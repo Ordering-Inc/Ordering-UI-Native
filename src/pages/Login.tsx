@@ -3,7 +3,10 @@ import { Platform } from "react-native";
 import styled from 'styled-components/native'
 // @ts-ignore
 // import { LoginForm } from 'ordering-login-form';
-import LoginForm from '../components/LoginForm'
+import LoginForm from '../components/LoginForm';
+import { colors } from '../theme';
+// @ts-ignore
+// import { LoginForm } from 'ordering-login-form';
 
 const BgWrapper = styled.ImageBackground`
   flex: 1;
@@ -44,13 +47,13 @@ const Login = ({ navigation }: any) => {
                         padding="10% 5%"
                         border="1px solid"
                         borderRadius="20px"
-                        backgroundColor="#11142C"
+                        backgroundColor={colors.secondary}
                         loginButtonText="Login"
                         registerButtonText="Register"
                         forgotButtonText="Forgot password?"
                         onLogin={login}
                         onForgot={forgot}
-                        loginButtonBackground="#06B7AE"/>
+                        loginButtonBackground={colors.primary}/>
                 </LoginWrapper>
             </KeyboardView>
 

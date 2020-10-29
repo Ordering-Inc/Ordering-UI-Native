@@ -21,7 +21,7 @@ const TitleWrapper = styled.View`
 
 interface Props {
     title?: string,
-    subTitle?: string,
+    subTitle?: any,
     titleAlign?: any,
     isBackStyle?: boolean,
     onActionLeft?: () => void,
@@ -40,8 +40,8 @@ const NavBar = (props: Props) => {
             />
             <TitleWrapper>
                 <OText 
-                    size={20}
-                    weight={'500'}
+                    size={22}
+                    weight={'600'}
                     style={
                         {textAlign: props.titleAlign ? props.titleAlign : 'center', 
                         marginRight: props.showCall ? 0 : 40}
@@ -50,13 +50,7 @@ const NavBar = (props: Props) => {
                     {props.title || ''}
                 </OText>
                 { props.subTitle
-                    ? ( <OText
-                            size={14}
-                            weight={'300'} 
-                            style={{textAlign: props.titleAlign ? props.titleAlign : 'center'}}
-                        >
-                            {props.subTitle}
-                        </OText> )
+                    ? ( props.subTitle )
                     : null 
                 }
             </TitleWrapper>

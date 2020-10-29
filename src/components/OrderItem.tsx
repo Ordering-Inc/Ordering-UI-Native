@@ -1,12 +1,13 @@
 import * as React from 'react'
-import { Text } from 'react-native'
 import styled from 'styled-components/native'
+import { ORDER_STATUS } from '../config/constants'
 import { getOrderStatus, getStatusColor } from '../providers/Utilities'
-import { Theme } from '../theme'
-import { OText, OIcon } from './shared'
+import { colors, light } from '../theme'
+import { OText, OIcon, OButton } from './shared'
 
 interface Props {
     data: any,
+    canAccept?: boolean,
     onClick?: any
 }
 
@@ -14,7 +15,7 @@ const Wrapper = styled.TouchableOpacity`
     flex: 1;
     background-color: white;
     border-radius: 10px;
-    box-shadow: 0 0 1px #00000030;
+    box-shadow: 0 0 2px #00000020;
     border-left-width: 5px;
     padding: 10px;
     margin-bottom: 12px;
@@ -34,31 +35,36 @@ const Avatar = styled.Image`
     height: 80px;
     resize-mode: contain;
     margin-top: 8px;
-    margin-right: 5px;
+    margin-right: 8px;
+    border-radius: 10px;
+    border: 1px solid #e5e5e5;
 `
 const Status = styled.View`
-    border: 1px solid ${({theme}) => theme.borderColor}
-    border-radius: 10px;
-    padding: 8px 15px;
+    flex: 1;
     align-items: center;
-    justify-content: center;
-    margin-top: 6px;
+    justify-content: space-between;
+    margin-top: 12px;
+    flex-direction: row;
 `
 const Address = styled.View`
     flex: 1;
     flex-direction: row;
     align-items: center;
 `
-const Icon = styled.Image`
-    resize-mode: contain;
-    width: 24px;
-    height: 24px;
-`
 const OrderNumber = styled.View`
     flex: 1;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+`
+const StatusAction = styled.TouchableOpacity`
+    flex-grow: 1;
+    flex-basis: 0;
+    border: 1px solid ${({theme}): string => theme.borderColor}
+    padding: 10px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
 `
 
 const OrderItem = (props: Props) => {
@@ -72,7 +78,7 @@ const OrderItem = (props: Props) => {
     return (
         <Wrapper onPress={() => onClickItem(props.data)} style={{borderLeftColor: getStatusColor(props.data.status)}}>
             <InnerWrapper>
-                <Avatar source={{uri: 'https://res.cloudinary.com/demo/image/upload/w_200,h_200,c_scale/v1312461204/sample.jpg'}}></Avatar>
+                <Avatar resizeMode={'cover'} source={{uri: props.data.business.logo}}></Avatar>
                 <InfoWrapper>
                     <OrderNumber>
                         <OText size={22} weight={'600'}>
@@ -92,7 +98,17 @@ const OrderItem = (props: Props) => {
                 </InfoWrapper>
             </InnerWrapper>
             <Status>
-                <OText>{getOrderStatus(props.data.status)}</OText>
+                <StatusAction>
+                    <OText color={colors.primary}>{getOrderStatus(props.data.status)}</OText>
+                </StatusAction>
+                {props.data.status == ORDER_STATUS.PENDING ? (
+                    <>
+                        <OText style={{width: 10}}>{''}</OText>
+                        <StatusAction style={{backgroundColor: light.btnDisabled}}>
+                            <OText>{'Accept'}</OText>
+                        </StatusAction>
+                    </>
+                ) : null}
             </Status>
         </Wrapper>
     )

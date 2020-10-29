@@ -6,10 +6,10 @@ import styled from 'styled-components/native'
 const SImage = styled.Image`
     resize-mode: contain;
     tint-color: ${({theme})=>theme.primaryColor};
-    font-family: 'Poppins-Regular';
 `
 interface Props {
-    src: any,
+    src?: any,
+    url?: string,
     color?: string,
     width?: number,
     height?: number,
@@ -21,7 +21,7 @@ interface Props {
 const OImage = (props: Props): React.ReactElement => {
     return (
         <SImage
-            source={props.src}
+            source={props.src ? props.src : props.url ? {uri: props.url} : require('../../assets/icons/lunch.png')}
             style={{
                 tintColor: props.color, 
                 flex: props.isWrap ? 1 : 0,
@@ -35,7 +35,6 @@ const OImage = (props: Props): React.ReactElement => {
 }
 
 OImage.defaultProps = {
-    src: require('../../assets/icons/lunch.png'),
     width: 26,
     height: 26
 }

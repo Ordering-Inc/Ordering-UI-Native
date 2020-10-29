@@ -125,7 +125,7 @@ const RecieveOrder = ({ navigation, route }: any) => {
                     /> 
                 )
                 : (
-                    <OrderList></OrderList>
+                    <OrderList orders={[]} navigation={navigation}></OrderList>
                 )
             }
             

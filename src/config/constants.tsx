@@ -13,3 +13,9 @@ export const ORDER_STATUS = {
     DELIVERY_COMPLETED_BY_DRIVER  : 11,
     DELIVERY_FAILED_BY_DRIVER     : 12
 }
+
+export const DECIMAL = { // They are no longer configured from the builder, by default they are "Point" and "2"
+    separator: '.',
+    length: 2,
+    currency: '$'
+}

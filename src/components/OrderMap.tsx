@@ -31,7 +31,7 @@ const OrderMap = (props: MapInterface) => {
                         },
                         animated: true
                     });
-            },600)
+            },1000)
         }
     }, [])
 
@@ -40,7 +40,7 @@ const OrderMap = (props: MapInterface) => {
             <MapView 
                 style={ style.map }
                 provider={ PROVIDER_GOOGLE }
-                onRegionChangeComplete={region => setRegion(region)}
+                onRegionChangeComplete={setRegion.bind(this, props.region)}
                 ref={ mapRef }
             >
                 {

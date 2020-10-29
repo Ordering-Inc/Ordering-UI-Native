@@ -1,10 +1,10 @@
 
 import * as React from 'react'
-import { View } from 'react-native';
 import styled from 'styled-components/native'
-import { getStatusColor } from '../providers/Utilities';
+import { getOrderStatus } from '../providers/Utilities';
 import OrderItem from './OrderItem';
-import { ODropDown, OSegment } from './shared';
+import { ODropDown, OSegment, OText } from './shared';
+import orders from '../assets/json/orders.json'
 
 const Wrapper = styled.View`
     background-color: white;
@@ -23,8 +23,21 @@ const FilterWrapper = styled.View`
 const OrdersWrapper = styled.ScrollView`
     
 `
+const orderStatus = [
+    ['Group', getOrderStatus(0), getOrderStatus(4), getOrderStatus(7)],      // pending
+    ['Group', getOrderStatus(3), getOrderStatus(8)],         // inprogress
+    ['Group', getOrderStatus(1), getOrderStatus(9), getOrderStatus(11)],     // completed
+    ['Group', getOrderStatus(2), getOrderStatus(5), getOrderStatus(6), getOrderStatus(10), getOrderStatus(12)]   // canceled
+];
 
-const OrderList = () => {
+const dateFilters = [ 'Today', 'Last Week', 'Older' ];
+
+interface Props {
+    orders: Array<any>,
+    navigation: any
+}
+
+const OrderList = (props: Props) => {
     let items = [
         {
             text: 'Pending',
@@ -42,91 +55,72 @@ const OrderList = () => {
             text: 'Canceled',
             image: require('../assets/icons/canceled.png')
         }
-    ]
-    let filterGroups = [
-        'Driver Group',
-        'Admin Group',
-        'Student Group',
-        'Worker Group',
-        'Patners Group',
-    ]
-    let orders = [
-        {
-            id: 55,
-            business: {
-                name: 'Laundary Company',
-                address: '500 5th Ave, New York, NY 10110, USA'
-            },
-            status: 2,
-            date: '2020/10/26 11:48'
-        },
-        {
-            id: 56,
-            business: {
-                name: 'MCBonalds',
-                address: 'McDonald\'s, Strada Ștefan cel Mare 36-40, Constanța 900178, Romania'
-            },
-            status: 4,
-            date: '2020/10/27 10:30'
-        },
-        {
-            id: 57,
-            business: {
-                name: 'Star Buck',
-                address: 'Calz. de Tlalpan, Toriello Guerra, Mexico City, CDMX, Mexico'
-            },
-            status: 5,
-            date: '2020/10/27 16:40'
-        },
-        {
-            id: 58,
-            business: {
-                name: 'Laundary Company',
-                address: '500 5th Ave, New York, NY 10110, USA'
-            },
-            status: 7,
-            date: '2020/10/28 17:10'
-        },
-        {
-            id: 59,
-            business: {
-                name: 'Wine Bar',
-                address: '5th avenue, Pafnuncio Padilla, Ciudad Satélite, Naucalpan de Juárez, State of Mexico, Mexico'
-            },
-            status: 11,
-            date: '2020/10/29 10:59'
-        },
-    ]
+    ];
+    
+    // Events -----------
 
+    const [statusFilters, getFilterTypes] = React.useState(orderStatus[0]);
+    var [curTab, onChangeStatus] = React.useState(0);
 
-    let onOrderStatus = (idx: number) => {
-        alert(`Selectd Order Status : ${items[idx].text}`)
+    const onChangeTabs = (idx: number) => {
+        // alert(`Selectd Order Status : ${items[idx].text}`);
+        onChangeStatus(idx);
+        getFilterTypes(orderStatus[idx]);
+
     }
-    let filterByGroup = (idx: number) => {
-        alert( `Groupd : ${filterGroups[idx]}`)
+    const getOrders = (orders: Array<any>, tab: number) : Array<any> => {
+        var ary = [];
+        if (tab == 0) {
+            ary = orders.filter(item => item.status == 0 || item.status == 4 || item.status == 7)
+        } else if (tab == 1) {
+            ary = orders.filter(item => item.status == 3 || item.status == 8)
+        } else if (tab == 2) {
+            ary = orders.filter(item => item.status == 1 || item.status == 9 || item.status == 11)
+        } else if (tab == 3) {
+            ary = orders.filter(item => item.status == 2 || item.status == 5 || item.status == 6 || item.status == 10 || item.status == 12)
+        }
+        return ary
     }
-    let onClickOrder = (data: any) => {
-        alert(data.business.name)
+    const filterByGroup = (idx: number) => {
+        // alert( `Groupd : ${statusFilters[idx]}`);
     }
+    const filterByDate = (idx: number) => {
+        // alert( `Date : ${dateFilters[idx]}`);
+    }
+    const onClickOrder = (data: any) => {
+        // alert(data.business.name);
+        props.navigation.navigate('OrderDetail', data);
+    }
+
     return (
         <Wrapper>
             <OSegment 
                 items={items} 
-                selectedIdx={0} 
-                onSelectItem={onOrderStatus} 
+                selectedIdx={curTab} 
+                onSelectItem={onChangeTabs} 
             />
             <FilterWrapper>
                 <ODropDown 
-                    items={filterGroups} 
+                    items={statusFilters} 
                     placeholder={'Group'} 
                     kindImage={require('../assets/icons/group.png')}
-                    selectedIndex={2}
+                    selectedIndex={0}
                     onSelect={filterByGroup}
                 />
+                {curTab > 0 ? (<OText style={{ minWidth: 10 }}>{''}</OText>):null}
+                {curTab > 0 ? (
+                    <ODropDown 
+                        items={dateFilters} 
+                        placeholder={'Today'} 
+                        kindImage={require('../assets/icons/calendar.png')}
+                        selectedIndex={0}
+                        onSelect={filterByDate}
+                    />
+                ) : null}
             </FilterWrapper>
             <OrdersWrapper>
-                {orders.map((item, index) => (
-                    <OrderItem data={item} key={index} onClick={onClickOrder}></OrderItem>
+                {getOrders(orders, curTab).map((item, index) => (
+                    <OrderItem key={index} data={item} canAccept={curTab == 0 ? true : false} onClick={onClickOrder}></OrderItem>
                 ))}
             </OrdersWrapper>
         </Wrapper>

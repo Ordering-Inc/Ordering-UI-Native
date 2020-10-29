@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { ImageSourcePropType, ImageStyle, ViewStyle } from 'react-native'
 import styled from 'styled-components/native'
+import { OIcon } from '.'
 import { Theme } from '../../theme'
 
 const Wrapper = styled.View`
@@ -12,10 +13,11 @@ const Wrapper = styled.View`
     align-items: center;
 `
 const Input = styled.TextInput`
+    flex-grow: 1;
     min-height: 30px;
     font-size: 15px;
     font-family: 'Poppins-Regular';
-    width: 100%;
+    margin-horizontal: 10px;
 `
 const StyledImage = styled.Image`
     margin-right: 10px;
@@ -49,7 +51,7 @@ const OInput = (props: Props): React.ReactElement => {
             }
         >
             {props.icon
-                ? (<StyledImage style={{...props.iconStyle, tintColor: props.iconColor }} source={props.icon} />)
+                ? (<OIcon src={props.icon} color={props.iconColor} width={20} height={20} />)
                 : null
             }
             <Input
@@ -60,7 +62,7 @@ const OInput = (props: Props): React.ReactElement => {
 }
 
 OInput.defaultProps = {
-    iconColor: '#f5f5f5',
+    iconColor: '#959595',
     bgColor: 'white',
     borderColor: 'white'
 }

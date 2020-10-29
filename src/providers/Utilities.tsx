@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ORDER_STATUS } from '../config/constants'
+import { DECIMAL, ORDER_STATUS } from '../config/constants'
 
 export const getOrderStatus = (status_num: number) => {
     if (status_num == ORDER_STATUS.PENDING) { return "Pending" }
@@ -23,7 +23,7 @@ export const getStatusColor = (status_num: number) => {
     else if (status_num == ORDER_STATUS.COMPLETED)                      { return '#238938' }
     else if (status_num == ORDER_STATUS.REJECTED)                       { return '#610619' }
     else if (status_num == ORDER_STATUS.DRIVER_ARRIVED_BUSINESS)        { return '#530973' }
-    else if (status_num == ORDER_STATUS.READY_FOR_PICKUP)               { return '#482300' }
+    else if (status_num == ORDER_STATUS.READY_FOR_PICKUP)               { return '#438053' }
     else if (status_num == ORDER_STATUS.REJECTED_BY_BUSINESS)           { return '#110619' }
     else if (status_num == ORDER_STATUS.CANCELLED_BY_DRIVER)            { return '#000000' }
     else if (status_num == ORDER_STATUS.ACCEPTED_BY_BUSINESS)           { return '#119469' }
@@ -33,4 +33,11 @@ export const getStatusColor = (status_num: number) => {
     else if (status_num == ORDER_STATUS.DELIVERY_COMPLETED_BY_DRIVER)   { return '#349557' }
     else if (status_num == ORDER_STATUS.DELIVERY_FAILED_BY_DRIVER)      { return '#615044' }
     else { return "white" }
+}
+
+export const parsePrice = (number: number, currency?: string) => {
+    var rate: number = 10 ** DECIMAL.length;
+    var l = Math.floor(number);
+    var r = Math.floor((number - l) * rate);
+    return `${currency ? currency : DECIMAL.currency}${l}${DECIMAL.separator}${r == 0 ? '00' : r}`;
 }

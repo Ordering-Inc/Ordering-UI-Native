@@ -9,21 +9,20 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {
-  StatusBar
-} from 'react-native';
 import Login from './pages/Login';
 import RecieveOrder from './pages/RecieveOrder';
-
-import { Theme, light, dark } from './theme'
-import { ThemeProvider } from 'styled-components/native'
+import OrderDetail from './pages/OrderDetail';
 import Forgot from './pages/Forgot';
+
+import { light } from './theme'
+import { ThemeProvider } from 'styled-components/native'
 
 const Stack = createStackNavigator();
 
 const NavStack = () => {
   return (
     <Stack.Navigator
+      initialRouteName='Login'
       screenOptions={{
         headerTitleAlign: 'center',
         headerStyle: {
@@ -43,7 +42,12 @@ const NavStack = () => {
       <Stack.Screen
         name="RecieveOrder"
         component={RecieveOrder}
-        options={{ title: 'RecieveOrder', headerShown: false }}
+        options={{ title: 'Recieve Order', headerShown: false }}
+      />
+      <Stack.Screen
+        name="OrderDetail"
+        component={OrderDetail}
+        options={{ title: 'Order Detail', headerShown: false }}
       />
       <Stack.Screen
         name="Forgot"
@@ -57,7 +61,7 @@ const NavStack = () => {
 const App = () => {
   return (
     <>
-      <ThemeProvider theme={light}>
+      <ThemeProvider theme={ light }>
         <NavigationContainer>
           <NavStack />
         </NavigationContainer>
