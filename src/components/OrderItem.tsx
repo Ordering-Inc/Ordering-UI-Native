@@ -78,7 +78,13 @@ const OrderItem = (props: Props) => {
     return (
         <Wrapper onPress={() => onClickItem(props.data)} style={{borderLeftColor: getStatusColor(props.data.status)}}>
             <InnerWrapper>
-                <Avatar resizeMode={'cover'} source={{uri: props.data.business.logo}}></Avatar>
+                <OIcon 
+                    url={props.data.business.logo}
+                    width={80}
+                    height={80}
+                    style={{borderRadius: 10, borderColor: '#e5e5e5', borderWidth: 1, marginRight: 10}}
+                />
+                {/* <Avatar source={{uri: props.data.business.logo}}></Avatar> */}
                 <InfoWrapper>
                     <OrderNumber>
                         <OText size={22} weight={'600'}>
