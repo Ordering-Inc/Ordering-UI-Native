@@ -145,8 +145,8 @@ const RecieveOrder = ({ navigation, route }: any) => {
                         imgLeftStyle={{ tintColor: 'white', width: 15, height: 15, marginRight: -5 }}
                         style={{ paddingLeft: 10, paddingRight: 4}}
                         text={'You\'re offline'}
-                        bgColor={is_online ? colors.primary : colors.darkBackground} 
-                        borderColor={is_online ? colors.primary : colors.darkBackground}
+                        bgColor={is_online ? colors.primary : colors.backgroundDark} 
+                        borderColor={is_online ? colors.primary : colors.backgroundDark}
                         textStyle={{ color: 'white' }}
                     />
                 </InnerWrapper>

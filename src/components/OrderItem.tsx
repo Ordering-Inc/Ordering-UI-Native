@@ -84,7 +84,6 @@ const OrderItem = (props: Props) => {
                     height={80}
                     style={{borderRadius: 10, borderColor: '#e5e5e5', borderWidth: 1, marginRight: 10}}
                 />
-                {/* <Avatar source={{uri: props.data.business.logo}}></Avatar> */}
                 <InfoWrapper>
                     <OrderNumber>
                         <OText size={22} weight={'600'}>

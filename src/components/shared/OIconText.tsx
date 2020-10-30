@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { ImageStyle, TextStyle, ViewStyle } from 'react-native'
 import styled from 'styled-components/native'
 
 const Wrapper = styled.View`
@@ -10,7 +11,6 @@ const Icon = styled.Image`
     margin-right: 3px;
 `
 const Label = styled.Text`
-    flex: 1;
     flex-wrap: wrap;
     color: black;
     font-size: 14px;
@@ -22,13 +22,14 @@ interface Props {
     text?: string,
     size?: number,
     color?: string,
-    imgStyle?: any,
-    textStyle?: any
+    style?: ViewStyle,
+    imgStyle?: ImageStyle,
+    textStyle?: TextStyle
 }
 
 const OIconText = (props: Props) => {
     return (
-        <Wrapper>
+        <Wrapper style={props.style}>
             {props.icon ? (
                 <Icon 
                     source={props.icon} 

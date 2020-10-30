@@ -2,16 +2,18 @@ export const colors = {
   primary: '#06B7AE',
   secondary: '#11142C',
   skyBlue: '#069ccd',
+  white: '#fff',
   whiteGray: '#f7f6f3',
   dusk: 'rgb(65,77,107)',
-  green: 'rgb(29,211,168)',
+  green: '#0CAD63',
   mediumGray: 'rgb(134,154,183)',
-  paleGray: 'rgb(221,226,236)',
+  paleGray: '#FAFAFA',
+  lightGray: '#A2A2A2',
   backgroundLight: 'white',
-  backgroundDark: '#f7f6f3',
-  darkBackground: '#323739',
-  darkBackgroundLight: '#393241',
-  clear: 'transparent'
+  backgroundDark: '#484848',
+  clear: 'transparent',
+  error: '#C90800',
+  success: '#0CAD63'
 };
 
 export const light = {
@@ -19,7 +21,7 @@ export const light = {
   backgroundDark: colors.secondary,
   btnPrimary: colors.backgroundLight,
   btnPrimaryFont: 'black',
-  btnPrimaryLight: colors.darkBackground,
+  btnPrimaryLight: colors.backgroundDark,
   btnPrimaryLightFont: 'black',
   textDisabled: '#969696',
   btnDisabled: 'rgb(224,224,224)',
@@ -27,13 +29,13 @@ export const light = {
   tintColor: '#333333',
   primaryColor: colors.primary,
   navBackground: 'white',
-  borderColor: '#e0e0e0'
+  borderColor: colors.lightGray
 };
 
 export type Theme = typeof light;
 
 export const dark = {
-  background: colors.darkBackground,
+  background: colors.backgroundDark,
   btnPrimary: colors.primary,
   btnPrimaryFont: 'white',
   btnPrimaryLight: colors.whiteGray,

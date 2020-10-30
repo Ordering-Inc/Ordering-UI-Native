@@ -10,6 +10,7 @@ const SImage = styled.Image`
 interface Props {
     src?: any,
     url?: string,
+    dummy?: any,
     color?: string,
     width?: number,
     height?: number,
@@ -21,7 +22,7 @@ interface Props {
 const OImage = (props: Props): React.ReactElement => {
     return (
         <SImage
-            source={props.src ? props.src : props.url ? {uri: props.url} : require('../../assets/icons/lunch.png')}
+            source={props.src ? props.src : props.url ? {uri: props.url} : props.dummy ? props.dummy : require('../../assets/icons/lunch.png')}
             style={{
                 tintColor: props.color, 
                 flex: props.isWrap ? 1 : 0,

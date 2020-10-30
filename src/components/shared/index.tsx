@@ -7,5 +7,6 @@ import OIcon from './OIcon'
 import OIconText from './OIconText'
 import OCheckbox from './OCheckbox'
 import OIconButton from './OIconButton'
+import OTextarea from './OTextarea'
 
-export { OText, OButton, OInput, OSegment, ODropDown, OIcon, OIconText, OCheckbox, OIconButton }
+export { OText, OButton, OInput, OSegment, ODropDown, OIcon, OIconText, OCheckbox, OIconButton, OTextarea }

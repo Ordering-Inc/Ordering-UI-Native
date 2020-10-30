@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { ViewStyle } from 'react-native'
 import styled from 'styled-components/native'
 
 const Wrapper = styled.View`
@@ -14,9 +15,16 @@ const Wrapper = styled.View`
     padding: 25px;
 `
 
-const BottomWrapper = ({ children }: any) => {
+interface Props {
+    style?: ViewStyle,
+    children: any
+}
+
+const BottomWrapper = (props: Props) => {
     return (
-        <Wrapper>{ children }</Wrapper>
+        <Wrapper 
+            style={props.style}
+        >{ props.children }</Wrapper>
     )
 }
 

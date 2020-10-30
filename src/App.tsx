@@ -16,6 +16,8 @@ import Forgot from './pages/Forgot';
 
 import { light } from './theme'
 import { ThemeProvider } from 'styled-components/native'
+import Reject from './pages/Reject';
+import Accept from './pages/Accept';
 
 const Stack = createStackNavigator();
 
@@ -53,6 +55,16 @@ const NavStack = () => {
         name="Forgot"
         component={Forgot}
         options={{ title: 'Forgot Password', headerShown: false }}
+      />
+      <Stack.Screen
+        name="Reject"
+        component={Reject}
+        options={{ title: 'Reject Order', headerShown: false }}
+      />
+      <Stack.Screen
+        name="Accept"
+        component={Accept}
+        options={{ title: 'Accept Order', headerShown: false }}
       />
     </Stack.Navigator>
   );

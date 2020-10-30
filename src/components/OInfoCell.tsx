@@ -27,6 +27,7 @@ interface Props {
     name?: string,
     logo?: any,
     address?: string,
+    dummy?: any,
 
     onChat?: any,
     onCall?: any
@@ -36,14 +37,15 @@ const OInfoCell = (props: Props) => {
 
     return (
         <KindItems>
-            <OText style={{textTransform: 'uppercase', marginVertical: 10}} size={14} weight={'500'}>{props.title}</OText>
+            <OText style={{textTransform: 'uppercase', marginVertical: 10}} size={15} weight={'500'}>{props.title}</OText>
             <KInner>
                 <OIcon 
                     url={props.logo}
+                    dummy={props.dummy}
                     style={{borderRadius: 12}}
                     width={100} height={100}></OIcon>
                 <KInfoWrap>
-                    <OText size={18} weight={'500'}>{props.name}</OText>
+                    <OText size={19} weight={'500'}>{props.name}</OText>
                     <OIconText 
                         icon={require('../assets/icons/pin_outline.png')}
                         text={props.address} />

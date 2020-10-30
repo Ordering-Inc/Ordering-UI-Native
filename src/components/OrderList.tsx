@@ -89,7 +89,7 @@ const OrderList = (props: Props) => {
     }
     const onClickOrder = (data: any) => {
         // alert(data.business.name);
-        props.navigation.navigate('OrderDetail', data);
+        props.navigation.navigate('OrderDetail', {order: data, status: curTab});
     }
 
     return (

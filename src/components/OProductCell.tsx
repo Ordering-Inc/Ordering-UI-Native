@@ -26,16 +26,29 @@ interface Props {
 
 const OProductCell = (props: Props) => {
 
+    const getExtras = (options: Array<any>) : string => {
+        var str = '';
+        options.map(opt => {
+            str += opt.name + '\n';
+            opt.suboptions.map((s: any) => {
+                str += ' ' + s.name + '\n'
+            })
+        })
+        return str
+    }
+
     return (
         <Wrapper>
             <OText style={{marginVertical: 10}} size={14} weight={'500'}>{props.data.quantity || '1'}</OText>
             <OIcon 
-                url={props.data.image}
-                style={{borderRadius: 12}}
-                width={100} height={100}></OIcon>
+                url={props.data.images}
+                style={{borderRadius: 12, marginHorizontal: 10}}
+                width={80} height={80}></OIcon>
             <PInner>
-                <OText size={18} weight={'500'}>{props.data.name || 'Pepperoni Pizza'}</OText>
-                <OText size={14} weight={'300'}>{props.data.extra || 'with extra cheese \n Large \nSize \n small'}</OText>
+                <OText size={17} weight={'500'}>{props.data.name || 'Pepperoni Pizza'}</OText>
+                {props.data.options.length > 0 ? (
+                    <OText size={14} weight={'300'}>{getExtras(props.data.options as Array<any>) || ''}</OText>
+                ) : null}
             </PInner>
             <Price>
                 <OText>{`${parsePrice(props.data.price)}` || '$30.00'}</OText>
