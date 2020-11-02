@@ -3,7 +3,7 @@ import styled from 'styled-components/native'
 import BottomWrapper from '../components/BottomWrapper'
 import NavBar from '../components/NavBar'
 import NumberKey from '../components/NumberKey'
-import { OButton, OIconButton, OInput, OText } from '../components/shared'
+import { OButton, OText } from '../components/shared'
 import { colors } from '../theme'
 
 const Wrapper = styled.View`
@@ -22,18 +22,28 @@ const InnerCircle = styled.View`
 `
 
 
-const Accept = ({ navigation, props, theme }: any) => {
-    const [deliveryTime, onChangeTime] = React.useState('00:30');
+const Accept = ({ navigation, props }: any) => {
+    const [deliveryTime, onChangeTime] = React.useState('00:00');
 
     let onBack = () => {
         navigation.goBack();
     }
     let onAccept = () => {
-        alert('Sent Recover Email!')
+        alert(`Accept Order ${deliveryTime}`);
     }
 
     let onClickKey = (val: number) => {
-        let str = `${deliveryTime}${val}`
+        var str = ''
+        let l = deliveryTime.split(':')[0];
+        var r = deliveryTime.split(':')[1];
+        if (val == -1) {
+            let tmp = `${l.charAt(1)}${r.slice(0, -1)}`
+            str = (parseInt(l) > 0 ? `0${l.charAt(0)}` : `00`) + `:` + tmp;
+        } else {
+            if (parseInt(l) < 10) {
+                str = `${l.charAt(1)}${r.charAt(0)}:${r.charAt(1)}${val}`;
+            } else str = deliveryTime;
+        }
         onChangeTime(str);
     }
 
@@ -48,7 +58,7 @@ const Accept = ({ navigation, props, theme }: any) => {
             <Wrapper >
                 <InnerCircle>
                     <OText
-                        size={46}
+                        size={60}
                         weight={'500'}
                         style={{}}
                     >
@@ -57,7 +67,7 @@ const Accept = ({ navigation, props, theme }: any) => {
                 </InnerCircle>
                 <OText style={{marginVertical: 20}} size={19}>{'Delivery Time'}</OText>
             </Wrapper>
-            <NumberKey />
+            <NumberKey onChangeValue={onClickKey} />
             <BottomWrapper>
                 <OButton 
                     text={'Accept'}

@@ -1,17 +1,19 @@
+import { StackActions } from '@react-navigation/native'
 import * as React from 'react'
 import styled from 'styled-components/native'
 import BottomWrapper from '../components/BottomWrapper'
 import NavBar from '../components/NavBar'
 import OInfoCell from '../components/OInfoCell'
 import OProductCell from '../components/OProductCell'
-import { OIcon, OText, OIconText, OCheckbox, OButton, OIconButton } from '../components/shared'
+import { OIcon, OText, OIconText, OCheckbox, OIconButton } from '../components/shared'
+import { USER_TYPE } from '../config/constants'
 import { parsePrice } from '../providers/Utilities'
 import { colors } from '../theme'
+// import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
 
 const Wrapper = styled.ScrollView`
     background-color: white;
     padding: 0px 16px;
-    margin-bottom: 100px;
 `
 const UnderLineWrap = styled.View`
     border-bottom-width: 1px;
@@ -48,10 +50,11 @@ const OrderDetail = ({ navigation, route }: any, props: Props) => {
     const products: Array<any> = orderData.products;
 
     const onBack = () => {
-        navigation.navigate('RecieveOrder');
+        let stack = StackActions.pop(1);
+        navigation.dispatch(stack);
     }
     const onContact = () => {
-        navigation.navigate('RecieveOrder');
+        navigation.navigate('Contact');
     }
     const onCheckArrived = (checked: boolean) => {
         onArrived(checked);
@@ -62,12 +65,21 @@ const OrderDetail = ({ navigation, route }: any, props: Props) => {
     const onAccept = () => {
         navigation.navigate('Accept', orderData);
     }
+    const onStartDelivery = () => {
+        navigation.navigate('MapBusiness', {order: orderData});
+    }
 
     const bCall = () => {
-        alert('business calling!!')
+        // RNImmediatePhoneCall
     }
     const cCall = () => {
         alert('customer calling!!')
+    }
+    const bChat = () => {
+        navigation.navigate('Chat',{type: USER_TYPE.BUSINESS, data: orderData});
+    }
+    const cChat = () => {
+        navigation.navigate('Chat',{type: USER_TYPE.CUSTOMER, data: orderData});
     }
 
     const accptItem = (
@@ -115,6 +127,7 @@ const OrderDetail = ({ navigation, route }: any, props: Props) => {
                     address={orderData.business.address}
                     logo={orderData.business.logo}
                     onCall={bCall}
+                    onChat={bChat}
                 />
                 <OInfoCell
                     title={'Customer'}
@@ -123,6 +136,7 @@ const OrderDetail = ({ navigation, route }: any, props: Props) => {
                     logo={orderData.customer.photo}
                     dummy={require('../assets/images/customer.png')}
                     onCall={cCall}
+                    onChat={cChat}
                 />
 
                 <UnderLineWrap>
@@ -207,6 +221,7 @@ const OrderDetail = ({ navigation, route }: any, props: Props) => {
                         <OIconButton 
                             title={'Start delivery'} 
                             style={{ flex: 1 }} 
+                            onClick={onStartDelivery}
                             height={46} 
                             disabled={!hasArrived}
                             color={colors.primary} 

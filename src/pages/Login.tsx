@@ -2,11 +2,8 @@ import * as React from 'react';
 import { Platform } from "react-native";
 import styled from 'styled-components/native'
 // @ts-ignore
-// import { LoginForm } from 'ordering-login-form';
 import LoginForm from '../components/LoginForm';
 import { colors } from '../theme';
-// @ts-ignore
-// import { LoginForm } from 'ordering-login-form';
 
 const BgWrapper = styled.ImageBackground`
   flex: 1;
@@ -26,7 +23,7 @@ export const bdRadius = { topRight: '20px', topLeft: '20px', bottomRigt: '0px', 
 const Login = ({ navigation }: any) => {
 
     let login = () => {
-        navigation.navigate('RecieveOrder', { is_online: false });
+        navigation.navigate('Home');
     }
     let register = () => {
         alert('This is test register button');
@@ -44,7 +41,7 @@ const Login = ({ navigation }: any) => {
                     <LoginForm
                         title="Welcome to login!"
                         subTitle="Let's start your delivery orders!"
-                        padding="10% 5%"
+                        wrapperStyle={{padding: 20}}
                         border="1px solid"
                         borderRadius="20px"
                         backgroundColor={colors.secondary}

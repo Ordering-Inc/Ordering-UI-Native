@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import MapView, { Region, PROVIDER_GOOGLE, Marker, LatLng } from 'react-native-maps'
 import styled from 'styled-components/native'
 
@@ -18,7 +18,7 @@ const OrderMap = (props: MapInterface) => {
     const [region, setRegion] = React.useState(props.region);
     
     React.useEffect(() => {
-        if (mapRef.current) {
+        if (mapRef.current && props.markers.length > 0) {
             setTimeout(()=>{
                 mapRef.current?.fitToCoordinates(
                     props.markers.map(item => item.latlng), 
@@ -39,6 +39,7 @@ const OrderMap = (props: MapInterface) => {
         <Wrapper>
             <MapView 
                 style={ style.map }
+                mapType={ Platform.OS == 'android' ? "none" : "standard" }
                 provider={ PROVIDER_GOOGLE }
                 onRegionChangeComplete={setRegion.bind(this, props.region)}
                 ref={ mapRef }

@@ -2,16 +2,18 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
 import { getOrderStatus } from '../providers/Utilities';
-import OrderItem from './OrderItem';
 import { ODropDown, OSegment, OText } from './shared';
+
+import OrderItem from './OrderItem';
 import orders from '../assets/json/orders.json'
+import { StackActions } from '@react-navigation/native';
 
 const Wrapper = styled.View`
+flex: 1;
     background-color: white;
-    height: 100%;
     padding-horizontal: 12px;
     padding-top: 110px;
-    padding-bottom: 105px;
+    padding-bottom: 20px;
 `
 const FilterWrapper = styled.View`
     flex-direction: row;
@@ -34,6 +36,7 @@ const dateFilters = [ 'Today', 'Last Week', 'Older' ];
 
 interface Props {
     orders: Array<any>,
+    isOnline: boolean,
     navigation: any
 }
 
@@ -61,6 +64,11 @@ const OrderList = (props: Props) => {
 
     const [statusFilters, getFilterTypes] = React.useState(orderStatus[0]);
     var [curTab, onChangeStatus] = React.useState(0);
+    const [online, updateOnline] = React.useState(props.isOnline);
+
+    React.useEffect(() => {
+        updateOnline(props.isOnline);
+    },[props.isOnline]);
 
     const onChangeTabs = (idx: number) => {
         // alert(`Selectd Order Status : ${items[idx].text}`);
@@ -89,7 +97,14 @@ const OrderList = (props: Props) => {
     }
     const onClickOrder = (data: any) => {
         // alert(data.business.name);
-        props.navigation.navigate('OrderDetail', {order: data, status: curTab});
+        if (curTab == 0 && !online) {
+            alert('You are offline.')
+            return;
+        }
+        let detailStack = StackActions.push('OrderDetail', {order: data, status: curTab});
+        props.navigation.dispatch(detailStack);
+        // props.navigation.navigate('OrderDetail', {order: data, status: curTab});
+
     }
 
     return (
@@ -120,7 +135,7 @@ const OrderList = (props: Props) => {
             </FilterWrapper>
             <OrdersWrapper>
                 {getOrders(orders, curTab).map((item, index) => (
-                    <OrderItem key={index} data={item} canAccept={curTab == 0 ? true : false} onClick={onClickOrder}></OrderItem>
+                    <OrderItem key={index} isOnline={online} data={item} canAccept={curTab == 0 ? true : false} onClick={onClickOrder}></OrderItem>
                 ))}
             </OrdersWrapper>
         </Wrapper>

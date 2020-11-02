@@ -1,9 +1,9 @@
-import { string } from 'prop-types'
 import * as React from 'react'
-import { StyleSheet, TextStyle } from 'react-native'
 import styled from 'styled-components/native'
-import { OButton, OText } from './shared'
-import { colors, Theme } from '../theme'
+import { OButton, OIcon, OText } from './shared'
+import { colors } from '../theme'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Platform } from 'react-native'
 
 const Wrapper = styled.View`
     background-color: ${({theme}): string => theme.navBackground}
@@ -14,15 +14,22 @@ const Wrapper = styled.View`
     position: relative;
 `
 const TitleWrapper = styled.View`
-    flex-grow: 1;
     flex-direction: column;
     padding-horizontal: 10px;
+`
+const TitleTopWrapper = styled.View`
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
 `
 
 interface Props {
     title?: string,
     subTitle?: any,
+    titleColor?: string,
     titleAlign?: any,
+    withIcon?: boolean,
+    icon?: any,
     isBackStyle?: boolean,
     onActionLeft?: () => void,
     onRightAction?: () => void,
@@ -30,30 +37,51 @@ interface Props {
 }
 
 const NavBar = (props: Props) => {
+    const safeAreaInset = useSafeAreaInsets()
     return(
-        <Wrapper>
+        <Wrapper style={{paddingTop: Platform.OS == 'ios' ? safeAreaInset.top : 16}}>
             <OButton 
                 imgLeftSrc={require('../assets/icons/arrow_left.png')}
                 imgRightSrc={null}
                 isCircle={true}
                 onClick={props.onActionLeft}
             />
-            <TitleWrapper>
-                <OText 
-                    size={22}
-                    weight={'600'}
-                    style={
-                        {textAlign: props.titleAlign ? props.titleAlign : 'center', 
-                        marginRight: props.showCall ? 0 : 40}
+            <TitleTopWrapper> 
+                {props.withIcon
+                    ? (
+                        <OIcon 
+                            url={props.icon} 
+                            style={{
+                                borderColor: colors.lightGray, 
+                                borderRadius: 10, 
+                                borderWidth: 1,
+                                marginLeft: 12,
+                            }}
+                            width={60}
+                            height={60} />
+                    )
+                    : null
+                }   
+                <TitleWrapper>
+                    <OText 
+                        size={22}
+                        weight={'600'}
+                        style={
+                            {
+                                textAlign: props.titleAlign ? props.titleAlign : 'center', 
+                                marginRight: props.showCall ? 0 : 40,
+                                color: props.titleColor || 'black'
+                            }
+                        }
+                    >
+                        {props.title || ''}
+                    </OText>
+                    { props.subTitle
+                        ? ( props.subTitle )
+                        : null 
                     }
-                >
-                    {props.title || ''}
-                </OText>
-                { props.subTitle
-                    ? ( props.subTitle )
-                    : null 
-                }
-            </TitleWrapper>
+                </TitleWrapper>
+            </TitleTopWrapper>
             { props.showCall 
                 ? ( <OButton 
                         isCircle={true} 

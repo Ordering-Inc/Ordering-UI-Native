@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
 import { Rating } from 'react-native-elements';
 import styled from 'styled-components/native';
 import BottomWrapper from '../components/BottomWrapper';
@@ -7,16 +6,23 @@ import OrderMap from '../components/OrderMap';
 import OrderList from '../components/OrderList';
 import OButton from '../components/shared/OButton';
 import { colors } from '../theme';
+import { OText } from '../components/shared';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Wrapper = styled.View`
-    height: 100%;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+`
+const ContentWrap = styled.View`
+    flex: 1;
 `
 const TopActions = styled.View`
     position: absolute;
     width: 100%;
     min-height: 80px;
     background-color: transparent;
-    padding: 40px 25px 0;
+    padding: 40px 16px 0;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -24,7 +30,6 @@ const TopActions = styled.View`
     z-index: 5;
 `
 const InnerWrapper = styled.View`
-    flex: 1;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -56,85 +61,79 @@ export const IMAGES = {
     avatar: require('../assets/images/avatar.jpg'),
     arrow_up: require('../assets/icons/arrow_up.png'),
     map: require('../assets/icons/map.png'),
-}
-export const marker = require('../assets/images/marker.png');
-
-interface Props {
-    is_online: boolean,
-
+    marker: require('../assets/images/marker.png')
 }
 
-const RecieveOrder = ({ navigation, route }: any) => {
+let markers = [
+    {
+        latlng: { latitude: 37.78825, longitude: -122.4324 },
+        image: IMAGES.marker
+    },
+    {
+        latlng: { latitude: 37.79825, longitude: -122.4524 },
+        image: IMAGES.marker
+    },
+    {
+        latlng: { latitude: 37.78925, longitude: -122.3324 },
+        image: IMAGES.marker
+    }
+]
 
-    var [is_online, updateStatus] = React.useState(route.params.is_online)
-    var [show_map, updateView] = React.useState(true)
+const MapOrders = ({ navigation, route }: any) => {
 
-    let markers = [
-        {
-            latlng: { latitude: 37.78825, longitude: -122.4324 },
-            image: marker
-        },
-        {
-            latlng: { latitude: 37.79825, longitude: -122.4524 },
-            image: marker
-        },
-        {
-            latlng: { latitude: 37.78925, longitude: -122.3324 },
-            image: marker
-        }
-    ]
+    const safeAreaInset = useSafeAreaInsets();
 
-    React.useEffect(() => {
-        // onChangeStatus(!is_online)
-    })
+    const [is_online, updateStatus] = React.useState(route.params.is_online)
+    const [show_map, updateView] = React.useState(!route.params.order_view)
 
-    let onOffStatus = () => {
+    const onOffStatus = () => {
         updateStatus(!is_online)
     }
 
-    let onChangeView = () => {
+    const onChangeView = () => {
         updateView(!show_map)
     }
     
     return (
         <Wrapper>
-            <TopActions>
-                <OButton
-                    isCircle={true}
-                    onClick={() => { }}
-                    imgRightSrc={null}
-                    imgLeftSrc={IMAGES.menu} 
-                />
-                <OButton 
-                    onClick={onChangeView} 
-                    imgRightSrc={null}
-                    imgLeftSrc={show_map ? IMAGES.lunch : IMAGES.map} 
-                    text={show_map ? 'Order View' : 'Map View'} 
-                />
-            </TopActions>
-            {show_map
-                ? (
-                    <OrderMap       
-                        region={{
-                            latitude: 37.78825,
-                            longitude: -122.4324,
-                            latitudeDelta: 0.0922,
-                            longitudeDelta: 0.0421,
-                        }}
-                        markers={markers}
-                    /> 
-                )
-                : (
-                    <OrderList orders={[]} navigation={navigation}></OrderList>
-                )
-            }
-            
+            <ContentWrap>
+                <TopActions style={{paddingTop: safeAreaInset.top || 16}}>
+                    <OButton
+                        isCircle={true}
+                        onClick={() => { navigation.openDrawer() }}
+                        imgRightSrc={null}
+                        imgLeftSrc={IMAGES.menu} 
+                    />
+                    <OButton 
+                        onClick={onChangeView} 
+                        imgRightSrc={null}
+                        imgLeftSrc={show_map ? IMAGES.lunch : IMAGES.map} 
+                        text={show_map ? 'Order View' : 'Map View'} 
+                    />
+                </TopActions>
+                {show_map
+                    ? (
+                        <OrderMap       
+                            region={{
+                                latitude: 37.78825,
+                                longitude: -122.4324,
+                                latitudeDelta: 0.0922,
+                                longitudeDelta: 0.0421,
+                            }}
+                            markers={markers}
+                        /> 
+                    )
+                    : (
+                        <OrderList orders={[]} navigation={navigation} isOnline={is_online}></OrderList>
+                    )
+                }
+            </ContentWrap>
             <BottomWrapper>
                 <InnerWrapper>
                     <UserInfoView style={{ flexShrink: 1 }}>
                         <Avatar source={IMAGES.avatar}></Avatar>
                         <NameView>
-                            <Text style={{ fontSize: 17, marginBottom: 4, fontWeight: '700'}}>{'Smeeth Jhone Bailang'}</Text>
+                            <OText size={17} weight={'700'} style={{marginBottom: 4}}>{'Smeeth Jhone Bailang'}</OText>
                             <Rating imageSize={12} readonly></Rating>
                         </NameView>
                     </UserInfoView>
@@ -152,13 +151,12 @@ const RecieveOrder = ({ navigation, route }: any) => {
                 </InnerWrapper>
                 {is_online ? (
                     <FindingBtn>
-                        <Text>{'FINDING TRIPS'}</Text>
+                        <OText>{'FINDING TRIPS'}</OText>
                     </FindingBtn>
                 ) : null}
-                
             </BottomWrapper>
         </Wrapper>
     );
 }
 
-export default RecieveOrder;
+export default MapOrders;

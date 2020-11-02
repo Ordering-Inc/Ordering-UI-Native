@@ -3,6 +3,9 @@ import * as React from 'react'
 import { ImageStyle } from 'react-native'
 import styled from 'styled-components/native'
 
+const Wrapper = styled.View`
+
+`
 const SImage = styled.Image`
     resize-mode: contain;
     tint-color: ${({theme})=>theme.primaryColor};
@@ -21,17 +24,19 @@ interface Props {
 
 const OImage = (props: Props): React.ReactElement => {
     return (
-        <SImage
-            source={props.src ? props.src : props.url ? {uri: props.url} : props.dummy ? props.dummy : require('../../assets/icons/lunch.png')}
-            style={{
-                tintColor: props.color, 
-                flex: props.isWrap ? 1 : 0,
-                width: props.width,
-                height: props.height,
-                ...props.style}}
-        >
-            {props.children}
-        </SImage>
+        <Wrapper style={{borderRadius: props.style?.borderRadius, overflow: 'hidden', marginHorizontal: props.style?.marginHorizontal}}>
+            <SImage
+                source={props.src ? props.src : props.url ? {uri: props.url} : props.dummy ? props.dummy : require('../../assets/icons/lunch.png')}
+                style={{
+                    tintColor: props.color, 
+                    flex: props.isWrap ? 1 : 0,
+                    width: props.width,
+                    height: props.height,
+                    ...props.style, marginHorizontal: 0}}
+            >
+                {props.children}
+            </SImage>
+        </Wrapper>
     )
 }
 

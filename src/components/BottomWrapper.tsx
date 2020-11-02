@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { ViewStyle } from 'react-native'
+import { Platform, StatusBar, ViewStyle } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import styled from 'styled-components/native'
 
 const Wrapper = styled.View`
@@ -7,12 +8,10 @@ const Wrapper = styled.View`
     border-top-left-radius: 25px;
     box-shadow: 0 -1px 3px #00000010;
     background-color: white;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    margin-top: -20px;
     min-height: 100px;
     padding: 25px;
+    padding-bottom: 40px;
 `
 
 interface Props {
@@ -21,10 +20,13 @@ interface Props {
 }
 
 const BottomWrapper = (props: Props) => {
+    const safeAreaInset = useSafeAreaInsets();
     return (
         <Wrapper 
-            style={props.style}
-        >{ props.children }</Wrapper>
+            style={{paddingBottom: safeAreaInset.bottom || 16, ...props.style}}
+        >
+                { props.children }
+        </Wrapper>
     )
 }
 

@@ -2,52 +2,53 @@ import {
   ActivityIndicator,
   ImageSourcePropType,
   ImageStyle,
-  Pressable,
   TextStyle,
   TouchableOpacity,
+  View,
   ViewStyle,
 } from 'react-native';
 
 import * as React from 'react';
 import styled from 'styled-components/native';
+import { colors } from '../../theme';
 
-export const StyledButton = styled.View<Props>`
-    background-color: ${props => props.theme.btnPrimary};
-    border-radius: 26px;
-    border-width: 2px;
-    height: 52px;
-    border-color: ${({ theme }): string => theme.btnPrimary};
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 1px 1px 2px #00000020;
-    elevation: 2;
-    padding-left: 20px;
-    padding-right: 20px;
-    position: relative;
-  `;
+const StyledButton = styled.View<Props>`
+  background-color: ${props => props.theme.btnPrimary};
+  border-radius: 26px;
+  border-width: 2px;
+  height: 52px;
+  border-color: ${({ theme }): string => theme.btnPrimary};
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 1px 1px 2px #00000020;
+  elevation: 2;
+  padding-left: 20px;
+  padding-right: 20px;
+  position: relative;
+`
 const StyledButtonDisabled = styled(StyledButton)`
-    background-color: ${({ theme }): string => theme.btnDisabled};
-    border-color: rgb(200, 200, 200);
-  `;
+  background-color: ${colors.backgroundDark};
+  border-color: ${colors.backgroundDark};
+`
 
 const StyledText = styled.Text`
-    font-size: 16px;
-    color: ${({ theme }): string => theme.btnPrimaryFont};
-    margin-left: 10px;
-    margin-right: 10px;
-    font-family: 'Poppins-Regular';
-  `;
+  font-size: 16px;
+  color: ${({ theme }): string => theme.btnPrimaryFont};
+  margin-left: 10px;
+  margin-right: 10px;
+  font-family: 'Poppins-Regular';
+`
 
 const StyledTextDisabled = styled(StyledText)`
-    color: ${({ theme }): string => theme.textDisabled};
-  `;
+  color: ${colors.mediumGray};
+`
 
 const StyledImage = styled.Image`
-    width: 24px;
-    height: 24px;
-    resize-mode: contain;
-  `;
+  width: 24px;
+  height: 24px;
+  resize-mode: contain;
+`
 const EndImage = styled.Image`
   width: 15px;
   height: 15px;
@@ -81,11 +82,13 @@ interface Props {
 const OButton = (props: Props): React.ReactElement => {
   if (props.isDisabled) {
     return (
-      <StyledButtonDisabled style={props.disabledStyle}>
+      <View style={props.parentStyle}>
+      <StyledButtonDisabled style={props.style}>
         <StyledTextDisabled style={props.textStyle}>
           {props.text}
         </StyledTextDisabled>
       </StyledButtonDisabled>
+      </View>
     );
   }
 

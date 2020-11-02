@@ -8,7 +8,8 @@ import { OText, OIcon, OButton } from './shared'
 interface Props {
     data: any,
     canAccept?: boolean,
-    onClick?: any
+    onClick?: any,
+    isOnline?: boolean
 }
 
 const Wrapper = styled.TouchableOpacity`
@@ -57,18 +58,23 @@ const OrderNumber = styled.View`
     justify-content: space-between;
     align-items: center;
 `
-const StatusAction = styled.TouchableOpacity`
+const StatusAction = styled.View`
     flex-grow: 1;
     flex-basis: 0;
-    border: 1px solid ${({theme}): string => theme.borderColor}
-    padding: 10px;
+    border: 1px solid ${colors.lightGray}
+    height: 42px;
     border-radius: 10px;
     align-items: center;
     justify-content: center;
 `
 
 const OrderItem = (props: Props) => {
-    var [curItem, onSelectItem] = React.useState(null)
+    const [curItem, onSelectItem] = React.useState(null);
+    const [is_online, changOnline] = React.useState(props.isOnline);
+
+    React.useEffect(() => {
+        changOnline(props.isOnline);
+    }, [props.isOnline]);
 
     let onClickItem = (item: any) => {
         props.onClick(item)
@@ -109,9 +115,7 @@ const OrderItem = (props: Props) => {
                 {props.data.status == ORDER_STATUS.PENDING ? (
                     <>
                         <OText style={{width: 10}}>{''}</OText>
-                        <StatusAction style={{backgroundColor: light.btnDisabled}}>
-                            <OText>{'Accept'}</OText>
-                        </StatusAction>
+                        <OButton onClick={() => {}} style={{shadowColor: 'transparent', height: 42, borderRadius: 10}} parentStyle={{flex: 1}} textStyle={{fontSize: 14, color: 'white'}} bgColor={colors.primary} borderColor={colors.primary} isDisabled={!is_online} text={'Accept'} imgRightSrc={null} />
                     </>
                 ) : null}
             </Status>

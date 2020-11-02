@@ -8,7 +8,8 @@ const Wrapper = styled.View`
     background-color: ${({ theme }): string => theme.background};
     border-radius: 25px;
     border-width: 1px;
-    padding: 10px 20px;
+    padding-horizontal: 16px;
+    height: 50px;
     flex-direction: row;
     align-items: center;
 `
@@ -17,13 +18,6 @@ const Input = styled.TextInput`
     min-height: 30px;
     font-size: 15px;
     font-family: 'Poppins-Regular';
-    margin-horizontal: 10px;
-`
-const StyledImage = styled.Image`
-    margin-right: 10px;
-    width: 20px;
-    height: 20px;
-    resize-mode: contain;
 `
 
 interface Props {
@@ -36,7 +30,7 @@ interface Props {
     placeholder?: string,
     icon?: ImageSourcePropType,
     iconColor?: string,
-    iconStyle?: ImageStyle
+    iconStyle?: ImageStyle,
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -51,7 +45,7 @@ const OInput = (props: Props): React.ReactElement => {
             }
         >
             {props.icon
-                ? (<OIcon src={props.icon} color={props.iconColor} width={20} height={20} />)
+                ? (<OIcon src={props.icon} color={props.iconColor} width={20} height={20} style={{marginHorizontal: 10}} />)
                 : null
             }
             <Input

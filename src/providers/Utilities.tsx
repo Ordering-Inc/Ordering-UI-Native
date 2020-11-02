@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { DECIMAL, ORDER_STATUS } from '../config/constants'
 
 export const getOrderStatus = (status_num: number) => {

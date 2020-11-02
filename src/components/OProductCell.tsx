@@ -39,10 +39,10 @@ const OProductCell = (props: Props) => {
 
     return (
         <Wrapper>
-            <OText style={{marginVertical: 10}} size={14} weight={'500'}>{props.data.quantity || '1'}</OText>
+            <OText style={{marginVertical: 10, minWidth: 10}} size={14} weight={'500'}>{props.data.quantity || '1'}</OText>
             <OIcon 
                 url={props.data.images}
-                style={{borderRadius: 12, marginHorizontal: 10}}
+                style={{borderRadius: 15, marginHorizontal: 10}}
                 width={80} height={80}></OIcon>
             <PInner>
                 <OText size={17} weight={'500'}>{props.data.name || 'Pepperoni Pizza'}</OText>

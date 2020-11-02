@@ -8,9 +8,10 @@ export const colors = {
   green: '#0CAD63',
   mediumGray: 'rgb(134,154,183)',
   paleGray: '#FAFAFA',
-  lightGray: '#A2A2A2',
+  lightGray: '#D2D2D2',
   backgroundLight: 'white',
   backgroundDark: '#484848',
+  backgroundGray: '#EFEFEF',
   clear: 'transparent',
   error: '#C90800',
   success: '#0CAD63'

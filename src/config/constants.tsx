@@ -19,3 +19,18 @@ export const DECIMAL = { // They are no longer configured from the builder, by d
     length: 2,
     currency: '$'
 }
+
+export const STORAGE_KEY = {
+    ONLINE : 'app_is_online'
+}
+
+export const DIRECTION = {
+    RIGHT : 'right',
+    LEFT : 'left'
+}
+
+export const USER_TYPE = {
+    BUSINESS : 'business',
+    CUSTOMER : 'customer',
+    DRIVER : 'driver'
+}

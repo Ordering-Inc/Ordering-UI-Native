@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ViewStyle } from 'react-native';
 import styled from 'styled-components/native';
 import { colors } from  '../theme';
 import { OText, OButton, OInput } from './shared'
@@ -8,7 +9,7 @@ export interface ViewInterface {
     title?: string,
     subTitle?: string,
     backgroundColor?: string,
-    padding?: string,
+    wrapperStyle?: ViewStyle,
     borderRadius?: any,
     border?: string,
     placeHolderColor?: string,
@@ -29,7 +30,6 @@ export interface ViewInterface {
 
 export const Wrapper = styled.View<ViewInterface>`
     background-color: ${ props => props.backgroundColor };
-    padding: ${ props => props.padding };
     border: ${ props => props.border };
     border-radius: 20px;
     border-bottom-right-radius: 0;
@@ -58,15 +58,15 @@ const LoginForm = (props: ViewInterface) => {
                 bgColor={props.registerButtonBackground}
                 borderColor={props.registerButtonBorderColor}
                 textStyle={{color: 'white'}}
-                style={{marginBottom: 14}}
+                style={{marginBottom: 15}}
             />
         )
     }
     return (
         <Wrapper 
             backgroundColor={props.backgroundColor} 
-            padding={ props.padding }
             borderRadius={ props.borderRadius || '0px' }
+            style={props.wrapperStyle}
             border={ props.border }>
             { title }
             { sub_title }
