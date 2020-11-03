@@ -22,6 +22,8 @@ import Accept from './pages/Accept';
 import MapBusiness from './pages/MapBusiness';
 import SideMenu from './pages/SideMenu';
 import Chat from './pages/Chat';
+import Profile from './pages/Profile';
+import Supports from './pages/Supports';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -50,7 +52,7 @@ const MainNavStack = () => {
 
 const NavDraw = () => {
   return (
-    <Drawer.Navigator drawerContent={props => <SideMenu {...props} />}>
+    <Drawer.Navigator drawerContent={(props: any) => <SideMenu {...props} />}>
       <Drawer.Screen 
         name="OrderView"
         component={NavStack}
@@ -109,6 +111,16 @@ const NavStack = (is_online: boolean) => {
         name="Chat"
         component={Chat}
         options={{ title: 'Chat Screen', headerShown: false }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={Profile}
+        options={{ title: 'User\'s Profile', headerShown: false }}
+      />
+      <Stack.Screen
+        name="Supports"
+        component={Supports}
+        options={{ title: 'FAQ and Supports', headerShown: false }}
       />
       
     </Stack.Navigator>

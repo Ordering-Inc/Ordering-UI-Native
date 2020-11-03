@@ -1,5 +1,6 @@
 import { StackActions } from '@react-navigation/native'
 import * as React from 'react'
+import { Linking } from 'react-native'
 import styled from 'styled-components/native'
 import BottomWrapper from '../components/BottomWrapper'
 import NavBar from '../components/NavBar'
@@ -70,10 +71,10 @@ const OrderDetail = ({ navigation, route }: any, props: Props) => {
     }
 
     const bCall = () => {
-        // RNImmediatePhoneCall
+        Linking.openURL(`tel:${orderData.business.cellphone || orderData.business.phone}`);
     }
     const cCall = () => {
-        alert('customer calling!!')
+        Linking.openURL(`tel:${orderData.customer.cellphone || orderData.customer.phone}`);
     }
     const bChat = () => {
         navigation.navigate('Chat',{type: USER_TYPE.BUSINESS, data: orderData});

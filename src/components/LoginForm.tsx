@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ViewStyle } from 'react-native';
 import styled from 'styled-components/native';
+import { IMAGES } from '../config/constants';
 import { colors } from  '../theme';
 import { OText, OButton, OInput } from './shared'
 
@@ -35,11 +36,6 @@ export const Wrapper = styled.View<ViewInterface>`
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 `
-
-export const IMAGES = {
-    email: require('../assets/icons/ic_email.png'),
-    lock: require('../assets/icons/ic_lock.png'),
-}
 
 const LoginForm = (props: ViewInterface) => {
     

@@ -19,6 +19,8 @@ const Wrapper = styled.View`
     border-color: ${({theme}): string => theme.primaryColor}
     flex-grow: 1;
     flex-basis: 0;
+    align-items: center;
+    justify-content: center;
 `
 const InnerWrapper = styled.TouchableOpacity`
     flex-direction: row;
@@ -65,16 +67,18 @@ const DropItems = styled.Text`
 const ODropDown = (props: Props) => {
 
     const [curIndex, onSelect] = React.useState(props.selectedIndex);
+    const [items, getItems] = React.useState(props.items);
     const [isOpen, onOffToggle] = React.useState(false);
-    var is_opened = isOpen
-    
-    const onSelectItem = React.useCallback(
-        (index) => {
-            props.onSelect(index);
-            onOffToggle(false);
-            onSelect(index);
-        }, [props.onSelect]
-    );
+    const [value, setValue] = React.useState(curIndex && items ? items[curIndex] : null);
+
+    const onSelectItem = (index: number) => {
+        props.onSelect(index);
+        onSelect(index);
+        if (items) {
+            setValue(items[index]);
+        }
+        onOffToggle(false);
+    }
 
     React.useEffect(() => {
         if (props.items) {
@@ -84,12 +88,8 @@ const ODropDown = (props: Props) => {
             alert('Undefined Items')
     }, [props.items])
 
-    React.useEffect(() => {
-        
-    }, [props.selectedIndex])
-
     const onToggle = () => {
-        onOffToggle(!is_opened)
+        onOffToggle(is_opened => !is_opened)
     }
         
     return (
@@ -101,17 +101,17 @@ const ODropDown = (props: Props) => {
                     ? (<KindIcon source={props.kindImage} />)
                     : null
                 }
-                <SelLabel numberOfLines={1} ellipsizeMode={'tail'}>{curIndex && props.items ? props.items[curIndex] : props.placeholder}</SelLabel>
+                <SelLabel numberOfLines={1} ellipsizeMode={'tail'}>{value || props.placeholder}</SelLabel>
                 <DropIcon source={require('../../assets/icons/drop_down.png')} />
             </InnerWrapper>
             {isOpen
                 ? (
                     <DropView>
-                        {props.items
-                            ? props.items.map((item, index) => 
+                        {items
+                            ? items.map((item, index) => 
                                 (
                                     <TouchableOpacity
-                                        key={index}
+                                        key={`key_${index}`}
                                         onPress={() => onSelectItem(index)}
                                     >
                                         <DropItems>{item}</DropItems>

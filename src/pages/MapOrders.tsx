@@ -8,6 +8,7 @@ import OButton from '../components/shared/OButton';
 import { colors } from '../theme';
 import { OText } from '../components/shared';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { IMAGES } from '../config/constants';
 
 const Wrapper = styled.View`
     flex: 1;
@@ -54,15 +55,6 @@ const FindingBtn = styled.TouchableOpacity`
     margin-bottom: 10px;
     align-items: center;
 `
-
-export const IMAGES = {
-    menu: require('../assets/icons/menu.png'),
-    lunch: require('../assets/icons/lunch.png'),
-    avatar: require('../assets/images/avatar.jpg'),
-    arrow_up: require('../assets/icons/arrow_up.png'),
-    map: require('../assets/icons/map.png'),
-    marker: require('../assets/images/marker.png')
-}
 
 let markers = [
     {

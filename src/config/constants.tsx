@@ -34,3 +34,16 @@ export const USER_TYPE = {
     CUSTOMER : 'customer',
     DRIVER : 'driver'
 }
+
+export const IMAGES = {
+    menu: require('../assets/icons/menu.png'),
+    lunch: require('../assets/icons/lunch.png'),
+    avatar: require('../assets/images/avatar.jpg'),
+    arrow_up: require('../assets/icons/arrow_up.png'),
+    arrow_left: require('../assets/icons/arrow_left.png'),
+    map: require('../assets/icons/map.png'),
+    marker: require('../assets/images/marker.png'),
+    email: require('../assets/icons/ic_email.png'),
+    lock: require('../assets/icons/ic_lock.png'),
+    camera: require('../assets/icons/camera.png'),
+}

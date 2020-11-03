@@ -7,7 +7,6 @@ import OChatBubble from '../components/shared/OChatBubble'
 import { DIRECTION, USER_TYPE } from '../config/constants'
 import { colors } from '../theme'
 import SignatureScreen, { SignatureViewRef } from 'react-native-signature-canvas';
-import { View } from 'react-native'
 
 const Wrapper = styled.View`
     flex: 1;
@@ -27,7 +26,7 @@ const InputWrapper = styled.View`
     border-radius: 25px;
     padding-horizontal: 14px;
 `
-const SignatureView = styled.View`
+const SignatureWrap = styled.View`
     height: 150px;
 `
 
@@ -102,16 +101,17 @@ const Chat = (props: Props) => {
             </Inner>
             <BottomWrapper>
                 {showSignPad ? (
-                    <SignatureView>
+                    <SignatureWrap>
                         <SignatureScreen
                             ref={ref}
                             onEnd={handleEnd}
                             onOK={handleSignature} 
                             onEmpty={handleEmpty}
                             onClear={handleClear}
-                            autoClear={true} 
+                            autoClear={false}
+                            descriptionText={''} 
                         />
-                    </SignatureView>
+                    </SignatureWrap>
                 ) : null}
                 <ActionWrapper>
                     <InputWrapper>

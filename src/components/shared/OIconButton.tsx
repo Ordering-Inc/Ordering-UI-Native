@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ViewStyle } from 'react-native'
+import { ImageStyle, TextStyle, ViewStyle } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../theme'
 
@@ -44,8 +44,8 @@ interface Props {
     textColor?: string,
     iconColor?: string
     style?: ViewStyle,
-    iconStyle?: any,
-    textStyle?: any
+    iconStyle?: ImageStyle,
+    textStyle?: TextStyle
 }
 
 const OIconButton = (props: Props) => {

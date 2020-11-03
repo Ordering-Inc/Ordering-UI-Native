@@ -4,6 +4,7 @@ import { OButton, OIcon, OText } from './shared'
 import { colors } from '../theme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Platform } from 'react-native'
+import { IMAGES } from '../config/constants'
 
 const Wrapper = styled.View`
     background-color: ${({theme}): string => theme.navBackground}
@@ -30,6 +31,7 @@ interface Props {
     titleAlign?: any,
     withIcon?: boolean,
     icon?: any,
+    leftImg?: any,
     isBackStyle?: boolean,
     onActionLeft?: () => void,
     onRightAction?: () => void,
@@ -41,7 +43,7 @@ const NavBar = (props: Props) => {
     return(
         <Wrapper style={{paddingTop: Platform.OS == 'ios' ? safeAreaInset.top : 16}}>
             <OButton 
-                imgLeftSrc={require('../assets/icons/arrow_left.png')}
+                imgLeftSrc={props.leftImg || IMAGES.arrow_left}
                 imgRightSrc={null}
                 isCircle={true}
                 onClick={props.onActionLeft}

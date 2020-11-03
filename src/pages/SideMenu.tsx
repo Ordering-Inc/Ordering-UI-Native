@@ -1,21 +1,88 @@
+import { DrawerActions } from '@react-navigation/native'
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import styled from 'styled-components/native'
-import { OText } from '../components/shared'
+import { OIcon, OIconButton, OText, OToggle } from '../components/shared'
+import { colors } from '../theme'
 
-const Wrapper = styled.View`
-
+const Wrapper = styled.ScrollView`
+    flex: 1;
+    padding-top: 50px;
 `
+const TopWrapper = styled.View`
+    flex: 1;
+    align-items: center;
+`
+const MenuItemsWrap = styled.View`
+    padding-horizontal: 50px;
+    padding-top: 20px;
+`
+
+
 interface Props {
-    navigation: any
+    navigation: any,
+    route: any
 }
 
 const SideMenu = (props: Props) => {
+    const [isOnline, setOnline] = React.useState(false)
+    const onSwitchStatus = () => {
+        setOnline((status: boolean) => !status)
+    }
+
     return(
         <Wrapper>
-            <TouchableOpacity onPress={() => {props.navigation.navigate('Forgot')}} style={{marginTop: 50}} >
-                <OText>{'This is a test content'}</OText>
-            </TouchableOpacity>
+            <TopWrapper>
+                <OIcon src={require('../assets/images/app-logo.png')} width={190} height={90} />
+                <OIcon src={require('../assets/images/avatar.jpg')} width={100} height={100} style={{borderRadius: 14}} />
+
+                <OText size={20} style={{marginTop: 15}}>{'Dragon Team'}</OText>
+                <OText size={14} style={{marginTop: 12, marginBottom: 6, textTransform: 'uppercase'}} color={isOnline ? colors.primary : 'grey'}>{isOnline ? 'You\'re online' : 'You\'re offline'}</OText>
+                
+                <OToggle isOn={isOnline} onColor={colors.primary} onToggle={onSwitchStatus} />
+            </TopWrapper>
+            <MenuItemsWrap>
+                <OIconButton 
+                    icon={require('../assets/icons/menu-orders.png')} 
+                    title={'MyOrders'} 
+                    style={{justifyContent: 'flex-start', height: 50}} 
+                    borderColor={'transparent'} 
+                    textStyle={{marginHorizontal: 20}} 
+                    onClick={() => {
+                        props.navigation.navigate('MapOrders')
+                    }}
+                />
+                <OIconButton 
+                    icon={require('../assets/icons/menu-user.png')} 
+                    title={'Profile'} 
+                    style={{justifyContent: 'flex-start', height: 50}} 
+                    borderColor={'transparent'} 
+                    textStyle={{marginHorizontal: 20}} 
+                    onClick={() => {
+                        props.navigation.navigate('Profile')
+                    }}
+                />
+                <OIconButton 
+                    icon={require('../assets/icons/menu-help.png')} 
+                    title={'Supports'} 
+                    style={{justifyContent: 'flex-start', height: 50}} 
+                    borderColor={'transparent'} 
+                    textStyle={{marginHorizontal: 20}} 
+                    onClick={() => {
+                        props.navigation.navigate('Supports')
+                    }}
+                />
+                <OIconButton 
+                    icon={require('../assets/icons/menu-logout.png')} 
+                    title={'Logout'} 
+                    style={{justifyContent: 'flex-start', height: 50}} 
+                    borderColor={'transparent'} 
+                    textStyle={{marginHorizontal: 20}} 
+                    onClick={() => {
+                        props.navigation.navigate('Login')
+                    }}
+                />
+            </MenuItemsWrap>
         </Wrapper>
     )
 }
