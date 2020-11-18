@@ -15,13 +15,20 @@ interface Props {
     weight?: any,
     style?: TextStyle,
     children?: string,
-    isWrap?: boolean
+    isWrap?: boolean,
+    hasBottom?: boolean,
 }
 
 const OText = (props: Props): React.ReactElement => {
     return (
         <SText
-            style={{color: props.color || 'black', fontSize: props.size, fontWeight: props.weight, flex: props.isWrap ? 1 : 0, ...props.style}}
+            style={{
+                color: props.color || 'black', 
+                fontSize: props.size, 
+                fontWeight: props.weight, 
+                flex: props.isWrap ? 1 : 0, 
+                marginBottom: props.hasBottom ? 10 : 0,
+                ...props.style}}
         >
             {props.children}
         </SText>

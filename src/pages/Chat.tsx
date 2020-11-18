@@ -4,7 +4,7 @@ import BottomWrapper from '../components/BottomWrapper'
 import NavBar from '../components/NavBar'
 import { OIconButton, OInput, OText } from '../components/shared'
 import OChatBubble from '../components/shared/OChatBubble'
-import { DIRECTION, USER_TYPE } from '../config/constants'
+import { DIRECTION, IMAGES, USER_TYPE } from '../config/constants'
 import { colors } from '../theme'
 import SignatureScreen, { SignatureViewRef } from 'react-native-signature-canvas';
 
@@ -27,7 +27,15 @@ const InputWrapper = styled.View`
     padding-horizontal: 14px;
 `
 const SignatureWrap = styled.View`
-    height: 150px;
+    height: 179px;
+    padding-bottom: 12px;
+`
+const SignatureWrapInner = styled.View`
+    margin-top: 5px;
+    height: 87%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid ${colors.primary};
 `
 
 interface Props {
@@ -48,23 +56,21 @@ const Chat = (props: Props) => {
         // props.onOK(signature);
     };
 
-    const handleEmpty = () => {
-        console.log('Empty');
+    const onClearSign = () => {
+        ref.current?.clearSignature();
     }
-
-    const handleClear = () => {
-        console.log('clear success!');
-    }
-
-    const handleEnd = () => {
+    const onReadSign = () => {
         ref.current?.readSignature();
+        onClearSign();
     }
 
-    const style = `
-        .m-signature-pad--footer
-        .button {
-            background-color: red;
-            color: #FFF;
+    const padStyle = `
+        .m-signature-pad--body {
+            bottom: 0;
+        }
+        .m-signature-pad--footer {
+            background: red;
+            display: none;
         }
     `;
 
@@ -102,14 +108,25 @@ const Chat = (props: Props) => {
             <BottomWrapper>
                 {showSignPad ? (
                     <SignatureWrap>
-                        <SignatureScreen
-                            ref={ref}
-                            onEnd={handleEnd}
-                            onOK={handleSignature} 
-                            onEmpty={handleEmpty}
-                            onClear={handleClear}
-                            autoClear={false}
-                            descriptionText={''} 
+                        <OText style={{textTransform: 'uppercase'}}>{'Customer Signature'}</OText>
+                        <SignatureWrapInner>
+                            <SignatureScreen
+                                webStyle={padStyle}
+                                ref={ref}
+                                onOK={handleSignature} 
+                                autoClear={false}
+                            />
+                        </SignatureWrapInner>
+                        <OIconButton 
+                            icon={IMAGES.trash}
+                            borderColor={colors.clear}
+                            bgColor={colors.clear}
+                            style={{
+                                position: 'absolute',
+                                bottom: 16,
+                                left: -5
+                            }}
+                            onClick={onClearSign}
                         />
                     </SignatureWrap>
                 ) : null}

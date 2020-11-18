@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Platform } from "react-native";
+import { Platform, View, Text } from "react-native";
 import styled from 'styled-components/native'
-// @ts-ignore
 import LoginForm from '../components/LoginForm';
 import { colors } from '../theme';
+//@ts-ignore
+// import { LoginForm } from 'ordering-components/_modules/native';
 
 const BgWrapper = styled.ImageBackground`
   flex: 1;
@@ -20,15 +21,20 @@ const KeyboardView = styled.KeyboardAvoidingView`
 export const bgImage = require('../assets/images/home_bg.png'); 
 export const bdRadius = { topRight: '20px', topLeft: '20px', bottomRigt: '0px', bottomLeft: '0px'}
 
-const Login = ({ navigation }: any) => {
+export const TestForm = () => {
+    return(
+        <View style={{backgroundColor: 'red', height: 100, flex: 1}}>
+            <Text>{'Ok this is test'}</Text>
+        </View>
+    )
+}
 
-    let login = () => {
-        navigation.navigate('Home');
-    }
-    let register = () => {
+const Login = ({ navigation }: any) => {
+    
+    const register = () => {
         alert('This is test register button');
     }
-    let forgot = () => {
+    const forgot = () => {
         navigation.navigate('Forgot');
     }
 
@@ -38,7 +44,9 @@ const Login = ({ navigation }: any) => {
 
             <KeyboardView enabled behavior={ Platform.OS === 'ios'? "padding" : "height"}>
                 <LoginWrapper>
+                    {/* <LoginForm UIcomponent={TestForm} /> */}
                     <LoginForm
+                        navigation={navigation}
                         title="Welcome to login!"
                         subTitle="Let's start your delivery orders!"
                         wrapperStyle={{padding: 20}}
@@ -48,7 +56,6 @@ const Login = ({ navigation }: any) => {
                         loginButtonText="Login"
                         registerButtonText="Register"
                         forgotButtonText="Forgot password?"
-                        onLogin={login}
                         onForgot={forgot}
                         loginButtonBackground={colors.primary}/>
                 </LoginWrapper>

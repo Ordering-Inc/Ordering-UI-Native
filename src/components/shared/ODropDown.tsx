@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { DeviceEventEmitter, TouchableOpacity } from 'react-native'
 import styled from 'styled-components/native'
+import { colors } from '../../theme'
 
 interface Props {
     items?: Array<string>,
@@ -8,7 +9,8 @@ interface Props {
     selectedIndex?: number,
     kindImage?: any,
     placeholder?: string,
-    style?: any
+    style?: any,
+    dropIconColor?: string
 }
 
 const Wrapper = styled.View`
@@ -102,7 +104,7 @@ const ODropDown = (props: Props) => {
                     : null
                 }
                 <SelLabel numberOfLines={1} ellipsizeMode={'tail'}>{value || props.placeholder}</SelLabel>
-                <DropIcon source={require('../../assets/icons/drop_down.png')} />
+                <DropIcon style={{tintColor: props.dropIconColor || 'grey'}} source={require('../../assets/icons/drop_down.png')} />
             </InnerWrapper>
             {isOpen
                 ? (

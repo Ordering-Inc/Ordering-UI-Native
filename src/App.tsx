@@ -24,6 +24,8 @@ import SideMenu from './pages/SideMenu';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import Supports from './pages/Supports';
+import { ToastProvider } from './providers/ToastProvider';
+import { Toast } from './components/shared/OToast';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -130,10 +132,13 @@ const NavStack = (is_online: boolean) => {
 const App = () => {
   return (
     <>
-      <ThemeProvider theme={ light }>
-        <NavigationContainer>
-          <MainNavStack />
-        </NavigationContainer>
+      <ThemeProvider theme={light}>
+        <ToastProvider>
+          <NavigationContainer>
+            <MainNavStack />
+          </NavigationContainer>
+          <Toast />
+        </ToastProvider>
       </ThemeProvider>
     </>
   );

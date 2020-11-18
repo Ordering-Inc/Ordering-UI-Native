@@ -1,149 +1,158 @@
-import { useLinkProps } from '@react-navigation/native';
 import * as React from 'react';
 import {
-    Animated,
-    Easing,
     StyleSheet,
     Text,
-    TouchableOpacity,
     View,
-} from 'react-native';
+    TouchableOpacity,
+    Animated,
+    Platform,
+    TextStyle
+} from "react-native";
 
-interface Props {
-    onColor: string;
-    offColor: string;
-    label: string;
-    onToggle: () => void;
-    style: object;
-    isOn: boolean;
-    labelStyle: object;
-    size?: string;
-}
+interface propTypes {
+    isOn: boolean,
+    label?: string,
+    onColor?: string,
+    offColor?: string,
+    size?: string,
+    labelStyle?: TextStyle,
+    thumbOnStyle?: any,
+    thumbOffStyle?: any,
+    trackOnStyle?: any,
+    trackOffStyle?: any,
+    onToggle: any,
+    icon?: any,
+    disabled?: boolean,
+    animationSpeed?: number,
+    useNativeDriver?: boolean,
+    circleColor?: string,
+};
 
-interface DefaultProps {
-    onColor: string;
-    offColor: string;
-    label: string;
-    onToggle: () => void;
-    style: object;
-    isOn: boolean;
-    labelStyle: object;
-}
+const OToggleSwitch = (props: propTypes) => {
 
-export default class OToggle extends React.PureComponent<Props> {
-    animatedValue = new Animated.Value(0);
-
-    static defaultProps: DefaultProps = {
-        onColor: '#4cd137',
-        offColor: '#ecf0f1',
-        label: '',
-        onToggle: () => { },
-        style: {},
-        isOn: false,
-        labelStyle: {},
-    };
-
-    render() {
-        const moveToggle = this.animatedValue.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, 20],
-        });
-
-        const {
-            isOn,
-            onColor,
-            offColor,
-            style,
-            onToggle,
-            labelStyle,
-            label,
-            size,
-        } = this.props;
-
-        const color = isOn ? onColor : offColor;
-
-        this.animatedValue.setValue(isOn ? 0 : 1);
-
-        Animated.timing(this.animatedValue, {
-            toValue: isOn ? 1 : 0,
-            duration: 200,
-            easing: Easing.linear,
-            useNativeDriver: false
-        }).start();
-
-        return (
-            <View style={styles.container}>
-                {!!label && <Text style={[styles.label, labelStyle]}>{label}</Text>}
-
-                <TouchableOpacity
-                    onPress={() => {
-                        typeof onToggle === 'function' && onToggle();
-                    }}>
-                    <View
-                        style={[size == 'small' ? styles.sToggleContainer : styles.toggleContainer, style, { backgroundColor: color }]}>
-                        <Animated.View
-                            style={[
-                                size == 'small' ? styles.sToggleWheelStyle : styles.toggleWheelStyle,
-                                {
-                                    marginLeft: moveToggle,
-                                },
-                            ]}
-                        />
-                    </View>
-                </TouchableOpacity>
-            </View>
-        );
+    const calculateDimensions = (size: string) => {
+        switch (size) {
+            case "small":
+                return {
+                    width: 40,
+                    padding: 10,
+                    circleWidth: 15,
+                    circleHeight: 15,
+                    translateX: 22
+                };
+            case "large":
+                return {
+                    width: 70,
+                    padding: 20,
+                    circleWidth: 30,
+                    circleHeight: 30,
+                    translateX: 38
+                };
+            default:
+                return {
+                    width: 50,
+                    padding: 15,
+                    circleWidth: 25,
+                    circleHeight: 25,
+                    translateX: 30
+                };
+        }
     }
+
+    const offsetX = new Animated.Value(0);
+    const dimensions = calculateDimensions(props.size || 'medium');
+
+    const createToggleSwitchStyle = () => [
+        {
+            justifyContent: "center",
+            width: dimensions.width,
+            borderRadius: 20,
+            padding: dimensions.padding,
+            backgroundColor: props.isOn ? props.onColor : props.offColor
+        },
+        props.isOn ? props.trackOnStyle : props.trackOffStyle
+    ];
+
+    const createInsideCircleStyle = () => [
+        {
+            alignItems: "center",
+            justifyContent: "center",
+            margin: Platform.OS === "web" ? 0 : 4,
+            left: Platform.OS === "web" ? 4 : 0,
+            position: "absolute",
+            backgroundColor: props.circleColor,
+            transform: [{ translateX: offsetX }],
+            width: dimensions.circleWidth,
+            height: dimensions.circleHeight,
+            borderRadius: dimensions.circleWidth / 2,
+            shadowColor: "#000",
+            shadowOffset: {
+                width: 0,
+                height: 2
+            },
+            shadowOpacity: 0.2,
+            shadowRadius: 2.5,
+            elevation: 1.5
+        },
+        props.isOn ? props.thumbOnStyle : props.thumbOffStyle
+    ];
+
+
+    const { isOn, onToggle, disabled, labelStyle, label, icon } = props;
+
+    const toValue = isOn
+        ? dimensions.width - dimensions.translateX
+        : 0;
+
+    Animated.timing(offsetX, {
+        toValue,
+        duration: props.animationSpeed,
+        useNativeDriver: props.useNativeDriver || false,
+    }).start();
+
+    return (
+        <View style={styles.container}>
+            {label ? (
+                <Text style={[styles.labelStyle, labelStyle]}>{label}</Text>
+            ) : null}
+            <TouchableOpacity
+                style={createToggleSwitchStyle()}
+                activeOpacity={0.8}
+                onPress={() => (disabled ? null : onToggle(!isOn))}
+            >
+                <Animated.View style={createInsideCircleStyle()}>
+                    {icon}
+                </Animated.View>
+            </TouchableOpacity>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center"
     },
-    toggleContainer: {
-        width: 50,
-        height: 30,
-        marginLeft: 3,
-        borderRadius: 15,
-        justifyContent: 'center',
-    },
-    sToggleContainer: {
-        width: 40,
-        height: 20,
-        marginLeft: 3,
-        borderRadius: 10,
-        justifyContent: 'center',
-    },
-    label: {
-        marginRight: 2,
-    },
-    toggleWheelStyle: {
-        width: 25,
-        height: 25,
-        backgroundColor: 'white',
-        borderRadius: 12.5,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 2.5,
-        elevation: 1.5,
-    },
-    sToggleWheelStyle: {
-        width: 15,
-        height: 15,
-        backgroundColor: 'white',
-        borderRadius: 7.5,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 2.5,
-        elevation: 1.5,
-    },
+    labelStyle: {
+        marginHorizontal: 10
+    }
 });
+
+OToggleSwitch.defaultProps = {
+    isOn: false,
+    onColor: "#4cd137",
+    offColor: "#ecf0f1",
+    size: "medium",
+    labelStyle: {},
+    thumbOnStyle: {},
+    thumbOffStyle: {},
+    trackOnStyle: {},
+    trackOffStyle: {},
+    icon: null,
+    disabled: false,
+    animationSpeed: 300,
+    useNativeDriver: true,
+    circleColor: 'white'
+};
+
+export default OToggleSwitch;

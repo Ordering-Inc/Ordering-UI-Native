@@ -1,8 +1,7 @@
-import { DrawerActions } from '@react-navigation/native'
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import styled from 'styled-components/native'
-import { OIcon, OIconButton, OText, OToggle } from '../components/shared'
+import ToggleSwitch from 'toggle-react-native'
+import { OIcon, OIconButton, OText } from '../components/shared'
 import { colors } from '../theme'
 
 const Wrapper = styled.ScrollView`
@@ -39,7 +38,7 @@ const SideMenu = (props: Props) => {
                 <OText size={20} style={{marginTop: 15}}>{'Dragon Team'}</OText>
                 <OText size={14} style={{marginTop: 12, marginBottom: 6, textTransform: 'uppercase'}} color={isOnline ? colors.primary : 'grey'}>{isOnline ? 'You\'re online' : 'You\'re offline'}</OText>
                 
-                <OToggle isOn={isOnline} onColor={colors.primary} onToggle={onSwitchStatus} />
+                <ToggleSwitch isOn={isOnline} onColor={colors.primary} onToggle={onSwitchStatus} />
             </TopWrapper>
             <MenuItemsWrap>
                 <OIconButton 

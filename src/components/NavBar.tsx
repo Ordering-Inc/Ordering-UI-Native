@@ -3,7 +3,7 @@ import styled from 'styled-components/native'
 import { OButton, OIcon, OText } from './shared'
 import { colors } from '../theme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Platform } from 'react-native'
+import { Platform, TextStyle } from 'react-native'
 import { IMAGES } from '../config/constants'
 
 const Wrapper = styled.View`
@@ -25,6 +25,8 @@ const TitleTopWrapper = styled.View`
 `
 
 interface Props {
+    navigation?: any,
+    route?: any,
     title?: string,
     subTitle?: any,
     titleColor?: string,
@@ -35,11 +37,15 @@ interface Props {
     isBackStyle?: boolean,
     onActionLeft?: () => void,
     onRightAction?: () => void,
-    showCall?: boolean
+    showCall?: boolean,
+    titleStyle?: TextStyle
 }
 
 const NavBar = (props: Props) => {
-    const safeAreaInset = useSafeAreaInsets()
+    const safeAreaInset = useSafeAreaInsets();
+    const goSupport = () => {
+        props.navigation.navigate('Supports',{});
+    }
     return(
         <Wrapper style={{paddingTop: Platform.OS == 'ios' ? safeAreaInset.top : 16}}>
             <OButton 
@@ -72,7 +78,9 @@ const NavBar = (props: Props) => {
                             {
                                 textAlign: props.titleAlign ? props.titleAlign : 'center', 
                                 marginRight: props.showCall ? 0 : 40,
-                                color: props.titleColor || 'black'
+                                color: props.titleColor || 'black',
+                                paddingHorizontal: props.titleAlign == 'left' ? 12 : 0,
+                                ...props.titleStyle
                             }
                         }
                     >
@@ -91,8 +99,8 @@ const NavBar = (props: Props) => {
                         borderColor={colors.primary} 
                         imgRightSrc={null} 
                         imgLeftStyle={{tintColor: 'white', width:30, height: 30}} 
-                        imgLeftSrc={require('../assets/icons/help.png')}
-                        onClick={props.onRightAction} /> ) 
+                        imgLeftSrc={IMAGES.support}
+                        onClick={props.onRightAction || goSupport} /> ) 
                 : null 
             }
         </Wrapper>

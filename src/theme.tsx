@@ -14,7 +14,7 @@ export const colors = {
   backgroundGray: '#EFEFEF',
   clear: 'transparent',
   error: '#C90800',
-  success: '#0CAD63'
+  success: '#90C68E'
 };
 
 export const light = {
@@ -34,17 +34,3 @@ export const light = {
 };
 
 export type Theme = typeof light;
-
-export const dark = {
-  background: colors.backgroundDark,
-  btnPrimary: colors.primary,
-  btnPrimaryFont: 'white',
-  btnPrimaryLight: colors.whiteGray,
-  btnPrimaryLightFont: 'black',
-  textDisabled: '#969696',
-  btnDisabled: 'rgb(224,224,224)',
-  fontColor: 'white',
-  tintColor: '#a3a3a3',
-  primaryColor: colors.primary,
-  navBackground: colors.clear
-};

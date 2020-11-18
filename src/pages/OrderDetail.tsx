@@ -118,7 +118,7 @@ const OrderDetail = ({ navigation, route }: any, props: Props) => {
                 subTitle={isInProgress(orderData.status) ? accptItem : dateTime}
                 titleAlign={'left'}
                 onActionLeft={onBack}
-                onRightAction={onContact}
+                navigation={navigation}
                 showCall={true}
             />
             <Wrapper>
