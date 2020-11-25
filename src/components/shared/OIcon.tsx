@@ -11,7 +11,7 @@ const SImage = styled.Image`
     resize-mode: contain;
     tint-color: ${colors.primary};
 `
-interface Props {
+export interface OIconProps {
     src?: any,
     url?: string,
     dummy?: any,
@@ -23,7 +23,7 @@ interface Props {
     children?: any,
 }
 
-const OImage = (props: Props): React.ReactElement => {
+const OImage = (props: OIconProps): React.ReactElement => {
     return (
         <Wrapper style={{borderRadius: props.style?.borderRadius, overflow: 'hidden', marginHorizontal: props.style?.marginHorizontal}}>
             <SImage

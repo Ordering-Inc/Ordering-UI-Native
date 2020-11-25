@@ -1,29 +1,17 @@
+import { OIconProps } from './src/components/shared/OIcon';
 import * as React from 'react';
-import {
-    OText, 
-    OButton, 
-    OInput, 
-    OSegment, 
-    ODropDown, 
-    OIcon, 
-    OIconText, 
-    OCheckbox, 
-    OIconButton, 
-    OTextarea,
-    OToggle
-} from './src/components/shared'
 
-declare type OText = React.Component<{}>;
-declare type OButton = React.Component<{}>;
-declare type OInput = React.Component<{}>;
-declare type OSegment = React.Component<{}>;
-declare type OIcon = React.Component<{}>;
-declare type ODropDown = React.Component<{}>;
-declare type OIconText = React.Component<{}>;
-declare type OCheckbox = React.Component<{}>;
-declare type OIconButton = React.Component<{}>;
-declare type OTextarea = React.Component<{}>;
-declare type OToggle = React.Component<{}>;
+declare class OText extends React.Component<React.ReactElement> {}
+declare class OButton extends React.Component<React.ReactElement> {}
+declare class OInput extends React.Component<React.ReactElement> {}
+declare class OSegment extends React.Component<React.ReactElement> {}
+declare class OIcon extends React.Component<OIconProps> {}
+declare class ODropDown extends React.Component<React.ReactElement> {}
+declare class OIconText extends React.Component<React.ReactElement> {}
+declare class OCheckbox extends React.Component<React.ReactElement> {}
+declare class OIconButton extends React.Component<React.ReactElement> {}
+declare class OTextarea extends React.Component<React.ReactElement> {}
+declare class OToggle extends React.Component<React.ReactElement> {}
 
 export { 
     OText, 
