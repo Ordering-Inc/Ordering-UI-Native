@@ -3,7 +3,7 @@ import { TouchableOpacity } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../theme'
 
-interface Props {
+export interface ODropDownProps {
     items?: Array<string>,
     onSelect?: any,
     selectedIndex?: number,
@@ -66,7 +66,7 @@ const DropItems = styled.Text`
     margin-bottom: 2px;
 `
 
-const ODropDown = (props: Props) => {
+const ODropDown = (props: ODropDownProps) => {
 
     const [curIndex, onSelect] = React.useState(props.selectedIndex);
     const [items, getItems] = React.useState(props.items);

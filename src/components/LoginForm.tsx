@@ -9,7 +9,7 @@ import { OText, OButton, OInput } from './shared';
 import Spinner from 'react-native-loading-spinner-overlay'
 import { _setStoreData } from '../providers/StoreUtil';
 
-export interface ViewInterface {
+export interface LoginFormInterface {
     navigation?: any,
     onLogin?: any,
     title?: string,
@@ -34,7 +34,7 @@ export interface ViewInterface {
     forgotButtonText?: string
 }
 
-export const Wrapper = styled.View<ViewInterface>`
+export const Wrapper = styled.View<LoginFormInterface>`
     background-color: ${ props => props.backgroundColor };
     border: ${ props => props.border };
     border-radius: 20px;
@@ -42,7 +42,7 @@ export const Wrapper = styled.View<ViewInterface>`
     border-bottom-left-radius: 0;
 `
 
-const LoginForm = (props: ViewInterface) => {
+const LoginForm = (props: LoginFormInterface): React.ReactElement => {
 
     const ordering = ApiProvider();
     

@@ -9,7 +9,7 @@ const SText = styled.Text`
     font-size: 14px;
     flex-wrap: wrap;
 `
-interface Props {
+export interface OTextProps {
     color?: string,
     size?: number,
     weight?: any,
@@ -19,7 +19,7 @@ interface Props {
     hasBottom?: boolean,
 }
 
-const OText = (props: Props): React.ReactElement => {
+const OText = (props: OTextProps): React.ReactElement => {
     return (
         <SText
             style={{

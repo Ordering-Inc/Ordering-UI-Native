@@ -12,7 +12,7 @@ import * as React from 'react';
 import styled from 'styled-components/native';
 import { colors } from '../../theme';
 
-const StyledButton = styled.View<Props>`
+const StyledButton = styled.View`
   background-color: ${colors.primary};
   border-radius: 26px;
   border-width: 2px;
@@ -58,7 +58,7 @@ const EndImage = styled.Image`
   right: 20px;
 `;
 
-interface Props {
+export interface OButtonProps {
   testID?: string;
   isLoading?: boolean;
   isDisabled?: boolean;
@@ -79,7 +79,7 @@ interface Props {
   borderColor?: string;
 }
 
-const OButton = (props: Props): React.ReactElement => {
+const OButton = (props: OButtonProps): React.ReactElement => {
   if (props.isDisabled) {
     return (
       <View style={props.parentStyle}>

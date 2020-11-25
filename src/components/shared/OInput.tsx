@@ -20,7 +20,7 @@ const Input = styled.TextInput`
     font-family: 'Poppins-Regular';
 `
 
-interface Props {
+export interface OInputProps {
     bgColor?: string,
     borderColor?: string,
     isRequired?: boolean,
@@ -36,7 +36,7 @@ interface Props {
     onChange?: any
 }
 
-const OInput = (props: Props): React.ReactElement => {
+const OInput = (props: OInputProps): React.ReactElement => {
 
     return (
         <Wrapper

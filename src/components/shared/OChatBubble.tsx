@@ -1,8 +1,8 @@
-import * as React from 'react'
-import styled from 'styled-components/native'
-import { DIRECTION } from '../../config/constants'
-import { colors } from '../../theme'
-import OText from './OText'
+import * as React from 'react';
+import styled from 'styled-components/native';
+import { DIRECTION } from '../../config/constants';
+import { colors } from '../../theme';
+import OText from './OText';
 
 const Wrapper = styled.View`
     flex: 1;
@@ -14,7 +14,7 @@ const Wrapper = styled.View`
     margin-bottom: 14px;
 `
 
-interface Props {
+export interface ChatBubbleProps {
     side?: string,
     bgColor?: string,
     textColor?: string,
@@ -23,7 +23,7 @@ interface Props {
     data?: any
 }
 
-const OChatBubble = (props: Props) => {
+const OChatBubble = (props: ChatBubbleProps) => {
     return (
         <Wrapper style={
             props.side == DIRECTION.RIGHT 

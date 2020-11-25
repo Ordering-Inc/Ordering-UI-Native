@@ -21,11 +21,11 @@ const BtnDel = styled.TouchableOpacity`
     justify-content: center;
 `
 
-interface Props {
+export interface NumberKeyProps {
     onChangeValue: any
 }
 
-const NumberKey = (props : Props) => {
+const NumberKey = (props : NumberKeyProps) => {
 
     const onChange = (val: number) => {
         props.onChangeValue(val);

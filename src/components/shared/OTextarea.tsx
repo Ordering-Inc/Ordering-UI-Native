@@ -11,13 +11,13 @@ const Inner = styled.TextInput`
     height: 150px;
 `
 
-interface Props {
+export interface OTextAreaProps {
     lines?: number,
     value?: string,
     placeholder?: string
 }
 
-const OTextarea = (props: Props) => {
+const OTextarea = (props: OTextAreaProps) => {
     return (
         <Wrapper>
             <Inner

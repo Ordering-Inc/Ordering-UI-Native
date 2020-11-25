@@ -30,7 +30,7 @@ const Check = styled.View`
 const Title = styled.Text`
     font-family: 'Poppins-Regular';
 `
-interface Props {
+export interface OCheckboxProps {
     label?: string,
     checked?: boolean,
     onChange?: any,
@@ -39,7 +39,7 @@ interface Props {
     size?: number
 }
 
-const OCheckbox = (props: Props) => {
+const OCheckbox = (props: OCheckboxProps): React.ReactElement => {
     const [is_checked, onChanged] = React.useState(props.checked)
 
     const checkToggle = (state: boolean) => {

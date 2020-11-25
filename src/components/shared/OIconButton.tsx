@@ -31,7 +31,7 @@ const Title = styled.Text`
     margin-horizontal: 7px;
 `
 
-interface Props {
+export interface OIconButtonProps {
     icon?: any,
     title?: string,
     onClick?: any,
@@ -48,7 +48,7 @@ interface Props {
     textStyle?: TextStyle
 }
 
-const OIconButton = (props: Props) => {
+const OIconButton = (props: OIconButtonProps): React.ReactElement => {
     return (
         <>
         {!props.disabled ? (
