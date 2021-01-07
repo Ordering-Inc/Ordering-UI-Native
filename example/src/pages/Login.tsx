@@ -1,35 +1,33 @@
-import * as React from 'react';
-import { Platform, View, Text } from "react-native";
-import styled from 'styled-components/native'
-import { LoginForm } from '../components/LoginForm';
-import { colors } from '../theme';
+import React from 'react';
+import {Platform} from 'react-native';
+import styled from 'styled-components/native';
+import {LoginForm} from '../components/LoginForm';
+import {colors} from '../theme';
 
 const BgWrapper = styled.ImageBackground`
   flex: 1;
-`
+`;
 const LoginWrapper = styled.View`
   flex: 1;
   justify-content: flex-end;
   margin-bottom: 0;
-`
+`;
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
-`
+`;
 
-export const bgImage = require('../assets/images/home_bg.png');
-export const bdRadius = { topRight: '20px', topLeft: '20px', bottomRigt: '0px', bottomLeft: '0px'}
+const bgImage = require('../assets/images/home_bg.png');
 
-const Login = ({ navigation }: any) => {
-  const register = () => {
-    alert('This is test register button');
-  }
+export const Login = ({navigation}: any) => {
   const forgot = () => {
     navigation.navigate('Forgot');
-  }
+  };
 
   return (
-    <BgWrapper source={ bgImage }>
-      <KeyboardView enabled behavior={ Platform.OS === 'ios'? "padding" : "height"}>
+    <BgWrapper source={bgImage}>
+      <KeyboardView
+        enabled
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <LoginWrapper>
           <LoginForm
             navigation={navigation}
@@ -48,7 +46,7 @@ const Login = ({ navigation }: any) => {
         </LoginWrapper>
       </KeyboardView>
     </BgWrapper>
-  )
-}
+  );
+};
 
 export default Login;
