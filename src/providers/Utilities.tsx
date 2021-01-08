@@ -42,11 +42,7 @@ export const parsePrice = (number: number, currency?: string) => {
     return `${currency ? currency : DECIMAL.currency}${l}${DECIMAL.separator}${r == 0 ? '00' : r}`;
 }
 
-export const accessToken = async () => {
-    try {
-        const user = await _retrieveStoreData(STORAGE_KEY.USER);
-        return user ? JSON.parse(user).session.access_token : '';
-    } catch (err) {
-        return '';
-    }
+export const parseDateTime = (date_time_str: string) => {
+    var date = new Date(date_time_str);
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds}`;
 }

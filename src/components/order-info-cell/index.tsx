@@ -1,26 +1,8 @@
 import * as React from 'react'
-import styled from 'styled-components/native'
-import { colors } from '../theme'
-import { OText, OIconText, OIcon, OIconButton } from './shared'
-
-const KindItems = styled.View`
-    flex: 1;
-    padding-vertical: 10px;
-`
-const KInner = styled.View`
-    flex: 1;    
-    flex-direction: row;
-`
-const KInfoWrap = styled.View`
-    flex: 1;
-    padding-horizontal: 10px;
-`
-const KActions = styled.View`
-    flex: 1;
-    flex-direction: row;
-    align-items: center;
-    margin-top: 10px;
-`
+import { backgroundColors, borderColors } from '../../globalStyles'
+import { COMP_ICONS } from '../index.conf'
+import { OText, OIconText, OIcon, OIconButton } from '../shared'
+import { KActions, KindItems, KInfoWrap, KInner } from './styles'
 
 interface Props {
     title?: string,
@@ -33,7 +15,7 @@ interface Props {
     onCall?: any
 }
 
-const OInfoCell = (props: Props) => {
+const OrderInfoCell = (props: Props) => {
 
     return (
         <KindItems>
@@ -47,21 +29,21 @@ const OInfoCell = (props: Props) => {
                 <KInfoWrap>
                     <OText size={19} weight={'500'}>{props.name}</OText>
                     <OIconText 
-                        icon={require('../assets/icons/pin_outline.png')}
+                        icon={COMP_ICONS.pin_outline}
                         text={props.address} />
                     <KActions>
                         <OIconButton
-                            icon={require('../assets/icons/speech-bubble.png')}
+                            icon={COMP_ICONS.speech_bubble}
                             title={'Chat'}
-                            borderColor={colors.primary}
-                            bgColor={'white'}
+                            borderColor={borderColors.primary}
+                            bgColor={backgroundColors.light}
                             onClick={props.onChat}
                         />
                         <OIconButton
-                            icon={require('../assets/icons/phone.png')}
+                            icon={COMP_ICONS.phone}
                             title={'Call'}
-                            borderColor={colors.primary}
-                            bgColor={'white'}
+                            borderColor={borderColors.primary}
+                            bgColor={backgroundColors.light}
                             style={{marginHorizontal: 10}}
                             onClick={props.onCall}
                         />
@@ -72,8 +54,8 @@ const OInfoCell = (props: Props) => {
     )
 }
 
-OInfoCell.defaultProps = {
+OrderInfoCell.defaultProps = {
 
 }
 
-export default OInfoCell;
+export default OrderInfoCell;

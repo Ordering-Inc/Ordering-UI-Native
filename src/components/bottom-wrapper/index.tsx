@@ -1,18 +1,7 @@
 import * as React from 'react'
 import { ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import styled from 'styled-components/native'
-
-const Wrapper = styled.View`
-    border-top-right-radius: 25px;
-    border-top-left-radius: 25px;
-    box-shadow: 0 -1px 3px #00000010;
-    background-color: white;
-    margin-top: -20px;
-    min-height: 100px;
-    padding: 20px;
-    padding-bottom: 40px;
-`
+import { Wrapper } from './styles';
 
 interface Props {
     style?: ViewStyle,

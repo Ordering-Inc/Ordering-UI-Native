@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { ImageStyle } from 'react-native'
 import styled from 'styled-components/native'
-import { colors } from '../../theme'
+import { colors } from '../../globalStyles'
 
 const Wrapper = styled.View`
 

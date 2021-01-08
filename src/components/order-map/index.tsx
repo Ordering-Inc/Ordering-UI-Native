@@ -1,17 +1,13 @@
 import * as React from 'react'
 import { Platform, StyleSheet } from 'react-native'
 import MapView, { Region, PROVIDER_GOOGLE, Marker, LatLng } from 'react-native-maps'
-import styled from 'styled-components/native'
+import { MapWrapper } from './styles';
 
 export interface MapInterface {
     region?: Region,
     onChangeRegion?: any,
     markers: Array<{latlng: LatLng, image: any}>
 }
-
-const Wrapper = styled.View`
-    height: 100%;
-`
 
 const OrderMap = (props: MapInterface) => {
     const mapRef = React.useRef<MapView>(null);
@@ -29,14 +25,14 @@ const OrderMap = (props: MapInterface) => {
                             right: 50,
                             bottom: 300
                         },
-                        animated: true
+                        animated: false
                     });
-            },1000)
+            },500)
         }
-    }, [])
+    })
 
     return (
-        <Wrapper>
+        <MapWrapper>
             <MapView 
                 style={ style.map }
                 mapType={ Platform.OS == 'android' ? "none" : "standard" }
@@ -55,7 +51,7 @@ const OrderMap = (props: MapInterface) => {
                     ))
                 }
             </MapView>
-        </Wrapper>
+        </MapWrapper>
     )
 }
 

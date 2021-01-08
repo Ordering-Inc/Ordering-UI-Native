@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { ImageSourcePropType, ImageStyle, ViewStyle } from 'react-native'
+import { ImageSourcePropType, ImageStyle, TextInputProps, ViewStyle } from 'react-native'
 import styled from 'styled-components/native'
 import OIcon from './OIcon'
-import { colors } from '../../theme'
+import { color } from '../../globalStyles'
 
 const Wrapper = styled.View`
-    background-color: ${colors.backgroundLight};
+    background-color: ${color.backgroundLight};
     border-radius: 25px;
     border-width: 1px;
     padding-horizontal: 16px;
@@ -20,7 +20,8 @@ const Input = styled.TextInput`
     font-family: 'Poppins-Regular';
 `
 
-export interface OInputProps {
+interface Props {
+    default?: TextInputProps,
     bgColor?: string,
     borderColor?: string,
     isRequired?: boolean,
@@ -36,7 +37,7 @@ export interface OInputProps {
     onChange?: any
 }
 
-const OInput = (props: OInputProps): React.ReactElement => {
+const OInput = (props: Props): React.ReactElement => {
 
     return (
         <Wrapper
@@ -53,6 +54,7 @@ const OInput = (props: OInputProps): React.ReactElement => {
                 : null
             }
             <Input
+                {...props.default}
                 secureTextEntry={props.isSecured}
                 onChangeText={txt => props.onChange(txt)}
                 defaultValue={props.value}

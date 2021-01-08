@@ -1,31 +1,14 @@
 import * as React from 'react'
-import styled from 'styled-components/native'
-import { OIcon } from './shared'
-import OKeyButton from './shared/OKeyButton'
+import { COMP_ICONS } from '../index.conf'
+import { OIcon } from '../shared'
+import OKeyButton from '../shared/OKeyButton'
+import { BtnDel, KeyRow, KeyWrapper } from './styles'
 
-const KeyWrapper = styled.View`
-    background-color: #F0F0F0C2;
-    height: 280px;
-    padding: 7px;
-    margin-bottom: 64px;
-`
-const KeyRow = styled.View`
-    flex-direction: row;
-    justify-content: space-around;
-    margin-bottom: 7px;
-`
-const BtnDel = styled.TouchableOpacity`
-    flex: 0.32;
-    height: 50px;
-    align-items: center;
-    justify-content: center;
-`
-
-export interface NumberKeyProps {
+interface Props {
     onChangeValue: any
 }
 
-const NumberKey = (props : NumberKeyProps) => {
+const NumberKeyBoard = (props : Props) => {
 
     const onChange = (val: number) => {
         props.onChangeValue(val);
@@ -52,11 +35,11 @@ const NumberKey = (props : NumberKeyProps) => {
                 <OKeyButton style={{flex: 0.32, backgroundColor: 'transparent'}} />
                 <OKeyButton title={'0'} onClick={() => onChange(0)} style={{flex: 0.32}} />
                 <BtnDel onPress={() => onChange(-1)}>
-                    <OIcon src={require('../assets/icons/delete.png')} />
+                    <OIcon src={COMP_ICONS.delete} />
                 </BtnDel>
             </KeyRow>
         </KeyWrapper>
     )
 }
 
-export default NumberKey;
+export default NumberKeyBoard;
