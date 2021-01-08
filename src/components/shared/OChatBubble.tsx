@@ -1,10 +1,10 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
 import { DIRECTION } from '../../config/constants'
-import { colors } from '../../globalStyles'
+import { color } from '../../globalStyles'
 import OText from './OText'
 
-const Wrapper = styled.View`
+const Wrapper = styled.Viesw`
     flex: 1;
     border-radius: 35px;
     min-height: 50px;
@@ -27,11 +27,11 @@ const OChatBubble = (props: Props) => {
     return (
         <Wrapper style={
             props.side == DIRECTION.RIGHT 
-                ? {borderBottomRightRadius: 0, backgroundColor: props.bgColor ? props.bgColor : colors.primary, alignSelf: 'flex-end'} 
-                : {borderBottomLeftRadius: 0, backgroundColor: props.bgColor ? props.bgColor : colors.backgroundGray, alignSelf: 'flex-start'}
+                ? {borderBottomRightRadius: 0, backgroundColor: props.bgColor ? props.bgColor : color.primary, alignSelf: 'flex-end'} 
+                : {borderBottomLeftRadius: 0, backgroundColor: props.bgColor ? props.bgColor : color.backgroundGray, alignSelf: 'flex-start'}
             }>
-            <OText color={props.textColor ? props.textColor : props.side == DIRECTION.RIGHT ? colors.white : 'black'}>{props.contents}</OText>
-            <OText color={props.textColor ? props.textColor : props.side == DIRECTION.RIGHT ? colors.white : 'black'} style={{textAlign: 'right'}} size={9}>{props.datetime}</OText>
+            <OText color={props.textColor ? props.textColor : props.side == DIRECTION.RIGHT ? color.white : 'black'}>{props.contents}</OText>
+            <OText color={props.textColor ? props.textColor : props.side == DIRECTION.RIGHT ? color.white : 'black'} style={{textAlign: 'right'}} size={9}>{props.datetime}</OText>
         </Wrapper>
     )
 }

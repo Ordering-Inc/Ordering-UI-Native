@@ -21,7 +21,10 @@ const color  = {
   mediumGray: '#869ab7',
   
   buttonFont: 'black',
-  buttonFontDisabled: 'black'
+  buttonFontDisabled: 'black',
+
+  backgroundGray: 'gray',
+  backgroundLight:'white'
 };
 
 const backgroundColors = {
@@ -70,4 +73,4 @@ const labelTheme = {
   error: color.error,
 }
 
-export { backgroundColors, borderColors, buttonTheme, labelTheme }
+export { backgroundColors, borderColors, buttonTheme, labelTheme, color }
