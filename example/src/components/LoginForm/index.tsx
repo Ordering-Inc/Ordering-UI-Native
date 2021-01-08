@@ -1,25 +1,16 @@
 import React, {useEffect} from 'react';
 import Spinner from 'react-native-loading-spinner-overlay';
-// @ts-ignore
 import {LoginForm as LoginFormController} from 'ordering-components/Native';
-// @ts-ignore
-import styled from 'styled-components/native';
 
-import {IMAGES, STORAGE_KEY} from '../config/constants';
-import ApiProvider from '../providers/ApiProvider';
-import {ToastType, useToast} from '../providers/ToastProvider';
-import {_setStoreData} from '../providers/StoreUtil';
-import {colors} from '../theme';
-import {OText, OButton, OInput} from './shared';
-import {ViewInterface} from '../types';
+import {Wrapper} from './styles';
 
-export const Wrapper = styled.View<ViewInterface>`
-  background-color: ${(props: any) => props.backgroundColor};
-  border: ${(props: any) => props.border};
-  border-radius: 20px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-`;
+import {IMAGES, STORAGE_KEY} from '../../config/constants';
+import ApiProvider from '../../providers/ApiProvider';
+import {ToastType, useToast} from '../../providers/ToastProvider';
+import {_setStoreData} from '../../providers/StoreUtil';
+import {colors} from '../../theme';
+import {OText, OButton, OInput} from '../shared';
+import {ViewInterface} from '../../types';
 
 const LoginFormUI = (props: ViewInterface) => {
   const ordering = ApiProvider();
@@ -55,8 +46,7 @@ const LoginFormUI = (props: ViewInterface) => {
             _setStoreData(STORAGE_KEY.USER, resp.result);
             props.navigation.navigate('Home');
           } else {
-            // don't have permission
-            alert("You don't have permission to use app.");
+            showToast(ToastType.Error, "You don't have permission to use app.");
           }
         } else {
           setLoading(false);
@@ -74,11 +64,15 @@ const LoginFormUI = (props: ViewInterface) => {
 
   let title, sub_title, reg_button;
   if (props.title) {
-    title = <OText style={{fontSize: 24, color: 'white'}}>{props.title}</OText>;
+    title = (
+      <OText size={24} color="white">
+        {props.title}
+      </OText>
+    );
   }
   if (props.subTitle) {
     sub_title = (
-      <OText style={{fontSize: 16, color: 'white', marginBottom: 18}}>
+      <OText size={16} color="white" mBottom={18}>
         {props.subTitle}
       </OText>
     );
