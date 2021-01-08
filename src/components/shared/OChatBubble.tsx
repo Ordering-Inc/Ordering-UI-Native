@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
 import { DIRECTION } from '../../config/constants'
-import { colors } from '../../theme'
+import { colors } from '../../globalStyles'
 import OText from './OText'
 
 const Wrapper = styled.View`

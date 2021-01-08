@@ -1,22 +1,9 @@
 import * as React from 'react'
-import styled from 'styled-components/native'
-import { parsePrice } from '../providers/Utilities'
-import { colors } from '../theme'
-import { OText, OIcon } from './shared'
+import { parsePrice } from '../../providers/Utilities'
+import {  } from '../../globalStyles'
+import { OText, OIcon } from '../shared'
+import { PInner, Price, Wrapper } from './styles'
 
-const Wrapper = styled.View`
-    flex: 1;
-    padding-vertical: 10px;
-    flex-direction: row;
-    align-items: center;
-`
-const PInner = styled.View`
-    flex: 1;
-    flex-grow: 1;
-`
-const Price = styled.View`
-    align-items: flex-start;
-`
 interface Props {
     data?: any,
 
@@ -24,7 +11,7 @@ interface Props {
     onCall?: any
 }
 
-const OProductCell = (props: Props) => {
+const OrderProductCell = (props: Props) => {
 
     const getExtras = (options: Array<any>) : string => {
         var str = '';
@@ -57,8 +44,8 @@ const OProductCell = (props: Props) => {
     )
 }
 
-OProductCell.defaultProps = {
+OrderProductCell.defaultProps = {
 
 }
 
-export default OProductCell;
+export default OrderProductCell;

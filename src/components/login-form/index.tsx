@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { ViewStyle } from 'react-native';
 import styled from 'styled-components/native';
-import { IMAGES, STORAGE_KEY } from '../config/constants';
-import ApiProvider from '../providers/ApiProvider';
-import { ToastType, useToast } from '../providers/ToastProvider';
-import { colors } from  '../theme';
-import { OText, OButton, OInput } from './shared';
+import { IMAGES, STORAGE_KEY } from '../../config/constants';
+import ApiProvider from '../../providers/ApiProvider';
+import { ToastType, useToast } from '../../providers/ToastProvider';
+import { buttonTheme } from  '../../globalStyles';
+import { OText, OButton, OInput } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay'
-import { _setStoreData } from '../providers/StoreUtil';
+import { _setStoreData } from '../../providers/StoreUtil';
+import { AuthContext, AuthContextProps } from '../../contexts/AuthContext';
+import { Wrapper } from './styles';
 
 export interface ViewInterface {
     navigation?: any,
-    onLogin?: any,
     title?: string,
     subTitle?: string,
     backgroundColor?: string,
@@ -19,6 +20,8 @@ export interface ViewInterface {
     borderRadius?: any,
     border?: string,
     placeHolderColor?: string,
+
+    isRegister?: boolean,
     buttonBackground?: string,
     inputMargin?: string,
     loginButtonText?: string,
@@ -29,22 +32,13 @@ export interface ViewInterface {
     registerButtonBackground?: string,
     registerButtonBorderColor?: string,
     loginButtonBorderColor?: string,
-    onRegister?: any,
-    onForgot?: any,
     forgotButtonText?: string
 }
 
-export const Wrapper = styled.View<ViewInterface>`
-    background-color: ${ props => props.backgroundColor };
-    border: ${ props => props.border };
-    border-radius: 20px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-`
-
 const LoginForm = (props: ViewInterface) => {
 
-    const ordering = ApiProvider();
+    const { signIn } = React.useContext(AuthContext) as AuthContextProps;
+    const api = new ApiProvider();
     
     const { showToast } = useToast();
 
@@ -67,34 +61,43 @@ const LoginForm = (props: ViewInterface) => {
             return
         }
         setLoading(true)
-        ordering.users().auth({email: email, password: password})
-        .then((res: any) => {
-            console.log(res.response.data)
-            let resp = res.response.data;
-            if (!resp.error) {
-                setLoading(false)
-                if (resp.result && resp.result.available && resp.result.level == 4) {
-                    _setStoreData(STORAGE_KEY.USER, resp.result);
-                    props.navigation.navigate('Home');
+        api.login({email: email, password: password})
+            .then((res: any) => {
+                console.log(res.response.data)
+                let resp = res.response.data;
+                if (!resp.error) {
+                    setLoading(false)
+                    if (resp.result && resp.result.level == 4) {
+                        _setStoreData(STORAGE_KEY.USER, resp.result);
+                        const token = resp.result.session ? resp.result.session.access_token : null;
+                        signIn(token);
+                    } else {
+                        // don't have permission
+                        showToast(ToastType.Error, 'You don\'t have permission to use app.')
+                    }
                 } else {
-                    // don't have permission
-                    alert('You don\'t have permission to use app.');
+                    setLoading(false)
+                    var err = ''
+                    resp.result.map((e: string, index: number) => {
+                        err += e + ((index < resp.result.length - 1) ? '\n' : '');
+                    })
+                    showToast(ToastType.Error, err)
                 }
-            } else {
+            })
+            .catch(err => {
                 setLoading(false)
-                var err = ''
-                resp.result.map((e: string, index: number) => {
-                    err += e + ((index < resp.result.length - 1) ? '\n' : '');
-                })
-                showToast(ToastType.Error, err)
-            }
-        })
-        .catch(err => {
-            setLoading(false)
-            console.log(err)
-        });
+                console.log(err)
+            });
+    }
+
+    const onForgot = () => {
+        props.navigation.navigate('Forgot');
     }
     
+    const onRegister = () => {
+        
+    }
+
     let title, sub_title, reg_button
     if (props.title) {
         title = <OText style={{fontSize: 24, color: 'white'}}>{props.title}</OText>
@@ -102,24 +105,25 @@ const LoginForm = (props: ViewInterface) => {
     if (props.subTitle) {
         sub_title = <OText style={{fontSize: 16, color: 'white', marginBottom: 18}}>{ props.subTitle }</OText>
     }
-    if (props.onRegister) {
+    if (props.isRegister) {
         reg_button = (
             <OButton 
-                onClick={props.onRegister}
+                onClick={onRegister}
                 text={props.registerButtonText}
                 bgColor={props.registerButtonBackground}
                 borderColor={props.registerButtonBorderColor}
-                textStyle={{color: 'white'}}
+                textStyle={{color: buttonTheme.fontColor}}
                 style={{marginBottom: 15}}
             />
         )
     }
     return (
         <Wrapper 
-            backgroundColor={props.backgroundColor} 
-            borderRadius={ props.borderRadius || '0px' }
-            style={props.wrapperStyle}
-            border={ props.border }>
+            style={{
+                ...props.wrapperStyle, 
+                backgroundColor: props.backgroundColor,
+                borderRadius: props.borderRadius || 0
+                }}>
             <Spinner 
                 visible={is_loading}
             />
@@ -145,16 +149,16 @@ const LoginForm = (props: ViewInterface) => {
                 text={props.loginButtonText}
                 bgColor={props.loginButtonBackground}
                 borderColor={props.loginButtonBackground}
-                textStyle={{color: 'white'}}
+                textStyle={{color: buttonTheme.fontColor}}
                 style={{marginBottom: 14}}
                 />
             { reg_button }
             <OButton 
-                onClick={props.onForgot}
+                onClick={onForgot}
                 text={props.forgotButtonText}
-                bgColor={colors.clear}
-                borderColor={colors.clear}
-                textStyle={{color: 'white'}}
+                bgColor={buttonTheme.backgroundClear}
+                borderColor={buttonTheme.backgroundClear}
+                textStyle={{color: buttonTheme.fontColor}}
                 imgRightSrc={null}
             />
         </Wrapper>

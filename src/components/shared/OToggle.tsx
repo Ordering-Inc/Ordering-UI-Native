@@ -29,6 +29,8 @@ interface propTypes {
 };
 
 const OToggleSwitch = (props: propTypes) => {
+    const { onToggle, disabled, labelStyle, label, icon } = props;
+    const [is_on, onChange] = React.useState(props.isOn)
 
     const calculateDimensions = (size: string) => {
         switch (size) {
@@ -68,9 +70,9 @@ const OToggleSwitch = (props: propTypes) => {
             width: dimensions.width,
             borderRadius: 20,
             padding: dimensions.padding,
-            backgroundColor: props.isOn ? props.onColor : props.offColor
+            backgroundColor: is_on ? props.onColor : props.offColor
         },
-        props.isOn ? props.trackOnStyle : props.trackOffStyle
+        is_on ? props.trackOnStyle : props.trackOffStyle
     ];
 
     const createInsideCircleStyle = () => [
@@ -94,13 +96,10 @@ const OToggleSwitch = (props: propTypes) => {
             shadowRadius: 2.5,
             elevation: 1.5
         },
-        props.isOn ? props.thumbOnStyle : props.thumbOffStyle
+        is_on ? props.thumbOnStyle : props.thumbOffStyle
     ];
 
-
-    const { isOn, onToggle, disabled, labelStyle, label, icon } = props;
-
-    const toValue = isOn
+    const toValue = is_on
         ? dimensions.width - dimensions.translateX
         : 0;
 
@@ -118,7 +117,7 @@ const OToggleSwitch = (props: propTypes) => {
             <TouchableOpacity
                 style={createToggleSwitchStyle()}
                 activeOpacity={0.8}
-                onPress={() => (disabled ? null : onToggle(!isOn))}
+                onPress={() => (disabled ? null : onToggle(!is_on))}
             >
                 <Animated.View style={createInsideCircleStyle()}>
                     {icon}
