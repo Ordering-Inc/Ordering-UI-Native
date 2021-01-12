@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {LoginForm as LoginFormController} from 'ordering-components/Native';
+import {LoginForm as LoginFormController} from 'ordering-components/native';
 
 import {Wrapper} from './styles';
 

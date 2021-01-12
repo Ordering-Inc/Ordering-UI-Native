@@ -20,7 +20,7 @@
     "@types/styled-components": "^5.1.3",
     "axios": "^0.21.0",
     "ordering-api-sdk": "github:sergioaok/ordering-api-sdk",
-    "ordering-components": "sergioaok/ordering-components#development",
+    "ordering-components": "github:sergioaok/ordering-components#test-reactnative",
     "patch-package": "^6.2.2",
     "postinstall-postinstall": "^2.1.0",
     "prop-types": "^15.7.2",

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Platform} from 'react-native';
-import {useLanguage} from 'ordering-components/Native';
+import {useLanguage} from 'ordering-components/native';
 import styled from 'styled-components/native';
 import {LoginForm} from '../components/LoginForm';
 import {colors} from '../theme';
