@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {LoginForm as LoginFormController} from 'ordering-components/native';
 
@@ -10,33 +10,23 @@ import {ToastType, useToast} from '../../providers/ToastProvider';
 import {_setStoreData} from '../../providers/StoreUtil';
 import {colors} from '../../theme';
 import {OText, OButton, OInput} from '../shared';
-import {ViewInterface} from '../../types';
 
-const LoginFormUI = (props: ViewInterface) => {
+const LoginFormUI = (props: any) => {
+  const {credentials} = props
   const ordering = ApiProvider();
   const {showToast} = useToast();
-  const auth = {
-    email: '',
-    password: '',
-  };
 
-  const [email, onChangEmail] = React.useState(auth.email);
-  const [password, onChangPassword] = React.useState(auth.password);
   const [is_loading, setLoading] = React.useState(false);
 
-  useEffect(() => {
-    onChangEmail(email.toLowerCase().trim());
-  }, [email]);
-
   const onLogin = () => {
-    if (email.length === 0 || password.length === 0) {
+    if (credentials.email.length === 0 || credentials.password.length === 0) {
       showToast(ToastType.Info, 'Email and Password fields are required.');
       return;
     }
     setLoading(true);
     ordering
       .users()
-      .auth({email: email, password: password})
+      .auth({email: credentials.email, password: credentials.password})
       .then((res: any) => {
         console.log(res.response.data);
         let resp = res.response.data;
@@ -100,18 +90,20 @@ const LoginFormUI = (props: ViewInterface) => {
       {sub_title}
       <OInput
         placeholder={'Email'}
+        name='email'
         style={{marginBottom: 10}}
         icon={IMAGES.email}
-        value={email}
-        onChange={(e: any) => onChangEmail(e)}
+        value={credentials.email}
+        onChange={props.hanldeChangeInput}
       />
       <OInput
         isSecured={true}
         placeholder={'Password'}
+        name='password'
         style={{marginBottom: 25}}
         icon={IMAGES.lock}
-        value={password}
-        onChange={(p: any) => onChangPassword(p)}
+        value={credentials.password}
+        onChange={props.hanldeChangeInput}
       />
       <OButton
         onClick={onLogin}
