@@ -1,5 +1,13 @@
 import {ViewStyle} from 'react-native';
 
+export interface ProfileParams {
+  isEdit?: boolean;
+  formState?: any;
+  toggleIsEdit?: any;
+  cleanFormState?: any;
+  setFormState?: any;
+  handleChangeInput?: any;
+}
 export interface ViewInterface {
   navigation?: any;
   onLogin?: any;

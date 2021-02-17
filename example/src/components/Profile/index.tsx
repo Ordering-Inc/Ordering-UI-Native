@@ -12,7 +12,7 @@ import {colors} from '../../theme';
 import ToggleSwitch from 'toggle-react-native';
 import {ToastType, useToast} from '../../providers/ToastProvider';
 import ApiProvider from '../../providers/ApiProvider';
-
+import {ProfileParams} from '../../types'
 import {
   ODropDown,
   OIcon,
@@ -30,14 +30,14 @@ import {
   EditButton,
 } from './styles';
 
-const ProfileUI = (props: any) => {
+const ProfileUI = (props: ProfileParams) => {
   const {
-    handleChangeInput,
     isEdit,
-    toggleIsEdit,
     formState,
+    toggleIsEdit,
     cleanFormState,
     setFormState,
+    handleChangeInput,
   } = props;
 
   const [{user}] = useSession();
@@ -48,16 +48,19 @@ const ProfileUI = (props: any) => {
   const [canPush, changeCanPush] = React.useState(true);
 
   const handleImagePicker = () => {
-    launchImageLibrary({mediaType: 'photo',includeBase64: true}, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
-        showToast(ToastType.Error, response.errorMessage);
-      } else {
-        handleUpdateUser(response.uri)
-      }
-    });
+    launchImageLibrary(
+      {mediaType: 'photo', includeBase64: true},
+      (response) => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.errorMessage) {
+          console.log('ImagePicker Error: ', response.errorMessage);
+          showToast(ToastType.Error, response.errorMessage);
+        } else {
+          handleUpdateUser(response.uri);
+        }
+      },
+    );
   };
 
   const handleUpdateUser = async (image?: any) => {
