@@ -32,4 +32,4 @@ const OKeyButton = (props: Props) => {
     )
 }
 
-export default OKeyButton;
+export default OKeyButton

@@ -34,6 +34,7 @@ interface Props {
   iconStyle?: ImageStyle;
   value?: string;
   onChange?: any;
+  name?: string;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -54,8 +55,9 @@ const OInput = (props: Props): React.ReactElement => {
         />
       ) : null}
       <Input
+        name={props.name}
         secureTextEntry={props.isSecured}
-        onChangeText={(txt) => props.onChange(txt)}
+        onChangeText={(txt: any) => props.name ? props.onChange({target: {name: props.name, value: txt}}) : props.onChange(txt)}
         defaultValue={props.value}
         placeholder={props.placeholder ? props.placeholder : ''}
       />

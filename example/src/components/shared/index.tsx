@@ -9,6 +9,7 @@ import OCheckbox from './OCheckbox'
 import OIconButton from './OIconButton'
 import OTextarea from './OTextarea'
 import OToggle from './OToggle'
+import OKeyButton from './OKeyButton'
 
 export { 
     OText, 
@@ -21,5 +22,6 @@ export {
     OCheckbox, 
     OIconButton, 
     OTextarea,
-    OToggle
+    OToggle,
+    OKeyButton
 }

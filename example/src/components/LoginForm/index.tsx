@@ -57,8 +57,9 @@ const LoginFormUI = (props: ViewInterface) => {
           showToast(ToastType.Error, err);
         }
       })
-      .catch(() => {
+      .catch((error) => {
         setLoading(false);
+        showToast(ToastType.Error,error.message)
       });
   };
 
