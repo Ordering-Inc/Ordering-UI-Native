@@ -25,6 +25,11 @@ const RootNavigator = () => {
         component={Forgot}
         options={{headerShown: false}}
       />
+      <Stack.Screen 
+        name='MyAccount'
+        component={DrawNavigator}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };

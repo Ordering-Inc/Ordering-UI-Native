@@ -44,7 +44,7 @@ const LoginFormUI = (props: ViewInterface) => {
           setLoading(false);
           if (resp.result && resp.result.available && resp.result.level === 4) {
             _setStoreData(STORAGE_KEY.USER, resp.result);
-            props.navigation.navigate('Home');
+            props.navigation.navigate('MyAccount');
           } else {
             showToast(ToastType.Error, "You don't have permission to use app.");
           }
