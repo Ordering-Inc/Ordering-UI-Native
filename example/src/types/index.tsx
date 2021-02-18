@@ -1,5 +1,17 @@
 import {ViewStyle} from 'react-native';
 
+export interface LoginParams {
+  formState?: any;
+  useLoginByEmail?: boolean;
+  useLoginByCellphone?: boolean;
+  loginTab?: string;
+  handleChangeTab?: any;
+  loginButtonText?: string;
+  onNavigationRedirect?: any;
+  registerButtonText?: string;
+  forgotButtonText?: string;
+  handleButtonLoginClick?: any;
+}
 export interface ViewInterface {
   navigation?: any;
   onLogin?: any;
