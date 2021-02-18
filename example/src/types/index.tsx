@@ -12,6 +12,10 @@ export interface LoginParams {
   forgotButtonText?: string;
   handleButtonLoginClick?: any;
 }
+
+export interface BusinessControllerParameters {
+  business?: any
+}
 export interface ViewInterface {
   navigation?: any;
   onLogin?: any;
