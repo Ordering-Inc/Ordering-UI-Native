@@ -1,138 +1,236 @@
 import React, {useEffect} from 'react';
+import { Pressable, StyleSheet, ScrollView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {LoginForm as LoginFormController} from 'ordering-components/native';
+import { useForm, Controller } from 'react-hook-form';
 
-import {Wrapper} from './styles';
+import {
+  LoginForm as LoginFormController,
+  useLanguage,
+  useConfig
+} from 'ordering-components/native';
 
-import {IMAGES, STORAGE_KEY} from '../../config/constants';
-import ApiProvider from '../../providers/ApiProvider';
-import {ToastType, useToast} from '../../providers/ToastProvider';
-import {_setStoreData} from '../../providers/StoreUtil';
-import {colors} from '../../theme';
-import {OText, OButton, OInput} from '../shared';
-import {ViewInterface} from '../../types';
+import {
+  Container,
+  ButtonsSection,
+  Wrapper,
+  LoginWith,
+  FormSide,
+  FormInput,
+  OTabs,
+  OTab,
+  SocialButtons
+} from './styles';
 
-const LoginFormUI = (props: ViewInterface) => {
-  const ordering = ApiProvider();
-  const {showToast} = useToast();
-  const auth = {
-    email: '',
-    password: '',
-  };
+import { IMAGES } from '../../config/constants';
+import { ToastType, useToast } from '../../providers/ToastProvider';
+import NavBar from '../NavBar'
 
-  const [email, onChangEmail] = React.useState(auth.email);
-  const [password, onChangPassword] = React.useState(auth.password);
-  const [is_loading, setLoading] = React.useState(false);
+import { OText, OButton, OInput } from '../shared';
+import { LoginParams } from '../../types';
+import { colors } from '../../theme'
+
+const LoginFormUI = (props: LoginParams) => {
+  const {
+    loginTab,
+    formState,
+    useLoginByEmail,
+    useLoginByCellphone,
+    loginButtonText,
+    forgotButtonText,
+    registerButtonText,
+    handleChangeTab,
+    handleButtonLoginClick,
+    onNavigationRedirect
+  } = props
+
+  const { showToast } = useToast();
+  const [, t] = useLanguage()
+  const [{ configs }] = useConfig()
+  const { control, handleSubmit, errors } = useForm();
+
+  const onSubmit = (values: any) => handleButtonLoginClick(values);
+
+  const goToBack = () => onNavigationRedirect('Home')
 
   useEffect(() => {
-    onChangEmail(email.toLowerCase().trim());
-  }, [email]);
-
-  const onLogin = () => {
-    if (email.length === 0 || password.length === 0) {
-      showToast(ToastType.Info, 'Email and Password fields are required.');
-      return;
+    if (!formState.loading && formState.result?.error) {
+      showToast(ToastType.Error, formState.result?.result[0])
     }
-    setLoading(true);
-    ordering
-      .users()
-      .auth({email: email, password: password})
-      .then((res: any) => {
-        console.log(res.response.data);
-        let resp = res.response.data;
-        if (!resp.error) {
-          setLoading(false);
-          if (resp.result && resp.result.available && resp.result.level === 4) {
-            _setStoreData(STORAGE_KEY.USER, resp.result);
-            props.navigation.navigate('MyAccount');
-          } else {
-            showToast(ToastType.Error, "You don't have permission to use app.");
-          }
-        } else {
-          setLoading(false);
-          var err = '';
-          resp.result.map((e: string, index: number) => {
-            err += e + (index < resp.result.length - 1 ? '\n' : '');
-          });
-          showToast(ToastType.Error, err);
-        }
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-  };
+  }, [formState])
 
-  let title, sub_title, reg_button;
-  if (props.title) {
-    title = (
-      <OText size={24} color="white">
-        {props.title}
-      </OText>
-    );
-  }
-  if (props.subTitle) {
-    sub_title = (
-      <OText size={16} color="white" mBottom={18}>
-        {props.subTitle}
-      </OText>
-    );
-  }
-  if (props.onRegister) {
-    reg_button = (
-      <OButton
-        onClick={props.onRegister}
-        text={props.registerButtonText}
-        bgColor={props.registerButtonBackground}
-        borderColor={props.registerButtonBorderColor}
-        textStyle={{color: 'white'}}
-        style={{marginBottom: 15}}
-      />
-    );
-  }
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      // Convert all errors in one string to show in toast provider
+      const list = Object.values(errors)
+      let stringError = ''
+      list.map((item: any, i: number) => {
+        stringError += (i + 1) === list.length ? `- ${item.message}` : `- ${item.message}\n`
+      })
+      showToast(ToastType.Error, stringError)
+    }
+  }, [errors])
+
   return (
-    <Wrapper
-      backgroundColor={props.backgroundColor}
-      borderRadius={props.borderRadius || '0px'}
-      style={props.wrapperStyle}
-      border={props.border}>
-      <Spinner visible={is_loading} />
-      {title}
-      {sub_title}
-      <OInput
-        placeholder={'Email'}
-        style={{marginBottom: 10}}
-        icon={IMAGES.email}
-        value={email}
-        onChange={(e: any) => onChangEmail(e)}
-      />
-      <OInput
-        isSecured={true}
-        placeholder={'Password'}
-        style={{marginBottom: 25}}
-        icon={IMAGES.lock}
-        value={password}
-        onChange={(p: any) => onChangPassword(p)}
-      />
-      <OButton
-        onClick={onLogin}
-        text={props.loginButtonText}
-        bgColor={props.loginButtonBackground}
-        borderColor={props.loginButtonBackground}
-        textStyle={{color: 'white'}}
-        style={{marginBottom: 14}}
-      />
-      {reg_button}
-      <OButton
-        onClick={props.onForgot}
-        text={props.forgotButtonText}
-        bgColor={colors.clear}
-        borderColor={colors.clear}
-        textStyle={{color: 'white'}}
-        imgRightSrc={null}
-      />
-    </Wrapper>
+    <Container style={{ backgroundColor: '#FFF', height: '100%' }}>
+      <ScrollView>
+        <Wrapper>
+          <NavBar
+            title={t('LOGIN', 'Login')}
+            titleAlign={'center'}
+            onActionLeft={goToBack}
+            showCall={false}
+            btnStyle={{ paddingLeft: 0 }}
+          />
+          <FormSide>
+            {useLoginByEmail && useLoginByCellphone && (
+              <LoginWith>
+                <OTabs>
+                  {useLoginByEmail && (
+                    <Pressable onPress={() => handleChangeTab('email')}>
+                      <OTab>
+                        <OText size={18} color={loginTab === 'email' ? colors.primary : colors.disabled}>
+                          {t('LOGIN_BY_EMAIL', 'Login by Email')}
+                        </OText>
+                      </OTab>
+                    </Pressable>
+                  )}
+                  {useLoginByCellphone && (
+                    <Pressable onPress={() => handleChangeTab('cellphone')}>
+                      <OTab>
+                        <OText size={18} color={loginTab === 'cellphone' ? colors.primary : colors.disabled}>
+                          {t('LOGIN_BY_CELLPHONE', 'Login by Cellphone')}
+                        </OText>
+                      </OTab>
+                    </Pressable>
+                  )}
+                </OTabs>
+              </LoginWith>
+            )}
+
+            {(useLoginByCellphone || useLoginByEmail) && (
+              <FormInput>
+                {useLoginByEmail && loginTab === 'email' && (
+                  <Controller
+                    control={control}
+                    render={({ onChange, value }) => (
+                      <OInput
+                        placeholder={'Email'}
+                        style={{marginBottom: 10}}
+                        icon={IMAGES.email}
+                        value={value}
+                        onChange={(val: any) => onChange(val)}
+                      />
+                    )}
+                    name="email"
+                    rules={{
+                      required: t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email')),
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
+                      }
+                    }}
+                    defaultValue=""
+                    />
+                )}
+
+                {useLoginByCellphone && loginTab === 'cellphone' && (
+                  <Controller
+                    control={control}
+                    render={({ onChange, value }) => (
+                      <OInput
+                        type='number-pad'
+                        isSecured={true}
+                        placeholder={'Cellphone'}
+                        style={{marginBottom: 25}}
+                        icon={IMAGES.phone}
+                        value={value}
+                        onChange={(val: any) => onChange(val)}
+                      />
+                    )}
+                    name="cellphone"
+                    rules={{ required: t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone')) }}
+                    defaultValue=""
+                  />
+                )}
+
+                <Controller
+                  control={control}
+                  render={({ onChange, value }) => (
+                    <OInput
+                      isSecured={true}
+                      placeholder={'Password'}
+                      style={{marginBottom: 25}}
+                      icon={IMAGES.lock}
+                      value={value}
+                      onChange={(val: any) => onChange(val)}
+                    />
+                  )}
+                  name="password"
+                  rules={{ required: t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'Password')) }}
+                  defaultValue=""
+                />
+
+                <OButton
+                  onClick={handleSubmit(onSubmit)}
+                  text={loginButtonText}
+                  bgColor={colors.primary}
+                  borderColor={colors.primary}
+                  textStyle={{color: 'white'}}
+                  imgRightSrc={null}
+                />
+              </FormInput>
+            )}
+
+            {onNavigationRedirect && forgotButtonText && (
+              <Pressable onPress={() => onNavigationRedirect('Forgot')}>
+                <OText size={20} mBottom={18}>
+                  {forgotButtonText}
+                </OText>
+              </Pressable>
+            )}
+
+            <ButtonsSection>
+              <OText size={18} mBottom={30} color={colors.disabled}>
+                {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
+              </OText>
+
+              {/* {configs && Object.keys(configs).length > 0 && (
+                <SocialButtons>
+                  {(configs?.facebook_login?.value === 'true' ||
+                    configs?.facebook_login?.value === '1') &&
+                    configs?.facebook_id?.value &&
+                  (
+                    <OText size={18} mBottom={30} color={colors.disabled}>
+                      facebook login button
+                    </OText>
+                  )}
+                </SocialButtons>
+              )} */}
+
+              {onNavigationRedirect && registerButtonText && (
+                <OButton
+                  onClick={() => onNavigationRedirect('Signup')}
+                  text={registerButtonText}
+                  style={loginStyle.btnOutline}
+                  borderColor={colors.primary}
+                  imgRightSrc={null}
+                />
+              )}
+            </ButtonsSection>
+          </FormSide>
+          <Spinner visible={formState.loading} />
+        </Wrapper>
+      </ScrollView>
+    </Container>
   );
 };
+
+const loginStyle = StyleSheet.create({
+  btnOutline: {
+    backgroundColor: '#FFF',
+    color: colors.primary
+  }
+});
 
 export const LoginForm = (props: any) => {
   const loginProps = {

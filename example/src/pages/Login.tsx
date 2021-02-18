@@ -1,48 +1,52 @@
 import React from 'react';
 import {Platform} from 'react-native';
 import styled from 'styled-components/native';
-import {LoginForm} from '../components/LoginForm';
-import {colors} from '../theme';
+import { LoginForm } from '../components/LoginForm';
+import { colors } from '../theme';
+
+import { useLanguage } from 'ordering-components/native';
 
 const BgWrapper = styled.ImageBackground`
   flex: 1;
 `;
 const LoginWrapper = styled.View`
   flex: 1;
-  justify-content: flex-end;
   margin-bottom: 0;
 `;
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
 `;
 
-const bgImage = require('../assets/images/home_bg.png');
-
 export const Login = ({navigation}: any) => {
-  const forgot = () => {
-    navigation.navigate('Forgot');
-  };
+  const [, t] = useLanguage()
+
+  const loginProps = {
+    navigation,
+    useLoginByCellphone: true,
+    loginButtonText: t('LOGIN', 'Login'),
+    loginButtonBackground: colors.primary,
+    forgotButtonText: t('FORGOT_YOUR_PASSWORD', 'Forgot your password?'),
+    registerButtonText: t('SIGN_UP', 'Sign up'),
+    onNavigationRedirect: (page: string) => {
+      if (!page) return
+      navigation.navigate(page);
+    },
+    handleSuccessLogin: (user: any) => {
+      if (user?.id) {
+        navigation.navigate('Home');
+      }
+    }
+  }
+
 
   return (
-    <BgWrapper source={bgImage}>
+    <BgWrapper>
       <KeyboardView
         enabled
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
         <LoginWrapper>
-          <LoginForm
-            navigation={navigation}
-            title="Welcome to login!"
-            subTitle="Let's start your delivery orders!"
-            backgroundColor={colors.secondary}
-            borderRadius="20px"
-            wrapperStyle={{padding: 20}}
-            border="1px solid"
-            loginButtonText="Login"
-            loginButtonBackground={colors.primary}
-            onForgot={forgot}
-            forgotButtonText="Forgot password?"
-            registerButtonText="Register"
-          />
+          <LoginForm {...loginProps} />
         </LoginWrapper>
       </KeyboardView>
     </BgWrapper>

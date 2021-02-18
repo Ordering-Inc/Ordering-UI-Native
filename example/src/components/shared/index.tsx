@@ -10,16 +10,16 @@ import OIconButton from './OIconButton'
 import OTextarea from './OTextarea'
 import OToggle from './OToggle'
 
-export { 
-    OText, 
-    OButton, 
-    OInput, 
-    OSegment, 
-    ODropDown, 
-    OIcon, 
-    OIconText, 
-    OCheckbox, 
-    OIconButton, 
+export {
+    OText,
+    OButton,
+    OInput,
+    OSegment,
+    ODropDown,
+    OIcon,
+    OIconText,
+    OCheckbox,
+    OIconButton,
     OTextarea,
     OToggle
 }

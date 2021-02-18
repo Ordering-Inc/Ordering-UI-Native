@@ -22,7 +22,6 @@ const StyledButton = styled.View<Props>`
   align-items: center;
   justify-content: center;
   box-shadow: 1px 1px 2px #00000020;
-  elevation: 2;
   padding-left: 20px;
   padding-right: 20px;
   position: relative;
@@ -45,15 +44,15 @@ const StyledTextDisabled = styled(StyledText)`
 `
 
 const StyledImage = styled.Image`
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   resize-mode: contain;
 `
 const EndImage = styled.Image`
   width: 15px;
   height: 15px;
   resize-mode: contain;
-  right 20px;
+  right: 20px;
   position: absolute;
   right: 20px;
 `;
