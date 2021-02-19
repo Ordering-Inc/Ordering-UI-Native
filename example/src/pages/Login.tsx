@@ -3,16 +3,14 @@ import {Platform} from 'react-native';
 import styled from 'styled-components/native';
 import { LoginForm } from '../components/LoginForm';
 import { colors } from '../theme';
+import { Container } from '../layouts/Container'
 
 import { useLanguage } from 'ordering-components/native';
 
 const BgWrapper = styled.ImageBackground`
   flex: 1;
 `;
-const LoginWrapper = styled.View`
-  flex: 1;
-  margin-bottom: 0;
-`;
+
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
 `;
@@ -26,7 +24,7 @@ export const Login = ({navigation}: any) => {
     loginButtonText: t('LOGIN', 'Login'),
     loginButtonBackground: colors.primary,
     forgotButtonText: t('FORGOT_YOUR_PASSWORD', 'Forgot your password?'),
-    registerButtonText: t('SIGN_UP', 'Sign up'),
+    registerButtonText: t('SIGNUP', 'Signup'),
     onNavigationRedirect: (page: string) => {
       if (!page) return
       navigation.navigate(page);
@@ -45,9 +43,9 @@ export const Login = ({navigation}: any) => {
         enabled
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <LoginWrapper>
+        <Container>
           <LoginForm {...loginProps} />
-        </LoginWrapper>
+        </Container>
       </KeyboardView>
     </BgWrapper>
   );

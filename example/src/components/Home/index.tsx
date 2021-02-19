@@ -1,20 +1,24 @@
 import React from 'react';
-import {useLanguage} from 'ordering-components/native';
-import {StyleSheet} from 'react-native';
-import {colors} from '../../theme';
-import {OButton, OIcon, OText} from '../shared';
-import {BgWrapper, LogoWrapper, Slogan} from './styles';
+import { useLanguage } from 'ordering-components/native';
+import { StyleSheet, View } from 'react-native';
+import { colors } from '../../theme';
+import { OButton, OIcon, OText } from '../shared';
+import { LogoWrapper, Slogan } from './styles';
 
-const sloganImage = require('../assets/images/product.png');
-const applogo = require('../assets/images/app-logo.png');
+const sloganImage = require('../../assets/images/product.png');
+const applogo = require('../../assets/images/app-logo.png');
 
 export const Home = (props: any) => {
-  const {redirectLogin, redirectSignup, sloganTitle, sloganSubtitle} = props;
+  const {
+    sloganTitle,
+    sloganSubtitle,
+    onNavigationRedirect
+  } = props;
 
   const [, t] = useLanguage();
 
   return (
-    <BgWrapper>
+    <View>
       <LogoWrapper>
         <OIcon src={applogo} style={styles.logo} />
       </LogoWrapper>
@@ -28,31 +32,32 @@ export const Home = (props: any) => {
         bgColor={colors.primary}
         borderColor={colors.primary}
         style={styles.buttons}
-        onClick={redirectLogin}
+        textStyle={{color: 'white'}}
+        onClick={() => onNavigationRedirect('Login')}
       />
       <OButton
-        text="signup"
+        text={t('SIGNUP', 'Signup')}
         bgColor={colors.white}
         borderColor={colors.primary}
         style={styles.buttons}
-        onClick={redirectSignup}
+        onClick={() => onNavigationRedirect('Signup')}
       />
-    </BgWrapper>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   logo: {
-    height: 200,
-    width: 260,
+    height: 80,
+    width: 250,
+    marginTop: 10
   },
   slogan: {
     height: 300,
-    width: 300,
-    marginVertical: 10,
+    width: 300
   },
   buttons: {
     marginVertical: 10,
-    marginHorizontal: 30,
-  },
+    marginHorizontal: 30
+  }
 });
