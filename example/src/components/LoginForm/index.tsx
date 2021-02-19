@@ -54,7 +54,10 @@ const LoginFormUI = (props: LoginParams) => {
 
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
-      showToast(ToastType.Error, formState.result?.result[0])
+      formState.result?.result && showToast(
+        ToastType.Error,
+        formState.result?.result[0]
+      )
     }
   }, [formState])
 
@@ -115,7 +118,7 @@ const LoginFormUI = (props: LoginParams) => {
                     render={({ onChange, value }) => (
                       <OInput
                         placeholder={'Email'}
-                        style={{marginBottom: 10}}
+                        style={loginStyle.inputStyle}
                         icon={IMAGES.email}
                         value={value}
                         onChange={(val: any) => onChange(val)}
@@ -141,7 +144,7 @@ const LoginFormUI = (props: LoginParams) => {
                         type='number-pad'
                         isSecured={true}
                         placeholder={'Cellphone'}
-                        style={{marginBottom: 25}}
+                        style={loginStyle.inputStyle}
                         icon={IMAGES.phone}
                         value={value}
                         onChange={(val: any) => onChange(val)}
@@ -159,7 +162,7 @@ const LoginFormUI = (props: LoginParams) => {
                     <OInput
                       isSecured={true}
                       placeholder={'Password'}
-                      style={{marginBottom: 25}}
+                      style={loginStyle.inputStyle}
                       icon={IMAGES.lock}
                       value={value}
                       onChange={(val: any) => onChange(val)}
@@ -194,7 +197,7 @@ const LoginFormUI = (props: LoginParams) => {
                 {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
               </OText>
 
-              {/* {configs && Object.keys(configs).length > 0 && (
+              {configs && Object.keys(configs).length > 0 && (
                 <SocialButtons>
                   {(configs?.facebook_login?.value === 'true' ||
                     configs?.facebook_login?.value === '1') &&
@@ -205,7 +208,7 @@ const LoginFormUI = (props: LoginParams) => {
                     </OText>
                   )}
                 </SocialButtons>
-              )} */}
+              )}
 
               {onNavigationRedirect && registerButtonText && (
                 <OButton
@@ -229,6 +232,11 @@ const loginStyle = StyleSheet.create({
   btnOutline: {
     backgroundColor: '#FFF',
     color: colors.primary
+  },
+  inputStyle: {
+    marginBottom: 25,
+    borderWidth: 1,
+    borderColor: colors.disabled
   }
 });
 
