@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import Login from '../pages/Login';
 import Forgot from '../pages/Forgot';
 import DrawNavigator from './DrawNavigator';

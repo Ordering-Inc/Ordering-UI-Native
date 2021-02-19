@@ -11,16 +11,16 @@ import OTextarea from './OTextarea'
 import OToggle from './OToggle'
 import OKeyButton from './OKeyButton'
 
-export { 
-    OText, 
-    OButton, 
-    OInput, 
-    OSegment, 
-    ODropDown, 
-    OIcon, 
-    OIconText, 
-    OCheckbox, 
-    OIconButton, 
+export {
+    OText,
+    OButton,
+    OInput,
+    OSegment,
+    ODropDown,
+    OIcon,
+    OIconText,
+    OCheckbox,
+    OIconButton,
     OTextarea,
     OToggle,
     OKeyButton

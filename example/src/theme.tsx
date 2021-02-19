@@ -1,6 +1,13 @@
 export const colors = {
-  primary: '#06B7AE',
-  secondary: '#11142C',
+  primary: '#D83520',
+  secundary: '#EFEFEF',
+  primaryContrast: '#FFF',
+  secundaryContrast: '#000',
+  disabled: '#CBCBCB',
+  disabledContrast: '#000',
+  backgroundPage: '#F8F8F8',
+  colorPage: '#333',
+
   skyBlue: '#069ccd',
   white: '#fff',
   whiteGray: '#f7f6f3',

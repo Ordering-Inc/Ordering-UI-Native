@@ -4,7 +4,6 @@ import NavBar from '../components/NavBar';
 import {IMAGES} from '../config/constants';
 import {UserProfileForm as ProfileController} from '../components/Profile';
 
-
 const Wrapper = styled.ScrollView`
   flex: 1;
   background-color: white;
@@ -32,7 +31,7 @@ const Profile = (props: Props) => {
         showCall={false}
       />
       <Wrapper>
-        <ProfileController {...props} />
+        <ProfileController {...props} useSessionUser useValidationFields/>
       </Wrapper>
     </>
   );

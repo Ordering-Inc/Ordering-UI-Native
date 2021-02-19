@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   UserFormDetails as UserProfileController,
   useSession,
+  useUtils,
+  useLanguage,
 } from 'ordering-components/native';
-import {launchImageLibrary} from 'react-native-image-picker';
-
+import { useForm, Controller } from 'react-hook-form';
+import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {StyleSheet} from 'react-native';
-import {IMAGES} from '../../config/constants';
-import {colors} from '../../theme';
+import { StyleSheet } from 'react-native';
+import { IMAGES } from '../../config/constants';
+import { colors } from '../../theme';
 import ToggleSwitch from 'toggle-react-native';
-import {ToastType, useToast} from '../../providers/ToastProvider';
-import ApiProvider from '../../providers/ApiProvider';
-import {ProfileParams} from '../../types'
+import { ToastType, useToast } from '../../providers/ToastProvider';
+import { ProfileParams } from '../../types';
+import { flatArray } from '../../utils';
 import {
   ODropDown,
   OIcon,
@@ -30,69 +32,106 @@ import {
   EditButton,
 } from './styles';
 
+const notValidationFields = [
+  'coupon',
+  'driver_tip',
+  'mobile_phone',
+  'address',
+  'address_notes',
+];
+
 const ProfileUI = (props: ProfileParams) => {
   const {
     isEdit,
     formState,
+    validationFields,
+    showField,
+    isRequiredField,
     toggleIsEdit,
     cleanFormState,
-    setFormState,
     handleChangeInput,
+    handleButtonUpdateClick,
   } = props;
 
-  const [{user}] = useSession();
-  const ordering = ApiProvider();
-  const {showToast} = useToast();
+  const [{ user }] = useSession();
+  const [, t] = useLanguage();
+  const { showToast } = useToast();
+  const { control, handleSubmit, errors } = useForm();
+  const [{ optimizeImage }] = useUtils();
 
-  const [canGetOrders, changeGetOrders] = React.useState(true);
-  const [canPush, changeCanPush] = React.useState(true);
+  const [canGetOrders, changeGetOrders] = useState(true);
+  const [canPush, changeCanPush] = useState(true);
+  const [validationFieldsSorted, setValidationFieldsSorted] = useState(
+    [],
+  );
 
-  const handleImagePicker = () => {
-    launchImageLibrary(
-      {mediaType: 'photo', includeBase64: true},
-      (response) => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.errorMessage) {
-          console.log('ImagePicker Error: ', response.errorMessage);
-          showToast(ToastType.Error, response.errorMessage);
-        } else {
-          handleUpdateUser(response.uri);
-        }
-      },
+  const onSubmit = (values: any) => handleButtonUpdateClick(values);
+
+  const sortValidationFields = () => {
+    const fields = [
+      'name',
+      'middle_name',
+      'lastname',
+      'second_lastname',
+      'email',
+    ];
+    const fieldsSorted = [];
+    const validationsFieldsArray = Object.values(
+      validationFields.fields?.checkout,
     );
+
+    fields.forEach((f) => {
+      validationsFieldsArray.forEach((field: any) => {
+        if (f === field.code) {
+          fieldsSorted.push(field);
+        }
+      });
+    });
+
+    fieldsSorted.push(
+      validationsFieldsArray.filter(
+        (field: any) => !fields.includes(field.code),
+      ),
+    );
+    setValidationFieldsSorted(flatArray(fieldsSorted));
   };
 
-  const handleUpdateUser = async (image?: any) => {
-    let response;
-    try {
-      setFormState({...formState, loading: true});
-      if (image) {
-        response = await ordering
-          .setAccessToken(user?.session?.access_token)
-          .users(user?.id)
-          .save({photo: image});
-      } else {
-        response = await ordering
-          .setAccessToken(user?.session?.access_token)
-          .users(user?.id)
-          .save(formState.changes);
-      }
-      setFormState({
-        ...formState,
-        changes: response.content.error ? formState.changes : {},
-        result: response.content,
-        loading: false,
-      });
-      if (response.content.error) {
-        showToast(ToastType.Error, response.content.result);
-      } else {
-        showToast(ToastType.Success, 'Update successfully');
-        toggleIsEdit();
-      }
-    } catch (error) {
-      showToast(ToastType.Error, error.message);
+  useEffect(() => {
+    if (!formState.loading && formState.result?.error) {
+      showToast(ToastType.Error, formState.result?.result[0]);
     }
+  }, [formState]);
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      // Convert all errors in one string to show in toast provider
+      const list = Object.values(errors);
+      let stringError = '';
+      list.map((item: any, i: number) => {
+        stringError +=
+          i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
+      });
+      showToast(ToastType.Error, stringError);
+    }
+  }, [errors]);
+
+  useEffect(() => {
+    if (validationFields?.fields?.checkout) {
+      sortValidationFields();
+    }
+  }, [validationFields?.fields?.checkout]);
+
+  const handleImagePicker = () => {
+    launchImageLibrary({ mediaType: 'photo' }, (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorMessage) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+        showToast(ToastType.Error, response.errorMessage);
+      } else {
+        handleButtonUpdateClick({}, optimizeImage(response.uri));
+      }
+    });
   };
 
   const toggleGetOrder = () => {
@@ -106,7 +145,7 @@ const ProfileUI = (props: ProfileParams) => {
   };
 
   const handleCancelEdit = () => {
-    cleanFormState({changes: {}});
+    cleanFormState({ changes: {} });
     toggleIsEdit();
   };
 
@@ -114,16 +153,16 @@ const ProfileUI = (props: ProfileParams) => {
     <>
       <CenterView>
         <OIcon
-          src={formState?.result?.result?.photo || user.photo || IMAGES.avatar}
+          url={user.photo}
           width={100}
           height={100}
-          style={{borderRadius: 12}}
+          style={{ borderRadius: 12 }}
         />
         <OIconButton
           icon={IMAGES.camera}
           borderColor={colors.clear}
-          iconStyle={{width: 30, height: 30}}
-          style={{maxWidth: 40}}
+          iconStyle={{ width: 30, height: 30 }}
+          style={{ maxWidth: 40 }}
           onClick={() => handleImagePicker()}
         />
       </CenterView>
@@ -131,79 +170,111 @@ const ProfileUI = (props: ProfileParams) => {
       {!isEdit ? (
         <UserData>
           <Names>
-            <OText>{formState?.result?.result?.name || user.name}</OText>
-            <OText>
-              {formState?.result?.result?.lastname || user.lastname}
-            </OText>
+            <OText space>{user.name}</OText>
+            <OText>{user.lastname}</OText>
           </Names>
-          <OText>{formState?.result?.result?.email || user.email}</OText>
-          {(formState?.result?.result?.cellphone || user.cellphone) && (
-            <OText>
-              {formState?.result?.result?.cellphone || user.cellphone}
-            </OText>
-          )}
+          <OText>{user.email}</OText>
+          {user.cellphone && <OText>{user.cellphone}</OText>}
         </UserData>
       ) : (
-        <>
-          <OInput
-            name="name"
-            placeholder={'Full Name'}
-            borderColor={colors.whiteGray}
-            style={styles.inputbox}
-            onChange={handleChangeInput}
-            value={formState?.result?.result?.name || user.name}
-          />
-          <OInput
-            name="email"
-            placeholder={'Email'}
-            borderColor={colors.whiteGray}
-            style={styles.inputbox}
-            onChange={handleChangeInput}
-            value={formState?.result?.result?.email || user.email}
-          />
-          <OInput
-            name="cellphone"
-            placeholder={'Mobile number'}
-            borderColor={colors.whiteGray}
-            style={styles.inputbox}
-            onChange={handleChangeInput}
-            value={formState?.result?.result?.cellphone || user.cellphone}
-          />
-          <OInput
-            name="password"
-            placeholder={'Password'}
-            borderColor={colors.whiteGray}
-            style={styles.inputbox}
-            onChange={handleChangeInput}
-          />
-        </>
-      )}
+          <>
+            {validationFieldsSorted.map(
+              (field: any) =>
+                !notValidationFields.includes(field.code) &&
+                showField &&
+                showField(field.code) && (
+                  <Controller
+                    key={field.id}
+                    control={control}
+                    render={({ onChange, value }) => (
+                      <OInput
+                        name={field.code}
+                        placeholder={t(field.code.toUpperCase(), field?.name)}
+                        borderColor={colors.whiteGray}
+                        style={styles.inputbox}
+                        onChange={(val: any) => {
+                          onChange(val);
+                          handleChangeInput(val);
+                        }}
+                        value={value}
+                      />
+                    )}
+                    name={field.code}
+                    rules={{
+                      required: isRequiredField(field.code)
+                        ? t(
+                          `VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`,
+                          `${field?.name} is required`,
+                        ).replace('_attribute_', t(field?.name, field.code))
+                        : null,
+                      pattern: {
+                        value:
+                          field.code === 'email'
+                            ? /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
+                            : null,
+                        message:
+                          field.code === 'email'
+                            ? t(
+                              'INVALID_ERROR_EMAIL',
+                              'Invalid email address',
+                            ).replace('_attribute_', t('EMAIL', 'Email'))
+                            : null,
+                      },
+                    }}
+                    defaultValue={
+                      formState?.result?.result
+                        ? formState?.result?.result[field.code]
+                        : formState?.changes[field.code] ??
+                        (user && user[field.code]) ??
+                        ''
+                    }
+                  />
+                ),
+            )}
+            <Controller
+              control={control}
+              render={({ onChange, value }) => (
+                <OInput
+                  isSecured={true}
+                  placeholder={'Password'}
+                  style={{ marginBottom: 25 }}
+                  icon={IMAGES.lock}
+                  value={value}
+                  onChange={(val: any) => onChange(val)}
+                />
+              )}
+              name="password"
+              rules={{ required: t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'Password')) }}
+              defaultValue=""
+            />
+          </>
+        )}
       <EditButton>
         {!isEdit ? (
           <OKeyButton
             title="Edit"
-            style={{...styles.editButton, flex: 0}}
+            style={{ ...styles.editButton, flex: 0 }}
             onClick={toggleIsEdit}
           />
         ) : (
-          <>
-            <OKeyButton
-              title="Cancel"
-              style={styles.editButton}
-              onClick={() => handleCancelEdit()}
-            />
-            {((formState &&
-              Object.keys(formState?.changes).length > 0 &&
-              isEdit) ||
-              formState?.loading) && (
+            <>
               <OKeyButton
-                title="Update"
-                onClick={() => handleUpdateUser()}
-                style={{...styles.editButton, backgroundColor: colors.primary}}
+                title="Cancel"
+                style={styles.editButton}
+                onClick={handleCancelEdit}
               />
-            )}
-          </>
-        )}
+              {((formState &&
+                Object.keys(formState?.changes).length > 0 &&
+                isEdit) ||
+                formState?.loading) && (
+                  <OKeyButton
+                    title="Update"
+                    onClick={handleSubmit(onSubmit)}
+                    style={{ ...styles.editButton, backgroundColor: colors.primary }}
+                  />
+                )}
+            </>
+          )}
       </EditButton>
 
       <DetailView>
@@ -216,7 +287,7 @@ const ProfileUI = (props: ProfileParams) => {
         />
       </DetailView>
 
-      <OText size={20} style={{marginVertical: 20}}>
+      <OText size={20} style={{ marginVertical: 20 }}>
         {'Settings'}
       </OText>
 
@@ -242,7 +313,7 @@ const ProfileUI = (props: ProfileParams) => {
         items={['12H', '24H']}
         placeholder={'Time Format'}
         onSelect={() => onChangeTimeFormat}
-        style={{marginBottom: 120, ...styles.dropdown}}
+        style={{ marginBottom: 120, ...styles.dropdown }}
       />
     </>
   );
