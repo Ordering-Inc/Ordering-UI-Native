@@ -1,1 +1,1 @@
-export const flatArray = (arr: array) => [].concat(...arr)
+export const flatArray = (arr: any) => [].concat(...arr)

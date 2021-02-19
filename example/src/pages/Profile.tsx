@@ -1,13 +1,17 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
+import { Platform } from 'react-native';
 import NavBar from '../components/NavBar';
-import {IMAGES} from '../config/constants';
-import {UserProfileForm as ProfileController} from '../components/Profile';
+import { IMAGES } from '../config/constants';
+import { UserProfileForm as ProfileController } from '../components/Profile';
 
 const Wrapper = styled.ScrollView`
   flex: 1;
-  background-color: white;
-  padding-horizontal: 24px;
+  padding: 20px;
+`;
+
+const KeyboardView = styled.KeyboardAvoidingView`
+  flex-grow: 1;
 `;
 
 interface Props {
@@ -23,16 +27,21 @@ const Profile = (props: Props) => {
 
   return (
     <>
-      <NavBar
-        title={'Profile'}
-        titleAlign={'left'}
-        onActionLeft={onMenu}
-        leftImg={IMAGES.menu}
-        showCall={false}
-      />
-      <Wrapper>
-        <ProfileController {...props} useSessionUser useValidationFields/>
-      </Wrapper>
+      <KeyboardView
+        enabled
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <NavBar
+          title={'Profile'}
+          titleAlign={'left'}
+          onActionLeft={onMenu}
+          leftImg={IMAGES.menu}
+          showCall={false}
+        />
+        <Wrapper>
+          <ProfileController {...props} useSessionUser useValidationFields />
+        </Wrapper>
+      </KeyboardView>
     </>
   );
 };

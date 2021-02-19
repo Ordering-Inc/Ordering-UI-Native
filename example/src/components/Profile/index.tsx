@@ -50,20 +50,16 @@ const ProfileUI = (props: ProfileParams) => {
     toggleIsEdit,
     cleanFormState,
     handleChangeInput,
-    handleButtonUpdateClick,
+    handleButtonUpdateClick
   } = props;
 
   const [{ user }] = useSession();
   const [, t] = useLanguage();
   const { showToast } = useToast();
-  const { control, handleSubmit, errors } = useForm();
+  const { control, handleSubmit, errors, setValue, register } = useForm();
   const [{ optimizeImage }] = useUtils();
 
-  const [canGetOrders, changeGetOrders] = useState(true);
-  const [canPush, changeCanPush] = useState(true);
-  const [validationFieldsSorted, setValidationFieldsSorted] = useState(
-    [],
-  );
+  const [validationFieldsSorted, setValidationFieldsSorted] = useState([]);
 
   const onSubmit = (values: any) => handleButtonUpdateClick(values);
 
@@ -73,7 +69,7 @@ const ProfileUI = (props: ProfileParams) => {
       'middle_name',
       'lastname',
       'second_lastname',
-      'email',
+      'email'
     ];
     const fieldsSorted = [];
     const validationsFieldsArray = Object.values(
@@ -96,31 +92,6 @@ const ProfileUI = (props: ProfileParams) => {
     setValidationFieldsSorted(flatArray(fieldsSorted));
   };
 
-  useEffect(() => {
-    if (!formState.loading && formState.result?.error) {
-      showToast(ToastType.Error, formState.result?.result[0]);
-    }
-  }, [formState]);
-
-  useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      // Convert all errors in one string to show in toast provider
-      const list = Object.values(errors);
-      let stringError = '';
-      list.map((item: any, i: number) => {
-        stringError +=
-          i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
-      });
-      showToast(ToastType.Error, stringError);
-    }
-  }, [errors]);
-
-  useEffect(() => {
-    if (validationFields?.fields?.checkout) {
-      sortValidationFields();
-    }
-  }, [validationFields?.fields?.checkout]);
-
   const handleImagePicker = () => {
     launchImageLibrary({ mediaType: 'photo' }, (response) => {
       if (response.didCancel) {
@@ -134,20 +105,68 @@ const ProfileUI = (props: ProfileParams) => {
     });
   };
 
-  const toggleGetOrder = () => {
-    changeGetOrders((status) => !status);
-  };
-  const togglePush = () => {
-    changeCanPush((status) => !status);
-  };
-  const onChangeTimeFormat = (idx: number) => {
-    alert(idx);
-  };
-
   const handleCancelEdit = () => {
     cleanFormState({ changes: {} });
     toggleIsEdit();
   };
+
+  useEffect(() => {
+    if (validationFields?.fields?.checkout) {
+      sortValidationFields();
+    }
+  }, [validationFields?.fields?.checkout]);
+
+  useEffect(() => {
+    validationFieldsSorted && validationFieldsSorted.map((field: any) => {
+      showField && showField(field.code) && !notValidationFields.includes(field.code) &&
+        register(field.code, {
+          required: isRequiredField(field.code)
+            ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field?.name} is required`).replace('_attribute_', t(field?.name, field.code))
+            : null,
+          pattern: {
+            value: field.code === 'email' ? /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i : null,
+            message: field.code === 'email' ? t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email')) : null
+          }
+        })
+    })
+  }, [register, validationFieldsSorted])
+
+  useEffect(() => {
+    validationFieldsSorted && validationFieldsSorted.map((field: any) => {
+      setValue(field.code, formState?.result?.result
+        ? formState?.result?.result[field.code]
+        : formState?.changes[field.code] ?? (user && user[field.code]) ?? '')
+    })
+  }, [validationFieldsSorted])
+
+  useEffect(() => {
+    if (formState.result.result) {
+      if (formState.result.error) {
+        showToast(ToastType.Error, formState.result.result);
+      } else {
+        showToast(ToastType.Success, 'Update successfully');
+      }
+    }
+  }, [formState.result])
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      // Convert all errors in one string to show in toast provider
+      const list = Object.values(errors);
+      let stringError = '';
+      list.map((item: any, i: number) => {
+        stringError +=
+          i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
+      });
+      showToast(ToastType.Error, stringError);
+    }
+  }, [errors]);
+  
+  useEffect(() => {
+    if (!formState.loading && formState.result?.error) {
+      showToast(ToastType.Error, formState.result?.result[0]);
+    }
+  }, [formState]);
 
   return (
     <>
@@ -173,6 +192,12 @@ const ProfileUI = (props: ProfileParams) => {
             <OText space>{user.name}</OText>
             <OText>{user.lastname}</OText>
           </Names>
+          {(user.middle_name || user.second_lastname) && (
+            <Names>
+              <OText space>{user.middle_name}</OText>
+              <OText>{user.second_lastname}</OText>
+            </Names>
+          )}
           <OText>{user.email}</OText>
           {user.cellphone && <OText>{user.cellphone}</OText>}
         </UserData>
@@ -183,138 +208,69 @@ const ProfileUI = (props: ProfileParams) => {
                 !notValidationFields.includes(field.code) &&
                 showField &&
                 showField(field.code) && (
-                  <Controller
+                  <OInput
                     key={field.id}
-                    control={control}
-                    render={({ onChange, value }) => (
-                      <OInput
-                        name={field.code}
-                        placeholder={t(field.code.toUpperCase(), field?.name)}
-                        borderColor={colors.whiteGray}
-                        style={styles.inputbox}
-                        onChange={(val: any) => {
-                          onChange(val);
-                          handleChangeInput(val);
-                        }}
-                        value={value}
-                      />
-                    )}
                     name={field.code}
-                    rules={{
-                      required: isRequiredField(field.code)
-                        ? t(
-                          `VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`,
-                          `${field?.name} is required`,
-                        ).replace('_attribute_', t(field?.name, field.code))
-                        : null,
-                      pattern: {
-                        value:
-                          field.code === 'email'
-                            ? /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-                            : null,
-                        message:
-                          field.code === 'email'
-                            ? t(
-                              'INVALID_ERROR_EMAIL',
-                              'Invalid email address',
-                            ).replace('_attribute_', t('EMAIL', 'Email'))
-                            : null,
-                      },
+                    placeholder={t(field.code.toUpperCase(), field?.name)}
+                    borderColor={colors.whiteGray}
+                    style={styles.inputbox}
+                    onChange={(val: any) => {
+                      setValue(field.code, val.target.value)
+                      handleChangeInput(val);
                     }}
-                    defaultValue={
-                      formState?.result?.result
-                        ? formState?.result?.result[field.code]
-                        : formState?.changes[field.code] ??
-                        (user && user[field.code]) ??
-                        ''
-                    }
+                    value={user[field.code]}
                   />
-                ),
+                )
             )}
             <Controller
               control={control}
               render={({ onChange, value }) => (
                 <OInput
+                  name='password'
                   isSecured={true}
                   placeholder={'Password'}
-                  style={{ marginBottom: 25 }}
                   icon={IMAGES.lock}
                   value={value}
-                  onChange={(val: any) => onChange(val)}
+                  style={styles.inputbox}
+                  onChange={(val: any) => {
+                    handleChangeInput(val); onChange(val.target.value)
+                  }}
                 />
               )}
               name="password"
-              rules={{ required: t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'Password')) }}
               defaultValue=""
             />
           </>
         )}
-      <EditButton>
-        {!isEdit ? (
-          <OKeyButton
-            title="Edit"
-            style={{ ...styles.editButton, flex: 0 }}
-            onClick={toggleIsEdit}
-          />
-        ) : (
-            <>
-              <OKeyButton
-                title="Cancel"
-                style={styles.editButton}
-                onClick={handleCancelEdit}
-              />
-              {((formState &&
-                Object.keys(formState?.changes).length > 0 &&
-                isEdit) ||
-                formState?.loading) && (
-                  <OKeyButton
-                    title="Update"
-                    onClick={handleSubmit(onSubmit)}
-                    style={{ ...styles.editButton, backgroundColor: colors.primary }}
-                  />
-                )}
-            </>
-          )}
-      </EditButton>
-
-      <DetailView>
-        <OText>{'On Shift: Available to receive orders'}</OText>
-        <ToggleSwitch
-          size={'small'}
-          onColor={colors.success}
-          isOn={canGetOrders}
-          onToggle={toggleGetOrder}
-        />
-      </DetailView>
-
-      <OText size={20} style={{ marginVertical: 20 }}>
-        {'Settings'}
-      </OText>
-
-      <PushSetting>
-        <OText color={'grey'}>{'Push Notifications'}</OText>
-        <ToggleSwitch
-          onColor={colors.success}
-          isOn={canPush}
-          onToggle={togglePush}
-        />
-      </PushSetting>
-      <ODropDown
-        items={[]}
-        placeholder={'Select your language'}
-        style={styles.dropdown}
-      />
-      <ODropDown
-        items={[]}
-        placeholder={'Currency Position'}
-        style={styles.dropdown}
-      />
-      <ODropDown
-        items={['12H', '24H']}
-        placeholder={'Time Format'}
-        onSelect={() => onChangeTimeFormat}
-        style={{ marginBottom: 120, ...styles.dropdown }}
-      />
+      {!validationFields.loading && (
+        <EditButton>
+          {!isEdit ? (
+            <OKeyButton
+              title="Edit"
+              style={{ ...styles.editButton, flex: 0 }}
+              onClick={toggleIsEdit}
+            />
+          ) : (
+              <>
+                <OKeyButton
+                  title="Cancel"
+                  style={styles.editButton}
+                  onClick={handleCancelEdit}
+                />
+                {((formState &&
+                  Object.keys(formState?.changes).length > 0 &&
+                  isEdit) ||
+                  formState?.loading) && (
+                    <OKeyButton
+                      title="Update"
+                      onClick={handleSubmit(onSubmit)}
+                      style={{ ...styles.editButton, backgroundColor: colors.primary, marginLeft: 8 }}
+                    />
+                  )}
+              </>
+            )}
+        </EditButton>
+      )}
     </>
   );
 };
@@ -338,7 +294,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 50,
     marginVertical: 8,
-    marginHorizontal: 8,
     flex: 1,
   },
 });

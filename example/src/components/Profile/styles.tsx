@@ -1,5 +1,5 @@
 import styled from 'styled-components/native'
-import {colors} from '../../theme';
+import { colors } from '../../theme';
 
 export const CenterView = styled.View`
   align-items: center;
