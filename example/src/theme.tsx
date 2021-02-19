@@ -5,7 +5,7 @@ export const colors = {
   secundaryContrast: '#000',
   disabled: '#CBCBCB',
   disabledContrast: '#000',
-  backgroundPage: '#F8F8F8',
+  backgroundPage: '#FFFFFF',
   colorPage: '#333',
 
   skyBlue: '#069ccd',

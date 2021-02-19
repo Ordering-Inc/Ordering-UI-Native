@@ -10,7 +10,6 @@ import {
 } from 'ordering-components/native';
 
 import {
-  Container,
   ButtonsSection,
   Wrapper,
   LoginWith,
@@ -54,7 +53,10 @@ const LoginFormUI = (props: LoginParams) => {
 
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
-      showToast(ToastType.Error, formState.result?.result[0])
+      formState.result?.result && showToast(
+        ToastType.Error,
+        formState.result?.result[0]
+      )
     }
   }, [formState])
 
@@ -71,157 +73,153 @@ const LoginFormUI = (props: LoginParams) => {
   }, [errors])
 
   return (
-    <Container style={{ backgroundColor: '#FFF', height: '100%' }}>
-      <ScrollView>
-        <Wrapper>
-          <NavBar
-            title={t('LOGIN', 'Login')}
-            titleAlign={'center'}
-            onActionLeft={goToBack}
-            showCall={false}
-            btnStyle={{ paddingLeft: 0 }}
-          />
-          <FormSide>
-            {useLoginByEmail && useLoginByCellphone && (
-              <LoginWith>
-                <OTabs>
-                  {useLoginByEmail && (
-                    <Pressable onPress={() => handleChangeTab('email')}>
-                      <OTab>
-                        <OText size={18} color={loginTab === 'email' ? colors.primary : colors.disabled}>
-                          {t('LOGIN_BY_EMAIL', 'Login by Email')}
-                        </OText>
-                      </OTab>
-                    </Pressable>
-                  )}
-                  {useLoginByCellphone && (
-                    <Pressable onPress={() => handleChangeTab('cellphone')}>
-                      <OTab>
-                        <OText size={18} color={loginTab === 'cellphone' ? colors.primary : colors.disabled}>
-                          {t('LOGIN_BY_CELLPHONE', 'Login by Cellphone')}
-                        </OText>
-                      </OTab>
-                    </Pressable>
-                  )}
-                </OTabs>
-              </LoginWith>
-            )}
+    <Wrapper>
+      <NavBar
+        title={t('LOGIN', 'Login')}
+        titleAlign={'center'}
+        onActionLeft={goToBack}
+        showCall={false}
+        btnStyle={{ paddingLeft: 0 }}
+      />
+      <FormSide>
+        {useLoginByEmail && useLoginByCellphone && (
+          <LoginWith>
+            <OTabs>
+              {useLoginByEmail && (
+                <Pressable onPress={() => handleChangeTab('email')}>
+                  <OTab>
+                    <OText size={18} color={loginTab === 'email' ? colors.primary : colors.disabled}>
+                      {t('LOGIN_BY_EMAIL', 'Login by Email')}
+                    </OText>
+                  </OTab>
+                </Pressable>
+              )}
+              {useLoginByCellphone && (
+                <Pressable onPress={() => handleChangeTab('cellphone')}>
+                  <OTab>
+                    <OText size={18} color={loginTab === 'cellphone' ? colors.primary : colors.disabled}>
+                      {t('LOGIN_BY_CELLPHONE', 'Login by Cellphone')}
+                    </OText>
+                  </OTab>
+                </Pressable>
+              )}
+            </OTabs>
+          </LoginWith>
+        )}
 
-            {(useLoginByCellphone || useLoginByEmail) && (
-              <FormInput>
-                {useLoginByEmail && loginTab === 'email' && (
-                  <Controller
-                    control={control}
-                    render={({ onChange, value }) => (
-                      <OInput
-                        placeholder={'Email'}
-                        style={{marginBottom: 10}}
-                        icon={IMAGES.email}
-                        value={value}
-                        onChange={(val: any) => onChange(val)}
-                      />
-                    )}
-                    name="email"
-                    rules={{
-                      required: t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email')),
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
-                      }
-                    }}
-                    defaultValue=""
-                    />
-                )}
-
-                {useLoginByCellphone && loginTab === 'cellphone' && (
-                  <Controller
-                    control={control}
-                    render={({ onChange, value }) => (
-                      <OInput
-                        type='number-pad'
-                        isSecured={true}
-                        placeholder={'Cellphone'}
-                        style={{marginBottom: 25}}
-                        icon={IMAGES.phone}
-                        value={value}
-                        onChange={(val: any) => onChange(val)}
-                      />
-                    )}
-                    name="cellphone"
-                    rules={{ required: t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone')) }}
-                    defaultValue=""
+        {(useLoginByCellphone || useLoginByEmail) && (
+          <FormInput>
+            {useLoginByEmail && loginTab === 'email' && (
+              <Controller
+                control={control}
+                render={({ onChange, value }) => (
+                  <OInput
+                    placeholder={'Email'}
+                    style={loginStyle.inputStyle}
+                    icon={IMAGES.email}
+                    value={value}
+                    onChange={(val: any) => onChange(val)}
                   />
                 )}
-
-                <Controller
-                  control={control}
-                  render={({ onChange, value }) => (
-                    <OInput
-                      isSecured={true}
-                      placeholder={'Password'}
-                      style={{marginBottom: 25}}
-                      icon={IMAGES.lock}
-                      value={value}
-                      onChange={(val: any) => onChange(val)}
-                    />
-                  )}
-                  name="password"
-                  rules={{ required: t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'Password')) }}
-                  defaultValue=""
+                name="email"
+                rules={{
+                  required: t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email')),
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
+                  }
+                }}
+                defaultValue=""
                 />
-
-                <OButton
-                  onClick={handleSubmit(onSubmit)}
-                  text={loginButtonText}
-                  bgColor={colors.primary}
-                  borderColor={colors.primary}
-                  textStyle={{color: 'white'}}
-                  imgRightSrc={null}
-                />
-              </FormInput>
             )}
 
-            {onNavigationRedirect && forgotButtonText && (
-              <Pressable onPress={() => onNavigationRedirect('Forgot')}>
-                <OText size={20} mBottom={18}>
-                  {forgotButtonText}
-                </OText>
-              </Pressable>
+            {useLoginByCellphone && loginTab === 'cellphone' && (
+              <Controller
+                control={control}
+                render={({ onChange, value }) => (
+                  <OInput
+                    type='number-pad'
+                    isSecured={true}
+                    placeholder={'Cellphone'}
+                    style={loginStyle.inputStyle}
+                    icon={IMAGES.phone}
+                    value={value}
+                    onChange={(val: any) => onChange(val)}
+                  />
+                )}
+                name="cellphone"
+                rules={{ required: t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone')) }}
+                defaultValue=""
+              />
             )}
 
-            <ButtonsSection>
-              <OText size={18} mBottom={30} color={colors.disabled}>
-                {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
-              </OText>
-
-              {/* {configs && Object.keys(configs).length > 0 && (
-                <SocialButtons>
-                  {(configs?.facebook_login?.value === 'true' ||
-                    configs?.facebook_login?.value === '1') &&
-                    configs?.facebook_id?.value &&
-                  (
-                    <OText size={18} mBottom={30} color={colors.disabled}>
-                      facebook login button
-                    </OText>
-                  )}
-                </SocialButtons>
-              )} */}
-
-              {onNavigationRedirect && registerButtonText && (
-                <OButton
-                  onClick={() => onNavigationRedirect('Signup')}
-                  text={registerButtonText}
-                  style={loginStyle.btnOutline}
-                  borderColor={colors.primary}
-                  imgRightSrc={null}
+            <Controller
+              control={control}
+              render={({ onChange, value }) => (
+                <OInput
+                  isSecured={true}
+                  placeholder={'Password'}
+                  style={loginStyle.inputStyle}
+                  icon={IMAGES.lock}
+                  value={value}
+                  onChange={(val: any) => onChange(val)}
                 />
               )}
-            </ButtonsSection>
-          </FormSide>
-          <Spinner visible={formState.loading} />
-        </Wrapper>
-      </ScrollView>
-    </Container>
+              name="password"
+              rules={{ required: t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'Password')) }}
+              defaultValue=""
+            />
+
+            <OButton
+              onClick={handleSubmit(onSubmit)}
+              text={loginButtonText}
+              bgColor={colors.primary}
+              borderColor={colors.primary}
+              textStyle={{color: 'white'}}
+              imgRightSrc={null}
+            />
+          </FormInput>
+        )}
+
+        {onNavigationRedirect && forgotButtonText && (
+          <Pressable onPress={() => onNavigationRedirect('Forgot')}>
+            <OText size={20} mBottom={18}>
+              {forgotButtonText}
+            </OText>
+          </Pressable>
+        )}
+
+        <ButtonsSection>
+          <OText size={18} mBottom={30} color={colors.disabled}>
+            {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
+          </OText>
+
+          {configs && Object.keys(configs).length > 0 && (
+            <SocialButtons>
+              {(configs?.facebook_login?.value === 'true' ||
+                configs?.facebook_login?.value === '1') &&
+                configs?.facebook_id?.value &&
+              (
+                <OText size={18} mBottom={30} color={colors.disabled}>
+                  facebook login button
+                </OText>
+              )}
+            </SocialButtons>
+          )}
+
+          {onNavigationRedirect && registerButtonText && (
+            <OButton
+              onClick={() => onNavigationRedirect('Signup')}
+              text={registerButtonText}
+              style={loginStyle.btnOutline}
+              borderColor={colors.primary}
+              imgRightSrc={null}
+            />
+          )}
+        </ButtonsSection>
+      </FormSide>
+      <Spinner visible={formState.loading} />
+    </Wrapper>
   );
 };
 
@@ -229,6 +227,11 @@ const loginStyle = StyleSheet.create({
   btnOutline: {
     backgroundColor: '#FFF',
     color: colors.primary
+  },
+  inputStyle: {
+    marginBottom: 25,
+    borderWidth: 1,
+    borderColor: colors.disabled
   }
 });
 
