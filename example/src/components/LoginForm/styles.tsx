@@ -1,11 +1,4 @@
 import styled from 'styled-components/native';
-import { ViewInterface } from '../../types';
-import { colors } from '../../theme';
-
-export const Container = styled.SafeAreaView`
-  flex-grow: 1;
-  background-color: white;
-`
 
 export const Wrapper = styled.View`
   padding: 20px;
