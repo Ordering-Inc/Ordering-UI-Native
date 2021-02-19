@@ -11,12 +11,10 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { StyleSheet } from 'react-native';
 import { IMAGES } from '../../config/constants';
 import { colors } from '../../theme';
-import ToggleSwitch from 'toggle-react-native';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { ProfileParams } from '../../types';
 import { flatArray } from '../../utils';
 import {
-  ODropDown,
   OIcon,
   OIconButton,
   OInput,
@@ -25,8 +23,6 @@ import {
 } from '../../components/shared';
 import {
   CenterView,
-  DetailView,
-  PushSetting,
   UserData,
   Names,
   EditButton,
@@ -56,7 +52,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [{ user }] = useSession();
   const [, t] = useLanguage();
   const { showToast } = useToast();
-  const { control, handleSubmit, errors, setValue, register } = useForm();
+  const { control, handleSubmit, errors, setValue } = useForm();
   const [{ optimizeImage }] = useUtils();
 
   const [validationFieldsSorted, setValidationFieldsSorted] = useState([]);
@@ -117,29 +113,6 @@ const ProfileUI = (props: ProfileParams) => {
   }, [validationFields?.fields?.checkout]);
 
   useEffect(() => {
-    validationFieldsSorted && validationFieldsSorted.map((field: any) => {
-      showField && showField(field.code) && !notValidationFields.includes(field.code) &&
-        register(field.code, {
-          required: isRequiredField(field.code)
-            ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field?.name} is required`).replace('_attribute_', t(field?.name, field.code))
-            : null,
-          pattern: {
-            value: field.code === 'email' ? /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i : null,
-            message: field.code === 'email' ? t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email')) : null
-          }
-        })
-    })
-  }, [register, validationFieldsSorted])
-
-  useEffect(() => {
-    validationFieldsSorted && validationFieldsSorted.map((field: any) => {
-      setValue(field.code, formState?.result?.result
-        ? formState?.result?.result[field.code]
-        : formState?.changes[field.code] ?? (user && user[field.code]) ?? '')
-    })
-  }, [validationFieldsSorted])
-
-  useEffect(() => {
     if (formState.result.result) {
       if (formState.result.error) {
         showToast(ToastType.Error, formState.result.result);
@@ -161,7 +134,7 @@ const ProfileUI = (props: ProfileParams) => {
       showToast(ToastType.Error, stringError);
     }
   }, [errors]);
-  
+
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
       showToast(ToastType.Error, formState.result?.result[0]);
@@ -208,17 +181,34 @@ const ProfileUI = (props: ProfileParams) => {
                 !notValidationFields.includes(field.code) &&
                 showField &&
                 showField(field.code) && (
-                  <OInput
+                  <Controller
                     key={field.id}
+                    control={control}
+                    render={() => (
+                      <OInput
+                        key={field.id}
+                        name={field.code}
+                        placeholder={t(field.code.toUpperCase(), field?.name)}
+                        borderColor={colors.whiteGray}
+                        style={styles.inputbox}
+                        onChange={(val: any) => {
+                          setValue(field.code, val.target.value)
+                          handleChangeInput(val);
+                        }}
+                        value={user[field.code]}
+                      />
+                    )}
                     name={field.code}
-                    placeholder={t(field.code.toUpperCase(), field?.name)}
-                    borderColor={colors.whiteGray}
-                    style={styles.inputbox}
-                    onChange={(val: any) => {
-                      setValue(field.code, val.target.value)
-                      handleChangeInput(val);
+                    defaultValue={user[field.code]}
+                    rules={{
+                      required: isRequiredField(field.code)
+                        ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field?.name} is required`).replace('_attribute_', t(field?.name, field.code))
+                        : null,
+                      pattern: {
+                        value: field.code === 'email' ? /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i : null,
+                        message: field.code === 'email' ? t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email')) : null
+                      }
                     }}
-                    value={user[field.code]}
                   />
                 )
             )}
@@ -239,6 +229,14 @@ const ProfileUI = (props: ProfileParams) => {
               )}
               name="password"
               defaultValue=""
+              rules={
+                {
+                  minLength: {
+                    value: 8,
+                    message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.').replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
+                  }
+                }
+              }
             />
           </>
         )}
