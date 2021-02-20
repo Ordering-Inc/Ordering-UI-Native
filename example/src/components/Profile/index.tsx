@@ -8,7 +8,7 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { IMAGES } from '../../config/constants';
 import { colors } from '../../theme';
 import { ToastType, useToast } from '../../providers/ToastProvider';
@@ -46,7 +46,8 @@ const ProfileUI = (props: ProfileParams) => {
     toggleIsEdit,
     cleanFormState,
     handleChangeInput,
-    handleButtonUpdateClick
+    handleButtonUpdateClick,
+    setFormState
   } = props;
 
   const [{ user }] = useSession();
@@ -96,7 +97,12 @@ const ProfileUI = (props: ProfileParams) => {
         console.log('ImagePicker Error: ', response.errorMessage);
         showToast(ToastType.Error, response.errorMessage);
       } else {
-        handleButtonUpdateClick({}, optimizeImage(response.uri));
+        if (response.uri) {
+          console.log(optimizeImage(response.uri))
+          handleButtonUpdateClick(null, true, optimizeImage(response.fileName));
+        } else {
+          showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+        }
       }
     });
   };
@@ -113,11 +119,11 @@ const ProfileUI = (props: ProfileParams) => {
   }, [validationFields?.fields?.checkout]);
 
   useEffect(() => {
-    if (formState.result.result) {
-      if (formState.result.error) {
+    if (formState.result.result && !formState.loading) {
+      if (formState.result?.error) {
         showToast(ToastType.Error, formState.result.result);
       } else {
-        showToast(ToastType.Success, 'Update successfully');
+        showToast(ToastType.Success, t('UPDATE_SUCCESSFULLY', 'Update successfully'));
       }
     }
   }, [formState.result])
@@ -134,12 +140,6 @@ const ProfileUI = (props: ProfileParams) => {
       showToast(ToastType.Error, stringError);
     }
   }, [errors]);
-
-  useEffect(() => {
-    if (!formState.loading && formState.result?.error) {
-      showToast(ToastType.Error, formState.result?.result[0]);
-    }
-  }, [formState]);
 
   return (
     <>
