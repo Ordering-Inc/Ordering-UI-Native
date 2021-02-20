@@ -7,27 +7,12 @@ export const FormSide = styled.View`
   align-items: center;
   margin: auto;
 `;
-
-export const OTabs = styled.View`
-  display: flex;
-  flex-direction: row;
-`;
-
-export const OTab = styled.View`
-  padding: 0px 15px;
-`;
-
-export const LoginWith = styled.View`
-  font-size: 14px;
-`;
-
 export const FormInput = styled.View`
   display: flex;
   flex-direction: column;
   width: 90%;
-  padding: 25px 0px 15px;
+  padding: 0px 0px 15px;
 `
-
 export const ButtonsSection = styled.View`
   margin: 10px 0px 0px;
   width: 90%;

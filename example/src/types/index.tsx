@@ -12,6 +12,25 @@ export interface LoginParams {
   forgotButtonText?: string;
   handleButtonLoginClick?: any;
 }
+
+export interface signupParams {
+  navigation?: any;
+  loginButtonText?: string;
+  signupButtonText?: string;
+  onNavigationRedirect?: any;
+  formState?: any;
+  validationFields?: any;
+  showField?: any;
+  isRequiredField?: any;
+  useChekoutFileds?: boolean;
+  handleSuccessSignup?: any;
+  handleButtonSignupClick?: any;
+}
+
+export interface phoneInput {
+  data?: any;
+  handleData?: any;
+}
 export interface ViewInterface {
   navigation?: any;
   onLogin?: any;

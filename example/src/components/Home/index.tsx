@@ -28,7 +28,7 @@ export const Home = (props: any) => {
         <OText size={18}>{sloganSubtitle}</OText>
       </Slogan>
       <OButton
-        text={t('LOGIN', 'Login now')}
+        text={t('LOGIN_NOW', 'Login now')}
         bgColor={colors.primary}
         borderColor={colors.primary}
         style={styles.buttons}
