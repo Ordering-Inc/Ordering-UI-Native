@@ -23,12 +23,12 @@ import { ToastType, useToast } from '../../providers/ToastProvider';
 import NavBar from '../NavBar'
 
 import { OText, OButton, OInput } from '../shared';
-import { signupParams } from '../../types';
+import { SignupParams } from '../../types';
 import { colors } from '../../theme'
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']
 
-const SignupFormUI = (props: signupParams) => {
+const SignupFormUI = (props: SignupParams) => {
   const {
     navigation,
     loginButtonText,

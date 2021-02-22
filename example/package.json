@@ -6,6 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
+    "start-cache": "react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint .",
     "postinstall": "patch-package"
@@ -33,6 +34,7 @@
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-fast-image": "^8.3.3",
     "react-native-gesture-handler": "^1.8.0",
+    "react-native-image-picker": "^3.2.1",
     "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-maps": "^0.27.1",
     "react-native-phone-number-input": "^2.0.0",

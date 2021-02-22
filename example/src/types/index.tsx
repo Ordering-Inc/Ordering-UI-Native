@@ -1,5 +1,4 @@
-import {ViewStyle} from 'react-native';
-
+import { ViewStyle } from 'react-native';
 export interface LoginParams {
   formState?: any;
   useLoginByEmail?: boolean;
@@ -12,8 +11,21 @@ export interface LoginParams {
   forgotButtonText?: string;
   handleButtonLoginClick?: any;
 }
+export interface ProfileParams {
+  isEdit?: boolean;
+  formState?: any;
+  toggleIsEdit?: any;
+  cleanFormState?: any;
+  setFormState?: any;
+  handleChangeInput?: any;
+  handleButtonUpdateClick?: any;
+  handlechangeImage?: any;
+  validationFields?: any;
+  showField?: any;
+  isRequiredField?: any;
+}
 
-export interface signupParams {
+export interface SignupParams {
   navigation?: any;
   loginButtonText?: string;
   signupButtonText?: string;
@@ -27,7 +39,7 @@ export interface signupParams {
   handleButtonSignupClick?: any;
 }
 
-export interface phoneInput {
+export interface PhoneInputParams {
   data?: any;
   handleData?: any;
 }

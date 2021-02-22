@@ -6,9 +6,9 @@ import { useLanguage, useConfig } from 'ordering-components/native';
 import { Wrapper } from './styles'
 
 import { colors } from '../../theme'
-import { phoneInput } from '../../types';
+import { PhoneInputParams } from '../../types';
 
-export const PhoneInputNumber = (props: phoneInput) => {
+export const PhoneInputNumber = (props: PhoneInputParams) => {
   const {
     data,
     handleData,

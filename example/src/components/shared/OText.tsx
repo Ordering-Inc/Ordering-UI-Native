@@ -29,12 +29,13 @@ interface Props {
   isWrap?: boolean;
   hasBottom?: boolean;
   mBottom?: any;
+  space?: any
 }
 
 const OText = (props: Props): React.ReactElement => {
   return (
     <SText {...props} style={props.style}>
-      {props.children}
+      {props.children}{props.space && ' '}
     </SText>
   );
 };
