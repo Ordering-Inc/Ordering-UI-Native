@@ -1,10 +1,13 @@
 import * as React from 'react'
-import DeliveryApp from "./src/DeliveryApp"
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import DeliveryApp from './src/DeliveryApp'
 
 const App = () => {
-    return (
-        <DeliveryApp />
-    )
+  return (
+    <SafeAreaProvider>
+      <DeliveryApp />
+    </SafeAreaProvider>
+  )
 }
 
 export default App

@@ -21,6 +21,7 @@ export const ButtonsSection = styled.View`
 `
 
 export const SocialButtons = styled.View`
-   width: 90%;
+   width: 100%;
    margin-top: 10px;
+   padding-bottom: 50px;
 `

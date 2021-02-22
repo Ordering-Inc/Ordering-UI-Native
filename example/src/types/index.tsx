@@ -1,5 +1,6 @@
 import { ViewStyle } from 'react-native';
 export interface LoginParams {
+  navigation?: any;
   formState?: any;
   useLoginByEmail?: boolean;
   useLoginByCellphone?: boolean;

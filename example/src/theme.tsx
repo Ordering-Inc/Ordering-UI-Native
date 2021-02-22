@@ -8,7 +8,7 @@ export const colors = {
   backgroundPage: '#FFFFFF',
   colorPage: '#333',
 
-  skyBlue: '#069ccd',
+  skyBlue: '#1977F2',
   white: '#fff',
   whiteGray: '#f7f6f3',
   dusk: 'rgb(65,77,107)',

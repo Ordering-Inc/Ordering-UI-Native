@@ -33,6 +33,7 @@
     "react-native-awesome-loading": "^1.0.15",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-fast-image": "^8.3.3",
+    "react-native-fbsdk": "^3.0.0",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-image-picker": "^3.2.1",
     "react-native-loading-spinner-overlay": "^2.0.0",
