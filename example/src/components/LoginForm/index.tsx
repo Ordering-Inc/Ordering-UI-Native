@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
@@ -6,8 +6,11 @@ import { useForm, Controller } from 'react-hook-form';
 import {
   LoginForm as LoginFormController,
   useLanguage,
-  useConfig
+  useConfig,
+  useSession
 } from 'ordering-components/native';
+
+import { FacebookLogin } from '../FacebookLogin'
 
 import {
   ButtonsSection,
@@ -31,6 +34,7 @@ const LoginFormUI = (props: LoginParams) => {
   const {
     loginTab,
     formState,
+    navigation,
     useLoginByEmail,
     useLoginByCellphone,
     loginButtonText,
@@ -44,11 +48,18 @@ const LoginFormUI = (props: LoginParams) => {
   const { showToast } = useToast();
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
+  const [, { login }] = useSession()
   const { control, handleSubmit, errors } = useForm();
 
   const onSubmit = (values: any) => handleButtonLoginClick(values);
 
-  const goToBack = () => onNavigationRedirect('Home')
+  const handleSuccessFacebook = (user: any) => {
+    login({
+      user,
+      token: user.session.access_token
+    })
+    navigation.navigate('Home');
+  }
 
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
@@ -76,7 +87,7 @@ const LoginFormUI = (props: LoginParams) => {
       <NavBar
         title={t('LOGIN', 'Login')}
         titleAlign={'center'}
-        onActionLeft={goToBack}
+        onActionLeft={() => navigation.goBack()}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
       />
@@ -189,25 +200,28 @@ const LoginFormUI = (props: LoginParams) => {
           </Pressable>
         )}
 
-        <ButtonsSection>
-          <OText size={18} mBottom={30} color={colors.disabled}>
-            {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
-          </OText>
+        {configs && Object.keys(configs).length > 0 && (
+          (configs?.facebook_login?.value === 'true' ||
+              configs?.facebook_login?.value === '1') &&
+              configs?.facebook_id?.value &&
+          (
+            <ButtonsSection>
+              <OText size={18} mBottom={10} color={colors.disabled}>
+                {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
+              </OText>
 
-          {configs && Object.keys(configs).length > 0 && (
-            <SocialButtons>
-              {(configs?.facebook_login?.value === 'true' ||
-                configs?.facebook_login?.value === '1') &&
-                configs?.facebook_id?.value &&
-              (
-                <OText size={18} mBottom={30} color={colors.disabled}>
-                  facebook login button
-                </OText>
-              )}
-            </SocialButtons>
-          )}
+              <SocialButtons>
+                <FacebookLogin
+                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleSuccessFacebookLogin={handleSuccessFacebook}
+                />
+              </SocialButtons>
+            </ButtonsSection>
+          )
+        )}
 
-          {onNavigationRedirect && registerButtonText && (
+        {onNavigationRedirect && registerButtonText && (
+          <ButtonsSection>
             <OButton
               onClick={() => onNavigationRedirect('Signup')}
               text={registerButtonText}
@@ -215,8 +229,8 @@ const LoginFormUI = (props: LoginParams) => {
               borderColor={colors.primary}
               imgRightSrc={null}
             />
-          )}
-        </ButtonsSection>
+          </ButtonsSection>
+        )}
       </FormSide>
       {/* <Spinner visible={formState.loading} /> */}
     </View>

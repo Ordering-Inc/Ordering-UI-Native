@@ -45,3 +45,9 @@ export const _setStoreData = (key: string, val: any) => {
         console.log(error)
     }
 };
+
+export const clearAllData = () => {
+    AsyncStorage.getAllKeys()
+        .then(keys => AsyncStorage.multiRemove(keys))
+        .then(() => alert('success'));
+}

@@ -36,6 +36,6 @@ export const ButtonsSection = styled.View`
 `
 
 export const SocialButtons = styled.View`
-   width: 90%;
-   margin-top: 10px;
+   width: 100%;
+   margin: 0px auto 20px;
 `

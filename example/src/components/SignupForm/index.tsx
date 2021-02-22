@@ -4,11 +4,13 @@ import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
+import { FacebookLogin } from '../FacebookLogin'
 
 import {
   SignupForm as SignUpController,
   useLanguage,
-  useConfig
+  useConfig,
+  useSession
 } from 'ordering-components/native';
 
 import {
@@ -44,8 +46,9 @@ const SignupFormUI = (props: SignupParams) => {
   } = props
 
   const { showToast } = useToast();
-  const [, t] = useLanguage()
-  const [{ configs }] = useConfig()
+  const [, t] = useLanguage();
+  const [, { login }] = useSession();
+  const [{ configs }] = useConfig();
   const { control, handleSubmit, errors } = useForm();
 
   const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
@@ -57,6 +60,14 @@ const SignupFormUI = (props: SignupParams) => {
       cellphone: null
     }
   });
+
+  const handleSuccessFacebook = (user: any) => {
+    login({
+      user,
+      token: user.session.access_token
+    })
+    navigation.navigate('Home');
+  }
 
   const onSubmit = (values: any) => {
     if (phoneInputData.error) {
@@ -235,14 +246,15 @@ const SignupFormUI = (props: SignupParams) => {
               configs?.facebook_id?.value &&
           (
             <ButtonsSection>
-              <OText size={18} mBottom={30} color={colors.disabled}>
+              <OText size={18} color={colors.disabled}>
                 {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
               </OText>
 
               <SocialButtons>
-                <OText size={18} mBottom={30} color={colors.disabled}>
-                  facebook login button
-                </OText>
+                <FacebookLogin
+                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleSuccessFacebookLogin={handleSuccessFacebook}
+                />
               </SocialButtons>
             </ButtonsSection>
           )
@@ -266,7 +278,8 @@ const style = StyleSheet.create({
   wrappText: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginBottom: 30
   }
 });
 
