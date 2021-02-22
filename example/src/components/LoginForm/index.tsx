@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { Pressable, StyleSheet, ScrollView } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -11,7 +11,6 @@ import {
 
 import {
   ButtonsSection,
-  Wrapper,
   LoginWith,
   FormSide,
   FormInput,
@@ -73,7 +72,7 @@ const LoginFormUI = (props: LoginParams) => {
   }, [errors])
 
   return (
-    <Wrapper>
+    <View>
       <NavBar
         title={t('LOGIN', 'Login')}
         titleAlign={'center'}
@@ -177,6 +176,7 @@ const LoginFormUI = (props: LoginParams) => {
               borderColor={colors.primary}
               textStyle={{color: 'white'}}
               imgRightSrc={null}
+              isLoading={formState.loading}
             />
           </FormInput>
         )}
@@ -218,8 +218,8 @@ const LoginFormUI = (props: LoginParams) => {
           )}
         </ButtonsSection>
       </FormSide>
-      <Spinner visible={formState.loading} />
-    </Wrapper>
+      {/* <Spinner visible={formState.loading} /> */}
+    </View>
   );
 };
 
