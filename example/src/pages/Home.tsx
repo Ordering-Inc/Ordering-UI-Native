@@ -16,7 +16,7 @@ export const Home = ({navigation}: any) => {
   }
 
   return (
-    <Container>
+    <Container nopadding>
       <HomePage {...homeProps} />
     </Container>
   );

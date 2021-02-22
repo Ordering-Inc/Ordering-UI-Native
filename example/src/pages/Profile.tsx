@@ -20,6 +20,11 @@ interface Props {
 }
 
 const Profile = (props: Props) => {
+  const profileProps = {
+    ...props,
+    useSessionUser: true,
+    useValidationFields: true
+  }
 
   const onMenu = () => {
     props.navigation.openDrawer();
@@ -39,7 +44,7 @@ const Profile = (props: Props) => {
           showCall={false}
         />
         <Wrapper>
-          <ProfileController {...props} useSessionUser useValidationFields />
+          <ProfileController {...profileProps} />
         </Wrapper>
       </KeyboardView>
     </>

@@ -24,6 +24,25 @@ export interface ProfileParams {
   showField?: any;
   isRequiredField?: any;
 }
+
+export interface SignupParams {
+  navigation?: any;
+  loginButtonText?: string;
+  signupButtonText?: string;
+  onNavigationRedirect?: any;
+  formState?: any;
+  validationFields?: any;
+  showField?: any;
+  isRequiredField?: any;
+  useChekoutFileds?: boolean;
+  handleSuccessSignup?: any;
+  handleButtonSignupClick?: any;
+}
+
+export interface PhoneInputParams {
+  data?: any;
+  handleData?: any;
+}
 export interface ViewInterface {
   navigation?: any;
   onLogin?: any;

@@ -37,6 +37,7 @@
     "react-native-image-picker": "^3.2.1",
     "react-native-loading-spinner-overlay": "^2.0.0",
     "react-native-maps": "^0.27.1",
+    "react-native-phone-number-input": "^2.0.0",
     "react-native-reanimated": "^1.13.1",
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.11.0",
