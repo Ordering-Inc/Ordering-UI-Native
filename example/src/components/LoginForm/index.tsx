@@ -90,6 +90,7 @@ const LoginFormUI = (props: LoginParams) => {
         onActionLeft={() => navigation.goBack()}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
+        paddingTop={0}
       />
       <FormSide>
         {useLoginByEmail && useLoginByCellphone && (

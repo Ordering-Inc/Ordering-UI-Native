@@ -45,7 +45,8 @@ interface Props {
   onRightAction?: () => void,
   showCall?: boolean,
   titleStyle?: TextStyle,
-  btnStyle?: TextStyle
+  btnStyle?: TextStyle,
+  paddingTop?: number
 }
 
 const NavBar = (props: Props) => {
@@ -54,7 +55,7 @@ const NavBar = (props: Props) => {
     props.navigation.navigate('Supports', {});
   }
   return (
-    <Wrapper style={{ paddingTop: Platform.OS == 'ios' ? safeAreaInset.top : 16 }}>
+    <Wrapper style={{ paddingTop: Platform.OS == 'ios' ? safeAreaInset.top : props.paddingTop }}>
       <OButton
         imgLeftSrc={props.leftImg || IMAGES.arrow_left}
         imgRightSrc={null}
