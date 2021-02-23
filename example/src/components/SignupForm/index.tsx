@@ -53,6 +53,8 @@ const SignupFormUI = (props: SignupParams) => {
 
   const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
 
+  const [isFBLoading, setIsFBLoading] = useState(false)
+
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
     phone: {
@@ -253,6 +255,7 @@ const SignupFormUI = (props: SignupParams) => {
               <SocialButtons>
                 <FacebookLogin
                   handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleLoading={(val: boolean) => setIsFBLoading(val)}
                   handleSuccessFacebookLogin={handleSuccessFacebook}
                 />
               </SocialButtons>
@@ -260,7 +263,7 @@ const SignupFormUI = (props: SignupParams) => {
           )
         )}
       </FormSide>
-      <Spinner visible={formState.loading || validationFields.loading} />
+      <Spinner visible={formState.loading || validationFields.loading || isFBLoading} />
     </View>
   );
 };

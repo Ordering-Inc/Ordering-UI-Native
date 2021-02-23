@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import {
   UserFormDetails as UserProfileController,
   useSession,
-  useUtils,
   useLanguage,
 } from 'ordering-components/native';
 import { useForm, Controller } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { IMAGES } from '../../config/constants';
 import { colors } from '../../theme';
 import { ToastType, useToast } from '../../providers/ToastProvider';
@@ -48,15 +47,13 @@ const ProfileUI = (props: ProfileParams) => {
     toggleIsEdit,
     cleanFormState,
     handleChangeInput,
-    handleButtonUpdateClick,
-    setFormState
+    handleButtonUpdateClick
   } = props;
 
   const [{ user }] = useSession();
   const [, t] = useLanguage();
   const { showToast } = useToast();
   const { control, handleSubmit, errors, setValue } = useForm();
-  const [{ optimizeImage }] = useUtils();
 
   const [validationFieldsSorted, setValidationFieldsSorted] = useState([]);
 
@@ -92,7 +89,7 @@ const ProfileUI = (props: ProfileParams) => {
   };
 
   const handleImagePicker = () => {
-    launchImageLibrary({ mediaType: 'photo' }, (response) => {
+    launchImageLibrary({ mediaType: 'photo', maxHeight: 200, maxWidth: 200, includeBase64: true }, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.errorMessage) {
@@ -100,8 +97,8 @@ const ProfileUI = (props: ProfileParams) => {
         showToast(ToastType.Error, response.errorMessage);
       } else {
         if (response.uri) {
-          console.log(optimizeImage(response.uri))
-          handleButtonUpdateClick(null, true, optimizeImage(response.fileName));
+          const url = `data:${response.type};base64,${response.base64}`
+          handleButtonUpdateClick(null, true, url);
         } else {
           showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
         }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { AccessToken, LoginManager } from 'react-native-fbsdk';
 import { useLanguage, useSession, useApi } from 'ordering-components/native';
+// import { clearAllData } from '../../providers/StoreUtil'
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -11,6 +12,7 @@ import { colors } from '../../theme';
 export const FacebookLogin = (props: any) => {
   const {
     handleErrors,
+    handleLoading,
     handleSuccessFacebookLogin
   } = props
 
@@ -32,20 +34,25 @@ export const FacebookLogin = (props: any) => {
       if (!response.content.error) {
         if (handleSuccessFacebookLogin) {
           handleSuccessFacebookLogin(response.content.result)
+          handleLoading && handleLoading(false)
         }
       } else {
+        handleLoading && handleLoading(false)
         logoutWithFacebook()
       }
     } catch (err) {
+      handleLoading && handleLoading(false)
       handleErrors && handleErrors(err.message)
     }
   }
 
   const loginWithFacebook = () => {
+    handleLoading && handleLoading(true)
     LoginManager.logInWithPermissions(['public_profile']).then(
       (login: any) => {
         if (login.isCancelled) {
           const err = t('LOGIN_WITH_FACEBOOK_CANCELLED', 'Login cancelled')
+          handleLoading && handleLoading(false)
           handleErrors && handleErrors(err)
         } else {
           AccessToken.getCurrentAccessToken().then((data: any) => {
@@ -58,6 +65,7 @@ export const FacebookLogin = (props: any) => {
         const err = error
           ? t(error?.replace(/ /g, '_').toUpperCase(), 'Login cancelled')
           : t('LOGIN_FAIL_WITH_FACEBOOK', 'Login fail with facebook')
+        handleLoading && handleLoading(true)
         handleErrors && handleErrors(err)
       },
     );
