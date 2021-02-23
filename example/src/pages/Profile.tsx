@@ -4,7 +4,6 @@ import { Platform } from 'react-native';
 import NavBar from '../components/NavBar';
 import { IMAGES } from '../config/constants';
 import { UserProfileForm } from '../components/UserProfileForm';
-import { useSession } from 'ordering-components/native'
 
 const Wrapper = styled.ScrollView`
   flex: 1;
@@ -27,8 +26,6 @@ const Profile = (props: Props) => {
     useValidationFields: true
   }
 
-  const [{ user }] = useSession()
-
   const onMenu = () => {
     props.navigation.openDrawer();
   };
@@ -47,7 +44,7 @@ const Profile = (props: Props) => {
           showCall={false}
         />
         <Wrapper>
-          <UserProfileForm {...profileProps} userId={user?.id} />
+          <UserProfileForm {...profileProps} />
         </Wrapper>
       </KeyboardView>
     </>
