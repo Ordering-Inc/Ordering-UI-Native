@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
@@ -50,6 +50,8 @@ const LoginFormUI = (props: LoginParams) => {
   const [{ configs }] = useConfig()
   const [, { login }] = useSession()
   const { control, handleSubmit, errors } = useForm();
+
+  const [isFBLoading, setIsFBLoading] = useState(false)
 
   const onSubmit = (values: any) => handleButtonLoginClick(values);
 
@@ -214,6 +216,7 @@ const LoginFormUI = (props: LoginParams) => {
               <SocialButtons>
                 <FacebookLogin
                   handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleLoading={(val: boolean) => setIsFBLoading(val)}
                   handleSuccessFacebookLogin={handleSuccessFacebook}
                 />
               </SocialButtons>
@@ -233,7 +236,7 @@ const LoginFormUI = (props: LoginParams) => {
           </ButtonsSection>
         )}
       </FormSide>
-      {/* <Spinner visible={formState.loading} /> */}
+      <Spinner visible={isFBLoading} />
     </View>
   );
 };
