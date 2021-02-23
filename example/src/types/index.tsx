@@ -13,6 +13,7 @@ export interface LoginParams {
   handleButtonLoginClick?: any;
 }
 export interface ProfileParams {
+  navigation?: any;
   isEdit?: boolean;
   formState?: any;
   toggleIsEdit?: any;

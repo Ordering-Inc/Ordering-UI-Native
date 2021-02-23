@@ -14,6 +14,7 @@ import { colors } from '../../theme';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { ProfileParams } from '../../types';
 import { flatArray } from '../../utils';
+import {AddressList} from '../AddressList'
 import {
   OIcon,
   OIconButton,
@@ -38,6 +39,7 @@ const notValidationFields = [
 
 const ProfileUI = (props: ProfileParams) => {
   const {
+    navigation,
     isEdit,
     formState,
     validationFields,
@@ -269,6 +271,7 @@ const ProfileUI = (props: ProfileParams) => {
             )}
         </EditButton>
       )}
+      <AddressList navigation={navigation} nopadding isFromProfile />
     </>
   );
 };

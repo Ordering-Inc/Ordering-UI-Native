@@ -4,7 +4,7 @@ import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import Forgot from '../pages/Forgot';
 import Home from '../pages/Home'
-import DrawNavigator from './DrawNavigator';
+import MyAccountNavigator from './MyAccountNavigator';
 
 const Stack = createStackNavigator();
 
@@ -33,7 +33,7 @@ const RootNavigator = () => {
       />
       <Stack.Screen
         name='MyAccount'
-        component={DrawNavigator}
+        component={MyAccountNavigator}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
