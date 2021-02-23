@@ -8,18 +8,23 @@ import { colors } from '../../theme'
 import { OButton, OText, OAlert } from '../shared'
 import NavBar from '../NavBar'
 import { Container } from '../../layouts/Container'
+import {AddressListParams} from '../../types'
 
 const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
 
-const AddressListUI = (props) => {
+const AddressListUI = (props: AddressListParams) => {
 
-    const { navigation, addressList, handleSetDefault, handleDelete, isFromProfile, nopadding } = props
+    const { 
+        navigation, 
+        addressList, 
+        isFromProfile, 
+        nopadding,
+        handleSetDefault, 
+        handleDelete, 
+    } = props
 
     const [orderState] = useOrder()
     const [, t] = useLanguage()
-
-    const [addressOpen, setAddressOpen] = useState(false)
-    const [curAddress, setCurAddress] = useState({})
 
     const uniqueAddressesList = (addressList.addresses && addressList.addresses.filter(
         (address: any, i: number, self: any) =>
@@ -64,13 +69,8 @@ const AddressListUI = (props) => {
         }
     }
 
-    const openAddressForm = (address: any) => {
-        navigation.navigate('AddressForm', { address: address, previousComponent: isFromProfile ? 'Profile' : 'AddressList' })
-    }
-
     const handleSetAddress = (address: any) => {
         if (address.id === orderState?.options?.address_id) return
-        setAddressOpen(false)
         handleSetDefault(address)
     }
 
@@ -103,7 +103,7 @@ const AddressListUI = (props) => {
                                 <AddressItem key={address.id} onPress={() => handleSetAddress(address)} isSelected={checkAddress(address)}>
                                     <MaterialIcon name={addressIcon(address?.tag)} size={32} color={colors.primary} style={styles.icon} />
                                     <OText style={styles.address}>{address.address}</OText>
-                                    <MaterialIcon name='pencil-outline' size={28} color={colors.green} onPress={() => openAddressForm(address)} />
+                                    <MaterialIcon name='pencil-outline' size={28} color={colors.green} onPress={() => onNavigationRedirect('AddressForm', { address: address, previousComponent: isFromProfile ? 'Profile' : 'AddressList' })} />
                                     <OAlert
                                         title={t('DELETE_ADDRESS', 'Delete Address')}
                                         message={t('DELETE_ADDRESS_CONFIRMATION', 'Are you sure to you wants delete the selected address')}
@@ -125,7 +125,7 @@ const AddressListUI = (props) => {
                             imgLeftStyle={styles.buttonIcon}
                             style={styles.button}
                             borderColor={colors.primary}
-                            onClick={() => onNavigationRedirect('AddressForm', {address: null, previousComponent: 'AddressList', nopadding: true})}
+                            onClick={() => onNavigationRedirect('AddressForm', { address: null, previousComponent: 'AddressList', nopadding: true })}
                         />
                         <OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('OrderView')} />
                     </ContainerButtons>
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     }
 })
 
-export const AddressList = (props) => {
+export const AddressList = (props: AddressListParams) => {
     const addressListProps = {
         ...props,
         UIComponent: AddressListUI

@@ -27,6 +27,15 @@ export interface ProfileParams {
   isRequiredField?: any;
 }
 
+export interface AddressListParams {
+  navigation?: any;
+  addressList?: any;
+  handleSetDefault?: any;
+  handleDelete?: any;
+  isFromProfile?: boolean;
+  nopadding?: boolean
+}
+
 export interface SignupParams {
   navigation?: any;
   loginButtonText?: string;
