@@ -1,11 +1,16 @@
 import React from 'react'
-import { LanguageSelector as LanguageSelectorController } from 'ordering-components/native'
-import { View, StyleSheet } from 'react-native'
-import { ODropDown } from '../shared'
+import { LanguageSelector as LanguageSelectorController,useOrder } from 'ordering-components/native'
+import { StyleSheet } from 'react-native'
+
 import RNPickerSelect from 'react-native-picker-select'
 import { Container } from './styles'
+import {colors} from '../../theme'
+import { OText } from '../shared'
+import AntIcon from 'react-native-vector-icons/AntDesign'
 
 const LanguageSelectorUI = (props) => {
+
+  const [orderState] = useOrder()
 
   const {
     languagesState,
@@ -30,6 +35,9 @@ const LanguageSelectorUI = (props) => {
           items={_languages || []}
           placeholder={{ value: currentLanguage || '', label: currentLanguage.toUpperCase() }}
           style={pickerStyle}
+          useNativeAndroidPickerStyle={false}
+          Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon}/>}
+          disabled={orderState.loading}
         />
       )}
     </Container>
@@ -38,17 +46,22 @@ const LanguageSelectorUI = (props) => {
 
 const pickerStyle = StyleSheet.create({
   inputAndroid: {
-    color: 'black',
-    width: 100,
+    color: colors.secundaryContrast,
+    width: 75,
     borderWidth: 1,
-    borderColor: 'red'
+    borderColor: colors.primary,
+    borderRadius: 25,
+    paddingHorizontal: 10
   },
   icon: {
-    color: 'black',
-    width: 10
+    width: 10,
+    height: 10,
+    top: 17,
+    right: 10,
+    position: 'absolute',
   },
   placeholder: {
-    color: 'black'
+    color: colors.secundaryContrast
   }
 })
 
