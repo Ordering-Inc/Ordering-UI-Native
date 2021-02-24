@@ -30,10 +30,11 @@ export interface ProfileParams {
 export interface AddressListParams {
   navigation?: any;
   addressList?: any;
-  handleSetDefault?: any;
-  handleDelete?: any;
   isFromProfile?: boolean;
-  nopadding?: boolean
+  nopadding?: boolean;
+  userId?: any;
+  handleDelete?: any;
+  handleSetDefault?: any;
 }
 
 export interface SignupParams {

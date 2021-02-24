@@ -1,8 +1,7 @@
 
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import HomeNavigator from './HomeNavigator';
-import {AddressList} from '../components/AddressList'
+import AddressList from '../pages/AddressList'
 import {AddressForm} from '../components/AddressForm'
 import DrawNavigator from './DrawNavigator';
 

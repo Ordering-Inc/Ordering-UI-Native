@@ -268,7 +268,7 @@ const ProfileUI = (props: ProfileParams) => {
             )}
         </EditButton>
       )}
-      <AddressList navigation={navigation} nopadding isFromProfile />
+      <AddressList userId={user.id} navigation={navigation} nopadding isFromProfile />
     </>
   );
 };

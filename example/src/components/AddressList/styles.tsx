@@ -1,5 +1,5 @@
-import styled, {css} from 'styled-components/native'
-import {colors} from '../../theme'
+import styled, { css } from 'styled-components/native'
+import { colors } from '../../theme'
 
 export const AddressListContainer = styled.View`
     flex: 1;
