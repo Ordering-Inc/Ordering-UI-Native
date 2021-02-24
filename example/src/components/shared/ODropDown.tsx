@@ -1,16 +1,16 @@
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity,View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../theme'
 
 interface Props {
-    items?: Array<string>,
-    onSelect?: any,
-    selectedIndex?: number,
-    kindImage?: any,
-    placeholder?: string,
-    style?: any,
-    dropIconColor?: string
+	items?: Array<string>,
+	onSelect?: any,
+	selectedIndex?: number,
+	kindImage?: any,
+	placeholder?: string,
+	style?: any,
+	dropIconColor?: string
 }
 
 const Wrapper = styled.View`
@@ -18,21 +18,23 @@ const Wrapper = styled.View`
     padding: 10px 14px;
     border-radius: 20px;
     border-width: 1px;
-    border-color: ${colors.primary}
+    border-color: ${colors.primary};
     flex-grow: 1;
     flex-basis: 0;
     align-items: center;
     justify-content: center;
+		position: relative;
 `
 const InnerWrapper = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+		position: relative
 `
 const SelLabel = styled.Text`
     flex: 1;
     font-family: 'Poppins-Regular';
-    color: grey;
+    color: red;
     flex-grow: 1;
     margin: 0 10px;
 `
@@ -68,66 +70,65 @@ const DropItems = styled.Text`
 
 const ODropDown = (props: Props) => {
 
-    const [curIndex, onSelect] = React.useState(props.selectedIndex);
-    const [items, getItems] = React.useState(props.items);
-    const [isOpen, onOffToggle] = React.useState(false);
-    const [value, setValue] = React.useState(curIndex && items ? items[curIndex] : null);
+	const [curIndex, onSelect] = React.useState(props.selectedIndex);
+	const [isOpen, onOffToggle] = React.useState(false);
+	const [value, setValue] = React.useState(curIndex && props.items ? props.items[curIndex] : null);
 
-    const onSelectItem = (index: number) => {
-        props.onSelect(index);
-        onSelect(index);
-        if (items) {
-            setValue(items[index]);
-        }
-        onOffToggle(false);
-    }
+	const onSelectItem = (index: number) => {
+		props.onSelect(index);
+		onSelect(index);
+		if (props.items) {
+			setValue(props.items[index]);
+		}
+		onOffToggle(false);
+	}
 
-    React.useEffect(() => {
-        if (props.items) {
-            onSelect(0);
-        }
-        else
-            alert('Undefined Items')
-    }, [props.items])
+	React.useEffect(() => {
+		if (props.items) {
+			onSelect(0);
+		}
+		else
+			alert('Undefined Items')
+	}, [props.items])
 
-    const onToggle = () => {
-        onOffToggle(is_opened => !is_opened)
-    }
-        
-    return (
-        <Wrapper style={props.style}>
-            <InnerWrapper
-                onPress={onToggle}
-            >
-                {props.kindImage 
-                    ? (<KindIcon source={props.kindImage} />)
-                    : null
-                }
-                <SelLabel numberOfLines={1} ellipsizeMode={'tail'}>{value || props.placeholder}</SelLabel>
-                <DropIcon style={{tintColor: props.dropIconColor || 'grey'}} source={require('../../assets/icons/drop_down.png')} />
-            </InnerWrapper>
-            {isOpen
-                ? (
-                    <DropView>
-                        {items
-                            ? items.map((item, index) => 
-                                (
-                                    <TouchableOpacity
-                                        key={`key_${index}`}
-                                        onPress={() => onSelectItem(index)}
-                                    >
-                                        <DropItems>{item}</DropItems>
-                                    </TouchableOpacity>
-                                )
-                            ) 
-                            : null
-                        }
-                    </DropView>
-                )
-                : null
-            }
-        </Wrapper>
-    )
+	const onToggle = () => {
+		onOffToggle(!isOpen)
+	}
+
+	return (
+		<Wrapper style={props.style}>
+			<InnerWrapper
+				onPress={onToggle}
+			>
+				{props.kindImage
+					? (<KindIcon source={props.kindImage} />)
+					: null
+				}
+				<SelLabel numberOfLines={1} ellipsizeMode={'tail'}>{value || props.placeholder}</SelLabel>
+				<DropIcon style={{ tintColor: props.dropIconColor || 'grey' }} source={require('../../assets/icons/drop_down.png')} />
+			</InnerWrapper>
+			{isOpen
+				? (
+					<DropView>
+						{props.items
+							? props.items.map((item, index) =>
+							(
+								<TouchableOpacity
+									key={`key_${index}`}
+									onPress={() => onSelectItem(index)}
+								>
+									<DropItems >{item}</DropItems>
+								</TouchableOpacity>
+							)
+							)
+							: null
+						}
+					</DropView>
+				)
+				: null
+			}
+		</Wrapper>
+	)
 }
 
 export default ODropDown
