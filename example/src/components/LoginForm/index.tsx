@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
+import { PhoneInputNumber } from '../PhoneInputNumber'
 
 import {
   LoginForm as LoginFormController,
@@ -13,13 +14,15 @@ import {
 import { FacebookLogin } from '../FacebookLogin'
 
 import {
-  ButtonsSection,
+  ButtonsWrapper,
   LoginWith,
   FormSide,
   FormInput,
   OTabs,
   OTab,
-  SocialButtons
+  SocialButtons,
+  OrSeparator,
+  LineSeparator
 } from './styles';
 
 import { IMAGES } from '../../config/constants';
@@ -39,9 +42,11 @@ const LoginFormUI = (props: LoginParams) => {
     useLoginByCellphone,
     loginButtonText,
     forgotButtonText,
+    verifyPhoneState,
     registerButtonText,
     handleChangeTab,
     handleButtonLoginClick,
+    handleVerifyCode,
     onNavigationRedirect
   } = props
 
@@ -51,9 +56,41 @@ const LoginFormUI = (props: LoginParams) => {
   const [, { login }] = useSession()
   const { control, handleSubmit, errors } = useForm();
 
-  const [isFBLoading, setIsFBLoading] = useState(false)
+  const [isFBLoading, setIsFBLoading] = useState(false);
+  const [phoneInputData, setPhoneInputData] = useState({
+    error: '',
+    phone: {
+      country_phone_code: null,
+      cellphone: null
+    }
+  });
 
-  const onSubmit = (values: any) => handleButtonLoginClick(values);
+  const onSubmit = (values: any) => {
+    if (phoneInputData.error) {
+      showToast(ToastType.Error, phoneInputData.error);
+      return
+    }
+    handleButtonLoginClick({
+      ...values,
+      ...phoneInputData.phone
+    });
+  }
+
+  const handleVerifyCodeClick = () => {
+    if (phoneInputData.error) {
+      showToast(ToastType.Error, phoneInputData.error);
+      return
+    }
+    if (
+      !phoneInputData.error &&
+      !phoneInputData.phone.country_phone_code &&
+      !phoneInputData.phone.cellphone
+    ) {
+      showToast(ToastType.Error, t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.'))
+      return
+    }
+    handleVerifyCode && handleVerifyCode(phoneInputData.phone)
+  }
 
   const handleSuccessFacebook = (user: any) => {
     login({
@@ -73,10 +110,32 @@ const LoginFormUI = (props: LoginParams) => {
   }, [formState])
 
   useEffect(() => {
+    if (verifyPhoneState && !verifyPhoneState?.loading && verifyPhoneState.result?.error) {
+      const message = typeof verifyPhoneState?.result?.result === 'string'
+        ? verifyPhoneState?.result?.result
+        : verifyPhoneState?.result?.result[0]
+      verifyPhoneState.result?.result && showToast(
+        ToastType.Error,
+        message
+      )
+    }
+  }, [verifyPhoneState])
+
+  useEffect(() => {
     if (Object.keys(errors).length > 0) {
       // Convert all errors in one string to show in toast provider
       const list = Object.values(errors)
       let stringError = ''
+      if (phoneInputData.error) {
+        list.unshift({ message: phoneInputData.error })
+      }
+      if (
+        !phoneInputData.error &&
+        !phoneInputData.phone.country_phone_code &&
+        !phoneInputData.phone.cellphone
+      ) {
+        list.unshift({ message: t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.') })
+      }
       list.map((item: any, i: number) => {
         stringError += (i + 1) === list.length ? `- ${item.message}` : `- ${item.message}\n`
       })
@@ -145,24 +204,10 @@ const LoginFormUI = (props: LoginParams) => {
                 defaultValue=""
                 />
             )}
-
             {useLoginByCellphone && loginTab === 'cellphone' && (
-              <Controller
-                control={control}
-                render={({ onChange, value }) => (
-                  <OInput
-                    type='number-pad'
-                    isSecured={true}
-                    placeholder={'Cellphone'}
-                    style={loginStyle.inputStyle}
-                    icon={IMAGES.phone}
-                    value={value}
-                    onChange={(val: any) => onChange(val)}
-                  />
-                )}
-                name="cellphone"
-                rules={{ required: t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone')) }}
-                defaultValue=""
+              <PhoneInputNumber
+                data={phoneInputData}
+                handleData={(val: any) => setPhoneInputData(val)}
               />
             )}
 
@@ -203,12 +248,36 @@ const LoginFormUI = (props: LoginParams) => {
           </Pressable>
         )}
 
+        {useLoginByCellphone && loginTab === 'cellphone' && (
+          <>
+            <OrSeparator>
+              <LineSeparator />
+              <OText size={18} mRight={20} mLeft={20}>
+                {t('OR', 'Or')}
+              </OText>
+              <LineSeparator />
+            </OrSeparator>
+
+            <ButtonsWrapper mBottom={20}>
+              <OButton
+                onClick={handleVerifyCodeClick}
+                text={t('GET_VERIFY_CODE', 'Get Verify Code')}
+                borderColor={colors.primary}
+                style={loginStyle.btnOutline}
+                imgRightSrc={null}
+                isLoading={verifyPhoneState?.loading}
+                indicatorColor={colors.primary}
+              />
+            </ButtonsWrapper>
+          </>
+        )}
+
         {configs && Object.keys(configs).length > 0 && (
           (configs?.facebook_login?.value === 'true' ||
               configs?.facebook_login?.value === '1') &&
               configs?.facebook_id?.value &&
           (
-            <ButtonsSection>
+            <ButtonsWrapper>
               <OText size={18} mBottom={10} color={colors.disabled}>
                 {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
               </OText>
@@ -220,12 +289,12 @@ const LoginFormUI = (props: LoginParams) => {
                   handleSuccessFacebookLogin={handleSuccessFacebook}
                 />
               </SocialButtons>
-            </ButtonsSection>
+            </ButtonsWrapper>
           )
         )}
 
         {onNavigationRedirect && registerButtonText && (
-          <ButtonsSection>
+          <ButtonsWrapper>
             <OButton
               onClick={() => onNavigationRedirect('Signup')}
               text={registerButtonText}
@@ -233,7 +302,7 @@ const LoginFormUI = (props: LoginParams) => {
               borderColor={colors.primary}
               imgRightSrc={null}
             />
-          </ButtonsSection>
+          </ButtonsWrapper>
         )}
       </FormSide>
       <Spinner visible={isFBLoading} />

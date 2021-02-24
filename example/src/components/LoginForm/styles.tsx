@@ -1,4 +1,5 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
+import { colors } from '../../theme'
 
 export const FormSide = styled.View`
   display: flex;
@@ -28,14 +29,33 @@ export const FormInput = styled.View`
   padding: 25px 0px 15px;
 `
 
-export const ButtonsSection = styled.View`
+export const ButtonsWrapper = styled.View`
   margin: 10px 0px 0px;
   width: 90%;
   display: flex;
   flex-direction: column;
+
+  ${(props: any) => props.mBottom && css`
+    margin-bottom: ${props.mBottom}px;
+  `}
 `
 
 export const SocialButtons = styled.View`
-   width: 100%;
-   margin: 0px auto 20px;
+  width: 100%;
+  margin: 0px auto 20px;
+`
+
+export const OrSeparator = styled.View`
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+`
+
+export const LineSeparator = styled.View`
+  width: 40%;
+  height: 1px;
+  background-color: ${colors.disabled};
 `

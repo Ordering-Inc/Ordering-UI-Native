@@ -11,6 +11,8 @@ export interface LoginParams {
   registerButtonText?: string;
   forgotButtonText?: string;
   handleButtonLoginClick?: any;
+  handleVerifyCode?: any;
+  verifyPhoneState?: any;
 }
 export interface ProfileParams {
   isEdit?: boolean;
