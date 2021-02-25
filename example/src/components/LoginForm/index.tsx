@@ -12,6 +12,7 @@ import {
 } from 'ordering-components/native';
 
 import { FacebookLogin } from '../FacebookLogin'
+import { VerifyPhone } from '../VerifyPhone'
 
 import {
   ButtonsWrapper,
@@ -29,7 +30,7 @@ import { IMAGES } from '../../config/constants';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import NavBar from '../NavBar'
 
-import { OText, OButton, OInput } from '../shared';
+import { OText, OButton, OInput, OModal } from '../shared';
 import { LoginParams } from '../../types';
 import { colors } from '../../theme'
 
@@ -43,10 +44,12 @@ const LoginFormUI = (props: LoginParams) => {
     loginButtonText,
     forgotButtonText,
     verifyPhoneState,
+    checkPhoneCodeState,
     registerButtonText,
     handleChangeTab,
     handleButtonLoginClick,
-    handleVerifyCode,
+    handleSendVerifyCode,
+    handleCheckPhoneCode,
     onNavigationRedirect
   } = props
 
@@ -56,6 +59,8 @@ const LoginFormUI = (props: LoginParams) => {
   const [, { login }] = useSession()
   const { control, handleSubmit, errors } = useForm();
 
+  const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false)
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isFBLoading, setIsFBLoading] = useState(false);
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -89,7 +94,8 @@ const LoginFormUI = (props: LoginParams) => {
       showToast(ToastType.Error, t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.'))
       return
     }
-    handleVerifyCode && handleVerifyCode(phoneInputData.phone)
+    handleSendVerifyCode && handleSendVerifyCode(phoneInputData.phone)
+    setIsLoadingVerifyModal(true)
   }
 
   const handleSuccessFacebook = (user: any) => {
@@ -110,14 +116,23 @@ const LoginFormUI = (props: LoginParams) => {
   }, [formState])
 
   useEffect(() => {
-    if (verifyPhoneState && !verifyPhoneState?.loading && verifyPhoneState.result?.error) {
-      const message = typeof verifyPhoneState?.result?.result === 'string'
-        ? verifyPhoneState?.result?.result
-        : verifyPhoneState?.result?.result[0]
-      verifyPhoneState.result?.result && showToast(
-        ToastType.Error,
-        message
-      )
+    if (verifyPhoneState && !verifyPhoneState?.loading) {
+      if (verifyPhoneState.result?.error) {
+        const message = typeof verifyPhoneState?.result?.result === 'string'
+          ? verifyPhoneState?.result?.result
+          : verifyPhoneState?.result?.result[0]
+        verifyPhoneState.result?.result && showToast(
+          ToastType.Error,
+          message
+        )
+        return
+      }
+
+      const okResult = verifyPhoneState.result?.result === 'OK'
+      if (okResult) {
+        !isModalVisible && setIsModalVisible(true)
+        setIsLoadingVerifyModal(false)
+      }
     }
   }, [verifyPhoneState])
 
@@ -265,7 +280,7 @@ const LoginFormUI = (props: LoginParams) => {
                 borderColor={colors.primary}
                 style={loginStyle.btnOutline}
                 imgRightSrc={null}
-                isLoading={verifyPhoneState?.loading}
+                isLoading={verifyPhoneState?.loading || isLoadingVerifyModal}
                 indicatorColor={colors.primary}
               />
             </ButtonsWrapper>
@@ -305,6 +320,17 @@ const LoginFormUI = (props: LoginParams) => {
           </ButtonsWrapper>
         )}
       </FormSide>
+      <OModal
+        open={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+      >
+        <VerifyPhone
+          phone={phoneInputData.phone}
+          checkPhoneCodeState={checkPhoneCodeState}
+          handleCheckPhoneCode={handleCheckPhoneCode}
+          handleVerifyCodeClick={handleVerifyCodeClick}
+        />
+      </OModal>
       <Spinner visible={isFBLoading} />
     </View>
   );

@@ -10,9 +10,11 @@ export interface LoginParams {
   onNavigationRedirect?: any;
   registerButtonText?: string;
   forgotButtonText?: string;
-  handleButtonLoginClick?: any;
-  handleVerifyCode?: any;
   verifyPhoneState?: any;
+  checkPhoneCodeState?: any;
+  handleButtonLoginClick?: any;
+  handleSendVerifyCode?: any;
+  handleCheckPhoneCode?: any;
 }
 export interface ProfileParams {
   isEdit?: boolean;
