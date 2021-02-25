@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import { Platform } from 'react-native';
 import NavBar from '../components/NavBar';
 import { IMAGES } from '../config/constants';
-import { UserProfileForm as ProfileController } from '../components/Profile';
+import { UserProfileForm } from '../components/UserProfileForm';
 
 const Wrapper = styled.ScrollView`
   flex: 1;
@@ -44,7 +44,7 @@ const Profile = (props: Props) => {
           showCall={false}
         />
         <Wrapper>
-          <ProfileController {...profileProps} />
+          <UserProfileForm {...profileProps} />
         </Wrapper>
       </KeyboardView>
     </>
