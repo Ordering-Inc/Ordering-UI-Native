@@ -5,9 +5,10 @@ import { StyleSheet } from 'react-native'
 import RNPickerSelect from 'react-native-picker-select'
 import { Container } from './styles'
 import { colors } from '../../theme'
+import { LanguageSelectorParams } from '../../types'
 import AntIcon from 'react-native-vector-icons/AntDesign'
 
-const LanguageSelectorUI = (props) => {
+const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
   const [orderState] = useOrder()
 
@@ -66,7 +67,7 @@ const pickerStyle = StyleSheet.create({
   }
 })
 
-export const LanguageSelector = (props) => {
+export const LanguageSelector = (props: LanguageSelectorParams) => {
   const LanguageProps = {
     ...props,
     UIComponent: LanguageSelectorUI
