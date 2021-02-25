@@ -260,6 +260,7 @@ const AddressFormUI = (props) => {
 									marginTop: 44,
 									borderBottomEndRadius: 15,
 									elevation: 2,
+									zIndex: 1000
 								},
 								textInput: {
 									borderColor: 'red',
