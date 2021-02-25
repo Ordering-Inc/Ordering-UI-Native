@@ -1,11 +1,10 @@
 import React from 'react'
-import { LanguageSelector as LanguageSelectorController,useOrder } from 'ordering-components/native'
+import { LanguageSelector as LanguageSelectorController, useOrder } from 'ordering-components/native'
 import { StyleSheet } from 'react-native'
 
 import RNPickerSelect from 'react-native-picker-select'
 import { Container } from './styles'
-import {colors} from '../../theme'
-import { OText } from '../shared'
+import { colors } from '../../theme'
 import AntIcon from 'react-native-vector-icons/AntDesign'
 
 const LanguageSelectorUI = (props) => {
@@ -21,7 +20,8 @@ const LanguageSelectorUI = (props) => {
   const _languages = languagesState?.languages?.map((language: any) => {
     return {
       value: language?.code,
-      label: language?.code?.toUpperCase()
+      label: language?.name,
+      inputLabel: language?.code.toUpperCase()
     }
   })
   _languages && _languages.sort((a: any, b: any) =>
@@ -33,10 +33,11 @@ const LanguageSelectorUI = (props) => {
         <RNPickerSelect
           onValueChange={handleChangeLanguage}
           items={_languages || []}
-          placeholder={{ value: currentLanguage || '', label: currentLanguage.toUpperCase() }}
+          value={currentLanguage}
           style={pickerStyle}
           useNativeAndroidPickerStyle={false}
-          Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon}/>}
+          placeholder={{}}
+          Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon} />}
           disabled={orderState.loading}
         />
       )}
@@ -47,10 +48,10 @@ const LanguageSelectorUI = (props) => {
 const pickerStyle = StyleSheet.create({
   inputAndroid: {
     color: colors.secundaryContrast,
-    width: 75,
+    width: 60,
     borderWidth: 1,
-    borderColor: colors.primary,
-    borderRadius: 25,
+    borderColor: colors.secundaryContrast,
+    borderRadius: 20,
     paddingHorizontal: 10
   },
   icon: {
