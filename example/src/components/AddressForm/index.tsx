@@ -27,7 +27,6 @@ const AddressFormUI = (props) => {
 		userCustomerSetup,
 		isRequiredField,
 	} = props
-	const { previousComponent } = route?.params
 
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
@@ -133,11 +132,8 @@ const AddressFormUI = (props) => {
 			}
 		})
 	}
-	const onNavigationRedirect = (page: string) => {
-		navigation.navigate(page)
-	}
 
-	const goToBack = () => onNavigationRedirect(previousComponent)
+	const goToBack = () => navigation.goBack()
 
 	useEffect(() => {
 		if (alertState.open) {

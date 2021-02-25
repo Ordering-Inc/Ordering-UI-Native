@@ -131,7 +131,7 @@ const AddressListUI = (props: AddressListParams) => {
 										name='pencil-outline'
 										size={28}
 										color={colors.green}
-										onPress={() => onNavigationRedirect('AddressForm', { address: address, previousComponent: isFromProfile ? 'Profile' : 'AddressList', isEditing: true, addressList: addressList, onSaveAddress: handleSaveAddress })}
+										onPress={() => onNavigationRedirect('AddressForm', { address: address, isEditing: true, addressList: addressList, onSaveAddress: handleSaveAddress })}
 									/>
 									<OAlert
 										title={t('DELETE_ADDRESS', 'Delete Address')}
@@ -156,7 +156,7 @@ const AddressListUI = (props: AddressListParams) => {
 					imgLeftStyle={styles.buttonIcon}
 					style={styles.button}
 					borderColor={colors.primary}
-					onClick={() => onNavigationRedirect('AddressForm', { address: null, previousComponent: 'AddressList', nopadding: true, addressList: addressList, onSaveAddress: handleSaveAddress })}
+					onClick={() => onNavigationRedirect('AddressForm', { address: null, nopadding: true, addressList: addressList, onSaveAddress: handleSaveAddress })}
 				/>
 			</AddressListContainer>
 		</Container>
