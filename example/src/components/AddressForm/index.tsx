@@ -1,32 +1,51 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, } from 'ordering-components/native'
-import {StyleSheet} from 'react-native'
+import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder } from 'ordering-components/native'
+import { StyleSheet } from 'react-native'
 import { OInput, OTextarea, OText, OButton, OIcon } from '../shared'
 import NavBar from '../NavBar'
 import { colors } from '../../theme'
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
-import {AddressFormContainer,IconsContainer} from './styles'
+import { AddressFormContainer, AutocompleteInput, IconsContainer } from './styles'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { useForm, Controller } from 'react-hook-form'
 
-export const AddressFormUI = (props) => {
-	const { navigation, route, updateChanges, formState, isEditing, handleChangeInput, addressState, addressesList, saveAddress, userCustomerSetup } = props
-	const { previousComponent, address, nopadding } = route?.params
+const inputNames = [{ name: 'address', code: 'Address' }, { name: 'internal_number', code: 'Internal number' }, { name: 'zipcode', code: 'Zipcode' }, { name: 'address_notes', code: 'Address notes' }]
+
+const AddressFormUI = (props) => {
+	const {
+		navigation,
+		route,
+		updateChanges,
+		address,
+		formState,
+		isEditing,
+		handleChangeInput,
+		addressState,
+		addressesList,
+		saveAddress,
+		userCustomerSetup,
+		isRequiredField,
+	} = props
+	const { previousComponent } = route?.params
 
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
 	const { showToast } = useToast()
 	const [configState] = useConfig()
+	const [orderState] = useOrder()
+	const { handleSubmit, errors, control, setValue } = useForm()
 
-	const [data, setData] = useState({ data: {}, details: {} })
-	const [location, setLocation] = useState({ lat: null, lng: null })
-	const [alertState, setAlertState] = useState({ open: false, content: {} })
+	const [alertState, setAlertState] = useState({ open: false, content: [] })
+	const [addressTag, setAddressTag] = useState(addressState?.address?.tag)
+	const [firstLocationNoEdit, setFirstLocationNoEdit] = useState({ value: null })
+	const [isFirstTime, setIsFirstTime] = useState(true)
 	const [locationChange, setLocationChange] = useState(
 		isEditing
 			? addressState?.address?.location
 			: formState.changes?.location ?? null
 	)
-  const [addressTag, setAddressTag] = useState(addressState?.address?.tag)
+
 
 	const googleInput = useRef(null)
 
@@ -40,7 +59,6 @@ export const AddressFormUI = (props) => {
 				open: true,
 				content: [t('VALIDATION_ERROR_ADDRESS_REQUIRED', 'The field Address is required')]
 			})
-			setLocationChange(null)
 			return
 		}
 		if (formState?.changes?.address && !formState?.changes?.location) {
@@ -54,8 +72,8 @@ export const AddressFormUI = (props) => {
 		}
 
 		const arrayList = isEditing
-			? addressesList.filter((address: any) => address.id !== addressState.address?.id) || []
-			: addressesList || []
+			? addressesList.addresses.filter((address: any) => address.id !== addressState?.address?.id) || []
+			: addressesList.addresses || []
 		const addressToCompare = isEditing
 			? { ...addressState.address, ...formState.changes }
 			: formState?.changes
@@ -64,6 +82,7 @@ export const AddressFormUI = (props) => {
 
 		if (!isAddressAlreadyExist) {
 			saveAddress({}, userCustomerSetup)
+			goToBack()
 			return
 		}
 
@@ -92,7 +111,7 @@ export const AddressFormUI = (props) => {
 				values.push(!address[prop])
 			}
 		})
-		return values.every(value => value)
+		return values.every((value: any) => value)
 	}
 
 	const handleChangeAddress = (data: any, details: any) => {
@@ -106,13 +125,13 @@ export const AddressFormUI = (props) => {
 	}
 
 	const handleAddressTag = (tag: string) => {
-    setAddressTag(tag)
-    handleChangeInput({
-      target: {
-        name: 'tag',
-        value: tag
-      }
-    })
+		setAddressTag(tag)
+		handleChangeInput({
+			target: {
+				name: 'tag',
+				value: tag
+			}
+		})
 	}
 	const onNavigationRedirect = (page: string) => {
 		navigation.navigate(page)
@@ -129,6 +148,83 @@ export const AddressFormUI = (props) => {
 		}
 	}, [alertState.content])
 
+	useEffect(() => {
+		if (!auth) {
+			inputNames.forEach(field =>
+				setValue(
+					field.name,
+					formState?.changes[field.name] ||
+					(orderState?.options?.address && orderState?.options?.address[field.name]) ||
+					''
+				)
+			)
+			return
+		}
+
+		if (!formState.loading && formState.result?.error) {
+			setAlertState({
+				open: true,
+				content: formState.result?.result || [t('ERROR', 'Error')]
+			})
+		}
+
+		setValue('address', formState?.changes?.address ?? addressState.address?.address ?? '')
+		if (!isEditing) {
+			formState?.changes?.address && setLocationChange(formState?.changes?.location)
+			if (
+				formState?.changes?.address &&
+				formState?.changes?.address !== firstLocationNoEdit?.address &&
+				formState?.changes?.location &&
+				formState?.changes?.location?.lat !== firstLocationNoEdit.value?.lat &&
+				formState?.changes?.location?.lng !== firstLocationNoEdit.value?.lng
+			) {
+				setFirstLocationNoEdit({
+					value: formState?.changes?.location,
+					address: formState?.changes?.address
+				})
+			}
+		}
+
+		if (isEditing) {
+			if (formState?.changes?.location) {
+				const prevLocation = { lat: Math.trunc(locationChange.lat), lng: Math.trunc(locationChange.lng) }
+				const newLocation = { lat: Math.trunc(formState?.changes?.location?.lat), lng: Math.trunc(formState?.changes?.location?.lng) }
+				if (prevLocation.lat !== newLocation.lat && prevLocation.lng !== newLocation.lng) {
+					setLocationChange(formState?.changes?.location)
+				}
+			}
+		}
+	}, [formState])
+
+	useEffect(() => {
+		if (formState?.result?.result && !formState?.loading) {
+			if (formState.result?.error) {
+				showToast(ToastType.Error, formState.result.result);
+			} else {
+				showToast(ToastType.Success, t('UPDATE_SUCCESSFULLY', 'Update successfully'));
+			}
+		}
+	}, [formState.result])
+
+	useEffect(() => {
+		if (Object.keys(errors).length > 0) {
+			// Convert all errors in one string to show in toast provider
+			const list = Object.values(errors);
+			let stringError = '';
+			list.map((item: any, i: number) => {
+				stringError +=
+					i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
+			});
+			showToast(ToastType.Error, stringError);
+		}
+	}, [errors]);
+
+	useEffect(() => {
+		if(googleInput?.current){
+			googleInput?.current?.setAddressText(address?.address || formState.changes?.address || addressState.address.address || '')
+		}
+	}, [])
+
 	return (
 		<AddressFormContainer>
 			<NavBar
@@ -138,35 +234,101 @@ export const AddressFormUI = (props) => {
 				showCall={false}
 				btnStyle={{ paddingLeft: 0 }}
 			/>
-
-			<GooglePlacesAutocomplete
-				placeholder={t('ADD_ADDRESS', 'Add a address')}
-				onPress={(data, details = null) => {
-					const { lat, lng }: any = details?.geometry?.location
-					setLocation({ lat, lng })
-					handleChangeAddress(data, details)
-					setData({ data, details })
-				}}
-				query={{ key: googleMapsApiKey }}
-				fetchDetails
-				ref={googleInput}
-				textInputProps={{
-					onChangeText: (text) => {
-						handleChangeInput({ target: { name: 'address', value: text } })
-					}
-				}}
-				styles={{
-					listView: {
-						position: "absolute",
-						marginTop: 44,
-						borderBottomEndRadius: 15,
-						elevation: 2,
-					},
-				}}
+			<AutocompleteInput>
+				<Controller
+					control={control}
+					name='address'
+					defaultValue={address?.address || formState.changes?.address || addressState.address.address || ''}
+					rules={{ required: isRequiredField('address') ? t(`VALIDATION_ERROR_ADDRESS_REQUIRED`, `The field Address is required`) : null }}
+					render={(text,onChange) => (
+						<GooglePlacesAutocomplete
+							placeholder={t('ADD_ADDRESS', 'Add a address')}
+							onPress={(data, details: any) => {
+								handleChangeAddress(data, details)
+							}}
+							query={{ key: googleMapsApiKey }}
+							fetchDetails
+							ref={googleInput}
+							textInputProps={{
+								onChangeText: (text) => {
+									if(!isFirstTime){
+										handleChangeInput({ target: { name: 'address', value: text } })
+										setValue('address', text)
+									}
+									setIsFirstTime(false)
+								},
+							}}
+							styles={{
+								listView: {
+									position: "absolute",
+									marginTop: 44,
+									borderBottomEndRadius: 15,
+									elevation: 2,
+								},
+								textInput: {
+									borderColor: 'red',
+									borderWidth: 1,
+									borderRadius: 20
+								},
+							}}
+						/>
+					)}
+				/>
+			</AutocompleteInput>
+			<Controller
+				control={control}
+				name='internal_number'
+				rules={{ required: isRequiredField('internal_number') ? t(`VALIDATION_ERROR_INTERNAL_NUMBER_REQUIRED`, `The field internal number is required`) : null }}
+				defaultValue={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
+				render={() => (
+					<OInput
+						name='internal_number'
+						placeholder={t('INTERNAL_NUMBER', 'Internal number')}
+						onChange={(text: string) => {
+							handleChangeInput(text)
+							setValue('internal_number', text)
+						}
+						}
+						value={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
+					/>
+				)}
 			/>
-			<OInput name='internal_number' placeholder={t('INTERNAL_NUMBER', 'Internal number')} onChange={handleChangeInput} />
-			<OInput name='zip_code' placeholder={t('ZIP_CODE', 'Zip code')} onChange={handleChangeInput} />
-			<OInput name='address_notes' placeholder={t('ADDRESS_NOTES', 'Address notes')} onChange={handleChangeInput} />
+			<Controller
+				control={control}
+				name='zipcode'
+				rules={{ required: isRequiredField('zipcode') ? t(`VALIDATION_ERROR_ZIP_CODE_REQUIRED`, `The field Zip Code is required`) : null }}
+				defaultValue={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
+				render={() => (
+					<OInput
+						name='zipcode'
+						placeholder={t('ZIP_CODE', 'Zip code')}
+						onChange={(text: string) => {
+							handleChangeInput(text)
+							setValue('zipcode', text)
+						}
+						}
+						value={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
+					/>
+				)}
+			/>
+			<Controller
+				control={control}
+				name='address_notes'
+				rules={{ required: isRequiredField('address_notes') ? t(`VALIDATION_ERROR_ADDRESS_NOTES_REQUIRED`, `The field address notes is required`) : null }}
+				defaultValue={address?.address_notes || formState.changes?.address_notes || addressState.address.address_notes || ''}
+				render={() => (
+					<OInput
+						name='address_notes'
+						placeholder={t('ADDRESS_NOTES', 'Address notes')}
+						onChange={(text) => {
+							handleChangeInput(text)
+							setValue('address_notes', text)
+						}
+						}
+						value={address?.address_notes || formState.changes?.address_notes || addressState.address.address_notes || ''}
+					/>
+				)}
+			/>
 			<OButton
 				text={
 					!formState.loading ? (
@@ -176,20 +338,20 @@ export const AddressFormUI = (props) => {
 					) : t('LOADING', 'Loading')
 				}
 				imgRightSrc=''
-				onClick={() => onSubmit()}
+				onClick={handleSubmit(onSubmit)}
 			/>
 			<IconsContainer>
-				<MaterialIcon name='home' size={64} style={{...styles.icons, backgroundColor: addressTag === 'home' ? colors.primary : colors.backgroundGray}} onPress={() => handleAddressTag('home')} />
-				<MaterialIcon name='office-building' size={64} style={{...styles.icons, backgroundColor: addressTag === 'office' ? colors.primary : colors.backgroundGray}} onPress={() => handleAddressTag('office')}/>
-				<MaterialIcon name='heart' size={64} style={{...styles.icons, backgroundColor: addressTag === 'favorite' ? colors.primary : colors.backgroundGray}} onPress={() => handleAddressTag('favorite')}/>
-				<MaterialIcon name='plus' size={64} style={{...styles.icons, backgroundColor: addressTag === 'other' ? colors.primary : colors.backgroundGray}} onPress={() => handleAddressTag('other')}/>
+				<MaterialIcon name='home' size={64} style={{ ...styles.icons, backgroundColor: addressTag === 'home' ? colors.primary : colors.backgroundGray }} onPress={() => handleAddressTag('home')} />
+				<MaterialIcon name='office-building' size={64} style={{ ...styles.icons, backgroundColor: addressTag === 'office' ? colors.primary : colors.backgroundGray }} onPress={() => handleAddressTag('office')} />
+				<MaterialIcon name='heart' size={64} style={{ ...styles.icons, backgroundColor: addressTag === 'favorite' ? colors.primary : colors.backgroundGray }} onPress={() => handleAddressTag('favorite')} />
+				<MaterialIcon name='plus' size={64} style={{ ...styles.icons, backgroundColor: addressTag === 'other' ? colors.primary : colors.backgroundGray }} onPress={() => handleAddressTag('other')} />
 			</IconsContainer>
 		</AddressFormContainer>
 	)
 }
 
 const styles = StyleSheet.create({
-	icons: { 
+	icons: {
 		borderRadius: 20,
 		color: colors.white
 	}

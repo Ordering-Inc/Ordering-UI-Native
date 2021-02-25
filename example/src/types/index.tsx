@@ -55,6 +55,12 @@ export interface PhoneInputParams {
   data?: any;
   handleData?: any;
 }
+
+export interface LanguageSelectorParams {
+  languagesState?: Array<any>;
+  currentLanguage?: string;
+  handleChangeLanguage?: any
+}
 export interface ViewInterface {
   navigation?: any;
   onLogin?: any;

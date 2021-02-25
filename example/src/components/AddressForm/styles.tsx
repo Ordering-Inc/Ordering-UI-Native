@@ -12,3 +12,8 @@ export const IconsContainer = styled.View`
     justify-content: space-between;
     margin-vertical: 20px;
 `
+
+export const AutocompleteInput = styled.View`
+    height: 100px;
+    padding: 10px
+`

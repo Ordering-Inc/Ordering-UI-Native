@@ -2,8 +2,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import AddressList from '../pages/AddressList'
-import {AddressForm} from '../components/AddressForm'
-import DrawNavigator from './DrawNavigator';
+import AddressForm from '../pages/AddressForm'
+import DrawNavigator from './DrawNavigator'
 
 
 const Stack = createStackNavigator();

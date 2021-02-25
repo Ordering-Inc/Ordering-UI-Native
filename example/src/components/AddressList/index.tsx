@@ -21,6 +21,7 @@ const AddressListUI = (props: AddressListParams) => {
 		nopadding,
 		handleSetDefault,
 		handleDelete,
+		setAddressList
 	} = props
 
 	const [orderState] = useOrder()
@@ -80,6 +81,26 @@ const AddressListUI = (props: AddressListParams) => {
 
 	const goToBack = () => onNavigationRedirect('Login')
 
+	const handleSaveAddress = (address: any) => {
+		let found = false
+		const addresses = addressList.addresses.map((_address: any) => {
+			if (_address?.id === address?.id) {
+				Object.assign(_address, address)
+				found = true
+			} else if (address.default) {
+				_address.default = false
+			}
+			return _address
+		})
+		if (!found) {
+			addresses.push(address)
+		}
+		setAddressList({
+			...addressList,
+			addresses
+		})
+	}
+
 	return (
 		<Container nopadding={nopadding}>
 			{!isFromProfile && (
@@ -100,22 +121,23 @@ const AddressListUI = (props: AddressListParams) => {
 							{isFromProfile ? (
 								<OText size={24} mBottom={20}>{t('SAVED_PLACES', 'My saved places')}</OText>
 							) : (
-								<OText size={24} mBottom={20}>{t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}</OText>
-							)}
+									<OText size={24} mBottom={20}>{t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}</OText>
+								)}
 							{uniqueAddressesList.map((address: any) => (
 								<AddressItem key={address.id} onPress={() => handleSetAddress(address)} isSelected={checkAddress(address)}>
 									<MaterialIcon name={addressIcon(address?.tag)} size={32} color={colors.primary} style={styles.icon} />
 									<OText style={styles.address}>{address.address}</OText>
-									<MaterialIcon 
-										name='pencil-outline' 
-										size={28} 
-										color={colors.green} 
-										onPress={() => onNavigationRedirect('AddressForm', { address: address, previousComponent: isFromProfile ? 'Profile' : 'AddressList' })} 
+									<MaterialIcon
+										name='pencil-outline'
+										size={28}
+										color={colors.green}
+										onPress={() => onNavigationRedirect('AddressForm', { address: address, previousComponent: isFromProfile ? 'Profile' : 'AddressList', isEditing: true, addressList: addressList, onSaveAddress: handleSaveAddress })}
 									/>
 									<OAlert
 										title={t('DELETE_ADDRESS', 'Delete Address')}
-										message={t('DELETE_ADDRESS_CONFIRMATION', 'Are you sure to you wants delete the selected address')}
+										message={t('QUESTION_DELETE_ADDRESS', 'Are you sure to you wants delete the selected address')}
 										onAccept={() => handleDelete(address)}
+										disabled={checkAddress(address)}
 									>
 										<MaterialIcon name='trash-can-outline' size={28} color={colors.primary} />
 									</OAlert>
@@ -123,8 +145,8 @@ const AddressListUI = (props: AddressListParams) => {
 							))}
 						</>
 					)}
-				{!isFromProfile && (
-						<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('OrderView')} />
+				{!isFromProfile && addressList?.addresses?.length > 0 && (
+					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('OrderView')} />
 				)}
 				<OButton
 					text={t('ADD_NEW_ADDRESS', 'Add new Address')}
@@ -134,7 +156,7 @@ const AddressListUI = (props: AddressListParams) => {
 					imgLeftStyle={styles.buttonIcon}
 					style={styles.button}
 					borderColor={colors.primary}
-					onClick={() => onNavigationRedirect('AddressForm', { address: null, previousComponent: 'AddressList', nopadding: true })}
+					onClick={() => onNavigationRedirect('AddressForm', { address: null, previousComponent: 'AddressList', nopadding: true, addressList: addressList, onSaveAddress: handleSaveAddress })}
 				/>
 			</AddressListContainer>
 		</Container>

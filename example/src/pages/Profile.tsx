@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import { Platform } from 'react-native';
 import NavBar from '../components/NavBar';
 import { IMAGES } from '../config/constants';
-import { UserProfileForm as ProfileController } from '../components/Profile';
+import { UserProfileForm as ProfileController } from '../components/UserProfileForm';
 import { Container } from '../layouts/Container'
 
 const KeyboardView = styled.KeyboardAvoidingView`

@@ -1,9 +1,11 @@
 import * as React from 'react'
-import styled from 'styled-components/native'
+import styled, {css} from 'styled-components/native'
 import { Alert } from 'react-native'
 import { useLanguage } from 'ordering-components/native'
 
-const Wrapper = styled.TouchableOpacity``
+const Wrapper = styled.TouchableOpacity`
+	
+`
 
 interface Props {
 	children: any,
@@ -11,7 +13,8 @@ interface Props {
 	message?: string,
 	onCancel?: any,
 	onAccept?: any,
-	onClick?: () => void
+	onClick?: () => void,
+	disabled?: boolean
 }
 
 const OAlert = (props: Props) => {
@@ -43,7 +46,7 @@ const OAlert = (props: Props) => {
 	}
 
 	return (
-		<Wrapper onPress={handleClick}>
+		<Wrapper onPress={handleClick} disabled={props.disabled}>
 			{props.children}
 		</Wrapper>
 	)
