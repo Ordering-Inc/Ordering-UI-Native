@@ -12,8 +12,7 @@ export const AddressItem = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
     ${(props: any) => props.isSelected && css`
-        opacity: 0.5;
-        background: ${colors.backgroundDark};
+        background-color: ${colors.disabled};
     `}
 `
 

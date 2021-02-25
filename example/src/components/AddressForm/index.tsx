@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder } from 'ordering-components/native'
-import { StyleSheet } from 'react-native'
-import { OInput, OTextarea, OText, OButton, OIcon } from '../shared'
+import { StyleSheet, View } from 'react-native'
+import { OInput, OButton } from '../shared'
 import NavBar from '../NavBar'
 import { colors } from '../../theme'
 import { ToastType, useToast } from '../../providers/ToastProvider';
@@ -9,13 +9,13 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { AddressFormContainer, AutocompleteInput, IconsContainer } from './styles'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useForm, Controller } from 'react-hook-form'
+import { AddressFormParams } from '../../types'
 
 const inputNames = [{ name: 'address', code: 'Address' }, { name: 'internal_number', code: 'Internal number' }, { name: 'zipcode', code: 'Zipcode' }, { name: 'address_notes', code: 'Address notes' }]
 
-const AddressFormUI = (props) => {
+const AddressFormUI = (props: AddressFormParams) => {
 	const {
 		navigation,
-		route,
 		updateChanges,
 		address,
 		formState,
@@ -216,7 +216,7 @@ const AddressFormUI = (props) => {
 	}, [errors]);
 
 	useEffect(() => {
-		if(googleInput?.current){
+		if (googleInput?.current) {
 			googleInput?.current?.setAddressText(address?.address || formState.changes?.address || addressState.address.address || '')
 		}
 	}, [])
@@ -236,7 +236,7 @@ const AddressFormUI = (props) => {
 					name='address'
 					defaultValue={address?.address || formState.changes?.address || addressState.address.address || ''}
 					rules={{ required: isRequiredField('address') ? t(`VALIDATION_ERROR_ADDRESS_REQUIRED`, `The field Address is required`) : null }}
-					render={(text,onChange) => (
+					render={() => (
 						<GooglePlacesAutocomplete
 							placeholder={t('ADD_ADDRESS', 'Add a address')}
 							onPress={(data, details: any) => {
@@ -247,7 +247,7 @@ const AddressFormUI = (props) => {
 							ref={googleInput}
 							textInputProps={{
 								onChangeText: (text) => {
-									if(!isFirstTime){
+									if (!isFirstTime) {
 										handleChangeInput({ target: { name: 'address', value: text } })
 										setValue('address', text)
 									}
@@ -263,7 +263,7 @@ const AddressFormUI = (props) => {
 									zIndex: 1000
 								},
 								textInput: {
-									borderColor: 'red',
+									borderColor: colors.primary,
 									borderWidth: 1,
 									borderRadius: 20
 								},
@@ -287,6 +287,7 @@ const AddressFormUI = (props) => {
 						}
 						}
 						value={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
+						style={styles.inputsStyle}
 					/>
 				)}
 			/>
@@ -305,6 +306,7 @@ const AddressFormUI = (props) => {
 						}
 						}
 						value={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
+						style={styles.inputsStyle}
 					/>
 				)}
 			/>
@@ -323,6 +325,8 @@ const AddressFormUI = (props) => {
 						}
 						}
 						value={address?.address_notes || formState.changes?.address_notes || addressState.address.address_notes || ''}
+						multiline
+						style={styles.textAreaStyles}
 					/>
 				)}
 			/>
@@ -336,12 +340,21 @@ const AddressFormUI = (props) => {
 				}
 				imgRightSrc=''
 				onClick={handleSubmit(onSubmit)}
+				textStyle={{ color: colors.white }}
 			/>
 			<IconsContainer>
-				<MaterialIcon name='home' size={64} style={{ ...styles.icons, backgroundColor: addressTag === 'home' ? colors.primary : colors.backgroundGray }} onPress={() => handleAddressTag('home')} />
-				<MaterialIcon name='office-building' size={64} style={{ ...styles.icons, backgroundColor: addressTag === 'office' ? colors.primary : colors.backgroundGray }} onPress={() => handleAddressTag('office')} />
-				<MaterialIcon name='heart' size={64} style={{ ...styles.icons, backgroundColor: addressTag === 'favorite' ? colors.primary : colors.backgroundGray }} onPress={() => handleAddressTag('favorite')} />
-				<MaterialIcon name='plus' size={64} style={{ ...styles.icons, backgroundColor: addressTag === 'other' ? colors.primary : colors.backgroundGray }} onPress={() => handleAddressTag('other')} />
+				<View style={{ ...styles.iconContainer, backgroundColor: addressTag === 'home' ? colors.primary : colors.backgroundGray, borderColor: addressTag === 'home' ? colors.primary : colors.backgroundGray }}>
+					<MaterialIcon name='home' size={58} style={{ ...styles.icons }} onPress={() => handleAddressTag('home')} />
+				</View>
+				<View style={{ ...styles.iconContainer, backgroundColor: addressTag === 'office' ? colors.primary : colors.backgroundGray, alignItems: 'center', borderColor: addressTag === 'office' ? colors.primary : colors.backgroundGray }}>
+					<MaterialIcon name='office-building' size={58} style={{ ...styles.icons }} onPress={() => handleAddressTag('office')} />
+				</View>
+				<View style={{ ...styles.iconContainer, backgroundColor: addressTag === 'favorite' ? colors.primary : colors.backgroundGray, alignItems: 'center', borderColor: addressTag === 'favorite' ? colors.primary : colors.backgroundGray }}>
+					<MaterialIcon name='heart' size={58} style={{ ...styles.icons }} onPress={() => handleAddressTag('favorite')} />
+				</View>
+				<View style={{ ...styles.iconContainer, backgroundColor: addressTag === 'other' ? colors.primary : colors.backgroundGray, alignItems: 'center', borderColor: addressTag === 'other' ? colors.primary : colors.backgroundGray }}>
+					<MaterialIcon name='plus' size={58} style={{ ...styles.icons }} onPress={() => handleAddressTag('other')} />
+				</View>
 			</IconsContainer>
 		</AddressFormContainer>
 	)
@@ -351,10 +364,28 @@ const styles = StyleSheet.create({
 	icons: {
 		borderRadius: 20,
 		color: colors.white
+	},
+	iconContainer: {
+		marginHorizontal: 10,
+		borderWidth: 5,
+		alignItems: 'center',
+		borderRadius: 25
+	},
+	inputsStyle: {
+		borderBottomColor: colors.secundaryContrast,
+		borderRadius: 0,
+		marginVertical: 20
+	},
+	textAreaStyles: {
+		borderColor: colors.secundaryContrast,
+		borderRadius: 0,
+		marginVertical: 20,
+		height: 150,
+		textAlignVertical: 'top'
 	}
 })
 
-export const AddressForm = (props) => {
+export const AddressForm = (props: AddressFormParams) => {
 	const addressFormProps = {
 		...props,
 		UIComponent: AddressFormUI

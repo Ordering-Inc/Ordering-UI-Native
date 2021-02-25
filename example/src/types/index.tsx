@@ -35,8 +35,22 @@ export interface AddressListParams {
   userId?: any;
   handleDelete?: any;
   handleSetDefault?: any;
+  setAddressList?: any;
 }
 
+export interface AddressFormParams {
+  navigation?: any,
+  updateChanges?: any,
+  address?: any,
+  formState?: any,
+  isEditing?: boolean,
+  handleChangeInput?: any,
+  addressState?: any,
+  addressesList?: any,
+  saveAddress?: any,
+  userCustomerSetup?: boolean,
+  isRequiredField?: boolean,
+}
 export interface SignupParams {
   navigation?: any;
   loginButtonText?: string;

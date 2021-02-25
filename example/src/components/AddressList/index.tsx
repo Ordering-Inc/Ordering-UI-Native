@@ -139,14 +139,14 @@ const AddressListUI = (props: AddressListParams) => {
 										onAccept={() => handleDelete(address)}
 										disabled={checkAddress(address)}
 									>
-										<MaterialIcon name='trash-can-outline' size={28} color={colors.primary} />
+										<MaterialIcon name='trash-can-outline' size={28} color={!checkAddress(address) ? colors.primary : colors.paleGray} />
 									</OAlert>
 								</AddressItem>
 							))}
 						</>
 					)}
 				{!isFromProfile && addressList?.addresses?.length > 0 && (
-					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('OrderView')} />
+					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('OrderView')} textStyle={{color: colors.white}} />
 				)}
 				<OButton
 					text={t('ADD_NEW_ADDRESS', 'Add new Address')}
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 	},
 	button: {
-		marginVertical: 40
+		marginVertical: 30
 	}
 })
 

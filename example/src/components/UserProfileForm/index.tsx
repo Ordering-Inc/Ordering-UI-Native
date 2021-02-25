@@ -13,7 +13,7 @@ import { colors } from '../../theme';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { ProfileParams } from '../../types';
 import { flatArray } from '../../utils';
-import {AddressList} from '../AddressList'
+import { AddressList } from '../AddressList'
 import {
   OIcon,
   OIconButton,
@@ -268,7 +268,12 @@ const ProfileUI = (props: ProfileParams) => {
             )}
         </EditButton>
       )}
-      <AddressList userId={user.id} navigation={navigation} nopadding isFromProfile />
+      <AddressList
+        nopadding
+        isFromProfile
+        userId={user.id}
+        navigation={navigation}
+      />
     </>
   );
 };
