@@ -26,6 +26,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 		saveAddress,
 		userCustomerSetup,
 		isRequiredField,
+		isGuestUser
 	} = props
 
 	const [, t] = useLanguage()
@@ -81,7 +82,11 @@ const AddressFormUI = (props: AddressFormParams) => {
 
 		if (!isAddressAlreadyExist) {
 			saveAddress({}, userCustomerSetup)
-			goToBack()
+			if(!isGuestUser){
+				goToBack()
+			} else {
+				continueAsGuest()
+			}
 			return
 		}
 
@@ -134,6 +139,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 	}
 
 	const goToBack = () => navigation.goBack()
+
+	const continueAsGuest = () => navigation.navigate('MapOrders')
 
 	useEffect(() => {
 		if (alertState.open) {
