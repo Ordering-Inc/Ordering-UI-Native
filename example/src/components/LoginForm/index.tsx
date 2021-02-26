@@ -219,7 +219,7 @@ const LoginFormUI = (props: LoginParams) => {
                   }
                 }}
                 defaultValue=""
-                />
+              />
             )}
             {useLoginByCellphone && loginTab === 'cellphone' && (
               <PhoneInputNumber
