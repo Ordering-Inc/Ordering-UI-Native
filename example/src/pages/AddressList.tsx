@@ -9,8 +9,6 @@ const AddressList = ({ navigation }: any) => {
   const AddressListProps = {
     navigation,
     userId: user.id,
-    goToBack: () => navigation.goBack(),
-    onNavigationRedirect: (route: string, params: any) => navigation.navigate(route, params)
   }
 
   return <AddressListController {...AddressListProps} />

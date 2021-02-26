@@ -2,19 +2,19 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import * as React from 'react';
 import SideMenu from '../pages/SideMenu';
-import HomeNavigator from './HomeNavigator';
+import GuestNavigator from './GuestNavigator';
 
 const Drawer = createDrawerNavigator();
 
-const DrawNavigator = () => {
+const DrawGuestNavigator = () => {
   return (
     <Drawer.Navigator drawerContent={(props: any) => <SideMenu {...props} />}>
       <Drawer.Screen 
-        name="OrderView"
-        component={HomeNavigator}
+        name="Guest"
+        component={GuestNavigator}
       />
     </Drawer.Navigator>
   )
 }
 
-export default DrawNavigator;
+export default DrawGuestNavigator;

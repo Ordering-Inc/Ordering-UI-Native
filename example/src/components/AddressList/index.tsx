@@ -15,14 +15,13 @@ const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
 const AddressListUI = (props: AddressListParams) => {
 
 	const {
+		navigation,
 		addressList,
 		isFromProfile,
 		nopadding,
 		handleSetDefault,
 		handleDelete,
 		setAddressList,
-		onNavigationRedirect,
-		goToBack
 	} = props
 
 	const [orderState] = useOrder()
@@ -96,6 +95,9 @@ const AddressListUI = (props: AddressListParams) => {
 		})
 	}
 
+	const goToBack =  () => navigation.goBack()
+  const onNavigationRedirect = (route: string, params: any) => navigation.navigate(route, params)
+
 	return (
 		<Container nopadding={nopadding}>
 			{!isFromProfile && (
@@ -141,7 +143,7 @@ const AddressListUI = (props: AddressListParams) => {
 						</>
 					)}
 				{!isFromProfile && addressList?.addresses?.length > 0 && (
-					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('OrderView')} textStyle={{color: colors.white}} />
+					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('MyAccount')} textStyle={{color: colors.white}} />
 				)}
 				<OButton
 					text={t('ADD_NEW_ADDRESS', 'Add new Address')}

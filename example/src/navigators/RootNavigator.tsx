@@ -4,10 +4,10 @@ import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import Forgot from '../pages/ForgotPassword';
 import Home from '../pages/Home'
-import MyAccountNavigator from './MyAccountNavigator';
 import AddressList from '../pages/AddressList'
 import AddressForm from '../pages/AddressForm'
-import GuestNavigator from './GuestNavigator'
+import DrawNavigator from './DrawNavigator';
+import DrawGuestNavigator from './DrawGuestNavigator'
 
 const Stack = createStackNavigator();
 
@@ -46,12 +46,12 @@ const RootNavigator = () => {
       />
       <Stack.Screen
         name='MyAccount'
-        component={MyAccountNavigator}
+        component={DrawNavigator}
         options={{ headerShown: false }}
       />
       <Stack.Screen 
         name='Guest'
-        component={GuestNavigator}
+        component={DrawGuestNavigator}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
