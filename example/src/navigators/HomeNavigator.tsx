@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
 import MapOrders from '../pages/MapOrders';
 import OrderDetail from '../pages/OrderDetail';
-import Forgot from '../pages/Forgot';
+import Forgot from '../pages/ForgotPassword';
 import Reject from '../pages/Reject';
 import Accept from '../pages/Accept';
 import MapBusiness from '../pages/MapBusiness';

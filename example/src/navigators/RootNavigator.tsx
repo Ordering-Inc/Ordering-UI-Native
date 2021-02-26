@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
-import Forgot from '../pages/Forgot';
+import Forgot from '../pages/ForgotPassword';
 import Home from '../pages/Home'
 import MyAccountNavigator from './MyAccountNavigator';
 
