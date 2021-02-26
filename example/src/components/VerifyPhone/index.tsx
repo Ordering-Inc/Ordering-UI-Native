@@ -2,33 +2,37 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, TextInput } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { getTraduction } from '../../utils'
 
 import { OText } from '../shared';
 import { colors } from '../../theme'
-import { ToastType, useToast } from '../../providers/ToastProvider';
 
 import {
   Container,
   CountDownContainer,
   ResendSection,
   WrappCountdown,
-  InputsSection
+  InputsSection,
+  ErrorSection
 } from './styles'
 
-const TIME_COUNTDOWN = 60 * 0.25 // 10 minutes
+const TIME_COUNTDOWN = 60 * 10 // 10 minutes
 
 export const VerifyPhone = (props: any) => {
   const {
     phone,
+    formValues,
+    verifyPhoneState,
     checkPhoneCodeState,
+    setCheckPhoneCodeState,
     handleCheckPhoneCode,
     handleVerifyCodeClick
   } = props
   const [, t] = useLanguage()
-  const { showToast } = useToast();
 
   const [timer, setTimer] = useState(`${TIME_COUNTDOWN / 60}:00`)
   const [verifyCode, setVerifyCode] = useState({ 0: '', 1: '', 2: '', 3: '' })
+  const [isSendCodeAgain, setIsSendCodeAgain] = useState(false)
 
   const lastNumbers = phone?.cellphone &&
     `${phone?.cellphone.charAt(phone?.cellphone.length-2)}${phone?.cellphone.charAt(phone?.cellphone.length-1)}`
@@ -37,40 +41,60 @@ export const VerifyPhone = (props: any) => {
     setVerifyCode({ ...verifyCode, [i]: val })
   }
 
+  const checkResult = (result: any) => {
+    if (!result) return
+    return typeof result === 'string'
+      ? [result]
+      : result
+  }
+
+  const handleSendCodeAgain = () => {
+    setCheckPhoneCodeState && setCheckPhoneCodeState()
+    setTimer(`${TIME_COUNTDOWN / 60}:00`)
+    setIsSendCodeAgain(true)
+    handleVerifyCodeClick && handleVerifyCodeClick()
+  }
+
   useEffect(() => {
-    let timer = TIME_COUNTDOWN - 1;
+    let _timer = TIME_COUNTDOWN - 1;
     let minutes = 0;
     let seconds = 0;
     const interval = setInterval(() => {
-      minutes = timer / 60;
-      seconds = timer % 60;
+      minutes = _timer / 60;
+      seconds = _timer % 60;
 
       minutes = minutes < 10 ? 0 + minutes : minutes;
       seconds = seconds < 10 ? 0 + seconds : seconds;
 
       const formatMinutes = parseInt(minutes.toString()) < 10
         ? `0${parseInt(minutes.toString())}`
-        : parseInt(minutes.toString())
+        : parseInt(minutes.toString());
 
       const formatseconds = parseInt(seconds.toString()) < 10
         ? `0${parseInt(seconds.toString())}`
-        : parseInt(seconds.toString())
+        : parseInt(seconds.toString());
 
-      setTimer(`${formatMinutes}:${formatseconds}`)
+      setTimer(`${formatMinutes}:${formatseconds}`);
 
-      if (--timer < 0) {
-        clearInterval(interval)
+      if (--_timer < 0) {
+        clearInterval(interval);
+      }
+
+      if (timer === `${TIME_COUNTDOWN / 60}:00` && isSendCodeAgain) {
+        setIsSendCodeAgain(false)
+        clearInterval(interval);
       }
     }, 1000);
 
     return () => clearInterval(interval)
-  }, [])
+  }, [isSendCodeAgain])
 
   useEffect(() => {
     const codes = Object.keys(verifyCode).length
     const isFullInputs = codes && Object.values(verifyCode).every(val => val)
     if (codes === 4 && isFullInputs) {
       const values = {
+        ...formValues,
         cellphone: phone.cellphone,
         country_phone_code: `+${phone.country_phone_code}`,
         code: Object.values(verifyCode).join().replace(/,/g, '')
@@ -78,21 +102,6 @@ export const VerifyPhone = (props: any) => {
       handleCheckPhoneCode && handleCheckPhoneCode(values)
     }
   }, [verifyCode])
-
-  useEffect(() => {
-    if (checkPhoneCodeState && !checkPhoneCodeState?.loading) {
-      if (checkPhoneCodeState.result?.error) {
-        const message = typeof checkPhoneCodeState?.result?.result === 'string'
-          ? checkPhoneCodeState?.result?.result
-          : checkPhoneCodeState?.result?.result[0]
-        checkPhoneCodeState.result?.result && showToast(
-          ToastType.Error,
-          message
-        )
-        return
-      }
-    }
-  }, [checkPhoneCodeState])
 
   return (
     <Container>
@@ -127,11 +136,30 @@ export const VerifyPhone = (props: any) => {
           />
         ))}
       </InputsSection>
+      {(verifyPhoneState?.result?.error ? verifyPhoneState : checkPhoneCodeState) &&
+        !(verifyPhoneState?.result?.error ? verifyPhoneState : checkPhoneCodeState)?.loading &&
+        (verifyPhoneState?.result?.error ? verifyPhoneState : checkPhoneCodeState)?.result?.error &&
+        (verifyPhoneState?.result?.error ? verifyPhoneState : checkPhoneCodeState).result?.result &&
+      (
+        <ErrorSection>
+          {checkResult((
+            verifyPhoneState?.result?.error ? verifyPhoneState : checkPhoneCodeState
+          ).result?.result)?.map((e: any, i: number) => (
+            <OText
+              key={i}
+              size={20}
+              color={colors.error}
+            >
+              {`* ${t(getTraduction(e))}`}
+            </OText>
+          ))}
+        </ErrorSection>
+      )}
       <ResendSection>
         <OText size={17} style={{ marginRight: 5 }}>
           {t('ARE_YOU_NOT_SEEING_THE_CODE', 'Are you not seeing the code?')}
         </OText>
-        <Pressable onPress={() => handleVerifyCodeClick()}>
+        <Pressable onPress={() => handleSendCodeAgain()}>
           <OText size={17} color={colors.primary}>
             {t('SEND_AGAIN', 'Send Again')}
           </OText>

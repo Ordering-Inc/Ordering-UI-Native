@@ -33,3 +33,11 @@ export const InputsSection = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `
+
+export const ErrorSection = styled.View`
+  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+`

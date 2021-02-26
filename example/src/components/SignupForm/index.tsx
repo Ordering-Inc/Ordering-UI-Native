@@ -20,11 +20,14 @@ import {
   SocialButtons
 } from './styles'
 
+import { LoginWith as SignupWith, OTab, OTabs } from '../LoginForm/styles'
+
 import { IMAGES } from '../../config/constants';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import NavBar from '../NavBar'
+import { VerifyPhone } from '../VerifyPhone';
 
-import { OText, OButton, OInput } from '../shared';
+import { OText, OButton, OInput, OModal } from '../shared';
 import { SignupParams } from '../../types';
 import { colors } from '../../theme'
 
@@ -41,9 +44,19 @@ const SignupFormUI = (props: SignupParams) => {
     showField,
     isRequiredField,
     useChekoutFileds,
+    useSignupByEmail,
+    useSignupByCellphone,
     handleSuccessSignup,
-    handleButtonSignupClick
+    handleButtonSignupClick,
+
+    verifyPhoneState,
+    checkPhoneCodeState,
+    setCheckPhoneCodeState,
+    handleSendVerifyCode,
+    handleCheckPhoneCode
   } = props
+
+  const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
 
   const { showToast } = useToast();
   const [, t] = useLanguage();
@@ -51,10 +64,11 @@ const SignupFormUI = (props: SignupParams) => {
   const [{ configs }] = useConfig();
   const { control, handleSubmit, errors } = useForm();
 
-  const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
-
+  const [formValues, setFormValues] = useState(null)
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
+  const [signupTab, setSignupTab] = useState(useSignupByCellphone && !useSignupByEmail ? 'cellphone' : 'email')
   const [isFBLoading, setIsFBLoading] = useState(false)
-
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
     phone: {
@@ -84,17 +98,31 @@ const SignupFormUI = (props: SignupParams) => {
       showToast(ToastType.Error, t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.'))
       return
     }
-    handleButtonSignupClick && handleButtonSignupClick({
-      ...values,
+    if (signupTab === 'email') {
+      handleButtonSignupClick && handleButtonSignupClick({
+        ...values,
+        ...phoneInputData.phone
+      })
+      if (!formState.loading && formState.result.result && !formState.result.error) {
+        handleSuccessSignup && handleSuccessSignup(formState.result.result)
+      }
+      return
+    }
+    setFormValues(values)
+    handleVerifyCodeClick(values)
+  }
+
+  const handleVerifyCodeClick = (values: any) => {
+    const formData = values || formValues
+    handleSendVerifyCode && handleSendVerifyCode({
+      ...formData,
       ...phoneInputData.phone
     })
-    if (!formState.loading && formState.result.result && !formState.result.error) {
-      handleSuccessSignup && handleSuccessSignup(formState.result.result)
-    }
+    setIsLoadingVerifyModal(true)
   }
 
   // get object with rules for hook form inputs
-  const getRules = (field: any) => {
+  const getInputRules = (field: any) => {
     const rules: any = {
       required: isRequiredField(field.code)
         ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field.name} is required`)
@@ -116,6 +144,7 @@ const SignupFormUI = (props: SignupParams) => {
         ToastType.Error,
         formState.result?.result[0]
       )
+      setIsLoadingVerifyModal(false)
     }
   }, [formState])
 
@@ -139,8 +168,31 @@ const SignupFormUI = (props: SignupParams) => {
         stringError += (i + 1) === list.length ? `- ${item.message}` : `- ${item.message}\n`
       })
       showToast(ToastType.Error, stringError)
+      setIsLoadingVerifyModal(false)
     }
   }, [errors])
+
+  useEffect(() => {
+    if (verifyPhoneState && !verifyPhoneState?.loading) {
+      if (verifyPhoneState.result?.error) {
+        const message = typeof verifyPhoneState?.result?.result === 'string'
+          ? verifyPhoneState?.result?.result
+          : verifyPhoneState?.result?.result[0]
+        verifyPhoneState.result?.result && showToast(
+          ToastType.Error,
+          message
+        )
+        setIsLoadingVerifyModal(false)
+        return
+      }
+
+      const okResult = verifyPhoneState.result?.result === 'OK'
+      if (okResult) {
+        !isModalVisible && setIsModalVisible(true)
+        setIsLoadingVerifyModal(false)
+      }
+    }
+  }, [verifyPhoneState])
 
   return (
     <View>
@@ -152,6 +204,30 @@ const SignupFormUI = (props: SignupParams) => {
         btnStyle={{ paddingLeft: 0 }}
       />
       <FormSide>
+        {useSignupByEmail && useSignupByCellphone && (
+          <SignupWith>
+            <OTabs>
+              {useSignupByEmail && (
+                <Pressable onPress={() => setSignupTab('email')}>
+                  <OTab>
+                    <OText size={18} color={signupTab === 'email' ? colors.primary : colors.disabled}>
+                      {t('SIGNUP_BY_EMAIL', 'Signup by Email')}
+                    </OText>
+                  </OTab>
+                </Pressable>
+              )}
+              {useSignupByCellphone && (
+                <Pressable onPress={() => setSignupTab('cellphone')}>
+                  <OTab>
+                    <OText size={18} color={signupTab === 'cellphone' ? colors.primary : colors.disabled}>
+                      {t('SIGNUP_BY_PHONE', 'Signup by Phone')}
+                    </OText>
+                  </OTab>
+                </Pressable>
+              )}
+            </OTabs>
+          </SignupWith>
+        )}
         <FormInput>
           {!(useChekoutFileds && validationFields?.loading) ? (
             <>
@@ -173,7 +249,7 @@ const SignupFormUI = (props: SignupParams) => {
                         />
                       )}
                       name={field.code}
-                      rules={getRules(field)}
+                      rules={getInputRules(field)}
                       defaultValue=""
                     />
                   )
@@ -187,38 +263,41 @@ const SignupFormUI = (props: SignupParams) => {
                 />
               )}
 
-              <Controller
-                control={control}
-                render={({ onChange, value }) => (
-                  <OInput
-                    isSecured={true}
-                    placeholder={'Password'}
-                    style={style.inputStyle}
-                    icon={IMAGES.lock}
-                    value={value}
-                    onChange={(val: any) => onChange(val)}
-                  />
-                )}
-                name="password"
-                rules={{
-                  required: isRequiredField('password')
-                    ? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required')
-                      .replace('_attribute_', t('PASSWORD', 'password'))
-                    : null,
-                  minLength: {
-                    value: 8,
-                    message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.')
-                      .replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
-                  }
-                }}
-                defaultValue=""
-              />
+              {signupTab !== 'cellphone' && (
+                <Controller
+                  control={control}
+                  render={({ onChange, value }) => (
+                    <OInput
+                      isSecured={true}
+                      placeholder={'Password'}
+                      style={style.inputStyle}
+                      icon={IMAGES.lock}
+                      value={value}
+                      onChange={(val: any) => onChange(val)}
+                    />
+                  )}
+                  name="password"
+                  rules={{
+                    required: isRequiredField('password')
+                      ? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required')
+                        .replace('_attribute_', t('PASSWORD', 'password'))
+                      : null,
+                    minLength: {
+                      value: 8,
+                      message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.')
+                        .replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
+                    }
+                  }}
+                  defaultValue=""
+                />
+              )}
             </>
           ) : (
             <Spinner visible />
           )}
 
-          <OButton
+          {signupTab === 'email' ? (
+            <OButton
             onClick={handleSubmit(onSubmit)}
             text={signupButtonText}
             bgColor={colors.primary}
@@ -226,7 +305,18 @@ const SignupFormUI = (props: SignupParams) => {
             textStyle={{color: 'white'}}
             imgRightSrc={null}
             isDisabled={formState.loading || validationFields.loading}
-          />
+            />
+          ) : (
+            <OButton
+              onClick={handleSubmit(onSubmit)}
+              text={t('GET_VERIFY_CODE', 'Get Verify Code')}
+              borderColor={colors.primary}
+              imgRightSrc={null}
+              textStyle={{color: 'white'}}
+              isLoading={isLoadingVerifyModal}
+              indicatorColor={colors.white}
+            />
+          )}
         </FormInput>
 
         {onNavigationRedirect && loginButtonText && (
@@ -263,6 +353,20 @@ const SignupFormUI = (props: SignupParams) => {
           )
         )}
       </FormSide>
+      <OModal
+        open={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+      >
+        <VerifyPhone
+          phone={phoneInputData.phone}
+          formValues={formValues}
+          verifyPhoneState={verifyPhoneState}
+          checkPhoneCodeState={checkPhoneCodeState}
+          handleCheckPhoneCode={handleCheckPhoneCode}
+          setCheckPhoneCodeState={setCheckPhoneCodeState}
+          handleVerifyCodeClick={onSubmit}
+        />
+      </OModal>
       <Spinner visible={formState.loading || validationFields.loading || isFBLoading} />
     </View>
   );

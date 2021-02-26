@@ -11,8 +11,8 @@ import {
   useSession
 } from 'ordering-components/native';
 
-import { FacebookLogin } from '../FacebookLogin'
-import { VerifyPhone } from '../VerifyPhone'
+import { FacebookLogin } from '../FacebookLogin';
+import { VerifyPhone } from '../VerifyPhone';
 
 import {
   ButtonsWrapper,
@@ -46,6 +46,7 @@ const LoginFormUI = (props: LoginParams) => {
     verifyPhoneState,
     checkPhoneCodeState,
     registerButtonText,
+    setCheckPhoneCodeState,
     handleChangeTab,
     handleButtonLoginClick,
     handleSendVerifyCode,
@@ -59,7 +60,7 @@ const LoginFormUI = (props: LoginParams) => {
   const [, { login }] = useSession()
   const { control, handleSubmit, errors } = useForm();
 
-  const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false)
+  const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isFBLoading, setIsFBLoading] = useState(false);
   const [phoneInputData, setPhoneInputData] = useState({
@@ -125,6 +126,7 @@ const LoginFormUI = (props: LoginParams) => {
           ToastType.Error,
           message
         )
+        setIsLoadingVerifyModal(false)
         return
       }
 
@@ -185,7 +187,7 @@ const LoginFormUI = (props: LoginParams) => {
                 <Pressable onPress={() => handleChangeTab('cellphone')}>
                   <OTab>
                     <OText size={18} color={loginTab === 'cellphone' ? colors.primary : colors.disabled}>
-                      {t('LOGIN_BY_CELLPHONE', 'Login by Cellphone')}
+                      {t('LOGIN_BY_PHONE', 'Login by Phone')}
                     </OText>
                   </OTab>
                 </Pressable>
@@ -280,7 +282,7 @@ const LoginFormUI = (props: LoginParams) => {
                 borderColor={colors.primary}
                 style={loginStyle.btnOutline}
                 imgRightSrc={null}
-                isLoading={verifyPhoneState?.loading || isLoadingVerifyModal}
+                isLoading={isLoadingVerifyModal}
                 indicatorColor={colors.primary}
               />
             </ButtonsWrapper>
@@ -326,8 +328,10 @@ const LoginFormUI = (props: LoginParams) => {
       >
         <VerifyPhone
           phone={phoneInputData.phone}
+          verifyPhoneState={verifyPhoneState}
           checkPhoneCodeState={checkPhoneCodeState}
           handleCheckPhoneCode={handleCheckPhoneCode}
+          setCheckPhoneCodeState={setCheckPhoneCodeState}
           handleVerifyCodeClick={handleVerifyCodeClick}
         />
       </OModal>
