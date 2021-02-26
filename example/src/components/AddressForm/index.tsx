@@ -140,7 +140,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 
 	const goToBack = () => navigation.goBack()
 
-	const continueAsGuest = () => navigation.navigate('MapOrders')
+	const continueAsGuest = () => navigation.navigate('Guest')
 
 	useEffect(() => {
 		if (alertState.open) {

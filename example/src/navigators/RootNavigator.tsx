@@ -5,6 +5,9 @@ import Signup from '../pages/Signup';
 import Forgot from '../pages/Forgot';
 import Home from '../pages/Home'
 import MyAccountNavigator from './MyAccountNavigator';
+import AddressList from '../pages/AddressList'
+import AddressForm from '../pages/AddressForm'
+import GuestNavigator from './GuestNavigator'
 
 const Stack = createStackNavigator();
 
@@ -14,27 +17,42 @@ const RootNavigator = () => {
       <Stack.Screen
         name="Home"
         component={Home}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Login"
         component={Login}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Signup"
         component={Signup}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Forgot"
         component={Forgot}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name="AddressList"
+        component={AddressList}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen 
+        name="AddressForm"
+        component={AddressForm}
         options={{headerShown: false}}
       />
       <Stack.Screen
         name='MyAccount'
         component={MyAccountNavigator}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name='Guest'
+        component={GuestNavigator}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
