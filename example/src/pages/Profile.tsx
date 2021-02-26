@@ -19,7 +19,9 @@ const Profile = (props: Props) => {
   const profileProps = {
     ...props,
     useSessionUser: true,
-    useValidationFields: true
+    useValidationFields: true,
+    goToBack: () => props.navigation.goBack(),
+    onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params)
   }
 
   const onMenu = () => {

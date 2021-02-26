@@ -27,8 +27,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 		userCustomerSetup,
 		isRequiredField,
 		isGuestUser,
-		goToBack,
-		continueAsGuest
 	} = props
 
 	const [, t] = useLanguage()
@@ -139,6 +137,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 			}
 		})
 	}
+
+	const goToBack = () => navigation.goBack()
+	const continueAsGuest = () => navigation.navigate('Guest')
 
 	useEffect(() => {
 		if (alertState.open) {

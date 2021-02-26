@@ -41,8 +41,6 @@ export interface AddressListParams {
   handleDelete?: any;
   handleSetDefault?: any;
   setAddressList?: any;
-  onNavigationRedirect?: any,
-  goToBack?: any
 }
 
 export interface AddressFormParams {
@@ -59,8 +57,6 @@ export interface AddressFormParams {
   isRequiredField?: boolean,
   isGuestUser?: boolean,
   useValidationFileds?: boolean,
-  onNavigationRedirect?: any,
-  goToBack?: any
 }
 export interface SignupParams {
   navigation?: any;

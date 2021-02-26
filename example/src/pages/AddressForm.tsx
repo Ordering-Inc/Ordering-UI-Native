@@ -19,8 +19,6 @@ const AddressForm = ({navigation,route}: any) => {
     onSaveAddress: route?.params?.onSaveAddress,
     isSelectedAfterAdd: true,
     isGuestUser: route?.params?.isGuestUser,
-    goToBack: () => navigation.goBack(),
-    continueAsGuest: () => navigation.navigate('Guest'),
   }
 
   return (
