@@ -11,7 +11,7 @@ export const FormInput = styled.View`
   display: flex;
   flex-direction: column;
   width: 90%;
-  padding: 0px 0px 15px;
+  padding: 25px 0px 15px;
 `
 export const ButtonsSection = styled.View`
   margin: 10px 0px 0px;

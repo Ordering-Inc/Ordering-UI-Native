@@ -10,6 +10,7 @@ import OIconButton from './OIconButton'
 import OTextarea from './OTextarea'
 import OToggle from './OToggle'
 import OKeyButton from './OKeyButton'
+import OModal from './OModal'
 import OAlert from './OAlert'
 
 export {
@@ -25,5 +26,6 @@ export {
 	OTextarea,
 	OToggle,
 	OKeyButton,
-	OAlert
+	OAlert,
+  OModal
 }
