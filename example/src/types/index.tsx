@@ -10,7 +10,12 @@ export interface LoginParams {
   onNavigationRedirect?: any;
   registerButtonText?: string;
   forgotButtonText?: string;
+  verifyPhoneState?: any;
+  checkPhoneCodeState?: any;
+  setCheckPhoneCodeState?: any;
   handleButtonLoginClick?: any;
+  handleSendVerifyCode?: any;
+  handleCheckPhoneCode?: any;
 }
 export interface ProfileParams {
   isEdit?: boolean;
@@ -36,8 +41,15 @@ export interface SignupParams {
   showField?: any;
   isRequiredField?: any;
   useChekoutFileds?: boolean;
+  useSignupByEmail?: boolean;
+  useSignupByCellphone?: boolean;
   handleSuccessSignup?: any;
   handleButtonSignupClick?: any;
+  verifyPhoneState?: any;
+  checkPhoneCodeState?: any;
+  setCheckPhoneCodeState?: any;
+  handleSendVerifyCode?: any;
+  handleCheckPhoneCode?: any;
 }
 
 export interface PhoneInputParams {

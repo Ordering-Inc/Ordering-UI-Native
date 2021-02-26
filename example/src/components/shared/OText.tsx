@@ -9,6 +9,10 @@ const SText = styled.Text`
   flex-wrap: wrap;
   margin-bottom: ${(props: any) =>
     props.hasBottom ? '10px' : props.mBottom ? `${props.mBottom}px` : 0};
+  margin-right: ${(props: any) =>
+    props.hasBottom ? '10px' : props.mRight ? `${props.mRight}px` : 0};
+  margin-left: ${(props: any) =>
+    props.hasBottom ? '10px' : props.mLeft ? `${props.mLeft}px` : 0};
   ${(props: any) =>
     props.weight &&
     css`
@@ -29,7 +33,9 @@ interface Props {
   isWrap?: boolean;
   hasBottom?: boolean;
   mBottom?: any;
-  space?: any
+  space?: any;
+  mRight?: number;
+  mLeft?: number;
 }
 
 const OText = (props: Props): React.ReactElement => {

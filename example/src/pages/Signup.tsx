@@ -11,6 +11,8 @@ export const Signup = (props: any) => {
     useChekoutFileds: true,
     loginButtonText: t('LOGIN', 'Login'),
     signupButtonText: t('SIGNUP', 'Signup'),
+    useSignupByEmail: true,
+    useSignupByCellphone: true,
     onNavigationRedirect: (page: string) => {
       if (!page) return
       props.navigation.navigate(page);
