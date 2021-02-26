@@ -1,5 +1,5 @@
 import React from 'react';
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 import styled from 'styled-components/native';
 import { LoginForm } from '../components/LoginForm';
 import { colors } from '../theme';
@@ -15,7 +15,7 @@ const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
 `;
 
-export const Login = ({navigation}: any) => {
+export const Login = ({ navigation }: any) => {
   const [, t] = useLanguage()
 
   const loginProps = {
@@ -31,7 +31,7 @@ export const Login = ({navigation}: any) => {
     },
     handleSuccessLogin: (user: any) => {
       if (user?.id) {
-        navigation.navigate('Home');
+        navigation.navigate('MyAccount');
       }
     }
   }

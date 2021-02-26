@@ -18,6 +18,7 @@ export interface LoginParams {
   handleCheckPhoneCode?: any;
 }
 export interface ProfileParams {
+  navigation?: any;
   isEdit?: boolean;
   formState?: any;
   toggleIsEdit?: any;
@@ -31,6 +32,30 @@ export interface ProfileParams {
   isRequiredField?: any;
 }
 
+export interface AddressListParams {
+  navigation?: any;
+  addressList?: any;
+  isFromProfile?: boolean;
+  nopadding?: boolean;
+  userId?: any;
+  handleDelete?: any;
+  handleSetDefault?: any;
+  setAddressList?: any;
+}
+
+export interface AddressFormParams {
+  navigation?: any,
+  updateChanges?: any,
+  address?: any,
+  formState?: any,
+  isEditing?: boolean,
+  handleChangeInput?: any,
+  addressState?: any,
+  addressesList?: any,
+  saveAddress?: any,
+  userCustomerSetup?: boolean,
+  isRequiredField?: boolean,
+}
 export interface SignupParams {
   navigation?: any;
   loginButtonText?: string;
