@@ -96,7 +96,7 @@ const AddressListUI = (props: AddressListParams) => {
 	}
 
 	const goToBack =  () => navigation.goBack()
-  const onNavigationRedirect = (route: string, params: any) => navigation.navigate(route, params)
+  const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
 
 	return (
 		<Container nopadding={nopadding}>
