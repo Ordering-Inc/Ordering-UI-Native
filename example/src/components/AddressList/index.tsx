@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder } from 'ordering-components/native'
-import { AddressListContainer, AddressItem, ContainerButtons } from './styles'
+import { AddressListContainer, AddressItem } from './styles'
 import { StyleSheet } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -15,13 +15,14 @@ const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
 const AddressListUI = (props: AddressListParams) => {
 
 	const {
-		navigation,
 		addressList,
 		isFromProfile,
 		nopadding,
 		handleSetDefault,
 		handleDelete,
-		setAddressList
+		setAddressList,
+		onNavigationRedirect,
+		goToBack
 	} = props
 
 	const [orderState] = useOrder()
@@ -74,12 +75,6 @@ const AddressListUI = (props: AddressListParams) => {
 		if (address.id === orderState?.options?.address_id) return
 		handleSetDefault(address)
 	}
-
-	const onNavigationRedirect = (page: string, params?: any) => {
-		navigation.navigate(page, params)
-	}
-
-	const goToBack = () => onNavigationRedirect('Login')
 
 	const handleSaveAddress = (address: any) => {
 		let found = false
@@ -156,7 +151,7 @@ const AddressListUI = (props: AddressListParams) => {
 					imgLeftStyle={styles.buttonIcon}
 					style={styles.button}
 					borderColor={colors.primary}
-					onClick={() => onNavigationRedirect('AddressForm', { address: null, nopadding: true, addressList: addressList, onSaveAddress: handleSaveAddress })}
+					onClick={() => onNavigationRedirect('AddressForm', { address: null, nopadding: true, addressList: addressList?.addresses, onSaveAddress: handleSaveAddress })}
 				/>
 			</AddressListContainer>
 		</Container>

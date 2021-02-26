@@ -17,7 +17,10 @@ const AddressForm = ({navigation,route}: any) => {
     isEditing: route?.params?.isEditing,
     addressesList: route?.params?.addressList,
     onSaveAddress: route?.params?.onSaveAddress,
-    isSelectedAfterAdd: true
+    isSelectedAfterAdd: true,
+    isGuestUser: route?.params?.isGuestUser,
+    goToBack: () => navigation.goBack(),
+    continueAsGuest: () => navigation.navigate('Guest'),
   }
 
   return (
