@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import styled from 'styled-components/native';
 import { LoginForm } from '../components/LoginForm';
 import { colors } from '../theme';
-import { Container } from '../layouts/Container'
+import { Container } from '../layouts/Container';
 
 import { useLanguage } from 'ordering-components/native';
 
