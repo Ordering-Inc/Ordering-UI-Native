@@ -3,12 +3,8 @@ import styled from 'styled-components/native';
 import { Platform } from 'react-native';
 import NavBar from '../components/NavBar';
 import { IMAGES } from '../config/constants';
-import { UserProfileForm as ProfileController } from '../components/Profile';
-
-const Wrapper = styled.ScrollView`
-  flex: 1;
-  padding: 20px;
-`;
+import { UserProfileForm as ProfileController } from '../components/UserProfileForm';
+import { Container } from '../layouts/Container'
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
@@ -36,16 +32,16 @@ const Profile = (props: Props) => {
         enabled
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <NavBar
-          title={'Profile'}
-          titleAlign={'left'}
-          onActionLeft={onMenu}
-          leftImg={IMAGES.menu}
-          showCall={false}
-        />
-        <Wrapper>
+        <Container>
+          <NavBar
+            title={'Profile'}
+            titleAlign={'left'}
+            onActionLeft={onMenu}
+            leftImg={IMAGES.menu}
+            showCall={false}
+          />
           <ProfileController {...profileProps} />
-        </Wrapper>
+        </Container>
       </KeyboardView>
     </>
   );

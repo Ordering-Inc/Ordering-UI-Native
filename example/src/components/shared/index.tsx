@@ -10,18 +10,20 @@ import OIconButton from './OIconButton'
 import OTextarea from './OTextarea'
 import OToggle from './OToggle'
 import OKeyButton from './OKeyButton'
+import OAlert from './OAlert'
 
 export {
-    OText,
-    OButton,
-    OInput,
-    OSegment,
-    ODropDown,
-    OIcon,
-    OIconText,
-    OCheckbox,
-    OIconButton,
-    OTextarea,
-    OToggle,
-    OKeyButton
+	OText,
+	OButton,
+	OInput,
+	OSegment,
+	ODropDown,
+	OIcon,
+	OIconText,
+	OCheckbox,
+	OIconButton,
+	OTextarea,
+	OToggle,
+	OKeyButton,
+	OAlert
 }

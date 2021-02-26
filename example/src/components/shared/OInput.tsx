@@ -36,6 +36,7 @@ interface Props {
   onChange?: any;
   name?: string;
   type?: string;
+  multiline?: boolean;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -62,6 +63,8 @@ const OInput = (props: Props): React.ReactElement => {
         defaultValue={props.value}
         placeholder={props.placeholder ? props.placeholder : ''}
         keyboardType={props.type || 'default'}
+        multiline={props.multiline}
+        scrollEnabled={props.multiline}
       />
     </Wrapper>
   );
