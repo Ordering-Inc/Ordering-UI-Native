@@ -11,17 +11,17 @@ const Stack = createStackNavigator();
 const MyAccountNavigator = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen 
+      <Stack.Screen
         name="AddressList"
         component={AddressList}
         options={{headerShown: false}}
       />
-      <Stack.Screen 
+      <Stack.Screen
         name="AddressForm"
         component={AddressForm}
         options={{headerShown: false}}
       />
-      <Stack.Screen 
+      <Stack.Screen
         name="OrderView"
         component={DrawNavigator}
         options={{headerShown: false}}
