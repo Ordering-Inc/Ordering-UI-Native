@@ -52,5 +52,7 @@ export const IMAGES = {
     phone: require('../assets/icons/phone.png'),
     mail: require('../assets/icons/mail.png'),
     chat: require('../assets/icons/chat.png'),
-    user: require('../assets/icons/menu-user.png')
+    user: require('../assets/icons/menu-user.png'),
+    applogo: require('../assets/images/app-logo.png'),
+    menulogout : require('../assets/icons/menu-logout.png')
 }
