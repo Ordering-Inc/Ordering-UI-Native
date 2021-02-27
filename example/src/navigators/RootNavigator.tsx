@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
 import { useOrder, useSession } from 'ordering-components/native';
 
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import Forgot from '../pages/ForgotPassword';
-import Home from '../pages/Home';
+import Home from '../pages/Home'
+import AddressList from '../pages/AddressList'
+import AddressForm from '../pages/AddressForm'
+import DrawNavigator from './DrawNavigator';
 import Splash from '../pages/Splash';
-import MyAccountNavigator from './MyAccountNavigator';
+import DrawGuestNavigator from './DrawGuestNavigator'
 
 const Stack = createStackNavigator();
 
@@ -30,55 +32,73 @@ const RootNavigator = () => {
   }, [loading])
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        {
-          !loaded && (
-            <Stack.Screen
-              name="Splash"
-              component={Splash}
-              options={{headerShown: false}}
-            />
-          )
-        }
-        {
-          loaded && (
-            <>
-              {!auth ? (
-                <>
-                  <Stack.Screen
-                    name="Home"
-                    component={Home}
-                    options={{headerShown: false}}
-                  />
-                  <Stack.Screen
-                    name="Login"
-                    component={Login}
-                    options={{headerShown: false}}
-                  />
-                  <Stack.Screen
-                    name="Signup"
-                    component={Signup}
-                    options={{headerShown: false}}
-                  />
-                  <Stack.Screen
-                    name="Forgot"
-                    component={Forgot}
-                    options={{headerShown: false}}
-                  />
-                </>
-              ) : (
+    <Stack.Navigator>
+      {
+        !loaded && (
+          <Stack.Screen
+            name="Splash"
+            component={Splash}
+            options={{headerShown: false}}
+          />
+        )
+      }
+      {
+        loaded && (
+          <>
+            {!auth ? (
+              <>
                 <Stack.Screen
-                  name='MyAccount'
-                  component={MyAccountNavigator}
+                  name="Home"
+                  component={Home}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Login"
+                  component={Login}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Signup"
+                  component={Signup}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Forgot"
+                  component={Forgot}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="AddressList"
+                  component={AddressList}
                   options={{headerShown: false}}
                 />
-              )}
-            </>
-          )
-        }
-      </Stack.Navigator>
-    </NavigationContainer>
+                <Stack.Screen
+                  name="AddressForm"
+                  component={AddressForm}
+                  options={{headerShown: false}}
+                />
+                <Stack.Screen
+                  name='MyAccount'
+                  component={DrawNavigator}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='Guest'
+                  component={DrawGuestNavigator}
+                  options={{ headerShown: false }}
+                />
+              </>
+            ) : (
+              <Stack.Screen
+                name='MyAccount'
+                component={DrawNavigator}
+                options={{ headerShown: false }}
+              />
+            )}
+          </>
+        )
+      }
+    </Stack.Navigator>
   );
 };
 

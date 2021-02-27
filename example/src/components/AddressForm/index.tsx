@@ -72,8 +72,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 		}
 
 		const arrayList = isEditing
-			? addressesList.addresses.filter((address: any) => address.id !== addressState?.address?.id) || []
-			: addressesList.addresses || []
+			? addressesList?.filter((address: any) => address.id !== addressState?.address?.id) || []
+			: addressesList || []
 		const addressToCompare = isEditing
 			? { ...addressState.address, ...formState.changes }
 			: formState?.changes
@@ -139,8 +139,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 	}
 
 	const goToBack = () => navigation.goBack()
-
-	const continueAsGuest = () => navigation.navigate('MapOrders')
+	const continueAsGuest = () => navigation.navigate('Guest')
 
 	useEffect(() => {
 		if (alertState.open) {

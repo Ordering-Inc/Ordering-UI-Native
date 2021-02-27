@@ -31,7 +31,7 @@ export const Login = ({ navigation }: any) => {
     },
     handleSuccessLogin: (user: any) => {
       if (user?.id) {
-        navigation.navigate('MyAccount');
+        navigation.navigate('AddressList');
       }
     }
   }

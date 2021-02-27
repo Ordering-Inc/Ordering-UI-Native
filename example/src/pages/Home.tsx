@@ -7,9 +7,9 @@ export const Home = ({navigation}: any) => {
   const [, t] = useLanguage();
   const homeProps = {
     navigation,
-    onNavigationRedirect: (page: string) => {
+    onNavigationRedirect: (page: string, params: any) => {
       if (!page) return
-      navigation.navigate(page);
+      navigation.navigate(page, params);
     },
     sloganTitle: t('TITLE_HOME', 'Welcome!'),
     sloganSubtitle: t('SUBTITLE_HOME', "Let's start to order food now")

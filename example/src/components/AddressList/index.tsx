@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder } from 'ordering-components/native'
-import { AddressListContainer, AddressItem, ContainerButtons } from './styles'
+import { AddressListContainer, AddressItem } from './styles'
 import { StyleSheet } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -21,7 +21,7 @@ const AddressListUI = (props: AddressListParams) => {
 		nopadding,
 		handleSetDefault,
 		handleDelete,
-		setAddressList
+		setAddressList,
 	} = props
 
 	const [orderState] = useOrder()
@@ -75,12 +75,6 @@ const AddressListUI = (props: AddressListParams) => {
 		handleSetDefault(address)
 	}
 
-	const onNavigationRedirect = (page: string, params?: any) => {
-		navigation.navigate(page, params)
-	}
-
-	const goToBack = () => onNavigationRedirect('Login')
-
 	const handleSaveAddress = (address: any) => {
 		let found = false
 		const addresses = addressList.addresses.map((_address: any) => {
@@ -100,6 +94,9 @@ const AddressListUI = (props: AddressListParams) => {
 			addresses
 		})
 	}
+
+	const goToBack =  () => navigation.goBack()
+  const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
 
 	return (
 		<Container nopadding={nopadding}>
@@ -146,7 +143,7 @@ const AddressListUI = (props: AddressListParams) => {
 						</>
 					)}
 				{!isFromProfile && addressList?.addresses?.length > 0 && (
-					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('OrderView')} textStyle={{color: colors.white}} />
+					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('MyAccount')} textStyle={{color: colors.white}} />
 				)}
 				<OButton
 					text={t('ADD_NEW_ADDRESS', 'Add new Address')}
@@ -156,7 +153,7 @@ const AddressListUI = (props: AddressListParams) => {
 					imgLeftStyle={styles.buttonIcon}
 					style={styles.button}
 					borderColor={colors.primary}
-					onClick={() => onNavigationRedirect('AddressForm', { address: null, nopadding: true, addressList: addressList, onSaveAddress: handleSaveAddress })}
+					onClick={() => onNavigationRedirect('AddressForm', { address: null, nopadding: true, addressList: addressList?.addresses, onSaveAddress: handleSaveAddress })}
 				/>
 			</AddressListContainer>
 		</Container>

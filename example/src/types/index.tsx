@@ -55,6 +55,8 @@ export interface AddressFormParams {
   saveAddress?: any,
   userCustomerSetup?: boolean,
   isRequiredField?: boolean,
+  isGuestUser?: boolean,
+  useValidationFileds?: boolean,
 }
 export interface SignupParams {
   navigation?: any;

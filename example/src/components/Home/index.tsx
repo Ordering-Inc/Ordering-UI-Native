@@ -34,7 +34,7 @@ export const Home = (props: any) => {
         bgColor={colors.primary}
         borderColor={colors.primary}
         style={styles.buttons}
-        textStyle={{color: 'white'}}
+        textStyle={{ color: 'white' }}
         onClick={() => onNavigationRedirect('Login')}
       />
       <OButton
@@ -43,6 +43,14 @@ export const Home = (props: any) => {
         borderColor={colors.primary}
         style={styles.buttons}
         onClick={() => onNavigationRedirect('Signup')}
+      />
+      <OButton
+        text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
+        bgColor={colors.primary}
+        borderColor={colors.primary}
+        style={{ ...styles.buttons, marginVertical: 40 }}
+        textStyle={{ color: 'white' }}
+        onClick={() => onNavigationRedirect('AddressForm', { isGuestUser: true })}
       />
     </View>
   );
