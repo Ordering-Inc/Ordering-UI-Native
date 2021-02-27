@@ -9,7 +9,7 @@ const Drawer = createDrawerNavigator();
 const DrawNavigator = () => {
   return (
     <Drawer.Navigator drawerContent={(props: any) => <SideMenu {...props} />}>
-      <Drawer.Screen 
+      <Drawer.Screen
         name="OrderView"
         component={HomeNavigator}
       />
