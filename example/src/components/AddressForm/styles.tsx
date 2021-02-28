@@ -15,5 +15,4 @@ export const IconsContainer = styled.View`
 
 export const AutocompleteInput = styled.View`
     height: 100px;
-    padding: 10px;
 `
