@@ -72,7 +72,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 		}
 
 		const arrayList = isEditing
-			? addressesList?.filter((address: any) => address.id !== addressState?.address?.id) || []
+			? addressesList.addresses?.filter((address: any) => address.id !== addressState?.address?.id) || []
 			: addressesList || []
 		const addressToCompare = isEditing
 			? { ...addressState.address, ...formState.changes }
