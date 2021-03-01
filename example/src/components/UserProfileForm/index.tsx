@@ -144,7 +144,7 @@ const ProfileUI = (props: ProfileParams) => {
     <>
       <CenterView>
         <OIcon
-          url={user.photo}
+          url={user?.photo}
           width={100}
           height={100}
           style={{ borderRadius: 12 }}
@@ -161,17 +161,17 @@ const ProfileUI = (props: ProfileParams) => {
       {!isEdit ? (
         <UserData>
           <Names>
-            <OText space>{user.name}</OText>
-            <OText>{user.lastname}</OText>
+            <OText space>{user?.name}</OText>
+            <OText>{user?.lastname}</OText>
           </Names>
-          {(user.middle_name || user.second_lastname) && (
+          {(user?.middle_name || user?.second_lastname) && (
             <Names>
-              <OText space>{user.middle_name}</OText>
-              <OText>{user.second_lastname}</OText>
+              <OText space>{user?.middle_name}</OText>
+              <OText>{user?.second_lastname}</OText>
             </Names>
           )}
-          <OText>{user.email}</OText>
-          {user.cellphone && <OText>{user.cellphone}</OText>}
+          <OText>{user?.email}</OText>
+          {user?.cellphone && <OText>{user?.cellphone}</OText>}
         </UserData>
       ) : (
           <>
@@ -268,12 +268,14 @@ const ProfileUI = (props: ProfileParams) => {
             )}
         </EditButton>
       )}
-      <AddressList
-        nopadding
-        isFromProfile
-        userId={user.id}
-        navigation={navigation}
-      />
+      {user?.id && (
+        <AddressList
+          nopadding
+          isFromProfile
+          userId={user.id}
+          navigation={navigation}
+        />
+      )}
     </>
   );
 };

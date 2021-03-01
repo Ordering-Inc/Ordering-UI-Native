@@ -8,7 +8,7 @@ const AddressList = ({ navigation }: any) => {
 
   const AddressListProps = {
     navigation,
-    userId: user.id,
+    userId: user?.id,
   }
 
   return <AddressListController {...AddressListProps} />
