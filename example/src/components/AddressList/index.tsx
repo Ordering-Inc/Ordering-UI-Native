@@ -6,7 +6,6 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors } from '../../theme'
 import { OButton, OText, OAlert } from '../shared'
-import NavBar from '../NavBar'
 import { Container } from '../../layouts/Container'
 import { AddressListParams } from '../../types'
 
@@ -100,15 +99,6 @@ const AddressListUI = (props: AddressListParams) => {
 
 	return (
 		<Container nopadding={nopadding}>
-			{!isFromProfile && (
-				<NavBar
-					title={t('ADDRESS_LIST', 'Address List')}
-					titleAlign={'center'}
-					onActionLeft={goToBack}
-					showCall={false}
-					btnStyle={{ paddingLeft: 0 }}
-				/>
-			)}
 			<AddressListContainer>
 				<Spinner visible={addressList.loading || orderState.loading} />
 				{
@@ -153,7 +143,7 @@ const AddressListUI = (props: AddressListParams) => {
 						onClick={() => onNavigationRedirect('AddressForm', { address: null, nopadding: true, addressList: addressList?.addresses, onSaveAddress: handleSaveAddress })}
 					/>
 				{!isFromProfile && addressList?.addresses?.length > 0 && (
-					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('MyAccount')} textStyle={{color: colors.white}} />
+					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('MapOrders')} textStyle={{color: colors.white}} />
 				)}
 			</AddressListContainer>
 		</Container>

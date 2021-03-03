@@ -29,11 +29,6 @@ export const Login = ({ navigation }: any) => {
       if (!page) return
       navigation.navigate(page);
     },
-    handleSuccessLogin: (user: any) => {
-      if (user?.id) {
-        navigation.navigate('AddressList');
-      }
-    }
   }
 
 

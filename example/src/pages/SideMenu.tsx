@@ -29,10 +29,6 @@ const SideMenu = (props: Props) => {
     setOnline((status: boolean) => !status)
   }
 
-  const handleSuccessLogout = () => {
-    props.navigation.navigate('Login')
-  }
-
   return (
     <Wrapper>
       <TopWrapper>
@@ -75,9 +71,7 @@ const SideMenu = (props: Props) => {
             props.navigation.navigate('Supports')
           }}
         />
-        <LogoutButton
-          handleSuccessLogout={handleSuccessLogout}
-        />
+        <LogoutButton/>
       </MenuItemsWrap>
     </Wrapper>
   )

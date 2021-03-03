@@ -38,7 +38,7 @@ const RootNavigator = () => {
           <Stack.Screen
             name="Splash"
             component={Splash}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
         )
       }
@@ -68,18 +68,8 @@ const RootNavigator = () => {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                  name="AddressList"
-                  component={AddressList}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
                   name="AddressForm"
                   component={AddressForm}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name='MyAccount'
-                  component={DrawNavigator}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
@@ -89,12 +79,12 @@ const RootNavigator = () => {
                 />
               </>
             ) : (
-              <Stack.Screen
-                name='MyAccount'
-                component={DrawNavigator}
-                options={{ headerShown: false }}
-              />
-            )}
+                <Stack.Screen
+                  name='MyAccount'
+                  component={DrawNavigator}
+                  options={{ headerShown: false }}
+                />
+              )}
           </>
         )
       }

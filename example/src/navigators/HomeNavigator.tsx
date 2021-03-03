@@ -11,24 +11,30 @@ import Profile from '../pages/Profile';
 import Supports from '../pages/Supports';
 import AddressList from '../pages/AddressList'
 import AddressForm from '../pages/AddressForm'
+import { useSession } from 'ordering-components/native'
 
 const Stack = createStackNavigator();
 
 const HomeNavigator = (is_online: boolean) => {
+
+	const [{ user }] = useSession()
+
 	return (
-		<Stack.Navigator
-			initialRouteName='MapOrders'
-			screenOptions={{
-				headerTitleAlign: 'center',
-				headerStyle: {
-					backgroundColor: '#621FF7',
-				},
-				headerTintColor: '#fff',
-				headerTitleStyle: {
-					fontWeight: 'bold',
-				},
-			}}
-		>
+		<Stack.Navigator>
+			{user?.id && (
+				<>
+					<Stack.Screen
+						name="AddressList"
+						component={AddressList}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="Profile"
+						component={Profile}
+						options={{ title: 'User\'s Profile', headerShown: false }}
+					/>
+				</>
+			)}
 			<Stack.Screen
 				name="MapOrders"
 				component={MapOrders}
@@ -65,20 +71,11 @@ const HomeNavigator = (is_online: boolean) => {
 				component={Chat}
 				options={{ title: 'Chat Screen', headerShown: false }}
 			/>
-			<Stack.Screen
-				name="Profile"
-				component={Profile}
-				options={{ title: 'User\'s Profile', headerShown: false }}
-			/>
+
 			<Stack.Screen
 				name="Supports"
 				component={Supports}
 				options={{ title: 'FAQ and Supports', headerShown: false }}
-			/>
-			<Stack.Screen
-				name="AddressList"
-				component={AddressList}
-				options={{ headerShown: false }}
 			/>
 			<Stack.Screen
 				name="AddressForm"
