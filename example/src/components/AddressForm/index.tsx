@@ -82,7 +82,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 
 		if (!isAddressAlreadyExist) {
 			saveAddress({}, userCustomerSetup)
-			if(!isGuestUser){
+			if (!isGuestUser) {
 				goToBack()
 			} else {
 				continueAsGuest()
@@ -266,13 +266,19 @@ const AddressFormUI = (props: AddressFormParams) => {
 									marginTop: 44,
 									borderBottomEndRadius: 15,
 									elevation: 2,
-									zIndex: 1000
+									zIndex: 1000,
 								},
 								textInput: {
 									borderColor: colors.primary,
 									borderWidth: 1,
-									borderRadius: 20
+									borderRadius: 10,
+									flexGrow: 1,
+									fontSize: 15,
+									paddingHorizontal: 20,
+									minHeight: 50,
+									fontFamily: 'Poppins-Regular'
 								},
+
 							}}
 						/>
 					)}
@@ -336,18 +342,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 					/>
 				)}
 			/>
-			<OButton
-				text={
-					!formState.loading ? (
-						isEditing
-							? t('UPDATE', 'Update')
-							: t('ADD', 'Add')
-					) : t('LOADING', 'Loading')
-				}
-				imgRightSrc=''
-				onClick={handleSubmit(onSubmit)}
-				textStyle={{ color: colors.white }}
-			/>
 			<IconsContainer>
 				<View style={{ ...styles.iconContainer, backgroundColor: addressTag === 'home' ? colors.primary : colors.backgroundGray, borderColor: addressTag === 'home' ? colors.primary : colors.backgroundGray }}>
 					<MaterialIcon name='home' size={58} style={{ ...styles.icons }} onPress={() => handleAddressTag('home')} />
@@ -362,6 +356,18 @@ const AddressFormUI = (props: AddressFormParams) => {
 					<MaterialIcon name='plus' size={58} style={{ ...styles.icons }} onPress={() => handleAddressTag('other')} />
 				</View>
 			</IconsContainer>
+			<OButton
+				text={
+					!formState.loading ? (
+						isEditing
+							? t('UPDATE', 'Update')
+							: t('SAVE', 'Save')
+					) : t('LOADING', 'Loading')
+				}
+				imgRightSrc=''
+				onClick={handleSubmit(onSubmit)}
+				textStyle={{ color: colors.white }}
+			/>
 		</AddressFormContainer>
 	)
 }
@@ -369,25 +375,25 @@ const AddressFormUI = (props: AddressFormParams) => {
 const styles = StyleSheet.create({
 	icons: {
 		borderRadius: 20,
-		color: colors.white
+		color: colors.white, 
 	},
 	iconContainer: {
-		marginHorizontal: 10,
-		borderWidth: 5,
+		borderWidth: 10,
 		alignItems: 'center',
-		borderRadius: 25
+		borderRadius: 10,
 	},
 	inputsStyle: {
-		borderBottomColor: colors.secundaryContrast,
-		borderRadius: 0,
+		borderColor: colors.secundaryContrast,
+		borderRadius: 10,
 		marginVertical: 20
 	},
 	textAreaStyles: {
 		borderColor: colors.secundaryContrast,
-		borderRadius: 0,
+		borderRadius: 10,
 		marginVertical: 20,
 		height: 150,
-		textAlignVertical: 'top'
+		textAlignVertical: 'top',
+		alignItems: 'flex-start'
 	}
 })
 
