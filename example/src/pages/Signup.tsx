@@ -1,10 +1,11 @@
 import React from 'react';
 import { SignupForm } from '../components/SignupForm';
 import { Container } from '../layouts/Container'
-import { useLanguage } from 'ordering-components/native';
+import { useLanguage, useSession } from 'ordering-components/native';
 
 export const Signup = (props: any) => {
   const [, t] = useLanguage()
+  const [, { login }] = useSession()
 
   const signupProps = {
     ...props,
@@ -19,7 +20,10 @@ export const Signup = (props: any) => {
     },
     handleSuccessSignup: (user: any) => {
       if (user?.id) {
-        props.navigation.navigate('Home');
+        login({
+          user,
+          token: user.session.access_token
+        })
       }
     }
   }
