@@ -36,6 +36,7 @@ interface Props {
   space?: any;
   mRight?: number;
   mLeft?: number;
+  numberOfLines?: number;
 }
 
 const OText = (props: Props): React.ReactElement => {

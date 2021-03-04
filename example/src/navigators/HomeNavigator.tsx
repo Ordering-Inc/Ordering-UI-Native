@@ -11,6 +11,7 @@ import Profile from '../pages/Profile';
 import Supports from '../pages/Supports';
 import AddressList from '../pages/AddressList'
 import AddressForm from '../pages/AddressForm'
+import BusinessesListing from '../pages/BusinessesListing'
 import { useSession } from 'ordering-components/native'
 
 const Stack = createStackNavigator();
@@ -32,6 +33,11 @@ const HomeNavigator = (is_online: boolean) => {
 						name="Profile"
 						component={Profile}
 						options={{ title: 'User\'s Profile', headerShown: false }}
+					/>
+					<Stack.Screen
+						name="BusinessesListing"
+						component={BusinessesListing}
+						options={{ headerShown: false }}
 					/>
 				</>
 			)}

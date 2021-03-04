@@ -8,7 +8,7 @@ export const flatArray = (arr: any) => [].concat(...arr)
  */
 export const getTraduction = (key: string) => {
   const [, t] = useLanguage()
-  const keyList = {
+  const keyList: any = {
     // Add the key and traduction that you need below
     ERROR_ORDER_WITHOUT_CART: 'The order was placed without a cart',
     ERROR_INVALID_COUPON: "The coupon doesn't exist",
@@ -23,4 +23,15 @@ export const getTraduction = (key: string) => {
   }
 
   return keyList[key] ? t(key, keyList[key]) : t(key)
+}
+
+/**
+ * Function to convert delivery time in minutes
+ * @param {string} time business delivery time
+ */
+export const convertHoursToMinutes = (time: any) => {
+  if (!time) return '0min'
+  const [hour, minute] = time.split(':')
+  const result = (parseInt(hour, 10) * 60) + parseInt(minute, 10)
+  return `${result}min`
 }

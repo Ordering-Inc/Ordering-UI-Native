@@ -65,6 +65,7 @@ const OInput = (props: Props): React.ReactElement => {
         keyboardType={props.type || 'default'}
         multiline={props.multiline}
         scrollEnabled={props.multiline}
+        editable={!props.isDisabled}
       />
     </Wrapper>
   );

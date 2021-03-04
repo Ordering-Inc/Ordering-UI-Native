@@ -1,0 +1,104 @@
+import React, { useEffect, useRef, useCallback } from 'react'
+import { BusinessList as BusinessesListingController, useLanguage, useSession, useOrder } from 'ordering-components/native'
+import { BusinessTypeFilter } from '../BusinessTypeFilter'
+import { BusinessController } from '../BusinessController'
+import { WelcomeTitle, Search, AddressInput } from './styles'
+import { OText, OIcon, OInput } from '../shared'
+import { colors } from '../../theme'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+
+
+import { View, StyleSheet, ScrollView } from 'react-native'
+import Spinner from 'react-native-loading-spinner-overlay';
+
+const home = require('../../assets/icons/home.png')
+
+const PIXELS_TO_SCROLL = 1000
+
+const BusinessesListingUI = (props) => {
+  const { navigation, businessesList, searchValue, getBusinesses, handleChangeBusinessType, handleBusinessClick, paginationProps } = props
+  const [, t] = useLanguage()
+  const [{ user }] = useSession()
+  const [orderState] = useOrder()
+  const BusinessContainer = useRef(null)
+
+  const handleScroll = ({ nativeEvent }: any) => {
+    const y = nativeEvent.contentOffset.y
+    const height = nativeEvent.contentSize.height
+    const hasMore = !(paginationProps.totalPages === paginationProps.currentPage)
+
+    if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
+      getBusinesses()
+    }
+  }
+
+  const onRedirect = (route: string, params?: any) => {
+    navigation.navigate(route, params)
+  }
+
+  return (
+    <ScrollView ref={BusinessContainer} style={styles.container} onScroll={(e) => handleScroll(e)}>
+      <Search>
+        <MaterialIcon name='search' size={32} />
+      </Search>
+      <WelcomeTitle>
+        <View style={styles.welcome}>
+          <OText size={28}>{t('WELCOME_TITLE_APP', 'Hello there, ')}</OText>
+          <OText size={28} color={colors.primary}>{user.name}</OText>
+        </View>
+        <OIcon
+          url={user?.photo}
+          width={80}
+          height={80}
+          style={{ borderRadius: 6 }}
+        />
+      </WelcomeTitle>
+      <AddressInput onPress={() => onRedirect('AddressList')}>
+        <MaterialComIcon name='home-outline' color={colors.primary} size={20} style={{ marginRight: 10 }} />
+        <OText style={styles.inputStyle} numberOfLines={1}>
+          {orderState?.options?.address?.address}
+        </OText>
+      </AddressInput>
+      <BusinessTypeFilter
+        handleChangeBusinessType={handleChangeBusinessType}
+      />
+      {
+        businessesList.businesses?.map((business: any) => (
+          <BusinessController
+            key={business.id}
+            className='card'
+            business={business}
+            handleCustomClick={handleBusinessClick}
+            orderType={orderState?.options?.type}
+          />
+        ))
+      }
+      <Spinner visible={businessesList.loading} />
+    </ScrollView>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  welcome: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  inputStyle: {
+    backgroundColor: colors.backgroundGray,
+    flex: 1
+  }
+})
+
+export const BusinessesListing = (props) => {
+
+  const BusinessesListingProps = {
+    ...props,
+    UIComponent: BusinessesListingUI
+  }
+
+  return <BusinessesListingController {...BusinessesListingProps} />
+}

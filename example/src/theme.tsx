@@ -7,7 +7,6 @@ export const colors = {
   disabledContrast: '#000',
   backgroundPage: '#FFFFFF',
   colorPage: '#333',
-
   skyBlue: '#1977F2',
   white: '#fff',
   whiteGray: '#f7f6f3',
@@ -18,7 +17,7 @@ export const colors = {
   lightGray: '#D2D2D2',
   backgroundLight: 'white',
   backgroundDark: '#484848',
-  backgroundGray: '#EFEFEF',
+  backgroundGray: '#CCCCCC',
   clear: 'transparent',
   error: '#C90800',
   success: '#90C68E',
