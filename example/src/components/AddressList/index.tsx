@@ -143,7 +143,7 @@ const AddressListUI = (props: AddressListParams) => {
 						onClick={() => onNavigationRedirect('AddressForm', { address: null, nopadding: true, addressList: addressList?.addresses, onSaveAddress: handleSaveAddress })}
 					/>
 				{!isFromProfile && addressList?.addresses?.length > 0 && (
-					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('MapOrders')} textStyle={{color: colors.white}} />
+					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('BottomTab')} textStyle={{color: colors.white}} />
 				)}
 			</AddressListContainer>
 		</Container>

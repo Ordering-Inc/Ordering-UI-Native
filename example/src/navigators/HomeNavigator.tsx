@@ -7,10 +7,10 @@ import Reject from '../pages/Reject';
 import Accept from '../pages/Accept';
 import MapBusiness from '../pages/MapBusiness';
 import Chat from '../pages/Chat';
-import Profile from '../pages/Profile';
 import Supports from '../pages/Supports';
 import AddressList from '../pages/AddressList'
 import AddressForm from '../pages/AddressForm'
+import BottomNavigator from '../navigators/BottomNavigator'
 import { useSession } from 'ordering-components/native'
 
 const Stack = createStackNavigator();
@@ -29,9 +29,9 @@ const HomeNavigator = (is_online: boolean) => {
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="Profile"
-						component={Profile}
-						options={{ title: 'User\'s Profile', headerShown: false }}
+						name='BottomTab'
+						component={BottomNavigator}
+						options={{ headerShown: false }}
 					/>
 				</>
 			)}

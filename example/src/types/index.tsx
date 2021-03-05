@@ -87,7 +87,42 @@ export interface PhoneInputParams {
 export interface LanguageSelectorParams {
   languagesState?: Array<any>;
   currentLanguage?: string;
-  handleChangeLanguage?: any
+  handleChangeLanguage?: any;
+}
+export interface BusinessesListingParams {
+  navigation?: any;
+  businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
+  searchValue: string;
+  getBusinesses: () => void;
+  handleChangeBusinessType?: any;
+  handleBusinessClick?: void;
+  paginationProps?: any;
+  handleChangeSearch?: any;
+}
+export interface BusinessTypeFilterParams {
+  businessTypes?: Array<any>;
+  handleChangeBusinessType: () => void;
+  currentTypeSelected?: string | null;
+  defaultBusinessType?: string | null;
+}
+export interface BusinessControllerParams {
+  key?: number;
+  business?: any;
+  handleCustomClick?: any;
+  orderType?: any;
+}
+export interface SearchBarParams {
+  searchValue?: any;
+  lazyLoad?: boolean;
+  onSearch: (value: any) => {};
+}
+export interface NotFoundSourceParams {
+  image?: any,
+  content?: string,
+  btnTitle?: string,
+  conditioned?: boolean,
+  onClickButton?: () => {},
+  children?: any
 }
 export interface ViewInterface {
   navigation?: any;

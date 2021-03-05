@@ -48,7 +48,6 @@ const SignupFormUI = (props: SignupParams) => {
     useSignupByCellphone,
     handleSuccessSignup,
     handleButtonSignupClick,
-
     verifyPhoneState,
     checkPhoneCodeState,
     setCheckPhoneCodeState,
