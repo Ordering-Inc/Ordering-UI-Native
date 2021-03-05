@@ -8,7 +8,7 @@ import {
 import { OIcon, OText } from '../shared';
 import { StyleSheet, View } from 'react-native';
 import { colors } from '../../theme';
-import { BusinessControllerParameters } from '../../types';
+import { BusinessControllerParams } from '../../types';
 import { convertHoursToMinutes } from '../../utils';
 import {
   Card,
@@ -26,7 +26,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
-export const BusinessControllerUI = (props: BusinessControllerParameters) => {
+export const BusinessControllerUI = (props: BusinessControllerParams) => {
   const { business } = props;
   const [{ parsePrice, parseDistance, parseNumber }] = useUtils();
   const [orderState] = useOrder();
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export const BusinessController = (props: any) => {
+export const BusinessController = (props: BusinessControllerParams) => {
   const BusinessControllerProps = {
     ...props,
     UIComponent: BusinessControllerUI,

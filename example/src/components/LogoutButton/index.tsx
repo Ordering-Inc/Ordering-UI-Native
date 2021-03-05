@@ -3,20 +3,23 @@ import { LogoutAction, useLanguage } from 'ordering-components/native';
 
 import { OIconButton } from '../shared';
 import { IMAGES } from '../../config/constants';
+import { colors } from '../../theme';
 
 const LogoutButtonUI = (props: any) => {
   const { handleLogoutClick } = props
   const [, t] = useLanguage()
 
   return (
+    <>
     <OIconButton
       icon={IMAGES.menulogout}
-      title={t('LOGOUT', 'Logout')}
-      style={{ justifyContent: 'flex-start', height: 50 }}
+      style={{ justifyContent: 'flex-end', height: 50 }}
       borderColor={'transparent'}
       textStyle={{ marginHorizontal: 20 }}
       onClick={() => handleLogoutClick()}
+      iconColor={colors.disabledContrast}
     />
+    </>
   )
 }
 

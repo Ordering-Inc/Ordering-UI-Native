@@ -2,7 +2,8 @@ import styled from 'styled-components/native'
 
 export const BusinessCategoriesTitle = styled.View`
   flex: 1;
-  margin-vertical: 10px;
+  margin-top: 10px;
+  margin-bottom: 5px;
 `
 
 export const BusinessCategories = styled.View`

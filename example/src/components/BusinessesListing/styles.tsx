@@ -18,7 +18,7 @@ export const Search = styled.View`
 
 export const AddressInput = styled.TouchableOpacity`
   flex-direction: row;
-  background-color: ${colors.backgroundGray};
+  background-color: ${colors.inputDisabled};
   border-radius: 10px;
   align-items: center;
   margin-vertical: 10px;

@@ -1,27 +1,25 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import React from 'react'
 import { BusinessList as BusinessesListingController, useLanguage, useSession, useOrder } from 'ordering-components/native'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { WelcomeTitle, Search, AddressInput } from './styles'
-import { OText, OIcon, OInput } from '../shared'
+import { OText, OIcon } from '../shared'
 import { colors } from '../../theme'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
+import { BusinessesListingParams } from '../../types'
 
 import { View, StyleSheet, ScrollView } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay';
 
-const home = require('../../assets/icons/home.png')
-
 const PIXELS_TO_SCROLL = 1000
 
-const BusinessesListingUI = (props) => {
+const BusinessesListingUI = (props: BusinessesListingParams) => {
   const { navigation, businessesList, searchValue, getBusinesses, handleChangeBusinessType, handleBusinessClick, paginationProps } = props
   const [, t] = useLanguage()
   const [{ user }] = useSession()
   const [orderState] = useOrder()
-  const BusinessContainer = useRef(null)
 
   const handleScroll = ({ nativeEvent }: any) => {
     const y = nativeEvent.contentOffset.y
@@ -38,14 +36,14 @@ const BusinessesListingUI = (props) => {
   }
 
   return (
-    <ScrollView ref={BusinessContainer} style={styles.container} onScroll={(e) => handleScroll(e)}>
+    <ScrollView style={styles.container} onScroll={(e) => handleScroll(e)}>
       <Search>
         <MaterialIcon name='search' size={32} />
       </Search>
       <WelcomeTitle>
         <View style={styles.welcome}>
           <OText size={28}>{t('WELCOME_TITLE_APP', 'Hello there, ')}</OText>
-          <OText size={28} color={colors.primary}>{user.name}</OText>
+          <OText size={28} color={colors.primary}>{user?.name}</OText>
         </View>
         <OIcon
           url={user?.photo}
@@ -67,7 +65,6 @@ const BusinessesListingUI = (props) => {
         businessesList.businesses?.map((business: any) => (
           <BusinessController
             key={business.id}
-            className='card'
             business={business}
             handleCustomClick={handleBusinessClick}
             orderType={orderState?.options?.type}
@@ -88,12 +85,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   inputStyle: {
-    backgroundColor: colors.backgroundGray,
+    backgroundColor: colors.inputDisabled,
     flex: 1
   }
 })
 
-export const BusinessesListing = (props) => {
+export const BusinessesListing = (props: BusinessesListingParams) => {
 
   const BusinessesListingProps = {
     ...props,

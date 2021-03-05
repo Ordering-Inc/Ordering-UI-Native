@@ -14,6 +14,7 @@ import { ToastType, useToast } from '../../providers/ToastProvider';
 import { ProfileParams } from '../../types';
 import { flatArray } from '../../utils';
 import { AddressList } from '../AddressList'
+import { LogoutButton } from '../LogoutButton'
 import {
   OIcon,
   OIconButton,
@@ -57,7 +58,14 @@ const ProfileUI = (props: ProfileParams) => {
 
   const [validationFieldsSorted, setValidationFieldsSorted] = useState([]);
 
-  const onSubmit = (values: any) => handleButtonUpdateClick(values);
+  const onSubmit = (values: any) => {
+    if(formState.changes.password && formState.changes.password.length < 8){
+      showToast(ToastType.Error, t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.').replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8))
+      return
+    }
+    
+    handleButtonUpdateClick(values);
+  }
 
   const sortValidationFields = () => {
     const fields = [
@@ -142,6 +150,7 @@ const ProfileUI = (props: ProfileParams) => {
 
   return (
     <>
+      <LogoutButton />
       <CenterView>
         <OIcon
           url={user?.photo}
@@ -211,31 +220,15 @@ const ProfileUI = (props: ProfileParams) => {
                   />
                 )
             )}
-            <Controller
-              control={control}
-              render={({ onChange, value }) => (
-                <OInput
-                  name='password'
-                  isSecured={true}
-                  placeholder={'Password'}
-                  icon={IMAGES.lock}
-                  value={value}
-                  style={styles.inputbox}
-                  onChange={(val: any) => {
-                    handleChangeInput(val); onChange(val.target.value)
-                  }}
-                />
-              )}
-              name="password"
-              defaultValue=""
-              rules={
-                {
-                  minLength: {
-                    value: 8,
-                    message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.').replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
-                  }
-                }
-              }
+            <OInput
+              name='password'
+              isSecured={true}
+              placeholder={'Password'}
+              icon={IMAGES.lock}
+              style={styles.inputbox}
+              onChange={(val: any) => {
+                handleChangeInput(val)
+              }}
             />
           </>
         )}

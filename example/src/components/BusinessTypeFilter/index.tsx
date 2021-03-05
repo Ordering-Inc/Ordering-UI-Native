@@ -1,26 +1,27 @@
 import React from 'react'
-import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 'ordering-components'
+import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 'ordering-components/native'
 import { BusinessCategoriesTitle, BusinessCategories, Category } from './styles'
 import { OText } from '../shared'
 import { View, StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors } from '../../theme'
+import { BusinessTypeFilterParams } from '../../types'
 
-export const BusinessTypeFilterUI = (props) => {
+export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
   const { businessTypes, handleChangeBusinessType, currentTypeSelected } = props
   const [, t] = useLanguage()
   return (
     <>
       <BusinessCategoriesTitle>
-        <OText>{t('BUSINESS_CATEGORIES', 'Business Categories')}</OText>
+        <OText color={colors.textSecondary}>{t('BUSINESS_CATEGORIES', 'Business Categories')}</OText>
       </BusinessCategoriesTitle>
       <BusinessCategories>
-        {businessTypes.map((category: any) => (
+        {businessTypes?.map((category: any) => (
           <Category key={category.key}>
             <View style={{ ...styles.iconContainer, backgroundColor: currentTypeSelected === category.value ? colors.primary : colors.primaryContrast }}>
               <MaterialIcon name={category.icon} size={50} style={{ ...styles.icons, color: currentTypeSelected === category.value ? colors.primaryContrast : colors.backgroundGray }} onPress={() => handleChangeBusinessType(category.value)} />
             </View>
-            <OText>{t(`BUSINESS_TYPE_${category.value ? category.value.toUpperCase() : 'ALL'}`, category.key)}</OText>
+            <OText color={currentTypeSelected === category.value ? colors.btnFont : colors.textSecondary}>{t(`BUSINESS_TYPE_${category.value ? category.value.toUpperCase() : 'ALL'}`, category.key)}</OText>
           </Category>
         ))}
       </BusinessCategories>
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const BusinessTypeFilter = (props) => {
+export const BusinessTypeFilter = (props: BusinessTypeFilterParams) => {
   const businessTypeFilterProps = {
     ...props,
     UIComponent: BusinessTypeFilterUI,

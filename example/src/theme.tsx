@@ -21,5 +21,7 @@ export const colors = {
   clear: 'transparent',
   error: '#C90800',
   success: '#90C68E',
-  btnFont: 'black'
+  btnFont: 'black',
+  inputDisabled: '#F7F7F7',
+  textSecondary: '#858585'
 };

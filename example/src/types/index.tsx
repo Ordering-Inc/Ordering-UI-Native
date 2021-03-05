@@ -89,6 +89,26 @@ export interface LanguageSelectorParams {
   currentLanguage?: string;
   handleChangeLanguage?: any
 }
+export interface BusinessesListingParams {
+  navigation?: any,
+  businessesList: { businesses: Array<any>, loading: boolean, error: null | string },
+  searchValue: string,
+  getBusinesses: () => void,
+  handleChangeBusinessType?: any,
+  handleBusinessClick?: void,
+  paginationProps?: any,
+}
+export interface BusinessTypeFilterParams {
+  businessTypes?: Array<any>,
+  handleChangeBusinessType: () => void,
+  currentTypeSelected?: string | null,
+  defaultBusinessType?: string | null
+}
+export interface BusinessControllerParams {
+  business?: any;
+  handleCustomClick?: any;
+  orderType?: any;
+}
 export interface ViewInterface {
   navigation?: any;
   onLogin?: any;
