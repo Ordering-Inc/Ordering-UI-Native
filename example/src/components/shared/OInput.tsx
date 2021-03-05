@@ -3,6 +3,7 @@ import {ImageSourcePropType, ImageStyle, ViewStyle} from 'react-native';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
 import {colors} from '../../theme';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 const Wrapper = styled.View`
   background-color: ${colors.backgroundLight};
@@ -37,6 +38,8 @@ interface Props {
   name?: string;
   type?: string;
   multiline?: boolean;
+  vertorIcon?: string;
+  vectorIconColor?: string;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -56,6 +59,9 @@ const OInput = (props: Props): React.ReactElement => {
           style={{marginHorizontal: 10}}
         />
       ) : null}
+      {props.vertorIcon && (
+        <MaterialIcon name={props?.vertorIcon} size={20} color={props?.vectorIconColor} style={{marginHorizontal: 10}} />
+      )}
       <Input
         name={props.name}
         secureTextEntry={props.isSecured}

@@ -12,8 +12,11 @@ export const BusinessList = styled.View`
 `
 
 export const Search = styled.View`
-  align-items: flex-end;
-  margin-bottom: 20px
+  flex-direction: row;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+  margin-vertical: 10px;
 `
 
 export const AddressInput = styled.TouchableOpacity`
@@ -21,6 +24,6 @@ export const AddressInput = styled.TouchableOpacity`
   background-color: ${colors.inputDisabled};
   border-radius: 10px;
   align-items: center;
-  margin-vertical: 10px;
+  margin-vertical: 5px;
   padding: 10px;
 `

@@ -2,10 +2,11 @@ import React from 'react'
 import { BusinessList as BusinessesListingController, useLanguage, useSession, useOrder } from 'ordering-components/native'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
+import { SearchBar } from '../SearchBar'
+import { NotFoundSource } from '../NotFoundSource'
 import { WelcomeTitle, Search, AddressInput } from './styles'
 import { OText, OIcon } from '../shared'
 import { colors } from '../../theme'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { BusinessesListingParams } from '../../types'
@@ -16,7 +17,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 const PIXELS_TO_SCROLL = 1000
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
-  const { navigation, businessesList, searchValue, getBusinesses, handleChangeBusinessType, handleBusinessClick, paginationProps } = props
+  const { navigation, businessesList, searchValue, getBusinesses, handleChangeBusinessType, handleBusinessClick, paginationProps, handleChangeSearch } = props
   const [, t] = useLanguage()
   const [{ user }] = useSession()
   const [orderState] = useOrder()
@@ -37,9 +38,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
   return (
     <ScrollView style={styles.container} onScroll={(e) => handleScroll(e)}>
-      <Search>
-        <MaterialIcon name='search' size={32} />
-      </Search>
       <WelcomeTitle>
         <View style={styles.welcome}>
           <OText size={28}>{t('WELCOME_TITLE_APP', 'Hello there, ')}</OText>
@@ -52,6 +50,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           style={{ borderRadius: 6 }}
         />
       </WelcomeTitle>
+      <Search>
+        <SearchBar onSearch={handleChangeSearch} searchValue={searchValue} lazyLoad />
+      </Search>
       <AddressInput onPress={() => onRedirect('AddressList')}>
         <MaterialComIcon name='home-outline' color={colors.primary} size={20} style={{ marginRight: 10 }} />
         <OText style={styles.inputStyle} numberOfLines={1}>
@@ -61,6 +62,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       <BusinessTypeFilter
         handleChangeBusinessType={handleChangeBusinessType}
       />
+      {
+        !businessesList.loading && businessesList.businesses.length === 0 && (
+          <NotFoundSource
+            content={t('NOT_FOUND_BUSINESSES', 'No businesses to delivery / pick up at this address, please change filters or change address.')}
+          />
+        )
+      }
       {
         businessesList.businesses?.map((business: any) => (
           <BusinessController
