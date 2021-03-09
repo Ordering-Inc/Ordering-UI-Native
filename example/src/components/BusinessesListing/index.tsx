@@ -49,8 +49,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       {auth && (
         <WelcomeTitle>
           <View style={styles.welcome}>
-            <OText size={28}>{t('WELCOME_TITLE_APP', 'Hello there, ')}</OText>
-            <OText size={28} color={colors.primary}>{user?.name}</OText>
+            <OText style={{fontWeight: 'bold'}} size={28} >{t('WELCOME_TITLE_APP', 'Hello there, ')}</OText>
+            <OText style={{fontWeight: 'bold'}} size={28} color={colors.primary}>{user?.name}</OText>
           </View>
           <OIcon
             url={user?.photo}

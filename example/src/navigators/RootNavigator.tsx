@@ -10,6 +10,7 @@ import AddressForm from '../pages/AddressForm'
 import DrawNavigator from './DrawNavigator';
 import Splash from '../pages/Splash';
 import BusinessList from '../pages/BusinessesListing';
+import HomeNavigator from './HomeNavigator';
 
 const Stack = createStackNavigator();
 
@@ -81,7 +82,7 @@ const RootNavigator = () => {
             ) : (
               <Stack.Screen
                 name='MyAccount'
-                component={DrawNavigator}
+                component={HomeNavigator}
                 options={{ headerShown: false }}
               />
             )}
