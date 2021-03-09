@@ -13,13 +13,14 @@ import { BusinessesListingParams } from '../../types'
 
 import { View, StyleSheet, ScrollView } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay';
+import NavBar from '../NavBar'
 
 const PIXELS_TO_SCROLL = 1000
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
   const { navigation, businessesList, searchValue, getBusinesses, handleChangeBusinessType, handleBusinessClick, paginationProps, handleChangeSearch } = props
   const [, t] = useLanguage()
-  const [{ user }] = useSession()
+  const [{ user, auth }] = useSession()
   const [orderState] = useOrder()
 
   const handleScroll = ({ nativeEvent }: any) => {
@@ -38,22 +39,31 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
   return (
     <ScrollView style={styles.container} onScroll={(e) => handleScroll(e)}>
-      <WelcomeTitle>
-        <View style={styles.welcome}>
-          <OText size={28} style={{fontWeight: 'bold'}}>{t('WELCOME_TITLE_APP', 'Hello there, ')}</OText>
-          <OText size={28} style={{fontWeight: 'bold'}} color={colors.primary}>{user?.name}</OText>
-        </View>
-        <OIcon
-          url={user?.photo}
-          width={80}
-          height={80}
-          style={{ borderRadius: 6 }}
+      {!auth && (
+        <NavBar
+          onActionLeft={() => navigation.goBack()}
+          showCall={false}
+          btnStyle={{ paddingLeft: 0 }}
         />
-      </WelcomeTitle>
+      )}
+      {auth && (
+        <WelcomeTitle>
+          <View style={styles.welcome}>
+            <OText style={{fontWeight: 'bold'}} size={28} >{t('WELCOME_TITLE_APP', 'Hello there, ')}</OText>
+            <OText style={{fontWeight: 'bold'}} size={28} color={colors.primary}>{user?.name}</OText>
+          </View>
+          <OIcon
+            url={user?.photo}
+            width={80}
+            height={80}
+            style={{ borderRadius: 6 }}
+          />
+        </WelcomeTitle>
+      )}
       <Search>
         <SearchBar onSearch={handleChangeSearch} searchValue={searchValue} lazyLoad />
       </Search>
-      <AddressInput onPress={() => onRedirect('AddressList')}>
+      <AddressInput onPress={() => auth ? onRedirect('AddressList') : onRedirect('AddressForm')}>
         <MaterialComIcon name='home-outline' color={colors.primary} size={20} style={{ marginRight: 10 }} />
         <OText style={styles.inputStyle} numberOfLines={1}>
           {orderState?.options?.address?.address}

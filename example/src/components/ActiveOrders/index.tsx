@@ -56,7 +56,8 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
             textStyle={{ color: colors.primary }}
             onClick={loadMoreOrders}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-            borderColor={colors.primary}
+            borderColor={colors.white}
+            style={{paddingLeft: 30, paddingRight: 30}}
           />
         </Card>
       )}
@@ -85,6 +86,7 @@ const styles = StyleSheet.create({
   },
   loadOrders: {
     justifyContent: 'center',
-    borderColor: colors.white,
+    alignItems: 'center',
+    minWidth: 230
   }
 })

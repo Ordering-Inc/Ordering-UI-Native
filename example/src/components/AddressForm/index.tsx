@@ -139,7 +139,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 	}
 
 	const goToBack = () => navigation.goBack()
-	const continueAsGuest = () => navigation.navigate('Guest')
+	const continueAsGuest = () => navigation.navigate('BusinessList')
 
 	useEffect(() => {
 		if (alertState.open) {
@@ -306,7 +306,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 			<Controller
 				control={control}
 				name='zipcode'
-				rules={{ required: isRequiredField('zipcode') ? t(`VALIDATION_ERROR_ZIP_CODE_REQUIRED`, `The field Zip Code is required`) : null }}
+				rules={{ required: isRequiredField && isRequiredField('zipcode') ? t(`VALIDATION_ERROR_ZIP_CODE_REQUIRED`, `The field Zip Code is required`) : null }}
 				defaultValue={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
 				render={() => (
 					<OInput

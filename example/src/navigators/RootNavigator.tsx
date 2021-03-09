@@ -6,11 +6,11 @@ import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import Forgot from '../pages/ForgotPassword';
 import Home from '../pages/Home'
-import AddressList from '../pages/AddressList'
 import AddressForm from '../pages/AddressForm'
 import DrawNavigator from './DrawNavigator';
 import Splash from '../pages/Splash';
-import DrawGuestNavigator from './DrawGuestNavigator'
+import BusinessList from '../pages/BusinessesListing';
+import HomeNavigator from './HomeNavigator';
 
 const Stack = createStackNavigator();
 
@@ -73,18 +73,19 @@ const RootNavigator = () => {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                  name='Guest'
-                  component={DrawGuestNavigator}
+                  name='BusinessList'
+                  component={BusinessList}
                   options={{ headerShown: false }}
                 />
+
               </>
             ) : (
-                <Stack.Screen
-                  name='MyAccount'
-                  component={DrawNavigator}
-                  options={{ headerShown: false }}
-                />
-              )}
+              <Stack.Screen
+                name='MyAccount'
+                component={HomeNavigator}
+                options={{ headerShown: false }}
+              />
+            )}
           </>
         )
       }
