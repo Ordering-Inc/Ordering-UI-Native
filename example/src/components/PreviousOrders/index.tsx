@@ -21,6 +21,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   const [, t] = useLanguage()
   const [{ parseDate, parsePrice }] = useUtils()
 
+  const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12]
+
   const Order = ({ item: order }: any) => (
     <Card>
       {order.business?.logo && (
@@ -39,15 +41,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
           <TouchableOpacity>
             <OText size={10} color={colors.primary} mRight={5}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
           </TouchableOpacity>
-          {(
-            parseInt(order?.status) === 1 ||
-            parseInt(order?.status) === 2 ||
-            parseInt(order?.status) === 5 ||
-            parseInt(order?.status) === 6 ||
-            parseInt(order?.status) === 10 ||
-            parseInt(order?.status) === 11 ||
-            parseInt(order?.status) === 12
-          ) && !order.review && (
+          {
+            allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && (
               <TouchableOpacity>
                 <OText size={10} color={colors.primary}>{t('REVIEW_ORDER', 'Review Order')}</OText>
               </TouchableOpacity>
