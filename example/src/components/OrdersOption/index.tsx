@@ -8,18 +8,16 @@ import { PreviousOrders } from '../PreviousOrders'
 
 import { OptionTitle } from './styles'
 import { colors } from '../../theme'
+import { OrdersOptionParams } from '../../types'
 
-import EmptyActiveOrders from '../../assets/images/svg/EmptyActiveOrders' 
-
-const OrdersOptionUI = (props) => {
+const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
     activeOrders,
     orderList,
     pagination,
-    isBusinessesPage,
-    loadMoreOrders,
     titleContent,
     customArray,
+    loadMoreOrders,
     onRedirectPage
   } = props
 
@@ -98,7 +96,6 @@ const OrdersOptionUI = (props) => {
             pagination={pagination}
             onRedirectPage={onRedirectPage}
             loadMoreOrders={loadMoreOrders}
-            isBusinessesPage={isBusinessesPage}
             reorderLoading={reorderLoading}
             customArray={customArray}
             getOrderStatus={getOrderStatus}

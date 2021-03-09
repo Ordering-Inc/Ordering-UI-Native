@@ -4,8 +4,9 @@ import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import { OButton, OIcon, OText } from '../shared'
 import { Card, Logo, Information, MyOrderOptions, Status } from './styles'
 import { colors } from '../../theme'
+import { PreviousOrdersParams } from '../../types'
 
-export const PreviousOrders = (props: any) => {
+export const PreviousOrders = (props: PreviousOrdersParams) => {
   const {
     orders,
     pagination,

@@ -124,6 +124,37 @@ export interface NotFoundSourceParams {
   onClickButton?: () => {},
   children?: any
 }
+export interface MyOrdersParams {
+  navigation?: any;
+}
+export interface OrdersOptionParams {
+  orderList: { loading: boolean, error: Array<any> | string | null, orders: Array<any> },
+  activeOrders?: boolean,
+  pagination?: any,
+  titleContent?: string,
+  customArray?: Array<any>,
+  loadMoreOrders?: () => {},
+  onRedirectPage?: () => {}
+}
+export interface ActiveOrdersParams {
+  orders?: any,
+  pagination?: any,
+  getOrderStatus?: any,
+  reorderLoading?: boolean,
+  loadMoreOrders?: () => {},
+  onRedirectPage?: () => {},
+  customArray?: Array<any>
+}
+export interface PreviousOrdersParams {
+  orders?: any,
+  pagination?: any,
+  getOrderStatus?: any,
+  orderID?: number
+  reorderLoading?: boolean,
+  onRedirectPage?: () => {},
+  loadMoreOrders?: () => {},
+  handleReorder?: (order: any) => {},
+}
 export interface ViewInterface {
   navigation?: any;
   onLogin?: any;

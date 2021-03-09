@@ -5,7 +5,9 @@ import { ActiveOrdersContainer, Card, Map, Information, Logo, OrderInformation, 
 import { View, StyleSheet } from 'react-native'
 import { colors } from '../../theme'
 
-export const ActiveOrders = (props: any) => {
+import {ActiveOrdersParams} from '../../types'
+
+export const ActiveOrders = (props: ActiveOrdersParams) => {
 
   const {
     orders,
