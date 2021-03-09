@@ -8,6 +8,7 @@ import { colors } from '../../theme'
 import { OButton, OText, OAlert } from '../shared'
 import { Container } from '../../layouts/Container'
 import { AddressListParams } from '../../types'
+import { NotFoundSource } from '../NotFoundSource'
 
 const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
 
@@ -94,8 +95,8 @@ const AddressListUI = (props: AddressListParams) => {
 		})
 	}
 
-	const goToBack =  () => navigation.goBack()
-  const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
+	const goToBack = () => navigation.goBack()
+	const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
 
 	return (
 		<Container nopadding={nopadding}>
@@ -108,8 +109,8 @@ const AddressListUI = (props: AddressListParams) => {
 							{isFromProfile ? (
 								<OText size={24} mBottom={20}>{t('SAVED_PLACES', 'My saved places')}</OText>
 							) : (
-									<OText size={24} mBottom={20}>{t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}</OText>
-								)}
+								<OText size={24} mBottom={20}>{t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}</OText>
+							)}
 							{uniqueAddressesList.map((address: any) => (
 								<AddressItem key={address.id} onPress={() => handleSetAddress(address)} isSelected={checkAddress(address)}>
 									<MaterialIcon name={addressIcon(address?.tag)} size={32} color={colors.primary} style={styles.icon} />
@@ -132,19 +133,27 @@ const AddressListUI = (props: AddressListParams) => {
 							))}
 						</>
 					)}
-					<OButton
-						text={t('ADD_NEW_ADDRESS', 'Add new Address')}
-						imgRightSrc=''
-						imgLeftSrc={addIcon}
-						bgColor={colors.white}
-						imgLeftStyle={styles.buttonIcon}
-						style={styles.button}
-						borderColor={colors.primary}
-						onClick={() => onNavigationRedirect('AddressForm', { address: null, nopadding: true, addressList: addressList?.addresses, onSaveAddress: handleSaveAddress })}
-					/>
-				{!isFromProfile && addressList?.addresses?.length > 0 && (
-					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('BottomTab')} textStyle={{color: colors.white}} />
+				{!addressList.loading && addressList.error && (
+					addressList.error.length > 0 && (
+						<NotFoundSource
+							content={addressList.error[0]?.message || addressList.error[0] || t('NETWORK_ERROR', 'Network Error, please reload the app')}
+						/>
+					)
 				)}
+				<OButton
+					text={t('ADD_NEW_ADDRESS', 'Add new Address')}
+					imgRightSrc=''
+					imgLeftSrc={addIcon}
+					bgColor={colors.white}
+					imgLeftStyle={styles.buttonIcon}
+					style={styles.button}
+					borderColor={colors.primary}
+					onClick={() => onNavigationRedirect('AddressForm', { address: null, nopadding: true, addressList: addressList?.addresses, onSaveAddress: handleSaveAddress })}
+				/>
+				{!isFromProfile && addressList?.addresses?.length > 0 && (
+					<OButton text={t('CONTINUE', 'Continue')} style={styles.button} onClick={() => onNavigationRedirect('BottomTab')} textStyle={{ color: colors.white }} />
+				)}
+
 			</AddressListContainer>
 		</Container>
 	)

@@ -40,8 +40,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     <ScrollView style={styles.container} onScroll={(e) => handleScroll(e)}>
       <WelcomeTitle>
         <View style={styles.welcome}>
-          <OText size={28}>{t('WELCOME_TITLE_APP', 'Hello there, ')}</OText>
-          <OText size={28} color={colors.primary}>{user?.name}</OText>
+          <OText size={28} style={{fontWeight: 'bold'}}>{t('WELCOME_TITLE_APP', 'Hello there, ')}</OText>
+          <OText size={28} style={{fontWeight: 'bold'}} color={colors.primary}>{user?.name}</OText>
         </View>
         <OIcon
           url={user?.photo}
