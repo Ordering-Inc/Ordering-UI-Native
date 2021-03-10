@@ -10,9 +10,7 @@ export const AddressFormContainer = styled.View`
 export const IconsContainer = styled.View`
     flex-direction: row;
     justify-content: space-between;
-    margin-vertical: 30px;
+    margin-bottom: 20px;
 `
 
-export const AutocompleteInput = styled.View`
-    height: 100px;
-`
+export const AutocompleteInput = styled.View``

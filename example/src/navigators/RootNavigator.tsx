@@ -48,7 +48,7 @@ const RootNavigator = () => {
             {!auth ? (
               <>
                 <Stack.Screen
-                  name="Home"
+                  name="HomeScreen"
                   component={Home}
                   options={{ headerShown: false }}
                 />
@@ -77,7 +77,6 @@ const RootNavigator = () => {
                   component={BusinessList}
                   options={{ headerShown: false }}
                 />
-
               </>
             ) : (
               <Stack.Screen
