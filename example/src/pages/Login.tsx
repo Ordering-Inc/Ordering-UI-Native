@@ -7,12 +7,8 @@ import { Container } from '../layouts/Container';
 
 import { useLanguage } from 'ordering-components/native';
 
-const BgWrapper = styled.ImageBackground`
-  flex: 1;
-`;
-
 const KeyboardView = styled.KeyboardAvoidingView`
-  flex-grow: 1;
+  flex: 1;
 `;
 
 export const Login = ({ navigation }: any) => {
@@ -33,16 +29,14 @@ export const Login = ({ navigation }: any) => {
 
 
   return (
-    <BgWrapper>
-      <KeyboardView
-        enabled
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <Container>
-          <LoginForm {...loginProps} />
-        </Container>
-      </KeyboardView>
-    </BgWrapper>
+    <KeyboardView
+      enabled
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <Container>
+        <LoginForm {...loginProps} />
+      </Container>
+    </KeyboardView>
   );
 };
 

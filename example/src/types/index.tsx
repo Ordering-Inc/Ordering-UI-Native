@@ -41,6 +41,8 @@ export interface AddressListParams {
   handleDelete?: any;
   handleSetDefault?: any;
   setAddressList?: any;
+  route?: any;
+  actionStatus?: any;
 }
 
 export interface AddressFormParams {
@@ -98,6 +100,7 @@ export interface BusinessesListingParams {
   handleBusinessClick?: void;
   paginationProps?: any;
   handleChangeSearch?: any;
+  onRedirect?: any;
 }
 export interface BusinessTypeFilterParams {
   businessTypes?: Array<any>;

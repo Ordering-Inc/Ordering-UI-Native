@@ -15,6 +15,7 @@ import { FacebookLogin } from '../FacebookLogin';
 import { VerifyPhone } from '../VerifyPhone';
 
 import {
+  Container,
   ButtonsWrapper,
   LoginWith,
   FormSide,
@@ -104,7 +105,6 @@ const LoginFormUI = (props: LoginParams) => {
       user,
       token: user.session.access_token
     })
-    navigation.navigate('Home');
   }
 
   useEffect(() => {
@@ -161,7 +161,7 @@ const LoginFormUI = (props: LoginParams) => {
   }, [errors])
 
   return (
-    <View>
+    <Container>
       <NavBar
         title={t('LOGIN', 'Login')}
         titleAlign={'center'}
@@ -336,7 +336,7 @@ const LoginFormUI = (props: LoginParams) => {
         />
       </OModal>
       <Spinner visible={isFBLoading} />
-    </View>
+    </Container>
   );
 };
 

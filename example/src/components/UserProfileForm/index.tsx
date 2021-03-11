@@ -63,7 +63,7 @@ const ProfileUI = (props: ProfileParams) => {
       showToast(ToastType.Error, t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.').replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8))
       return
     }
-    
+
     handleButtonUpdateClick(values);
   }
 

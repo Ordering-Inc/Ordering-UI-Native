@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme'
 
 export const AddressListContainer = styled.View`
     flex: 1;
@@ -12,7 +11,7 @@ export const AddressItem = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
     ${(props: any) => props.isSelected && css`
-        background-color: ${colors.disabled};
+        background-color: #F7F7F7;
     `}
 `
 

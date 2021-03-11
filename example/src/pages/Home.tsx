@@ -1,7 +1,7 @@
 import React from 'react';
 import { Home as HomePage } from '../components/Home';
 import { useLanguage } from 'ordering-components/native';
-import { Container } from '../layouts/Container'
+import { Container } from '../layouts/Container';
 
 export const Home = ({navigation}: any) => {
   const [, t] = useLanguage();
