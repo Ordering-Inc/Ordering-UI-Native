@@ -27,7 +27,7 @@ import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-  const { business } = props;
+  const { business, handleClick } = props;
   const [{ parsePrice, parseDistance, parseNumber }] = useUtils();
   const [orderState] = useOrder();
   const [, t] = useLanguage();
@@ -46,7 +46,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
   };
 
   return (
-    <Card>
+    <Card onPress={() => handleClick && handleClick(business)}>
       <BusinessHero
         source={{ uri: business?.header }}
         imageStyle={styles.headerStyle}

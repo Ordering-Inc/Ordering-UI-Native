@@ -3,17 +3,16 @@ import { BusinessesListing as BusinessListingController } from '../components/Bu
 import styled from 'styled-components/native'
 import {colors} from '../theme'
 
-const BusinessesListing = (props: any) => {
+const BusinessesListing = (props) => {
 
   const BusinessesListingProps = {
     ...props,
     isSearchByName: true,
     isSearchByDescription: true,
     propsToFetch: ['id', 'name', 'header', 'logo', 'location', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug'],
-    onRedirect: (route: string, params?: any) => {
-      props.navigation.navigate(route, params)
-    },
-    onBusinessClick: (business: any) => {}
+    onBusinessClick: (business) => {
+      props.navigation.navigate('Business', { store: business.slug })
+    }
   }
 
   const BusinessListView = styled.SafeAreaView`
