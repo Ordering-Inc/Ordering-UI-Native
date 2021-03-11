@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
+import { useSession } from 'ordering-components/native'
 import MapOrders from '../pages/MapOrders';
 import OrderDetail from '../pages/OrderDetail';
 import Forgot from '../pages/ForgotPassword';
@@ -11,7 +12,7 @@ import Supports from '../pages/Supports';
 import AddressList from '../pages/AddressList'
 import AddressForm from '../pages/AddressForm'
 import BottomNavigator from '../navigators/BottomNavigator'
-import { useSession } from 'ordering-components/native'
+import OrderDetails from '../pages/OrderDetails';
 
 const Stack = createStackNavigator();
 
@@ -31,6 +32,11 @@ const HomeNavigator = (is_online: boolean) => {
 					<Stack.Screen
 						name='BottomTab'
 						component={BottomNavigator}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="OrderDetails"
+						component={OrderDetails}
 						options={{ headerShown: false }}
 					/>
 				</>

@@ -54,7 +54,7 @@ export interface AddressFormParams {
   addressesList?: any,
   saveAddress?: any,
   userCustomerSetup?: boolean,
-  isRequiredField?: boolean,
+  isRequiredField: (field: string) => {},
   isGuestUser?: boolean,
   useValidationFileds?: boolean,
 }
@@ -124,9 +124,6 @@ export interface NotFoundSourceParams {
   onClickButton?: () => {},
   children?: any
 }
-export interface MyOrdersParams {
-  navigation?: any;
-}
 export interface OrdersOptionParams {
   orderList: { loading: boolean, error: Array<any> | string | null, orders: Array<any> },
   activeOrders?: boolean,
@@ -134,16 +131,16 @@ export interface OrdersOptionParams {
   titleContent?: string,
   customArray?: Array<any>,
   loadMoreOrders?: () => {},
-  onRedirectPage?: () => {}
+  onNavigationRedirect?: () => {},
 }
 export interface ActiveOrdersParams {
   orders?: any,
   pagination?: any,
   getOrderStatus?: any,
   reorderLoading?: boolean,
-  loadMoreOrders?: () => {},
-  onRedirectPage?: () => {},
   customArray?: Array<any>
+  loadMoreOrders?: () => {},
+  onNavigationRedirect?: (route: string, params: any) => {}
 }
 export interface PreviousOrdersParams {
   orders?: any,
@@ -151,9 +148,28 @@ export interface PreviousOrdersParams {
   getOrderStatus?: any,
   orderID?: number
   reorderLoading?: boolean,
-  onRedirectPage?: () => {},
   loadMoreOrders?: () => {},
   handleReorder?: (order: any) => {},
+  onNavigationRedirect?: (route: string, params: any) => {}
+}
+export interface OrderDetailsParams {
+  navigation?: any,
+  messagesReadList?: any,
+  urlToShare?: string,
+  messages?: any,
+  order?: any,
+  handleOrderRedirect?: () => {},
+  setMessages?: () => {},
+  readMessages?: () => {},
+}
+export interface ProductItemAccordionParams {
+  isCartPending?: boolean,
+    isCartProduct?: boolean,
+    product?: any,
+    getProductMax?: boolean,
+    changeQuantity?: (product: any, quantity: number) => {},
+    onDeleteProduct?: (product: any) => {},
+    onEditProduct?: () => {}
 }
 export interface ViewInterface {
   navigation?: any;

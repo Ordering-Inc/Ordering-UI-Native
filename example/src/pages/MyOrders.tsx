@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components/native'
 import { useLanguage } from 'ordering-components/native'
 import { OrdersOption } from '../components/OrdersOption'
 import { OText } from '../components/shared'
-import { MyOrdersParams } from '../types'
 
 import { colors } from '../theme'
 
@@ -16,17 +15,26 @@ const Container = styled.View`
   background-color: ${colors.backgroundPage};
 `
 
-const MyOrders = (props: MyOrdersParams) => {
+const MyOrders = ({ navigation }: any) => {
 
   const [, t] = useLanguage()
+
+  const MyOrderProps = {
+    navigation,
+    onNavigationRedirect: (page: string, params: any) => {
+      if (!page) return
+      navigation.navigate(page, params);
+    }
+  }
+
 
   return (
     <Container>
       <OText size={24} mBottom={20}>
         {t('MY_ORDERS', 'My Orders')}
       </OText>
-      <OrdersOption {...props} activeOrders />
-      <OrdersOption {...props} />
+      <OrdersOption {...MyOrderProps} activeOrders />
+      <OrdersOption {...MyOrderProps} />
     </Container>
   )
 }

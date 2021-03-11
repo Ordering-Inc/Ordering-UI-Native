@@ -18,7 +18,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     titleContent,
     customArray,
     loadMoreOrders,
-    onRedirectPage
+    onNavigationRedirect
   } = props
 
   const [, t] = useLanguage()
@@ -31,7 +31,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const orders = customArray || values
 
-  const [ordersSorted, setOrdersSorted] = useState([])
+  const [ordersSorted, setOrdersSorted] = useState<Array<any>>([])
 
   const [reorderLoading, setReorderLoading] = useState(false)
 
@@ -61,9 +61,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   useEffect(() => {
     const ordersSorted = orders.sort((a: any, b: any) => {
       if (activeOrders) {
-        return new Date(b.created_at) - new Date(a.created_at)
+        return Math.abs(new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
       }
-      return new Date(a.created_at) - new Date(b.created_at)
+      return Math.abs(new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
     })
     setOrdersSorted(ordersSorted)
   }, [orders])
@@ -92,13 +92,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {!loading && !error && orders.length > 0 && (
         activeOrders ? (
           <ActiveOrders
-            orders={ordersSorted}
-            pagination={pagination}
-            onRedirectPage={onRedirectPage}
-            loadMoreOrders={loadMoreOrders}
-            reorderLoading={reorderLoading}
-            customArray={customArray}
-            getOrderStatus={getOrderStatus}
+          orders={ordersSorted}
+          pagination={pagination}
+          loadMoreOrders={loadMoreOrders}
+          reorderLoading={reorderLoading}
+          customArray={customArray}
+          getOrderStatus={getOrderStatus}
+          onNavigationRedirect={onNavigationRedirect}
           />
         ) : (
           <PreviousOrders
@@ -106,8 +106,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             orders={ordersSorted}
             pagination={pagination}
             loadMoreOrders={loadMoreOrders}
-            onRedirectPage={onRedirectPage}
             getOrderStatus={getOrderStatus}
+            onNavigationRedirect={onNavigationRedirect}
           />
         )
       )}
