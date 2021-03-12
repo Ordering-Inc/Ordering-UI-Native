@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Modal, StyleSheet, Text, TouchableOpacity, ScrollView, View, SafeAreaView } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
+import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { colors } from '../../theme';
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
   cancelText?: string;
   isTransparent?: boolean;
   hideCloseDefault?: boolean;
+  isCustom?: boolean;
 }
 
 const OModal = (props: Props): React.ReactElement => {
@@ -26,6 +28,7 @@ const OModal = (props: Props): React.ReactElement => {
     onClose,
     acceptText,
     cancelText,
+    isCustom,
     isTransparent,
     hideCloseDefault
   } = props
@@ -37,25 +40,37 @@ const OModal = (props: Props): React.ReactElement => {
       visible={open}
       onRequestClose={() => { onClose() }}
     >
-      <View style={styles.centeredView}>
-        <View style={styles.titleSection}>
-          <Icon
-            name="x"
-            size={35}
-            style={styles.cancelBtn}
-            onPress={onClose}
-          />
-          <Text style={styles.modalText}>{title}</Text>
-        </View>
-        {children}
-      </View>
+      <SafeAreaView>
+        <ScrollView>
+          <View style={styles.centeredView}>
+            {!isCustom ? (
+              <View style={styles.titleSection}>
+                <Icon
+                  name="x"
+                  size={35}
+                  style={styles.cancelBtn}
+                  onPress={onClose}
+                />
+                <Text style={styles.modalText}>{title}</Text>
+              </View>
+            ) : (
+              <IconAntDesign
+                name="arrowleft"
+                size={25}
+                style={styles.customCancelBtn}
+                onPress={onClose}
+              />
+            )}
+            {children}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   centeredView: {
-    justifyContent: "center",
     alignItems: "center",
     position: 'relative',
     width: '100%'
@@ -73,6 +88,14 @@ const styles = StyleSheet.create({
     left: 0,
     margin: 15,
     zIndex: 10000
+  },
+  customCancelBtn: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    margin: 15,
+    zIndex: 10000,
+    color: 'white'
   },
   modalText: {
     marginTop: 15,

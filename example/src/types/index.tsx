@@ -153,6 +153,10 @@ export interface SingleProductCardParams {
   isSoldOut: boolean;
   onProductClick: any;
 }
+export interface BusinessInformationParams {
+  businessState: { business: any, loading: boolean, error: null };
+  businessSchedule: Array<any>;
+}
 export interface SearchBarParams {
   searchValue?: any;
   lazyLoad?: boolean;
