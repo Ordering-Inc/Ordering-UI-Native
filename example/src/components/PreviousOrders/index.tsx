@@ -10,7 +10,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   const {
     orders,
     pagination,
-    onRedirectPage,
+    onNavigationRedirect,
     loadMoreOrders,
     getOrderStatus,
     handleReorder,
@@ -22,6 +22,10 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   const [{ parseDate, parsePrice }] = useUtils()
 
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12]
+
+  const handleClickViewOrder = (uuid: string) => {
+    onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid } )
+  }
 
   const Order = ({ item: order }: any) => (
     <Card>
@@ -38,7 +42,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
           {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
         </OText>
         <MyOrderOptions>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => handleClickViewOrder(order?.uuid)}>
             <OText size={10} color={colors.primary} mRight={5}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
           </TouchableOpacity>
           {

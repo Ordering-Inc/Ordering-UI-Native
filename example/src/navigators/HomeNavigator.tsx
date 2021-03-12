@@ -13,6 +13,7 @@ import AddressList from '../pages/AddressList'
 import AddressForm from '../pages/AddressForm'
 import SpinnerLoader from '../pages/SpinnerLoader'
 import BottomNavigator from '../navigators/BottomNavigator'
+import OrderDetails from '../pages/OrderDetails'
 import RootNavigator from '../navigators/RootNavigator'
 
 const Stack = createStackNavigator();
@@ -44,6 +45,11 @@ const HomeNavigator = () => {
                   component={AddressForm}
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+						      name="OrderDetails"
+						      component={OrderDetails}
+					      	options={{ headerShown: false }}
+					      />
               </>
             ) : (
               <>
