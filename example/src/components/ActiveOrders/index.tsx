@@ -10,6 +10,7 @@ import {ActiveOrdersParams} from '../../types'
 export const ActiveOrders = (props: ActiveOrdersParams) => {
 
   const {
+    onNavigationRedirect,
     orders,
     pagination,
     loadMoreOrders,
@@ -18,9 +19,13 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
   const [, t] = useLanguage()
   const [{ parseDate, parsePrice }] = useUtils()
 
+  const handleClickCard = (uuid: string) => {
+    onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid } )
+  }
+
   const Order = ({ order, index }: { order: any, index: number }) => (
     <React.Fragment>
-      <Card>
+      <Card onPress={() => handleClickCard(order?.uuid)}>
         <Information>
           {order.business?.logo && (
             <Logo>
@@ -68,7 +73,11 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
     <ActiveOrdersContainer horizontal>
       {orders.length > 0 && (
         orders.map((order: any, index: any) => (
-          <Order key={order?.id || order?.uuid}order={order} index={index} />
+          <Order 
+            key={order?.id || order?.uuid} 
+            order={order} 
+            index={index} 
+          />
         ))
       )}
     </ActiveOrdersContainer>

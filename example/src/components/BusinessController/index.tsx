@@ -46,7 +46,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
   };
 
   return (
-    <Card onPress={() => handleClick && handleClick(business)}>
+    <Card onPress={() => handleClick(business)}>
       <BusinessHero
         source={{ uri: business?.header }}
         imageStyle={styles.headerStyle}

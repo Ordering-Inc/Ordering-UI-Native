@@ -29,7 +29,7 @@ interface Props {
   size?: number;
   weight?: any;
   style?: TextStyle;
-  children?: string;
+  children?: JSX.Element | JSX.Element[] | string;
   isWrap?: boolean;
   hasBottom?: boolean;
   mBottom?: any;
