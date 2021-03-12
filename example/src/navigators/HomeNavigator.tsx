@@ -1,28 +1,30 @@
 import * as React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
-import { useOrder, useSession } from 'ordering-components/native';
+import { useSession, useOrder } from 'ordering-components/native';
+
+import BottomNavigator from '../navigators/BottomNavigator';
+import RootNavigator from '../navigators/RootNavigator';
+import CheckoutNavigator from '../navigators/CheckoutNavigator';
+
 // import MapOrders from '../pages/MapOrders';
-// import OrderDetail from '../pages/OrderDetail';
-// import Forgot from '../pages/ForgotPassword';
 // import Reject from '../pages/Reject';
 // import Accept from '../pages/Accept';
 // import MapBusiness from '../pages/MapBusiness';
 // import Chat from '../pages/Chat';
 // import Supports from '../pages/Supports';
-import BottomNavigator from '../navigators/BottomNavigator'
-import CheckoutNavigator from '../navigators/CheckoutNavigator'
-import RootNavigator from '../navigators/RootNavigator'
 
-import AddressList from '../pages/AddressList'
-import AddressForm from '../pages/AddressForm'
-import SpinnerLoader from '../pages/SpinnerLoader'
+import AddressList from '../pages/AddressList';
+import AddressForm from '../pages/AddressForm';
+import SpinnerLoader from '../pages/SpinnerLoader';
+import OrderDetails from '../pages/OrderDetails';
+import BusinessProductsList from '../pages/BusinessProductsList';
 
 const Stack = createStackNavigator();
 
-const HomeNavigator = () => {
+const HomeNavigator = (is_online: boolean) => {
 
-  const [orderState] = useOrder()
-  const [{ auth }] = useSession()
+  const [orderState] = useOrder();
+  const [{ auth }] = useSession();
 
   return (
     <Stack.Navigator>
@@ -49,6 +51,16 @@ const HomeNavigator = () => {
                 <Stack.Screen
                   name="CheckoutNavigator"
                   component={CheckoutNavigator}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="OrderDetails"
+                  component={OrderDetails}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Business"
+                  component={BusinessProductsList}
                   options={{ headerShown: false }}
                 />
               </>
@@ -112,7 +124,6 @@ const HomeNavigator = () => {
         component={Chat}
         options={{ title: 'Chat Screen', headerShown: false }}
       /> */}
-
       {/* <Stack.Screen
         name="Supports"
         component={Supports}

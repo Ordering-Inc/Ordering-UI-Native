@@ -1,13 +1,13 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { colors } from '../../theme'
-import { OInput } from '../shared'
+import { OInput, OButton } from '../shared'
 import {useLanguage} from 'ordering-components/native'
 import {SearchBarParams} from '../../types'
-
+import styled from 'styled-components/native'
 export const SearchBar = (props: SearchBarParams) => {
 
-  const { searchValue, onSearch, lazyLoad } = props
+  const { searchValue, placeholder, onSearch, onCancel, lazyLoad, isCancelButtonShow, noBorderShow } = props
 
   const [,t] = useLanguage()
 
@@ -28,22 +28,48 @@ export const SearchBar = (props: SearchBarParams) => {
   }
 
   return (
-    <OInput
-      value={searchValue}
-      onChange={onChangeSearch}
-      style={styles.inputStyle}
-      placeholder={t('FIND_RESTAURANT_OR_DISH', 'Find a restaurant or Dish')}
-      vertorIcon='search'
-      vectorIconColor={colors.disabled}
-    />
+    <View style={[styles.container, !noBorderShow && styles.borderStyle]}>
+      <OInput
+        value={searchValue}
+        onChange={onChangeSearch}
+        style={styles.inputStyle}
+        placeholder={placeholder}
+        vertorIcon='search'
+        vectorIconColor={colors.disabled}
+      />
+      {isCancelButtonShow && (
+        <OButton
+          imgRightSrc=''
+          text={t('CANCEL', 'Cancel')}
+          bgColor='transparent'
+          borderColor={colors.lightGray}
+          style={styles.buttonStyle}
+          onClick={onCancel}
+        />
+      )}
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  inputStyle: {
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 1,
+  },
+  borderStyle: {
     borderColor: colors.primary,
-    borderRadius: 10,
     borderWidth: 1,
-    flex: 1
-  } 
+    borderRadius: 10,
+  },
+  inputStyle: {
+    flex: 1,
+  },
+  buttonStyle: {
+    maxHeight: 40,
+    paddingRight: 5,
+    paddingLeft: 5,
+  }
 })
