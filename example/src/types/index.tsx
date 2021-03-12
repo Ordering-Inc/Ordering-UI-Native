@@ -41,8 +41,6 @@ export interface AddressListParams {
   handleDelete?: any;
   handleSetDefault?: any;
   setAddressList?: any;
-  route?: any;
-  actionStatus?: any;
 }
 
 export interface AddressFormParams {
@@ -100,7 +98,6 @@ export interface BusinessesListingParams {
   handleBusinessClick?: void;
   paginationProps?: any;
   handleChangeSearch?: any;
-  onRedirect?: any;
 }
 export interface BusinessTypeFilterParams {
   businessTypes?: Array<any>;
@@ -113,11 +110,57 @@ export interface BusinessControllerParams {
   business?: any;
   handleCustomClick?: any;
   orderType?: any;
+  handleClick?: any;
+}
+export interface BusinessProductsListingParams {
+  navigation?: any;
+  errors: any;
+  businessState: { business: any, loading: boolean, error: null };
+  categoryState: any;
+  searchValue?: string;
+  featuredProducts: boolean;
+  handleChangeSearch?: any;
+  categorySelected: any;
+  handleChangeCategory: (value: any) => {};
+  handleSearchRedirect: any;
+}
+export interface BusinessBasicInformationParams {
+  businessState: { business: any, loading: boolean, error: null };
+  openBusinessInformation?: boolean;
+  setOpenBusinessInformation?: any;
+}
+export interface BusinessProductsCategoriesParams {
+  categories: Array<any>;
+  handlerClickCategory: (value: any) => {};
+  categorySelected: any;
+  featured: boolean;
+}
+export interface BusinessProductsListParams {
+  errors: any;
+  businessId: number;
+  category: any;
+  categories: Array<any>;
+  categoryState: any;
+  onProductClick: any;
+  handleSearchRedirect: () => {};
+  featured: any;
+  searchValue: any;
+  handleClearSearch: (value: any) => {};
+}
+export interface SingleProductCardParams {
+  businessId: number,
+  product: any;
+  isSoldOut: boolean;
+  onProductClick: any;
 }
 export interface SearchBarParams {
   searchValue?: any;
   lazyLoad?: boolean;
+  placeholder: string;
+  isCancelButtonShow?: boolean;
+  noBorderShow?: boolean;
   onSearch: (value: any) => {};
+  onCancel?: any;
 }
 export interface NotFoundSourceParams {
   image?: any,
@@ -197,4 +240,14 @@ export interface ViewInterface {
   onRegister?: any;
   onForgot?: any;
   forgotButtonText?: string;
+}
+export interface FloatingButtonParams {
+  btnLeftValue?: string;
+  btnRightValue?: string;
+  btnText: string
+  handleButtonClick?: any;
+  disabled?: boolean;
+  isSecondaryBtn?: boolean;
+  btnLeftValueShow?: boolean;
+  btnRightValueShow?: boolean;
 }

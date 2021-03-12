@@ -1,6 +1,6 @@
 import styled, {css} from 'styled-components/native';
 
-export const Card = styled.View`
+export const Card = styled.TouchableOpacity`
   margin-vertical: 20px;
   border-radius: 25px;
   flex: 1;
