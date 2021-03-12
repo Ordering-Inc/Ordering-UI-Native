@@ -5,7 +5,7 @@ import { BusinessController } from '../BusinessController'
 import { SearchBar } from '../SearchBar'
 import { NotFoundSource } from '../NotFoundSource'
 import { WelcomeTitle, Search, AddressInput } from './styles'
-import { OText, OIcon } from '../shared'
+import { OText, OIcon, OButton } from '../shared'
 import { colors } from '../../theme'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -73,6 +73,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       <Search>
         <SearchBar onSearch={handleChangeSearch} searchValue={searchValue} lazyLoad />
       </Search>
+      <OButton
+        text='checkout'
+        bgColor={colors.primary}
+        borderColor={colors.primary}
+        // style={styles.buttons}
+        textStyle={{ color: 'white' }}
+        onClick={() => navigation.navigate('CheckoutNavigator')}
+      />
       <AddressInput
         onPress={() => auth
           ? onRedirect('AddressList', { isFromBusinesses: true })

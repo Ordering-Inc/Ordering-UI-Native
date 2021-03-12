@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
-import { useOrder, useSession } from 'ordering-components/native'
+import { useOrder, useSession } from 'ordering-components/native';
 // import MapOrders from '../pages/MapOrders';
 // import OrderDetail from '../pages/OrderDetail';
 // import Forgot from '../pages/ForgotPassword';
@@ -9,11 +9,13 @@ import { useOrder, useSession } from 'ordering-components/native'
 // import MapBusiness from '../pages/MapBusiness';
 // import Chat from '../pages/Chat';
 // import Supports from '../pages/Supports';
+import BottomNavigator from '../navigators/BottomNavigator'
+import CheckoutNavigator from '../navigators/CheckoutNavigator'
+import RootNavigator from '../navigators/RootNavigator'
+
 import AddressList from '../pages/AddressList'
 import AddressForm from '../pages/AddressForm'
 import SpinnerLoader from '../pages/SpinnerLoader'
-import BottomNavigator from '../navigators/BottomNavigator'
-import RootNavigator from '../navigators/RootNavigator'
 
 const Stack = createStackNavigator();
 
@@ -42,6 +44,11 @@ const HomeNavigator = () => {
                 <Stack.Screen
                   name="AddressForm"
                   component={AddressForm}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="CheckoutNavigator"
+                  component={CheckoutNavigator}
                   options={{ headerShown: false }}
                 />
               </>

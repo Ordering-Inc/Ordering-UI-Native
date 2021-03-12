@@ -18,8 +18,9 @@ interface Props {
   width?: number,
   height?: number,
   style?: ImageStyle,
-  isWrap?: boolean
+  isWrap?: boolean,
   children?: any,
+  borderRadius?: number,
 }
 
 const OImage = (props: Props): React.ReactElement => {
@@ -32,7 +33,9 @@ const OImage = (props: Props): React.ReactElement => {
           flex: props.isWrap ? 1 : 0,
           width: props.width,
           height: props.height,
-          ...props.style, marginHorizontal: 0
+          marginHorizontal: 0,
+          borderRadius: props.borderRadius,
+          ...props.style,
         }}
       >
         {props.children}
