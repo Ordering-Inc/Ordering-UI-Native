@@ -96,22 +96,9 @@ const styles = StyleSheet.create({
 })
 
 export const BusinessInformation = (props) => {
-  const googleMapsControls = {
-    defaultZoom: 15,
-    zoomControl: true,
-    streetViewControl: true,
-    fullscreenControl: true,
-    mapTypeId: 'roadmap', // 'roadmap', 'satellite', 'hybrid', 'terrain'
-    mapTypeControl: true,
-    mapTypeControlOptions: {
-      mapTypeIds: ['roadmap', 'satellite']
-    }
-  }
-
   const BusinessInformationProps = {
     ...props,
-    UIComponent: BusinessInformationUI,
-    googleMapsControls
+    UIComponent: BusinessInformationUI
   }
   return <BusinessInformationController {...BusinessInformationProps} />
 }

@@ -126,8 +126,7 @@ export interface BusinessProductsListingParams {
 }
 export interface BusinessBasicInformationParams {
   businessState: { business: any, loading: boolean, error: null };
-  openBusinessInformation?: boolean;
-  setOpenBusinessInformation?: any;
+  isBusinessInfoShow?: boolean;
 }
 export interface BusinessProductsCategoriesParams {
   categories: Array<any>;
@@ -156,6 +155,10 @@ export interface SingleProductCardParams {
 export interface BusinessInformationParams {
   businessState: { business: any, loading: boolean, error: null };
   businessSchedule: Array<any>;
+}
+export interface BusinessReviewsParams {
+  businessState: { business: any, loading: boolean, error: null };
+  reviewsList: { reviews: any, loading: boolean, error: null };
 }
 export interface SearchBarParams {
   searchValue?: any;

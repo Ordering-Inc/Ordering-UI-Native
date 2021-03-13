@@ -9,6 +9,7 @@ import { BusinessBasicInformationParams } from '../../types'
 import { colors } from '../../theme'
 import { convertHoursToMinutes } from '../../utils'
 import { BusinessInformation } from '../BusinessInformation'
+import { BusinessReviews } from '../BusinessReviews'
 import {
   BusinessContainer,
   BusinessHeader,
@@ -31,6 +32,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
   const [, t] = useLanguage()
   const [{ parsePrice, parseDistance, optimizeImage }] = useUtils()
   const [openBusinessInformation, setOpenBusinessInformation] =  useState(false)
+  const [openBusinessReviews, setOpenBusinessReviews] = useState(false)
   const getBusinessType = () => {
     if (Object.keys(business).length <= 0) return 'none'
     const typeObj = types.map(t => {
@@ -118,9 +120,9 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
             <OText size={20} color={colors.textSecondary}>{business?.reviews?.total}</OText>
           </View>
           {!isBusinessInfoShow && (
-            <View>
+            <TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
               <OText color={colors.primary}>{t('SEE_REVIEWS', 'See reviews')}</OText>
-            </View>
+            </TouchableOpacity>
           )}
         </WrapReviews>
       </BusinessInfo>
@@ -132,6 +134,17 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         <BusinessInformation
           businessState={businessState}
           business={business}
+        />
+      </OModal>
+      <OModal
+       isCustom
+       open={openBusinessReviews}
+       onClose={() => setOpenBusinessReviews(false)}
+      >
+        <BusinessReviews
+          businessState={businessState}
+          businessId={business.id}
+          reviews={business.reviews?.reviews}
         />
       </OModal>
     </BusinessContainer>
