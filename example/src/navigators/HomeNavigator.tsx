@@ -46,10 +46,10 @@ const HomeNavigator = () => {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
-						      name="OrderDetails"
-						      component={OrderDetails}
-					      	options={{ headerShown: false }}
-					      />
+                  name="OrderDetails"
+                  component={OrderDetails}
+                  options={{ headerShown: false }}
+                />
               </>
             ) : (
               <>

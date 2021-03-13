@@ -8,12 +8,12 @@ export enum ToastType {
 }
 
 // Defines the parameters required to display the toast
-type ToastConfigType = { type: ToastType; message: string; duration: number };
+type ToastConfigType = { type: ToastType; message: string | Array<string>; duration: number };
 
 // The toast context exposes this object throughout the app
 type ToastContextType = {
     toastConfig: ToastConfigType | null;
-    showToast: (type: ToastType, message: string, duration?: number) => void;
+    showToast: (type: ToastType, message: string | Array<string>, duration?: number) => void;
     hideToast: () => void;
 };
 

@@ -70,6 +70,10 @@ export const OrderCustomer = styled.View`
   padding: 20px;
 `
 
+export const OrderDriver = styled.View`
+  padding: 20px;
+`
+
 export const Customer = styled.View`
   flex-direction: row;
   align-items: center;

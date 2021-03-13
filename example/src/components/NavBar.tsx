@@ -65,16 +65,15 @@ const NavBar = (props: Props) => {
       <TitleTopWrapper>
         {props.withIcon
           ? (
-            <OIcon
-              url={props.icon}
-              style={{
-                borderColor: colors.lightGray,
-                borderRadius: 10,
-                borderWidth: 1,
-                marginLeft: 12,
-              }}
-              width={60}
-              height={60} />
+              <OIcon
+                url={props.icon}
+                style={{
+                  borderColor: colors.lightGray,
+                  borderRadius: 20,
+                }}
+                width={60}
+                height={60} 
+              />
           )
           : null
         }
