@@ -10,10 +10,9 @@ const BusinessesListing = (props: any) => {
     isSearchByName: true,
     isSearchByDescription: true,
     propsToFetch: ['id', 'name', 'header', 'logo', 'location', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug'],
-    onRedirect: (route: string, params?: any) => {
-      props.navigation.navigate(route, params)
-    },
-    onBusinessClick: (business: any) => {}
+    onBusinessClick: (business: any) => {
+      props.navigation.navigate('Business', { store: business.slug })
+    }
   }
 
   const BusinessListView = styled.SafeAreaView`

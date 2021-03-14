@@ -10,6 +10,7 @@ import AddressForm from '../pages/AddressForm'
 import DrawNavigator from './DrawNavigator';
 import Splash from '../pages/Splash';
 import BusinessList from '../pages/BusinessesListing';
+import BusinessProductsList from '../pages/BusinessProductsList'
 import HomeNavigator from './HomeNavigator';
 
 const Stack = createStackNavigator();
@@ -48,7 +49,7 @@ const RootNavigator = () => {
             {!auth ? (
               <>
                 <Stack.Screen
-                  name="HomeScreen"
+                  name="Home"
                   component={Home}
                   options={{ headerShown: false }}
                 />
@@ -77,6 +78,12 @@ const RootNavigator = () => {
                   component={BusinessList}
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                  name='Business'
+                  component={BusinessProductsList}
+                  options={{ headerShown: false }}
+                />
+
               </>
             ) : (
               <Stack.Screen
