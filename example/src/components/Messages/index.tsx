@@ -22,23 +22,25 @@ import {
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Spinner from 'react-native-loading-spinner-overlay'
 
+import { MessagesParams } from '../../types'
+
 const paperIcon = require('../../assets/images/paper-plane.png')
 const ImageDummy = require('../../assets/images/image.png')
 
-const MessagesUI = (props) => {
+
+const MessagesUI = (props: MessagesParams) => {
 
   const {
     type,
     order,
     messages,
-    handleSend,
     image,
     message,
+    messagesToShow,
+    setMessage,
+    handleSend,
     sendMessage,
     setImage,
-    setMessage,
-    driver,
-    messagesToShow,
     readMessages,
   } = props
 
@@ -88,7 +90,7 @@ const MessagesUI = (props) => {
   };
 
   const getStatus = (status: number) => {
-    
+
     switch (status) {
       case 0:
         return 'ORDER_STATUS_PENDING'
@@ -177,7 +179,7 @@ const MessagesUI = (props) => {
                 datetime={getTimeAgo(message.created_at)}
               />
             )}
-            {(messagesToShow?.messages?.length || (message?.can_see?.includes('2')) || (message?.can_see?.includes('4') && driver)) && (
+            {(messagesToShow?.messages?.length || (message?.can_see?.includes('2')) || (message?.can_see?.includes('4') && type === USER_TYPE.DRIVER)) && (
               <>
                 {message.type === 2 && user?.id === message.author_id && (
                   <OChatBubble
@@ -250,7 +252,7 @@ const MessagesUI = (props) => {
         <ActionWrapper>
           <InputWrapper>
             <OInput
-              placeholder={t('WRITE_A_MESSAGE','Write a message...')}
+              placeholder={t('WRITE_A_MESSAGE', 'Write a message...')}
               style={{ flex: 1, paddingHorizontal: 0 }}
               onChange={onChangeMessage}
               value={message}
@@ -304,7 +306,7 @@ const MessagesUI = (props) => {
   )
 }
 
-export const Messages = (props) => {
+export const Messages = (props: MessagesParams) => {
   const messagesProps = {
     ...props,
     UIComponent: MessagesUI

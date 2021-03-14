@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { Messages } from '../Messages'
+import { Messages } from '../MessagesNew'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -128,10 +128,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const handleCloseModal = () => {
     setOpenMessages({ business: false, driver: false })
   }
-
-  useEffect(() => {
-    unreadMessages()
-  }, [messages?.messages])
 
   useEffect(() => {
     if (messagesReadList?.length) {
@@ -326,7 +322,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           setMessages={setMessages}
         />
       </OModal>
-      
+
     </OrderDetailsContainer>
   )
 }
