@@ -126,7 +126,8 @@ export interface BusinessProductsListingParams {
 }
 export interface BusinessBasicInformationParams {
   businessState: { business: any, loading: boolean, error: null };
-  isBusinessInfoShow?: boolean;
+  openBusinessInformation?: boolean;
+  setOpenBusinessInformation?: any;
 }
 export interface BusinessProductsCategoriesParams {
   categories: Array<any>;
@@ -151,14 +152,6 @@ export interface SingleProductCardParams {
   product: any;
   isSoldOut: boolean;
   onProductClick: any;
-}
-export interface BusinessInformationParams {
-  businessState: { business: any, loading: boolean, error: null };
-  businessSchedule: Array<any>;
-}
-export interface BusinessReviewsParams {
-  businessState: { business: any, loading: boolean, error: null };
-  reviewsList: { reviews: any, loading: boolean, error: null };
 }
 export interface SearchBarParams {
   searchValue?: any;
@@ -270,23 +263,4 @@ export interface FloatingButtonParams {
   isSecondaryBtn?: boolean;
   btnLeftValueShow?: boolean;
   btnRightValueShow?: boolean;
-}
-export interface MomentOptionParams {
-  navigation: any;
-  nopadding?: boolean;
-  datesList: Array<any>;
-  hoursList: Array<any>;
-  dateSelected?: any;
-  timeSelected?: any;
-  isAsap? :boolean;
-  handleAsap: () => {};
-  handleChangeDate: (value: any) => {};
-  handleChangeTime: (value: any) => {};
-}
-export interface OrderTypeSelectParams {
-  handleChangeOrderType: (value: any) => {};
-  typeSelected?: number;
-  defaultValue?: number;
-  configTypes?: Array<any>;
-  orderTypes: Array<any>;
 }

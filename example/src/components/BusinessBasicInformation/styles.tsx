@@ -3,7 +3,6 @@ import {colors} from '../../theme'
 
 export const BusinessContainer = styled.View`
   flex-direction: column;
-  width: 100%;
 `
 export const BusinessHeader = styled.ImageBackground`
   flex-direction: row;
@@ -11,6 +10,7 @@ export const BusinessHeader = styled.ImageBackground`
   height: 100%;
   position: relative;
   max-height: 260px;
+  height: 260px;
   resize-mode: cover;
   min-height: 200px;
 `
@@ -32,7 +32,4 @@ export const WrapReviews = styled.View`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`
-export const WrapBusinessInfo = styled.TouchableOpacity`
-  margin-horizontal: 10px;
 `

@@ -63,6 +63,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleChangeSearch('')
   }
 
+  console.log(currentCart)
+
   return (
     <>
       <Spinner visible={loading} />

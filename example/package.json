@@ -22,7 +22,6 @@
     "@types/react-native-loading-spinner-overlay": "^0.5.2",
     "@types/styled-components": "^5.1.3",
     "axios": "^0.21.0",
-    "moment": "^2.29.1",
     "ordering-api-sdk": "github:Ordering-Inc/ordering-api-sdk",
     "ordering-components": "github:Ordering-Inc/ordering-components#development",
     "patch-package": "^6.2.2",
