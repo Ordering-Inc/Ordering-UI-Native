@@ -210,12 +210,21 @@ export interface OrderDetailsParams {
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean,
-    isCartProduct?: boolean,
-    product?: any,
-    getProductMax?: boolean,
-    changeQuantity?: (product: any, quantity: number) => {},
-    onDeleteProduct?: (product: any) => {},
-    onEditProduct?: () => {}
+  isCartProduct?: boolean,
+  product?: any,
+  getProductMax?: boolean,
+  changeQuantity?: (product: any, quantity: number) => {},
+  onDeleteProduct?: (product: any) => {},
+  onEditProduct?: () => {}
+}
+export interface ReviewOrderParams {
+  order?: { orderId: number, businessId: number, logo: string },
+  stars: any,
+  handleChangeInput: (val: string) => {},
+  handleChangeRating: ({target: { name: string, value: number }} : {target: {name: string, value: number}}) => {},
+  handleSendReview: () => {},
+  formState: {loading: false, result: string | Array<string>, error: boolean},
+  navigation: any
 }
 export interface ViewInterface {
   navigation?: any;
