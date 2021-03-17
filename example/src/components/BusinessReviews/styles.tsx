@@ -20,7 +20,7 @@ export const BusinessReviewContent = styled.ScrollView`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  margin-top: 30px;
+  margin-top: 40px;
 `
 export const WrapCustomerReview = styled.View`
   padding: 20px 0;

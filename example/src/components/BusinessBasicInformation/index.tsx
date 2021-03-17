@@ -127,7 +127,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         </WrapReviews>
       </BusinessInfo>
       <OModal
-       isCustom
+       titleSectionStyle={styles.modalTitleSectionStyle}
        open={openBusinessInformation}
        onClose={() => setOpenBusinessInformation(false)}
       >
@@ -137,7 +137,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         />
       </OModal>
       <OModal
-       isCustom
+       titleSectionStyle={styles.modalTitleSectionStyle}
        open={openBusinessReviews}
        onClose={() => setOpenBusinessReviews(false)}
       >
@@ -188,5 +188,10 @@ const styles = StyleSheet.create({
   reviewStyle: {
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  modalTitleSectionStyle: {
+    position: 'absolute',
+    width: '100%',
+    top: 0    
   }
 })

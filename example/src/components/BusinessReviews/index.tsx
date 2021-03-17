@@ -50,7 +50,11 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
           <OText size={16}>{t('ERROR_UNKNOWN', 'An error has ocurred')}</OText>
           ) : (
           <>
-            <ScrollView horizontal style={styles.wrapTotalScoresStyle}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.wrapTotalScoresStyle}
+            >
               <Score star={businessState?.business?.reviews?.quality} text={t('REVIEW_QUALITY', 'Quality of products')} />
               <Score star={businessState?.business?.reviews?.delivery} text={t('REVIEW_PUNCTUALITY', 'Punctuality')} />
               <Score star={businessState?.business?.reviews?.service} text={t('REVIEW_SERVICE', 'Service')} />
@@ -73,7 +77,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
                   </View>
                   <OText mLeft={20}>{review.comment}</OText>
                 </WrapCustomerReviewTotal>
-                <ScrollView horizontal>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   <Score star={review.quality} text={t('REVIEW_QUALITY', 'Quality of products')} />
                   <Score star={review.delivery} text={t('REVIEW_PUNCTUALITY', 'Punctuality')} />
                   <Score star={review.service} text={t('REVIEW_SERVICE', 'Service')} />

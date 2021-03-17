@@ -10,7 +10,8 @@ import {
   GrayBackground,
   WrapScheduleBlock,
   ScheduleBlock,
-  WrapBusinessMap
+  WrapBusinessMap,
+  InnerContent
 } from './styles'
 import { StyleSheet } from 'react-native'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -54,33 +55,35 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
         businessState={businessState}
       />
       <WrapMainContent>
-        <GrayBackground>
-          <OText size={16} weight='bold'>{t('BUSINESS_LOCATION', 'Business Location')}</OText>
-        </GrayBackground>
-        <WrapBusinessMap style={styles.wrapMapStyle}>
-          <OrderMap
-            markers={[businessMarker]}
-          />
-        </WrapBusinessMap>
-        <OText mBottom={20}>
-          {businessState?.business?.address}
-        </OText>
-        <GrayBackground>
-          <OText size={16} weight='bold'>
-            {t('BUSINESS_OPENING_TIME', 'Business Opening Time')}
+        <InnerContent>
+          <GrayBackground>
+            <OText size={16} weight='bold'>{t('BUSINESS_LOCATION', 'Business Location')}</OText>
+          </GrayBackground>
+          <WrapBusinessMap style={styles.wrapMapStyle}>
+            <OrderMap
+              markers={[businessMarker]}
+            />
+          </WrapBusinessMap>
+          <OText mBottom={20}>
+            {businessState?.business?.address}
           </OText>
-        </GrayBackground>
-        {businessSchedule?.length > 0 && (
-          <WrapScheduleBlock horizontal>
-            {businessSchedule.map((schedule: any, i: number) => (
-              <ScheduleBlock key={i}>
-                <OText size={20}>{daysOfWeek[i]}</OText>
-                <OText>{scheduleFormatted(schedule.lapses[0].open)}</OText>
-                <OText>{scheduleFormatted(schedule.lapses[0].close)}</OText>
-              </ScheduleBlock>
-            ))}
-          </WrapScheduleBlock>
-        )}
+          <GrayBackground>
+            <OText size={16} weight='bold'>
+              {t('BUSINESS_OPENING_TIME', 'Business Opening Time')}
+            </OText>
+          </GrayBackground>
+          {businessSchedule?.length > 0 && (
+            <WrapScheduleBlock horizontal>
+              {businessSchedule.map((schedule: any, i: number) => (
+                <ScheduleBlock key={i}>
+                  <OText size={20}>{daysOfWeek[i]}</OText>
+                  <OText>{scheduleFormatted(schedule.lapses[0].open)}</OText>
+                  <OText>{scheduleFormatted(schedule.lapses[0].close)}</OText>
+                </ScheduleBlock>
+              ))}
+            </WrapScheduleBlock>
+          )}
+        </InnerContent>
       </WrapMainContent>
     </BusinessInformationContainer>
   )
