@@ -264,3 +264,22 @@ export interface FloatingButtonParams {
   btnLeftValueShow?: boolean;
   btnRightValueShow?: boolean;
 }
+export interface MomentOptionParams {
+  navigation: any;
+  nopadding?: boolean;
+  datesList: Array<any>;
+  hoursList: Array<any>;
+  dateSelected?: any;
+  timeSelected?: any;
+  isAsap? :boolean;
+  handleAsap: () => {};
+  handleChangeDate: (value: any) => {};
+  handleChangeTime: (value: any) => {};
+}
+export interface OrderTypeSelectParams {
+  handleChangeOrderType: (value: any) => {};
+  typeSelected?: number;
+  defaultValue?: number;
+  configTypes?: Array<any>;
+  orderTypes: Array<any>;
+}

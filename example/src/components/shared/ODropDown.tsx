@@ -1,48 +1,49 @@
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
-import styled from 'styled-components/native'
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import styled, { css } from 'styled-components/native'
 import { colors } from '../../theme'
 
 interface Props {
-  items?: Array<string>,
+  secondary?: boolean,
+  options?: Array<any>,
   onSelect?: any,
   selectedIndex?: number,
   kindImage?: any,
   placeholder?: string,
   style?: any,
-  dropIconColor?: string
+  defaultValue?: any,
+  dropViewMaxHeight?: any,
 }
 
-const Wrapper = styled.View`
-  background-color: white;
-  padding: 10px 14px;
-  border-radius: 20px;
-  border-width: 1px;
-  border-color: ${colors.primary};
-  flex-grow: 1;
-  flex-basis: 0;
+const Wrapper = styled.View`  
   align-items: center;
   justify-content: center;
   position: relative;
+  z-index: 100;
 `
 const InnerWrapper = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   position: relative;
+  padding: 10px;
+  border-radius: 10px;
+  border-width: 1px;
+  border-color: ${(props: any) => props.secondary ? colors.lightGray : colors.primary};
+  background-color: ${(props: any) => props.secondary ? colors.white : colors.primary};
 `
 const SelLabel = styled.Text`
   flex: 1;
-  font-family: 'Poppins-Regular';
-  color: red;
+  color: black;
   flex-grow: 1;
-  margin: 0 10px;
+  color: ${(props: any) => props.secondary ? 'black' : colors.white};
 `
 const DropIcon = styled.Image`
-  tint-color: ${colors.primary};
+  tint-color: ${(props: any) => props.secondary ? 'black' : colors.white};
   resize-mode: contain;
   width: 7px;
   height: 7px;
+  margin-left: 5px;
 `
 const KindIcon = styled.Image`
   tint-color: ${colors.primary};
@@ -54,75 +55,90 @@ const DropView = styled.View`
   position: absolute;
   box-shadow: 0 4px 3px #00000022;
   background-color: white;
-  top: 42px;
-  left: 20px;
   width: 100%;
-  padding: 4px 5px;
-  border-bottom-right-radius: 10px;
-  border-bottom-left-radius: 10px;
+  top: 42px;
+  left: 0px;
+  border-radius: 10px;
+  border-width: 1px;
+  border-color: ${colors.lightGray};
+  background-color: ${(props: any) => props.secondary ? colors.white : '#FFF5F5'};
 `
-const DropItems = styled.Text`
+const DropOption = styled.Text`
   padding: 9px 5px;
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.primary};
+  border-bottom-color: ${colors.lightGray};
   margin-bottom: 2px;
+  ${(props: any) => props.selected && css`
+    color: ${colors.primary};
+  `}
 `
-
 const ODropDown = (props: Props) => {
-
-  const [curIndex, onSelect] = React.useState(props.selectedIndex);
   const [isOpen, onOffToggle] = React.useState(false);
-  const [value, setValue] = React.useState(curIndex && props.items ? props.items[curIndex] : null);
+  const defaultOption = props.options?.find(option => option.value === props.defaultValue)
+  const [selectedOption, setSelectedOption] = React.useState(defaultOption)
+  const [value, setValue] = React.useState(props.defaultValue)
 
-  const onSelectItem = (index: number) => {
-    props.onSelect(index);
-    onSelect(index);
-    if (props.items) {
-      setValue(props.items[index]);
-    }
+  const onSelectItem = (option: any) => {
+    setSelectedOption(option);
+    setValue(option.value);
+    props.onSelect(option.value);
     onOffToggle(false);
   }
-
-  React.useEffect(() => {
-    if (props.items) {
-      onSelect(0);
-    }
-    else
-      alert('Undefined Items')
-  }, [props.items])
 
   const onToggle = () => {
     onOffToggle(!isOpen)
   }
 
+  React.useEffect(() => {
+    const _defaultOption = props.options?.find(option => option.value === props.defaultValue)
+    setSelectedOption(_defaultOption)
+    setValue(props.defaultValue)
+  }, [props.defaultValue, props.options])
+
   return (
     <Wrapper style={props.style}>
       <InnerWrapper
+        secondary={props.secondary}
         onPress={onToggle}
       >
         {props.kindImage
           ? (<KindIcon source={props.kindImage} />)
           : null
         }
-        <SelLabel numberOfLines={1} ellipsizeMode={'tail'}>{value || props.placeholder}</SelLabel>
-        <DropIcon style={{ tintColor: props.dropIconColor || 'grey' }} source={require('../../assets/icons/drop_down.png')} />
+        <SelLabel secondary={props.secondary} numberOfLines={1} ellipsizeMode={'tail'}>
+          {selectedOption?.content || props.placeholder}
+        </SelLabel>
+        <DropIcon
+          secondary={props.secondary}
+          source={require('../../assets/icons/drop_down.png')}
+        />
       </InnerWrapper>
-      {isOpen
+      {isOpen && props.options
         ? (
-          <DropView>
-            {props.items
-              ? props.items.map((item, index) =>
-              (
-                <TouchableOpacity
-                  key={`key_${index}`}
-                  onPress={() => onSelectItem(index)}
-                >
-                  <DropItems >{item}</DropItems>
-                </TouchableOpacity>
-              )
-              )
-              : null
-            }
+          <DropView secondary={props.secondary}>
+            <ScrollView style={{
+              width: '100%',
+              maxHeight: props.dropViewMaxHeight ? props.dropViewMaxHeight : null
+            }}>
+              {props.options
+                ? props.options.map((option, index) =>
+                  (
+                    <TouchableOpacity
+                      key={`key_${index}`}
+                      onPress={() => onSelectItem(option)}
+                    >
+                      <DropOption
+                        numberOfLines={1}
+                        selected={value === option.value}
+                      >
+                        {option.content}
+                      </DropOption>
+                    </TouchableOpacity>
+                  )
+                )
+                : null
+              }
+            </ScrollView>
           </DropView>
         )
         : null

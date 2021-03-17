@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { Messages } from '../MessagesNew'
+import { Messages } from '../Messages'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
