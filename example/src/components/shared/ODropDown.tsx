@@ -64,7 +64,7 @@ const DropView = styled.View`
   background-color: ${(props: any) => props.secondary ? colors.white : '#FFF5F5'};
 `
 const DropOption = styled.Text`
-  padding: 9px 5px;
+  padding: 10px;
   border-bottom-width: 1px;
   border-bottom-color: ${colors.lightGray};
   margin-bottom: 2px;

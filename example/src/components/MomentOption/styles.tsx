@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components/native'
 import { colors } from '../../theme'
 
-export const Container = styled.View`
+export const Container = styled.ScrollView`
   flex: 1;
   background-color: ${colors.backgroundPage};
   padding: 0 20px;
@@ -36,11 +36,12 @@ export const Day = styled.TouchableOpacity`
   `}
 `
 export const WrapHours = styled.ScrollView`
-  flex: 1;
   border-width: 1px;
   border-color: ${colors.textSecondary};
   border-radius: 10px;
-  margin-top: 10px;
+  margin-top: 20px;
+  height: 140px;
+  max-height: 140px;
 `
 export const Hours = styled.View`
   flex: 1;

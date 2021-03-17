@@ -181,7 +181,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
               placeholder={t('SELECT_A_TIME', 'Select a time')}
               onSelect={(value: any) => handleChangeTime(value)}
               style={styles.selectStyle}
-              dropViewMaxHeight={150}
+              dropViewMaxHeight={140}
             />
             {optionSelected.isSchedule && (
               <WrapHours>
