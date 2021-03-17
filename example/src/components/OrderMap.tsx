@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Platform, StyleSheet } from 'react-native'
+import { Platform, StyleSheet, Image } from 'react-native'
 import MapView, { Region, PROVIDER_GOOGLE, Marker, LatLng } from 'react-native-maps'
 import styled from 'styled-components/native'
 
@@ -16,7 +16,6 @@ const Wrapper = styled.View`
 const OrderMap = (props: MapInterface) => {
     const mapRef = React.useRef<MapView>(null);
     const [region, setRegion] = React.useState(props.region);
-    
     React.useEffect(() => {
         if (mapRef.current && props.markers.length > 0) {
             setTimeout(()=>{
@@ -37,10 +36,10 @@ const OrderMap = (props: MapInterface) => {
 
     return (
         <Wrapper>
-            <MapView 
-                style={ style.map }
+             <MapView
+                style={ styles.map }
                 mapType={ Platform.OS == 'android' ? "none" : "standard" }
-                provider={ PROVIDER_GOOGLE }
+                // provider={ PROVIDER_GOOGLE }
                 onRegionChangeComplete={setRegion.bind(this, props.region)}
                 ref={ mapRef }
             >
@@ -50,8 +49,14 @@ const OrderMap = (props: MapInterface) => {
                             key={index}
                             tracksViewChanges={ false }
                             coordinate={ item.latlng }
-                            image={ item.image }
-                        />
+                            anchor={{ x: -0.5, y: -0.5 }}
+                        >
+                            <Image
+                                source={item.image}
+                                resizeMode='contain'
+                                style={styles.markerStyle}
+                            />
+                        </Marker>
                     ))
                 }
             </MapView>
@@ -59,9 +64,14 @@ const OrderMap = (props: MapInterface) => {
     )
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject
+    },
+    markerStyle: {
+        width: 45,
+        height: 45,
+        borderRadius: 30,
     }
 })
 

@@ -1,33 +1,38 @@
-import React from 'react'
-import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import React, { useState } from 'react'
+import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import IconEvilIcons from 'react-native-vector-icons/EvilIcons'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native'
-import { OIcon, OText } from '../shared'
+import { OIcon, OText, OModal } from '../shared'
 import { BusinessBasicInformationParams } from '../../types'
 import { colors } from '../../theme'
 import { convertHoursToMinutes } from '../../utils'
-
+import { BusinessInformation } from '../BusinessInformation'
+import { BusinessReviews } from '../BusinessReviews'
 import {
   BusinessContainer,
   BusinessHeader,
   BusinessLogo,
   BusinessInfo,
   BusinessInfoItem,
-  WrapReviews
+  WrapReviews,
+  WrapBusinessInfo
 } from './styles'
 const types = ['food', 'laundry', 'alcohol', 'groceries']
 
 export const BusinessBasicInformation = (props: BusinessBasicInformationParams) => {
   const {
-    businessState
+    businessState,
+    isBusinessInfoShow
   } = props
-  const { business, loading } = businessState
+  const { business } = businessState
 
   const [orderState] = useOrder()
   const [, t] = useLanguage()
   const [{ parsePrice, parseDistance, optimizeImage }] = useUtils()
+  const [openBusinessInformation, setOpenBusinessInformation] =  useState(false)
+  const [openBusinessReviews, setOpenBusinessReviews] = useState(false)
   const getBusinessType = () => {
     if (Object.keys(business).length <= 0) return 'none'
     const typeObj = types.map(t => {
@@ -39,10 +44,13 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
   return (
     <BusinessContainer>
       <BusinessHeader
+        style={isBusinessInfoShow ? styles.businesInfoheaderStyle : styles.headerStyle}
         source={{ uri: business?.header }}
       >
         <BusinessLogo>
-          <OIcon url={optimizeImage(business?.logo, 'h_200,c_limit')} style={styles.businessLogo} />
+          {!isBusinessInfoShow && (
+            <OIcon url={optimizeImage(business?.logo, 'h_200,c_limit')} style={styles.businessLogo} />
+          )}
         </BusinessLogo>
       </BusinessHeader>
       <BusinessInfo style={styles.businessInfo}>
@@ -51,12 +59,17 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
             <OText size={20} weight='bold'>
               {business?.name}
             </OText>
-            <IconAntDesign
-              name='infocirlceo'
-              color={colors.primary}
-              size={16}
-              style={styles.infoIcon}
-            />
+            {!isBusinessInfoShow && (
+              <WrapBusinessInfo
+                onPress={() => setOpenBusinessInformation(true)}
+              >
+                <IconAntDesign
+                  name='infocirlceo'
+                  color={colors.primary}
+                  size={16}
+                />
+              </WrapBusinessInfo>
+            )}
           </BusinessInfoItem>
           <View>
             <OText color={colors.textSecondary}>{getBusinessType()}</OText>
@@ -106,16 +119,45 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
             />
             <OText size={20} color={colors.textSecondary}>{business?.reviews?.total}</OText>
           </View>
-          <View>
-            <OText color={colors.primary}>{t('SEE_REVIEWS', 'See reviews')}</OText>
-          </View>
+          {!isBusinessInfoShow && (
+            <TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
+              <OText color={colors.primary}>{t('SEE_REVIEWS', 'See reviews')}</OText>
+            </TouchableOpacity>
+          )}
         </WrapReviews>
       </BusinessInfo>
+      <OModal
+       titleSectionStyle={styles.modalTitleSectionStyle}
+       open={openBusinessInformation}
+       onClose={() => setOpenBusinessInformation(false)}
+      >
+        <BusinessInformation
+          businessState={businessState}
+          business={business}
+        />
+      </OModal>
+      <OModal
+       titleSectionStyle={styles.modalTitleSectionStyle}
+       open={openBusinessReviews}
+       onClose={() => setOpenBusinessReviews(false)}
+      >
+        <BusinessReviews
+          businessState={businessState}
+          businessId={business.id}
+          reviews={business.reviews?.reviews}
+        />
+      </OModal>
     </BusinessContainer>
   )
 }
 
 const styles = StyleSheet.create({
+  businesInfoheaderStyle: {
+    height: 150
+  },
+  headerStyle: {
+    height: 260
+  },
   businessLogo: {
     width: 75,
     height: 75,
@@ -132,9 +174,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     transform: [{ translateY: -20 }],
   },
-  infoIcon: {
-    marginHorizontal: 10,
-  },
   bullet: {
     flexDirection: 'row',
     alignItems: 'center'
@@ -149,5 +188,10 @@ const styles = StyleSheet.create({
   reviewStyle: {
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  modalTitleSectionStyle: {
+    position: 'absolute',
+    width: '100%',
+    top: 0    
   }
 })
