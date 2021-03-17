@@ -235,10 +235,11 @@ export interface MessagesParams {
   image?: string,
   messagesToShow?: any ,
   sendMessage?: any,
-  handleSend: () => {},
-  setImage: (image: string | null) => {},
-  setMessage: (comment: string) => {},
-  readMessages: () => {},
+  handleSend?: () => {},
+  setImage?: (image: string | null) => {},
+  setMessage?: (comment: string) => {},
+  setMessages?: () => {},
+  readMessages?: () => {},
 }
 export interface ViewInterface {
   navigation?: any;
