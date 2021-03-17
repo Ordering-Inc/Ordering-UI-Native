@@ -210,12 +210,13 @@ export interface OrderDetailsParams {
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean,
-    isCartProduct?: boolean,
-    product?: any,
-    getProductMax?: boolean,
-    changeQuantity?: (product: any, quantity: number) => {},
-    onDeleteProduct?: (product: any) => {},
-    onEditProduct?: () => {}
+  isCartProduct?: boolean,
+  product?: any,
+  getProductMax?: any,
+  changeQuantity?: any,
+  onDeleteProduct?: any,
+  onEditProduct?: any,
+  offsetDisabled: any,
 }
 export interface ViewInterface {
   navigation?: any;

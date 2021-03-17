@@ -20,6 +20,5 @@ export const DTCard = styled.View`
 
   ${(props: any) => props.isActive && css`
     background-color: ${colors.primary};
-    color: ${colors.primaryContrast};
   `}
 `

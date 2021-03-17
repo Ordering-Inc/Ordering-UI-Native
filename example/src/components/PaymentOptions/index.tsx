@@ -10,11 +10,10 @@ import { FlatList, TouchableOpacity } from 'react-native'
 // import GrStripe from '@meronex/icons/gr/GrStripe'
 // import EnPaypal from '@meronex/icons/en/EnPaypal'
 import {
-  // PaymentOptions as PaymentOptionsController,
+  PaymentOptions as PaymentOptionsController,
   useLanguage,
   useSession
 } from 'ordering-components/native';
-import { PaymentOptions as PaymentOptionsController } from './test'
 
 // import { Modal } from '../Modal'
 // import { PaymentOptionCash } from '../PaymentOptionCash'

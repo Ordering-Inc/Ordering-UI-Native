@@ -27,7 +27,7 @@ const DriverTipsUI = (props: any) => {
             style={style.circle}
             isActive={option === optionSelected}
           >
-            <OText size={14}>
+            <OText size={14} color={option === optionSelected ? '#FFF' : '#000'}>
               {`${option}%`}
             </OText>
           </DTCard>

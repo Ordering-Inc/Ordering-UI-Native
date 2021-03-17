@@ -1,5 +1,6 @@
 export const colors = {
   primary: '#D83520',
+  red: '#D83520',
   secundary: '#EFEFEF',
   primaryContrast: '#FFF',
   secundaryContrast: '#000',

@@ -9,6 +9,7 @@ import RootNavigator from '../navigators/RootNavigator'
 // import AddressForm from '../pages/AddressForm'
 // import SpinnerLoader from '../pages/SpinnerLoader'
 import CheckoutPage from '../pages/Checkout';
+import BusinessProductsList from '../pages/BusinessProductsList';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,11 @@ const CheckoutNavigator = () => {
       <Stack.Screen
         name="CheckoutPage"
         component={CheckoutPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Business"
+        component={BusinessProductsList}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
