@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Messages } from '../Messages'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -31,13 +32,16 @@ import {
   OrderBill,
   Total,
   NavBack,
-  Icons
+  Icons,
+  OrderDriver
 } from './styles'
-import { OIcon, OText } from '../shared'
+import { OIcon, OModal, OText } from '../shared'
 import { colors } from '../../theme'
 import { ProductItemAccordion } from '../ProductItemAccordion'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { OrderDetailsParams } from '../../types'
+import { USER_TYPE } from '../../config/constants'
+
 const appLogo = require('../../assets/images/Logo.png')
 
 const orderStatus0 = require('../../assets/images/status-0.png')
@@ -76,16 +80,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openReview, setOpenReview] = useState(false)
   const [isReviewed, setIsReviewed] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
-  const [openProductShare, setOpenProductShare] = useState(false)
-  // const { order, loading, businessData, error } = props.order
   const { order, loading, error } = props.order
 
   const getOrderStatus = (s: string) => {
     const status = parseInt(s)
     const orderStatus = [
       { key: 0, value: t('PENDING', 'Pending'), slug: 'PENDING', percentage: 0.25, image: orderStatus0 },
-      { key: 1, value: t('COMPLETED', 'Completed'), slug: 'COMPLETED', percentage: 1,image: orderStatus1 },
-      { key: 2, value: t('REJECTED', 'Rejected'), slug: 'REJECTED', percentage: 0,image: orderStatus2 },
+      { key: 1, value: t('COMPLETED', 'Completed'), slug: 'COMPLETED', percentage: 1, image: orderStatus1 },
+      { key: 2, value: t('REJECTED', 'Rejected'), slug: 'REJECTED', percentage: 0, image: orderStatus2 },
       { key: 3, value: t('DRIVER_IN_BUSINESS', 'Driver in business'), slug: 'DRIVER_IN_BUSINESS', percentage: 0.60, image: orderStatus3 },
       { key: 4, value: t('PREPARATION_COMPLETED', 'Preparation Completed'), slug: 'PREPARATION_COMPLETED', percentage: 0.70, image: orderStatus4 },
       { key: 5, value: t('REJECTED_BY_BUSINESS', 'Rejected by business'), slug: 'REJECTED_BY_BUSINESS', percentage: 0, image: orderStatus5 },
@@ -123,15 +125,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setUnreadAlert({ business, driver })
   }
 
-  const locations = [
-    { ...order?.driver?.location, icon: order?.driver?.photo },
-    { ...order?.business?.location, icon: order?.business?.logo },
-    { ...order?.customer?.location, icon: order?.customer?.photo }
-  ]
-
-  useEffect(() => {
-    unreadMessages()
-  }, [messages?.messages])
+  const handleCloseModal = () => {
+    setOpenMessages({ business: false, driver: false })
+  }
 
   useEffect(() => {
     if (messagesReadList?.length) {
@@ -179,6 +175,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       name='message-text-outline'
                       size={24}
                       color={colors.backgroundDark}
+                      onPress={() => handleOpenMessages({ business: true, driver: false })}
                     />
                   </TouchableOpacity>
                 </Icons>
@@ -221,11 +218,33 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OIcon url={user?.photo} width={100} height={100} style={styles.logo} />
                 </CustomerPhoto>
                 <InfoBlock>
-                  <OText>{order?.customer?.name} {order?.customer?.lastname}</OText>
+                  <OText size={18}>{order?.customer?.name} {order?.customer?.lastname}</OText>
                   <OText>{order?.customer?.address}</OText>
                 </InfoBlock>
               </Customer>
             </OrderCustomer>
+            <OrderDriver>
+              <OText size={18}>{t('DRIVER', 'Driver')}</OText>
+              <Customer>
+                <CustomerPhoto>
+                  <OIcon url={order?.driver?.photo} width={100} height={100} style={styles.logo} />
+                </CustomerPhoto>
+                <InfoBlock>
+                  <OText size={18}>{order?.driver?.name} {order?.driver?.lastname}</OText>
+                  <Icons>
+                    <TouchableOpacity>
+                      <MaterialCommunityIcon
+                        name='message-text-outline'
+                        size={24}
+                        color={colors.backgroundDark}
+                        onPress={() => handleOpenMessages({ driver: true, business: false })}
+                      />
+                    </TouchableOpacity>
+                  </Icons>
+                </InfoBlock>
+
+              </Customer>
+            </OrderDriver>
             <OrderProducts>
               <OText size={18}>{t('YOUR_ORDER', 'Your Order')}</OText>
               {order?.products?.length && order?.products.map((product: any, i: number) => (
@@ -294,6 +313,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </OrderContent>
         </>
       )}
+      <OModal open={openMessages.business || openMessages.driver} EntireModal onClose={() => handleCloseModal()}>
+        <Messages
+          type={openMessages.business ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER}
+          orderId={order?.id}
+          messages={messages}
+          order={order}
+          setMessages={setMessages}
+        />
+      </OModal>
+
     </OrderDetailsContainer>
   )
 }

@@ -226,6 +226,20 @@ export interface ReviewOrderParams {
   formState: {loading: false, result: string | Array<string>, error: boolean},
   navigation: any
 }
+export interface MessagesParams {
+  type?: string,
+  order?: any,
+  orderId?: number,
+  messages?: any,
+  message?: string,
+  image?: string,
+  messagesToShow?: any ,
+  sendMessage?: any,
+  handleSend: () => {},
+  setImage: (image: string | null) => {},
+  setMessage: (comment: string) => {},
+  readMessages: () => {},
+}
 export interface ViewInterface {
   navigation?: any;
   onLogin?: any;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { OrderReview as ReviewOrderController, useLanguage } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { useForm, Controller } from 'react-hook-form'
 
 import {
   ReviewOrderContainer,
@@ -31,6 +32,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
 
   const [, t] = useLanguage()
   const { showToast } = useToast()
+  const { handleSubmit, control, errors } = useForm()
 
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<any>, success?: boolean }>({ open: false, content: [], success: false })
 
@@ -45,7 +47,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     if (Object.values(stars).some(value => value === 0)) {
       setAlertState({
         open: true,
-        content: Object.values(categories).map((category, i) => stars[category.name] === 0 ? `${t('CATEGORY_ATLEAST_ONE', `${category.show} must be at least one point`).replace('CATEGORY', category.name.toUpperCase())} ${i !== 3 && '\n'}` : ' ')
+        content: Object.values(categories).map((category, i) => stars[category.name] === 0 ? `- ${t('CATEGORY_ATLEAST_ONE', `${category.show} must be at least one point`).replace('CATEGORY', category.name.toUpperCase())} ${i !== 3 && '\n'}` : ' ')
       })
       return
     }
@@ -78,8 +80,22 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     }
     if (!formState.loading && !formState.error && alertState.success) {
       showToast(ToastType.Success, t('REVIEW_SUCCESS_CONTENT', 'Thank you, Review successfully submitted!'))
+      navigation.goBack()
     }
   }, [formState.result])
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      // Convert all errors in one string to show in toast provider
+      const list = Object.values(errors);
+      let stringError = '';
+      list.map((item: any, i: number) => {
+        stringError +=
+          i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
+      });
+      showToast(ToastType.Error, stringError);
+    }
+  }, [errors]);
 
   useEffect(() => {
     if (alertState.open) {
@@ -89,6 +105,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       )
     }
   }, [alertState.content])
+
 
   const getStar = (star: number, index: number, category: string) => {
     switch (star) {
@@ -129,13 +146,26 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             </Stars>
           </Category>
         ))}
-        <OInput
+        <Controller
+          control={control}
+          defaultValue=''
           name='comments'
-          placeholder={t('COMMENTS', 'Comments')}
-          onChange={(val: string) => handleChangeInput(val)}
-          style={styles.inputTextArea}
-          multiline
-          bgColor={colors.inputDisabled}
+          render={({onChange}) => (
+            <OInput
+              name='comments'
+              placeholder={t('COMMENTS', 'Comments')}
+              onChange={(val: string) => {
+                onChange(val)
+                handleChangeInput(val)
+              }}
+              style={styles.inputTextArea}
+              multiline
+              bgColor={colors.inputDisabled}
+            />
+          )}
+          rules={{
+            required: t('FIELD_COMMENT_REQUIRED', 'The field comments is required')
+          }}
         />
       </FormReviews>
       <OButton
@@ -143,7 +173,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
         style={{ marginTop: 20 }}
         text={t('SAVE', 'Save')}
         imgRightSrc=''
-        onClick={onSubmit}
+        onClick={handleSubmit(onSubmit)}
       />
       <Spinner visible={formState.loading} />
     </ReviewOrderContainer>
