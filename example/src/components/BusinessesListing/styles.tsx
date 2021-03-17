@@ -33,6 +33,7 @@ export const OrderControlContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  z-index: 10;
 `
 
 export const WrapMomentOption = styled.TouchableOpacity`
