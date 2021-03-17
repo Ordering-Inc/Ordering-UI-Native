@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
+import styled from 'styled-components';
 import { colors } from '../../theme';
 
 interface Props {
@@ -10,10 +11,12 @@ interface Props {
   onAccept?: any;
   onCancel?: any;
   onClose?: any;
+  style?: any;
   acceptText?: string;
   cancelText?: string;
   isTransparent?: boolean;
   hideCloseDefault?: boolean;
+  EntireModal?: boolean;
 }
 
 const OModal = (props: Props): React.ReactElement => {
@@ -27,7 +30,9 @@ const OModal = (props: Props): React.ReactElement => {
     acceptText,
     cancelText,
     isTransparent,
-    hideCloseDefault
+    hideCloseDefault,
+    EntireModal,
+    style
   } = props
 
   return (
@@ -36,8 +41,9 @@ const OModal = (props: Props): React.ReactElement => {
       transparent={isTransparent}
       visible={open}
       onRequestClose={() => { onClose() }}
+      style={{ height: '100%', flex: 1, position: 'absolute', ...style }}
     >
-      <View style={styles.centeredView}>
+      {!EntireModal ? <View style={styles.centeredView}>
         <View style={styles.titleSection}>
           <Icon
             name="x"
@@ -48,7 +54,21 @@ const OModal = (props: Props): React.ReactElement => {
           <Text style={styles.modalText}>{title}</Text>
         </View>
         {children}
-      </View>
+      </View> :
+        <>
+          <View style={styles.titleSection}>
+            <Icon
+              name="x"
+              size={35}
+              style={styles.cancelBtn}
+              onPress={onClose}
+            />
+            <Text style={styles.modalText}>{title}</Text>
+          </View>
+          {children}
+        </>
+      }
+
     </Modal>
   );
 };

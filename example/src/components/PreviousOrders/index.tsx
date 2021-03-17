@@ -70,6 +70,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       <FlatList
         data={orders}
         renderItem={Order}
+        style={{height: '60%'}}
         keyExtractor={(order) => order?.id.toString() || order?.uuid.toString()}
       />
     </>

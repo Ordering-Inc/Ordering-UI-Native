@@ -210,12 +210,25 @@ export interface OrderDetailsParams {
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean,
-    isCartProduct?: boolean,
-    product?: any,
-    getProductMax?: boolean,
-    changeQuantity?: (product: any, quantity: number) => {},
-    onDeleteProduct?: (product: any) => {},
-    onEditProduct?: () => {}
+  isCartProduct?: boolean,
+  product?: any,
+  getProductMax?: boolean,
+  changeQuantity?: (product: any, quantity: number) => {},
+  onDeleteProduct?: (product: any) => {},
+  onEditProduct?: () => {}
+}
+export interface MessagesParams {
+  type?: string,
+  order?: any,
+  messages?: any,
+  message?: string,
+  image?: string,
+  messagesToShow?: any ,
+  sendMessage?: any,
+  handleSend: () => {},
+  setImage: (image: string | null) => {},
+  setMessage: (comment: string) => {},
+  readMessages: () => {},
 }
 export interface ViewInterface {
   navigation?: any;
