@@ -28,7 +28,7 @@ export const ToastProvider: React.FC = ({ children }) => {
         setToastConfig,
     ] = React.useState<ToastConfigType | null>(null);
 
-    function showToast(type: ToastType, message: string, duration = 4000) {
+    function showToast(type: ToastType, message: string | Array<string>, duration = 4000) {
         // Calls setToastConfig to show the toast
         setToastConfig({ type, message, duration });
     }

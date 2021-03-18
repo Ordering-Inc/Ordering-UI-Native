@@ -224,18 +224,29 @@ export interface ProductItemAccordionParams {
   onDeleteProduct?: (product: any) => {},
   onEditProduct?: () => {}
 }
+export interface ReviewOrderParams {
+  order?: { orderId: number, businessId: number, logo: string },
+  stars: any,
+  handleChangeInput: (val: string) => {},
+  handleChangeRating: ({target: { name: string, value: number }} : {target: {name: string, value: number}}) => {},
+  handleSendReview: () => {},
+  formState: {loading: false, result: string | Array<string>, error: boolean},
+  navigation: any
+}
 export interface MessagesParams {
   type?: string,
   order?: any,
+  orderId?: number,
   messages?: any,
   message?: string,
   image?: string,
   messagesToShow?: any ,
   sendMessage?: any,
-  handleSend: () => {},
-  setImage: (image: string | null) => {},
-  setMessage: (comment: string) => {},
-  readMessages: () => {},
+  handleSend?: () => {},
+  setImage?: (image: string | null) => {},
+  setMessage?: (comment: string) => {},
+  setMessages?: () => {},
+  readMessages?: () => {},
 }
 export interface ViewInterface {
   navigation?: any;
@@ -278,7 +289,7 @@ export interface MomentOptionParams {
   hoursList: Array<any>;
   dateSelected?: any;
   timeSelected?: any;
-  isAsap? :boolean;
+  isAsap?: boolean;
   handleAsap: () => {};
   handleChangeDate: (value: any) => {};
   handleChangeTime: (value: any) => {};

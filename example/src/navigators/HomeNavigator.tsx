@@ -16,6 +16,7 @@ import AddressForm from '../pages/AddressForm';
 import SpinnerLoader from '../pages/SpinnerLoader';
 import OrderDetails from '../pages/OrderDetails';
 import BusinessProductsList from '../pages/BusinessProductsList';
+import ReviewOrder from '../pages/ReviewOrder'
 import MomentOption from '../pages/MomentOption'
 
 const Stack = createStackNavigator();
@@ -55,6 +56,11 @@ const HomeNavigator = (is_online: boolean) => {
                 <Stack.Screen
                   name="Business"
                   component={BusinessProductsList}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ReviewOrder"
+                  component={ReviewOrder}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen

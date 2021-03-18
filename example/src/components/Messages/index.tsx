@@ -37,9 +37,9 @@ const MessagesUI = (props: MessagesParams) => {
     image,
     message,
     messagesToShow,
+    sendMessage,
     setMessage,
     handleSend,
-    sendMessage,
     setImage,
     readMessages,
   } = props
@@ -55,15 +55,15 @@ const MessagesUI = (props: MessagesParams) => {
   const [modalImage, setModalImage] = useState('')
 
   const onChangeMessage = (val: string) => {
-    setMessage(val)
+    setMessage && setMessage(val)
   }
 
   const removeImage = () => {
-    setImage(null)
+    setImage && setImage(null)
   }
 
   const clearInputs = () => {
-    setMessage('')
+    setMessage && setMessage('')
     removeImage()
   }
 
@@ -81,7 +81,7 @@ const MessagesUI = (props: MessagesParams) => {
       } else {
         if (response.uri) {
           const url = `data:${response.type};base64,${response.base64}`
-          setImage(url);
+          setImage && setImage(url);
         } else {
           showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
         }
@@ -124,7 +124,7 @@ const MessagesUI = (props: MessagesParams) => {
   }
 
   const onSubmit = (values: any) => {
-    handleSend()
+    handleSend && handleSend()
     clearInputs()
   }
 
@@ -244,7 +244,7 @@ const MessagesUI = (props: MessagesParams) => {
           contents={
             `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
           }
-          datetime={getTimeAgo(order?.orderCreated_at)}
+          datetime={getTimeAgo(order?.created_at)}
         />
         <MapMessages messages={messages} />
       </Inner>
