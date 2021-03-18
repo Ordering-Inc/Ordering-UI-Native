@@ -63,8 +63,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleChangeSearch('')
   }
 
-  console.log(currentCart)
-
   return (
     <>
       <Spinner visible={loading} />
@@ -121,8 +119,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 </TopHeader>
                 <BusinessBasicInformation
                   businessState={businessState}
-                  setOpenBusinessInformation={setOpenBusinessInformation}
-                  openBusinessInformation={openBusinessInformation}
                 />
               </WrapHeader>
               {!(business?.categories?.length === 0) && (

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Modal, StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
 import { colors } from '../../theme';
@@ -17,6 +17,7 @@ interface Props {
   isTransparent?: boolean;
   hideCloseDefault?: boolean;
   EntireModal?: boolean;
+  titleSectionStyle?: any;
 }
 
 const OModal = (props: Props): React.ReactElement => {
@@ -32,6 +33,7 @@ const OModal = (props: Props): React.ReactElement => {
     isTransparent,
     hideCloseDefault,
     EntireModal,
+    titleSectionStyle,
     style
   } = props
 
@@ -43,20 +45,9 @@ const OModal = (props: Props): React.ReactElement => {
       onRequestClose={() => { onClose() }}
       style={{ height: '100%', flex: 1, position: 'absolute', ...style }}
     >
-      {!EntireModal ? <View style={styles.centeredView}>
-        <View style={styles.titleSection}>
-          <Icon
-            name="x"
-            size={35}
-            style={styles.cancelBtn}
-            onPress={onClose}
-          />
-          <Text style={styles.modalText}>{title}</Text>
-        </View>
-        {children}
-      </View> :
-        <>
-          <View style={styles.titleSection}>
+      <SafeAreaView style={styles.container}>
+        {!EntireModal ? <View style={styles.centeredView}>
+          <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
             <Icon
               name="x"
               size={35}
@@ -66,19 +57,34 @@ const OModal = (props: Props): React.ReactElement => {
             <Text style={styles.modalText}>{title}</Text>
           </View>
           {children}
-        </>
-      }
-
+        </View> :
+          <>
+            <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
+              <Icon
+                name="x"
+                size={35}
+                style={styles.cancelBtn}
+                onPress={onClose}
+              />
+              <Text style={styles.modalText}>{title}</Text>
+            </View>
+            {children}
+          </>
+        }
+      </SafeAreaView>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   centeredView: {
     justifyContent: "center",
     alignItems: "center",
     position: 'relative',
-    width: '100%'
+    width: '100%',
   },
   titleSection: {
     width: '100%',
@@ -86,7 +92,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: 20,
   },
   cancelBtn: {
     position: 'absolute',
@@ -97,7 +103,8 @@ const styles = StyleSheet.create({
   modalText: {
     marginTop: 15,
     fontSize: 25,
-    textAlign: "center"
+    textAlign: "center",
+    zIndex: 10
   },
 
   modalView: {
@@ -134,4 +141,3 @@ const styles = StyleSheet.create({
 });
 
 export default OModal;
-
