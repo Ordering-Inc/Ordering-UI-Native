@@ -242,7 +242,7 @@ const MessagesUI = (props: MessagesParams) => {
       >
         <OChatBubble
           contents={
-            `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
+            `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
           }
           datetime={getTimeAgo(order?.orderCreated_at)}
         />

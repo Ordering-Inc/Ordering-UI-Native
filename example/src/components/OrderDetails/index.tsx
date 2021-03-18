@@ -137,7 +137,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   return (
     <OrderDetailsContainer>
-      <Spinner visible={!order || Object.keys(order).length === 0} />
+     <Spinner visible={!order || Object.keys(order).length === 0} />
       {order && Object.keys(order).length > 0 && (
         <>
           <Header>
