@@ -5,8 +5,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import BottomNavigator from '../navigators/BottomNavigator'
 import RootNavigator from '../navigators/RootNavigator'
 
-// import AddressList from '../pages/AddressList'
-// import AddressForm from '../pages/AddressForm'
+import AddressList from '../pages/AddressList'
+import AddressForm from '../pages/AddressForm'
 // import SpinnerLoader from '../pages/SpinnerLoader'
 import CheckoutPage from '../pages/Checkout';
 import BusinessProductsList from '../pages/BusinessProductsList';
@@ -28,6 +28,16 @@ const CheckoutNavigator = () => {
       <Stack.Screen
         name="Business"
         component={BusinessProductsList}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddressList"
+        component={AddressList}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddressForm"
+        component={AddressForm}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

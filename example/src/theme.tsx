@@ -24,5 +24,7 @@ export const colors = {
   success: '#90C68E',
   btnFont: 'black',
   inputDisabled: '#F7F7F7',
-  textSecondary: '#858585'
+  textSecondary: '#858585',
+  editColor: '#F2BB40',
+  cancelColor: '#D81212'
 };
