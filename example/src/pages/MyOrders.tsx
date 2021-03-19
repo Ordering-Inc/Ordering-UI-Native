@@ -1,4 +1,5 @@
 import React from 'react'
+import { SafeAreaView } from 'react-native'
 import styled, { css } from 'styled-components/native'
 import { useLanguage } from 'ordering-components/native'
 import { OrdersOption } from '../components/OrdersOption'
@@ -29,13 +30,15 @@ const MyOrders = ({ navigation }: any) => {
 
 
   return (
-    <Container>
-      <OText size={24} mBottom={20}>
-        {t('MY_ORDERS', 'My Orders')}
-      </OText>
-      <OrdersOption {...MyOrderProps} activeOrders />
-      <OrdersOption {...MyOrderProps} />
-    </Container>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Container>
+        <OText size={24} mBottom={20}>
+          {t('MY_ORDERS', 'My Orders')}
+        </OText>
+        <OrdersOption {...MyOrderProps} activeOrders />
+        <OrdersOption {...MyOrderProps} />
+      </Container>
+    </SafeAreaView>
   )
 }
 
