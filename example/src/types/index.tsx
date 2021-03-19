@@ -301,3 +301,12 @@ export interface OrderTypeSelectParams {
   configTypes?: Array<any>;
   orderTypes: Array<any>;
 }
+export interface UpsellingProductsParams {
+  isCustomMode?: boolean;
+  upsellingProducts?: any;
+  business?: any;
+  handleUpsellingPage?: () => {};
+  openUpselling: boolean;
+  canOpenUpselling?: boolean;
+  setCanOpenUpselling?: (value: any) => {};
+}
