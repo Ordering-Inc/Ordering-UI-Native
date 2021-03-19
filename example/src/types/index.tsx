@@ -126,8 +126,7 @@ export interface BusinessProductsListingParams {
 }
 export interface BusinessBasicInformationParams {
   businessState: { business: any, loading: boolean, error: null };
-  openBusinessInformation?: boolean;
-  setOpenBusinessInformation?: any;
+  isBusinessInfoShow?: boolean;
 }
 export interface BusinessProductsCategoriesParams {
   categories: Array<any>;
@@ -152,6 +151,14 @@ export interface SingleProductCardParams {
   product: any;
   isSoldOut: boolean;
   onProductClick: any;
+}
+export interface BusinessInformationParams {
+  businessState: { business: any, loading: boolean, error: null };
+  businessSchedule: Array<any>;
+}
+export interface BusinessReviewsParams {
+  businessState: { business: any, loading: boolean, error: null };
+  reviewsList: { reviews: any, loading: boolean, error: null };
 }
 export interface SearchBarParams {
   searchValue?: any;
@@ -217,18 +224,29 @@ export interface ProductItemAccordionParams {
   onDeleteProduct?: (product: any) => {},
   onEditProduct?: () => {}
 }
+export interface ReviewOrderParams {
+  order?: { orderId: number, businessId: number, logo: string },
+  stars: any,
+  handleChangeInput: (val: string) => {},
+  handleChangeRating: ({target: { name: string, value: number }} : {target: {name: string, value: number}}) => {},
+  handleSendReview: () => {},
+  formState: {loading: false, result: string | Array<string>, error: boolean},
+  navigation: any
+}
 export interface MessagesParams {
   type?: string,
   order?: any,
+  orderId?: number,
   messages?: any,
   message?: string,
   image?: string,
   messagesToShow?: any ,
   sendMessage?: any,
-  handleSend: () => {},
-  setImage: (image: string | null) => {},
-  setMessage: (comment: string) => {},
-  readMessages: () => {},
+  handleSend?: () => {},
+  setImage?: (image: string | null) => {},
+  setMessage?: (comment: string) => {},
+  setMessages?: () => {},
+  readMessages?: () => {},
 }
 export interface ViewInterface {
   navigation?: any;
@@ -263,4 +281,23 @@ export interface FloatingButtonParams {
   isSecondaryBtn?: boolean;
   btnLeftValueShow?: boolean;
   btnRightValueShow?: boolean;
+}
+export interface MomentOptionParams {
+  navigation: any;
+  nopadding?: boolean;
+  datesList: Array<any>;
+  hoursList: Array<any>;
+  dateSelected?: any;
+  timeSelected?: any;
+  isAsap?: boolean;
+  handleAsap: () => {};
+  handleChangeDate: (value: any) => {};
+  handleChangeTime: (value: any) => {};
+}
+export interface OrderTypeSelectParams {
+  handleChangeOrderType: (value: any) => {};
+  typeSelected?: number;
+  defaultValue?: number;
+  configTypes?: Array<any>;
+  orderTypes: Array<any>;
 }

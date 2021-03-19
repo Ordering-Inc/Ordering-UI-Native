@@ -11,7 +11,7 @@ import { ProductOption } from '../ProductOption'
 
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet,Dimensions } from 'react-native'
 
 import {
   ProductHeader,
@@ -32,6 +32,7 @@ import { OButton, OInput, OText } from '../shared'
 import { ScrollView } from 'react-native-gesture-handler'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 
+const windowHeight = Dimensions.get('window').height;
 export const ProductOptionsUI = (props) => {
   const {
     navigation,
@@ -257,6 +258,7 @@ export const ProductOptionsUI = (props) => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    height: windowHeight
   },
   headerItem: {
     flexDirection: 'row',

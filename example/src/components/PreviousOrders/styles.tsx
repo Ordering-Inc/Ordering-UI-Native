@@ -17,7 +17,7 @@ export const Information = styled.View`
   justify-content: space-between;
   align-items: flex-start;
   flex: 1;
-  margin-horizontal: 10px 
+  margin-horizontal: 10px
 `
 
 export const MyOrderOptions = styled.View`

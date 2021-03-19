@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useLanguage, useUtils } from 'ordering-components/native'
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
-import { OButton, OIcon, OText } from '../shared'
+import { OButton, OIcon, OModal, OText } from '../shared'
 import { Card, Logo, Information, MyOrderOptions, Status } from './styles'
 import { colors } from '../../theme'
 import { PreviousOrdersParams } from '../../types'
+import { ReviewOrder } from '../ReviewOrder'
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {
   const {
@@ -20,11 +21,19 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 
   const [, t] = useLanguage()
   const [{ parseDate, parsePrice }] = useUtils()
-
+  const [orderForReview, setOrderForReview] = useState(null)
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12]
 
   const handleClickViewOrder = (uuid: string) => {
-    onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid } )
+    onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid })
+  }
+
+  const handleClickOrderReview = (order: any) => {
+    onNavigationRedirect && onNavigationRedirect('ReviewOrder', {order: {id: order?.id, business_id: order?.business_id, logo: order.business?.logo}})
+  }
+
+  const handleCloseOrderReview = () => {
+    setOrderForReview(null)
   }
 
   const Order = ({ item: order }: any) => (
@@ -47,7 +56,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
           </TouchableOpacity>
           {
             allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => handleClickOrderReview(order)}>
                 <OText size={10} color={colors.primary}>{t('REVIEW_ORDER', 'Review Order')}</OText>
               </TouchableOpacity>
             )}
@@ -70,7 +79,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       <FlatList
         data={orders}
         renderItem={Order}
-        style={{height: '60%'}}
+        style={{ height: '60%' }}
         keyExtractor={(order) => order?.id.toString() || order?.uuid.toString()}
       />
     </>

@@ -3,7 +3,7 @@ import { colors } from '../../theme'
 
 export const WrapHeader = styled.View`
   position: relative;
-  z-index: 1
+  z-index: 1;
 `
 
 export const TopHeader = styled.View`
@@ -24,7 +24,7 @@ export const ProductHeader = styled.ImageBackground`
   height: 260px;
   resize-mode: cover;
   min-height: 200px;
-  z-index: 0
+  z-index: 0;
 `
 
 export const WrapContent = styled.View`
@@ -34,7 +34,7 @@ export const WrapContent = styled.View`
   background-color: white;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  z-index: 100
+  z-index: 100;
 `
 
 export const ProductTitle = styled.View`
@@ -73,5 +73,5 @@ export const ProductComment = styled.View`
 export const ProductActions = styled.View`
   padding: 20px;
   flex-direction: row;
-  width: 100%
+  width: 100%;
 `

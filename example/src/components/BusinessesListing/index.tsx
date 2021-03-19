@@ -1,20 +1,18 @@
 import React from 'react'
-import { BusinessList as BusinessesListingController, useLanguage, useSession, useOrder } from 'ordering-components/native'
+import { BusinessList as BusinessesListingController, useLanguage, useSession, useOrder, useConfig, useUtils } from 'ordering-components/native'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { SearchBar } from '../SearchBar'
 import { NotFoundSource } from '../NotFoundSource'
-import { WelcomeTitle, Search, AddressInput } from './styles'
-import { OText, OIcon } from '../shared'
+import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
+import { OText, OIcon, ODropDown } from '../shared'
 import { colors } from '../../theme'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-
 import { BusinessesListingParams } from '../../types'
-
 import { View, StyleSheet, ScrollView } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay';
 import NavBar from '../NavBar'
-
+import { OrderTypeSelector } from '../OrderTypeSelector'
 const PIXELS_TO_SCROLL = 1000
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
@@ -27,10 +25,15 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     handleBusinessClick,
     paginationProps,
     handleChangeSearch,
+    onRedirect
   } = props
   const [, t] = useLanguage()
   const [{ user, auth }] = useSession()
   const [orderState] = useOrder()
+  const [{ configs }] = useConfig()
+  const [{ parseDate }] = useUtils()
+
+  const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
   const handleScroll = ({ nativeEvent }: any) => {
     const y = nativeEvent.contentOffset.y
@@ -72,21 +75,33 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       <Search>
         <SearchBar onSearch={handleChangeSearch} searchValue={searchValue} lazyLoad />
       </Search>
-      <AddressInput
-        onPress={() => auth
-          ? navigation.navigate('AddressList', { isFromBusinesses: true })
-          : navigation.navigate('AddressForm')}
+      <OrderControlContainer>
+        <OrderTypeSelector configTypes={configTypes} />
+        <AddressInput
+          onPress={() => auth
+            ? navigation.navigate('AddressList', { isFromBusinesses: true })
+            : navigation.navigate('AddressForm')}
+          >
+          <MaterialComIcon
+            name='home-outline'
+            color={colors.primary}
+            size={20}
+            style={{ marginRight: 10 }}
+          />
+          <OText size={12} style={styles.inputStyle} numberOfLines={1}>
+            {orderState?.options?.address?.address}
+          </OText>
+        </AddressInput>
+        <WrapMomentOption
+          onPress={() => navigation.navigate('MomentOption')}
         >
-        <MaterialComIcon
-          name='home-outline'
-          color={colors.primary}
-          size={20}
-          style={{ marginRight: 10 }}
-        />
-        <OText style={styles.inputStyle} numberOfLines={1}>
-          {orderState?.options?.address?.address}
-        </OText>
-      </AddressInput>
+          <OText size={12} numberOfLines={1} ellipsizeMode='tail'>
+            {orderState.options?.moment
+            ? parseDate(orderState.options?.moment, { outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm' })
+            : t('ASAP_ABBREVIATION', 'ASAP')}
+          </OText>
+        </WrapMomentOption>
+      </OrderControlContainer>
       <BusinessTypeFilter
         handleChangeBusinessType={handleChangeBusinessType}
       />
@@ -123,7 +138,7 @@ const styles = StyleSheet.create({
   inputStyle: {
     backgroundColor: colors.inputDisabled,
     flex: 1
-  }
+  },
 })
 
 export const BusinessesListing = (props: BusinessesListingParams) => {

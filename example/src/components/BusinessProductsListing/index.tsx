@@ -51,13 +51,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [isOpenSearchBar, setIsOpenSearchBar] = useState(false)
   const [curProduct, setCurProduct] = useState(null)
 
-  const currentCart: any = Object.values(orderState.carts).find(cart => cart?.business?.slug === business?.slug) ?? {}
+  const currentCart: any = Object.values(orderState.carts).find((cart : any) => cart?.business?.slug === business?.slug) ?? {}
 
   const onRedirect = (route: string, params?: any) => {
     navigation.navigate(route, params)
   }
 
-  const onProductClick = (product) => {
+  const onProductClick = (product : any) => {
     setCurProduct(product)
   }
 
@@ -130,13 +130,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 </TopHeader>
                 <BusinessBasicInformation
                   businessState={businessState}
-                  setOpenBusinessInformation={setOpenBusinessInformation}
-                  openBusinessInformation={openBusinessInformation}
                 />
               </WrapHeader>
               {!(business?.categories?.length === 0) && (
                 <BusinessProductsCategories
-                  categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a, b) => a.rank - b.rank)]}
+                  categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a : any, b : any) => a.rank - b.rank)]}
                   categorySelected={categorySelected}
                   onClickCategory={handleChangeCategory}
                   featured={featuredProducts}
