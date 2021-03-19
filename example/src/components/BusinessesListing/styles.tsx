@@ -24,6 +24,22 @@ export const AddressInput = styled.TouchableOpacity`
   background-color: ${colors.inputDisabled};
   border-radius: 10px;
   align-items: center;
+  margin-horizontal: 10px;
+  padding: 10px;
+  flex: 1;
+`
+
+export const OrderControlContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+`
+
+export const WrapMomentOption = styled.TouchableOpacity`
+  background-color: #FFF5F5;
+  border-radius: 10px;
   margin-vertical: 5px;
   padding: 10px;
+  max-width: 120px;
 `

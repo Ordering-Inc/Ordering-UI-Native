@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { Messages } from '../MessagesNew'
+import { Messages } from '../Messages'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -63,8 +63,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const {
     navigation,
-    handleOrderRedirect,
-    urlToShare,
     messages,
     setMessages,
     readMessages,
@@ -72,15 +70,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   } = props
 
   const [, t] = useLanguage()
-  const [{ configs }] = useConfig()
   const [{ parsePrice, parseNumber, parseDate }] = useUtils()
   const [{ user }] = useSession()
 
   const [openMessages, setOpenMessages] = useState({ business: false, driver: false })
-  const [openReview, setOpenReview] = useState(false)
-  const [isReviewed, setIsReviewed] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
-  const { order, loading, error } = props.order
+  const { order } = props.order
 
   const getOrderStatus = (s: string) => {
     const status = parseInt(s)
@@ -137,7 +132,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   return (
     <OrderDetailsContainer>
-      <Spinner visible={!order || Object.keys(order).length === 0} />
+     <Spinner visible={!order || Object.keys(order).length === 0} />
       {order && Object.keys(order).length > 0 && (
         <>
           <Header>

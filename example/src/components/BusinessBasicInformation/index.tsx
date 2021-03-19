@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import IconEvilIcons from 'react-native-vector-icons/EvilIcons'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native'
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native'
 import { OIcon, OText, OModal } from '../shared'
 import { BusinessBasicInformationParams } from '../../types'
