@@ -27,8 +27,9 @@ const StyledButton = styled.View<Props>`
   position: relative;
 `
 const StyledButtonDisabled = styled(StyledButton)`
-  background-color: ${colors.backgroundDark};
-  border-color: ${colors.backgroundDark};
+  background-color: ${colors.white};
+  border-color: ${colors.primary};
+  opacity: 0.3
 `
 
 const StyledText = styled.Text`
@@ -40,7 +41,7 @@ const StyledText = styled.Text`
 `
 
 const StyledTextDisabled = styled(StyledText)`
-  color: ${colors.mediumGray};
+  color: ${colors.primary}
 `
 
 const StyledImage = styled.Image`

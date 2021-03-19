@@ -16,7 +16,8 @@ interface Props {
   cancelText?: string;
   isTransparent?: boolean;
   hideCloseDefault?: boolean;
-  EntireModal?: boolean;
+  entireModal?: boolean;
+  customClose?: boolean;
 }
 
 const OModal = (props: Props): React.ReactElement => {
@@ -31,7 +32,8 @@ const OModal = (props: Props): React.ReactElement => {
     cancelText,
     isTransparent,
     hideCloseDefault,
-    EntireModal,
+    entireModal,
+    customClose,
     style
   } = props
 
@@ -43,7 +45,7 @@ const OModal = (props: Props): React.ReactElement => {
       onRequestClose={() => { onClose() }}
       style={{ height: '100%', flex: 1, position: 'absolute', ...style }}
     >
-      {!EntireModal ? <View style={styles.centeredView}>
+      {!entireModal ? <View style={styles.centeredView}>
         <View style={styles.titleSection}>
           <Icon
             name="x"
@@ -56,6 +58,7 @@ const OModal = (props: Props): React.ReactElement => {
         {children}
       </View> :
         <>
+        {!customClose && (
           <View style={styles.titleSection}>
             <Icon
               name="x"
@@ -65,6 +68,7 @@ const OModal = (props: Props): React.ReactElement => {
             />
             <Text style={styles.modalText}>{title}</Text>
           </View>
+        )}
           {children}
         </>
       }

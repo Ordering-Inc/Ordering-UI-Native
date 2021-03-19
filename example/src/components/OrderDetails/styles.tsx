@@ -56,7 +56,7 @@ export const OrderStatus = styled.View`
 `
 
 export const StaturBar = styled.View`
-` 
+`
 
 export const StatusImage = styled.View`
   

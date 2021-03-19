@@ -27,7 +27,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     handleBusinessClick,
     paginationProps,
     handleChangeSearch,
-    onRedirect
   } = props
   const [, t] = useLanguage()
   const [{ user, auth }] = useSession()
@@ -75,8 +74,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       </Search>
       <AddressInput
         onPress={() => auth
-          ? onRedirect('AddressList', { isFromBusinesses: true })
-          : onRedirect('AddressForm')}
+          ? navigation.navigate('AddressList', { isFromBusinesses: true })
+          : navigation.navigate('AddressForm')}
         >
         <MaterialComIcon
           name='home-outline'
