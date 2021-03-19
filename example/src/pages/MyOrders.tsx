@@ -1,9 +1,9 @@
 import React from 'react'
-import { SafeAreaView } from 'react-native'
 import styled, { css } from 'styled-components/native'
 import { useLanguage } from 'ordering-components/native'
 import { OrdersOption } from '../components/OrdersOption'
 import { OText } from '../components/shared'
+import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 
 import { colors } from '../theme'
 
@@ -30,7 +30,7 @@ const MyOrders = ({ navigation }: any) => {
 
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaContainer>
       <Container>
         <OText size={24} mBottom={20}>
           {t('MY_ORDERS', 'My Orders')}
@@ -38,7 +38,7 @@ const MyOrders = ({ navigation }: any) => {
         <OrdersOption {...MyOrderProps} activeOrders />
         <OrdersOption {...MyOrderProps} />
       </Container>
-    </SafeAreaView>
+    </SafeAreaContainer>
   )
 }
 
