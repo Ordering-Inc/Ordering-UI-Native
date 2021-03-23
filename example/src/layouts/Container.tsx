@@ -1,7 +1,8 @@
+import React from 'react';
 import styled, { css } from 'styled-components/native';
 import { colors } from '../theme';
 
-export const Container = styled.ScrollView`
+const ContainerStyled = styled.ScrollView`
   flex: 1;
   height: 100%;
   ${(props: any) => !props.nopadding && css`
@@ -9,3 +10,17 @@ export const Container = styled.ScrollView`
   `}
   background-color: ${colors.backgroundPage};
 `;
+
+const SafeAreStyled = styled.SafeAreaView`
+  flex: 1;
+`;
+
+export const Container = (props: any) => {
+  return (
+    <SafeAreStyled>
+      <ContainerStyled>
+        {props.children}
+      </ContainerStyled>
+    </SafeAreStyled>
+  )
+}

@@ -31,6 +31,14 @@ const AddressListUI = (props: AddressListParams) => {
   const [orderState] = useOrder()
   const [, t] = useLanguage()
 
+  const onNavigatorRedirect = () => {
+    if (route && route?.params?.isFromBusinesses) {
+      onNavigationRedirect('BottomTab')
+    } else if (route && route?.params?.isFromCheckout) {
+      onNavigationRedirect('CheckoutPage')
+    }
+  }
+
   const uniqueAddressesList = (addressList.addresses && addressList.addresses.filter(
     (address: any, i: number, self: any) =>
       i === self.findIndex((obj: any) => (
@@ -112,7 +120,12 @@ const AddressListUI = (props: AddressListParams) => {
               {isFromProfile && (
                 <OText size={24} mBottom={20}>{t('SAVED_PLACES', 'My saved places')}</OText>
               )}
-              {route && route?.params?.isFromBusinesses && !isFromProfile && (
+              {
+                route &&
+                (route?.params?.isFromBusinesses ||
+                  route?.params?.isFromCheckout ) &&
+                !isFromProfile &&
+              (
                 <NavBar
                   title={t('ADDRESS_LIST', 'Address List')}
                   titleAlign={'center'}
@@ -175,7 +188,9 @@ const AddressListUI = (props: AddressListParams) => {
             />
           )
         )}
-        {!(route && route?.params?.isFromBusinesses) && !isFromProfile && (
+        {!(route && (route?.params?.isFromBusinesses || route?.params?.isFromCheckout)) &&
+          !isFromProfile &&
+        (
           <OText size={24}>
             {t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}
           </OText>
@@ -201,7 +216,7 @@ const AddressListUI = (props: AddressListParams) => {
           <OButton
             text={t('CONTINUE', 'Continue')}
             style={styles.button}
-            onClick={() => !isGoBack ? onNavigationRedirect('BottomTab') : navigation.goBack()}
+            onClick={() => onNavigatorRedirect()}
             textStyle={{ color: colors.white }}
           />
         )}

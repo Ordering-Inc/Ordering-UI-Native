@@ -146,7 +146,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                   categories={[
                     { id: null, name: t('ALL', 'All') },
                     { id: 'featured', name: t('FEATURED', 'Featured') },
-                    ...business?.categories.sort((a, b) => a.rank - b.rank)
+                    ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
                   ]}
                   category={categorySelected}
                   categoryState={categoryState}
@@ -174,6 +174,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           btnLeftValue={currentCart?.products?.length}
           btnRightValue={parsePrice(currentCart?.total)}
           disabled={currentCart?.subtotal < currentCart?.minimum || currentCart?.products?.length === 0}
+          handleClick={() => onRedirect('CheckoutNavigator', { cartUuid: currentCart?.uuid })}
         />
       )}
       <OModal open={!!curProduct} onClose={handleCloseProductModal} entireModal customClose>

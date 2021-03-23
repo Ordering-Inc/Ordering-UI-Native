@@ -5,7 +5,7 @@ import { OInput, OButton } from '../shared'
 import {useLanguage} from 'ordering-components/native'
 import {SearchBarParams} from '../../types'
 import styled from 'styled-components/native'
-export const SearchBar = (props: SearchBarParams) => {
+export const SearchBar = (props: any) => {
 
   const { searchValue, placeholder, onSearch, onCancel, lazyLoad, isCancelButtonShow, noBorderShow } = props
 

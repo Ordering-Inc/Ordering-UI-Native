@@ -7,7 +7,6 @@ import { colors } from '../theme'
 const BusinessProductsList = (props) => {
   const { store } = props.route.params
   const [ordering] = useApi()
-  const [events] = useEvent()
 
   const businessProductsProps = {
     ...props,
@@ -47,12 +46,8 @@ const BusinessProductsList = (props) => {
     handleSearchRedirect: () => {
       props.navigation.navigate('BusinessList')
     },
-    onProductRedirect: ({ slug, category, product }) => {
-    
-    },
-    onCheckoutRedirect: (cartUuid) => {
-
-    }
+    onProductRedirect: ({ slug, category, product }) => {},
+    onCheckoutRedirect: (cartUuid) => {}
   }
   return (
     <BusinessProductsListView>
