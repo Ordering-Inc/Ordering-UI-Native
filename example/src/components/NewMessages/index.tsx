@@ -138,7 +138,7 @@ const MessagesUI = (props) => {
           }
         }
       }
-      if(message.type === 0){
+      if (message.type === 0) {
         newMessage = firstMessage
       }
       newMessages = [...newMessages, newMessage]
@@ -151,7 +151,7 @@ const MessagesUI = (props) => {
       <Actions
         {...props}
         options={{
-          'Send Image' : () => handleImagePicker(),
+          'Send Image': () => handleImagePicker(),
         }}
         containerStyle={{
           width: 44,
@@ -185,18 +185,18 @@ const MessagesUI = (props) => {
   }
 
   const renderInputToolbar = (props) => (
-    <InputToolbar 
+    <InputToolbar
       {...props}
       containerStyle={{
         border: `1px solid ${colors.lightGray}`,
         padding: 10,
       }}
-      primaryStyle={{alignItems: 'center', justifyContent: 'center'}}
+      primaryStyle={{ alignItems: 'center', justifyContent: 'center' }}
     />
   )
 
   const renderComposer = (props) => (
-    <Composer 
+    <Composer
       {...props}
       textInputStyle={{
         backgroundColor: colors.lightGray,
@@ -238,67 +238,76 @@ const MessagesUI = (props) => {
       />
     </Send>
   )
- 
+
   const renderBubble = (props) => (
-    <Bubble 
+    <Bubble
       {...props}
       textStyle={{
         left: {},
-        right: {color: colors.white}
+        right: { color: colors.white }
       }}
       containerStyle={{
-        left: {marginVertical: 5},
-        right: {marginVertical: 5}
+        left: { marginVertical: 5 },
+        right: { marginVertical: 5 }
       }}
       wrapperStyle={{
-        left: {backgroundColor: '#f7f7f7', padding: 5},
-        right: {backgroundColor: colors.primary, padding: 5}
+        left: { backgroundColor: '#f7f7f7', padding: 5 },
+        right: { backgroundColor: colors.primary, padding: 5 }
       }}
     />
   )
 
   const renderMessageImage = (props) => (
-    <MessageImage 
+    <MessageImage
       {...props}
     />
   )
 
+  const renderScrollToBottomComponent = () => (
+      <MaterialCommunityIcon name='chevron-double-down' size={32} />
+  )
+
   return (
     <>
-    <Wrapper>
-     <Header>
-        <OIcon
-          url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
-          width={60}
-          height={60}
-          style={{ borderRadius: 10, marginRight: 10 }}
+      <Wrapper>
+        <Header>
+          <OIcon
+            url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
+            width={60}
+            height={60}
+            style={{ borderRadius: 10, marginRight: 10 }}
+          />
+          <TitleHeader>
+            <OText size={18}>{type === USER_TYPE.DRIVER ? order?.driver?.name : order?.business?.name}</OText>
+            <OText>{t('ONLINE', 'Online')}</OText>
+          </TitleHeader>
+        </Header>
+        <GiftedChat
+          messages={formattedMessages}
+          user={{
+            _id: user.id,
+            name: user.name,
+            avatar: user.photo
+          }}
+          onSend={onSubmit}
+          onInputTextChanged={onChangeMessage}
+          alignTop
+          scrollToBottom
+          renderAvatarOnTop
+          renderUsernameOnMessage
+          renderInputToolbar={renderInputToolbar}
+          renderComposer={renderComposer}
+          renderSend={renderSend}
+          renderActions={renderActions}
+          renderBubble={renderBubble}
+          renderMessageImage={renderMessageImage}
+          scrollToBottomComponent={() => renderScrollToBottomComponent()}
+          messagesContainerStyle={{
+            paddingBottom: 20
+          }}
+          showAvatarForEveryMessage
         />
-        <TitleHeader>
-          <OText size={18}>{type === USER_TYPE.DRIVER ? order?.driver?.name : order?.business?.name}</OText>
-          <OText>{t('ONLINE', 'Online')}</OText>
-        </TitleHeader>
-      </Header>
-    <GiftedChat
-      messages={formattedMessages}
-      user={{
-        _id: user.id
-      }}
-      onSend={onSubmit}
-      onInputTextChanged={onChangeMessage}
-      alignTop
-      loadEarlier
-      scrollToBottom
-      renderAvatarOnTop
-      renderUsernameOnMessage
-      renderInputToolbar={renderInputToolbar}
-      renderComposer={renderComposer}
-      renderSend={renderSend}
-      renderActions={renderActions}
-      renderBubble={renderBubble}
-      renderMessageImage={renderMessageImage}
-      showAvatarForEveryMessage
-    />
-    </Wrapper>
+      </Wrapper>
     </>
   )
 }
