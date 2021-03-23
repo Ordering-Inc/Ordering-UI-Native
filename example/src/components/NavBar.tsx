@@ -27,7 +27,8 @@ const TitleTopWrapper = styled.View`
 const btnBackArrow = {
   borderWidth: 0,
   backgroundColor: '#FFF',
-  borderColor: '#FFF'
+  borderColor: '#FFF',
+  shadowColor: '#FFF'
 }
 
 interface Props {

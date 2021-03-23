@@ -4,6 +4,7 @@ import { useSession, useOrder } from 'ordering-components/native';
 
 import BottomNavigator from '../navigators/BottomNavigator';
 import RootNavigator from '../navigators/RootNavigator';
+import CheckoutNavigator from '../navigators/CheckoutNavigator';
 
 // import MapOrders from '../pages/MapOrders';
 // import Reject from '../pages/Reject';
@@ -11,6 +12,7 @@ import RootNavigator from '../navigators/RootNavigator';
 // import MapBusiness from '../pages/MapBusiness';
 // import Chat from '../pages/Chat';
 // import Supports from '../pages/Supports';
+
 import AddressList from '../pages/AddressList';
 import AddressForm from '../pages/AddressForm';
 import SpinnerLoader from '../pages/SpinnerLoader';
@@ -46,6 +48,11 @@ const HomeNavigator = (is_online: boolean) => {
                 <Stack.Screen
                   name="AddressForm"
                   component={AddressForm}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="CheckoutNavigator"
+                  component={CheckoutNavigator}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen

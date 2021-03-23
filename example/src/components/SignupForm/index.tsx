@@ -257,8 +257,8 @@ const SignupFormUI = (props: SignupParams) => {
 
               {!!showInputPhoneNumber && (
                 <PhoneInputNumber
-                data={phoneInputData}
-                handleData={(val: any) => setPhoneInputData(val)}
+                  data={phoneInputData}
+                  handleData={(val: any) => setPhoneInputData(val)}
                 />
               )}
 
@@ -297,13 +297,13 @@ const SignupFormUI = (props: SignupParams) => {
 
           {signupTab === 'email' ? (
             <OButton
-            onClick={handleSubmit(onSubmit)}
-            text={signupButtonText}
-            bgColor={colors.primary}
-            borderColor={colors.primary}
-            textStyle={{color: 'white'}}
-            imgRightSrc={null}
-            isDisabled={formState.loading || validationFields.loading}
+              onClick={handleSubmit(onSubmit)}
+              text={signupButtonText}
+              bgColor={colors.primary}
+              borderColor={colors.primary}
+              textStyle={{color: 'white'}}
+              imgRightSrc={null}
+              isDisabled={formState.loading || validationFields.loading}
             />
           ) : (
             <OButton

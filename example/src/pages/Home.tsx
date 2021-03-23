@@ -2,6 +2,7 @@ import React from 'react';
 import { Home as HomePage } from '../components/Home';
 import { useLanguage } from 'ordering-components/native';
 import { Container } from '../layouts/Container';
+import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 
 export const Home = ({navigation}: any) => {
   const [, t] = useLanguage();
@@ -16,9 +17,11 @@ export const Home = ({navigation}: any) => {
   }
 
   return (
-    <Container nopadding>
-      <HomePage {...homeProps} />
-    </Container>
+    <SafeAreaContainer>
+      <Container nopadding>
+        <HomePage {...homeProps} />
+      </Container>
+    </SafeAreaContainer>
   );
 };
 

@@ -4,7 +4,7 @@ import {colors} from '../../theme'
 export const WelcomeTitle = styled.View`
   flex: 1;
   flex-direction: row;
-  align-items: center
+  align-items: center;
 `
 
 export const BusinessList = styled.View`

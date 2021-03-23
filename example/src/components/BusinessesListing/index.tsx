@@ -5,7 +5,7 @@ import { BusinessController } from '../BusinessController'
 import { SearchBar } from '../SearchBar'
 import { NotFoundSource } from '../NotFoundSource'
 import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
-import { OText, OIcon, ODropDown } from '../shared'
+import { OText, OIcon } from '../shared'
 import { colors } from '../../theme'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { BusinessesListingParams } from '../../types'
@@ -79,8 +79,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         <OrderTypeSelector configTypes={configTypes} />
         <AddressInput
           onPress={() => auth
-            ? onRedirect('AddressList', { isFromBusinesses: true })
-            : onRedirect('AddressForm')}
+            ? navigation.navigate('AddressList', { isFromBusinesses: true })
+            : navigation.navigate('AddressForm')}
           >
           <MaterialComIcon
             name='home-outline'
