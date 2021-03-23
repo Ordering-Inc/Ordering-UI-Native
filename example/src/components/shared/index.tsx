@@ -12,6 +12,7 @@ import OToggle from './OToggle'
 import OKeyButton from './OKeyButton'
 import OModal from './OModal'
 import OAlert from './OAlert'
+import OBottomPopup from './OBottomPopup'
 
 export {
 	OText,
@@ -27,5 +28,6 @@ export {
 	OToggle,
 	OKeyButton,
 	OAlert,
-  OModal
+  	OModal,
+	OBottomPopup
 }
