@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
   modalTitleSectionStyle: {
     position: 'absolute',
     width: '100%',
-    top: 0    
+    top: 0,
+    zIndex: 100
   }
 })

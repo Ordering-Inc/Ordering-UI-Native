@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components/native'
 import { useLanguage } from 'ordering-components/native'
 import { OrdersOption } from '../components/OrdersOption'
 import { OText } from '../components/shared'
+import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 
 import { colors } from '../theme'
 
@@ -29,13 +30,15 @@ const MyOrders = ({ navigation }: any) => {
 
 
   return (
-    <Container>
-      <OText size={24} mBottom={20}>
-        {t('MY_ORDERS', 'My Orders')}
-      </OText>
-      <OrdersOption {...MyOrderProps} activeOrders />
-      <OrdersOption {...MyOrderProps} />
-    </Container>
+    <SafeAreaContainer>
+      <Container>
+        <OText size={24} mBottom={20}>
+          {t('MY_ORDERS', 'My Orders')}
+        </OText>
+        <OrdersOption {...MyOrderProps} activeOrders />
+        <OrdersOption {...MyOrderProps} />
+      </Container>
+    </SafeAreaContainer>
   )
 }
 
