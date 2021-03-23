@@ -51,13 +51,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [isOpenSearchBar, setIsOpenSearchBar] = useState(false)
   const [curProduct, setCurProduct] = useState(null)
 
-  const currentCart: any = Object.values(orderState.carts).find((cart : any) => cart?.business?.slug === business?.slug) ?? {}
+  const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
   const onRedirect = (route: string, params?: any) => {
     navigation.navigate(route, params)
   }
 
-  const onProductClick = (product : any) => {
+  const onProductClick = (product: any) => {
     setCurProduct(product)
   }
 
@@ -85,7 +85,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 <TopHeader>
                   {!isOpenSearchBar && (
                     <>
-                      <View style={styles.headerItem}>
+                      <View style={{...styles.headerItem, flex: 1}}>
                         <TouchableOpacity
                           onPress={() => navigation.goBack()}
                         >
@@ -96,13 +96,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                             style={styles.BackIcon}
                           />
                         </TouchableOpacity>
-                        <AddressInput onPress={() => auth ? onRedirect('AddressList') : onRedirect('AddressForm')}>
+                        <AddressInput onPress={() => auth ? onRedirect('AddressList', { isGoBack: true }) : onRedirect('AddressForm', { isGoBack: true })}>
                           <OText color={colors.white} numberOfLines={1}>
                             {orderState?.options?.address?.address}
                           </OText>
                         </AddressInput>
                       </View>
-                      <View style={styles.headerItem}>
+                      <View style={{...styles.headerItem, width: 30}}>
                         <TouchableOpacity
                           onPress={() => setIsOpenSearchBar(true)}
                         >
@@ -134,7 +134,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               </WrapHeader>
               {!(business?.categories?.length === 0) && (
                 <BusinessProductsCategories
-                  categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a : any, b : any) => a.rank - b.rank)]}
+                  categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
                   categorySelected={categorySelected}
                   onClickCategory={handleChangeCategory}
                   featured={featuredProducts}

@@ -24,6 +24,7 @@ const AddressListUI = (props: AddressListParams) => {
     handleSetDefault,
     handleDelete,
     setAddressList,
+    isGoBack,
     actionStatus
   } = props
 
@@ -200,7 +201,7 @@ const AddressListUI = (props: AddressListParams) => {
           <OButton
             text={t('CONTINUE', 'Continue')}
             style={styles.button}
-            onClick={() => onNavigationRedirect('BottomTab')}
+            onClick={() => !isGoBack ? onNavigationRedirect('BottomTab') : navigation.goBack()}
             textStyle={{ color: colors.white }}
           />
         )}
