@@ -7,7 +7,7 @@ import { ToastType, useToast } from '../../providers/ToastProvider'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors } from '../../theme'
 import { OIcon, OIconButton, OText } from '../shared'
-import { TouchableOpacity, ActivityIndicator } from 'react-native'
+import { TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native'
 import { Header, TitleHeader, Wrapper } from './styles'
 import { MessagesParams } from '../../types'
 
@@ -154,14 +154,7 @@ const MessagesUI = (props: MessagesParams) => {
         options={{
           'Send Image': () => handleImagePicker(),
         }}
-        containerStyle={{
-          width: 44,
-          height: 44,
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginHorizontal: 4,
-          marginBottom: 0
-        }}
+        containerStyle={styles.containerActions}
         optionTintColor='#222845'
         icon={() => (
           <>
@@ -175,7 +168,10 @@ const MessagesUI = (props: MessagesParams) => {
               bgColor={colors.inputDisabled}
             />
             {image && (
-              <TouchableOpacity style={{ position: 'absolute', top: -5, right: -5, borderColor: colors.backgroundDark, backgroundColor: colors.white, borderRadius: 25 }} onPress={() => removeImage()}>
+              <TouchableOpacity 
+                style={{ position: 'absolute', top: -5, right: -5, borderColor: colors.backgroundDark, backgroundColor: colors.white, borderRadius: 25 }} 
+                onPress={() => removeImage()}
+              >
                 <MaterialCommunityIcon name='close-circle-outline' color={colors.backgroundDark} size={24} />
               </TouchableOpacity>
             )}
@@ -214,13 +210,7 @@ const MessagesUI = (props: MessagesParams) => {
       {...props}
       disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
       alwaysShowSend
-      containerStyle={{
-        width: 64,
-        height: 44,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginHorizontal: 4
-      }}
+      containerStyle={styles.containerSend}
     >
       <OIconButton
         onClick={onSubmit}
@@ -312,6 +302,24 @@ const MessagesUI = (props: MessagesParams) => {
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  containerActions: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 4,
+    marginBottom: 0
+  },
+  containerSend: {
+    width: 64,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 4
+  }
+})
 
 export const Messages = (props: MessagesParams) => {
   const MessagesProps = {
