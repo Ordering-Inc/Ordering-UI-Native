@@ -47,7 +47,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, justifyContent: 'space-evenly' }}>
+              <View style={{ width: 50, height: 50, justifyContent: 'space-evenly' }}>
                 <MaterialCommunityIcon name='home' size={46} color={color} />
               </View>
             )
@@ -60,7 +60,7 @@ const BottomNavigator = () => {
           {
             tabBarIcon:
               ({ color }) => (
-                <View style={{ width: 50, justifyContent: 'space-evenly' }}>
+                <View style={{ width: 50, height: 50, justifyContent: 'space-evenly' }}>
                   <MaterialIcon name='format-list-bulleted' size={46} color={color} />
                 </View>
               ),
@@ -93,7 +93,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, justifyContent: 'space-evenly' }}>
+              <View style={{ width: 50, height: 50, justifyContent: 'space-evenly' }}>
                 <MaterialIcon name='person' size={46} color={color} />
               </View>
             )

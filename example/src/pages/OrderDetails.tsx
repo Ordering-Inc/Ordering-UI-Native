@@ -1,5 +1,6 @@
 import React from 'react'
 import { OrderDetails as OrderDetailsController } from '../components/OrderDetails'
+import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 
 const OrderDetails = ({ navigation, route } : any) => {
   const { orderId } = route.params
@@ -9,7 +10,9 @@ const OrderDetails = ({ navigation, route } : any) => {
   }
 
   return (
-    <OrderDetailsController {...orderDetailsProps} />
+    <SafeAreaContainer>
+      <OrderDetailsController {...orderDetailsProps} />
+    </SafeAreaContainer>
   )
 }
 

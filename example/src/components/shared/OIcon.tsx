@@ -7,7 +7,6 @@ import { colors } from '../../theme'
 const Wrapper = styled.View``
 
 const SImage = styled.Image`
-  resize-mode: contain;
   tint-color: ${colors.primary};
 `
 interface Props {
@@ -19,6 +18,7 @@ interface Props {
   height?: number,
   style?: ImageStyle,
   isWrap?: boolean,
+  cover?: boolean,
   children?: any,
   borderRadius?: number,
 }
@@ -37,6 +37,7 @@ const OImage = (props: Props): React.ReactElement => {
           borderRadius: props.borderRadius,
           ...props.style,
         }}
+        resizeMode={props.cover ? 'cover' : 'contain'}
       >
         {props.children}
       </SImage>

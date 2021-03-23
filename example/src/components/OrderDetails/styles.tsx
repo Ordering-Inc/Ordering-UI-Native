@@ -56,7 +56,7 @@ export const OrderStatus = styled.View`
 `
 
 export const StaturBar = styled.View`
-` 
+`
 
 export const StatusImage = styled.View`
   
@@ -67,6 +67,10 @@ export const SectionTitle = styled.View`
 `
 
 export const OrderCustomer = styled.View`
+  padding: 20px;
+`
+
+export const OrderDriver = styled.View`
   padding: 20px;
 `
 

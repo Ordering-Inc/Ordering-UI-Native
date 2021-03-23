@@ -126,8 +126,7 @@ export interface BusinessProductsListingParams {
 }
 export interface BusinessBasicInformationParams {
   businessState: { business: any, loading: boolean, error: null };
-  openBusinessInformation?: boolean;
-  setOpenBusinessInformation?: any;
+  isBusinessInfoShow?: boolean;
 }
 export interface BusinessProductsCategoriesParams {
   categories: Array<any>;
@@ -154,6 +153,14 @@ export interface SingleProductCardParams {
   product: any;
   isSoldOut: boolean;
   onProductClick: any;
+}
+export interface BusinessInformationParams {
+  businessState: { business: any, loading: boolean, error: null };
+  businessSchedule: Array<any>;
+}
+export interface BusinessReviewsParams {
+  businessState: { business: any, loading: boolean, error: null };
+  reviewsList: { reviews: any, loading: boolean, error: null };
 }
 export interface SearchBarParams {
   searchValue?: any;
@@ -214,11 +221,35 @@ export interface ProductItemAccordionParams {
   isCartPending?: boolean,
   isCartProduct?: boolean,
   product?: any,
-  getProductMax?: any,
-  changeQuantity?: any,
-  onDeleteProduct?: any,
-  onEditProduct?: any,
+  getProductMax?: boolean,
+  changeQuantity?: (product: any, quantity: number) => {},
+  onDeleteProduct?: (product: any) => {},
+  onEditProduct?: () => {},
   offsetDisabled: any,
+}
+export interface ReviewOrderParams {
+  order?: { orderId: number, businessId: number, logo: string },
+  stars: any,
+  handleChangeInput: (val: string) => {},
+  handleChangeRating: ({target: { name: string, value: number }} : {target: {name: string, value: number}}) => {},
+  handleSendReview: () => {},
+  formState: {loading: false, result: string | Array<string>, error: boolean},
+  navigation: any
+}
+export interface MessagesParams {
+  type?: string,
+  order?: any,
+  orderId?: number,
+  messages?: any,
+  message?: string,
+  image?: string,
+  messagesToShow?: any ,
+  sendMessage?: any,
+  handleSend?: () => {},
+  setImage?: (image: string | null) => {},
+  setMessage?: (comment: string) => {},
+  setMessages?: () => {},
+  readMessages?: () => {},
 }
 export interface ViewInterface {
   navigation?: any;
@@ -254,4 +285,32 @@ export interface FloatingButtonParams {
   btnLeftValueShow?: boolean;
   btnRightValueShow?: boolean;
   handleClick?: any;
+}
+export interface MomentOptionParams {
+  navigation: any;
+  nopadding?: boolean;
+  datesList: Array<any>;
+  hoursList: Array<any>;
+  dateSelected?: any;
+  timeSelected?: any;
+  isAsap?: boolean;
+  handleAsap: () => {};
+  handleChangeDate: (value: any) => {};
+  handleChangeTime: (value: any) => {};
+}
+export interface OrderTypeSelectParams {
+  handleChangeOrderType: (value: any) => {};
+  typeSelected?: number;
+  defaultValue?: number;
+  configTypes?: Array<any>;
+  orderTypes: Array<any>;
+}
+export interface UpsellingProductsParams {
+  isCustomMode?: boolean;
+  upsellingProducts?: any;
+  business?: any;
+  handleUpsellingPage?: () => {};
+  openUpselling: boolean;
+  canOpenUpselling?: boolean;
+  setCanOpenUpselling?: (value: any) => {};
 }

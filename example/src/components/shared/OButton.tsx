@@ -40,7 +40,7 @@ const StyledText = styled.Text`
 `
 
 const StyledTextDisabled = styled(StyledText)`
-  color: ${colors.mediumGray};
+  color: ${colors.primary}
 `
 
 const StyledImage = styled.Image`

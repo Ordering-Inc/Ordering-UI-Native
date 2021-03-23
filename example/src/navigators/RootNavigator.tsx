@@ -7,6 +7,7 @@ import Signup from '../pages/Signup';
 import Forgot from '../pages/ForgotPassword';
 import Home from '../pages/Home'
 import AddressForm from '../pages/AddressForm'
+import MomentOption from '../pages/MomentOption'
 import DrawNavigator from './DrawNavigator';
 import Splash from '../pages/Splash';
 import BusinessList from '../pages/BusinessesListing';
@@ -83,7 +84,11 @@ const RootNavigator = () => {
                   component={BusinessProductsList}
                   options={{ headerShown: false }}
                 />
-
+                <Stack.Screen
+                  name='MomentOption'
+                  component={MomentOption}
+                  options={{ headerShown: false }}
+                />
               </>
             ) : (
               <Stack.Screen
