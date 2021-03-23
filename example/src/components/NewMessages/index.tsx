@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Messages as MessagesController, useSession, useUtils, useLanguage } from 'ordering-components/native'
 import { launchImageLibrary } from 'react-native-image-picker'
-import { GiftedChat, Actions, ActionsProps, InputToolbar, Composer, Send, Bubble, MessageImage } from 'react-native-gifted-chat'
+import { GiftedChat, Actions, ActionsProps, InputToolbar, Composer, Send, Bubble, MessageImage, InputToolbarProps, ComposerProps } from 'react-native-gifted-chat'
 import { USER_TYPE } from '../../config/constants'
 import { ToastType, useToast } from '../../providers/ToastProvider'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -9,11 +9,12 @@ import { colors } from '../../theme'
 import { OIcon, OIconButton, OText } from '../shared'
 import { TouchableOpacity, ActivityIndicator } from 'react-native'
 import { Header, TitleHeader, Wrapper } from './styles'
+import { MessagesParams } from '../../types'
 
 const ImageDummy = require('../../assets/images/image.png')
 const paperIcon = require('../../assets/images/paper-plane.png')
 
-const MessagesUI = (props) => {
+const MessagesUI = (props: MessagesParams) => {
 
   const {
     type,
@@ -98,8 +99,8 @@ const MessagesUI = (props) => {
 
   const onSubmit = (values: any) => {
     handleSend && handleSend()
-    setImage(null)
-    setMessage('')
+    setImage && setImage(null)
+    setMessage && setMessage('')
   }
 
   const messageConsole = (message: any) => {
@@ -184,18 +185,17 @@ const MessagesUI = (props) => {
     )
   }
 
-  const renderInputToolbar = (props) => (
+  const renderInputToolbar = (props: InputToolbarProps) => (
     <InputToolbar
       {...props}
       containerStyle={{
-        border: `1px solid ${colors.lightGray}`,
         padding: 10,
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'center' }}
     />
   )
 
-  const renderComposer = (props) => (
+  const renderComposer = (props: ComposerProps) => (
     <Composer
       {...props}
       textInputStyle={{
@@ -209,7 +209,7 @@ const MessagesUI = (props) => {
     />
   )
 
-  const renderSend = (props) => (
+  const renderSend = (props: any) => (
     <Send
       {...props}
       disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
@@ -239,7 +239,7 @@ const MessagesUI = (props) => {
     </Send>
   )
 
-  const renderBubble = (props) => (
+  const renderBubble = (props: any) => (
     <Bubble
       {...props}
       textStyle={{
@@ -257,14 +257,14 @@ const MessagesUI = (props) => {
     />
   )
 
-  const renderMessageImage = (props) => (
+  const renderMessageImage = (props: any) => (
     <MessageImage
       {...props}
     />
   )
 
   const renderScrollToBottomComponent = () => (
-      <MaterialCommunityIcon name='chevron-double-down' size={32} />
+    <MaterialCommunityIcon name='chevron-double-down' size={32} />
   )
 
   return (
@@ -306,14 +306,14 @@ const MessagesUI = (props) => {
             paddingBottom: 20
           }}
           showAvatarForEveryMessage
-          renderLoading={() => <ActivityIndicator size="small" color="#000"/>}
+          renderLoading={() => <ActivityIndicator size="small" color="#000" />}
         />
       </Wrapper>
     </>
   )
 }
 
-export const Messages = (props) => {
+export const Messages = (props: MessagesParams) => {
   const MessagesProps = {
     ...props,
     UIComponent: MessagesUI
