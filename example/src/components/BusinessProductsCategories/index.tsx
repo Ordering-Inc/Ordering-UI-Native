@@ -6,7 +6,7 @@ import { Tab } from './styles'
 import { OText } from '../shared'
 import { BusinessProductsCategoriesParams } from '../../types'
 
-const BusinessProductsCategoriesUI = (props: BusinessProductsCategoriesParams) => {
+const BusinessProductsCategoriesUI = (props: any) => {
   const {
     featured,
     categories,

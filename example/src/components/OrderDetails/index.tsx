@@ -308,7 +308,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </OrderContent>
         </>
       )}
-      <OModal open={openMessages.business || openMessages.driver} EntireModal onClose={() => handleCloseModal()}>
+      <OModal open={openMessages.business || openMessages.driver} entireModal onClose={() => handleCloseModal()}>
         <Messages
           type={openMessages.business ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER}
           orderId={order?.id}

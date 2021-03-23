@@ -130,7 +130,9 @@ export interface BusinessBasicInformationParams {
 }
 export interface BusinessProductsCategoriesParams {
   categories: Array<any>;
-  handlerClickCategory: (value: any) => {};
+  // handlerClickCategory: any;
+  onClickCategory: any;
+  openBusinessInformation: any;
   categorySelected: any;
   featured: boolean;
 }
@@ -222,7 +224,8 @@ export interface ProductItemAccordionParams {
   getProductMax?: boolean,
   changeQuantity?: (product: any, quantity: number) => {},
   onDeleteProduct?: (product: any) => {},
-  onEditProduct?: () => {}
+  onEditProduct?: () => {},
+  offsetDisabled: any,
 }
 export interface ReviewOrderParams {
   order?: { orderId: number, businessId: number, logo: string },
@@ -281,6 +284,7 @@ export interface FloatingButtonParams {
   isSecondaryBtn?: boolean;
   btnLeftValueShow?: boolean;
   btnRightValueShow?: boolean;
+  handleClick?: any;
 }
 export interface MomentOptionParams {
   navigation: any;
@@ -300,4 +304,13 @@ export interface OrderTypeSelectParams {
   defaultValue?: number;
   configTypes?: Array<any>;
   orderTypes: Array<any>;
+}
+export interface UpsellingProductsParams {
+  isCustomMode?: boolean;
+  upsellingProducts?: any;
+  business?: any;
+  handleUpsellingPage?: () => {};
+  openUpselling: boolean;
+  canOpenUpselling?: boolean;
+  setCanOpenUpselling?: (value: any) => {};
 }

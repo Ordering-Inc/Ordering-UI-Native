@@ -5,7 +5,7 @@ export const AccordionSection = styled.View`
   background: #FFF;
   padding: 10px;
   border-bottom-width: 1px;
-  border-bottom-color: #d9d9d9
+  border-bottom-color: #d9d9d9;
 
 `
 

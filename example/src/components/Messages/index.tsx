@@ -175,6 +175,7 @@ const MessagesUI = (props: MessagesParams) => {
                 <MaterialCommunityIcon name='close-circle-outline' color={colors.backgroundDark} size={24} />
               </TouchableOpacity>
             )}
+<<<<<<< HEAD
           </>
         )}
       />
@@ -262,6 +263,31 @@ const MessagesUI = (props: MessagesParams) => {
     <>
       <Wrapper>
         <Header>
+=======
+          </UploadImage>
+          <OIconButton
+            onClick={onSubmit}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
+              borderColor: colors.primary
+            }}
+            iconStyle={{ marginTop: 3, marginRight: 2 }}
+            icon={paperIcon}
+            disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
+            disabledColor={colors.white}
+          />
+        </ActionWrapper>
+      </BottomWrapper>
+      <OModal
+        open={modalImage ? true : false}
+        onClose={() => setModalImage('')}
+        entireModal
+      >
+        <View style={{ height: '100%', alignSelf: 'center', justifyContent: 'center' }}>
+>>>>>>> caf3d505f470426411f42b4e485ae45cd1470ca1
           <OIcon
             url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
             width={60}
