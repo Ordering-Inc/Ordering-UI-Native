@@ -7,7 +7,7 @@ import { ToastType, useToast } from '../../providers/ToastProvider'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors } from '../../theme'
 import { OIcon, OIconButton, OText } from '../shared'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, ActivityIndicator } from 'react-native'
 import { Header, TitleHeader, Wrapper } from './styles'
 
 const ImageDummy = require('../../assets/images/image.png')
@@ -306,6 +306,7 @@ const MessagesUI = (props) => {
             paddingBottom: 20
           }}
           showAvatarForEveryMessage
+          renderLoading={() => <ActivityIndicator size="small" color="#000"/>}
         />
       </Wrapper>
     </>
