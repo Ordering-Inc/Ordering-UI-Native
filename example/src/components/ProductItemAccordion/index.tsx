@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from 'react'
 import { View, StyleSheet, Animated, Easing } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import RNPickerSelect from 'react-native-picker-select'
+import AntIcon from 'react-native-vector-icons/AntDesign'
+
 import {
   Accordion,
   AccordionSection,
@@ -18,6 +21,7 @@ import {
 import { OIcon, OText } from '../shared'
 
 import {ProductItemAccordionParams} from '../../types'
+import { colors } from '../../theme'
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   const {
@@ -86,6 +90,13 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     toggleAccordion()
   }, [isActive])*/
 
+  const productOptions = [...Array(getProductMax(product) + 1),].map((_: any, opt: number) => {
+    return {
+      label: opt === 0 ? t('REMOVE', 'Remove') : opt.toString(),
+      value: opt.toString()
+    }
+  })
+
   return (
     <AccordionSection>
       <Accordion
@@ -94,8 +105,16 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
       >
         <ProductInfo>
           {isCartProduct && !isCartPending && getProductMax ? (
-            <>
-            </>
+            <RNPickerSelect
+              items={productOptions}
+              onValueChange={handleChangeQuantity}
+              value={product.quantity.toString()}
+              style={pickerStyle}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{}}
+              Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon} />}
+              disabled={orderState.loading}
+            />
           ) : (
             <ProductQuantity>
               <OText>
@@ -113,11 +132,30 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
           <View style={{ width: '70%' }}>
             <OText>{product.name}</OText>
           </View>
-          <View style={{ flexDirection: 'row' }}>
-            <OText>{parsePrice(product.total || product.price)}</OText>
-            {(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
-              <MaterialCommunityIcon name='chevron-down' size={18} />
-            )}
+          <View style={{ display: 'flex', flexDirection:'column' }}>
+            <View style={{ flexDirection: 'row' }}>
+              <OText>{parsePrice(product.total || product.price)}</OText>
+              {(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
+                <MaterialCommunityIcon name='chevron-down' size={18} />
+                )}
+            </View>
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
+              {onEditProduct && (
+                <MaterialCommunityIcon
+                name='pencil-outline'
+                size={20}
+                onPress={() => onEditProduct(product)}
+                />
+              )}
+              {onDeleteProduct && (
+                <MaterialCommunityIcon
+                name='trash-can-outline'
+                size={20}
+                color={colors.red}
+                onPress={() => onDeleteProduct(product)}
+                />
+              )}
+            </View>
           </View>
         </ContentInfo>
       </Accordion>
@@ -165,6 +203,23 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     </AccordionSection>
   )
 }
+
+const pickerStyle = StyleSheet.create({
+  inputAndroid: {
+    color: colors.secundaryContrast,
+    width: 50,
+  },
+  icon: {
+    width: 10,
+    height: 10,
+    top: 17,
+    right: 10,
+    position: 'absolute',
+  },
+  placeholder: {
+    color: colors.secundaryContrast
+  }
+})
 
 const styles = StyleSheet.create({
   productImage: {

@@ -1,20 +1,37 @@
 import React from 'react'
-import { useLanguage } from 'ordering-components/native'
+import { View, StyleSheet } from 'react-native'
+import { useLanguage, useOrder } from 'ordering-components/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import BusinessList from '../pages/BusinessesListing'
-import Profile from '../pages/Profile'
-import MyOrders from '../pages/MyOrders'
-
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import { colors } from '../theme'
-import { View } from 'react-native'
+import styled from 'styled-components/native'
 
-const Tab = createMaterialBottomTabNavigator()
+import { colors } from '../theme'
+import { OText } from '../components/shared'
+
+import BusinessList from '../pages/BusinessesListing'
+import MyOrders from '../pages/MyOrders'
+import CartList from '../pages/CartList'
+import Profile from '../pages/Profile'
+
+const CartsLenght = styled.View`
+  width: 25px;
+  height: 25px;
+  background-color: ${colors.primary};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 0;
+`
+
+const Tab = createMaterialBottomTabNavigator();
 
 const BottomNavigator = () => {
 
   const [, t] = useLanguage()
+  const [{ carts }] = useOrder()
+  const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
 
   return (
     <Tab.Navigator
@@ -50,6 +67,27 @@ const BottomNavigator = () => {
           }}
       />
       <Tab.Screen
+        name="Cart"
+        component={CartList}
+        options={{
+          tabBarIcon:
+            ({ color }) => (
+              <View style={styles.wrappCartIcon}>
+                <MaterialIcon name='shopping-basket' size={46} color={color} />
+                {cartsList.length > 0 && (
+                  <CartsLenght style={{ borderRadius: 100 / 2 }}>
+                    <OText
+                      color={colors.white}
+                    >
+                      {cartsList.length}
+                    </OText>
+                  </CartsLenght>
+                )}
+              </View>
+            )
+        }}
+      />
+      <Tab.Screen
         name="Profile"
         component={Profile}
         options={{
@@ -64,5 +102,15 @@ const BottomNavigator = () => {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  wrappCartIcon: {
+    width: 50,
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    position: 'relative',
+    zIndex: 9999
+  }
+})
 
 export default BottomNavigator

@@ -56,3 +56,14 @@ export const IMAGES = {
     applogo: require('../assets/images/app-logo.png'),
     menulogout : require('../assets/icons/menu-logout.png')
 }
+
+export const PAYMENT_IMAGES = {
+  cash: require('../assets/icons/cash.png'),
+  carddelivery: require('../assets/icons/card-delivery.png'),
+  paypal: require('../assets/icons/paypal.png'),
+  stripe: require('../assets/icons/stripe.png'),
+  stripecc: require('../assets/icons/cc-stripe.png'),
+  stripes: require('../assets/icons/stripe-s.png'),
+  stripesb: require('../assets/icons/stripe-sb.png'),
+  creditCard: require('../assets/icons/credit-card.png')
+}

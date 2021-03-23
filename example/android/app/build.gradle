@@ -132,10 +132,10 @@ android {
 
     defaultConfig {
         applicationId "com.delivery"
-        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        minSdkVersion 21
         multiDexEnabled true
     }
     splits {
@@ -191,6 +191,10 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     implementation project(':react-native-fbsdk')
+
+    implementation 'com.android.support:multidex:1.0.3'
+
+    implementation 'com.android.support:design:27.1.0'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
