@@ -63,8 +63,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleChangeSearch('')
   }
 
-  console.log(currentCart)
-
   return (
     <>
       <Spinner visible={loading} />
@@ -167,6 +165,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           btnLeftValue={currentCart?.products?.length}
           btnRightValue={parsePrice(currentCart?.total)}
           disabled={ currentCart?.subtotal < currentCart?.minimum || currentCart?.products?.length === 0}
+          handleClick={() => onRedirect('CheckoutNavigator', { cartUuid: currentCart?.uuid })}
         />
       )}
     </>

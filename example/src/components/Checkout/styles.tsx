@@ -42,12 +42,30 @@ export const ChMoment = styled(ChAddress)`
   padding: 0 0 20px;
 `
 
+export const ChUserDetails = styled.View`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 0 20px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${colors.inputDisabled};
+`
+
+export const ChBusinessDetails = styled(ChUserDetails)`
+`
+
 export const ChPaymethods = styled.View`
   display: flex;
   flex-direction: column;
+  padding: 0 0 20px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${colors.inputDisabled};
 `
 
 export const ChDriverTips = styled(ChPaymethods)``
+
+export const ChCart = styled(ChPaymethods)``
 
 export const ChPlaceOrderBtn = styled.View`
   width: 100%;

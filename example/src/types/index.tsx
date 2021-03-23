@@ -131,7 +131,9 @@ export interface BusinessBasicInformationParams {
 }
 export interface BusinessProductsCategoriesParams {
   categories: Array<any>;
-  handlerClickCategory: (value: any) => {};
+  // handlerClickCategory: any;
+  onClickCategory: any;
+  openBusinessInformation: any;
   categorySelected: any;
   featured: boolean;
 }
@@ -251,4 +253,5 @@ export interface FloatingButtonParams {
   isSecondaryBtn?: boolean;
   btnLeftValueShow?: boolean;
   btnRightValueShow?: boolean;
+  handleClick?: any;
 }

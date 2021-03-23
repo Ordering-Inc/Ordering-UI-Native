@@ -73,14 +73,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       <Search>
         <SearchBar onSearch={handleChangeSearch} searchValue={searchValue} lazyLoad />
       </Search>
-      <OButton
-        text='checkout'
-        bgColor={colors.primary}
-        borderColor={colors.primary}
-        // style={styles.buttons}
-        textStyle={{ color: 'white' }}
-        onClick={() => navigation.navigate('CheckoutNavigator')}
-      />
       <AddressInput
         onPress={() => auth
           ? onRedirect('AddressList', { isFromBusinesses: true })

@@ -1,28 +1,39 @@
-import * as React from 'react';
+import React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
-// import { useOrder, useSession } from 'ordering-components/native';
-
-import BottomNavigator from '../navigators/BottomNavigator'
-import RootNavigator from '../navigators/RootNavigator'
 
 import AddressList from '../pages/AddressList'
 import AddressForm from '../pages/AddressForm'
-// import SpinnerLoader from '../pages/SpinnerLoader'
+import CartList from '../pages/CartList'
 import CheckoutPage from '../pages/Checkout';
 import BusinessProductsList from '../pages/BusinessProductsList';
 
 const Stack = createStackNavigator();
 
-const CheckoutNavigator = () => {
+const CheckoutNavigator = (props: any) => {
+  const {
+    navigation,
+    route
+  } = props;
 
-  // const [orderState] = useOrder()
-  // const [{ auth }] = useSession()
+  const cartUuid = route?.params?.cartUuid
+
+  const checkoutProps = {
+    navigation,
+    cartUuid: route?.params?.cartUuid
+  }
 
   return (
     <Stack.Navigator>
+      {!cartUuid && (
+        <Stack.Screen
+          name="Cart"
+          component={CartList}
+          options={{ headerShown: false }}
+        />
+      )}
       <Stack.Screen
         name="CheckoutPage"
-        component={CheckoutPage}
+        children={() => <CheckoutPage {...checkoutProps} />}
         options={{ headerShown: false }}
       />
       <Stack.Screen

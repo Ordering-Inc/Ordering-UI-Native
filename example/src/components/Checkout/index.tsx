@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Checkout as CheckoutController,
@@ -16,8 +16,13 @@ import { OText, OButton, OIcon } from '../shared';
 import { IMAGES } from '../../config/constants';
 import { colors } from '../../theme';
 
+import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
 import { DriverTips } from '../DriverTips';
+// import { Cart } from '../Cart';
+import { OrderSummary } from '../OrderSummary';
+import { NotFoundSource } from '../NotFoundSource';
+import { UserDetails } from '../UserDetails';
 
 import {
   ChContainer,
@@ -29,11 +34,21 @@ import {
   ChMoment,
   ChPaymethods,
   ChDriverTips,
+  ChCart,
   ChPlaceOrderBtn,
-  ChErrors
+  ChErrors,
+  ChBusinessDetails,
+  ChUserDetails
 } from './styles';
 
 const DriverTipsOptions = [0, 10, 15, 20, 25];
+const mapConfigs = {
+  mapZoom: 16,
+  mapSize: {
+    width: 640,
+    height: 190
+  }
+};
 
 const CheckoutUI = (props: any) => {
   const {
@@ -51,7 +66,8 @@ const CheckoutUI = (props: any) => {
 
   const [, t] = useLanguage();
   const [{ user }] = useSession();
-  const [{ parsePrice }] = useUtils()
+  const [{ configs }] = useConfig();
+  const [{ parsePrice }] = useUtils();
   const [{ options, carts }] = useOrder();
   const [validationFields] = useValidationFields();
 
@@ -74,6 +90,16 @@ const CheckoutUI = (props: any) => {
 
   const handleEdit = () => { console.log('edit') }
 
+  // useEffect(() => {
+  //   return () => {
+  //     navigation.setParams({
+  //       navigation: null,
+  //       cartUuid: null,
+  //       isFromBusiness: null
+  //     })
+  //   }
+  // }, [])
+
   return (
     <ChContainer>
       <ChSection style={style.paddSection}>
@@ -88,46 +114,62 @@ const CheckoutUI = (props: any) => {
           <OText size={24}>{t('DELIVERY', 'Delivery')}</OText>
         </ChHeader>
       </ChSection>
+
       <ChSection>
         <ChTotal>
-          <ChTotalWrap>
-            <OIcon
-              url={user?.photo}
-              width={80}
-              height={80}
-              borderRadius={80}
-            />
-            <OText size={24} mLeft={10}>
-              {t('DAKOTA_WINE', 'Dakota Wine')}
-            </OText>
-          </ChTotalWrap>
-          <OText size={24}>
-            {t('Total', '$73.22')}
-          </OText>
+          {
+            (businessDetails?.loading || cartState.loading) &&
+            !businessDetails?.error &&
+          (
+            <View>
+              <View>
+                <OText>
+                  Loading...
+                </OText>
+              </View>
+            </View>
+          )}
+          {
+            !cartState.loading &&
+            businessDetails?.business &&
+            Object.values(businessDetails?.business).length > 0 &&
+          (
+            <>
+              <ChTotalWrap>
+                <OIcon
+                  url={businessDetails?.business?.logo}
+                  width={80}
+                  height={80}
+                  borderRadius={80}
+                />
+                <OText size={24} mLeft={10}>
+                  {businessDetails?.business?.name}
+                </OText>
+              </ChTotalWrap>
+              <OText size={24}>
+                {cart?.total >= 1 && parsePrice(cart?.total)}
+              </OText>
+            </>
+          )}
         </ChTotal>
       </ChSection>
       <ChSection style={style.paddSection}>
         <ChAddress>
-          <OText
-            size={20}
-            numberOfLines={1}
-            ellipsizeMode='tail'
-            style={{ width: '65%' }}
-          >
-            {t('ADDRESSSSS', '5th ave 111, new york, ny')}
-          </OText>
-          <OText
-            size={18}
-            style={{ flex: 1 }}
-            color={colors.primary}
-          >
-            {t('VIEWMAP', 'View Map')}
-          </OText>
-          <MaterialIcon
-            name='pencil-outline'
-            size={28}
-            onPress={() => handleEdit()}
-          />
+          {(businessDetails?.loading || cartState.loading) ? (
+            <OText size={18}>
+              Loading...
+            </OText>
+          ) : (
+            <AddressDetails
+              navigation={navigation}
+              location={businessDetails?.business?.location}
+              businessLogo={businessDetails?.business?.logo}
+              isCartPending={cart?.status === 2}
+              businessId={cart?.business_id}
+              apiKey={configs?.google_maps_api_key?.value}
+              mapConfigs={mapConfigs}
+            />
+          )}
         </ChAddress>
       </ChSection>
       <ChSection style={style.paddSectionH}>
@@ -145,6 +187,94 @@ const CheckoutUI = (props: any) => {
             onPress={() => handleEdit()}
           />
         </ChMoment>
+      </ChSection>
+
+      <ChSection style={style.paddSection}>
+        <ChUserDetails>
+          {cartState.loading ? (
+            <View>
+              <View>
+                <OText>
+                  Loading...
+                </OText>
+              </View>
+            </View>
+          ) : (
+            <UserDetails
+              isUserDetailsEdit={isUserDetailsEdit}
+              cartStatus={cart?.status}
+              businessId={cart?.business_id}
+              useValidationFields
+              useDefualtSessionManager
+              useSessionUser
+              isCheckout
+            />
+          )}
+        </ChUserDetails>
+      </ChSection>
+
+      <ChSection style={style.paddSectionH}>
+        <ChBusinessDetails>
+          {
+            (businessDetails?.loading || cartState.loading) &&
+            !businessDetails?.error &&
+          (
+            <View>
+              <View>
+                <OText>
+                  Loading...
+                </OText>
+              </View>
+            </View>
+          )}
+          {
+            !cartState.loading &&
+            businessDetails?.business &&
+            Object.values(businessDetails?.business).length > 0 &&
+          (
+            <View>
+              <OText size={20}>
+                {t('BUSINESS_DETAILS', 'Business Details')}
+              </OText>
+              <View>
+                <OText size={16}>
+                  <OText size={18} weight='bold'>
+                    {t('NAME', 'Name')}:{' '}
+                  </OText>
+                  {businessDetails?.business?.name}
+                </OText>
+                <OText size={16}>
+                  <OText size={18} weight='bold'>
+                    {t('EMAIL', 'Email')}:{' '}
+                  </OText>
+                  {businessDetails?.business?.email}
+                </OText>
+                <OText size={16}>
+                  <OText size={18} weight='bold'>
+                    {t('CELLPHONE', 'Cellphone')}:{' '}
+                  </OText>
+                  {businessDetails?.business?.cellphone}
+                </OText>
+                <OText size={16}>
+                  <OText size={18} weight='bold'>
+                    {t('ADDRESS', 'Address')}:{' '}
+                  </OText>
+                  {businessDetails?.business?.address}
+                </OText>
+              </View>
+            </View>
+          )}
+          {businessDetails?.error && businessDetails?.error?.length > 0 && (
+            <View>
+              <OText size={20}>
+                {t('BUSINESS_DETAILS', 'Business Details')}
+              </OText>
+              <NotFoundSource
+                content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
+              />
+            </View>
+          )}
+        </ChBusinessDetails>
       </ChSection>
 
       {!cartState.loading && cart && (
@@ -189,9 +319,19 @@ const CheckoutUI = (props: any) => {
         </ChSection>
       )}
 
-      <ChSection style={style.paddSection}>
-        <Text>cart Section</Text>
-      </ChSection>
+      {!cartState.loading && cart && (
+        <ChSection style={style.paddSection}>
+          <ChCart>
+            <OText size={20}>
+              {t('ORDER_SUMMARY', 'Order Summary')}
+            </OText>
+            <OrderSummary
+              cart={cart}
+              isCartPending={cart?.status === 2}
+              />
+          </ChCart>
+        </ChSection>
+      )}
 
       {!cartState.loading && cart && cart?.status !== 2 && (
         <ChSection style={style.paddSectionH}>
@@ -200,7 +340,7 @@ const CheckoutUI = (props: any) => {
               onClick={() => handlePlaceOrder()}
               bgColor={cart?.subtotal < cart?.minimum ? colors.secundary : colors.primary}
               borderColor={colors.primary}
-              textStyle={{color: 'white'}}
+              textStyle={{color: 'white', fontSize: 20}}
               imgRightSrc={null}
               // isLoading={formState.loading}
               isDisabled={!cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
@@ -214,36 +354,38 @@ const CheckoutUI = (props: any) => {
         </ChSection>
       )}
 
-      <ChSection style={style.paddSection}>
-        <ChErrors>
-          {!cart?.valid_address && cart?.status !== 2 && (
-            <OText
-              color={colors.error}
-              size={14}
-            >
-              {t('INVALID_CART_ADDRESS', 'Selected address is invalid, please select a closer address.')}
-            </OText>
-          )}
+      {!cartState.loading && cart && (
+        <ChSection style={style.paddSection}>
+          <ChErrors>
+            {!cart?.valid_address && cart?.status !== 2 && (
+              <OText
+                color={colors.error}
+                size={14}
+              >
+                {t('INVALID_CART_ADDRESS', 'Selected address is invalid, please select a closer address.')}
+              </OText>
+            )}
 
-          {!paymethodSelected && cart?.status !== 2 && (
-            <OText
-              color={colors.error}
-              size={14}
-            >
-              {t('WARNING_NOT_PAYMENT_SELECTED', 'Please, select a payment method to place order.')}
-            </OText>
-          )}
+            {!paymethodSelected && cart?.status !== 2 && (
+              <OText
+                color={colors.error}
+                size={14}
+              >
+                {t('WARNING_NOT_PAYMENT_SELECTED', 'Please, select a payment method to place order.')}
+              </OText>
+            )}
 
-          {!cart?.valid_products && cart?.status !== 2 && (
-            <OText
-              color={colors.error}
-              size={14}
-            >
-              {t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
-            </OText>
-          )}
-        </ChErrors>
-      </ChSection>
+            {!cart?.valid_products && cart?.status !== 2 && (
+              <OText
+                color={colors.error}
+                size={14}
+              >
+                {t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
+              </OText>
+            )}
+          </ChErrors>
+        </ChSection>
+      )}
     </ChContainer>
   )
 }
@@ -371,7 +513,6 @@ export const Checkout = (props: any) => {
         }
       } else {
         const cart = Array.isArray(result) ? null : result
-        console.log('result cart', cart);
         setCartState({
           ...cartState,
           loading: false,
