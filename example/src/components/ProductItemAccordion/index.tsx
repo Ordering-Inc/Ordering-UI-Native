@@ -90,7 +90,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     toggleAccordion()
   }, [isActive])*/
 
-  const productOptions = [...Array(getProductMax(product) + 1),].map((_: any, opt: number) => {
+  const productOptions = getProductMax && [...Array(getProductMax(product) + 1),].map((_: any, opt: number) => {
     return {
       label: opt === 0 ? t('REMOVE', 'Remove') : opt.toString(),
       value: opt.toString()
