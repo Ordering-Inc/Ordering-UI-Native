@@ -262,7 +262,7 @@ const MessagesUI = (props: MessagesParams) => {
     <>
       <Wrapper>
         <Header>
-          <OIcon
+         <OIcon
             url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
             width={60}
             height={60}
