@@ -26,13 +26,13 @@ export const Day = styled.TouchableOpacity`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-right-width: 1;
+  border-right-width: 1px;
   width: 25%;
   margin-vertical: 10px;
   border-color: ${colors.textSecondary};
 
   ${(props: any) => props.borderLeftShow && css`
-    border-left-width: 1;
+    border-left-width: 1px;
   `}
 `
 export const WrapHours = styled.ScrollView`

@@ -24,8 +24,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     handleChangeBusinessType,
     handleBusinessClick,
     paginationProps,
-    handleChangeSearch,
-    onRedirect
+    handleChangeSearch
   } = props
   const [, t] = useLanguage()
   const [{ user, auth }] = useSession()
@@ -73,7 +72,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         </WelcomeTitle>
       )}
       <Search>
-        <SearchBar onSearch={handleChangeSearch} searchValue={searchValue} lazyLoad />
+        <SearchBar onSearch={handleChangeSearch} searchValue={searchValue} lazyLoad placeholder={t('FIND_BUSINESS', 'Find a Business')}/>
       </Search>
       <OrderControlContainer>
         <OrderTypeSelector configTypes={configTypes} />

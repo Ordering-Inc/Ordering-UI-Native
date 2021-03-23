@@ -26,7 +26,7 @@ export const ScheduleBlock = styled.View`
   flex-direction: column;
   align-items: center;
   padding: 0 20px;
-  border-left-width: 1;
+  border-left-width: 1px;
   border-color: ${colors.lightGray};
 `
 export const WrapBusinessMap = styled.View`

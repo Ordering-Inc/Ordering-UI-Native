@@ -44,7 +44,7 @@ export const SearchBar = (props: any) => {
           bgColor='transparent'
           borderColor={colors.lightGray}
           style={styles.buttonStyle}
-          onClick={onCancel}
+          onClick={onCancel || handleClear}
         />
       )}
     </View>

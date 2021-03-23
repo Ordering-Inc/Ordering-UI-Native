@@ -24,6 +24,7 @@ const AddressListUI = (props: AddressListParams) => {
     handleSetDefault,
     handleDelete,
     setAddressList,
+    isGoBack,
     actionStatus
   } = props
 
