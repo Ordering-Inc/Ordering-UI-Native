@@ -221,7 +221,7 @@ export interface ProductItemAccordionParams {
   isCartPending?: boolean,
   isCartProduct?: boolean,
   product?: any,
-  getProductMax?: boolean,
+  getProductMax?: any,
   changeQuantity?: (product: any, quantity: number) => {},
   onDeleteProduct?: (product: any) => {},
   onEditProduct?: () => {},

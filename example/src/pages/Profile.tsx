@@ -8,7 +8,6 @@ import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
 `;
-
 interface Props {
   navigation: any;
   route: any;
