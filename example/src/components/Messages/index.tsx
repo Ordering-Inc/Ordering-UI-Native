@@ -1,18 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import { Messages as MessagesController, useSession, useUtils, useLanguage } from 'ordering-components/native'
-import { launchImageLibrary } from 'react-native-image-picker'
-import { GiftedChat, Actions, ActionsProps, InputToolbar, Composer, Send, Bubble, MessageImage, InputToolbarProps, ComposerProps } from 'react-native-gifted-chat'
-import { USER_TYPE } from '../../config/constants'
-import { ToastType, useToast } from '../../providers/ToastProvider'
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import React, { useState, useRef, useEffect } from 'react'
+import { View, TouchableOpacity } from 'react-native'
+import { Messages as MessagesController, useLanguage, useUtils, useSession } from 'ordering-components/native'
+import BottomWrapper from '../BottomWrapper'
+import { OIcon, OIconButton, OInput, OModal, OText } from '../shared'
+import OChatBubble from '../shared/OChatBubble'
+import { DIRECTION, USER_TYPE } from '../../config/constants'
 import { colors } from '../../theme'
-import { OIcon, OIconButton, OText } from '../shared'
-import { TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native'
-import { Header, TitleHeader, Wrapper } from './styles'
+import { launchImageLibrary } from 'react-native-image-picker'
+import { ToastType, useToast } from '../../providers/ToastProvider'
+
+import {
+  ActionWrapper,
+  Inner,
+  InputWrapper,
+  Wrapper,
+  Header,
+  TitleHeader,
+  UploadImage
+} from './styles'
+
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Spinner from 'react-native-loading-spinner-overlay'
+
 import { MessagesParams } from '../../types'
 
-const ImageDummy = require('../../assets/images/image.png')
 const paperIcon = require('../../assets/images/paper-plane.png')
+const ImageDummy = require('../../assets/images/image.png')
+
 
 const MessagesUI = (props: MessagesParams) => {
 
@@ -30,12 +44,15 @@ const MessagesUI = (props: MessagesParams) => {
     readMessages,
   } = props
 
-  const [{ user }] = useSession()
-  const [{ parseDate }] = useUtils()
   const [, t] = useLanguage()
-  const { showToast } = useToast();
 
-  const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
+  const [{ parseDate, getTimeAgo }] = useUtils()
+  const [{ user }] = useSession()
+  const { showToast } = useToast();
+  const chatRef = useRef<any>(null)
+
+  const [alertState, setAlertState] = useState<{ open: boolean, content: Array<string> | string }>({ open: false, content: [] })
+  const [modalImage, setModalImage] = useState('')
 
   const onChangeMessage = (val: string) => {
     setMessage && setMessage(val)
@@ -43,6 +60,15 @@ const MessagesUI = (props: MessagesParams) => {
 
   const removeImage = () => {
     setImage && setImage(null)
+  }
+
+  const clearInputs = () => {
+    setMessage && setMessage('')
+    removeImage()
+  }
+
+  const handleSetModalImage = (src: string) => {
+    setModalImage(src)
   }
 
   const handleImagePicker = () => {
@@ -99,8 +125,7 @@ const MessagesUI = (props: MessagesParams) => {
 
   const onSubmit = (values: any) => {
     handleSend && handleSend()
-    setImage && setImage(null)
-    setMessage && setMessage('')
+    clearInputs()
   }
 
   const messageConsole = (message: any) => {
@@ -115,218 +140,176 @@ const MessagesUI = (props: MessagesParams) => {
   }
 
   useEffect(() => {
-    let newMessages: Array<any> = []
-    const console = `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
-    const firstMessage = {
-      _id: 0,
-      text: console,
-      createdAt: order?.created_at,
-      system: true
+    if (!sendMessage.loading) {
+      chatRef.current.scrollToEnd()
     }
-    messages.messages.map((message: any) => {
-      let newMessage
-      if (message.type !== 0 && (messagesToShow?.messages?.length || (message?.can_see?.includes('2')) || (message?.can_see?.includes('4') && type === USER_TYPE.DRIVER))) {
-        newMessage = {
-          _id: message.id,
-          text: message.type === 1 ? messageConsole(message) : message.comment,
-          createdAt: message.type !== 0 && message.created_at,
-          image: message.source,
-          system: message.type === 1,
-          user: {
-            _id: message.author.id,
-            name: message.author.name,
-            avatar: message.author.id !== user.id && type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo
-          }
-        }
-      }
-      if (message.type === 0) {
-        newMessage = firstMessage
-      }
-      newMessages = [...newMessages, newMessage]
-    })
-    setFormattedMessages([...newMessages.reverse()])
-  }, [messages.messages.length])
+    readMessages && readMessages()
+  }, [messages.messages.length, sendMessage.loading])
 
-  const renderActions = (props: Readonly<ActionsProps>) => {
+  useEffect(() => {
+    if (!sendMessage.loading && sendMessage?.error) {
+      setAlertState({
+        open: true,
+        content: sendMessage.error || [t('ERROR', 'Error')]
+      })
+    }
+    if (sendMessage.loading) {
+      clearInputs()
+    }
+  }, [sendMessage])
+
+  useEffect(() => {
+    if (alertState.open) {
+      alertState.content && showToast(
+        ToastType.Error,
+        alertState.content
+      )
+    }
+  }, [alertState.content])
+
+  const MapMessages = ({ messages }: any) => {
     return (
-      <Actions
-        {...props}
-        options={{
-          'Send Image': () => handleImagePicker(),
-        }}
-        containerStyle={styles.containerActions}
-        optionTintColor='#222845'
-        icon={() => (
-          <>
+      <>
+        {messages?.messages.map((message: any, i: number) => (
+          <React.Fragment key={message.id + i}>
+            {message.type === 1 && (
+              <OChatBubble
+                side={DIRECTION.LEFT}
+                contents={messageConsole(message)}
+                datetime={getTimeAgo(message.created_at)}
+              />
+            )}
+            {(messagesToShow?.messages?.length || (message?.can_see?.includes('2')) || (message?.can_see?.includes('4') && type === USER_TYPE.DRIVER)) && (
+              <>
+                {message.type === 2 && user?.id === message.author_id && (
+                  <OChatBubble
+                    side={DIRECTION.RIGHT}
+                    contents={message.comment}
+                    datetime={getTimeAgo(message.created_at)}
+                  />
+                )}
+                {message.type === 3 && user?.id === message.author_id && (
+                  <OChatBubble
+                    side={DIRECTION.RIGHT}
+                    contents={message?.comment}
+                    datetime={getTimeAgo(message.created_at)}
+                    image={message?.source}
+                    onClick={() => handleSetModalImage(message.source)}
+                  />
+                )}
+                {message.type === 2 && user?.id !== message.author_id && (
+                  <OChatBubble
+                    side={DIRECTION.LEFT}
+                    contents={message?.comment}
+                    datetime={getTimeAgo(message.created_at)}
+                  />
+                )}
+                {message.type === 3 && user?.id !== message.author_id && (
+                  <OChatBubble
+                    side={DIRECTION.LEFT}
+                    contents={message?.comment}
+                    datetime={getTimeAgo(message.created_at)}
+                    image={message?.source}
+                    onClick={() => handleSetModalImage(message.source)}
+                  />
+                )}
+              </>
+            )}
+          </React.Fragment>
+        ))}
+      </>
+    )
+  }
+
+
+  return (
+    <Wrapper>
+      <Spinner visible={messages.loading || sendMessage.loading} />
+      <Header>
+        <OIcon
+          url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
+          width={60}
+          height={60}
+          style={{ borderRadius: 10, marginRight: 10 }}
+        />
+        <TitleHeader>
+          <OText size={18}>{type === USER_TYPE.DRIVER ? order?.driver?.name : order?.business?.name}</OText>
+          <OText>{t('ONLINE', 'Online')}</OText>
+        </TitleHeader>
+      </Header>
+      <Inner
+        ref={chatRef}
+      >
+        <OChatBubble
+          contents={
+            `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
+          }
+          datetime={getTimeAgo(order?.created_at)}
+        />
+        <MapMessages messages={messages} />
+      </Inner>
+      <BottomWrapper>
+        <ActionWrapper>
+          <InputWrapper>
+            <OInput
+              placeholder={t('WRITE_A_MESSAGE', 'Write a message...')}
+              style={{ flex: 1, paddingHorizontal: 0 }}
+              onChange={onChangeMessage}
+              value={message}
+            />
+          </InputWrapper>
+          <UploadImage>
             <OIconButton
-              borderColor={image ? colors.white : colors.lightGray}
-              style={{ width: 32, height: 32, borderRadius: 10 }}
+              borderColor={colors.lightGray}
+              style={{ width: 50, height: 50, borderRadius: 25, marginHorizontal: 10 }}
               icon={image ? { uri: image } : ImageDummy}
-              iconStyle={{ borderRadius: image ? 10 : 0, width: image ? 32 : 24, height: image ? 32 : 24 }}
+              iconStyle={{ borderRadius: image ? 25 : 0, width: image ? 50 : 20, height: image ? 50 : 20 }}
               onClick={handleImagePicker}
               iconCover
               bgColor={colors.inputDisabled}
             />
             {image && (
-              <TouchableOpacity
-                style={{ position: 'absolute', top: -5, right: -5, borderColor: colors.backgroundDark, backgroundColor: colors.white, borderRadius: 25 }}
-                onPress={() => removeImage()}
-              >
+              <TouchableOpacity style={{ position: 'absolute', top: -5, left: 40, borderColor: colors.backgroundDark, backgroundColor: colors.white, borderRadius: 25 }} onPress={() => removeImage()}>
                 <MaterialCommunityIcon name='close-circle-outline' color={colors.backgroundDark} size={24} />
               </TouchableOpacity>
             )}
-          </>
-        )}
-      />
-    )
-  }
-
-  const renderInputToolbar = (props: InputToolbarProps) => (
-    <InputToolbar
-      {...props}
-      containerStyle={{
-        padding: 10,
-      }}
-      primaryStyle={{ alignItems: 'center', justifyContent: 'center' }}
-    />
-  )
-
-  const renderComposer = (props: ComposerProps) => (
-    <Composer
-      {...props}
-      textInputStyle={{
-        backgroundColor: colors.lightGray,
-        borderRadius: 25,
-        paddingHorizontal: 10,
-      }}
-      textInputProps={{
-        value: message
-      }}
-      placeholder={t('WRITE_MESSAGE', 'Write message...')}
-    />
-  )
-
-  const renderSend = (props: any) => (
-    <Send
-      {...props}
-      disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
-      alwaysShowSend
-      containerStyle={styles.containerSend}
-    >
-      <OIconButton
-        onClick={onSubmit}
-        style={{
-          width: 54,
-          height: 32,
-          borderRadius: 25,
-          opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
-          borderColor: colors.primary
-        }}
-        iconStyle={{ marginTop: 3, marginRight: 2 }}
-        icon={paperIcon}
-        disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
-        disabledColor={colors.white}
-      />
-    </Send>
-  )
-
-  const renderBubble = (props: any) => (
-    <Bubble
-      {...props}
-      textStyle={{
-        left: {},
-        right: { color: colors.white }
-      }}
-      containerStyle={{
-        left: { marginVertical: 5 },
-        right: { marginVertical: 5 }
-      }}
-      wrapperStyle={{
-        left: { backgroundColor: '#f7f7f7', padding: 5 },
-        right: { backgroundColor: colors.primary, padding: 5 }
-      }}
-    />
-  )
-
-  const renderMessageImage = (props: any) => (
-    <MessageImage
-      {...props}
-    />
-  )
-
-  const renderScrollToBottomComponent = () => (
-    <MaterialCommunityIcon name='chevron-double-down' size={32} />
-  )
-
-  return (
-    <>
-      <Wrapper>
-        <Header>
-         <OIcon
-            url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
-            width={60}
-            height={60}
-            style={{ borderRadius: 10, marginRight: 10 }}
+          </UploadImage>
+          <OIconButton
+            onClick={onSubmit}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
+              borderColor: colors.primary
+            }}
+            iconStyle={{ marginTop: 3, marginRight: 2 }}
+            icon={paperIcon}
+            disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
+            disabledColor={colors.white}
           />
-          <TitleHeader>
-            <OText size={18}>{type === USER_TYPE.DRIVER ? order?.driver?.name : order?.business?.name}</OText>
-            <OText>{t('ONLINE', 'Online')}</OText>
-          </TitleHeader>
-        </Header>
-        <GiftedChat
-          messages={formattedMessages}
-          user={{
-            _id: user.id,
-            name: user.name,
-            avatar: user.photo
-          }}
-          onSend={onSubmit}
-          onInputTextChanged={onChangeMessage}
-          alignTop
-          scrollToBottom
-          renderAvatarOnTop
-          renderUsernameOnMessage
-          renderInputToolbar={renderInputToolbar}
-          renderComposer={renderComposer}
-          renderSend={renderSend}
-          renderActions={renderActions}
-          renderBubble={renderBubble}
-          renderMessageImage={renderMessageImage}
-          scrollToBottomComponent={() => renderScrollToBottomComponent()}
-          messagesContainerStyle={{
-            paddingBottom: 20
-          }}
-          showAvatarForEveryMessage
-          isLoadingEarlier={messages.loading}
-          renderLoading={() => <ActivityIndicator size="small" color="#000" />}
-        />
-      </Wrapper>
-    </>
+        </ActionWrapper>
+      </BottomWrapper>
+      <OModal
+        open={modalImage ? true : false}
+        onClose={() => setModalImage('')}
+        entireModal
+      >
+        <View style={{ height: '100%', alignSelf: 'center', justifyContent: 'center' }}>
+          <OIcon
+            url={modalImage}
+            style={{ width: 300, height: 300 }}
+          />
+        </View>
+      </OModal>
+    </Wrapper>
   )
 }
 
-const styles = StyleSheet.create({
-  containerActions: {
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 4,
-    marginBottom: 0
-  },
-  containerSend: {
-    width: 64,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 4
-  }
-})
-
 export const Messages = (props: MessagesParams) => {
-  const MessagesProps = {
+  const messagesProps = {
     ...props,
     UIComponent: MessagesUI
   }
-  return <MessagesController {...MessagesProps} />
+  return <MessagesController {...messagesProps} />
 }
