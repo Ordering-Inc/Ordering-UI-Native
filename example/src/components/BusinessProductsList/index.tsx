@@ -18,9 +18,9 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     categories,
     categoryState,
     onProductClick,
-    handleSearchRedirect,
     featured,
     searchValue,
+    handleSearchRedirect,
     handleClearSearch
   } = props
 
@@ -35,7 +35,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             isSoldOut={(product.inventoried && !product.quantity)}
             product={product}
             businessId={businessId}
-            onProductClick={onProductClick}
+            onProductClick={() => onProductClick(product)}
           />
         ))
       )}
@@ -81,7 +81,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                             onProductClick={onProductClick}
                           />
                         ))
-                      }                      
+                      }
                     </>
                   </>
                 )

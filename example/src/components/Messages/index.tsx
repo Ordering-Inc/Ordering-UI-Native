@@ -293,7 +293,7 @@ const MessagesUI = (props: MessagesParams) => {
       <OModal
         open={modalImage ? true : false}
         onClose={() => setModalImage('')}
-        EntireModal
+        entireModal
       >
         <View style={{ height: '100%', alignSelf: 'center', justifyContent: 'center' }}>
           <OIcon

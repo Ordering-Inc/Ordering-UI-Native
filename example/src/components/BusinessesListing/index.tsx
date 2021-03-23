@@ -79,8 +79,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         <OrderTypeSelector configTypes={configTypes} />
         <AddressInput
           onPress={() => auth
-            ? onRedirect('AddressList', { isFromBusinesses: true })
-            : onRedirect('AddressForm')}
+            ? navigation.navigate('AddressList', { isFromBusinesses: true })
+            : navigation.navigate('AddressForm')}
           >
           <MaterialComIcon
             name='home-outline'

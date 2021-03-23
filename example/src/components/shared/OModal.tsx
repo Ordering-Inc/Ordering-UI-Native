@@ -16,7 +16,8 @@ interface Props {
   cancelText?: string;
   isTransparent?: boolean;
   hideCloseDefault?: boolean;
-  EntireModal?: boolean;
+  entireModal?: boolean;
+  customClose?: boolean;
   titleSectionStyle?: any;
 }
 
@@ -32,7 +33,8 @@ const OModal = (props: Props): React.ReactElement => {
     cancelText,
     isTransparent,
     hideCloseDefault,
-    EntireModal,
+    entireModal,
+    customClose,
     titleSectionStyle,
     style
   } = props
@@ -46,19 +48,8 @@ const OModal = (props: Props): React.ReactElement => {
       style={{ height: '100%', flex: 1, position: 'absolute', ...style }}
     >
       <SafeAreaView style={styles.container}>
-        {!EntireModal ? <View style={styles.centeredView}>
-          <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-            <Icon
-              name="x"
-              size={35}
-              style={styles.cancelBtn}
-              onPress={onClose}
-            />
-            <Text style={styles.modalText}>{title}</Text>
-          </View>
-          {children}
-        </View> :
-          <>
+        {!entireModal ? (
+          <View style={styles.centeredView}>
             <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
               <Icon
                 name="x"
@@ -68,6 +59,21 @@ const OModal = (props: Props): React.ReactElement => {
               />
               <Text style={styles.modalText}>{title}</Text>
             </View>
+            {children}
+          </View>
+        ) :
+          <>
+            {!customClose && (
+              <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
+                <Icon
+                  name="x"
+                  size={35}
+                  style={styles.cancelBtn}
+                  onPress={onClose}
+                />
+                <Text style={styles.modalText}>{title}</Text>
+              </View>
+            )}
             {children}
           </>
         }

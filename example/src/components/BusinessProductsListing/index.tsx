@@ -10,7 +10,7 @@ import {
   useSession,
   useUtils
 } from 'ordering-components/native'
-import { OText } from '../shared'
+import { OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { SearchBar } from '../SearchBar'
 import { BusinessProductsCategories } from '../BusinessProductsCategories'
@@ -26,6 +26,7 @@ import {
 } from './styles'
 import { colors } from '../../theme'
 import { FloatingButton } from '../FloatingButton'
+import { ProductForm } from '../ProductForm'
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -48,19 +49,29 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const { business, loading, error } = businessState
   const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
   const [isOpenSearchBar, setIsOpenSearchBar] = useState(false)
-  const currentCart: any = Object.values(orderState.carts).find(cart => cart?.business?.slug === business?.slug) ?? {}
+  const [curProduct, setCurProduct] = useState(null)
+
+  const currentCart: any = Object.values(orderState.carts).find((cart : any) => cart?.business?.slug === business?.slug) ?? {}
 
   const onRedirect = (route: string, params?: any) => {
     navigation.navigate(route, params)
   }
 
-  const onProductClick = () => {
-
+  const onProductClick = (product : any) => {
+    setCurProduct(product)
   }
 
   const handleCancel = () => {
     setIsOpenSearchBar(false)
     handleChangeSearch('')
+  }
+
+  const handleCloseProductModal = () => {
+    setCurProduct(null)
+  }
+
+  const handlerProductAction = () => {
+    handleCloseProductModal()
   }
 
   return (
@@ -123,7 +134,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               </WrapHeader>
               {!(business?.categories?.length === 0) && (
                 <BusinessProductsCategories
-                  categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a, b) => a.rank - b.rank)]}
+                  categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a : any, b : any) => a.rank - b.rank)]}
                   categorySelected={categorySelected}
                   onClickCategory={handleChangeCategory}
                   featured={featuredProducts}
@@ -155,16 +166,26 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       {!loading && auth && (
         <FloatingButton
           btnText={
-            currentCart?.products?.length > 0  ? t('VIEW_ORDER', 'View Order') : t('EMPTY_CART', 'Empty cart')
+            currentCart?.products?.length > 0 ? t('VIEW_ORDER', 'View Order') : t('EMPTY_CART', 'Empty cart')
           }
           isSecondaryBtn={!(currentCart?.products?.length > 0)}
           btnLeftValueShow={currentCart?.products?.length > 0}
           btnRightValueShow={currentCart?.products?.length > 0}
           btnLeftValue={currentCart?.products?.length}
           btnRightValue={parsePrice(currentCart?.total)}
-          disabled={ currentCart?.subtotal < currentCart?.minimum || currentCart?.products?.length === 0}
+          disabled={currentCart?.subtotal < currentCart?.minimum || currentCart?.products?.length === 0}
         />
       )}
+      <OModal open={!!curProduct} onClose={handleCloseProductModal} entireModal customClose>
+        <ProductForm
+          product={curProduct}
+          businessSlug={business.slug}
+          businessId={business.id}
+          onClose={handleCloseProductModal}
+          navigation={navigation}
+          onSave={handlerProductAction}
+        />
+      </OModal>
     </>
   )
 }
