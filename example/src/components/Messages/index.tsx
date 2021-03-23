@@ -168,8 +168,8 @@ const MessagesUI = (props: MessagesParams) => {
               bgColor={colors.inputDisabled}
             />
             {image && (
-              <TouchableOpacity 
-                style={{ position: 'absolute', top: -5, right: -5, borderColor: colors.backgroundDark, backgroundColor: colors.white, borderRadius: 25 }} 
+              <TouchableOpacity
+                style={{ position: 'absolute', top: -5, right: -5, borderColor: colors.backgroundDark, backgroundColor: colors.white, borderRadius: 25 }}
                 onPress={() => removeImage()}
               >
                 <MaterialCommunityIcon name='close-circle-outline' color={colors.backgroundDark} size={24} />
@@ -297,6 +297,7 @@ const MessagesUI = (props: MessagesParams) => {
             paddingBottom: 20
           }}
           showAvatarForEveryMessage
+          isLoadingEarlier={messages.loading}
           renderLoading={() => <ActivityIndicator size="small" color="#000" />}
         />
       </Wrapper>
