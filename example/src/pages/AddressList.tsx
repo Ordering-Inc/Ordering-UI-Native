@@ -5,12 +5,12 @@ import { useSession } from 'ordering-components/native'
 const AddressList = ({ route, navigation }: any) => {
 
   const [{ user }] = useSession()
-  const {isGoBack} = route.params
+  const isGoBack = route?.params?.isGoBack
   const AddressListProps = {
     navigation,
     route,
     userId: user?.id,
-    isGoBack: isGoBack
+    isGoBack
   }
 
   return (
