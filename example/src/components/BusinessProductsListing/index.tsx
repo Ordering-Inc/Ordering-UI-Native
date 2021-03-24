@@ -104,7 +104,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                             size={25}
                           />
                         </TouchableOpacity>
-                        <AddressInput onPress={() => auth ? onRedirect('AddressList', { isGoBack: true }) : onRedirect('AddressForm', { isGoBack: true })}>
+                        <AddressInput onPress={() => auth ? onRedirect('AddressList', { isGoBack: true }) : onRedirect('AddressForm')}>
                           <OText color={colors.white} numberOfLines={1}>
                             {orderState?.options?.address?.address}
                           </OText>
@@ -181,8 +181,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 : `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
           }
           isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum || !(currentCart?.products?.length > 0)}
-          btnLeftValueShow={currentCart?.products?.length > 0}
-          btnRightValueShow={currentCart?.products?.length > 0}
+          btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && !openUpselling && currentCart?.products?.length > 0}
+          btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && !openUpselling && currentCart?.products?.length > 0}
           btnLeftValue={currentCart?.products?.length}
           btnRightValue={parsePrice(currentCart?.total)}
           disabled={openUpselling || currentCart?.subtotal < currentCart?.minimum}

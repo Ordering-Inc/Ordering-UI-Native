@@ -5,7 +5,7 @@ import { colors } from '../../theme'
 
 interface Props {
   secondary?: boolean,
-  options?: Array<any>,
+  options?: any,
   onSelect?: any,
   selectedIndex?: number,
   kindImage?: any,

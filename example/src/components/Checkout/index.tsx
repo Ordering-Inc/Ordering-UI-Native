@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { View, StyleSheet } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Checkout as CheckoutController,
   useOrder,
@@ -23,6 +23,7 @@ import { DriverTips } from '../DriverTips';
 import { OrderSummary } from '../OrderSummary';
 import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
+import { OrderTypeSelector } from '../OrderTypeSelector'
 
 import {
   ChContainer,
@@ -32,6 +33,7 @@ import {
   ChTotalWrap,
   ChAddress,
   ChMoment,
+  CHMomentWrapper,
   ChPaymethods,
   ChDriverTips,
   ChCart,
@@ -67,7 +69,7 @@ const CheckoutUI = (props: any) => {
   const [, t] = useLanguage();
   const [{ user }] = useSession();
   const [{ configs }] = useConfig();
-  const [{ parsePrice }] = useUtils();
+  const [{ parsePrice, parseDate }] = useUtils();
   const [{ options, carts }] = useOrder();
   const [validationFields] = useValidationFields();
 
@@ -75,30 +77,16 @@ const CheckoutUI = (props: any) => {
   const [userErrors, setUserErrors] = useState([]);
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
 
+  const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
+
   const handlePlaceOrder = () => {
     if (!userErrors.length) {
       handlerClickPlaceOrder && handlerClickPlaceOrder()
       return
     }
-    // setAlertState({
-    //   open: true,
-    //   content: Object.values(userErrors).map(error => error)
-    // })
     console.log('error', userErrors);
     setIsUserDetailsEdit(true)
   }
-
-  const handleEdit = () => { console.log('edit') }
-
-  // useEffect(() => {
-  //   return () => {
-  //     navigation.setParams({
-  //       navigation: null,
-  //       cartUuid: null,
-  //       isFromBusiness: null
-  //     })
-  //   }
-  // }, [])
 
   return (
     <ChContainer>
@@ -111,7 +99,7 @@ const CheckoutUI = (props: any) => {
         />
         <ChHeader>
           <OText size={24}>{t('CHECKOUT', 'Checkout')}</OText>
-          <OText size={24}>{t('DELIVERY', 'Delivery')}</OText>
+          <OrderTypeSelector configTypes={configTypes} />
         </ChHeader>
       </ChSection>
 
@@ -174,18 +162,22 @@ const CheckoutUI = (props: any) => {
       </ChSection>
       <ChSection style={style.paddSectionH}>
         <ChMoment>
-          <OText
-            size={20}
-            ellipsizeMode='tail'
-            style={{ flex: 1 }}
+          <CHMomentWrapper
+            onPress={() => navigation.navigate('MomentOption')}
           >
-            {t('MOMENTTTTT', 'ASAP')}
-          </OText>
-          <MaterialIcon
-            name='pencil-outline'
-            size={28}
-            onPress={() => handleEdit()}
-          />
+            <MaterialCommunityIcon
+              name='clock-outline'
+              size={24}
+              style={{ marginRight: 5 }}
+            />
+            <OText size={18} numberOfLines={1} ellipsizeMode='tail'>
+              {options?.moment
+              ? parseDate(options?.moment, {
+                  outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
+                })
+              : t('ASAP_ABBREVIATION', 'ASAP')}
+            </OText>
+          </CHMomentWrapper>
         </ChMoment>
       </ChSection>
 
@@ -359,6 +351,7 @@ const CheckoutUI = (props: any) => {
           <ChErrors>
             {!cart?.valid_address && cart?.status !== 2 && (
               <OText
+                style={{ textAlign: 'center' }}
                 color={colors.error}
                 size={14}
               >
@@ -368,6 +361,7 @@ const CheckoutUI = (props: any) => {
 
             {!paymethodSelected && cart?.status !== 2 && (
               <OText
+                style={{ textAlign: 'center' }}
                 color={colors.error}
                 size={14}
               >
@@ -377,6 +371,7 @@ const CheckoutUI = (props: any) => {
 
             {!cart?.valid_products && cart?.status !== 2 && (
               <OText
+                style={{ textAlign: 'center' }}
                 color={colors.error}
                 size={14}
               >
@@ -397,7 +392,8 @@ const style = StyleSheet.create({
     borderColor: '#FFF',
     display: 'flex',
     justifyContent: 'flex-start',
-    paddingLeft: 0
+    paddingLeft: 0,
+    width: 20
   },
   paddSection: {
     padding: 20

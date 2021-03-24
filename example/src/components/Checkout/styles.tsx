@@ -9,6 +9,7 @@ export const ChHeader = styled.View`
   display: flex;
   justify-content: space-between;
   flex-direction: row;
+  align-items: center;
   margin: 0px 10px;
 `
 
@@ -40,6 +41,16 @@ export const ChAddress = styled.View`
 
 export const ChMoment = styled(ChAddress)`
   padding: 0 0 20px;
+`
+
+export const CHMomentWrapper = styled.TouchableOpacity`
+  background-color: #FFF5F5;
+  border-radius: 10px;
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
 `
 
 export const ChUserDetails = styled.View`
@@ -79,4 +90,3 @@ export const ChErrors = styled.View`
   flex-direction: column;
   align-items: center;
 `
-

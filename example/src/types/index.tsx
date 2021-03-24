@@ -41,6 +41,8 @@ export interface AddressListParams {
   handleDelete?: any;
   handleSetDefault?: any;
   setAddressList?: any;
+  isGoBack?: boolean;
+  route?: any
 }
 
 export interface AddressFormParams {
