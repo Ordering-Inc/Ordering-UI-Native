@@ -33,7 +33,7 @@ const AddressListUI = (props: AddressListParams) => {
 
   const onNavigatorRedirect = () => {
     if (route && route?.params?.isFromBusinesses) {
-      onNavigationRedirect('BottomTab')
+      isGoBack ? navigation.goBack() : onNavigationRedirect('BottomTab')
     } else if (route && route?.params?.isFromCheckout) {
       onNavigationRedirect('CheckoutPage')
     }
