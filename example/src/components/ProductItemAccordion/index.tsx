@@ -18,10 +18,11 @@ import {
   ProductSubOption,
   ProductComment
 } from './styles'
-import { OIcon, OText } from '../shared'
+import { OIcon, OText, OAlert } from '../shared'
 
-import {ProductItemAccordionParams} from '../../types'
+import { ProductItemAccordionParams } from '../../types'
 import { colors } from '../../theme'
+import Spinner from 'react-native-loading-spinner-overlay'
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   const {
@@ -99,6 +100,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   return (
     <AccordionSection>
+      <Spinner visible={orderState.loading}/>
       <Accordion
         isValid={product?.valid ?? true}
         onPress={() => setActiveState(!isActive)}
@@ -123,37 +125,43 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
             </ProductQuantity>
           )}
         </ProductInfo>
+        <ContentInfo>
         {product?.images && (
           <ProductImage>
             <OIcon url={product?.images} style={styles.productImage} />
           </ProductImage>
         )}
-        <ContentInfo>
-          <View style={{ width: '70%' }}>
+          <View style={{flex: 0.8}}>
             <OText>{product.name}</OText>
           </View>
-          <View style={{ display: 'flex', flexDirection:'column' }}>
+          <View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end' }}>
             <View style={{ flexDirection: 'row' }}>
               <OText>{parsePrice(product.total || product.price)}</OText>
               {(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
                 <MaterialCommunityIcon name='chevron-down' size={18} />
-                )}
+              )}
             </View>
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
-              {onEditProduct && (
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+              {onEditProduct && isCartProduct && !isCartPending && (
                 <MaterialCommunityIcon
-                name='pencil-outline'
-                size={20}
-                onPress={() => onEditProduct(product)}
+                  name='pencil-outline'
+                  size={20}
+                  color={colors.green}
+                  onPress={() => onEditProduct(product)}
                 />
               )}
-              {onDeleteProduct && (
-                <MaterialCommunityIcon
-                name='trash-can-outline'
-                size={20}
-                color={colors.red}
-                onPress={() => onDeleteProduct(product)}
-                />
+              {onDeleteProduct && isCartProduct && !isCartPending && (
+                <OAlert
+                  title={t('DELETE_PRODUCT', 'Delete Product')}
+                  message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
+                  onAccept={() => onDeleteProduct(product)}
+                >
+                  <MaterialCommunityIcon
+                    name='trash-can-outline'
+                    size={20}
+                    color={colors.red}
+                  />
+                </OAlert>
               )}
             </View>
           </View>

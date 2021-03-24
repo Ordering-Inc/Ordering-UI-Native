@@ -223,8 +223,8 @@ export interface ProductItemAccordionParams {
   product?: any,
   getProductMax?: any,
   changeQuantity?: (product: any, quantity: number) => {},
-  onDeleteProduct?: (product: any) => {},
-  onEditProduct?: () => {},
+  onDeleteProduct?: (product: any) => void,
+  onEditProduct?: (product: any) => void,
   offsetDisabled: any,
 }
 export interface ReviewOrderParams {

@@ -31,20 +31,23 @@ export const Accordion = (props) => {
 }
 
 export const ProductInfo = styled.View`
-  margin-right: 10px
+  width: 15%
 `
 
-export const ProductQuantity = styled.View``
+export const ProductQuantity = styled.View`
+`
 
 export const ContentInfo = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  flex: 1;
   padding-horizontal: 10px;
+  overflow: hidden;
+  width: 85%
 `
 
 export const ProductImage = styled.View`
+  margin-right: 10px
 `
 
 export const AccordionContent = styled.View`

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Cart,
   useOrder,
@@ -19,8 +19,9 @@ import {
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { CouponControl } from '../CouponControl';
-import { OText } from '../shared';
+import { OModal, OText } from '../shared';
 import { colors } from '../../theme';
+import { ProductForm } from '../ProductForm';
 
 
 const OrderSummaryUI = (props: any) => {
@@ -46,25 +47,24 @@ const OrderSummaryUI = (props: any) => {
   const [orderState] = useOrder();
   const [{ parsePrice, parseNumber, parseDate }] = useUtils();
   const [validationFields] = useValidationFields();
+  const [openProduct, setModalIsOpen] = useState(false)
+  const [curProduct, setCurProduct] = useState<any>(null)
 
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
 
   const handleDeleteClick = (product: any) => {
-    console.log('handleDeleteClick', product);
-    // setConfirm({
-    //   open: true,
-    //   content: t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?'),
-    //   handleOnAccept: () => {
-    //     removeProduct(product)
-    //     setConfirm({ ...confirm, open: false })
-    //   }
-    // })
+    removeProduct(product)
   }
 
   const handleEditProduct = (product: any) => {
-    console.log('handleEditProduct', product);
-    // setCurProduct(product)
-    // setModalIsOpen(true)
+    setCurProduct(product)
+    setModalIsOpen(true)
+  }
+
+  const handlerProductAction = (product: any) => {
+    if (Object.keys(product).length) {
+      setModalIsOpen(false)
+    }
   }
 
   return (
@@ -160,6 +160,23 @@ const OrderSummaryUI = (props: any) => {
           </OSTable>
         </OSTotal>
       </OSBill>
+      <OModal
+        open={openProduct}
+        entireModal
+        customClose
+        onClose={() => setModalIsOpen(false)}
+      >
+        <ProductForm
+          isCartProduct
+          productCart={curProduct}
+          businessSlug={cart?.business?.slug}
+          businessId={curProduct?.business_id}
+          categoryId={curProduct?.category_id}
+          productId={curProduct?.id}
+          onSave={handlerProductAction}
+          onClose={() => setModalIsOpen(false)}
+        />
+      </OModal>
     </OSContainer>
   )
 }
