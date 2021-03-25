@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000000AA',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   touchableOutsideStyle: {
     flex: 1,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     paddingHorizontal: 20,
-    maxHeight: deviceHeight * 0.5
+    maxHeight: deviceHeight < 700 ? deviceHeight * 0.7 : deviceHeight * 0.6,
   },
   titleStyle: {
     fontSize: 20,

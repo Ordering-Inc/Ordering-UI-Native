@@ -199,7 +199,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           onSave={handlerProductAction}
         />
       </OModal>
-      <OBottomPopup open={openUpselling}>
+      {openUpselling && (
         <UpsellingProducts
           businessId={currentCart?.business_id}
           business={currentCart?.business}
@@ -209,7 +209,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           canOpenUpselling={canOpenUpselling}
           setCanOpenUpselling={setCanOpenUpselling}
         />
-      </OBottomPopup>
+      )}
     </>
   )
 }

@@ -230,7 +230,8 @@ const CartUI = (props: any) => {
         />
 
       </OModal>
-      <OBottomPopup open={openUpselling}>
+
+      {openUpselling && (
         <UpsellingProducts
           handleUpsellingPage={handleUpsellingPage}
           openUpselling={openUpselling}
@@ -240,8 +241,7 @@ const CartUI = (props: any) => {
           canOpenUpselling={canOpenUpselling}
           setCanOpenUpselling={setCanOpenUpselling}
         />
-      </OBottomPopup>
-
+      )}
     </CContainer>
   )
 }
