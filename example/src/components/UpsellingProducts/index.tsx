@@ -18,6 +18,7 @@ import {
   AddButton,
   CloseUpselling
 } from './styles'
+import { ProductForm } from '../ProductForm';
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const {
     isCustomMode,
@@ -28,7 +29,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     canOpenUpselling,
     setCanOpenUpselling
   } = props
-  const [actualProduct, setActualProduct] = useState(null)
+  const [actualProduct, setActualProduct] = useState<any>(null)
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [{ parsePrice }] = useUtils()
   const [, t] = useLanguage()
@@ -38,7 +39,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
       if (upsellingProducts?.products?.length && !upsellingProducts.loading) {
         setCanOpenUpselling && setCanOpenUpselling(true)
       } else if (!upsellingProducts?.products?.length && !upsellingProducts.loading && !canOpenUpselling && openUpselling) {
-        handleUpsellingPage()
+        handleUpsellingPage && handleUpsellingPage()
       }
     }
   }, [upsellingProducts.loading, upsellingProducts?.products.length])
@@ -110,7 +111,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
               <CloseUpselling>
                 <OButton
                   imgRightSrc=''
-                  text={t('NO_ THANKS', 'No Thanks')}
+                  text={t('NO_THANKS', 'No Thanks')}
                   style={styles.closeUpsellingButton}
                   onClick={() => handleUpsellingPage()}
                 />
@@ -122,14 +123,18 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
       <OModal
         open={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
+        entireModal
+        customClose
       >
-        {/* <ProductForm
+        {actualProduct && (
+         <ProductForm
           product={actualProduct}
-          businessId={actualProduct.api.businessId}
+          businessId={actualProduct?.api?.businessId}
           businessSlug={business.slug}
           onSave={() => handleSaveProduct()}
-        /> */}
-        <OText>please replace with product form.</OText>
+          onClose={() => setModalIsOpen(false)}
+        />
+        )}
       </OModal>
     </>
   )
@@ -156,7 +161,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export const UpsellingProducts = (props) => {
+export const UpsellingProducts = (props : UpsellingProductsParams) => {
   const upsellingProductsProps = {
     ...props,
     UIComponent: UpsellingProductsUI

@@ -10,7 +10,7 @@ import {
   useSession,
   useUtils
 } from 'ordering-components/native'
-import { OModal, OText } from '../shared'
+import { OBottomPopup, OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { SearchBar } from '../SearchBar'
 import { BusinessProductsCategories } from '../BusinessProductsCategories'
@@ -27,6 +27,7 @@ import {
 import { colors } from '../../theme'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
+import { UpsellingProducts } from '../UpsellingProducts'
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -51,6 +52,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [isOpenSearchBar, setIsOpenSearchBar] = useState(false)
   const [curProduct, setCurProduct] = useState(null)
   const [openUpselling, setOpenUpselling] = useState(false)
+  const [canOpenUpselling, setCanOpenUpselling] = useState(false)
 
   const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
@@ -75,6 +77,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleCloseProductModal()
   }
 
+  const handleUpsellingPage = () => {
+    onRedirect('CheckoutNavigator', { cartUuid: currentCart?.uuid })
+    setOpenUpselling(false)
+  }
+
   return (
     <>
       <Spinner visible={loading} />
@@ -86,24 +93,24 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 <TopHeader>
                   {!isOpenSearchBar && (
                     <>
-                      <View style={{...styles.headerItem, flex: 1}}>
+                      <View style={{ ...styles.headerItem, flex: 1 }}>
                         <TouchableOpacity
                           onPress={() => navigation.goBack()}
                         >
                           <IconAntDesign
                             name='arrowleft'
                             color={colors.white}
+                            style={{backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 50, marginRight: 20}}
                             size={25}
-                            style={styles.BackIcon}
                           />
                         </TouchableOpacity>
-                        <AddressInput onPress={() => auth ? onRedirect('AddressList', { isGoBack: true }) : onRedirect('AddressForm', { isGoBack: true })}>
+                        <AddressInput onPress={() => auth ? onRedirect('AddressList', { isGoBack: true }) : onRedirect('AddressForm')}>
                           <OText color={colors.white} numberOfLines={1}>
                             {orderState?.options?.address?.address}
                           </OText>
                         </AddressInput>
                       </View>
-                      <View style={{...styles.headerItem, width: 30}}>
+                      <View style={{ ...styles.headerItem, width: 30 }}>
                         <TouchableOpacity
                           onPress={() => setIsOpenSearchBar(true)}
                         >
@@ -167,17 +174,19 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       {!loading && auth && (
         <FloatingButton
           btnText={
-            currentCart?.subtotal >= currentCart?.minimum
-              ? !openUpselling ? t('VIEW_ORDER', 'View Order') : t('LOADING', 'Loading')
-              : `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
+            !(currentCart?.products?.length > 0)
+              ? t('EMPTY_CART', 'Empty cart')
+              : currentCart?.subtotal >= currentCart?.minimum
+                ? !openUpselling ? t('VIEW_ORDER', 'View Order') : t('LOADING', 'Loading')
+                : `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
           }
-          isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum}
+          isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum || !(currentCart?.products?.length > 0)}
           btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && !openUpselling && currentCart?.products?.length > 0}
           btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && !openUpselling && currentCart?.products?.length > 0}
           btnLeftValue={currentCart?.products?.length}
           btnRightValue={parsePrice(currentCart?.total)}
           disabled={openUpselling || currentCart?.subtotal < currentCart?.minimum}
-          handleClick={() => onRedirect('CheckoutNavigator', { cartUuid: currentCart?.uuid })}
+          handleClick={() => setOpenUpselling(true)}
         />
       )}
       <OModal open={!!curProduct} onClose={handleCloseProductModal} entireModal customClose>
@@ -190,6 +199,17 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           onSave={handlerProductAction}
         />
       </OModal>
+      <OBottomPopup open={openUpselling}>
+        <UpsellingProducts
+          businessId={currentCart?.business_id}
+          business={currentCart?.business}
+          cartProducts={currentCart?.products}
+          handleUpsellingPage={handleUpsellingPage}
+          openUpselling={openUpselling}
+          canOpenUpselling={canOpenUpselling}
+          setCanOpenUpselling={setCanOpenUpselling}
+        />
+      </OBottomPopup>
     </>
   )
 }

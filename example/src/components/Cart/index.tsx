@@ -22,10 +22,11 @@ import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
 // import { ProductForm } from '../ProductForm';
-// import { UpsellingPage } from '../UpsellingPage';
+import { UpsellingPage } from '../UpsellingPage';
 
-import { OButton, OText } from '../shared';
+import { OButton, OText, OBottomPopup } from '../shared';
 import { colors } from '../../theme';
+import { UpsellingProducts } from '../UpsellingProducts';
 
 
 const CartUI = (props: any) => {
@@ -98,10 +99,11 @@ const CartUI = (props: any) => {
     }
   }
 
-  // const handleUpsellingPage = () => {
-  //   setOpenUpselling(false)
-  //   setCanOpenUpselling(false)
-  // }
+  const handleUpsellingPage = () => {
+    props.onNavigationRedirect('CheckoutNavigator', { cartUuid: cart?.uuid })
+    setOpenUpselling(false)
+    setCanOpenUpselling(false)
+  }
 
   return (
     <CContainer>
@@ -122,8 +124,8 @@ const CartUI = (props: any) => {
             changeQuantity={changeQuantity}
             getProductMax={getProductMax}
             offsetDisabled={offsetDisabled}
-            // onDeleteProduct={handleDeleteClick}
-            // onEditProduct={handleEditProduct}
+          // onDeleteProduct={handleDeleteClick}
+          // onEditProduct={handleEditProduct}
           />
         ))}
 
@@ -209,17 +211,17 @@ const CartUI = (props: any) => {
           <OButton
             text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
               !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
-              ) : !cart?.valid_address ? (
-                t('OUT_OF_COVERAGE', 'Out of Coverage')
-              ) : (
-                `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
-              )}
+            ) : !cart?.valid_address ? (
+              t('OUT_OF_COVERAGE', 'Out of Coverage')
+            ) : (
+              `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+            )}
             bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
             isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
             borderColor={colors.primary}
             imgRightSrc={null}
-            textStyle={{color: 'white'}}
-            onClick={() => props.onNavigationRedirect('CheckoutNavigator', { cartUuid: cart?.uuid })}
+            textStyle={{ color: 'white' }}
+            onClick={() => setOpenUpselling(true)}
             style={{ width: '100%' }}
           />
         </CheckoutAction>
@@ -252,6 +254,18 @@ const CartUI = (props: any) => {
           setCanOpenUpselling={setCanOpenUpselling}
         />
       )} */}
+      <OBottomPopup open={openUpselling}>
+        <UpsellingProducts
+          handleUpsellingPage={handleUpsellingPage}
+          openUpselling={openUpselling}
+          businessId={cart?.business_id}
+          business={cart?.business}
+          cartProducts={cart?.products}
+          canOpenUpselling={canOpenUpselling}
+          setCanOpenUpselling={setCanOpenUpselling}
+        />
+      </OBottomPopup>
+
     </CContainer>
   )
 }
