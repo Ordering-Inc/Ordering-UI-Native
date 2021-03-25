@@ -79,6 +79,8 @@ const CheckoutUI = (props: any) => {
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
+  const cartsWithProducts = carts && Object.values(carts).filter((cart: any) => cart.products.length) || null
+
   const handlePlaceOrder = () => {
     if (!userErrors.length) {
       handlerClickPlaceOrder && handlerClickPlaceOrder()
@@ -108,37 +110,37 @@ const CheckoutUI = (props: any) => {
           {
             (businessDetails?.loading || cartState.loading) &&
             !businessDetails?.error &&
-          (
-            <View>
+            (
               <View>
-                <OText>
-                  Loading...
+                <View>
+                  <OText>
+                    Loading...
                 </OText>
+                </View>
               </View>
-            </View>
-          )}
+            )}
           {
             !cartState.loading &&
             businessDetails?.business &&
             Object.values(businessDetails?.business).length > 0 &&
-          (
-            <>
-              <ChTotalWrap>
-                <OIcon
-                  url={businessDetails?.business?.logo}
-                  width={80}
-                  height={80}
-                  borderRadius={80}
-                />
-                <OText size={24} mLeft={10}>
-                  {businessDetails?.business?.name}
+            (
+              <>
+                <ChTotalWrap>
+                  <OIcon
+                    url={businessDetails?.business?.logo}
+                    width={80}
+                    height={80}
+                    borderRadius={80}
+                  />
+                  <OText size={24} mLeft={10}>
+                    {businessDetails?.business?.name}
+                  </OText>
+                </ChTotalWrap>
+                <OText size={24}>
+                  {cart?.total >= 1 && parsePrice(cart?.total)}
                 </OText>
-              </ChTotalWrap>
-              <OText size={24}>
-                {cart?.total >= 1 && parsePrice(cart?.total)}
-              </OText>
-            </>
-          )}
+              </>
+            )}
         </ChTotal>
       </ChSection>
       <ChSection style={style.paddSection}>
@@ -172,10 +174,10 @@ const CheckoutUI = (props: any) => {
             />
             <OText size={18} numberOfLines={1} ellipsizeMode='tail'>
               {options?.moment
-              ? parseDate(options?.moment, {
+                ? parseDate(options?.moment, {
                   outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
                 })
-              : t('ASAP_ABBREVIATION', 'ASAP')}
+                : t('ASAP_ABBREVIATION', 'ASAP')}
             </OText>
           </CHMomentWrapper>
         </ChMoment>
@@ -210,52 +212,52 @@ const CheckoutUI = (props: any) => {
           {
             (businessDetails?.loading || cartState.loading) &&
             !businessDetails?.error &&
-          (
-            <View>
+            (
               <View>
-                <OText>
-                  Loading...
+                <View>
+                  <OText>
+                    Loading...
                 </OText>
+                </View>
               </View>
-            </View>
-          )}
+            )}
           {
             !cartState.loading &&
             businessDetails?.business &&
             Object.values(businessDetails?.business).length > 0 &&
-          (
-            <View>
-              <OText size={20}>
-                {t('BUSINESS_DETAILS', 'Business Details')}
-              </OText>
+            (
               <View>
-                <OText size={16}>
-                  <OText size={18} weight='bold'>
-                    {t('NAME', 'Name')}:{' '}
-                  </OText>
-                  {businessDetails?.business?.name}
+                <OText size={20}>
+                  {t('BUSINESS_DETAILS', 'Business Details')}
                 </OText>
-                <OText size={16}>
-                  <OText size={18} weight='bold'>
-                    {t('EMAIL', 'Email')}:{' '}
+                <View>
+                  <OText size={16}>
+                    <OText size={18} weight='bold'>
+                      {t('NAME', 'Name')}:{' '}
+                    </OText>
+                    {businessDetails?.business?.name}
                   </OText>
-                  {businessDetails?.business?.email}
-                </OText>
-                <OText size={16}>
-                  <OText size={18} weight='bold'>
-                    {t('CELLPHONE', 'Cellphone')}:{' '}
+                  <OText size={16}>
+                    <OText size={18} weight='bold'>
+                      {t('EMAIL', 'Email')}:{' '}
+                    </OText>
+                    {businessDetails?.business?.email}
                   </OText>
-                  {businessDetails?.business?.cellphone}
-                </OText>
-                <OText size={16}>
-                  <OText size={18} weight='bold'>
-                    {t('ADDRESS', 'Address')}:{' '}
+                  <OText size={16}>
+                    <OText size={18} weight='bold'>
+                      {t('CELLPHONE', 'Cellphone')}:{' '}
+                    </OText>
+                    {businessDetails?.business?.cellphone}
                   </OText>
-                  {businessDetails?.business?.address}
-                </OText>
+                  <OText size={16}>
+                    <OText size={18} weight='bold'>
+                      {t('ADDRESS', 'Address')}:{' '}
+                    </OText>
+                    {businessDetails?.business?.address}
+                  </OText>
+                </View>
               </View>
-            </View>
-          )}
+            )}
           {businessDetails?.error && businessDetails?.error?.length > 0 && (
             <View>
               <OText size={20}>
@@ -296,31 +298,40 @@ const CheckoutUI = (props: any) => {
         options.type === 1 &&
         cart?.status !== 2 &&
         validationFields?.fields?.checkout?.driver_tip?.enabled &&
-      (
-        <ChSection style={style.paddSectionH}>
-          <ChDriverTips>
-            <OText size={20}>
-              {t('DRIVER_TIPS', 'Driver Tips')}
-            </OText>
-            <DriverTips
-              businessId={cart?.business_id}
-              driverTipsOptions={DriverTipsOptions}
-              useOrderContext
-            />
-          </ChDriverTips>
-        </ChSection>
-      )}
+        (
+          <ChSection style={style.paddSectionH}>
+            <ChDriverTips>
+              <OText size={20}>
+                {t('DRIVER_TIPS', 'Driver Tips')}
+              </OText>
+              <DriverTips
+                businessId={cart?.business_id}
+                driverTipsOptions={DriverTipsOptions}
+                useOrderContext
+              />
+            </ChDriverTips>
+          </ChSection>
+        )}
 
       {!cartState.loading && cart && (
         <ChSection style={style.paddSection}>
           <ChCart>
-            <OText size={20}>
-              {t('ORDER_SUMMARY', 'Order Summary')}
-            </OText>
-            <OrderSummary
-              cart={cart}
-              isCartPending={cart?.status === 2}
+            {cartsWithProducts && cart?.products?.length === 0 ? (
+              <NotFoundSource
+                content={t('NOT_FOUND_CARTS', 'Sorry, You don\'t seem to have any carts.')}
+                btnTitle={t('SEARCH_REDIRECT', 'Go to Businesses')}
               />
+            ) : (
+              <>
+                <OText size={20}>
+                  {t('ORDER_SUMMARY', 'Order Summary')}
+                </OText>
+                <OrderSummary
+                  cart={cart}
+                  isCartPending={cart?.status === 2}
+                />
+              </>
+            )}
           </ChCart>
         </ChSection>
       )}
@@ -332,7 +343,7 @@ const CheckoutUI = (props: any) => {
               onClick={() => handlePlaceOrder()}
               bgColor={cart?.subtotal < cart?.minimum ? colors.secundary : colors.primary}
               borderColor={colors.primary}
-              textStyle={{color: 'white', fontSize: 20}}
+              textStyle={{ color: 'white', fontSize: 20 }}
               imgRightSrc={null}
               // isLoading={formState.loading}
               isDisabled={!cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
@@ -474,8 +485,10 @@ export const Checkout = (props: any) => {
       const url = `${ordering.root}/carts/${cartId}`
       const response = await fetch(url, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}` }
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
       })
       const { result } = await response.json()
 
