@@ -75,12 +75,6 @@ const CartUI = (props: any) => {
     }
   }
 
-  // useEffect(() => {
-  //   return () => {
-  //     setConfirm({ ...confirm, open: false })
-  //   }
-  // }, [])
-
   const handleClearProducts = async () => {
     try {
       setIsCartsLoading(true)
@@ -92,9 +86,9 @@ const CartUI = (props: any) => {
   }
 
   const handleUpsellingPage = () => {
-    props.onNavigationRedirect('CheckoutNavigator', { cartUuid: cart?.uuid })
     setOpenUpselling(false)
     setCanOpenUpselling(false)
+    props.onNavigationRedirect('CheckoutNavigator', { cartUuid: cart?.uuid })
   }
 
   return (
@@ -236,17 +230,7 @@ const CartUI = (props: any) => {
         />
 
       </OModal>
-      {/* {openUpselling && (
-        <UpsellingPage
-          businessId={cart.business_id}
-          cartProducts={cart.products}
-          business={cart.business}
-          handleUpsellingPage={handleUpsellingPage}
-          openUpselling={openUpselling}
-          canOpenUpselling={canOpenUpselling}
-          setCanOpenUpselling={setCanOpenUpselling}
-        />
-      )} */}
+
       {openUpselling && (
         <UpsellingProducts
           handleUpsellingPage={handleUpsellingPage}
@@ -258,7 +242,6 @@ const CartUI = (props: any) => {
           setCanOpenUpselling={setCanOpenUpselling}
         />
       )}
-
     </CContainer>
   )
 }

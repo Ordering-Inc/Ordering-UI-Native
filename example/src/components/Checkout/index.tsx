@@ -19,7 +19,6 @@ import { colors } from '../../theme';
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
 import { DriverTips } from '../DriverTips';
-// import { Cart } from '../Cart';
 import { OrderSummary } from '../OrderSummary';
 import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
@@ -43,6 +42,8 @@ import {
   ChUserDetails
 } from './styles';
 
+import { ToastType, useToast } from '../../providers/ToastProvider';
+
 const DriverTipsOptions = [0, 10, 15, 20, 25];
 const mapConfigs = {
   mapZoom: 16,
@@ -52,20 +53,30 @@ const mapConfigs = {
   }
 };
 
+const manageErrorsToShow = (array = []) => {
+  let stringError = ''
+  const list = Array.isArray(array) ? array : Object.values(array)
+  list.map((item: any, i: number) => {
+    stringError += (i + 1) === array.length ? `- ${item?.message || item}` : `- ${item?.message || item}\n`
+  })
+  return stringError;
+}
+
 const CheckoutUI = (props: any) => {
   const {
     navigation,
     cart,
-    // errors,
+    errors,
     placing,
     cartState,
     businessDetails,
     paymethodSelected,
     handlePaymethodChange,
-    handleOrderRedirect,
     handlerClickPlaceOrder,
+    // handleOrderRedirect,
   } = props
 
+  const { showToast } = useToast();
   const [, t] = useLanguage();
   const [{ user }] = useSession();
   const [{ configs }] = useConfig();
@@ -74,7 +85,7 @@ const CheckoutUI = (props: any) => {
   const [validationFields] = useValidationFields();
 
   const [errorCash, setErrorCash] = useState(false);
-  const [userErrors, setUserErrors] = useState([]);
+  const [userErrors, setUserErrors] = useState<any>([]);
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
@@ -86,9 +97,63 @@ const CheckoutUI = (props: any) => {
       handlerClickPlaceOrder && handlerClickPlaceOrder()
       return
     }
-    console.log('error', userErrors);
+    let stringError = ''
+    Object.values(userErrors).map((item: any, i: number) => {
+      stringError += (i + 1) === errors.length ? `- ${item?.message || item}` : `- ${item?.message || item}\n`
+    })
+    showToast(ToastType.Error, stringError)
     setIsUserDetailsEdit(true)
   }
+
+  const checkValidationFields = () => {
+    setUserErrors([])
+    const errors = []
+    const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes']
+
+    Object.values(validationFields?.fields?.checkout).map((field: any) => {
+      if (field?.required && !notFields.includes(field.code)) {
+        if (!user[field?.code]) {
+          errors.push(t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `The field ${field?.name} is required`))
+        }
+      }
+    })
+
+    if (!user?.cellphone && validationFields?.fields?.checkout?.cellphone?.required) {
+      errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is required'))
+    }
+
+    // if (user?.cellphone) {
+    //   if (user?.country_phone_code) {
+    //     let phone = null
+    //     phone = `+${user?.country_phone_code}${user?.cellphone}`
+    //     const phoneNumber = parsePhoneNumber(phone)
+    //     if (!phoneNumber?.isValid()) {
+    //       errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is invalid.'))
+    //     }
+    //   } else {
+    //     errors.push(t('INVALID_ERROR_COUNTRY_CODE_PHONE_NUMBER', 'The country code of the phone number is invalid'))
+    //   }
+    // }
+
+    setUserErrors(errors)
+  }
+
+  useEffect(() => {
+    if (validationFields && validationFields?.fields?.checkout) {
+      checkValidationFields()
+    }
+  }, [validationFields, user])
+
+  useEffect(() => {
+    if (errors) {
+      const errorText = manageErrorsToShow(errors)
+      showToast(ToastType.Error, errorText)
+    }
+  }, [errors])
+
+  useEffect(() => {
+    handlePaymethodChange(null)
+  }, [cart?.total])
 
   return (
     <ChContainer>
@@ -121,6 +186,7 @@ const CheckoutUI = (props: any) => {
             )}
           {
             !cartState.loading &&
+            !businessDetails?.loading &&
             businessDetails?.business &&
             Object.values(businessDetails?.business).length > 0 &&
             (
@@ -286,7 +352,7 @@ const CheckoutUI = (props: any) => {
               onPaymentChange={handlePaymethodChange}
               errorCash={errorCash}
               setErrorCash={setErrorCash}
-              handleOrderRedirect={handleOrderRedirect}
+              // handleOrderRedirect={handleOrderRedirect}
               isPaymethodNull={paymethodSelected}
             />
           </ChPaymethods>
@@ -418,42 +484,18 @@ export const Checkout = (props: any) => {
   const {
     errors,
     clearErrors,
-    query,
+    // query,
     cartUuid,
-    handleOrderRedirect,
-    handleCheckoutRedirect,
-    // handleSearchRedirect,
-    // handleCheckoutListRedirect
+    onNavigationRedirect
   } = props
 
-  const [orderState, { confirmCart }] = useOrder()
-  const [{ token }] = useSession()
-  const [ordering] = useApi()
-  const [, t] = useLanguage()
+  const { showToast } = useToast();
+  const [{ token }] = useSession();
+  const [ordering] = useApi();
+  const [orderState, { confirmCart }] = useOrder();
 
   const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null })
-
-  // const [openUpselling, setOpenUpselling] = useState(false)
-  // const [canOpenUpselling, setCanOpenUpselling] = useState(false)
   const [currentCart, setCurrentCart] = useState({ business_id: null, products: null })
-  // const [alertState, setAlertState] = useState({ open: false, content: [] })
-
-  // const cartsWithProducts = orderState?.carts && Object.values(orderState?.carts).filter(cart => cart.products.length) || null
-
-  // const closeAlert = () => {
-  //   setAlertState({
-  //     open: false,
-  //     content: []
-  //   })
-  //   clearErrors && clearErrors()
-  // }
-
-  // const handleUpsellingPage = () => {
-  //   setOpenUpselling(false)
-  //   setCurrentCart(null)
-  //   setCanOpenUpselling(false)
-  //   handleCheckoutRedirect(currentCart.uuid)
-  // }
 
   useEffect(() => {
     if (!orderState.loading && currentCart?.business_id) {
@@ -464,20 +506,13 @@ export const Checkout = (props: any) => {
     }
   }, [orderState.loading])
 
-  // useEffect(() => {
-  //   if (currentCart?.products) {
-  //     setOpenUpselling(true)
-  //   }
-  // }, [currentCart])
-
-  // useEffect(() => {
-  //   if (errors?.length) {
-  //     setAlertState({
-  //       open: true,
-  //       content: errors
-  //     })
-  //   }
-  // }, [errors])
+  useEffect(() => {
+    if (errors) {
+      const errorText = manageErrorsToShow(errors)
+      showToast(ToastType.Error, errorText)
+      clearErrors && clearErrors()
+    }
+  }, [errors])
 
   const getOrder = async (cartId: any) => {
     try {
@@ -493,20 +528,17 @@ export const Checkout = (props: any) => {
       const { result } = await response.json()
 
       if (result.status === 1 && result.order?.uuid) {
-        handleOrderRedirect(result.order.uuid)
+        onNavigationRedirect('OrderDetails', { orderId: result.order.uuid })
         setCartState({ ...cartState, loading: false })
-      } else if (result.status === 2 && result.paymethod_data?.gateway === 'stripe_redirect' && query.get('payment_intent')) {
+        // } else if (result.status === 2 && result.paymethod_data?.gateway === 'stripe_redirect' && query.get('payment_intent')) {
+      } else if (result.status === 2 && result.paymethod_data?.gateway === 'stripe_redirect') {
         try {
           const confirmCartRes = await confirmCart(cartUuid)
           if (confirmCartRes.error) {
-            // setAlertState({
-            //   open: true,
-            //   content: [confirmCartRes.error.message]
-            // })
-            console.log('error');
+            showToast(ToastType.Error, confirmCartRes.error.message)
           }
           if (confirmCartRes.result.order?.uuid) {
-            handleOrderRedirect(confirmCartRes.result.order.uuid)
+            onNavigationRedirect('OrderDetails', { orderId: confirmCartRes.result.order.uuid })
           }
           setCartState({
             ...cartState,
@@ -514,11 +546,7 @@ export const Checkout = (props: any) => {
             cart: result
           })
         } catch (error) {
-          // setAlertState({
-          //   open: true,
-          //   content: [error.message]
-          // })
-          console.log('error');
+          showToast(ToastType.Error, error?.toString() || error.message)
         }
       } else {
         const cart = Array.isArray(result) ? null : result
@@ -552,6 +580,16 @@ export const Checkout = (props: any) => {
   }
 
   return (
-    <CheckoutController {...checkoutProps} />
+    <>
+      {cartState.loading ? (
+        <View style={{ width: '80%', padding: 20 }}>
+          <OText>
+            LOADING..
+          </OText>
+        </View>
+      ) : (
+        <CheckoutController {...checkoutProps} />
+      )}
+    </>
   )
 }
