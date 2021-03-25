@@ -22,12 +22,11 @@ import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
 // import { ProductForm } from '../ProductForm';
-import { UpsellingPage } from '../UpsellingPage';
 
-import { OButton, OText, OBottomPopup } from '../shared';
+import { OButton, OModal, OText, OBottomPopup } from '../shared';
 import { colors } from '../../theme';
+import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
-
 
 const CartUI = (props: any) => {
   const {
@@ -47,8 +46,8 @@ const CartUI = (props: any) => {
   const [validationFields] = useValidationFields()
 
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null })
-  // const [openProduct, setModalIsOpen] = useState(false)
-  // const [curProduct, setCurProduct] = useState({})
+  const [openProduct, setModalIsOpen] = useState(false)
+  const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
 
@@ -61,33 +60,26 @@ const CartUI = (props: any) => {
     ? t('RIGHT_NOW', 'Right Now')
     : parseDate(orderState?.option?.moment, { outputFormat: 'YYYY-MM-DD HH:mm' })
 
-  // const handleDeleteClick = (product: any) => {
-  //   setConfirm({
-  //     open: true,
-  //     content: t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?'),
-  //     handleOnAccept: () => {
-  //       removeProduct(product)
-  //       setConfirm({ ...confirm, open: false })
-  //     }
-  //   })
-  // }
+  const handleDeleteClick = (product: any) => {
+    removeProduct(product)
+  }
 
-  // const handleEditProduct = (product: any) => {
-  //   setCurProduct(product)
-  //   setModalIsOpen(true)
-  // }
+  const handleEditProduct = (product: any) => {
+    setCurProduct(product)
+    setModalIsOpen(true)
+  }
+
+  const handlerProductAction = (product: any) => {
+    if (Object.keys(product).length) {
+      setModalIsOpen(false)
+    }
+  }
 
   // useEffect(() => {
   //   return () => {
   //     setConfirm({ ...confirm, open: false })
   //   }
   // }, [])
-
-  // const handlerProductAction = (product: any) => {
-  //   if (Object.keys(product).length) {
-  //     setModalIsOpen(false)
-  //   }
-  // }
 
   const handleClearProducts = async () => {
     try {
@@ -124,8 +116,8 @@ const CartUI = (props: any) => {
             changeQuantity={changeQuantity}
             getProductMax={getProductMax}
             offsetDisabled={offsetDisabled}
-          // onDeleteProduct={handleDeleteClick}
-          // onEditProduct={handleEditProduct}
+            onDeleteProduct={handleDeleteClick}
+            onEditProduct={handleEditProduct}
           />
         ))}
 
@@ -212,7 +204,7 @@ const CartUI = (props: any) => {
             text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
               !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
             ) : !cart?.valid_address ? (
-              t('OUT_OF_COVERAGE', 'Out of Coverage')
+              `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
             ) : (
               `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
             )}
@@ -220,17 +212,16 @@ const CartUI = (props: any) => {
             isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
             borderColor={colors.primary}
             imgRightSrc={null}
-            textStyle={{ color: 'white' }}
+            textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
             onClick={() => setOpenUpselling(true)}
-            style={{ width: '100%' }}
+            style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
           />
         </CheckoutAction>
       </BusinessItemAccordion>
-      {/* <Modal
-        width='70%'
+      <OModal
         open={openProduct}
-        padding='0'
-        closeOnBackdrop
+        entireModal
+        customClose
         onClose={() => setModalIsOpen(false)}
       >
         <ProductForm
@@ -241,8 +232,10 @@ const CartUI = (props: any) => {
           categoryId={curProduct?.category_id}
           productId={curProduct?.id}
           onSave={handlerProductAction}
+          onClose={() => setModalIsOpen(false)}
         />
-      </Modal> */}
+
+      </OModal>
       {/* {openUpselling && (
         <UpsellingPage
           businessId={cart.business_id}

@@ -8,7 +8,7 @@ export const OSContainer = styled.View`
 export const OSProductList = styled.View``
 
 export const OSBill = styled.View`
-  padding-horizontal: 30px;
+  padding-horizontal: 10px;
   padding-top: 10px;
   flex: 1;
 `
