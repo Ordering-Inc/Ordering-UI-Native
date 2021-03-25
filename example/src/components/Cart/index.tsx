@@ -22,12 +22,11 @@ import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
 // import { ProductForm } from '../ProductForm';
-// import { UpsellingPage } from '../UpsellingPage';
 
-import { OButton, OModal, OText } from '../shared';
+import { OButton, OModal, OText, OBottomPopup } from '../shared';
 import { colors } from '../../theme';
 import { ProductForm } from '../ProductForm';
-
+import { UpsellingProducts } from '../UpsellingProducts';
 
 const CartUI = (props: any) => {
   const {
@@ -92,10 +91,11 @@ const CartUI = (props: any) => {
     }
   }
 
-  // const handleUpsellingPage = () => {
-  //   setOpenUpselling(false)
-  //   setCanOpenUpselling(false)
-  // }
+  const handleUpsellingPage = () => {
+    props.onNavigationRedirect('CheckoutNavigator', { cartUuid: cart?.uuid })
+    setOpenUpselling(false)
+    setCanOpenUpselling(false)
+  }
 
   return (
     <CContainer>
@@ -213,7 +213,7 @@ const CartUI = (props: any) => {
             borderColor={colors.primary}
             imgRightSrc={null}
             textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-            onClick={() => props.onNavigationRedirect('CheckoutNavigator', { cartUuid: cart?.uuid })}
+            onClick={() => setOpenUpselling(true)}
             style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
           />
         </CheckoutAction>
@@ -247,6 +247,18 @@ const CartUI = (props: any) => {
           setCanOpenUpselling={setCanOpenUpselling}
         />
       )} */}
+      <OBottomPopup open={openUpselling}>
+        <UpsellingProducts
+          handleUpsellingPage={handleUpsellingPage}
+          openUpselling={openUpselling}
+          businessId={cart?.business_id}
+          business={cart?.business}
+          cartProducts={cart?.products}
+          canOpenUpselling={canOpenUpselling}
+          setCanOpenUpselling={setCanOpenUpselling}
+        />
+      </OBottomPopup>
+
     </CContainer>
   )
 }

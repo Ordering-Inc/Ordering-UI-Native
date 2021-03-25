@@ -41,6 +41,8 @@ export interface AddressListParams {
   handleDelete?: any;
   handleSetDefault?: any;
   setAddressList?: any;
+  isGoBack?: boolean;
+  route?: any
 }
 
 export interface AddressFormParams {
@@ -309,8 +311,10 @@ export interface UpsellingProductsParams {
   isCustomMode?: boolean;
   upsellingProducts?: any;
   business?: any;
-  handleUpsellingPage?: () => {};
+  businessId?: number;
+  cartProducts?: Array<any>; 
+  handleUpsellingPage: () => void;
   openUpselling: boolean;
   canOpenUpselling?: boolean;
-  setCanOpenUpselling?: (value: any) => {};
+  setCanOpenUpselling?: (value: any) => void;
 }
