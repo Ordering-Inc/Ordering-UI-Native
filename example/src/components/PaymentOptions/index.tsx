@@ -16,7 +16,7 @@ import {
 } from 'ordering-components/native';
 
 // import { Modal } from '../Modal'
-// import { PaymentOptionCash } from '../PaymentOptionCash'
+import { PaymentOptionCash } from '../PaymentOptionCash'
 // import { PaymentOptionStripe } from '../PaymentOptionStripe'
 // import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
 // import { StripeElementsForm } from '../StripeElementsForm'
@@ -34,6 +34,7 @@ import {
   PayCardSelected,
   CardItemContent
 } from './styles'
+import { colors } from '../../theme';
 
 const stripeOptions = ['stripe_direct', 'stripe', 'stripe_connect']
 const stripeRedirectOptions = [
@@ -81,7 +82,7 @@ const PaymentOptionsUI = (props: any) => {
     paymethodData,
     paymethodsList,
     isPaymethodNull,
-    handleOrderRedirect,
+    onNavigationRedirect,
     handlePaymethodClick,
     handlePaymethodDataChange
   } = props
@@ -121,7 +122,11 @@ const PaymentOptionsUI = (props: any) => {
             width={40}
             height={40}
             />
-          <OText size={12} style={{ margin: 0 }}>
+          <OText
+            size={12}
+            style={{ margin: 0 }}
+            color={paymethodSelected?.id === item.id ? colors.white : '#000'}
+          >
             {item.name}
           </OText>
         </PMItem>
@@ -162,13 +167,13 @@ const PaymentOptionsUI = (props: any) => {
         </OText>
       )}
 
-      {/* {paymethodSelected?.gateway === 'cash' && (
+      {paymethodSelected?.gateway === 'cash' && (
         <PaymentOptionCash
           orderTotal={cart.total}
           onChangeData={handlePaymethodDataChange}
           setErrorCash={props.setErrorCash}
         />
-      )} */}
+      )}
 
       {/* {stripeOptions.includes(paymethodSelected?.gateway) && paymethodData?.card && (
         <PayCardSelected>
@@ -208,7 +213,7 @@ const PaymentOptionsUI = (props: any) => {
                 ? t('NEED_LOGIN_TO_USE', 'Sorry, you need to login to use this method')
                 : null
             }
-            handlerChangePaypal={(uuid) => handleOrderRedirect && handleOrderRedirect(uuid)}
+            handlerChangePaypal={(uuid) => onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid })}
           />
         )}
       </Modal> */}

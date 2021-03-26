@@ -99,7 +99,8 @@ const styles = StyleSheet.create({
   inputsStyle: {
     borderColor: colors.secundaryContrast,
     borderRadius: 50,
-    width: '64%'
+    flex: 1,
+    marginRight: 30
   },
 });
 
