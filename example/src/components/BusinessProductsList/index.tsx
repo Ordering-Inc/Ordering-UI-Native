@@ -9,6 +9,8 @@ import {
   ErrorMessage,
   WrapperNotFound
 } from './styles'
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+import { View } from 'react-native'
 
 const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   const {
@@ -20,6 +22,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     onProductClick,
     featured,
     searchValue,
+    isBusinessLoading,
     handleSearchRedirect,
     handleClearSearch
   } = props
@@ -92,7 +95,24 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
       }
 
       {
-        !categoryState.loading && categoryState.products.length === 0 && (
+        (categoryState.loading || isBusinessLoading) && (
+          <>
+            {[...Array(categoryState.pagination.nextPageItems).keys()].map((item, i) => (
+              <Placeholder key={i} style={{ padding: 5 }} Animation={Fade}>
+                <View style={{ flexDirection: 'row' }}>
+                  <PlaceholderLine width={24} height={70} style={{ marginRight: 10, marginBottom: 10 }} />
+                  <Placeholder style={{ paddingVertical: 10 }}>
+                      <PlaceholderLine width={60} style={{marginBottom: 25}}/>
+                      <PlaceholderLine width={20} />
+                  </Placeholder>
+                </View>
+              </Placeholder>
+            ))}
+          </>
+        )
+      }
+      {
+        !categoryState.loading && !isBusinessLoading && categoryState.products.length === 0 && (
           <WrapperNotFound>
             <NotFoundSource
               content={!searchValue ? t('ERROR_NOT_FOUND_PRODUCTS_TIME', 'No products found at this time') : t('ERROR_NOT_FOUND_PRODUCTS', 'No products found, please change filters.')}

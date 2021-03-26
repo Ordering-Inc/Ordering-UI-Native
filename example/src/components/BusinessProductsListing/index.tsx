@@ -28,6 +28,7 @@ import { colors } from '../../theme'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
+import { BusinessCategories } from '../BusinessTypeFilter/styles'
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -84,8 +85,31 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   return (
     <>
-      <Spinner visible={loading} />
       <ScrollView style={styles.mainContainer}>
+        {loading && !error && (
+          <>
+            <BusinessBasicInformation
+              businessState={{ business: {}, loading: true }}
+              openBusinessInformation={openBusinessInformation}
+            />
+            <BusinessProductsCategories
+              categories={[]}
+              categorySelected={categorySelected}
+              onClickCategory={handleChangeCategory}
+              featured={featuredProducts}
+              openBusinessInformation={openBusinessInformation}
+              loading={loading}
+            />
+            <WrapContent>
+              <BusinessProductsList
+                categories={[]}
+                category={categorySelected}
+                categoryState={categoryState}
+                isBusinessLoading={loading}
+              />
+            </WrapContent>
+          </>
+        )}
         {
           !loading && business?.id && (
             <>
@@ -100,7 +124,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                           <IconAntDesign
                             name='arrowleft'
                             color={colors.white}
-                            style={{backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 50, marginRight: 20}}
+                            style={{ backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 50, marginRight: 20 }}
                             size={25}
                           />
                         </TouchableOpacity>

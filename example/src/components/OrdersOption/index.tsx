@@ -2,13 +2,21 @@ import React, { useState, useEffect } from 'react'
 import { OrderList, useLanguage, useOrder } from 'ordering-components/native'
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
-import Spinner from 'react-native-loading-spinner-overlay'
 import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
 
 import { OptionTitle } from './styles'
 import { colors } from '../../theme'
 import { OrdersOptionParams } from '../../types'
+
+import ContentLoader from 'react-native-easy-content-loader';
+import {
+  Placeholder,
+  PlaceholderMedia,
+  PlaceholderLine,
+  Fade
+} from "rn-placeholder";
+import { View } from 'react-native'
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
@@ -70,7 +78,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   return (
     <>
-      <Spinner visible={loading} />
       {(orders.length > 0) && (
         <>
           <OptionTitle>
@@ -89,16 +96,47 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           )}
         </>
       )}
+      {loading && (
+        <>
+          {activeOrders ? (
+            <Placeholder style={{marginTop: 30}} Animation={Fade}>
+              <View style={{ width: '100%', flexDirection: 'row' }}>
+                <PlaceholderLine width={20} height={70} style={{ marginRight: 20 }} />
+                <Placeholder>
+                  <PlaceholderLine width={30} style={{ marginTop: 5 }} />
+                  <PlaceholderLine width={50} />
+                  <PlaceholderLine width={70} />
+                </Placeholder>
+              </View>
+            </Placeholder>
+          ) : (
+            <View style={{marginTop: 30}}>
+              {[...Array(5)].map((item, i) => (
+                <Placeholder key={i} Animation={Fade}>
+                  <View style={{ width: '100%', flexDirection: 'row' }}>
+                    <PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 20 }} />
+                    <Placeholder>
+                      <PlaceholderLine width={30} style={{ marginTop: 5 }} />
+                      <PlaceholderLine width={50} />
+                      <PlaceholderLine width={20} />
+                    </Placeholder>
+                  </View>
+                </Placeholder>
+              ))}
+            </View>
+          )}
+        </>
+      )}
       {!loading && !error && orders.length > 0 && (
         activeOrders ? (
           <ActiveOrders
-          orders={ordersSorted}
-          pagination={pagination}
-          loadMoreOrders={loadMoreOrders}
-          reorderLoading={reorderLoading}
-          customArray={customArray}
-          getOrderStatus={getOrderStatus}
-          onNavigationRedirect={onNavigationRedirect}
+            orders={ordersSorted}
+            pagination={pagination}
+            loadMoreOrders={loadMoreOrders}
+            reorderLoading={reorderLoading}
+            customArray={customArray}
+            getOrderStatus={getOrderStatus}
+            onNavigationRedirect={onNavigationRedirect}
           />
         ) : (
           <PreviousOrders

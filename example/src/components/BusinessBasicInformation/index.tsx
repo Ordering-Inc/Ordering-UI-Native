@@ -19,6 +19,7 @@ import {
   WrapReviews,
   WrapBusinessInfo
 } from './styles'
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 const types = ['food', 'laundry', 'alcohol', 'groceries']
 
 export const BusinessBasicInformation = (props: BusinessBasicInformationParams) => {
@@ -26,12 +27,12 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
     businessState,
     isBusinessInfoShow
   } = props
-  const { business } = businessState
+  const { business, loading } = businessState
 
   const [orderState] = useOrder()
   const [, t] = useLanguage()
   const [{ parsePrice, parseDistance, optimizeImage }] = useUtils()
-  const [openBusinessInformation, setOpenBusinessInformation] =  useState(false)
+  const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
   const [openBusinessReviews, setOpenBusinessReviews] = useState(false)
   const getBusinessType = () => {
     if (Object.keys(business).length <= 0) return 'none'
@@ -48,17 +49,32 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         source={{ uri: business?.header }}
       >
         <BusinessLogo>
-          {!isBusinessInfoShow && (
-            <OIcon url={optimizeImage(business?.logo, 'h_200,c_limit')} style={styles.businessLogo} />
+
+          {loading ? (
+            <Placeholder Animation={Fade}>
+              <PlaceholderLine height={60} width={20} style={{ ...styles.businessLogo }} />
+            </Placeholder>
+          ) : (
+            <>
+              {!isBusinessInfoShow && (
+                <OIcon url={optimizeImage(business?.logo, 'h_200,c_limit')} style={styles.businessLogo} />
+              )}
+            </>
           )}
         </BusinessLogo>
       </BusinessHeader>
       <BusinessInfo style={styles.businessInfo}>
         <View>
           <BusinessInfoItem>
-            <OText size={20} weight='bold'>
-              {business?.name}
-            </OText>
+            {loading ? (
+              <Placeholder Animation={Fade}>
+                <PlaceholderLine height={30} width={20} />
+              </Placeholder>
+            ) : (
+              <OText size={20} weight='bold'>
+                {business?.name}
+              </OText>
+            )}
             {!isBusinessInfoShow && (
               <WrapBusinessInfo
                 onPress={() => setOpenBusinessInformation(true)}
@@ -71,10 +87,25 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
               </WrapBusinessInfo>
             )}
           </BusinessInfoItem>
-          <View>
-            <OText color={colors.textSecondary}>{getBusinessType()}</OText>
-          </View>
+          {loading ? (
+            <Placeholder Animation={Fade}>
+              <PlaceholderLine width={10} />
+            </Placeholder>
+          ) : (
+            <View>
+              <OText color={colors.textSecondary}>{getBusinessType()}</OText>
+            </View>
+          )}
           <BusinessInfoItem>
+            {loading && (
+              <Placeholder Animation={Fade}>
+                <View style={{ flexDirection: 'row' }}>
+                  <PlaceholderLine width={13} style={{ marginRight: 10 }} />
+                  <PlaceholderLine width={13} style={{ marginRight: 10 }} />
+                  <PlaceholderLine width={13} />
+                </View>
+              </Placeholder>
+            )}
             <View style={styles.bullet}>
               <IconEvilIcons
                 name='clock'
@@ -127,9 +158,9 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         </WrapReviews>
       </BusinessInfo>
       <OModal
-       titleSectionStyle={styles.modalTitleSectionStyle}
-       open={openBusinessInformation}
-       onClose={() => setOpenBusinessInformation(false)}
+        titleSectionStyle={styles.modalTitleSectionStyle}
+        open={openBusinessInformation}
+        onClose={() => setOpenBusinessInformation(false)}
       >
         <BusinessInformation
           businessState={businessState}
@@ -137,9 +168,9 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         />
       </OModal>
       <OModal
-       titleSectionStyle={styles.modalTitleSectionStyle}
-       open={openBusinessReviews}
-       onClose={() => setOpenBusinessReviews(false)}
+        titleSectionStyle={styles.modalTitleSectionStyle}
+        open={openBusinessReviews}
+        onClose={() => setOpenBusinessReviews(false)}
       >
         <BusinessReviews
           businessState={businessState}

@@ -41,8 +41,10 @@ import {
   ChBusinessDetails,
   ChUserDetails
 } from './styles';
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const DriverTipsOptions = [0, 10, 15, 20, 25];
 const mapConfigs = {
@@ -177,13 +179,14 @@ const CheckoutUI = (props: any) => {
             (businessDetails?.loading || cartState.loading) &&
             !businessDetails?.error &&
             (
-              <View>
-                <View>
-                  <OText>
-                    Loading...
-                </OText>
-                </View>
-              </View>
+              <>
+                <Placeholder Animation={Fade}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <PlaceholderLine width={25} height={70} style={{ marginBottom: 10, marginRight: 10 }} />
+                    <PlaceholderLine width={75} height={20} style={{ marginTop: 25 }} />
+                  </View>
+                </Placeholder>
+              </>
             )}
           {
             !cartState.loading &&
@@ -213,9 +216,10 @@ const CheckoutUI = (props: any) => {
       <ChSection style={style.paddSection}>
         <ChAddress>
           {(businessDetails?.loading || cartState.loading) ? (
-            <OText size={18}>
-              Loading...
-            </OText>
+            <Placeholder Animation={Fade}>
+              <PlaceholderLine height={20} style={{ marginBottom: 50 }} />
+              <PlaceholderLine height={100} />
+            </Placeholder>
           ) : (
             <AddressDetails
               navigation={navigation}
@@ -253,13 +257,12 @@ const CheckoutUI = (props: any) => {
       <ChSection style={style.paddSection}>
         <ChUserDetails>
           {cartState.loading ? (
-            <View>
-              <View>
-                <OText>
-                  Loading...
-                </OText>
-              </View>
-            </View>
+            <Placeholder Animation={Fade}>
+              <PlaceholderLine height={20} width={70} />
+              <PlaceholderLine height={15} width={60} />
+              <PlaceholderLine height={15} width={60} />
+              <PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+            </Placeholder>
           ) : (
             <UserDetails
               isUserDetailsEdit={isUserDetailsEdit}
@@ -280,13 +283,12 @@ const CheckoutUI = (props: any) => {
             (businessDetails?.loading || cartState.loading) &&
             !businessDetails?.error &&
             (
-              <View>
-                <View>
-                  <OText>
-                    Loading...
-                </OText>
-                </View>
-              </View>
+              <Placeholder Animation={Fade}>
+                <PlaceholderLine height={20} width={70} />
+                <PlaceholderLine height={15} width={60} />
+                <PlaceholderLine height={15} width={60} />
+                <PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+              </Placeholder>
             )}
           {
             !cartState.loading &&
@@ -583,11 +585,7 @@ export const Checkout = (props: any) => {
   return (
     <>
       {cartState.loading ? (
-        <View style={{ width: '80%', padding: 20 }}>
-          <OText>
-            LOADING..
-          </OText>
-        </View>
+        <Spinner visible={cartState.loading}/>
       ) : (
         <CheckoutController {...checkoutProps} />
       )}

@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     paddingHorizontal: 20,
-    maxHeight: deviceHeight < 700 ? deviceHeight * 0.7 : deviceHeight * 0.6,
+    maxHeight: deviceHeight,
   },
   titleStyle: {
     fontSize: 20,
