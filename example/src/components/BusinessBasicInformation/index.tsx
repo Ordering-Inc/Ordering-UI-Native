@@ -45,7 +45,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
   return (
     <BusinessContainer>
       <BusinessHeader
-        style={isBusinessInfoShow ? styles.businesInfoheaderStyle : styles.headerStyle}
+        style={isBusinessInfoShow ? styles.businesInfoheaderStyle : {...styles.headerStyle, backgroundColor: colors.backgroundGray}}
         source={{ uri: business?.header }}
       >
         <BusinessLogo>
