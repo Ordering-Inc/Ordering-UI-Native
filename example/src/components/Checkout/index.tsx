@@ -42,6 +42,7 @@ import {
   ChBusinessDetails,
   ChUserDetails
 } from './styles';
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 const DriverTipsOptions = [0, 10, 15, 20, 25];
 const mapConfigs = {
@@ -108,45 +109,47 @@ const CheckoutUI = (props: any) => {
           {
             (businessDetails?.loading || cartState.loading) &&
             !businessDetails?.error &&
-          (
-            <View>
-              <View>
-                <OText>
-                  Loading...
-                </OText>
-              </View>
-            </View>
-          )}
+            (
+              <>
+                <Placeholder Animation={Fade}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <PlaceholderLine width={25} height={70} style={{ marginBottom: 10, marginRight: 10 }} />
+                    <PlaceholderLine width={75} height={20} style={{ marginTop: 25 }} />
+                  </View>
+                </Placeholder>
+              </>
+            )}
           {
             !cartState.loading &&
             businessDetails?.business &&
             Object.values(businessDetails?.business).length > 0 &&
-          (
-            <>
-              <ChTotalWrap>
-                <OIcon
-                  url={businessDetails?.business?.logo}
-                  width={80}
-                  height={80}
-                  borderRadius={80}
-                />
-                <OText size={24} mLeft={10}>
-                  {businessDetails?.business?.name}
+            (
+              <>
+                <ChTotalWrap>
+                  <OIcon
+                    url={businessDetails?.business?.logo}
+                    width={80}
+                    height={80}
+                    borderRadius={80}
+                  />
+                  <OText size={24} mLeft={10}>
+                    {businessDetails?.business?.name}
+                  </OText>
+                </ChTotalWrap>
+                <OText size={24}>
+                  {cart?.total >= 1 && parsePrice(cart?.total)}
                 </OText>
-              </ChTotalWrap>
-              <OText size={24}>
-                {cart?.total >= 1 && parsePrice(cart?.total)}
-              </OText>
-            </>
-          )}
+              </>
+            )}
         </ChTotal>
       </ChSection>
       <ChSection style={style.paddSection}>
         <ChAddress>
           {(businessDetails?.loading || cartState.loading) ? (
-            <OText size={18}>
-              Loading...
-            </OText>
+            <Placeholder Animation={Fade}>
+              <PlaceholderLine height={20} style={{ marginBottom: 50 }} />
+              <PlaceholderLine height={100} />
+            </Placeholder>
           ) : (
             <AddressDetails
               navigation={navigation}
@@ -172,10 +175,10 @@ const CheckoutUI = (props: any) => {
             />
             <OText size={18} numberOfLines={1} ellipsizeMode='tail'>
               {options?.moment
-              ? parseDate(options?.moment, {
+                ? parseDate(options?.moment, {
                   outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
                 })
-              : t('ASAP_ABBREVIATION', 'ASAP')}
+                : t('ASAP_ABBREVIATION', 'ASAP')}
             </OText>
           </CHMomentWrapper>
         </ChMoment>
@@ -184,13 +187,12 @@ const CheckoutUI = (props: any) => {
       <ChSection style={style.paddSection}>
         <ChUserDetails>
           {cartState.loading ? (
-            <View>
-              <View>
-                <OText>
-                  Loading...
-                </OText>
-              </View>
-            </View>
+            <Placeholder Animation={Fade}>
+              <PlaceholderLine height={20} width={70} />
+              <PlaceholderLine height={15} width={60} />
+              <PlaceholderLine height={15} width={60} />
+              <PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+            </Placeholder>
           ) : (
             <UserDetails
               isUserDetailsEdit={isUserDetailsEdit}
@@ -210,52 +212,51 @@ const CheckoutUI = (props: any) => {
           {
             (businessDetails?.loading || cartState.loading) &&
             !businessDetails?.error &&
-          (
-            <View>
-              <View>
-                <OText>
-                  Loading...
-                </OText>
-              </View>
-            </View>
-          )}
+            (
+              <Placeholder Animation={Fade}>
+                <PlaceholderLine height={20} width={70} />
+                <PlaceholderLine height={15} width={60} />
+                <PlaceholderLine height={15} width={60} />
+                <PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+              </Placeholder>
+            )}
           {
             !cartState.loading &&
             businessDetails?.business &&
             Object.values(businessDetails?.business).length > 0 &&
-          (
-            <View>
-              <OText size={20}>
-                {t('BUSINESS_DETAILS', 'Business Details')}
-              </OText>
+            (
               <View>
-                <OText size={16}>
-                  <OText size={18} weight='bold'>
-                    {t('NAME', 'Name')}:{' '}
-                  </OText>
-                  {businessDetails?.business?.name}
+                <OText size={20}>
+                  {t('BUSINESS_DETAILS', 'Business Details')}
                 </OText>
-                <OText size={16}>
-                  <OText size={18} weight='bold'>
-                    {t('EMAIL', 'Email')}:{' '}
+                <View>
+                  <OText size={16}>
+                    <OText size={18} weight='bold'>
+                      {t('NAME', 'Name')}:{' '}
+                    </OText>
+                    {businessDetails?.business?.name}
                   </OText>
-                  {businessDetails?.business?.email}
-                </OText>
-                <OText size={16}>
-                  <OText size={18} weight='bold'>
-                    {t('CELLPHONE', 'Cellphone')}:{' '}
+                  <OText size={16}>
+                    <OText size={18} weight='bold'>
+                      {t('EMAIL', 'Email')}:{' '}
+                    </OText>
+                    {businessDetails?.business?.email}
                   </OText>
-                  {businessDetails?.business?.cellphone}
-                </OText>
-                <OText size={16}>
-                  <OText size={18} weight='bold'>
-                    {t('ADDRESS', 'Address')}:{' '}
+                  <OText size={16}>
+                    <OText size={18} weight='bold'>
+                      {t('CELLPHONE', 'Cellphone')}:{' '}
+                    </OText>
+                    {businessDetails?.business?.cellphone}
                   </OText>
-                  {businessDetails?.business?.address}
-                </OText>
+                  <OText size={16}>
+                    <OText size={18} weight='bold'>
+                      {t('ADDRESS', 'Address')}:{' '}
+                    </OText>
+                    {businessDetails?.business?.address}
+                  </OText>
+                </View>
               </View>
-            </View>
-          )}
+            )}
           {businessDetails?.error && businessDetails?.error?.length > 0 && (
             <View>
               <OText size={20}>
@@ -296,20 +297,20 @@ const CheckoutUI = (props: any) => {
         options.type === 1 &&
         cart?.status !== 2 &&
         validationFields?.fields?.checkout?.driver_tip?.enabled &&
-      (
-        <ChSection style={style.paddSectionH}>
-          <ChDriverTips>
-            <OText size={20}>
-              {t('DRIVER_TIPS', 'Driver Tips')}
-            </OText>
-            <DriverTips
-              businessId={cart?.business_id}
-              driverTipsOptions={DriverTipsOptions}
-              useOrderContext
-            />
-          </ChDriverTips>
-        </ChSection>
-      )}
+        (
+          <ChSection style={style.paddSectionH}>
+            <ChDriverTips>
+              <OText size={20}>
+                {t('DRIVER_TIPS', 'Driver Tips')}
+              </OText>
+              <DriverTips
+                businessId={cart?.business_id}
+                driverTipsOptions={DriverTipsOptions}
+                useOrderContext
+              />
+            </ChDriverTips>
+          </ChSection>
+        )}
 
       {!cartState.loading && cart && (
         <ChSection style={style.paddSection}>
@@ -320,7 +321,7 @@ const CheckoutUI = (props: any) => {
             <OrderSummary
               cart={cart}
               isCartPending={cart?.status === 2}
-              />
+            />
           </ChCart>
         </ChSection>
       )}
@@ -332,7 +333,7 @@ const CheckoutUI = (props: any) => {
               onClick={() => handlePlaceOrder()}
               bgColor={cart?.subtotal < cart?.minimum ? colors.secundary : colors.primary}
               borderColor={colors.primary}
-              textStyle={{color: 'white', fontSize: 20}}
+              textStyle={{ color: 'white', fontSize: 20 }}
               imgRightSrc={null}
               // isLoading={formState.loading}
               isDisabled={!cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
@@ -474,8 +475,10 @@ export const Checkout = (props: any) => {
       const url = `${ordering.root}/carts/${cartId}`
       const response = await fetch(url, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}` }
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
       })
       const { result } = await response.json()
 

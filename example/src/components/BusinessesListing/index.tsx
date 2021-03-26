@@ -13,6 +13,7 @@ import { View, StyleSheet, ScrollView } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay';
 import NavBar from '../NavBar'
 import { OrderTypeSelector } from '../OrderTypeSelector'
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 const PIXELS_TO_SCROLL = 1000
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
@@ -56,10 +57,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       {auth && (
         <WelcomeTitle>
           <View style={styles.welcome}>
-            <OText style={{fontWeight: 'bold'}} size={28} >
+            <OText style={{ fontWeight: 'bold' }} size={28} >
               {t('WELCOME_TITLE_APP', 'Hello there, ')}
             </OText>
-            <OText style={{fontWeight: 'bold'}} size={28} color={colors.primary}>
+            <OText style={{ fontWeight: 'bold' }} size={28} color={colors.primary}>
               {user?.name}
             </OText>
           </View>
@@ -72,7 +73,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         </WelcomeTitle>
       )}
       <Search>
-        <SearchBar onSearch={handleChangeSearch} searchValue={searchValue} lazyLoad placeholder={t('FIND_BUSINESS', 'Find a Business')}/>
+        <SearchBar onSearch={handleChangeSearch} searchValue={searchValue} lazyLoad placeholder={t('FIND_BUSINESS', 'Find a Business')} />
       </Search>
       <OrderControlContainer>
         <OrderTypeSelector configTypes={configTypes} />
@@ -80,7 +81,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           onPress={() => auth
             ? navigation.navigate('AddressList', { isFromBusinesses: true })
             : navigation.navigate('AddressForm')}
-          >
+        >
           <MaterialComIcon
             name='home-outline'
             color={colors.primary}
@@ -96,8 +97,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         >
           <OText size={12} numberOfLines={1} ellipsizeMode='tail'>
             {orderState.options?.moment
-            ? parseDate(orderState.options?.moment, { outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm' })
-            : t('ASAP_ABBREVIATION', 'ASAP')}
+              ? parseDate(orderState.options?.moment, { outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm' })
+              : t('ASAP_ABBREVIATION', 'ASAP')}
           </OText>
         </WrapMomentOption>
       </OrderControlContainer>
@@ -111,8 +112,23 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           />
         )
       }
+      {businessesList.loading && (
+        <Placeholder Animation={Fade}>
+          <View style={{ width: '100%' }}>
+            <PlaceholderLine height={200} style={{ marginBottom: 20, borderRadius: 25 }} />
+            <View style={{ paddingHorizontal: 10 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <PlaceholderLine height={25} width={40} style={{ marginBottom: 10 }} />
+                <PlaceholderLine height={25} width={20} style={{ marginBottom: 10 }} />
+              </View>
+              <PlaceholderLine height={20} width={30} style={{ marginBottom: 10 }} />
+              <PlaceholderLine height={20} width={80} style={{ marginBottom: 10 }} />
+            </View>
+          </View>
+        </Placeholder>
+      )}
       {
-        businessesList.businesses?.map((business: any) => (
+        !businessesList.loading && businessesList.businesses?.map((business: any) => (
           <BusinessController
             key={business.id}
             business={business}
@@ -121,7 +137,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           />
         ))
       }
-      <Spinner visible={businessesList.loading} />
     </ScrollView>
   )
 }

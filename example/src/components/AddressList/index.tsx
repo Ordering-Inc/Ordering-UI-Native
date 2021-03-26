@@ -1,7 +1,7 @@
 import React from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder } from 'ordering-components/native'
 import { AddressListContainer, AddressItem } from './styles'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors } from '../../theme'
@@ -10,6 +10,7 @@ import { Container } from '../../layouts/Container'
 import { AddressListParams } from '../../types'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 
 const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
 
@@ -32,7 +33,7 @@ const AddressListUI = (props: AddressListParams) => {
   const [, t] = useLanguage()
 
   const onNavigatorRedirect = () => {
-    if (route && (route?.params?.isFromBusinesses || isGoBack) ) {
+    if (route && (route?.params?.isFromBusinesses || isGoBack)) {
       isGoBack ? navigation.goBack() : onNavigationRedirect('BottomTab')
     } else if (route && route?.params?.isFromCheckout) {
       onNavigationRedirect('CheckoutPage')
@@ -113,28 +114,43 @@ const AddressListUI = (props: AddressListParams) => {
   return (
     <Container nopadding={nopadding}>
       <AddressListContainer>
+        {isFromProfile && (
+          <OText size={24} mBottom={20}>{t('SAVED_PLACES', 'My saved places')}</OText>
+        )}
+        {
+          route &&
+          (route?.params?.isFromBusinesses ||
+            route?.params?.isFromCheckout) &&
+          !isFromProfile &&
+          (
+            <NavBar
+              title={t('ADDRESS_LIST', 'Address List')}
+              titleAlign={'center'}
+              onActionLeft={() => goToBack()}
+              showCall={false}
+              btnStyle={{ paddingLeft: 0 }}
+              paddingTop={0}
+            />
+          )}
+        {addressList.loading && (
+          <>
+            {[...Array(5)].map((item, i) => (
+              <Placeholder key={i} style={{ padding: 20 }} Animation={Fade}>
+                <View style={{ flexDirection: 'row' }}>
+                  <PlaceholderLine width={10} height={40} style={{ marginBottom: 0, marginRight: 15 }} />
+                  <Placeholder>
+                    <PlaceholderLine width={55} />
+                    <PlaceholderLine width={40} />
+                  </Placeholder>
+                </View>
+              </Placeholder>
+            ))}
+          </>
+        )}
         {
           !addressList.error &&
           addressList?.addresses?.length > 0 && (
             <>
-              {isFromProfile && (
-                <OText size={24} mBottom={20}>{t('SAVED_PLACES', 'My saved places')}</OText>
-              )}
-              {
-                route &&
-                (route?.params?.isFromBusinesses ||
-                  route?.params?.isFromCheckout ) &&
-                !isFromProfile &&
-              (
-                <NavBar
-                  title={t('ADDRESS_LIST', 'Address List')}
-                  titleAlign={'center'}
-                  onActionLeft={() => goToBack()}
-                  showCall={false}
-                  btnStyle={{ paddingLeft: 0 }}
-                  paddingTop={0}
-                />
-              )}
               {uniqueAddressesList.map((address: any) => (
                 <AddressItem
                   key={address.id}
@@ -154,11 +170,11 @@ const AddressListUI = (props: AddressListParams) => {
                     color={colors.green}
                     onPress={() => onNavigationRedirect(
                       'AddressForm', {
-                        address: address,
-                        isEditing: true,
-                        addressList: addressList,
-                        onSaveAddress: handleSaveAddress
-                      }
+                      address: address,
+                      isEditing: true,
+                      addressList: addressList,
+                      onSaveAddress: handleSaveAddress
+                    }
                     )}
                   />
                   <OAlert
@@ -190,11 +206,11 @@ const AddressListUI = (props: AddressListParams) => {
         )}
         {!(route && (route?.params?.isFromBusinesses || route?.params?.isFromCheckout)) &&
           !isFromProfile &&
-        (
-          <OText size={24}>
-            {t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}
-          </OText>
-        )}
+          (
+            <OText size={24}>
+              {t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}
+            </OText>
+          )}
         <OButton
           text={t('ADD_NEW_ADDRESS', 'Add new Address')}
           imgRightSrc=''
@@ -205,11 +221,11 @@ const AddressListUI = (props: AddressListParams) => {
           borderColor={colors.primary}
           onClick={() => onNavigationRedirect(
             'AddressForm', {
-              address: null,
-              nopadding: true,
-              addressList: addressList?.addresses,
-              onSaveAddress: handleSaveAddress
-            }
+            address: null,
+            nopadding: true,
+            addressList: addressList?.addresses,
+            onSaveAddress: handleSaveAddress
+          }
           )}
         />
         {!isFromProfile && addressList?.addresses?.length > 0 && (
@@ -220,7 +236,6 @@ const AddressListUI = (props: AddressListParams) => {
             textStyle={{ color: colors.white }}
           />
         )}
-        <Spinner visible={addressList.loading} />
       </AddressListContainer>
     </Container>
   )

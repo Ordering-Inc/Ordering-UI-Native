@@ -55,6 +55,7 @@
     "react-native-styled-toast": "^1.0.25",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^10.10.0",
+    "rn-placeholder": "^3.0.3",
     "styled-components": "^5.1.1",
     "styled-system": "^5.1.5",
     "toggle-react-native": "^1.1.2",
