@@ -158,6 +158,12 @@ const CheckoutUI = (props: any) => {
     handlePaymethodChange(null)
   }, [cart?.total])
 
+  useEffect(() => {
+    if (!cart) {
+      onNavigationRedirect('Cart')
+    }
+  }, [cart])
+
   return (
     <ChContainer>
       <ChSection style={style.paddSection}>

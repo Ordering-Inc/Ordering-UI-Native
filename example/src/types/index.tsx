@@ -157,6 +157,7 @@ export interface SingleProductCardParams {
   onProductClick: any;
 }
 export interface BusinessInformationParams {
+  navigation: any,
   businessState: { business: any, loading: boolean, error: null };
   businessSchedule: Array<any>;
 }

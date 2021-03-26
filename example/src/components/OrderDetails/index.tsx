@@ -75,7 +75,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const [openMessages, setOpenMessages] = useState({ business: false, driver: false })
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
-  const { order } = props.order
+  const { order, businessData } = props.order
 
   const getOrderStatus = (s: string) => {
     const status = parseInt(s)
@@ -159,24 +159,30 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </Header>
           <OrderContent>
             <OrderBusiness>
-              <Logo>
-                <OIcon url={order?.business?.logo} style={styles.logo}></OIcon>
-              </Logo>
-              <View>
-                <OText style={styles.textBold}>{order?.business?.name}</OText>
-                <Icons>
-                  <TouchableOpacity>
-                    <MaterialCommunityIcon
-                      name='message-text-outline'
-                      size={24}
-                      color={colors.backgroundDark}
-                      onPress={() => handleOpenMessages({ business: true, driver: false })}
-                    />
-                  </TouchableOpacity>
-                </Icons>
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Logo>
+                  <OIcon url={order?.business?.logo} style={styles.logo}></OIcon>
+                </Logo>
+                <OText size={20} style={styles.textBold}>{order?.business?.name}</OText>
               </View>
+              <Icons>
+                <MaterialCommunityIcon
+                  name='store'
+                  size={28}
+                  color={colors.backgroundDark}
+                  onPress={() => props.navigation.navigate('Business', { store: businessData?.slug })}
+                />
+                <TouchableOpacity>
+                  <MaterialCommunityIcon
+                    name='message-text-outline'
+                    size={26}
+                    color={colors.backgroundDark}
+                    onPress={() => handleOpenMessages({ business: true, driver: false })}
+                  />
+                </TouchableOpacity>
+              </Icons>
             </OrderBusiness>
-            <View style={styles.rowDirection}>
+            <View style={{ ...styles.rowDirection, backgroundColor: colors.white }}>
               <OrderInfo>
                 <OrderData>
                   <OText size={20}>{t('ORDER', 'Order')} #{order?.id}</OText>
@@ -218,28 +224,30 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </InfoBlock>
               </Customer>
             </OrderCustomer>
-            <OrderDriver>
-              <OText size={18}>{t('DRIVER', 'Driver')}</OText>
-              <Customer>
-                <CustomerPhoto>
-                  <OIcon url={order?.driver?.photo} width={100} height={100} style={styles.logo} />
-                </CustomerPhoto>
-                <InfoBlock>
-                  <OText size={18}>{order?.driver?.name} {order?.driver?.lastname}</OText>
-                  <Icons>
-                    <TouchableOpacity>
-                      <MaterialCommunityIcon
-                        name='message-text-outline'
-                        size={24}
-                        color={colors.backgroundDark}
-                        onPress={() => handleOpenMessages({ driver: true, business: false })}
-                      />
-                    </TouchableOpacity>
-                  </Icons>
-                </InfoBlock>
+            {order?.driver && (
+              <OrderDriver>
+                <OText size={18}>{t('YOUR_DRIVER', 'Your Driver')}</OText>
+                <Customer>
+                  <CustomerPhoto>
+                    <OIcon url={order?.driver?.photo} width={100} height={100} style={styles.logo} />
+                  </CustomerPhoto>
+                  <InfoBlock>
+                    <OText size={18}>{order?.driver?.name} {order?.driver?.lastname}</OText>
+                    <Icons>
+                      <TouchableOpacity>
+                        <MaterialCommunityIcon
+                          name='message-text-outline'
+                          size={24}
+                          color={colors.backgroundDark}
+                          onPress={() => handleOpenMessages({ driver: true, business: false })}
+                        />
+                      </TouchableOpacity>
+                    </Icons>
+                  </InfoBlock>
 
-              </Customer>
-            </OrderDriver>
+                </Customer>
+              </OrderDriver>
+            )}
             <OrderProducts>
               <OText size={18}>{t('YOUR_ORDER', 'Your Order')}</OText>
               {order?.products?.length && order?.products.map((product: any, i: number) => (
