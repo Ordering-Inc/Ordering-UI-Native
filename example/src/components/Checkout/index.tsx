@@ -73,6 +73,7 @@ const CheckoutUI = (props: any) => {
     paymethodSelected,
     handlePaymethodChange,
     handlerClickPlaceOrder,
+    onNavigationRedirect
     // handleOrderRedirect,
   } = props
 
@@ -352,7 +353,7 @@ const CheckoutUI = (props: any) => {
               onPaymentChange={handlePaymethodChange}
               errorCash={errorCash}
               setErrorCash={setErrorCash}
-              // handleOrderRedirect={handleOrderRedirect}
+              onNavigationRedirect={onNavigationRedirect}
               isPaymethodNull={paymethodSelected}
             />
           </ChPaymethods>
