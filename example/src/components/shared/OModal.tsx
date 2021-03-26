@@ -104,7 +104,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     margin: 15,
-    zIndex: 10000
+    zIndex: 10000,
+    backgroundColor: '#CCCCCC80',
+    borderRadius: 100/2
   },
   modalText: {
     marginTop: 15,

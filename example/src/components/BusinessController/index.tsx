@@ -166,7 +166,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.backgroundDark,
-    opacity: 0.6
+    opacity: 0.6,
+    borderTopRightRadius: 25,
+    borderTopLeftRadius: 25,
   },
   bullet: {
     flexDirection: 'row',

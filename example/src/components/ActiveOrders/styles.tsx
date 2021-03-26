@@ -3,8 +3,8 @@ import { colors } from '../../theme'
 
 export const ActiveOrdersContainer = styled.ScrollView`
   margin-bottom: 20px;
-  height: 110px;
-  max-height: 110px
+  height: 130px;
+  max-height: 150px;
 `
 
 export const Card = styled.TouchableOpacity`

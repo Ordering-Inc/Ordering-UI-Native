@@ -108,9 +108,10 @@ const PaymentOptionsUI = (props: any) => {
   }, [isPaymethodNull])
 
   const renderPaymethods = ({ item }: any) => {
+    const ids = [1, 2] // delete this validation when other payments are done
     return (
       <TouchableOpacity
-        onPress={() => handlePaymethodClick(item)}
+        onPress={() => ids.includes(item.id) ? handlePaymethodClick(item) : null}
       >
         <PMItem
           key={item.id}
