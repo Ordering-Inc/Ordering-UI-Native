@@ -1,7 +1,8 @@
 import React from 'react';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import { Home as HomePage } from '../components/Home';
 import { useLanguage } from 'ordering-components/native';
-import { Container } from '../layouts/Container';
+import { colors } from '../theme';
 
 export const Home = ({navigation}: any) => {
   const [, t] = useLanguage();
@@ -11,15 +12,24 @@ export const Home = ({navigation}: any) => {
       if (!page) return
       navigation.navigate(page, params);
     },
-    sloganTitle: t('TITLE_HOME', 'Welcome!'),
-    sloganSubtitle: t('SUBTITLE_HOME', "Let's start to order food now")
   }
 
   return (
-    <Container nopadding>
+    <SafeAreaView style={styles.wrapper}>
       <HomePage {...homeProps} />
-    </Container>
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    backgroundColor: colors.backgroundPage,
+  }
+})
 
 export default Home;

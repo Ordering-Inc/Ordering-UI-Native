@@ -15,6 +15,7 @@ import { ProfileParams } from '../../types';
 import { flatArray } from '../../utils';
 import { AddressList } from '../AddressList'
 import { LogoutButton } from '../LogoutButton'
+import {LanguageSelector} from '../LanguageSelector'
 import {
   OIcon,
   OIconButton,
@@ -27,6 +28,7 @@ import {
   UserData,
   Names,
   EditButton,
+  Actions
 } from './styles';
 
 const notValidationFields = [
@@ -150,7 +152,10 @@ const ProfileUI = (props: ProfileParams) => {
 
   return (
     <>
-      <LogoutButton />
+      <Actions>
+        <LanguageSelector />
+        <LogoutButton />
+      </Actions>
       <CenterView>
         <OIcon
           url={user?.photo}

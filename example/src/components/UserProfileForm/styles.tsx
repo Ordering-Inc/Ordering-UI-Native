@@ -18,3 +18,11 @@ export const EditButton = styled.View`
   justify-content: center;
   flex-direction: row;
 `
+
+export const Actions = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+`
