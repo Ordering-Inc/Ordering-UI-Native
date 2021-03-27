@@ -18,6 +18,7 @@ const LogoutButtonUI = (props: any) => {
       textStyle={{ marginHorizontal: 20 }}
       onClick={() => handleLogoutClick()}
       iconColor={colors.disabledContrast}
+      iconStyle={{ width: 28, height: 28 }}
     />
     </>
   )
