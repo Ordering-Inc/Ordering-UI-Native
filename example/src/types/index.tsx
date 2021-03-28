@@ -188,7 +188,7 @@ export interface OrdersOptionParams {
   titleContent?: string,
   customArray?: Array<any>,
   loadMoreOrders?: () => {},
-  onNavigationRedirect?: () => {},
+  onNavigationRedirect?: (route: string, params?: any) => {},
 }
 export interface ActiveOrdersParams {
   orders?: any,
@@ -197,7 +197,7 @@ export interface ActiveOrdersParams {
   reorderLoading?: boolean,
   customArray?: Array<any>
   loadMoreOrders?: () => {},
-  onNavigationRedirect?: (route: string, params: any) => {}
+  onNavigationRedirect?: (route: string, params?: any) => {}
 }
 export interface PreviousOrdersParams {
   orders?: any,
@@ -206,8 +206,8 @@ export interface PreviousOrdersParams {
   orderID?: number
   reorderLoading?: boolean,
   loadMoreOrders?: () => {},
-  handleReorder?: (order: any) => {},
-  onNavigationRedirect?: (route: string, params: any) => {}
+  handleReorder: (order: any) => {},
+  onNavigationRedirect?: (route: string, params?: any) => {}
 }
 export interface OrderDetailsParams {
   navigation?: any,

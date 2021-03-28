@@ -7,6 +7,7 @@ import { colors } from '../../theme'
 import { PreviousOrdersParams } from '../../types'
 import { ReviewOrder } from '../ReviewOrder'
 import { ScrollView } from 'react-native-gesture-handler'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {
   const {
@@ -21,7 +22,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   } = props
 
   const [, t] = useLanguage()
-  const [{ parseDate, parsePrice }] = useUtils()
+  const [{ parseDate }] = useUtils()
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12]
 
   const handleClickViewOrder = (uuid: string) => {
@@ -36,6 +37,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
     <ScrollView
       style={{ height: '60%', marginBottom: 30 }}
     >
+      <Spinner visible={reorderLoading} />
       {orders.map((order: any) => (
         <Card key={order.id}>
           {order.business?.logo && (
@@ -75,6 +77,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
               imgRightSrc={''}
               textStyle={styles.buttonText}
               style={styles.reorderbutton}
+              onClick={() => handleReorder(order.id)}
             />
           </Status>
 

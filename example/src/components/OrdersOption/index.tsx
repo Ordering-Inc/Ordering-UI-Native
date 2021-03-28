@@ -8,8 +8,8 @@ import { PreviousOrders } from '../PreviousOrders'
 import { OptionTitle } from './styles'
 import { colors } from '../../theme'
 import { OrdersOptionParams } from '../../types'
+import { ToastType, useToast } from '../../providers/ToastProvider'
 
-import ContentLoader from 'react-native-easy-content-loader';
 import {
   Placeholder,
   PlaceholderMedia,
@@ -31,6 +31,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const [, t] = useLanguage()
   const [, { reorder }] = useOrder()
+  const { showToast } = useToast()
   const { loading, error, orders: values } = orderList
 
   const imageFails = activeOrders
@@ -42,6 +43,23 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [ordersSorted, setOrdersSorted] = useState<Array<any>>([])
 
   const [reorderLoading, setReorderLoading] = useState(false)
+
+
+  const handleReorder = async (orderId: number) => {
+    setReorderLoading(true)
+    try {
+      const { error, result } = await reorder(orderId)
+      if (!error) {
+        onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: result.uuid })
+      } else {
+        showToast(ToastType.Error, t('ERROR_ORDER_WITHOUT_CART', 'The order was placed without a cart'))
+      }
+      setReorderLoading(false)
+    } catch (err) {
+      showToast(ToastType.Error, t('ERROR', err.message))
+      setReorderLoading(false)
+    }
+  }
 
   const getOrderStatus = (s: string) => {
     const status = parseInt(s)
@@ -99,9 +117,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {loading && (
         <>
           {activeOrders ? (
-            <Placeholder style={{marginTop: 30}} Animation={Fade}>
+            <Placeholder style={{ marginTop: 30 }} Animation={Fade}>
               <View style={{ width: '100%', flexDirection: 'row' }}>
-                <PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 30 }} />
+                <PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 35 }} />
                 <Placeholder>
                   <PlaceholderLine width={30} style={{ marginTop: 5 }} />
                   <PlaceholderLine width={50} />
@@ -110,7 +128,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               </View>
             </Placeholder>
           ) : (
-            <View style={{marginTop: 30}}>
+            <View style={{ marginTop: 30 }}>
               {[...Array(5)].map((item, i) => (
                 <Placeholder key={i} Animation={Fade}>
                   <View style={{ width: '100%', flexDirection: 'row' }}>
@@ -146,6 +164,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             loadMoreOrders={loadMoreOrders}
             getOrderStatus={getOrderStatus}
             onNavigationRedirect={onNavigationRedirect}
+            handleReorder={handleReorder}
           />
         )
       )}
@@ -153,7 +172,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   )
 }
 
-export const OrdersOption = (props) => {
+export const OrdersOption = (props: OrdersOptionParams) => {
   const MyOrdersProps = {
     ...props,
     UIComponent: OrdersOptionUI,
