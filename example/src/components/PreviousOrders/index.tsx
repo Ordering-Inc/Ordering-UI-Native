@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { useLanguage, useUtils } from 'ordering-components/native'
 import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
-import { OButton, OIcon, OModal, OText } from '../shared'
-import { Card, Logo, Information, MyOrderOptions, Status } from './styles'
+import { OButton, OIcon, OText } from '../shared'
+import { Card, Logo, Information, MyOrderOptions, Status, WrappButton } from './styles'
 import { colors } from '../../theme'
 import { PreviousOrdersParams } from '../../types'
 import { ReviewOrder } from '../ReviewOrder'
+import { ScrollView } from 'react-native-gesture-handler'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {
   const {
@@ -20,8 +22,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   } = props
 
   const [, t] = useLanguage()
-  const [{ parseDate, parsePrice }] = useUtils()
-  const [orderForReview, setOrderForReview] = useState(null)
+  const [{ parseDate }] = useUtils()
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12]
 
   const handleClickViewOrder = (uuid: string) => {
@@ -29,60 +30,71 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   }
 
   const handleClickOrderReview = (order: any) => {
-    onNavigationRedirect && onNavigationRedirect('ReviewOrder', {order: {id: order?.id, business_id: order?.business_id, logo: order.business?.logo}})
+    onNavigationRedirect && onNavigationRedirect('ReviewOrder', { order: { id: order?.id, business_id: order?.business_id, logo: order.business?.logo } })
   }
-
-  const handleCloseOrderReview = () => {
-    setOrderForReview(null)
-  }
-
-  const Order = ({ item: order }: any) => (
-    <Card>
-      {order.business?.logo && (
-        <Logo>
-          <OIcon url={order.business?.logo} style={styles.logo} />
-        </Logo>
-      )}
-      <Information>
-        <OText size={16}>
-          {order.business?.name}
-        </OText>
-        <OText size={12} color={colors.textSecondary}>
-          {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
-        </OText>
-        <MyOrderOptions>
-          <TouchableOpacity onPress={() => handleClickViewOrder(order?.uuid)}>
-            <OText size={10} color={colors.primary} mRight={5}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
-          </TouchableOpacity>
-          {
-            allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && (
-              <TouchableOpacity onPress={() => handleClickOrderReview(order)}>
-                <OText size={10} color={colors.primary}>{t('REVIEW_ORDER', 'Review Order')}</OText>
-              </TouchableOpacity>
-            )}
-        </MyOrderOptions>
-      </Information>
-      <Status>
-        <OText color={colors.primary} size={16}>{getOrderStatus(order.status)?.value}</OText>
-        <OButton
-          text={t('REORDER', 'Reorder')}
-          imgRightSrc={''}
-          textStyle={styles.buttonText}
-          style={styles.reorderbutton}
-        />
-      </Status>
-    </Card>
-  )
-
   return (
-    <>
-      <FlatList
-        data={orders}
-        renderItem={Order}
-        style={{ height: '60%' }}
-        keyExtractor={(order) => order?.id.toString() || order?.uuid.toString()}
-      />
-    </>
+
+    <ScrollView
+      style={{ height: '60%', marginBottom: 30 }}
+    >
+      <Spinner visible={reorderLoading} />
+      {orders.map((order: any) => (
+        <Card key={order.id}>
+          {order.business?.logo && (
+            <Logo>
+              <OIcon url={order.business?.logo} style={styles.logo} />
+            </Logo>
+          )}
+          <Information>
+            <OText size={16} numberOfLines={1}>
+              {order.business?.name}
+            </OText>
+            <OText size={12} color={colors.textSecondary} numberOfLines={1}>
+              {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
+            </OText>
+            <MyOrderOptions>
+              <TouchableOpacity onPress={() => handleClickViewOrder(order?.uuid)}>
+                <OText size={10} color={colors.primary} mRight={5} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
+              </TouchableOpacity>
+              {
+                allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && (
+                  <TouchableOpacity onPress={() => handleClickOrderReview(order)}>
+                    <OText size={10} color={colors.primary} numberOfLines={1}>{t('REVIEW_ORDER', 'Review Order')}</OText>
+                  </TouchableOpacity>
+                )}
+            </MyOrderOptions>
+          </Information>
+          <Status>
+            <OText
+              color={colors.primary}
+              size={16}
+              numberOfLines={1}
+            >
+              {getOrderStatus(order.status)?.value}
+            </OText>
+            <OButton
+              text={t('REORDER', 'Reorder')}
+              imgRightSrc={''}
+              textStyle={styles.buttonText}
+              style={styles.reorderbutton}
+              onClick={() => handleReorder(order.id)}
+            />
+          </Status>
+
+        </Card>
+      ))}
+      {pagination.totalPages && pagination.currentPage < pagination.totalPages && (
+        <WrappButton>
+          <OButton
+            onClick={loadMoreOrders}
+            text={t('LOAD_MORE_ORDERS', 'Load more orders')}
+            imgRightSrc={null}
+            textStyle={{color: colors.white}}
+          />
+        </WrappButton>
+      )}
+    </ScrollView>
+
   )
 }
 
