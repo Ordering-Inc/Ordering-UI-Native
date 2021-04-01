@@ -1,15 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder } from 'ordering-components/native'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
-import { OInput, OButton } from '../shared'
+import { OInput, OButton, OText, OModal } from '../shared'
 import NavBar from '../NavBar'
 import { colors } from '../../theme'
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
-import { AddressFormContainer, AutocompleteInput, IconsContainer } from './styles'
+import { AddressFormContainer, AutocompleteInput, IconsContainer, GoogleMapContainer } from './styles'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useForm, Controller } from 'react-hook-form'
 import { AddressFormParams } from '../../types'
+import { GoogleMap } from '../GoogleMap'
+
 
 const inputNames = [{ name: 'address', code: 'Address' }, { name: 'internal_number', code: 'Internal number' }, { name: 'zipcode', code: 'Zipcode' }, { name: 'address_notes', code: 'Address notes' }]
 const tagsName = [
@@ -42,9 +44,10 @@ const AddressFormUI = (props: AddressFormParams) => {
   const [orderState] = useOrder()
   const { handleSubmit, errors, control, setValue } = useForm()
 
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const [toggleMap, setToggleMap] = useState(false)
+  const [alertState, setAlertState] = useState<{open: boolean, content : string | Array<string>}>({ open: false, content: [] })
   const [addressTag, setAddressTag] = useState(addressState?.address?.tag)
-  const [firstLocationNoEdit, setFirstLocationNoEdit] = useState({ value: null })
+  const [firstLocationNoEdit, setFirstLocationNoEdit] = useState({ value: {lat: null, lng: null}, address: null })
   const [isFirstTime, setIsFirstTime] = useState(true)
   const [locationChange, setLocationChange] = useState(
     isEditing
@@ -52,11 +55,17 @@ const AddressFormUI = (props: AddressFormParams) => {
       : formState.changes?.location ?? null
   )
 
-  const googleInput = useRef(null)
+
+  const googleInput : any = useRef(null)
 
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
   const isLocationRequired = configState.configs?.google_autocomplete_selection_required?.value === '1' ||
     configState.configs?.google_autocomplete_selection_required?.value === 'true'
+  const maxLimitLocation = configState?.configs?.meters_to_change_address?.value
+  const mapErrors: any = {
+    ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
+    ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
+  }
 
   const goToBack = () => navigation.goBack()
   const continueAsGuest = () => navigation.navigate('BusinessList')
@@ -128,12 +137,22 @@ const AddressFormUI = (props: AddressFormParams) => {
 
   const handleChangeAddress = (data: any, details: any) => {
     const addressSelected = {
-      address: data?.description,
+      address: data?.description || data?.address,
       location: details?.geometry?.location,
-      utc_offset: details?.utc_offset,
-      map_data: { library: 'google', place_id: data.place_id }
+      utc_offset: details?.utc_offset || null,
+      map_data: { library: 'google', place_id: data.place_id },
+      zip_code: data?.zip_code || null
     }
     updateChanges(addressSelected)
+  }
+
+  const setMapErrors = (errKey: string) => {
+    setAlertState({
+      open: true,
+      content: !(errKey === 'ERROR_MAX_LIMIT_LOCATION')
+        ? [t(errKey, mapErrors[errKey])]
+        : `${[t(errKey, mapErrors[errKey])]} ${maxLimitLocation} ${[t('METTERS', 'meters')]}`
+    })
   }
 
   const handleAddressTag = (tag: string) => {
@@ -289,6 +308,13 @@ const AddressFormUI = (props: AddressFormParams) => {
           )}
         />
       </AutocompleteInput>
+
+      {(addressState?.address?.location || formState?.changes?.location) && (
+        <TouchableOpacity onPress={() => setToggleMap(!toggleMap)}>
+          <OText color={colors.primary} style={{textAlign: 'center'}}>{t('VIEW_MAP', 'View map to modify the exact location')}</OText>
+        </TouchableOpacity>
+      )}
+
       <Controller
         control={control}
         name='internal_number'
@@ -307,6 +333,7 @@ const AddressFormUI = (props: AddressFormParams) => {
           />
         )}
       />
+
       <Controller
         control={control}
         name='zipcode'
@@ -370,18 +397,45 @@ const AddressFormUI = (props: AddressFormParams) => {
           </TouchableOpacity>
         ))}
       </IconsContainer>
-      <OButton
-        text={
-          !formState.loading ? (
-            isEditing
-              ? t('UPDATE', 'Update')
-              : t('SAVE', 'Save')
-          ) : t('LOADING', 'Loading')
-        }
-        imgRightSrc=''
-        onClick={handleSubmit(onSubmit)}
-        textStyle={{ color: colors.white }}
-      />
+      {Object.keys(formState?.changes).length > 0 ? (
+        <OButton
+          text={
+            !formState.loading ? (
+              isEditing || (!auth && orderState.options?.address?.address)
+                ? t('UPDATE', 'Update')
+                : t('SAVE', 'Save')
+            ) : t('LOADING', 'Loading')
+          }
+          imgRightSrc=''
+          onClick={handleSubmit(onSubmit)}
+          textStyle={{ color: colors.white }}
+        />
+      ) : (
+        <OButton 
+          text={t('CANCEL', 'Cancel')}
+          style={{backgroundColor: colors.white}}
+          onClick={goToBack}
+        />
+      )}
+      <OModal open={toggleMap} onClose={() => setToggleMap(false)} entireModal customClose >
+        {locationChange && (
+          <GoogleMapContainer>
+            <GoogleMap
+              location={locationChange}
+              handleChangeAddressMap={handleChangeAddress}
+              setErrors={setMapErrors}
+              maxLimitLocation={maxLimitLocation}
+            />
+          </GoogleMapContainer>
+        )}
+        <OButton
+          text={t('SAVE', 'Save')}
+          textStyle={{ color: colors.white }}
+          imgRightSrc={null}
+          style={{ marginHorizontal: 30, marginBottom: 10 }}
+          onClick={() => setToggleMap(false)}
+        />
+      </OModal>
     </AddressFormContainer>
   )
 }
