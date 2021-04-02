@@ -8,10 +8,12 @@
 
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { ToastProvider } from './providers/ToastProvider';
+import { ToastProvider, ToastType, useToast } from './providers/ToastProvider';
 import { Toast } from './components/shared/OToast';
 import RootNavigator from './navigators/RootNavigator';
 import { OrderingProvider } from 'ordering-components/native';
+import Alert from './providers/AlertProvider'
+
 
 const configFile = {
   app_id: 'react-native-app',
@@ -28,7 +30,7 @@ const configFile = {
 
 const DeliveryApp = () => {
   return (
-    <OrderingProvider settings={configFile}>
+    <OrderingProvider settings={configFile} Alert={Alert}>
       <ToastProvider>
         <NavigationContainer>
           <RootNavigator />
