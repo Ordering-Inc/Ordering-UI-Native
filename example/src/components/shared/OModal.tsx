@@ -19,6 +19,7 @@ interface Props {
   entireModal?: boolean;
   customClose?: boolean;
   titleSectionStyle?: any;
+  isNotDecoration?: boolean;
 }
 
 const OModal = (props: Props): React.ReactElement => {
@@ -36,6 +37,7 @@ const OModal = (props: Props): React.ReactElement => {
     entireModal,
     customClose,
     titleSectionStyle,
+    isNotDecoration,
     style
   } = props
 
@@ -54,7 +56,7 @@ const OModal = (props: Props): React.ReactElement => {
               <Icon
                 name="x"
                 size={35}
-                style={styles.cancelBtn}
+                style={isNotDecoration ? styles.cancelBtn : styles.decorationBtn}
                 onPress={onClose}
               />
               <Text style={styles.modalText}>{title}</Text>
@@ -104,15 +106,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     margin: 15,
-    zIndex: 10000,
-    backgroundColor: '#CCCCCC80',
-    borderRadius: 100/2
+    zIndex: 10000
   },
   modalText: {
     marginTop: 15,
     fontSize: 25,
     textAlign: "center",
     zIndex: 10
+  },
+  decorationBtn: {
+    position: 'absolute',
+    left: 0,
+    margin: 15,
+    zIndex: 10000,
+    backgroundColor: '#CCCCCC80',
+    borderRadius: 100/2
   },
 
   modalView: {

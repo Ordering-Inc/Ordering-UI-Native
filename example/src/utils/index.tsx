@@ -1,4 +1,7 @@
-import { useLanguage } from 'ordering-components/native'
+import React from 'react';
+import { useLanguage } from 'ordering-components/native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { colors } from '../theme';
 
 export const flatArray = (arr: any) => [].concat(...arr)
 
@@ -20,6 +23,7 @@ export const getTraduction = (key: string) => {
     ERROR_NOT_FOUND_BUSINESSES: 'No businesses found near your location',
     YOU_DO_NOT_HAVE_PERMISSION: 'You do not have permission',
     INVALID_CODE: 'Invalid verify code',
+    STRIPE_ERROR: 'Payment service error. Try again later.'
   }
 
   return keyList[key] ? t(key, keyList[key]) : t(key)
@@ -34,4 +38,66 @@ export const convertHoursToMinutes = (time: any) => {
   const [hour, minute] = time.split(':')
   const result = (parseInt(hour, 10) * 60) + parseInt(minute, 10)
   return `${result}min`
+}
+
+export const getIconCard = (brand: string, size: number) => {
+  const value = brand?.toLowerCase()
+  switch (value) {
+    case 'visa':
+      return (
+        <FontAwesome
+          name='cc-visa'
+          size={size}
+          color={'#000'}
+        />
+      )
+    case 'mastercard':
+      return (
+        <FontAwesome
+          name='cc-mastercard'
+          size={size}
+          color={'#000'}
+        />
+      )
+    case 'amex':
+      return (
+        <FontAwesome
+          name='cc-amex'
+          size={size}
+          color={'#000'}
+        />
+      )
+    case 'discover':
+      return (
+        <FontAwesome
+          name='cc-discover'
+          size={size}
+          color={'#000'}
+        />
+      )
+    case 'jcb':
+      return (
+        <FontAwesome
+          name='cc-jcb'
+          size={size}
+          color={'#000'}
+        />
+      )
+    case 'diners-club':
+      return (
+        <FontAwesome
+          name='cc-diners-club'
+          size={size}
+          color={'#000'}
+        />
+      )
+    default:
+      return (
+        <FontAwesome
+          name='credit-card-alt'
+          size={size}
+          color={'#000'}
+        />
+      )
+  }
 }

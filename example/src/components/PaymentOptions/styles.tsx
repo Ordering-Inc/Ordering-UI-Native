@@ -42,31 +42,15 @@ export const PMItem = styled.View`
   `}
 `
 
-export const PayCardSelected = styled.View`
+export const PMCardSelected = styled.View`
   padding: 30px 0px 0px;
 `
 
-export const CardItemContent = styled.View`
+export const PMCardItemContent = styled.View`
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   width: 100%;
   font-weight: bold;
-
-  .checks svg {
-    color: ${(props: any) => props.theme.colors.primary};
-    font-size: 22px;
-  }
-
-  .brand svg {
-    font-size: 26px;
-  }
-
-  > * {
-    margin-right: 10px
-    ${(props: any) => props.theme?.rtl && css`
-      margin-left: 10px;
-      margin-right: 0;
-    `}
-  }
 `

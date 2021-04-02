@@ -1,40 +1,31 @@
-import React, { useEffect } from 'react';
-import { FlatList, TouchableOpacity } from 'react-native'
-// import Skeleton from 'react-loading-skeleton'
-// import IosCash from '@meronex/icons/ios/IosCash'
-// import IosCard from '@meronex/icons/ios/IosCard'
-// import IosRadioButtonOn from '@meronex/icons/ios/IosRadioButtonOn'
-// import FaStripe from '@meronex/icons/fa/FaStripe'
-// import FaCcStripe from '@meronex/icons/fa/FaCcStripe'
-// import FaStripeS from '@meronex/icons/fa/FaStripeS'
-// import GrStripe from '@meronex/icons/gr/GrStripe'
-// import EnPaypal from '@meronex/icons/en/EnPaypal'
+import React, { useEffect, useState } from 'react';
+import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {
   PaymentOptions as PaymentOptionsController,
   useLanguage,
   useSession
 } from 'ordering-components/native';
 
-// import { Modal } from '../Modal'
-import { PaymentOptionCash } from '../PaymentOptionCash'
-// import { PaymentOptionStripe } from '../PaymentOptionStripe'
+import { PaymentOptionCash } from '../PaymentOptionCash';
+import { PaymentOptionStripe } from '../PaymentOptionStripe';
+import { StripeElementsForm } from '../StripeElementsForm'
 // import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
-// import { StripeElementsForm } from '../StripeElementsForm'
 // import { StripeRedirectForm } from '../StripeRedirectForm'
 // import { NotFoundSource } from '../NotFoundSource'
 
-// import { getIconCard } from '../../utils'
-
 import { IMAGES, PAYMENT_IMAGES } from '../../config/constants';
-import { OText, OButton, OIcon } from '../shared';
+import { OText, OButton, OIcon, OModal } from '../shared';
 
 import {
   PMContainer,
   PMItem,
-  PayCardSelected,
-  CardItemContent
+  PMCardSelected,
+  PMCardItemContent
 } from './styles'
 import { colors } from '../../theme';
+import { getIconCard } from '../../utils';
 
 const stripeOptions = ['stripe_direct', 'stripe', 'stripe_connect']
 const stripeRedirectOptions = [
@@ -86,7 +77,7 @@ const PaymentOptionsUI = (props: any) => {
     handlePaymethodClick,
     handlePaymethodDataChange
   } = props
-  const [, t] = useLanguage()
+  const [, t] = useLanguage();
   // const [{ token }] = useSession()
 
   useEffect(() => {
@@ -108,10 +99,9 @@ const PaymentOptionsUI = (props: any) => {
   }, [isPaymethodNull])
 
   const renderPaymethods = ({ item }: any) => {
-    const ids = [1, 2] // delete this validation when other payments are done
     return (
       <TouchableOpacity
-        onPress={() => ids.includes(item.id) ? handlePaymethodClick(item) : null}
+        onPress={() => handlePaymethodClick(item)}
       >
         <PMItem
           key={item.id}
@@ -135,13 +125,16 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
+  const excludeIds = [3, 32]; //exclude paypal y stripe redirect
+
   return (
     <PMContainer>
       {paymethodsList.paymethods.length > 0 && (
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
-          data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
+          // data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
+          data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeIds.includes(p.id))}
           renderItem={renderPaymethods}
           keyExtractor={paymethod => paymethod.id.toString()}
         />
@@ -176,21 +169,93 @@ const PaymentOptionsUI = (props: any) => {
         />
       )}
 
-      {/* {stripeOptions.includes(paymethodSelected?.gateway) && paymethodData?.card && (
-        <PayCardSelected>
-          <CardItemContent>
-            <span className='checks'>
-              <IosRadioButtonOn />
-            </span>
-            <span className='brand'>
-              {getIconCard(paymethodData?.card?.brand)}
-            </span>
-            <span>
-              XXXX-XXXX-XXXX-{paymethodData?.card?.last4}
-            </span>
-          </CardItemContent>
-        </PayCardSelected>
-      )} */}
+      {stripeOptions.includes(paymethodSelected?.gateway) && paymethodData?.card && (
+        <PMCardSelected>
+          <PMCardItemContent>
+            <View style={styles.viewStyle}>
+              <MaterialCommunityIcons
+                name='radiobox-marked'
+                size={24}
+                color={colors.primary}
+              />
+            </View>
+            <View style={styles.viewStyle}>
+              <OText>
+                {getIconCard(paymethodData?.card?.brand, 26)}
+              </OText>
+            </View>
+            <View style={styles.viewStyle}>
+              <OText>
+                XXXX-XXXX-XXXX-{paymethodData?.card?.last4}
+              </OText>
+            </View>
+          </PMCardItemContent>
+        </PMCardSelected>
+      )}
+
+      {/* Stripe */}
+      <OModal
+        isNotDecoration
+        open={paymethodSelected?.gateway === 'stripe' && !paymethodData.id}
+        title={t('SELECT_A_CARD', 'Select a card')}
+        onClose={() => handlePaymethodClick(null)}
+      >
+        {paymethodSelected?.gateway === 'stripe' && (
+          <PaymentOptionStripe
+            paymethod={paymethodSelected}
+            businessId={props.businessId}
+            publicKey={paymethodSelected.credentials.publishable}
+            payType={paymethodsList?.name}
+            onSelectCard={handlePaymethodDataChange}
+            onNavigationRedirect={onNavigationRedirect}
+            onCancel={() => handlePaymethodClick(null)}
+          />
+        )}
+      </OModal>
+
+
+      {/* Stripe Connect */}
+      <OModal
+        isNotDecoration
+        open={paymethodSelected?.gateway === 'stripe_connect' && !paymethodData.id}
+        title={t('SELECT_A_CARD', 'Select a card')}
+        onClose={() => handlePaymethodClick(null)}
+      >
+        {paymethodSelected?.gateway === 'stripe_connect' && (
+          <PaymentOptionStripe
+            paymethod={paymethodSelected}
+            businessId={props.businessId}
+            publicKey={paymethodSelected.credentials.stripe.publishable}
+            clientSecret={paymethodSelected.credentials.publishable}
+            payType={paymethodsList?.name}
+            onSelectCard={handlePaymethodDataChange}
+            onCancel={() => handlePaymethodClick(null)}
+          />
+        )}
+      </OModal>
+
+      {/* Stripe direct */}
+      <OModal
+        isNotDecoration
+        title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
+        open={paymethodSelected?.gateway === 'stripe_direct' && !paymethodData.id}
+        onClose={() => handlePaymethodClick(null)}
+      >
+        {paymethodSelected?.gateway === 'stripe_direct' && (
+          <KeyboardAvoidingView
+            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
+            enabled={Platform.OS === 'ios' ? true : false}
+          >
+            <StripeElementsForm
+              businessId={props.businessId}
+              publicKey={paymethodSelected.credentials.publishable}
+              handleSource={handlePaymethodDataChange}
+              onCancel={() => handlePaymethodClick(null)}
+            />
+          </KeyboardAvoidingView>
+        )}
+      </OModal>
 
       {/* Paypal */}
       {/* <Modal
@@ -219,62 +284,6 @@ const PaymentOptionsUI = (props: any) => {
         )}
       </Modal> */}
 
-      {/* Stripe */}
-      {/* <Modal
-        className='modal-info'
-        open={paymethodSelected?.gateway === 'stripe' && !paymethodData.id}
-        onClose={() => handlePaymethodClick(null)}
-        title={t('SELECT_A_CARD', 'Select a card')}
-      >
-        {paymethodSelected?.gateway === 'stripe' && (
-          <PaymentOptionStripe
-            paymethod={paymethodSelected}
-            businessId={props.businessId}
-            publicKey={paymethodSelected.credentials.publishable}
-            payType={paymethodsList?.name}
-            onSelectCard={handlePaymethodDataChange}
-            onCancel={() => handlePaymethodClick(null)}
-          />
-        )}
-      </Modal> */}
-
-      {/* Stripe Connect */}
-      {/* <Modal
-        title={t('SELECT_A_CARD', 'Select a card')}
-        open={paymethodSelected?.gateway === 'stripe_connect' && !paymethodData.id}
-        className='modal-info'
-        onClose={() => handlePaymethodClick(null)}
-      >
-        {paymethodSelected?.gateway === 'stripe_connect' && (
-          <PaymentOptionStripe
-            paymethod={paymethodSelected}
-            businessId={props.businessId}
-            publicKey={paymethodSelected.credentials.stripe.publishable}
-            clientSecret={paymethodSelected.credentials.publishable}
-            payType={paymethodsList?.name}
-            onSelectCard={handlePaymethodDataChange}
-            onCancel={() => handlePaymethodClick(null)}
-          />
-        )}
-      </Modal> */}
-
-      {/* Stripe direct */}
-      {/* <Modal
-        title={t('ADD_CARD', 'Add card')}
-        open={paymethodSelected?.gateway === 'stripe_direct' && !paymethodData.id}
-        className='modal-info'
-        onClose={() => handlePaymethodClick(null)}
-      >
-        {paymethodSelected?.gateway === 'stripe_direct' && (
-          <StripeElementsForm
-            businessId={props.businessId}
-            publicKey={paymethodSelected.credentials.publishable}
-            handleSource={handlePaymethodDataChange}
-            onCancel={() => handlePaymethodClick(null)}
-          />
-        )}
-      </Modal> */}
-
       {/* Stripe Redirect */}
       {/* <Modal
         title={t('STRIPE_REDIRECT', 'Stripe Redirect')}
@@ -292,6 +301,12 @@ const PaymentOptionsUI = (props: any) => {
     </PMContainer>
   )
 }
+
+const styles = StyleSheet.create({
+  viewStyle: {
+    marginRight: 10
+  },
+})
 
 export const PaymentOptions = (props: any) => {
   const paymentOptions = {
