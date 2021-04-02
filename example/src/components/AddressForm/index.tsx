@@ -11,6 +11,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useForm, Controller } from 'react-hook-form'
 import { AddressFormParams } from '../../types'
 import { GoogleMap } from '../GoogleMap'
+import Alert from '../../providers/AlertProvider'
 
 
 const inputNames = [{ name: 'address', code: 'Address' }, { name: 'internal_number', code: 'Internal number' }, { name: 'zipcode', code: 'Zipcode' }, { name: 'address_notes', code: 'Address notes' }]
@@ -45,7 +46,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   const { handleSubmit, errors, control, setValue } = useForm()
 
   const [toggleMap, setToggleMap] = useState(false)
-  const [alertState, setAlertState] = useState<{open: boolean, content : string | Array<string>}>({ open: false, content: [] })
+  const [alertState, setAlertState] = useState<{open: boolean, content : Array<string>, key ?: string | null}>({ open: false, content: [], key: null })
   const [addressTag, setAddressTag] = useState(addressState?.address?.tag)
   const [firstLocationNoEdit, setFirstLocationNoEdit] = useState({ value: {lat: null, lng: null}, address: null })
   const [isFirstTime, setIsFirstTime] = useState(true)
@@ -151,7 +152,15 @@ const AddressFormUI = (props: AddressFormParams) => {
       open: true,
       content: !(errKey === 'ERROR_MAX_LIMIT_LOCATION')
         ? [t(errKey, mapErrors[errKey])]
-        : `${[t(errKey, mapErrors[errKey])]} ${maxLimitLocation} ${[t('METTERS', 'meters')]}`
+        : [`${t(errKey, mapErrors[errKey])} ${maxLimitLocation} ${t('METTERS', 'meters')}`],
+      key: errKey
+    })
+  }
+
+  const closeAlert = () => {
+    setAlertState({
+      open: false,
+      content: []
     })
   }
 
@@ -166,7 +175,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   }
 
   useEffect(() => {
-    if (alertState.open) {
+    if (alertState.open && alertState?.key !== 'ERROR_MAX_LIMIT_LOCATION' ) {
       alertState.content && showToast(
         ToastType.Error,
         alertState.content
@@ -436,6 +445,13 @@ const AddressFormUI = (props: AddressFormParams) => {
           onClick={() => setToggleMap(false)}
         />
       </OModal>
+      <Alert 
+        open={alertState.open}
+        onAccept={closeAlert}
+        onClose={closeAlert}
+        content={alertState.content}
+        title={t('ERROR', 'Error')}
+      />
     </AddressFormContainer>
   )
 }
