@@ -160,6 +160,7 @@ export interface BusinessInformationParams {
   navigation: any,
   businessState: { business: any, loading: boolean, error: null };
   businessSchedule: Array<any>;
+  businessLocation?: any
 }
 export interface BusinessReviewsParams {
   businessState: { business: any, loading: boolean, error: null };
@@ -318,4 +319,13 @@ export interface UpsellingProductsParams {
   openUpselling: boolean;
   canOpenUpselling?: boolean;
   setCanOpenUpselling?: (value: any) => void;
+}
+
+export interface GoogleMapsParams {
+  location: {lat: number, lng: number}
+  handleChangeAddressMap?: (address : any, details : any) => void
+  setErrors?: (error : string) => void
+  maxLimitLocation?: number
+  readOnly?: boolean
+  markerTitle?: string
 }

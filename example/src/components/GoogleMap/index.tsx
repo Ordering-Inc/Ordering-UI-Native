@@ -1,12 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Dimensions, StyleSheet } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps'
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig } from 'ordering-components/native'
+import { GoogleMapsParams } from '../../types';
 
-export const GoogleMap = (props) => {
+export const GoogleMap = (props: GoogleMapsParams) => {
 
-  const { location, handleChangeAddressMap, setErrors, maxLimitLocation } = props
+  const {
+    location,
+    handleChangeAddressMap,
+    setErrors,
+    maxLimitLocation,
+    readOnly,
+    markerTitle
+  } = props
 
   const [, t] = useLanguage()
   const [configState] = useConfig()
@@ -24,7 +32,7 @@ export const GoogleMap = (props) => {
 
   const center = { lat: location?.lat, lng: location?.lng }
 
-  const geocodePosition = (pos) => {
+  const geocodePosition = (pos: { latitude: number, longitude: number }) => {
     Geocoder.from({
       latitude: pos.latitude,
       longitude: pos.longitude
@@ -54,11 +62,11 @@ export const GoogleMap = (props) => {
         setErrors && setErrors('ERROR_NOT_FOUND_ADDRESS')
       }
     }).catch(err => {
-      console.log(err.message)
+      setErrors && setErrors(err.message)
     })
   }
 
-  const validateResult = (curPos) => {
+  const validateResult = (curPos: { latitude: number, longitude: number }) => {
     const loc1 = center
     const loc2 = curPos
     const distance = calculateDistance(loc1, loc2)
@@ -76,11 +84,11 @@ export const GoogleMap = (props) => {
       setRegion({ ...region, longitude: curPos.longitude, latitude: curPos.latitude })
     } else {
       setErrors && setErrors('ERROR_MAX_LIMIT_LOCATION')
-      setMarkerPosition({latitude: center.lat, longitude: center.lng})
+      setMarkerPosition({ latitude: center.lat, longitude: center.lng })
     }
   }
 
-  const calculateDistance = (pointA, pointB) => {
+  const calculateDistance = (pointA: { lat: number, lng: number }, pointB: { latitude: number, longitude: number }) => {
 
     // http://www.movable-type.co.uk/scripts/latlong.html
     const lat1 = pointA.lat;
@@ -104,12 +112,12 @@ export const GoogleMap = (props) => {
     return distance; // in meters
   }
 
-  const handleChangeMarkerPosition = (e) => {
+  const handleChangeMarkerPosition = (e: any) => {
     const curPosition = e.nativeEvent.coordinate
     validateResult(curPosition)
   }
 
-  const handleChangeRegion = (coordinates) => {
+  const handleChangeRegion = (coordinates: Region) => {
     validateResult(coordinates)
   }
 
@@ -122,14 +130,14 @@ export const GoogleMap = (props) => {
       provider={PROVIDER_GOOGLE}
       region={region}
       style={StyleSheet.absoluteFillObject}
-      onRegionChangeComplete={handleChangeRegion}
+      onRegionChangeComplete={!readOnly ? (coordinates) => handleChangeRegion(coordinates) : () => { }}
       zoomTapEnabled
       zoomEnabled
       zoomControlEnabled
     >
       <Marker
         coordinate={markerPosition}
-        title={t('YOUR_LOCATION', 'Your Location')}
+        title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
         ref={markerRef}
       />
     </MapView>
