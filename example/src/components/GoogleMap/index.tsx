@@ -13,7 +13,10 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     setErrors,
     maxLimitLocation,
     readOnly,
-    markerTitle
+    markerTitle,
+    saveLocation,
+    setSaveLocation,
+    handleToggleMap
   } = props
 
   const [, t] = useLanguage()
@@ -55,9 +58,10 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         const details = {
           geometry: { location: { lat: pos.latitude, lng: pos.longitude } }
         }
+        
         handleChangeAddressMap && handleChangeAddressMap(address, details)
-        center.lat = address.location?.lat
-        center.lng = address.location?.lng
+        setSaveLocation && setSaveLocation(false)
+        handleToggleMap && handleToggleMap()
       } else {
         setErrors && setErrors('ERROR_NOT_FOUND_ADDRESS')
       }
@@ -79,7 +83,6 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     }
 
     if (distance <= maxLimitLocation) {
-      geocodePosition(curPos)
       setMarkerPosition(curPos)
       setRegion({ ...region, longitude: curPos.longitude, latitude: curPos.latitude })
     } else {
@@ -124,6 +127,12 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   useEffect(() => {
     Geocoder.init(googleMapsApiKey)
   }, [])
+
+  useEffect(() => {
+    if(saveLocation){
+      geocodePosition(markerPosition)
+    }
+  },[saveLocation])
 
   return (
     <MapView

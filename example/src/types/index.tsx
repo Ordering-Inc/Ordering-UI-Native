@@ -42,7 +42,8 @@ export interface AddressListParams {
   handleSetDefault?: any;
   setAddressList?: any;
   isGoBack?: boolean;
-  route?: any
+  route?: any;
+  actionStatus?: any
 }
 
 export interface AddressFormParams {
@@ -327,5 +328,8 @@ export interface GoogleMapsParams {
   setErrors?: (error : string) => void
   maxLimitLocation?: number
   readOnly?: boolean
-  markerTitle?: string
+  markerTitle?: string,
+  saveLocation?: boolean,
+  setSaveLocation?: (val : boolean) => void
+  handleToggleMap?: () => void
 }

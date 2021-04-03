@@ -55,7 +55,7 @@ const AddressFormUI = (props: AddressFormParams) => {
       ? addressState?.address?.location
       : formState.changes?.location ?? null
   )
-
+  const [saveMapLocation,setSaveMapLocation] = useState(false)
 
   const googleInput : any = useRef(null)
 
@@ -172,6 +172,10 @@ const AddressFormUI = (props: AddressFormParams) => {
         value: tag
       }
     })
+  }
+
+  const handleToggleMap = () => {
+    setToggleMap(!toggleMap)
   }
 
   useEffect(() => {
@@ -319,7 +323,7 @@ const AddressFormUI = (props: AddressFormParams) => {
       </AutocompleteInput>
 
       {(addressState?.address?.location || formState?.changes?.location) && (
-        <TouchableOpacity onPress={() => setToggleMap(!toggleMap)}>
+        <TouchableOpacity onPress={handleToggleMap}>
           <OText color={colors.primary} style={{textAlign: 'center'}}>{t('VIEW_MAP', 'View map to modify the exact location')}</OText>
         </TouchableOpacity>
       )}
@@ -426,7 +430,7 @@ const AddressFormUI = (props: AddressFormParams) => {
           onClick={goToBack}
         />
       )}
-      <OModal open={toggleMap} onClose={() => setToggleMap(false)} entireModal customClose >
+      <OModal open={toggleMap} onClose={() => handleToggleMap()} entireModal customClose >
         {locationChange && (
           <GoogleMapContainer>
             <GoogleMap
@@ -434,6 +438,9 @@ const AddressFormUI = (props: AddressFormParams) => {
               handleChangeAddressMap={handleChangeAddress}
               setErrors={setMapErrors}
               maxLimitLocation={maxLimitLocation}
+              saveLocation={saveMapLocation}
+              setSaveLocation={setSaveMapLocation}
+              handleToggleMap={handleToggleMap}
             />
           </GoogleMapContainer>
         )}
@@ -442,10 +449,10 @@ const AddressFormUI = (props: AddressFormParams) => {
           textStyle={{ color: colors.white }}
           imgRightSrc={null}
           style={{ marginHorizontal: 30, marginBottom: 10 }}
-          onClick={() => setToggleMap(false)}
+          onClick={() => setSaveMapLocation(true)}
         />
       </OModal>
-      <Alert 
+      <Alert
         open={alertState.open}
         onAccept={closeAlert}
         onClose={closeAlert}
