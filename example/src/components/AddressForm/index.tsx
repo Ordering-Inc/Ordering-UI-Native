@@ -12,6 +12,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { AddressFormParams } from '../../types'
 import { GoogleMap } from '../GoogleMap'
 import Alert from '../../providers/AlertProvider'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 
 const inputNames = [{ name: 'address', code: 'Address' }, { name: 'internal_number', code: 'Internal number' }, { name: 'zipcode', code: 'Zipcode' }, { name: 'address_notes', code: 'Address notes' }]
@@ -266,6 +267,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 
   return (
     <AddressFormContainer style={{ height: 300, overflow: 'scroll' }}>
+      <Spinner visible={saveMapLocation} />
       <NavBar
         title={t('ADDRESS_FORM', 'Address Form')}
         titleAlign={'center'}

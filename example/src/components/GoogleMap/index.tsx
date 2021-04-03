@@ -58,7 +58,6 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         const details = {
           geometry: { location: { lat: pos.latitude, lng: pos.longitude } }
         }
-        
         handleChangeAddressMap && handleChangeAddressMap(address, details)
         setSaveLocation && setSaveLocation(false)
         handleToggleMap && handleToggleMap()
@@ -129,10 +128,10 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   }, [])
 
   useEffect(() => {
-    if(saveLocation){
+    if (saveLocation) {
       geocodePosition(markerPosition)
     }
-  },[saveLocation])
+  }, [saveLocation])
 
   return (
     <MapView
