@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSession, useApi, useLanguage } from 'ordering-components/native';
+// import stripe from 'react-native-stripe-payments';
 
 export const StripeCardForm = (props: any) => {
   const {
@@ -15,6 +16,7 @@ export const StripeCardForm = (props: any) => {
   const [{ user }] = useSession();
   const [ordering] = useApi();
   const [, t] = useLanguage();
+  // stripe.setOptions({ publishingKey: publicKey });
 
   const [state, setState] = useState<any>({ error: null, loading: false })
 
@@ -111,6 +113,8 @@ export const StripeCardForm = (props: any) => {
       })
     }
   };
+
+  // console.log('stripe', stripe);
 
   return (
     <UIComponent

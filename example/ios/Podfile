@@ -16,6 +16,8 @@ target 'delivery' do
 
 
 
+  pod 'react-native-stripe-payments', :path => '../node_modules/react-native-stripe-payments'
+
   target 'deliveryTests' do
     inherit! :complete
     # Pods for testing
