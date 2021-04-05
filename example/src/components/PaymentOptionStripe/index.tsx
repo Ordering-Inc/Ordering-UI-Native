@@ -21,8 +21,7 @@ import {
   OSItemContent,
   OSItemActions,
   OSWrapper,
-  OSActions,
-  OSCardList
+  OSActions
 } from './styles';
 import { colors } from '../../theme';
 
@@ -34,12 +33,11 @@ const PaymentOptionStripeUI = (props: any) => {
     cardSelected,
     cardsList,
     handleCardClick,
-    handleNewCard,
-    onNavigationRedirect
+    handleNewCard
   } = props;
 
-  const [{ token }] = useSession()
-  const [, t] = useLanguage()
+  const [{ token }] = useSession();
+  const [, t] = useLanguage();
 
   const [addCartOpen, setAddCardOpen] = useState(false)
 

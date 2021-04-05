@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 import { CreditCardInput } from 'react-native-credit-card-input';
-import { StripeCardForm as CardForm } from './component';
+import { StripeCardForm as CardForm } from './naked';
 
 import {
   FormStripe,
@@ -32,6 +32,7 @@ const StripeCardFormUI = (props:  any) => {
         <CreditCardInput
           autoFocus
           requiresCVC
+          requiresPostalCode
           labelStyle={styles.label}
           inputStyle={styles.input}
           validColor={'#000000'}

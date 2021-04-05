@@ -18,7 +18,7 @@ export const StripeCardForm = (props: any) => {
 
   const [state, setState] = useState<any>({ error: null, loading: false })
 
-  const stripeTokenHandler = async (tokenId: any, user: any, businessId: any) => {
+  const stripeTokenHandler = async (tokenId: any, user: any, businessId: any, cardDetails: any) => {
     try {
       const result = await fetch(`${ordering.root}/payments/stripe/cards`, {
         method: 'POST',
@@ -34,8 +34,12 @@ export const StripeCardForm = (props: any) => {
         })
       })
       const response = await result.json();
-      console.log('response', response);
-      onNewCard && onNewCard(response.result);
+      const obj = typeof response.result === 'string'
+        ? {brand: cardDetails?.brand,
+          last4: cardDetails?.last4,
+          id: response.result}
+        : response.result
+      onNewCard && onNewCard(obj);
     } catch (error) {
       setState({
         ...state,
@@ -87,7 +91,7 @@ export const StripeCardForm = (props: any) => {
         ...state,
         loading: false
       })
-      toSave && stripeTokenHandler(result?.id, user, props.businessId);
+      toSave && stripeTokenHandler(result?.id, user, props.businessId, result?.card);
     } catch (error) {
       setState({
         ...state,

@@ -4,7 +4,7 @@ import { useLanguage } from 'ordering-components/native';
 
 import { ErrorMessage } from './styles';
 
-import { StripeElementsForm as StripeFormController } from './component';
+import { StripeElementsForm as StripeFormController } from './naked';
 import { StripeCardForm } from '../StripeCardForm';
 
 const StripeElementsFormUI = (props: any) => {
