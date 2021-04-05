@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  Placeholder,
+  PlaceholderMedia,
+  PlaceholderLine,
+  Fade
+} from "rn-placeholder";
 
 import {
   PaymentOptions as PaymentOptionsController,
@@ -141,9 +147,19 @@ const PaymentOptionsUI = (props: any) => {
       )}
 
       {(paymethodsList.loading || isLoading) && (
-        <OText size={12} style={{ margin: 0 }}>
-          Loading...
-        </OText>
+        <Placeholder style={{ marginTop: 10 }} Animation={Fade}>
+          <View style={{ display: 'flex', flexDirection: 'row' }}>
+            {[...Array(3)].map((_, i) => (
+              <PlaceholderLine
+              key={i}
+              width={37}
+              height={80}
+              noMargin
+              style={{ borderRadius: 10, marginRight: 10 }}
+              />
+            ))}
+          </View>
+        </Placeholder>
       )}
 
       {paymethodsList.error && paymethodsList.error.length > 0 && (

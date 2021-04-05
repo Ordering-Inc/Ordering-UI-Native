@@ -7,8 +7,8 @@ export const StripeCardForm = (props: any) => {
     toSave,
     onNewCard,
     publicKey,
-    // requirements,
-    // handleSource,
+    requirements,
+    handleSource,
     handleCustomSubmit
   } = props;
 
@@ -91,6 +91,17 @@ export const StripeCardForm = (props: any) => {
         ...state,
         loading: false
       })
+      if (!requirements && handleSource) {
+        handleSource && handleSource({
+          id: result?.card?.id,
+          type: 'card',
+          card: {
+            brand: result?.card?.brand,
+            last4: result?.card?.last4
+          }
+        })
+        return
+      }
       toSave && stripeTokenHandler(result?.id, user, props.businessId, result?.card);
     } catch (error) {
       setState({

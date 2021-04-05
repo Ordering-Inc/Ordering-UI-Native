@@ -32,7 +32,6 @@ const StripeCardFormUI = (props:  any) => {
         <CreditCardInput
           autoFocus
           requiresCVC
-          requiresPostalCode
           labelStyle={styles.label}
           inputStyle={styles.input}
           validColor={'#000000'}
