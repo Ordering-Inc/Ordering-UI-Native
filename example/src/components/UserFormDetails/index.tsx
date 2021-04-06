@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { useSession, useLanguage } from 'ordering-components/native';
 import { useForm, Controller } from 'react-hook-form';
 
-import { UDForm, UDLoader, UDWrapper } from './styles';
+import { UDForm, UDLoader, UDWrapper,WrapperPhone } from './styles';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OText, OButton, OInput } from '../shared';
@@ -26,7 +26,9 @@ export const UserFormDetailsUI = (props: any) => {
     validationFields,
     handleChangeInput,
     handleButtonUpdateClick,
-    isCheckout
+    isCheckout,
+    phoneUpdate,
+    togglePhoneUpdate
   } = props
 
   const [, t] = useLanguage();
@@ -44,7 +46,6 @@ export const UserFormDetailsUI = (props: any) => {
       cellphone: null
     }
   });
-  // const [alertState, setAlertState] = useState({ open: false, content: [] })
 
   const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
 
@@ -205,6 +206,12 @@ export const UserFormDetailsUI = (props: any) => {
     }
   }, [user, isEdit])
 
+  useEffect(() => {
+    if (user?.cellphone && !user?.country_phone_code) {
+      togglePhoneUpdate(true)
+    }
+  }, [user?.country_phone_code])
+
   return (
     <>
       <UDForm>
@@ -245,12 +252,18 @@ export const UserFormDetailsUI = (props: any) => {
               ))}
 
             {!!showInputPhoneNumber && (
-              <PhoneInputNumber
-                defaultValue={user?.cellphone}
-                data={phoneInputData}
-                handleData={(val: any) => handleChangePhoneNumber(val)}
-              />
+              <WrapperPhone>
+                <PhoneInputNumber
+                  data={phoneInputData}
+                  handleData={(val: any) => handleChangePhoneNumber(val)}
+                  defaultValue={phoneUpdate ? '' : user?.cellphone}
+                />
+                {phoneUpdate && (
+                  <OText color={colors.error} style={{ marginHorizontal: 10, textAlign: 'center' }}>{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}</OText>
+                )}
+              </WrapperPhone>
             )}
+
           </UDWrapper>
         )}
         {validationFields?.loading && (

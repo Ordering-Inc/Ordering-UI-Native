@@ -30,7 +30,8 @@ import {
   UserData,
   Names,
   EditButton,
-  Actions
+  Actions,
+  WrapperPhone
 } from './styles';
 
 const notValidationFields = [
@@ -68,6 +69,7 @@ const ProfileUI = (props: ProfileParams) => {
       cellphone: null
     }
   });
+  const [phoneUpdate, setPhoneUpdate] = useState(false)
 
   const onSubmit = (values: any) => {
     if (phoneInputData.error) {
@@ -178,6 +180,12 @@ const ProfileUI = (props: ProfileParams) => {
     }
   }, [errors]);
 
+  useEffect(() => {
+    if (user?.cellphone && !user?.country_phone_code) {
+      setPhoneUpdate(true)
+    }
+  }, [user?.country_phone_code])
+
   return (
     <>
       <Actions>
@@ -214,6 +222,9 @@ const ProfileUI = (props: ProfileParams) => {
           )}
           <OText>{user?.email}</OText>
           {user?.cellphone && <OText>{user?.cellphone}</OText>}
+          {phoneUpdate && (
+            <OText color={colors.error}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
+          )}
         </UserData>
       ) : (
         <>
@@ -253,7 +264,6 @@ const ProfileUI = (props: ProfileParams) => {
                 />
               )
           )}
-
           <OInput
             name='password'
             isSecured={true}
@@ -264,11 +274,17 @@ const ProfileUI = (props: ProfileParams) => {
               handleChangeInput(val)
             }}
           />
-          <PhoneInputNumber
-            data={phoneInputData}
-            handleData={(val: any) => handleChangePhoneNumber(val)}
-            defaultValue={user?.cellphone}
-          />
+          <WrapperPhone>
+
+            <PhoneInputNumber
+              data={phoneInputData}
+              handleData={(val: any) => handleChangePhoneNumber(val)}
+              defaultValue={phoneUpdate ? '' : user?.cellphone}
+            />
+            {phoneUpdate && (
+              <OText color={colors.error} style={{ marginHorizontal: 10, textAlign: 'center' }}>{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}</OText>
+            )}
+          </WrapperPhone>
         </>
       )}
       {!validationFields.loading && (

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -23,12 +23,15 @@ const UserDetailsUI = (props: any) => {
     cartStatus,
     toggleIsEdit,
     validationFields,
-    isUserDetailsEdit
+    isUserDetailsEdit,
+    phoneUpdate,
+    togglePhoneUpdate
   } = props
 
   const [, t] = useLanguage()
   const [{ user }] = useSession()
   const userData = props.userData || formState.result?.result || user
+
 
   useEffect(() => {
     if (isUserDetailsEdit) {
@@ -93,16 +96,21 @@ const UserDetailsUI = (props: any) => {
                 {userData?.email}
               </OText>
               {(userData?.cellphone || user?.cellphone) && (
-                <OText size={16}>
-                  <OText size={18} weight='bold'>
-                    {t('CELLPHONE', 'Cellphone')}:{' '}
+                <>
+                  <OText size={16}>
+                    <OText size={18} weight='bold'>
+                      {t('CELLPHONE', 'Cellphone')}:{' '}
+                    </OText>
+                    {(userData?.country_phone_code) && `+${(userData?.country_phone_code)} `}{(userData?.cellphone)}
                   </OText>
-                  {(userData?.country_phone_code) && `+${(userData?.country_phone_code)} `}{(userData?.cellphone)}
-                </OText>
+                  {phoneUpdate && (
+                    <OText color={colors.error} style={{textAlign: 'center'}}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
+                  )}
+                </>
               )}
             </UDInfo>
           ) : (
-            <UserFormDetailsUI {...props} />
+            <UserFormDetailsUI {...props} phoneUpdate={phoneUpdate} togglePhoneUpdate={togglePhoneUpdate} />
           )}
         </UDContainer>
       )}
