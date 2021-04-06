@@ -14,7 +14,6 @@ import { GoogleMap } from '../GoogleMap'
 import Alert from '../../providers/AlertProvider'
 import Spinner from 'react-native-loading-spinner-overlay'
 
-
 const inputNames = [{ name: 'address', code: 'Address' }, { name: 'internal_number', code: 'Internal number' }, { name: 'zipcode', code: 'Zipcode' }, { name: 'address_notes', code: 'Address notes' }]
 const tagsName = [
   { icon: 'home', value: 'home' },
