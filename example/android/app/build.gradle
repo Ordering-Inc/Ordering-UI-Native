@@ -196,6 +196,8 @@ dependencies {
 
     implementation 'com.android.support:design:27.1.0'
 
+    implementation 'com.google.firebase:firebase-core:16.0.7'
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }
