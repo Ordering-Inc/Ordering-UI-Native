@@ -15,7 +15,9 @@ import { ProfileParams } from '../../types';
 import { flatArray } from '../../utils';
 import { AddressList } from '../AddressList'
 import { LogoutButton } from '../LogoutButton'
-import {LanguageSelector} from '../LanguageSelector'
+import { LanguageSelector } from '../LanguageSelector'
+import { PhoneInputNumber } from '../PhoneInputNumber'
+
 import {
   OIcon,
   OIconButton,
@@ -59,9 +61,20 @@ const ProfileUI = (props: ProfileParams) => {
   const { control, handleSubmit, errors, setValue } = useForm();
 
   const [validationFieldsSorted, setValidationFieldsSorted] = useState([]);
+  const [phoneInputData, setPhoneInputData] = useState({
+    error: '',
+    phone: {
+      country_phone_code: null,
+      cellphone: null
+    }
+  });
 
   const onSubmit = (values: any) => {
-    if(formState.changes.password && formState.changes.password.length < 8){
+    if (phoneInputData.error) {
+      showToast(ToastType.Error, phoneInputData.error)
+      return
+    }
+    if (formState.changes.password && formState.changes.password.length < 8) {
       showToast(ToastType.Error, t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.').replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8))
       return
     }
@@ -120,6 +133,21 @@ const ProfileUI = (props: ProfileParams) => {
     cleanFormState({ changes: {} });
     toggleIsEdit();
   };
+
+  const handleChangePhoneNumber = (number) => {
+    setPhoneInputData(number)
+    let phoneNumber = {
+      country_phone_code: {
+        name: 'country_phone_code',
+        value: number.phone.country_phone_code
+      },
+      cellphone: {
+        name: 'cellphone',
+        value: number.phone.cellphone
+      }
+    }
+    handleChangeInput(phoneNumber, true)
+  }
 
   useEffect(() => {
     if (validationFields?.fields?.checkout) {
@@ -188,55 +216,61 @@ const ProfileUI = (props: ProfileParams) => {
           {user?.cellphone && <OText>{user?.cellphone}</OText>}
         </UserData>
       ) : (
-          <>
-            {validationFieldsSorted.map(
-              (field: any) =>
-                !notValidationFields.includes(field.code) &&
-                showField &&
-                showField(field.code) && (
-                  <Controller
-                    key={field.id}
-                    control={control}
-                    render={() => (
-                      <OInput
-                        key={field.id}
-                        name={field.code}
-                        placeholder={t(field.code.toUpperCase(), field?.name)}
-                        borderColor={colors.whiteGray}
-                        style={styles.inputbox}
-                        onChange={(val: any) => {
-                          setValue(field.code, val.target.value)
-                          handleChangeInput(val);
-                        }}
-                        value={user[field.code]}
-                      />
-                    )}
-                    name={field.code}
-                    defaultValue={user[field.code]}
-                    rules={{
-                      required: isRequiredField(field.code)
-                        ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field?.name} is required`).replace('_attribute_', t(field?.name, field.code))
-                        : null,
-                      pattern: {
-                        value: field.code === 'email' ? /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i : null,
-                        message: field.code === 'email' ? t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email')) : null
-                      }
-                    }}
-                  />
-                )
-            )}
-            <OInput
-              name='password'
-              isSecured={true}
-              placeholder={'Password'}
-              icon={IMAGES.lock}
-              style={styles.inputbox}
-              onChange={(val: any) => {
-                handleChangeInput(val)
-              }}
-            />
-          </>
-        )}
+        <>
+          {validationFieldsSorted.map(
+            (field: any) =>
+              !notValidationFields.includes(field.code) &&
+              showField &&
+              showField(field.code) && (
+                <Controller
+                  key={field.id}
+                  control={control}
+                  render={() => (
+                    <OInput
+                      key={field.id}
+                      name={field.code}
+                      placeholder={t(field.code.toUpperCase(), field?.name)}
+                      borderColor={colors.whiteGray}
+                      style={styles.inputbox}
+                      onChange={(val: any) => {
+                        setValue(field.code, val.target.value)
+                        handleChangeInput(val);
+                      }}
+                      value={user[field.code]}
+                    />
+                  )}
+                  name={field.code}
+                  defaultValue={user[field.code]}
+                  rules={{
+                    required: isRequiredField(field.code)
+                      ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field?.name} is required`).replace('_attribute_', t(field?.name, field.code))
+                      : null,
+                    pattern: {
+                      value: field.code === 'email' ? /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i : null,
+                      message: field.code === 'email' ? t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email')) : null
+                    }
+                  }}
+                />
+              )
+          )}
+
+          <OInput
+            name='password'
+            isSecured={true}
+            placeholder={t('PASSWORD', 'Password')}
+            icon={IMAGES.lock}
+            style={styles.inputbox}
+            onChange={(val: any) => {
+              handleChangeInput(val)
+            }}
+          />
+          <PhoneInputNumber
+            data={phoneInputData}
+            handleData={(val: any) => handleChangePhoneNumber(val)}
+            defaultValue={user?.cellphone}
+          />
+        </>
+      )}
       {!validationFields.loading && (
         <EditButton>
           {!isEdit ? (
@@ -246,26 +280,27 @@ const ProfileUI = (props: ProfileParams) => {
               onClick={toggleIsEdit}
             />
           ) : (
-              <>
-                <OKeyButton
-                  title="Cancel"
-                  style={styles.editButton}
-                  onClick={handleCancelEdit}
-                />
-                {((formState &&
-                  Object.keys(formState?.changes).length > 0 &&
-                  isEdit) ||
-                  formState?.loading) && (
-                    <OKeyButton
-                      title="Update"
-                      onClick={handleSubmit(onSubmit)}
-                      style={{ ...styles.editButton, backgroundColor: colors.primary, marginLeft: 8 }}
-                    />
-                  )}
-              </>
-            )}
+            <>
+              <OKeyButton
+                title="Cancel"
+                style={styles.editButton}
+                onClick={handleCancelEdit}
+              />
+              {((formState &&
+                Object.keys(formState?.changes).length > 0 &&
+                isEdit) ||
+                formState?.loading) && (
+                  <OKeyButton
+                    title="Update"
+                    onClick={handleSubmit(onSubmit)}
+                    style={{ ...styles.editButton, backgroundColor: colors.primary, marginLeft: 8 }}
+                  />
+                )}
+            </>
+          )}
         </EditButton>
       )}
+
       {user?.id && (
         <AddressList
           nopadding

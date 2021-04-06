@@ -12,6 +12,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
   const {
     data,
     handleData,
+    defaultValue
   } = props
 
   const [, t] = useLanguage()
@@ -20,42 +21,43 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
   const [userphoneNumber, setUserphoneNumber] = useState('');
 
   useEffect(() => {
-    if (userphoneNumber) {
-      const checkValid = phoneInput.current?.isValidNumber(userphoneNumber);
-      const callingCode = phoneInput.current?.getCallingCode();
-      const formattedNumber = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
-      if (!checkValid && formattedNumber?.number) {
+    if((defaultValue && userphoneNumber) || defaultValue === undefined){
+      if (userphoneNumber) {
+        const checkValid = phoneInput.current?.isValidNumber(userphoneNumber);
+        const callingCode = phoneInput.current?.getCallingCode();
+        const formattedNumber = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
+        if (!checkValid && formattedNumber?.number) {
+          handleData && handleData({
+            ...data,
+            error: t('INVALID_ERROR_PHONE_NUMBER', 'The Phone Number field is invalid')
+          })
+          return
+        }
         handleData && handleData({
           ...data,
-          error: t('INVALID_ERROR_PHONE_NUMBER', 'The Phone Number field is invalid')
+          error: '',
+          phone: {
+            country_phone_code: callingCode,
+            cellphone: formattedNumber?.number
+          }
         })
-        return
+      } else {
+        handleData && handleData({
+          ...data,
+          error: '',
+          phone: {
+            country_phone_code: null,
+            cellphone: null
+          }
+        })
       }
-      handleData && handleData({
-        ...data,
-        error: '',
-        phone: {
-          country_phone_code: callingCode,
-          cellphone: formattedNumber?.number
-        }
-      })
-    } else {
-      handleData && handleData({
-        ...data,
-        error: '',
-        phone: {
-          country_phone_code: null,
-          cellphone: null
-        }
-      })
     }
-  }, [userphoneNumber])
-
-  return (
-    <Wrapper>
+    }, [userphoneNumber])
+    return (
+      <Wrapper>
       <PhoneInput
         ref={phoneInput}
-        defaultValue={userphoneNumber}
+        defaultValue={userphoneNumber || defaultValue}
         defaultCode={configs?.default_country_code?.value}
         onChangeFormattedText={(text) => setUserphoneNumber(text)}
         withDarkTheme

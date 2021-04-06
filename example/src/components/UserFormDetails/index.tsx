@@ -10,7 +10,7 @@ import { OText, OButton, OInput } from '../shared';
 import { colors } from '../../theme';
 import { IMAGES } from '../../config/constants';
 
-// import { PhoneInputNumber } from '../PhoneInputNumber';
+import { PhoneInputNumber } from '../PhoneInputNumber'
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone']
 
@@ -116,6 +116,10 @@ export const UserFormDetailsUI = (props: any) => {
     //   return
     // }
     // if (Object.keys(formState.changes).length > 0 && isPhoneNumberValid) {
+    if (phoneInputData.error) {
+      showToast(ToastType.Error, phoneInputData.error)
+      return
+    }
     if (Object.keys(formState.changes).length > 0) {
       let changes = null
       if (user?.cellphone && !userPhoneNumber) {
@@ -128,38 +132,20 @@ export const UserFormDetailsUI = (props: any) => {
     }
   }
 
-  // const handleChangePhoneNumber = (number, isValid) => {
-  const handleChangePhoneNumber = (data: any) => {
-    console.log(data);
-    // setUserPhoneNumber(number)
-
-    // let phoneNumberParser = null
-    // let phoneNumber = {
-    //   country_phone_code: {
-    //     name: 'country_phone_code',
-    //     value: ''
-    //   },
-    //   cellphone: {
-    //     name: 'cellphone',
-    //     value: ''
-    //   }
-    // }
-    // if (isValid) {
-    //   phoneNumberParser = parsePhoneNumber(number)
-    // }
-    // if (phoneNumberParser) {
-    //   phoneNumber = {
-    //     country_phone_code: {
-    //       name: 'country_phone_code',
-    //       value: phoneNumberParser.countryCallingCode
-    //     },
-    //     cellphone: {
-    //       name: 'cellphone',
-    //       value: phoneNumberParser.nationalNumber
-    //     }
-    //   }
-    // }
-    // handleChangeInput(phoneNumber, true)
+  const handleChangePhoneNumber = (number) => {
+    console.log(number)
+    setPhoneInputData(number)
+    let phoneNumber = {
+      country_phone_code: {
+        name: 'country_phone_code',
+        value: number.phone.country_phone_code
+      },
+      cellphone: {
+        name: 'cellphone',
+        value: number.phone.cellphone
+      }
+    }
+    handleChangeInput(phoneNumber, true)
   }
 
   const sortValidationFields = () => {
@@ -226,49 +212,45 @@ export const UserFormDetailsUI = (props: any) => {
           <UDWrapper>
             {validationFieldsSorted.map((field: any) =>
               !notValidationFields.includes(field.code) &&
-            (
-              showField && showField(field.code) && (
-                <React.Fragment key={field.id}>
-                  <Controller
-                    key={field.id}
-                    control={control}
-                    render={() => (
-                      <OInput
-                        name={field.code}
-                        placeholder={t(field.code.toUpperCase(), field?.name)}
-                        style={styles.inputStyle}
-                        icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
-                        isDisabled={!isEdit}
-                        value={formState?.result?.result
-                          ? formState?.result?.result[field.code]
-                          : formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
-                        onChange={(val: any) => {
-                          setValue(field.code, val.target.value)
-                          handleChangeInput(val)
-                        }}
-                      />
-                    )}
-                    name={field.code}
-                    rules={getInputRules(field)}
-                    defaultValue={formState?.result?.result
-                      ? formState?.result?.result[field.code]
-                      : formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
-                  />
-                </React.Fragment>
-              )
-            ))}
+              (
+                showField && showField(field.code) && (
+                  <React.Fragment key={field.id}>
+                    <Controller
+                      key={field.id}
+                      control={control}
+                      render={() => (
+                        <OInput
+                          name={field.code}
+                          placeholder={t(field.code.toUpperCase(), field?.name)}
+                          style={styles.inputStyle}
+                          icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
+                          isDisabled={!isEdit}
+                          value={formState?.result?.result
+                            ? formState?.result?.result[field.code]
+                            : formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
+                          onChange={(val: any) => {
+                            setValue(field.code, val.target.value)
+                            handleChangeInput(val)
+                          }}
+                        />
+                      )}
+                      name={field.code}
+                      rules={getInputRules(field)}
+                      defaultValue={formState?.result?.result
+                        ? formState?.result?.result[field.code]
+                        : formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
+                    />
+                  </React.Fragment>
+                )
+              ))}
 
-            {/* {!!showInputPhoneNumber && (
+            {!!showInputPhoneNumber && (
               <PhoneInputNumber
-                currentNumber={userPhoneNumber?.replace(/\s+/g, '')}
+                defaultValue={user?.cellphone}
                 data={phoneInputData}
-                handleData={(val: any) => setPhoneInputData(val)}
-                setValue={handleChangePhoneNumber}
-                handleIsValid={setIsValidPhoneNumber}
-                disabled={!isEdit}
-                values={phoneInputData}
+                handleData={(val: any) => handleChangePhoneNumber(val)}
               />
-            )} */}
+            )}
           </UDWrapper>
         )}
         {validationFields?.loading && (
@@ -283,7 +265,7 @@ export const UserFormDetailsUI = (props: any) => {
         <OButton
           text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
           bgColor={colors.primary}
-          textStyle={{color: 'white'}}
+          textStyle={{ color: 'white' }}
           borderColor={colors.primary}
           isDisabled={formState.loading}
           imgRightSrc={null}

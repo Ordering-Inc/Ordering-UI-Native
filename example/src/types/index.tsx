@@ -84,6 +84,7 @@ export interface SignupParams {
 export interface PhoneInputParams {
   data?: any;
   handleData?: any;
+  defaultValue?: any;
 }
 
 export interface LanguageSelectorParams {
