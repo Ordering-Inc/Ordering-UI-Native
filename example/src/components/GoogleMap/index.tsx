@@ -4,13 +4,13 @@ import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps'
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig } from 'ordering-components/native'
 import { GoogleMapsParams } from '../../types';
+import Alert from '../../providers/AlertProvider'
 
 export const GoogleMap = (props: GoogleMapsParams) => {
 
   const {
     location,
     handleChangeAddressMap,
-    setErrors,
     maxLimitLocation,
     readOnly,
     markerTitle,
@@ -34,7 +34,11 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
 
   const center = { lat: location?.lat, lng: location?.lng }
-
+  const [alertState, setAlertState] = useState<{open: boolean, content : Array<string>, key ?: string | null}>({ open: false, content: [], key: null })
+  const mapErrors: any = {
+    ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
+    ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
+  }
   const geocodePosition = (pos: { latitude: number, longitude: number }) => {
     Geocoder.from({
       latitude: pos.latitude,
@@ -62,10 +66,10 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         setSaveLocation && setSaveLocation(false)
         handleToggleMap && handleToggleMap()
       } else {
-        setErrors && setErrors('ERROR_NOT_FOUND_ADDRESS')
+        setMapErrors && setMapErrors('ERROR_NOT_FOUND_ADDRESS')
       }
     }).catch(err => {
-      setErrors && setErrors(err.message)
+      setMapErrors && setMapErrors(err.message)
     })
   }
 
@@ -85,7 +89,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       setMarkerPosition(curPos)
       setRegion({ ...region, longitude: curPos.longitude, latitude: curPos.latitude })
     } else {
-      setErrors && setErrors('ERROR_MAX_LIMIT_LOCATION')
+      setMapErrors && setMapErrors('ERROR_MAX_LIMIT_LOCATION')
       setMarkerPosition({ latitude: center.lat, longitude: center.lng })
     }
   }
@@ -122,6 +126,23 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const handleChangeRegion = (coordinates: Region) => {
     validateResult(coordinates)
   }
+  
+  const closeAlert = () => {
+    setAlertState({
+      open: false,
+      content: []
+    })
+  }
+
+  const setMapErrors = (errKey: string) => {
+    setAlertState({
+      open: true,
+      content: !(errKey === 'ERROR_MAX_LIMIT_LOCATION')
+        ? [t(errKey, mapErrors[errKey])]
+        : [`${t(errKey, mapErrors[errKey])} ${maxLimitLocation} ${t('METTERS', 'meters')}`],
+      key: errKey
+    })
+  }
 
   useEffect(() => {
     Geocoder.init(googleMapsApiKey)
@@ -134,20 +155,29 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   }, [saveLocation])
 
   return (
-    <MapView
-      provider={PROVIDER_GOOGLE}
-      region={region}
-      style={StyleSheet.absoluteFillObject}
-      onRegionChangeComplete={!readOnly ? (coordinates) => handleChangeRegion(coordinates) : () => { }}
-      zoomTapEnabled
-      zoomEnabled
-      zoomControlEnabled
-    >
-      <Marker
-        coordinate={markerPosition}
-        title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
-        ref={markerRef}
+    <>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        region={region}
+        style={StyleSheet.absoluteFillObject}
+        onRegionChangeComplete={!readOnly ? (coordinates) => handleChangeRegion(coordinates) : () => { }}
+        zoomTapEnabled
+        zoomEnabled
+        zoomControlEnabled
+      >
+        <Marker
+          coordinate={markerPosition}
+          title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
+          ref={markerRef}
+        />
+      </MapView>
+      <Alert
+        open={alertState.open}
+        onAccept={closeAlert}
+        onClose={closeAlert}
+        content={alertState.content}
+        title={t('ERROR', 'Error')}
       />
-    </MapView>
+    </>
   )
 }
