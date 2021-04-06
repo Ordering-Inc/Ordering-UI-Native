@@ -64,10 +64,6 @@ const AddressFormUI = (props: AddressFormParams) => {
   const isLocationRequired = configState.configs?.google_autocomplete_selection_required?.value === '1' ||
     configState.configs?.google_autocomplete_selection_required?.value === 'true'
   const maxLimitLocation = configState?.configs?.meters_to_change_address?.value
-  // const mapErrors: any = {
-  //   ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
-  //   ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
-  // }
 
   const goToBack = () => navigation.goBack()
   const continueAsGuest = () => navigation.navigate('BusinessList')
@@ -147,16 +143,6 @@ const AddressFormUI = (props: AddressFormParams) => {
     }
     updateChanges(addressSelected)
   }
-
-  // const setMapErrors = (errKey: string) => {
-  //   setAlertState({
-  //     open: true,
-  //     content: !(errKey === 'ERROR_MAX_LIMIT_LOCATION')
-  //       ? [t(errKey, mapErrors[errKey])]
-  //       : [`${t(errKey, mapErrors[errKey])} ${maxLimitLocation} ${t('METTERS', 'meters')}`],
-  //     key: errKey
-  //   })
-  // }
 
   const closeAlert = () => {
     setAlertState({
@@ -438,7 +424,6 @@ const AddressFormUI = (props: AddressFormParams) => {
             <GoogleMap
               location={locationChange}
               handleChangeAddressMap={handleChangeAddress}
-              // setErrors={setMapErrors}
               maxLimitLocation={maxLimitLocation}
               saveLocation={saveMapLocation}
               setSaveLocation={setSaveMapLocation}
