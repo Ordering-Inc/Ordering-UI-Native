@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useSession, useApi, useLanguage } from 'ordering-components/native';
-// import stripe from 'react-native-stripe-payments';
 
 export const StripeCardForm = (props: any) => {
   const {
@@ -16,7 +15,6 @@ export const StripeCardForm = (props: any) => {
   const [{ user }] = useSession();
   const [ordering] = useApi();
   const [, t] = useLanguage();
-  // stripe.setOptions({ publishingKey: publicKey });
 
   const [state, setState] = useState<any>({ error: null, loading: false })
 
@@ -94,6 +92,16 @@ export const StripeCardForm = (props: any) => {
         loading: false
       })
       if (!requirements && handleSource) {
+        console.log('inside', creditCardData);
+        // const result = await stripe.createPaymentMethod({
+        //   type: 'card',
+        //   card: creditCardData,
+        //   billing_details: {
+        //     name: `${user.name} ${user.lastname}`,
+        //     email: user.email,
+        //     address: user.address
+        //   }
+        // })
         handleSource && handleSource({
           id: result?.card?.id,
           type: 'card',
@@ -113,8 +121,6 @@ export const StripeCardForm = (props: any) => {
       })
     }
   };
-
-  // console.log('stripe', stripe);
 
   return (
     <UIComponent
