@@ -26,3 +26,7 @@ export const Actions = styled.View`
   justify-content: space-between;
   margin-bottom: 20px;
 `
+
+export const WrapperPhone = styled.View`
+  
+`
