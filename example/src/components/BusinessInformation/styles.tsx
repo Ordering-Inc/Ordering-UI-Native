@@ -31,4 +31,7 @@ export const ScheduleBlock = styled.View`
 `
 export const WrapBusinessMap = styled.View`
   max-height: 200px;
+  height: 200px;
+  width: 100%;
+  flex: 1
 `

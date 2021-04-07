@@ -7,8 +7,8 @@ interface Props {
   open: boolean,
   title: string,
   content: Array<string>,
-  onClose: () => {},
-  onAccept: () => {}
+  onClose: () => void,
+  onAccept: () => void
 }
 
 const Alert = (props: Props) => {
