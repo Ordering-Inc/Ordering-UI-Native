@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { useSession, useLanguage } from 'ordering-components/native';
 import { useForm, Controller } from 'react-hook-form';
 
-import { UDForm, UDLoader, UDWrapper,WrapperPhone } from './styles';
+import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OText, OButton, OInput } from '../shared';
@@ -28,7 +28,6 @@ export const UserFormDetailsUI = (props: any) => {
     handleButtonUpdateClick,
     isCheckout,
     phoneUpdate,
-    togglePhoneUpdate
   } = props
 
   const [, t] = useLanguage();
@@ -122,6 +121,13 @@ export const UserFormDetailsUI = (props: any) => {
       return
     }
     if (Object.keys(formState.changes).length > 0) {
+      if (formState.changes?.cellphone === null) {
+        showToast(
+          ToastType.Error,
+          t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.')
+        );
+        return
+      }
       let changes = null
       if (user?.cellphone && !userPhoneNumber) {
         changes = {
@@ -134,8 +140,8 @@ export const UserFormDetailsUI = (props: any) => {
   }
 
   const handleChangePhoneNumber = (number) => {
-    console.log(number)
     setPhoneInputData(number)
+    console.log(number)
     let phoneNumber = {
       country_phone_code: {
         name: 'country_phone_code',
@@ -206,12 +212,6 @@ export const UserFormDetailsUI = (props: any) => {
     }
   }, [user, isEdit])
 
-  useEffect(() => {
-    if (user?.cellphone && !user?.country_phone_code) {
-      togglePhoneUpdate(true)
-    }
-  }, [user?.country_phone_code])
-
   return (
     <>
       <UDForm>
@@ -232,7 +232,7 @@ export const UserFormDetailsUI = (props: any) => {
                           style={styles.inputStyle}
                           icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
                           isDisabled={!isEdit}
-                          value={formState?.result?.result
+                          value={formState?.result?.result && !formState.result.error
                             ? formState?.result?.result[field.code]
                             : formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
                           onChange={(val: any) => {
@@ -243,7 +243,7 @@ export const UserFormDetailsUI = (props: any) => {
                       )}
                       name={field.code}
                       rules={getInputRules(field)}
-                      defaultValue={formState?.result?.result
+                      defaultValue={formState?.result?.result && !formState.result.error
                         ? formState?.result?.result[field.code]
                         : formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
                     />

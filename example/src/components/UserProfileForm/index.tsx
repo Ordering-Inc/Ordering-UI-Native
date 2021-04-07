@@ -76,6 +76,13 @@ const ProfileUI = (props: ProfileParams) => {
       showToast(ToastType.Error, phoneInputData.error)
       return
     }
+    if (!phoneInputData.phone.cellphone) {
+      showToast(
+        ToastType.Error,
+        t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.')
+      );
+      return
+    }
     if (formState.changes.password && formState.changes.password.length < 8) {
       showToast(ToastType.Error, t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.').replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8))
       return
@@ -183,6 +190,8 @@ const ProfileUI = (props: ProfileParams) => {
   useEffect(() => {
     if (user?.cellphone && !user?.country_phone_code) {
       setPhoneUpdate(true)
+    } else {
+      setPhoneUpdate(false)
     }
   }, [user?.country_phone_code])
 

@@ -14,6 +14,7 @@ import { OText } from '../shared';
 import { colors } from '../../theme';
 
 import { UserFormDetailsUI } from '../UserFormDetails';
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 const UserDetailsUI = (props: any) => {
   const {
@@ -30,7 +31,7 @@ const UserDetailsUI = (props: any) => {
 
   const [, t] = useLanguage()
   const [{ user }] = useSession()
-  const userData = props.userData || formState.result?.result || user
+  const userData = props.userData || (!formState.result.error && formState.result?.result) || user
 
 
   useEffect(() => {
@@ -44,14 +45,23 @@ const UserDetailsUI = (props: any) => {
     cleanFormState({ changes: {} })
   }
 
+  useEffect(() => {
+    if (user?.cellphone && !user?.country_phone_code) {
+      togglePhoneUpdate(true)
+    } else {
+      togglePhoneUpdate(false)
+    }
+  }, [user?.country_phone_code])
+
   return (
     <>
       {(validationFields.loading || formState.loading) && (
-        <View>
-          <OText>
-            Loading...
-          </OText>
-        </View>
+        <Placeholder Animation={Fade}>
+          <PlaceholderLine height={20} width={70} />
+          <PlaceholderLine height={15} width={60} />
+          <PlaceholderLine height={15} width={60} />
+          <PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+        </Placeholder>
       )}
 
       {!(validationFields.loading || formState.loading) && (
@@ -104,7 +114,7 @@ const UserDetailsUI = (props: any) => {
                     {(userData?.country_phone_code) && `+${(userData?.country_phone_code)} `}{(userData?.cellphone)}
                   </OText>
                   {phoneUpdate && (
-                    <OText color={colors.error} style={{textAlign: 'center'}}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
+                    <OText color={colors.error} style={{ textAlign: 'center' }}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
                   )}
                 </>
               )}
