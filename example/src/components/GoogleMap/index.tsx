@@ -34,7 +34,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
 
   const center = { lat: location?.lat, lng: location?.lng }
-  const [alertState, setAlertState] = useState<{open: boolean, content : Array<string>, key ?: string | null}>({ open: false, content: [], key: null })
+  const [alertState, setAlertState] = useState<{ open: boolean, content: Array<string>, key?: string | null }>({ open: false, content: [], key: null })
   const mapErrors: any = {
     ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
     ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
@@ -96,14 +96,13 @@ export const GoogleMap = (props: GoogleMapsParams) => {
 
   const calculateDistance = (pointA: { lat: number, lng: number }, pointB: { latitude: number, longitude: number }) => {
 
-    // http://www.movable-type.co.uk/scripts/latlong.html
     const lat1 = pointA.lat;
     const lon1 = pointA.lng;
 
     const lat2 = pointB.latitude;
     const lon2 = pointB.longitude;
 
-    const R = 6371e3; // earth radius in meters
+    const R = 6371e3;
     const φ1 = lat1 * (Math.PI / 180);
     const φ2 = lat2 * (Math.PI / 180);
     const Δφ = (lat2 - lat1) * (Math.PI / 180);
@@ -115,18 +114,13 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     const distance = R * c;
-    return distance; // in meters
-  }
-
-  const handleChangeMarkerPosition = (e: any) => {
-    const curPosition = e.nativeEvent.coordinate
-    validateResult(curPosition)
+    return distance;
   }
 
   const handleChangeRegion = (coordinates: Region) => {
     validateResult(coordinates)
   }
-  
+
   const closeAlert = () => {
     setAlertState({
       open: false,

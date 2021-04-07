@@ -13,7 +13,6 @@
       <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyDA9TBxTZWMvz_9uuM_kfomnGEV37zFEvA"/>
-      <!-- You will also only need to add this uses-library tag -->
       <uses-library android:name="org.apache.http.legacy" android:required="false"/>
       <activity
         android:name=".MainActivity"
