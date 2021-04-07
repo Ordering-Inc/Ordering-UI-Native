@@ -17,10 +17,12 @@ import { StyleSheet } from 'react-native'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { BusinessInformationParams } from '../../types'
 import OrderMap from '../OrderMap'
+import { GoogleMap } from '../GoogleMap'
 const BusinessInformationUI = (props: BusinessInformationParams) => {
   const {
     businessState,
-    businessSchedule
+    businessSchedule,
+    businessLocation
   } = props
   const [, t] = useLanguage()
   const daysOfWeek = [
@@ -32,13 +34,13 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
     t('FRIDAY_ABBREVIATION', 'Fri'),
     t('SATURDAY_ABBREVIATION', 'Sat')
   ]
-  const scheduleFormatted = ({ hour, minute }) => {
-    const checkTime = (val) => val < 10 ? `0${val}` : val
+  const scheduleFormatted = ({ hour, minute } : {hour : number | string, minute : number | string}) => {
+    const checkTime = (val : number | string) => val < 10 ? `0${val}` : val
     return `${checkTime(hour)}:${checkTime(minute)}`
   }
   const businessCoordinate = {
-    latitude: businessState?.business?.location?.lat,
-    longitude: businessState?.business?.location?.lng
+    lat: businessState?.business?.location?.lat,
+    lng: businessState?.business?.location?.lng
   }
   const businessImage = {
     uri: businessState?.business?.logo
@@ -59,11 +61,15 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
           <GrayBackground>
             <OText size={16} weight='bold'>{t('BUSINESS_LOCATION', 'Business Location')}</OText>
           </GrayBackground>
-          <WrapBusinessMap style={styles.wrapMapStyle}>
-            <OrderMap
-              markers={[businessMarker]}
-            />
-          </WrapBusinessMap>
+          {businessLocation.location && (
+            <WrapBusinessMap style={styles.wrapMapStyle}>
+              <GoogleMap
+                readOnly
+                location={businessLocation.location}
+                markerTitle={businessState?.business?.name}
+              />
+            </WrapBusinessMap>
+          )}
           <OText mBottom={20}>
             {businessState?.business?.address}
           </OText>
@@ -98,7 +104,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export const BusinessInformation = (props) => {
+export const BusinessInformation = (props : BusinessInformationParams) => {
   const BusinessInformationProps = {
     ...props,
     UIComponent: BusinessInformationUI
