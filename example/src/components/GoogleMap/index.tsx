@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, View, Image } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps'
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig } from 'ordering-components/native'
 import { GoogleMapsParams } from '../../types';
 import Alert from '../../providers/AlertProvider'
+import { OIcon, OText } from '../shared';
 
 export const GoogleMap = (props: GoogleMapsParams) => {
 
@@ -16,21 +17,22 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     markerTitle,
     saveLocation,
     setSaveLocation,
-    handleToggleMap
+    handleToggleMap,
+    locations
   } = props
 
   const [, t] = useLanguage()
   const [configState] = useConfig()
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / height;
-  const [markerPosition, setMarkerPosition] = useState({ latitude: location.lat, longitude: location.lng })
+  const [markerPosition, setMarkerPosition] = useState({ latitude: locations[2].lat, longitude: locations[2].lng })
   const [region, setRegion] = useState({
     latitude: location.lat,
     longitude: location.lng,
-    latitudeDelta: 0.003,
-    longitudeDelta: 0.003 * ASPECT_RATIO
+    latitudeDelta: 0.095,
+    longitudeDelta: 0.095 * ASPECT_RATIO
   })
-  const markerRef = useRef(null)
+  let mapRef = useRef<any>(null)
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
 
   const center = { lat: location?.lat, lng: location?.lng }
@@ -39,6 +41,12 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
     ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
   }
+  const MARKERS = locations.map((location: { lat: number, lng: number }) => {
+    return {
+      latitude: location.lat,
+      longitude: location.lng
+    }
+  })
   const geocodePosition = (pos: { latitude: number, longitude: number }) => {
     Geocoder.from({
       latitude: pos.latitude,
@@ -138,9 +146,17 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     })
   }
 
+  const fitAllMarkers = () => {
+    mapRef.current.fitToCoordinates(MARKERS, {
+      edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
+      animated: true,
+    });
+  }
+
   useEffect(() => {
     Geocoder.init(googleMapsApiKey)
   }, [])
+
 
   useEffect(() => {
     if (saveLocation) {
@@ -148,22 +164,51 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     }
   }, [saveLocation])
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (mapRef.current) {
+        fitAllMarkers()
+      }
+    }, 1000)
+    return () => clearInterval(interval)
+
+  }, [locations])
+
   return (
     <>
       <MapView
         provider={PROVIDER_GOOGLE}
-        region={region}
-        style={StyleSheet.absoluteFillObject}
+        initialRegion={region}
+        style={styles.map}
         onRegionChangeComplete={!readOnly ? (coordinates) => handleChangeRegion(coordinates) : () => { }}
         zoomTapEnabled
         zoomEnabled
         zoomControlEnabled
+        ref={mapRef}
       >
-        <Marker
-          coordinate={markerPosition}
-          title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
-          ref={markerRef}
-        />
+        {locations ? (
+          <>
+            {MARKERS.map((location: { latitude: number, longitude: number }, i: number) => (
+              <React.Fragment key={i}>
+                {
+                  <Marker
+                    coordinate={location}
+                    title={locations[i]?.title}
+                  >
+                    <View>
+                      <OIcon url={locations[i].icon} width={50} height={50} />
+                    </View>
+                  </Marker>
+                }
+              </React.Fragment>
+            ))}
+          </>
+        ) : (
+          <Marker
+            coordinate={markerPosition}
+            title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
+          />
+        )}
       </MapView>
       <Alert
         open={alertState.open}
@@ -175,3 +220,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  }
+})

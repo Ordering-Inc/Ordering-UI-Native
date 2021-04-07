@@ -116,3 +116,10 @@ export const Total = styled.View`
   border-top-color: #d9d9d9;
   padding-vertical: 10px
 `
+
+export const Map = styled.View`
+  width: 100%;
+  height: 250px;
+  margin-top: 20px;
+  border-radius: 20px
+`
