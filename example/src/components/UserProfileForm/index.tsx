@@ -76,7 +76,7 @@ const ProfileUI = (props: ProfileParams) => {
       showToast(ToastType.Error, phoneInputData.error)
       return
     }
-    if (!phoneInputData.phone.cellphone) {
+    if (formState.changes.cellphone === '') {
       showToast(
         ToastType.Error,
         t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.')
