@@ -25,7 +25,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const [configState] = useConfig()
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / height;
-  const [markerPosition, setMarkerPosition] = useState({ latitude: locations[2].lat, longitude: locations[2].lng })
+  const [markerPosition, setMarkerPosition] = useState({ latitude: locations ? locations[2].lat : location.lat, longitude: locations ? locations[2].lng : location.lng })
   const [region, setRegion] = useState({
     latitude: location.lat,
     longitude: location.lng,
@@ -41,7 +41,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
     ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
   }
-  const MARKERS = locations.map((location: { lat: number, lng: number }) => {
+  const MARKERS = locations && locations.map((location: { lat: number, lng: number }) => {
     return {
       latitude: location.lat,
       longitude: location.lng
@@ -148,7 +148,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
 
   const fitAllMarkers = () => {
     mapRef.current.fitToCoordinates(MARKERS, {
-      edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
+      edgePadding: { top: 80, right: 80, bottom: 80, left: 80 },
       animated: true,
     });
   }
@@ -171,7 +171,6 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       }
     }, 1000)
     return () => clearInterval(interval)
-
   }, [locations])
 
   return (
@@ -188,7 +187,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       >
         {locations ? (
           <>
-            {MARKERS.map((location: { latitude: number, longitude: number }, i: number) => (
+            {MARKERS && MARKERS.map((location: { latitude: number, longitude: number }, i: number) => (
               <React.Fragment key={i}>
                 {
                   <Marker
