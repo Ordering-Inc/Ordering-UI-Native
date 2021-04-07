@@ -90,32 +90,6 @@ export const UserFormDetailsUI = (props: any) => {
   }
 
   const onSubmit = () => {
-    // const isPhoneNumberValid = userPhoneNumber ? isValidPhoneNumber : true
-    // if (!userPhoneNumber &&
-    //     validationFields?.fields?.checkout?.cellphone?.required &&
-    //     validationFields?.fields?.checkout?.cellphone?.enabled
-    // ) {
-    //   showToast(
-    //     ToastType.Error,
-    //     t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.')
-    //   );
-    //   return
-    // }
-    // if (!isPhoneNumberValid && userPhoneNumber) {
-    //   if (user?.country_phone_code) {
-    //     showToast(
-    //       ToastType.Error,
-    //       t('INVALID_ERROR_PHONE_NUMBER', 'The Phone Number field is invalid')
-    //     );
-    //     return
-    //   }
-    //   showToast(
-    //     ToastType.Error,
-    //     t('INVALID_ERROR_COUNTRY_CODE_PHONE_NUMBER', 'The country code of the phone number is invalid')
-    //   );
-    //   return
-    // }
-    // if (Object.keys(formState.changes).length > 0 && isPhoneNumberValid) {
     if (phoneInputData.error) {
       showToast(ToastType.Error, phoneInputData.error)
       return
@@ -141,7 +115,6 @@ export const UserFormDetailsUI = (props: any) => {
 
   const handleChangePhoneNumber = (number) => {
     setPhoneInputData(number)
-    console.log(number)
     let phoneNumber = {
       country_phone_code: {
         name: 'country_phone_code',

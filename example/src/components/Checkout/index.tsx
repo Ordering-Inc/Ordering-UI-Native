@@ -130,19 +130,6 @@ const CheckoutUI = (props: any) => {
       errors.push(t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number'))
     }
 
-    // if (user?.cellphone) {
-    //   if (user?.country_phone_code) {
-    //     let phone = null
-    //     phone = `+${user?.country_phone_code}${user?.cellphone}`
-    //     const phoneNumber = parsePhoneNumber(phone)
-    //     if (!phoneNumber?.isValid()) {
-    //       errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is invalid.'))
-    //     }
-    //   } else {
-    //     errors.push(t('INVALID_ERROR_COUNTRY_CODE_PHONE_NUMBER', 'The country code of the phone number is invalid'))
-    //   }
-    // }
-
     setUserErrors(errors)
   }
 
