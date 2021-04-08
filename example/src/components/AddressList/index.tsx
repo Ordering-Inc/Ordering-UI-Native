@@ -113,6 +113,7 @@ const AddressListUI = (props: AddressListParams) => {
 
   return (
     <Container nopadding={nopadding}>
+      <Spinner visible={actionStatus.loading || orderState.loading}/>
       <AddressListContainer>
         {isFromProfile && (
           <OText size={24} mBottom={20}>{t('SAVED_PLACES', 'My saved places')}</OText>

@@ -1,11 +1,12 @@
 import React from 'react'
-import { useLanguage, useUtils } from 'ordering-components/native'
+import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
 import { OButton, OIcon, OText } from '../shared'
 import { ActiveOrdersContainer, Card, Map, Information, Logo, OrderInformation, BusinessInformation, Price } from './styles'
 import { View, StyleSheet } from 'react-native'
 import { colors } from '../../theme'
+import { getGoogleMapImage } from '../../utils'
 
-import {ActiveOrdersParams} from '../../types'
+import { ActiveOrdersParams } from '../../types'
 
 export const ActiveOrders = (props: ActiveOrdersParams) => {
 
@@ -16,16 +17,28 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
     loadMoreOrders,
     getOrderStatus
   } = props
+
+  const [{configs}] = useConfig()
   const [, t] = useLanguage()
   const [{ parseDate, parsePrice }] = useUtils()
 
   const handleClickCard = (uuid: string) => {
-    onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid } )
+    onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid })
   }
 
   const Order = ({ order, index }: { order: any, index: number }) => (
     <React.Fragment>
-      <Card onPress={() => handleClickCard(order?.uuid)}>
+      <Card onPress={() => handleClickCard(order?.uuid)} isMiniCard={configs?.google_maps_api_key?.value}>
+        {(configs?.google_maps_api_key?.value) && (
+          <Map>
+            <OIcon
+              url={getGoogleMapImage(order?.business?.location, configs?.google_maps_api_key?.value)}
+              height={100}
+              width={340}
+              style={{resizeMode: 'cover', borderTopRightRadius: 24, borderTopLeftRadius: 24}}
+            />
+          </Map>
+        )}
         <Information>
           {order.business?.logo && (
             <Logo>
@@ -46,7 +59,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
             <Price>
               <OText size={16}>{parsePrice(order?.summary?.total || order?.total)}</OText>
               {order?.status !== 0 && (
-                <OText color={colors.primary} size={12}>{getOrderStatus(order.status)?.value}</OText>
+                <OText color={colors.primary} size={12} numberOfLines={2}>{getOrderStatus(order.status)?.value}</OText>
               )}
             </Price>
           </OrderInformation>
@@ -62,7 +75,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
             onClick={loadMoreOrders}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
             borderColor={colors.white}
-            style={{paddingLeft: 30, paddingRight: 30}}
+            style={{ paddingLeft: 30, paddingRight: 30 }}
           />
         </Card>
       )}
@@ -70,13 +83,13 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
   )
 
   return (
-    <ActiveOrdersContainer horizontal>
+    <ActiveOrdersContainer horizontal isMiniCards={configs?.google_maps_api_key?.value}>
       {orders.length > 0 && (
         orders.map((order: any, index: any) => (
-          <Order 
-            key={order?.id || order?.uuid} 
-            order={order} 
-            index={index} 
+          <Order
+            key={order?.id || order?.uuid}
+            order={order}
+            index={index}
           />
         ))
       )}

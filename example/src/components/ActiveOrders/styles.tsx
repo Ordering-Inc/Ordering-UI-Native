@@ -3,8 +3,8 @@ import { colors } from '../../theme'
 
 export const ActiveOrdersContainer = styled.ScrollView`
   margin-bottom: 20px;
-  height: 130px;
-  max-height: 150px;
+  height: ${({ isMiniCards }: { isMiniCards: boolean }) => !isMiniCards ? '100px' : '200px'};
+  max-height: ${({ isMiniCards }: { isMiniCards: boolean }) => !isMiniCards ? '110px' : '210px'};
 `
 
 export const Card = styled.TouchableOpacity`
@@ -13,12 +13,14 @@ export const Card = styled.TouchableOpacity`
   border-radius: 20px;
   margin-right: 10px;
   min-width: 340px;
-  height: 100px
+  width: 340px;
+  height: ${({ isMiniCard }: { isMiniCard: boolean }) => !isMiniCard ? '100px' : '200px'}
 `
 
 export const Map = styled.View`
   flex: 1;
-  height: 125px
+  height: 125px;
+  margin-bottom: 10px
 `
 
 export const Information = styled.View`
@@ -37,15 +39,14 @@ export const OrderInformation = styled.View`
   justify-content: space-between;
   flex: 1;
   padding-left: 10px;
-  
 `
 
 export const BusinessInformation = styled.View`
-  
 `
 
 export const Price = styled.View`
   justify-content: space-between;
   align-items: flex-end;
-  margin-left: 10px
+  margin-left: 10px;
+  width: 30%;
 `
