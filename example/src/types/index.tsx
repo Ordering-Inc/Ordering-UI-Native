@@ -223,6 +223,7 @@ export interface OrderDetailsParams {
   setMessages?: () => {},
   readMessages?: () => {},
   isFromCheckout: boolean,
+  driverLocation: any,
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean,
