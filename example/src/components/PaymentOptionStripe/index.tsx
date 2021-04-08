@@ -97,15 +97,11 @@ const PaymentOptionStripeUI = (props: any) => {
 
   return (
     <OSContainer style={styles.container}>
-      {!token && (
-        <OSMessage>
-          {t('NEED_LOGIN_TO_USE', 'Sorry, you need to login to use this method')}
-        </OSMessage>
-      )}
-
       {token && !cardsList.loading && cardsList.cards && cardsList.cards.length === 0 && (
         <OSItem>
-          <span>{t('NO_CARDS', 'No cards')}</span>
+          <OText size={22}>
+            {t('YOU_DONT_HAVE_CARDS', 'You don\'t have cards')}
+          </OText>
         </OSItem>
       )}
 
