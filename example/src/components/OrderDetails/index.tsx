@@ -33,7 +33,8 @@ import {
   Total,
   NavBack,
   Icons,
-  OrderDriver
+  OrderDriver,
+  Map
 } from './styles'
 import { OIcon, OModal, OText } from '../shared'
 import { colors } from '../../theme'
@@ -41,6 +42,7 @@ import { ProductItemAccordion } from '../ProductItemAccordion'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { OrderDetailsParams } from '../../types'
 import { USER_TYPE } from '../../config/constants'
+import { GoogleMap } from '../GoogleMap'
 
 const appLogo = require('../../assets/images/Logo.png')
 
@@ -57,6 +59,7 @@ const orderStatus9 = require('../../assets/images/status-9.png')
 const orderStatus10 = require('../../assets/images/status-10.png')
 const orderStatus11 = require('../../assets/images/status-11.png')
 const orderStatus12 = require('../../assets/images/status-12.png')
+const storeDummy = require('../../assets/images/store.png')
 
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
@@ -66,7 +69,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     messages,
     setMessages,
     readMessages,
-    messagesReadList
+    messagesReadList,
+    driverLocation
   } = props
 
   const [, t] = useLanguage()
@@ -76,6 +80,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openMessages, setOpenMessages] = useState({ business: false, driver: false })
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
   const { order, businessData } = props.order
+
 
   const getOrderStatus = (s: string) => {
     const status = parseInt(s)
@@ -130,9 +135,21 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }, [messagesReadList])
 
+  const locations = [
+    { ...order?.driver?.location, title: t('DRIVER', 'Driver'), icon: order?.driver?.photo || 'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png' },
+    { ...order?.business?.location, title: order?.business?.name, icon: order?.business?.logo || storeDummy },
+    { ...order?.customer?.location, title: t('YOUR_LOCATION', 'Your Location'), icon: order?.customer?.photo || 'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png' }
+  ]
+
+  useEffect(() => {
+    if (driverLocation) {
+      locations[0] = driverLocation
+    }
+  }, [driverLocation])
+
   return (
     <OrderDetailsContainer>
-     <Spinner visible={!order || Object.keys(order).length === 0} />
+      <Spinner visible={!order || Object.keys(order).length === 0} />
       {order && Object.keys(order).length > 0 && (
         <>
           <Header>
@@ -223,6 +240,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText>{order?.customer?.address}</OText>
                 </InfoBlock>
               </Customer>
+              {order?.driver && (
+                <>
+                  {order?.driver?.location && parseInt(order?.status) === 9 && (
+                    <Map>
+                      <GoogleMap
+                        location={order?.driver?.location}
+                        locations={locations}
+                        readOnly
+                      />
+                    </Map>
+                  )}
+                </>
+              )}
             </OrderCustomer>
             {order?.driver && (
               <OrderDriver>
