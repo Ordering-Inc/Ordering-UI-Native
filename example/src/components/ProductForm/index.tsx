@@ -35,7 +35,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import { NotFoundSource } from '../NotFoundSource'
 
 const windowHeight = Dimensions.get('window').height;
-export const ProductOptionsUI = (props) => {
+export const ProductOptionsUI = (props: any) => {
   const {
     navigation,
     editMode,
@@ -117,8 +117,15 @@ export const ProductOptionsUI = (props) => {
             </ProductTitle>
             <ProductDescription>
               <OText>{product?.description || productCart?.description}</OText>
-              <OText size={20}>{t('SKU', 'Sku')}</OText>
-              <OText>{product?.sku || productCart?.sku}</OText>
+              {(
+                (product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
+                (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1')
+              ) &&(
+                <>
+                  <OText size={20}>{t('SKU', 'Sku')}</OText>
+                  <OText>{product?.sku || productCart?.sku}</OText>
+                </>
+              )}
             </ProductDescription>
             <ProductEditions>
               {product?.ingredients.length > 0 && (
@@ -302,7 +309,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export const ProductForm = (props) => {
+export const ProductForm = (props: any) => {
   const productOptionsProps = {
     ...props,
     UIComponent: ProductOptionsUI
