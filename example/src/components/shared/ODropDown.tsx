@@ -19,7 +19,7 @@ const Wrapper = styled.View`
   align-items: center;
   justify-content: center;
   position: relative;
-  z-index: 100;
+  z-index: 9999;
 `
 const InnerWrapper = styled.TouchableOpacity`
   flex-direction: row;
@@ -52,6 +52,7 @@ const KindIcon = styled.Image`
   height: 14px;
 `
 const DropView = styled.View`
+  z-index: 9999;
   position: absolute;
   box-shadow: 0 4px 3px #00000022;
   background-color: white;
@@ -70,18 +71,19 @@ const DropOption = styled.Text`
   margin-bottom: 2px;
   ${(props: any) => props.selected && css`
     color: ${colors.primary};
-  `}
+  `};
+  z-index: 9999;
 `
 const ODropDown = (props: Props) => {
   const [isOpen, onOffToggle] = React.useState(false);
-  const defaultOption = props.options?.find(option => option.value === props.defaultValue)
-  const [selectedOption, setSelectedOption] = React.useState(defaultOption)
+  const defaultOption = props.options?.find((option: any) => option.value === props.defaultValue)
+  const [selectedOption, setSelectedOption] = React.useState<any>(defaultOption)
   const [value, setValue] = React.useState(props.defaultValue)
 
   const onSelectItem = (option: any) => {
     setSelectedOption(option);
     setValue(option.value);
-    props.onSelect(option.value);
+    props.onSelect(option);
     onOffToggle(false);
   }
 
@@ -90,7 +92,7 @@ const ODropDown = (props: Props) => {
   }
 
   React.useEffect(() => {
-    const _defaultOption = props.options?.find(option => option.value === props.defaultValue)
+    const _defaultOption = props.options?.find((option: any) => option.value === props.defaultValue)
     setSelectedOption(_defaultOption)
     setValue(props.defaultValue)
   }, [props.defaultValue, props.options])
@@ -106,42 +108,37 @@ const ODropDown = (props: Props) => {
           : null
         }
         <SelLabel secondary={props.secondary} numberOfLines={1} ellipsizeMode={'tail'}>
-          {selectedOption?.content || props.placeholder}
+          {selectedOption?.content || selectedOption?.name || props.placeholder}
         </SelLabel>
         <DropIcon
           secondary={props.secondary}
           source={require('../../assets/icons/drop_down.png')}
         />
       </InnerWrapper>
-      {isOpen && props.options
-        ? (
+      {isOpen && props.options &&
+        (
           <DropView secondary={props.secondary}>
             <ScrollView style={{
               width: '100%',
-              maxHeight: props.dropViewMaxHeight ? props.dropViewMaxHeight : null
+              maxHeight: props.dropViewMaxHeight || null,
             }}>
-              {props.options
-                ? props.options.map((option, index) =>
-                  (
-                    <TouchableOpacity
-                      key={`key_${index}`}
-                      onPress={() => onSelectItem(option)}
-                    >
-                      <DropOption
-                        numberOfLines={1}
-                        selected={value === option.value}
-                      >
-                        {option.content}
-                      </DropOption>
-                    </TouchableOpacity>
-                  )
-                )
-                : null
+              {props.options && props.options.map((option: any, index: number) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => onSelectItem(option)}
+                  style={{ zIndex: 9999 }}
+                >
+                  <DropOption
+                    numberOfLines={1}
+                    selected={value === option.value}
+                  >
+                    {option.content || option.name}
+                  </DropOption>
+                </TouchableOpacity>))
               }
             </ScrollView>
           </DropView>
         )
-        : null
       }
     </Wrapper>
   )

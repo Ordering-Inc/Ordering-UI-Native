@@ -11,7 +11,7 @@ import {
   FormActions
 } from './styles';
 
-import { OButton } from '../shared';
+import { OButton, OText } from '../shared';
 import { colors } from '../../theme';
 
 const StripeCardFormUI = (props:  any) => {
@@ -39,7 +39,11 @@ const StripeCardFormUI = (props:  any) => {
           placeholderColor={colors.backgroundGray}
           onChange={handleChange}
         />
-        <ErrorMessage>{error}</ErrorMessage>
+        <ErrorMessage>
+          <OText color={colors.error} style={{ textAlign: 'center' }}>
+            {error}
+          </OText>
+        </ErrorMessage>
       </FormRow>
       <FormActions>
         <View style={{ width: '49%' }}>

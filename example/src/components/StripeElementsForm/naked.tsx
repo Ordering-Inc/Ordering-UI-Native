@@ -45,5 +45,11 @@ export const StripeElementsForm = (props: any) => {
     toSave && getRequirements()
   }, [token])
 
-  return <UIComponent {...props} values={state} />
+  return (
+    <UIComponent
+      {...props}
+      values={state}
+      requirements={state.requirements}
+    />
+  )
 }

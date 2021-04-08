@@ -31,9 +31,9 @@ export const PMItem = styled.View`
     margin-right: 0;
   `}
 
-  ${(props: any) => props.isDisabled && css`
+  /* ${(props: any) => props.isDisabled && css`
     pointer-events: none;
-  `}
+  `} */
 
   ${(props: any) => props.isActive ? css`
     background-color: ${colors.primary};

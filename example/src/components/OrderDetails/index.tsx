@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, BackHandler } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -66,7 +66,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     messages,
     setMessages,
     readMessages,
-    messagesReadList
+    messagesReadList,
+    isFromCheckout,
   } = props
 
   const [, t] = useLanguage()
@@ -124,6 +125,21 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setOpenMessages({ business: false, driver: false })
   }
 
+  const handleArrowBack: any = () => {
+    if (!isFromCheckout) {
+      navigation.goBack();
+      return
+    }
+    navigation.navigate('BottomTab');
+  }
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleArrowBack);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleArrowBack);
+    }
+  }, [])
+
   useEffect(() => {
     if (messagesReadList?.length) {
       openMessages.business ? setUnreadAlert({ ...unreadAlert, business: false }) : setUnreadAlert({ ...unreadAlert, driver: false })
@@ -139,7 +155,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <NavBack>
               <MaterialCommunityIcon
                 name='arrow-left'
-                onPress={() => navigation.goBack()}
+                onPress={() => handleArrowBack()}
                 size={24}
                 color={colors.white}
                 style={{ marginBottom: 10 }}

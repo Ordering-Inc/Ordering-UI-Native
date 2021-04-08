@@ -16,9 +16,9 @@ import {
 
 import { PaymentOptionCash } from '../PaymentOptionCash';
 import { PaymentOptionStripe } from '../PaymentOptionStripe';
-import { StripeElementsForm } from '../StripeElementsForm'
+import { StripeElementsForm } from '../StripeElementsForm';
+import { StripeRedirectForm } from '../StripeRedirectForm';
 // import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
-// import { StripeRedirectForm } from '../StripeRedirectForm'
 // import { NotFoundSource } from '../NotFoundSource'
 
 import { IMAGES, PAYMENT_IMAGES } from '../../config/constants';
@@ -31,7 +31,7 @@ import {
   PMCardItemContent
 } from './styles'
 import { colors } from '../../theme';
-import { getIconCard } from '../../utils';
+import { getIconCard, flatArray } from '../../utils';
 
 const stripeOptions = ['stripe_direct', 'stripe', 'stripe_connect']
 const stripeRedirectOptions = [
@@ -86,6 +86,10 @@ const PaymentOptionsUI = (props: any) => {
   const [, t] = useLanguage();
   // const [{ token }] = useSession()
 
+  const stripeRedirectValues = [
+    { name: t('SELECT_A_PAYMENT_METHOD', 'Select a payment method'), value: '-1' },
+  ]
+
   useEffect(() => {
     if (paymethodsList.paymethods.length === 1) {
       handlePaymethodClick && handlePaymethodClick(paymethodsList.paymethods[0])
@@ -131,7 +135,7 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeIds = [3, 32]; //exclude paypal & stripe redirect
+  const excludeIds = [3]; //exclude paypal & stripe redirect
 
   return (
     <PMContainer>
@@ -229,27 +233,6 @@ const PaymentOptionsUI = (props: any) => {
         )}
       </OModal>
 
-
-      {/* Stripe Connect */}
-      <OModal
-        isNotDecoration
-        open={paymethodSelected?.gateway === 'stripe_connect' && !paymethodData.id}
-        title={t('SELECT_A_CARD', 'Select a card')}
-        onClose={() => handlePaymethodClick(null)}
-      >
-        {paymethodSelected?.gateway === 'stripe_connect' && (
-          <PaymentOptionStripe
-            paymethod={paymethodSelected}
-            businessId={props.businessId}
-            publicKey={paymethodSelected.credentials.stripe.publishable}
-            clientSecret={paymethodSelected.credentials.publishable}
-            payType={paymethodsList?.name}
-            onSelectCard={handlePaymethodDataChange}
-            onCancel={() => handlePaymethodClick(null)}
-          />
-        )}
-      </OModal>
-
       {/* Stripe direct */}
       <OModal
         isNotDecoration
@@ -271,6 +254,43 @@ const PaymentOptionsUI = (props: any) => {
             />
           </KeyboardAvoidingView>
         )}
+      </OModal>
+
+      {/* Stripe Connect */}
+      <OModal
+        isNotDecoration
+        open={paymethodSelected?.gateway === 'stripe_connect' && !paymethodData.id}
+        title={t('SELECT_A_CARD', 'Select a card')}
+        onClose={() => handlePaymethodClick(null)}
+      >
+        {paymethodSelected?.gateway === 'stripe_connect' && (
+          <PaymentOptionStripe
+            paymethod={paymethodSelected}
+            businessId={props.businessId}
+            publicKey={paymethodSelected.credentials.stripe.publishable}
+            clientSecret={paymethodSelected.credentials.publishable}
+            payType={paymethodsList?.name}
+            onSelectCard={handlePaymethodDataChange}
+            onCancel={() => handlePaymethodClick(null)}
+          />
+        )}
+      </OModal>
+
+      {/* Stripe Redirect */}
+      <OModal
+        isNotDecoration
+        open={['stripe_redirect'].includes(paymethodSelected?.gateway) && !paymethodData.type}
+        title={t('STRIPE_REDIRECT', 'Stripe Redirect')}
+        onClose={() => handlePaymethodClick(null)}
+      >
+        <StripeRedirectForm
+          businessId={props.businessId}
+          currency={props.currency}
+          // paymethods={flatArray([stripeRedirectValues, stripeRedirectOptions])}
+          publicKey={paymethodSelected?.credentials?.publishable}
+          paymethods={stripeRedirectOptions}
+          handleStripeRedirect={handlePaymethodDataChange}
+        />
       </OModal>
 
       {/* Paypal */}
@@ -298,21 +318,6 @@ const PaymentOptionsUI = (props: any) => {
             handlerChangePaypal={(uuid) => onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid })}
           />
         )}
-      </Modal> */}
-
-      {/* Stripe Redirect */}
-      {/* <Modal
-        title={t('STRIPE_REDIRECT', 'Stripe Redirect')}
-        open={['stripe_redirect'].includes(paymethodSelected?.gateway) && !paymethodData.type}
-        className='modal-info'
-        onClose={() => handlePaymethodClick(null)}
-      >
-        <StripeRedirectForm
-          businessId={props.businessId}
-          currency={props.currency}
-          paymethods={stripeRedirectOptions}
-          handleStripeRedirect={handlePaymethodDataChange}
-        />
       </Modal> */}
     </PMContainer>
   )
