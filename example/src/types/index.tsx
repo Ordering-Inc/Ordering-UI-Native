@@ -222,6 +222,8 @@ export interface OrderDetailsParams {
   handleOrderRedirect?: () => {},
   setMessages?: () => {},
   readMessages?: () => {},
+  isFromCheckout: boolean,
+  driverLocation: any,
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean,
@@ -231,7 +233,7 @@ export interface ProductItemAccordionParams {
   changeQuantity?: (product: any, quantity: number) => {},
   onDeleteProduct?: (product: any) => void,
   onEditProduct?: (product: any) => void,
-  offsetDisabled: any,
+  offsetDisabled?: any,
 }
 export interface ReviewOrderParams {
   order?: { orderId: number, businessId: number, logo: string },

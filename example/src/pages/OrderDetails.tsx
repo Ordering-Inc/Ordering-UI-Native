@@ -3,10 +3,11 @@ import { OrderDetails as OrderDetailsController } from '../components/OrderDetai
 import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 
 const OrderDetails = ({ navigation, route } : any) => {
-  const { orderId } = route.params
+  const { orderId, isFromCheckout } = route.params
   const orderDetailsProps = {
     navigation,
     orderId,
+    isFromCheckout
   }
 
   return (

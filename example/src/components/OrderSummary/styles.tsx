@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 export const OSContainer = styled.View`
   display: flex;
   flex-direction: column;
+  justify-content: center;
 `
 
 export const OSProductList = styled.View``

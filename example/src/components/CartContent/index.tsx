@@ -40,7 +40,7 @@ export const CartContent = (props: any) => {
             width={200}
             height={122}
           /> */}
-          <OText>
+          <OText size={24} style={{ textAlign: 'center' }}>
             {t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
           </OText>
         </CCNotCarts>

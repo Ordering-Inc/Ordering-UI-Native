@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { View, StyleSheet } from 'react-native';
+import stripe from 'tipsi-stripe';
+
 import {
   Checkout as CheckoutController,
   useOrder,
@@ -46,7 +48,6 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-const DriverTipsOptions = [0, 10, 15, 20, 25];
 const mapConfigs = {
   mapZoom: 16,
   mapSize: {
@@ -75,8 +76,8 @@ const CheckoutUI = (props: any) => {
     paymethodSelected,
     handlePaymethodChange,
     handlerClickPlaceOrder,
-    onNavigationRedirect
-    // handleOrderRedirect,
+    onNavigationRedirect,
+    driverTipsOptions
   } = props
 
   const { showToast } = useToast();
@@ -154,11 +155,11 @@ const CheckoutUI = (props: any) => {
     handlePaymethodChange(null)
   }, [cart?.total])
 
-  useEffect(() => {
-    if (!cart) {
-      onNavigationRedirect('Cart')
-    }
-  }, [cart])
+  // useEffect(() => {
+  //   if (!cart) {
+  //     onNavigationRedirect('Cart')
+  //   }
+  // }, [cart])
 
   return (
     <ChContainer>
@@ -174,6 +175,31 @@ const CheckoutUI = (props: any) => {
           <OrderTypeSelector configTypes={configTypes} />
         </ChHeader>
       </ChSection>
+
+      {!cartState.loading && (cart?.status === 2 || cart?.status === 4) && (
+        <ChSection style={{ paddingBottom: 20 }}>
+          <ChErrors>
+            {!cartState.loading && cart?.status === 2 && (
+              <OText
+                style={{ textAlign: 'center' }}
+                color={colors.error}
+                size={17}
+              >
+                {t('CART_STATUS_PENDING_MESSAGE_APP', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the app')}
+              </OText>
+            )}
+            {!cartState.loading && cart?.status === 4 && (
+              <OText
+                style={{ textAlign: 'center' }}
+                color={colors.error}
+                size={17}
+              >
+                {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
+              </OText>
+            )}
+          </ChErrors>
+        </ChSection>
+      )}
 
       <ChSection>
         <ChTotal>
@@ -379,7 +405,7 @@ const CheckoutUI = (props: any) => {
               </OText>
               <DriverTips
                 businessId={cart?.business_id}
-                driverTipsOptions={DriverTipsOptions}
+                driverTipsOptions={driverTipsOptions}
                 useOrderContext
               />
             </ChDriverTips>
@@ -491,7 +517,6 @@ export const Checkout = (props: any) => {
   const {
     errors,
     clearErrors,
-    // query,
     cartUuid,
     onNavigationRedirect
   } = props
@@ -501,25 +526,8 @@ export const Checkout = (props: any) => {
   const [ordering] = useApi();
   const [orderState, { confirmCart }] = useOrder();
 
-  const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null })
-  const [currentCart, setCurrentCart] = useState({ business_id: null, products: null })
-
-  useEffect(() => {
-    if (!orderState.loading && currentCart?.business_id) {
-      const cartMatched: any = Object.values(orderState.carts).find(
-        (cart: any) => cart.business_id === currentCart?.business_id
-      ) || {}
-      setCurrentCart(cartMatched)
-    }
-  }, [orderState.loading])
-
-  useEffect(() => {
-    if (errors) {
-      const errorText = manageErrorsToShow(errors)
-      showToast(ToastType.Error, errorText)
-      clearErrors && clearErrors()
-    }
-  }, [errors])
+  const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null });
+  const [currentCart, setCurrentCart] = useState({ business_id: null, products: null });
 
   const getOrder = async (cartId: any) => {
     try {
@@ -532,12 +540,21 @@ export const Checkout = (props: any) => {
           Authorization: `Bearer ${token}`
         }
       })
-      const { result } = await response.json()
+      const { result } = await response.json();
+
+      let publicKey = null
+      try {
+        const { content } = await ordering.setAccessToken(token).paymentCards().getCredentials();
+        if (!content.error) {
+          publicKey = content.result.publishable;
+        }
+      } catch (error) {
+        publicKey = null
+      }
 
       if (result.status === 1 && result.order?.uuid) {
         onNavigationRedirect('OrderDetails', { orderId: result.order.uuid })
         setCartState({ ...cartState, loading: false })
-        // } else if (result.status === 2 && result.paymethod_data?.gateway === 'stripe_redirect' && query.get('payment_intent')) {
       } else if (result.status === 2 && result.paymethod_data?.gateway === 'stripe_redirect') {
         try {
           const confirmCartRes = await confirmCart(cartUuid)
@@ -545,13 +562,50 @@ export const Checkout = (props: any) => {
             showToast(ToastType.Error, confirmCartRes.error.message)
           }
           if (confirmCartRes.result.order?.uuid) {
-            onNavigationRedirect('OrderDetails', { orderId: confirmCartRes.result.order.uuid })
+            onNavigationRedirect('OrderDetails', { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true })
           }
           setCartState({
             ...cartState,
             loading: false,
             cart: result
           })
+        } catch (error) {
+          showToast(ToastType.Error, error?.toString() || error.message)
+        }
+      } else if (result.status === 2 && result.paymethod_data?.gateway === 'stripe_direct') {
+        const clientSecret = result.paymethod_data?.result?.client_secret
+        const paymentMethodId = result.paymethod_data?.data?.source_id;
+
+        stripe.setOptions({
+          publishableKey: publicKey,
+          // androidPayMode: 'test', // Android only
+        })
+
+        try {
+          const confirmPaymentIntent = await stripe.confirmPaymentIntent({
+            clientSecret,
+            paymentMethodId
+          });
+
+          if (confirmPaymentIntent?.status === 'succeeded') {
+            try {
+              const confirmCartRes = await confirmCart(cartUuid)
+              if (confirmCartRes.error) {
+                showToast(ToastType.Error, confirmCartRes.error.message)
+              }
+              if (confirmCartRes.result.order?.uuid) {
+                onNavigationRedirect('OrderDetails', { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true })
+              }
+            } catch (error) {
+              showToast(ToastType.Error, error?.toString() || error.message)
+            }
+            setCartState({
+              ...cartState,
+              loading: false,
+              cart: result
+            })
+            return
+          }
         } catch (error) {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
@@ -572,6 +626,23 @@ export const Checkout = (props: any) => {
       })
     }
   }
+
+  useEffect(() => {
+    if (!orderState.loading && currentCart?.business_id) {
+      const cartMatched: any = Object.values(orderState.carts).find(
+        (cart: any) => cart.business_id === currentCart?.business_id
+      ) || {}
+      setCurrentCart(cartMatched)
+    }
+  }, [orderState.loading])
+
+  useEffect(() => {
+    if (errors) {
+      const errorText = manageErrorsToShow(errors)
+      showToast(ToastType.Error, errorText)
+      clearErrors && clearErrors()
+    }
+  }, [errors])
 
   useEffect(() => {
     if (token && cartUuid) {

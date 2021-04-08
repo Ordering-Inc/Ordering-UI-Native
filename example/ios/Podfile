@@ -14,7 +14,7 @@ target 'delivery' do
 
   use_react_native!(:path => config["reactNativePath"])
 
-
+  pod 'tipsi-stripe', :path => '../node_modules/tipsi-stripe'
 
   pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
