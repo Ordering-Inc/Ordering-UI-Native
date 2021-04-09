@@ -21,7 +21,7 @@ export const BIHeader = styled.TouchableOpacity`
   justify-content: space-between;
   position: relative;
   padding: 10px;
-  background: #F8F8F8;
+  background-color: #F8F8F8;
 
   ${(props: any) => props.isClosed && css`
     background-color: rgba(0, 0, 0, 0.1);

@@ -67,7 +67,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
       </Card>
       {pagination?.totalPages && pagination?.currentPage < pagination?.totalPages && index === (10 * pagination?.currentPage) - 1 && (
         <Card
-          style={styles.loadOrders}
+          style={{ ...styles.loadOrders, height: configs?.google_maps_api_key?.value ? 200 : 100 }}
         >
           <OButton
             bgColor={colors.white}
