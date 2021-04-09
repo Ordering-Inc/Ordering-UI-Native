@@ -83,7 +83,7 @@ const ODropDown = (props: Props) => {
   const onSelectItem = (option: any) => {
     setSelectedOption(option);
     setValue(option.value);
-    props.onSelect(option);
+    props.onSelect(option.value);
     onOffToggle(false);
   }
 

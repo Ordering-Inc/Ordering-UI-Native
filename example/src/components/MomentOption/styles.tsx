@@ -39,7 +39,7 @@ export const WrapHours = styled.ScrollView`
   border-width: 1px;
   border-color: ${colors.textSecondary};
   border-radius: 10px;
-  margin-top: 20px;
+  margin: 20px 0;
   height: 140px;
   max-height: 140px;
 `

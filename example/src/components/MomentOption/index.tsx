@@ -26,8 +26,6 @@ import {
   WrapDelveryTime
 } from './styles'
 
-import { ODropDown } from '../shared'
-
 const MomentOptionUI = (props: MomentOptionParams) => {
   const {
     navigation,
@@ -53,25 +51,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
     setOptionSelected({ isAsap: true, isSchedule: false })
   }
 
-  const [selectHoursList, setSelectHoursList] = useState([])
-  useEffect(() => {
-    const _hoursList: Array<any> = hoursList.map((hour: any) => {
-      return {
-        value: hour.startTime,
-        content: (
-          configs?.format_time?.value === '12' ? (
-            hour.startTime.includes('12')
-              ? `${hour.startTime}PM`
-              : parseTime(moment(hour.startTime, 'HH:mm'), { outputFormat: 'hh:mma' })
-          ) : (
-            parseTime(moment(hour.startTime, 'HH:mm'), { outputFormat: 'HH:mm' })
-          )
-        )
-      }
-    })
-    setSelectHoursList(_hoursList)
-  }, [hoursList])
-
   useEffect(() => {
     if (orderState.options?.moment) {
       setOptionSelected({ isAsap: false, isSchedule: true })
@@ -80,9 +59,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
     }
   }, [orderState.options?.moment])
 
-  const _handleChangeTime = (startTime: any) => {
-    handleChangeTime(startTime)
-  }
   return (
     <Container nopadding={nopadding}>
       <NavBar
@@ -141,48 +117,39 @@ const MomentOptionUI = (props: MomentOptionParams) => {
       >
         {datesList.length > 0 && (
           <>
-          <OText color={colors.textSecondary}>{t('DELIVERY_DATE', 'Delivery Date')}</OText>
-          <Days>
-            {
-              datesList.slice(0, 6).map((date: any, i: any) => {
-                const dateParts = date.split('-')
-                const _date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
-                const dayName = t('DAY' + (_date.getDay() >= 1 ? _date.getDay() : 7)).substring(0, 3).toUpperCase()
-                const dayNumber = (_date.getDate() < 10 ? '0' : '') + _date.getDate()
-                return (
-                  <Day
-                    key={dayNumber}
-                    borderLeftShow={i === 0 || i === 4}
-                    onPress={() => handleChangeDate(date)}
-                  >
-                    <OText
-                      style={styles.dayNameStyle}
-                      color={(dateSelected === date && optionSelected.isSchedule) ? colors.primary : colors.textSecondary}
-                    >{dayName}</OText>
-                    <OText
-                      size={28}
-                      color={(dateSelected === date && optionSelected.isSchedule) ? colors.primary : colors.textSecondary}
-                    >{dayNumber}</OText>
-                  </Day>
-                )
-              })
-            }
-          </Days>
+            <OText color={colors.textSecondary}>{t('DELIVERY_DATE', 'Delivery Date')}</OText>
+            <Days>
+              {
+                datesList.slice(0, 6).map((date: any, i: any) => {
+                  const dateParts = date.split('-')
+                  const _date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
+                  const dayName = t('DAY' + (_date.getDay() >= 1 ? _date.getDay() : 7)).substring(0, 3).toUpperCase()
+                  const dayNumber = (_date.getDate() < 10 ? '0' : '') + _date.getDate()
+                  return (
+                    <Day
+                      key={dayNumber}
+                      borderLeftShow={i === 0 || i === 4}
+                      onPress={() => handleChangeDate(date)}
+                    >
+                      <OText
+                        style={styles.dayNameStyle}
+                        color={(dateSelected === date && optionSelected.isSchedule) ? colors.primary : colors.textSecondary}
+                      >{dayName}</OText>
+                      <OText
+                        size={28}
+                        color={(dateSelected === date && optionSelected.isSchedule) ? colors.primary : colors.textSecondary}
+                      >{dayNumber}</OText>
+                    </Day>
+                  )
+                })
+              }
+            </Days>
           </>
         )}
 
         {hoursList.length > 0 && (
           <>
             <OText color={colors.textSecondary}>{t('DELIVERY_TIME', 'Delivery Time')}</OText>
-            <ODropDown
-              secondary
-              options={selectHoursList} 
-              defaultValue={timeSelected}
-              placeholder={t('SELECT_A_TIME', 'Select a time')}
-              onSelect={(value: any) => handleChangeTime(value)}
-              style={styles.selectStyle}
-              dropViewMaxHeight={140}
-            />
             {optionSelected.isSchedule && (
               <WrapHours>
                 <Hours name='hours'>
@@ -190,7 +157,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
                     hoursList.map((hour: any, i: any) => (
                       <Hour
                         key={i}
-                        onPress={() => _handleChangeTime(hour.startTime)}
+                        onPress={() => handleChangeTime(hour.startTime)}
                       >
                         <OText color={timeSelected === hour.startTime ? colors.primary : colors.textSecondary}>
                           {configs?.format_time?.value === '12' ? (
