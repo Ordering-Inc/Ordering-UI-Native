@@ -6,13 +6,6 @@ import BottomNavigator from '../navigators/BottomNavigator';
 import RootNavigator from '../navigators/RootNavigator';
 import CheckoutNavigator from '../navigators/CheckoutNavigator';
 
-// import MapOrders from '../pages/MapOrders';
-// import Reject from '../pages/Reject';
-// import Accept from '../pages/Accept';
-// import MapBusiness from '../pages/MapBusiness';
-// import Chat from '../pages/Chat';
-// import Supports from '../pages/Supports';
-
 import AddressList from '../pages/AddressList';
 import AddressForm from '../pages/AddressForm';
 import SpinnerLoader from '../pages/SpinnerLoader';
@@ -30,7 +23,7 @@ const HomeNavigator = (is_online: boolean) => {
 
   return (
     <Stack.Navigator>
-      {(!orderState.loading || orderState.options?.address?.location) ? (
+      {!orderState.loading && orderState?.options?.user_id ? (
         <>
           {auth ? (
             orderState.options?.address?.location ? (
@@ -105,42 +98,6 @@ const HomeNavigator = (is_online: boolean) => {
           options={{ headerShown: false }}
         />
       )}
-      {/* <Stack.Screen
-        name="MapOrders"
-        component={MapOrders}
-        options={{ title: 'Recieve Order', headerShown: false }}
-        initialParams={{ is_online: is_online }}
-      /> */}
-      {/* <Stack.Screen
-        name="OrderDetail"
-        component={OrderDetail}
-        options={{ title: 'Order Detail', headerShown: false }}
-      /> */}
-      {/* <Stack.Screen
-        name="Reject"
-        component={Reject}
-        options={{ title: 'Reject Order', headerShown: false }}
-      /> */}
-      {/* <Stack.Screen
-        name="Accept"
-        component={Accept}
-        options={{ title: 'Accept Order', headerShown: false }}
-      /> */}
-      {/* <Stack.Screen
-        name="MapBusiness"
-        component={MapBusiness}
-        options={{ title: 'Map Business', headerShown: false }}
-      /> */}
-      {/* <Stack.Screen
-        name="Chat"
-        component={Chat}
-        options={{ title: 'Chat Screen', headerShown: false }}
-      /> */}
-      {/* <Stack.Screen
-        name="Supports"
-        component={Supports}
-        options={{ title: 'FAQ and Supports', headerShown: false }}
-      /> */}
     </Stack.Navigator>
   );
 }

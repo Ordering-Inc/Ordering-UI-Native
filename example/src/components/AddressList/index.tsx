@@ -138,10 +138,11 @@ const AddressListUI = (props: AddressListParams) => {
             {[...Array(5)].map((item, i) => (
               <Placeholder key={i} style={{ padding: 20 }} Animation={Fade}>
                 <View style={{ flexDirection: 'row' }}>
-                  <PlaceholderLine width={10} height={40} style={{ marginBottom: 0, marginRight: 15 }} />
+                  <PlaceholderLine width={20} height={60} style={{ marginBottom: 0, marginRight: 15 }} />
                   <Placeholder>
-                    <PlaceholderLine width={55} />
+                    <PlaceholderLine width={70} />
                     <PlaceholderLine width={40} />
+                    <PlaceholderLine width={70} />
                   </Placeholder>
                 </View>
               </Placeholder>
@@ -205,30 +206,34 @@ const AddressListUI = (props: AddressListParams) => {
             />
           )
         )}
-        {!(route && (route?.params?.isFromBusinesses || route?.params?.isFromCheckout)) &&
-          !isFromProfile &&
-          (
-            <OText size={24}>
-              {t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}
-            </OText>
-          )}
-        <OButton
-          text={t('ADD_NEW_ADDRESS', 'Add new Address')}
-          imgRightSrc=''
-          imgLeftSrc={addIcon}
-          bgColor={colors.white}
-          imgLeftStyle={styles.buttonIcon}
-          style={styles.button}
-          borderColor={colors.primary}
-          onClick={() => onNavigationRedirect(
-            'AddressForm', {
-            address: null,
-            nopadding: true,
-            addressList: addressList?.addresses,
-            onSaveAddress: handleSaveAddress
-          }
-          )}
-        />
+        {!addressList.loading && !addressList.error && (
+          <>
+            {!(
+              route && (route?.params?.isFromBusinesses || route?.params?.isFromCheckout)
+            ) && !isFromProfile && (
+              <OText size={24}>
+                {t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}
+              </OText>
+            )}
+            <OButton
+              text={t('ADD_NEW_ADDRESS', 'Add new Address')}
+              imgRightSrc=''
+              imgLeftSrc={addIcon}
+              bgColor={colors.white}
+              imgLeftStyle={styles.buttonIcon}
+              style={styles.button}
+              borderColor={colors.primary}
+              onClick={() => onNavigationRedirect(
+                'AddressForm', {
+                address: null,
+                nopadding: true,
+                addressList: addressList?.addresses,
+                onSaveAddress: handleSaveAddress
+              }
+              )}
+            />
+          </>
+        )}
         {!isFromProfile && addressList?.addresses?.length > 0 && (
           <OButton
             text={t('CONTINUE', 'Continue')}

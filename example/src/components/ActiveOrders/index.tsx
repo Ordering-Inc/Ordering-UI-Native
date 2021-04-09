@@ -68,11 +68,11 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
       {pagination?.totalPages && pagination?.currentPage < pagination?.totalPages && index === (10 * pagination?.currentPage) - 1 && (
         <Card
           style={{ ...styles.loadOrders, height: configs?.google_maps_api_key?.value ? 200 : 100 }}
+          onPress={loadMoreOrders}
         >
           <OButton
             bgColor={colors.white}
-            textStyle={{ color: colors.primary }}
-            onClick={loadMoreOrders}
+            textStyle={{ color: colors.primary, fontSize: 20 }}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
             borderColor={colors.white}
             style={{ paddingLeft: 30, paddingRight: 30 }}

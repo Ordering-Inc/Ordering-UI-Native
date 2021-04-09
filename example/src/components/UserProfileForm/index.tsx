@@ -143,7 +143,7 @@ const ProfileUI = (props: ProfileParams) => {
     toggleIsEdit();
   };
 
-  const handleChangePhoneNumber = (number) => {
+  const handleChangePhoneNumber = (number: any) => {
     setPhoneInputData(number)
     let phoneNumber = {
       country_phone_code: {
