@@ -78,7 +78,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
               {t('BUSINESS_OPENING_TIME', 'Business Opening Time')}
             </OText>
           </GrayBackground>
-          {businessSchedule?.length > 0 && (
+          {businessSchedule && businessSchedule?.length > 0 && (
             <WrapScheduleBlock horizontal>
               {businessSchedule.map((schedule: any, i: number) => (
                 <ScheduleBlock key={i}>

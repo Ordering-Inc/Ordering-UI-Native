@@ -65,7 +65,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
       }
 
       {
-        !category.id && categories.filter(category => category.id !== null).map((category, i, _categories) => {
+        !category.id && categories && categories.filter(category => category.id !== null).map((category, i, _categories) => {
           const products = categoryState.products?.filter((product: any) => product.category_id === category.id) || []
           return (
             <React.Fragment key={category.id}>
@@ -97,7 +97,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
       {
         (categoryState.loading || isBusinessLoading) && (
           <>
-            {[...Array(categoryState.pagination.nextPageItems).keys()].map((item, i) => (
+            {[...Array(categoryState?.pagination?.nextPageItems).keys()].map((item, i) => (
               <Placeholder key={i} style={{ padding: 5 }} Animation={Fade}>
                 <View style={{ flexDirection: 'row' }}>
                   <PlaceholderLine width={24} height={70} style={{ marginRight: 10, marginBottom: 10 }} />
@@ -112,19 +112,19 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         )
       }
       {
-        !categoryState.loading && !isBusinessLoading && categoryState.products.length === 0 && (
+        !categoryState.loading && !isBusinessLoading && categoryState.products.length === 0 && !errors && (
           <WrapperNotFound>
             <NotFoundSource
               content={!searchValue ? t('ERROR_NOT_FOUND_PRODUCTS_TIME', 'No products found at this time') : t('ERROR_NOT_FOUND_PRODUCTS', 'No products found, please change filters.')}
               btnTitle={!searchValue ? t('SEARCH_REDIRECT', 'Go to Businesses') : t('CLEAR_FILTERS', 'Clear filters')}
-              onClickButton={() => !searchValue ? handleSearchRedirect() : handleClearSearch('')}
+              onClickButton={() => !searchValue ? handleSearchRedirect && handleSearchRedirect() : handleClearSearch && handleClearSearch('')}
             />
           </WrapperNotFound>
         )
       }
 
       {errors && errors.length > 0 && (
-        errors.map((e, i) => (
+        errors.map((e: any, i: number) => (
           <ErrorMessage key={i}>
             <OText space>ERROR:</OText>
             <OText>{e}</OText>

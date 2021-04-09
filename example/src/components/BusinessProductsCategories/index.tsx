@@ -28,7 +28,7 @@ const BusinessProductsCategoriesUI = (props: any) => {
         </Placeholder>
       )}
       {
-        !loading && categories && categories.length && categories.map(category => (
+        !loading && categories && categories.length && categories.map((category: any) => (
           <Tab
             key={category.name}
             onPress={() => handlerClickCategory(category)}

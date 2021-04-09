@@ -129,7 +129,8 @@ export interface BusinessProductsListingParams {
   handleSearchRedirect: any;
 }
 export interface BusinessBasicInformationParams {
-  businessState: { business: any, loading: boolean, error: null };
+  businessState?: any;
+  openBusinessInformation?: any;
   isBusinessInfoShow?: boolean;
 }
 export interface BusinessProductsCategoriesParams {
@@ -139,30 +140,33 @@ export interface BusinessProductsCategoriesParams {
   openBusinessInformation: any;
   categorySelected: any;
   featured: boolean;
+  loading?: any;
 }
 export interface BusinessProductsListParams {
-  errors: any;
-  businessId: number;
-  category: any;
-  categories: Array<any>;
-  categoryState: any;
-  onProductClick: any;
-  handleSearchRedirect: () => {};
-  featured: any;
-  searchValue: any;
-  handleClearSearch: (value: any) => {};
+  errors?: any;
+  businessId?: number;
+  category?: any;
+  categories?: Array<any>;
+  categoryState?: any;
+  onProductClick?: any;
+  handleSearchRedirect?: () => {};
+  featured?: any;
+  searchValue?: any;
+  handleClearSearch?: (value: any) => {};
+  isBusinessLoading?: any,
 }
 export interface SingleProductCardParams {
-  businessId: number,
+  businessId: any,
   product: any;
   isSoldOut: boolean;
   onProductClick: any;
 }
 export interface BusinessInformationParams {
-  navigation: any,
-  businessState: { business: any, loading: boolean, error: null };
-  businessSchedule: Array<any>;
+  navigation?: any,
+  businessState?: any;
+  businessSchedule?: Array<any>;
   businessLocation?: any
+  business?: any
 }
 export interface BusinessReviewsParams {
   businessState: { business: any, loading: boolean, error: null };
@@ -182,7 +186,7 @@ export interface NotFoundSourceParams {
   content?: string,
   btnTitle?: string,
   conditioned?: boolean,
-  onClickButton?: () => {},
+  onClickButton?: any,
   children?: any
 }
 export interface OrdersOptionParams {
