@@ -135,13 +135,16 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
+  const excludeIds = [3, 31, 32]; //exclude paypal & connect & redirect
+
   return (
     <PMContainer>
       {paymethodsList.paymethods.length > 0 && (
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
-          data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
+          // data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
+          data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeIds.includes(p.id))}
           renderItem={renderPaymethods}
           keyExtractor={paymethod => paymethod.id.toString()}
         />
@@ -254,7 +257,7 @@ const PaymentOptionsUI = (props: any) => {
       </OModal>
 
       {/* Stripe Connect */}
-      <OModal
+      {/* <OModal
         isNotDecoration
         open={paymethodSelected?.gateway === 'stripe_connect' && !paymethodData.id}
         title={t('SELECT_A_CARD', 'Select a card')}
@@ -271,10 +274,10 @@ const PaymentOptionsUI = (props: any) => {
             onCancel={() => handlePaymethodClick(null)}
           />
         )}
-      </OModal>
+      </OModal> */}
 
       {/* Stripe Redirect */}
-      <OModal
+      {/* <OModal
         isNotDecoration
         open={['stripe_redirect'].includes(paymethodSelected?.gateway) && !paymethodData.type}
         title={t('STRIPE_REDIRECT', 'Stripe Redirect')}
@@ -288,7 +291,7 @@ const PaymentOptionsUI = (props: any) => {
           paymethods={stripeRedirectOptions}
           handleStripeRedirect={handlePaymethodDataChange}
         />
-      </OModal>
+      </OModal> */}
 
       {/* Paypal */}
       {/* <Modal
