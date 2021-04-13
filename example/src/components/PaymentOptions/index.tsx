@@ -135,16 +135,13 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeIds = [3]; //exclude paypal & stripe redirect
-
   return (
     <PMContainer>
       {paymethodsList.paymethods.length > 0 && (
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
-          // data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
-          data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeIds.includes(p.id))}
+          data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
           renderItem={renderPaymethods}
           keyExtractor={paymethod => paymethod.id.toString()}
         />
