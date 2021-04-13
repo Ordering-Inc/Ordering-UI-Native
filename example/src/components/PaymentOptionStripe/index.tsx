@@ -153,7 +153,7 @@ const PaymentOptionStripeUI = (props: any) => {
                 textStyle={{color: 'white'}}
                 style={styles.btnAction}
                 imgRightSrc={null}
-                isDisabled={!cardSelected}
+                isDisabled={!cardSelected || cardsList?.cards?.length === 0}
                 onClick={() => onSelectCard(cardSelected)}
               />
             </View>

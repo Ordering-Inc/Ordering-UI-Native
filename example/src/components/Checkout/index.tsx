@@ -155,12 +155,6 @@ const CheckoutUI = (props: any) => {
     handlePaymethodChange(null)
   }, [cart?.total])
 
-  // useEffect(() => {
-  //   if (!cart) {
-  //     onNavigationRedirect('Cart')
-  //   }
-  // }, [cart])
-
   return (
     <ChContainer>
       <ChSection style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
@@ -370,7 +364,7 @@ const CheckoutUI = (props: any) => {
         </ChBusinessDetails>
       </ChSection>
 
-      {!cartState.loading && cart && (
+      {!cartState.loading && cart && cart?.status !== 2 && (
         <ChSection style={style.paddSection}>
           <ChPaymethods>
             <OText size={20}>
@@ -518,10 +512,12 @@ export const Checkout = (props: any) => {
     errors,
     clearErrors,
     cartUuid,
-    onNavigationRedirect
+    stripePaymentOptions,
+    onNavigationRedirect,
   } = props
 
   const { showToast } = useToast();
+  const [, t] = useLanguage();
   const [{ token }] = useSession();
   const [ordering] = useApi();
   const [orderState, { confirmCart }] = useOrder();
@@ -572,7 +568,7 @@ export const Checkout = (props: any) => {
         } catch (error) {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
-      } else if (result.status === 2 && result.paymethod_data?.gateway === 'stripe_direct') {
+      } else if (result.status === 2 && stripePaymentOptions.includes(result.paymethod_data?.gateway)) {
         const clientSecret = result.paymethod_data?.result?.client_secret
         const paymentMethodId = result.paymethod_data?.data?.source_id;
 
@@ -607,7 +603,34 @@ export const Checkout = (props: any) => {
             return
           }
         } catch (error) {
-          showToast(ToastType.Error, error?.toString() || error.message)
+          const e = error.message === 'failed'
+            ? t('FAILED_PAYMENT', 'Failed payment')
+            : error?.toString() || error.message
+          if (e.includes('The provided PaymentMethod was previously used with a PaymentIntent')) {
+            showToast(ToastType.Error, t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again'))
+            try {
+              const confirmCartRes = await confirmCart(cartUuid)
+              if (confirmCartRes.error) {
+                showToast(ToastType.Error, confirmCartRes.error.message)
+              }
+              setCartState({
+                ...cartState,
+                loading: false,
+                cart: result
+              })
+            } catch (error) {
+              showToast(ToastType.Error, error?.toString() || error.message)
+            }
+            return
+          }
+          showToast(ToastType.Error, e)
+          const cart = Array.isArray(result) ? null : result
+          setCartState({
+            ...cartState,
+            loading: false,
+            cart,
+            error: cart ? null : result
+          })
         }
       } else {
         const cart = Array.isArray(result) ? null : result
