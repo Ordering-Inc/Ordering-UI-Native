@@ -1,27 +1,24 @@
-import * as React from 'react'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import React, { useState, useEffect } from 'react'
 import styled, { css } from 'styled-components/native'
+import { ScrollView, TouchableOpacity  } from 'react-native-gesture-handler'
+import { ScrollView as CustomScrollView, TouchableOpacity as CustomTouchableOpacity } from 'react-native'
 import { colors } from '../../theme'
 
 interface Props {
   secondary?: boolean,
-  options?: any,
-  onSelect?: any,
-  selectedIndex?: number,
-  kindImage?: any,
-  placeholder?: string,
-  style?: any,
+  options?: any;
   defaultValue?: any,
+  placeholder?: string,
+  onSelect?: any,
+  style?: any,
   dropViewMaxHeight?: any,
+  isModal?: any,
 }
 
-const Wrapper = styled.View`  
-  align-items: center;
-  justify-content: center;
+const Wrapper = styled.View`
   position: relative;
-  z-index: 9999;
 `
-const InnerWrapper = styled.TouchableOpacity`
+const Selected = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -32,10 +29,7 @@ const InnerWrapper = styled.TouchableOpacity`
   border-color: ${(props: any) => props.secondary ? colors.lightGray : colors.primary};
   background-color: ${(props: any) => props.secondary ? colors.white : colors.primary};
 `
-const SelLabel = styled.Text`
-  flex: 1;
-  color: black;
-  flex-grow: 1;
+const SelectedLabel = styled.Text`
   color: ${(props: any) => props.secondary ? 'black' : colors.white};
 `
 const DropIcon = styled.Image`
@@ -45,88 +39,89 @@ const DropIcon = styled.Image`
   height: 7px;
   margin-left: 5px;
 `
-const KindIcon = styled.Image`
-  tint-color: ${colors.primary};
-  resize-mode: contain;
-  width: 14px;
-  height: 14px;
-`
 const DropView = styled.View`
-  z-index: 9999;
   position: absolute;
-  box-shadow: 0 4px 3px #00000022;
-  background-color: white;
-  width: 100%;
+  z-index: 9999;
   top: 42px;
-  left: 0px;
-  border-radius: 10px;
   border-width: 1px;
   border-color: ${colors.lightGray};
   background-color: ${(props: any) => props.secondary ? colors.white : '#FFF5F5'};
+  border-radius: 10px;
+  width: 100%;
 `
 const DropOption = styled.Text`
   padding: 10px;
   border-bottom-width: 1px;
   border-bottom-color: ${colors.lightGray};
-  margin-bottom: 2px;
   ${(props: any) => props.selected && css`
     color: ${colors.primary};
   `};
-  z-index: 9999;
 `
 const ODropDown = (props: Props) => {
-  const [isOpen, onOffToggle] = React.useState(false);
-  const defaultOption = props.options?.find((option: any) => option.value === props.defaultValue)
-  const [selectedOption, setSelectedOption] = React.useState<any>(defaultOption)
-  const [value, setValue] = React.useState(props.defaultValue)
-
-  const onSelectItem = (option: any) => {
-    setSelectedOption(option);
-    setValue(option.value);
-    props.onSelect(option.value);
-    onOffToggle(false);
-  }
+  const {
+    secondary,
+    options,
+    defaultValue,
+    placeholder,
+    onSelect,
+    dropViewMaxHeight,
+    isModal
+  } = props
+  const [isOpen, setIsOpen] = useState(false)
+  const defaultOption = options?.find((option: any) => option.value === defaultValue)
+  const [selectedOption, setSelectedOption] = useState<any>(defaultOption)
+  const [value, setValue] = useState(defaultValue)
 
   const onToggle = () => {
-    onOffToggle(!isOpen)
+    setIsOpen(!isOpen)
   }
 
-  React.useEffect(() => {
-    const _defaultOption = props.options?.find((option: any) => option.value === props.defaultValue)
+  const onSelectOption = (option: any) => {
+    setSelectedOption(option)
+    setValue(option.value)
+    onSelect(option.value || option.name)
+    setIsOpen(false)
+  }
+
+  useEffect(() => {
+    console.log(defaultValue, options)
+    const _defaultOption = options?.find((option: any) => option.value === defaultValue)
     setSelectedOption(_defaultOption)
-    setValue(props.defaultValue)
-  }, [props.defaultValue, props.options])
+    setValue(defaultValue)
+  }, [defaultValue, options])
+  
+  useEffect(() => {
+    console.log(selectedOption, 'selected option')
+  }, [selectedOption])
 
   return (
     <Wrapper style={props.style}>
-      <InnerWrapper
-        secondary={props.secondary}
-        onPress={onToggle}
+      <Selected
+        secondary={secondary}
+        onPress={() => onToggle()}
       >
-        {props.kindImage
-          ? (<KindIcon source={props.kindImage} />)
-          : null
-        }
-        <SelLabel secondary={props.secondary} numberOfLines={1} ellipsizeMode={'tail'}>
-          {selectedOption?.content || selectedOption?.name || props.placeholder}
-        </SelLabel>
+        <SelectedLabel
+          secondary={secondary}
+        >
+          {selectedOption?.content || selectedOption?.name || placeholder}
+        </SelectedLabel>
         <DropIcon
-          secondary={props.secondary}
+          secondary={secondary}
           source={require('../../assets/icons/drop_down.png')}
         />
-      </InnerWrapper>
-      {isOpen && props.options &&
-        (
-          <DropView secondary={props.secondary}>
+      </Selected>
+      {isOpen && options && (
+        <DropView
+          secondary={secondary}
+        >
+          {!isModal ? (
             <ScrollView style={{
-              width: '100%',
-              maxHeight: props.dropViewMaxHeight || null,
-            }}>
-              {props.options && props.options.map((option: any, index: number) => (
-                <TouchableOpacity
+              maxHeight: dropViewMaxHeight || null }}
+            >
+              {options.map((option: any, index: number) => (
+                <TouchableOpacity 
                   key={index}
-                  onPress={() => onSelectItem(option)}
-                  style={{ zIndex: 9999 }}
+                  onPress={() => onSelectOption(option)}
                 >
                   <DropOption
                     numberOfLines={1}
@@ -134,12 +129,30 @@ const ODropDown = (props: Props) => {
                   >
                     {option.content || option.name}
                   </DropOption>
-                </TouchableOpacity>))
-              }
+                </TouchableOpacity>
+              ))}
             </ScrollView>
-          </DropView>
-        )
-      }
+          ) : (
+            <CustomScrollView style={{
+              maxHeight: dropViewMaxHeight || null }}
+            >
+              {options.map((option: any, index: number) => (
+                <CustomTouchableOpacity 
+                  key={index}
+                  onPress={() => onSelectOption(option)}
+                >
+                  <DropOption
+                    numberOfLines={1}
+                    selected={value === option.value}
+                  >
+                    {option.content || option.name}
+                  </DropOption>
+                </CustomTouchableOpacity>
+              ))}
+            </CustomScrollView>
+          )}
+        </DropView>
+      )}
     </Wrapper>
   )
 }
