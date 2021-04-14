@@ -4,6 +4,9 @@ import { StyleSheet, View } from 'react-native';
 import { colors } from '../../theme';
 import { OButton, OIcon, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
+import { LanguageSelector } from '../LanguageSelector'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const sloganImage = require('../../assets/images/product.png');
 const applogo = require('../../assets/images/app-logo.png');
@@ -17,6 +20,9 @@ export const Home = (props: any) => {
 
   return (
     <View style={{ width: '100%' }}>
+      <View style={styles.languageSelector}>
+        <LanguageSelector />
+      </View>
       <LogoWrapper>
         <OIcon src={applogo} style={styles.logo} />
       </LogoWrapper>
@@ -38,14 +44,15 @@ export const Home = (props: any) => {
         style={styles.buttons}
         onClick={() => onNavigationRedirect('Signup')}
       />
-      <OButton
-        text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
-        bgColor={colors.primary}
-        borderColor={colors.primary}
-        style={{ ...styles.buttons, marginTop: 40 }}
-        textStyle={{ color: 'white' }}
-        onClick={() => onNavigationRedirect('AddressForm', { isGuestUser: true })}
-      />
+      <TouchableOpacity
+        style={{ ...styles.textLink, marginTop: 40 }}
+        onPress={() => onNavigationRedirect('AddressForm', { isGuestUser: true })}
+      >
+        <OText weight='bold' style={{ fontSize: 18 }}>
+          {t('CONTINUE_AS_GUEST', 'Continue as guest')}
+        </OText>
+        <MaterialCommunityIcon name='login' size={24} style={{ marginLeft: 5 }} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -66,5 +73,14 @@ const styles = StyleSheet.create({
   },
   sloganText: {
     textAlign: 'center'
+  },
+  languageSelector: {
+    marginRight: 20
+  },
+  textLink: {
+    flexDirection: 'row',
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
