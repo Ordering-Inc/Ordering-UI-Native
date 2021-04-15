@@ -257,6 +257,7 @@ const ProfileUI = (props: ProfileParams) => {
                         handleChangeInput(val);
                       }}
                       value={user[field.code]}
+                      autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                     />
                   )}
                   name={field.code}

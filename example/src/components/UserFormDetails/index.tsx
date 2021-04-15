@@ -204,6 +204,7 @@ export const UserFormDetailsUI = (props: any) => {
                           placeholder={t(field.code.toUpperCase(), field?.name)}
                           style={styles.inputStyle}
                           icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
+                          autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                           isDisabled={!isEdit}
                           value={formState?.result?.result && !formState.result.error
                             ? formState?.result?.result[field.code]

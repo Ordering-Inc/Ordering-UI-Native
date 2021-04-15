@@ -214,6 +214,7 @@ const LoginFormUI = (props: LoginParams) => {
                     icon={IMAGES.email}
                     value={value}
                     onChange={(val: any) => onChange(val)}
+                    autoCapitalize='none'
                   />
                 )}
                 name="email"
