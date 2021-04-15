@@ -1,6 +1,6 @@
 import React from 'react';
-import { useLanguage } from 'ordering-components/native';
-import { StyleSheet, View } from 'react-native';
+import { useLanguage,useOrder } from 'ordering-components/native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { colors } from '../../theme';
 import { OButton, OIcon, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
@@ -8,8 +8,10 @@ import { LanguageSelector } from '../LanguageSelector'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-const sloganImage = require('../../assets/images/product.png');
+const sloganImage = require('../../assets/images/home-logo.png');
 const applogo = require('../../assets/images/app-logo.png');
+
+const windowHeight = Dimensions.get('window').height
 
 export const Home = (props: any) => {
   const {
@@ -17,6 +19,8 @@ export const Home = (props: any) => {
   } = props;
 
   const [, t] = useLanguage();
+  const [orderState] = useOrder()
+
 
   return (
     <View style={{ width: '100%' }}>
@@ -46,7 +50,7 @@ export const Home = (props: any) => {
       />
       <TouchableOpacity
         style={{ ...styles.textLink, marginTop: 40 }}
-        onPress={() => onNavigationRedirect('AddressForm', { isGuestUser: true })}
+        onPress={() => orderState?.options?.address ? onNavigationRedirect('BusinessList', { isGuestUser: true }) : onNavigationRedirect('AddressForm', { isGuestUser: true })}
       >
         <OText weight='bold' style={{ fontSize: 18 }}>
           {t('CONTINUE_AS_GUEST', 'Continue as guest')}
@@ -64,8 +68,8 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   slogan: {
-    height: 230,
-    width: 300
+    height: windowHeight / 2,
+    width: 400
   },
   buttons: {
     marginVertical: 10,
