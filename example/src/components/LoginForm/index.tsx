@@ -49,7 +49,6 @@ const LoginFormUI = (props: LoginParams) => {
     checkPhoneCodeState,
     registerButtonText,
     setCheckPhoneCodeState,
-    handleChangeTab,
     handleButtonLoginClick,
     handleSendVerifyCode,
     handleCheckPhoneCode,
@@ -73,6 +72,11 @@ const LoginFormUI = (props: LoginParams) => {
       cellphone: null
     }
   });
+
+  const handleChangeTab = (val: string) => {
+    props.handleChangeTab(val);
+    setPasswordSee(false);
+  }
 
   const onSubmit = (values: any) => {
     if (phoneInputData.error) {

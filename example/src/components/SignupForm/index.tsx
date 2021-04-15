@@ -86,6 +86,11 @@ const SignupFormUI = (props: SignupParams) => {
     navigation.navigate('Home');
   }
 
+  const handleChangeTab = (val: string) => {
+    setSignupTab(val);
+    setPasswordSee(false);
+  }
+
   const onSubmit = (values: any) => {
     if (phoneInputData.error) {
       showToast(ToastType.Error, phoneInputData.error);
@@ -212,7 +217,7 @@ const SignupFormUI = (props: SignupParams) => {
           <SignupWith style={{ paddingBottom: 25 }}>
             <OTabs>
               {useSignupByEmail && (
-                <Pressable onPress={() => setSignupTab('email')}>
+                <Pressable onPress={() => handleChangeTab('email')}>
                   <OTab>
                     <OText size={18} color={signupTab === 'email' ? colors.primary : colors.disabled}>
                       {t('SIGNUP_BY_EMAIL', 'Signup by Email')}
@@ -221,7 +226,7 @@ const SignupFormUI = (props: SignupParams) => {
                 </Pressable>
               )}
               {useSignupByCellphone && (
-                <Pressable onPress={() => setSignupTab('cellphone')}>
+                <Pressable onPress={() => handleChangeTab('cellphone')}>
                   <OTab>
                     <OText size={18} color={signupTab === 'cellphone' ? colors.primary : colors.disabled}>
                       {t('SIGNUP_BY_PHONE', 'Signup by Phone')}
