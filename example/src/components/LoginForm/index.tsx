@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import {
   LoginForm as LoginFormController,
@@ -61,6 +62,7 @@ const LoginFormUI = (props: LoginParams) => {
   const [, { login }] = useSession()
   const { control, handleSubmit, errors } = useForm();
 
+  const [passwordSee, setPasswordSee] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isFBLoading, setIsFBLoading] = useState(false);
@@ -232,10 +234,15 @@ const LoginFormUI = (props: LoginParams) => {
               control={control}
               render={({ onChange, value }) => (
                 <OInput
-                  isSecured={true}
+                  isSecured={!passwordSee ? true : false}
                   placeholder={'Password'}
                   style={loginStyle.inputStyle}
                   icon={IMAGES.lock}
+                  iconCustomRight={
+                    !passwordSee ?
+                      <MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
+                      <MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
+                  }
                   value={value}
                   onChange={(val: any) => onChange(val)}
                 />

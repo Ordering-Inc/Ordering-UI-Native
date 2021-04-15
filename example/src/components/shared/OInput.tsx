@@ -13,9 +13,12 @@ const Wrapper = styled.View`
   height: 50px;
   flex-direction: row;
   align-items: center;
+  flex: 1;
+  justify-content: center;
 `;
 const Input = styled.TextInput`
   flex-grow: 1;
+  flex: 1;
   min-height: 30px;
   font-size: 15px;
   font-family: 'Poppins-Regular';
@@ -31,8 +34,12 @@ interface Props {
   style?: ViewStyle;
   placeholder?: string;
   icon?: ImageSourcePropType;
+  iconRight?: ImageSourcePropType;
   iconColor?: string;
+  iconRightColor?: string;
   iconStyle?: ImageStyle;
+  iconRightStyle?: ImageStyle;
+  iconCustomRight?: any;
   value?: string;
   onChange?: any;
   name?: string;
@@ -56,7 +63,7 @@ const OInput = (props: Props): React.ReactElement => {
           color={props.iconColor}
           width={20}
           height={20}
-          style={{marginHorizontal: 10}}
+          style={{marginRight: 10}}
         />
       ) : null}
       {props.vertorIcon && (
@@ -73,6 +80,16 @@ const OInput = (props: Props): React.ReactElement => {
         scrollEnabled={props.multiline}
         editable={!props.isDisabled}
       />
+      {props.iconRight && (
+        <OIcon
+          src={props.iconRight}
+          color={props.iconRightColor}
+          width={20}
+          height={20}
+          style={{ ...props.iconRightStyle }}
+        />
+      )}
+      {props.iconCustomRight}
     </Wrapper>
   );
 };

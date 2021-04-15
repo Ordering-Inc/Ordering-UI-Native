@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import { FacebookLogin } from '../FacebookLogin'
@@ -63,6 +64,7 @@ const SignupFormUI = (props: SignupParams) => {
   const [{ configs }] = useConfig();
   const { control, handleSubmit, errors } = useForm();
 
+  const [passwordSee, setPasswordSee] = useState(false);
   const [formValues, setFormValues] = useState(null)
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
@@ -203,8 +205,11 @@ const SignupFormUI = (props: SignupParams) => {
         btnStyle={{ paddingLeft: 0 }}
       />
       <FormSide>
-        {useSignupByEmail && useSignupByCellphone && (
-          <SignupWith>
+        {useSignupByEmail && useSignupByCellphone &&
+          configs && Object.keys(configs).length > 0 &&
+            (configs?.twilio_service_enabled?.value === 'true' ||
+              configs?.twilio_service_enabled?.value === '1') && (
+          <SignupWith style={{ paddingBottom: 25 }}>
             <OTabs>
               {useSignupByEmail && (
                 <Pressable onPress={() => setSignupTab('email')}>
@@ -267,10 +272,15 @@ const SignupFormUI = (props: SignupParams) => {
                   control={control}
                   render={({ onChange, value }) => (
                     <OInput
-                      isSecured={true}
+                      isSecured={!passwordSee ? true : false}
                       placeholder={'Password'}
                       style={style.inputStyle}
                       icon={IMAGES.lock}
+                      iconCustomRight={
+                        !passwordSee ?
+                          <MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
+                          <MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
+                      }
                       value={value}
                       onChange={(val: any) => onChange(val)}
                     />
