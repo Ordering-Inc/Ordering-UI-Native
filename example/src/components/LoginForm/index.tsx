@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import {
   LoginForm as LoginFormController,
@@ -48,7 +49,6 @@ const LoginFormUI = (props: LoginParams) => {
     checkPhoneCodeState,
     registerButtonText,
     setCheckPhoneCodeState,
-    handleChangeTab,
     handleButtonLoginClick,
     handleSendVerifyCode,
     handleCheckPhoneCode,
@@ -61,6 +61,7 @@ const LoginFormUI = (props: LoginParams) => {
   const [, { login }] = useSession()
   const { control, handleSubmit, errors } = useForm();
 
+  const [passwordSee, setPasswordSee] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isFBLoading, setIsFBLoading] = useState(false);
@@ -71,6 +72,11 @@ const LoginFormUI = (props: LoginParams) => {
       cellphone: null
     }
   });
+
+  const handleChangeTab = (val: string) => {
+    props.handleChangeTab(val);
+    setPasswordSee(false);
+  }
 
   const onSubmit = (values: any) => {
     if (phoneInputData.error) {
@@ -208,6 +214,7 @@ const LoginFormUI = (props: LoginParams) => {
                     icon={IMAGES.email}
                     value={value}
                     onChange={(val: any) => onChange(val)}
+                    autoCapitalize='none'
                   />
                 )}
                 name="email"
@@ -232,10 +239,15 @@ const LoginFormUI = (props: LoginParams) => {
               control={control}
               render={({ onChange, value }) => (
                 <OInput
-                  isSecured={true}
+                  isSecured={!passwordSee ? true : false}
                   placeholder={'Password'}
                   style={loginStyle.inputStyle}
                   icon={IMAGES.lock}
+                  iconCustomRight={
+                    !passwordSee ?
+                      <MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
+                      <MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
+                  }
                   value={value}
                   onChange={(val: any) => onChange(val)}
                 />
@@ -265,29 +277,35 @@ const LoginFormUI = (props: LoginParams) => {
           </Pressable>
         )}
 
-        {useLoginByCellphone && loginTab === 'cellphone' && (
-          <>
-            <OrSeparator>
-              <LineSeparator />
-              <OText size={18} mRight={20} mLeft={20}>
-                {t('OR', 'Or')}
-              </OText>
-              <LineSeparator />
-            </OrSeparator>
+        {useLoginByCellphone &&
+          loginTab === 'cellphone' &&
+          configs && Object.keys(configs).length > 0 &&
+            (configs?.twilio_service_enabled?.value === 'true' ||
+              configs?.twilio_service_enabled?.value === '1') &&
+          (
+            <>
+              <OrSeparator>
+                <LineSeparator />
+                <OText size={18} mRight={20} mLeft={20}>
+                  {t('OR', 'Or')}
+                </OText>
+                <LineSeparator />
+              </OrSeparator>
 
-            <ButtonsWrapper mBottom={20}>
-              <OButton
-                onClick={handleVerifyCodeClick}
-                text={t('GET_VERIFY_CODE', 'Get Verify Code')}
-                borderColor={colors.primary}
-                style={loginStyle.btnOutline}
-                imgRightSrc={null}
-                isLoading={isLoadingVerifyModal}
-                indicatorColor={colors.primary}
-              />
-            </ButtonsWrapper>
-          </>
-        )}
+              <ButtonsWrapper mBottom={20}>
+                <OButton
+                  onClick={handleVerifyCodeClick}
+                  text={t('GET_VERIFY_CODE', 'Get Verify Code')}
+                  borderColor={colors.primary}
+                  style={loginStyle.btnOutline}
+                  imgRightSrc={null}
+                  isLoading={isLoadingVerifyModal}
+                  indicatorColor={colors.primary}
+                />
+              </ButtonsWrapper>
+            </>
+          )
+        }
 
         {configs && Object.keys(configs).length > 0 && (
           (configs?.facebook_login?.value === 'true' ||

@@ -1,26 +1,25 @@
 import React from 'react';
-import { LogoutAction, useLanguage } from 'ordering-components/native';
+import { TouchableOpacity } from 'react-native';
+import { LogoutAction } from 'ordering-components/native';
 
-import { OIconButton } from '../shared';
+import { OIcon } from '../shared';
 import { IMAGES } from '../../config/constants';
 import { colors } from '../../theme';
 
 const LogoutButtonUI = (props: any) => {
   const { handleLogoutClick } = props
-  const [, t] = useLanguage()
 
   return (
-    <>
-    <OIconButton
-      icon={IMAGES.menulogout}
-      style={{ justifyContent: 'flex-end', height: 50 }}
-      borderColor={'transparent'}
-      textStyle={{ marginHorizontal: 20 }}
-      onClick={() => handleLogoutClick()}
-      iconColor={colors.disabledContrast}
-      iconStyle={{ width: 28, height: 28 }}
-    />
-    </>
+    <TouchableOpacity
+      onPress={() => handleLogoutClick()}
+    >
+      <OIcon
+        src={IMAGES.menulogout}
+        width={28}
+        height={28}
+        color={colors.disabledContrast}
+      />
+    </TouchableOpacity>
   )
 }
 

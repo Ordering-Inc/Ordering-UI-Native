@@ -28,7 +28,10 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 
   const Order = ({ order, index }: { order: any, index: number }) => (
     <React.Fragment>
-      <Card onPress={() => handleClickCard(order?.uuid)} isMiniCard={configs?.google_maps_api_key?.value}>
+      <Card
+        isMiniCard={configs?.google_maps_api_key?.value}
+        onPress={() => handleClickCard(order?.uuid)}
+      >
         {(configs?.google_maps_api_key?.value) && (
           <Map>
             <OIcon
@@ -83,7 +86,12 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
   )
 
   return (
-    <ActiveOrdersContainer horizontal isMiniCards={configs?.google_maps_api_key?.value}>
+    <ActiveOrdersContainer
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+      horizontal
+      isMiniCards={configs?.google_maps_api_key?.value}
+    >
       {orders.length > 0 && (
         orders.map((order: any, index: any) => (
           <Order

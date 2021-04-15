@@ -10,7 +10,7 @@ export const ChHeader = styled.View`
   justify-content: space-between;
   flex-direction: row;
   align-items: center;
-  margin: 0px 10px;
+  margin: 0px;
 `
 
 export const ChTotal = styled.View`

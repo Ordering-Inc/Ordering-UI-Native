@@ -84,7 +84,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
                 size={16}
                 style={styles.starIcon}
               />
-              <OText>{parseNumber(business?.reviews?.total)}</OText>
+              <OText>{parseNumber(business?.reviews?.total, { separator: '.' })}</OText>
             </Reviews>
           )}
         </BusinessInfo>
