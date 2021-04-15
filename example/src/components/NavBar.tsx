@@ -8,7 +8,7 @@ import { IMAGES } from '../config/constants'
 
 const Wrapper = styled.View`
   background-color: ${colors.white};
-  padding: 44px 20px 20px 0px;
+  padding: 10px 20px 20px 0px;
   flex-direction: row;
   justify-content: center;
   align-items: center;

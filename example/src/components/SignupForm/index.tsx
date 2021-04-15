@@ -97,7 +97,7 @@ const SignupFormUI = (props: SignupParams) => {
       showToast(ToastType.Error, t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.'))
       return
     }
-    if (signupTab === 'email') {
+    if (signupTab === 'email' || !useSignupByCellphone) {
       handleButtonSignupClick && handleButtonSignupClick({
         ...values,
         ...phoneInputData.phone
@@ -234,25 +234,25 @@ const SignupFormUI = (props: SignupParams) => {
                 validationFields?.fields?.checkout &&
                 Object.values(validationFields?.fields?.checkout).map(
                   (field: any) => !notValidationFields.includes(field.code) && (
-                  showField(field.code) && (
-                    <Controller
-                      key={field.id}
-                      control={control}
-                      render={({ onChange, value }) => (
-                        <OInput
-                          placeholder={t(field.name)}
-                          style={style.inputStyle}
-                          icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
-                          value={value}
-                          onChange={(val: any) => onChange(val)}
-                        />
-                      )}
-                      name={field.code}
-                      rules={getInputRules(field)}
-                      defaultValue=""
-                    />
-                  )
-                ))
+                    showField(field.code) && (
+                      <Controller
+                        key={field.id}
+                        control={control}
+                        render={({ onChange, value }) => (
+                          <OInput
+                            placeholder={t(field.name)}
+                            style={style.inputStyle}
+                            icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
+                            value={value}
+                            onChange={(val: any) => onChange(val)}
+                          />
+                        )}
+                        name={field.code}
+                        rules={getInputRules(field)}
+                        defaultValue=""
+                      />
+                    )
+                  ))
               }
 
               {!!showInputPhoneNumber && (
@@ -262,59 +262,59 @@ const SignupFormUI = (props: SignupParams) => {
                 />
               )}
 
-              {signupTab !== 'cellphone' && (
-                <Controller
-                  control={control}
-                  render={({ onChange, value }) => (
-                    <OInput
-                      isSecured={true}
-                      placeholder={'Password'}
-                      style={style.inputStyle}
-                      icon={IMAGES.lock}
-                      value={value}
-                      onChange={(val: any) => onChange(val)}
-                    />
-                  )}
-                  name="password"
-                  rules={{
-                    required: isRequiredField('password')
-                      ? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required')
-                        .replace('_attribute_', t('PASSWORD', 'password'))
-                      : null,
-                    minLength: {
-                      value: 8,
-                      message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.')
-                        .replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
-                    }
-                  }}
-                  defaultValue=""
-                />
-              )}
+              <Controller
+                control={control}
+                render={({ onChange, value }) => (
+                  <OInput
+                    isSecured={true}
+                    placeholder={'Password'}
+                    style={style.inputStyle}
+                    icon={IMAGES.lock}
+                    value={value}
+                    onChange={(val: any) => onChange(val)}
+                  />
+                )}
+                name="password"
+                rules={{
+                  required: isRequiredField('password')
+                    ? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required')
+                      .replace('_attribute_', t('PASSWORD', 'password'))
+                    : null,
+                  minLength: {
+                    value: 8,
+                    message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.')
+                      .replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
+                  }
+                }}
+                defaultValue=""
+              />
+
             </>
           ) : (
             <Spinner visible />
           )}
 
-          {signupTab === 'email' ? (
-            <OButton
-              onClick={handleSubmit(onSubmit)}
-              text={signupButtonText}
-              bgColor={colors.primary}
-              borderColor={colors.primary}
-              textStyle={{color: 'white'}}
-              imgRightSrc={null}
-              isDisabled={formState.loading || validationFields.loading}
-            />
-          ) : (
+          {signupTab === 'cellphone' && useSignupByEmail && useSignupByCellphone ? (
             <OButton
               onClick={handleSubmit(onSubmit)}
               text={t('GET_VERIFY_CODE', 'Get Verify Code')}
               borderColor={colors.primary}
               imgRightSrc={null}
-              textStyle={{color: 'white'}}
+              textStyle={{ color: 'white' }}
               isLoading={isLoadingVerifyModal}
               indicatorColor={colors.white}
             />
+          ) : (
+            <OButton
+              onClick={handleSubmit(onSubmit)}
+              text={signupButtonText}
+              bgColor={colors.primary}
+              borderColor={colors.primary}
+              textStyle={{ color: 'white' }}
+              imgRightSrc={null}
+              isDisabled={formState.loading || validationFields.loading}
+            />
+
           )}
         </FormInput>
 
@@ -333,8 +333,8 @@ const SignupFormUI = (props: SignupParams) => {
 
         {configs && Object.keys(configs).length > 0 && (
           (configs?.facebook_login?.value === 'true' ||
-              configs?.facebook_login?.value === '1') &&
-              configs?.facebook_id?.value &&
+            configs?.facebook_login?.value === '1') &&
+          configs?.facebook_id?.value &&
           (
             <ButtonsSection>
               <OText size={18} color={colors.disabled}>
