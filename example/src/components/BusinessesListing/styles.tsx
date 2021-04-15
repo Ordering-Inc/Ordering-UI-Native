@@ -26,21 +26,25 @@ export const AddressInput = styled.TouchableOpacity`
   border-radius: 10px;
   align-items: center;
   margin-horizontal: 10px;
-  padding: 10px;
+  padding: 15px;
   flex: 1;
+  width: 100%;
 `
 
 export const OrderControlContainer = styled.View`
-  flex-direction: row;
+  width: 100%;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
   z-index: 10;
+  padding-bottom: 20px;
+  flex: 1;
 `
 
 export const WrapMomentOption = styled.TouchableOpacity`
-  background-color: #FFF5F5;
+  background-color: ${colors.inputDisabled};
   border-radius: 10px;
   margin-vertical: 5px;
-  padding: 10px;
-  max-width: 120px;
+  padding: 15px 20px;
+  max-width: 240px;
 `

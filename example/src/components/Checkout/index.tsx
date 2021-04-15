@@ -157,7 +157,7 @@ const CheckoutUI = (props: any) => {
 
   return (
     <ChContainer>
-      <ChSection style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
+      <ChSection style={{  paddingBottom: 20 }}>
         <OButton
           imgLeftSrc={IMAGES.arrow_left}
           imgRightSrc={null}

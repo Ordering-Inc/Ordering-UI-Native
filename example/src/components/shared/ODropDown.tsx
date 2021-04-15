@@ -23,13 +23,14 @@ const Selected = styled.TouchableOpacity`
   align-items: center;
   justify-content: space-between;
   position: relative;
-  padding: 10px;
+  padding: 15px;
   border-radius: 10px;
   border-width: 1px;
   border-color: ${(props: any) => props.secondary ? colors.lightGray : colors.primary};
   background-color: ${(props: any) => props.secondary ? colors.white : colors.primary};
 `
 const SelectedLabel = styled.Text`
+  font-size: 16px;
   color: ${(props: any) => props.secondary ? 'black' : colors.white};
 `
 const DropIcon = styled.Image`
@@ -42,7 +43,7 @@ const DropIcon = styled.Image`
 const DropView = styled.View`
   position: absolute;
   z-index: 9999;
-  top: 42px;
+  top: 54px;
   border-width: 1px;
   border-color: ${colors.lightGray};
   background-color: ${(props: any) => props.secondary ? colors.white : '#FFF5F5'};
@@ -50,7 +51,8 @@ const DropView = styled.View`
   width: 100%;
 `
 const DropOption = styled.Text`
-  padding: 10px;
+  padding: 15px;
+  font-size: 16px;
   border-bottom-width: 1px;
   border-bottom-color: ${colors.lightGray};
   ${(props: any) => props.selected && css`
@@ -114,7 +116,7 @@ const ODropDown = (props: Props) => {
               maxHeight: dropViewMaxHeight || null }}
             >
               {options.map((option: any, index: number) => (
-                <TouchableOpacity 
+                <TouchableOpacity
                   key={index}
                   onPress={() => onSelectOption(option)}
                 >

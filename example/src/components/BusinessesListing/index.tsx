@@ -70,7 +70,18 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         <SearchBar onSearch={handleChangeSearch} searchValue={searchValue} lazyLoad placeholder={t('FIND_BUSINESS', 'Find a Business')} />
       </Search>
       <OrderControlContainer>
-        <OrderTypeSelector configTypes={configTypes} />
+        <View style={styles.wrapperOrderOptions}>
+          <OrderTypeSelector configTypes={configTypes} />
+          <WrapMomentOption
+            onPress={() => navigation.navigate('MomentOption')}
+            >
+            <OText size={14} numberOfLines={1} ellipsizeMode='tail'>
+              {orderState.options?.moment
+                ? parseDate(orderState.options?.moment, { outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm' })
+                : t('ASAP_ABBREVIATION', 'ASAP')}
+            </OText>
+          </WrapMomentOption>
+        </View>
         <AddressInput
           onPress={() => auth
             ? navigation.navigate('AddressList', { isFromBusinesses: true })
@@ -82,19 +93,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
             size={20}
             style={{ marginRight: 10 }}
           />
-          <OText size={12} style={styles.inputStyle} numberOfLines={1}>
+          <OText size={16} style={styles.inputStyle} numberOfLines={1}>
             {orderState?.options?.address?.address}
           </OText>
         </AddressInput>
-        <WrapMomentOption
-          onPress={() => navigation.navigate('MomentOption')}
-        >
-          <OText size={12} numberOfLines={1} ellipsizeMode='tail'>
-            {orderState.options?.moment
-              ? parseDate(orderState.options?.moment, { outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm' })
-              : t('ASAP_ABBREVIATION', 'ASAP')}
-          </OText>
-        </WrapMomentOption>
       </OrderControlContainer>
       <BusinessTypeFilter
         handleChangeBusinessType={handleChangeBusinessType}
@@ -151,6 +153,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.inputDisabled,
     flex: 1
   },
+  wrapperOrderOptions: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10
+  }
 })
 
 export const BusinessesListing = (props: BusinessesListingParams) => {
