@@ -265,29 +265,35 @@ const LoginFormUI = (props: LoginParams) => {
           </Pressable>
         )}
 
-        {useLoginByCellphone && loginTab === 'cellphone' && (
-          <>
-            <OrSeparator>
-              <LineSeparator />
-              <OText size={18} mRight={20} mLeft={20}>
-                {t('OR', 'Or')}
-              </OText>
-              <LineSeparator />
-            </OrSeparator>
+        {useLoginByCellphone &&
+          loginTab === 'cellphone' &&
+          configs && Object.keys(configs).length > 0 &&
+            (configs?.twilio_service_enabled?.value === 'true' ||
+              configs?.twilio_service_enabled?.value === '1') &&
+          (
+            <>
+              <OrSeparator>
+                <LineSeparator />
+                <OText size={18} mRight={20} mLeft={20}>
+                  {t('OR', 'Or')}
+                </OText>
+                <LineSeparator />
+              </OrSeparator>
 
-            <ButtonsWrapper mBottom={20}>
-              <OButton
-                onClick={handleVerifyCodeClick}
-                text={t('GET_VERIFY_CODE', 'Get Verify Code')}
-                borderColor={colors.primary}
-                style={loginStyle.btnOutline}
-                imgRightSrc={null}
-                isLoading={isLoadingVerifyModal}
-                indicatorColor={colors.primary}
-              />
-            </ButtonsWrapper>
-          </>
-        )}
+              <ButtonsWrapper mBottom={20}>
+                <OButton
+                  onClick={handleVerifyCodeClick}
+                  text={t('GET_VERIFY_CODE', 'Get Verify Code')}
+                  borderColor={colors.primary}
+                  style={loginStyle.btnOutline}
+                  imgRightSrc={null}
+                  isLoading={isLoadingVerifyModal}
+                  indicatorColor={colors.primary}
+                />
+              </ButtonsWrapper>
+            </>
+          )
+        }
 
         {configs && Object.keys(configs).length > 0 && (
           (configs?.facebook_login?.value === 'true' ||

@@ -84,15 +84,10 @@ const ODropDown = (props: Props) => {
   }
 
   useEffect(() => {
-    console.log(defaultValue, options)
     const _defaultOption = options?.find((option: any) => option.value === defaultValue)
     setSelectedOption(_defaultOption)
     setValue(defaultValue)
   }, [defaultValue, options])
-  
-  useEffect(() => {
-    console.log(selectedOption, 'selected option')
-  }, [selectedOption])
 
   return (
     <Wrapper style={props.style}>
