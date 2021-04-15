@@ -5,6 +5,7 @@ export const WelcomeTitle = styled.View`
   flex: 1;
   flex-direction: row;
   align-items: center;
+  margin-bottom: 15px;
 `
 
 export const BusinessList = styled.View`

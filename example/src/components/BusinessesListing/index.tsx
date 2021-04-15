@@ -64,12 +64,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
               {user?.name}
             </OText>
           </View>
-          <OIcon
-            url={user?.photo}
-            width={80}
-            height={80}
-            style={{ borderRadius: 6 }}
-          />
         </WelcomeTitle>
       )}
       <Search>
