@@ -7,6 +7,7 @@ import { Wrapper } from './styles'
 
 import { colors } from '../../theme'
 import { PhoneInputParams } from '../../types';
+import { OText } from '../shared';
 
 export const PhoneInputNumber = (props: PhoneInputParams) => {
   const {
@@ -20,7 +21,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
   const phoneInput = useRef<PhoneInput>(null);
   const [userphoneNumber, setUserphoneNumber] = useState('');
 
-  const handleChangeNumber = (number) => {
+  const handleChangeNumber = (number: any) => {
     setUserphoneNumber(number)
   }
 
@@ -59,9 +60,10 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         })
       }
     }
-    }, [userphoneNumber])
-    return (
-      <Wrapper>
+  }, [userphoneNumber])
+
+  return (
+    <Wrapper>
       <PhoneInput
         ref={phoneInput}
         defaultValue={userphoneNumber || defaultValue}
@@ -71,6 +73,13 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         countryPickerProps={{withAlphaFilter:true}}
         textContainerStyle={style.input}
       />
+      <OText
+        size={16}
+        color={colors.error}
+        style={{ textAlign: 'center', marginTop: 5 }}
+      >
+        {data.error}
+      </OText>
     </Wrapper>
   )
 }
