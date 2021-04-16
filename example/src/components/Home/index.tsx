@@ -52,7 +52,7 @@ export const Home = (props: any) => {
           onClick={() => onNavigationRedirect('Signup')}
         />
         <TouchableOpacity
-          style={styles.textLink}
+          style={{ ...styles.textLink, marginTop: 15 }}
           onPress={() => orderState?.options?.address?.address
             ? onNavigationRedirect('BusinessList', { isGuestUser: true })
             : onNavigationRedirect('AddressForm', { isGuestUser: true })
