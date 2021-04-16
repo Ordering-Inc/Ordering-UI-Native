@@ -73,13 +73,15 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         countryPickerProps={{withAlphaFilter:true}}
         textContainerStyle={style.input}
       />
-      <OText
-        size={16}
-        color={colors.error}
-        style={{ textAlign: 'center', marginTop: 5 }}
-      >
-        {data.error}
-      </OText>
+      {!!data?.error && (
+        <OText
+          size={16}
+          color={colors.error}
+          style={{ textAlign: 'center', marginTop: 5 }}
+          >
+          {data.error}
+        </OText>
+      )}
     </Wrapper>
   )
 }
