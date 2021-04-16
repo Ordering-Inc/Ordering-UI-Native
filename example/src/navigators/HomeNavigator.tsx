@@ -39,11 +39,6 @@ const HomeNavigator = (is_online: boolean) => {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                  name="AddressForm"
-                  component={AddressForm}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
                   name="CheckoutNavigator"
                   component={CheckoutNavigator}
                   options={{ headerShown: false }}
@@ -70,18 +65,11 @@ const HomeNavigator = (is_online: boolean) => {
                 />
               </>
             ) : (
-              <>
-                <Stack.Screen
-                  name="AddressList"
-                  component={AddressList}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="AddressForm"
-                  component={AddressForm}
-                  options={{ headerShown: false }}
-                />
-              </>
+              <Stack.Screen
+                name="AddressList"
+                component={AddressList}
+                options={{ headerShown: false }}
+              />
             )
           ) : (
             <Stack.Screen

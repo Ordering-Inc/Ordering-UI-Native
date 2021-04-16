@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder } from 'ordering-components/native'
 import { AddressListContainer, AddressItem } from './styles'
 import { StyleSheet, View } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors } from '../../theme'
-import { OButton, OText, OAlert } from '../shared'
+import { OButton, OText, OAlert, OModal } from '../shared'
 import { Container } from '../../layouts/Container'
-import { AddressListParams } from '../../types'
+import { AddressFormParams, AddressListParams } from '../../types'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+import { AddressForm } from '../AddressForm'
 
 const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
 
@@ -32,6 +33,8 @@ const AddressListUI = (props: AddressListParams) => {
 
   const [orderState] = useOrder()
   const [, t] = useLanguage()
+  const [isOpenAddressForm, setIsOpenAddressForm] = useState(false)
+  const [addressFormProps, setAddressFormProps] = useState<AddressFormParams>({ address: null, isEditing: false, addressesList: [], isSelectedAfterAdd: true, handleCloseAddressForm: null })
 
   const onNavigatorRedirect = () => {
     if (route && (isFromBusinesses || isGoBack)) {
@@ -111,14 +114,31 @@ const AddressListUI = (props: AddressListParams) => {
       ...addressList,
       addresses
     })
+    handleCloseAddressForm()
+
+  }
+
+  const handleSetAddressFormProps = (addressFormProps: any) => {
+    setAddressFormProps(addressFormProps)
+  }
+
+  const handleCloseAddressForm = () => {
+    setIsOpenAddressForm(false)
+    setAddressFormProps({ address: null, isEditing: false, addressesList: [], onSaveAddress: null, isSelectedAfterAdd: true, handleCloseAddressForm: null })
   }
 
   const goToBack = () => navigation.goBack()
   const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
 
+  useEffect(() => {
+    if (addressFormProps.onSaveAddress) {
+      setIsOpenAddressForm(true)
+    }
+  }, [addressFormProps])
+
   return (
     <Container nopadding={nopadding}>
-      <Spinner visible={actionStatus.loading || orderState.loading || (addressList.loading && (!isFromBusinesses && !isFromProfile) )} />
+      <Spinner visible={actionStatus.loading || orderState.loading || (addressList.loading && (!isFromBusinesses && !isFromProfile))} />
       {(!addressList.loading || (isFromBusinesses || isFromProfile)) && (
         <AddressListContainer>
           {isFromProfile && (
@@ -176,13 +196,15 @@ const AddressListUI = (props: AddressListParams) => {
                       name='pencil-outline'
                       size={28}
                       color={colors.green}
-                      onPress={() => onNavigationRedirect(
-                        'AddressForm', {
-                        address: address,
-                        isEditing: true,
-                        addressList: addressList,
-                        onSaveAddress: handleSaveAddress
-                      }
+                      onPress={() => handleSetAddressFormProps(
+                        {
+                          address: address,
+                          isEditing: true,
+                          addressesList: addressList,
+                          onSaveAddress: handleSaveAddress,
+                          handleCloseAddressForm: handleCloseAddressForm,
+                          isSelectedAfterAdd: true
+                        }
                       )}
                     />
                     <OAlert
@@ -229,14 +251,14 @@ const AddressListUI = (props: AddressListParams) => {
                 imgLeftStyle={styles.buttonIcon}
                 style={styles.button}
                 borderColor={colors.primary}
-                onClick={() => onNavigationRedirect(
-                  'AddressForm', {
+                onClick={() => handleSetAddressFormProps({
                   address: null,
+                  onSaveAddress: handleSaveAddress,
+                  addressesList: addressList?.addresses,
                   nopadding: true,
-                  addressList: addressList?.addresses,
-                  onSaveAddress: handleSaveAddress
-                }
-                )}
+                  handleCloseAddressForm: handleCloseAddressForm,
+                  isSelectedAfterAdd: true
+                })}
               />
             </>
           )}
@@ -249,6 +271,13 @@ const AddressListUI = (props: AddressListParams) => {
             />
           )}
         </AddressListContainer>
+      )}
+      {isOpenAddressForm && (
+        <OModal open={isOpenAddressForm} entireModal onClose={() => handleCloseAddressForm()}>
+          <AddressForm
+            {...addressFormProps}
+          />
+        </OModal>
       )}
     </Container>
   )

@@ -58,9 +58,12 @@ export interface AddressFormParams {
   addressesList?: any,
   saveAddress?: any,
   userCustomerSetup?: boolean,
-  isRequiredField: (field: string) => {},
+  isRequiredField?: (field: string) => {},
   isGuestUser?: boolean,
   useValidationFileds?: boolean,
+  handleCloseAddressForm: any,
+  isSelectedAfterAdd?: boolean,
+  onSaveAddress?: any
 }
 export interface SignupParams {
   navigation?: any;

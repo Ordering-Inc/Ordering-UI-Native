@@ -70,11 +70,6 @@ const RootNavigator = () => {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                  name="AddressForm"
-                  component={AddressForm}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
                   name='BusinessList'
                   component={BusinessList}
                   options={{ headerShown: false }}

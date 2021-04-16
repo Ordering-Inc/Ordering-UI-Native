@@ -29,6 +29,7 @@ import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
 import { BusinessCategories } from '../BusinessTypeFilter/styles'
+import { AddressForm } from '../AddressForm'
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -54,6 +55,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [curProduct, setCurProduct] = useState(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
+  const [isOpenAddressForm, setIsOpenAddressForm] = useState(false)
 
   const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
@@ -81,6 +83,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const handleUpsellingPage = () => {
     onRedirect('CheckoutNavigator', { cartUuid: currentCart?.uuid })
     setOpenUpselling(false)
+  }
+
+  const handleCloseAddressForm = () => {
+    setIsOpenAddressForm(false)
   }
 
   return (
@@ -128,7 +134,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                             size={25}
                           />
                         </TouchableOpacity>
-                        <AddressInput onPress={() => auth ? onRedirect('AddressList', { isGoBack: true, isFromBusinesses: true }) : onRedirect('AddressForm')}>
+                        <AddressInput onPress={() => auth ? onRedirect('AddressList', { isGoBack: true, isFromBusinesses: true }) : setIsOpenAddressForm(true)}>
                           <OText color={colors.white} numberOfLines={1}>
                             {orderState?.options?.address?.address}
                           </OText>
@@ -223,6 +229,14 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           onSave={handlerProductAction}
         />
       </OModal>
+      {isOpenAddressForm && (
+        <OModal open={isOpenAddressForm} onClose={() => handleCloseAddressForm()} entireModal>
+          <AddressForm
+            isSelectedAfterAdd
+            handleCloseAddressForm={() => handleCloseAddressForm()}
+          />
+        </OModal>
+      )}
       {openUpselling && (
         <UpsellingProducts
           businessId={currentCart?.business_id}

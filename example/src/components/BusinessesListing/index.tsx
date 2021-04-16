@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BusinessList as BusinessesListingController, useLanguage, useSession, useOrder, useConfig, useUtils } from 'ordering-components/native'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { SearchBar } from '../SearchBar'
 import { NotFoundSource } from '../NotFoundSource'
 import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
-import { OText, OIcon } from '../shared'
+import { OText, OIcon, OModal } from '../shared'
 import { colors } from '../../theme'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { BusinessesListingParams } from '../../types'
@@ -14,6 +14,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import NavBar from '../NavBar'
 import { OrderTypeSelector } from '../OrderTypeSelector'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+import { AddressForm } from '../AddressForm'
 const PIXELS_TO_SCROLL = 1000
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
@@ -33,6 +34,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const [{ configs }] = useConfig()
   const [{ parseDate }] = useUtils()
 
+  const [isOpenAddressForm, setIsOpenAddressForm] = useState(false)
+
+
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
   const handleScroll = ({ nativeEvent }: any) => {
@@ -43,6 +47,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
       getBusinesses()
     }
+  }
+
+  const handleCloseAddressForm = () => {
+    setIsOpenAddressForm(false)
   }
 
   return (
@@ -74,7 +82,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           <OrderTypeSelector configTypes={configTypes} />
           <WrapMomentOption
             onPress={() => navigation.navigate('MomentOption')}
-            >
+          >
             <OText size={14} numberOfLines={1} ellipsizeMode='tail'>
               {orderState.options?.moment
                 ? parseDate(orderState.options?.moment, { outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm' })
@@ -85,7 +93,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         <AddressInput
           onPress={() => auth
             ? navigation.navigate('AddressList', { isFromBusinesses: true })
-            : navigation.navigate('AddressForm')}
+            : setIsOpenAddressForm(true)}
         >
           <MaterialComIcon
             name='home-outline'
@@ -111,7 +119,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       {businessesList.loading && (
         <>
           {[...Array(paginationProps.nextPageItems ? paginationProps.nextPageItems : 8).keys()].map((item, i) => (
-            <Placeholder Animation={Fade} key={i} style={{marginBottom: 20}}>
+            <Placeholder Animation={Fade} key={i} style={{ marginBottom: 20 }}>
               <View style={{ width: '100%' }}>
                 <PlaceholderLine height={200} style={{ marginBottom: 20, borderRadius: 25 }} />
                 <View style={{ paddingHorizontal: 10 }}>
@@ -136,6 +144,16 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
             orderType={orderState?.options?.type}
           />
         ))
+      }
+      {
+        isOpenAddressForm && (
+          <OModal open={isOpenAddressForm} onClose={() => handleCloseAddressForm()} entireModal >
+            <AddressForm
+              isSelectedAfterAdd
+              handleCloseAddressForm={() => handleCloseAddressForm()}
+            />
+          </OModal>
+        )
       }
     </ScrollView>
   )
