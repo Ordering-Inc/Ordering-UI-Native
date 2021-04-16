@@ -234,6 +234,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           <AddressForm
             isSelectedAfterAdd
             handleCloseAddressForm={() => handleCloseAddressForm()}
+            address={orderState.options?.address}
           />
         </OModal>
       )}

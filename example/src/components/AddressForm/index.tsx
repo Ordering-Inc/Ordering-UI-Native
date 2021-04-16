@@ -98,8 +98,10 @@ const AddressFormUI = (props: AddressFormParams) => {
     if (!isAddressAlreadyExist) {
       saveAddress()
       if (isGuestUser) {
-        handleCloseAddressForm()
         continueAsGuest()
+      }
+      if(!auth){
+        handleCloseAddressForm()
       }
       return
     }
