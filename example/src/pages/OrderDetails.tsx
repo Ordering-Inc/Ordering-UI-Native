@@ -17,4 +17,4 @@ const OrderDetails = ({ navigation, route } : any) => {
   )
 }
 
-export default OrderDetails
+export default OrderDetails;
