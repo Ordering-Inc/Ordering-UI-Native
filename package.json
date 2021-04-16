@@ -9,19 +9,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sergioaok/Ordering-UI-Native.git"
+    "url": "git+https://github.com/Ordering-Inc/Ordering-UI-Native.git"
   },
   "keywords": [
     "ordering",
     "ui",
     "component",
     "native",
-    "ordering-native"
+    "ordering-native",
+    "react-native"
   ],
   "author": "ordering.inc",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sergioaok/Ordering-UI-Native/issues"
+    "url": "https://github.com/Ordering-Inc/Ordering-UI-Native/issues"
   },
-  "homepage": "https://github.com/sergioaok/Ordering-UI-Native#readme"
+  "homepage": "https://github.com/Ordering-Inc/Ordering-UI-Native#readme"
 }
