@@ -1,7 +1,13 @@
 import React from 'react';
 import { SignupForm } from '../components/SignupForm';
 import { Container } from '../layouts/Container'
+import styled from 'styled-components/native';
 import { useLanguage, useSession } from 'ordering-components/native';
+import { Platform } from 'react-native';
+
+const KeyboardView = styled.KeyboardAvoidingView`
+  flex: 1;
+`;
 
 export const Signup = (props: any) => {
   const [, t] = useLanguage()
@@ -13,7 +19,6 @@ export const Signup = (props: any) => {
     loginButtonText: t('LOGIN', 'Login'),
     signupButtonText: t('SIGNUP', 'Signup'),
     useSignupByEmail: true,
-    useSignupByCellphone: true,
     onNavigationRedirect: (page: string) => {
       if (!page) return
       props.navigation.navigate(page);
@@ -28,9 +33,14 @@ export const Signup = (props: any) => {
     }
   }
   return (
-    <Container>
-      <SignupForm {...signupProps} />
-    </Container>
+    <KeyboardView
+      enabled
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <Container>
+        <SignupForm {...signupProps} />
+      </Container>
+    </KeyboardView>
   );
 };
 

@@ -104,7 +104,7 @@ const SignupFormUI = (props: SignupParams) => {
       showToast(ToastType.Error, t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.'))
       return
     }
-    if (signupTab === 'email') {
+    if (signupTab === 'email' || !useSignupByCellphone) {
       handleButtonSignupClick && handleButtonSignupClick({
         ...values,
         ...phoneInputData.phone
@@ -311,26 +311,27 @@ const SignupFormUI = (props: SignupParams) => {
             <Spinner visible />
           )}
 
-          {signupTab === 'email' ? (
-            <OButton
-              onClick={handleSubmit(onSubmit)}
-              text={signupButtonText}
-              bgColor={colors.primary}
-              borderColor={colors.primary}
-              textStyle={{color: 'white'}}
-              imgRightSrc={null}
-              isDisabled={formState.loading || validationFields.loading}
-            />
-          ) : (
+          {signupTab === 'cellphone' && useSignupByEmail && useSignupByCellphone ? (
             <OButton
               onClick={handleSubmit(onSubmit)}
               text={t('GET_VERIFY_CODE', 'Get Verify Code')}
               borderColor={colors.primary}
               imgRightSrc={null}
-              textStyle={{color: 'white'}}
+              textStyle={{ color: 'white' }}
               isLoading={isLoadingVerifyModal}
               indicatorColor={colors.white}
             />
+          ) : (
+            <OButton
+              onClick={handleSubmit(onSubmit)}
+              text={signupButtonText}
+              bgColor={colors.primary}
+              borderColor={colors.primary}
+              textStyle={{ color: 'white' }}
+              imgRightSrc={null}
+              isDisabled={formState.loading || validationFields.loading}
+            />
+
           )}
         </FormInput>
 
@@ -349,8 +350,8 @@ const SignupFormUI = (props: SignupParams) => {
 
         {configs && Object.keys(configs).length > 0 && (
           (configs?.facebook_login?.value === 'true' ||
-              configs?.facebook_login?.value === '1') &&
-              configs?.facebook_id?.value &&
+            configs?.facebook_login?.value === '1') &&
+          configs?.facebook_id?.value &&
           (
             <ButtonsSection>
               <OText size={18} color={colors.disabled}>
