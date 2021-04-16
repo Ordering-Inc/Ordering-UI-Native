@@ -18,7 +18,7 @@ import {
 import { colors } from '../../theme'
 import { OText } from '../shared'
 
-export const ProductOptionSubOptionUI = (props) => {
+export const ProductOptionSubOptionUI = (props: any) => {
   const {
     state,
     increment,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export const ProductOptionSubOption = (props) => {
+export const ProductOptionSubOption = (props: any) => {
   const productOptionSubOptionProps = {
     ...props,
     UIComponent: ProductOptionSubOptionUI

@@ -27,12 +27,12 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 
   const removeToBalance = editMode ? product?.quantity : 0
   const cart = orderState.carts[`businessId:${businessId}`]
-  const productCart = cart?.products?.find(prod => prod.id === product?.id)
+  const productCart = cart?.products?.find((prod: any) => prod.id === product?.id)
   const totalBalance = (productCart?.quantity || 0) - removeToBalance
 
   const maxCartProductConfig = (stateConfig.configs.max_product_amount ? parseInt(stateConfig.configs.max_product_amount) : 100) - totalBalance
 
-  const productBalance = (cart?.products?.reduce((sum, _product) => sum + (product && _product.id === product?.id ? _product.quantity : 0), 0) || 0) - removeToBalance
+  const productBalance = (cart?.products?.reduce((sum: any, _product: any) => sum + (product && _product.id === product?.id ? _product.quantity : 0), 0) || 0) - removeToBalance
   let maxCartProductInventory = (product?.inventoried ? product?.quantity : undefined) - productBalance
   maxCartProductInventory = !isNaN(maxCartProductInventory) ? maxCartProductInventory : maxCartProductConfig
 
@@ -51,7 +51,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
         <OText size={12} numberOfLines={2} ellipsizeMode='tail' style={styles.textStyle}>{product?.description}</OText>
         <OText color={colors.primary}>{parsePrice(product?.price)}</OText>
       </CardInfo>
-      
+
       {(isSoldOut || maxProductQuantity <= 0) && (
         <SoldOut>
           <OText weight='bold' style={styles.soldOutTextStyle}>{t('SOLD_OUT', 'SOLD OUT')}</OText>

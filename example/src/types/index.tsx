@@ -57,7 +57,7 @@ export interface AddressFormParams {
   addressesList?: any,
   saveAddress?: any,
   userCustomerSetup?: boolean,
-  isRequiredField: (field: string) => {},
+  isRequiredField?: any,
   isGuestUser?: boolean,
   useValidationFileds?: boolean,
 }

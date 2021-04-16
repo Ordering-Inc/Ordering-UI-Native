@@ -158,6 +158,22 @@ const ProfileUI = (props: ProfileParams) => {
     handleChangeInput(phoneNumber, true)
   }
 
+  const getInputRules = (field: any) => {
+    const rules: any = {
+      required: isRequiredField(field.code)
+        ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field.name} is required`)
+          .replace('_attribute_', t(field.name, field.code))
+        : null
+    }
+    if (field.code && field.code === 'email') {
+      rules.pattern = {
+        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+        message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
+      }
+    }
+    return rules
+  }
+
   useEffect(() => {
     if (validationFields?.fields?.checkout) {
       sortValidationFields();
@@ -262,15 +278,7 @@ const ProfileUI = (props: ProfileParams) => {
                   )}
                   name={field.code}
                   defaultValue={user && user[field.code]}
-                  rules={{
-                    required: isRequiredField(field.code)
-                      ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field?.name} is required`).replace('_attribute_', t(field?.name, field.code))
-                      : null,
-                    pattern: {
-                      value: field.code === 'email' ? /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i : null,
-                      message: field.code === 'email' ? t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email')) : null
-                    }
-                  }}
+                  rules={getInputRules(field)}
                 />
               )
           )}
