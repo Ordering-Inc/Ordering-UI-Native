@@ -256,12 +256,12 @@ const ProfileUI = (props: ProfileParams) => {
                         setValue(field.code, val.target.value)
                         handleChangeInput(val);
                       }}
-                      value={user[field.code]}
+                      value={user && user[field.code]}
                       autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                     />
                   )}
                   name={field.code}
-                  defaultValue={user[field.code]}
+                  defaultValue={user && user[field.code]}
                   rules={{
                     required: isRequiredField(field.code)
                       ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field?.name} is required`).replace('_attribute_', t(field?.name, field.code))
