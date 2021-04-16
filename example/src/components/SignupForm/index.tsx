@@ -245,6 +245,7 @@ const SignupFormUI = (props: SignupParams) => {
                           icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
                           value={value}
                           onChange={(val: any) => onChange(val)}
+                          autoCapitalize={field.code === 'email' ? 'none' : undefined}
                         />
                       )}
                       name={field.code}

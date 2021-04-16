@@ -43,7 +43,8 @@ export interface AddressListParams {
   setAddressList?: any;
   isGoBack?: boolean;
   route?: any;
-  actionStatus?: any
+  actionStatus?: any;
+  isFromBusinesses?: any;
 }
 
 export interface AddressFormParams {

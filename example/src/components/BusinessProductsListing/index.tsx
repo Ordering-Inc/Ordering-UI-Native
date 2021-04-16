@@ -128,7 +128,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                             size={25}
                           />
                         </TouchableOpacity>
-                        <AddressInput onPress={() => auth ? onRedirect('AddressList', { isGoBack: true }) : onRedirect('AddressForm')}>
+                        <AddressInput onPress={() => auth ? onRedirect('AddressList', { isGoBack: true, isFromBusinesses: true }) : onRedirect('AddressForm')}>
                           <OText color={colors.white} numberOfLines={1}>
                             {orderState?.options?.address?.address}
                           </OText>

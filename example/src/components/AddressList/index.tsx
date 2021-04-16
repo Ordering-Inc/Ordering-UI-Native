@@ -26,18 +26,23 @@ const AddressListUI = (props: AddressListParams) => {
     handleDelete,
     setAddressList,
     isGoBack,
-    actionStatus
+    actionStatus,
+    isFromBusinesses,
   } = props
 
   const [orderState] = useOrder()
   const [, t] = useLanguage()
 
   const onNavigatorRedirect = () => {
-    if (route && (route?.params?.isFromBusinesses || isGoBack)) {
+    if (route && (isFromBusinesses || isGoBack)) {
       isGoBack ? navigation.goBack() : onNavigationRedirect('BottomTab')
-    } else if (route && route?.params?.isFromCheckout) {
-      onNavigationRedirect('CheckoutPage')
+      return
     }
+    if (route && route?.params?.isFromCheckout) {
+      onNavigationRedirect('CheckoutPage')
+      return
+    }
+    onNavigationRedirect('BottomTab')
   }
 
   const uniqueAddressesList = (addressList.addresses && addressList.addresses.filter(
@@ -113,136 +118,138 @@ const AddressListUI = (props: AddressListParams) => {
 
   return (
     <Container nopadding={nopadding}>
-      <Spinner visible={actionStatus.loading || orderState.loading}/>
-      <AddressListContainer>
-        {isFromProfile && (
-          <OText size={24} mBottom={20}>{t('SAVED_PLACES', 'My saved places')}</OText>
-        )}
-        {
-          route &&
-          (route?.params?.isFromBusinesses ||
-            route?.params?.isFromCheckout) &&
-          !isFromProfile &&
-          (
-            <NavBar
-              title={t('ADDRESS_LIST', 'Address List')}
-              titleAlign={'center'}
-              onActionLeft={() => goToBack()}
-              showCall={false}
-              btnStyle={{ paddingLeft: 0 }}
-              paddingTop={0}
-            />
+      <Spinner visible={actionStatus.loading || orderState.loading || (addressList.loading && (!isFromBusinesses && !isFromProfile) )} />
+      {(!addressList.loading || (isFromBusinesses || isFromProfile)) && (
+        <AddressListContainer>
+          {isFromProfile && (
+            <OText size={24} mBottom={20}>{t('SAVED_PLACES', 'My saved places')}</OText>
           )}
-        {addressList.loading && (
-          <>
-            {[...Array(5)].map((item, i) => (
-              <Placeholder key={i} style={{ padding: 20 }} Animation={Fade}>
-                <View style={{ flexDirection: 'row' }}>
-                  <PlaceholderLine width={20} height={60} style={{ marginBottom: 0, marginRight: 15 }} />
-                  <Placeholder>
-                    <PlaceholderLine width={70} />
-                    <PlaceholderLine width={40} />
-                    <PlaceholderLine width={70} />
-                  </Placeholder>
-                </View>
-              </Placeholder>
-            ))}
-          </>
-        )}
-        {
-          !addressList.error &&
-          addressList?.addresses?.length > 0 && (
+          {
+            route &&
+            (route?.params?.isFromBusinesses ||
+              route?.params?.isFromCheckout) &&
+            !isFromProfile &&
+            (
+              <NavBar
+                title={t('ADDRESS_LIST', 'Address List')}
+                titleAlign={'center'}
+                onActionLeft={() => goToBack()}
+                showCall={false}
+                btnStyle={{ paddingLeft: 0 }}
+                paddingTop={0}
+              />
+            )}
+          {addressList.loading && (
             <>
-              {uniqueAddressesList.map((address: any) => (
-                <AddressItem
-                  key={address.id}
-                  isSelected={checkAddress(address)}
-                  onPress={() => handleSetAddress(address)}
-                >
-                  <MaterialIcon
-                    name={addressIcon(address?.tag)}
-                    size={32}
-                    color={colors.primary}
-                    style={styles.icon}
-                  />
-                  <OText style={styles.address}>{address.address}</OText>
-                  <MaterialIcon
-                    name='pencil-outline'
-                    size={28}
-                    color={colors.green}
-                    onPress={() => onNavigationRedirect(
-                      'AddressForm', {
-                      address: address,
-                      isEditing: true,
-                      addressList: addressList,
-                      onSaveAddress: handleSaveAddress
-                    }
-                    )}
-                  />
-                  <OAlert
-                    title={t('DELETE_ADDRESS', 'Delete Address')}
-                    message={t('QUESTION_DELETE_ADDRESS', 'Are you sure to you wants delete the selected address')}
-                    onAccept={() => handleDelete(address)}
-                    disabled={checkAddress(address)}
-                  >
-                    <MaterialIcon
-                      name='trash-can-outline'
-                      size={28}
-                      color={!checkAddress(address) ? colors.primary : colors.disabled}
-                    />
-                  </OAlert>
-                </AddressItem>
+              {[...Array(5)].map((item, i) => (
+                <Placeholder key={i} style={{ padding: 20 }} Animation={Fade}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <PlaceholderLine width={20} height={60} style={{ marginBottom: 0, marginRight: 15 }} />
+                    <Placeholder>
+                      <PlaceholderLine width={70} />
+                      <PlaceholderLine width={40} />
+                      <PlaceholderLine width={70} />
+                    </Placeholder>
+                  </View>
+                </Placeholder>
               ))}
             </>
           )}
-        {!addressList.loading && addressList.error && (
-          addressList.error.length > 0 && (
-            <NotFoundSource
-              content={
-                addressList.error[0]?.message ||
-                addressList.error[0] ||
-                t('NETWORK_ERROR', 'Network Error, please reload the app')
-              }
-            />
-          )
-        )}
-        {!addressList.loading && !addressList.error && (
-          <>
-            {!(
-              route && (route?.params?.isFromBusinesses || route?.params?.isFromCheckout)
-            ) && !isFromProfile && (
-              <OText size={24}>
-                {t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}
-              </OText>
+          {
+            !addressList.error &&
+            addressList?.addresses?.length > 0 && (
+              <>
+                {uniqueAddressesList.map((address: any) => (
+                  <AddressItem
+                    key={address.id}
+                    isSelected={checkAddress(address)}
+                    onPress={() => handleSetAddress(address)}
+                  >
+                    <MaterialIcon
+                      name={addressIcon(address?.tag)}
+                      size={32}
+                      color={colors.primary}
+                      style={styles.icon}
+                    />
+                    <OText style={styles.address}>{address.address}</OText>
+                    <MaterialIcon
+                      name='pencil-outline'
+                      size={28}
+                      color={colors.green}
+                      onPress={() => onNavigationRedirect(
+                        'AddressForm', {
+                        address: address,
+                        isEditing: true,
+                        addressList: addressList,
+                        onSaveAddress: handleSaveAddress
+                      }
+                      )}
+                    />
+                    <OAlert
+                      title={t('DELETE_ADDRESS', 'Delete Address')}
+                      message={t('QUESTION_DELETE_ADDRESS', 'Are you sure to you wants delete the selected address')}
+                      onAccept={() => handleDelete(address)}
+                      disabled={checkAddress(address)}
+                    >
+                      <MaterialIcon
+                        name='trash-can-outline'
+                        size={28}
+                        color={!checkAddress(address) ? colors.primary : colors.disabled}
+                      />
+                    </OAlert>
+                  </AddressItem>
+                ))}
+              </>
             )}
+          {!addressList.loading && addressList.error && (
+            addressList.error.length > 0 && (
+              <NotFoundSource
+                content={
+                  addressList.error[0]?.message ||
+                  addressList.error[0] ||
+                  t('NETWORK_ERROR', 'Network Error, please reload the app')
+                }
+              />
+            )
+          )}
+          {!addressList.loading && !addressList.error && (
+            <>
+              {!(
+                route && (route?.params?.isFromBusinesses || route?.params?.isFromCheckout)
+              ) && !isFromProfile && (
+                  <OText size={24}>
+                    {t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}
+                  </OText>
+                )}
+              <OButton
+                text={t('ADD_NEW_ADDRESS', 'Add new Address')}
+                imgRightSrc=''
+                imgLeftSrc={addIcon}
+                bgColor={colors.white}
+                imgLeftStyle={styles.buttonIcon}
+                style={styles.button}
+                borderColor={colors.primary}
+                onClick={() => onNavigationRedirect(
+                  'AddressForm', {
+                  address: null,
+                  nopadding: true,
+                  addressList: addressList?.addresses,
+                  onSaveAddress: handleSaveAddress
+                }
+                )}
+              />
+            </>
+          )}
+          {!isFromProfile && addressList?.addresses?.length > 0 && (
             <OButton
-              text={t('ADD_NEW_ADDRESS', 'Add new Address')}
-              imgRightSrc=''
-              imgLeftSrc={addIcon}
-              bgColor={colors.white}
-              imgLeftStyle={styles.buttonIcon}
+              text={t('CONTINUE', 'Continue')}
               style={styles.button}
-              borderColor={colors.primary}
-              onClick={() => onNavigationRedirect(
-                'AddressForm', {
-                address: null,
-                nopadding: true,
-                addressList: addressList?.addresses,
-                onSaveAddress: handleSaveAddress
-              }
-              )}
+              onClick={() => onNavigatorRedirect()}
+              textStyle={{ color: colors.white }}
             />
-          </>
-        )}
-        {!isFromProfile && addressList?.addresses?.length > 0 && (
-          <OButton
-            text={t('CONTINUE', 'Continue')}
-            style={styles.button}
-            onClick={() => onNavigatorRedirect()}
-            textStyle={{ color: colors.white }}
-          />
-        )}
-      </AddressListContainer>
+          )}
+        </AddressListContainer>
+      )}
     </Container>
   )
 }
