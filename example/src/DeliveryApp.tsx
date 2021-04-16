@@ -7,6 +7,7 @@
  */
 
 import * as React from 'react';
+import * as Sentry from "@sentry/react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { ToastProvider, ToastType, useToast } from './providers/ToastProvider';
 import { Toast } from './components/shared/OToast';
@@ -27,6 +28,10 @@ const configFile = {
     url: 'https://socket.ordering.co'
   }
 }
+
+Sentry.init({
+  dsn: "https://90197fffe6a1431b8c3eb79e1e36f0ee@o460529.ingest.sentry.io/5722123",
+});
 
 const DeliveryApp = () => {
   return (
