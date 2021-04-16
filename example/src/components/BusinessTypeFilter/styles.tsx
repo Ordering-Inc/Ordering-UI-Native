@@ -1,4 +1,5 @@
 import styled from 'styled-components/native'
+import { colors } from '../../theme'
 
 export const BusinessCategoriesTitle = styled.View`
   flex: 1;
@@ -8,10 +9,23 @@ export const BusinessCategoriesTitle = styled.View`
 
 export const BusinessCategories = styled.View`
   flex: 1;
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-vertical: 10px;
+  margin: 10px 0px;
+  width: 100%;
 `
 export const Category = styled.View`
-  align-items: center
+  flex-direction: column;
+  align-content: stretch;
+  width: 18%;
+`
+
+export const IconContainer = styled.View`
+  border-width: 1px;
+  display: flex;
+  border-color: ${colors.backgroundGray};
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
 `

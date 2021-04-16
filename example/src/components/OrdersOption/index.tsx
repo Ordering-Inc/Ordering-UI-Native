@@ -99,7 +99,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {(orders.length > 0) && (
         <>
           <OptionTitle>
-            <OText color={colors.textSecondary} mBottom={10} >
+            <OText size={16} color={colors.textSecondary} mBottom={10} >
               {titleContent || (activeOrders
                 ? t('ACTIVE_ORDERS', 'Active Orders')
                 : t('PREVIOUS_ORDERS', 'Previous Orders'))}

@@ -1,27 +1,125 @@
 import React from 'react'
 import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 'ordering-components/native'
-import { BusinessCategoriesTitle, BusinessCategories, Category } from './styles'
+import { BusinessCategoriesTitle, BusinessCategories, Category, IconContainer } from './styles'
 import { OText } from '../shared'
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { colors } from '../../theme'
 import { BusinessTypeFilterParams } from '../../types'
 
 export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
-  const { businessTypes, handleChangeBusinessType, currentTypeSelected } = props
-  const [, t] = useLanguage()
+  const {
+    businessTypes,
+    handleChangeBusinessType,
+    currentTypeSelected
+  } = props;
+
+  const [, t] = useLanguage();
+
+  const categoryIcons = (category: any) => {
+    switch (category.key) {
+      case 'All':
+        return (
+          <MaterialIcon
+            name='view-grid-plus-outline'
+            size={40}
+            style={{
+              ...styles.icons,
+              color: currentTypeSelected === category.value
+                ? colors.primaryContrast
+                : colors.backgroundGray
+            }}
+            onPress={() => handleChangeBusinessType(category.value)}
+          />
+        )
+      case 'Food':
+        return (
+          <Ionicons
+            name='fast-food-outline'
+            size={40}
+            style={{
+              ...styles.icons,
+              color: currentTypeSelected === category.value
+                ? colors.primaryContrast
+                : colors.backgroundGray
+            }}
+            onPress={() => handleChangeBusinessType(category.value)}
+          />
+        )
+      case 'Groceries':
+        return (
+          <MaterialIcon
+            name='baguette'
+            size={40}
+            style={{
+              ...styles.icons,
+              color: currentTypeSelected === category.value
+                ? colors.primaryContrast
+                : colors.backgroundGray
+            }}
+            onPress={() => handleChangeBusinessType(category.value)}
+          />
+        )
+      case 'Laundry':
+        return (
+          <MaterialIcon
+            name='washing-machine'
+            size={40}
+            style={{
+              ...styles.icons,
+              color: currentTypeSelected === category.value
+                ? colors.primaryContrast
+                : colors.backgroundGray
+            }}
+            onPress={() => handleChangeBusinessType(category.value)}
+          />
+        )
+      case 'Alcohol':
+        return (
+          <MaterialIcon
+            name='glass-wine'
+            size={40}
+            style={{
+              ...styles.icons,
+              color: currentTypeSelected === category.value
+                ? colors.primaryContrast
+                : colors.backgroundGray
+            }}
+            onPress={() => handleChangeBusinessType(category.value)}
+          />
+        )
+    }
+  }
+
   return (
     <>
       <BusinessCategoriesTitle>
-        <OText color={colors.textSecondary}>{t('BUSINESS_CATEGORIES', 'Business Categories')}</OText>
+        <OText
+          size={16}
+          color={colors.textSecondary}
+        >
+          {t('BUSINESS_CATEGORIES', 'Business Categories')}
+        </OText>
       </BusinessCategoriesTitle>
       <BusinessCategories>
         {businessTypes?.map((category: any) => (
-          <Category key={category.key}>
-            <View style={{ ...styles.iconContainer, backgroundColor: currentTypeSelected === category.value ? colors.primary : colors.primaryContrast }}>
-              <MaterialIcon name={category.icon} size={50} style={{ ...styles.icons, color: currentTypeSelected === category.value ? colors.primaryContrast : colors.backgroundGray }} onPress={() => handleChangeBusinessType(category.value)} />
-            </View>
-            <OText color={currentTypeSelected === category.value ? colors.btnFont : colors.textSecondary}>{t(`BUSINESS_TYPE_${category.value ? category.value.toUpperCase() : 'ALL'}`, category.key)}</OText>
+          <Category key={category.key} >
+            <IconContainer
+              style={{
+                backgroundColor: currentTypeSelected === category.value
+                  ? colors.primary
+                  : colors.primaryContrast
+              }}
+            >
+              {categoryIcons(category)}
+            </IconContainer>
+            <OText
+              style={{ textAlign: 'center' }}
+              color={currentTypeSelected === category.value ? colors.btnFont : colors.textSecondary}
+            >
+              {t(`BUSINESS_TYPE_${category.value ? category.value.toUpperCase() : 'ALL'}`, category.key)}
+            </OText>
           </Category>
         ))}
       </BusinessCategories>
@@ -31,16 +129,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 
 const styles = StyleSheet.create({
   icons: {
-    borderRadius: 20,
-    height: 60,
-    padding: 5
-  },
-  iconContainer: {
-    borderWidth: 1,
-    borderColor: colors.backgroundGray,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
+    padding: 10
   },
 })
 
@@ -49,11 +138,11 @@ export const BusinessTypeFilter = (props: BusinessTypeFilterParams) => {
     ...props,
     UIComponent: BusinessTypeFilterUI,
     businessTypes: props.businessTypes || [
-      { key: 'All', value: null, icon: 'view-grid-plus-outline' },
-      { key: 'Food', value: 'food', icon: 'food', },
-      { key: 'Groceries', value: 'groceries', icon: 'fruit-watermelon' },
-      { key: 'Laundry', value: 'laundry', icon: 'washing-machine' },
-      { key: 'Alcohol', value: 'alcohol', icon: 'glass-wine' },
+      { key: 'All', value: null },
+      { key: 'Food', value: 'food' },
+      { key: 'Groceries', value: 'groceries' },
+      { key: 'Laundry', value: 'laundry' },
+      { key: 'Alcohol', value: 'alcohol' },
     ],
     defaultBusinessType: props.defaultBusinessType || null,
     onChangeBusinessType: props.handleChangeBusinessType

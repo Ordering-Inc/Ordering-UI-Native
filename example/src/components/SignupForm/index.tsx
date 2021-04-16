@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import { FacebookLogin } from '../FacebookLogin'
@@ -63,6 +64,7 @@ const SignupFormUI = (props: SignupParams) => {
   const [{ configs }] = useConfig();
   const { control, handleSubmit, errors } = useForm();
 
+  const [passwordSee, setPasswordSee] = useState(false);
   const [formValues, setFormValues] = useState(null)
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
@@ -82,6 +84,11 @@ const SignupFormUI = (props: SignupParams) => {
       token: user.session.access_token
     })
     navigation.navigate('Home');
+  }
+
+  const handleChangeTab = (val: string) => {
+    setSignupTab(val);
+    setPasswordSee(false);
   }
 
   const onSubmit = (values: any) => {
@@ -203,11 +210,14 @@ const SignupFormUI = (props: SignupParams) => {
         btnStyle={{ paddingLeft: 0 }}
       />
       <FormSide>
-        {useSignupByEmail && useSignupByCellphone && (
-          <SignupWith>
+        {useSignupByEmail && useSignupByCellphone &&
+          configs && Object.keys(configs).length > 0 &&
+            (configs?.twilio_service_enabled?.value === 'true' ||
+              configs?.twilio_service_enabled?.value === '1') && (
+          <SignupWith style={{ paddingBottom: 25 }}>
             <OTabs>
               {useSignupByEmail && (
-                <Pressable onPress={() => setSignupTab('email')}>
+                <Pressable onPress={() => handleChangeTab('email')}>
                   <OTab>
                     <OText size={18} color={signupTab === 'email' ? colors.primary : colors.disabled}>
                       {t('SIGNUP_BY_EMAIL', 'Signup by Email')}
@@ -216,7 +226,7 @@ const SignupFormUI = (props: SignupParams) => {
                 </Pressable>
               )}
               {useSignupByCellphone && (
-                <Pressable onPress={() => setSignupTab('cellphone')}>
+                <Pressable onPress={() => handleChangeTab('cellphone')}>
                   <OTab>
                     <OText size={18} color={signupTab === 'cellphone' ? colors.primary : colors.disabled}>
                       {t('SIGNUP_BY_PHONE', 'Signup by Phone')}
@@ -234,25 +244,26 @@ const SignupFormUI = (props: SignupParams) => {
                 validationFields?.fields?.checkout &&
                 Object.values(validationFields?.fields?.checkout).map(
                   (field: any) => !notValidationFields.includes(field.code) && (
-                    showField(field.code) && (
-                      <Controller
-                        key={field.id}
-                        control={control}
-                        render={({ onChange, value }) => (
-                          <OInput
-                            placeholder={t(field.name)}
-                            style={style.inputStyle}
-                            icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
-                            value={value}
-                            onChange={(val: any) => onChange(val)}
-                          />
-                        )}
-                        name={field.code}
-                        rules={getInputRules(field)}
-                        defaultValue=""
-                      />
-                    )
-                  ))
+                  showField(field.code) && (
+                    <Controller
+                      key={field.id}
+                      control={control}
+                      render={({ onChange, value }) => (
+                        <OInput
+                          placeholder={t(field.name)}
+                          style={style.inputStyle}
+                          icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
+                          value={value}
+                          onChange={(val: any) => onChange(val)}
+                          autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
+                        />
+                      )}
+                      name={field.code}
+                      rules={getInputRules(field)}
+                      defaultValue=""
+                    />
+                  )
+                ))
               }
 
               {!!showInputPhoneNumber && (
@@ -262,33 +273,39 @@ const SignupFormUI = (props: SignupParams) => {
                 />
               )}
 
-              <Controller
-                control={control}
-                render={({ onChange, value }) => (
-                  <OInput
-                    isSecured={true}
-                    placeholder={'Password'}
-                    style={style.inputStyle}
-                    icon={IMAGES.lock}
-                    value={value}
-                    onChange={(val: any) => onChange(val)}
-                  />
-                )}
-                name="password"
-                rules={{
-                  required: isRequiredField('password')
-                    ? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required')
-                      .replace('_attribute_', t('PASSWORD', 'password'))
-                    : null,
-                  minLength: {
-                    value: 8,
-                    message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.')
-                      .replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
-                  }
-                }}
-                defaultValue=""
-              />
-
+              {signupTab !== 'cellphone' && (
+                <Controller
+                  control={control}
+                  render={({ onChange, value }) => (
+                    <OInput
+                      isSecured={!passwordSee ? true : false}
+                      placeholder={'Password'}
+                      style={style.inputStyle}
+                      icon={IMAGES.lock}
+                      iconCustomRight={
+                        !passwordSee ?
+                          <MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
+                          <MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
+                      }
+                      value={value}
+                      onChange={(val: any) => onChange(val)}
+                    />
+                  )}
+                  name="password"
+                  rules={{
+                    required: isRequiredField('password')
+                      ? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required')
+                        .replace('_attribute_', t('PASSWORD', 'password'))
+                      : null,
+                    minLength: {
+                      value: 8,
+                      message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.')
+                        .replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
+                    }
+                  }}
+                  defaultValue=""
+                />
+              )}
             </>
           ) : (
             <Spinner visible />

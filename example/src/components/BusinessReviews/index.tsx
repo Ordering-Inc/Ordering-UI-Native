@@ -17,7 +17,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { GrayBackground } from '../BusinessInformation/styles'
 import { BusinessReviewsParams } from '../../types'
 
-const Score = ({ star, text }) => (
+const Score = ({ star, text }: any) => (
   <ScoreView>
     <View style={styles.reviewScoreStyle}>
       <IconAntDesign
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export const BusinessReviews = (props) => {
+export const BusinessReviews = (props: any) => {
   const BusinessReviewProps = {
     ...props,
     UIComponent: BusinessReviewsUI
