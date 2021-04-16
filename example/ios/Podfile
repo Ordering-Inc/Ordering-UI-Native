@@ -18,6 +18,8 @@ target 'delivery' do
 
   pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
+  pod 'RNSentry', :path => '../node_modules/@sentry/react-native'
+
   target 'deliveryTests' do
     inherit! :complete
     # Pods for testing

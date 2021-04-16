@@ -16,41 +16,50 @@ export const Home = (props: any) => {
   const [, t] = useLanguage();
 
   return (
-    <View style={{ width: '100%' }}>
-      <LogoWrapper>
-        <OIcon src={applogo} style={styles.logo} />
-      </LogoWrapper>
-      <Slogan>
-        <OIcon src={sloganImage} style={styles.slogan} />
-      </Slogan>
-      <OButton
-        text={t('LOGIN_NOW', 'Login now')}
-        bgColor={colors.primary}
-        borderColor={colors.primary}
-        style={styles.buttons}
-        textStyle={{ color: 'white' }}
-        onClick={() => onNavigationRedirect('Login')}
-      />
-      <OButton
-        text={t('SIGNUP', 'Signup')}
-        bgColor={colors.white}
-        borderColor={colors.primary}
-        style={styles.buttons}
-        onClick={() => onNavigationRedirect('Signup')}
-      />
-      <OButton
-        text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
-        bgColor={colors.primary}
-        borderColor={colors.primary}
-        style={{ ...styles.buttons, marginTop: 40 }}
-        textStyle={{ color: 'white' }}
-        onClick={() => onNavigationRedirect('AddressForm', { isGuestUser: true })}
-      />
+    <View style={styles.container}>
+      <View style={styles.wrapperContent}>
+        <LogoWrapper>
+          <OIcon src={applogo} style={styles.logo} />
+        </LogoWrapper>
+        <Slogan>
+          <OIcon src={sloganImage} style={styles.slogan} />
+        </Slogan>
+      </View>
+      <View style={styles.wrapperBtn}>
+        <OButton
+          text={t('LOGIN_NOW', 'Login now')}
+          bgColor={colors.primary}
+          borderColor={colors.primary}
+          style={styles.buttons}
+          textStyle={{ color: 'white' }}
+          onClick={() => onNavigationRedirect('Login')}
+        />
+        <OButton
+          text={t('SIGNUP', 'Signup')}
+          bgColor={colors.white}
+          borderColor={colors.primary}
+          style={styles.buttons}
+          onClick={() => onNavigationRedirect('Signup')}
+        />
+        <OButton
+          text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
+          bgColor={colors.primary}
+          borderColor={colors.primary}
+          style={styles.buttons}
+          textStyle={{ color: 'white' }}
+          onClick={() => onNavigationRedirect('AddressForm', { isGuestUser: true })}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   logo: {
     height: 80,
     width: 250,
@@ -66,5 +75,14 @@ const styles = StyleSheet.create({
   },
   sloganText: {
     textAlign: 'center'
+  },
+  wrapperContent: {
+    marginTop: 20
+  },
+  wrapperBtn: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    marginBottom: 5
   }
 });

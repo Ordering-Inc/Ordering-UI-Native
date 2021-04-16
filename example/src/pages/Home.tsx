@@ -23,6 +23,7 @@ export const Home = ({navigation}: any) => {
 
 const styles = StyleSheet.create({
   wrapper: {
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
