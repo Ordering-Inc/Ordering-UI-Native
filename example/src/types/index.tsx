@@ -89,7 +89,7 @@ export interface PhoneInputParams {
 }
 
 export interface LanguageSelectorParams {
-  languagesState?: Array<any>;
+  languagesState?: any;
   currentLanguage?: string;
   handleChangeLanguage?: any;
 }
@@ -105,7 +105,7 @@ export interface BusinessesListingParams {
 }
 export interface BusinessTypeFilterParams {
   businessTypes?: Array<any>;
-  handleChangeBusinessType: () => void;
+  handleChangeBusinessType: any;
   currentTypeSelected?: string | null;
   defaultBusinessType?: string | null;
 }
@@ -190,13 +190,13 @@ export interface NotFoundSourceParams {
   children?: any
 }
 export interface OrdersOptionParams {
-  orderList: { loading: boolean, error: Array<any> | string | null, orders: Array<any> },
+  orderList?: any,
   activeOrders?: boolean,
   pagination?: any,
   titleContent?: string,
   customArray?: Array<any>,
   loadMoreOrders?: () => {},
-  onNavigationRedirect?: (route: string, params?: any) => {},
+  onNavigationRedirect?: any,
 }
 export interface ActiveOrdersParams {
   orders?: any,
@@ -226,8 +226,8 @@ export interface OrderDetailsParams {
   handleOrderRedirect?: () => {},
   setMessages?: () => {},
   readMessages?: () => {},
-  isFromCheckout: boolean,
-  driverLocation: any,
+  isFromCheckout?: boolean,
+  driverLocation?: any,
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean,
@@ -241,12 +241,12 @@ export interface ProductItemAccordionParams {
 }
 export interface ReviewOrderParams {
   order?: { orderId: number, businessId: number, logo: string },
-  stars: any,
-  handleChangeInput: (val: string) => {},
-  handleChangeRating: ({target: { name: string, value: number }} : {target: {name: string, value: number}}) => {},
-  handleSendReview: () => {},
-  formState: {loading: false, result: string | Array<string>, error: boolean},
-  navigation: any
+  stars?: any,
+  handleChangeInput?: any,
+  handleChangeRating?: any,
+  handleSendReview?: any,
+  formState?: any,
+  navigation?: any
 }
 export interface MessagesParams {
   type?: string,
