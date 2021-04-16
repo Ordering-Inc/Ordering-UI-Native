@@ -23,7 +23,8 @@ export const getTraduction = (key: string) => {
     ERROR_NOT_FOUND_BUSINESSES: 'No businesses found near your location',
     YOU_DO_NOT_HAVE_PERMISSION: 'You do not have permission',
     INVALID_CODE: 'Invalid verify code',
-    STRIPE_ERROR: 'Payment service error. Try again later.'
+    STRIPE_ERROR: 'Payment service error. Try again later.',
+    ERROR_AUTH_TWILIO_DISABLED: 'Auth error, twilio is disabled'
   }
 
   return keyList[key] ? t(key, keyList[key]) : t(key)

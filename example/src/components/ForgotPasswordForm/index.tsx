@@ -90,6 +90,7 @@ const ForgotPasswordUI = (props: any) => {
               icon={IMAGES.email}
               value={value}
               onChange={(val: any) => onChange(val)}
+              autoCapitalize='none'
             />
           )}
           name="email"
