@@ -38,14 +38,16 @@ const AddressListUI = (props: AddressListParams) => {
 
   const onNavigatorRedirect = () => {
     if (route && (isFromBusinesses || isGoBack)) {
-      isGoBack ? navigation.goBack() : onNavigationRedirect('BottomTab')
+      isGoBack ? goToBack() : onNavigationRedirect('BottomTab')
       return
     }
     if (route && route?.params?.isFromCheckout) {
       onNavigationRedirect('CheckoutPage')
       return
     }
-    onNavigationRedirect('BottomTab')
+    if(orderState.options?.address?.location){
+      onNavigationRedirect('BottomTab')
+    }
   }
 
   const uniqueAddressesList = (addressList.addresses && addressList.addresses.filter(
@@ -115,7 +117,6 @@ const AddressListUI = (props: AddressListParams) => {
       addresses
     })
     handleCloseAddressForm()
-
   }
 
   const handleSetAddressFormProps = (addressFormProps: any) => {
@@ -135,6 +136,12 @@ const AddressListUI = (props: AddressListParams) => {
       setIsOpenAddressForm(true)
     }
   }, [addressFormProps])
+
+  useEffect(() => {
+    if (orderState.loading) {
+      onNavigatorRedirect()
+    }
+  }, [orderState.options.address])
 
   return (
     <Container nopadding={nopadding}>
