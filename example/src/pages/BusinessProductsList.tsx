@@ -4,7 +4,7 @@ import { BusinessProductsListing as BusinessProductsListController } from '../co
 import styled from 'styled-components/native'
 import { colors } from '../theme'
 
-const BusinessProductsList = (props) => {
+const BusinessProductsList = (props: any) => {
   const { store } = props.route.params
   const [ordering] = useApi()
 
@@ -46,8 +46,8 @@ const BusinessProductsList = (props) => {
     handleSearchRedirect: () => {
       props.navigation.navigate('BusinessList')
     },
-    onProductRedirect: ({ slug, category, product }) => {},
-    onCheckoutRedirect: (cartUuid) => {}
+    onProductRedirect: ({ slug, category, product }: any) => {},
+    onCheckoutRedirect: (cartUuid: any) => {}
   }
   return (
     <BusinessProductsListView>

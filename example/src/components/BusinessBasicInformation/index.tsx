@@ -35,12 +35,12 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
   const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
   const [openBusinessReviews, setOpenBusinessReviews] = useState(false)
   const getBusinessType = () => {
-    if (Object.keys(business).length <= 0) return 'none'
-    const typeObj = types.map(t => {
-      return { [t]: business[t] }
-    }).reduce((r, c) => ({ ...r, ...c }), {})
-    const businessType = Object.entries(typeObj).reduce((a, [k, v]) => v !== false ? [...a, [k, v]] : a, [])[0]
-    return businessType[0]
+    if (Object.keys(business).length <= 0) return t('GENERAL', 'General')
+    const _types: any = []
+    types.forEach(type => business[type] && _types.push(
+      t(`BUSINESS_TYPE_${type?.replace(/\s/g, '_')?.toUpperCase()}`, type)
+    ))
+    return _types.join(', ')
   }
   return (
     <BusinessContainer>
