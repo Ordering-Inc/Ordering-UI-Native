@@ -15,7 +15,7 @@ const AccordionStyled = styled.TouchableOpacity`
   align-items: center;
 `
 
-export const Accordion = (props) => {
+export const Accordion = (props: any) => {
   const style : any = {}
   if (!props.isValid) {
     style.opacity = '0.5'

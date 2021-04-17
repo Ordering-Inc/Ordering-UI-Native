@@ -7,7 +7,7 @@ import { View } from 'react-native'
 import { OText } from '../shared'
 import { colors } from '../../theme'
 
-const ProductIngredientUI = (props) => {
+const ProductIngredientUI = (props: any) => {
   const {
     state,
     ingredient,
@@ -30,7 +30,7 @@ const ProductIngredientUI = (props) => {
   )
 }
 
-export const ProductIngredient = (props) => {
+export const ProductIngredient = (props: any) => {
   const productIngredientProps = {
     ...props,
     UIComponent: ProductIngredientUI

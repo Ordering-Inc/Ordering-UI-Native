@@ -16,7 +16,6 @@ import {
 import { StyleSheet } from 'react-native'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { BusinessInformationParams } from '../../types'
-import OrderMap from '../OrderMap'
 import { GoogleMap } from '../GoogleMap'
 const BusinessInformationUI = (props: BusinessInformationParams) => {
   const {
