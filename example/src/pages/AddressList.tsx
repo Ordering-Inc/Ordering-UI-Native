@@ -7,12 +7,14 @@ const AddressList = ({ route, navigation }: any) => {
   const [{ user }] = useSession()
   const isGoBack = route?.params?.isGoBack
   const isFromBusinesses = route?.params?.isFromBusinesses
+  const isFromProductsList = route?.params?.isFromProductsList
   const AddressListProps = {
     navigation,
     route,
     userId: user?.id,
     isGoBack,
-    isFromBusinesses
+    isFromBusinesses,
+    isFromProductsList
   }
 
   return (

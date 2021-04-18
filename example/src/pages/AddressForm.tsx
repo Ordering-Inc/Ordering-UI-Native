@@ -19,6 +19,8 @@ const AddressForm = ({navigation,route}: any) => {
     onSaveAddress: route?.params?.onSaveAddress,
     isSelectedAfterAdd: true,
     isGuestUser: route?.params?.isGuestUser,
+    isFromBusinesses: route?.params?.isFromBusinesses,
+    isFromProductsList: route?.params?.isFromProductsList
   }
 
   return (

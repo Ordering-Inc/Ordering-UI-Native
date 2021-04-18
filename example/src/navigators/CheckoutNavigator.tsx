@@ -46,6 +46,11 @@ const CheckoutNavigator = (props: any) => {
         component={AddressList}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="AddressForm"
+        component={AddressForm}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }

@@ -14,7 +14,6 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import NavBar from '../NavBar'
 import { OrderTypeSelector } from '../OrderTypeSelector'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
-import { AddressForm } from '../AddressForm'
 const PIXELS_TO_SCROLL = 1000
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
@@ -93,7 +92,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         <AddressInput
           onPress={() => auth
             ? navigation.navigate('AddressList', { isFromBusinesses: true })
-            : setIsOpenAddressForm(true)}
+            : navigation.navigate('AddressForm', { address: orderState.options?.address,isFromBusinesses: true  })}
         >
           <MaterialComIcon
             name='home-outline'
@@ -144,17 +143,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
             orderType={orderState?.options?.type}
           />
         ))
-      }
-      {
-        isOpenAddressForm && (
-          <OModal open={isOpenAddressForm} onClose={() => handleCloseAddressForm()} entireModal >
-            <AddressForm
-              isSelectedAfterAdd
-              handleCloseAddressForm={() => handleCloseAddressForm()}
-              address={orderState.options?.address}
-            />
-          </OModal>
-        )
       }
     </ScrollView>
   )

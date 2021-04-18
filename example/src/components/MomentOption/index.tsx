@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export const MomentOption = (props) => {
+export const MomentOption = (props: any) => {
   const momentOptionProps = {
     ...props,
     UIComponent: MomentOptionUI

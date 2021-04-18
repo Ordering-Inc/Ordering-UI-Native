@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { AddressList as AddressListController, useLanguage, useOrder } from 'ordering-components/native'
+import { AddressList as AddressListController, useLanguage, useOrder, useSession } from 'ordering-components/native'
 import { AddressListContainer, AddressItem } from './styles'
 import { StyleSheet, View } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
@@ -11,7 +11,6 @@ import { AddressFormParams, AddressListParams } from '../../types'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
-import { AddressForm } from '../AddressForm'
 
 const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
 
@@ -29,12 +28,12 @@ const AddressListUI = (props: AddressListParams) => {
     isGoBack,
     actionStatus,
     isFromBusinesses,
+    isFromProductsList
   } = props
 
   const [orderState] = useOrder()
   const [, t] = useLanguage()
-  const [isOpenAddressForm, setIsOpenAddressForm] = useState(false)
-  const [addressFormProps, setAddressFormProps] = useState<AddressFormParams>({ address: null, isEditing: false, addressesList: [], isSelectedAfterAdd: true, handleCloseAddressForm: null })
+  const [{ auth }] = useSession()
 
   const onNavigatorRedirect = () => {
     if (route && (isFromBusinesses || isGoBack)) {
@@ -45,9 +44,8 @@ const AddressListUI = (props: AddressListParams) => {
       onNavigationRedirect('CheckoutPage')
       return
     }
-    if(orderState.options?.address?.location){
-      onNavigationRedirect('BottomTab')
-    }
+    onNavigationRedirect('BottomTab')
+
   }
 
   const uniqueAddressesList = (addressList.addresses && addressList.addresses.filter(
@@ -116,29 +114,13 @@ const AddressListUI = (props: AddressListParams) => {
       ...addressList,
       addresses
     })
-    handleCloseAddressForm()
-  }
-
-  const handleSetAddressFormProps = (addressFormProps: any) => {
-    setAddressFormProps(addressFormProps)
-  }
-
-  const handleCloseAddressForm = () => {
-    setIsOpenAddressForm(false)
-    setAddressFormProps({ address: null, isEditing: false, addressesList: [], onSaveAddress: null, isSelectedAfterAdd: true, handleCloseAddressForm: null })
   }
 
   const goToBack = () => navigation.goBack()
   const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
 
   useEffect(() => {
-    if (addressFormProps.onSaveAddress) {
-      setIsOpenAddressForm(true)
-    }
-  }, [addressFormProps])
-
-  useEffect(() => {
-    if (orderState.loading) {
+    if (orderState.loading && auth && orderState.options.address?.location) {
       onNavigatorRedirect()
     }
   }, [orderState.options.address])
@@ -146,15 +128,18 @@ const AddressListUI = (props: AddressListParams) => {
   return (
     <Container nopadding={nopadding}>
       <Spinner visible={actionStatus.loading || orderState.loading || (addressList.loading && (!isFromBusinesses && !isFromProfile))} />
-      {(!addressList.loading || (isFromBusinesses || isFromProfile)) && (
+      {(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile)) && (
         <AddressListContainer>
           {isFromProfile && (
             <OText size={24} mBottom={20}>{t('SAVED_PLACES', 'My saved places')}</OText>
           )}
           {
             route &&
-            (route?.params?.isFromBusinesses ||
-              route?.params?.isFromCheckout) &&
+            (
+              route?.params?.isFromBusinesses ||
+              route?.params?.isFromCheckout ||
+              route?.params?.isFromProductsList
+            ) &&
             !isFromProfile &&
             (
               <NavBar
@@ -203,14 +188,15 @@ const AddressListUI = (props: AddressListParams) => {
                       name='pencil-outline'
                       size={28}
                       color={colors.green}
-                      onPress={() => handleSetAddressFormProps(
+                      onPress={() => onNavigationRedirect(
+                        'AddressForm',
                         {
                           address: address,
                           isEditing: true,
                           addressesList: addressList,
                           onSaveAddress: handleSaveAddress,
-                          handleCloseAddressForm: handleCloseAddressForm,
-                          isSelectedAfterAdd: true
+                          isSelectedAfterAdd: true,
+                          isFromProductsList: isFromProductsList
                         }
                       )}
                     />
@@ -258,14 +244,15 @@ const AddressListUI = (props: AddressListParams) => {
                 imgLeftStyle={styles.buttonIcon}
                 style={styles.button}
                 borderColor={colors.primary}
-                onClick={() => handleSetAddressFormProps({
-                  address: null,
-                  onSaveAddress: handleSaveAddress,
-                  addressesList: addressList?.addresses,
-                  nopadding: true,
-                  handleCloseAddressForm: handleCloseAddressForm,
-                  isSelectedAfterAdd: true
-                })}
+                onClick={() => onNavigationRedirect(
+                  'AddressForm',
+                  {
+                    address: null,
+                    onSaveAddress: handleSaveAddress,
+                    addressesList: addressList?.addresses,
+                    nopadding: true,
+                    isSelectedAfterAdd: true
+                  })}
               />
             </>
           )}
@@ -278,13 +265,6 @@ const AddressListUI = (props: AddressListParams) => {
             />
           )}
         </AddressListContainer>
-      )}
-      {isOpenAddressForm && (
-        <OModal open={isOpenAddressForm} entireModal onClose={() => handleCloseAddressForm()}>
-          <AddressForm
-            {...addressFormProps}
-          />
-        </OModal>
       )}
     </Container>
   )

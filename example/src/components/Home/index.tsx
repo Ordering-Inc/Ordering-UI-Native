@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { useLanguage,useOrder } from 'ordering-components/native';
+import React, { useState } from 'react';
+import { useLanguage, useOrder } from 'ordering-components/native';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { colors } from '../../theme';
 import { OButton, OIcon, OModal, OText } from '../shared';
@@ -62,7 +62,7 @@ export const Home = (props: any) => {
           style={{ ...styles.textLink, marginTop: 15 }}
           onPress={() => orderState?.options?.address?.address
             ? onNavigationRedirect('BusinessList', { isGuestUser: true })
-            : setIsOpenAddressForm(true)
+            : onNavigationRedirect('AddressForm', { isGuestUser: true })
           }
         >
           <OText weight='bold' size={18}>
@@ -71,16 +71,6 @@ export const Home = (props: any) => {
           <MaterialCommunityIcon name='login' size={24} style={{ marginLeft: 5 }} />
         </TouchableOpacity>
       </View>
-      {isOpenAddressForm && (
-        <OModal open={isOpenAddressForm} entireModal onClose={handleCloseAddressForm}>
-          <AddressForm
-            isGuestUser
-            handleCloseAddressForm={handleCloseAddressForm}
-            isSelectedAfterAdd
-            navigation={navigation}
-          />
-        </OModal>
-      )}
     </View>
   );
 };

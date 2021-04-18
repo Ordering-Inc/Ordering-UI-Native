@@ -5,13 +5,12 @@ import { useOrder, useSession } from 'ordering-components/native';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import Forgot from '../pages/ForgotPassword';
-import Home from '../pages/Home'
-import AddressForm from '../pages/AddressForm'
-import MomentOption from '../pages/MomentOption'
-import DrawNavigator from './DrawNavigator';
+import Home from '../pages/Home';
+import AddressForm from '../pages/AddressForm';
+import MomentOption from '../pages/MomentOption';
 import Splash from '../pages/Splash';
 import BusinessList from '../pages/BusinessesListing';
-import BusinessProductsList from '../pages/BusinessProductsList'
+import BusinessProductsList from '../pages/BusinessProductsList';
 import HomeNavigator from './HomeNavigator';
 
 const Stack = createStackNavigator();
@@ -67,6 +66,11 @@ const RootNavigator = () => {
                 <Stack.Screen
                   name="Forgot"
                   component={Forgot}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="AddressForm"
+                  component={AddressForm}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen

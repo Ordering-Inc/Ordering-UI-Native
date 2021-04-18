@@ -7,7 +7,7 @@ import {
 import { OText } from '../shared'
 import { colors } from '../../theme'
 
-const ProductOptionUI = (props) => {
+const ProductOptionUI = (props: any) => {
   const {
     children,
     option,
@@ -36,7 +36,7 @@ const ProductOptionUI = (props) => {
   )
 }
 
-export const ProductOption = (props) => {
+export const ProductOption = (props: any) => {
   const productOptionProps = {
     ...props,
     UIComponent: ProductOptionUI

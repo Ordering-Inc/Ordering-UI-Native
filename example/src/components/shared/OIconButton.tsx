@@ -46,7 +46,9 @@ interface Props {
   iconStyle?: ImageStyle,
   textStyle?: TextStyle,
   disabledColor?: string,
-  iconCover?: boolean
+  iconCover?: boolean,
+  urlIcon?: any,
+  cover?: any,
 }
 
 const OIconButton = (props: Props) => {

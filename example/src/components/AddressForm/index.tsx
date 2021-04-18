@@ -36,7 +36,7 @@ const AddressFormUI = (props: AddressFormParams) => {
     userCustomerSetup,
     isGuestUser,
     isRequiredField,
-    handleCloseAddressForm
+    isFromProductsList
   } = props
 
   const [, t] = useLanguage()
@@ -67,6 +67,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   const maxLimitLocation = configState?.configs?.meters_to_change_address?.value
 
   const continueAsGuest = () => navigation.navigate('BusinessList')
+  const goToBack = () => navigation.goBack()
 
   const onSubmit = () => {
     if (!auth && formState?.changes?.address === '' && addressState?.address?.address) {
@@ -87,7 +88,7 @@ const AddressFormUI = (props: AddressFormParams) => {
     }
 
     const arrayList = isEditing
-      ? addressesList.addresses?.filter((address: any) => address.id !== addressState?.address?.id) || []
+      ? addressesList?.addresses?.filter((address: any) => address.id !== addressState?.address?.id) || []
       : addressesList || []
     const addressToCompare = isEditing
       ? { ...addressState.address, ...formState.changes }
@@ -100,8 +101,8 @@ const AddressFormUI = (props: AddressFormParams) => {
       if (isGuestUser) {
         continueAsGuest()
       }
-      if(!auth){
-        handleCloseAddressForm()
+      if (!isGuestUser && !auth) {
+        !isFromProductsList ? navigation.navigate('Business') : navigation.goBack()
       }
       return
     }
@@ -165,6 +166,12 @@ const AddressFormUI = (props: AddressFormParams) => {
   const handleToggleMap = () => {
     setToggleMap(!toggleMap)
   }
+
+  useEffect(() => {
+    if(orderState.loading && !addressesList && orderState.options.address && auth){
+      !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business')
+    }
+  }, [orderState.options.address])
 
   useEffect(() => {
     if (alertState.open && alertState?.key !== 'ERROR_MAX_LIMIT_LOCATION') {
@@ -268,6 +275,13 @@ const AddressFormUI = (props: AddressFormParams) => {
   return (
     <AddressFormContainer style={{ height: 300, overflow: 'scroll' }}>
       <Spinner visible={saveMapLocation} />
+      <NavBar
+        title={t('ADDRESS_FORM', 'Address Form')}
+        titleAlign={'center'}
+        onActionLeft={goToBack}
+        showCall={false}
+        btnStyle={{ paddingLeft: 0 }}
+      />
       <AutocompleteInput>
         <Controller
           control={control}
@@ -424,7 +438,7 @@ const AddressFormUI = (props: AddressFormParams) => {
         <OButton
           text={t('CANCEL', 'Cancel')}
           style={{ backgroundColor: colors.white }}
-          onClick={handleCloseAddressForm}
+          onClick={() => navigation.goBack()}
         />
       )}
       <OModal open={toggleMap} onClose={() => handleToggleMap()} entireModal customClose >

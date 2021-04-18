@@ -1,10 +1,10 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
-import { OButton, OIcon, OText } from './shared'
-import { colors } from '../theme'
+import { OButton, OIcon, OText } from '../shared'
+import { colors } from '../../theme'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Platform, TextStyle } from 'react-native'
-import { IMAGES } from '../config/constants'
+import { IMAGES } from '../../config/constants'
 
 const Wrapper = styled.View`
   background-color: ${colors.white};
