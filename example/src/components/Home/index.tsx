@@ -7,7 +7,6 @@ import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { AddressForm } from '../AddressForm';
 
 const sloganImage = require('../../assets/images/home-logo.png');
 const applogo = require('../../assets/images/app-logo.png');
@@ -22,12 +21,6 @@ export const Home = (props: any) => {
 
   const [, t] = useLanguage();
   const [orderState] = useOrder()
-
-  const [isOpenAddressForm, setIsOpenAddressForm] = useState(false)
-
-  const handleCloseAddressForm = () => {
-    setIsOpenAddressForm(false)
-  }
 
   return (
     <View style={styles.container}>

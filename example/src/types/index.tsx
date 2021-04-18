@@ -44,7 +44,8 @@ export interface AddressListParams {
   isGoBack?: boolean;
   route?: any;
   actionStatus?: any;
-  isFromBusinesses?: any;
+  isFromBusinesses?: boolean;
+  isFromProductsList?: boolean;
 }
 
 export interface AddressFormParams {
@@ -61,9 +62,9 @@ export interface AddressFormParams {
   isRequiredField?: (field: string) => {},
   isGuestUser?: boolean,
   useValidationFileds?: boolean,
-  handleCloseAddressForm: any,
   isSelectedAfterAdd?: boolean,
-  onSaveAddress?: any
+  onSaveAddress?: any,
+  isFromProductsList?: boolean
 }
 export interface SignupParams {
   navigation?: any;
