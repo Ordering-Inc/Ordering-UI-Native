@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder } from 'ordering-components/native'
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Keyboard } from 'react-native'
 import { OInput, OButton, OText, OModal } from '../shared'
 import NavBar from '../NavBar'
 import { colors } from '../../theme'
@@ -34,8 +34,9 @@ const AddressFormUI = (props: AddressFormParams) => {
     addressesList,
     saveAddress,
     userCustomerSetup,
+    isGuestUser,
     isRequiredField,
-    isGuestUser
+    isFromProductsList
   } = props
 
   const [, t] = useLanguage()
@@ -46,26 +47,27 @@ const AddressFormUI = (props: AddressFormParams) => {
   const { handleSubmit, errors, control, setValue } = useForm()
 
   const [toggleMap, setToggleMap] = useState(false)
-  const [alertState, setAlertState] = useState<{open: boolean, content : Array<string>, key ?: string | null}>({ open: false, content: [], key: null })
+  const [alertState, setAlertState] = useState<{ open: boolean, content: Array<string>, key?: string | null }>({ open: false, content: [], key: null })
   const [addressTag, setAddressTag] = useState(addressState?.address?.tag)
-  const [firstLocationNoEdit, setFirstLocationNoEdit] = useState({ value: {lat: null, lng: null}, address: null })
+  const [firstLocationNoEdit, setFirstLocationNoEdit] = useState({ value: { lat: null, lng: null }, address: null })
   const [isFirstTime, setIsFirstTime] = useState(true)
   const [locationChange, setLocationChange] = useState(
     isEditing
       ? addressState?.address?.location
       : formState.changes?.location ?? null
   )
-  const [saveMapLocation,setSaveMapLocation] = useState(false)
+  const [saveMapLocation, setSaveMapLocation] = useState(false)
+  const [isKeyboardShow, setIsKeyboardShow] = useState(false)
 
-  const googleInput : any = useRef(null)
+  const googleInput: any = useRef(null)
 
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
   const isLocationRequired = configState.configs?.google_autocomplete_selection_required?.value === '1' ||
     configState.configs?.google_autocomplete_selection_required?.value === 'true'
   const maxLimitLocation = configState?.configs?.meters_to_change_address?.value
 
-  const goToBack = () => navigation.goBack()
   const continueAsGuest = () => navigation.navigate('BusinessList')
+  const goToBack = () => navigation.goBack()
 
   const onSubmit = () => {
     if (!auth && formState?.changes?.address === '' && addressState?.address?.address) {
@@ -86,7 +88,7 @@ const AddressFormUI = (props: AddressFormParams) => {
     }
 
     const arrayList = isEditing
-      ? addressesList.addresses?.filter((address: any) => address.id !== addressState?.address?.id) || []
+      ? addressesList?.addresses?.filter((address: any) => address.id !== addressState?.address?.id) || []
       : addressesList || []
     const addressToCompare = isEditing
       ? { ...addressState.address, ...formState.changes }
@@ -96,10 +98,11 @@ const AddressFormUI = (props: AddressFormParams) => {
 
     if (!isAddressAlreadyExist) {
       saveAddress()
-      if (!isGuestUser) {
-        goToBack()
-      } else {
+      if (isGuestUser) {
         continueAsGuest()
+      }
+      if (!isGuestUser && !auth) {
+        !isFromProductsList ? navigation.navigate('Business') : navigation.goBack()
       }
       return
     }
@@ -165,7 +168,13 @@ const AddressFormUI = (props: AddressFormParams) => {
   }
 
   useEffect(() => {
-    if (alertState.open && alertState?.key !== 'ERROR_MAX_LIMIT_LOCATION' ) {
+    if(orderState.loading && !addressesList && orderState.options.address && auth){
+      !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business')
+    }
+  }, [orderState.options.address])
+
+  useEffect(() => {
+    if (alertState.open && alertState?.key !== 'ERROR_MAX_LIMIT_LOCATION') {
       alertState.content && showToast(
         ToastType.Error,
         alertState.content
@@ -250,6 +259,19 @@ const AddressFormUI = (props: AddressFormParams) => {
     }
   }, [])
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardShow(true)
+    })
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardShow(false)
+    })
+    return () => {
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [])
+
   return (
     <AddressFormContainer style={{ height: 300, overflow: 'scroll' }}>
       <Spinner visible={saveMapLocation} />
@@ -265,7 +287,7 @@ const AddressFormUI = (props: AddressFormParams) => {
           control={control}
           name='address'
           defaultValue={address?.address || formState.changes?.address || addressState.address.address || ''}
-          rules={{ required: isRequiredField('address') ? t(`VALIDATION_ERROR_ADDRESS_REQUIRED`, `The field Address is required`) : null }}
+          rules={{ required: isRequiredField && isRequiredField('address') ? t(`VALIDATION_ERROR_ADDRESS_REQUIRED`, `The field Address is required`) : null }}
           render={() => (
             <GooglePlacesAutocomplete
               placeholder={t('ADD_ADDRESS', 'Add a address')}
@@ -290,7 +312,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                   marginTop: 44,
                   borderBottomEndRadius: 15,
                   elevation: 2,
-                  zIndex: 1000,
+                  zIndex: 10000000,
                 },
                 textInput: {
                   borderColor: colors.primary,
@@ -309,16 +331,16 @@ const AddressFormUI = (props: AddressFormParams) => {
         />
       </AutocompleteInput>
 
-      {(addressState?.address?.location || formState?.changes?.location) && (
+      {!isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) && (
         <TouchableOpacity onPress={handleToggleMap}>
-          <OText color={colors.primary} style={{textAlign: 'center'}}>{t('VIEW_MAP', 'View map to modify the exact location')}</OText>
+          <OText color={colors.primary} style={{ textAlign: 'center' }}>{t('VIEW_MAP', 'View map to modify the exact location')}</OText>
         </TouchableOpacity>
       )}
 
       <Controller
         control={control}
         name='internal_number'
-        rules={{ required: isRequiredField('internal_number') ? t(`VALIDATION_ERROR_INTERNAL_NUMBER_REQUIRED`, `The field internal number is required`) : null }}
+        rules={{ required: isRequiredField && isRequiredField('internal_number') ? t(`VALIDATION_ERROR_INTERNAL_NUMBER_REQUIRED`, `The field internal number is required`) : null }}
         defaultValue={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
         render={() => (
           <OInput
@@ -355,7 +377,7 @@ const AddressFormUI = (props: AddressFormParams) => {
       <Controller
         control={control}
         name='address_notes'
-        rules={{ required: isRequiredField('address_notes') ? t(`VALIDATION_ERROR_ADDRESS_NOTES_REQUIRED`, `The field address notes is required`) : null }}
+        rules={{ required: isRequiredField && isRequiredField('address_notes') ? t(`VALIDATION_ERROR_ADDRESS_NOTES_REQUIRED`, `The field address notes is required`) : null }}
         defaultValue={address?.address_notes || formState.changes?.address_notes || addressState.address.address_notes || ''}
         render={() => (
           <OInput
@@ -371,32 +393,34 @@ const AddressFormUI = (props: AddressFormParams) => {
           />
         )}
       />
-      <IconsContainer>
-        {tagsName.map(tag => (
-          <TouchableOpacity
-            key={tag.value}
-            onPress={() => handleAddressTag(tag.value)}
-          >
-            <View
-              style={{
-                ...styles.iconContainer,
-                backgroundColor: addressTag === tag.value
-                  ? colors.primary
-                  : colors.backgroundGray,
-                borderColor: addressTag === tag.value
-                  ? colors.primary
-                  : colors.backgroundGray
-              }}
+      {!isKeyboardShow && (
+        <IconsContainer>
+          {tagsName.map(tag => (
+            <TouchableOpacity
+              key={tag.value}
+              onPress={() => handleAddressTag(tag.value)}
             >
-              <MaterialIcon
-                name={tag.icon}
-                size={40}
-                style={{ ...styles.icons }}
-              />
-            </View>
-          </TouchableOpacity>
-        ))}
-      </IconsContainer>
+              <View
+                style={{
+                  ...styles.iconContainer,
+                  backgroundColor: addressTag === tag.value
+                    ? colors.primary
+                    : colors.backgroundGray,
+                  borderColor: addressTag === tag.value
+                    ? colors.primary
+                    : colors.backgroundGray
+                }}
+              >
+                <MaterialIcon
+                  name={tag.icon}
+                  size={40}
+                  style={{ ...styles.icons }}
+                />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </IconsContainer>
+      )}
       {Object.keys(formState?.changes).length > 0 ? (
         <OButton
           text={
@@ -411,10 +435,10 @@ const AddressFormUI = (props: AddressFormParams) => {
           textStyle={{ color: colors.white }}
         />
       ) : (
-        <OButton 
+        <OButton
           text={t('CANCEL', 'Cancel')}
-          style={{backgroundColor: colors.white}}
-          onClick={goToBack}
+          style={{ backgroundColor: colors.white }}
+          onClick={() => navigation.goBack()}
         />
       )}
       <OModal open={toggleMap} onClose={() => handleToggleMap()} entireModal customClose >

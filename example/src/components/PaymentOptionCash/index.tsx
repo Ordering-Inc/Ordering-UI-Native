@@ -43,6 +43,7 @@ export const PaymentOptionCash = (props: any) => {
             placeholder='0'
             onChange={(e: any) => handleChangeCash(e)}
             style={styles.inputsStyle}
+            type='numeric'
           />
         </PCWrapper>
         {!!value && parseFloat(value) < orderTotal && (
@@ -60,7 +61,9 @@ const styles = StyleSheet.create({
     borderColor: colors.secundaryContrast,
     borderRadius: 50,
     marginTop: 10,
-    width: '100%'
+    width: '100%',
+    height: 60,
+    maxHeight: 60
   },
   errorMsg: {
     marginTop: 10,

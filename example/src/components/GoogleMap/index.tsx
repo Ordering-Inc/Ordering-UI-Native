@@ -29,8 +29,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const [region, setRegion] = useState({
     latitude: location.lat,
     longitude: location.lng,
-    latitudeDelta: 0.095,
-    longitudeDelta: 0.095 * ASPECT_RATIO
+    latitudeDelta: 0.0005,
+    longitudeDelta: 0.0005 * ASPECT_RATIO
   })
   let mapRef = useRef<any>(null)
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value

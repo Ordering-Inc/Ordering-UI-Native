@@ -1,8 +1,8 @@
-import React from 'react';
-import { useLanguage,useOrder } from 'ordering-components/native';
+import React, { useState } from 'react';
+import { useLanguage, useOrder } from 'ordering-components/native';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { colors } from '../../theme';
-import { OButton, OIcon, OText } from '../shared';
+import { OButton, OIcon, OModal, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -15,12 +15,12 @@ const windowHeight = Dimensions.get('window').height
 
 export const Home = (props: any) => {
   const {
+    navigation,
     onNavigationRedirect
   } = props;
 
   const [, t] = useLanguage();
   const [orderState] = useOrder()
-
 
   return (
     <View style={styles.container}>

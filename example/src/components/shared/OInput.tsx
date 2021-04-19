@@ -47,7 +47,7 @@ interface Props {
   multiline?: boolean;
   vertorIcon?: string;
   vectorIconColor?: string;
-  autoCapitalize?:string;
+  autoCapitalize?: string
 }
 
 const OInput = (props: Props): React.ReactElement => {
