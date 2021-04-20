@@ -26,5 +26,6 @@ export const colors = {
   inputDisabled: '#F7F7F7',
   textSecondary: '#858585',
   editColor: '#F2BB40',
-  cancelColor: '#D81212'
+  cancelColor: '#D81212',
+  black: '#000000'
 };

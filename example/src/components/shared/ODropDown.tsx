@@ -13,6 +13,8 @@ interface Props {
   style?: any,
   dropViewMaxHeight?: any,
   isModal?: any,
+  bgcolor?: string,
+  textcolor?: string,
 }
 
 const Wrapper = styled.View`
@@ -26,15 +28,15 @@ const Selected = styled.TouchableOpacity`
   padding: 15px;
   border-radius: 10px;
   border-width: 1px;
-  border-color: ${(props: any) => props.secondary ? colors.lightGray : colors.primary};
-  background-color: ${(props: any) => props.secondary ? colors.white : colors.primary};
+  border-color: ${(props: any) => props.bgcolor || (props.secondary ? colors.lightGray : colors.primary)};
+  background-color: ${(props: any) => props.bgcolor || (props.secondary ? colors.white : colors.primary)};
 `
 const SelectedLabel = styled.Text`
   font-size: 16px;
-  color: ${(props: any) => props.secondary ? 'black' : colors.white};
+  color: ${(props: any) => props.textcolor || (props.secondary ? 'black' : colors.white)};
 `
 const DropIcon = styled.Image`
-  tint-color: ${(props: any) => props.secondary ? 'black' : colors.white};
+  tint-color: ${(props: any) => props.textcolor || (props.secondary ? 'black' : colors.white)};
   resize-mode: contain;
   width: 7px;
   height: 7px;
@@ -46,7 +48,7 @@ const DropView = styled.View`
   top: 54px;
   border-width: 1px;
   border-color: ${colors.lightGray};
-  background-color: ${(props: any) => props.secondary ? colors.white : '#FFF5F5'};
+  background-color: ${colors.white};
   border-radius: 10px;
   width: 100%;
 `
@@ -95,14 +97,17 @@ const ODropDown = (props: Props) => {
     <Wrapper style={props.style}>
       <Selected
         secondary={secondary}
+        bgcolor={props.bgcolor}
         onPress={() => onToggle()}
       >
         <SelectedLabel
           secondary={secondary}
+          textcolor={props.textcolor}
         >
           {selectedOption?.content || selectedOption?.name || placeholder}
         </SelectedLabel>
         <DropIcon
+          textcolor={props.textcolor}
           secondary={secondary}
           source={require('../../assets/icons/drop_down.png')}
         />
@@ -134,7 +139,7 @@ const ODropDown = (props: Props) => {
               maxHeight: dropViewMaxHeight || null }}
             >
               {options.map((option: any, index: number) => (
-                <CustomTouchableOpacity 
+                <CustomTouchableOpacity
                   key={index}
                   onPress={() => onSelectOption(option)}
                 >

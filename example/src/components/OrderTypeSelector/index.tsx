@@ -6,6 +6,7 @@ import {
 import { ODropDown } from '../shared'
 import { OrderTypeWrapper } from './styles'
 import { OrderTypeSelectParams } from '../../types'
+import { colors } from '../../theme'
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const {
@@ -19,6 +20,8 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     typeSelected !== undefined && (
       <OrderTypeWrapper>
         <ODropDown
+          bgcolor={colors.inputDisabled}
+          textcolor={colors.black}
           options={orderTypes.filter((type: any) => configTypes?.includes(type.value))}
           defaultValue={defaultValue || typeSelected}
           onSelect={(orderType: any) => handleChangeOrderType(orderType)}

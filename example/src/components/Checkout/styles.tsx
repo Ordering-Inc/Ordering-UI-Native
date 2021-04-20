@@ -44,7 +44,7 @@ export const ChMoment = styled(ChAddress)`
 `
 
 export const CHMomentWrapper = styled.TouchableOpacity`
-  background-color: #FFF5F5;
+  background-color: ${colors.inputDisabled};
   border-radius: 10px;
   width: 100%;
   padding: 10px;

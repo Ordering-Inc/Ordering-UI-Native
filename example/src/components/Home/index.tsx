@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLanguage, useOrder } from 'ordering-components/native';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { colors } from '../../theme';
-import { OButton, OIcon, OModal, OText } from '../shared';
+import { OButton, OIcon, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const sloganImage = require('../../assets/images/home-logo.png');
 const applogo = require('../../assets/images/app-logo.png');
@@ -15,7 +14,6 @@ const windowHeight = Dimensions.get('window').height
 
 export const Home = (props: any) => {
   const {
-    navigation,
     onNavigationRedirect
   } = props;
 
@@ -61,7 +59,6 @@ export const Home = (props: any) => {
           <OText weight='bold' size={18}>
             {t('CONTINUE_AS_GUEST', 'Continue as guest')}
           </OText>
-          <MaterialCommunityIcon name='login' size={24} style={{ marginLeft: 5 }} />
         </TouchableOpacity>
       </View>
     </View>

@@ -239,16 +239,20 @@ const ProfileUI = (props: ProfileParams) => {
             <OText space>{user?.name}</OText>
             <OText>{user?.lastname}</OText>
           </Names>
-          {(user?.middle_name || user?.second_lastname) && (
+          {(!!user?.middle_name || !!user?.second_lastname) && (
             <Names>
               <OText space>{user?.middle_name}</OText>
               <OText>{user?.second_lastname}</OText>
             </Names>
           )}
           <OText>{user?.email}</OText>
-          {user?.cellphone && <OText>{user?.cellphone}</OText>}
-          {phoneUpdate && (
-            <OText color={colors.error}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
+          {!!user?.cellphone && <OText>{user?.cellphone}</OText>}
+          {!!phoneUpdate && (
+            <OText
+              color={colors.error}
+            >
+              {t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}
+            </OText>
           )}
         </UserData>
       ) : (
@@ -293,14 +297,18 @@ const ProfileUI = (props: ProfileParams) => {
             }}
           />
           <WrapperPhone>
-
             <PhoneInputNumber
               data={phoneInputData}
               handleData={(val: any) => handleChangePhoneNumber(val)}
               defaultValue={phoneUpdate ? '' : user?.cellphone}
             />
             {phoneUpdate && (
-              <OText color={colors.error} style={{ marginHorizontal: 10, textAlign: 'center' }}>{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}</OText>
+              <OText
+                color={colors.error}
+                style={{ marginHorizontal: 10, textAlign: 'center' }}
+              >
+                {t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}
+              </OText>
             )}
           </WrapperPhone>
         </>
