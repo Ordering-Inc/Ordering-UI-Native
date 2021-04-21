@@ -317,7 +317,6 @@ const AddressFormUI = (props: AddressFormParams) => {
                         zIndex: 10000000,
                       },
                       textInput: {
-                        borderColor: colors.primary,
                         borderWidth: 1,
                         borderRadius: 10,
                         flexGrow: 1,
