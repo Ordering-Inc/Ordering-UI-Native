@@ -31,6 +31,7 @@ import { VerifyPhone } from '../VerifyPhone';
 import { OText, OButton, OInput, OModal } from '../shared';
 import { SignupParams } from '../../types';
 import { colors } from '../../theme'
+import { sortInputFields } from '../../utils';
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']
 
@@ -240,11 +241,10 @@ const SignupFormUI = (props: SignupParams) => {
         <FormInput>
           {!(useChekoutFileds && validationFields?.loading) ? (
             <>
-              {
-                validationFields?.fields?.checkout &&
-                Object.values(validationFields?.fields?.checkout).map(
-                  (field: any) => !notValidationFields.includes(field.code) && (
-                  showField(field.code) && (
+              {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any) =>
+                !notValidationFields.includes(field.code) &&
+                (
+                  showField && showField(field.code) && (
                     <Controller
                       key={field.id}
                       control={control}
@@ -267,10 +267,12 @@ const SignupFormUI = (props: SignupParams) => {
               }
 
               {!!showInputPhoneNumber && (
-                <PhoneInputNumber
-                  data={phoneInputData}
-                  handleData={(val: any) => setPhoneInputData(val)}
-                />
+                <View style={{ marginBottom: 25 }}>
+                  <PhoneInputNumber
+                    data={phoneInputData}
+                    handleData={(val: any) => setPhoneInputData(val)}
+                  />
+                </View>
               )}
 
               {signupTab !== 'cellphone' && (
