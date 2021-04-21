@@ -196,7 +196,8 @@ const AddressListUI = (props: AddressListParams) => {
                           addressesList: addressList,
                           onSaveAddress: handleSaveAddress,
                           isSelectedAfterAdd: true,
-                          isFromProductsList: isFromProductsList
+                          isFromProductsList: isFromProductsList,
+                          hasAddressDefault: !!orderState.options?.address?.location
                         }
                       )}
                     />
@@ -251,7 +252,8 @@ const AddressListUI = (props: AddressListParams) => {
                     onSaveAddress: handleSaveAddress,
                     addressesList: addressList?.addresses,
                     nopadding: true,
-                    isSelectedAfterAdd: true
+                    isSelectedAfterAdd: true,
+                    hasAddressDefault: !!orderState.options?.address?.location
                   })}
               />
             </>
