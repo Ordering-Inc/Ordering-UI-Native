@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
-import Spinner from 'react-native-loading-spinner-overlay'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import {
-  BusinessAndProductList,
   useLanguage,
   useOrder,
   useSession,
   useUtils
 } from 'ordering-components/native'
-import { OBottomPopup, OModal, OText } from '../shared'
+import { OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { SearchBar } from '../SearchBar'
 import { BusinessProductsCategories } from '../BusinessProductsCategories'
@@ -28,7 +26,7 @@ import { colors } from '../../theme'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
-import { BusinessCategories } from '../BusinessTypeFilter/styles'
+import { BusinessAndProductList } from './testo'
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -40,7 +38,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     searchValue,
     handleChangeCategory,
     handleSearchRedirect,
-    featuredProducts
+    featuredProducts,
+    errorQuantityProducts
   } = props
 
   const [, t] = useLanguage()
@@ -106,6 +105,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 category={categorySelected}
                 categoryState={categoryState}
                 isBusinessLoading={loading}
+                errorQuantityProducts={errorQuantityProducts}
               />
             </WrapContent>
           </>
@@ -134,17 +134,19 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                           </OText>
                         </AddressInput>
                       </View>
-                      <View style={{ ...styles.headerItem, width: 30 }}>
-                        <TouchableOpacity
-                          onPress={() => setIsOpenSearchBar(true)}
-                        >
-                          <MaterialIcon
-                            name='search'
-                            color={colors.white}
-                            size={25}
-                          />
-                        </TouchableOpacity>
-                      </View>
+                      {!errorQuantityProducts && (
+                        <View style={{ ...styles.headerItem, width: 30 }}>
+                          <TouchableOpacity
+                            onPress={() => setIsOpenSearchBar(true)}
+                          >
+                            <MaterialIcon
+                              name='search'
+                              color={colors.white}
+                              size={25}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      )}
                     </>
                   )}
                   {isOpenSearchBar && (
@@ -189,6 +191,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                   featured={featuredProducts}
                   searchValue={searchValue}
                   handleClearSearch={handleChangeSearch}
+                  errorQuantityProducts={errorQuantityProducts}
                 />
               </WrapContent>
             </>
