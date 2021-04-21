@@ -231,10 +231,12 @@ const LoginFormUI = (props: LoginParams) => {
               />
             )}
             {useLoginByCellphone && loginTab === 'cellphone' && (
-              <PhoneInputNumber
-                data={phoneInputData}
-                handleData={(val: any) => setPhoneInputData(val)}
-              />
+              <View style={{ marginBottom: 25 }}>
+                <PhoneInputNumber
+                  data={phoneInputData}
+                  handleData={(val: any) => setPhoneInputData(val)}
+                />
+              </View>
             )}
 
             <Controller
