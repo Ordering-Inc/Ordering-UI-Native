@@ -217,20 +217,20 @@ const CheckoutUI = (props: any) => {
             Object.values(businessDetails?.business).length > 0 &&
             (
               <>
-                <ChTotalWrap>
-                  <OIcon
-                    url={businessDetails?.business?.logo}
-                    width={80}
-                    height={80}
-                    borderRadius={80}
-                  />
-                  <OText size={24} mLeft={10}>
+                <OIcon
+                  url={businessDetails?.business?.logo}
+                  width={80}
+                  height={80}
+                  borderRadius={80}
+                />
+                <View style={{ marginLeft: 15 , width: '85%' }}>
+                  <OText size={22} numberOfLines={2} ellipsizeMode='tail' style={{ width: '85%' }}>
                     {businessDetails?.business?.name}
                   </OText>
-                </ChTotalWrap>
-                <OText size={24}>
-                  {cart?.total >= 1 && parsePrice(cart?.total)}
-                </OText>
+                  <OText size={22}>
+                    {cart?.total >= 1 && parsePrice(cart?.total)}
+                  </OText>
+                </View>
               </>
             )}
         </ChTotal>
