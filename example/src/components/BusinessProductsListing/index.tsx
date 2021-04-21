@@ -3,6 +3,7 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import {
+  BusinessAndProductList,
   useLanguage,
   useOrder,
   useSession,
@@ -20,13 +21,13 @@ import {
   TopHeader,
   AddressInput,
   WrapSearchBar,
-  WrapContent
+  WrapContent,
+  BusinessProductsListingContainer
 } from './styles'
 import { colors } from '../../theme'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
-import { BusinessAndProductList } from './testo'
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -39,7 +40,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleChangeCategory,
     handleSearchRedirect,
     featuredProducts,
-    errorQuantityProducts
+    errorQuantityProducts,
   } = props
 
   const [, t] = useLanguage()
@@ -84,7 +85,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   return (
     <>
-      <ScrollView style={styles.mainContainer}>
+      <BusinessProductsListingContainer style={styles.mainContainer} isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}>
         {loading && !error && (
           <>
             <BusinessBasicInformation
@@ -197,17 +198,15 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             </>
           )
         }
-      </ScrollView>
-      {!loading && auth && (
+      </BusinessProductsListingContainer>
+      {!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
         <FloatingButton
           btnText={
-            !(currentCart?.products?.length > 0)
-              ? t('EMPTY_CART', 'Empty cart')
-              : currentCart?.subtotal >= currentCart?.minimum
-                ? !openUpselling ? t('VIEW_ORDER', 'View Order') : t('LOADING', 'Loading')
-                : `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
+            currentCart?.subtotal >= currentCart?.minimum
+              ? !openUpselling ? t('VIEW_ORDER', 'View Order') : t('LOADING', 'Loading')
+              : `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
           }
-          isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum || !(currentCart?.products?.length > 0)}
+          isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum}
           btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && !openUpselling && currentCart?.products?.length > 0}
           btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && !openUpselling && currentCart?.products?.length > 0}
           btnLeftValue={currentCart?.products?.length}
@@ -244,7 +243,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    marginBottom: 50,
   },
   BackIcon: {
     paddingRight: 20,
