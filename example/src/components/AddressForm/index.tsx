@@ -305,6 +305,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                   }
                   setIsFirstTime(false)
                 },
+                autoCorrect: false,
               }}
               styles={{
                 listView: {
@@ -489,13 +490,17 @@ const styles = StyleSheet.create({
   inputsStyle: {
     borderColor: colors.secundaryContrast,
     borderRadius: 10,
-    marginVertical: 20
+    marginVertical: 20,
+    height: 50,
+    maxHeight: 50,
+    minHeight: 50
   },
   textAreaStyles: {
     borderColor: colors.secundaryContrast,
     borderRadius: 10,
     marginVertical: 20,
     height: 150,
+    maxHeight: 150,
     textAlignVertical: 'top',
     alignItems: 'flex-start'
   }

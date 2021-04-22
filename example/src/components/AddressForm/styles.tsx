@@ -5,6 +5,7 @@ export const AddressFormContainer = styled.View`
     flex: 1;
     padding: 20px;
     background-color: ${colors.backgroundPage};
+    justify-content: space-between;
 `
 
 export const IconsContainer = styled.View`

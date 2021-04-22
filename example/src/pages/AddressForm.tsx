@@ -2,12 +2,15 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { Platform } from 'react-native';
 import { AddressForm as AddressFormController } from '../components/AddressForm'
+import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
+
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
+  flex-shrink: 1
 `;
 
-const AddressForm = ({navigation,route}: any) => {
+const AddressForm = ({ navigation, route }: any) => {
 
   const AddressFormProps = {
     navigation: navigation,
@@ -24,12 +27,14 @@ const AddressForm = ({navigation,route}: any) => {
   }
 
   return (
-    <KeyboardView
-      enabled
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <AddressFormController {...AddressFormProps} useValidationFileds />
-    </KeyboardView>
+    <SafeAreaContainer>
+      <KeyboardView
+        enabled
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <AddressFormController {...AddressFormProps} useValidationFileds />
+      </KeyboardView>
+    </SafeAreaContainer>
   )
 }
 
