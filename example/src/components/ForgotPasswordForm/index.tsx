@@ -85,12 +85,13 @@ const ForgotPasswordUI = (props: any) => {
           control={control}
           render={({ onChange, value }) => (
             <OInput
-              placeholder={'Email'}
+              placeholder={t('EMAIL', 'Email')}
               style={style.inputStyle}
               icon={IMAGES.email}
               value={value}
               onChange={(val: any) => onChange(val)}
               autoCapitalize='none'
+              autoCompleteType='off'
             />
           )}
           name="email"

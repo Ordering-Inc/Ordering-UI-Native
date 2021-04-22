@@ -213,6 +213,7 @@ export const UserFormDetailsUI = (props: any) => {
                             setValue(field.code, val.target.value)
                             handleChangeInput(val)
                           }}
+                          autoCompleteType={field.code === 'email' ? 'off' : ''}
                         />
                       )}
                       name={field.code}

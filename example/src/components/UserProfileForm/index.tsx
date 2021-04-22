@@ -278,6 +278,7 @@ const ProfileUI = (props: ProfileParams) => {
                       }}
                       value={user && user[field.code]}
                       autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
+                      autoCompleteType={field.code === 'email' ? 'off' : ''}
                     />
                   )}
                   name={field.code}

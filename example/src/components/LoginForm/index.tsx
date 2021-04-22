@@ -209,12 +209,13 @@ const LoginFormUI = (props: LoginParams) => {
                 control={control}
                 render={({ onChange, value }) => (
                   <OInput
-                    placeholder={'Email'}
+                    placeholder={t('EMAIL', 'Email')}
                     style={loginStyle.inputStyle}
                     icon={IMAGES.email}
                     value={value}
                     onChange={(val: any) => onChange(val)}
                     autoCapitalize='none'
+                    autoCompleteType='off'
                   />
                 )}
                 name="email"
@@ -240,7 +241,7 @@ const LoginFormUI = (props: LoginParams) => {
               render={({ onChange, value }) => (
                 <OInput
                   isSecured={!passwordSee ? true : false}
-                  placeholder={'Password'}
+                  placeholder={t('PASSWORD', 'Password')}
                   style={loginStyle.inputStyle}
                   icon={IMAGES.lock}
                   iconCustomRight={

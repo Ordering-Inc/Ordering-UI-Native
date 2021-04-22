@@ -256,6 +256,7 @@ const SignupFormUI = (props: SignupParams) => {
                           value={value}
                           onChange={(val: any) => onChange(val)}
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
+                          autoCompleteType={field.code === 'email' ? 'off' : ''}
                         />
                       )}
                       name={field.code}
@@ -279,7 +280,7 @@ const SignupFormUI = (props: SignupParams) => {
                   render={({ onChange, value }) => (
                     <OInput
                       isSecured={!passwordSee ? true : false}
-                      placeholder={'Password'}
+                      placeholder={t('PASSWORD', 'Password')}
                       style={style.inputStyle}
                       icon={IMAGES.lock}
                       iconCustomRight={
