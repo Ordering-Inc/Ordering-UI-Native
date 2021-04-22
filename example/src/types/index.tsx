@@ -64,7 +64,8 @@ export interface AddressFormParams {
   useValidationFileds?: boolean,
   isSelectedAfterAdd?: boolean,
   onSaveAddress?: any,
-  isFromProductsList?: boolean
+  isFromProductsList?: boolean,
+  hasAddressDefault?: any
 }
 export interface SignupParams {
   navigation?: any;

@@ -274,7 +274,6 @@ const AddressFormUI = (props: AddressFormParams) => {
     }
   }, [])
 
-  console.log(hasAddressDefault)
   useEffect(() => {
     if (!orderState.loading && auth && !hasAddressDefault && isSignUpEffect) {
       navigation.navigate('BottomTab')
