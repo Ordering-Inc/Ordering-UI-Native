@@ -20,7 +20,8 @@ const AddressForm = ({navigation,route}: any) => {
     isSelectedAfterAdd: true,
     isGuestUser: route?.params?.isGuestUser,
     isFromBusinesses: route?.params?.isFromBusinesses,
-    isFromProductsList: route?.params?.isFromProductsList
+    isFromProductsList: route?.params?.isFromProductsList,
+    hasAddressDefault: route?.params?.hasAddressDefault
   }
 
   return (

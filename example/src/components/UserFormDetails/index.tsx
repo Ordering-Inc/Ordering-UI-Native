@@ -11,14 +11,12 @@ import { colors } from '../../theme';
 import { IMAGES } from '../../config/constants';
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
-
-const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone']
+import { sortInputFields } from '../../utils';
 
 export const UserFormDetailsUI = (props: any) => {
   const {
     isEdit,
     formState,
-    onCancel,
     showField,
     cleanFormState,
     onCloseProfile,
@@ -26,7 +24,6 @@ export const UserFormDetailsUI = (props: any) => {
     validationFields,
     handleChangeInput,
     handleButtonUpdateClick,
-    isCheckout,
     phoneUpdate,
   } = props
 
@@ -36,7 +33,6 @@ export const UserFormDetailsUI = (props: any) => {
 
   const [{ user }] = useSession()
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(null)
-  const [validationFieldsSorted, setValidationFieldsSorted] = useState([])
   const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null)
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -128,21 +124,6 @@ export const UserFormDetailsUI = (props: any) => {
     handleChangeInput(phoneNumber, true)
   }
 
-  const sortValidationFields = () => {
-    const fields = ['name', 'middle_name', 'lastname', 'second_lastname', 'email']
-    const fieldsSorted: any = []
-    const validationsFieldsArray = Object.values(validationFields.fields?.checkout)
-
-    fields.forEach(f => {
-      validationsFieldsArray.forEach((field: any) => {
-        if (f === field.code) {
-          fieldsSorted.push(field)
-        }
-      })
-    })
-    setValidationFieldsSorted(fieldsSorted)
-  }
-
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       const list = Object.values(errors)
@@ -167,12 +148,6 @@ export const UserFormDetailsUI = (props: any) => {
   }, [formState?.loading])
 
   useEffect(() => {
-    if (validationFields?.fields?.checkout) {
-      sortValidationFields()
-    }
-  }, [validationFields?.fields?.checkout])
-
-  useEffect(() => {
     if (!isEdit && onCloseProfile) {
       onCloseProfile()
     }
@@ -188,10 +163,11 @@ export const UserFormDetailsUI = (props: any) => {
   return (
     <>
       <UDForm>
-        {!validationFields?.loading && validationFieldsSorted.length > 0 && (
+        {!validationFields?.loading &&
+          sortInputFields({ values: validationFields.fields?.checkout }).length > 0 &&
+        (
           <UDWrapper>
-            {validationFieldsSorted.map((field: any) =>
-              !notValidationFields.includes(field.code) &&
+            {sortInputFields({ values: validationFields.fields?.checkout }).map((field: any) =>
               (
                 showField && showField(field.code) && (
                   <React.Fragment key={field.id}>

@@ -7,12 +7,12 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { IMAGES } from '../../config/constants';
 import { colors } from '../../theme';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { ProfileParams } from '../../types';
-import { flatArray } from '../../utils';
+import { sortInputFields } from '../../utils';
 import { AddressList } from '../AddressList'
 import { LogoutButton } from '../LogoutButton'
 import { LanguageSelector } from '../LanguageSelector'
@@ -34,14 +34,6 @@ import {
   WrapperPhone
 } from './styles';
 
-const notValidationFields = [
-  'coupon',
-  'driver_tip',
-  'mobile_phone',
-  'address',
-  'address_notes',
-];
-
 const ProfileUI = (props: ProfileParams) => {
   const {
     navigation,
@@ -59,9 +51,8 @@ const ProfileUI = (props: ProfileParams) => {
   const [{ user }] = useSession();
   const [, t] = useLanguage();
   const { showToast } = useToast();
-  const {handleSubmit, errors, setValue, control} = useForm();
+  const { handleSubmit, errors, setValue, control } = useForm();
 
-  const [validationFieldsSorted, setValidationFieldsSorted] = useState([]);
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
     phone: {
@@ -90,35 +81,6 @@ const ProfileUI = (props: ProfileParams) => {
 
     handleButtonUpdateClick(values);
   }
-
-  const sortValidationFields = () => {
-    const fields = [
-      'name',
-      'middle_name',
-      'lastname',
-      'second_lastname',
-      'email'
-    ];
-    const fieldsSorted = [];
-    const validationsFieldsArray = Object.values(
-      validationFields.fields?.checkout,
-    );
-
-    fields.forEach((f) => {
-      validationsFieldsArray.forEach((field: any) => {
-        if (f === field.code) {
-          fieldsSorted.push(field);
-        }
-      });
-    });
-
-    fieldsSorted.push(
-      validationsFieldsArray.filter(
-        (field: any) => !fields.includes(field.code),
-      ),
-    );
-    setValidationFieldsSorted(flatArray(fieldsSorted));
-  };
 
   const handleImagePicker = () => {
     launchImageLibrary({ mediaType: 'photo', maxHeight: 200, maxWidth: 200, includeBase64: true }, (response) => {
@@ -173,12 +135,6 @@ const ProfileUI = (props: ProfileParams) => {
     }
     return rules
   }
-
-  useEffect(() => {
-    if (validationFields?.fields?.checkout) {
-      sortValidationFields();
-    }
-  }, [validationFields?.fields?.checkout]);
 
   useEffect(() => {
     if (formState.result.result && !formState.loading) {
@@ -256,49 +212,37 @@ const ProfileUI = (props: ProfileParams) => {
           )}
         </UserData>
       ) : (
-        <>
-          {validationFieldsSorted.map(
-            (field: any) =>
-              !notValidationFields.includes(field.code) &&
-              showField &&
-              showField(field.code) && (
-                <Controller
-                  key={field.id}
-                  control={control}
-                  render={() => (
-                    <OInput
-                      key={field.id}
-                      name={field.code}
-                      placeholder={t(field.code.toUpperCase(), field?.name)}
-                      borderColor={colors.whiteGray}
-                      style={styles.inputbox}
-                      value={formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
-                      onChange={(val: any) => {
-                        field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/\s/gi, ''))
-                        field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({target: {name : 'email', value: val.target.value.toLowerCase().replace(/\s/gi, '')}})
-                      }}
-                      autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
-                      autoCorrect={field.code === 'email' && false}
-                      type={field.code === 'email' ? 'visible-password' : ''}
-                      isSecured={field.code === 'email'}
-                    />
-                  )}
-                  name={field.code}
-                  defaultValue={user && user[field.code]}
-                  rules={getInputRules(field)}
-                />
-              )
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          {sortInputFields({ values: validationFields.fields?.checkout }).map((field: any) =>
+            showField && showField(field.code) && (
+              <Controller
+                key={field.id}
+                control={control}
+                render={() => (
+                  <OInput
+                    key={field.id}
+                    name={field.code}
+                    placeholder={t(field.code.toUpperCase(), field?.name)}
+                    icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
+                    borderColor={colors.whiteGray}
+                    style={styles.inputbox}
+                    onChange={(val: any) => {
+                      field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/\s/gi, ''))
+                      field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({ target: { name: 'email', value: val.target.value.toLowerCase().replace(/\s/gi, '') } })
+                    }}
+                    value={user && user[field.code]}
+                    autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
+                    autoCorrect={field.code === 'email' && false}
+                    type={field.code === 'email' ? 'visible-password' : ''}
+                    isSecured={field.code === 'email'}
+                  />
+                )}
+                name={field.code}
+                defaultValue={user && user[field.code]}
+                rules={getInputRules(field)}
+              />
+            )
           )}
-          <OInput
-            name='password'
-            isSecured={true}
-            placeholder={t('PASSWORD', 'Password')}
-            icon={IMAGES.lock}
-            style={styles.inputbox}
-            onChange={(val: any) => {
-              handleChangeInput(val)
-            }}
-          />
           <WrapperPhone>
             <PhoneInputNumber
               data={phoneInputData}
@@ -314,7 +258,18 @@ const ProfileUI = (props: ProfileParams) => {
               </OText>
             )}
           </WrapperPhone>
-        </>
+          <OInput
+            name='password'
+            isSecured={true}
+            placeholder={t('PASSWORD', 'Password')}
+            icon={IMAGES.lock}
+            borderColor={colors.whiteGray}
+            style={styles.inputbox}
+            onChange={(val: any) => {
+              handleChangeInput(val)
+            }}
+          />
+        </View>
       )}
       {!validationFields.loading && (
         <EditButton>
@@ -367,6 +322,7 @@ const styles = StyleSheet.create({
   },
   inputbox: {
     marginVertical: 8,
+    width: '90%'
   },
   editButton: {
     borderRadius: 25,
