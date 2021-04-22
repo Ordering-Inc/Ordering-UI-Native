@@ -59,7 +59,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [{ user }] = useSession();
   const [, t] = useLanguage();
   const { showToast } = useToast();
-  const { control, handleSubmit, errors, setValue } = useForm();
+  const {handleSubmit, errors, setValue, control} = useForm();
 
   const [validationFieldsSorted, setValidationFieldsSorted] = useState([]);
   const [phoneInputData, setPhoneInputData] = useState({
@@ -173,10 +173,6 @@ const ProfileUI = (props: ProfileParams) => {
     }
     return rules
   }
-  
-  const handleChangeInputEmail = (value : string) => {
-    handleChangeInput(value.toLowerCase().replace(/\s/gi, ''))
-  }
 
   useEffect(() => {
     if (validationFields?.fields?.checkout) {
@@ -276,13 +272,12 @@ const ProfileUI = (props: ProfileParams) => {
                       placeholder={t(field.code.toUpperCase(), field?.name)}
                       borderColor={colors.whiteGray}
                       style={styles.inputbox}
+                      value={formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
                       onChange={(val: any) => {
-                        setValue(field.code, val.target.value)
-                        field.code !== 'email' ? handleChangeInput(val) : handleChangeInputEmail(val)
+                        field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/\s/gi, ''))
+                        field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({target: {name : 'email', value: val.target.value.toLowerCase().replace(/\s/gi, '')}})
                       }}
-                      value={user && user[field.code]}
                       autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
-                      autoCompleteType={field.code === 'email' ? 'off' : ''}
                       autoCorrect={field.code === 'email' && false}
                       type={field.code === 'email' ? 'visible-password' : ''}
                       isSecured={field.code === 'email'}

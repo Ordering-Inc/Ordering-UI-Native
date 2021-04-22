@@ -220,7 +220,6 @@ const LoginFormUI = (props: LoginParams) => {
                     }}
                     value={value}
                     autoCapitalize='none'
-                    autoCompleteType='off'
                     autoCorrect={false}
                     type='visible-password'
                     isSecured

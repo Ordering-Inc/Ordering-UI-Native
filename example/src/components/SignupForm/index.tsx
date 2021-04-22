@@ -260,7 +260,6 @@ const SignupFormUI = (props: SignupParams) => {
                             value={value}
                             onChange={(val: any) => field.code !== 'email' ? onChange(val) : handleChangeInputEmail(val, onChange)}
                             autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
-                            autoCompleteType={field.code === 'email' ? 'off' : ''}
                             autoCorrect={field.code === 'email' && false}
                             type={field.code === 'email' ? 'visible-password' : ''}
                             isSecured={field.code === 'email'}

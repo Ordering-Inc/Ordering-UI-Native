@@ -77,7 +77,7 @@ const OInput = (props: Props): React.ReactElement => {
         name={props.name}
         secureTextEntry={props.isSecured}
         onChangeText={(txt: any) => props.name ? props.onChange({target: {name: props.name, value: txt}}) : props.onChange(txt)}
-        value={props.value}
+        defaultValue={props.value}
         placeholder={props.placeholder ? props.placeholder : ''}
         keyboardType={props.type || 'default'}
         multiline={props.multiline}
