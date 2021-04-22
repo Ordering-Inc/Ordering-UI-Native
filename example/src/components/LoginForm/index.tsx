@@ -153,6 +153,7 @@ const LoginFormUI = (props: LoginParams) => {
         list.unshift({ message: phoneInputData.error })
       }
       if (
+        loginTab === 'cellphone' &&
         !phoneInputData.error &&
         !phoneInputData.phone.country_phone_code &&
         !phoneInputData.phone.cellphone
@@ -215,6 +216,7 @@ const LoginFormUI = (props: LoginParams) => {
                     value={value}
                     onChange={(val: any) => onChange(val)}
                     autoCapitalize='none'
+                    type='email-address'
                   />
                 )}
                 name="email"
@@ -229,10 +231,12 @@ const LoginFormUI = (props: LoginParams) => {
               />
             )}
             {useLoginByCellphone && loginTab === 'cellphone' && (
-              <PhoneInputNumber
-                data={phoneInputData}
-                handleData={(val: any) => setPhoneInputData(val)}
-              />
+              <View style={{ marginBottom: 25 }}>
+                <PhoneInputNumber
+                  data={phoneInputData}
+                  handleData={(val: any) => setPhoneInputData(val)}
+                />
+              </View>
             )}
 
             <Controller

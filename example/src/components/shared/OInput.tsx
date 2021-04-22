@@ -81,6 +81,7 @@ const OInput = (props: Props): React.ReactElement => {
         scrollEnabled={props.multiline}
         editable={!props.isDisabled}
         autoCapitalize={props.autoCapitalize}
+        autoCorrect={false}
       />
       {props.iconRight && (
         <OIcon

@@ -109,3 +109,30 @@ export const getIconCard = (brand: string, size: number) => {
  export const getGoogleMapImage = ({ lat, lng }: any, apiKey: string) => {
   return `https://maps.googleapis.com/maps/api/staticmap?size=500x190&center=${lat},${lng}&zoom=17&scale=2&maptype=roadmap&&markers=icon:https://res.cloudinary.com/ditpjbrmz/image/upload/f_auto,q_auto,w_45,q_auto:best,q_auto:best/v1564675872/marker-customer_kvxric.png%7Ccolor:white%7C${lat},${lng}&key=${apiKey}`
 }
+/**
+ * List of fields with correct order
+ */
+export const fieldsToSort = ['name', 'middle_name', 'lastname', 'second_lastname', 'email'];
+/**
+ * Function to return a array sorted by certain fields
+ * @param fields Array with right order
+ * @param array Array to sort
+ */
+export const sortInputFields = ({ fields, values }: any) => {
+  let fieldsBase = fields;
+  const fieldsSorted: any = [];
+  const fieldsArray = Array.isArray(values) ? values : Object.values(values);
+
+  if (!fieldsBase) {
+    fieldsBase = fieldsToSort
+  }
+
+  fieldsBase.forEach((f: any) => {
+    fieldsArray.forEach((field: any) => {
+      if (f === field.code) {
+        fieldsSorted.push(field)
+      }
+    })
+  });
+  return fieldsSorted;
+}

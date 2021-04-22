@@ -27,5 +27,5 @@ export const UDLoader = styled.View`
 `
 
 export const WrapperPhone = styled.View`
-
+  margin-bottom: 25px;
 `

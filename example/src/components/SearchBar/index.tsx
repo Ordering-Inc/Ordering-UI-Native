@@ -1,13 +1,22 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { colors } from '../../theme'
 import { OInput, OButton } from '../shared'
-import {useLanguage} from 'ordering-components/native'
-import {SearchBarParams} from '../../types'
-import styled from 'styled-components/native'
-export const SearchBar = (props: any) => {
+import { useLanguage } from 'ordering-components/native'
+import Icon from 'react-native-vector-icons/Feather'
 
-  const { searchValue, placeholder, onSearch, onCancel, lazyLoad, isCancelButtonShow, noBorderShow } = props
+export const SearchBar = (props: any) => {
+  const {
+    searchValue,
+    placeholder,
+    onSearch,
+    onCancel,
+    lazyLoad,
+    isCancelButtonShow,
+    isCancelXButtonShow,
+    noBorderShow,
+    borderStyle
+  } = props
 
   const [,t] = useLanguage()
 
@@ -28,7 +37,7 @@ export const SearchBar = (props: any) => {
   }
 
   return (
-    <View style={[styles.container, !noBorderShow && styles.borderStyle]}>
+    <View style={[styles.container, !noBorderShow && (borderStyle || styles.borderStyle)]}>
       <OInput
         value={searchValue}
         onChange={onChangeSearch}
@@ -46,6 +55,17 @@ export const SearchBar = (props: any) => {
           style={styles.buttonStyle}
           onClick={onCancel || handleClear}
         />
+      )}
+      {isCancelXButtonShow && (
+        <TouchableOpacity
+          onPress={onCancel || handleClear}
+        >
+          <Icon
+            name='x-circle'
+            size={30}
+            style={{ marginRight: 5 }}
+          />
+        </TouchableOpacity>
       )}
     </View>
   )

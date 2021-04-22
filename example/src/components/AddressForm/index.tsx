@@ -6,7 +6,7 @@ import NavBar from '../NavBar'
 import { colors } from '../../theme'
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
-import { AddressFormContainer, AutocompleteInput, IconsContainer, GoogleMapContainer } from './styles'
+import { AddressFormContainer, AutocompleteInput, IconsContainer, GoogleMapContainer, FormInput } from './styles'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useForm, Controller } from 'react-hook-form'
 import { AddressFormParams } from '../../types'
@@ -273,203 +273,217 @@ const AddressFormUI = (props: AddressFormParams) => {
   }, [])
 
   return (
-    <AddressFormContainer style={{ height: 300, overflow: 'scroll' }}>
-      <Spinner visible={saveMapLocation} />
+    <>
       <NavBar
         title={t('ADDRESS_FORM', 'Address Form')}
         titleAlign={'center'}
         onActionLeft={goToBack}
         showCall={false}
-        btnStyle={{ paddingLeft: 0 }}
+        paddingTop={20}
       />
-      <AutocompleteInput>
-        <Controller
-          control={control}
-          name='address'
-          defaultValue={address?.address || formState.changes?.address || addressState.address.address || ''}
-          rules={{ required: isRequiredField && isRequiredField('address') ? t(`VALIDATION_ERROR_ADDRESS_REQUIRED`, `The field Address is required`) : null }}
-          render={() => (
-            <GooglePlacesAutocomplete
-              placeholder={t('ADD_ADDRESS', 'Add a address')}
-              onPress={(data, details: any) => {
-                handleChangeAddress(data, details)
-              }}
-              query={{ key: googleMapsApiKey }}
-              fetchDetails
-              ref={googleInput}
-              textInputProps={{
-                onChangeText: (text) => {
-                  if (!isFirstTime) {
-                    handleChangeInput({ target: { name: 'address', value: text } })
-                    setValue('address', text)
-                  }
-                  setIsFirstTime(false)
-                },
-              }}
-              styles={{
-                listView: {
-                  position: "absolute",
-                  marginTop: 44,
-                  borderBottomEndRadius: 15,
-                  elevation: 2,
-                  zIndex: 10000000,
-                },
-                textInput: {
-                  borderColor: colors.primary,
-                  borderWidth: 1,
-                  borderRadius: 10,
-                  flexGrow: 1,
-                  fontSize: 15,
-                  paddingHorizontal: 20,
-                  minHeight: 50,
-                  fontFamily: 'Poppins-Regular'
-                },
+      <AddressFormContainer style={{ height: 600, overflow: 'scroll' }}>
+        <View>
+          <FormInput>
+            <AutocompleteInput>
+              <Controller
+                control={control}
+                name='address'
+                defaultValue={address?.address || formState.changes?.address || addressState.address.address || ''}
+                rules={{ required: isRequiredField && isRequiredField('address') ? t(`VALIDATION_ERROR_ADDRESS_REQUIRED`, `The field Address is required`) : null }}
+                render={() => (
+                  <GooglePlacesAutocomplete
+                    placeholder={t('ADD_ADDRESS', 'Add a address')}
+                    onPress={(data, details: any) => {
+                      handleChangeAddress(data, details)
+                    }}
+                    query={{ key: googleMapsApiKey }}
+                    fetchDetails
+                    ref={googleInput}
+                    textInputProps={{
+                      onChangeText: (text) => {
+                        if (!isFirstTime) {
+                          handleChangeInput({ target: { name: 'address', value: text } })
+                          setValue('address', text)
+                        }
+                        setIsFirstTime(false)
+                      },
+                    }}
+                    styles={{
+                      listView: {
+                        position: "absolute",
+                        marginTop: 44,
+                        borderBottomEndRadius: 15,
+                        elevation: 2,
+                        zIndex: 10000000,
+                      },
+                      textInput: {
+                        borderWidth: 1,
+                        borderRadius: 10,
+                        flexGrow: 1,
+                        fontSize: 15,
+                        paddingHorizontal: 20,
+                        minHeight: 50,
+                        fontFamily: 'Poppins-Regular',
+                        marginBottom: !isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) ? 10 : 20
+                      },
 
-              }}
+                    }}
+                  />
+                )}
+              />
+            </AutocompleteInput>
+
+            {!isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) && (
+              <TouchableOpacity onPress={handleToggleMap} style={{ marginBottom: 10 }}>
+                <OText
+                  color={colors.primary}
+                  style={{ textAlign: 'center' }}
+                >
+                  {t('VIEW_MAP', 'View map to modify the exact location')}
+                </OText>
+              </TouchableOpacity>
+            )}
+
+            <Controller
+              control={control}
+              name='internal_number'
+              rules={{ required: isRequiredField && isRequiredField('internal_number') ? t(`VALIDATION_ERROR_INTERNAL_NUMBER_REQUIRED`, `The field internal number is required`) : null }}
+              defaultValue={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
+              render={() => (
+                <OInput
+                  name='internal_number'
+                  placeholder={t('INTERNAL_NUMBER', 'Internal number')}
+                  onChange={(text: string) => {
+                    handleChangeInput(text)
+                    setValue('internal_number', text)
+                  }}
+                  value={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
+                  style={styles.inputsStyle}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name='zipcode'
+              rules={{ required: isRequiredField && isRequiredField('zipcode') ? t(`VALIDATION_ERROR_ZIP_CODE_REQUIRED`, `The field Zip Code is required`) : null }}
+              defaultValue={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
+              render={() => (
+                <OInput
+                  name='zipcode'
+                  placeholder={t('ZIP_CODE', 'Zip code')}
+                  onChange={(text: string) => {
+                    handleChangeInput(text)
+                    setValue('zipcode', text)
+                  }}
+                  value={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
+                  style={styles.inputsStyle}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name='address_notes'
+              rules={{ required: isRequiredField && isRequiredField('address_notes') ? t(`VALIDATION_ERROR_ADDRESS_NOTES_REQUIRED`, `The field address notes is required`) : null }}
+              defaultValue={address?.address_notes || formState.changes?.address_notes || addressState.address.address_notes || ''}
+              render={() => (
+                <OInput
+                  name='address_notes'
+                  placeholder={t('ADDRESS_NOTES', 'Address notes')}
+                  onChange={(text: any) => {
+                    handleChangeInput(text)
+                    setValue('address_notes', text)
+                  }}
+                  value={address?.address_notes || formState.changes?.address_notes || addressState.address.address_notes || ''}
+                  multiline
+                  style={styles.textAreaStyles}
+                />
+              )}
+            />
+          </FormInput>
+          {!isKeyboardShow && (
+            <IconsContainer>
+              {tagsName.map(tag => (
+                <TouchableOpacity
+                  key={tag.value}
+                  onPress={() => handleAddressTag(tag.value)}
+                >
+                  <View
+                    style={{
+                      ...styles.iconContainer,
+                      backgroundColor: addressTag === tag.value
+                        ? colors.primary
+                        : colors.backgroundGray,
+                      borderColor: addressTag === tag.value
+                        ? colors.primary
+                        : colors.backgroundGray
+                    }}
+                  >
+                    <MaterialIcon
+                      name={tag.icon}
+                      size={40}
+                      style={{ ...styles.icons }}
+                    />
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </IconsContainer>
+          )}
+        </View>
+
+        <View>
+          {Object.keys(formState?.changes).length > 0 ? (
+            <OButton
+              text={
+                !formState.loading ? (
+                  isEditing || (!auth && orderState.options?.address?.address)
+                    ? t('UPDATE', 'Update')
+                    : t('SAVE', 'Save')
+                ) : t('LOADING', 'Loading')
+              }
+              imgRightSrc=''
+              onClick={handleSubmit(onSubmit)}
+              textStyle={{ color: colors.white }}
+            />
+          ) : (
+            <OButton
+              text={t('CANCEL', 'Cancel')}
+              style={{ backgroundColor: colors.white }}
+              onClick={() => navigation.goBack()}
             />
           )}
-        />
-      </AutocompleteInput>
-
-      {!isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) && (
-        <TouchableOpacity onPress={handleToggleMap}>
-          <OText color={colors.primary} style={{ textAlign: 'center' }}>{t('VIEW_MAP', 'View map to modify the exact location')}</OText>
-        </TouchableOpacity>
-      )}
-
-      <Controller
-        control={control}
-        name='internal_number'
-        rules={{ required: isRequiredField && isRequiredField('internal_number') ? t(`VALIDATION_ERROR_INTERNAL_NUMBER_REQUIRED`, `The field internal number is required`) : null }}
-        defaultValue={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
-        render={() => (
-          <OInput
-            name='internal_number'
-            placeholder={t('INTERNAL_NUMBER', 'Internal number')}
-            onChange={(text: string) => {
-              handleChangeInput(text)
-              setValue('internal_number', text)
-            }}
-            value={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
-            style={styles.inputsStyle}
+        </View>
+        <OModal open={toggleMap} onClose={() => handleToggleMap()} entireModal customClose >
+          {locationChange && (
+            <GoogleMapContainer>
+              <GoogleMap
+                location={locationChange}
+                handleChangeAddressMap={handleChangeAddress}
+                maxLimitLocation={maxLimitLocation}
+                saveLocation={saveMapLocation}
+                setSaveLocation={setSaveMapLocation}
+                handleToggleMap={handleToggleMap}
+              />
+            </GoogleMapContainer>
+          )}
+          <OButton
+            text={t('SAVE', 'Save')}
+            textStyle={{ color: colors.white }}
+            imgRightSrc={null}
+            style={{ marginHorizontal: 30, marginBottom: 10 }}
+            onClick={() => setSaveMapLocation(true)}
           />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name='zipcode'
-        rules={{ required: isRequiredField && isRequiredField('zipcode') ? t(`VALIDATION_ERROR_ZIP_CODE_REQUIRED`, `The field Zip Code is required`) : null }}
-        defaultValue={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
-        render={() => (
-          <OInput
-            name='zipcode'
-            placeholder={t('ZIP_CODE', 'Zip code')}
-            onChange={(text: string) => {
-              handleChangeInput(text)
-              setValue('zipcode', text)
-            }}
-            value={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
-            style={styles.inputsStyle}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name='address_notes'
-        rules={{ required: isRequiredField && isRequiredField('address_notes') ? t(`VALIDATION_ERROR_ADDRESS_NOTES_REQUIRED`, `The field address notes is required`) : null }}
-        defaultValue={address?.address_notes || formState.changes?.address_notes || addressState.address.address_notes || ''}
-        render={() => (
-          <OInput
-            name='address_notes'
-            placeholder={t('ADDRESS_NOTES', 'Address notes')}
-            onChange={(text: any) => {
-              handleChangeInput(text)
-              setValue('address_notes', text)
-            }}
-            value={address?.address_notes || formState.changes?.address_notes || addressState.address.address_notes || ''}
-            multiline
-            style={styles.textAreaStyles}
-          />
-        )}
-      />
-      {!isKeyboardShow && (
-        <IconsContainer>
-          {tagsName.map(tag => (
-            <TouchableOpacity
-              key={tag.value}
-              onPress={() => handleAddressTag(tag.value)}
-            >
-              <View
-                style={{
-                  ...styles.iconContainer,
-                  backgroundColor: addressTag === tag.value
-                    ? colors.primary
-                    : colors.backgroundGray,
-                  borderColor: addressTag === tag.value
-                    ? colors.primary
-                    : colors.backgroundGray
-                }}
-              >
-                <MaterialIcon
-                  name={tag.icon}
-                  size={40}
-                  style={{ ...styles.icons }}
-                />
-              </View>
-            </TouchableOpacity>
-          ))}
-        </IconsContainer>
-      )}
-      {Object.keys(formState?.changes).length > 0 ? (
-        <OButton
-          text={
-            !formState.loading ? (
-              isEditing || (!auth && orderState.options?.address?.address)
-                ? t('UPDATE', 'Update')
-                : t('SAVE', 'Save')
-            ) : t('LOADING', 'Loading')
-          }
-          imgRightSrc=''
-          onClick={handleSubmit(onSubmit)}
-          textStyle={{ color: colors.white }}
+        </OModal>
+        <Alert
+          open={alertState.open}
+          onAccept={closeAlert}
+          onClose={closeAlert}
+          content={alertState.content}
+          title={t('ERROR', 'Error')}
         />
-      ) : (
-        <OButton
-          text={t('CANCEL', 'Cancel')}
-          style={{ backgroundColor: colors.white }}
-          onClick={() => navigation.goBack()}
-        />
-      )}
-      <OModal open={toggleMap} onClose={() => handleToggleMap()} entireModal customClose >
-        {locationChange && (
-          <GoogleMapContainer>
-            <GoogleMap
-              location={locationChange}
-              handleChangeAddressMap={handleChangeAddress}
-              maxLimitLocation={maxLimitLocation}
-              saveLocation={saveMapLocation}
-              setSaveLocation={setSaveMapLocation}
-              handleToggleMap={handleToggleMap}
-            />
-          </GoogleMapContainer>
-        )}
-        <OButton
-          text={t('SAVE', 'Save')}
-          textStyle={{ color: colors.white }}
-          imgRightSrc={null}
-          style={{ marginHorizontal: 30, marginBottom: 10 }}
-          onClick={() => setSaveMapLocation(true)}
-        />
-      </OModal>
-      <Alert
-        open={alertState.open}
-        onAccept={closeAlert}
-        onClose={closeAlert}
-        content={alertState.content}
-        title={t('ERROR', 'Error')}
-      />
-    </AddressFormContainer>
+        <Spinner visible={saveMapLocation} />
+      </AddressFormContainer>
+    </>
   )
 }
 
@@ -489,16 +503,16 @@ const styles = StyleSheet.create({
   inputsStyle: {
     borderColor: colors.secundaryContrast,
     borderRadius: 10,
-    marginVertical: 20
+    marginBottom: 20
   },
   textAreaStyles: {
     borderColor: colors.secundaryContrast,
     borderRadius: 10,
-    marginVertical: 20,
-    height: 150,
+    marginBottom: 20,
+    height: 100,
     textAlignVertical: 'top',
     alignItems: 'flex-start'
-  }
+  },
 })
 
 export const AddressForm = (props: AddressFormParams) => {
