@@ -173,6 +173,10 @@ const ProfileUI = (props: ProfileParams) => {
     }
     return rules
   }
+  
+  const handleChangeInputEmail = (value : string) => {
+    handleChangeInput(value.toLowerCase().replace(/\s/gi, ''))
+  }
 
   useEffect(() => {
     if (validationFields?.fields?.checkout) {
@@ -274,11 +278,14 @@ const ProfileUI = (props: ProfileParams) => {
                       style={styles.inputbox}
                       onChange={(val: any) => {
                         setValue(field.code, val.target.value)
-                        handleChangeInput(val);
+                        field.code !== 'email' ? handleChangeInput(val) : handleChangeInputEmail(val)
                       }}
                       value={user && user[field.code]}
                       autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                       autoCompleteType={field.code === 'email' ? 'off' : ''}
+                      autoCorrect={field.code === 'email' && false}
+                      type={field.code === 'email' ? 'visible-password' : ''}
+                      isSecured={field.code === 'email'}
                     />
                   )}
                   name={field.code}

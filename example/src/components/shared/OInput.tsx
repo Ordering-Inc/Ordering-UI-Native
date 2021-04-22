@@ -49,6 +49,8 @@ interface Props {
   vectorIconColor?: string;
   autoCapitalize?: string;
   autoCompleteType?: string;
+  autoCorrect?: boolean;
+  keyboardType?: string;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -75,7 +77,7 @@ const OInput = (props: Props): React.ReactElement => {
         name={props.name}
         secureTextEntry={props.isSecured}
         onChangeText={(txt: any) => props.name ? props.onChange({target: {name: props.name, value: txt}}) : props.onChange(txt)}
-        defaultValue={props.value}
+        value={props.value}
         placeholder={props.placeholder ? props.placeholder : ''}
         keyboardType={props.type || 'default'}
         multiline={props.multiline}
@@ -83,6 +85,7 @@ const OInput = (props: Props): React.ReactElement => {
         editable={!props.isDisabled}
         autoCapitalize={props.autoCapitalize}
         autoCompleteType={props.autoCompleteType}
+        autoCorrect={props.autoCorrect}
       />
       {props.iconRight && (
         <OIcon

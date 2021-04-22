@@ -143,6 +143,10 @@ export const UserFormDetailsUI = (props: any) => {
     setValidationFieldsSorted(fieldsSorted)
   }
 
+  const handleChangeInputEmail = (value : string) => {
+    handleChangeInput(value.toLowerCase().replace(/\s/gi, ''))
+  }
+
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       const list = Object.values(errors)
@@ -211,9 +215,12 @@ export const UserFormDetailsUI = (props: any) => {
                             : formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
                           onChange={(val: any) => {
                             setValue(field.code, val.target.value)
-                            handleChangeInput(val)
+                            field.code !== 'email' ? handleChangeInput(val) : handleChangeInputEmail(val)
                           }}
                           autoCompleteType={field.code === 'email' ? 'off' : ''}
+                          autoCorrect={field.code === 'email' && false}
+                          type={field.code === 'email' ? 'visible-password' : ''}
+                          isSecured={field.code === 'email'}
                         />
                       )}
                       name={field.code}

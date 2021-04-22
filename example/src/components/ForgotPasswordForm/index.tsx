@@ -20,7 +20,7 @@ const ForgotPasswordUI = (props: any) => {
   const {
     navigation,
     formState,
-    handleButtonForgotPasswordClick
+    handleButtonForgotPasswordClick,
   } = props;
   const [, t] = useLanguage();
   const { showToast } = useToast();
@@ -31,6 +31,10 @@ const ForgotPasswordUI = (props: any) => {
   const onSubmit = (values: any) => {
     setEmailSent(values.email)
     handleButtonForgotPasswordClick && handleButtonForgotPasswordClick(values)
+  }
+
+  const handleChangeInputEmail = (value : string, onChange : any) => {
+    onChange(value.toLowerCase().replace(/\s/gi, ''))
   }
 
   useEffect(() => {
@@ -89,9 +93,14 @@ const ForgotPasswordUI = (props: any) => {
               style={style.inputStyle}
               icon={IMAGES.email}
               value={value}
-              onChange={(val: any) => onChange(val)}
+              onChange={(e: any) => {
+                handleChangeInputEmail(e, onChange)
+              }}
               autoCapitalize='none'
               autoCompleteType='off'
+              autoCorrect={false}
+              type='visible-password'
+              isSecured
             />
           )}
           name="email"

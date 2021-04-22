@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
@@ -52,7 +52,7 @@ const LoginFormUI = (props: LoginParams) => {
     handleButtonLoginClick,
     handleSendVerifyCode,
     handleCheckPhoneCode,
-    onNavigationRedirect
+    onNavigationRedirect,
   } = props
 
   const { showToast } = useToast();
@@ -60,7 +60,6 @@ const LoginFormUI = (props: LoginParams) => {
   const [{ configs }] = useConfig()
   const [, { login }] = useSession()
   const { control, handleSubmit, errors } = useForm();
-
   const [passwordSee, setPasswordSee] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -111,6 +110,10 @@ const LoginFormUI = (props: LoginParams) => {
       user,
       token: user.session.access_token
     })
+  }
+
+  const handleChangeInputEmail = (value : string, onChange : any) => {
+    onChange(value.toLowerCase().replace(/\s/gi, ''))
   }
 
   useEffect(() => {
@@ -212,10 +215,15 @@ const LoginFormUI = (props: LoginParams) => {
                     placeholder={t('EMAIL', 'Email')}
                     style={loginStyle.inputStyle}
                     icon={IMAGES.email}
+                    onChange={(e: any) => {
+                      handleChangeInputEmail(e, onChange)
+                    }}
                     value={value}
-                    onChange={(val: any) => onChange(val)}
                     autoCapitalize='none'
                     autoCompleteType='off'
+                    autoCorrect={false}
+                    type='visible-password'
+                    isSecured
                   />
                 )}
                 name="email"
@@ -263,7 +271,7 @@ const LoginFormUI = (props: LoginParams) => {
               text={loginButtonText}
               bgColor={colors.primary}
               borderColor={colors.primary}
-              textStyle={{color: 'white'}}
+              textStyle={{ color: 'white' }}
               imgRightSrc={null}
               isLoading={formState.loading}
             />
@@ -281,8 +289,8 @@ const LoginFormUI = (props: LoginParams) => {
         {useLoginByCellphone &&
           loginTab === 'cellphone' &&
           configs && Object.keys(configs).length > 0 &&
-            (configs?.twilio_service_enabled?.value === 'true' ||
-              configs?.twilio_service_enabled?.value === '1') &&
+          (configs?.twilio_service_enabled?.value === 'true' ||
+            configs?.twilio_service_enabled?.value === '1') &&
           (
             <>
               <OrSeparator>
@@ -310,8 +318,8 @@ const LoginFormUI = (props: LoginParams) => {
 
         {configs && Object.keys(configs).length > 0 && (
           (configs?.facebook_login?.value === 'true' ||
-              configs?.facebook_login?.value === '1') &&
-              configs?.facebook_id?.value &&
+            configs?.facebook_login?.value === '1') &&
+          configs?.facebook_id?.value &&
           (
             <ButtonsWrapper>
               <OText size={18} mBottom={10} color={colors.disabled}>

@@ -144,6 +144,10 @@ const SignupFormUI = (props: SignupParams) => {
     return rules
   }
 
+  const handleChangeInputEmail = (value : string, onChange : any) => {
+    onChange(value.toLowerCase().replace(/\s/gi, ''))
+  }
+
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
       formState.result?.result && showToast(
@@ -244,27 +248,30 @@ const SignupFormUI = (props: SignupParams) => {
                 validationFields?.fields?.checkout &&
                 Object.values(validationFields?.fields?.checkout).map(
                   (field: any) => !notValidationFields.includes(field.code) && (
-                  showField(field.code) && (
-                    <Controller
-                      key={field.id}
-                      control={control}
-                      render={({ onChange, value }) => (
-                        <OInput
-                          placeholder={t(field.name)}
-                          style={style.inputStyle}
-                          icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
-                          value={value}
-                          onChange={(val: any) => onChange(val)}
-                          autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
-                          autoCompleteType={field.code === 'email' ? 'off' : ''}
-                        />
-                      )}
-                      name={field.code}
-                      rules={getInputRules(field)}
-                      defaultValue=""
-                    />
-                  )
-                ))
+                    showField(field.code) && (
+                      <Controller
+                        key={field.id}
+                        control={control}
+                        render={({ onChange, value }) => (
+                          <OInput
+                            placeholder={t(field.name)}
+                            style={style.inputStyle}
+                            icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
+                            value={value}
+                            onChange={(val: any) => field.code !== 'email' ? onChange(val) : handleChangeInputEmail(val, onChange)}
+                            autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
+                            autoCompleteType={field.code === 'email' ? 'off' : ''}
+                            autoCorrect={field.code === 'email' && false}
+                            type={field.code === 'email' ? 'visible-password' : ''}
+                            isSecured={field.code === 'email'}
+                          />
+                        )}
+                        name={field.code}
+                        rules={getInputRules(field)}
+                        defaultValue=""
+                      />
+                    )
+                  ))
               }
 
               {!!showInputPhoneNumber && (
