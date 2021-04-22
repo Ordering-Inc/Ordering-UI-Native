@@ -36,7 +36,8 @@ const AddressFormUI = (props: AddressFormParams) => {
     userCustomerSetup,
     isGuestUser,
     isRequiredField,
-    isFromProductsList
+    isFromProductsList,
+    hasAddressDefault
   } = props
 
   const [, t] = useLanguage()
@@ -58,6 +59,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   )
   const [saveMapLocation, setSaveMapLocation] = useState(false)
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
+  const [isSignUpEffect,setIsSignUpEffect] = useState(false)
 
   const googleInput: any = useRef(null)
 
@@ -271,6 +273,13 @@ const AddressFormUI = (props: AddressFormParams) => {
       keyboardDidHideListener.remove()
     }
   }, [])
+
+  useEffect(() => {
+    if (!orderState.loading && auth && !hasAddressDefault && isSignUpEffect) {
+      navigation.navigate('BottomTab')
+    }
+    setIsSignUpEffect(true)
+  }, [orderState.loading])
 
   return (
     <>
