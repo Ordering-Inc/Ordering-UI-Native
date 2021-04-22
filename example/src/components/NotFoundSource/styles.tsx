@@ -5,9 +5,10 @@ export const NotFound = styled.View`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 80%;
+  width: 100%;
   height: auto;
   margin: 20px auto;
+  padding: 10px
 `
 
 export const NotFoundImage = styled.View`

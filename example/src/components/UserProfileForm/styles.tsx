@@ -28,5 +28,5 @@ export const Actions = styled.View`
 `
 
 export const WrapperPhone = styled.View`
-  
+  padding: 8px 0px;
 `

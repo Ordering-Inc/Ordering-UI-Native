@@ -3,7 +3,6 @@ import styled from 'styled-components/native';
 import { Platform } from 'react-native';
 import { UserProfileForm as ProfileController } from '../components/UserProfileForm';
 import { Container } from '../layouts/Container'
-import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
@@ -23,7 +22,7 @@ const Profile = (props: Props) => {
   }
 
   return (
-    <SafeAreaContainer>
+    <>
       <KeyboardView
         enabled
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -32,7 +31,7 @@ const Profile = (props: Props) => {
           <ProfileController {...profileProps} />
         </Container>
       </KeyboardView>
-    </SafeAreaContainer>
+    </>
   );
 };
 
