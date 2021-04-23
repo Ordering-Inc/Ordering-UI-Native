@@ -122,6 +122,7 @@ const PaymentOptionsUI = (props: any) => {
             src={getPayIcon(item.gateway)}
             width={40}
             height={40}
+            color={paymethodSelected?.id === item.id ? colors.white : colors.backgroundDark}
             />
           <OText
             size={12}
