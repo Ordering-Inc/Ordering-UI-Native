@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
@@ -52,7 +52,7 @@ const LoginFormUI = (props: LoginParams) => {
     handleButtonLoginClick,
     handleSendVerifyCode,
     handleCheckPhoneCode,
-    onNavigationRedirect
+    onNavigationRedirect,
   } = props
 
   const { showToast } = useToast();
@@ -60,7 +60,6 @@ const LoginFormUI = (props: LoginParams) => {
   const [{ configs }] = useConfig()
   const [, { login }] = useSession()
   const { control, handleSubmit, errors } = useForm();
-
   const [passwordSee, setPasswordSee] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -113,6 +112,10 @@ const LoginFormUI = (props: LoginParams) => {
     })
   }
 
+  const handleChangeInputEmail = (value : string, onChange : any) => {
+    onChange(value.toLowerCase().replace(/\s/gi, ''))
+  }
+
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
       formState.result?.result && showToast(
@@ -153,6 +156,7 @@ const LoginFormUI = (props: LoginParams) => {
         list.unshift({ message: phoneInputData.error })
       }
       if (
+        loginTab === 'cellphone' &&
         !phoneInputData.error &&
         !phoneInputData.phone.country_phone_code &&
         !phoneInputData.phone.cellphone
@@ -209,12 +213,17 @@ const LoginFormUI = (props: LoginParams) => {
                 control={control}
                 render={({ onChange, value }) => (
                   <OInput
-                    placeholder={'Email'}
+                    placeholder={t('EMAIL', 'Email')}
                     style={loginStyle.inputStyle}
                     icon={IMAGES.email}
+                    onChange={(e: any) => {
+                      handleChangeInputEmail(e, onChange)
+                    }}
                     value={value}
-                    onChange={(val: any) => onChange(val)}
                     autoCapitalize='none'
+                    autoCorrect={false}
+                    type='visible-password'
+                    isSecured
                   />
                 )}
                 name="email"
@@ -229,10 +238,12 @@ const LoginFormUI = (props: LoginParams) => {
               />
             )}
             {useLoginByCellphone && loginTab === 'cellphone' && (
-              <PhoneInputNumber
-                data={phoneInputData}
-                handleData={(val: any) => setPhoneInputData(val)}
-              />
+              <View style={{ marginBottom: 25 }}>
+                <PhoneInputNumber
+                  data={phoneInputData}
+                  handleData={(val: any) => setPhoneInputData(val)}
+                />
+              </View>
             )}
 
             <Controller
@@ -240,7 +251,7 @@ const LoginFormUI = (props: LoginParams) => {
               render={({ onChange, value }) => (
                 <OInput
                   isSecured={!passwordSee ? true : false}
-                  placeholder={'Password'}
+                  placeholder={t('PASSWORD', 'Password')}
                   style={loginStyle.inputStyle}
                   icon={IMAGES.lock}
                   iconCustomRight={
@@ -262,7 +273,7 @@ const LoginFormUI = (props: LoginParams) => {
               text={loginButtonText}
               bgColor={colors.primary}
               borderColor={colors.primary}
-              textStyle={{color: 'white'}}
+              textStyle={{ color: 'white' }}
               imgRightSrc={null}
               isLoading={formState.loading}
             />
@@ -280,8 +291,8 @@ const LoginFormUI = (props: LoginParams) => {
         {useLoginByCellphone &&
           loginTab === 'cellphone' &&
           configs && Object.keys(configs).length > 0 &&
-            (configs?.twilio_service_enabled?.value === 'true' ||
-              configs?.twilio_service_enabled?.value === '1') &&
+          (configs?.twilio_service_enabled?.value === 'true' ||
+            configs?.twilio_service_enabled?.value === '1') &&
           (
             <>
               <OrSeparator>
@@ -309,8 +320,8 @@ const LoginFormUI = (props: LoginParams) => {
 
         {configs && Object.keys(configs).length > 0 && (
           (configs?.facebook_login?.value === 'true' ||
-              configs?.facebook_login?.value === '1') &&
-              configs?.facebook_id?.value &&
+            configs?.facebook_login?.value === '1') &&
+          configs?.facebook_id?.value &&
           (
             <ButtonsWrapper>
               <OText size={18} mBottom={10} color={colors.disabled}>

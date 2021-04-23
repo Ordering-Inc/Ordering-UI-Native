@@ -31,6 +31,7 @@ import { VerifyPhone } from '../VerifyPhone';
 import { OText, OButton, OInput, OModal } from '../shared';
 import { SignupParams } from '../../types';
 import { colors } from '../../theme'
+import { sortInputFields } from '../../utils';
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']
 
@@ -144,6 +145,10 @@ const SignupFormUI = (props: SignupParams) => {
     return rules
   }
 
+  const handleChangeInputEmail = (value: string, onChange: any) => {
+    onChange(value.toLowerCase().replace(/\s/gi, ''))
+  }
+
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
       formState.result?.result && showToast(
@@ -212,39 +217,38 @@ const SignupFormUI = (props: SignupParams) => {
       <FormSide>
         {useSignupByEmail && useSignupByCellphone &&
           configs && Object.keys(configs).length > 0 &&
-            (configs?.twilio_service_enabled?.value === 'true' ||
-              configs?.twilio_service_enabled?.value === '1') && (
-          <SignupWith style={{ paddingBottom: 25 }}>
-            <OTabs>
-              {useSignupByEmail && (
-                <Pressable onPress={() => handleChangeTab('email')}>
-                  <OTab>
-                    <OText size={18} color={signupTab === 'email' ? colors.primary : colors.disabled}>
-                      {t('SIGNUP_BY_EMAIL', 'Signup by Email')}
-                    </OText>
-                  </OTab>
-                </Pressable>
-              )}
-              {useSignupByCellphone && (
-                <Pressable onPress={() => handleChangeTab('cellphone')}>
-                  <OTab>
-                    <OText size={18} color={signupTab === 'cellphone' ? colors.primary : colors.disabled}>
-                      {t('SIGNUP_BY_PHONE', 'Signup by Phone')}
-                    </OText>
-                  </OTab>
-                </Pressable>
-              )}
-            </OTabs>
-          </SignupWith>
-        )}
+          (configs?.twilio_service_enabled?.value === 'true' ||
+            configs?.twilio_service_enabled?.value === '1') && (
+            <SignupWith style={{ paddingBottom: 25 }}>
+              <OTabs>
+                {useSignupByEmail && (
+                  <Pressable onPress={() => handleChangeTab('email')}>
+                    <OTab>
+                      <OText size={18} color={signupTab === 'email' ? colors.primary : colors.disabled}>
+                        {t('SIGNUP_BY_EMAIL', 'Signup by Email')}
+                      </OText>
+                    </OTab>
+                  </Pressable>
+                )}
+                {useSignupByCellphone && (
+                  <Pressable onPress={() => handleChangeTab('cellphone')}>
+                    <OTab>
+                      <OText size={18} color={signupTab === 'cellphone' ? colors.primary : colors.disabled}>
+                        {t('SIGNUP_BY_PHONE', 'Signup by Phone')}
+                      </OText>
+                    </OTab>
+                  </Pressable>
+                )}
+              </OTabs>
+            </SignupWith>
+          )}
         <FormInput>
           {!(useChekoutFileds && validationFields?.loading) ? (
             <>
-              {
-                validationFields?.fields?.checkout &&
-                Object.values(validationFields?.fields?.checkout).map(
-                  (field: any) => !notValidationFields.includes(field.code) && (
-                  showField(field.code) && (
+              {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any) =>
+                !notValidationFields.includes(field.code) &&
+                (
+                  showField && showField(field.code) && (
                     <Controller
                       key={field.id}
                       control={control}
@@ -254,8 +258,11 @@ const SignupFormUI = (props: SignupParams) => {
                           style={style.inputStyle}
                           icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
                           value={value}
-                          onChange={(val: any) => onChange(val)}
+                          onChange={(val: any) => field.code !== 'email' ? onChange(val) : handleChangeInputEmail(val, onChange)}
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
+                          autoCorrect={field.code === 'email' && false}
+                          type={field.code === 'email' ? 'visible-password' : ''}
+                          isSecured={field.code === 'email'}
                         />
                       )}
                       name={field.code}
@@ -267,10 +274,12 @@ const SignupFormUI = (props: SignupParams) => {
               }
 
               {!!showInputPhoneNumber && (
-                <PhoneInputNumber
-                  data={phoneInputData}
-                  handleData={(val: any) => setPhoneInputData(val)}
-                />
+                <View style={{ marginBottom: 25 }}>
+                  <PhoneInputNumber
+                    data={phoneInputData}
+                    handleData={(val: any) => setPhoneInputData(val)}
+                  />
+                </View>
               )}
 
               {signupTab !== 'cellphone' && (
@@ -279,7 +288,7 @@ const SignupFormUI = (props: SignupParams) => {
                   render={({ onChange, value }) => (
                     <OInput
                       isSecured={!passwordSee ? true : false}
-                      placeholder={'Password'}
+                      placeholder={t('PASSWORD', 'Password')}
                       style={style.inputStyle}
                       icon={IMAGES.lock}
                       iconCustomRight={
@@ -335,40 +344,44 @@ const SignupFormUI = (props: SignupParams) => {
           )}
         </FormInput>
 
-        {onNavigationRedirect && loginButtonText && (
-          <View style={style.wrappText}>
-            <OText size={18} style={{ marginRight: 5 }}>
-              {t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
-            </OText>
-            <Pressable onPress={() => onNavigationRedirect('Login')}>
-              <OText size={18} color={colors.primary}>
-                {loginButtonText}
+        {
+          onNavigationRedirect && loginButtonText && (
+            <View style={style.wrappText}>
+              <OText size={18} style={{ marginRight: 5 }}>
+                {t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
               </OText>
-            </Pressable>
-          </View>
-        )}
-
-        {configs && Object.keys(configs).length > 0 && (
-          (configs?.facebook_login?.value === 'true' ||
-            configs?.facebook_login?.value === '1') &&
-          configs?.facebook_id?.value &&
-          (
-            <ButtonsSection>
-              <OText size={18} color={colors.disabled}>
-                {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
-              </OText>
-
-              <SocialButtons>
-                <FacebookLogin
-                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                  handleLoading={(val: boolean) => setIsFBLoading(val)}
-                  handleSuccessFacebookLogin={handleSuccessFacebook}
-                />
-              </SocialButtons>
-            </ButtonsSection>
+              <Pressable onPress={() => onNavigationRedirect('Login')}>
+                <OText size={18} color={colors.primary}>
+                  {loginButtonText}
+                </OText>
+              </Pressable>
+            </View>
           )
-        )}
-      </FormSide>
+        }
+
+        {
+          configs && Object.keys(configs).length > 0 && (
+            (configs?.facebook_login?.value === 'true' ||
+              configs?.facebook_login?.value === '1') &&
+            configs?.facebook_id?.value &&
+            (
+              <ButtonsSection>
+                <OText size={18} color={colors.disabled}>
+                  {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
+                </OText>
+
+                <SocialButtons>
+                  <FacebookLogin
+                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                    handleLoading={(val: boolean) => setIsFBLoading(val)}
+                    handleSuccessFacebookLogin={handleSuccessFacebook}
+                  />
+                </SocialButtons>
+              </ButtonsSection>
+            )
+          )
+        }
+      </FormSide >
       <OModal
         open={isModalVisible}
         onClose={() => setIsModalVisible(false)}
@@ -384,7 +397,7 @@ const SignupFormUI = (props: SignupParams) => {
         />
       </OModal>
       <Spinner visible={formState.loading || validationFields.loading || isFBLoading} />
-    </View>
+    </View >
   );
 };
 

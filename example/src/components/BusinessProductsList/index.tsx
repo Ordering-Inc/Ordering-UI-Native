@@ -24,7 +24,8 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     searchValue,
     isBusinessLoading,
     handleSearchRedirect,
-    handleClearSearch
+    handleClearSearch,
+    errorQuantityProducts
   } = props
 
   const [, t] = useLanguage()
@@ -112,7 +113,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         )
       }
       {
-        !categoryState.loading && !isBusinessLoading && categoryState.products.length === 0 && !errors && (
+        !categoryState.loading && !isBusinessLoading && categoryState.products.length === 0 && !errors && !((searchValue && errorQuantityProducts) || (!searchValue && !errorQuantityProducts)) && (
           <WrapperNotFound>
             <NotFoundSource
               content={!searchValue ? t('ERROR_NOT_FOUND_PRODUCTS_TIME', 'No products found at this time') : t('ERROR_NOT_FOUND_PRODUCTS', 'No products found, please change filters.')}

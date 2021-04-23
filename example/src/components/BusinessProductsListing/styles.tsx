@@ -1,4 +1,4 @@
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import { colors } from '../../theme'
 
 export const WrapHeader = styled.View`
@@ -26,4 +26,11 @@ export const WrapSearchBar = styled.View`
 `
 export const WrapContent = styled.View`
   padding: 10px 20px;
+`
+
+export const BusinessProductsListingContainer = styled.ScrollView`
+  flex: 1;
+  ${({ isActiveFloatingButtom }: { isActiveFloatingButtom: boolean }) => isActiveFloatingButtom && css`
+    margin-bottom: 50px;
+  `}
 `

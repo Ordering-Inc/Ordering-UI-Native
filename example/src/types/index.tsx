@@ -64,7 +64,8 @@ export interface AddressFormParams {
   useValidationFileds?: boolean,
   isSelectedAfterAdd?: boolean,
   onSaveAddress?: any,
-  isFromProductsList?: boolean
+  isFromProductsList?: boolean,
+  hasAddressDefault?: any
 }
 export interface SignupParams {
   navigation?: any;
@@ -132,6 +133,7 @@ export interface BusinessProductsListingParams {
   categorySelected: any;
   handleChangeCategory: (value: any) => {};
   handleSearchRedirect: any;
+  errorQuantityProducts?: boolean
 }
 export interface BusinessBasicInformationParams {
   businessState?: any;
@@ -159,6 +161,8 @@ export interface BusinessProductsListParams {
   searchValue?: any;
   handleClearSearch?: (value: any) => {};
   isBusinessLoading?: any,
+  errorQuantityProducts?: boolean
+
 }
 export interface SingleProductCardParams {
   businessId: any,

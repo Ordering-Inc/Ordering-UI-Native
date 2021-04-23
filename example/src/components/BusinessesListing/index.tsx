@@ -74,7 +74,15 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         </WelcomeTitle>
       )}
       <Search>
-        <SearchBar onSearch={handleChangeSearch} searchValue={searchValue} lazyLoad placeholder={t('FIND_BUSINESS', 'Find a Business')} />
+        <SearchBar
+          onSearch={handleChangeSearch}
+          searchValue={searchValue}
+          lazyLoad
+          isCancelXButtonShow={!!searchValue}
+          borderStyle={styles.borderStyle}
+          onCancel={() => handleChangeSearch('')}
+          placeholder={t('FIND_BUSINESS', 'Find a Business')}
+        />
       </Search>
       <OrderControlContainer>
         <View style={styles.wrapperOrderOptions}>
@@ -167,6 +175,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10
+  },
+  borderStyle: {
+    borderColor: colors.backgroundGray,
+    borderWidth: 1,
+    borderRadius: 10,
   }
 })
 
