@@ -11,7 +11,6 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useForm, Controller } from 'react-hook-form'
 import { AddressFormParams } from '../../types'
 import { GoogleMap } from '../GoogleMap'
-import Alert from '../../providers/AlertProvider'
 import Spinner from 'react-native-loading-spinner-overlay'
 
 const inputNames = [{ name: 'address', code: 'Address' }, { name: 'internal_number', code: 'Internal number' }, { name: 'zipcode', code: 'Zipcode' }, { name: 'address_notes', code: 'Address notes' }]
@@ -483,13 +482,6 @@ const AddressFormUI = (props: AddressFormParams) => {
             onClick={() => setSaveMapLocation(true)}
           />
         </OModal>
-        <Alert
-          open={alertState.open}
-          onAccept={closeAlert}
-          onClose={closeAlert}
-          content={alertState.content}
-          title={t('ERROR', 'Error')}
-        />
         <Spinner visible={saveMapLocation} />
       </AddressFormContainer>
     </>
