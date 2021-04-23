@@ -231,7 +231,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     <LinearGradient
                       start={{ x: 0, y: 0 }}
                       end={{ x: getOrderStatus(order?.status)?.percentage || 0, y: 0 }}
-                      locations={[getOrderStatus(order?.status)?.percentage || 0, 1]}
+                      locations={[1, 1]}
                       colors={[colors.primary, colors.disabled]}
                       style={styles.statusBar}
                     />
