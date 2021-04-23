@@ -49,7 +49,7 @@ export const CheckoutPage = (props: any) => {
                 showToast(ToastType.Error, confirmCartRes.error.message)
               }
               if (confirmCartRes.result.order?.uuid) {
-                props.navigation.navigate('OrderDetails', { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true })
+                props.navigation.navigate('HomeNavigator', { screen: 'OrderDetails', params: { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true }})
               }
             } catch (error) {
               showToast(ToastType.Error, error?.toString() || error.message)
