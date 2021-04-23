@@ -51,7 +51,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [{ user }] = useSession();
   const [, t] = useLanguage();
   const { showToast } = useToast();
-  const { control, handleSubmit, errors, setValue } = useForm();
+  const { handleSubmit, errors, setValue, control } = useForm();
 
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -227,11 +227,14 @@ const ProfileUI = (props: ProfileParams) => {
                     borderColor={colors.whiteGray}
                     style={styles.inputbox}
                     onChange={(val: any) => {
-                      setValue(field.code, val.target.value)
-                      handleChangeInput(val);
+                      field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/\s/gi, ''))
+                      field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({ target: { name: 'email', value: val.target.value.toLowerCase().replace(/\s/gi, '') } })
                     }}
                     value={user && user[field.code]}
                     autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
+                    autoCorrect={field.code === 'email' && false}
+                    type={field.code === 'email' ? 'visible-password' : ''}
+                    isSecured={field.code === 'email'}
                   />
                 )}
                 name={field.code}

@@ -182,20 +182,19 @@ export const UserFormDetailsUI = (props: any) => {
                           icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                           isDisabled={!isEdit}
-                          value={formState?.result?.result && !formState.result.error
-                            ? formState?.result?.result[field.code]
-                            : formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
-                          onChange={(val: any) => {
-                            setValue(field.code, val.target.value)
-                            handleChangeInput(val)
-                          }}
+                          value={formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
+                            onChange={(val: any) => {
+                              field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/\s/gi, ''))
+                              field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({target: {name : 'email', value: val.target.value.toLowerCase().replace(/\s/gi, '')}})
+                            }}
+                          autoCorrect={field.code === 'email' && false}
+                          type={field.code === 'email' ? 'visible-password' : ''}
+                          isSecured={field.code === 'email'}
                         />
                       )}
                       name={field.code}
                       rules={getInputRules(field)}
-                      defaultValue={formState?.result?.result && !formState.result.error
-                        ? formState?.result?.result[field.code]
-                        : formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
+                      defaultValue={user && user[field.code]}
                     />
                   </React.Fragment>
                 )

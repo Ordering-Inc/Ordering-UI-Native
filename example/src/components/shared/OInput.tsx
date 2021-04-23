@@ -47,7 +47,10 @@ interface Props {
   multiline?: boolean;
   vertorIcon?: string;
   vectorIconColor?: string;
-  autoCapitalize?: string
+  autoCapitalize?: string;
+  autoCompleteType?: string;
+  autoCorrect?: boolean;
+  keyboardType?: string;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -81,7 +84,8 @@ const OInput = (props: Props): React.ReactElement => {
         scrollEnabled={props.multiline}
         editable={!props.isDisabled}
         autoCapitalize={props.autoCapitalize}
-        autoCorrect={false}
+        autoCompleteType={props.autoCompleteType}
+        autoCorrect={props.autoCorrect}
       />
       {props.iconRight && (
         <OIcon
