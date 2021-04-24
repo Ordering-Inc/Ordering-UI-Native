@@ -227,8 +227,8 @@ const ProfileUI = (props: ProfileParams) => {
                     borderColor={colors.whiteGray}
                     style={styles.inputbox}
                     onChange={(val: any) => {
-                      field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/\s/gi, ''))
-                      field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({ target: { name: 'email', value: val.target.value.toLowerCase().replace(/\s/gi, '') } })
+                      field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
+                      field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({ target: { name: 'email', value: val.target.value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, '') } })
                     }}
                     value={user && user[field.code]}
                     autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}

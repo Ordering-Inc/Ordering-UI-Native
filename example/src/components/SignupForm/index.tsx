@@ -146,7 +146,7 @@ const SignupFormUI = (props: SignupParams) => {
   }
 
   const handleChangeInputEmail = (value: string, onChange: any) => {
-    onChange(value.toLowerCase().replace(/\s/gi, ''))
+    onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
   }
 
   useEffect(() => {
