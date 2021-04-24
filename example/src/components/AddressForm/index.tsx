@@ -323,6 +323,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                         borderBottomEndRadius: 15,
                         elevation: 2,
                         zIndex: 10000000,
+
                       },
                       textInput: {
                         borderWidth: 1,
@@ -332,9 +333,12 @@ const AddressFormUI = (props: AddressFormParams) => {
                         paddingHorizontal: 20,
                         minHeight: 50,
                         fontFamily: 'Poppins-Regular',
-                        marginBottom: !isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) ? 10 : 20
+                        marginBottom: !isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) ? 10 : 20,
+                        zIndex: 10000000,
                       },
-
+                      row: {
+                        zIndex: 10000000,
+                      },
                     }}
                   />
                 )}
