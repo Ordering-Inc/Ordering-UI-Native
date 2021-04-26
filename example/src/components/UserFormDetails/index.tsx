@@ -184,8 +184,8 @@ export const UserFormDetailsUI = (props: any) => {
                           isDisabled={!isEdit}
                           value={formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
                             onChange={(val: any) => {
-                              field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/\s/gi, ''))
-                              field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({target: {name : 'email', value: val.target.value.toLowerCase().replace(/\s/gi, '')}})
+                              field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
+                              field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({target: {name : 'email', value: val.target.value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, '')}})
                             }}
                           autoCorrect={field.code === 'email' && false}
                           type={field.code === 'email' ? 'visible-password' : ''}
