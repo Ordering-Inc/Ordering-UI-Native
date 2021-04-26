@@ -13,7 +13,9 @@ export const IconsContainer = styled.View`
   margin-bottom: 20px;
 `
 
-export const AutocompleteInput = styled.View``
+export const AutocompleteInput = styled.View`
+  z-index: 1000;
+`
 
 
 export const GoogleMapContainer = styled.View`

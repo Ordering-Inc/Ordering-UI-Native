@@ -1,6 +1,6 @@
 import React from 'react'
 import { LanguageSelector as LanguageSelectorController, useOrder } from 'ordering-components/native'
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 import RNPickerSelect from 'react-native-picker-select'
 import { Container } from './styles'
@@ -55,11 +55,21 @@ const pickerStyle = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 10
   },
+  inputIOS: {
+    color: colors.secundaryContrast,
+    paddingEnd: 20,
+    height: 30,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    backgroundColor: colors.backgroundGray
+  },
   icon: {
     width: 10,
     height: 10,
-    top: 17,
-    right: 10,
+    top: Platform.OS === 'ios' ? 8 : 17,
+    right: Platform.OS === 'ios' ? 7 : 10,
     position: 'absolute',
   },
   placeholder: {
