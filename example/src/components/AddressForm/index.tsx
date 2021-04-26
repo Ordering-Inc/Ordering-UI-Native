@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder } from 'ordering-components/native'
 import { StyleSheet, View, TouchableOpacity, Keyboard } from 'react-native'
 import { OInput, OButton, OText, OModal } from '../shared'
+import { getTraduction } from '../../utils'
 import NavBar from '../NavBar'
 import { colors } from '../../theme'
 import { ToastType, useToast } from '../../providers/ToastProvider';
@@ -310,6 +311,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                       },
                       autoCorrect: false
                     }}
+                    onFail={(error) => setAlertState({ open: true, content: getTraduction(error) })}
                     styles={{
                       listView: {
                         position: "absolute",
@@ -317,6 +319,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                         borderBottomEndRadius: 15,
                         elevation: 2,
                         zIndex: 10000000,
+
                       },
                       textInput: {
                         borderWidth: 1,
@@ -326,9 +329,12 @@ const AddressFormUI = (props: AddressFormParams) => {
                         paddingHorizontal: 20,
                         minHeight: 50,
                         fontFamily: 'Poppins-Regular',
-                        marginBottom: !isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) ? 10 : 20
+                        marginBottom: !isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) ? 10 : 20,
+                        zIndex: 10000000,
                       },
-
+                      row: {
+                        zIndex: 10000000,
+                      },
                     }}
                   />
                 )}

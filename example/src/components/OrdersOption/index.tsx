@@ -51,8 +51,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       const { error, result } = await reorder(orderId)
       if (!error) {
         onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: result.uuid })
-      } else {
-        showToast(ToastType.Error, t('ERROR_ORDER_WITHOUT_CART', 'The order was placed without a cart'))
+        return
       }
       setReorderLoading(false)
     } catch (err) {
