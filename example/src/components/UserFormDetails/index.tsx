@@ -32,7 +32,6 @@ export const UserFormDetailsUI = (props: any) => {
   const { handleSubmit, control, errors, setValue } = useForm();
 
   const [{ user }] = useSession()
-  const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(null)
   const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null)
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -91,7 +90,11 @@ export const UserFormDetailsUI = (props: any) => {
       return
     }
     if (Object.keys(formState.changes).length > 0) {
-      if (formState.changes?.cellphone === null) {
+      if (
+        formState.changes?.cellphone === null &&
+        validationFields?.fields?.checkout?.cellphone?.enabled &&
+        validationFields?.fields?.checkout?.cellphone?.required
+      ) {
         showToast(
           ToastType.Error,
           t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.')
@@ -127,8 +130,8 @@ export const UserFormDetailsUI = (props: any) => {
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       const list = Object.values(errors)
-      if (!isValidPhoneNumber && userPhoneNumber) {
-        list.push({ message: t('INVALID_ERROR_PHONE_NUMBER', 'The Phone Number field is invalid.') })
+      if (phoneInputData.error) {
+        list.push({ message: phoneInputData.error })
       }
       let stringError = ''
       list.map((item: any, i: number) => {
@@ -188,7 +191,7 @@ export const UserFormDetailsUI = (props: any) => {
                               field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({target: {name : 'email', value: val.target.value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, '')}})
                             }}
                           autoCorrect={field.code === 'email' && false}
-                          type={field.code === 'email' ? 'visible-password' : ''}
+                          type={field.code === 'email' ? 'email-address' : 'default'}
                           isSecured={field.code === 'email'}
                         />
                       )}

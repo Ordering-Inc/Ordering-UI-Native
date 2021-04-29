@@ -17,6 +17,7 @@ export const EditButton = styled.View`
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  flex: 1;
 `
 
 export const Actions = styled.View`

@@ -99,7 +99,7 @@ const ForgotPasswordUI = (props: any) => {
               autoCapitalize='none'
               autoCompleteType='off'
               autoCorrect={false}
-              type='visible-password'
+              type='email-address'
               isSecured
             />
           )}
