@@ -315,11 +315,15 @@ const AddressFormUI = (props: AddressFormParams) => {
                     styles={{
                       listView: {
                         position: "absolute",
-                        marginTop: 44,
+                        marginTop: 50,
+                        borderBottomStartRadius: 15,
                         borderBottomEndRadius: 15,
                         elevation: 2,
-                        zIndex: 10000000,
-
+                        borderWidth: 1,
+                        borderColor: "#ddd"
+                      },
+                      container: {
+                        zIndex: 100
                       },
                       textInput: {
                         borderWidth: 1,
@@ -329,12 +333,8 @@ const AddressFormUI = (props: AddressFormParams) => {
                         paddingHorizontal: 20,
                         minHeight: 50,
                         fontFamily: 'Poppins-Regular',
-                        marginBottom: !isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) ? 10 : 20,
-                        zIndex: 10000000,
-                      },
-                      row: {
-                        zIndex: 10000000,
-                      },
+                        marginBottom: !isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) ? 10 : 20
+                      }
                     }}
                   />
                 )}
