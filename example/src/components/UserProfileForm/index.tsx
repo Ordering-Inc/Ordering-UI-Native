@@ -23,7 +23,7 @@ import {
   OIconButton,
   OInput,
   OText,
-  OKeyButton,
+  OButton,
 } from '../../components/shared';
 import {
   CenterView,
@@ -67,7 +67,11 @@ const ProfileUI = (props: ProfileParams) => {
       showToast(ToastType.Error, phoneInputData.error)
       return
     }
-    if (formState.changes.cellphone === '') {
+    if (
+      formState.changes.cellphone === '' &&
+      validationFields?.fields?.checkout?.cellphone?.enabled &&
+      validationFields?.fields?.checkout?.cellphone?.required
+    ) {
       showToast(
         ToastType.Error,
         t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.')
@@ -103,6 +107,13 @@ const ProfileUI = (props: ProfileParams) => {
   const handleCancelEdit = () => {
     cleanFormState({ changes: {} });
     toggleIsEdit();
+    setPhoneInputData({
+      error: '',
+      phone: {
+        country_phone_code: null,
+        cellphone: null
+      }
+    })
   };
 
   const handleChangePhoneNumber = (number: any) => {
@@ -233,7 +244,7 @@ const ProfileUI = (props: ProfileParams) => {
                     value={user && user[field.code]}
                     autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                     autoCorrect={field.code === 'email' && false}
-                    type={field.code === 'email' ? 'visible-password' : ''}
+                    type={field.code === 'email' ? 'email-address' : ''}
                     isSecured={field.code === 'email'}
                   />
                 )}
@@ -274,28 +285,45 @@ const ProfileUI = (props: ProfileParams) => {
       {!validationFields.loading && (
         <EditButton>
           {!isEdit ? (
-            <OKeyButton
-              title="Edit"
-              style={{ ...styles.editButton, flex: 0 }}
+            <OButton
+              text={t('EDIT', 'Edit')}
+              bgColor={colors.white}
+              borderColor={colors.primary}
+              isDisabled={formState.loading}
+              imgRightSrc={null}
+              textStyle={{ fontSize: 20 }}
+              style={{ ...styles.editButton }}
               onClick={toggleIsEdit}
             />
           ) : (
             <>
-              <OKeyButton
-                title="Cancel"
-                style={styles.editButton}
-                onClick={handleCancelEdit}
-              />
+              <View style={{ flex: 1 }}>
+                <OButton
+                  text={t('CANCEL', 'Cancel')}
+                  bgColor={colors.white}
+                  borderColor={colors.primary}
+                  isDisabled={formState.loading}
+                  imgRightSrc={null}
+                  style={{ ...styles.editButton }}
+                  onClick={handleCancelEdit}
+                />
+              </View>
               {((formState &&
-                Object.keys(formState?.changes).length > 0 &&
-                isEdit) ||
-                formState?.loading) && (
-                  <OKeyButton
-                    title="Update"
+                Object.keys(formState?.changes).length > 0 && isEdit) || formState?.loading) &&
+              (
+                <View style={{ flex: 1, marginLeft: 5 }}>
+                  <OButton
+                    text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
+                    bgColor={colors.primary}
+                    textStyle={{ color: formState.loading ? 'black' : 'white' }}
+                    borderColor={colors.primary}
+                    isDisabled={formState.loading}
+                    imgRightSrc={null}
+                    style={{ ...styles.editButton }}
                     onClick={handleSubmit(onSubmit)}
-                    style={{ ...styles.editButton, backgroundColor: colors.primary, marginLeft: 8 }}
                   />
-                )}
+                </View>
+              )}
             </>
           )}
         </EditButton>
@@ -325,15 +353,16 @@ const styles = StyleSheet.create({
     width: '90%'
   },
   editButton: {
+    // flex:0,
     borderRadius: 25,
     borderColor: colors.primary,
     backgroundColor: colors.white,
-    borderWidth: 2,
+    borderWidth: 1,
     color: colors.primary,
-    width: 100,
-    height: 50,
+    // width: 100,
+    // height: 50,
     marginVertical: 8,
-    flex: 1,
+    // flex: 1,
   },
 });
 

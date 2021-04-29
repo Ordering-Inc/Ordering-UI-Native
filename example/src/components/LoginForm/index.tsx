@@ -222,7 +222,7 @@ const LoginFormUI = (props: LoginParams) => {
                     value={value}
                     autoCapitalize='none'
                     autoCorrect={false}
-                    type='visible-password'
+                    type='email-address'
                     isSecured
                   />
                 )}

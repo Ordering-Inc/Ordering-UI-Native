@@ -100,6 +100,7 @@ const SignupFormUI = (props: SignupParams) => {
     if (
       !phoneInputData.phone.country_phone_code &&
       !phoneInputData.phone.cellphone &&
+      validationFields?.fields?.checkout?.cellphone?.enabled &&
       validationFields?.fields?.checkout?.cellphone?.required
     ) {
       showToast(ToastType.Error, t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.'))
@@ -170,6 +171,7 @@ const SignupFormUI = (props: SignupParams) => {
         !phoneInputData.error &&
         !phoneInputData.phone.country_phone_code &&
         !phoneInputData.phone.cellphone &&
+        validationFields?.fields?.checkout?.cellphone?.enabled &&
         validationFields?.fields?.checkout?.cellphone?.required
       ) {
         list.push({ message: t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.') })
@@ -261,7 +263,7 @@ const SignupFormUI = (props: SignupParams) => {
                           onChange={(val: any) => field.code !== 'email' ? onChange(val) : handleChangeInputEmail(val, onChange)}
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                           autoCorrect={field.code === 'email' && false}
-                          type={field.code === 'email' ? 'visible-password' : ''}
+                          type={field.code === 'email' ? 'email-address' : 'default'}
                           isSecured={field.code === 'email'}
                         />
                       )}

@@ -123,7 +123,11 @@ const CheckoutUI = (props: any) => {
       }
     })
 
-    if (!user?.cellphone && validationFields?.fields?.checkout?.cellphone?.required) {
+    if (
+      !user?.cellphone &&
+      validationFields?.fields?.checkout?.cellphone?.enabled &&
+      validationFields?.fields?.checkout?.cellphone?.required
+    ) {
       errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is required'))
     }
 
