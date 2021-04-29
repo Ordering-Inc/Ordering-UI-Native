@@ -34,7 +34,7 @@ const ForgotPasswordUI = (props: any) => {
   }
 
   const handleChangeInputEmail = (value : string, onChange : any) => {
-    onChange(value.toLowerCase().replace(/\s/gi, ''))
+    onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
   }
 
   useEffect(() => {
@@ -99,7 +99,7 @@ const ForgotPasswordUI = (props: any) => {
               autoCapitalize='none'
               autoCompleteType='off'
               autoCorrect={false}
-              type='visible-password'
+              type='email-address'
               isSecured
             />
           )}

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder } from 'ordering-components/native'
 import { StyleSheet, View, TouchableOpacity, Keyboard } from 'react-native'
 import { OInput, OButton, OText, OModal } from '../shared'
+import { getTraduction } from '../../utils'
 import NavBar from '../NavBar'
 import { colors } from '../../theme'
 import { ToastType, useToast } from '../../providers/ToastProvider';
@@ -58,7 +59,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   )
   const [saveMapLocation, setSaveMapLocation] = useState(false)
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
-  const [isSignUpEffect,setIsSignUpEffect] = useState(false)
+  const [isSignUpEffect, setIsSignUpEffect] = useState(false)
 
   const googleInput: any = useRef(null)
 
@@ -147,13 +148,6 @@ const AddressFormUI = (props: AddressFormParams) => {
     updateChanges(addressSelected)
   }
 
-  const closeAlert = () => {
-    setAlertState({
-      open: false,
-      content: []
-    })
-  }
-
   const handleAddressTag = (tag: string) => {
     setAddressTag(tag)
     handleChangeInput({
@@ -169,7 +163,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   }
 
   useEffect(() => {
-    if(orderState.loading && !addressesList && orderState.options.address && auth){
+    if (orderState.loading && !addressesList && orderState.options.address && auth) {
       !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business')
     }
   }, [orderState.options.address])
@@ -315,7 +309,9 @@ const AddressFormUI = (props: AddressFormParams) => {
                         }
                         setIsFirstTime(false)
                       },
+                      autoCorrect: false
                     }}
+                    onFail={(error) => setAlertState({ open: true, content: getTraduction(error) })}
                     styles={{
                       listView: {
                         position: "absolute",
@@ -508,13 +504,17 @@ const styles = StyleSheet.create({
   inputsStyle: {
     borderColor: colors.secundaryContrast,
     borderRadius: 10,
-    marginBottom: 20
+    marginVertical: 20,
+    height: 50,
+    maxHeight: 50,
+    minHeight: 50
   },
   textAreaStyles: {
     borderColor: colors.secundaryContrast,
     borderRadius: 10,
-    marginBottom: 20,
-    height: 100,
+    marginVertical: 20,
+    height: 150,
+    maxHeight: 150,
     textAlignVertical: 'top',
     alignItems: 'flex-start'
   },
