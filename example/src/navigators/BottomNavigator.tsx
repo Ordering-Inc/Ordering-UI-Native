@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet,Platform } from 'react-native'
+import { View, Platform } from 'react-native'
 import { useLanguage, useOrder } from 'ordering-components/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -72,7 +72,13 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={styles.wrappCartIcon}>
+              <View style={{
+                  width: 50, 
+                  height: Platform.OS === 'ios' ? 50 : 'auto', 
+                  justifyContent: 'space-evenly',
+                  position: 'relative'
+                }}
+              >
                 <MaterialIcon name='shopping-basket' size={46} color={color} />
                 {cartsList.length > 0 && (
                   <CartsLenght style={{ borderRadius: 100 / 2 }}>
@@ -102,15 +108,5 @@ const BottomNavigator = () => {
     </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  wrappCartIcon: {
-    width: 50,
-    display: 'flex',
-    justifyContent: 'space-evenly',
-    position: 'relative',
-    zIndex: 9999
-  }
-})
 
 export default BottomNavigator
