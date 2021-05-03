@@ -7,6 +7,7 @@
  */
 
 import * as React from 'react';
+import { LogBox } from 'react-native';
 import * as Sentry from "@sentry/react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { ToastProvider, ToastType, useToast } from './providers/ToastProvider';
@@ -32,6 +33,10 @@ const configFile = {
 Sentry.init({
   dsn: "https://90197fffe6a1431b8c3eb79e1e36f0ee@o460529.ingest.sentry.io/5722123",
 });
+
+LogBox.ignoreLogs([
+  'Sending \`onAnimatedValueUpdate` with no listeners registered.'
+])
 
 const DeliveryApp = () => {
   return (

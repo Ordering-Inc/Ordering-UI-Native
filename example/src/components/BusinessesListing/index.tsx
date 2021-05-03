@@ -59,6 +59,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           onActionLeft={() => navigation.goBack()}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
+          style={{ paddingBottom: 0 }}
         />
       )}
       {auth && (

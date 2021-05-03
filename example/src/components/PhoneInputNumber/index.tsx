@@ -92,6 +92,9 @@ const style = StyleSheet.create({
     borderRadius: 25,
     borderWidth: 1,
     borderColor: colors.disabled,
-    paddingVertical: 0
+    paddingVertical: 0,
+    flexGrow: 1,
+    flex: 1,
+    height: 50,
   }
 })
