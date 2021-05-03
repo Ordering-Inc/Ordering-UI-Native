@@ -223,7 +223,6 @@ const LoginFormUI = (props: LoginParams) => {
                     autoCapitalize='none'
                     autoCorrect={false}
                     type='email-address'
-                    isSecured
                   />
                 )}
                 name="email"
