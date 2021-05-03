@@ -452,6 +452,7 @@ const AddressFormUI = (props: AddressFormParams) => {
               imgRightSrc=''
               onClick={handleSubmit(onSubmit)}
               textStyle={{ color: colors.white }}
+              isDisabled={formState.loading}
             />
           ) : (
             <OButton
@@ -504,7 +505,7 @@ const styles = StyleSheet.create({
   inputsStyle: {
     borderColor: colors.secundaryContrast,
     borderRadius: 10,
-    marginVertical: 20,
+    marginBottom: 20,
     height: 50,
     maxHeight: 50,
     minHeight: 50
@@ -512,7 +513,7 @@ const styles = StyleSheet.create({
   textAreaStyles: {
     borderColor: colors.secundaryContrast,
     borderRadius: 10,
-    marginVertical: 20,
+    marginBottom: 20,
     height: 150,
     maxHeight: 150,
     textAlignVertical: 'top',
