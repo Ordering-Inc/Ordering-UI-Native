@@ -6,7 +6,7 @@ import RNPickerSelect from 'react-native-picker-select'
 import { Container } from './styles'
 import { colors } from '../../theme'
 import { LanguageSelectorParams } from '../../types'
-import AntIcon from 'react-native-vector-icons/AntDesign'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
@@ -38,7 +38,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
           style={pickerStyle}
           useNativeAndroidPickerStyle={false}
           placeholder={{}}
-          Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon} />}
+          Icon={() => <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />}
           disabled={orderState.loading}
         />
       )}
@@ -49,28 +49,28 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 const pickerStyle = StyleSheet.create({
   inputAndroid: {
     color: colors.secundaryContrast,
-    width: 60,
     borderWidth: 1,
-    borderColor: colors.secundaryContrast,
-    borderRadius: 20,
-    paddingHorizontal: 10
+    borderColor: 'transparent',
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    backgroundColor: colors.inputDisabled,
+    width: 60,
   },
   inputIOS: {
     color: colors.secundaryContrast,
     paddingEnd: 20,
-    height: 30,
+    height: 40,
     borderWidth: 1,
     borderColor: 'transparent',
-    borderRadius: 4,
+    borderRadius: 15,
     paddingHorizontal: 10,
-    backgroundColor: colors.backgroundGray
+    backgroundColor: colors.inputDisabled
   },
   icon: {
-    width: 10,
-    height: 10,
-    top: Platform.OS === 'ios' ? 8 : 17,
-    right: Platform.OS === 'ios' ? 7 : 10,
+    top: Platform.OS === 'ios' ? 10 : 15,
+    right: Platform.OS === 'ios' ? 0 : 7,
     position: 'absolute',
+    fontSize: 20
   },
   placeholder: {
     color: colors.secundaryContrast
