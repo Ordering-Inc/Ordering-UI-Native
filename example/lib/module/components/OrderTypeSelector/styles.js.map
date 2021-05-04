@@ -1,1 +1,0 @@
-{"version":3,"sources":["styles.tsx"],"names":["styled","OrderTypeWrapper","View"],"mappings":"AAAA,OAAOA,MAAP,MAAmB,0BAAnB;AAEA,OAAO,MAAMC,gBAAgB,GAAGD,MAAM,CAACE,IAAK;AAC5C;AACA;AACA,CAHO","sourcesContent":["import styled from 'styled-components/native'\r\n\r\nexport const OrderTypeWrapper = styled.View`\r\n  flex: 1;\r\n  max-width: 140px;\r\n`\r\n"]}
