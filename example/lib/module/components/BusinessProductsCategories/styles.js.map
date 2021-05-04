@@ -1,0 +1,1 @@
+{"version":3,"sources":["styles.tsx"],"names":["styled","Tab","TouchableOpacity"],"mappings":"AAAA,OAAOA,MAAP,MAAmB,0BAAnB;AAEA,OAAO,MAAMC,GAAG,GAAGD,MAAM,CAACE,gBAAiB;AAC3C;AACA,CAFO","sourcesContent":["import styled from 'styled-components/native'\r\n\r\nexport const Tab = styled.TouchableOpacity`\r\n  padding-right: 20px;\r\n`"]}

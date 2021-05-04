@@ -1,4 +1,3 @@
-import { NumberKeyProps } from './src/components/NumberKey';
 import * as React from 'react';
 import { OToggleProps } from './src/components/shared/OToggle';
 import { OTextAreaProps } from './src/components/shared/OTextarea';
@@ -9,7 +8,7 @@ import { OSegmentProps } from './src/components/shared/OSegment';
 import { OInputProps } from './src/components/shared/OInput';
 import { OButtonProps } from './src/components/shared/OButton';
 import { OTextProps } from './src/components/shared/OText';
-import { LoginFormInterface } from './src/components/LoginForm';
+import { LoginForm } from './src/components/LoginForm';
 import { OIconProps } from './src/components/shared/OIcon';
 
 declare class OText extends React.Component<OTextProps> {}
@@ -25,7 +24,6 @@ declare class OTextarea extends React.Component<OTextAreaProps> {}
 declare class OToggle extends React.Component<OToggleProps> {}
 
 declare class LoginForm extends React.Component<LoginFormInterface> {}
-declare class NumberKey extends React.Component<NumberKeyProps> {}
 
 export { 
     OText, 
@@ -40,6 +38,5 @@ export {
     OTextarea,
     OToggle,
 
-    LoginForm,
-    NumberKey
+    LoginForm
 }

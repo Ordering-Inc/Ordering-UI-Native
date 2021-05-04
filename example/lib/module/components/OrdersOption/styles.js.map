@@ -1,0 +1,1 @@
+{"version":3,"sources":["styles.tsx"],"names":["styled","OptionTitle","View"],"mappings":"AAAA,OAAOA,MAAP,MAAmB,0BAAnB;AAGA,OAAO,MAAMC,WAAW,GAAGD,MAAM,CAACE,IAAK;AACvC,CADO","sourcesContent":["import styled from 'styled-components/native'\r\nimport { colors } from '../../theme'\r\n\r\nexport const OptionTitle = styled.View`\r\n`\r\n"]}

@@ -33,7 +33,7 @@ interface ItemProps {
     text?: string,
     image?: any
 }
-export interface OSegmentProps {
+interface Props {
     items: Array<ItemProps>,
     background?: string,
     labelStyle?: string,
@@ -41,7 +41,7 @@ export interface OSegmentProps {
     onSelectItem?: any,
 }
 
-const OSegment = (props: OSegmentProps) => {
+const OSegment = (props: Props) => {
     
     var [curIndex, onSelected] = React.useState(props.selectedIdx)
     const onSelectItem = (idx: number) => {

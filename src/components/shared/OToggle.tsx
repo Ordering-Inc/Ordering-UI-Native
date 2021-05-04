@@ -9,7 +9,7 @@ import {
     TextStyle
 } from "react-native";
 
-export interface OToggleProps {
+interface propTypes {
     isOn: boolean,
     label?: string,
     onColor?: string,
@@ -28,7 +28,7 @@ export interface OToggleProps {
     circleColor?: string,
 };
 
-const OToggleSwitch = (props: OToggleProps) : React.ReactElement => {
+const OToggleSwitch = (props: propTypes) => {
 
     const calculateDimensions = (size: string) => {
         switch (size) {

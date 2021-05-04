@@ -22,7 +22,6 @@ const DisabledWrapper = styled.View`
     justify-content: center;
 `
 const Icon = styled.Image`
-    resize-mode: contain;
     width: 22px;
     height: 22px;
 `
@@ -31,88 +30,93 @@ const Title = styled.Text`
     margin-horizontal: 7px;
 `
 
-export interface OIconButtonProps {
-    icon?: any,
-    title?: string,
-    onClick?: any,
-    height?: number,
-    isOutline?: boolean,
-    disabled?: boolean,
-    color?: string,
-    bgColor?: string,
-    borderColor?: string,
-    textColor?: string,
-    iconColor?: string
-    style?: ViewStyle,
-    iconStyle?: ImageStyle,
-    textStyle?: TextStyle
+interface Props {
+  icon?: any,
+  title?: string,
+  onClick?: any,
+  height?: number,
+  isOutline?: boolean,
+  disabled?: boolean,
+  color?: string,
+  bgColor?: string,
+  borderColor?: string,
+  textColor?: string,
+  iconColor?: string
+  style?: ViewStyle,
+  iconStyle?: ImageStyle,
+  textStyle?: TextStyle,
+  disabledColor?: string,
+  iconCover?: boolean,
+  urlIcon?: any,
+  cover?: any,
 }
 
-const OIconButton = (props: OIconButtonProps): React.ReactElement => {
-    return (
-        <>
-        {!props.disabled ? (
-            <Wrapper
-                onPress={props.onClick}
-                style={{
-                    borderColor: props.borderColor || props.color,
-                    backgroundColor: props.isOutline ? 'white' : props.bgColor || props.color,
-                    height: props.height || 40,
-                    borderRadius: props.height ? props.height * 0.5 : 20,
-                    ...props.style
-                }}
+const OIconButton = (props: Props) => {
+  return (
+    <>
+      {!props.disabled ? (
+        <Wrapper
+          onPress={props.onClick}
+          style={{
+            borderColor: props.borderColor || props.color,
+            backgroundColor: props.isOutline ? 'white' : props.bgColor || props.color,
+            height: props.height || 40,
+            borderRadius: props.height ? props.height * 0.5 : 20,
+            ...props.style
+          }}
+        >
+          {props.icon ? (
+            <Icon
+              source={props.icon}
+              style={{
+                tintColor: props.iconColor,
+                ...props.iconStyle
+              }}
+            />
+          ) : null}
+          {props.title ? (
+            <Title style={{
+              color: props.textColor || props.color,
+              ...props.textStyle
+            }}
             >
-                {props.icon ? (
-                    <Icon
-                        source={props.icon}
-                        style={{
-                            tintColor: props.iconColor,
-                            ...props.iconStyle
-                        }}
-                    />
-                ) : null}
-                {props.title ? (
-                    <Title style={{
-                            color: props.textColor || props.color,
-                            ...props.textStyle
-                        }}
-                    >
-                        {props.title}
-                    </Title>
-                ) : null}
-            </Wrapper>
-        ) : (
-            <DisabledWrapper
-                style={{
-                    borderColor: colors.backgroundDark,
-                    backgroundColor: colors.backgroundDark,
-                    height: props.height || 40,
-                    borderRadius: props.height ? props.height * 0.5 : 20,
-                    ...props.style
-                }}
+              {props.title}
+            </Title>
+          ) : null}
+        </Wrapper>
+      ) : (
+        <DisabledWrapper
+          style={{
+            borderColor: colors.backgroundDark,
+            backgroundColor: props.disabledColor ? props.disabledColor : colors.backgroundDark,
+            height: props.height || 40,
+            borderRadius: props.height ? props.height * 0.5 : 20,
+            ...props.style
+          }}
+        >
+          {props.icon ? (
+            <Icon
+              source={props.urlIcon ? {uri: props.icon} : props.icon}
+              resizeMode={props.cover ? 'cover' : 'contain'}
+              style={{
+                tintColor: props.iconColor,
+                ...props.iconStyle
+              }}
+            />
+          ) : null}
+          {props.title ? (
+            <Title style={{
+              color: props.textColor || props.color,
+              ...props.textStyle
+            }}
             >
-                {props.icon ? (
-                    <Icon
-                        source={props.icon}
-                        style={{
-                            tintColor: props.iconColor,
-                            ...props.iconStyle
-                        }}
-                    />
-                ) : null}
-                {props.title ? (
-                    <Title style={{
-                            color: props.textColor || props.color,
-                            ...props.textStyle
-                        }}
-                    >
-                        {props.title}
-                    </Title>
-                ) : null}
-            </DisabledWrapper>
-        )}
-        </>
-    )
+              {props.title}
+            </Title>
+          ) : null}
+        </DisabledWrapper>
+      )}
+    </>
+  )
 }
 
 OIconButton.defaultProps = {

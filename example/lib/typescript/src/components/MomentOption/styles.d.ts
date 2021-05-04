@@ -1,0 +1,9 @@
+export declare const Container: any;
+export declare const HeaderTitle: any;
+export declare const WrapSelectOption: any;
+export declare const Days: any;
+export declare const Day: any;
+export declare const WrapHours: any;
+export declare const Hours: any;
+export declare const Hour: any;
+export declare const WrapDelveryTime: any;

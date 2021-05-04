@@ -14,8 +14,8 @@ import { MomentOptionParams } from '../../types'
 import NavBar from '../NavBar'
 import { OText } from '../shared'
 import { colors } from '../../theme'
+import {Container} from '../../layouts/Container'
 import {
-  Container,
   HeaderTitle,
   WrapSelectOption,
   Days,

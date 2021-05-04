@@ -29,6 +29,7 @@ export const AddressInput = styled.TouchableOpacity`
   padding: 15px;
   flex: 1;
   width: 100%;
+  z-index: -10
 `
 
 export const OrderControlContainer = styled.View`

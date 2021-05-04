@@ -104,8 +104,8 @@
       "<rootDir>/lib/"
     ]
   },
-  "main": "lib\\module\\index.js",
-  "react-native": "src\\index.tsx",
+  "main": "lib\\commonjs\\index.js",
+  "react-native": "src\\index.js",
   "module": "lib\\module\\index.js",
   "types": "lib\\typescript\\src\\index.d.ts",
   "files": [
@@ -119,6 +119,7 @@
     "source": "src",
     "output": "lib",
     "targets": [
+      "commonjs",
       "module",
       "typescript"
     ]
