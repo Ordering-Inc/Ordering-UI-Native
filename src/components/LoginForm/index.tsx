@@ -1,8 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import {useForm, Controller} from 'react-hook-form';
-import {PhoneInputNumber} from '../PhoneInputNumber';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
@@ -11,8 +9,6 @@ import {
   useConfig,
   useSession,
 } from 'ordering-components/native';
-
-import {VerifyPhone} from '../VerifyPhone';
 
 import {
   Container,
@@ -108,13 +104,6 @@ const LoginFormUI = (props: LoginParams) => {
     }
     handleSendVerifyCode && handleSendVerifyCode(phoneInputData.phone);
     setIsLoadingVerifyModal(true);
-  };
-
-  const handleSuccessFacebook = (user: any) => {
-    login({
-      user,
-      token: user.session.access_token,
-    });
   };
 
   const handleChangeInputEmail = (value: string, onChange: any) => {
@@ -239,14 +228,6 @@ const LoginFormUI = (props: LoginParams) => {
                 }}
                 defaultValue=""
               />
-            )}
-            {useLoginByCellphone && loginTab === 'cellphone' && (
-              <View style={{marginBottom: 25}}>
-                <PhoneInputNumber
-                  data={phoneInputData}
-                  handleData={(val: any) => setPhoneInputData(val)}
-                />
-              </View>
             )}
 
             <Controller
