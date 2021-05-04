@@ -9,7 +9,6 @@ import {
 import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
 
-import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
 
@@ -33,6 +32,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { NotFoundSource } from '../NotFoundSource'
+import { IMAGES } from '../../config/constants'
 
 const windowHeight = Dimensions.get('window').height;
 export const ProductOptionsUI = (props: any) => {
@@ -94,16 +94,13 @@ export const ProductOptionsUI = (props: any) => {
           <WrapHeader>
             <TopHeader>
               <View style={styles.headerItem}>
-                <TouchableOpacity
-                  onPress={() => onClose()}
-                >
-                  <IconAntDesign
-                    name='arrowleft'
-                    color={colors.white}
-                    style={{ backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 50 }}
-                    size={25}
-                  />
-                </TouchableOpacity>
+                <OButton
+                  imgLeftSrc={IMAGES.arrow_left}
+                  imgRightSrc={null}
+                  style={styles.btnBackArrow}
+                  onClick={() => onClose()}
+                  imgLeftStyle={{ tintColor: '#fff' }}
+                />
               </View>
             </TopHeader>
             <ProductHeader
@@ -306,7 +303,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     marginRight: 10
-  }
+  },
+  btnBackArrow: {
+    borderWidth: 0,
+    color: '#FFF',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: 24,
+    marginRight: 15,
+  },
 })
 
 export const ProductForm = (props: any) => {
