@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import IconAntDesign from 'react-native-vector-icons/AntDesign'
+import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import {
@@ -9,13 +9,12 @@ import {
   useSession,
   useUtils
 } from 'ordering-components/native'
-import { OModal, OText } from '../shared'
+import { OButton, OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { SearchBar } from '../SearchBar'
 import { BusinessProductsCategories } from '../BusinessProductsCategories'
 import { BusinessProductsList } from '../BusinessProductsList'
 import { BusinessProductsListingParams } from '../../types'
-import { View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import {
   WrapHeader,
   TopHeader,
@@ -28,6 +27,7 @@ import { colors } from '../../theme'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
+import { IMAGES } from '../../config/constants'
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -119,26 +119,28 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                   {!isOpenSearchBar && (
                     <>
                       <View style={{ ...styles.headerItem, flex: 1 }}>
-                        <TouchableOpacity
-                          onPress={() => navigation.goBack()}
-                        >
-                          <IconAntDesign
-                            name='arrowleft'
-                            color={colors.white}
-                            style={{ backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 50, marginRight: 20 }}
-                            size={25}
-                          />
-                        </TouchableOpacity>
-                        <AddressInput onPress={() => auth ? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true }) : onRedirect('AddressForm', { address: orderState.options?.address })}>
+                        <OButton
+                          imgLeftSrc={IMAGES.arrow_left}
+                          imgRightSrc={null}
+                          style={styles.btnBackArrow}
+                          onClick={() => navigation.goBack()}
+                          imgLeftStyle={{ tintColor: '#fff' }}
+                        />
+                        <AddressInput
+                          onPress={() => auth 
+                            ? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true }) 
+                            : onRedirect('AddressForm', { address: orderState.options?.address })}
+                          >
                           <OText color={colors.white} numberOfLines={1}>
                             {orderState?.options?.address?.address}
                           </OText>
                         </AddressInput>
                       </View>
                       {!errorQuantityProducts && (
-                        <View style={{ ...styles.headerItem, width: 30 }}>
+                        <View style={{ ...styles.headerItem }}>
                           <TouchableOpacity
                             onPress={() => setIsOpenSearchBar(true)}
+                            style={styles.searchIcon}
                           >
                             <MaterialIcon
                               name='search'
@@ -252,8 +254,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 15,
     marginHorizontal: 20,
+  },
+  btnBackArrow: {
+    borderWidth: 0,
+    color: '#FFF',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: 24,
+    marginRight: 15,
+  },
+  searchIcon: {
+    borderWidth: 0,
+    color: '#FFF',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: 24,
+    padding: 15,
+    justifyContent: 'center'
   }
-})
+}) 
 
 export const BusinessProductsListing = (props: BusinessProductsListingParams) => {
   const businessProductslistingProps = {
