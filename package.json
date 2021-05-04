@@ -104,24 +104,23 @@
       "<rootDir>/lib/"
     ]
   },
-  "main": "lib\\commonjs\\index.js",
-  "react-native": "src\\index.js",
+  "main": "lib\\module\\index.js",
+  "react-native": "index.js",
   "module": "lib\\module\\index.js",
   "types": "lib\\typescript\\src\\index.d.ts",
   "files": [
-    "src",
+    "./",
     "lib",
     "!**/__tests__",
     "!**/__fixtures__",
-    "!**/__mocks__"
+    "!**/__mocks__",
+    "src"
   ],
   "react-native-builder-bob": {
-    "source": "src",
+    "source": "./",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
-      "typescript"
+      "module"
     ]
   },
   "eslintIgnore": [
