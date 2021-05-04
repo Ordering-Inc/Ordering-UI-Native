@@ -105,19 +105,19 @@
     ]
   },
   "main": "lib\\module\\index.js",
-  "react-native": "index.js",
+  "react-native": "src\\index.js",
   "module": "lib\\module\\index.js",
   "types": "lib\\typescript\\src\\index.d.ts",
   "files": [
-    "./",
+    "src",
     "lib",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
-    "src"
+    "./"
   ],
   "react-native-builder-bob": {
-    "source": "./",
+    "source": "src",
     "output": "lib",
     "targets": [
       "module"
