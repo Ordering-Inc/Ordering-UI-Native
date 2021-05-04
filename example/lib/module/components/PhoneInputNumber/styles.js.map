@@ -1,0 +1,1 @@
+{"version":3,"sources":["styles.tsx"],"names":["styled","Wrapper","View"],"mappings":"AAAA,OAAOA,MAAP,MAAmB,0BAAnB;AAEA,OAAO,MAAMC,OAAO,GAAGD,MAAM,CAACE,IAAK,EAA5B","sourcesContent":["import styled from 'styled-components/native';\r\n\r\nexport const Wrapper = styled.View``\r\n"]}

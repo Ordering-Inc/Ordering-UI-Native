@@ -1,0 +1,1 @@
+{"version":3,"sources":["SafeAreaContainer.tsx"],"names":["styled","SafeAreaContainer","SafeAreaView"],"mappings":"AAAA,OAAOA,MAAP,MAA4B,0BAA5B;AACA,OAAO,MAAMC,iBAAiB,GAAGD,MAAM,CAACE,YAAa;AACrD;AACA,CAFO","sourcesContent":["import styled, { css } from 'styled-components/native';\r\nexport const SafeAreaContainer = styled.SafeAreaView`\r\n  flex: 1;\r\n`\r\n"]}
