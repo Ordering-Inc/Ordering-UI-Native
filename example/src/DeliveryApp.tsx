@@ -35,7 +35,8 @@ Sentry.init({
 });
 
 LogBox.ignoreLogs([
-  'Sending \`onAnimatedValueUpdate` with no listeners registered.'
+  'Sending \`onAnimatedValueUpdate` with no listeners registered.',
+  'Non-serializable values were found in the navigation state.'
 ])
 
 const DeliveryApp = () => {

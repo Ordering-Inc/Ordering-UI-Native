@@ -46,20 +46,20 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
             </Logo>
           )}
           <Information>
-            <OText size={16} numberOfLines={1}>
+            <OText size={17} numberOfLines={1}>
               {order.business?.name}
             </OText>
-            <OText size={12} color={colors.textSecondary} numberOfLines={1}>
+            <OText size={15} color={colors.textSecondary} numberOfLines={1}>
               {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
             </OText>
             <MyOrderOptions>
               <TouchableOpacity onPress={() => handleClickViewOrder(order?.uuid)}>
-                <OText size={10} color={colors.primary} mRight={5} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
+                <OText size={16} color={colors.primary} mRight={5} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
               </TouchableOpacity>
               {
                 allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && (
                   <TouchableOpacity onPress={() => handleClickOrderReview(order)}>
-                    <OText size={10} color={colors.primary} numberOfLines={1}>{t('REVIEW_ORDER', 'Review Order')}</OText>
+                    <OText size={16} color={colors.primary} numberOfLines={1}>{t('REVIEW_ORDER', 'Review Order')}</OText>
                   </TouchableOpacity>
                 )}
             </MyOrderOptions>

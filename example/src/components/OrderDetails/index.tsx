@@ -36,12 +36,12 @@ import {
   OrderDriver,
   Map
 } from './styles'
-import { OIcon, OModal, OText } from '../shared'
+import { OButton, OIcon, OModal, OText } from '../shared'
 import { colors } from '../../theme'
 import { ProductItemAccordion } from '../ProductItemAccordion'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { OrderDetailsParams } from '../../types'
-import { USER_TYPE } from '../../config/constants'
+import { IMAGES, USER_TYPE } from '../../config/constants'
 import { GoogleMap } from '../GoogleMap'
 
 const appLogo = require('../../assets/images/Logo.png')
@@ -169,18 +169,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       {order && Object.keys(order).length > 0 && (
         <>
           <Header>
-            <NavBack>
-              <MaterialCommunityIcon
-                name='arrow-left'
-                onPress={() => handleArrowBack()}
-                size={24}
-                color={colors.white}
-                style={{ marginBottom: 10 }}
-              />
-            </NavBack>
+            <OButton
+              imgLeftSrc={IMAGES.arrow_left}
+              imgRightSrc={null}
+              style={styles.btnBackArrow}
+              onClick={() => handleArrowBack()}
+              imgLeftStyle={{ tintColor: '#fff' }}
+            />
             <HeaderInfo>
-              <OIcon src={appLogo} height={50} width={150}></OIcon>
-              <OText size={24} color={colors.white}>{order?.customer?.name} {t('THANKS_ORDER', 'thanks for your order!')}</OText>
+              <OIcon src={appLogo} height={50} width={180}></OIcon>
+              <OText size={28} color={colors.white} style={{ fontWeight: '600' }}>
+                  {order?.customer?.name} {t('THANKS_ORDER', 'thanks for your order!')}
+              </OText>
               <OText color={colors.white}>{t('ORDER_MESSAGE_HEADER_TEXT', 'Once business accepts your order, we will send you an email, thank you!')}</OText>
               <View style={{ ...styles.rowDirection, justifyContent: 'space-between' }}>
                 <OText size={20} color={colors.white} space>
@@ -196,7 +196,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <Logo>
                   <OIcon url={order?.business?.logo} style={styles.logo}></OIcon>
                 </Logo>
-                <OText size={20} style={styles.textBold}>{order?.business?.name}</OText>
+                <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                  <OText size={20} style={styles.textBold}>{order?.business?.name}</OText>
+                  <OText size={17}>{order?.business?.email}</OText>
+                  <OText size={17}>{order?.business?.cellphone}</OText>
+                </View>
               </View>
               <Icons>
                 <MaterialCommunityIcon
@@ -229,9 +233,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </OText>
                   <StaturBar>
                     <LinearGradient
-                      start={{ x: 0, y: 0 }}
+                      start={{ x: 0.0, y: 0.0 }}
                       end={{ x: getOrderStatus(order?.status)?.percentage || 0, y: 0 }}
-                      locations={[1, 1]}
+                      locations={[.9999, .9999]}
                       colors={[colors.primary, colors.disabled]}
                       style={styles.statusBar}
                     />
@@ -390,7 +394,17 @@ const styles = StyleSheet.create({
   },
   textBold: {
     fontWeight: 'bold'
-  }
+  },
+  btnBackArrow: {
+    borderWidth: 0,
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+    shadowColor: colors.primary,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    paddingLeft: 0,
+    height: 30
+  },
 })
 
 
