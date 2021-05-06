@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { AccessToken, LoginManager } from 'react-native-fbsdk';
 import { useLanguage, useSession, useApi } from 'ordering-components/native';
-// import { clearAllData } from '../../providers/StoreUtil'
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -65,7 +64,7 @@ export const FacebookLogin = (props: any) => {
         const err = error
           ? t(error?.replace(/ /g, '_').toUpperCase(), 'Login cancelled')
           : t('LOGIN_FAIL_WITH_FACEBOOK', 'Login fail with facebook')
-        handleLoading && handleLoading(true)
+        handleLoading && handleLoading(false)
         handleErrors && handleErrors(err)
       },
     );
@@ -74,10 +73,6 @@ export const FacebookLogin = (props: any) => {
   const onPressButton = auth
     ? logoutWithFacebook
     : loginWithFacebook;
-
-  useEffect(() => {
-    // clearAllData()
-  }, [])
 
   return (
     <Container>
