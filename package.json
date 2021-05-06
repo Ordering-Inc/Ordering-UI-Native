@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/sergioaok/Ordering-UI-Native/issues"
   },
-  "homepage": "https://github.com/sergioaok/Ordering-UI-Native#readme"
+  "homepage": "https://github.com/sergioaok/Ordering-UI-Native#readme",
+  "devDependencies": {
+    "react-native": "^0.64.1"
+  }
 }

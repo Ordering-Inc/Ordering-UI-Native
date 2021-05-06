@@ -11,13 +11,13 @@ export const TopHeader = styled.View`
   align-items: center;
   justify-content: space-between;
   z-index: 1;
-  flex: 1
+  flex: 1;
 `
 export const AddressInput = styled.TouchableOpacity`
   flex: 1;
   background-color: rgba(0,0,0,0.3);
-  padding: 10px;
-  border-radius: 24px
+  padding: 15px;
+  border-radius: 24px;
 `
 export const WrapSearchBar = styled.View`
   padding: 5px;

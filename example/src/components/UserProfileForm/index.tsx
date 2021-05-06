@@ -245,7 +245,6 @@ const ProfileUI = (props: ProfileParams) => {
                     autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                     autoCorrect={field.code === 'email' && false}
                     type={field.code === 'email' ? 'email-address' : ''}
-                    isSecured={field.code === 'email'}
                   />
                 )}
                 name={field.code}

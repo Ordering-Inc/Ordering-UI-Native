@@ -47,7 +47,7 @@ const OModal = (props: Props): React.ReactElement => {
       transparent={isTransparent}
       visible={open}
       onRequestClose={() => { onClose() }}
-      style={{ height: '100%', flex: 1, position: 'absolute', ...style }}
+      style={{ height: '100%', flex: 1, position: 'absolute', ...style, zIndex: 9999 }}
     >
       <SafeAreaView style={styles.container}>
         {!entireModal ? (

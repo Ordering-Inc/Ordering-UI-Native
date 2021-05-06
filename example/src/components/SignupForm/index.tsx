@@ -264,7 +264,6 @@ const SignupFormUI = (props: SignupParams) => {
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                           autoCorrect={field.code === 'email' && false}
                           type={field.code === 'email' ? 'email-address' : 'default'}
-                          isSecured={field.code === 'email'}
                         />
                       )}
                       name={field.code}

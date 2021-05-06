@@ -1,19 +1,28 @@
 import React, { useState } from 'react'
-import { BusinessList as BusinessesListingController, useLanguage, useSession, useOrder, useConfig, useUtils } from 'ordering-components/native'
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+import { View, StyleSheet, ScrollView, Platform } from 'react-native'
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { 
+  BusinessList as BusinessesListingController,
+  useLanguage,
+  useSession,
+  useOrder,
+  useConfig,
+  useUtils
+} from 'ordering-components/native'
+
+import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
+
+import NavBar from '../NavBar'
+import { colors } from '../../theme'
+import { SearchBar } from '../SearchBar'
+import { OText, OIcon, OModal } from '../shared'
+import { BusinessesListingParams } from '../../types'
+import { NotFoundSource } from '../NotFoundSource'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
-import { SearchBar } from '../SearchBar'
-import { NotFoundSource } from '../NotFoundSource'
-import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
-import { OText, OIcon, OModal } from '../shared'
-import { colors } from '../../theme'
-import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { BusinessesListingParams } from '../../types'
-import { View, StyleSheet, ScrollView } from 'react-native'
-import Spinner from 'react-native-loading-spinner-overlay';
-import NavBar from '../NavBar'
 import { OrderTypeSelector } from '../OrderTypeSelector'
-import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+
 const PIXELS_TO_SCROLL = 1000
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
@@ -59,6 +68,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           onActionLeft={() => navigation.goBack()}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
+          style={{ paddingBottom: 0 }}
         />
       )}
       {auth && (
@@ -174,7 +184,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10
+    marginBottom: 10,
+    zIndex: 100
   },
   borderStyle: {
     borderColor: colors.backgroundGray,
@@ -187,6 +198,7 @@ export const BusinessesListing = (props: BusinessesListingParams) => {
 
   const BusinessesListingProps = {
     ...props,
+    isForceSearch: Platform.OS === 'ios',
     UIComponent: BusinessesListingUI
   }
 

@@ -57,7 +57,7 @@ const NavBar = (props: Props) => {
     props.navigation.navigate('Supports', {});
   }
   return (
-    <Wrapper style={{ paddingTop: Platform.OS == 'ios' ? safeAreaInset.top : props.paddingTop, ...props.style }}>
+    <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
       <OButton
         imgLeftSrc={props.leftImg || IMAGES.arrow_left}
         imgRightSrc={null}

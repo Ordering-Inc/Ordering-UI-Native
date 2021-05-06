@@ -161,7 +161,7 @@ const CheckoutUI = (props: any) => {
 
   return (
     <ChContainer>
-      <ChSection style={{  paddingBottom: 20 }}>
+      <ChSection style={{  paddingBottom: 20, zIndex: 100 }}>
         <OButton
           imgLeftSrc={IMAGES.arrow_left}
           imgRightSrc={null}
@@ -496,12 +496,12 @@ const CheckoutUI = (props: any) => {
 const style = StyleSheet.create({
   btnBackArrow: {
     borderWidth: 0,
-    backgroundColor: '#FFF',
-    borderColor: '#FFF',
+    backgroundColor: colors.white,
+    borderColor: colors.white,
+    shadowColor: colors.white,
     display: 'flex',
     justifyContent: 'flex-start',
     paddingLeft: 0,
-    width: 20
   },
   paddSection: {
     padding: 20

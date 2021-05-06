@@ -17,18 +17,18 @@ export const Information = styled.View`
   justify-content: space-between;
   align-items: flex-start;
   margin-horizontal: 10px;
-  flex: 1
+  flex: 1;
 `
 
 export const MyOrderOptions = styled.View`
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
 `
 
 export const Status = styled.View`
   align-items: center;
   justify-content: space-between;
-  width: 100px
+  width: 100px;
 `
 
 export const WrappButton = styled.View`
