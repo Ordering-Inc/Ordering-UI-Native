@@ -127,7 +127,6 @@ const AddressListUI = (props: AddressListParams) => {
 
   return (
     <Container nopadding={nopadding}>
-      <Spinner visible={actionStatus.loading || orderState.loading || (addressList.loading && (!isFromBusinesses && !isFromProfile))} />
       {(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile)) && (
         <AddressListContainer>
           {isFromProfile && (
