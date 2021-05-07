@@ -525,7 +525,7 @@ export const Checkout = (props: any) => {
   const [, t] = useLanguage();
   const [{ token }] = useSession();
   const [ordering] = useApi();
-  const [{ confirmCart }] = useOrder();
+  const [,{ confirmCart }] = useOrder();
 
   const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null });
 
