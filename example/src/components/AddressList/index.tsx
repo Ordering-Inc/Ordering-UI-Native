@@ -28,8 +28,7 @@ const AddressListUI = (props: AddressListParams) => {
     isGoBack,
     actionStatus,
     isFromBusinesses,
-    isFromProductsList,
-    isFromCheckout
+    isFromProductsList
   } = props
 
   const [orderState] = useOrder()
@@ -45,7 +44,9 @@ const AddressListUI = (props: AddressListParams) => {
       onNavigationRedirect('CheckoutPage')
       return
     }
-    onNavigationRedirect('BottomTab')
+    if (route && route?.params?.isAfterSignup){
+      onNavigationRedirect('BottomTab')
+    }
 
   }
 
@@ -121,7 +122,7 @@ const AddressListUI = (props: AddressListParams) => {
   const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
 
   useEffect(() => {
-    if (orderState.loading && auth && orderState.options.address?.location && !isFromCheckout) {
+    if (orderState.loading && auth && orderState.options.address?.location) {
       onNavigatorRedirect()
     }
   }, [orderState.options.address])
