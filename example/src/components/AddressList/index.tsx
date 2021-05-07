@@ -28,7 +28,8 @@ const AddressListUI = (props: AddressListParams) => {
     isGoBack,
     actionStatus,
     isFromBusinesses,
-    isFromProductsList
+    isFromProductsList,
+    isFromCheckout
   } = props
 
   const [orderState] = useOrder()
@@ -120,7 +121,7 @@ const AddressListUI = (props: AddressListParams) => {
   const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
 
   useEffect(() => {
-    if (orderState.loading && auth && orderState.options.address?.location) {
+    if (orderState.loading && auth && orderState.options.address?.location && !isFromCheckout) {
       onNavigatorRedirect()
     }
   }, [orderState.options.address])

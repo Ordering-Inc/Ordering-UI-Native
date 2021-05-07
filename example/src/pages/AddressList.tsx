@@ -8,13 +8,15 @@ const AddressList = ({ route, navigation }: any) => {
   const isGoBack = route?.params?.isGoBack
   const isFromBusinesses = route?.params?.isFromBusinesses
   const isFromProductsList = route?.params?.isFromProductsList
+  const isFromCheckout = route?.params?.isFromCheckout
   const AddressListProps = {
     navigation,
     route,
     userId: user?.id,
     isGoBack,
     isFromBusinesses,
-    isFromProductsList
+    isFromProductsList,
+    isFromCheckout
   }
 
   return (
