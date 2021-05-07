@@ -674,14 +674,14 @@ export const Checkout = (props: any) => {
     cartState,
     businessId: cartState.cart?.business_id
   }
-  console.log(cartState.loading)
 
   return (
     <>
-    {cartState.loading && (
+    {cartState.loading ? (
       <Spinner visible={cartState.loading} />
-    )}
+    ) : (
       <CheckoutController {...checkoutProps} />
+    )}
     </>
   )
 }

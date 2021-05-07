@@ -24,18 +24,18 @@ const CheckoutNavigator = (props: any) => {
 
   return (
     <Stack.Navigator>
+      {!cartUuid && (
+        <Stack.Screen
+          name="Cart"
+          component={CartList}
+          options={{ headerShown: false }}
+        />
+      )}
       <Stack.Screen
         name="CheckoutPage"
         children={() => <CheckoutPage {...checkoutProps} />}
         options={{ headerShown: false }}
         />
-        {!cartUuid && (
-          <Stack.Screen
-            name="Cart"
-            component={CartList}
-            options={{ headerShown: false }}
-          />
-        )}
       <Stack.Screen
         name="Business"
         component={BusinessProductsList}
