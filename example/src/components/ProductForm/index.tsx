@@ -51,7 +51,8 @@ export const ProductOptionsUI = (props: any) => {
     handleChangeSuboptionState,
     handleChangeCommentState,
     productObject,
-    onClose
+    onClose,
+    isFromCheckout
   } = props
 
   const [{ parsePrice }] = useUtils()
@@ -88,7 +89,9 @@ export const ProductOptionsUI = (props: any) => {
 
   return (
     <ScrollView style={styles.mainContainer}>
-      <Spinner visible={loading} />
+      {!isFromCheckout && (
+        <Spinner visible={loading} />
+      )}
       {!loading && !error && product && (
         <>
           <WrapHeader>

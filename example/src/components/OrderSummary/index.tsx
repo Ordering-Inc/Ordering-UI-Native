@@ -40,7 +40,8 @@ const OrderSummaryUI = (props: any) => {
     isCartPopover,
     isForceOpenCart,
     isCartOnProductsList,
-    handleCartOpen
+    handleCartOpen,
+    isFromCheckout
   } = props;
 
   const [, t] = useLanguage();
@@ -83,6 +84,7 @@ const OrderSummaryUI = (props: any) => {
                 offsetDisabled={offsetDisabled}
                 onDeleteProduct={handleDeleteClick}
                 onEditProduct={handleEditProduct}
+                isFromCheckout={isFromCheckout}
               />
             ))}
           </OSProductList>
@@ -177,6 +179,7 @@ const OrderSummaryUI = (props: any) => {
               productId={curProduct?.id}
               onSave={handlerProductAction}
               onClose={() => setModalIsOpen(false)}
+              isFromCheckout={isFromCheckout}
             />
           </OModal>
         </>
