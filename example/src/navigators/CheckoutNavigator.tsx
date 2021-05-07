@@ -35,7 +35,7 @@ const CheckoutNavigator = (props: any) => {
         name="CheckoutPage"
         children={() => <CheckoutPage {...checkoutProps} />}
         options={{ headerShown: false }}
-      />
+        />
       <Stack.Screen
         name="Business"
         component={BusinessProductsList}
@@ -45,6 +45,7 @@ const CheckoutNavigator = (props: any) => {
         name="AddressList"
         component={AddressList}
         options={{ headerShown: false }}
+        initialParams={{isFromCheckout: true}}
       />
       <Stack.Screen
         name="AddressForm"

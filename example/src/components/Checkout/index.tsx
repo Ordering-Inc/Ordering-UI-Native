@@ -131,7 +131,7 @@ const CheckoutUI = (props: any) => {
       errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is required'))
     }
 
-    if(phoneUpdate){
+    if (phoneUpdate) {
       errors.push(t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number'))
     }
 
@@ -161,7 +161,7 @@ const CheckoutUI = (props: any) => {
 
   return (
     <ChContainer>
-      <ChSection style={{  paddingBottom: 20, zIndex: 100 }}>
+      <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
         <OButton
           imgLeftSrc={IMAGES.arrow_left}
           imgRightSrc={null}
@@ -227,7 +227,7 @@ const CheckoutUI = (props: any) => {
                   height={80}
                   borderRadius={80}
                 />
-                <View style={{ marginLeft: 15 , width: '85%' }}>
+                <View style={{ marginLeft: 15, width: '85%' }}>
                   <OText size={22} numberOfLines={2} ellipsizeMode='tail' style={{ width: '85%' }}>
                     {businessDetails?.business?.name}
                   </OText>
@@ -426,6 +426,7 @@ const CheckoutUI = (props: any) => {
                 <OrderSummary
                   cart={cart}
                   isCartPending={cart?.status === 2}
+                  isFromCheckout
                 />
               </>
             )}
@@ -524,10 +525,9 @@ export const Checkout = (props: any) => {
   const [, t] = useLanguage();
   const [{ token }] = useSession();
   const [ordering] = useApi();
-  const [orderState, { confirmCart }] = useOrder();
+  const [,{ confirmCart }] = useOrder();
 
   const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null });
-  const [currentCart, setCurrentCart] = useState({ business_id: null, products: null });
 
   const getOrder = async (cartId: any) => {
     try {
@@ -655,15 +655,6 @@ export const Checkout = (props: any) => {
   }
 
   useEffect(() => {
-    if (!orderState.loading && currentCart?.business_id) {
-      const cartMatched: any = Object.values(orderState.carts).find(
-        (cart: any) => cart.business_id === currentCart?.business_id
-      ) || {}
-      setCurrentCart(cartMatched)
-    }
-  }, [orderState.loading])
-
-  useEffect(() => {
     if (errors) {
       const errorText = manageErrorsToShow(errors)
       showToast(ToastType.Error, errorText)
@@ -686,11 +677,11 @@ export const Checkout = (props: any) => {
 
   return (
     <>
-      {cartState.loading ? (
-        <Spinner visible={cartState.loading}/>
-      ) : (
-        <CheckoutController {...checkoutProps} />
-      )}
+    {cartState.loading ? (
+      <Spinner visible={cartState.loading} />
+    ) : (
+      <CheckoutController {...checkoutProps} />
+    )}
     </>
   )
 }

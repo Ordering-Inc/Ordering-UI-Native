@@ -77,11 +77,13 @@ const HomeNavigator = (is_online: boolean) => {
                   name="AddressList"
                   component={AddressList}
                   options={{ headerShown: false }}
+                  initialParams={{isAfterSignup: true}}
                 />
                 <Stack.Screen
                   name="AddressForm"
                   component={AddressForm}
                   options={{ headerShown: false }}
+                  initialParams={{isAfterSignup: true}}
                 />
               </>
             )

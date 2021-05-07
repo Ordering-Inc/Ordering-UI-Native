@@ -44,7 +44,9 @@ const AddressListUI = (props: AddressListParams) => {
       onNavigationRedirect('CheckoutPage')
       return
     }
-    onNavigationRedirect('BottomTab')
+    if (route && route?.params?.isAfterSignup){
+      onNavigationRedirect('BottomTab')
+    }
 
   }
 
