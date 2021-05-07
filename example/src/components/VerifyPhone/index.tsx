@@ -5,7 +5,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { getTraduction } from '../../utils'
 
 import { OText } from '../shared';
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 
 import {
   Container,

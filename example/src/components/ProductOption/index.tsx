@@ -5,7 +5,7 @@ import {
   WrapHeader,
 } from './styles'
 import { OText } from '../shared'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 
 const ProductOptionUI = (props: any) => {
   const {

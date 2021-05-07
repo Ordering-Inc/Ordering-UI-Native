@@ -9,7 +9,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { StyleSheet, View } from 'react-native';
 import { IMAGES } from '../../config/constants';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { ProfileParams } from '../../types';
 import { sortInputFields } from '../../utils';

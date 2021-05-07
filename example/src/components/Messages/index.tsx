@@ -5,7 +5,7 @@ import { GiftedChat, Actions, ActionsProps, InputToolbar, Composer, Send, Bubble
 import { USER_TYPE } from '../../config/constants'
 import { ToastType, useToast } from '../../providers/ToastProvider'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { OIcon, OIconButton, OText } from '../shared'
 import { TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native'
 import { Header, TitleHeader, Wrapper } from './styles'

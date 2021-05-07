@@ -23,7 +23,7 @@ import {
   OSWrapper,
   OSActions
 } from './styles';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 
 const PaymentOptionStripeUI = (props: any) => {
   const {

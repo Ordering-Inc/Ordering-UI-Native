@@ -1,5 +1,5 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 
 export const Container = styled.View`
   margin: 20px 0;

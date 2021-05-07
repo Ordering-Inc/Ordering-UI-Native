@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled, { css } from 'styled-components/native'
 import { ScrollView, TouchableOpacity  } from 'react-native-gesture-handler'
 import { ScrollView as CustomScrollView, TouchableOpacity as CustomTouchableOpacity } from 'react-native'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 
 interface Props {
   secondary?: boolean,
@@ -33,10 +33,10 @@ const Selected = styled.TouchableOpacity`
 `
 const SelectedLabel = styled.Text`
   font-size: 16px;
-  color: ${(props: any) => props.textcolor || (props.secondary ? 'black' : colors.white)};
+  color: ${(props: any) => props.textcolor || (props.secondary ? colors.black : colors.white)};
 `
 const DropIcon = styled.Image`
-  tint-color: ${(props: any) => props.textcolor || (props.secondary ? 'black' : colors.white)};
+  tint-color: ${(props: any) => props.textcolor || (props.secondary ? colors.black : colors.white)};
   resize-mode: contain;
   width: 7px;
   height: 7px;

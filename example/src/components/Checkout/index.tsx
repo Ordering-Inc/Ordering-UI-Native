@@ -16,7 +16,7 @@ import {
 
 import { OText, OButton, OIcon } from '../shared';
 import { IMAGES } from '../../config/constants';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';

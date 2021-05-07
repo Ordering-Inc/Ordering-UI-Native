@@ -1,14 +1,14 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native'
 
-import { IMAGES } from '../config/constants';
+import { LOGO_IMAGES } from '../config/constants';
 import { OIcon } from '../components/shared';
 
 
 const Splash = () => {
   return (
     <View style={styles.wrapper}>
-      <OIcon src={IMAGES.applogo} style={styles.logo} />
+      <OIcon src={LOGO_IMAGES.logotype} style={styles.logo} />
     </View>
   )
 }

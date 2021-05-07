@@ -23,7 +23,7 @@ import {
   WrapContent,
   BusinessProductsListingContainer
 } from './styles'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'

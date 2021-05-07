@@ -15,7 +15,7 @@ import {
   PositionControl,
   Circle
 } from './styles'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { OText } from '../shared'
 
 export const ProductOptionSubOptionUI = (props: any) => {

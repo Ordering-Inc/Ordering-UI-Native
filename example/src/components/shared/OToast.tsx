@@ -2,7 +2,7 @@ import * as React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ToastType, useToast } from "../../providers/ToastProvider";
-import { colors } from "../../theme";
+import { colors } from "../../theme.json";
 
 const fadeDuration = 300;
 const bottomPosition = 20;

@@ -34,7 +34,7 @@ import NavBar from '../NavBar'
 
 import { OText, OButton, OInput, OModal } from '../shared';
 import { LoginParams } from '../../types';
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 
 const LoginFormUI = (props: LoginParams) => {
   const {

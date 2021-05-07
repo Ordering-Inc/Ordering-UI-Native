@@ -5,7 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import BottomWrapper from '../BottomWrapper';
 import NavBar from '../NavBar';
 import { OButton, OInput, OText } from '../shared';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 import { IMAGES } from '../../config/constants';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 

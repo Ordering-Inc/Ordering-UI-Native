@@ -13,7 +13,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { MomentOptionParams } from '../../types'
 import NavBar from '../NavBar'
 import { OText } from '../shared'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import {Container} from '../../layouts/Container'
 import {
   HeaderTitle,

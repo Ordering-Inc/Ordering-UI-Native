@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 
 const Wrapper = styled.View`
 

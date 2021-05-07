@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { OInput, OButton } from '../shared'
 import { useLanguage } from 'ordering-components/native'
 import Icon from 'react-native-vector-icons/Feather'

@@ -4,7 +4,7 @@ import { Platform, StyleSheet } from 'react-native'
 
 import RNPickerSelect from 'react-native-picker-select'
 import { Container } from './styles'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { LanguageSelectorParams } from '../../types'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 

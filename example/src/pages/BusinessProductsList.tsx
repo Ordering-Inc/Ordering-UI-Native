@@ -2,7 +2,7 @@ import React from 'react'
 import { useApi, useEvent } from 'ordering-components/native'
 import { BusinessProductsListing as BusinessProductsListController } from '../components/BusinessProductsListing'
 import styled from 'styled-components/native'
-import { colors } from '../theme'
+import { colors } from '../theme.json'
 
 const BusinessProductsList = (props: any) => {
   const { store } = props.route.params

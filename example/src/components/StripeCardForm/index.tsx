@@ -12,7 +12,7 @@ import {
 } from './styles';
 
 import { OButton, OText } from '../shared';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 
 const StripeCardFormUI = (props:  any) => {
   const { stateCardForm, handleCancel } = props;

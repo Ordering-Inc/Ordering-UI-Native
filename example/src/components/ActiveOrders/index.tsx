@@ -3,7 +3,7 @@ import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
 import { OButton, OIcon, OText } from '../shared'
 import { ActiveOrdersContainer, Card, Map, Information, Logo, OrderInformation, BusinessInformation, Price } from './styles'
 import { View, StyleSheet } from 'react-native'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { getGoogleMapImage } from '../../utils'
 
 import { ActiveOrdersParams } from '../../types'

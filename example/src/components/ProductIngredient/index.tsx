@@ -5,7 +5,7 @@ import { Container } from './styles'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { View } from 'react-native'
 import { OText } from '../shared'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 
 const ProductIngredientUI = (props: any) => {
   const {

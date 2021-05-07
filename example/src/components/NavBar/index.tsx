@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
 import { OButton, OIcon, OText } from '../shared'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Platform, TextStyle } from 'react-native'
 import { IMAGES } from '../../config/constants'

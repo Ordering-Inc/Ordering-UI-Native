@@ -4,7 +4,7 @@ import { LogoutAction } from 'ordering-components/native';
 
 import { OIcon } from '../shared';
 import { IMAGES } from '../../config/constants';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 
 const LogoutButtonUI = (props: any) => {
   const { handleLogoutClick } = props

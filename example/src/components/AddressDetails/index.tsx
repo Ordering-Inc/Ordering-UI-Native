@@ -10,7 +10,7 @@ import {
   ADMap
 } from './styles';
 
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { OText, OIcon } from '../shared';
 
 const AddressDetailsUI = (props: any) => {

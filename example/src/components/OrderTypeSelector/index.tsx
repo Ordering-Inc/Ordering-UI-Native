@@ -6,7 +6,7 @@ import {
 import { ODropDown } from '../shared'
 import { OrderTypeWrapper } from './styles'
 import { OrderTypeSelectParams } from '../../types'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const {

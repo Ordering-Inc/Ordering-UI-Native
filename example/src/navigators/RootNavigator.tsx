@@ -16,7 +16,7 @@ import HomeNavigator from './HomeNavigator';
 const Stack = createStackNavigator();
 
 const RootNavigator = () => {
-  const [{ auth, user, loading }, { login }] = useSession();
+  const [{ auth, loading }] = useSession();
   const [orderStatus] = useOrder();
   const [loaded, setLoaded] = useState(false);
 

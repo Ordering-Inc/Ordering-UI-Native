@@ -12,7 +12,7 @@ import {
 } from './styles'
 import { OButton, OIcon, OInput, OText } from '../shared'
 import { TouchableOpacity, StyleSheet } from 'react-native';
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { useToast, ToastType } from '../../providers/ToastProvider'
 import NavBar from '../NavBar'
 import Spinner from 'react-native-loading-spinner-overlay'

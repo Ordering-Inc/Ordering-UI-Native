@@ -4,7 +4,7 @@ import { useUtils, useLanguage } from 'ordering-components/native';
 
 import { PCContainer, PCForm, PCWrapper } from './styles';
 import { OInput, OText } from '../shared';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 
 export const PaymentOptionCash = (props: any) => {
   const {

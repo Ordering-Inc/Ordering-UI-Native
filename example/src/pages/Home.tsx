@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { Home as HomePage } from '../components/Home';
 import { useLanguage } from 'ordering-components/native';
-import { colors } from '../theme';
+import { colors } from '../theme.json';
 
 export const Home = ({navigation}: any) => {
   const [, t] = useLanguage();

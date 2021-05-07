@@ -7,7 +7,7 @@ import {
 } from './styles'
 import { OText } from '../shared'
 import { StyleSheet } from 'react-native'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 
 const FloatingButtonUI = (props: FloatingButtonParams) => {
   const {

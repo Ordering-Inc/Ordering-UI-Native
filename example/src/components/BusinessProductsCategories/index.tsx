@@ -1,7 +1,7 @@
 import React from 'react'
 import { BusinessProductsCategories as ProductsCategories } from 'ordering-components/native'
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { Tab } from './styles'
 import { OText } from '../shared'
 import { BusinessProductsCategoriesParams } from '../../types'

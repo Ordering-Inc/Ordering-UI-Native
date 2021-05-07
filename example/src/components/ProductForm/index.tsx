@@ -26,7 +26,7 @@ import {
   ProductComment,
   ProductActions
 } from './styles'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { OButton, OInput, OText } from '../shared'
 import { ScrollView } from 'react-native-gesture-handler'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'

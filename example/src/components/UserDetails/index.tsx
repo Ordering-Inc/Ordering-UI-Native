@@ -11,7 +11,7 @@ import {
 } from 'ordering-components/native';
 
 import { OText } from '../shared';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 
 import { UserFormDetailsUI } from '../UserFormDetails';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
