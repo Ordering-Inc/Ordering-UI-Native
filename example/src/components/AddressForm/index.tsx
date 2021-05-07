@@ -4,7 +4,7 @@ import { StyleSheet, View, TouchableOpacity, Keyboard } from 'react-native'
 import { OInput, OButton, OText, OModal } from '../shared'
 import { getTraduction } from '../../utils'
 import NavBar from '../NavBar'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import { AddressFormContainer, AutocompleteInput, IconsContainer, GoogleMapContainer, FormInput } from './styles'

@@ -14,7 +14,7 @@ import {
 import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
 
 import NavBar from '../NavBar'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { SearchBar } from '../SearchBar'
 import { OText, OIcon, OModal } from '../shared'
 import { BusinessesListingParams } from '../../types'

@@ -30,7 +30,7 @@ import { VerifyPhone } from '../VerifyPhone';
 
 import { OText, OButton, OInput, OModal } from '../shared';
 import { SignupParams } from '../../types';
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { sortInputFields } from '../../utils';
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']

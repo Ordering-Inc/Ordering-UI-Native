@@ -7,7 +7,7 @@ import {
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
 import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 import { BusinessControllerParams } from '../../types';
 import { convertHoursToMinutes } from '../../utils';
 import {

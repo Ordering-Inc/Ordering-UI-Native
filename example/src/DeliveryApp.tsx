@@ -10,25 +10,22 @@ import * as React from 'react';
 import { LogBox } from 'react-native';
 import * as Sentry from "@sentry/react-native";
 import { NavigationContainer } from '@react-navigation/native';
-import { ToastProvider, ToastType, useToast } from './providers/ToastProvider';
-import { Toast } from './components/shared/OToast';
-import RootNavigator from './navigators/RootNavigator';
 import { OrderingProvider } from 'ordering-components/native';
+
+import { ToastProvider } from './providers/ToastProvider';
+import RootNavigator from './navigators/RootNavigator';
+import { Toast } from './components/shared/OToast';
 import Alert from './providers/AlertProvider'
+import {
+  ORDER_STATUS_IMAGES,
+  CATEGORIES_IMAGES,
+  DUMMIES_IMAGES,
+  GENERAL_IMAGES,
+  LOGO_IMAGES,
+} from './config/constants';
 
-
-const configFile = {
-  app_id: 'react-native-app',
-  project: 'luisv4',
-  api: {
-    url: 'https://apiv4.ordering.co',
-    language: 'en',
-    version: 'v400'
-  },
-  socket: {
-    url: 'https://socket.ordering.co'
-  }
-}
+import settings from './config.json';
+import theme from './theme.json';
 
 Sentry.init({
   dsn: "https://90197fffe6a1431b8c3eb79e1e36f0ee@o460529.ingest.sentry.io/5722123",
@@ -39,9 +36,52 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state.'
 ])
 
+theme.images = {
+  logos: {
+    logotype: LOGO_IMAGES.logotype,
+    logotypeInvert: LOGO_IMAGES.logotypeInvert,
+    // isotype,
+    // isotypeInvert
+  },
+  general: {
+    homeHero: GENERAL_IMAGES.homeHero,
+    notFound: GENERAL_IMAGES.notFound,
+  //   notFound404,
+  //   notFoundLighting,
+  //   searchIcon,
+  //   notNetwork,
+  //   orderDetailsHeader,
+    emptyActiveOrders: GENERAL_IMAGES.emptyActiveOrders,
+    emptyPastOrders: GENERAL_IMAGES.emptyPastOrders
+  },
+  order: {
+    status0: ORDER_STATUS_IMAGES.orderStatus0,
+    status1: ORDER_STATUS_IMAGES.orderStatus1,
+    status2: ORDER_STATUS_IMAGES.orderStatus2,
+    status3: ORDER_STATUS_IMAGES.orderStatus3,
+    status4: ORDER_STATUS_IMAGES.orderStatus4,
+    status5: ORDER_STATUS_IMAGES.orderStatus5,
+    status6: ORDER_STATUS_IMAGES.orderStatus6,
+    status7: ORDER_STATUS_IMAGES.orderStatus7,
+    status8: ORDER_STATUS_IMAGES.orderStatus8,
+    status9: ORDER_STATUS_IMAGES.orderStatus9,
+    status10: ORDER_STATUS_IMAGES.orderStatus10,
+    status11: ORDER_STATUS_IMAGES.orderStatus11,
+    status12: ORDER_STATUS_IMAGES.orderStatus12,
+    status13: ORDER_STATUS_IMAGES.orderStatus13
+  },
+  categories: {
+    all: CATEGORIES_IMAGES.all
+  },
+  dummies: {
+    product: DUMMIES_IMAGES.product,
+    businessLogo: DUMMIES_IMAGES.store
+  }
+}
+
 const DeliveryApp = () => {
   return (
-    <OrderingProvider settings={configFile} Alert={Alert}>
+    <OrderingProvider settings={settings} Alert={Alert}>
       <ToastProvider>
         <NavigationContainer>
           <RootNavigator />

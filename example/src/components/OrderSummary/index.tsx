@@ -20,7 +20,7 @@ import {
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { CouponControl } from '../CouponControl';
 import { OModal, OText } from '../shared';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 import { ProductForm } from '../ProductForm';
 
 

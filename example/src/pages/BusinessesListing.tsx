@@ -1,7 +1,7 @@
 import React from 'react'
 import { BusinessesListing as BusinessListingController } from '../components/BusinessesListing'
 import styled from 'styled-components/native'
-import {colors} from '../theme'
+import { colors } from '../theme.json'
 
 const BusinessesListing = (props: any) => {
 

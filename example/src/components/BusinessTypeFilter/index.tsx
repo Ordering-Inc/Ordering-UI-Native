@@ -5,7 +5,7 @@ import { OText } from '../shared'
 import { StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { BusinessTypeFilterParams } from '../../types'
 
 export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {

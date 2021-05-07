@@ -1,14 +1,12 @@
 import React from 'react';
 import { useLanguage, useOrder } from 'ordering-components/native';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 import { OButton, OIcon, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-const sloganImage = require('../../assets/images/home-logo.png');
-const applogo = require('../../assets/images/app-logo.png');
+import { LOGO_IMAGES, GENERAL_IMAGES } from '../../config/constants';
 
 const windowHeight = Dimensions.get('window').height
 
@@ -27,10 +25,10 @@ export const Home = (props: any) => {
           <LanguageSelector />
         </View>
         <LogoWrapper>
-          <OIcon src={applogo} style={styles.logo} />
+          <OIcon src={LOGO_IMAGES.logotype} style={styles.logo} />
         </LogoWrapper>
         <Slogan>
-          <OIcon src={sloganImage} style={styles.slogan} />
+          <OIcon src={GENERAL_IMAGES.homeHero} style={styles.slogan} />
         </Slogan>
       </View>
       <View style={styles.wrapperBtn}>

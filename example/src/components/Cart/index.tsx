@@ -24,7 +24,7 @@ import { CouponControl } from '../CouponControl';
 // import { ProductForm } from '../ProductForm';
 
 import { OButton, OModal, OText, OBottomPopup } from '../shared';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 

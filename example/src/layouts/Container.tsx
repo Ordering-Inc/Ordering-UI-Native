@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import styled, { css } from 'styled-components/native';
-import { colors } from '../theme';
+import { colors } from '../theme.json';
 
 const ContainerStyled = styled.ScrollView`
   flex: 1;

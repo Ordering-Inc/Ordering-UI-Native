@@ -30,7 +30,7 @@ import {
   PMCardSelected,
   PMCardItemContent
 } from './styles'
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 import { getIconCard, flatArray } from '../../utils';
 
 const stripeOptions = ['stripe_direct', 'stripe', 'stripe_connect']

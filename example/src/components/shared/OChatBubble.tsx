@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components/native'
 import { OIcon } from '.'
 import { DIRECTION } from '../../config/constants'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import OText from './OText'
 
 const Wrapper = styled.View`

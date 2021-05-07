@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLanguage } from 'ordering-components/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { colors } from '../theme';
+import { colors } from '../theme.json';
 
 export const flatArray = (arr: any) => [].concat(...arr)
 

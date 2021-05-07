@@ -7,7 +7,7 @@ import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OText, OButton, OInput } from '../shared';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 import { IMAGES } from '../../config/constants';
 
 import { PhoneInputNumber } from '../PhoneInputNumber'

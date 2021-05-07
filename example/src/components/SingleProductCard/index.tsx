@@ -7,7 +7,7 @@ import {
   SoldOut
 } from './styles'
 import { StyleSheet } from 'react-native'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { OText, OIcon } from '../shared'
 
 export const SingleProductCard = (props: SingleProductCardParams) => {

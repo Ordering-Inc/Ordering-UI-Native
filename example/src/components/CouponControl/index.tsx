@@ -9,7 +9,7 @@ import {
 } from './styles';
 
 import { OInput, OButton, OAlert, OText } from '../shared';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 
 const CouponControlUI = (props: any) => {
   const {

@@ -8,7 +8,7 @@ import {
   useLanguage
 } from 'ordering-components/native'
 import { OText, OIcon, OModal, OBottomPopup, OButton } from '../shared'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { UpsellingProductsParams } from '../../types'
 import {
   Container,

@@ -5,7 +5,7 @@ import { useLanguage, useConfig } from 'ordering-components/native';
 
 import { Wrapper } from './styles'
 
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import { PhoneInputParams } from '../../types';
 import { OText } from '../shared';
 

@@ -5,7 +5,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { View, StyleSheet } from 'react-native'
 import { OText } from '../shared'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import {
   BusinessReviewsContainer,
   ScoreView,

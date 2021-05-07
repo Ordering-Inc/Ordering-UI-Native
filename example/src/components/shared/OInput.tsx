@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ImageSourcePropType, ImageStyle, ViewStyle} from 'react-native';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
-import {colors} from '../../theme';
+import { colors } from '../../theme.json';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 const Wrapper = styled.View`

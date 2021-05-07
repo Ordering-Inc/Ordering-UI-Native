@@ -2,7 +2,7 @@ import * as React from 'react'
 import AwesomeAlert from 'react-native-awesome-alerts'
 import { getTraduction } from '../utils'
 import { useLanguage } from 'ordering-components/native'
-import { colors } from '../theme'
+import { colors } from '../theme.json'
 interface Props {
   open: boolean,
   title: string,

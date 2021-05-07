@@ -21,7 +21,7 @@ import {
 import { OIcon, OText, OAlert } from '../shared'
 
 import { ProductItemAccordionParams } from '../../types'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 import Spinner from 'react-native-loading-spinner-overlay'
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 

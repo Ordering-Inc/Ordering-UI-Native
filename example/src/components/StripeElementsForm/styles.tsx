@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 
 export const ErrorMessage = styled.View`
   color: ${colors.cancelColor};

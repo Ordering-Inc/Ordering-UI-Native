@@ -11,7 +11,7 @@ import {
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OButton, ODropDown, OInput, OText } from '../shared';
-import { colors } from '../../theme';
+import { colors } from '../../theme.json';
 import { IMAGES } from '../../config/constants';
 
 const StripeRedirectFormUI = (props: any) => {
