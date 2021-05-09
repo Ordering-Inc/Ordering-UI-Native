@@ -78,7 +78,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ parsePrice, parseNumber, parseDate }] = useUtils()
   const [{ user }] = useSession()
 
-  const [openMessages, setOpenMessages] = useState({ business: false, driver: false })
   const [openModalForBusiness,setOpenModalForBusiness] = useState(false)
   const [openModalForDriver,setOpenModalForDriver] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
@@ -118,7 +117,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const handleOpenMessagesForDriver = () => {
     setOpenModalForDriver(true)
     readMessages && readMessages()
-    setUnreadAlert({...unreadAlert, business: false})
+    setUnreadAlert({...unreadAlert, driver: false})
   }
 
   const unreadMessages = () => {
@@ -152,7 +151,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     if (messagesReadList?.length) {
-      openMessages.business ? setUnreadAlert({ ...unreadAlert, business: false }) : setUnreadAlert({ ...unreadAlert, driver: false })
+      openModalForBusiness ? setUnreadAlert({ ...unreadAlert, business: false }) : setUnreadAlert({ ...unreadAlert, driver: false })
     }
   }, [messagesReadList])
 
@@ -214,12 +213,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   color={colors.backgroundDark}
                   onPress={() => props.navigation.navigate('Business', { store: businessData?.slug })}
                 />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => handleOpenMessagesForBusiness()}>
                   <MaterialCommunityIcon
                     name='message-text-outline'
                     size={26}
                     color={colors.backgroundDark}
-                    onPress={() => handleOpenMessagesForBusiness()}
                   />
                 </TouchableOpacity>
               </Icons>
@@ -289,12 +287,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <InfoBlock>
                     <OText size={18}>{order?.driver?.name} {order?.driver?.lastname}</OText>
                     <Icons>
-                      <TouchableOpacity>
+                      <TouchableOpacity onPress={() => handleOpenMessagesForDriver()}>
                         <MaterialCommunityIcon
                           name='message-text-outline'
                           size={24}
                           color={colors.backgroundDark}
-                          onPress={() => handleOpenMessagesForDriver()}
                         />
                       </TouchableOpacity>
                     </Icons>
