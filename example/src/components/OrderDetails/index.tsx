@@ -79,6 +79,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ user }] = useSession()
 
   const [openMessages, setOpenMessages] = useState({ business: false, driver: false })
+  const [openModalForBusiness,setOpenModalForBusiness] = useState(false)
+  const [openModalForDriver,setOpenModalForDriver] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
   const { order, businessData } = props.order
 
@@ -107,14 +109,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     return objectStatus && objectStatus
   }
 
-  const handleOpenMessages = (data: any) => {
-    setOpenMessages(data)
+  const handleOpenMessagesForBusiness = () => {
+    setOpenModalForBusiness(true)
     readMessages && readMessages()
-    if (order?.unread_count > 0) {
-      data.business
-        ? setUnreadAlert({ ...unreadAlert, business: false })
-        : setUnreadAlert({ ...unreadAlert, driver: false })
-    }
+    setUnreadAlert({...unreadAlert, business: false})
+  }
+
+  const handleOpenMessagesForDriver = () => {
+    setOpenModalForDriver(true)
+    readMessages && readMessages()
+    setUnreadAlert({...unreadAlert, business: false})
   }
 
   const unreadMessages = () => {
@@ -127,7 +131,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }
 
   const handleCloseModal = () => {
-    setOpenMessages({ business: false, driver: false })
+    setOpenModalForBusiness(false)
+    setOpenModalForDriver(false)
   }
 
   const handleArrowBack: any = () => {
@@ -214,7 +219,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     name='message-text-outline'
                     size={26}
                     color={colors.backgroundDark}
-                    onPress={() => handleOpenMessages({ business: true, driver: false })}
+                    onPress={() => handleOpenMessagesForBusiness()}
                   />
                 </TouchableOpacity>
               </Icons>
@@ -289,7 +294,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           name='message-text-outline'
                           size={24}
                           color={colors.backgroundDark}
-                          onPress={() => handleOpenMessages({ driver: true, business: false })}
+                          onPress={() => handleOpenMessagesForDriver()}
                         />
                       </TouchableOpacity>
                     </Icons>
@@ -366,9 +371,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </OrderContent>
         </>
       )}
-      <OModal open={openMessages.business || openMessages.driver} entireModal onClose={() => handleCloseModal()}>
+      <OModal open={openModalForBusiness || openModalForDriver} entireModal onClose={() => handleCloseModal()}>
         <Messages
-          type={openMessages.business ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER}
+          type={openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER}
           orderId={order?.id}
           messages={messages}
           order={order}
