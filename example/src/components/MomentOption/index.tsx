@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import {
-  MomentOption as MomentOptionController,
   useLanguage,
   useConfig,
   useUtils,
-  useOrder
+  useOrder,
+  MomentOption as MomentOptionController
 } from 'ordering-components/native'
-import Spinner from 'react-native-loading-spinner-overlay'
 import { StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { MomentOptionParams } from '../../types'
@@ -58,6 +57,12 @@ const MomentOptionUI = (props: MomentOptionParams) => {
       setOptionSelected({ isAsap: true, isSchedule: false })
     }
   }, [orderState.options?.moment])
+
+  useEffect(() => {
+    if(orderState.loading){
+      goToBack()
+    }
+  }, [orderState.loading])
 
   return (
     <Container nopadding={nopadding}>
@@ -177,7 +182,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
           </>
         )}
       </WrapDelveryTime>
-      <Spinner visible={orderState.loading} />
     </Container>
   )
 }
