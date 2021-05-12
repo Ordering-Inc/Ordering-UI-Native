@@ -126,8 +126,8 @@ const PaymentOptionStripeUI = (props: any) => {
         <OSWrapper style={styles.bottom}>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
-            bgColor={colors.primary}
-            borderColor={colors.primary}
+            bgColor={colors.backgroundGray}
+            borderColor={colors.backgroundGray}
             style={styles.btnAddStyle}
             textStyle={{color: 'white'}}
             imgRightSrc={null}
