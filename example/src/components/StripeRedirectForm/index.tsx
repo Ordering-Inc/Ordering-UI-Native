@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { StripeRedirectForm as StripeRedirectFormController, useSession, useLanguage } from 'ordering-components/native';
-import stripe from 'tipsi-stripe';
+// import stripe from 'tipsi-stripe';
 
 import {
   FormRedirect,
@@ -21,10 +21,10 @@ const StripeRedirectFormUI = (props: any) => {
     handleSubmitPaymentMethod
   } = props;
 
-  stripe.setOptions({
-    publishableKey: publicKey,
-    // androidPayMode: 'test', // Android only
-  })
+  // stripe.setOptions({
+  //   publishableKey: publicKey,
+  //   // androidPayMode: 'test', // Android only
+  // })
 
   const { showToast } = useToast();
   const { control, handleSubmit, errors } = useForm();
@@ -56,20 +56,20 @@ const StripeRedirectFormUI = (props: any) => {
   }, [errors])
 
   const handleCreateSource = async () => {
-    try {
-      // this.setState({ loading: true, source: null })
-      const source = await stripe.createSourceWithParams({
-        type: 'alipay',
-        amount: 50,
-        currency: 'USD',
-        returnURL: 'https://www.google.com/',
-      })
-      // this.setState({ loading: false, source })
-      console.log('source', source);
-    } catch (error) {
-      // this.setState({ loading: false })
-      console.log(error);
-    }
+    // try {
+    //   // this.setState({ loading: true, source: null })
+    //   const source = await stripe.createSourceWithParams({
+    //     type: 'alipay',
+    //     amount: 50,
+    //     currency: 'USD',
+    //     returnURL: 'https://www.google.com/',
+    //   })
+    //   // this.setState({ loading: false, source })
+    //   console.log('source', source);
+    // } catch (error) {
+    //   // this.setState({ loading: false })
+    //   console.log(error);
+    // }
   }
 
   return (
