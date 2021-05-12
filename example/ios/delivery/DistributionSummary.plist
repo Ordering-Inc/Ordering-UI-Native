@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>delivery.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>5C4616EB842C9932A59DB55F3BF981488F168619</string>
+				<key>dateExpires</key>
+				<string>4/29/22</string>
+				<key>type</key>
+				<string>Apple Development</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>5C4616EB842C9932A59DB55F3BF981488F168619</string>
+						<key>dateExpires</key>
+						<string>4/29/22</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>OpenSSL.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>LQ9F5756AF</string>
+						<key>name</key>
+						<string>Ordering, Inc.</string>
+					</dict>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>LQ9F5756AF.org.reactjs.native.example.delivery</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>LQ9F5756AF</string>
+				<key>get-task-allow</key>
+				<true/>
+				<key>keychain-access-groups</key>
+				<array>
+					<string>LQ9F5756AF.org.reactjs.native.example.delivery</string>
+				</array>
+			</dict>
+			<key>name</key>
+			<string>delivery.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>55900037-8f06-4c5f-bf9d-a2fb7b6ca949</string>
+				<key>name</key>
+				<string>iOS Team Provisioning Profile: *</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>LQ9F5756AF</string>
+				<key>name</key>
+				<string>Ordering, Inc.</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
