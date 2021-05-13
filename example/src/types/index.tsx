@@ -92,6 +92,7 @@ export interface PhoneInputParams {
   data?: any;
   handleData?: any;
   defaultValue?: any;
+  defaultCode?: number | null;
 }
 
 export interface LanguageSelectorParams {

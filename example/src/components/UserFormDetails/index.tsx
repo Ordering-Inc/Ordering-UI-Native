@@ -162,7 +162,6 @@ export const UserFormDetailsUI = (props: any) => {
       }
     }
   }, [user, isEdit])
-
   return (
     <>
       <UDForm>
@@ -208,6 +207,7 @@ export const UserFormDetailsUI = (props: any) => {
                   data={phoneInputData}
                   handleData={(val: any) => handleChangePhoneNumber(val)}
                   defaultValue={phoneUpdate ? '' : user?.cellphone}
+                  defaultCode={user?.country_phone_code || null}
                 />
                 {phoneUpdate && (
                   <OText color={colors.error} style={{ marginHorizontal: 10, textAlign: 'center' }}>{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}</OText>
