@@ -51,6 +51,7 @@ interface Props {
   autoCompleteType?: string;
   autoCorrect?: boolean;
   keyboardType?: string;
+  returnKeyType?: string;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -86,6 +87,7 @@ const OInput = (props: Props): React.ReactElement => {
         autoCapitalize={props.autoCapitalize}
         autoCompleteType={props.autoCompleteType}
         autoCorrect={props.autoCorrect}
+        returnKeyType={props.returnKeyType}
       />
       {props.iconRight && (
         <OIcon
