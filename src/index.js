@@ -10,8 +10,8 @@ import {
     OIconButton, 
     OTextarea,
     OToggle
-} from './src/components/shared';
-import LoginForm from './src/components/LoginForm';
+} from './components/shared';
+import LoginForm from './components/LoginForm';
 
 export { 
     OText, 
