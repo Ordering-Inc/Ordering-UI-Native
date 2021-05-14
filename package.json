@@ -93,22 +93,22 @@
     "ts-jest": "^26.4.1",
     "typescript": "^4.0.3"
   },
-  "react-native": "\\index.js",
+  "react-native": "index.js",
   "module": "lib\\module\\index.js",
   "files": [
-    "/",
+    "./",
     "lib",
     "!**/__tests__",
     "!**/__fixtures__",
-    "!**/__mocks__"
+    "!**/__mocks__",
+    "/"
   ],
   "react-native-builder-bob": {
-    "source": "/",
+    "source": "./",
     "output": "lib",
     "targets": [
       "commonjs",
-      "module",
-      "typescript"
+      "module"
     ]
   },
   "eslintIgnore": [
