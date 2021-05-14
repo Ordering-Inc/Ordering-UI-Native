@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "native app components with example",
   "main": "lib\\commonjs\\index.js",
-  "types": "lib\\typescript\\index.d.ts",
+  "types": "lib\\typescript\\src\\index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "bob build"
@@ -93,22 +93,24 @@
     "ts-jest": "^26.4.1",
     "typescript": "^4.0.3"
   },
-  "react-native": "index.js",
+  "react-native": "src\\index.js",
   "module": "lib\\module\\index.js",
   "files": [
-    "./",
+    "src",
     "lib",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
+    "./",
     "/"
   ],
   "react-native-builder-bob": {
-    "source": "./",
+    "source": "src",
     "output": "lib",
     "targets": [
       "commonjs",
-      "module"
+      "module",
+      "typescript"
     ]
   },
   "eslintIgnore": [
