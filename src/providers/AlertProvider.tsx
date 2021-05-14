@@ -1,41 +1,47 @@
 import * as React from 'react'
 import AwesomeAlert from 'react-native-awesome-alerts'
-
+import { getTraduction } from '../utils'
+import { useLanguage } from 'ordering-components/native'
+import { colors } from '../theme.json'
 interface Props {
-    
+  open: boolean,
+  title: string,
+  content: Array<string>,
+  onClose: () => void,
+  onAccept: () => void
 }
 
-const AlertProvider = () => {
-    const [isShow, showAlert] = React.useState(false)
-    const show = () => {
-        showAlert(true);
-    };
-    
-    const hide = () => {
-        showAlert(false)
-    };
-
-    return (
-        <AwesomeAlert
-          show={isShow}
-          showProgress={false}
-          title="AwesomeAlert"
-          message="I have a message for you!"
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={true}
-          showConfirmButton={true}
-          cancelText="No, cancel"
-          confirmText="Yes, delete it"
-          confirmButtonColor="#DD6B55"
-          onCancelPressed={() => {
-            hide();
-          }}
-          onConfirmPressed={() => {
-            hide();
-          }}
-        />
-    )
+const Alert = (props: Props) => {
+  const {
+    open,
+    title,
+    content,
+    onClose,
+    onAccept,
+  } = props
+  const [, t] = useLanguage()
+  const parseContent = (list: Array<string>) => {
+    let allMessages: string = ''
+    list?.map((message: string) => {
+      allMessages = `* ${getTraduction(message)}\n` + allMessages
+    })
+    return allMessages
+  }
+  return (
+    <AwesomeAlert
+      show={open}
+      showProgress={false}
+      title={title}
+      message={getTraduction(content?.[0])}
+      closeOnTouchOutside={true}
+      closeOnHardwareBackPress={false}
+      showConfirmButton={true}
+      confirmText={t('ACCEPT', 'Accept')}
+      confirmButtonColor={colors.primary}
+      onCancelPressed={() => onClose()}
+      onConfirmPressed={() => onAccept()}
+    />
+  )
 }
 
-export default AlertProvider;
+export default Alert;
