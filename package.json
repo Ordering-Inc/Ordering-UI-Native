@@ -108,8 +108,8 @@
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      ["commonjs", { "babelrc": true }],
+      ["module", { "babelrc": true }],
       "typescript"
     ]
   },
