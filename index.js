@@ -12,7 +12,6 @@ import {
     OToggle
 } from './src/components/shared';
 import LoginForm from './src/components/LoginForm';
-import NumberKey from './src/components/NumberKey';
 
 export { 
     OText, 
@@ -26,7 +25,5 @@ export {
     OIconButton, 
     OTextarea,
     OToggle,
-
     LoginForm,
-    NumberKey
 }

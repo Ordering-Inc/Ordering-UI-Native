@@ -17,7 +17,7 @@ const Label = styled.Text`
     font-family: 'Poppins-Regular';
 `
 
-export interface IconTextProps {
+interface Props {
     icon?: any,
     text?: string,
     size?: number,
@@ -27,7 +27,7 @@ export interface IconTextProps {
     textStyle?: TextStyle
 }
 
-const OIconText = (props: IconTextProps): React.ReactElement => {
+const OIconText = (props: Props) => {
     return (
         <Wrapper style={props.style}>
             {props.icon ? (

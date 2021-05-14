@@ -1,4 +1,3 @@
-import { NumberKeyProps } from './src/components/NumberKey';
 import * as React from 'react';
 import { OToggleProps } from './src/components/shared/OToggle';
 import { OTextAreaProps } from './src/components/shared/OTextarea';
@@ -9,37 +8,34 @@ import { OSegmentProps } from './src/components/shared/OSegment';
 import { OInputProps } from './src/components/shared/OInput';
 import { OButtonProps } from './src/components/shared/OButton';
 import { OTextProps } from './src/components/shared/OText';
-import { LoginFormInterface } from './src/components/LoginForm';
+import { LoginParams } from './src/types';
 import { OIconProps } from './src/components/shared/OIcon';
 
-declare class OText extends React.Component<OTextProps> {}
-declare class OButton extends React.Component<OButtonProps> {}
-declare class OInput extends React.Component<OInputProps> {}
-declare class OSegment extends React.Component<OSegmentProps> {}
-declare class OIcon extends React.Component<OIconProps> {}
-declare class ODropDown extends React.Component<ODropDownProps> {}
-declare class OIconText extends React.Component<OIconProps> {}
-declare class OCheckbox extends React.Component<OCheckboxProps> {}
-declare class OIconButton extends React.Component<OIconButtonProps> {}
-declare class OTextarea extends React.Component<OTextAreaProps> {}
-declare class OToggle extends React.Component<OToggleProps> {}
+declare class OText extends React.Component<OTextProps> { }
+declare class OButton extends React.Component<OButtonProps> { }
+declare class OInput extends React.Component<OInputProps> { }
+declare class OSegment extends React.Component<OSegmentProps> { }
+declare class OIcon extends React.Component<OIconProps> { }
+declare class ODropDown extends React.Component<ODropDownProps> { }
+declare class OIconText extends React.Component<OIconProps> { }
+declare class OCheckbox extends React.Component<OCheckboxProps> { }
+declare class OIconButton extends React.Component<OIconButtonProps> { }
+declare class OTextarea extends React.Component<OTextAreaProps> { }
+declare class OToggle extends React.Component<OToggleProps> { }
 
-declare class LoginForm extends React.Component<LoginFormInterface> {}
-declare class NumberKey extends React.Component<NumberKeyProps> {}
+declare class LoginForm extends React.Component<LoginParams> { }
 
-export { 
-    OText, 
-    OButton, 
-    OInput, 
-    OSegment, 
-    ODropDown, 
-    OIcon, 
-    OIconText, 
-    OCheckbox, 
-    OIconButton, 
+export {
+    OText,
+    OButton,
+    OInput,
+    OSegment,
+    ODropDown,
+    OIcon,
+    OIconText,
+    OCheckbox,
+    OIconButton,
     OTextarea,
     OToggle,
-
     LoginForm,
-    NumberKey
 }

@@ -9,17 +9,25 @@ import OCheckbox from './OCheckbox'
 import OIconButton from './OIconButton'
 import OTextarea from './OTextarea'
 import OToggle from './OToggle'
+import OKeyButton from './OKeyButton'
+import OModal from './OModal'
+import OAlert from './OAlert'
+import OBottomPopup from './OBottomPopup'
 
-export { 
-    OText, 
-    OButton, 
-    OInput, 
-    OSegment, 
-    ODropDown, 
-    OIcon, 
-    OIconText, 
-    OCheckbox, 
-    OIconButton, 
-    OTextarea,
-    OToggle
+export {
+	OText,
+	OButton,
+	OInput,
+	OSegment,
+	ODropDown,
+	OIcon,
+	OIconText,
+	OCheckbox,
+	OIconButton,
+	OTextarea,
+	OToggle,
+	OKeyButton,
+	OAlert,
+  	OModal,
+	OBottomPopup
 }

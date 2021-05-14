@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
-import { colors } from '../../theme'
+import { colors } from '../../theme.json'
 
 const Wrapper = styled.View`
 
@@ -30,7 +30,7 @@ const Check = styled.View`
 const Title = styled.Text`
     font-family: 'Poppins-Regular';
 `
-export interface OCheckboxProps {
+interface Props {
     label?: string,
     checked?: boolean,
     onChange?: any,
@@ -39,7 +39,7 @@ export interface OCheckboxProps {
     size?: number
 }
 
-const OCheckbox = (props: OCheckboxProps): React.ReactElement => {
+const OCheckbox = (props: Props) => {
     const [is_checked, onChanged] = React.useState(props.checked)
 
     const checkToggle = (state: boolean) => {
