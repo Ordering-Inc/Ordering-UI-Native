@@ -53,7 +53,7 @@ export interface OInputProps {
   keyboardType?: string;
 }
 
-const OInput = (props: Props): React.ReactElement => {
+const OInput = (props: OInputProps): React.ReactElement => {
   return (
     <Wrapper
       style={{

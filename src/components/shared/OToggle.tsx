@@ -28,7 +28,7 @@ export interface OToggleProps {
     circleColor?: string,
 };
 
-const OToggleSwitch = (props: propTypes) => {
+const OToggleSwitch = (props: OToggleProps) => {
 
     const calculateDimensions = (size: string) => {
         switch (size) {

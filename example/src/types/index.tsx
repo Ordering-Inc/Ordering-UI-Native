@@ -247,6 +247,7 @@ export interface ProductItemAccordionParams {
   onDeleteProduct?: (product: any) => void,
   onEditProduct?: (product: any) => void,
   offsetDisabled?: any,
+  isFromCheckout?: boolean
 }
 export interface ReviewOrderParams {
   order?: { orderId: number, businessId: number, logo: string },
