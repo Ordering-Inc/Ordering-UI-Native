@@ -11,7 +11,7 @@ import {
     OTextarea,
     OToggle
 } from './components/shared';
-import LoginForm from './components/LoginForm';
+import {LoginForm} from './components/LoginForm';
 
 export { 
     OText, 
