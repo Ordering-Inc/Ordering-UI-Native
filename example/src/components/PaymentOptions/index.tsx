@@ -136,7 +136,7 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeIds = [3, 22, 28, 31, 32]; //exclude paypal & connect & redirect
+  const excludeIds = [3, 28, 31, 32]; //exclude paypal & connect & redirect
 
   return (
     <PMContainer>

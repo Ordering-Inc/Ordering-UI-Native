@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 import { ErrorMessage } from './styles';
 
@@ -23,15 +24,17 @@ const StripeElementsFormUI = (props: any) => {
   return (
     <View>
       {publicKey ? (
-        <StripeCardForm
-          toSave={toSave}
-          publicKey={publicKey}
-          onNewCard={onNewCard}
-          businessId={businessId}
-          handleCancel={onCancel}
-          handleSource={handleSource}
-          requirements={requirements}
-        />
+        <StripeProvider publishableKey='pk_test_SP5YYDD4PdEVfH8U2QJhsVxR'>
+          <StripeCardForm
+            toSave={toSave}
+            publicKey={publicKey}
+            onNewCard={onNewCard}
+            businessId={businessId}
+            handleCancel={onCancel}
+            handleSource={handleSource}
+            requirements={requirements}
+          />
+        </StripeProvider>
       ) : (
         <ErrorMessage>{t('SOMETHING_WRONG', 'Something is wrong!')}</ErrorMessage>
       )}

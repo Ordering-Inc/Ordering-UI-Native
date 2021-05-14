@@ -573,8 +573,6 @@ export const Checkout = (props: any) => {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
       } else if (result.status === 2 && stripePaymentOptions.includes(result.paymethod_data?.gateway)) {
-        console.log('status 2');
-        
         // const clientSecret = result.paymethod_data?.result?.client_secret
         // const paymentMethodId = result.paymethod_data?.data?.source_id;
 
@@ -638,6 +636,13 @@ export const Checkout = (props: any) => {
     //         error: cart ? null : result
     //       })
         // }
+        const cart = Array.isArray(result) ? null : result
+        setCartState({
+          ...cartState,
+          loading: false,
+          cart,
+          error: cart ? null : result
+        })
       } else {
         const cart = Array.isArray(result) ? null : result
         setCartState({
