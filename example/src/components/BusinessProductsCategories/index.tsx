@@ -17,7 +17,7 @@ const BusinessProductsCategoriesUI = (props: any) => {
   } = props
 
   return (
-    <ScrollView horizontal style={{...styles.container, borderBottomWidth: loading ? 0 : 1}}>
+    <ScrollView horizontal style={{...styles.container, borderBottomWidth: loading ? 0 : 1}} showsHorizontalScrollIndicator={false}>
       {loading && (
         <Placeholder Animation={Fade}>
           <View style={{ flexDirection: 'row' }}>

@@ -142,3 +142,17 @@ export const transformCountryCode = (countryCode : number) => {
   const code = CODES.find((code : any) => code.phoneCode === countryCode)
   return code?.countryCode
 }
+
+/**
+ * Function to check if a number is decimal or not
+ * @param {*} value number to check if decimal or not
+ * @param {*} parser function fallback when is decimal
+ * @returns string
+ */
+ export const verifyDecimals = (value: number, parser: any) => {
+  if (value % 1 === 0) {
+    return value
+  } else {
+    return parser(value)
+  }
+}

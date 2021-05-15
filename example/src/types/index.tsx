@@ -109,12 +109,17 @@ export interface BusinessesListingParams {
   handleBusinessClick?: void;
   paginationProps?: any;
   handleChangeSearch?: any;
+  images?: any;
+  businessTypes?: any;
+  defaultBusinessType?: any;
 }
 export interface BusinessTypeFilterParams {
   businessTypes?: Array<any>;
   handleChangeBusinessType: any;
   currentTypeSelected?: string | null;
   defaultBusinessType?: string | null;
+  images?: any
+  typesState?: any
 }
 export interface BusinessControllerParams {
   key?: number;
@@ -248,6 +253,7 @@ export interface ProductItemAccordionParams {
   onDeleteProduct?: (product: any) => void,
   onEditProduct?: (product: any) => void,
   offsetDisabled?: any,
+  isFromCheckout?: any
 }
 export interface ReviewOrderParams {
   order?: { orderId: number, businessId: number, logo: string },
