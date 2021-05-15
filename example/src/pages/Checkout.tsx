@@ -16,7 +16,6 @@ export const CheckoutPage = (props: any) => {
   const checkoutProps = {
     ...props,
     cartUuid: props?.cartUuid || props.route?.params?.cartUuid,
-    driverTipsOptions: [0, 10, 15, 20, 25],
     stripePaymentOptions,
     onPlaceOrderClick: async (data: any, paymethod: any, cart: any) => {
       if (cart?.order?.uuid) {

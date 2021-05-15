@@ -124,6 +124,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         </AddressInput>
       </OrderControlContainer>
       <BusinessTypeFilter
+        images={props.images}
+        businessTypes={props.businessTypes}
+        defaultBusinessType={props.defaultBusinessType}
         handleChangeBusinessType={handleChangeBusinessType}
       />
       {

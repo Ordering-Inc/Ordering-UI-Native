@@ -76,8 +76,7 @@ const CheckoutUI = (props: any) => {
     paymethodSelected,
     handlePaymethodChange,
     handlerClickPlaceOrder,
-    onNavigationRedirect,
-    driverTipsOptions
+    onNavigationRedirect
   } = props
 
   const { showToast } = useToast();
@@ -91,7 +90,11 @@ const CheckoutUI = (props: any) => {
   const [errorCash, setErrorCash] = useState(false);
   const [userErrors, setUserErrors] = useState<any>([]);
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
-  const [phoneUpdate, setPhoneUpdate] = useState(false)
+  const [phoneUpdate, setPhoneUpdate] = useState(false);
+
+  const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
+    ? JSON.parse(configs?.driver_tip_options?.value) || []
+    : configs?.driver_tip_options?.value || []
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
@@ -184,15 +187,6 @@ const CheckoutUI = (props: any) => {
                 size={17}
               >
                 {t('CART_STATUS_PENDING_MESSAGE_APP', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the app')}
-              </OText>
-            )}
-            {!cartState.loading && cart?.status === 4 && (
-              <OText
-                style={{ textAlign: 'center' }}
-                color={colors.error}
-                size={17}
-              >
-                {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
               </OText>
             )}
           </ChErrors>
@@ -368,12 +362,47 @@ const CheckoutUI = (props: any) => {
         </ChBusinessDetails>
       </ChSection>
 
+      {!cartState.loading &&
+        cart &&
+        options.type === 1 &&
+        cart?.status !== 2 &&
+        validationFields?.fields?.checkout?.driver_tip?.enabled &&
+        driverTipsOptions && driverTipsOptions?.length > 0 &&
+        (
+          <ChSection style={style.paddSection}>
+            <ChDriverTips>
+              <OText size={20}>
+                {t('DRIVER_TIPS', 'Driver Tips')}
+              </OText>
+              <DriverTips
+                businessId={cart?.business_id}
+                driverTipsOptions={driverTipsOptions}
+                isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)}
+                isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
+                driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)
+                  ? cart?.driver_tip
+                  : cart?.driver_tip_rate}
+                useOrderContext
+              />
+            </ChDriverTips>
+          </ChSection>
+        )}
+
       {!cartState.loading && cart && cart?.status !== 2 && (
-        <ChSection style={style.paddSection}>
+        <ChSection style={style.paddSectionH}>
           <ChPaymethods>
             <OText size={20}>
               {t('PAYMENT_METHOD', 'Payment Method')}
             </OText>
+            {!cartState.loading && cart?.status === 4 && (
+              <OText
+                style={{ textAlign: 'center', marginTop: 20 }}
+                color={colors.error}
+                size={17}
+              >
+                {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
+              </OText>
+            )}
             <PaymentOptions
               cart={cart}
               isDisabled={cart?.status === 2}
@@ -389,26 +418,6 @@ const CheckoutUI = (props: any) => {
           </ChPaymethods>
         </ChSection>
       )}
-
-      {!cartState.loading &&
-        cart &&
-        options.type === 1 &&
-        cart?.status !== 2 &&
-        validationFields?.fields?.checkout?.driver_tip?.enabled &&
-        (
-          <ChSection style={style.paddSectionH}>
-            <ChDriverTips>
-              <OText size={20}>
-                {t('DRIVER_TIPS', 'Driver Tips')}
-              </OText>
-              <DriverTips
-                businessId={cart?.business_id}
-                driverTipsOptions={driverTipsOptions}
-                useOrderContext
-              />
-            </ChDriverTips>
-          </ChSection>
-        )}
 
       {!cartState.loading && cart && (
         <ChSection style={style.paddSection}>
