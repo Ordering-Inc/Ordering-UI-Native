@@ -101,17 +101,29 @@
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
-    "./",
-    "/"
+    "package.json",
+    "package-lock.json",
+    "README.md",
+    "yarn.lock",
+    ".buckconfig",
+    ".editorConfig",
+    ".eslintignore",
+    ".eslintrc.js",
+    ".flowconfig",
+    ".prettierrc.js",
+    ".watchmanconfig",
+    "tsconfig.json",
+    ".gitignore",
+    ".gitattributes"
   ],
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
     "targets": [
-      ["commonjs", { "babelrc": true }],
-      ["module", { "babelrc": true }],
+      "commonjs",
+      "module",
       "typescript"
-    ]
+   ]
   },
   "eslintIgnore": [
     "node_modules/",
