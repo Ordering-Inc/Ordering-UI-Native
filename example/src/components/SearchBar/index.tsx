@@ -45,6 +45,7 @@ export const SearchBar = (props: any) => {
         placeholder={placeholder}
         vertorIcon='search'
         vectorIconColor={colors.disabled}
+        returnKeyType='done'
       />
       {isCancelButtonShow && (
         <OButton
