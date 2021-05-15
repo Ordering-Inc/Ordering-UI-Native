@@ -136,3 +136,17 @@ export const sortInputFields = ({ fields, values }: any) => {
   });
   return fieldsSorted;
 }
+
+/**
+ * Function to check if a number is decimal or not
+ * @param {*} value number to check if decimal or not
+ * @param {*} parser function fallback when is decimal
+ * @returns string
+ */
+ export const verifyDecimals = (value: number, parser: any) => {
+  if (value % 1 === 0) {
+    return value
+  } else {
+    return parser(value)
+  }
+}
