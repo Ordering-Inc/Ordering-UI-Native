@@ -43,6 +43,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { OrderDetailsParams } from '../../types'
 import { IMAGES, USER_TYPE, ORDER_STATUS_IMAGES, LOGO_IMAGES, DUMMIES_IMAGES } from '../../config/constants'
 import { GoogleMap } from '../GoogleMap'
+import { verifyDecimals } from '../../utils'
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
@@ -59,6 +60,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [, t] = useLanguage()
   const [{ parsePrice, parseNumber, parseDate }] = useUtils()
   const [{ user }] = useSession()
+  const [{ configs }] = useConfig()
 
   const [openModalForBusiness,setOpenModalForBusiness] = useState(false)
   const [openModalForDriver,setOpenModalForDriver] = useState(false)
@@ -297,15 +299,28 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
                 <OText>{parsePrice(order?.summary?.subtotal || order?.subtotal)}</OText>
               </Table>
-              <Table>
-                <OText>
-                  {order?.tax_type === 1
-                    ? t('TAX_INCLUDED', 'Tax (included)')
-                    : t('TAX', 'Tax')}
-                  {`(${parseNumber(order?.tax)}%)`}
-                </OText>
-                <OText>{parsePrice(order?.summary?.tax || order?.totalTax)}</OText>
-              </Table>
+              {(order?.summary?.discount > 0 || order?.discount > 0) && (
+                <Table>
+                  {order?.offer_type === 1 ? (
+                    <OText>
+                      {t('DISCOUNT', 'Discount')}
+                      <OText>{`(${verifyDecimals(order?.offer_rate, parsePrice)}%)`}</OText>
+                    </OText>
+                  ) : (
+                    <OText>{t('DISCOUNT', 'Discount')}</OText>
+                  )}
+                  <OText>- {parsePrice(order?.summary?.discount || order?.discount)}</OText>
+                </Table>
+              )}
+              {order?.tax_type !== 1 && (
+                <Table>
+                  <OText>
+                    {t('TAX', 'Tax')}
+                    {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
+                  </OText>
+                  <OText>{parsePrice(order?.summary?.tax || order?.totalTax)}</OText>
+                </Table>
+              )}
               {(order?.summary?.delivery_price > 0 || order?.deliveryFee > 0) && (
                 <Table>
                   <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
@@ -315,8 +330,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <Table>
                 <OText>
                   {t('DRIVER_TIP', 'Driver tip')}
-                  {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) && (
-                    `(${parseNumber(order?.driver_tip)}%)`
+                  {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) &&
+                    parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
+                    !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
+                  (
+                    `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`
                   )}
                 </OText>
                 <OText>{parsePrice(order?.summary?.driver_tip || order?.totalDriverTip)}</OText>
@@ -324,23 +342,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <Table>
                 <OText>
                   {t('SERVICE_FEE', 'Service Fee')}
-                  {`(${parseNumber(order?.service_fee)}%)`}
+                  {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
                 </OText>
                 <OText>{parsePrice(order?.summary?.service_fee || order?.serviceFee || 0)}</OText>
               </Table>
-              {(order?.summary?.discount > 0 || order?.discount > 0) && (
-                <Table>
-                  {order?.offer_type === 1 ? (
-                    <OText>
-                      {t('DISCOUNT', 'Discount')}
-                      <OText>{`(${parseNumber(order?.offer_rate)}%)`}</OText>
-                    </OText>
-                  ) : (
-                    <OText>{t('DISCOUNT', 'Discount')}</OText>
-                  )}
-                  <OText>- {parsePrice(order?.summary?.discount || order?.discount)}</OText>
-                </Table>
-              )}
               <Total>
                 <Table>
                   <OText style={styles.textBold}>{t('TOTAL', 'Total')}</OText>
