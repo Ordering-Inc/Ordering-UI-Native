@@ -8,12 +8,14 @@ import { Wrapper } from './styles'
 import { colors } from '../../theme.json'
 import { PhoneInputParams } from '../../types';
 import { OText } from '../shared';
+import {transformCountryCode} from '../../utils'
 
 export const PhoneInputNumber = (props: PhoneInputParams) => {
   const {
     data,
     handleData,
-    defaultValue
+    defaultValue,
+    defaultCode
   } = props
 
   const [, t] = useLanguage()
@@ -67,7 +69,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
       <PhoneInput
         ref={phoneInput}
         defaultValue={userphoneNumber || defaultValue}
-        defaultCode={configs?.default_country_code?.value}
+        defaultCode={defaultCode ? transformCountryCode(defaultCode) : configs?.default_country_code?.value}
         onChangeFormattedText={(text) => handleChangeNumber(text)}
         withDarkTheme
         countryPickerProps={{withAlphaFilter:true}}

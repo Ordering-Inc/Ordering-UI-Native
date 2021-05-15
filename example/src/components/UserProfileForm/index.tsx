@@ -258,6 +258,7 @@ const ProfileUI = (props: ProfileParams) => {
               data={phoneInputData}
               handleData={(val: any) => handleChangePhoneNumber(val)}
               defaultValue={phoneUpdate ? '' : user?.cellphone}
+              defaultCode={user?.country_phone_code || null}
             />
             {phoneUpdate && (
               <OText
