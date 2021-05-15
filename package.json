@@ -123,7 +123,7 @@
       "commonjs",
       "module",
       "typescript"
-   ]
+    ]
   },
   "eslintIgnore": [
     "node_modules/",
