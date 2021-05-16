@@ -16,6 +16,8 @@ export interface LoginParams {
   handleButtonLoginClick?: any;
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
+  ToastType?: any;
+  useToast?: any;
 }
 export interface ProfileParams {
   navigation?: any;

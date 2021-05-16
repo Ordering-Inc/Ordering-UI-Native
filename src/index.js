@@ -9,21 +9,35 @@ import {
     OCheckbox, 
     OIconButton, 
     OTextarea,
-    OToggle
+    OToggle,
+    OModal,
+    OAlert,
+    Toast
 } from './components/shared';
-import {LoginForm} from './components/LoginForm';
+import Navbar from './components/NavBar'
+import {FacebookLogin} from './components/FacebookLogin'
+import {LoginForm} from './components/LoginForm'
+import {PhoneInputNumber} from './components/PhoneInputNumber'
+import {VerifyPhone} from './components/VerifyPhone'
 
 export { 
-    OText, 
-    OButton, 
-    OInput, 
-    OSegment, 
-    ODropDown, 
-    OIcon, 
-    OIconText, 
-    OCheckbox, 
-    OIconButton, 
+    OText,
+    OButton,
+    OInput,
+    OSegment,
+    ODropDown,
+    OIcon,
+    OIconText,
+    OCheckbox,
+    OIconButton,
     OTextarea,
     OToggle,
+    OAlert,
+    OModal,
     LoginForm,
+    FacebookLogin,
+    Navbar,
+    PhoneInputNumber,
+    VerifyPhone,
+    Toast
 }

@@ -8,8 +8,8 @@ import { OSegmentProps } from './src/components/shared/OSegment';
 import { OInputProps } from './src/components/shared/OInput';
 import { OButtonProps } from './src/components/shared/OButton';
 import { OTextProps } from './src/components/shared/OText';
-import { LoginParams } from './src/types';
 import { OIconProps } from './src/components/shared/OIcon';
+import { LoginParams, PhoneInputParams } from './src/types';
 
 declare class OText extends React.Component<OTextProps> { }
 declare class OButton extends React.Component<OButtonProps> { }
@@ -24,6 +24,7 @@ declare class OTextarea extends React.Component<OTextAreaProps> { }
 declare class OToggle extends React.Component<OToggleProps> { }
 
 declare class LoginForm extends React.Component<LoginParams> { }
+declare class PhoneInput extends React.Component<PhoneInputParams> {}
 
 export {
     OText,
@@ -38,4 +39,5 @@ export {
     OTextarea,
     OToggle,
     LoginForm,
+    PhoneInput
 }
