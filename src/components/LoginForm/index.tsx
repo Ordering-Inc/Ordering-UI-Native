@@ -51,7 +51,6 @@ const LoginFormUI = (props: LoginParams) => {
     onNavigationRedirect,
   } = props
 
-  const { showToast } = useToast();
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
   const [, { login }] = useSession()
@@ -75,7 +74,6 @@ const LoginFormUI = (props: LoginParams) => {
 
   const onSubmit = (values: any) => {
     if (phoneInputData.error) {
-      showToast(ToastType.Error, phoneInputData.error);
       return
     }
     handleButtonLoginClick({
@@ -86,7 +84,6 @@ const LoginFormUI = (props: LoginParams) => {
 
   const handleVerifyCodeClick = () => {
     if (phoneInputData.error) {
-      showToast(ToastType.Error, phoneInputData.error);
       return
     }
     if (
@@ -94,7 +91,6 @@ const LoginFormUI = (props: LoginParams) => {
       !phoneInputData.phone.country_phone_code &&
       !phoneInputData.phone.cellphone
     ) {
-      showToast(ToastType.Error, t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.'))
       return
     }
     handleSendVerifyCode && handleSendVerifyCode(phoneInputData.phone)
@@ -113,24 +109,8 @@ const LoginFormUI = (props: LoginParams) => {
   }
 
   useEffect(() => {
-    if (!formState.loading && formState.result?.error) {
-      formState.result?.result && showToast(
-        ToastType.Error,
-        formState.result?.result[0]
-      )
-    }
-  }, [formState])
-
-  useEffect(() => {
     if (verifyPhoneState && !verifyPhoneState?.loading) {
       if (verifyPhoneState.result?.error) {
-        const message = typeof verifyPhoneState?.result?.result === 'string'
-          ? verifyPhoneState?.result?.result
-          : verifyPhoneState?.result?.result[0]
-        verifyPhoneState.result?.result && showToast(
-          ToastType.Error,
-          message
-        )
         setIsLoadingVerifyModal(false)
         return
       }
@@ -162,7 +142,6 @@ const LoginFormUI = (props: LoginParams) => {
       list.map((item: any, i: number) => {
         stringError += (i + 1) === list.length ? `- ${item.message}` : `- ${item.message}\n`
       })
-      showToast(ToastType.Error, stringError)
     }
   }, [errors])
 
