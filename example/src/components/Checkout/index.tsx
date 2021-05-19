@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { View, StyleSheet } from 'react-native';
-// import stripe from 'tipsi-stripe';
+import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 import {
   Checkout as CheckoutController,
@@ -534,7 +534,8 @@ export const Checkout = (props: any) => {
   const [, t] = useLanguage();
   const [{ token }] = useSession();
   const [ordering] = useApi();
-  const [,{ confirmCart }] = useOrder();
+  const [, { confirmCart }] = useOrder();
+  const { confirmPayment, loading: confirmPaymentLoading } = useConfirmPayment();
 
   const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null });
 
@@ -582,69 +583,55 @@ export const Checkout = (props: any) => {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
       } else if (result.status === 2 && stripePaymentOptions.includes(result.paymethod_data?.gateway)) {
-        // const clientSecret = result.paymethod_data?.result?.client_secret
-        // const paymentMethodId = result.paymethod_data?.data?.source_id;
+        const clientSecret = result.paymethod_data?.result?.client_secret
+        const paymentMethodId = result.paymethod_data?.data?.source_id;
 
-        // stripe.setOptions({
-        //   publishableKey: publicKey,
-        //   // androidPayMode: 'test', // Android only
-        // })
+        initStripe({ publishableKey: publicKey });
 
-    //     try {
-    //       const confirmPaymentIntent = await stripe.confirmPaymentIntent({
-    //         clientSecret,
-    //         paymentMethodId
-    //       });
+        try {
+          const { paymentIntent, error } = await confirmPayment(clientSecret, {
+            type: 'Card',
+            paymentMethodId
+          });
 
-    //       if (confirmPaymentIntent?.status === 'succeeded') {
-    //         try {
-    //           const confirmCartRes = await confirmCart(cartUuid)
-    //           if (confirmCartRes.error) {
-    //             showToast(ToastType.Error, confirmCartRes.error.message)
-    //           }
-    //           if (confirmCartRes.result.order?.uuid) {
-    //             onNavigationRedirect('OrderDetails', { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true })
-    //           }
-    //         } catch (error) {
-    //           showToast(ToastType.Error, error?.toString() || error.message)
-    //         }
-    //         setCartState({
-    //           ...cartState,
-    //           loading: false,
-    //           cart: result
-    //         })
-    //         return
-    //       }
-    //     } catch (error) {
-    //       const e = error.message === 'failed'
-    //         ? t('FAILED_PAYMENT', 'Failed payment')
-    //         : error?.toString() || error.message
-    //       if (e.includes('The provided PaymentMethod was previously used with a PaymentIntent')) {
-    //         showToast(ToastType.Error, t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again'))
-    //         try {
-    //           const confirmCartRes = await confirmCart(cartUuid)
-    //           if (confirmCartRes.error) {
-    //             showToast(ToastType.Error, confirmCartRes.error.message)
-    //           }
-    //           setCartState({
-    //             ...cartState,
-    //             loading: false,
-    //             cart: result
-    //           })
-    //         } catch (error) {
-    //           showToast(ToastType.Error, error?.toString() || error.message)
-    //         }
-    //         return
-    //       }
-    //       showToast(ToastType.Error, e)
-    //       const cart = Array.isArray(result) ? null : result
-    //       setCartState({
-    //         ...cartState,
-    //         loading: false,
-    //         cart,
-    //         error: cart ? null : result
-    //       })
-        // }
+          try {
+            const confirmCartRes = await confirmCart(cartUuid)
+            if (confirmCartRes.error) {
+              showToast(ToastType.Error, confirmCartRes.error.message)
+              setCartState({
+                ...cartState,
+                loading: false,
+                cart: result
+              })
+              return
+            }
+            if (confirmCartRes.result.order?.uuid) {
+              onNavigationRedirect('OrderDetails', { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true })
+              setCartState({ ...cartState, loading: false })
+            } else {
+              showToast(ToastType.Error, t('FAILED_PAYMENT', 'The payment has failed'));
+              const cart = Array.isArray(result) ? null : result
+              setCartState({
+                ...cartState,
+                loading: false,
+                cart,
+                error: cart ? null : result
+              })
+              return
+            }
+          } catch (error) {
+            showToast(ToastType.Error, error?.toString() || error.message)
+          }
+        } catch (error) {
+          showToast(ToastType.Error, t('FAILED_PAYMENT', 'The payment has failed'));
+          const cart = Array.isArray(result) ? null : result
+          setCartState({
+            ...cartState,
+            loading: false,
+            cart,
+            error: cart ? null : result
+          })
+        }
       } else {
         const cart = Array.isArray(result) ? null : result
         setCartState({

@@ -1,48 +1,157 @@
-import React from 'react';
-import { View } from 'react-native';
-import { useLanguage } from 'ordering-components/native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { useLanguage, useSession } from 'ordering-components/native';
+import {
+  StripeProvider,
+  CardField,
+  useConfirmSetupIntent
+} from '@stripe/stripe-react-native';
 
 import { ErrorMessage } from './styles';
 
 import { StripeElementsForm as StripeFormController } from './naked';
-import { StripeCardForm } from '../StripeCardForm';
+import { OButton, OText } from '../shared';
+import { colors } from '../../theme.json';
 
 const StripeElementsFormUI = (props: any) => {
   const {
     publicKey,
-    handleSource,
+    // handleSource,
+    values,
     businessId,
     requirements,
-    onNewCard,
-    toSave,
-    onCancel
+    onCancel,
+    stripeTokenHandler
   } = props;
 
   const [, t] = useLanguage();
+  const [{ user }] = useSession();
+  const [card, setCard] = useState<any>(null);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [errors, setErrors] = useState('')
+  const { confirmSetupIntent, loading: confirmSetupLoading } = useConfirmSetupIntent();
+
+  const handleSaveCard = async () => {
+    setErrors('');
+    const billingDetails = {
+      name: `${user.name} ${user.lastname}`,
+      email: user.email,
+      addressLine1: user.address
+    };
+    try {
+      const { setupIntent, error } = await confirmSetupIntent(requirements, {
+        type: 'Card',
+        billingDetails,
+      });
+
+      if (setupIntent?.status === 'Succeeded') {
+        stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId);
+      }
+
+      if (error) {
+        setErrors(
+          error?.code === 'Unknown'
+            ? t('ERROR_ADD_CARD', 'An error occurred while trying to add a card')
+            : error.message
+        );
+      }
+    } catch (error) {
+      setErrors(error?.message || error?.toString());
+    }
+  };
+
+  useEffect(() => {
+    if (card) {
+      setIsCompleted(
+        !!card?.last4 &&
+        !!card?.expiryMonth &&
+        !!card?.expiryYear &&
+        !!card?.brand &&
+        !!card?.postalCode
+      )
+    }
+  }, [card])
 
   return (
-    <View>
+    <View style={styles.container}>
       {publicKey ? (
-        <StripeCardForm
-          toSave={toSave}
-          publicKey={publicKey}
-          onNewCard={onNewCard}
-          businessId={businessId}
-          handleCancel={onCancel}
-          handleSource={handleSource}
-          requirements={requirements}
+        <View style={{ flex: 1 }}>
+        <StripeProvider publishableKey={publicKey}>
+          <CardField
+            postalCodeEnabled={true}
+            cardStyle={{
+              backgroundColor: '#FFFFFF',
+              textColor: '#000000',
+            }}
+            style={{
+              width: '100%',
+              height: 50,
+              marginVertical: 30,
+              zIndex: 9999,
+            }}
+            onCardChange={(cardDetails: any) => setCard(cardDetails)}
+          />
+        </StripeProvider>
+        <OButton
+          text={t('SAVE_CARD', 'Save card')}
+          bgColor={isCompleted ? colors.primary : colors.backgroundGray}
+          borderColor={isCompleted ? colors.primary :colors.backgroundGray}
+          style={styles.btnAddStyle}
+          textStyle={{color: 'white'}}
+          imgRightSrc={null}
+          onClick={isCompleted ? () => handleSaveCard() : () => {}}
+          isLoading={confirmSetupLoading || values.loadingAdd}
         />
+        {!!errors && (
+          <ErrorMessage>
+            <OText
+              size={20}
+              color={colors.error}
+              style={{ marginTop: 20, textAlign: 'center' }}
+              >
+              {errors}
+            </OText>
+          </ErrorMessage>
+        )}
+      </View>
       ) : (
-        <ErrorMessage>{t('SOMETHING_WRONG', 'Something is wrong!')}</ErrorMessage>
+        <ErrorMessage>
+          <OText
+            size={20}
+            color={colors.error}
+            style={{ marginTop: 20 }}
+          >
+            {t('SOMETHING_WRONG', 'Something is wrong!')}
+          </OText>
+        </ErrorMessage>
       )}
     </View>
   )
 }
 
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20
+  },
+  btnAddStyle: {
+    marginTop: 20
+  },
+})
+
 export const StripeElementsForm = (props: any) => {
   const stripeProps = {
     ...props,
-    UIComponent: StripeElementsFormUI
+    UIComponent: StripeElementsFormUI,
+    onSelectCard: (card: any) => {
+      props.onSelectCard(card);
+      if (card) {
+        props.onCancel && props.onCancel();
+      }
+    }
   }
   return <StripeFormController {...stripeProps} />
 }
