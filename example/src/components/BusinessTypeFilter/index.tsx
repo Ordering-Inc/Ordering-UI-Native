@@ -1,21 +1,28 @@
 import React from 'react'
+import { StyleSheet, FlatList, View, ScrollView, TouchableOpacity } from 'react-native'
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 'ordering-components/native'
-import { BusinessCategoriesTitle, BusinessCategories, Category, IconContainer } from './styles'
-import { OText } from '../shared'
-import { StyleSheet } from 'react-native'
+
+import { BusinessCategoriesTitle, BusinessCategories, Category, IconContainer, BCContainer } from './styles'
+import { OIcon, OText } from '../shared'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { colors } from '../../theme.json'
 import { BusinessTypeFilterParams } from '../../types'
+import { CATEGORIES_IMAGES } from '../../config/constants'
 
 export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
   const {
+    typesState,
     businessTypes,
+    currentTypeSelected,
     handleChangeBusinessType,
-    currentTypeSelected
   } = props;
 
   const [, t] = useLanguage();
+  const { loading, error, types } = typesState;
+
+  const defaultImage = CATEGORIES_IMAGES.all;
 
   const categoryIcons = (category: any) => {
     switch (category.key) {
@@ -92,38 +99,84 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
     }
   }
 
+  const renderTypes = ({ item }: any) => {
+    return (
+      <TouchableOpacity
+        key={item.id}
+        onPress={() => handleChangeBusinessType(item.id)}
+      >
+        <Category>
+          {item.image ? (
+            <OIcon
+              url={item.image}
+              style={styles.logo}
+            />
+          ) : (
+            <OIcon
+              src={CATEGORIES_IMAGES.all}
+              style={styles.logo}
+            />
+          )}
+          <OText
+            style={{ textAlign: 'center' }}
+            size={20}
+            color={currentTypeSelected === item.id ? colors.primary : colors.textSecondary}
+          >
+            {t(`BUSINESS_TYPE_${item.name.replace(/\s/g, '_').toUpperCase()}`, item.name)}
+          </OText>
+        </Category>
+      </TouchableOpacity>
+    )
+  }
+
   return (
-    <>
-      <BusinessCategoriesTitle>
-        <OText
-          size={16}
-          color={colors.textSecondary}
-        >
-          {t('BUSINESS_CATEGORIES', 'Business Categories')}
-        </OText>
-      </BusinessCategoriesTitle>
-      <BusinessCategories>
-        {businessTypes?.map((category: any) => (
-          <Category key={category.key} >
-            <IconContainer
-              style={{
-                backgroundColor: currentTypeSelected === category.value
-                  ? colors.primary
-                  : colors.primaryContrast
-              }}
+    <BCContainer>
+      {loading && (
+        <View>
+          <Placeholder
+            style={{ marginVertical: 10 }}
+            Animation={Fade}
+          >
+            <ScrollView
+              horizontal
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
             >
-              {categoryIcons(category)}
-            </IconContainer>
+              {[...Array(4)].map((_, i) => (
+                <View style={{ width: 80, borderRadius: 10, marginRight: 15 }}>
+                  <PlaceholderLine
+                    key={i}
+                    height={80}
+                    noMargin
+                  />
+                </View>
+              ))}
+            </ScrollView>
+          </Placeholder>
+        </View>
+      )}
+      {!loading && !error && types && types.length > 0 && (
+        <>
+          <BusinessCategoriesTitle>
             <OText
-              style={{ textAlign: 'center' }}
-              color={currentTypeSelected === category.value ? colors.btnFont : colors.textSecondary}
+              size={16}
+              color={colors.textSecondary}
             >
-              {t(`BUSINESS_TYPE_${category.value ? category.value.toUpperCase() : 'ALL'}`, category.key)}
+              {t('BUSINESS_CATEGORIES', 'Business Categories')}
             </OText>
-          </Category>
-        ))}
-      </BusinessCategories>
-    </>
+          </BusinessCategoriesTitle>
+          <BusinessCategories>
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={types}
+              renderItem={renderTypes}
+              keyExtractor={type => type.name}
+            />
+          </BusinessCategories>
+        </>
+      )}
+    </BCContainer>
   )
 }
 
@@ -131,19 +184,21 @@ const styles = StyleSheet.create({
   icons: {
     padding: 10
   },
+  logo: {
+    width: 75,
+    height: 75,
+    marginBottom: 15,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 })
 
 export const BusinessTypeFilter = (props: BusinessTypeFilterParams) => {
   const businessTypeFilterProps = {
     ...props,
     UIComponent: BusinessTypeFilterUI,
-    businessTypes: props.businessTypes || [
-      { key: 'All', value: null },
-      { key: 'Food', value: 'food' },
-      { key: 'Groceries', value: 'groceries' },
-      { key: 'Laundry', value: 'laundry' },
-      { key: 'Alcohol', value: 'alcohol' },
-    ],
+    businessTypes: props.businessTypes,
     defaultBusinessType: props.defaultBusinessType || null,
     onChangeBusinessType: props.handleChangeBusinessType
   }

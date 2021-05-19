@@ -2,6 +2,7 @@ import React from 'react';
 import { useLanguage } from 'ordering-components/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../theme.json';
+import {CODES} from 'ordering-components/native'
 
 export const flatArray = (arr: any) => [].concat(...arr)
 
@@ -135,4 +136,23 @@ export const sortInputFields = ({ fields, values }: any) => {
     })
   });
   return fieldsSorted;
+}
+
+export const transformCountryCode = (countryCode : number) => {
+  const code = CODES.find((code : any) => code.phoneCode === countryCode)
+  return code?.countryCode
+}
+
+/**
+ * Function to check if a number is decimal or not
+ * @param {*} value number to check if decimal or not
+ * @param {*} parser function fallback when is decimal
+ * @returns string
+ */
+ export const verifyDecimals = (value: number, parser: any) => {
+  if (value % 1 === 0) {
+    return value
+  } else {
+    return parser(value)
+  }
 }
