@@ -7,7 +7,7 @@
  */
 
 import * as React from 'react';
-import { LogBox } from 'react-native';
+import { LogBox, Platform } from 'react-native';
 import * as Sentry from "@sentry/react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { OrderingProvider } from 'ordering-components/native';
@@ -28,7 +28,9 @@ import settings from './config.json';
 import theme from './theme.json';
 
 Sentry.init({
-  dsn: "https://90197fffe6a1431b8c3eb79e1e36f0ee@o460529.ingest.sentry.io/5722123",
+  environment: Platform.OS === 'ios' ? 'ios' : 'android',
+  dsn: 'https://90197fffe6a1431b8c3eb79e1e36f0ee@o460529.ingest.sentry.io/5722123',
+  release: "ordering-ui-native@" + process.env.npm_package_version
 });
 
 LogBox.ignoreLogs([
@@ -46,11 +48,11 @@ theme.images = {
   general: {
     homeHero: GENERAL_IMAGES.homeHero,
     notFound: GENERAL_IMAGES.notFound,
-  //   notFound404,
-  //   notFoundLighting,
-  //   searchIcon,
-  //   notNetwork,
-  //   orderDetailsHeader,
+    //   notFound404,
+    //   notFoundLighting,
+    //   searchIcon,
+    //   notNetwork,
+    //   orderDetailsHeader,
     emptyActiveOrders: GENERAL_IMAGES.emptyActiveOrders,
     emptyPastOrders: GENERAL_IMAGES.emptyPastOrders
   },
