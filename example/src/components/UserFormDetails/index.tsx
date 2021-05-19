@@ -25,6 +25,7 @@ export const UserFormDetailsUI = (props: any) => {
     handleChangeInput,
     handleButtonUpdateClick,
     phoneUpdate,
+    hideUpdateButton
   } = props
 
   const [, t] = useLanguage();
@@ -166,7 +167,7 @@ export const UserFormDetailsUI = (props: any) => {
     <>
       <UDForm>
         {!validationFields?.loading &&
-          sortInputFields({ values: validationFields.fields?.checkout }).length > 0 &&
+          sortInputFields({ values: validationFields?.fields?.checkout }).length > 0 &&
         (
           <UDWrapper>
             {sortInputFields({ values: validationFields.fields?.checkout }).map((field: any) =>
@@ -225,16 +226,20 @@ export const UserFormDetailsUI = (props: any) => {
           </UDLoader>
         )}
       </UDForm>
-      {((formState && Object.keys(formState?.changes).length > 0 && isEdit) || formState?.loading) && (
-        <OButton
-          text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
-          bgColor={colors.primary}
-          textStyle={{ color: 'white' }}
-          borderColor={colors.primary}
-          isDisabled={formState.loading}
-          imgRightSrc={null}
-          onClick={handleSubmit(onSubmit)}
-        />
+      {!hideUpdateButton && (
+          <>
+          {((formState && Object.keys(formState?.changes).length > 0 && isEdit) || formState?.loading) && (
+            <OButton
+              text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
+              bgColor={colors.primary}
+              textStyle={{ color: 'white' }}
+              borderColor={colors.primary}
+              isDisabled={formState.loading}
+              imgRightSrc={null}
+              onClick={handleSubmit(onSubmit)}
+            />
+          )}
+        </>
       )}
     </>
   )
