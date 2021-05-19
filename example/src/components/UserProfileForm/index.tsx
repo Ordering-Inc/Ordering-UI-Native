@@ -17,6 +17,7 @@ import { AddressList } from '../AddressList'
 import { LogoutButton } from '../LogoutButton'
 import { LanguageSelector } from '../LanguageSelector'
 import { PhoneInputNumber } from '../PhoneInputNumber'
+import { UserFormDetailsUI } from '../UserFormDetails'
 
 import {
   OIcon,
@@ -224,61 +225,9 @@ const ProfileUI = (props: ProfileParams) => {
         </UserData>
       ) : (
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          {sortInputFields({ values: validationFields.fields?.checkout }).map((field: any) =>
-            showField && showField(field.code) && (
-              <Controller
-                key={field.id}
-                control={control}
-                render={() => (
-                  <OInput
-                    key={field.id}
-                    name={field.code}
-                    placeholder={t(field.code.toUpperCase(), field?.name)}
-                    icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
-                    borderColor={colors.whiteGray}
-                    style={styles.inputbox}
-                    onChange={(val: any) => {
-                      field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
-                      field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({ target: { name: 'email', value: val.target.value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, '') } })
-                    }}
-                    value={user && user[field.code]}
-                    autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
-                    autoCorrect={field.code === 'email' && false}
-                    type={field.code === 'email' ? 'email-address' : ''}
-                  />
-                )}
-                name={field.code}
-                defaultValue={user && user[field.code]}
-                rules={getInputRules(field)}
-              />
-            )
-          )}
-          <WrapperPhone>
-            <PhoneInputNumber
-              data={phoneInputData}
-              handleData={(val: any) => handleChangePhoneNumber(val)}
-              defaultValue={phoneUpdate ? '' : user?.cellphone}
-              defaultCode={user?.country_phone_code || null}
-            />
-            {phoneUpdate && (
-              <OText
-                color={colors.error}
-                style={{ marginHorizontal: 10, textAlign: 'center' }}
-              >
-                {t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}
-              </OText>
-            )}
-          </WrapperPhone>
-          <OInput
-            name='password'
-            isSecured={true}
-            placeholder={t('PASSWORD', 'Password')}
-            icon={IMAGES.lock}
-            borderColor={colors.whiteGray}
-            style={styles.inputbox}
-            onChange={(val: any) => {
-              handleChangeInput(val)
-            }}
+          <UserFormDetailsUI
+            {...props}
+            hideUpdateButton
           />
         </View>
       )}
