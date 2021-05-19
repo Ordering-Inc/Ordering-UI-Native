@@ -67,7 +67,9 @@ export interface AddressFormParams {
   isSelectedAfterAdd?: boolean,
   onSaveAddress?: any,
   isFromProductsList?: boolean,
-  hasAddressDefault?: any
+  hasAddressDefault?: any,
+  ToastType?: any,
+  useToast?: any
 }
 export interface SignupParams {
   navigation?: any;
@@ -88,12 +90,22 @@ export interface SignupParams {
   setCheckPhoneCodeState?: any;
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
+  ToastType?: any;
+  useToast?: any;
+}
+export interface ForgotPasswordParams {
+  navigation?: any,
+  formState?: any,
+  handleButtonForgotPasswordClick?: any,
+  ToastType?: any,
+  useToast?: any
 }
 
 export interface PhoneInputParams {
   data?: any;
   handleData?: any;
   defaultValue?: any;
+  defaultCode?: number | null;
 }
 
 export interface LanguageSelectorParams {
@@ -110,12 +122,17 @@ export interface BusinessesListingParams {
   handleBusinessClick?: void;
   paginationProps?: any;
   handleChangeSearch?: any;
+  images?: any;
+  businessTypes?: any;
+  defaultBusinessType?: any;
 }
 export interface BusinessTypeFilterParams {
   businessTypes?: Array<any>;
   handleChangeBusinessType: any;
   currentTypeSelected?: string | null;
   defaultBusinessType?: string | null;
+  images?: any
+  typesState?: any
 }
 export interface BusinessControllerParams {
   key?: number;
