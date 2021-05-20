@@ -11,6 +11,7 @@ import { LogBox, Platform } from 'react-native';
 import * as Sentry from "@sentry/react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { OrderingProvider } from 'ordering-components/native';
+import RNBootSplash from "react-native-bootsplash";
 
 import { ToastProvider } from './providers/ToastProvider';
 import RootNavigator from './navigators/RootNavigator';
@@ -82,6 +83,12 @@ theme.images = {
 }
 
 const DeliveryApp = () => {
+  React.useEffect(() => {
+    setTimeout(() => {
+      RNBootSplash.hide({ fade: true });
+    }, 1000);
+  }, []);
+
   return (
     <OrderingProvider settings={settings} Alert={Alert}>
       <ToastProvider>
