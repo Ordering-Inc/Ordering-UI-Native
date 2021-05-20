@@ -102,21 +102,25 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
       ) : (
         <>
           {!canOpenUpselling || upsellingProducts?.products?.length === 0 ? null : (
-            <OBottomPopup
-              title={t('WANT_SOMETHING_ELSE', 'Do you want something else?')}
-              open={openUpselling}
-              onClose={() => handleUpsellingPage()}
-            >
-              <UpsellingLayout />
-              <CloseUpselling>
-                <OButton
-                  imgRightSrc=''
-                  text={t('NO_THANKS', 'No Thanks')}
-                  style={styles.closeUpsellingButton}
-                  onClick={() => handleUpsellingPage()}
-                />
-              </CloseUpselling>
-            </OBottomPopup>
+            <>
+            {!modalIsOpen && (
+              <OBottomPopup
+                title={t('WANT_SOMETHING_ELSE', 'Do you want something else?')}
+                open={openUpselling}
+                onClose={() => handleUpsellingPage()}
+              >
+               <UpsellingLayout />
+                <CloseUpselling>
+                  <OButton
+                    imgRightSrc=''
+                    text={t('NO_THANKS', 'No Thanks')}
+                    style={styles.closeUpsellingButton}
+                    onClick={() => handleUpsellingPage()}
+                  />
+                </CloseUpselling>
+              </OBottomPopup>
+            )}
+            </>
           )}
         </>
       )}
