@@ -38,8 +38,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     if (!isCustomMode) {
       if (upsellingProducts?.products?.length && !upsellingProducts.loading) {
         setCanOpenUpselling && setCanOpenUpselling(true)
-      } else if (!upsellingProducts?.products?.length && !upsellingProducts.loading && !canOpenUpselling && openUpselling) {
-        handleUpsellingPage && handleUpsellingPage()
+      }
+      if ((!upsellingProducts?.products?.length && !upsellingProducts.loading && !canOpenUpselling && openUpselling) ||
+          (!upsellingProducts?.products?.length && !upsellingProducts.loading && openUpselling)) {
+            handleUpsellingPage && handleUpsellingPage()
       }
     }
   }, [upsellingProducts.loading, upsellingProducts?.products.length])
