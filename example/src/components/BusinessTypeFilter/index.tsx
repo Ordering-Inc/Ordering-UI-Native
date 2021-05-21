@@ -143,9 +143,8 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
               showsHorizontalScrollIndicator={false}
             >
               {[...Array(4)].map((_, i) => (
-                <View style={{ width: 80, borderRadius: 10, marginRight: 15 }}>
+                <View style={{ width: 80, borderRadius: 10, marginRight: 15 }} key={i}>
                   <PlaceholderLine
-                    key={i}
                     height={80}
                     noMargin
                   />
