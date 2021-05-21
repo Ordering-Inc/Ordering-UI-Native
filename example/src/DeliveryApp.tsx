@@ -85,7 +85,7 @@ theme.images = {
 const DeliveryApp = () => {
   React.useEffect(() => {
     setTimeout(() => {
-      RNBootSplash.hide({ fade: true });
+      RNBootSplash.hide();
     }, 1000);
   }, []);
 
