@@ -67,9 +67,11 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
         </BusinessLogo>
         <BusinessState>
           {!business?.open && (
-            <OText color={colors.white} size={24} style={styles.businessState}>
-              {t('PREORDER', 'PREORDER')}
-            </OText>
+            <View style={styles.businessStateView}>
+              <OText color={colors.white} size={20} style={styles.businessStateText}>
+                {t('PREORDER', 'PREORDER')}
+              </OText>
+            </View>
           )}
         </BusinessState>
       </BusinessHero>
@@ -134,12 +136,14 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },
-  businessState: {
-    backgroundColor: colors.lightGray,
-    opacity: 0.8,
-    width: 150,
+  businessStateView: {
+    backgroundColor: '#6C6C6C',
+    borderRadius: 10,
+  },
+  businessStateText: {
+    color: colors.white,
     textAlign: 'center',
-    borderRadius: 25,
+    padding: 8,
   },
   metadata: {
     marginRight: 20,
