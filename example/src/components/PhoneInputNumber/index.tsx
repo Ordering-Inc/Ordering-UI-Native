@@ -74,6 +74,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         withDarkTheme
         countryPickerProps={{withAlphaFilter:true}}
         textContainerStyle={style.input}
+        placeholder={t('PHONE_NUMBER', 'Phone Number')}
       />
       {!!data?.error && (
         <OText
