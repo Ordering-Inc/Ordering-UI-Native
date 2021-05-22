@@ -14,6 +14,10 @@ export const Container = styled.View`
   justify-content: center;
   background-color: #FFF;
   z-index: 1000;
+
+  ${((props: any) => props.isIos && css `
+    padding-bottom: 20px;
+  `)}
 `
 
 export const Button = styled.TouchableOpacity`
