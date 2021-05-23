@@ -172,6 +172,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    marginBottom: 20
   },
   welcome: {
     flex: 1,

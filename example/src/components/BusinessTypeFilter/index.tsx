@@ -22,83 +22,6 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
   const [, t] = useLanguage();
   const { loading, error, types } = typesState;
 
-  const defaultImage = CATEGORIES_IMAGES.all;
-
-  const categoryIcons = (category: any) => {
-    switch (category.key) {
-      case 'All':
-        return (
-          <MaterialIcon
-            name='view-grid-plus-outline'
-            size={40}
-            style={{
-              ...styles.icons,
-              color: currentTypeSelected === category.value
-                ? colors.primaryContrast
-                : colors.backgroundGray
-            }}
-            onPress={() => handleChangeBusinessType(category.value)}
-          />
-        )
-      case 'Food':
-        return (
-          <Ionicons
-            name='fast-food-outline'
-            size={40}
-            style={{
-              ...styles.icons,
-              color: currentTypeSelected === category.value
-                ? colors.primaryContrast
-                : colors.backgroundGray
-            }}
-            onPress={() => handleChangeBusinessType(category.value)}
-          />
-        )
-      case 'Groceries':
-        return (
-          <MaterialIcon
-            name='baguette'
-            size={40}
-            style={{
-              ...styles.icons,
-              color: currentTypeSelected === category.value
-                ? colors.primaryContrast
-                : colors.backgroundGray
-            }}
-            onPress={() => handleChangeBusinessType(category.value)}
-          />
-        )
-      case 'Laundry':
-        return (
-          <MaterialIcon
-            name='washing-machine'
-            size={40}
-            style={{
-              ...styles.icons,
-              color: currentTypeSelected === category.value
-                ? colors.primaryContrast
-                : colors.backgroundGray
-            }}
-            onPress={() => handleChangeBusinessType(category.value)}
-          />
-        )
-      case 'Alcohol':
-        return (
-          <MaterialIcon
-            name='glass-wine'
-            size={40}
-            style={{
-              ...styles.icons,
-              color: currentTypeSelected === category.value
-                ? colors.primaryContrast
-                : colors.backgroundGray
-            }}
-            onPress={() => handleChangeBusinessType(category.value)}
-          />
-        )
-    }
-  }
-
   const renderTypes = ({ item }: any) => {
     return (
       <TouchableOpacity
@@ -143,7 +66,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
               showsHorizontalScrollIndicator={false}
             >
               {[...Array(4)].map((_, i) => (
-                <View style={{ width: 80, borderRadius: 10, marginRight: 15 }} key={i}>
+                <View key={i} style={{ width: 80, borderRadius: 10, marginRight: 15 }}>
                   <PlaceholderLine
                     height={80}
                     noMargin
