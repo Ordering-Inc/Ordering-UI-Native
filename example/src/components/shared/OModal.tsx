@@ -53,12 +53,14 @@ const OModal = (props: Props): React.ReactElement => {
         {!entireModal ? (
           <View style={styles.centeredView}>
             <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-              <Icon
-                name="x"
-                size={35}
-                style={isNotDecoration ? styles.cancelBtn : styles.decorationBtn}
-                onPress={onClose}
-              />
+              <View style={styles.wrapperIcon}>
+                <Icon
+                  name="x"
+                  size={35}
+                  style={isNotDecoration && styles.cancelBtn}
+                  onPress={onClose}
+                />
+              </View>
               <Text style={styles.modalText}>{title}</Text>
             </View>
             {children}
@@ -114,13 +116,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     zIndex: 10
   },
-  decorationBtn: {
-    position: 'absolute',
-    left: 0,
-    margin: 15,
-    zIndex: 10000,
+  wrapperIcon: {
+    overflow: 'hidden',
+    borderRadius: 50,
     backgroundColor: '#CCCCCC80',
-    borderRadius: 100/2
+    width: 35,
+    margin: 15
   },
 
   modalView: {
