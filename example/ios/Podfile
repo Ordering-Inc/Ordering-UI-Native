@@ -16,9 +16,7 @@ target 'delivery' do
 
   # pod 'tipsi-stripe', :path => '../node_modules/tipsi-stripe'
 
-  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
 
-  pod 'RNSentry', :path => '../node_modules/@sentry/react-native'
 
   pod 'FBSDKCoreKit', :modular_headers => true
   pod 'FBSDKLoginKit', :modular_headers => true
