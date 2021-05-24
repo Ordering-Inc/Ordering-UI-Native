@@ -21,6 +21,7 @@
 		A242F3056FE34C58B7BA63BC /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1505D7F951614631AFC5EBDE /* Poppins-Bold.ttf */; };
 		A26AD19825FA5C03003870C2 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26AD19725FA5C03003870C2 /* File.swift */; };
 		A3EED803A6FC4F27BEA5CBA3 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0E2D6C9B74954133AD7088EC /* Poppins-SemiBold.ttf */; };
+		C3080A522657E6A2001B703C /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3080A512657E6A1001B703C /* BootSplash.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		A26AD19725FA5C03003870C2 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		A5D2E8BA97713FF884D65844 /* libPods-delivery-deliveryTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-delivery-deliveryTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C22EEB7603EF2615A3E24169 /* Pods-delivery-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-delivery-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-delivery-tvOSTests/Pods-delivery-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C3080A512657E6A1001B703C /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = delivery/BootSplash.storyboard; sourceTree = "<group>"; };
 		CF0FF41B79C04170BB3B50FD /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		D05C81F023B19A082D0C9D73 /* libPods-delivery.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-delivery.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E540EE2A09A3E5527D4DA775 /* Pods-delivery.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-delivery.release.xcconfig"; path = "Target Support Files/Pods-delivery/Pods-delivery.release.xcconfig"; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				C3080A512657E6A1001B703C /* BootSplash.storyboard */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -299,6 +302,7 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				A242F3056FE34C58B7BA63BC /* Poppins-Bold.ttf in Resources */,
+				C3080A522657E6A2001B703C /* BootSplash.storyboard in Resources */,
 				47FCB097EBEA4A789DC6A253 /* Poppins-Light.ttf in Resources */,
 				068A016FBA3D4574A8BA1ED6 /* Poppins-Medium.ttf in Resources */,
 				6222DEE082B74CA0A77679F2 /* Poppins-Regular.ttf in Resources */,

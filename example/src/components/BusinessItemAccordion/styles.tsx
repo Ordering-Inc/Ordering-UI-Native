@@ -1,12 +1,11 @@
 import React from 'react';
 import styled, { css } from 'styled-components/native';
+import { colors } from '../../theme.json';
 
 export const BIContainer = styled.View`
   display: flex;
   flex-direction: column;
   width: 100%;
-  border-bottom-width: 1px;
-  border-bottom-color: #BFBFBF;
   opacity: 1;
 
   ${(props: any) => props.isClosed && css`
