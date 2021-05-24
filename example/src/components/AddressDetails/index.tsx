@@ -18,7 +18,8 @@ const AddressDetailsUI = (props: any) => {
     navigation,
     addressToShow,
     isCartPending,
-    googleMapsUrl
+    googleMapsUrl,
+    apiKey
   } = props;
 
   const [orderState] = useOrder();
@@ -48,13 +49,15 @@ const AddressDetailsUI = (props: any) => {
           </View>
         </ADAddress>
       </ADHeader>
-      <ADMap>
-        <OIcon
-          url={googleMapsUrl}
-          style={{borderRadius: 15, width: '100%'}}
-          height={162}
-        />
-      </ADMap>
+      {apiKey && (
+        <ADMap>
+          <OIcon
+            url={googleMapsUrl}
+            style={{borderRadius: 15, width: '100%'}}
+            height={162}
+          />
+        </ADMap>
+      )}
     </ADContainer>
   )
 }

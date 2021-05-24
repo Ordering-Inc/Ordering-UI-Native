@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { useOrder, useLanguage, useUtils, useEvent } from 'ordering-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -21,7 +20,6 @@ export const BusinessItemAccordion = (props: any) => {
   const {
     cart,
     moment,
-    isCartsLoading,
     handleClearProducts
   } = props
 
@@ -134,7 +132,6 @@ export const BusinessItemAccordion = (props: any) => {
       <BIContent style={{ display: isActive ? 'flex' : 'none' }}>
         {props.children}
       </BIContent>
-      <Spinner visible={isCartsLoading} />
     </BIContainer>
   )
 }

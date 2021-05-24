@@ -1,5 +1,5 @@
 import React from 'react'
-import { BusinessReviews as BusinessReviewController, useLanguage } from 'ordering-components/native'
+import { BusinessReviews as BusinessReviewController, useLanguage, useOrder } from 'ordering-components/native'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -38,13 +38,14 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
     reviewsList,
   } = props
   const [, t] = useLanguage()
+  const [orderState] = useOrder()
   return (
     <BusinessReviewsContainer>
       <BusinessBasicInformation
         isBusinessInfoShow
         businessState={businessState}
       />
-      <Spinner visible={reviewsList.loading} />
+      <Spinner visible={reviewsList.loading && !orderState.loading} />
       <BusinessReviewContent>
         {reviewsList.error ? (
           <OText size={16}>{t('ERROR_UNKNOWN', 'An error has ocurred')}</OText>

@@ -37,7 +37,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
             <OIcon
               url={getGoogleMapImage(order?.business?.location, configs?.google_maps_api_key?.value)}
               height={100}
-              width={340}
+              width={320}
               style={{resizeMode: 'cover', borderTopRightRadius: 24, borderTopLeftRadius: 24}}
             />
           </Map>

@@ -84,7 +84,7 @@ const CheckoutUI = (props: any) => {
   const [{ user }] = useSession();
   const [{ configs }] = useConfig();
   const [{ parsePrice, parseDate }] = useUtils();
-  const [{ options, carts }] = useOrder();
+  const [{ options, carts, loading }] = useOrder();
   const [validationFields] = useValidationFields();
 
   const [errorCash, setErrorCash] = useState(false);
@@ -453,7 +453,7 @@ const CheckoutUI = (props: any) => {
               textStyle={{ color: 'white', fontSize: 20 }}
               imgRightSrc={null}
               // isLoading={formState.loading}
-              isDisabled={!cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+              isDisabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
               text={cart?.subtotal >= cart?.minimum ? (
                 placing ? t('PLACING', 'Placing') : t('PLACE_ORDER', 'Place Order')
               ) : (
@@ -537,6 +537,7 @@ export const Checkout = (props: any) => {
   const [,{ confirmCart }] = useOrder();
 
   const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null });
+  const [orderState] = useOrder()
 
   const getOrder = async (cartId: any) => {
     try {
@@ -686,7 +687,7 @@ export const Checkout = (props: any) => {
 
   return (
     <>
-    {cartState.loading ? (
+    {cartState.loading && !orderState.loading ? (
       <Spinner visible={cartState.loading} />
     ) : (
       <CheckoutController {...checkoutProps} />
