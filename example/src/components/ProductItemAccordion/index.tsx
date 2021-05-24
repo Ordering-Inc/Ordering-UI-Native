@@ -33,7 +33,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     getProductMax,
     onDeleteProduct,
     onEditProduct,
-    isFromCheckout
+    isFromCheckout,
   } = props
   const [, t] = useLanguage()
   const [orderState] = useOrder()
@@ -101,9 +101,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   return (
     <AccordionSection>
-      {!isFromCheckout && (
-        <Spinner visible={orderState.loading}/>
-      )}
       <Accordion
         isValid={product?.valid ?? true}
         onPress={() => setActiveState(!isActive)}

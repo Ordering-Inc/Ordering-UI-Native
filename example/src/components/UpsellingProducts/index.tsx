@@ -38,8 +38,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     if (!isCustomMode) {
       if (upsellingProducts?.products?.length && !upsellingProducts.loading) {
         setCanOpenUpselling && setCanOpenUpselling(true)
-      } else if (!upsellingProducts?.products?.length && !upsellingProducts.loading && !canOpenUpselling && openUpselling) {
-        handleUpsellingPage && handleUpsellingPage()
+      }
+      if ((!upsellingProducts?.products?.length && !upsellingProducts.loading && !canOpenUpselling && openUpselling) ||
+          (!upsellingProducts?.products?.length && !upsellingProducts.loading && openUpselling)) {
+            handleUpsellingPage && handleUpsellingPage()
       }
     }
   }, [upsellingProducts.loading, upsellingProducts?.products.length])
@@ -102,21 +104,25 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
       ) : (
         <>
           {!canOpenUpselling || upsellingProducts?.products?.length === 0 ? null : (
-            <OBottomPopup
-              title={t('WANT_SOMETHING_ELSE', 'Do you want something else?')}
-              open={openUpselling}
-              onClose={() => handleUpsellingPage()}
-            >
-              <UpsellingLayout />
-              <CloseUpselling>
-                <OButton
-                  imgRightSrc=''
-                  text={t('NO_THANKS', 'No Thanks')}
-                  style={styles.closeUpsellingButton}
-                  onClick={() => handleUpsellingPage()}
-                />
-              </CloseUpselling>
-            </OBottomPopup>
+            <>
+            {!modalIsOpen && (
+              <OBottomPopup
+                title={t('WANT_SOMETHING_ELSE', 'Do you want something else?')}
+                open={openUpselling}
+                onClose={() => handleUpsellingPage()}
+              >
+               <UpsellingLayout />
+                <CloseUpselling>
+                  <OButton
+                    imgRightSrc=''
+                    text={t('NO_THANKS', 'No Thanks')}
+                    style={styles.closeUpsellingButton}
+                    onClick={() => handleUpsellingPage()}
+                  />
+                </CloseUpselling>
+              </OBottomPopup>
+            )}
+            </>
           )}
         </>
       )}

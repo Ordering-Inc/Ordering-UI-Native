@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
 import { useLanguage, useUtils } from 'ordering-components/native'
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import { OButton, OIcon, OText } from '../shared'
 import { Card, Logo, Information, MyOrderOptions, Status, WrappButton } from './styles'
 import { colors } from '../../theme.json'
 import { PreviousOrdersParams } from '../../types'
-import { ReviewOrder } from '../ReviewOrder'
-import { ScrollView } from 'react-native-gesture-handler'
-import Spinner from 'react-native-loading-spinner-overlay'
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {
   const {
@@ -22,6 +19,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   } = props
 
   const [, t] = useLanguage()
+  const [reorderSelected,setReorderSelected] = useState<number | null>(null)
   const [{ parseDate }] = useUtils()
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12]
 
@@ -32,12 +30,16 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   const handleClickOrderReview = (order: any) => {
     onNavigationRedirect && onNavigationRedirect('ReviewOrder', { order: { id: order?.id, business_id: order?.business_id, logo: order.business?.logo } })
   }
+
+  const handleReorderClick = (id : number) => {
+    setReorderSelected(id)
+    handleReorder(id)
+  }
   return (
 
     <ScrollView
       style={{ height: '60%', marginBottom: 30 }}
     >
-      <Spinner visible={reorderLoading} />
       {orders.map((order: any) => (
         <Card key={order.id}>
           {order.business?.logo && (
@@ -76,8 +78,9 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
               text={t('REORDER', 'Reorder')}
               imgRightSrc={''}
               textStyle={styles.buttonText}
-              style={styles.reorderbutton}
-              onClick={() => handleReorder(order.id)}
+              style={reorderLoading && order.id === reorderSelected ? styles.reorderLoading : styles.reorderbutton}
+              onClick={() => handleReorderClick(order.id)}
+              isLoading={order.id === reorderSelected && reorderLoading}
             />
           </Status>
 
@@ -111,6 +114,11 @@ const styles = StyleSheet.create({
     paddingRight: 0,
     borderRadius: 10,
     flex: 1
+  },
+  reorderLoading: {
+    width: 80,
+    height: 40,
+    borderRadius: 10,
   },
   buttonText: {
     color: colors.white,

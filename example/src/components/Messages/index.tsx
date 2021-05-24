@@ -7,7 +7,7 @@ import { ToastType, useToast } from '../../providers/ToastProvider'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors } from '../../theme.json'
 import { OIcon, OIconButton, OText } from '../shared'
-import { TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native'
+import { TouchableOpacity, ActivityIndicator, StyleSheet, View } from 'react-native'
 import { Header, TitleHeader, Wrapper } from './styles'
 import { MessagesParams } from '../../types'
 
@@ -147,7 +147,7 @@ const MessagesUI = (props: MessagesParams) => {
     setFormattedMessages([...newMessages.reverse()])
   }, [messages.messages.length])
 
-  const renderActions = (props: Readonly<ActionsProps>) => {
+  const RenderActions = (props : any) => {
     return (
       <Actions
         {...props}
@@ -159,13 +159,12 @@ const MessagesUI = (props: MessagesParams) => {
         icon={() => (
           <>
             <OIconButton
-              borderColor={image ? colors.white : colors.lightGray}
+              borderColor={colors.white}
               style={{ width: 32, height: 32, borderRadius: 10 }}
               icon={image ? { uri: image } : ImageDummy}
-              iconStyle={{ borderRadius: image ? 10 : 0, width: image ? 32 : 24, height: image ? 32 : 24 }}
+              iconStyle={{ borderRadius: image ? 10 : 0, width: image ? 32 : 28, height: image ? 32 : 24 }}
               onClick={handleImagePicker}
               iconCover
-              bgColor={colors.inputDisabled}
             />
             {image && (
               <TouchableOpacity
@@ -187,23 +186,29 @@ const MessagesUI = (props: MessagesParams) => {
       containerStyle={{
         padding: 10,
       }}
-      primaryStyle={{ alignItems: 'center', justifyContent: 'center' }}
+      primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}
     />
   )
 
   const renderComposer = (props: ComposerProps) => (
-    <Composer
-      {...props}
-      textInputStyle={{
-        backgroundColor: colors.lightGray,
-        borderRadius: 25,
-        paddingHorizontal: 10,
-      }}
-      textInputProps={{
-        value: message
-      }}
-      placeholder={t('WRITE_MESSAGE', 'Write message...')}
-    />
+    <View style={{flexDirection: 'row', width: '80%'}}>
+      <Composer
+        {...props}
+        textInputStyle={{
+          backgroundColor: colors.white,
+          borderRadius: 25,
+          paddingHorizontal: 10,
+          borderColor: '#DBDCDB',
+          borderWidth: 1,
+          color: '#010300',
+        }}
+        textInputProps={{
+          value: message
+        }}
+        placeholder={t('WRITE_MESSAGE', 'Write message...')}
+      />
+      <RenderActions {...props} />
+    </View>
   )
 
   const renderSend = (props: any) => (
@@ -216,11 +221,10 @@ const MessagesUI = (props: MessagesParams) => {
       <OIconButton
         onClick={onSubmit}
         style={{
-          width: 54,
           height: 32,
           borderRadius: 25,
           opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
-          borderColor: colors.primary
+          borderColor: colors.primary,
         }}
         iconStyle={{ marginTop: 3, marginRight: 2 }}
         icon={paperIcon}
@@ -238,12 +242,12 @@ const MessagesUI = (props: MessagesParams) => {
         right: { color: colors.white }
       }}
       containerStyle={{
-        left: { marginVertical: 5 },
-        right: { marginVertical: 5 }
+        left: { marginVertical: 5, borderBottomRightRadius: 12 },
+        right: { marginVertical: 5, borderBottomRightRadius: 12 }
       }}
       wrapperStyle={{
-        left: { backgroundColor: '#f7f7f7', padding: 5 },
-        right: { backgroundColor: colors.primary, padding: 5 }
+        left: { backgroundColor: '#f7f7f7', padding: 5, borderBottomLeftRadius: 0 },
+        right: { backgroundColor: colors.primary, padding: 5, borderBottomRightRadius: 0}
       }}
     />
   )
@@ -289,14 +293,12 @@ const MessagesUI = (props: MessagesParams) => {
           renderInputToolbar={renderInputToolbar}
           renderComposer={renderComposer}
           renderSend={renderSend}
-          renderActions={renderActions}
           renderBubble={renderBubble}
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
           messagesContainerStyle={{
-            paddingBottom: 20
+            paddingBottom: 20,
           }}
-          showAvatarForEveryMessage
           isLoadingEarlier={messages.loading}
           renderLoading={() => <ActivityIndicator size="small" color="#000" />}
         />
@@ -312,7 +314,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 4,
-    marginBottom: 0
+    marginBottom: 0,
   },
   containerSend: {
     width: 64,
