@@ -77,7 +77,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
       </HeaderTitle>
 
       <WrapSelectOption
-        onPress={() => _handleAsap()}
+        onPress={() => !orderState.loading && _handleAsap()}
       >
         {optionSelected.isAsap ? (
           <MaterialIcon
@@ -162,7 +162,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
                     hoursList.map((hour: any, i: any) => (
                       <Hour
                         key={i}
-                        onPress={() => handleChangeTime(hour.startTime)}
+                        onPress={() => !orderState.loading && handleChangeTime(hour.startTime)}
                       >
                         <OText color={timeSelected === hour.startTime ? colors.primary : colors.textSecondary}>
                           {configs?.format_time?.value === '12' ? (
