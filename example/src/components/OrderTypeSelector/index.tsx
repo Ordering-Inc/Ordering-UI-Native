@@ -1,12 +1,14 @@
 import React from 'react'
 import {
   OrderTypeControl,
-  useLanguage
+  useLanguage,
+  useOrder
 } from 'ordering-components/native'
-import { ODropDown } from '../shared'
+import {StyleSheet, Platform} from 'react-native'
 import { OrderTypeWrapper } from './styles'
 import { OrderTypeSelectParams } from '../../types'
 import { colors } from '../../theme.json'
+import RNPickerSelect from 'react-native-picker-select'
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const {
@@ -16,21 +18,64 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     configTypes,
     orderTypes
   } = props
+  const [orderState] = useOrder()
+
+  const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value))
+
+  const items = _orderTypes.map((type) => {
+    return {
+      value: type.value,
+      label: type.content,
+      inputLabel: type.content
+    }
+  })
+
   return (
     typeSelected !== undefined && (
       <OrderTypeWrapper>
-        <ODropDown
-          bgcolor={colors.inputDisabled}
-          textcolor={colors.black}
-          options={orderTypes.filter((type: any) => configTypes?.includes(type.value))}
-          defaultValue={defaultValue || typeSelected}
-          onSelect={(orderType: any) => handleChangeOrderType(orderType)}
+        <RNPickerSelect
+          onValueChange={(orderType: any) => handleChangeOrderType(orderType)}
+          items={items}
+          placeholder={{}}
+          style={pickerStyle}
+          value={defaultValue || typeSelected}
+          useNativeAndroidPickerStyle={false}
+          disabled={orderState.loading}
         />
       </OrderTypeWrapper>
     )
   )
 }
 
+const pickerStyle = StyleSheet.create({
+  inputAndroid: {
+    color: colors.secundaryContrast,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    backgroundColor: colors.inputDisabled,
+  },
+  inputIOS: {
+    color: colors.secundaryContrast,
+    paddingEnd: 20,
+    height: 40,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    backgroundColor: colors.inputDisabled
+  },
+  icon: {
+    top: Platform.OS === 'ios' ? 10 : 15,
+    right: Platform.OS === 'ios' ? 0 : 7,
+    position: 'absolute',
+    fontSize: 20
+  },
+  placeholder: {
+    color: colors.secundaryContrast
+  }
+})
 
 export const OrderTypeSelector = (props: any) => {
   const [, t] = useLanguage()
