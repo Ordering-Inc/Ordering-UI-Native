@@ -82,7 +82,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
                 <IconAntDesign
                   name='infocirlceo'
                   color={colors.primary}
-                  size={16}
+                  size={25}
                 />
               </WrapBusinessInfo>
             )}

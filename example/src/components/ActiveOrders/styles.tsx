@@ -12,8 +12,8 @@ export const Card = styled.TouchableOpacity`
   border: 1px solid ${colors.primary};
   border-radius: 20px;
   margin-right: 10px;
-  min-width: 340px;
-  width: 340px;
+  min-width: 320px;
+  width: 320px;
   height: ${({ isMiniCard }: { isMiniCard: boolean }) => !isMiniCard ? '100px' : '200px'};
 `
 

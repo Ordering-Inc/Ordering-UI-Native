@@ -36,7 +36,8 @@ Sentry.init({
 
 LogBox.ignoreLogs([
   'Sending \`onAnimatedValueUpdate` with no listeners registered.',
-  'Non-serializable values were found in the navigation state.'
+  'Non-serializable values were found in the navigation state.',
+  'Setting a timer'
 ])
 
 theme.images = {

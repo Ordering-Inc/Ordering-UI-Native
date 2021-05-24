@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View,ScrollView } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 
 import BottomWrapper from '../BottomWrapper';
@@ -15,6 +15,7 @@ import {
 } from 'ordering-components/native';
 
 import { Wrapper } from './styles';
+import { Container } from '../../layouts/Container';
 
 const ForgotPasswordUI = (props: any) => {
   const {
@@ -67,15 +68,16 @@ const ForgotPasswordUI = (props: any) => {
   }, [errors])
 
   return (
-    <>
+    <Container>
       <NavBar
-        title={'Forgot your password?'}
+        title={t('FORGOT_YOUR_PASSWORD', 'Forgot your password?')}
         titleAlign={'center'}
         onActionLeft={() => navigation.goBack()}
         showCall={false}
-        btnStyle={{ paddingLeft: 0 }}
+        btnStyle={{ left: 10 }}
         paddingTop={0}
       />
+    <View style={{flex: 1, height: 400}}>
       <Wrapper>
         <OText
           color={'gray'}
@@ -124,7 +126,8 @@ const ForgotPasswordUI = (props: any) => {
           onClick={emailSent && !formState.result?.error ? () => {} : handleSubmit(onSubmit)}
         />
       </BottomWrapper>
-    </>
+    </View>
+    </Container>
   )
 }
 

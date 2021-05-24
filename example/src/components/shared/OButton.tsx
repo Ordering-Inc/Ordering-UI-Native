@@ -76,6 +76,7 @@ interface Props {
   isCircle?: boolean;
   bgColor?: string;
   borderColor?: string;
+  loadingStyle?: ViewStyle;
 }
 
 const OButton = (props: Props): React.ReactElement => {
@@ -94,7 +95,7 @@ const OButton = (props: Props): React.ReactElement => {
   if (props.isLoading) {
     return (
       <StyledButton style={props.style}>
-        <ActivityIndicator size="small" color={props.indicatorColor} />
+        <ActivityIndicator size="small" color={props.indicatorColor} style={props.loadingStyle}/>
       </StyledButton>
     );
   }
