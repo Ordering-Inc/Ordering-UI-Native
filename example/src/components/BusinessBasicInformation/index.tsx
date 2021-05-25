@@ -85,7 +85,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
               <PlaceholderLine width={10} />
             </Placeholder>
           ) : (
-            <View>
+            <View style={{width: '75%'}}>
               <OText color={colors.textSecondary}>{getBusinessType()}</OText>
             </View>
           )}
@@ -133,22 +133,22 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
             <OText color={colors.textSecondary} style={styles.metadata}>{business && parsePrice(business?.delivery_price || 0)}</OText>
           </BusinessInfoItem>
         </View>
-        <WrapReviews>
-          <View style={styles.reviewStyle}>
-            <IconAntDesign
-              name="star"
-              color={colors.primary}
-              size={16}
-              style={styles.starIcon}
-            />
-            <OText size={20} color={colors.textSecondary}>{business?.reviews?.total}</OText>
-          </View>
-          {!isBusinessInfoShow && (
-            <TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
-              <OText color={colors.primary}>{t('SEE_REVIEWS', 'See reviews')}</OText>
-            </TouchableOpacity>
-          )}
-        </WrapReviews>
+          <WrapReviews>
+            <View style={styles.reviewStyle}>
+              <IconAntDesign
+                name="star"
+                color={colors.primary}
+                size={16}
+                style={styles.starIcon}
+              />
+              <OText size={20} color={colors.textSecondary}>{business?.reviews?.total}</OText>
+            </View>
+            {!isBusinessInfoShow && (
+              <TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
+                <OText color={colors.primary}>{t('SEE_REVIEWS', 'See reviews')}</OText>
+              </TouchableOpacity>
+            )}
+          </WrapReviews>
       </BusinessInfo>
       <OModal
         titleSectionStyle={styles.modalTitleSectionStyle}

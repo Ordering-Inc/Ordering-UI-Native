@@ -11,7 +11,7 @@ import {
   Stars
 } from './styles'
 import { OButton, OIcon, OInput, OText } from '../shared'
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet,View } from 'react-native';
 import { colors } from '../../theme.json'
 import { useToast, ToastType } from '../../providers/ToastProvider'
 import NavBar from '../NavBar'
@@ -137,6 +137,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       <BusinessLogo>
         <OIcon url={order?.logo} width={100} height={100} />
       </BusinessLogo>
+      <View style={{flex: 1, justifyContent: 'flex-end'}}>
+
       <FormReviews>
         {Object.values(categories).map(category => (
           <Category key={category.name}>
@@ -152,21 +154,21 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
           name='comments'
           render={({onChange}) => (
             <OInput
-              name='comments'
-              placeholder={t('COMMENTS', 'Comments')}
-              onChange={(val: string) => {
-                onChange(val)
-                handleChangeInput(val)
-              }}
-              style={styles.inputTextArea}
-              multiline
-              bgColor={colors.inputDisabled}
+            name='comments'
+            placeholder={t('COMMENTS', 'Comments')}
+            onChange={(val: string) => {
+              onChange(val)
+              handleChangeInput(val)
+            }}
+            style={styles.inputTextArea}
+            multiline
+            bgColor={colors.inputDisabled}
             />
-          )}
-          rules={{
-            required: t('FIELD_COMMENT_REQUIRED', 'The field comments is required')
-          }}
-        />
+            )}
+            rules={{
+              required: t('FIELD_COMMENT_REQUIRED', 'The field comments is required')
+            }}
+            />
       </FormReviews>
       <OButton
         textStyle={{ color: colors.white }}
@@ -174,7 +176,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
         text={t('SAVE', 'Save')}
         imgRightSrc=''
         onClick={handleSubmit(onSubmit)}
-      />
+        />
+        </View>
       <Spinner visible={formState.loading} />
     </ReviewOrderContainer>
   )
@@ -185,7 +188,7 @@ const styles = StyleSheet.create({
     borderColor: colors.secundaryContrast,
     borderRadius: 10,
     marginVertical: 20,
-    height: 150,
+    height: 100,
     alignItems: 'flex-start'
   }
 })
