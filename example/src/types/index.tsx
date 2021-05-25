@@ -139,12 +139,16 @@ export interface BusinessProductsListingParams {
   categorySelected: any;
   handleChangeCategory: (value: any) => {};
   handleSearchRedirect: any;
-  errorQuantityProducts?: boolean
+  errorQuantityProducts?: boolean;
+  header?: any;
+  logo?: any;
 }
 export interface BusinessBasicInformationParams {
   businessState?: any;
   openBusinessInformation?: any;
   isBusinessInfoShow?: boolean;
+  header?: any;
+  logo?: any;
 }
 export interface BusinessProductsCategoriesParams {
   categories: Array<any>;

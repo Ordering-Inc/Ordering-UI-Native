@@ -130,6 +130,16 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           />
         )
       }
+      {
+        businessesList.businesses?.map((business: any) => (
+          <BusinessController
+            key={business.id}
+            business={business}
+            handleCustomClick={handleBusinessClick}
+            orderType={orderState?.options?.type}
+          />
+        ))
+      }
       {businessesList.loading && (
         <>
           {[...Array(paginationProps.nextPageItems ? paginationProps.nextPageItems : 8).keys()].map((item, i) => (
@@ -149,16 +159,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           ))}
         </>
       )}
-      {
-        !businessesList.loading && businessesList.businesses?.map((business: any) => (
-          <BusinessController
-            key={business.id}
-            business={business}
-            handleCustomClick={handleBusinessClick}
-            orderType={orderState?.options?.type}
-          />
-        ))
-      }
     </ScrollView>
   )
 }

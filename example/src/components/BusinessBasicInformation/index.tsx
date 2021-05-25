@@ -25,7 +25,9 @@ const types = ['food', 'laundry', 'alcohol', 'groceries']
 export const BusinessBasicInformation = (props: BusinessBasicInformationParams) => {
   const {
     businessState,
-    isBusinessInfoShow
+    isBusinessInfoShow,
+    logo,
+    header
   } = props
   const { business, loading } = businessState
 
@@ -46,21 +48,12 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
     <BusinessContainer>
       <BusinessHeader
         style={isBusinessInfoShow ? styles.businesInfoheaderStyle : {...styles.headerStyle, backgroundColor: colors.backgroundGray}}
-        source={{ uri: business?.header }}
+        source={{ uri: header || business?.header }}
       >
         <BusinessLogo>
-
-          {loading ? (
-            <Placeholder Animation={Fade}>
-              <PlaceholderLine height={60} width={20} style={{ ...styles.businessLogo }} />
-            </Placeholder>
-          ) : (
-            <>
-              {!isBusinessInfoShow && (
-                <OIcon url={optimizeImage(business?.logo, 'h_200,c_limit')} style={styles.businessLogo} />
-              )}
-            </>
-          )}
+        {!isBusinessInfoShow && (
+          <OIcon url={optimizeImage(logo || business?.logo, 'h_200,c_limit')} style={styles.businessLogo} />
+        )}
         </BusinessLogo>
       </BusinessHeader>
       <BusinessInfo style={styles.businessInfo}>
