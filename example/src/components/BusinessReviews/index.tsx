@@ -45,7 +45,6 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
         isBusinessInfoShow
         businessState={businessState}
       />
-      <Spinner visible={reviewsList.loading && !orderState.loading} />
       <BusinessReviewContent>
         {reviewsList.error ? (
           <OText size={16}>{t('ERROR_UNKNOWN', 'An error has ocurred')}</OText>
