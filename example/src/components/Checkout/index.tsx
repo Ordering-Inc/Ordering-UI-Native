@@ -257,6 +257,7 @@ const CheckoutUI = (props: any) => {
         <ChMoment>
           <CHMomentWrapper
             onPress={() => navigation.navigate('MomentOption')}
+            disabled={loading}
           >
             <MaterialCommunityIcon
               name='clock-outline'
