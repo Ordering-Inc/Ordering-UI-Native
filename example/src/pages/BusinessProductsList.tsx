@@ -6,6 +6,8 @@ import { colors } from '../theme.json'
 
 const BusinessProductsList = (props: any) => {
   const { store } = props.route.params
+  const header = props.route.params?.header
+  const logo = props.route.params?.logo
   const [ordering] = useApi()
 
   const businessProductsProps = {
@@ -47,7 +49,9 @@ const BusinessProductsList = (props: any) => {
       props.navigation.navigate('BusinessList')
     },
     onProductRedirect: ({ slug, category, product }: any) => {},
-    onCheckoutRedirect: (cartUuid: any) => {}
+    onCheckoutRedirect: (cartUuid: any) => {},
+    logo,
+    header
   }
   return (
     <BusinessProductsListView>
