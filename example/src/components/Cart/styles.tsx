@@ -10,36 +10,6 @@ export const OrderBill = styled.View`
   flex-direction: column;
   padding: 10px;
   background-color: #FFF;
-  /* table {
-    width: 100%;
-    font-size: 16px;
-    font-weight: 300;
-
-    td span {
-      unicode-bidi: bidi-override;
-    }
-
-    tr td:nth-child(2) {
-      font-weight: 500;
-      text-align: right;
-      ${(props: any) => props.theme?.rtl && css`
-        text-align: left;
-    `}
-    }
-  } */
-  /* table.total {
-    border-top: 1px solid #EAEAEA;
-    padding-top: 10px;
-    tr {
-      td:nth-child(1) {
-        font-weight: bold;
-      }
-      td:nth-child(2) {
-        font-weight: bold;
-        color: #D81212;
-      }
-    }
-  } */
 `
 
 export const CouponContainer = styled.View`

@@ -30,7 +30,9 @@ const CartUI = (props: any) => {
     getProductMax,
     offsetDisabled,
     removeProduct,
-    handleCartOpen
+    handleCartOpen,
+    setIsCartsLoading,
+    isFromCart
   } = props
 
   const [, t] = useLanguage()
@@ -43,8 +45,6 @@ const CartUI = (props: any) => {
   const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
-
-  const [isCartsLoading, setIsCartsLoading] = useState(false)
 
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
@@ -70,18 +70,18 @@ const CartUI = (props: any) => {
 
   const handleClearProducts = async () => {
     try {
-      setIsCartsLoading(true)
+      setIsCartsLoading && setIsCartsLoading(true)
       const result = await clearCart(cart?.uuid)
-      setIsCartsLoading(false)
+      setIsCartsLoading && setIsCartsLoading(false)
     } catch (error) {
-      setIsCartsLoading(false)
+      setIsCartsLoading && setIsCartsLoading(false)
     }
   }
 
   const handleUpsellingPage = () => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
-    props.onNavigationRedirect('CheckoutNavigator', { cartUuid: cart?.uuid })
+    props.onNavigationRedirect('CheckoutNavigator', { screen: 'CheckoutPage', cartUuid: cart?.uuid })
   }
 
   return (
@@ -89,7 +89,6 @@ const CartUI = (props: any) => {
       <BusinessItemAccordion
         cart={cart}
         moment={momentFormatted}
-        isCartsLoading={isCartsLoading}
         handleClearProducts={handleClearProducts}
         handleCartOpen={handleCartOpen}
         onNavigationRedirect={props.onNavigationRedirect}

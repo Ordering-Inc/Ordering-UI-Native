@@ -41,6 +41,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleSearchRedirect,
     featuredProducts,
     errorQuantityProducts,
+    header,
+    logo
   } = props
 
   const [, t] = useLanguage()
@@ -91,6 +93,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             <BusinessBasicInformation
               businessState={{ business: {}, loading: true }}
               openBusinessInformation={openBusinessInformation}
+              header={header}
+              logo={logo}
             />
             <BusinessProductsCategories
               categories={[]}

@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useOrder, useSession } from 'ordering-components/native';
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
+
+dayjs.extend(isSameOrAfter)
+dayjs.extend(utc)
 
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
@@ -17,9 +23,16 @@ const Stack = createStackNavigator();
 
 const RootNavigator = () => {
   const [{ auth, loading }] = useSession();
-  const [orderStatus] = useOrder();
+  const [orderStatus, { changeMoment }] = useOrder();
   const [loaded, setLoaded] = useState(false);
 
+  const validDate = (date : any) => {
+    if (!date) return
+    const _date = dayjs(date, 'YYYY-MM-DD HH:mm').isSameOrAfter(dayjs(), 'day')
+      ? dayjs(date).format('YYYY-MM-DD HH:mm')
+      : dayjs().format('YYYY-MM-DD HH:mm')
+    return _date
+  }
   useEffect(() => {
     if (!loaded && !orderStatus.loading) {
       setLoaded(true)
@@ -31,6 +44,23 @@ const RootNavigator = () => {
       setLoaded(!auth)
     }
   }, [loading])
+
+  useEffect(() => {
+    const _currentDate = dayjs.utc(validDate(orderStatus.options?.moment)).local()
+    if (!_currentDate) {
+      return
+    }
+    const selected = dayjs(_currentDate, 'YYYY-MM-DD HH:mm')
+    const now = dayjs()
+    const secondsDiff = selected.diff(now, 'seconds')
+    const checkTime = setTimeout(() => {
+      changeMoment(null)
+    }, secondsDiff * 1000)
+
+    return () => {
+      clearTimeout(checkTime)
+    }
+  }, [orderStatus.options?.moment])
 
   return (
     <Stack.Navigator>

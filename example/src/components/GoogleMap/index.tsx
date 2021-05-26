@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Dimensions, StyleSheet, View, Image } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps'
+import { Dimensions, StyleSheet, View, Image, Platform } from 'react-native';
+import MapView, { PROVIDER_DEFAULT, PROVIDER_GOOGLE, Marker, Region, } from 'react-native-maps'
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig } from 'ordering-components/native'
 import { GoogleMapsParams } from '../../types';
@@ -166,7 +166,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (mapRef.current) {
+      if (mapRef.current && locations) {
         fitAllMarkers()
       }
     }, 1000)
@@ -176,7 +176,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   return (
     <>
       <MapView
-        provider={PROVIDER_GOOGLE}
+        provider={Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
         initialRegion={region}
         style={styles.map}
         onRegionChangeComplete={!readOnly ? (coordinates) => handleChangeRegion(coordinates) : () => { }}
@@ -184,6 +184,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         zoomEnabled
         zoomControlEnabled
         ref={mapRef}
+        mapType={Platform.OS === "android" ? "none" : "standard"}
       >
         {locations ? (
           <>

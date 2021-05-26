@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useLanguage } from 'ordering-components/native';
+import { useLanguage, useOrder } from 'ordering-components/native';
 
 import { CCContainer, CCNotCarts, CCList } from './styles';
 
 import { Cart } from '../Cart';
 import { OIcon, OText } from '../shared';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export const CartContent = (props: any) => {
   const {
@@ -13,6 +14,7 @@ export const CartContent = (props: any) => {
   } = props
 
   const [, t] = useLanguage()
+  const [isCartsLoading, setIsCartsLoading] = useState(false)
 
   return (
     <CCContainer>
@@ -27,6 +29,8 @@ export const CartContent = (props: any) => {
                 <Cart
                   cart={cart}
                   onNavigationRedirect={props.onNavigationRedirect}
+                  isCartsLoading={isCartsLoading}
+                  setIsCartsLoading={setIsCartsLoading}
                 />
               )}
             </CCList>
@@ -45,6 +49,7 @@ export const CartContent = (props: any) => {
           </OText>
         </CCNotCarts>
       )}
+      <Spinner visible={isCartsLoading} />
     </CCContainer>
   )
 }

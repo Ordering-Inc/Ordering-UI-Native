@@ -48,6 +48,12 @@ const MomentOptionUI = (props: MomentOptionParams) => {
   const _handleAsap = () => {
     handleAsap()
     setOptionSelected({ isAsap: true, isSchedule: false })
+    goToBack()
+  }
+
+  const handleChangeMoment = (time : any) => {
+    handleChangeTime(time)
+    goToBack()
   }
 
   useEffect(() => {
@@ -57,12 +63,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
       setOptionSelected({ isAsap: true, isSchedule: false })
     }
   }, [orderState.options?.moment])
-
-  useEffect(() => {
-    if(orderState.loading){
-      goToBack()
-    }
-  }, [orderState.loading])
 
   return (
     <Container nopadding={nopadding}>
@@ -78,6 +78,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 
       <WrapSelectOption
         onPress={() => _handleAsap()}
+        disabled={orderState.loading}
       >
         {optionSelected.isAsap ? (
           <MaterialIcon
@@ -98,6 +99,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
       </WrapSelectOption>
       <WrapSelectOption
         onPress={() => setOptionSelected({ isAsap: false, isSchedule: true })}
+        disabled={orderState.loading}
       >
         {optionSelected.isSchedule ? (
           <MaterialIcon
@@ -162,7 +164,8 @@ const MomentOptionUI = (props: MomentOptionParams) => {
                     hoursList.map((hour: any, i: any) => (
                       <Hour
                         key={i}
-                        onPress={() => handleChangeTime(hour.startTime)}
+                        onPress={() => handleChangeMoment(hour.startTime)}
+                        disabled={orderState.loading}
                       >
                         <OText color={timeSelected === hour.startTime ? colors.primary : colors.textSecondary}>
                           {configs?.format_time?.value === '12' ? (

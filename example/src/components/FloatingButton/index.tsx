@@ -6,7 +6,7 @@ import {
   Button
 } from './styles'
 import { OText } from '../shared'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { colors } from '../../theme.json'
 
 const FloatingButtonUI = (props: FloatingButtonParams) => {
@@ -22,7 +22,7 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
   } = props
 
   return (
-    <Container>
+    <Container isIos={Platform.OS === 'ios'}>
       <Button
         style={[isSecondaryBtn ? styles.secodaryBtn: styles.primaryBtn]}
         onPress={handleButtonClick}

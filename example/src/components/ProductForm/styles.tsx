@@ -43,7 +43,7 @@ export const ProductTitle = styled.View`
 `
 
 export const ProductDescription = styled.View`
-  margin-bottom: 30px
+  margin-bottom: 30px;
 `
 
 export const ProductEditions = styled.View`
@@ -71,7 +71,16 @@ export const ProductComment = styled.View`
 `
 
 export const ProductActions = styled.View`
+  position: absolute;
+  flex: 1;
+  bottom: 0px;
   padding: 20px;
-  flex-direction: row;
   width: 100%;
+  flex-direction: row;
+  background-color: #FFF;
+  z-index: 1000;
+
+  ${((props: any) => props.isIos && css `
+    padding-bottom: 20px;
+  `)}
 `

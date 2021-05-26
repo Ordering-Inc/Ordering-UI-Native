@@ -11,6 +11,7 @@ import { LogBox, Platform } from 'react-native';
 import * as Sentry from "@sentry/react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { OrderingProvider } from 'ordering-components/native';
+import RNBootSplash from "react-native-bootsplash";
 
 import { ToastProvider } from './providers/ToastProvider';
 import RootNavigator from './navigators/RootNavigator';
@@ -35,7 +36,8 @@ Sentry.init({
 
 LogBox.ignoreLogs([
   'Sending \`onAnimatedValueUpdate` with no listeners registered.',
-  'Non-serializable values were found in the navigation state.'
+  'Non-serializable values were found in the navigation state.',
+  'Setting a timer'
 ])
 
 theme.images = {
@@ -82,6 +84,12 @@ theme.images = {
 }
 
 const DeliveryApp = () => {
+  React.useEffect(() => {
+    setTimeout(() => {
+      RNBootSplash.hide();
+    }, 1000);
+  }, []);
+
   return (
     <OrderingProvider settings={settings} Alert={Alert}>
       <ToastProvider>

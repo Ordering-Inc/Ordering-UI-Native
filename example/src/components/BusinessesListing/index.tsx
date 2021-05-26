@@ -42,9 +42,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const [{ configs }] = useConfig()
   const [{ parseDate }] = useUtils()
 
-  const [isOpenAddressForm, setIsOpenAddressForm] = useState(false)
-
-
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
   const handleScroll = ({ nativeEvent }: any) => {
@@ -55,10 +52,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
       getBusinesses()
     }
-  }
-
-  const handleCloseAddressForm = () => {
-    setIsOpenAddressForm(false)
   }
 
   return (
@@ -99,6 +92,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           <OrderTypeSelector configTypes={configTypes} />
           <WrapMomentOption
             onPress={() => navigation.navigate('MomentOption')}
+            disabled={orderState.loading}
           >
             <OText size={14} numberOfLines={1} ellipsizeMode='tail'>
               {orderState.options?.moment
@@ -136,6 +130,16 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           />
         )
       }
+      {
+        businessesList.businesses?.map((business: any) => (
+          <BusinessController
+            key={business.id}
+            business={business}
+            handleCustomClick={handleBusinessClick}
+            orderType={orderState?.options?.type}
+          />
+        ))
+      }
       {businessesList.loading && (
         <>
           {[...Array(paginationProps.nextPageItems ? paginationProps.nextPageItems : 8).keys()].map((item, i) => (
@@ -155,16 +159,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           ))}
         </>
       )}
-      {
-        !businessesList.loading && businessesList.businesses?.map((business: any) => (
-          <BusinessController
-            key={business.id}
-            business={business}
-            handleCustomClick={handleBusinessClick}
-            orderType={orderState?.options?.type}
-          />
-        ))
-      }
     </ScrollView>
   )
 }
@@ -172,6 +166,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    marginBottom: 20
   },
   welcome: {
     flex: 1,

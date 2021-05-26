@@ -3,7 +3,6 @@ import { colors } from '../../theme.json'
 
 export const BusinessContainer = styled.View`
   flex-direction: column;
-  width: 100%;
 `
 export const BusinessHeader = styled.ImageBackground`
   flex-direction: row;

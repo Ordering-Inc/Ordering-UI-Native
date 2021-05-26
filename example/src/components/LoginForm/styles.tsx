@@ -63,3 +63,7 @@ export const LineSeparator = styled.View`
   height: 1px;
   background-color: ${colors.disabled};
 `
+
+export const SkeletonWrapper = styled.View`
+  width: 90%;
+`

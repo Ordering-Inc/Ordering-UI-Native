@@ -11,7 +11,7 @@ const BusinessesListing = (props: any) => {
     isSearchByDescription: true,
     propsToFetch: ['id', 'name', 'header', 'logo', 'location', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug'],
     onBusinessClick: (business: any) => {
-      props.navigation.navigate('Business', { store: business.slug })
+      props.navigation.navigate('Business', { store: business.slug, header: business.header, logo: business.logo })
     }
   }
 

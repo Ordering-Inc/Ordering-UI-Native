@@ -1,12 +1,20 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { Checkout } from '../components/Checkout';
 import { Container } from '../layouts/Container';
+
 import { initStripe, useConfirmPayment  } from '@stripe/stripe-react-native';
+import styled from 'styled-components/native';
+
 import { ToastType, useToast } from '../providers/ToastProvider';
 
 import { useOrder, useLanguage } from 'ordering-components/native';
 
-const stripePaymentOptions = ['stripe', 'stripe_direct', 'stripe_connect']
+const stripePaymentOptions = ['stripe', 'stripe_direct', 'stripe_connect'];
+
+const KeyboardView = styled.KeyboardAvoidingView`
+  flex: 1;
+`;
 
 export const CheckoutPage = (props: any) => {
   const { showToast } = useToast();
@@ -67,9 +75,14 @@ export const CheckoutPage = (props: any) => {
     }
   }
   return (
-    <Container nopadding>
-      <Checkout {...checkoutProps} />
-    </Container>
+    <KeyboardView
+      enabled
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <Container nopadding>
+        <Checkout {...checkoutProps} />
+      </Container>
+    </KeyboardView>
   )
 }
 
