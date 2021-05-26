@@ -96,7 +96,7 @@ const StripeCardsListUI = (props: any) => {
                   {getIconCard(card.brand, 26)}
                 </View>
                 <View style={styles.viewStyle}>
-                  <OText size={20}>
+                  <OText size={18}>
                     XXXX-XXXX-XXXX-{card.last4}
                   </OText>
                 </View>
