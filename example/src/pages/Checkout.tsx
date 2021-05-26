@@ -2,8 +2,10 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { Checkout } from '../components/Checkout';
 import { Container } from '../layouts/Container';
+
+import { initStripe, useConfirmPayment  } from '@stripe/stripe-react-native';
 import styled from 'styled-components/native';
-// import stripe from 'tipsi-stripe';
+
 import { ToastType, useToast } from '../providers/ToastProvider';
 
 import { useOrder, useLanguage } from 'ordering-components/native';
@@ -18,6 +20,7 @@ export const CheckoutPage = (props: any) => {
   const { showToast } = useToast();
   const [, t] = useLanguage();
   const [, { confirmCart }] = useOrder();
+  const { confirmPayment, loading: confirmPaymentLoading } = useConfirmPayment();
 
   const checkoutProps = {
     ...props,
@@ -36,37 +39,34 @@ export const CheckoutPage = (props: any) => {
           ? paymethod?.paymethod?.credentials?.stripe.publishable
           : paymethod?.paymethod?.credentials?.publishable;
 
-        // stripe.setOptions({
-        //   publishableKey: publicKey
-        // })
+        initStripe({ publishableKey: publicKey });
 
-        // try {
-        //   const confirmPaymentIntent = await stripe.confirmPaymentIntent({
-        //     clientSecret,
-        //     paymentMethodId
-        //   });
+        try {
+          const { paymentIntent, error } = await confirmPayment(clientSecret, {
+            type: 'Card',
+            paymentMethodId
+          });
 
-        //   if (confirmPaymentIntent?.status === 'succeeded') {
-        //     props.handleIsRedirect && props.handleIsRedirect(true);
-        //     try {
-        //       const confirmCartRes = await confirmCart(cart?.uuid)
-        //       if (confirmCartRes.error) {
-        //         showToast(ToastType.Error, confirmCartRes.error.message)
-        //       }
-        //       if (confirmCartRes.result.order?.uuid) {
-        //         props.navigation.navigate('HomeNavigator', { screen: 'OrderDetails', params: { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true }})
-        //       }
-        //     } catch (error) {
-        //       showToast(ToastType.Error, error?.toString() || error.message)
-        //     }
-        //     return
-        //   }
-        // } catch (error) {
-        //   const e = error.message === 'failed'
-        //     ? t('FAILED_PAYMENT', 'The payment has failed')
-        //     : error?.toString() || error.message
-        //   showToast(ToastType.Error, e)
-        // }
+          props.handleIsRedirect && props.handleIsRedirect(true);
+          try {
+            const confirmCartRes = await confirmCart(cart?.uuid)
+            if (confirmCartRes.error) {
+              showToast(ToastType.Error, confirmCartRes.error.message)
+            }
+            if (confirmCartRes.result.order?.uuid) {
+              props.navigation.navigate('OrderDetails', { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true })
+              return
+            }
+          } catch (error) {
+            showToast(ToastType.Error, error?.toString() || error.message)
+          }
+          return
+        } catch (error) {
+          const e = error?.message?.toLowerCase() === 'failed'
+            ? t('FAILED_PAYMENT', 'The payment has failed')
+            : error?.toString() || error.message
+          showToast(ToastType.Error, e)
+        }
       }
     },
     onNavigationRedirect: (page: string, params: any) => {
