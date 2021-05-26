@@ -4,25 +4,21 @@ import {
   useSession,
   useLanguage,
 } from 'ordering-components/native';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { StyleSheet, View } from 'react-native';
-import { IMAGES } from '../../config/constants';
-import { colors } from '../../theme.json';
+import { colors,images } from '../../theme.json';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { ProfileParams } from '../../types';
-import { sortInputFields } from '../../utils';
 import { AddressList } from '../AddressList'
 import { LogoutButton } from '../LogoutButton'
 import { LanguageSelector } from '../LanguageSelector'
-import { PhoneInputNumber } from '../PhoneInputNumber'
 import { UserFormDetailsUI } from '../UserFormDetails'
 
 import {
   OIcon,
   OIconButton,
-  OInput,
   OText,
   OButton,
 } from '../../components/shared';
@@ -31,8 +27,7 @@ import {
   UserData,
   Names,
   EditButton,
-  Actions,
-  WrapperPhone
+  Actions
 } from './styles';
 
 const ProfileUI = (props: ProfileParams) => {
@@ -188,12 +183,13 @@ const ProfileUI = (props: ProfileParams) => {
       <CenterView>
         <OIcon
           url={user?.photo}
+          src={!user?.photo && images.general.user}
           width={100}
           height={100}
           style={{ borderRadius: 12 }}
         />
         <OIconButton
-          icon={IMAGES.camera}
+          icon={images.general.camera}
           borderColor={colors.clear}
           iconStyle={{ width: 30, height: 30 }}
           style={{ maxWidth: 40 }}

@@ -40,6 +40,66 @@
     "cancelColor": "#D81212",
     "black": "#000000"
   },
-  "images": {}
+  "images": {
+    "logos": {
+      "logotype": "",
+      "logotypeInvert": ""
+    },
+    "general": {
+      "homeHero": "",
+      "notFound": "",
+      "emptyActiveOrders": "",
+      "emptyPastOrders": "",
+      "menu": "",
+      "lunch": "",
+      "arrow_up": "",
+      "arrow_left": "",
+      "map": "",
+      "marker": "",
+      "email": "",
+      "lock": "",
+      "camera": "",
+      "support": "",
+      "trash": "",
+      "phone": "",
+      "mail": "",
+      "chat": "",
+      "user": "",
+      "menulogout": "",
+      "cash": "",
+      "carddelivery": "",
+      "paypal": "",
+      "stripe": "",
+      "stripecc": "",
+      "stripes": "",
+      "stripesb": "",
+      "creditCard": ""
+    },
+    "order": {
+      "status0": "",
+      "status1": "",
+      "status2": "",
+      "status3": "",
+      "status4": "",
+      "status5": "",
+      "status6": "",
+      "status7": "",
+      "status8": "",
+      "status9": "",
+      "status10": "",
+      "status11": "",
+      "status12": "",
+      "status13": ""
+    },
+    "categories": {
+      "all": ""
+    },
+    "dummies": {
+      "product": "",
+      "businessLogo": "",
+      "driverPhoto": "",
+      "customerPhoto": ""
+    }
+  }
 }
 

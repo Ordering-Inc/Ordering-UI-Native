@@ -23,11 +23,10 @@ import {
   WrapContent,
   BusinessProductsListingContainer
 } from './styles'
-import { colors } from '../../theme.json'
+import { colors,images } from '../../theme.json'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
-import { IMAGES } from '../../config/constants'
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -124,7 +123,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                     <>
                       <View style={{ ...styles.headerItem, flex: 1 }}>
                         <OButton
-                          imgLeftSrc={IMAGES.arrow_left}
+                          imgLeftSrc={images.general.arrow_left}
                           imgRightSrc={null}
                           style={styles.btnBackArrow}
                           onClick={() => navigation.goBack()}

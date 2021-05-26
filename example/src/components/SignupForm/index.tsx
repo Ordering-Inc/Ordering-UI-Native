@@ -23,14 +23,13 @@ import {
 
 import { LoginWith as SignupWith, OTab, OTabs } from '../LoginForm/styles'
 
-import { IMAGES } from '../../config/constants';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import NavBar from '../NavBar'
 import { VerifyPhone } from '../VerifyPhone';
 
 import { OText, OButton, OInput, OModal } from '../shared';
 import { SignupParams } from '../../types';
-import { colors } from '../../theme.json'
+import { colors,images } from '../../theme.json'
 import { sortInputFields } from '../../utils';
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']
@@ -258,7 +257,7 @@ const SignupFormUI = (props: SignupParams) => {
                         <OInput
                           placeholder={t(field.name)}
                           style={style.inputStyle}
-                          icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
+                          icon={field.code === 'email' ? images.general.email : images.general.user}
                           value={value}
                           onChange={(val: any) => field.code !== 'email' ? onChange(val) : handleChangeInputEmail(val, onChange)}
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
@@ -291,7 +290,7 @@ const SignupFormUI = (props: SignupParams) => {
                       isSecured={!passwordSee ? true : false}
                       placeholder={t('PASSWORD', 'Password')}
                       style={style.inputStyle}
-                      icon={IMAGES.lock}
+                      icon={images.general.lock}
                       iconCustomRight={
                         !passwordSee ?
                           <MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :

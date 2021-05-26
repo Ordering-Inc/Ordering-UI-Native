@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Placeholder,
@@ -21,8 +21,7 @@ import { StripeRedirectForm } from '../StripeRedirectForm';
 // import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
 // import { NotFoundSource } from '../NotFoundSource'
 
-import { IMAGES, PAYMENT_IMAGES } from '../../config/constants';
-import { OText, OButton, OIcon, OModal } from '../shared';
+import { OText, OIcon, OModal } from '../shared';
 
 import {
   PMContainer,
@@ -30,7 +29,7 @@ import {
   PMCardSelected,
   PMCardItemContent
 } from './styles'
-import { colors } from '../../theme.json';
+import { colors, images } from '../../theme.json';
 import { getIconCard, flatArray } from '../../utils';
 
 const stripeOptions = ['stripe_direct', 'stripe', 'stripe_connect']
@@ -44,21 +43,21 @@ const stripeRedirectOptions = [
 const getPayIcon = (method: string) => {
   switch (method) {
     case 'cash':
-      return PAYMENT_IMAGES.cash
+      return images.general.cash
     case 'card_delivery':
-      return PAYMENT_IMAGES.carddelivery
+      return images.general.carddelivery
     case 'paypal':
-      return PAYMENT_IMAGES.paypal
+      return images.general.paypal
     case 'stripe':
-      return PAYMENT_IMAGES.stripe
+      return images.general.stripe
     case 'stripe_direct':
-      return PAYMENT_IMAGES.stripecc
+      return images.general.stripecc
     case 'stripe_connect':
-      return PAYMENT_IMAGES.stripes
+      return images.general.stripes
     case 'stripe_redirect':
-      return PAYMENT_IMAGES.stripesb
+      return images.general.stripesb
     default:
-      return PAYMENT_IMAGES.creditCard
+      return images.general.creditCard
   }
 }
 

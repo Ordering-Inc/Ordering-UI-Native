@@ -29,13 +29,12 @@ import {
   SkeletonWrapper
 } from './styles';
 
-import { IMAGES } from '../../config/constants';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import NavBar from '../NavBar'
 
 import { OText, OButton, OInput, OModal } from '../shared';
 import { LoginParams } from '../../types';
-import { colors } from '../../theme.json'
+import { colors, images } from '../../theme.json'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 
 const LoginFormUI = (props: LoginParams) => {
@@ -217,7 +216,7 @@ const LoginFormUI = (props: LoginParams) => {
                   <OInput
                     placeholder={t('EMAIL', 'Email')}
                     style={loginStyle.inputStyle}
-                    icon={IMAGES.email}
+                    icon={images.general.email}
                     onChange={(e: any) => {
                       handleChangeInputEmail(e, onChange)
                     }}
@@ -254,7 +253,7 @@ const LoginFormUI = (props: LoginParams) => {
                   isSecured={!passwordSee ? true : false}
                   placeholder={t('PASSWORD', 'Password')}
                   style={loginStyle.inputStyle}
-                  icon={IMAGES.lock}
+                  icon={images.general.lock}
                   iconCustomRight={
                     !passwordSee ?
                       <MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :

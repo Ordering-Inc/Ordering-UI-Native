@@ -7,8 +7,7 @@ import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OText, OButton, OInput } from '../shared';
-import { colors } from '../../theme.json';
-import { IMAGES } from '../../config/constants';
+import { colors,images } from '../../theme.json';
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import { sortInputFields } from '../../utils';
@@ -182,7 +181,7 @@ export const UserFormDetailsUI = (props: any) => {
                           name={field.code}
                           placeholder={t(field.code.toUpperCase(), field?.name)}
                           style={styles.inputStyle}
-                          icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
+                          icon={field.code === 'email' ? images.general.email : images.general.user}
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                           isDisabled={!isEdit}
                           value={formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
