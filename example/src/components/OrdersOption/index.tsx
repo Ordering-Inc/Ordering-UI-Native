@@ -4,16 +4,14 @@ import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
-import { GENERAL_IMAGES } from '../../config/constants';
 
 import { OptionTitle } from './styles'
-import { colors } from '../../theme.json'
+import { colors, images } from '../../theme.json'
 import { OrdersOptionParams } from '../../types'
 import { ToastType, useToast } from '../../providers/ToastProvider'
 
 import {
   Placeholder,
-  PlaceholderMedia,
   PlaceholderLine,
   Fade
 } from "rn-placeholder";
@@ -36,8 +34,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const { loading, error, orders: values } = orderList
 
   const imageFails = activeOrders
-    ? GENERAL_IMAGES.emptyActiveOrders
-    : GENERAL_IMAGES.emptyPastOrders
+    ? images.general.emptyActiveOrders
+    : images.general.emptyPastOrders
 
   const orders = customArray || values
 

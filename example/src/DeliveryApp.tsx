@@ -17,13 +17,6 @@ import { ToastProvider } from './providers/ToastProvider';
 import RootNavigator from './navigators/RootNavigator';
 import { Toast } from './components/shared/OToast';
 import Alert from './providers/AlertProvider'
-import {
-  ORDER_STATUS_IMAGES,
-  CATEGORIES_IMAGES,
-  DUMMIES_IMAGES,
-  GENERAL_IMAGES,
-  LOGO_IMAGES,
-} from './config/constants';
 
 import settings from './config.json';
 import theme from './theme.json';
@@ -43,44 +36,70 @@ LogBox.ignoreLogs([
 
 theme.images = {
   logos: {
-    logotype: LOGO_IMAGES.logotype,
-    logotypeInvert: LOGO_IMAGES.logotypeInvert,
+    logotype: require('./assets/images/logotype.png'),
+    logotypeInvert: require('./assets/images/logotype-invert.png'),
     // isotype,
     // isotypeInvert
   },
   general: {
-    homeHero: GENERAL_IMAGES.homeHero,
-    notFound: GENERAL_IMAGES.notFound,
+    homeHero: require('./assets/images/home-hero.png'),
+    notFound: require('./assets/images/not-found.png'),
     //   notFound404,
     //   notFoundLighting,
     //   searchIcon,
     //   notNetwork,
     //   orderDetailsHeader,
-    emptyActiveOrders: GENERAL_IMAGES.emptyActiveOrders,
-    emptyPastOrders: GENERAL_IMAGES.emptyPastOrders
+    emptyActiveOrders: require('./assets/images/empty-active-orders.png'),
+    emptyPastOrders: require('./assets/images/empty-past-orders.png'),
+    menu: require('./assets/icons/menu.png'),
+    lunch: require('./assets/icons/lunch.png'),
+    arrow_up: require('./assets/icons/arrow_up.png'),
+    arrow_left: require('./assets/icons/arrow_left.png'),
+    map: require('./assets/icons/map.png'),
+    marker: require('./assets/images/marker.png'),
+    email: require('./assets/icons/ic_email.png'),
+    lock: require('./assets/icons/ic_lock.png'),
+    camera: require('./assets/icons/camera.png'),
+    support: require('./assets/icons/help.png'),
+    trash: require('./assets/icons/trash.png'),
+    phone: require('./assets/icons/phone.png'),
+    mail: require('./assets/icons/mail.png'),
+    chat: require('./assets/icons/chat.png'),
+    user: require('./assets/icons/menu-user.png'),
+    menulogout: require('./assets/icons/menu-logout.png'),
+    cash: require('./assets/icons/cash.png'),
+    carddelivery: require('./assets/icons/card-delivery.png'),
+    paypal: require('./assets/icons/paypal.png'),
+    stripe: require('./assets/icons/stripe.png'),
+    stripecc: require('./assets/icons/cc-stripe.png'),
+    stripes: require('./assets/icons/stripe-s.png'),
+    stripesb: require('./assets/icons/stripe-sb.png'),
+    creditCard: require('./assets/icons/credit-card.png')
   },
   order: {
-    status0: ORDER_STATUS_IMAGES.orderStatus0,
-    status1: ORDER_STATUS_IMAGES.orderStatus1,
-    status2: ORDER_STATUS_IMAGES.orderStatus2,
-    status3: ORDER_STATUS_IMAGES.orderStatus3,
-    status4: ORDER_STATUS_IMAGES.orderStatus4,
-    status5: ORDER_STATUS_IMAGES.orderStatus5,
-    status6: ORDER_STATUS_IMAGES.orderStatus6,
-    status7: ORDER_STATUS_IMAGES.orderStatus7,
-    status8: ORDER_STATUS_IMAGES.orderStatus8,
-    status9: ORDER_STATUS_IMAGES.orderStatus9,
-    status10: ORDER_STATUS_IMAGES.orderStatus10,
-    status11: ORDER_STATUS_IMAGES.orderStatus11,
-    status12: ORDER_STATUS_IMAGES.orderStatus12,
-    status13: ORDER_STATUS_IMAGES.orderStatus13
+    status0: require('./assets/images/status-0.png'),
+    status1: require('./assets/images/status-1.png'),
+    status2: require('./assets/images/status-2.png'),
+    status3: require('./assets/images/status-3.png'),
+    status4: require('./assets/images/status-4.png'),
+    status5: require('./assets/images/status-5.png'),
+    status6: require('./assets/images/status-6.png'),
+    status7: require('./assets/images/status-7.png'),
+    status8: require('./assets/images/status-8.png'),
+    status9: require('./assets/images/status-9.png'),
+    status10: require('./assets/images/status-10.png'),
+    status11: require('./assets/images/status-11.png'),
+    status12: require('./assets/images/status-12.png'),
+    status13: require('./assets/images/status-13.png')
   },
   categories: {
-    all: CATEGORIES_IMAGES.all
+    all: require('./assets/images/categories/category-all.png')
   },
   dummies: {
-    product: DUMMIES_IMAGES.product,
-    businessLogo: DUMMIES_IMAGES.store
+    product: require('./assets/images/dummies/product.png'),
+    businessLogo: require('./assets/images/dummies/store.png'),
+    driverPhoto: 'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png',
+    customerPhoto: 'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png'
   }
 }
 

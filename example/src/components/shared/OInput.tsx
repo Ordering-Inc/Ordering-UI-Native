@@ -33,7 +33,7 @@ interface Props {
   isSecured?: boolean;
   style?: ViewStyle;
   placeholder?: string;
-  icon?: ImageSourcePropType;
+  icon?: ImageSourcePropType | string;
   iconRight?: ImageSourcePropType;
   iconColor?: string;
   iconRightColor?: string;

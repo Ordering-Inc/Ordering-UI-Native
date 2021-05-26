@@ -26,13 +26,12 @@ import {
   ProductComment,
   ProductActions
 } from './styles'
-import { colors } from '../../theme.json'
+import { colors, images } from '../../theme.json'
 import { OButton, OInput, OText } from '../shared'
 import { ScrollView } from 'react-native-gesture-handler'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { NotFoundSource } from '../NotFoundSource'
-import { IMAGES } from '../../config/constants'
 
 const windowHeight = Dimensions.get('window').height;
 export const ProductOptionsUI = (props: any) => {
@@ -99,7 +98,7 @@ export const ProductOptionsUI = (props: any) => {
               <TopHeader>
                 <View style={styles.headerItem}>
                   <OButton
-                    imgLeftSrc={IMAGES.arrow_left}
+                    imgLeftSrc={images.general.arrow_left}
                     imgRightSrc={null}
                     style={styles.btnBackArrow}
                     onClick={() => onClose()}

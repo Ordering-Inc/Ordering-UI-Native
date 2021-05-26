@@ -3,18 +3,14 @@ import { StyleSheet, FlatList, View, ScrollView, TouchableOpacity } from 'react-
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 'ordering-components/native'
 
-import { BusinessCategoriesTitle, BusinessCategories, Category, IconContainer, BCContainer } from './styles'
+import { BusinessCategoriesTitle, BusinessCategories, Category, BCContainer } from './styles'
 import { OIcon, OText } from '../shared'
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { colors } from '../../theme.json'
+import { colors,images } from '../../theme.json'
 import { BusinessTypeFilterParams } from '../../types'
-import { CATEGORIES_IMAGES } from '../../config/constants'
 
 export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
   const {
     typesState,
-    businessTypes,
     currentTypeSelected,
     handleChangeBusinessType,
   } = props;
@@ -36,7 +32,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
             />
           ) : (
             <OIcon
-              src={CATEGORIES_IMAGES.all}
+              src={images.categories.all}
               style={styles.logo}
             />
           )}

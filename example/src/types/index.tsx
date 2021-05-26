@@ -104,7 +104,7 @@ export interface BusinessesListingParams {
   navigation?: any;
   businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
   searchValue: string;
-  getBusinesses: () => void;
+  getBusinesses: (newFetch?: boolean) => void;
   handleChangeBusinessType?: any;
   handleBusinessClick?: void;
   paginationProps?: any;
