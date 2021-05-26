@@ -37,11 +37,11 @@ import {
   Map
 } from './styles'
 import { OButton, OIcon, OModal, OText } from '../shared'
-import { colors } from '../../theme.json'
+import { colors, images } from '../../theme.json'
 import { ProductItemAccordion } from '../ProductItemAccordion'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { OrderDetailsParams } from '../../types'
-import { IMAGES, USER_TYPE, ORDER_STATUS_IMAGES, LOGO_IMAGES, DUMMIES_IMAGES } from '../../config/constants'
+import { USER_TYPE } from '../../config/constants'
 import { GoogleMap } from '../GoogleMap'
 import { verifyDecimals } from '../../utils'
 
@@ -71,20 +71,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const getOrderStatus = (s: string) => {
     const status = parseInt(s)
     const orderStatus = [
-      { key: 0, value: t('PENDING', 'Pending'), slug: 'PENDING', percentage: 0.25, image: ORDER_STATUS_IMAGES.orderStatus0 },
-      { key: 1, value: t('COMPLETED', 'Completed'), slug: 'COMPLETED', percentage: 1, image: ORDER_STATUS_IMAGES.orderStatus1 },
-      { key: 2, value: t('REJECTED', 'Rejected'), slug: 'REJECTED', percentage: 0, image: ORDER_STATUS_IMAGES.orderStatus2 },
-      { key: 3, value: t('DRIVER_IN_BUSINESS', 'Driver in business'), slug: 'DRIVER_IN_BUSINESS', percentage: 0.60, image: ORDER_STATUS_IMAGES.orderStatus3 },
-      { key: 4, value: t('PREPARATION_COMPLETED', 'Preparation Completed'), slug: 'PREPARATION_COMPLETED', percentage: 0.70, image: ORDER_STATUS_IMAGES.orderStatus4 },
-      { key: 5, value: t('REJECTED_BY_BUSINESS', 'Rejected by business'), slug: 'REJECTED_BY_BUSINESS', percentage: 0, image: ORDER_STATUS_IMAGES.orderStatus5 },
-      { key: 6, value: t('REJECTED_BY_DRIVER', 'Rejected by Driver'), slug: 'REJECTED_BY_DRIVER', percentage: 0, image: ORDER_STATUS_IMAGES.orderStatus6 },
-      { key: 7, value: t('ACCEPTED_BY_BUSINESS', 'Accepted by business'), slug: 'ACCEPTED_BY_BUSINESS', percentage: 0.35, image: ORDER_STATUS_IMAGES.orderStatus7 },
-      { key: 8, value: t('ACCEPTED_BY_DRIVER', 'Accepted by driver'), slug: 'ACCEPTED_BY_DRIVER', percentage: 0.45, image: ORDER_STATUS_IMAGES.orderStatus8 },
-      { key: 9, value: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver'), slug: 'PICK_UP_COMPLETED_BY_DRIVER', percentage: 0.80, image: ORDER_STATUS_IMAGES.orderStatus9 },
-      { key: 10, value: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver'), slug: 'PICK_UP_FAILED_BY_DRIVER', percentage: 0, image: ORDER_STATUS_IMAGES.orderStatus10 },
-      { key: 11, value: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver'), slug: 'DELIVERY_COMPLETED_BY_DRIVER', percentage: 1, image: ORDER_STATUS_IMAGES.orderStatus11 },
-      { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver'), slug: 'DELIVERY_FAILED_BY_DRIVER', percentage: 0, image: ORDER_STATUS_IMAGES.orderStatus12 },
-      { key: 13, value: t('PREORDER', 'PreOrder'), slug: 'PREORDER', percentage: 0, image: ORDER_STATUS_IMAGES.orderStatus13 },
+      { key: 0, value: t('PENDING', 'Pending'), slug: 'PENDING', percentage: 0.25, image: images.order.status0 },
+      { key: 1, value: t('COMPLETED', 'Completed'), slug: 'COMPLETED', percentage: 1, image: images.order.status1 },
+      { key: 2, value: t('REJECTED', 'Rejected'), slug: 'REJECTED', percentage: 0, image: images.order.status2 },
+      { key: 3, value: t('DRIVER_IN_BUSINESS', 'Driver in business'), slug: 'DRIVER_IN_BUSINESS', percentage: 0.60, image: images.order.status3 },
+      { key: 4, value: t('PREPARATION_COMPLETED', 'Preparation Completed'), slug: 'PREPARATION_COMPLETED', percentage: 0.70, image: images.order.status4 },
+      { key: 5, value: t('REJECTED_BY_BUSINESS', 'Rejected by business'), slug: 'REJECTED_BY_BUSINESS', percentage: 0, image: images.order.status5 },
+      { key: 6, value: t('REJECTED_BY_DRIVER', 'Rejected by Driver'), slug: 'REJECTED_BY_DRIVER', percentage: 0, image: images.order.status6 },
+      { key: 7, value: t('ACCEPTED_BY_BUSINESS', 'Accepted by business'), slug: 'ACCEPTED_BY_BUSINESS', percentage: 0.35, image: images.order.status7 },
+      { key: 8, value: t('ACCEPTED_BY_DRIVER', 'Accepted by driver'), slug: 'ACCEPTED_BY_DRIVER', percentage: 0.45, image: images.order.status8 },
+      { key: 9, value: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver'), slug: 'PICK_UP_COMPLETED_BY_DRIVER', percentage: 0.80, image: images.order.status9 },
+      { key: 10, value: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver'), slug: 'PICK_UP_FAILED_BY_DRIVER', percentage: 0, image: images.order.status10 },
+      { key: 11, value: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver'), slug: 'DELIVERY_COMPLETED_BY_DRIVER', percentage: 1, image: images.order.status11 },
+      { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver'), slug: 'DELIVERY_FAILED_BY_DRIVER', percentage: 0, image: images.order.status12 },
+      { key: 13, value: t('PREORDER', 'PreOrder'), slug: 'PREORDER', percentage: 0, image: images.order.status13 },
     ]
 
 
@@ -142,7 +142,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const locations = [
     { ...order?.driver?.location, title: t('DRIVER', 'Driver'), icon: order?.driver?.photo || 'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png' },
-    { ...order?.business?.location, title: order?.business?.name, icon: order?.business?.logo || DUMMIES_IMAGES.store },
+    { ...order?.business?.location, title: order?.business?.name, icon: order?.business?.logo || images.dummies.businessLogo },
     { ...order?.customer?.location, title: t('YOUR_LOCATION', 'Your Location'), icon: order?.customer?.photo || 'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png' }
   ]
 
@@ -159,14 +159,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         <>
           <Header>
             <OButton
-              imgLeftSrc={IMAGES.arrow_left}
+              imgLeftSrc={images.general.arrow_left}
               imgRightSrc={null}
               style={styles.btnBackArrow}
               onClick={() => handleArrowBack()}
               imgLeftStyle={{ tintColor: '#fff' }}
             />
             <HeaderInfo>
-              <OIcon src={LOGO_IMAGES.logotypeInvert} height={50} width={180}></OIcon>
+              <OIcon src={images.logos.logotypeInvert} height={50} width={180}></OIcon>
               <OText size={28} color={colors.white} style={{ fontWeight: '600' }}>
                   {order?.customer?.name} {t('THANKS_ORDER', 'thanks for your order!')}
               </OText>

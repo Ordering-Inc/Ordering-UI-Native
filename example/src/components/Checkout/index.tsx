@@ -15,8 +15,7 @@ import {
 } from 'ordering-components/native';
 
 import { OText, OButton, OIcon } from '../shared';
-import { IMAGES } from '../../config/constants';
-import { colors } from '../../theme.json';
+import { colors, images } from '../../theme.json';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -31,7 +30,6 @@ import {
   ChSection,
   ChHeader,
   ChTotal,
-  ChTotalWrap,
   ChAddress,
   ChMoment,
   CHMomentWrapper,
@@ -166,7 +164,7 @@ const CheckoutUI = (props: any) => {
     <ChContainer>
       <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
         <OButton
-          imgLeftSrc={IMAGES.arrow_left}
+          imgLeftSrc={images.general.arrow_left}
           imgRightSrc={null}
           style={style.btnBackArrow}
           onClick={() => navigation.goBack()}

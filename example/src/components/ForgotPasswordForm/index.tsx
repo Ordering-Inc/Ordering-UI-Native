@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View,ScrollView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 
 import BottomWrapper from '../BottomWrapper';
 import NavBar from '../NavBar';
 import { OButton, OInput, OText } from '../shared';
-import { colors } from '../../theme.json';
-import { IMAGES } from '../../config/constants';
+import { colors,images } from '../../theme.json';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 
 import {
@@ -93,7 +92,7 @@ const ForgotPasswordUI = (props: any) => {
             <OInput
               placeholder={t('EMAIL', 'Email')}
               style={style.inputStyle}
-              icon={IMAGES.email}
+              icon={images.general.email}
               value={value}
               onChange={(e: any) => {
                 handleChangeInputEmail(e, onChange)
