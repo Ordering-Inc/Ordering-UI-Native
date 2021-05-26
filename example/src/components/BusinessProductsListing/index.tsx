@@ -161,7 +161,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                       <SearchBar
                         onSearch={handleChangeSearch}
                         onCancel={() => handleCancel()}
-                        isCancelButtonShow
+                        isCancelXButtonShow={!!searchValue}
                         noBorderShow
                         placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
                         lazyLoad={businessState?.business?.lazy_load_products_recommended}
