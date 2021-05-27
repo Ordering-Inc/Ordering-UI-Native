@@ -37,7 +37,7 @@ const BottomNavigator = () => {
     <Tab.Navigator
       initialRouteName='BusinessList'
       activeColor={colors.primary}
-      barStyle={{ backgroundColor: colors.white }}
+      barStyle={{ backgroundColor: colors.white, height: 40, position: 'relative', bottom: 20 }}
       labeled={false}
       inactiveColor={colors.disabled}
     >
@@ -47,7 +47,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, height: Platform.OS === 'ios' ? 50 : 'auto', justifyContent: 'space-evenly' }}>
+              <View style={{ width: 50, height: 50, justifyContent: 'flex-start', position: 'relative', bottom: 5 }}>
                 <MaterialCommunityIcon name='home' size={46} color={color} />
               </View>
             )
@@ -60,7 +60,7 @@ const BottomNavigator = () => {
           {
             tabBarIcon:
               ({ color }) => (
-                <View style={{ width: 50, height: Platform.OS === 'ios' ? 50 : 'auto', justifyContent: 'space-evenly' }}>
+                <View style={{ width: 50, height: 50, justifyContent: 'flex-start', position: 'relative', bottom: 5 }}>
                   <MaterialIcon name='format-list-bulleted' size={46} color={color} />
                 </View>
               ),
@@ -73,10 +73,11 @@ const BottomNavigator = () => {
           tabBarIcon:
             ({ color }) => (
               <View style={{
-                  width: 50, 
-                  height: Platform.OS === 'ios' ? 50 : 'auto', 
-                  justifyContent: 'space-evenly',
-                  position: 'relative'
+                  width: 50,
+                  height: 50,
+                  justifyContent: 'flex-start',
+                  position: 'relative',
+                  bottom: 5
                 }}
               >
                 <MaterialIcon name='shopping-basket' size={46} color={color} />
@@ -99,7 +100,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, height: Platform.OS === 'ios' ? 50 : 'auto', justifyContent: 'space-evenly' }}>
+              <View style={{ width: 50, height: 50, justifyContent: 'flex-start', position: 'relative', bottom: 5 }}>
                 <MaterialIcon name='person' size={46} color={color} />
               </View>
             )
