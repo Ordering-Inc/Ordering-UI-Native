@@ -32,12 +32,13 @@ const BottomNavigator = () => {
   const [, t] = useLanguage()
   const [{ carts }] = useOrder()
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
-
+  const isIos = Platform.OS === 'ios'
+  const androidStyles = isIos ? {} : {height: 40, position: 'relative', bottom: 20}
   return (
     <Tab.Navigator
       initialRouteName='BusinessList'
       activeColor={colors.primary}
-      barStyle={{ backgroundColor: colors.white, height: 40, position: 'relative', bottom: 20 }}
+      barStyle={{ backgroundColor: colors.white, ...androidStyles }}
       labeled={false}
       inactiveColor={colors.disabled}
     >
@@ -47,7 +48,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, height: 50, justifyContent: 'flex-start', position: 'relative', bottom: 5 }}>
+              <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 5 : 0  }}>
                 <MaterialCommunityIcon name='home' size={46} color={color} />
               </View>
             )
@@ -60,7 +61,7 @@ const BottomNavigator = () => {
           {
             tabBarIcon:
               ({ color }) => (
-                <View style={{ width: 50, height: 50, justifyContent: 'flex-start', position: 'relative', bottom: 5 }}>
+                <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 5 : 0 }}>
                   <MaterialIcon name='format-list-bulleted' size={46} color={color} />
                 </View>
               ),
@@ -75,9 +76,9 @@ const BottomNavigator = () => {
               <View style={{
                   width: 50,
                   height: 50,
-                  justifyContent: 'flex-start',
+                  justifyContent: !isIos ? 'flex-start' : 'space-evenly',
                   position: 'relative',
-                  bottom: 5
+                  bottom: !isIos ? 5 : 0
                 }}
               >
                 <MaterialIcon name='shopping-basket' size={46} color={color} />
@@ -100,7 +101,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, height: 50, justifyContent: 'flex-start', position: 'relative', bottom: 5 }}>
+              <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 5 : 0  }}>
                 <MaterialIcon name='person' size={46} color={color} />
               </View>
             )
