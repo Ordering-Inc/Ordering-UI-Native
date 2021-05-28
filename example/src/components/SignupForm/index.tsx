@@ -211,7 +211,7 @@ const SignupFormUI = (props: SignupParams) => {
       <NavBar
         title={t('SIGNUP', 'Signup')}
         titleAlign={'center'}
-        onActionLeft={() => navigation.canGoBack && navigation.goBack()}
+        onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
       />

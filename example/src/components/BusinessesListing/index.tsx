@@ -79,7 +79,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     <ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} {...panResponder.panHandlers}>
       {!auth && (
         <NavBar
-          onActionLeft={() => navigation.canGoBack && navigation.goBack()}
+          onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
           style={{ paddingBottom: 0 }}

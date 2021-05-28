@@ -126,7 +126,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                           imgLeftSrc={images.general.arrow_left}
                           imgRightSrc={null}
                           style={styles.btnBackArrow}
-                          onClick={() => navigation.canGoBack && navigation.goBack()}
+                          onClick={() => navigation?.canGoBack() && navigation.goBack()}
                           imgLeftStyle={{ tintColor: '#fff' }}
                         />
                         <AddressInput

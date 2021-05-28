@@ -69,7 +69,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   const maxLimitLocation = configState?.configs?.meters_to_change_address?.value
 
   const continueAsGuest = () => navigation.navigate('BusinessList')
-  const goToBack = () => navigation.canGoBack && navigation.goBack()
+  const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
   const onSubmit = () => {
     if (!auth && formState?.changes?.address === '' && addressState?.address?.address) {
@@ -106,7 +106,7 @@ const AddressFormUI = (props: AddressFormParams) => {
       if (!isGuestUser && !auth) {
         !isFromProductsList
           ? navigation.navigate('Business')
-          : navigation.canGoBack && navigation.goBack()
+          : navigation?.canGoBack() && navigation.goBack()
       }
       return
     }
@@ -460,7 +460,7 @@ const AddressFormUI = (props: AddressFormParams) => {
             <OButton
               text={t('CANCEL', 'Cancel')}
               style={{ backgroundColor: colors.white }}
-              onClick={() => navigation.canGoBack && navigation.goBack()}
+              onClick={() => navigation?.canGoBack() && navigation.goBack()}
             />
           )}
         </View>

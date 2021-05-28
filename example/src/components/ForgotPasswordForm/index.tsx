@@ -71,7 +71,7 @@ const ForgotPasswordUI = (props: any) => {
       <NavBar
         title={t('FORGOT_YOUR_PASSWORD', 'Forgot your password?')}
         titleAlign={'center'}
-        onActionLeft={() => navigation.canGoBack && navigation.goBack()}
+        onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
         showCall={false}
         btnStyle={{ left: 10 }}
         paddingTop={0}
