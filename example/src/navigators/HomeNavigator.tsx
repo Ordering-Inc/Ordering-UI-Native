@@ -23,7 +23,7 @@ const HomeNavigator = (is_online: boolean) => {
 
   return (
     <Stack.Navigator>
-      {!orderState.loading || orderState?.options?.user_id ? (
+      {!orderState.loading && auth && orderState?.options?.user_id ? (
         <>
           {auth ? (
               <>
