@@ -14,6 +14,7 @@ import BusinessProductsList from '../pages/BusinessProductsList';
 import ReviewOrder from '../pages/ReviewOrder'
 import MomentOption from '../pages/MomentOption'
 import Splash from '../pages/Splash';
+import AfterSignupNavigator from './AfterSignupNavigator';
 
 
 const Stack = createStackNavigator();
@@ -25,69 +26,74 @@ const HomeNavigator = (is_online: boolean) => {
 
   return (
     <Stack.Navigator>
-      {!orderState.loading || orderState?.options?.user_id ? (
+      {!orderState.loading || auth ? (
         <>
           {auth ? (
-            orderState.options?.address?.location ? (
               <>
-                <Stack.Screen
+                {!orderState?.options?.address?.location && !orderState.loading ? (
+                  <>
+                    <Stack.Screen
+                      name="AddressListInitial"
+                      component={AddressList}
+                      options={{ headerShown: false }}
+                      initialParams={{afterSignup: true}}
+                    />
+                    <Stack.Screen
+                      name="AddressFormInitial"
+                      component={AddressForm}
+                      options={{ headerShown: false }}
+                      initialParams={{afterSignup: true}}
+                    />
+                  </>
+                ) : (
+                <>
+                  <Stack.Screen
                   name='BottomTab'
                   component={BottomNavigator}
                   options={{ headerShown: false }}
+                  />
+                <Stack.Screen
+                name="CheckoutNavigator"
+                component={CheckoutNavigator}
+                options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                  name="AddressList"
-                  component={AddressList}
-                  options={{ headerShown: false }}
+                name="OrderDetails"
+                component={OrderDetails}
+                options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                  name="AddressForm"
-                  component={AddressForm}
-                  options={{ headerShown: false }}
+                name="Business"
+                component={BusinessProductsList}
+                options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                  name="CheckoutNavigator"
-                  component={CheckoutNavigator}
-                  options={{ headerShown: false }}
+                name="ReviewOrder"
+                component={ReviewOrder}
+                options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                  name="OrderDetails"
-                  component={OrderDetails}
-                  options={{ headerShown: false }}
+                name='MomentOption'
+                component={MomentOption}
+                options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                  name="Business"
-                  component={BusinessProductsList}
-                  options={{ headerShown: false }}
+                name="AddressList"
+                component={AddressList}
+                options={{ headerShown: false }}
+                initialParams={{afterSignup: false}}
                 />
                 <Stack.Screen
-                  name="ReviewOrder"
-                  component={ReviewOrder}
-                  options={{ headerShown: false }}
+                name="AddressForm"
+                component={AddressForm}
+                options={{ headerShown: false }}
+                initialParams={{afterSignup: false}}
                 />
-                <Stack.Screen
-                  name='MomentOption'
-                  component={MomentOption}
-                  options={{ headerShown: false }}
-                />
-              </>
-            ) : (
-              <>
-                <Stack.Screen
-                  name="AddressList"
-                  component={AddressList}
-                  options={{ headerShown: false }}
-                  initialParams={{isAfterSignup: true}}
-                />
-                <Stack.Screen
-                  name="AddressForm"
-                  component={AddressForm}
-                  options={{ headerShown: false }}
-                  initialParams={{isAfterSignup: true}}
-                />
+                </>
+                )}
               </>
             )
-          ) : (
+           : (
             <Stack.Screen
               name='root'
               component={RootNavigator}
@@ -97,10 +103,10 @@ const HomeNavigator = (is_online: boolean) => {
         </>
       ) : (
         <Stack.Screen
-            name="Splash"
-            component={Splash}
-            options={{ headerShown: false }}
-          />
+          name="Splash"
+          component={Splash}
+          options={{ headerShown: false }}
+        />
       )}
     </Stack.Navigator>
   );
