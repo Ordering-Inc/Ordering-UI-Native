@@ -24,7 +24,7 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
     <NotFound>
       {errorImage && (
         <NotFoundImage>
-          <OIcon src={errorImage} width={300} height={260} />
+          <OIcon src={errorImage} width={260} height={220} />
         </NotFoundImage>
       )}
         {content && conditioned && !errorImage && <OText color={colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}

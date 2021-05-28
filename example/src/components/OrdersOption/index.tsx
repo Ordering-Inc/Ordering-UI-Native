@@ -103,14 +103,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 : t('PREVIOUS_ORDERS', 'Previous Orders'))}
             </OText>
           </OptionTitle>
-          {!loading && ordersSorted.length === 0 && (
-            <NotFoundSource
-              content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
-              image={imageFails}
-              conditioned
-            />
-          )}
         </>
+      )}
+      {!loading && ordersSorted.length === 0 && (
+        <NotFoundSource
+          content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
+          image={imageFails}
+          conditioned
+        />
       )}
       {loading && (
         <>
