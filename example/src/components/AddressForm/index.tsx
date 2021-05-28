@@ -314,13 +314,13 @@ const AddressFormUI = (props: AddressFormParams) => {
                     onFail={(error) => setAlertState({ open: true, content: getTraduction(error) })}
                     styles={{
                       listView: {
-                        position: "absolute",
-                        marginTop: 50,
+                        position: 'relative',
                         borderBottomStartRadius: 15,
                         borderBottomEndRadius: 15,
                         elevation: 2,
                         borderWidth: 1,
-                        borderColor: "#ddd"
+                        borderColor: "#ddd",
+                        bottom: 20
                       },
                       container: {
                         zIndex: 100
