@@ -33,7 +33,7 @@ import {
 import { colors, images } from '../../theme.json';
 import { getIconCard, flatArray } from '../../utils';
 
-const stripeOptions = ['stripe_direct', 'stripe', 'stripe_connect']
+const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 // const stripeRedirectOptions = [
 //   { name: 'Bancontact', value: 'bancontact' },
 //   { name: 'Alipay', value: 'alipay' },
@@ -139,7 +139,7 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeIds = [3, 28, 31, 32, 66]; //exclude paypal & connect & redirect
+  const excludeIds: any = [3, 28, 31, 32, 66]; //exclude paypal & connect & redirect
 
   return (
     <PMContainer>
@@ -150,7 +150,7 @@ const PaymentOptionsUI = (props: any) => {
           // data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
           data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeIds.includes(p.id))}
           renderItem={renderPaymethods}
-          keyExtractor={paymethod => paymethod.id.toString()}
+          keyExtractor={(paymethod: any) => paymethod.id.toString()}
         />
       )}
 
@@ -247,7 +247,7 @@ const PaymentOptionsUI = (props: any) => {
       )}
 
       <OModal
-        isNotDecoration
+        entireModal
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
         open={addCartOpen}
         onClose={() => setAddCardOpen(false)}

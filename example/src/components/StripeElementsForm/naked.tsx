@@ -75,7 +75,7 @@ export const StripeElementsForm = (props: any) => {
   }
 
   useEffect(() => {
-    if (!token) return
+    if (!token || state.requirements) return
     toSave && getRequirements()
   }, [token])
 

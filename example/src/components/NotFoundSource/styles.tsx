@@ -7,8 +7,8 @@ export const NotFound = styled.View`
   align-items: center;
   width: 100%;
   height: auto;
-  margin: 20px auto;
-  padding: 10px
+  margin: 10px auto;
+  padding: 10px;
 `
 
 export const NotFoundImage = styled.View`
