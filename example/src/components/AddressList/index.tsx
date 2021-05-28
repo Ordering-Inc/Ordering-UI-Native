@@ -119,7 +119,7 @@ const AddressListUI = (props: AddressListParams) => {
     })
   }
 
-  const goToBack = () => navigation.canGoBack && navigation.goBack()
+  const goToBack = () => navigation?.canGoBack() && navigation.goBack()
   const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
 
   useEffect(() => {
