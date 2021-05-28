@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
   },
   titleSection: {
     width: '100%',
-    height: 30,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
