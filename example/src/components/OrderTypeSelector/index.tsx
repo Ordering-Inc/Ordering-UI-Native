@@ -52,9 +52,10 @@ const pickerStyle = StyleSheet.create({
     color: colors.secundaryContrast,
     borderWidth: 1,
     borderColor: 'transparent',
-    borderRadius: 15,
-    paddingHorizontal: 10,
+    borderRadius: 10,
+    paddingHorizontal: 20,
     backgroundColor: colors.inputDisabled,
+    fontSize: 15
   },
   inputIOS: {
     color: colors.secundaryContrast,
@@ -62,9 +63,10 @@ const pickerStyle = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     borderColor: 'transparent',
-    borderRadius: 15,
-    paddingHorizontal: 10,
-    backgroundColor: colors.inputDisabled
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    backgroundColor: colors.inputDisabled,
+    fontSize: 15
   },
   icon: {
     top: Platform.OS === 'ios' ? 10 : 15,
