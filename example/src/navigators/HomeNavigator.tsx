@@ -8,7 +8,6 @@ import CheckoutNavigator from '../navigators/CheckoutNavigator';
 
 import AddressList from '../pages/AddressList';
 import AddressForm from '../pages/AddressForm';
-import SpinnerLoader from '../pages/SpinnerLoader';
 import OrderDetails from '../pages/OrderDetails';
 import BusinessProductsList from '../pages/BusinessProductsList';
 import ReviewOrder from '../pages/ReviewOrder'
