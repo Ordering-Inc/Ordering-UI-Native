@@ -14,8 +14,6 @@ import BusinessProductsList from '../pages/BusinessProductsList';
 import ReviewOrder from '../pages/ReviewOrder'
 import MomentOption from '../pages/MomentOption'
 import Splash from '../pages/Splash';
-import AfterSignupNavigator from './AfterSignupNavigator';
-
 
 const Stack = createStackNavigator();
 
@@ -26,7 +24,7 @@ const HomeNavigator = (is_online: boolean) => {
 
   return (
     <Stack.Navigator>
-      {!orderState.loading || auth ? (
+      {!orderState.loading || orderState?.options?.user_id ? (
         <>
           {auth ? (
               <>

@@ -147,7 +147,7 @@ const AddressListUI = (props: AddressListParams) => {
               <NavBar
                 title={t('ADDRESS_LIST', 'Address List')}
                 titleAlign={'center'}
-                onActionLeft={() => navigation.pop()}
+                onActionLeft={() => goToBack()}
                 showCall={false}
                 btnStyle={{ paddingLeft: 0 }}
                 paddingTop={0}
