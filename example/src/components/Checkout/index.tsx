@@ -156,9 +156,9 @@ const CheckoutUI = (props: any) => {
     }
   }, [errors])
 
-  useEffect(() => {
-    handlePaymethodChange(null)
-  }, [cart?.total])
+  // useEffect(() => {
+  //   handlePaymethodChange(null)
+  // }, [cart?.total])
 
   return (
     <ChContainer>
