@@ -46,47 +46,47 @@ const HomeNavigator = (is_online: boolean) => {
                 ) : (
                 <>
                   <Stack.Screen
-                  name='BottomTab'
-                  component={BottomNavigator}
-                  options={{ headerShown: false }}
+                    name='BottomTab'
+                    component={BottomNavigator}
+                    options={{ headerShown: false }}
                   />
-                <Stack.Screen
-                name="CheckoutNavigator"
-                component={CheckoutNavigator}
-                options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                name="OrderDetails"
-                component={OrderDetails}
-                options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                name="Business"
-                component={BusinessProductsList}
-                options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                name="ReviewOrder"
-                component={ReviewOrder}
-                options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                name='MomentOption'
-                component={MomentOption}
-                options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                name="AddressList"
-                component={AddressList}
-                options={{ headerShown: false }}
-                initialParams={{afterSignup: false}}
-                />
-                <Stack.Screen
-                name="AddressForm"
-                component={AddressForm}
-                options={{ headerShown: false }}
-                initialParams={{afterSignup: false}}
-                />
+                  <Stack.Screen
+                    name="CheckoutNavigator"
+                    component={CheckoutNavigator}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="OrderDetails"
+                    component={OrderDetails}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="Business"
+                    component={BusinessProductsList}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="ReviewOrder"
+                    component={ReviewOrder}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name='MomentOption'
+                    component={MomentOption}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="AddressList"
+                    component={AddressList}
+                    options={{ headerShown: false }}
+                    initialParams={{afterSignup: false}}
+                  />
+                  <Stack.Screen
+                    name="AddressForm"
+                    component={AddressForm}
+                    options={{ headerShown: false }}
+                    initialParams={{afterSignup: false}}
+                  />
                 </>
                 )}
               </>
