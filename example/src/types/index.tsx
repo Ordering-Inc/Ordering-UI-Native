@@ -46,6 +46,7 @@ export interface AddressListParams {
   actionStatus?: any;
   isFromBusinesses?: boolean;
   isFromProductsList?: boolean;
+  afterSignup?: boolean;
 }
 
 export interface AddressFormParams {

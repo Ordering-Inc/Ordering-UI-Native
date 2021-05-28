@@ -80,7 +80,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
               textStyle={styles.buttonText}
               style={reorderLoading && order.id === reorderSelected ? styles.reorderLoading : styles.reorderbutton}
               onClick={() => handleReorderClick(order.id)}
-              isLoading={order.id === reorderSelected && reorderLoading}
+              isLoading={reorderLoading && order.id === reorderSelected}
             />
           </Status>
 
