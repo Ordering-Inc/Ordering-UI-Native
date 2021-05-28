@@ -211,7 +211,7 @@ const SignupFormUI = (props: SignupParams) => {
       <NavBar
         title={t('SIGNUP', 'Signup')}
         titleAlign={'center'}
-        onActionLeft={() => navigation.goBack()}
+        onActionLeft={() => navigation.canGoBack && navigation.goBack()}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
       />
@@ -253,7 +253,7 @@ const SignupFormUI = (props: SignupParams) => {
                     <Controller
                       key={field.id}
                       control={control}
-                      render={({ onChange, value }) => (
+                      render={({ onChange, value }: any) => (
                         <OInput
                           placeholder={t(field.name)}
                           style={style.inputStyle}
@@ -285,7 +285,7 @@ const SignupFormUI = (props: SignupParams) => {
               {signupTab !== 'cellphone' && (
                 <Controller
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ onChange, value }: any) => (
                     <OInput
                       isSecured={!passwordSee ? true : false}
                       placeholder={t('PASSWORD', 'Password')}

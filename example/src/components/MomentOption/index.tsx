@@ -44,7 +44,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
   const [orderState] = useOrder()
   const [optionSelected, setOptionSelected] = useState({ isAsap: false, isSchedule: false })
 
-  const goToBack = () => navigation.goBack()
+  const goToBack = () => navigation.canGoBack && navigation.goBack()
   const _handleAsap = () => {
     handleAsap()
     setOptionSelected({ isAsap: true, isSchedule: false })

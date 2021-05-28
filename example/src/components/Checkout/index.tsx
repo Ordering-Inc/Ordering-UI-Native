@@ -167,7 +167,7 @@ const CheckoutUI = (props: any) => {
           imgLeftSrc={images.general.arrow_left}
           imgRightSrc={null}
           style={style.btnBackArrow}
-          onClick={() => navigation.goBack()}
+          onClick={() => navigation.canGoBack && navigation.goBack()}
         />
         <ChHeader>
           <OText size={24}>{t('CHECKOUT', 'Checkout')}</OText>

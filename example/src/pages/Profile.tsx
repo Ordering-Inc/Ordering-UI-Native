@@ -17,7 +17,7 @@ const Profile = (props: Props) => {
     ...props,
     useSessionUser: true,
     useValidationFields: true,
-    goToBack: () => props.navigation.goBack(),
+    goToBack: () => props.navigation.canGoBack && props.navigation.goBack(),
     onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params)
   }
 

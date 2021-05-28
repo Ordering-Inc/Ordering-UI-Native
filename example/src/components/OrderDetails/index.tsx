@@ -121,7 +121,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const handleArrowBack: any = () => {
     if (!isFromCheckout) {
-      navigation.goBack();
+      navigation.canGoBack && navigation.goBack();
       return
     }
     navigation.navigate('BottomTab');

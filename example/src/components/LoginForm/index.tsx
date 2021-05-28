@@ -176,7 +176,7 @@ const LoginFormUI = (props: LoginParams) => {
       <NavBar
         title={t('LOGIN', 'Login')}
         titleAlign={'center'}
-        onActionLeft={() => navigation.goBack()}
+        onActionLeft={() => navigation.canGoBack && navigation.goBack()}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
         paddingTop={0}

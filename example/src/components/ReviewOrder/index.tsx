@@ -80,7 +80,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     }
     if (!formState.loading && !formState.error && alertState.success) {
       showToast(ToastType.Success, t('REVIEW_SUCCESS_CONTENT', 'Thank you, Review successfully submitted!'))
-      navigation.goBack()
+      navigation.canGoBack && navigation.goBack()
     }
   }, [formState.result])
 
@@ -129,7 +129,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       <NavBar
         title={t('REVIEW_ORDER', 'Review your Order')}
         titleAlign={'center'}
-        onActionLeft={() => navigation.goBack()}
+        onActionLeft={() => navigation.canGoBack && navigation.goBack()}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
         paddingTop={0}
@@ -152,7 +152,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
           control={control}
           defaultValue=''
           name='comments'
-          render={({onChange}) => (
+          render={({ onChange }: any) => (
             <OInput
             name='comments'
             placeholder={t('COMMENTS', 'Comments')}
