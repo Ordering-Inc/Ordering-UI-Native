@@ -267,6 +267,13 @@ const AddressFormUI = (props: AddressFormParams) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (!orderState.loading && auth && !hasAddressDefault && isSignUpEffect) {
+      navigation.navigate('BottomTab')
+    }
+    setIsSignUpEffect(true)
+  }, [orderState.loading])
+
   return (
     <>
       <NavBar
