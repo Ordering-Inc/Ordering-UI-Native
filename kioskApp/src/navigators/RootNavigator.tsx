@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useOrder, useSession } from 'ordering-components/native';
 
 import LoginPage from '../screens/LoginPage';
+import IntroPage from '../screens/IntroPage';
 
 const Stack = createStackNavigator();
 
@@ -24,10 +25,15 @@ const RootNavigator = () => {
   }, [loading]); */
 
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="Intro">
       <Stack.Screen
         name="Login"
         component={LoginPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Intro"
+        component={IntroPage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
