@@ -359,7 +359,7 @@ const SignupFormUI = (props: SignupParams) => {
           )
         }
 
-        {
+        {/* {
           configs && Object.keys(configs).length > 0 && (
             (configs?.facebook_login?.value === 'true' ||
               configs?.facebook_login?.value === '1') &&
@@ -380,7 +380,7 @@ const SignupFormUI = (props: SignupParams) => {
               </ButtonsSection>
             )
           )
-        }
+        } */}
       </FormSide >
       <OModal
         open={isModalVisible}
