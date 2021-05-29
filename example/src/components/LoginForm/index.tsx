@@ -176,7 +176,7 @@ const LoginFormUI = (props: LoginParams) => {
       <NavBar
         title={t('LOGIN', 'Login')}
         titleAlign={'center'}
-        onActionLeft={() => navigation.goBack()}
+        onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
         paddingTop={0}
@@ -212,7 +212,7 @@ const LoginFormUI = (props: LoginParams) => {
             {useLoginByEmail && loginTab === 'email' && (
               <Controller
                 control={control}
-                render={({ onChange, value }) => (
+                render={({ onChange, value }: any) => (
                   <OInput
                     placeholder={t('EMAIL', 'Email')}
                     style={loginStyle.inputStyle}
@@ -248,7 +248,7 @@ const LoginFormUI = (props: LoginParams) => {
 
             <Controller
               control={control}
-              render={({ onChange, value }) => (
+              render={({ onChange, value }: any) => (
                 <OInput
                   isSecured={!passwordSee ? true : false}
                   placeholder={t('PASSWORD', 'Password')}
@@ -318,7 +318,7 @@ const LoginFormUI = (props: LoginParams) => {
           )
         }
 
-        {configs && Object.keys(configs).length > 0 ? (
+        {/* {configs && Object.keys(configs).length > 0 ? (
           (configs?.facebook_login?.value === 'true' ||
             configs?.facebook_login?.value === '1') &&
           configs?.facebook_id?.value &&
@@ -344,7 +344,7 @@ const LoginFormUI = (props: LoginParams) => {
               <PlaceholderLine height={50} style={{borderRadius: 25, marginBottom: 25}} />
             </Placeholder>
           </SkeletonWrapper>
-        )}
+        )} */}
 
         {onNavigationRedirect && registerButtonText && (
           <ButtonsWrapper>

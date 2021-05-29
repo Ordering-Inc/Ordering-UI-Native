@@ -211,7 +211,7 @@ const SignupFormUI = (props: SignupParams) => {
       <NavBar
         title={t('SIGNUP', 'Signup')}
         titleAlign={'center'}
-        onActionLeft={() => navigation.goBack()}
+        onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
       />
@@ -253,7 +253,7 @@ const SignupFormUI = (props: SignupParams) => {
                     <Controller
                       key={field.id}
                       control={control}
-                      render={({ onChange, value }) => (
+                      render={({ onChange, value }: any) => (
                         <OInput
                           placeholder={t(field.name)}
                           style={style.inputStyle}
@@ -285,7 +285,7 @@ const SignupFormUI = (props: SignupParams) => {
               {signupTab !== 'cellphone' && (
                 <Controller
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ onChange, value }: any) => (
                     <OInput
                       isSecured={!passwordSee ? true : false}
                       placeholder={t('PASSWORD', 'Password')}
@@ -359,7 +359,7 @@ const SignupFormUI = (props: SignupParams) => {
           )
         }
 
-        {
+        {/* {
           configs && Object.keys(configs).length > 0 && (
             (configs?.facebook_login?.value === 'true' ||
               configs?.facebook_login?.value === '1') &&
@@ -380,7 +380,7 @@ const SignupFormUI = (props: SignupParams) => {
               </ButtonsSection>
             )
           )
-        }
+        } */}
       </FormSide >
       <OModal
         open={isModalVisible}

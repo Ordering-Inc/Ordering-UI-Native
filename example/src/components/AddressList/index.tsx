@@ -28,7 +28,8 @@ const AddressListUI = (props: AddressListParams) => {
     isGoBack,
     actionStatus,
     isFromBusinesses,
-    isFromProductsList
+    isFromProductsList,
+    afterSignup
   } = props
 
   const [orderState] = useOrder()
@@ -44,7 +45,7 @@ const AddressListUI = (props: AddressListParams) => {
       onNavigationRedirect('CheckoutPage')
       return
     }
-    if (route && route?.params?.isAfterSignup){
+    if (route && !route?.params?.isFromCheckout){
       onNavigationRedirect('BottomTab')
     }
 
@@ -118,7 +119,7 @@ const AddressListUI = (props: AddressListParams) => {
     })
   }
 
-  const goToBack = () => navigation.goBack()
+  const goToBack = () => navigation?.canGoBack() && navigation.goBack()
   const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
 
   useEffect(() => {
@@ -141,7 +142,7 @@ const AddressListUI = (props: AddressListParams) => {
               route?.params?.isFromCheckout ||
               route?.params?.isFromProductsList
             ) &&
-            !isFromProfile &&
+            !isFromProfile && 
             (
               <NavBar
                 title={t('ADDRESS_LIST', 'Address List')}
@@ -189,7 +190,7 @@ const AddressListUI = (props: AddressListParams) => {
                       name='pencil-outline'
                       size={28}
                       color={colors.green}
-                      onPress={() => onNavigationRedirect(
+                      onPress={() => !afterSignup ?  onNavigationRedirect(
                         'AddressForm',
                         {
                           address: address,
@@ -200,7 +201,17 @@ const AddressListUI = (props: AddressListParams) => {
                           isFromProductsList: isFromProductsList,
                           hasAddressDefault: !!orderState.options?.address?.location
                         }
-                      )}
+                      ) : onNavigationRedirect(
+                        'AddressFormInitial',
+                        {
+                          address: address,
+                          isEditing: true,
+                          addressesList: addressList,
+                          onSaveAddress: handleSaveAddress,
+                          isSelectedAfterAdd: true,
+                          isFromProductsList: isFromProductsList,
+                          hasAddressDefault: !!orderState.options?.address?.location
+                        })}
                     />
                     <OAlert
                       title={t('DELETE_ADDRESS', 'Delete Address')}
@@ -246,7 +257,7 @@ const AddressListUI = (props: AddressListParams) => {
                 imgLeftStyle={styles.buttonIcon}
                 style={styles.button}
                 borderColor={colors.primary}
-                onClick={() => onNavigationRedirect(
+                onClick={() => !afterSignup ? onNavigationRedirect(
                   'AddressForm',
                   {
                     address: null,
@@ -255,7 +266,15 @@ const AddressListUI = (props: AddressListParams) => {
                     nopadding: true,
                     isSelectedAfterAdd: true,
                     hasAddressDefault: !!orderState.options?.address?.location
-                  })}
+                  }) : onNavigationRedirect(
+                    'AddressFormInitial',
+                    {
+                      address: null,
+                      onSaveAddress: handleSaveAddress,
+                      addressesList: addressList?.addresses,
+                      nopadding: true,
+                      isSelectedAfterAdd: true,
+                      hasAddressDefault: !!orderState.options?.address?.location})}
               />
             </>
           )}
