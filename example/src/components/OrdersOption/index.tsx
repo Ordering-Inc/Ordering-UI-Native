@@ -50,9 +50,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       const { error, result } = await reorder(orderId)
       if (!error) {
         onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: result.uuid })
+        setReorderLoading(false)
         return
       }
       setReorderLoading(false)
+
     } catch (err) {
       showToast(ToastType.Error, t('ERROR', err.message))
       setReorderLoading(false)
