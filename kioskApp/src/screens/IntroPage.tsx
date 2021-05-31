@@ -1,11 +1,15 @@
 import React from 'react';
 import { Dimensions, View } from 'react-native';
+import { useLanguage } from 'ordering-components/native';
 
 import { Container } from '../layouts/Container';
 import OImage from '../components/shared/OImage';
 import OButton from '../components/shared/OButton';
+import { LanguageSelector } from '../components/LanguageSelector';
 
 const IntroPage = () => {
+	const [, t] = useLanguage()
+
   return (
 		<Container>
 			<View
@@ -28,12 +32,14 @@ const IntroPage = () => {
 				/>
 
 				<OButton
-					text="Touch to order"
+					text={t('TOUCH_TO_ORDER', 'Touch to order')}
 					parentStyle={{
 						alignItems: 'center',
 						width: _dim.width - _offset
 					}}
 				/>
+
+				<LanguageSelector />
 			</View>
 		</Container>
 	);
