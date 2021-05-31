@@ -61,6 +61,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 						renderItem: ({item}) => (
 							<TouchableOpacity
 								onPress={() => {
+									/* @ts-ignore */
 									handleChangeLanguage(item.value);
 									setCountryModalVisible(false);
 								}}
@@ -69,9 +70,13 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 									<Flag
 										withEmoji
 										flagSize={24}
+										/* @ts-ignore */
 										countryCode={item.countryCode}
 									/>
-									<Text>{item.label}</Text>
+									<Text>{
+										/* @ts-ignore */
+										item.label
+									}</Text>
 								</LanguageItem>
 							</TouchableOpacity>
 						)
