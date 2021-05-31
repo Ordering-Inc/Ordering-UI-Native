@@ -14,7 +14,7 @@ import { colors } from '../../theme.json';
 
 const StyledButton = styled.View<Props>`
   background-color: ${colors.primary};
-  border-radius: 26px;
+  border-radius: 6px;
   border-width: 2px;
   height: 52px;
   border-color: ${colors.primary};
@@ -125,8 +125,7 @@ OButton.defaultProps = {
   isLoading: false,
   isDisabled: false,
   indicatorColor: 'white',
-  activeOpacity: 0.5,
-  imgRightSrc: require('../../assets/icons/arrow_right.png')
+  activeOpacity: 0.5
 };
 
 export default OButton;
