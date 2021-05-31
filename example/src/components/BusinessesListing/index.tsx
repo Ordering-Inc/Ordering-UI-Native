@@ -45,9 +45,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const timerId = useRef<any>(false)
   const panResponder = useRef(
     PanResponder.create({
-      onMoveShouldSetPanResponderCapture: () => {
+      onMoveShouldSetPanResponder: (e, gestureState) => {
+        const {dx, dy} = gestureState;
         resetInactivityTimeout()
-        return true
+        return (Math.abs(dx) > 20) || (Math.abs(dy) > 20);
       },
     })
   ).current
