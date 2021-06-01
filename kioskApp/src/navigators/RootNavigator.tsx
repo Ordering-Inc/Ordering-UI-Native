@@ -25,7 +25,7 @@ const RootNavigator = () => {
   }, [loading]); */
 
   return (
-    <Stack.Navigator initialRouteName="Intro">
+    <Stack.Navigator initialRouteName="Login">
       <Stack.Screen
         name="Login"
         component={LoginPage}

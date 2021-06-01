@@ -12,6 +12,7 @@ import OKeyButton from './OKeyButton'
 import OModal from './OModal'
 import OAlert from './OAlert'
 import OBottomPopup from './OBottomPopup'
+import OImage from './OImage'
 
 export {
 	OText,
@@ -26,6 +27,7 @@ export {
 	OToggle,
 	OKeyButton,
 	OAlert,
-  	OModal,
+  OModal,
+  OImage,
 	OBottomPopup
 }

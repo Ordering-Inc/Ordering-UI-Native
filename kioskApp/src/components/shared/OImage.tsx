@@ -5,7 +5,7 @@ const SImage = styled.Image`
   width: ${(props:any) => css`${props?.width || 0}`}px;
   height: ${(props:any) => css`${props?.height || 0}`}px;
 	overflow: ${(props:any) => css`${props?.overflow || 'visible'}`};
-	resizeMode: ${(props:any) => css`${props?.overflow || 'contain'}`};
+	resizeMode: ${(props:any) => css`${props?.resizeMode || 'contain'}`};
 `;
 
 interface Props {
