@@ -120,27 +120,27 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               <WrapHeader>
                 <TopHeader>
                   {!isOpenSearchBar && (
-                    <>
-                      <View style={{ ...styles.headerItem, flex: 1 }}>
-                        <OButton
-                          imgLeftSrc={images.general.arrow_left}
-                          imgRightSrc={null}
-                          style={styles.btnBackArrow}
-                          onClick={() => navigation?.canGoBack() && navigation.goBack()}
-                          imgLeftStyle={{ tintColor: '#fff' }}
-                        />
+                    <View style={{ display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
+                      <OButton
+                        imgLeftSrc={images.general.arrow_left}
+                        imgRightSrc={null}
+                        style={{ ...styles.btnBackArrow, marginVertical: 15, marginLeft: 15 }}
+                        onClick={() => navigation?.canGoBack() && navigation.goBack()}
+                        imgLeftStyle={{ tintColor: '#fff' }}
+                      />
+                      <View style={{ marginVertical: 15, flex: 1 }}>
                         <AddressInput
-                          onPress={() => auth 
-                            ? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true }) 
+                          onPress={() => auth
+                            ? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
                             : onRedirect('AddressForm', { address: orderState.options?.address })}
-                          >
+                            >
                           <OText color={colors.white} numberOfLines={1}>
                             {orderState?.options?.address?.address}
                           </OText>
                         </AddressInput>
                       </View>
                       {!errorQuantityProducts && (
-                        <View style={{ ...styles.headerItem }}>
+                        <View style={{ marginVertical: 15, marginLeft: 15 }}>
                           <TouchableOpacity
                             onPress={() => setIsOpenSearchBar(true)}
                             style={styles.searchIcon}
@@ -153,14 +153,14 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                           </TouchableOpacity>
                         </View>
                       )}
-                    </>
+                    </View>
                   )}
                   {isOpenSearchBar && (
                     <WrapSearchBar>
                       <SearchBar
                         onSearch={handleChangeSearch}
                         onCancel={() => handleCancel()}
-                        isCancelXButtonShow={!!searchValue}
+                        isCancelXButtonShow
                         noBorderShow
                         placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
                         lazyLoad={businessState?.business?.lazy_load_products_recommended}
