@@ -32,6 +32,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+[GMSServices provideAPIKey:@"AIzaSyBRTTYBWVFP3_lBhxNmZopx1YNp8mNhtyU"]
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
@@ -43,7 +44,7 @@ static void InitializeFlipper(UIApplication *application) {
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UIViewController *rootViewController = [UIViewController new];
+  UIViewContrapioller *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
