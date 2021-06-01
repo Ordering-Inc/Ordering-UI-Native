@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLanguage, useOrder } from 'ordering-components/native';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { colors, images } from '../../theme.json';
@@ -6,6 +6,7 @@ import { OButton, OIcon, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FacebookLogin } from '../FacebookLogin';
 
 const windowHeight = Dimensions.get('window').height
 
@@ -15,7 +16,16 @@ export const Home = (props: any) => {
   } = props;
 
   const [, t] = useLanguage();
-  const [orderState] = useOrder()
+  const [orderState] = useOrder();
+  // const [isFBLoading, setIsFBLoading] = useState(false);
+
+  const handleSuccessFacebook = (user: any) => {
+    // login({
+    //   user,
+    //   token: user.session.access_token
+    // })
+    console.log('handleSuccessFacebook', user);
+  }
 
   return (
     <View style={styles.container}>
@@ -45,6 +55,11 @@ export const Home = (props: any) => {
           borderColor={colors.primary}
           style={styles.buttons}
           onClick={() => onNavigationRedirect('Signup')}
+        />
+        <FacebookLogin
+          // handleErrors={(err: any) => showToast(ToastType.Error, err)}
+          // handleLoading={(val: boolean) => setIsFBLoading(val)}
+          // handleSuccessFacebookLogin={handleSuccessFacebook}
         />
         <TouchableOpacity
           style={{ ...styles.textLink, marginTop: 15 }}

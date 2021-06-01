@@ -195,7 +195,7 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-    implementation project(':react-native-fbsdk')
+    implementation project(':react-native-fbsdk-next')
 
     implementation 'com.android.support:multidex:1.0.3'
 
@@ -225,6 +225,8 @@ dependencies {
     }
 
     compile project(':react-native-vector-icons')
+
+    compile 'com.facebook.android:facebook-android-sdk:4.26.0'
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";

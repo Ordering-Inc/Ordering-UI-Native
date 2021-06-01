@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { AccessToken, LoginManager } from 'react-native-fbsdk';
+import { StyleSheet, Text, Alert } from 'react-native';
+// import { AccessToken, LoginManager, Settings } from 'react-native-fbsdk-next';
+import { LoginButton, AccessToken, LoginManager } from 'react-native-fbsdk-next';
 import { useLanguage, useSession, useApi } from 'ordering-components/native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -47,27 +48,34 @@ export const FacebookLogin = (props: any) => {
 
   const loginWithFacebook = () => {
     handleLoading && handleLoading(true)
-    LoginManager.logInWithPermissions(['public_profile']).then(
-      (login: any) => {
-        if (login.isCancelled) {
-          const err = t('LOGIN_WITH_FACEBOOK_CANCELLED', 'Login cancelled')
-          handleLoading && handleLoading(false)
-          handleErrors && handleErrors(err)
-        } else {
-          AccessToken.getCurrentAccessToken().then((data: any) => {
-            const accessToken = data.accessToken.toString();
-            handleLoginClick(accessToken)
-          });
-        }
-      },
-      (error: any) => {
-        const err = error
-          ? t(error?.replace(/ /g, '_').toUpperCase(), 'Login cancelled')
-          : t('LOGIN_FAIL_WITH_FACEBOOK', 'Login fail with facebook')
-        handleLoading && handleLoading(false)
-        handleErrors && handleErrors(err)
-      },
-    );
+    try {
+      const respo = LoginManager.logInWithPermissions
+    } catch (error) {
+      
+    }
+    // LoginManager.logInWithPermissions(['public_profile']).then(
+    //   (login: any) => {
+    //     console.log('login', login);
+    //     // if (login.isCancelled) {
+    //     //   const err = t('LOGIN_WITH_FACEBOOK_CANCELLED', 'Login cancelled')
+    //     //   handleLoading && handleLoading(false)
+    //     //   handleErrors && handleErrors(err)
+    //     // } else {
+    //     //   AccessToken.getCurrentAccessToken().then((data: any) => {
+    //     //     const accessToken = data.accessToken.toString();
+    //     //     handleLoginClick(accessToken)
+    //     //   });
+    //     // }
+    //   },
+    //   (error: any) => {
+    //     console.log('error', error);
+    //     // const err = error
+    //     //   ? t(error?.replace(/ /g, '_').toUpperCase(), 'Login cancelled')
+    //     //   : t('LOGIN_FAIL_WITH_FACEBOOK', 'Login fail with facebook')
+    //     // handleLoading && handleLoading(false)
+    //     // handleErrors && handleErrors(err)
+    //   },
+    // );
   };
 
   const onPressButton = auth
@@ -76,7 +84,7 @@ export const FacebookLogin = (props: any) => {
 
   return (
     <Container>
-      <FacebookButton
+      {/* <FacebookButton
         onPress={onPressButton}
       >
         <Icon
@@ -88,7 +96,12 @@ export const FacebookLogin = (props: any) => {
         <Text style={style.textBtn}>
           {buttonText}
         </Text>
-      </FacebookButton>
+      </FacebookButton> */}
+      <LoginButton
+        onLoginFinished={(error, data) => {
+          Alert.alert(JSON.stringify(error || data, null, 2));
+        }}
+      />
     </Container>
   );
 }
