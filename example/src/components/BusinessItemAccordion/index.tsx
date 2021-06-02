@@ -46,6 +46,7 @@ export const BusinessItemAccordion = (props: any) => {
       <BIHeader
         isClosed={isClosed}
         onPress={() => !isClosed ? setActiveState(!isActive) : isClosed}
+        activeOpacity={1}
       >
         <BIInfo>
           {cart?.business?.logo && (
@@ -78,11 +79,9 @@ export const BusinessItemAccordion = (props: any) => {
           </BIContentInfo>
         </BIInfo>
 
-        {!isClosed && !!isProducts && (
+        {!isClosed && !!isProducts && cart?.valid_products && cart?.total > 0 && (
           <BITotal>
-            {cart?.valid_products && cart?.total > 0 && (
-              <OText color='#000'>{parsePrice(cart?.total)}</OText>
-            )}
+            <OText color='#000'>{parsePrice(cart?.total)}</OText>
             <OText>{t('CART_TOTAL', 'Total')}</OText>
           </BITotal>
         )}

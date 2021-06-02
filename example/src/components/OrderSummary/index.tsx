@@ -84,7 +84,11 @@ const OrderSummaryUI = (props: any) => {
           <OSBill>
             <OSTable>
               <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
-              <OText>{parsePrice(cart?.subtotal || 0)}</OText>
+              <OText>
+                {cart.business.tax_type === 1
+                  ? parsePrice((cart?.subtotal + cart?.tax) || 0)
+                  : parsePrice(cart?.subtotal || 0)}
+              </OText>
             </OSTable>
             {cart?.discount > 0 && cart?.total >= 0 && (
               <OSTable>

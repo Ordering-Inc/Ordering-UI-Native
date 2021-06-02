@@ -111,7 +111,11 @@ const CartUI = (props: any) => {
           <OSBill>
             <OSTable>
               <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
-              <OText>{parsePrice(cart?.subtotal || 0)}</OText>
+              <OText>
+                {cart.business.tax_type === 1
+                  ? parsePrice((cart?.subtotal + cart?.tax) || 0)
+                  : parsePrice(cart?.subtotal || 0)}
+              </OText>
             </OSTable>
             {cart?.discount > 0 && cart?.total >= 0 && (
               <OSTable>
@@ -147,9 +151,9 @@ const CartUI = (props: any) => {
                   {t('DRIVER_TIP', 'Driver tip')}
                   {cart?.driver_tip_rate > 0 &&
                     parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
-                    !!!parseInt(configs?.driver_tip_use_custom?.value, 10) &&
+                    !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
                   (
-                    `(${parseNumber(cart?.driver_tip_rate)}%)`
+                    `(${verifyDecimals(cart?.driver_tip_rate, parseNumber)}%)`
                   )}
                 </OText>
                 <OText>{parsePrice(cart?.driver_tip)}</OText>
@@ -186,24 +190,26 @@ const CartUI = (props: any) => {
             </OSTotal>
           </OSBill>
         )}
-        <CheckoutAction>
-          <OButton
-            text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-              !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
-            ) : !cart?.valid_address ? (
-              `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
-            ) : (
-              `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
-            )}
-            bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
-            isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
-            borderColor={colors.primary}
-            imgRightSrc={null}
-            textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-            onClick={() => setOpenUpselling(true)}
-            style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
-          />
-        </CheckoutAction>
+        {cart?.valid_products && (
+          <CheckoutAction>
+            <OButton
+              text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
+                !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
+              ) : !cart?.valid_address ? (
+                `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
+              ) : (
+                `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+              )}
+              bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
+              isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
+              borderColor={colors.primary}
+              imgRightSrc={null}
+              textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+              onClick={() => setOpenUpselling(true)}
+              style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
+            />
+          </CheckoutAction>
+        )}
       </BusinessItemAccordion>
       <OModal
         open={openProduct}
