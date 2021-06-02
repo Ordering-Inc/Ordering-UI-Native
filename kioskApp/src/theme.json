@@ -10,7 +10,7 @@
     }
   },
   "colors": {
-    "primary": "#D83520",
+    "primary": "#2C7BE5",
     "primaryContrast": "#FFF",
     "secundary": "#EFEFEF",
     "secundaryContrast": "#000",
@@ -33,7 +33,7 @@
     "clear": "transparent",
     "error": "#C90800",
     "success": "#90C68E",
-    "btnFont": "black",
+    "btnFont": "#FFFFFF",
     "inputDisabled": "#F7F7F7",
     "textSecondary": "#858585",
     "editColor": "#F2BB40",

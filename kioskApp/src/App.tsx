@@ -7,7 +7,6 @@ import RootNavigator from './navigators/RootNavigator';
 import Alert from './providers/AlertProvider';
 
 import settings from './config.json';
-import theme from './theme.json';
 
 const App = () => {
   return (
