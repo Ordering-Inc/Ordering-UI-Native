@@ -32,7 +32,7 @@ const CartUI = (props: any) => {
     removeProduct,
     handleCartOpen,
     setIsCartsLoading,
-    isFromCart
+    // isFromCart
   } = props
 
   const [, t] = useLanguage()
@@ -54,7 +54,7 @@ const CartUI = (props: any) => {
     : parseDate(orderState?.option?.moment, { outputFormat: 'YYYY-MM-DD HH:mm' })
 
   const handleDeleteClick = (product: any) => {
-    removeProduct(product)
+    removeProduct(product, cart)
   }
 
   const handleEditProduct = (product: any) => {
