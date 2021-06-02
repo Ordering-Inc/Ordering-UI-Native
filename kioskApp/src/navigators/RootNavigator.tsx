@@ -1,33 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useOrder, useSession } from 'ordering-components/native';
 
 import LoginPage from '../screens/LoginPage';
 import IntroPage from '../screens/IntroPage';
 import BusinessPage from '../screens/BusinessPage';
 import DeliveryTypePage from '../screens/DeliveryTypePage';
+import CategoryPage from '../screens/CategoryPage';
 
 const Stack = createStackNavigator();
 
 const RootNavigator = () => {
-  /* const [{ auth, loading }] = useSession();
-  const [orderStatus] = useOrder(); */
-  const [loaded, setLoaded] = useState(false);
-
-  /* useEffect(() => {
-    if (!loaded && !orderStatus.loading) {
-      setLoaded(true);
-    }
-  }, [orderStatus]);
-
-  useEffect(() => {
-    if (!loading) {
-      setLoaded(!auth);
-    }
-  }, [loading]); */
-
   return (
-    <Stack.Navigator initialRouteName="DeliveryType">
+    <Stack.Navigator initialRouteName="Category">
       <Stack.Screen
         name="Login"
         component={LoginPage}
@@ -46,6 +30,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name="DeliveryType"
         component={DeliveryTypePage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Category"
+        component={CategoryPage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

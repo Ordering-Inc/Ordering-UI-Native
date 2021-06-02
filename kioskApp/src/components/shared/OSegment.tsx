@@ -5,26 +5,19 @@ import styled from 'styled-components/native'
 import { normalize } from '../../providers/Responsive'
 import { colors } from '../../theme.json'
 
-const Wrapper = styled.View`
-    background-color: white;
-    flex-direction: row;
-    justify-content: space-between;
+const Wrapper = styled.ScrollView`
+	background-color: #F8F9FA;
+	flex-direction: row;
 `
 const SegItem = styled.View`
-    background-color: grey;
-    padding: 8px 8px;
-    flex-direction: row;
-    align-items: center;
-    border-radius: 18px;
+	padding: 24px 12px;
+	flex-direction: row;
+	align-items: center;
+	border-bottom-width: 2px;
 `
-const ItemIcon = styled.Image`
-    resize-mode: contain;
-    margin-right: 5px;
-    width: 14px;
-    height: 14px;
-`
+
 const ItemLabel = styled.Text`
-    font-family: 'Poppins-Regular';
+	font-weight: bold;
 `
 
 // Props for component
@@ -49,15 +42,17 @@ const OSegment = (props: Props) => {
         props.onSelectItem(idx)
     }
     return (
-        <Wrapper>
+        <Wrapper
+					horizontal
+				>
+
             {props.items.map((item, index) => (
                 <TouchableOpacity
                     key={`SegmentItem_${index}`}
                     onPress={() => onSelectItem(index)}
                 >
-                    <SegItem style={{backgroundColor: index == curIndex ? colors.primary : 'white'}}>
-                        <ItemIcon source={item.image} style={{tintColor: index == curIndex ? 'white' : '#ADADAD'}}></ItemIcon>
-                        <ItemLabel style={{ fontSize: normalize(8.8), color: index == curIndex ? 'white' : '#ADADAD' }}>{ props.labelStyle == 'uppercase' ? item.text?.toUpperCase() : item.text}</ItemLabel>
+                    <SegItem style={{borderBottomColor: index == curIndex ? colors.primary : 'transparent'}}>
+                        <ItemLabel style={{ fontSize: normalize(12), color: index == curIndex ? '#344050' : '#ADADAD' }}>{ props.labelStyle == 'uppercase' ? item.text?.toUpperCase() : item.text}</ItemLabel>
                     </SegItem>
                 </TouchableOpacity>
             ))}
@@ -66,7 +61,7 @@ const OSegment = (props: Props) => {
 }
 
 OSegment.defaultProps = {
-    labelStyle: 'uppercase'
+    labelStyle: 'lowercase'
 }
 
 export default OSegment;
