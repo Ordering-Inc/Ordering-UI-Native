@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { LanguageSelector as LanguageSelectorController, useOrder } from 'ordering-components/native'
 import { Platform, StyleSheet } from 'react-native'
 
@@ -18,6 +18,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     handleChangeLanguage,
   } = props
 
+  const [languageSelected, setLanguageSelected] = useState(currentLanguage)
   const _languages = languagesState?.languages?.map((language: any) => {
     return {
       value: language?.code,
@@ -28,11 +29,16 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   _languages && _languages.sort((a: any, b: any) =>
     (a.content > b.content) ? 1 : ((b.content > a.content) ? -1 : 0)
   )
+
+  const handleSelectLanguage = (language : any) => {
+    setLanguageSelected(language)
+  }
+
   return (
     <Container>
       {languagesState?.languages && (
         <RNPickerSelect
-          onValueChange={handleChangeLanguage}
+          onValueChange={Platform.OS === 'ios' ? handleSelectLanguage : handleChangeLanguage}
           items={_languages || []}
           value={currentLanguage}
           style={pickerStyle}
@@ -40,6 +46,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
           placeholder={{}}
           Icon={() => <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />}
           disabled={orderState.loading}
+          onDonePress={() => handleChangeLanguage(languageSelected)}
         />
       )}
     </Container>

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { View, StyleSheet, Animated, Easing } from 'react-native'
+import React, { useState } from 'react'
+import { View, StyleSheet, Animated, Platform } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
@@ -22,7 +22,7 @@ import { OIcon, OText, OAlert } from '../shared'
 
 import { ProductItemAccordionParams } from '../../types'
 import { colors } from '../../theme.json'
-import Spinner from 'react-native-loading-spinner-overlay'
+
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   const {
@@ -32,16 +32,16 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     changeQuantity,
     getProductMax,
     onDeleteProduct,
-    onEditProduct,
-    isFromCheckout,
+    onEditProduct
   } = props
   const [, t] = useLanguage()
   const [orderState] = useOrder()
   const [{ parsePrice }] = useUtils()
 
   const [isActive, setActiveState] = useState(false)
-  const [setHeight, setHeightState] = useState({ height: new Animated.Value(0) })
-  const [setRotate, setRotateState] = useState({ angle: new Animated.Value(0) })
+  const [quantity,setQuantity] = useState(product.quantity.toString())
+  // const [setHeight, setHeightState] = useState({ height: new Animated.Value(0) })
+  // const [setRotate, setRotateState] = useState({ angle: new Animated.Value(0) })
 
   const productInfo = () => {
     if (isCartProduct) {
@@ -83,6 +83,10 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     }
   }
 
+  const handleChangeCustomQuantity = (value : string) => {
+    setQuantity(value)
+  }
+
   const getFormattedSubOptionName = ({ quantity, name, position, price }: { quantity: number, name: string, position: string, price: number }) => {
     const pos = position ? `(${position})` : ''
     return `${quantity} x ${name} ${pos} +${price}`
@@ -109,13 +113,14 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
           {isCartProduct && !isCartPending && getProductMax ? (
             <RNPickerSelect
               items={productOptions}
-              onValueChange={handleChangeQuantity}
+              onValueChange={Platform.OS === 'ios' ? handleChangeCustomQuantity : handleChangeQuantity}
               value={product.quantity.toString()}
               style={pickerStyle}
               useNativeAndroidPickerStyle={false}
               placeholder={{}}
               Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon} />}
               disabled={orderState.loading}
+              onDonePress={() => handleChangeQuantity(quantity)}
             />
           ) : (
             <ProductQuantity>
