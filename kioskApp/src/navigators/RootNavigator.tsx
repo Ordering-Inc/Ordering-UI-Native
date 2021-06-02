@@ -5,7 +5,7 @@ import { useOrder, useSession } from 'ordering-components/native';
 import LoginPage from '../screens/LoginPage';
 import IntroPage from '../screens/IntroPage';
 import BusinessPage from '../screens/BusinessPage';
-import DeliveryTypesPage from '../screens/DeliveryTypesPage';
+import DeliveryTypePage from '../screens/DeliveryTypePage';
 
 const Stack = createStackNavigator();
 
@@ -27,7 +27,7 @@ const RootNavigator = () => {
   }, [loading]); */
 
   return (
-    <Stack.Navigator initialRouteName="Business">
+    <Stack.Navigator initialRouteName="DeliveryType">
       <Stack.Screen
         name="Login"
         component={LoginPage}
@@ -44,8 +44,8 @@ const RootNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="DeliveryTypes"
-        component={DeliveryTypesPage}
+        name="DeliveryType"
+        component={DeliveryTypePage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -3,6 +3,7 @@ export const IMAGES = {
   lunch: require('../assets/icons/lunch.png'),
   arrow_up: require('../assets/icons/arrow_up.png'),
   arrow_left: require('../assets/icons/arrow_left.png'),
+  arrow_right_circular_outlined: require('../assets/icons/arrow_right_circular_outlined.png'),
   map: require('../assets/icons/map.png'),
   marker: require('../assets/images/marker.png'),
   email: require('../assets/icons/ic_email.png'),
@@ -14,7 +15,9 @@ export const IMAGES = {
   mail: require('../assets/icons/mail.png'),
   chat: require('../assets/icons/chat.png'),
   user: require('../assets/icons/menu-user.png'),
-  menulogout: require('../assets/icons/menu-logout.png')
+  menulogout: require('../assets/icons/menu-logout.png'),
+  pushPin: require('../assets/icons/push_pin.png'),
+  shoppingCart: require('../assets/icons/shopping_cart.png'),
 }
 
 export const USER_TYPE = {
@@ -38,6 +41,11 @@ export const ORDER_STATUS_IMAGES = {
   orderStatus11: require('../assets/images/status-11.png'),
   orderStatus12: require('../assets/images/status-12.png'),
   orderStatus13: require('../assets/images/status-13.png'),
+}
+
+export const DELIVERY_TYPE_IMAGES = {
+  eatIn: require('../assets/images/take-out.png'),
+  takeOut: require('../assets/images/eat-in.png'),
 }
 
 export const PAYMENT_IMAGES = {

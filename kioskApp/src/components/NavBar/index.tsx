@@ -13,6 +13,8 @@ const Wrapper = styled.View`
   justify-content: center;
   align-items: center;
   position: relative;
+  border-bottom-color: #E1E8ED;
+  border-bottom-width: 1px;
 `
 const TitleWrapper = styled.View`
   flex-direction: column;
@@ -89,6 +91,7 @@ const NavBar = (props: Props) => {
                 marginRight: props.showCall ? 0 : 40,
                 color: props.titleColor || 'black',
                 paddingHorizontal: props.titleAlign == 'left' ? 12 : 0,
+                fontWeight: "700",
                 ...props.titleStyle
               }
             }
