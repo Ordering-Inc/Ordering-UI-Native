@@ -46,7 +46,8 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
           value={defaultValue || typeSelected}
           useNativeAndroidPickerStyle={false}
           disabled={orderState.loading}
-          onDonePress={() => handleChangeOrderType(orderTypeSelected)}
+          onClose={() => handleChangeOrderType(orderTypeSelected)}
+          doneText=''
         />
       </OrderTypeWrapper>
     )

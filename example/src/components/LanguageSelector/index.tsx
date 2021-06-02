@@ -46,7 +46,8 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
           placeholder={{}}
           Icon={() => <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />}
           disabled={orderState.loading}
-          onDonePress={() => handleChangeLanguage(languageSelected)}
+          onClose={() => handleChangeLanguage(languageSelected)}
+          doneText=''
         />
       )}
     </Container>

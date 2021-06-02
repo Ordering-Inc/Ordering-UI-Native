@@ -120,7 +120,8 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
               placeholder={{}}
               Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon} />}
               disabled={orderState.loading}
-              onDonePress={() => handleChangeQuantity(quantity)}
+              onClose={() => handleChangeQuantity(quantity)}
+              doneText=''
             />
           ) : (
             <ProductQuantity>
