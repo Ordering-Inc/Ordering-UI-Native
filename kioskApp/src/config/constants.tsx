@@ -21,3 +21,7 @@ export const USER_TYPE = {
   CUSTOMER: 'customer',
   DRIVER: 'driver',
 };
+
+export const LOGO_IMAGES = {
+  logotype: require('../assets/images/logotype.png'),
+}
