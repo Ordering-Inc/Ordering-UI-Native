@@ -1,7 +1,8 @@
-import * as React from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
-import { ToastType, useToast } from '../../providers/ToastProvider';
-import { colors } from '../../theme.json';
+import * as React from "react";
+import { Animated, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ToastType, useToast } from "../../providers/ToastProvider";
+import { colors } from "../../theme.json";
 
 const fadeDuration = 300;
 const bottomPosition = 20;
@@ -61,7 +62,11 @@ export const Toast: React.FC = () => {
 
   return (
     <Animated.View
-      style={[styles.container, { bottom: bottomPosition, opacity }]}>
+      style={[
+        styles.container,
+        { bottom: bottomPosition, opacity },
+      ]}
+    >
       <View style={[styles.toast, { backgroundColor }]}>
         <Text style={styles.message}>{message}</Text>
       </View>
@@ -71,10 +76,10 @@ export const Toast: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    alignSelf: 'center',
-    position: 'absolute',
+    alignSelf: "center",
+    position: "absolute",
     maxWidth: 480,
-    zIndex: 9999999999,
+    zIndex: 9999999999
   },
   toast: {
     borderRadius: 16,
@@ -82,7 +87,7 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
     color: '#fff',
   },
 });

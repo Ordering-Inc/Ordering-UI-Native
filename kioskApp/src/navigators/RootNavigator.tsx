@@ -4,6 +4,8 @@ import { useOrder, useSession } from 'ordering-components/native';
 
 import LoginPage from '../screens/LoginPage';
 import IntroPage from '../screens/IntroPage';
+import BusinessPage from '../screens/BusinessPage';
+import DeliveryTypePage from '../screens/DeliveryTypePage';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +36,16 @@ const RootNavigator = () => {
       <Stack.Screen
         name="Intro"
         component={IntroPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Business"
+        component={BusinessPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DeliveryType"
+        component={DeliveryTypePage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
