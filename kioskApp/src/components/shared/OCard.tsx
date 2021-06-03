@@ -1,7 +1,7 @@
 import React from 'react';
 import { ViewStyle } from 'react-native';
 
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import OImage from './OImage';
 import OText from './OText';
 import { colors } from '../../theme.json';
@@ -16,6 +16,17 @@ const CardBody = styled.View`
 	padding: 4%;
 `
 
+const CardBadge = styled.Text`
+	padding: 2% 4%;
+	position: absolute;
+	background-color: ${colors.primary};
+	z-index: 100;
+	border-radius: 5px;
+	color: #fff;
+	font-weight: bold;
+	margin: 10px 0;
+`
+
 const OCard = (props: Props): React.ReactElement => {
 	return (
 		<CardContainer
@@ -23,6 +34,11 @@ const OCard = (props: Props): React.ReactElement => {
 		 onPress={props?.onPress}
 		 disabled={!props?.onPress}
 		>
+			{props?.badgeText && (
+				<CardBadge>
+					{props?.badgeText}
+				</CardBadge>
+			)}
 			<OImage
 				source={props.image}
 				height={150}
@@ -69,6 +85,7 @@ const OCard = (props: Props): React.ReactElement => {
 }
 
 interface Props {
+	badgeText?: string;
 	onPress?(): void;
 	image: string;
 	title: string;

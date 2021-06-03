@@ -88,6 +88,7 @@ const CategoryPage = () => {
           prevPrice="$8.99"
           description="Laboris ex ullamco ut eiusmod dolor ad dolore. Elit fugiat laboris ex laborum magna nulla duis sit incididunt nisi eu anim. Laboris dolore ullamco dolore dolore."
           onPress={() => { console.log('xxxxxxx') }}
+          badgeText="-$2.00"
         />
 
         <OCard
@@ -103,6 +104,7 @@ const CategoryPage = () => {
           price="$10.99"
           prevPrice="$8.99"
           description="Laboris ex ullamco ut eiusmod dolor ad dolore. Elit fugiat laboris ex laborum magna nulla duis sit incididunt nisi eu anim. Laboris dolore ullamco dolore dolore."
+          badgeText="-$2.00"
         />
       </GridContainer>
 		</Container>
