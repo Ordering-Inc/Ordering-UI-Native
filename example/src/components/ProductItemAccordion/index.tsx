@@ -147,41 +147,33 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
             </View>
             <View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end' }}>
               <View style={{ flexDirection: 'row' }}>
-                <OText>{parsePrice(product.total || product.price)}</OText>
+                <OText size={18}>{parsePrice(product.total || product.price)}</OText>
                 {(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
                   <MaterialCommunityIcon name='chevron-down' size={18} />
                 )}
               </View>
-              <View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end' }}>
-                <View style={{ flexDirection: 'row' }}>
-                  <OText size={18}>{parsePrice(product.total || product.price)}</OText>
-                  {(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
-                    <MaterialCommunityIcon name='chevron-down' size={18} />
-                  )}
-                </View>
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
-                  {onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
+              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+                {onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
+                  <MaterialCommunityIcon
+                    name='pencil-outline'
+                    size={26}
+                    color={colors.green}
+                    onPress={() => onEditProduct(product)}
+                  />
+                )}
+                {onDeleteProduct && isCartProduct && !isCartPending && (
+                  <OAlert
+                    title={t('DELETE_PRODUCT', 'Delete Product')}
+                    message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
+                    onAccept={() => onDeleteProduct(product)}
+                  >
                     <MaterialCommunityIcon
-                      name='pencil-outline'
+                      name='trash-can-outline'
                       size={26}
-                      color={colors.green}
-                      onPress={() => onEditProduct(product)}
+                      color={colors.red}
                     />
-                  )}
-                  {onDeleteProduct && isCartProduct && !isCartPending && (
-                    <OAlert
-                      title={t('DELETE_PRODUCT', 'Delete Product')}
-                      message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
-                      onAccept={() => onDeleteProduct(product)}
-                    >
-                      <MaterialCommunityIcon
-                        name='trash-can-outline'
-                        size={26}
-                        color={colors.red}
-                      />
-                    </OAlert>
-                  )}
-                </View>
+                  </OAlert>
+                )}
               </View>
             </View>
           </ContentInfo>
