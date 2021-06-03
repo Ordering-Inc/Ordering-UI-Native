@@ -10,6 +10,7 @@ import {
   OSegment,
   OText
 } from '../components/shared';
+import { DELIVERY_TYPE_IMAGES } from '../config/constants';
 
 const CategoryPage = () => {
   const [, t] = useLanguage()
@@ -80,11 +81,29 @@ const CategoryPage = () => {
           justifyContent: 'space-between',
         }}
       >
-        <OCard/>
-        <OCard/>
-        <OCard/>
-        <OCard/>
-        <OCard/>
+        <OCard
+          title="Excepteur et eu laboris enim ipsum incididunt do."
+          image={DELIVERY_TYPE_IMAGES.eatIn}
+          price="$10.99"
+          prevPrice="$8.99"
+          description="Laboris ex ullamco ut eiusmod dolor ad dolore. Elit fugiat laboris ex laborum magna nulla duis sit incididunt nisi eu anim. Laboris dolore ullamco dolore dolore."
+        />
+
+        <OCard
+          title="Excepteur et eu laboris enim ipsum incididunt do."
+          image={DELIVERY_TYPE_IMAGES.eatIn}
+          price="$10.99"
+          prevPrice="$8.99"
+          description="Laboris ex ullamco ut eiusmod dolor ad dolore. Elit fugiat laboris ex laborum magna nulla duis sit incididunt nisi eu anim. Laboris dolore ullamco dolore dolore."
+        />
+
+        <OCard
+          title="Excepteur et eu laboris enim ipsum incididunt do."
+          image={DELIVERY_TYPE_IMAGES.eatIn}
+          price="$10.99"
+          prevPrice="$8.99"
+          description="Laboris ex ullamco ut eiusmod dolor ad dolore. Elit fugiat laboris ex laborum magna nulla duis sit incididunt nisi eu anim. Laboris dolore ullamco dolore dolore."
+        />
       </GridContainer>
 		</Container>
 	);

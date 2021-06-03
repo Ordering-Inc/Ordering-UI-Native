@@ -19,9 +19,9 @@ const CardBody = styled.View`
 
 const OCard = (props: Props): React.ReactElement => {
 	return (
-		<CardContainer {...props.style}>
+		<CardContainer style={{...props.style}}>
 			<OImage
-				source={DELIVERY_TYPE_IMAGES.eatIn}
+				source={props.image}
 				height={150}
 				resizeMode="cover"
 				borderRadius={16}
@@ -33,7 +33,7 @@ const OCard = (props: Props): React.ReactElement => {
 					numberOfLines={2}
 					mBottom={8}
 				>
-					Extensive name of a dish of our business
+					{props.title}
 				</OText>
 
 				<OText
@@ -41,7 +41,7 @@ const OCard = (props: Props): React.ReactElement => {
 					numberOfLines={3}
 					mBottom={8}
 				>
-					Delicious sugar based mousse with red berries topping
+					{props.description}
 				</OText>
 
 				<OText>
@@ -49,15 +49,15 @@ const OCard = (props: Props): React.ReactElement => {
 						color={colors.primary}
 						weight="bold"
 					>
-						{'$10.50 '}
+						{props.price}
 					</OText>
-					
+
 					<OText
 						color={colors.mediumGray}
 						size={12}
 						style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
 					>
-						{'$10.50 '}
+						{'  ' + props?.prevPrice || ''}
 					</OText>
 				</OText>
 			</CardBody>
@@ -66,6 +66,11 @@ const OCard = (props: Props): React.ReactElement => {
 }
 
 interface Props {
+	image: string;
+	title: string;
+	description: string;
+	price: string;
+	prevPrice?: string;
 	style?: ViewStyle;
 }
 
