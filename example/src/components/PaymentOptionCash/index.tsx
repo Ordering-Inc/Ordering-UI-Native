@@ -44,6 +44,7 @@ export const PaymentOptionCash = (props: any) => {
             onChange={(e: any) => handleChangeCash(e)}
             style={styles.inputsStyle}
             type='numeric'
+            returnKeyType='done'
           />
         </PCWrapper>
         {!!value && parseFloat(value) < orderTotal && (

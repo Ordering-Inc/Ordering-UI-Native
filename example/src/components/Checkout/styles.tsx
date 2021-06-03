@@ -1,7 +1,13 @@
+import { Platform } from 'react-native';
 import styled, { css } from 'styled-components/native';
 import { colors } from '../../theme.json';
 
-export const ChContainer = styled.View``
+export const ChContainer = styled.ScrollView`
+  flex: 1;
+  margin-bottom: 50px;
+  padding: ${Platform.OS === 'ios' ? '0px 20px 20px' : '0px 20px 0px 20px'};
+  background-color: ${colors.backgroundPage};
+`
 
 export const ChSection = styled.View``
 

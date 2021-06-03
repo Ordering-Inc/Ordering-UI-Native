@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, Animated } from 'react-native'
+import { View, Animated, Platform, StyleSheet } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
@@ -22,6 +22,7 @@ import { OIcon, OText, OAlert } from '../shared'
 
 import { ProductItemAccordionParams } from '../../types'
 import { colors } from '../../theme.json'
+
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   const {
@@ -39,6 +40,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const [{ parsePrice }] = useUtils()
 
   const [isActive, setActiveState] = useState(false)
+  const [quantity,setQuantity] = useState(product.quantity.toString())
   // const [setHeight, setHeightState] = useState({ height: new Animated.Value(0) })
   // const [setRotate, setRotateState] = useState({ angle: new Animated.Value(0) })
 
@@ -82,9 +84,11 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     }
   }
 
-  const getFormattedSubOptionName = (
-    { quantity, name, position, price }: { quantity: number, name: string, position: string, price: number }
-  ) => {
+  const handleChangeCustomQuantity = (value : string) => {
+    setQuantity(value)
+  }
+
+  const getFormattedSubOptionName = ({ quantity, name, position, price }: { quantity: number, name: string, position: string, price: number }) => {
     const pos = position ? `(${position})` : ''
     return `${quantity} x ${name} ${pos} +${price}`
   }
@@ -114,13 +118,15 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
             {isCartProduct && !isCartPending && getProductMax ? (
               <RNPickerSelect
                 items={productOptions}
-                onValueChange={handleChangeQuantity}
+                onValueChange={Platform.OS === 'ios' ? handleChangeCustomQuantity : handleChangeQuantity}
                 value={product.quantity.toString()}
                 style={pickerStyle}
                 useNativeAndroidPickerStyle={false}
                 placeholder={{}}
                 Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon} />}
                 disabled={orderState.loading}
+                onClose={() => handleChangeQuantity(quantity)}
+                doneText=''
               />
             ) : (
               <ProductQuantity>
@@ -141,33 +147,41 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
             </View>
             <View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end' }}>
               <View style={{ flexDirection: 'row' }}>
-                <OText size={18}>{parsePrice(product.total || product.price)}</OText>
+                <OText>{parsePrice(product.total || product.price)}</OText>
                 {(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
                   <MaterialCommunityIcon name='chevron-down' size={18} />
                 )}
               </View>
-              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
-                {onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
-                  <MaterialCommunityIcon
-                    name='pencil-outline'
-                    size={26}
-                    color={colors.green}
-                    onPress={() => onEditProduct(product)}
-                  />
-                )}
-                {onDeleteProduct && isCartProduct && !isCartPending && (
-                  <OAlert
-                    title={t('DELETE_PRODUCT', 'Delete Product')}
-                    message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
-                    onAccept={() => onDeleteProduct(product)}
-                  >
+              <View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end' }}>
+                <View style={{ flexDirection: 'row' }}>
+                  <OText size={18}>{parsePrice(product.total || product.price)}</OText>
+                  {(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
+                    <MaterialCommunityIcon name='chevron-down' size={18} />
+                  )}
+                </View>
+                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+                  {onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
                     <MaterialCommunityIcon
-                      name='trash-can-outline'
+                      name='pencil-outline'
                       size={26}
-                      color={colors.red}
+                      color={colors.green}
+                      onPress={() => onEditProduct(product)}
                     />
-                  </OAlert>
-                )}
+                  )}
+                  {onDeleteProduct && isCartProduct && !isCartPending && (
+                    <OAlert
+                      title={t('DELETE_PRODUCT', 'Delete Product')}
+                      message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
+                      onAccept={() => onDeleteProduct(product)}
+                    >
+                      <MaterialCommunityIcon
+                        name='trash-can-outline'
+                        size={26}
+                        color={colors.red}
+                      />
+                    </OAlert>
+                  )}
+                </View>
               </View>
             </View>
           </ContentInfo>
