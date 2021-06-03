@@ -2,12 +2,11 @@ import React from 'react';
 import { ViewStyle } from 'react-native';
 
 import styled from 'styled-components/native';
-import { DELIVERY_TYPE_IMAGES } from '../../config/constants';
 import OImage from './OImage';
 import OText from './OText';
 import { colors } from '../../theme.json';
 
-const CardContainer = styled.View`
+const CardContainer = styled.TouchableOpacity`
 	width: 46%;
 	margin: 2%;
 	overflow: hidden;
@@ -19,7 +18,11 @@ const CardBody = styled.View`
 
 const OCard = (props: Props): React.ReactElement => {
 	return (
-		<CardContainer style={{...props.style}}>
+		<CardContainer
+		 style={{...props.style}}
+		 onPress={props?.onPress}
+		 disabled={!props?.onPress}
+		>
 			<OImage
 				source={props.image}
 				height={150}
@@ -57,7 +60,7 @@ const OCard = (props: Props): React.ReactElement => {
 						size={12}
 						style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
 					>
-						{'  ' + props?.prevPrice || ''}
+						{props?.prevPrice ? `  ${props?.prevPrice}  ` : ''}
 					</OText>
 				</OText>
 			</CardBody>
@@ -66,6 +69,7 @@ const OCard = (props: Props): React.ReactElement => {
 }
 
 interface Props {
+	onPress?(): void;
 	image: string;
 	title: string;
 	description: string;

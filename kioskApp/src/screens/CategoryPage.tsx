@@ -87,13 +87,13 @@ const CategoryPage = () => {
           price="$10.99"
           prevPrice="$8.99"
           description="Laboris ex ullamco ut eiusmod dolor ad dolore. Elit fugiat laboris ex laborum magna nulla duis sit incididunt nisi eu anim. Laboris dolore ullamco dolore dolore."
+          onPress={() => { console.log('xxxxxxx') }}
         />
 
         <OCard
           title="Excepteur et eu laboris enim ipsum incididunt do."
           image={DELIVERY_TYPE_IMAGES.eatIn}
           price="$10.99"
-          prevPrice="$8.99"
           description="Laboris ex ullamco ut eiusmod dolor ad dolore. Elit fugiat laboris ex laborum magna nulla duis sit incididunt nisi eu anim. Laboris dolore ullamco dolore dolore."
         />
 
