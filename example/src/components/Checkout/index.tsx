@@ -45,6 +45,8 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { FloatingButton } from '../FloatingButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -161,6 +163,7 @@ const CheckoutUI = (props: any) => {
   // }, [cart?.total])
 
   return (
+    <>
     <ChContainer>
       <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
         <OButton
@@ -442,27 +445,6 @@ const CheckoutUI = (props: any) => {
         </ChSection>
       )}
 
-      {!cartState.loading && cart && cart?.status !== 2 && (
-        <ChSection style={style.paddSectionH}>
-          <ChPlaceOrderBtn>
-            <OButton
-              onClick={() => handlePlaceOrder()}
-              bgColor={cart?.subtotal < cart?.minimum ? colors.secundary : colors.primary}
-              borderColor={colors.primary}
-              textStyle={{ color: 'white', fontSize: 20 }}
-              imgRightSrc={null}
-              // isLoading={formState.loading}
-              isDisabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
-              text={cart?.subtotal >= cart?.minimum ? (
-                placing ? t('PLACING', 'Placing') : t('PLACE_ORDER', 'Place Order')
-              ) : (
-                `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
-              )}
-            />
-          </ChPlaceOrderBtn>
-        </ChSection>
-      )}
-
       {!cartState.loading && cart && (
         <ChSection style={style.paddSection}>
           <ChErrors>
@@ -499,6 +481,23 @@ const CheckoutUI = (props: any) => {
         </ChSection>
       )}
     </ChContainer>
+    {!cartState.loading && cart && cart?.status !== 2 && (
+        <>
+          <>
+            <FloatingButton
+              handleClick={() => handlePlaceOrder()}
+              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+              btnText={cart?.subtotal >= cart?.minimum ? (
+                placing ? t('PLACING', 'Placing') : t('PLACE_ORDER', 'Place Order')
+              ) : (
+                `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+              )}
+            />
+          </>
+        </>
+      )}
+    </>
   )
 }
 

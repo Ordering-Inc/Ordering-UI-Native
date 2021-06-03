@@ -191,6 +191,7 @@ export const UserFormDetailsUI = (props: any) => {
                             }}
                           autoCorrect={field.code === 'email' && false}
                           type={field.code === 'email' ? 'email-address' : 'default'}
+                          returnKeyType='done'
                         />
                       )}
                       name={field.code}
