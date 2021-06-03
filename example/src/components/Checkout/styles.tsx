@@ -89,4 +89,5 @@ export const ChErrors = styled.View`
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 20px;
 `

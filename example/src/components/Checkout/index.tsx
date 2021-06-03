@@ -160,6 +160,12 @@ const CheckoutUI = (props: any) => {
   //   handlePaymethodChange(null)
   // }, [cart?.total])
 
+  useEffect(() => {
+    if (cart?.products?.length === 0) {
+      navigation?.canGoBack() && navigation.goBack();
+    }
+  }, [cart?.products])
+
   return (
     <ChContainer>
       <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
@@ -363,6 +369,7 @@ const CheckoutUI = (props: any) => {
 
       {!cartState.loading &&
         cart &&
+        cart?.valid &&
         options.type === 1 &&
         cart?.status !== 2 &&
         validationFields?.fields?.checkout?.driver_tip?.enabled &&
@@ -387,7 +394,7 @@ const CheckoutUI = (props: any) => {
           </ChSection>
         )}
 
-      {!cartState.loading && cart && cart?.status !== 2 && (
+      {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
         <ChSection style={style.paddSectionH}>
           <ChPaymethods>
             <OText size={20}>
@@ -476,7 +483,7 @@ const CheckoutUI = (props: any) => {
               </OText>
             )}
 
-            {!paymethodSelected && cart?.status !== 2 && (
+            {!paymethodSelected && cart?.status !== 2 && cart?.valid && (
               <OText
                 style={{ textAlign: 'center' }}
                 color={colors.error}
