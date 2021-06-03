@@ -114,7 +114,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           <OrderTypeSelector configTypes={configTypes} />
           <WrapMomentOption
             onPress={() => navigation.navigate('MomentOption')}
-            disabled={orderState.loading}
           >
             <OText size={14} numberOfLines={1} ellipsizeMode='tail'>
               {orderState.options?.moment
