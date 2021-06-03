@@ -11,8 +11,8 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme">
       <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyDA9TBxTZWMvz_9uuM_kfomnGEV37zFEvA"/>
+        android:name="com.google.android.maps.v2.API_KEY"
+        android:value="AIzaSyBRTTYBWVFP3_lBhxNmZopx1YNp8mNhtyU"/>
       <uses-library android:name="org.apache.http.legacy" android:required="false"/>
       <activity
         android:name=".MainActivity"
