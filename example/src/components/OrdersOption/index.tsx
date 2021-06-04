@@ -76,7 +76,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       { key: 9, value: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver') },
       { key: 10, value: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver') },
       { key: 11, value: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver') },
-      { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver') }
+      { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver') },
+      { key: 13, value: t('PREORDER', 'PreOrder')},
+      { key: 14, value: t('ORDER_NOT_READY', 'Order not ready') },
+      { key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer')},
+      { key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business') },
+      { key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer') },
     ]
 
     const objectStatus = orderStatus.find((o) => o.key === status)
