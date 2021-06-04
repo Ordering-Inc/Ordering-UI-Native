@@ -8,7 +8,7 @@ import OButton from '../components/shared/OButton';
 import { LanguageSelector } from '../components/LanguageSelector';
 import { GENERAL_IMAGES, LOGO_IMAGES } from '../config/constants'
 
-const IntroPage = () => {
+const IntroPage = (): React.ReactElement => {
 	const [, t] = useLanguage()
 
   return (

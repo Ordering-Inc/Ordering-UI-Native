@@ -10,7 +10,7 @@ const SImage = styled.Image`
 `;
 
 interface Props {
-  source: string,
+  source: string | { uri: string },
   width?: number,
   height?: number,
 	resizeMode?: string,

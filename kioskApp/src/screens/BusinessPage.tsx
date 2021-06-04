@@ -1,39 +1,26 @@
 import React from 'react';
-import { Dimensions, Text } from 'react-native';
+import { View } from 'react-native';
 import { useLanguage, useApi } from 'ordering-components/native';
 
 import { Container } from '../layouts/Container';
 import { BusinessProductsListing } from '../components/BusinessProductsListing';
+import NavBar from '../components/NavBar';
 
-const BusinessPage = () => {
-	const [, t] = useLanguage()
-
-
-	// const { store } = useParams()
+const BusinessPage = (props:any): React.ReactElement => {
+  const [, t] = useLanguage()
   const [ordering] = useApi()
-  // const { search } = useLocation()
 
-  // let category
-  // let product
-
-  /* if (search) {
-    const data = search.substring(1).split('&')
-    category = data[0]
-    product = data[1]
-  } */
-  // const categoryId = category && category.split('=')[1]
-  // const productId = product && product.split('=')[1]
-
-  const businessProductsProps = {
+  const businessProductsListingProps = {
+    ...props,
     ordering,
     isSearchByName: true,
     isSearchByDescription: true,
-    slug: '41',
-    // categoryId,
-    // productId,
+    slug: '47',
+    categoryId: null,
+    productId: null,
     langFallbacks: null,
     businessProps: [
-			'name',
+      'name',
       'id',
       'name',
       'header',
@@ -69,19 +56,18 @@ const BusinessPage = () => {
   }
 
   return (
-		<Container>
+    <Container nopadding>
+      <View style={{ paddingVertical: 20 }}>
+        <NavBar
+          title={t('MENU', 'Menu')}
+        />
+      </View>
 
-			<Text>Business Page</Text>
-
-			<BusinessProductsListing
-				{...businessProductsProps}
-			/>
-
-		</Container>
-	);
+      <BusinessProductsListing
+        { ...businessProductsListingProps }
+      />
+    </Container>
+  );
 };
-
-const _dim = Dimensions.get('window');
-const _offset = 50;
 
 export default BusinessPage;

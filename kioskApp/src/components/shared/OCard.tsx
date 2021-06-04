@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViewStyle } from 'react-native';
+import { TextStyle, ViewStyle } from 'react-native';
 
 import styled, { css } from 'styled-components/native';
 import OImage from './OImage';
@@ -51,34 +51,41 @@ const OCard = (props: Props): React.ReactElement => {
 					size={18}
 					numberOfLines={2}
 					mBottom={8}
+					style={{...props?.titleStyle}}
 				>
 					{props.title}
 				</OText>
 
-				<OText
-					color={colors.mediumGray}
-					numberOfLines={3}
-					mBottom={8}
-				>
-					{props.description}
-				</OText>
-
-				<OText>
-					<OText
-						color={colors.primary}
-						weight="bold"
-					>
-						{props.price}
-					</OText>
-
+				{props?.description && (
 					<OText
 						color={colors.mediumGray}
-						size={12}
-						style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
+						numberOfLines={3}
+						mBottom={8}
+						style={{...props?.descriptionStyle}}
 					>
-						{props?.prevPrice ? `  ${props?.prevPrice}  ` : ''}
+						{props.description}
 					</OText>
-				</OText>
+				)}
+				
+				{props?.price && (
+					<OText>
+						<OText
+							color={colors.primary}
+							weight="bold"
+						>
+							{props.price}
+						</OText>
+
+						<OText
+							color={colors.mediumGray}
+							size={12}
+							style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
+						>
+							{props?.prevPrice ? `  ${props?.prevPrice}  ` : ''}
+						</OText>
+					</OText>
+				)}
+
 			</CardBody>
 		</CardContainer>
 	);
@@ -87,10 +94,12 @@ const OCard = (props: Props): React.ReactElement => {
 interface Props {
 	badgeText?: string;
 	onPress?(): void;
-	image: string;
+	image: string | { uri: string };
 	title: string;
-	description: string;
-	price: string;
+	titleStyle?: TextStyle;
+	description?: string;
+	descriptionStyle?: TextStyle;
+	price?: string;
 	prevPrice?: string;
 	style?: ViewStyle;
 }

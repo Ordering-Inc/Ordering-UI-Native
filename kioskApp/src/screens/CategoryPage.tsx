@@ -10,59 +10,35 @@ import {
   OSegment,
   OText
 } from '../components/shared';
-import { DELIVERY_TYPE_IMAGES } from '../config/constants';
 
-const CategoryPage = () => {
-  const [, t] = useLanguage()
-  const [curTab, onChangeStatus] = useState(0);
+const CategoryPage = (props: any): React.ReactElement => {
 
+  const {
+    navigation,
+    route,
+  } = props;
+
+  const { category, categories } = route.params;
+
+  const [, t] = useLanguage();
+  const [curIndexCateg, setIndexCateg] = useState(categories.indexOf(category));
   
-  let items = [
-    {
-      text: 'Dessert',
-    },
-    {
-      text: 'Burgers',
-    },
-    {
-      text: 'Tacos',
-    },
-    {
-      text: 'Asian',
-    },
-    {
-      text: 'Mexican',
-    },
-    {
-      text: 'Pizza',
-    },
-    {
-      text: 'Burgers',
-    },
-    {
-      text: 'Tacos',
-    },
-    {
-      text: 'Asian',
-    },
-    {
-      text: 'Mexican',
-    }
-  ];
+  const onChangeTabs = (idx: number) => setIndexCateg(idx);
 
-  const onChangeTabs = (idx: number) => {
-    onChangeStatus(idx);
-  }
+  const goToBack = () => navigation.goBack()
 
   return (
 		<Container nopadding>
       <View style={{ paddingVertical: 20 }}>
         <NavBar
           title={t('CATEGORY', 'Category')}
+          onActionLeft={goToBack}
         />
         <OSegment
-          items={items} 
-          selectedIdx={curTab} 
+          items={categories.map((category:any) => ({
+            text: category.name
+          }))}
+          selectedIdx={curIndexCateg} 
           onSelectItem={onChangeTabs}
         />
       </View>
@@ -72,40 +48,26 @@ const CategoryPage = () => {
           size={_dim.width * 0.09}
           weight="bold"
         >
-          {t('DESSERT', 'Dessert')}
+          {categories[curIndexCateg].name}
         </OText>
       </View>
 
       <GridContainer
-        style={{
-          justifyContent: 'space-between',
-        }}
+        style={{ justifyContent: 'space-between' }}
       >
-        <OCard
-          title="Excepteur et eu laboris enim ipsum incididunt do."
-          image={DELIVERY_TYPE_IMAGES.eatIn}
-          price="$10.99"
-          prevPrice="$8.99"
-          description="Laboris ex ullamco ut eiusmod dolor ad dolore. Elit fugiat laboris ex laborum magna nulla duis sit incididunt nisi eu anim. Laboris dolore ullamco dolore dolore."
-          onPress={() => { console.log('xxxxxxx') }}
-          badgeText="-$2.00"
-        />
-
-        <OCard
-          title="Excepteur et eu laboris enim ipsum incididunt do."
-          image={DELIVERY_TYPE_IMAGES.eatIn}
-          price="$10.99"
-          description="Laboris ex ullamco ut eiusmod dolor ad dolore. Elit fugiat laboris ex laborum magna nulla duis sit incididunt nisi eu anim. Laboris dolore ullamco dolore dolore."
-        />
-
-        <OCard
-          title="Excepteur et eu laboris enim ipsum incididunt do."
-          image={DELIVERY_TYPE_IMAGES.eatIn}
-          price="$10.99"
-          prevPrice="$8.99"
-          description="Laboris ex ullamco ut eiusmod dolor ad dolore. Elit fugiat laboris ex laborum magna nulla duis sit incididunt nisi eu anim. Laboris dolore ullamco dolore dolore."
-          badgeText="-$2.00"
-        />
+        {categories[curIndexCateg].products.map((product:any) => (
+          <OCard
+            key={product.id}
+            title={!!product?.name && product?.name}
+            image={{ uri: product?.images }}
+            price={product?.price && `$${product?.price}`}
+            prevPrice={product?.in_offer && `$${product?.offer_price}`}
+            description={!!product?.description && product?.description}
+            onPress={() => {
+              
+            }}
+          />
+        ))}
       </GridContainer>
 		</Container>
 	);

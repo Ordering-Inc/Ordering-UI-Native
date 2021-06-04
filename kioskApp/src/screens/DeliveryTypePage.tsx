@@ -8,7 +8,7 @@ import { OText } from '../components/shared';
 import DeliveryTypeCard from '../components/DeliveryTypeCard';
 import { DELIVERY_TYPE_IMAGES, IMAGES } from '../config/constants';
 
-const DeliveryTypePage = () => {
+const DeliveryTypePage = (): React.ReactElement => {
 	const [, t] = useLanguage()
 
   return (
