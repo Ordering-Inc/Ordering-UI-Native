@@ -10,12 +10,16 @@ const BusinessPage = (props:any): React.ReactElement => {
   const [, t] = useLanguage()
   const [ordering] = useApi()
 
+  const {
+    navigation
+  } = props;
+
   const businessProductsListingProps = {
     ...props,
     ordering,
     isSearchByName: true,
     isSearchByDescription: true,
-    slug: '47',
+    slug: '41',
     categoryId: null,
     productId: null,
     langFallbacks: null,
@@ -55,11 +59,14 @@ const BusinessPage = (props:any): React.ReactElement => {
     onCheckoutRedirect: (cartUuid:any) => {}
   }
 
+  const goToBack = () => navigation.goBack()
+
   return (
     <Container nopadding>
       <View style={{ paddingVertical: 20 }}>
         <NavBar
           title={t('MENU', 'Menu')}
+          onActionLeft={goToBack}
         />
       </View>
 

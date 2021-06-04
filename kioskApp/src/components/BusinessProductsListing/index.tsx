@@ -1,13 +1,16 @@
 import React from 'react'
-import { Dimensions, FlatList, View } from 'react-native'
+import { Dimensions, View } from 'react-native'
 import {
   BusinessAndProductList,
   useLanguage,
 } from 'ordering-components/native'
+import Carousel from 'react-native-snap-carousel';
 
 import { BusinessProductsListingParams } from '../../types'
 import { OCard, OText } from '../shared'
 import GridContainer from '../../layouts/GridContainer'
+import PromoCard from '../PromoCard';
+import { DELIVERY_TYPE_IMAGES } from '../../config/constants';
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
@@ -29,9 +32,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [, t] = useLanguage();
 
   const _renderTitle = (title: string): React.ReactElement => (
-    <View style={{ paddingHorizontal: 20, paddingVertical: 8 }}>
+    <View style={{ paddingHorizontal: 20, paddingVertical: 40 }}>
       <OText
-        size={_dim.width * 0.09}
+        size={_dim.width * 0.05}
         weight="bold"
       >
         {title}
@@ -39,9 +42,39 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     </View>
   );
 
+  const _renderItem = ({item, index} : any) => {
+    return (
+      <PromoCard
+        title="50% OFF"
+        subtitle="Flat"
+        description="On first good order."
+        image={DELIVERY_TYPE_IMAGES.eatIn}
+      />
+    );
+  }
+
   const _renderPromos = (): React.ReactElement => (
     <>
       {_renderTitle(t('PROMOS', 'Promos'))}
+      
+      <Carousel
+        keyExtractor={(item:any) => item.id}
+        ref={(_) => {}}
+        data={businessState?.business?.original?.categories}
+        renderItem={_renderItem}
+        sliderWidth={_dim.width}
+        itemWidth={_dim.width * 0.4}
+        alwaysBounceHorizontal={false}
+        slideStyle={{
+          width: _dim.width * 0.45,
+          marginLeft: 20,
+        }}
+        inactiveSlideScale={1}
+        snapToAlignment="start"
+        activeSlideAlignment="start"
+        inactiveSlideOpacity={1}
+      />
+
     </>
   );
 
@@ -49,12 +82,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     <>    
       {_renderTitle(t('CATEGORIES', 'Categories'))}
         
-      <GridContainer
-        style={{ justifyContent: 'space-between' }}
-      >
+      <GridContainer>
         {
           businessState?.business?.original?.categories.map((category: any) => (
             <OCard
+              key={category.id}
               title={category?.name || ''}
               image={{ uri: category?.image}}
               onPress={() => {
@@ -81,7 +113,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   return (
     <>
-      {businessState?.business?.original?.promos?.length > 0
+      {businessState?.business?.original?.categories?.length > 0
         && _renderPromos()}
       
       {businessState?.business?.original?.categories?.length > 0

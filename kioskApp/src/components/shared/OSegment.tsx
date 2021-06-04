@@ -52,7 +52,7 @@ const OSegment = (props: Props) => {
                     onPress={() => onSelectItem(index)}
                 >
                     <SegItem style={{borderBottomColor: index == curIndex ? colors.primary : 'transparent'}}>
-                        <ItemLabel style={{ fontSize: normalize(12), color: index == curIndex ? '#344050' : '#ADADAD' }}>{ props.labelStyle == 'uppercase' ? item.text?.toUpperCase() : item.text}</ItemLabel>
+                        <ItemLabel style={{ fontSize: normalize(8), color: index == curIndex ? '#344050' : '#ADADAD' }}>{ props.labelStyle == 'uppercase' ? item.text?.toUpperCase() : item.text}</ItemLabel>
                     </SegItem>
                 </TouchableOpacity>
             ))}

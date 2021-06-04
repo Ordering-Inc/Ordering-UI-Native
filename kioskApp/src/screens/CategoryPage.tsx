@@ -45,16 +45,14 @@ const CategoryPage = (props: any): React.ReactElement => {
 
       <View style={{ paddingHorizontal: 20, paddingVertical: 8 }}>
         <OText
-          size={_dim.width * 0.09}
+          size={_dim.width * 0.05}
           weight="bold"
         >
           {categories[curIndexCateg].name}
         </OText>
       </View>
 
-      <GridContainer
-        style={{ justifyContent: 'space-between' }}
-      >
+      <GridContainer>
         {categories[curIndexCateg].products.map((product:any) => (
           <OCard
             key={product.id}

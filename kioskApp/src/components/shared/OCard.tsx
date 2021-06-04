@@ -7,7 +7,7 @@ import OText from './OText';
 import { colors } from '../../theme.json';
 
 const CardContainer = styled.TouchableOpacity`
-	width: 46%;
+	width: 21%;
 	margin: 2%;
 	overflow: hidden;
 `

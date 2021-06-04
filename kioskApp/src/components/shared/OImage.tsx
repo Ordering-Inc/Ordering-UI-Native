@@ -6,7 +6,7 @@ const SImage = styled.Image`
   height: ${(props:any) => css`${props?.height || 0}px`};
 	overflow: ${(props:any) => css`${props?.overflow || 'visible'}`};
   resizeMode: ${(props:any) => css`${props?.resizeMode || 'contain'}`};
-	border-radius: ${(props:any) => css`${props?.borderRadius || 0}`};
+	border-radius: ${(props:any) => css`${props?.borderRadius || 0}`}px;
 `;
 
 interface Props {
