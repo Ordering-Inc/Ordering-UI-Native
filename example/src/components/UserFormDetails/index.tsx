@@ -191,6 +191,7 @@ export const UserFormDetailsUI = (props: any) => {
                             }}
                           autoCorrect={field.code === 'email' && false}
                           type={field.code === 'email' ? 'email-address' : 'default'}
+                          returnKeyType='done'
                         />
                       )}
                       name={field.code}
@@ -220,7 +221,7 @@ export const UserFormDetailsUI = (props: any) => {
         {validationFields?.loading && (
           <UDLoader>
             <OText size={20}>
-              Loading...
+              {t('LOADING', 'Loading')}
             </OText>
           </UDLoader>
         )}
