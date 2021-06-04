@@ -79,9 +79,7 @@ export const CheckoutPage = (props: any) => {
       enabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <Container nopadding>
-        <Checkout {...checkoutProps} />
-      </Container>
+      <Checkout {...checkoutProps} />
     </KeyboardView>
   )
 }

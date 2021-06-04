@@ -32,7 +32,8 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state.',
   'Setting a timer',
   'The `value` prop is required for the `<Context.Provider>`',
-  'Can\'t perform a React state update'
+  'Can\'t perform a React state update',
+  'Remote debugger'
 ])
 
 theme.images = {

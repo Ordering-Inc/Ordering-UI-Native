@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Dimensions, StyleSheet, View, Image, Platform } from 'react-native';
+import { Dimensions, StyleSheet, View, Platform } from 'react-native';
 import MapView, { PROVIDER_DEFAULT, PROVIDER_GOOGLE, Marker, Region, } from 'react-native-maps'
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig } from 'ordering-components/native'
 import { GoogleMapsParams } from '../../types';
 import Alert from '../../providers/AlertProvider'
-import { OIcon, OText } from '../shared';
+import { OIcon } from '../shared';
 
 export const GoogleMap = (props: GoogleMapsParams) => {
 
@@ -29,8 +29,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const [region, setRegion] = useState({
     latitude: location.lat,
     longitude: location.lng,
-    latitudeDelta: 0.0005,
-    longitudeDelta: 0.0005 * ASPECT_RATIO
+    latitudeDelta: 0.0010,
+    longitudeDelta: 0.0010 * ASPECT_RATIO
   })
   let mapRef = useRef<any>(null)
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
@@ -183,8 +183,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         zoomTapEnabled
         zoomEnabled
         zoomControlEnabled
+        cacheEnabled
+        moveOnMarkerPress
         ref={mapRef}
-        mapType={Platform.OS === "android" ? "none" : "standard"}
       >
         {locations ? (
           <>
