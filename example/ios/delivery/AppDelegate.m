@@ -8,6 +8,10 @@
 #import <FBSDKShareKit/FBSDKShareKit.h>
 #import "RNBootSplash.h"
 
+#if RCT_DEV
+#import <React/RCTDevLoadingView.h>
+#endif
+
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
 #import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
@@ -32,12 +36,15 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-[GMSServices provideAPIKey:@"AIzaSyBRTTYBWVFP3_lBhxNmZopx1YNp8mNhtyU"]
+[GMSServices provideAPIKey:@"AIzaSyBRTTYBWVFP3_lBhxNmZopx1YNp8mNhtyU"];
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
+  #if RCT_DEV
+    [bridge moduleForClass:[RCTDevLoadingView class]];
+  #endif
+    RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"delivery"
                                             initialProperties:nil];
 
