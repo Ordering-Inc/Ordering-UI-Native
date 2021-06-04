@@ -47,6 +47,7 @@ import { ToastType, useToast } from '../../providers/ToastProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { FloatingButton } from '../FloatingButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Container } from '../../layouts/Container';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -170,6 +171,7 @@ const CheckoutUI = (props: any) => {
 
   return (
     <>
+      <Container>
     <ChContainer>
       <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
         <OButton
@@ -453,7 +455,7 @@ const CheckoutUI = (props: any) => {
       )}
 
       {!cartState.loading && cart && (
-        <ChSection style={style.paddSection}>
+        <ChSection style={{ paddingTop: 0, paddingBottom: 20, paddingHorizontal: 20 }}>
           <ChErrors>
             {!cart?.valid_address && cart?.status !== 2 && (
               <OText
@@ -488,6 +490,7 @@ const CheckoutUI = (props: any) => {
         </ChSection>
       )}
     </ChContainer>
+    </Container>
     {!cartState.loading && cart && cart?.status !== 2 && (
         <>
           <>
