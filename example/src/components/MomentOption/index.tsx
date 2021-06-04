@@ -52,6 +52,9 @@ const MomentOptionUI = (props: MomentOptionParams) => {
     setMomentState({ isLoading: 1, isEditing: true })
     handleAsap()
     setOptionSelected({ isAsap: true, isSchedule: false })
+    if (!orderState.options?.moment) {
+      setMomentState({ isLoading: 2, isEditing: false })
+    }
   }
 
   const handleChangeMoment = (time : any) => {
