@@ -32,7 +32,8 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state.',
   'Setting a timer',
   'The `value` prop is required for the `<Context.Provider>`',
-  'Remote debugger'
+  'Remote debugger',
+  'Task orphaned for request'
 ])
 
 theme.images = {
