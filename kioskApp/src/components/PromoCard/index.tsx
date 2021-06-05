@@ -85,7 +85,7 @@ interface Props {
 	image: string | { uri: string };
 	title: string;
 	titleStyle?: TextStyle;
-	subtitle: string;
+	subtitle?: string;
 	subtitleStyle?: TextStyle;
 	description?: string;
 	descriptionStyle?: TextStyle;

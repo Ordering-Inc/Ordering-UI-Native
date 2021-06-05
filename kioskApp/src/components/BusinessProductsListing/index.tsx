@@ -10,7 +10,6 @@ import { BusinessProductsListingParams } from '../../types'
 import { OCard, OText } from '../shared'
 import GridContainer from '../../layouts/GridContainer'
 import PromoCard from '../PromoCard';
-import { DELIVERY_TYPE_IMAGES } from '../../config/constants';
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
@@ -31,6 +30,20 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const [, t] = useLanguage();
 
+  const _categories:any = businessState?.business?.original?.categories;
+  let _promos:any = [];
+
+  _categories?.forEach((categ:any) => {
+    const _featuredProds = categ?.products?.filter((prod:any) => prod.featured);
+
+    if(_featuredProds?.length > 0) {
+      _promos = [
+        ..._promos,
+        ..._featuredProds,
+      ]
+    }
+  });
+
   const _renderTitle = (title: string): React.ReactElement => (
     <View style={{ paddingHorizontal: 20, paddingVertical: 40 }}>
       <OText
@@ -45,10 +58,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const _renderItem = ({item, index} : any) => {
     return (
       <PromoCard
-        title="50% OFF"
-        subtitle="Flat"
-        description="On first good order."
-        image={DELIVERY_TYPE_IMAGES.eatIn}
+        title={item?.name}
+        description={!!item?.description && item?.description}
+        image={{uri: item?.images}}
       />
     );
   }
@@ -60,7 +72,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       <Carousel
         keyExtractor={(item:any) => item.id}
         ref={(_) => {}}
-        data={businessState?.business?.original?.categories}
+        data={_promos}
         renderItem={_renderItem}
         sliderWidth={_dim.width}
         itemWidth={_dim.width * 0.4}
@@ -84,7 +96,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         
       <GridContainer>
         {
-          businessState?.business?.original?.categories.map((category: any) => (
+          _categories.map((category: any) => (
             <OCard
               key={category.id}
               title={category?.name || ''}
@@ -113,10 +125,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   return (
     <>
-      {businessState?.business?.original?.categories?.length > 0
+      {_promos?.length > 0
         && _renderPromos()}
       
-      {businessState?.business?.original?.categories?.length > 0
+      {_categories?.length > 0
         && _renderCategories()}
     </>
   );
