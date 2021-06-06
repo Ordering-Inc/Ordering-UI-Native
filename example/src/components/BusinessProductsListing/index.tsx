@@ -23,7 +23,7 @@ import {
   WrapContent,
   BusinessProductsListingContainer
 } from './styles'
-import { colors,images } from '../../theme.json'
+import { colors, images } from '../../theme.json'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
@@ -87,14 +87,100 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   return (
     <>
       <BusinessProductsListingContainer style={styles.mainContainer} isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}>
+        <WrapHeader>
+          {!loading && business?.id && (
+            <TopHeader>
+              {!isOpenSearchBar && (
+                <>
+                  <View style={{ ...styles.headerItem, flex: 1 }}>
+                    <OButton
+                      imgLeftSrc={images.general.arrow_left}
+                      imgRightSrc={null}
+                      style={styles.btnBackArrow}
+                      onClick={() => navigation?.canGoBack() && navigation.goBack()}
+                      imgLeftStyle={{ tintColor: '#fff' }}
+                    />
+                    <AddressInput
+                      onPress={() => auth
+                        ? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
+                        : onRedirect('AddressForm', { address: orderState.options?.address })}
+                    >
+                      <OText color={colors.white} numberOfLines={1}>
+                        {orderState?.options?.address?.address}
+                      </OText>
+                    </AddressInput>
+                  </View>
+                  {!errorQuantityProducts && (
+                    <View style={{ ...styles.headerItem }}>
+                      <TouchableOpacity
+                        onPress={() => setIsOpenSearchBar(true)}
+                        style={styles.searchIcon}
+                      >
+                        <MaterialIcon
+                          name='search'
+                          color={colors.white}
+                          size={25}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </>
+              )}
+              {isOpenSearchBar && (
+                <WrapSearchBar>
+                  <SearchBar
+                    onSearch={handleChangeSearch}
+                    onCancel={() => handleCancel()}
+                    isCancelXButtonShow={!!searchValue}
+                    noBorderShow
+                    placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
+                    lazyLoad={businessState?.business?.lazy_load_products_recommended}
+                  />
+                </WrapSearchBar>
+              )}
+            </TopHeader>
+          )}
+          <BusinessBasicInformation
+            businessState={businessState}
+            openBusinessInformation={openBusinessInformation}
+            header={header}
+            logo={logo}
+          />
+        </WrapHeader>
+        {!loading && business?.id && (
+          <>
+            {!(business?.categories?.length === 0) && (
+              <BusinessProductsCategories
+                categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
+                categorySelected={categorySelected}
+                onClickCategory={handleChangeCategory}
+                featured={featuredProducts}
+                openBusinessInformation={openBusinessInformation}
+              />
+            )}
+            <WrapContent>
+              <BusinessProductsList
+                categories={[
+                  { id: null, name: t('ALL', 'All') },
+                  { id: 'featured', name: t('FEATURED', 'Featured') },
+                  ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
+                ]}
+                category={categorySelected}
+                categoryState={categoryState}
+                businessId={business.id}
+                errors={errors}
+                onProductClick={onProductClick}
+                handleSearchRedirect={handleSearchRedirect}
+                featured={featuredProducts}
+                searchValue={searchValue}
+                handleClearSearch={handleChangeSearch}
+                errorQuantityProducts={errorQuantityProducts}
+              />
+            </WrapContent>
+          </>
+        )}
         {loading && !error && (
           <>
-            <BusinessBasicInformation
-              businessState={{ business: {}, loading: true }}
-              openBusinessInformation={openBusinessInformation}
-              header={header}
-              logo={logo}
-            />
             <BusinessProductsCategories
               categories={[]}
               categorySelected={categorySelected}
@@ -114,95 +200,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             </WrapContent>
           </>
         )}
-        {
-          !loading && business?.id && (
-            <>
-              <WrapHeader>
-                <TopHeader>
-                  {!isOpenSearchBar && (
-                    <>
-                      <View style={{ ...styles.headerItem, flex: 1 }}>
-                        <OButton
-                          imgLeftSrc={images.general.arrow_left}
-                          imgRightSrc={null}
-                          style={styles.btnBackArrow}
-                          onClick={() => navigation?.canGoBack() && navigation.goBack()}
-                          imgLeftStyle={{ tintColor: '#fff' }}
-                        />
-                        <AddressInput
-                          onPress={() => auth 
-                            ? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true }) 
-                            : onRedirect('AddressForm', { address: orderState.options?.address })}
-                          >
-                          <OText color={colors.white} numberOfLines={1}>
-                            {orderState?.options?.address?.address}
-                          </OText>
-                        </AddressInput>
-                      </View>
-                      {!errorQuantityProducts && (
-                        <View style={{ ...styles.headerItem }}>
-                          <TouchableOpacity
-                            onPress={() => setIsOpenSearchBar(true)}
-                            style={styles.searchIcon}
-                          >
-                            <MaterialIcon
-                              name='search'
-                              color={colors.white}
-                              size={25}
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      )}
-                    </>
-                  )}
-                  {isOpenSearchBar && (
-                    <WrapSearchBar>
-                      <SearchBar
-                        onSearch={handleChangeSearch}
-                        onCancel={() => handleCancel()}
-                        isCancelXButtonShow={!!searchValue}
-                        noBorderShow
-                        placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
-                        lazyLoad={businessState?.business?.lazy_load_products_recommended}
-                      />
-                    </WrapSearchBar>
-                  )}
-                </TopHeader>
-                <BusinessBasicInformation
-                  businessState={businessState}
-                />
-              </WrapHeader>
-              {!(business?.categories?.length === 0) && (
-                <BusinessProductsCategories
-                  categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
-                  categorySelected={categorySelected}
-                  onClickCategory={handleChangeCategory}
-                  featured={featuredProducts}
-                  openBusinessInformation={openBusinessInformation}
-                />
-              )}
-              <WrapContent>
-                <BusinessProductsList
-                  categories={[
-                    { id: null, name: t('ALL', 'All') },
-                    { id: 'featured', name: t('FEATURED', 'Featured') },
-                    ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
-                  ]}
-                  category={categorySelected}
-                  categoryState={categoryState}
-                  businessId={business.id}
-                  errors={errors}
-                  onProductClick={onProductClick}
-                  handleSearchRedirect={handleSearchRedirect}
-                  featured={featuredProducts}
-                  searchValue={searchValue}
-                  handleClearSearch={handleChangeSearch}
-                  errorQuantityProducts={errorQuantityProducts}
-                />
-              </WrapContent>
-            </>
-          )
-        }
       </BusinessProductsListingContainer>
       {!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
         <FloatingButton
@@ -273,7 +270,7 @@ const styles = StyleSheet.create({
     padding: 15,
     justifyContent: 'center'
   }
-}) 
+})
 
 export const BusinessProductsListing = (props: BusinessProductsListingParams) => {
   const businessProductslistingProps = {
