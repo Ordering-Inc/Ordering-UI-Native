@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-
-import BottomWrapper from '../BottomWrapper';
-import NavBar from '../NavBar';
-import { OButton, OInput, OText } from '../shared';
-import { colors,images } from '../../theme.json';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 
 import {
   ForgotPasswordForm as ForgotPasswordController,
   useLanguage
 } from 'ordering-components/native';
 
-import { Wrapper } from './styles';
-import { Container } from '../../layouts/Container';
+import NavBar from '../NavBar';
+import { Container, FormInput, FormSide } from '../../components/LoginForm/styles'
+import { ToastType, useToast } from '../../providers/ToastProvider';
+
+import { OButton, OInput, OText } from '../shared';
+import { colors,images } from '../../theme.json';
 
 const ForgotPasswordUI = (props: any) => {
   const {
@@ -73,11 +71,10 @@ const ForgotPasswordUI = (props: any) => {
         titleAlign={'center'}
         onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
         showCall={false}
-        btnStyle={{ left: 10 }}
+        btnStyle={{ paddingLeft: 0 }}
         paddingTop={0}
       />
-    <View style={{flex: 1, height: 400}}>
-      <Wrapper>
+      <FormSide>
         <OText
           color={'gray'}
           size={16}
@@ -86,51 +83,49 @@ const ForgotPasswordUI = (props: any) => {
         >
           {t('FORGOT_PASSWORD_TEXT_MESSAGE', "Enter your email address and we'll sent a link to reset your password.")}
         </OText>
-        <Controller
-          control={control}
-          render={({ onChange, value }) => (
-            <OInput
-              placeholder={t('EMAIL', 'Email')}
-              style={style.inputStyle}
-              icon={images.general.email}
-              value={value}
-              onChange={(e: any) => {
-                handleChangeInputEmail(e, onChange)
-              }}
-              autoCapitalize='none'
-              autoCompleteType='off'
-              autoCorrect={false}
-              type='email-address'
-              isSecured
-            />
-          )}
-          name="email"
-          rules={{
-            required: t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email')),
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
-            }
-          }}
-          defaultValue=""
-        />
-      </Wrapper>
-      <BottomWrapper>
-        <OButton
-          text={emailSent && !formState.result?.error ? t('LINK_SEND_FORGOT_PASSWORD', 'Link Sent') : t('FRONT_RECOVER_PASSWORD', 'Recover Password')}
-          textStyle={{ color: 'white' }}
-          bgColor={emailSent && !formState.result?.error ? colors.disabled : colors.primary}
-          borderColor={emailSent && !formState.result?.error ? colors.disabled : colors.primary}
-          isLoading={formState.loading}
-          onClick={emailSent && !formState.result?.error ? () => {} : handleSubmit(onSubmit)}
-        />
-      </BottomWrapper>
-    </View>
-    </Container>
-  )
-}
+        <FormInput>
+          <Controller
+            control={control}
+            render={({ onChange, value }: any) => (
+              <OInput
+                placeholder={t('EMAIL', 'Email')}
+                style={styles.inputStyle}
+                icon={images.general.email}
+                onChange={(e: any) => {
+                  handleChangeInputEmail(e, onChange)
+                }}
+                value={value}
+                autoCapitalize='none'
+                autoCorrect={false}
+                type='email-address'
+              />
+            )}
+            name="email"
+            rules={{
+              required: t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email')),
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
+              }
+            }}
+            defaultValue=""
+          />
 
-const style = StyleSheet.create({
+          <OButton
+            text={emailSent && !formState.result?.error ? t('LINK_SEND_FORGOT_PASSWORD', 'Link Sent') : t('FRONT_RECOVER_PASSWORD', 'Recover Password')}
+            textStyle={{ color: 'white' }}
+            bgColor={emailSent && !formState.result?.error ? colors.disabled : colors.primary}
+            borderColor={emailSent && !formState.result?.error ? colors.disabled : colors.primary}
+            isLoading={formState.loading}
+            onClick={emailSent && !formState.result?.error ? () => {} : handleSubmit(onSubmit)}
+          />
+        </FormInput>
+      </FormSide>
+    </Container>
+  );
+};
+
+const styles = StyleSheet.create({
   inputStyle: {
     marginBottom: 25,
     borderWidth: 1,
