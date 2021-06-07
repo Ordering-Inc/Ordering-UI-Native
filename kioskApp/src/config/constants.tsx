@@ -18,6 +18,7 @@ export const IMAGES = {
   menulogout: require('../assets/icons/menu-logout.png'),
   pushPin: require('../assets/icons/push_pin.png'),
   shoppingCart: require('../assets/icons/shopping_cart.png'),
+  edit: require('../assets/icons/edit.png'),
 }
 
 export const USER_TYPE = {

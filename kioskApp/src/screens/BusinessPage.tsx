@@ -1,14 +1,16 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useRef } from 'react';
+import { Button, View } from 'react-native';
 import { useLanguage, useApi } from 'ordering-components/native';
 
 import { Container } from '../layouts/Container';
 import { BusinessProductsListing } from '../components/BusinessProductsListing';
 import NavBar from '../components/NavBar';
+import CartBottomSheet from '../components/CartBottomSheet';
 
 const BusinessPage = (props:any): React.ReactElement => {
   const [, t] = useLanguage()
   const [ordering] = useApi()
+  const refRBSheet = useRef<any>(null);
 
   const {
     navigation
@@ -59,7 +61,7 @@ const BusinessPage = (props:any): React.ReactElement => {
     onCheckoutRedirect: (cartUuid:any) => {}
   }
 
-  const goToBack = () => navigation.goBack()
+  const goToBack = () => navigation.goBack()  
 
   return (
     <Container nopadding>
@@ -70,9 +72,15 @@ const BusinessPage = (props:any): React.ReactElement => {
         />
       </View>
 
-      <BusinessProductsListing
-        { ...businessProductsListingProps }
-      />
+      <CartBottomSheet
+        refRBSheet={refRBSheet}
+      >
+        <BusinessProductsListing
+          { ...businessProductsListingProps }
+        />
+      </CartBottomSheet>
+
+      <Button title="OPEN BOTTOM SHEET >" onPress={() => refRBSheet.current.open()} />
     </Container>
   );
 };

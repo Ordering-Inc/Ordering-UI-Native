@@ -6,7 +6,7 @@ import { normalize } from '../../providers/Responsive'
 import { colors } from '../../theme.json'
 
 const Wrapper = styled.ScrollView`
-	background-color: #F8F9FA;
+	background-color: ${colors.whiteGray};
 	flex-direction: row;
 `
 const SegItem = styled.View`
