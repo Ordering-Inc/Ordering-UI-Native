@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Dimensions, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Button, Dimensions, View } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 
 import { Container } from '../layouts/Container';
@@ -10,6 +10,7 @@ import {
   OSegment,
   OText
 } from '../components/shared';
+import CartBottomSheet from '../components/CartBottomSheet';
 
 const CategoryPage = (props: any): React.ReactElement => {
 
@@ -17,11 +18,12 @@ const CategoryPage = (props: any): React.ReactElement => {
     navigation,
     route,
   } = props;
-
+  
   const { category, categories } = route.params;
 
   const [, t] = useLanguage();
   const [curIndexCateg, setIndexCateg] = useState(categories.indexOf(category));
+  const refRBSheet = useRef<any>(null);
   
   const onChangeTabs = (idx: number) => setIndexCateg(idx);
 
@@ -43,30 +45,34 @@ const CategoryPage = (props: any): React.ReactElement => {
         />
       </View>
 
-      <View style={{ paddingHorizontal: 20, paddingVertical: 8 }}>
-        <OText
-          size={_dim.width * 0.05}
-          weight="bold"
-        >
-          {categories[curIndexCateg].name}
-        </OText>
-      </View>
+      <CartBottomSheet
+        refRBSheet={refRBSheet}
+      >
+        <View style={{ paddingHorizontal: 20, paddingVertical: 8 }}>
+          <OText
+            size={_dim.width * 0.05}
+            weight="bold"
+          >
+            {categories[curIndexCateg].name}
+          </OText>
+        </View>
 
-      <GridContainer>
-        {categories[curIndexCateg].products.map((product:any) => (
-          <OCard
-            key={product.id}
-            title={!!product?.name && product?.name}
-            image={{ uri: product?.images }}
-            price={product?.price && `$${product?.price}`}
-            prevPrice={product?.in_offer && `$${product?.offer_price}`}
-            description={!!product?.description && product?.description}
-            onPress={() => {
-              
-            }}
-          />
-        ))}
-      </GridContainer>
+        <GridContainer>
+          {categories[curIndexCateg].products.map((product:any) => (
+            <OCard
+              key={product.id}
+              title={!!product?.name && product?.name}
+              image={{ uri: product?.images }}
+              price={product?.price && `$${product?.price}`}
+              prevPrice={product?.in_offer && `$${product?.offer_price}`}
+              description={!!product?.description && product?.description}
+              onPress={() => {
+                refRBSheet.current.open()
+              }}
+            />
+          ))}
+        </GridContainer>
+      </CartBottomSheet>
 		</Container>
 	);
 };

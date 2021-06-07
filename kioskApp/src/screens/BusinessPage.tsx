@@ -80,7 +80,7 @@ const BusinessPage = (props:any): React.ReactElement => {
         />
       </CartBottomSheet>
 
-      <Button title="OPEN BOTTOM SHEET >" onPress={() => refRBSheet.current.open()} />
+      <Button title="CART" onPress={() => refRBSheet.current.open()} />
     </Container>
   );
 };

@@ -36,19 +36,47 @@ const CartBottomSheet = (props: Props): React.ReactElement => {
 				<View>
 					<StyledContent>
 						<TopBar/>
-						
-						<CartItem />
-						<CartItem />
-						<CartItem />
-						<CartItem />
-						<CartItem />
-						<CartItem />
-						<CartItem />
-						<CartItem />
-						<CartItem />
-						<CartItem />
-						<CartItem />
-						<CartItem />
+
+
+						<CartItem
+							name="Product name #1"
+							price={20.29}
+							quantity={1}
+							image={DELIVERY_TYPE_IMAGES.eatIn}
+							onEdit={() => {}}
+							onDecrease={() => {}}
+							onIncrease={() => {}}
+						/>
+
+						<CartItem
+							name="Product name #2"
+							price={8.97}
+							quantity={1}
+							image={DELIVERY_TYPE_IMAGES.takeOut}
+							onEdit={() => {}}
+							onDecrease={() => {}}
+							onIncrease={() => {}}
+						/>
+
+						<CartItem
+							name="Product name #3"
+							price={23.49}
+							quantity={1}
+							image={DELIVERY_TYPE_IMAGES.eatIn}
+							onEdit={() => {}}
+							onDecrease={() => {}}
+							onIncrease={() => {}}
+						/>
+
+						<CartItem
+							name="Product name #4"
+							price={10.99}
+							quantity={1}
+							image={DELIVERY_TYPE_IMAGES.takeOut}
+							onEdit={() => {}}
+							onDecrease={() => {}}
+							onIncrease={() => {}}
+						/>
 
 					</StyledContent>
 
@@ -114,7 +142,7 @@ const CartItem = (props: CartItemProps) => {
 		<StyledCartItem>
 			<View style={{ flexDirection: 'row' }}>
 				<OImage
-					source={DELIVERY_TYPE_IMAGES.eatIn}
+					source={props.image}
 					height={60}
 					width={60}
 					resizeMode="cover"
@@ -126,7 +154,7 @@ const CartItem = (props: CartItemProps) => {
 						size={_dim.width * 0.025}
 						weight="700"
 					>
-						full product name
+						{props.name}
 					</OText>
 
 					<OButton
@@ -139,9 +167,7 @@ const CartItem = (props: CartItemProps) => {
 							color: colors.primary,
 							marginLeft: 6,
 						}}
-						onClick={() => {
-							console.log('edit')
-						}}
+						onClick={props.onEdit}
 					/>
 				</View>
 			</View>
@@ -152,14 +178,14 @@ const CartItem = (props: CartItemProps) => {
 					weight="700"
 					color={colors.primary}
 				>
-					$12.99
+					{`$${props.price}`}
 				</OText>
 
 				<OText
 					size={_dim.width * 0.023}
 					weight="500"
 				>
-					- 1 +
+					{`${props.quantity}`}
 				</OText>
 			</View>
 		</StyledCartItem>
@@ -172,7 +198,13 @@ interface Props {
 }
 
 interface CartItemProps {
-	
+	image: string | { uri: string; };
+	name: string;
+	price: number;
+	quantity: number;
+	onEdit: () => void;
+	onIncrease: () => void;
+	onDecrease: () => void;
 }
 
 export default CartBottomSheet;
