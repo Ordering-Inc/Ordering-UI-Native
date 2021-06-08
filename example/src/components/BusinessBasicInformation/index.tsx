@@ -44,16 +44,17 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
     ))
     return _types.join(', ')
   }
+
   return (
     <BusinessContainer>
       <BusinessHeader
-        style={isBusinessInfoShow ? styles.businesInfoheaderStyle : {...styles.headerStyle, backgroundColor: colors.backgroundGray}}
-        source={{ uri: header || business?.header }}
+        style={isBusinessInfoShow ? styles.businesInfoheaderStyle : { ...styles.headerStyle, backgroundColor: colors.backgroundGray }}
+        source={{ uri: header || businessState?.business?.header }}
       >
         <BusinessLogo>
-        {!isBusinessInfoShow && (
-          <OIcon url={optimizeImage(logo || business?.logo, 'h_200,c_limit')} style={styles.businessLogo} />
-        )}
+          {!isBusinessInfoShow && (
+            <OIcon url={logo || businessState?.business?.logo} style={styles.businessLogo} />
+          )}
         </BusinessLogo>
       </BusinessHeader>
       <BusinessInfo style={styles.businessInfo}>
