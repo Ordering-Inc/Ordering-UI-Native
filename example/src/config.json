@@ -1,7 +1,7 @@
 {
   "app_id": "react-native-app",
   "app_name": "Ordering",
-  "project": "reactdemo",
+  "project": "luisv4",
   "api": {
     "url": "https://apiv4.ordering.co",
     "language": "en",
