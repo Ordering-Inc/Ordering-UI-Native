@@ -45,7 +45,6 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
     return _types.join(', ')
   }
 
-  console.log(businessState?.business?.header)
   return (
     <BusinessContainer>
       <BusinessHeader
