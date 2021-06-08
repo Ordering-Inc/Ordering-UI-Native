@@ -8,22 +8,29 @@ import { OText } from '../components/shared';
 import DeliveryTypeCard from '../components/DeliveryTypeCard';
 import { DELIVERY_TYPE_IMAGES, IMAGES } from '../config/constants';
 
-const DeliveryTypePage = () => {
-	const [, t] = useLanguage()
+const DeliveryTypePage = (props:any): React.ReactElement => {
+	const [, t] = useLanguage();
+
+	const {
+    navigation
+  } = props;
+
+  const goToBack = () => navigation.goBack();
 
   return (
 		<Container>
 			<NavBar
 				title={t('DELIVERY_TYPE', 'Delivery Type')}
+				onActionLeft={goToBack}
 			/>
 
 			<View style={{ marginVertical: _dim.height * 0.03 }}>
 				<OText
-					size={_dim.width * 0.09}
+					size={_dim.width * 0.05}
 				>
 					{t('WHERE_WILL_YOU_BE', 'Where will you be')} {'\n'}
 					<OText
-						size={_dim.width * 0.09}
+						size={_dim.width * 0.05}
 						weight={'700'}
 					>
 						{t('EATING_TODAY?', 'eating today?')}
@@ -38,7 +45,7 @@ const DeliveryTypePage = () => {
 				icon={IMAGES.pushPin}
 				callToActionText={t('START_MY_ORDER', 'Start my order')}
 				onClick={() => {
-					console.log('Eat in')
+					navigation.navigate('Business');
 				}}
 			/>
 
@@ -51,7 +58,7 @@ const DeliveryTypePage = () => {
 				icon={IMAGES.shoppingCart}
 				callToActionText={t('START_MY_ORDER', 'Start my order')}
 				onClick={() => {
-					console.log('Take out')
+					navigation.navigate('Business');
 				}}
 			/>
 

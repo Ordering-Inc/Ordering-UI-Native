@@ -1,7 +1,7 @@
 import styled from 'styled-components/native'
 
 export const Container = styled.ImageBackground`
-	height: 230px;
+	height: 320px;
 	justifyContent: center;
 `
 export const InnerContainer = styled.View`

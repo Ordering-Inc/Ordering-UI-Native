@@ -8,7 +8,11 @@ import OButton from '../components/shared/OButton';
 import { LanguageSelector } from '../components/LanguageSelector';
 import { GENERAL_IMAGES, LOGO_IMAGES } from '../config/constants'
 
-const IntroPage = () => {
+const IntroPage = (props: any): React.ReactElement => {
+	const {
+    navigation,
+  } = props;
+
 	const [, t] = useLanguage()
 
   return (
@@ -23,7 +27,7 @@ const IntroPage = () => {
 			>
 				<OImage
 					source={LOGO_IMAGES.logotype}
-					width={(_dim.width * 0.65) - _offset}
+					width={(_dim.width * 0.4) - _offset}
 					height={_dim.height * 0.1}
 				/>
 				
@@ -38,6 +42,9 @@ const IntroPage = () => {
 					parentStyle={{
 						alignItems: 'center',
 						width: _dim.width - _offset
+					}}
+					onClick={() => {
+						navigation.navigate('DeliveryType');
 					}}
 				/>
 

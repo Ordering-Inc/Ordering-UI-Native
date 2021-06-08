@@ -5,7 +5,7 @@ import { colors } from '../theme.json';
 
 const ContainerStyled = styled.ScrollView`
   flex: 1;
-  ${(props: any) =>
+  ${(props: Props) =>
     !props.nopadding &&
     css`
       padding: ${Platform.OS === 'ios' ? '0px 20px 20px' : '20px'};
@@ -18,10 +18,15 @@ const SafeAreStyled = styled.SafeAreaView`
   background-color: ${colors.backgroundPage};
 `;
 
-export const Container = (props: any) => {
+export const Container = (props: Props) => {
   return (
     <SafeAreStyled>
-      <ContainerStyled>{props.children}</ContainerStyled>
+      <ContainerStyled {...props}>{props.children}</ContainerStyled>
     </SafeAreStyled>
   );
 };
+
+interface Props {
+  nopadding?: boolean;
+  children?: any;
+}

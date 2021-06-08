@@ -1,39 +1,32 @@
-import React from 'react';
-import { Dimensions, Text } from 'react-native';
+import React, { useRef } from 'react';
+import { Button, View } from 'react-native';
 import { useLanguage, useApi } from 'ordering-components/native';
 
 import { Container } from '../layouts/Container';
 import { BusinessProductsListing } from '../components/BusinessProductsListing';
+import NavBar from '../components/NavBar';
+import CartBottomSheet from '../components/CartBottomSheet';
 
-const BusinessPage = () => {
-	const [, t] = useLanguage()
-
-
-	// const { store } = useParams()
+const BusinessPage = (props:any): React.ReactElement => {
+  const [, t] = useLanguage()
   const [ordering] = useApi()
-  // const { search } = useLocation()
+  const refRBSheet = useRef<any>(null);
 
-  // let category
-  // let product
+  const {
+    navigation
+  } = props;
 
-  /* if (search) {
-    const data = search.substring(1).split('&')
-    category = data[0]
-    product = data[1]
-  } */
-  // const categoryId = category && category.split('=')[1]
-  // const productId = product && product.split('=')[1]
-
-  const businessProductsProps = {
+  const businessProductsListingProps = {
+    ...props,
     ordering,
     isSearchByName: true,
     isSearchByDescription: true,
     slug: '41',
-    // categoryId,
-    // productId,
+    categoryId: null,
+    productId: null,
     langFallbacks: null,
     businessProps: [
-			'name',
+      'name',
       'id',
       'name',
       'header',
@@ -68,20 +61,28 @@ const BusinessPage = () => {
     onCheckoutRedirect: (cartUuid:any) => {}
   }
 
+  const goToBack = () => navigation.goBack()  
+
   return (
-		<Container>
+    <Container nopadding>
+      <View style={{ paddingVertical: 20 }}>
+        <NavBar
+          title={t('MENU', 'Menu')}
+          onActionLeft={goToBack}
+        />
+      </View>
 
-			<Text>Business Page</Text>
+      <CartBottomSheet
+        refRBSheet={refRBSheet}
+      >
+        <BusinessProductsListing
+          { ...businessProductsListingProps }
+        />
+      </CartBottomSheet>
 
-			<BusinessProductsListing
-				{...businessProductsProps}
-			/>
-
-		</Container>
-	);
+      <Button title="CART" onPress={() => refRBSheet.current.open()} />
+    </Container>
+  );
 };
-
-const _dim = Dimensions.get('window');
-const _offset = 50;
 
 export default BusinessPage;
