@@ -221,7 +221,7 @@ export const UserFormDetailsUI = (props: any) => {
         {validationFields?.loading && (
           <UDLoader>
             <OText size={20}>
-              {t('LOADING', 'Loading')}
+              Loading...
             </OText>
           </UDLoader>
         )}

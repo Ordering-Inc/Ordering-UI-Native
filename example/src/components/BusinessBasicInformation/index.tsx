@@ -47,13 +47,13 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
   return (
     <BusinessContainer>
       <BusinessHeader
-        style={isBusinessInfoShow ? styles.businesInfoheaderStyle : { ...styles.headerStyle, backgroundColor: colors.backgroundGray }}
-        source={{ uri: header }}
+        style={isBusinessInfoShow ? styles.businesInfoheaderStyle : {...styles.headerStyle, backgroundColor: colors.backgroundGray}}
+        source={{ uri: header || business?.header }}
       >
         <BusinessLogo>
-          {!isBusinessInfoShow && (
-            <OIcon url={optimizeImage(logo)} style={styles.businessLogo} />
-          )}
+        {!isBusinessInfoShow && (
+          <OIcon url={optimizeImage(logo || business?.logo, 'h_200,c_limit')} style={styles.businessLogo} />
+        )}
         </BusinessLogo>
       </BusinessHeader>
       <BusinessInfo style={styles.businessInfo}>
@@ -85,7 +85,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
               <PlaceholderLine width={10} />
             </Placeholder>
           ) : (
-            <View style={{ width: '75%' }}>
+            <View style={{width: '75%'}}>
               <OText color={colors.textSecondary}>{getBusinessType()}</OText>
             </View>
           )}
@@ -99,45 +99,40 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
                 </View>
               </Placeholder>
             )}
-            {!loading && (
-              <>
-                <View style={styles.bullet}>
-                  <IconEvilIcons
-                    name='clock'
-                    color={colors.textSecondary}
-                    size={16}
-                  />
-                  {orderState?.options?.type === 1 ? (
-                    <OText color={colors.textSecondary} style={styles.metadata}>
-                      {convertHoursToMinutes(business?.delivery_time)}
-                    </OText>
-                  ) : (
-                    <OText color={colors.textSecondary} style={styles.metadata}>
-                      {convertHoursToMinutes(business?.pickup_time)}
-                    </OText>
-                  )}
-                </View>
-                <View style={styles.bullet}>
-                  <IconEvilIcons
-                    name='location'
-                    color={colors.textSecondary}
-                    size={16}
-                  />
-                  <OText color={colors.textSecondary} style={styles.metadata}>{parseDistance(business?.distance || 0)}</OText>
-                </View>
-                <View style={styles.bullet}>
-                  <MaterialComIcon
-                    name='truck-delivery'
-                    color={colors.textSecondary}
-                    size={16}
-                  />
-                </View>
-                <OText color={colors.textSecondary} style={styles.metadata}>{business && parsePrice(business?.delivery_price || 0)}</OText>
-              </>
-            )}
+            <View style={styles.bullet}>
+              <IconEvilIcons
+                name='clock'
+                color={colors.textSecondary}
+                size={16}
+              />
+              {orderState?.options?.type === 1 ? (
+                <OText color={colors.textSecondary} style={styles.metadata}>
+                  {convertHoursToMinutes(business?.delivery_time)}
+                </OText>
+              ) : (
+                <OText color={colors.textSecondary} style={styles.metadata}>
+                  {convertHoursToMinutes(business?.pickup_time)}
+                </OText>
+              )}
+            </View>
+            <View style={styles.bullet}>
+              <IconEvilIcons
+                name='location'
+                color={colors.textSecondary}
+                size={16}
+              />
+              <OText color={colors.textSecondary} style={styles.metadata}>{parseDistance(business?.distance || 0)}</OText>
+            </View>
+            <View style={styles.bullet}>
+              <MaterialComIcon
+                name='truck-delivery'
+                color={colors.textSecondary}
+                size={16}
+              />
+            </View>
+            <OText color={colors.textSecondary} style={styles.metadata}>{business && parsePrice(business?.delivery_price || 0)}</OText>
           </BusinessInfoItem>
         </View>
-        {!loading && (
           <WrapReviews>
             <View style={styles.reviewStyle}>
               <IconAntDesign
@@ -154,7 +149,6 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
               </TouchableOpacity>
             )}
           </WrapReviews>
-        )}
       </BusinessInfo>
       <OModal
         titleSectionStyle={styles.modalTitleSectionStyle}
