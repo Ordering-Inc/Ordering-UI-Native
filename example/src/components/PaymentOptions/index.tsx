@@ -84,7 +84,7 @@ const PaymentOptionsUI = (props: any) => {
     handlePaymethodDataChange
   } = props
   const [, t] = useLanguage();
-  const [addCartOpen, setAddCardOpen] = useState(false);
+  const [addCardOpen, setAddCardOpen] = useState(false);
   // const [{ token }] = useSession()
 
   // const [card, setCard] = useState(null);
@@ -249,7 +249,7 @@ const PaymentOptionsUI = (props: any) => {
       <OModal
         entireModal
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-        open={addCartOpen}
+        open={addCardOpen}
         onClose={() => setAddCardOpen(false)}
       >
         <KeyboardAvoidingView
