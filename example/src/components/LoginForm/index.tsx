@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View, Keyboard } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber'
@@ -73,12 +73,15 @@ const LoginFormUI = (props: LoginParams) => {
     }
   });
 
+  const inputRef = useRef<any>({})
+
   const handleChangeTab = (val: string) => {
     props.handleChangeTab(val);
     setPasswordSee(false);
   }
 
   const onSubmit = (values: any) => {
+    Keyboard.dismiss()
     if (phoneInputData.error) {
       showToast(ToastType.Error, phoneInputData.error);
       return
@@ -224,6 +227,10 @@ const LoginFormUI = (props: LoginParams) => {
                     autoCapitalize='none'
                     autoCorrect={false}
                     type='email-address'
+                    autoCompleteType='email'
+                    returnKeyType='next'
+                    onSubmitEditing={() => inputRef.current?.focus()}
+                    blurOnSubmit={false}
                   />
                 )}
                 name="email"
@@ -242,6 +249,10 @@ const LoginFormUI = (props: LoginParams) => {
                 <PhoneInputNumber
                   data={phoneInputData}
                   handleData={(val: any) => setPhoneInputData(val)}
+                  textInputProps={{
+                    returnKeyType: 'next',
+                    onSubmitEditing: () => inputRef.current.focus(),
+                  }}
                 />
               </View>
             )}
@@ -260,14 +271,17 @@ const LoginFormUI = (props: LoginParams) => {
                       <MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
                   }
                   value={value}
+                  forwardRef={inputRef}
                   onChange={(val: any) => onChange(val)}
+                  returnKeyType='done'
+                  onSubmitEditing={handleSubmit(onSubmit)}
+                  blurOnSubmit
                 />
               )}
               name="password"
               rules={{ required: t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'Password')) }}
               defaultValue=""
             />
-
             <OButton
               onClick={handleSubmit(onSubmit)}
               text={loginButtonText}

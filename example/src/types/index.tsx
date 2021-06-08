@@ -1,4 +1,4 @@
-import { ViewStyle } from 'react-native';
+import { TextInputProps, ViewStyle } from 'react-native';
 export interface LoginParams {
   navigation?: any;
   formState?: any;
@@ -94,6 +94,8 @@ export interface PhoneInputParams {
   handleData?: any;
   defaultValue?: any;
   defaultCode?: number | null;
+  forwardRef?: any;
+  textInputProps?: TextInputProps
 }
 
 export interface LanguageSelectorParams {
