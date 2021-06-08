@@ -48,11 +48,11 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
     <BusinessContainer>
       <BusinessHeader
         style={isBusinessInfoShow ? styles.businesInfoheaderStyle : { ...styles.headerStyle, backgroundColor: colors.backgroundGray }}
-        source={{ uri: header }}
+        source={{ uri: header || businessState?.business?.header }}
       >
         <BusinessLogo>
           {!isBusinessInfoShow && (
-            <OIcon url={optimizeImage(logo)} style={styles.businessLogo} />
+            <OIcon url={logo || businessState?.business?.logo} style={styles.businessLogo} />
           )}
         </BusinessLogo>
       </BusinessHeader>
