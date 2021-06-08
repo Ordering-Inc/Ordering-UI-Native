@@ -5,3 +5,7 @@ export const Wrapper = styled.View`
   min-height: 200px;
   padding: 0px 25px;
 `;
+
+export const Container = styled.View`
+  padding-bottom: 40px;
+`

@@ -200,8 +200,8 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
             )}
             {productInfo().options.length > 0 && (
               <ProductOptionsList>
-                {productInfo().options.map((option: any) => (
-                  <ProductOption key={option.id}>
+                {productInfo().options.map((option: any, i: number) => (
+                  <ProductOption key={option.id + i}>
                     <OText>{option.name}</OText>
                     {option.suboptions.map((suboption: any) => (
                       <ProductSubOption key={suboption.id}>

@@ -8,7 +8,8 @@ import {
 } from 'ordering-components/native';
 
 import NavBar from '../NavBar';
-import { Container, FormInput, FormSide } from '../../components/LoginForm/styles'
+import { FormInput, FormSide } from '../../components/LoginForm/styles'
+import {Container} from './styles'
 import { ToastType, useToast } from '../../providers/ToastProvider';
 
 import { OButton, OInput, OText } from '../shared';
@@ -71,7 +72,6 @@ const ForgotPasswordUI = (props: any) => {
         titleAlign={'center'}
         onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
         showCall={false}
-        btnStyle={{ paddingLeft: 0 }}
         paddingTop={0}
       />
       <FormSide>
@@ -98,6 +98,10 @@ const ForgotPasswordUI = (props: any) => {
                 autoCapitalize='none'
                 autoCorrect={false}
                 type='email-address'
+                autoCompleteType='email'
+                returnKeyType='done'
+                blurOnSubmit
+                onSubmitEditing={handleSubmit(onSubmit)}
               />
             )}
             name="email"
