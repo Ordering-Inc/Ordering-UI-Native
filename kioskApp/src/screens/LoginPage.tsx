@@ -1,24 +1,22 @@
-import React from 'react';
-import { Text, StyleSheet, View } from 'react-native';
+import React from 'react'
+import { Container } from '../layouts/Container'
+import { LoginForm } from '../components/LoginForm';
 
-const LoginPage = () => {
+export const LoginPage = ({ navigation }: any) => {
+
+  const loginProps = {
+    navigation,
+    onNavigationRedirect: (page: string) => {
+      if (!page) return;
+      navigation.navigate(page);
+    },
+  };
+
   return (
-    <View>
-        <Text style={styles.baseText}>
-            LOGIN
-            <Text style={styles.innerText}> PAGE</Text>
-        </Text>
-    </View>
+    <Container>
+      <LoginForm {...loginProps} />
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  baseText: {
-    fontWeight: 'bold'
-  },
-  innerText: {
-    color: 'red'
-  }
-});
-
-export default LoginPage;
+export default LoginPage

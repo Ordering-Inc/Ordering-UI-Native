@@ -1,4 +1,3 @@
-
 import * as React from 'react'
 import { ImageStyle } from 'react-native'
 import styled from 'styled-components/native'
