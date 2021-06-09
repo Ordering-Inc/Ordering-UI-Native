@@ -49,7 +49,7 @@ export const getIconCard = (brand: string, size: number) => {
   switch (value) {
     case 'visa':
       return (
-        <FontAwesome
+        FontAwesome && <FontAwesome
           name='cc-visa'
           size={size}
           color={'#000'}
@@ -57,7 +57,7 @@ export const getIconCard = (brand: string, size: number) => {
       )
     case 'mastercard':
       return (
-        <FontAwesome
+        FontAwesome && <FontAwesome
           name='cc-mastercard'
           size={size}
           color={'#000'}
@@ -65,7 +65,7 @@ export const getIconCard = (brand: string, size: number) => {
       )
     case 'amex':
       return (
-        <FontAwesome
+        FontAwesome && <FontAwesome
           name='cc-amex'
           size={size}
           color={'#000'}
@@ -73,7 +73,7 @@ export const getIconCard = (brand: string, size: number) => {
       )
     case 'discover':
       return (
-        <FontAwesome
+        FontAwesome && <FontAwesome
           name='cc-discover'
           size={size}
           color={'#000'}
@@ -81,7 +81,7 @@ export const getIconCard = (brand: string, size: number) => {
       )
     case 'jcb':
       return (
-        <FontAwesome
+        FontAwesome && <FontAwesome
           name='cc-jcb'
           size={size}
           color={'#000'}
@@ -89,7 +89,7 @@ export const getIconCard = (brand: string, size: number) => {
       )
     case 'diners-club':
       return (
-        <FontAwesome
+        FontAwesome &&  <FontAwesome
           name='cc-diners-club'
           size={size}
           color={'#000'}
@@ -97,7 +97,7 @@ export const getIconCard = (brand: string, size: number) => {
       )
     default:
       return (
-        <FontAwesome
+        FontAwesome && <FontAwesome
           name='credit-card-alt'
           size={size}
           color={'#000'}
@@ -124,14 +124,14 @@ export const fieldsToSort = ['name', 'middle_name', 'lastname', 'second_lastname
 export const sortInputFields = ({ fields, values }: any) => {
   let fieldsBase = fields;
   const fieldsSorted: any = [];
-  const fieldsArray = Array.isArray(values) ? values : Object.values(values);
+  const fieldsArray = Array.isArray(values) ? values : values && Object.values(values);
 
   if (!fieldsBase) {
     fieldsBase = fieldsToSort
   }
 
   fieldsBase.forEach((f: any) => {
-    fieldsArray.forEach((field: any) => {
+    fieldsArray && fieldsArray.forEach((field: any) => {
       if (f === field.code) {
         fieldsSorted.push(field)
       }

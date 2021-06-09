@@ -1,5 +1,6 @@
 {
   "app_id": "react-native-app",
+  "notification_app": "orderingapp",
   "app_name": "Ordering",
   "project": "reactdemo",
   "api": {

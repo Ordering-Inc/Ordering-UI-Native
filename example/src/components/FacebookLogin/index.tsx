@@ -12,7 +12,8 @@ export const FacebookLogin = (props: any) => {
   const {
     handleErrors,
     handleLoading,
-    handleSuccessFacebookLogin
+    handleSuccessFacebookLogin,
+    notificationState
   } = props
 
   const [, t] = useLanguage()
@@ -29,7 +30,14 @@ export const FacebookLogin = (props: any) => {
 
   const handleLoginClick = async (accessToken: string) => {
     try {
-      const response = await ordering.users().authFacebook({ access_token: accessToken })
+      const body: any = {
+        access_token: accessToken
+      }
+      if (notificationState?.notification_token) {
+        body.notification_token = notificationState.notification_token
+        body.notification_app = notificationState.notification_app
+      }
+      const response = await ordering.users().authFacebook(body)
       if (!response.content.error) {
         if (handleSuccessFacebookLogin) {
           handleSuccessFacebookLogin(response.content.result)

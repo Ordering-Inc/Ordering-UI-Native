@@ -19,6 +19,7 @@ export const Signup = (props: any) => {
     loginButtonText: t('LOGIN', 'Login'),
     signupButtonText: t('SIGNUP', 'Signup'),
     useSignupByEmail: true,
+    notificationState: props.route?.params?.notification_state,
     onNavigationRedirect: (page: string) => {
       if (!page) return
       props.navigation.navigate(page);

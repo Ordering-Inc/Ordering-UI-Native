@@ -11,7 +11,7 @@ const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;
 `;
 
-export const Login = ({ navigation }: any) => {
+export const Login = ({ navigation, route }: any) => {
   const [, t] = useLanguage()
 
   const loginProps = {
@@ -25,6 +25,7 @@ export const Login = ({ navigation }: any) => {
       if (!page) return
       navigation.navigate(page);
     },
+    notificationState: route?.params?.notification_state
   }
 
 

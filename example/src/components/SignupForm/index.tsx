@@ -53,7 +53,8 @@ const SignupFormUI = (props: SignupParams) => {
     checkPhoneCodeState,
     setCheckPhoneCodeState,
     handleSendVerifyCode,
-    handleCheckPhoneCode
+    handleCheckPhoneCode,
+    notificationState
   } = props
 
   const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
@@ -359,7 +360,7 @@ const SignupFormUI = (props: SignupParams) => {
           )
         }
 
-        {/* {
+        {
           configs && Object.keys(configs).length > 0 && (
             (configs?.facebook_login?.value === 'true' ||
               configs?.facebook_login?.value === '1') &&
@@ -372,6 +373,7 @@ const SignupFormUI = (props: SignupParams) => {
 
                 <SocialButtons>
                   <FacebookLogin
+                    notificationState={notificationState}
                     handleErrors={(err: any) => showToast(ToastType.Error, err)}
                     handleLoading={(val: boolean) => setIsFBLoading(val)}
                     handleSuccessFacebookLogin={handleSuccessFacebook}
@@ -380,7 +382,7 @@ const SignupFormUI = (props: SignupParams) => {
               </ButtonsSection>
             )
           )
-        } */}
+        }
       </FormSide >
       <OModal
         open={isModalVisible}
