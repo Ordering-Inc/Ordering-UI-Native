@@ -203,7 +203,10 @@ const MessagesUI = (props: MessagesParams) => {
           color: '#010300',
         }}
         textInputProps={{
-          value: message
+          value: message,
+          onSubmitEditing: onSubmit,
+          returnKeyType: 'done',
+          blurOnSubmit: false
         }}
         placeholder={t('WRITE_MESSAGE', 'Write message...')}
       />
@@ -301,6 +304,7 @@ const MessagesUI = (props: MessagesParams) => {
           }}
           isLoadingEarlier={messages.loading}
           renderLoading={() => <ActivityIndicator size="small" color="#000" />}
+          keyboardShouldPersistTaps='always'
         />
       </Wrapper>
     </>
