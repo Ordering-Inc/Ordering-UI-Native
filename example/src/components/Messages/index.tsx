@@ -7,7 +7,7 @@ import { ToastType, useToast } from '../../providers/ToastProvider'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors } from '../../theme.json'
 import { OIcon, OIconButton, OText } from '../shared'
-import { TouchableOpacity, ActivityIndicator, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard } from 'react-native'
 import { Header, TitleHeader, Wrapper } from './styles'
 import { MessagesParams } from '../../types'
 
@@ -36,6 +36,7 @@ const MessagesUI = (props: MessagesParams) => {
   const { showToast } = useToast();
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
+  const [isKeyboardShow, setIsKeyboardShow] = useState(false)
 
   const onChangeMessage = (val: string) => {
     setMessage && setMessage(val)
@@ -147,6 +148,19 @@ const MessagesUI = (props: MessagesParams) => {
     setFormattedMessages([...newMessages.reverse()])
   }, [messages.messages.length])
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardShow(true)
+    })
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardShow(false)
+    })
+    return () => {
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [])
+
   const RenderActions = (props : any) => {
     return (
       <Actions
@@ -184,9 +198,9 @@ const MessagesUI = (props: MessagesParams) => {
     <InputToolbar
       {...props}
       containerStyle={{
-        padding: 10,
+        padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10
       }}
-      primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}
+      primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}      
     />
   )
 
@@ -203,7 +217,15 @@ const MessagesUI = (props: MessagesParams) => {
           color: '#010300',
         }}
         textInputProps={{
-          value: message
+          value: message,
+          onSubmitEditing: onSubmit,
+          returnKeyType: message ? 'send' : 'done',
+          blurOnSubmit: true,
+          multiline: false,
+          numberOfLines: 1,
+          autoCorrect: false,
+          autoCompleteType: 'off',
+          enablesReturnKeyAutomatically: false
         }}
         placeholder={t('WRITE_MESSAGE', 'Write message...')}
       />
@@ -297,10 +319,11 @@ const MessagesUI = (props: MessagesParams) => {
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
           messagesContainerStyle={{
-            paddingBottom: 20,
+            paddingBottom: 20
           }}
           isLoadingEarlier={messages.loading}
           renderLoading={() => <ActivityIndicator size="small" color="#000" />}
+          keyboardShouldPersistTaps='handled'
         />
       </Wrapper>
     </>

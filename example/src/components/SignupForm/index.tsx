@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { createRef, useEffect, useRef, useState } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -77,6 +77,68 @@ const SignupFormUI = (props: SignupParams) => {
       cellphone: null
     }
   });
+
+  const nameRef = useRef<any>(null)
+  const lastnameRef = useRef<any>(null)
+  const middleNameRef = useRef<any>(null)
+  const secondLastnameRef = useRef<any>(null)
+  const emailRef = useRef<any>(null)
+  const phoneRef = useRef<any>(null)
+  const passwordRef = useRef<any>(null)
+
+  const handleRefs = (ref : any, code : string) => {
+    switch(code){
+      case 'name': {
+        nameRef.current = ref
+        break
+      }
+      case 'middle_name': {
+        middleNameRef.current = ref
+      }
+      case 'lastname': {
+        lastnameRef.current = ref
+        break
+      }
+      case 'second_lastname': {
+        secondLastnameRef.current = ref
+        break
+      }
+      case 'email': {
+        emailRef.current = ref
+        break
+      }
+    }
+  }
+
+  const handleFocusRef = (code : string) => {
+    switch(code) {
+      case 'name': {
+        nameRef?.current?.focus()
+        break
+      }
+      case 'middle_name': {
+        middleNameRef?.current?.focus()
+        break
+      }
+      case 'lastname': {
+        lastnameRef?.current?.focus()
+        break
+      }
+      case 'second_lastname': {
+        secondLastnameRef?.current?.focus()
+        break
+      }
+      case 'email': {
+        emailRef?.current?.focus()
+        break
+      }
+    }
+  }
+
+  const getNextFieldCode = (index : number) => {
+    const fields = sortInputFields({ values: validationFields?.fields?.checkout })?.filter((field : any) => !notValidationFields.includes(field.code) && showField(field.code))
+    return fields[index + 1]?.code
+  }
 
   const handleSuccessFacebook = (user: any) => {
     login({
@@ -246,7 +308,7 @@ const SignupFormUI = (props: SignupParams) => {
         <FormInput>
           {!(useChekoutFileds && validationFields?.loading) ? (
             <>
-              {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any) =>
+              {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any, i : number) =>
                 !notValidationFields.includes(field.code) &&
                 (
                   showField && showField(field.code) && (
@@ -263,6 +325,11 @@ const SignupFormUI = (props: SignupParams) => {
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                           autoCorrect={field.code === 'email' && false}
                           type={field.code === 'email' ? 'email-address' : 'default'}
+                          autoCompleteType={field.code === 'email' ? 'email' : 'off'}
+                          returnKeyType='next'
+                          blurOnSubmit={false}
+                          forwardRef={(ref : any) => handleRefs(ref,field.code)}
+                          onSubmitEditing={() => field.code === 'email' ? phoneRef.current.focus() : handleFocusRef(getNextFieldCode(i))}
                         />
                       )}
                       name={field.code}
@@ -278,6 +345,11 @@ const SignupFormUI = (props: SignupParams) => {
                   <PhoneInputNumber
                     data={phoneInputData}
                     handleData={(val: any) => setPhoneInputData(val)}
+                    forwardRef={phoneRef}
+                    textInputProps={{
+                      returnKeyType: 'next',
+                      onSubmitEditing: () => passwordRef.current.focus()
+                    }}
                   />
                 </View>
               )}
@@ -298,6 +370,10 @@ const SignupFormUI = (props: SignupParams) => {
                       }
                       value={value}
                       onChange={(val: any) => onChange(val)}
+                      returnKeyType='done'
+                      onSubmitEditing={handleSubmit(onSubmit)}
+                      blurOnSubmit
+                      forwardRef={passwordRef}
                     />
                   )}
                   name="password"

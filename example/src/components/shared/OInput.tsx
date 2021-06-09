@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ImageSourcePropType, ImageStyle, ViewStyle} from 'react-native';
+import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps} from 'react-native';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
 import { colors } from '../../theme.json';
@@ -24,7 +24,7 @@ const Input = styled.TextInput`
   font-family: 'Poppins-Regular';
 `;
 
-interface Props {
+interface Props extends TextInputProps {
   bgColor?: string;
   borderColor?: string;
   isRequired?: boolean;
@@ -47,11 +47,7 @@ interface Props {
   multiline?: boolean;
   vertorIcon?: string;
   vectorIconColor?: string;
-  autoCapitalize?: string;
-  autoCompleteType?: string;
-  autoCorrect?: boolean;
-  keyboardType?: string;
-  returnKeyType?: string;
+  forwardRef?: any
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -88,6 +84,9 @@ const OInput = (props: Props): React.ReactElement => {
         autoCompleteType={props.autoCompleteType}
         autoCorrect={props.autoCorrect}
         returnKeyType={props.returnKeyType}
+        onSubmitEditing={props.onSubmitEditing}
+        blurOnSubmit={props.blurOnSubmit}
+        ref={props.forwardRef}
       />
       {props.iconRight && (
         <OIcon

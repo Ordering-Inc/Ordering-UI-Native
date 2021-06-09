@@ -62,6 +62,9 @@ const AddressFormUI = (props: AddressFormParams) => {
   const [isSignUpEffect, setIsSignUpEffect] = useState(false)
 
   const googleInput: any = useRef(null)
+  const internalNumberRef: any = useRef(null)
+  const zipCodeRef: any = useRef(null)
+  const addressNotesRef: any = useRef(null)
 
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
   const isLocationRequired = configState.configs?.google_autocomplete_selection_required?.value === '1' ||
@@ -312,7 +315,10 @@ const AddressFormUI = (props: AddressFormParams) => {
                           }
                           setIsFirstTime(false)
                         },
-                        autoCorrect: false
+                        onSubmitEditing: () => internalNumberRef.current.focus(),
+                        autoCorrect: false,
+                        blurOnSubmit: false,
+                        returnKeyType: 'next'
                       }}
                       onFail={(error) => setAlertState({ open: true, content: getTraduction(error) })}
                       styles={{
@@ -370,6 +376,10 @@ const AddressFormUI = (props: AddressFormParams) => {
                     }}
                     value={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
                     style={styles.inputsStyle}
+                    forwardRef={internalNumberRef}
+                    returnKeyType='next'
+                    onSubmitEditing={() => zipCodeRef.current.focus()}
+                    blurOnSubmit={false}
                   />
                 )}
               />
@@ -389,6 +399,10 @@ const AddressFormUI = (props: AddressFormParams) => {
                     }}
                     value={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
                     style={styles.inputsStyle}
+                    forwardRef={zipCodeRef}
+                    returnKeyType='next'
+                    onSubmitEditing={() => addressNotesRef.current.focus()}
+                    blurOnSubmit={false}
                   />
                 )}
               />
@@ -408,6 +422,9 @@ const AddressFormUI = (props: AddressFormParams) => {
                     value={address?.address_notes || formState.changes?.address_notes || addressState.address.address_notes || ''}
                     multiline
                     style={styles.textAreaStyles}
+                    returnKeyType='done'
+                    forwardRef={addressNotesRef}
+                    blurOnSubmit
                   />
                 )}
               />
