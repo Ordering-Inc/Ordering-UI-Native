@@ -16,7 +16,7 @@ import { IMAGES } from '../config/constants';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen")
 
 const HEADER_EXPANDED_HEIGHT = SCREEN_HEIGHT * 0.4;
-const HEADER_COLLAPSED_HEIGHT = 94;
+const HEADER_COLLAPSED_HEIGHT = 215;
 
 const ProductDetailsPage = (props:any) => {
 
@@ -43,7 +43,7 @@ const ProductDetailsPage = (props:any) => {
   const heroTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
     outputRange: [0, -(HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT)],
-    extrapolate: 'extend'
+    extrapolate: 'clamp'
   });
   const navBar1ContainerOpacity = scrollY.interpolate({
     inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
@@ -53,13 +53,18 @@ const ProductDetailsPage = (props:any) => {
   const navBar2ContainerOpacity = scrollY.interpolate({
     inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
     outputRange: [0, 1],
-    extrapolate: 'extend'
+    extrapolate: 'clamp'
+  });
+  const collapsedBarContainerOpacity = scrollY.interpolate({
+    inputRange: [180, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    outputRange: [0, 1],
+    extrapolate: 'clamp'
   });
 
   const goToBack = () => navigation.goBack();
 
   const navBarProps = {
-    style: { backgroundColor: 'transparent' },
+    style: { backgroundColor: 'transparent', width: SCREEN_WIDTH },
     paddingTop: 20,
     title: t('YOUR_DISH', 'Your dish'),
     btnStyle: { backgroundColor: 'transparent' },
@@ -79,6 +84,46 @@ const ProductDetailsPage = (props:any) => {
         </Animated.View>
         <Animated.View style={{ opacity: navBar2ContainerOpacity, position: 'absolute' }}>
           <NavBar {...navBarProps} />
+        </Animated.View>
+
+        <Animated.View style={{
+          backgroundColor: 'white',
+          width: SCREEN_WIDTH,
+          opacity: collapsedBarContainerOpacity,
+        }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              padding: 20,
+            }}
+          >
+            <OImage
+              source={{uri: product.images}}
+              width={80}
+              height={80}
+              resizeMode="cover"
+              borderRadius={6}
+            />
+            <OText
+              size={SCREEN_WIDTH * 0.025}
+              weight="bold"
+              mLeft={20}
+              numberOfLines={2}
+            >
+              {product.name}
+            </OText>
+          </View>
+          <View
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              height: 1,
+              backgroundColor: 'white',
+              width: SCREEN_WIDTH,
+              ...styles.shadow,
+            }}
+          />
         </Animated.View>
 
         <Animated.View style={{
@@ -175,6 +220,13 @@ const styles = StyleSheet.create({
     color: "black",
     fontWeight: "bold",
     fontSize: 24
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity:  0.4,
+    shadowRadius: 3,
+    elevation: 5,
   }
 });
 
