@@ -20,7 +20,12 @@ const CategoryPage = (props: any): React.ReactElement => {
     route,
   } = props;
   
-  const { category, categories }: Params = route.params;
+  const {
+    category,
+    categories,
+    businessId,
+    businessSlug,
+  }: Params = route.params;
 
   const [, t] = useLanguage();
   const [curIndexCateg, setIndexCateg] = useState(categories.indexOf(category));
@@ -65,7 +70,11 @@ const CategoryPage = (props: any): React.ReactElement => {
               title={product?.name}
               image={{ uri: product?.images }}
               onPress={() => {
-                navigation.navigate('ProductDetails', { product });
+                navigation.navigate('ProductDetails', {
+                  businessId,
+                  businessSlug,
+                  product,
+                });
               }}
               {...(!!product?.description && { description: product?.description } )}
               {...(!!product?.price && { price: `$${product?.price}` } )}
@@ -81,6 +90,8 @@ const CategoryPage = (props: any): React.ReactElement => {
 interface Params {
   category: Category;
   categories: Category[];
+  businessId: string;
+  businessSlug: string;
 }
 
 const _dim = Dimensions.get('window');

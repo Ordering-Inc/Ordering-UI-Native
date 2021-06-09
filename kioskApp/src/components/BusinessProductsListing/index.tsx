@@ -107,6 +107,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 navigation.navigate('Category', {
                   category,
                   categories: business.original.categories,
+                  businessId: business?.api?.businessId,
+                  businessSlug: business?.slug,
                 });
               }}
               titleStyle={{ textAlign: 'center' }}

@@ -39,6 +39,18 @@ export interface LoginParams {
   handleCheckPhoneCode?: any;
 }
 
+export interface ProductItemAccordionParams {
+  isCartPending?: boolean,
+  isCartProduct?: boolean,
+  product?: any,
+  getProductMax?: any,
+  changeQuantity?: (product: any, quantity: number) => {},
+  onDeleteProduct?: (product: any) => void,
+  onEditProduct?: (product: any) => void,
+  offsetDisabled?: any,
+  isFromCheckout?: any
+}
+
 export interface Open {
   hour: number;
   minute: number;
