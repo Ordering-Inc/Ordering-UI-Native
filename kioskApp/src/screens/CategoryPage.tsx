@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button, Dimensions, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 
 import { Container } from '../layouts/Container';
@@ -11,6 +11,7 @@ import {
   OText
 } from '../components/shared';
 import CartBottomSheet from '../components/CartBottomSheet';
+import { Category } from '../types';
 
 const CategoryPage = (props: any): React.ReactElement => {
 
@@ -19,7 +20,7 @@ const CategoryPage = (props: any): React.ReactElement => {
     route,
   } = props;
   
-  const { category, categories } = route.params;
+  const { category, categories }: Params = route.params;
 
   const [, t] = useLanguage();
   const [curIndexCateg, setIndexCateg] = useState(categories.indexOf(category));
@@ -37,7 +38,7 @@ const CategoryPage = (props: any): React.ReactElement => {
           onActionLeft={goToBack}
         />
         <OSegment
-          items={categories.map((category:any) => ({
+          items={categories.map((category) => ({
             text: category.name
           }))}
           selectedIdx={curIndexCateg} 
@@ -58,17 +59,17 @@ const CategoryPage = (props: any): React.ReactElement => {
         </View>
 
         <GridContainer>
-          {categories[curIndexCateg].products.map((product:any) => (
+          {categories[curIndexCateg].products.map((product) => (
             <OCard
               key={product.id}
-              title={!!product?.name && product?.name}
+              title={product?.name}
               image={{ uri: product?.images }}
-              price={product?.price && `$${product?.price}`}
-              prevPrice={product?.in_offer && `$${product?.offer_price}`}
-              description={!!product?.description && product?.description}
               onPress={() => {
-                refRBSheet.current.open()
+                navigation.navigate('ProductDetails', { product });
               }}
+              {...(!!product?.description && { description: product?.description } )}
+              {...(!!product?.price && { price: `$${product?.price}` } )}
+              {...(product?.in_offer && { prevPrice: `$${product?.offer_price}` } )}
             />
           ))}
         </GridContainer>
@@ -76,6 +77,11 @@ const CategoryPage = (props: any): React.ReactElement => {
 		</Container>
 	);
 };
+
+interface Params {
+  category: Category;
+  categories: Category[];
+}
 
 const _dim = Dimensions.get('window');
 

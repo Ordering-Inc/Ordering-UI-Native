@@ -3,6 +3,7 @@ export const IMAGES = {
   lunch: require('../assets/icons/lunch.png'),
   arrow_up: require('../assets/icons/arrow_up.png'),
   arrow_left: require('../assets/icons/arrow_left.png'),
+  arrow_left_white: require('../assets/icons/arrow_left_white.png'),
   arrow_right_circular_outlined: require('../assets/icons/arrow_right_circular_outlined.png'),
   map: require('../assets/icons/map.png'),
   marker: require('../assets/images/marker.png'),

@@ -6,12 +6,13 @@ import IntroPage from '../screens/IntroPage';
 import BusinessPage from '../screens/BusinessPage';
 import DeliveryTypePage from '../screens/DeliveryTypePage';
 import CategoryPage from '../screens/CategoryPage';
+import ProductDetailsPage from '../screens/ProductDetailsPage';
 
 const Stack = createStackNavigator();
 
 const RootNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="Business">
       <Stack.Screen
         name="Login"
         component={LoginPage}
@@ -35,6 +36,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name="Category"
         component={CategoryPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProductDetails"
+        component={ProductDetailsPage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
