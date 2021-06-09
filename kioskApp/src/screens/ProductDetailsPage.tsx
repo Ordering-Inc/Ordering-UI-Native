@@ -175,10 +175,7 @@ const ProductDetailsPage = (props:any) => {
               color="white"
               numberOfLines={4}
             >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui repellat aspernatur suscipit recusandae eligendi illo inventore doloribus voluptas, nostrum soluta vel alias commodi natus ipsa totam similique, est, adipisci neque!
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui repellat aspernatur suscipit recusandae eligendi illo inventore doloribus voluptas, nostrum soluta vel alias commodi natus ipsa totam similique, est, adipisci neque!
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui repellat aspernatur suscipit recusandae eligendi illo inventore doloribus voluptas, nostrum soluta vel alias commodi natus ipsa totam similique, est, adipisci neque!
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui repellat aspernatur suscipit recusandae eligendi illo inventore doloribus voluptas, nostrum soluta vel alias commodi natus ipsa totam similique, est, adipisci neque!
+              {product?.description}
             </OText>
           </Animated.View>
         </Animated.View>
