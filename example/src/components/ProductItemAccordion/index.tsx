@@ -142,7 +142,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 <OIcon url={product?.images} style={styles.productImage} />
               </ProductImage>
             )}
-            <View style={{flex: 0.8}}>
+            <View style={{flex: 1}}>
               <OText>{product.name}</OText>
             </View>
             <View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end' }}>
