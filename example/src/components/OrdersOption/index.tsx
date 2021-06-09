@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { OrderList, useLanguage, useOrder } from 'ordering-components/native'
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
@@ -38,8 +38,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     : images.general.emptyPastOrders
 
   const orders = customArray || values
-
-  const [ordersSorted, setOrdersSorted] = useState<Array<any>>([])
 
   const [reorderLoading, setReorderLoading] = useState(false)
 
@@ -93,16 +91,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     return objectStatus && objectStatus
   }
 
-  useEffect(() => {
-    const ordersSorted = orders.sort((a: any, b: any) => {
-      if (activeOrders) {
-        return Math.abs(new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      }
-      return Math.abs(new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-    })
-    setOrdersSorted(ordersSorted)
-  }, [orders])
-
   return (
     <>
       {(orders.length > 0) && (
@@ -116,7 +104,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           </OptionTitle>
         </>
       )}
-      {!loading && ordersSorted.length === 0 && (
+      {!loading && orders.length === 0 && (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           image={imageFails}
@@ -157,7 +145,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {!loading && !error && orders.length > 0 && (
         activeOrders ? (
           <ActiveOrders
-            orders={ordersSorted}
+            orders={orders}
             pagination={pagination}
             loadMoreOrders={loadMoreOrders}
             reorderLoading={reorderLoading}
@@ -168,7 +156,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         ) : (
           <PreviousOrders
             reorderLoading={reorderLoading}
-            orders={ordersSorted}
+            orders={orders}
             pagination={pagination}
             loadMoreOrders={loadMoreOrders}
             getOrderStatus={getOrderStatus}
@@ -185,7 +173,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
   const MyOrdersProps = {
     ...props,
     UIComponent: OrdersOptionUI,
-    orderStatus: props.activeOrders ? [0, 3, 4, 7, 8, 9] : [1, 2, 5, 6, 10, 11, 12],
+    orderStatus: props.activeOrders ? [0, 3, 4, 7, 8, 9, 13, 14, 15, 18, 19, 20, 21] : [1, 2, 5, 6, 10, 11, 12, 16, 17],
     useDefualtSessionManager: true,
     paginationSettings: {
       initialPage: 1,

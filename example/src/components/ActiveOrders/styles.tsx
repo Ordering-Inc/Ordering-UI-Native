@@ -4,7 +4,7 @@ import { colors } from '../../theme.json'
 export const ActiveOrdersContainer = styled.ScrollView`
   margin-bottom: 20px;
   height: ${({ isMiniCards }: { isMiniCards: boolean }) => !isMiniCards ? '150px' : '500px'};
-  max-height: ${({ isMiniCards }: { isMiniCards: boolean }) => !isMiniCards ? '150px' : '210px'};
+  max-height: ${({ isMiniCards }: { isMiniCards: boolean }) => !isMiniCards ? '150px' : '220px'};
 `
 
 export const Card = styled.TouchableOpacity`
