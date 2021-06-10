@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {
   OrderTypeControl,
   useLanguage,
@@ -19,7 +19,6 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     orderTypes
   } = props
   const [orderState] = useOrder()
-  const [orderTypeSelected,setOrderTypeSelected] = useState(defaultValue)
 
   const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value))
 
@@ -31,23 +30,18 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     }
   })
 
-  const handleSelectOrderType = (type : number) => {
-    setOrderTypeSelected(type)
-  }
 
   return (
     typeSelected !== undefined && (
       <OrderTypeWrapper>
         <RNPickerSelect
-          onValueChange={(orderType: any) => Platform.OS === 'ios' ? handleSelectOrderType(orderType) :  handleChangeOrderType(orderType)}
+          onValueChange={(orderType) => handleChangeOrderType(orderType)}
           items={items}
           placeholder={{}}
           style={pickerStyle}
           value={defaultValue || typeSelected}
           useNativeAndroidPickerStyle={false}
           disabled={orderState.loading}
-          onClose={() => handleChangeOrderType(orderTypeSelected)}
-          doneText=''
         />
       </OrderTypeWrapper>
     )
