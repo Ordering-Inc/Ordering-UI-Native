@@ -140,7 +140,7 @@ export const ProductOptionsUI = (props: any) => {
         <Animated.View style={{ opacity: navBar1ContainerOpacity }}>
           <NavBar
             {...navBarProps}
-            titleColor="white"
+            titleColor={colors.white}
             leftImg={IMAGES.arrow_left_white}
           />
         </Animated.View>
@@ -224,20 +224,20 @@ export const ProductOptionsUI = (props: any) => {
             }}
           >
             <OText
-              color="white"
+              color={colors.white}
               size={SCREEN_WIDTH * 0.05}
               weight="bold"
               mBottom={10}
               numberOfLines={2}
             >
-              {product.name}
+              {product?.name || productCart.name}
             </OText>
 
             <OText
-              color="white"
+              color={colors.white}
               numberOfLines={4}
             >
-              {product?.description}
+              {product?.description || productCart?.description}
             </OText>
           </Animated.View>
         </Animated.View>
@@ -256,14 +256,9 @@ export const ProductOptionsUI = (props: any) => {
           <Spinner visible={loading} />
         )}
         {!loading && !error && product && (
-          <View style={{ paddingVertical: 80 }}> 
+          <View style={{ paddingTop: 20, paddingBottom: 80 }}> 
             <WrapContent>
-              <ProductTitle>
-                <OText size={20} style={{ flex: 1 }}>{product?.name || productCart.name}</OText>
-                <OText size={20} color={colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
-              </ProductTitle>
               <ProductDescription>
-                <OText>{product?.description || productCart?.description}</OText>
                 {(
                   (product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
                   (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1')
@@ -278,7 +273,7 @@ export const ProductOptionsUI = (props: any) => {
                 {product?.ingredients.length > 0 && (
                   <View style={styles.optionContainer}>
                     <SectionTitle>
-                      <OText size={16}>{t('INGREDIENTS', 'Ingredients')}</OText>
+                      <OText size={28} weight="bold">{t('INGREDIENTS', 'Ingredients')}</OText>
                     </SectionTitle>
                     <WrapperIngredients style={{ backgroundColor: isSoldOut || maxProductQuantity <= 0 ? 'hsl(0, 0%, 72%)' : colors.white }}>
                       {product?.ingredients.map((ingredient: any) => (
@@ -332,7 +327,7 @@ export const ProductOptionsUI = (props: any) => {
                 }))}
                 <ProductComment>
                   <SectionTitle>
-                    <OText size={16}>{t('SPECIAL_COMMENT', 'Special comment')}</OText>
+                    <OText size={28} weight="bold">{t('SPECIAL_COMMENT', 'Special comment')}</OText>
                   </SectionTitle>
                   <OInput
                     multiline
@@ -360,22 +355,36 @@ export const ProductOptionsUI = (props: any) => {
               <TouchableOpacity
                 onPress={decrement}
                 disabled={productCart.quantity === 1 || isSoldOut}
+                style={[
+                  styles.quantityControlButtonBorder,
+                  (productCart.quantity === 1 || isSoldOut) && styles.quantityControlButtonDisabled,
+                ]}
               >
                 <MaterialCommunityIcon
-                  name='minus-circle-outline'
+                  name='minus'
                   size={32}
-                  color={productCart.quantity === 1 || isSoldOut ? colors.backgroundGray : colors.backgroundDark}
+                  style={[
+                    styles.quantityControlButton,
+                    (productCart.quantity === 1 || isSoldOut) && styles.quantityControlButtonDisabled,
+                  ]}
                 />
               </TouchableOpacity>
               <OText size={20}>{productCart.quantity}</OText>
               <TouchableOpacity
                 onPress={increment}
                 disabled={maxProductQuantity <= 0 || productCart.quantity >= maxProductQuantity || isSoldOut}
+                style={[
+                  styles.quantityControlButtonBorder,
+                  (maxProductQuantity <= 0 || productCart.quantity >= maxProductQuantity || isSoldOut) && styles.quantityControlButtonDisabled,
+                ]}
               >
                 <MaterialCommunityIcon
-                  name='plus-circle-outline'
+                  name='plus'
                   size={32}
-                  color={maxProductQuantity <= 0 || productCart.quantity >= maxProductQuantity || isSoldOut ? colors.backgroundGray : colors.backgroundDark}
+                  style={[
+                    styles.quantityControlButton,
+                    (maxProductQuantity <= 0 || productCart.quantity >= maxProductQuantity || isSoldOut) && styles.quantityControlButtonDisabled,
+                  ]}
                 />
               </TouchableOpacity>
             </View>
@@ -412,8 +421,6 @@ export const ProductOptionsUI = (props: any) => {
                 onClick={() => handleRedirectLogin()}
                 text={isSoldOut || maxProductQuantity <= 0 ? t('SOLD_OUT', 'Sold out') : t('LOGIN_SIGNUP', 'Login / Sign Up')}
                 imgRightSrc=''
-                textStyle={{ color: colors.primary }}
-                style={{ borderColor: colors.primary, backgroundColor: colors.white }}
               />
             )}
           </View>
@@ -426,7 +433,8 @@ export const ProductOptionsUI = (props: any) => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    height: windowHeight
+    height: windowHeight,
+    backgroundColor: colors.white,
   },
   headerItem: {
     flexDirection: 'row',
@@ -453,7 +461,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flex: 1,
-    marginRight: 10
+    marginRight: 10,
+    backgroundColor: colors.paleGray,
+    paddingHorizontal: 4,
+    borderColor: colors.mediumGray,
+    borderWidth: 1,
+    borderRadius: 6,
+  },
+  quantityControlButton: {
+    color: colors.primary,
+  },
+  quantityControlButtonBorder: {
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: colors.primary,
+  },
+  quantityControlButtonDisabled: {
+    opacity: 0.5,
   },
   btnBackArrow: {
     borderWidth: 0,

@@ -28,7 +28,12 @@ const ProductOptionUI = (props: any) => {
   return (
     <Container style={{color: error ? 'orange' : colors.white}}>
       <WrapHeader>
-        <OText size={16}>{option.name}</OText>
+        <OText
+          size={28}
+          weight="bold"
+        >
+          {option.name}
+        </OText>
         <OText color= '#A52121'>{maxMin}</OText>
       </WrapHeader>
       {children}

@@ -3,7 +3,7 @@ import {TextStyle} from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 const SText = styled.Text`
-  color: ${(props: any) => props.color || 'black'};
+  color: ${(props: any) => props.color || '#344050'};
   font-family: 'Poppins-Regular';
   font-size: ${(props: any) => (props.size ? `${props.size}px` : '14px')};
   flex-wrap: wrap;

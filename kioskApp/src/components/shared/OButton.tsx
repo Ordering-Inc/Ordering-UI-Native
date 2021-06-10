@@ -32,11 +32,12 @@ const StyledButtonDisabled = styled(StyledButton)`
 `
 
 const StyledText = styled.Text`
-  font-size: 16px;
+  font-size: 18px;
   color: ${colors.btnFont};
   margin-left: 10px;
   margin-right: 10px;
   font-family: 'Poppins-Regular';
+  font-weight: 700;
 `
 
 const StyledTextDisabled = styled(StyledText)`

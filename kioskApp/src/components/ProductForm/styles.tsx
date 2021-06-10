@@ -28,12 +28,10 @@ export const ProductHeader = styled.ImageBackground`
 `
 
 export const WrapContent = styled.View`
-  padding: 10px 20px;
+  padding: 0 20px;
   position: relative;
   bottom: 20px;
   background-color: white;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
   z-index: 100;
 `
 
@@ -51,8 +49,8 @@ export const ProductEditions = styled.View`
 `
 
 export const SectionTitle = styled.View`
-  padding: 15px 20px;
-  background-color: ${colors.paleGray};
+  padding: 15px 0px;
+  background-color: ${colors.white};
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 `

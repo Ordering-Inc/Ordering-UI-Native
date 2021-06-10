@@ -4,7 +4,7 @@ import {
   useUtils,
   useLanguage
 } from 'ordering-components/native'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import {
@@ -65,24 +65,23 @@ export const ProductOptionSubOptionUI = (props: any) => {
 
   return (
     <Container onPress={() => handleSuboptionClick()} disabled={disabled}>
-      <IconControl>
-        {((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
-          state?.selected ? (
-            <MaterialCommunityIcon name='checkbox-marked' color={colors.primary} size={24} />
-          ) : (
-            <MaterialCommunityIcon name='checkbox-blank-outline' color={colors.backgroundDark} size={24} />
-          )
-        ) : (
-          state?.selected ? (
-            <MaterialCommunityIcon name='radiobox-marked' color={colors.primary} size={24} />
-          ) : (
-            <MaterialCommunityIcon name='radiobox-blank' color={colors.backgroundDark} size={24} />
-          )
-        )}
-        <OText mLeft={10} style={{ flex: 1 }}>
+      <View
+        style={{
+          alignItems: "flex-start"
+        }}
+      >
+        <OText size={20}>
           {suboption?.name}
         </OText>
-      </IconControl>
+        <OText
+          color="#909BA9"
+          size={16}
+          weight="bold"
+        >
+          + {parsePrice(price)}
+        </OText>
+      </View>
+
       {showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} color={colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
       {option?.allow_suboption_quantity && (
         <QuantityControl>
@@ -133,9 +132,21 @@ export const ProductOptionSubOptionUI = (props: any) => {
           </PositionControl>
         )
       }
-      <OText color='#555'>
-        + {parsePrice(price)}
-      </OText>
+      <>
+        {((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
+          state?.selected ? (
+            <MaterialCommunityIcon name='checkbox-marked' color={colors.primary} size={24} />
+          ) : (
+            <MaterialCommunityIcon name='checkbox-blank-outline' color={colors.backgroundDark} size={24} />
+          )
+        ) : (
+          state?.selected ? (
+            <MaterialCommunityIcon name='radiobox-marked' color={colors.primary} size={24} />
+          ) : (
+            <MaterialCommunityIcon name='radiobox-blank' color={colors.backgroundDark} size={24} />
+          )
+        )}
+      </>
     </Container>
   )
 }
