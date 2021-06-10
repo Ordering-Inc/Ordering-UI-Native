@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Animated, Platform, StyleSheet } from 'react-native'
+import { View, Animated, StyleSheet } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
@@ -40,7 +40,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const [{ parsePrice }] = useUtils()
 
   const [isActive, setActiveState] = useState(false)
-  const [quantity,setQuantity] = useState(product.quantity.toString())
   // const [setHeight, setHeightState] = useState({ height: new Animated.Value(0) })
   // const [setRotate, setRotateState] = useState({ angle: new Animated.Value(0) })
 
@@ -84,10 +83,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     }
   }
 
-  const handleChangeCustomQuantity = (value : string) => {
-    setQuantity(value)
-  }
-
   const getFormattedSubOptionName = ({ quantity, name, position, price }: { quantity: number, name: string, position: string, price: number }) => {
     const pos = position ? `(${position})` : ''
     return `${quantity} x ${name} ${pos} +${price}`
@@ -118,15 +113,13 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
             {isCartProduct && !isCartPending && getProductMax ? (
               <RNPickerSelect
                 items={productOptions}
-                onValueChange={Platform.OS === 'ios' ? handleChangeCustomQuantity : handleChangeQuantity}
+                onValueChange={handleChangeQuantity}
                 value={product.quantity.toString()}
                 style={pickerStyle}
                 useNativeAndroidPickerStyle={false}
                 placeholder={{}}
                 Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon} />}
                 disabled={orderState.loading}
-                onClose={() => handleChangeQuantity(quantity)}
-                doneText=''
               />
             ) : (
               <ProductQuantity>
