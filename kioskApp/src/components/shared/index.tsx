@@ -30,7 +30,7 @@ export {
 	OToggle,
 	OKeyButton,
 	OAlert,
-  	OModal,
+  OModal,
 	OBottomPopup,
 	OCard,
 	OImage
