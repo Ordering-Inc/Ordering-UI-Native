@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {AppState} from 'react-native'
 import { createStackNavigator } from "@react-navigation/stack";
 import { useSession, useOrder, useWebsocket } from 'ordering-components/native';
 
@@ -23,6 +24,29 @@ const HomeNavigator = (is_online: boolean) => {
   const [{ auth }] = useSession();
   const socket = useWebsocket()
 
+  const appState = React.useRef<any>(AppState.currentState);
+
+  const _handleAppStateChange = (nextAppState : string) => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === "active"
+    ) {
+      socket.connect()
+    }
+    appState.current = nextAppState;
+    if(appState.current === 'background' || appState.current === 'inactive'){
+      socket.close()
+    }
+  };
+
+  React.useEffect(() => {
+    AppState.addEventListener("change", _handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener("change", _handleAppStateChange);
+    };
+  }, []);
+
   const panResponder = React.useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (e, gestureState) => {
@@ -33,21 +57,10 @@ const HomeNavigator = (is_online: boolean) => {
     })
   ).current
 
-  const timerId = React.useRef<any>(false)
-
-
-  React.useEffect(() => {
-    resetInactivityTimeout()
-  }, [])
-
   const resetInactivityTimeout = () => {
-    clearTimeout(timerId.current)
     if(!socket.socket.connected){
       socket.connect()
     }
-    timerId.current = setTimeout(() => {
-      socket.close()
-    }, 450000)
   }
 
   return (
