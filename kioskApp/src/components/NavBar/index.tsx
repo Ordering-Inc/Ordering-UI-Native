@@ -8,7 +8,7 @@ import { IMAGES } from '../../config/constants'
 
 const Wrapper = styled.View`
   background-color: ${colors.white};
-  padding: 10px 20px 20px 0px;
+  padding: 10px 0px 20px 0px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -45,7 +45,7 @@ interface Props {
   leftImg?: any,
   isBackStyle?: boolean,
   onActionLeft?: () => void,
-  onRightAction?: () => void,
+  rightComponent?: any,
   showCall?: boolean,
   titleStyle?: TextStyle,
   btnStyle?: TextStyle,
@@ -104,17 +104,7 @@ const NavBar = (props: Props) => {
           }
         </TitleWrapper>
       </TitleTopWrapper>
-      { props.showCall
-        ? (<OButton
-          isCircle={true}
-          bgColor={colors.primary}
-          borderColor={colors.primary}
-          imgRightSrc={null}
-          imgLeftStyle={{ tintColor: 'white', width: 30, height: 30 }}
-          imgLeftSrc={IMAGES.support}
-          onClick={props.onRightAction || goSupport} />)
-        : null
-      }
+      { props.rightComponent }
     </Wrapper>
   )
 }

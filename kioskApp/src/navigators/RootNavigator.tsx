@@ -7,6 +7,7 @@ import BusinessPage from '../screens/BusinessPage';
 import DeliveryTypePage from '../screens/DeliveryTypePage';
 import CategoryPage from '../screens/CategoryPage';
 import ProductDetailsPage from '../screens/ProductDetailsPage';
+import CartPage from '../screens/CartPage';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name="ProductDetails"
         component={ProductDetailsPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Cart"
+        component={CartPage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

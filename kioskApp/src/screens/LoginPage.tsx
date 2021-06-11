@@ -10,6 +10,9 @@ export const LoginPage = ({ navigation }: any) => {
       if (!page) return;
       navigation.navigate(page);
     },
+    handleSuccessLogin: () => {
+      navigation.navigate('Intro');
+    }
   };
 
   return (

@@ -33,128 +33,128 @@ export const getTraduction = (key: string) => {
   return keyList[key] ? t(key, keyList[key]) : t(key);
 };
 
-// /**
-//  * Function to convert delivery time in minutes
-//  * @param {string} time business delivery time
-//  */
-// export const convertHoursToMinutes = (time: any) => {
-//   if (!time) return '0min'
-//   const [hour, minute] = time.split(':')
-//   const result = (parseInt(hour, 10) * 60) + parseInt(minute, 10)
-//   return `${result}min`
-// }
+/**
+ * Function to convert delivery time in minutes
+ * @param {string} time business delivery time
+ */
+export const convertHoursToMinutes = (time: any) => {
+  if (!time) return '0min'
+  const [hour, minute] = time.split(':')
+  const result = (parseInt(hour, 10) * 60) + parseInt(minute, 10)
+  return `${result}min`
+}
 
-// export const getIconCard = (brand: string, size: number) => {
-//   const value = brand?.toLowerCase()
-//   switch (value) {
-//     case 'visa':
-//       return (
-//         <FontAwesome
-//           name='cc-visa'
-//           size={size}
-//           color={'#000'}
-//         />
-//       )
-//     case 'mastercard':
-//       return (
-//         <FontAwesome
-//           name='cc-mastercard'
-//           size={size}
-//           color={'#000'}
-//         />
-//       )
-//     case 'amex':
-//       return (
-//         <FontAwesome
-//           name='cc-amex'
-//           size={size}
-//           color={'#000'}
-//         />
-//       )
-//     case 'discover':
-//       return (
-//         <FontAwesome
-//           name='cc-discover'
-//           size={size}
-//           color={'#000'}
-//         />
-//       )
-//     case 'jcb':
-//       return (
-//         <FontAwesome
-//           name='cc-jcb'
-//           size={size}
-//           color={'#000'}
-//         />
-//       )
-//     case 'diners-club':
-//       return (
-//         <FontAwesome
-//           name='cc-diners-club'
-//           size={size}
-//           color={'#000'}
-//         />
-//       )
-//     default:
-//       return (
-//         <FontAwesome
-//           name='credit-card-alt'
-//           size={size}
-//           color={'#000'}
-//         />
-//       )
-//   }
-// }
-// /**
-//  * Function to return a static google maps image based in location
-//  * @param {object} param object with latitude and logitude
-//  */
-//  export const getGoogleMapImage = ({ lat, lng }: any, apiKey: string) => {
-//   return `https://maps.googleapis.com/maps/api/staticmap?size=500x190&center=${lat},${lng}&zoom=17&scale=2&maptype=roadmap&&markers=icon:https://res.cloudinary.com/ditpjbrmz/image/upload/f_auto,q_auto,w_45,q_auto:best,q_auto:best/v1564675872/marker-customer_kvxric.png%7Ccolor:white%7C${lat},${lng}&key=${apiKey}`
-// }
-// /**
-//  * List of fields with correct order
-//  */
-// export const fieldsToSort = ['name', 'middle_name', 'lastname', 'second_lastname', 'email'];
-// /**
-//  * Function to return a array sorted by certain fields
-//  * @param fields Array with right order
-//  * @param array Array to sort
-//  */
-// export const sortInputFields = ({ fields, values }: any) => {
-//   let fieldsBase = fields;
-//   const fieldsSorted: any = [];
-//   const fieldsArray = Array.isArray(values) ? values : Object.values(values);
+export const getIconCard = (brand: string, size: number) => {
+  const value = brand?.toLowerCase()
+  switch (value) {
+    case 'visa':
+      return (
+        <FontAwesome
+          name='cc-visa'
+          size={size}
+          color={'#000'}
+        />
+      )
+    case 'mastercard':
+      return (
+        <FontAwesome
+          name='cc-mastercard'
+          size={size}
+          color={'#000'}
+        />
+      )
+    case 'amex':
+      return (
+        <FontAwesome
+          name='cc-amex'
+          size={size}
+          color={'#000'}
+        />
+      )
+    case 'discover':
+      return (
+        <FontAwesome
+          name='cc-discover'
+          size={size}
+          color={'#000'}
+        />
+      )
+    case 'jcb':
+      return (
+        <FontAwesome
+          name='cc-jcb'
+          size={size}
+          color={'#000'}
+        />
+      )
+    case 'diners-club':
+      return (
+        <FontAwesome
+          name='cc-diners-club'
+          size={size}
+          color={'#000'}
+        />
+      )
+    default:
+      return (
+        <FontAwesome
+          name='credit-card-alt'
+          size={size}
+          color={'#000'}
+        />
+      )
+  }
+}
+/**
+ * Function to return a static google maps image based in location
+ * @param {object} param object with latitude and logitude
+ */
+ export const getGoogleMapImage = ({ lat, lng }: any, apiKey: string) => {
+  return `https://maps.googleapis.com/maps/api/staticmap?size=500x190&center=${lat},${lng}&zoom=17&scale=2&maptype=roadmap&&markers=icon:https://res.cloudinary.com/ditpjbrmz/image/upload/f_auto,q_auto,w_45,q_auto:best,q_auto:best/v1564675872/marker-customer_kvxric.png%7Ccolor:white%7C${lat},${lng}&key=${apiKey}`
+}
+/**
+ * List of fields with correct order
+ */
+export const fieldsToSort = ['name', 'middle_name', 'lastname', 'second_lastname', 'email'];
+/**
+ * Function to return a array sorted by certain fields
+ * @param fields Array with right order
+ * @param array Array to sort
+ */
+export const sortInputFields = ({ fields, values }: any) => {
+  let fieldsBase = fields;
+  const fieldsSorted: any = [];
+  const fieldsArray = Array.isArray(values) ? values : Object.values(values);
 
-//   if (!fieldsBase) {
-//     fieldsBase = fieldsToSort
-//   }
+  if (!fieldsBase) {
+    fieldsBase = fieldsToSort
+  }
 
-//   fieldsBase.forEach((f: any) => {
-//     fieldsArray.forEach((field: any) => {
-//       if (f === field.code) {
-//         fieldsSorted.push(field)
-//       }
-//     })
-//   });
-//   return fieldsSorted;
-// }
+  fieldsBase.forEach((f: any) => {
+    fieldsArray.forEach((field: any) => {
+      if (f === field.code) {
+        fieldsSorted.push(field)
+      }
+    })
+  });
+  return fieldsSorted;
+}
 
-// export const transformCountryCode = (countryCode : number) => {
-//   const code = CODES.find((code : any) => code.phoneCode === countryCode)
-//   return code?.countryCode
-// }
+export const transformCountryCode = (countryCode : number) => {
+  const code = CODES.find((code : any) => code.phoneCode === countryCode)
+  return code?.countryCode
+}
 
-// /**
-//  * Function to check if a number is decimal or not
-//  * @param {*} value number to check if decimal or not
-//  * @param {*} parser function fallback when is decimal
-//  * @returns string
-//  */
-//  export const verifyDecimals = (value: number, parser: any) => {
-//   if (value % 1 === 0) {
-//     return value
-//   } else {
-//     return parser(value)
-//   }
-// }
+/**
+ * Function to check if a number is decimal or not
+ * @param {*} value number to check if decimal or not
+ * @param {*} parser function fallback when is decimal
+ * @returns string
+ */
+ export const verifyDecimals = (value: number, parser: any) => {
+  if (value % 1 === 0) {
+    return value
+  } else {
+    return parser(value)
+  }
+}

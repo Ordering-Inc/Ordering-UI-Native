@@ -140,7 +140,7 @@ export interface Gallery {
   updated_at: string;
 }
 
-export interface Original {
+export interface OriginalBusiness {
   name: string;
   id: number;
   header: string;
@@ -298,8 +298,10 @@ export interface Category {
 }
 
 export interface Business {
+  tax: number;
+  tax_type: number;
   hidden: string[];
-  original: Original;
+  original: OriginalBusiness;
   api: Api;
   name: string;
   id: number;
@@ -336,4 +338,89 @@ export interface Business {
   maximum?: any;
   gallery: Gallery[];
   offers: any[];
+}
+
+export interface OriginalCart {
+  uuid: string;
+  user_id: number;
+  status?: any;
+  business_id: string;
+  comment?: any;
+  driver_tip_rate: number;
+  paymethod_id?: any;
+  driver_tip: number;
+  quantity: number;
+  pay_reference?: any;
+  paymethod_data?: any;
+  products: Product[];
+  business: Business;
+  metafields: any[];
+  subtotal: number;
+  valid_address: boolean;
+  delivery_zone_id: number;
+  delivery_price: number;
+  minimum: number;
+  valid_minimum: boolean;
+  valid_maximum: boolean;
+  maximum?: any;
+  valid_schedule: boolean;
+  valid_products: boolean;
+  valid: boolean;
+  tax_rate: number;
+  service_fee_rate: number;
+  summary_version: number;
+  tax: number;
+  service_fee: number;
+  tax_with_discount: number;
+  discount: number;
+  offers: any[];
+  subtotal_with_discount: number;
+  service_fee_with_discount: number;
+  delivery_price_with_discount: number;
+  total: number;
+}
+
+export interface Cart {
+  discount_rate: number;
+  discount_type: number;
+  hidden: string[];
+  original: OriginalCart;
+  api: Api;
+  uuid: string;
+  user_id: number;
+  status?: any;
+  business_id: string;
+  comment?: any;
+  driver_tip_rate: number;
+  paymethod_id?: any;
+  driver_tip: number;
+  quantity: number;
+  pay_reference?: any;
+  paymethod_data?: any;
+  products: Product[];
+  business: Business;
+  metafields: any[];
+  subtotal: number;
+  valid_address: boolean;
+  delivery_zone_id: number;
+  delivery_price: number;
+  minimum: number;
+  valid_minimum: boolean;
+  valid_maximum: boolean;
+  maximum?: any;
+  valid_schedule: boolean;
+  valid_products: boolean;
+  valid: boolean;
+  tax_rate: number;
+  service_fee_rate: number;
+  summary_version: number;
+  tax: number;
+  service_fee: number;
+  tax_with_discount: number;
+  discount: number;
+  offers: any[];
+  subtotal_with_discount: number;
+  service_fee_with_discount: number;
+  delivery_price_with_discount: number;
+  total: number;
 }

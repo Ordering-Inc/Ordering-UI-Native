@@ -99,6 +99,17 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     }
   })
 
+  {/* <RNPickerSelect
+    items={productOptions}
+    onValueChange={handleChangeQuantity}
+    value={product.quantity.toString()}
+    style={pickerStyle}
+    useNativeAndroidPickerStyle={false}
+    placeholder={{}}
+    Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon} />}
+    disabled={orderState.loading}
+  /> */}
+
   return (
     <AccordionSection>
       <Accordion
@@ -107,16 +118,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
       >
         <ProductInfo>
           {isCartProduct && !isCartPending && getProductMax ? (
-            <RNPickerSelect
-              items={productOptions}
-              onValueChange={handleChangeQuantity}
-              value={product.quantity.toString()}
-              style={pickerStyle}
-              useNativeAndroidPickerStyle={false}
-              placeholder={{}}
-              Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon} />}
-              disabled={orderState.loading}
-            />
+            <OText>{product.quantity.toString()}</OText>
           ) : (
             <ProductQuantity>
               <OText>
