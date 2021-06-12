@@ -47,11 +47,11 @@ export const ProductOptionSubOptionUI = (props: any) => {
     changePosition(position)
   }
 
-  const handleSuboptionClick = () => {
-    toggleSelect()
-    if (balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1)) {
+  const handleSuboptionClick = (isSelected : boolean) => {
+    if (!isSelected && balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1)) {
       setShowMessage(true)
     }
+    toggleSelect()
   }
 
   useEffect(() => {
@@ -64,13 +64,13 @@ export const ProductOptionSubOptionUI = (props: any) => {
   const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
 
   return (
-    <Container onPress={() => handleSuboptionClick()} disabled={disabled}>
+    <Container onPress={() => !option?.allow_suboption_quantity && handleSuboptionClick(state?.selected)} disabled={disabled}>
       <IconControl>
         {((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
           state?.selected ? (
-            <MaterialCommunityIcon name='checkbox-marked' color={colors.primary} size={24} />
+            <MaterialCommunityIcon onPress={() => option?.allow_suboption_quantity && handleSuboptionClick(state?.selected)} name='checkbox-marked' color={colors.primary} size={24} />
           ) : (
-            <MaterialCommunityIcon name='checkbox-blank-outline' color={colors.backgroundDark} size={24} />
+            <MaterialCommunityIcon onPress={() => option?.allow_suboption_quantity && handleSuboptionClick(state?.selected)} name='checkbox-blank-outline' color={colors.backgroundDark} size={24} />
           )
         ) : (
           state?.selected ? (
@@ -83,7 +83,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
           {suboption?.name}
         </OText>
       </IconControl>
-      {showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} color={colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
+      {showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} ellipsizeMode='true' color={colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
       {option?.allow_suboption_quantity && (
         <QuantityControl>
           <Checkbox disabled={state.quantity === 0} onPress={handleDecrement}>
@@ -111,7 +111,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
             <Circle onPress={() => handlePosition('left')}>
               <MaterialCommunityIcon
                 name='circle-half-full'
-                color={state.selected && state.position === 'left' ? colors.primary : colors.backgroundDark}
+                color={state.selected && state.position === 'left' ? colors.primary : '#cbcbcb'}
                 size={24}
                 style={styles.inverse}
               />
@@ -119,14 +119,14 @@ export const ProductOptionSubOptionUI = (props: any) => {
             <Circle onPress={() => handlePosition('whole')}>
               <MaterialCommunityIcon
                 name='checkbox-blank-circle'
-                color={state.selected && state.position === 'whole' ? colors.primary : colors.backgroundDark}
+                color={state.selected && state.position === 'whole' ? colors.primary : '#cbcbcb'}
                 size={24}
               />
             </Circle>
             <Circle onPress={() => handlePosition('right')}>
               <MaterialCommunityIcon
                 name='circle-half-full'
-                color={state.selected && state.position === 'right' ? colors.primary : colors.backgroundDark}
+                color={state.selected && state.position === 'right' ? colors.primary : '#cbcbcb'}
                 size={24}
               />
             </Circle>
