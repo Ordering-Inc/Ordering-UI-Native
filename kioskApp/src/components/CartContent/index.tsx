@@ -11,9 +11,10 @@ import { Cart as TypeCart } from '../../types';
 export const CartContent = (props: any) => {
   const {
     carts,
+    navigation,
     isOrderStateCarts
   }: Props = props
-
+  
   const [, t] = useLanguage()
   const [isCartsLoading, setIsCartsLoading] = useState(false)
 
@@ -26,14 +27,13 @@ export const CartContent = (props: any) => {
   return (
     <CCContainer>
       {isOrderStateCarts && cart && (
-        <>
-          <Cart
-            cart={cart}
-            onNavigationRedirect={props.onNavigationRedirect}
-            isCartsLoading={isCartsLoading}
-            setIsCartsLoading={setIsCartsLoading}
-          />
-        </>
+        <Cart
+          navigation={navigation}
+          cart={cart}
+          onNavigationRedirect={props.onNavigationRedirect}
+          isCartsLoading={isCartsLoading}
+          setIsCartsLoading={setIsCartsLoading}
+        />
       )}
       {(!cart || carts?.length === 0) && (
         <CCNotCarts>
@@ -51,4 +51,5 @@ export const CartContent = (props: any) => {
 interface Props {
   carts: TypeCart[], 
   isOrderStateCarts: any,
+  navigation: any,
 }

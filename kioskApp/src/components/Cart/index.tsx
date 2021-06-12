@@ -8,7 +8,7 @@ import {
   useValidationFields,
 } from 'ordering-components/native';
 
-import { CContainer, CheckoutAction } from './styles';
+import { CContainer, CheckoutAction, Actions, KeyboardView } from './styles';
 
 import { OSBill, OSTable, OSCoupon, OSTotal } from '../OrderSummary/styles';
 
@@ -23,6 +23,10 @@ import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
 import { Cart as TypeCart } from '../../types';
 import CartItem from '../CartItem';
+import NavBar from '../NavBar';
+import { Dimensions, ScrollView, Platform } from 'react-native';
+
+const windowHeight = Dimensions.get('window').height;
 
 const CartUI = (props: any) => {
   const {
@@ -34,7 +38,8 @@ const CartUI = (props: any) => {
     removeProduct,
     handleCartOpen,
     setIsCartsLoading,
-    isFromCart
+    isFromCart,
+    navigation,
   } : CartUIProps = props
   
 
@@ -86,10 +91,34 @@ const CartUI = (props: any) => {
     setCanOpenUpselling(false)
     props.onNavigationRedirect('CheckoutNavigator', { screen: 'CheckoutPage', cartUuid: cart?.uuid })
   }
+	
+	const goToBack = () => navigation.goBack();
 
   return (
-    <CContainer>
-      <>
+    <KeyboardView
+      enabled
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <NavBar
+        title={t('CONFIRM_YOUR_ORDER', 'Confirm your order')}
+        onActionLeft={goToBack}
+        rightComponent={(
+          <OButton
+            text={t('CANCEL_ORDER', 'Cancel order')}
+            bgColor="transparent"
+            borderColor="transparent"
+            textStyle={{ color: colors.primary }}
+            onClick={handleClearProducts}
+          />
+        )}
+      />
+
+      <ScrollView
+        style={{
+          height: windowHeight * 0.65,
+          backgroundColor: colors.white
+        }}
+      >
         {cart?.products?.length > 0 && cart?.products.map((product: any) => (
           <CartItem
             key={product.code}
@@ -103,7 +132,13 @@ const CartUI = (props: any) => {
             onEditProduct={handleEditProduct}
           />
         ))}
+      </ScrollView>
 
+      <Actions
+        style={{
+          height: windowHeight * 0.22
+        }}
+      >
         {cart?.valid_products && (
           <OSBill>
             <OSTable>
@@ -200,8 +235,9 @@ const CartUI = (props: any) => {
             onClick={() => setOpenUpselling(true)}
             style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
           />
-        </CheckoutAction>
-      </>
+        </CheckoutAction>  
+      </Actions>
+
       <OModal
         open={openProduct}
         entireModal
@@ -232,7 +268,7 @@ const CartUI = (props: any) => {
           setCanOpenUpselling={setCanOpenUpselling}
         />
       )}
-    </CContainer>
+    </KeyboardView>
   )
 }
 
@@ -246,6 +282,7 @@ interface CartUIProps {
   handleCartOpen: any,
   setIsCartsLoading: any,
   isFromCart: any,
+  navigation: any,
 }
 
 export const Cart = (props: any) => {
