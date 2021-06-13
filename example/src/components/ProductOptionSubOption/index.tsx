@@ -53,6 +53,12 @@ export const ProductOptionSubOptionUI = (props: any) => {
     }
     toggleSelect()
   }
+  
+  const handleClickContainer = () => {
+    if(!option?.allow_suboption_quantity){
+      handleSuboptionClick(state?.selected)
+    }
+  }
 
   useEffect(() => {
     if (!(balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1))) {
@@ -64,7 +70,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
   const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
 
   return (
-    <Container onPress={() => !option?.allow_suboption_quantity && handleSuboptionClick(state?.selected)} disabled={disabled}>
+    <Container onPress={() => handleClickContainer()} disabled={disabled}>
       <IconControl>
         {((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
           state?.selected ? (
