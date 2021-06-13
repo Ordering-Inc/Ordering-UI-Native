@@ -89,7 +89,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
           {suboption?.name}
         </OText>
       </IconControl>
-      {showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} ellipsizeMode='true' color={colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
+      {showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} color={colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
       {option?.allow_suboption_quantity && (
         <QuantityControl>
           <Checkbox disabled={state.quantity === 0} onPress={handleDecrement}>
