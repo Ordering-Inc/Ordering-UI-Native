@@ -1,43 +1,26 @@
-import React, {useRef} from 'react';
-import {Button, Dimensions, StyleSheet, View} from 'react-native';
-import {useLanguage, useApi} from 'ordering-components/native';
+import React from 'react';
+import { Button, Dimensions, View } from 'react-native';
+import { useLanguage } from 'ordering-components/native';
 
-import {Container} from '../layouts/Container';
+import { Container } from '../layouts/Container';
 import NavBar from '../components/NavBar';
-import CustomerName from "../components/CustomerName";
-import {OButton} from "../components/shared";
+import CustomerName from '../components/CustomerName';
 
 const _dim = Dimensions.get('window');
 
 const CustomerNamePage = (props: any): React.ReactElement => {
   const [, t] = useLanguage();
-  const [ordering] = useApi();
-  const refRBSheet = useRef<any>(null);
 
   const {
     navigation
   } = props;
 
-  const businessProductsListingProps = {
-    ...props,
-    ordering,
-    isSearchByName: true,
-    isSearchByDescription: true,
-    slug: '41',
-    categoryId: null,
-    productId: null,
-    langFallbacks: null,
-    handleSearchRedirect: () => {
-    },
-    onProductRedirect: (x: any) => {
-    },
-    onCheckoutRedirect: (cartUuid: any) => {
-    }
-  };
-
   const goToBack = () => navigation.goBack();
 
-  const goNext = () => {
+  const goNextPage = () => {
+    // this method is called when user press button "Proceed to Pay" and field is not empty
+    // Customer name is saved on local storage like STORAGE_KEY.CUSTOMER_NAME (constants placed on config/constants)
+    console.log('Implement navigate to the "proceed to pay" page and delete this log')
   };
 
   return (
@@ -51,25 +34,10 @@ const CustomerNamePage = (props: any): React.ReactElement => {
         </View>
 
         <CustomerName
-          refRBSheet={refRBSheet}
-        >
-
-        </CustomerName>
-
-        <OButton
-          style={styles.buttonStyle}
-          text={t('PROCEED_TO_PAY', 'Proceed to Pay')}
-          onClick={goNext}/>
+          onProceedToPay={goNextPage}/>
       </View>
     </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  buttonStyle: {
-    height: 44,
-    margin: 16
-  },
-});
 
 export default CustomerNamePage;

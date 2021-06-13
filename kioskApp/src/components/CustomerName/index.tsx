@@ -1,26 +1,49 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLanguage } from 'ordering-components/native';
+import { _setStoreData } from '../../providers/StoreUtil';
 
-import {OInput, OText} from '../shared';
-import {StyledContent} from './styles';
-import {Controller, useForm} from "react-hook-form";
-import {FormSide} from "../LoginForm/styles";
-import {StyleSheet} from "react-native";
-import {colors} from "../../theme.json";
+import { OButton, OInput, OText } from '../shared';
+import { StyledContent } from './styles';
+import { Controller, useForm } from 'react-hook-form';
+import { StyleSheet, View } from 'react-native';
+import { colors } from '../../theme.json';
+import { ToastType, useToast } from '../../providers/ToastProvider';
+import { STORAGE_KEY } from '../../config/constants';
 
 const CustomerName = (props: Props): React.ReactElement => {
+  const {
+    onProceedToPay
+  } = props;
 
-	const [, t] = useLanguage();
+  const [, t] = useLanguage();
   const {control, handleSubmit, formState: {errors}} = useForm();
+  const {showToast} = useToast();
 
-	return (
-		<>
+  const onSubmit = (values: any) => {
+    _setStoreData(STORAGE_KEY.CUSTOMER_NAME, values.name);
+    onProceedToPay()
+  };
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      // Convert all errors in one string to show in toast provider
+      const list = Object.values(errors);
+      let stringError = '';
+      list.map((item: any, i: number) => {
+        stringError += (i + 1) === list.length ? `- ${item.message}` : `- ${item.message}\n`
+      });
+      showToast(ToastType.Error, stringError);
+    }
+  }, [errors]);
+
+  return (
+    <View style={styles.container}>
       <StyledContent>
         <OText size={28}>
-          Whom might this
+          {t('WHOM_MIGHT_THIS', 'Whom might this')}
         </OText>
         <OText size={28} weight={'bold'}>
-          order be for?
+          {t('ORDER_BE_FOR', 'order be for?')}
         </OText>
 
         <Controller
@@ -30,34 +53,36 @@ const CustomerName = (props: Props): React.ReactElement => {
               placeholder={t('WHITE_YOUR_NAME', 'White your name')}
               style={styles.inputStyle}
               value={p.field.value}
-              autoCapitalize="none"
+              autoCapitalize="words"
               autoCorrect={false}
-              type="email-address"
               onChange={(val: any) => p.field.onChange(val)}
             />
           )}
-          name="email"
+          name="name"
           rules={{
             required: t(
-              'VALIDATION_ERROR_EMAIL_REQUIRED',
-              'The field Email is required',
-            ).replace('_attribute_', t('EMAIL', 'Email')),
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: t(
-                'INVALID_ERROR_EMAIL',
-                'Invalid email address',
-              ).replace('_attribute_', t('EMAIL', 'Email')),
-            },
+              'VALIDATION_ERROR_CUSTOMER_NAME_REQUIRED',
+              'The field Customer Name is required',
+            ).replace('_attribute_', t('CUSTOMER_NAME', 'Customer Name'))
           }}
           defaultValue=""
         />
+
       </StyledContent>
-		</>
-	);
+
+      <OButton
+        style={styles.buttonStyle}
+        text={t('PROCEED_TO_PAY', 'Proceed to Pay')}
+        onClick={handleSubmit(onSubmit)}/>
+
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   inputStyle: {
     marginTop: 36,
     borderRadius: 4,
@@ -66,11 +91,14 @@ const styles = StyleSheet.create({
     borderColor: colors.disabled,
     height: 44
   },
+  buttonStyle: {
+    height: 44,
+    margin: 16
+  },
 });
 
 interface Props {
-	refRBSheet: React.RefObject<any>;
-	children: any;
+  onProceedToPay: any;
 }
 
 export default CustomerName;
