@@ -217,7 +217,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           handleClick={() => setOpenUpselling(true)}
         />
       )}
-      <OModal open={!!curProduct} onClose={handleCloseProductModal} entireModal customClose>
+      <OModal
+        open={!!curProduct} 
+        onClose={handleCloseProductModal}
+        entireModal
+        customClose
+      >
         <ProductForm
           product={curProduct}
           businessSlug={business.slug}

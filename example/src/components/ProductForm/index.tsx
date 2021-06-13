@@ -10,7 +10,8 @@ import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
 
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Dimensions  } from 'react-native'
+import Icon from 'react-native-vector-icons/Feather';
 
 import {
   ProductHeader,
@@ -97,12 +98,11 @@ export const ProductOptionsUI = (props: any) => {
             <WrapHeader>
               <TopHeader>
                 <View style={styles.headerItem}>
-                  <OButton
-                    imgLeftSrc={images.general.arrow_left}
-                    imgRightSrc={null}
-                    style={styles.btnBackArrow}
-                    onClick={() => onClose()}
-                    imgLeftStyle={{ tintColor: '#fff' }}
+                  <Icon
+                    name="x"
+                    size={35}
+                    style={{color: colors.white, backgroundColor: 'rgba(0,0,0,0.3)'}}
+                    onPress={onClose}
                   />
                 </View>
               </TopHeader>
@@ -282,11 +282,11 @@ const styles = StyleSheet.create({
     height: windowHeight
   },
   headerItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 15,
-    marginHorizontal: 20,
-    zIndex: 1
+    overflow: 'hidden',
+    borderRadius: 50,
+    backgroundColor: '#CCCCCC80',
+    width: 35,
+    margin: 15
   },
   optionContainer: {
     marginBottom: 20

@@ -155,6 +155,8 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         titleSectionStyle={styles.modalTitleSectionStyle}
         open={openBusinessInformation}
         onClose={() => setOpenBusinessInformation(false)}
+        styleCloseButton={{color: colors.white, backgroundColor: 'rgba(0,0,0,0.3)'}}
+        isNotDecoration
       >
         <BusinessInformation
           businessState={businessState}
@@ -165,6 +167,8 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         titleSectionStyle={styles.modalTitleSectionStyle}
         open={openBusinessReviews}
         onClose={() => setOpenBusinessReviews(false)}
+        styleCloseButton={{color: colors.white, backgroundColor: 'rgba(0,0,0,0.3)'}}
+        isNotDecoration
       >
         <BusinessReviews
           businessState={businessState}
