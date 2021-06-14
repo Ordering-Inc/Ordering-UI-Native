@@ -131,7 +131,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                   <SearchBar
                     onSearch={handleChangeSearch}
                     onCancel={() => handleCancel()}
-                    isCancelXButtonShow={!!searchValue}
+                    isCancelXButtonShow
                     noBorderShow
                     placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
                     lazyLoad={businessState?.business?.lazy_load_products_recommended}
@@ -217,7 +217,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           handleClick={() => setOpenUpselling(true)}
         />
       )}
-      <OModal open={!!curProduct} onClose={handleCloseProductModal} entireModal customClose>
+      <OModal
+        open={!!curProduct} 
+        onClose={handleCloseProductModal}
+        entireModal
+        customClose
+      >
         <ProductForm
           product={curProduct}
           businessSlug={business.slug}

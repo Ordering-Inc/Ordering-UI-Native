@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Modal, StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
+import { Alert, Modal, StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpacity, View, TextStyle } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
 import { colors } from '../../theme.json';
@@ -20,6 +20,7 @@ interface Props {
   customClose?: boolean;
   titleSectionStyle?: any;
   isNotDecoration?: boolean;
+  styleCloseButton?: any
 }
 
 const OModal = (props: Props): React.ReactElement => {
@@ -38,7 +39,8 @@ const OModal = (props: Props): React.ReactElement => {
     customClose,
     titleSectionStyle,
     isNotDecoration,
-    style
+    style,
+    styleCloseButton
   } = props
 
   return (
@@ -57,7 +59,7 @@ const OModal = (props: Props): React.ReactElement => {
                 <Icon
                   name="x"
                   size={35}
-                  style={isNotDecoration && styles.cancelBtn}
+                  style={isNotDecoration && (styleCloseButton || styles.cancelBtn)}
                   onPress={onClose}
                 />
               </View>
@@ -72,7 +74,7 @@ const OModal = (props: Props): React.ReactElement => {
                 <Icon
                   name="x"
                   size={35}
-                  style={styles.cancelBtn}
+                  style={styleCloseButton || styles.cancelBtn}
                   onPress={onClose}
                 />
                 <Text style={styles.modalText}>{title}</Text>

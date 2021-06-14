@@ -18,7 +18,6 @@ export const TopHeader = styled.View`
 export const ProductHeader = styled.ImageBackground`
   flex-direction: row;
   width: 100%;
-  height: 100%;
   position: relative;
   max-height: 260px;
   height: 260px;

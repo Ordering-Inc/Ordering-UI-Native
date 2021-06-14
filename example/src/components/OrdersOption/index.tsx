@@ -78,7 +78,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       { key: 13, value: t('PREORDER', 'PreOrder')},
       { key: 14, value: t('ORDER_NOT_READY', 'Order not ready')},
       { key: 15, value: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Order picked up completed by customer') },
-      { key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancel },led by customer')},
+      { key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer')},
       { key: 17, value: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer')  },
       { key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business') },
       { key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer') },
