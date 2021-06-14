@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
 import { useOrder, useLanguage } from 'ordering-components/native';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 import { colors } from '../theme.json'
 import { CartContent } from '../components/CartContent';
 import { Container } from '../layouts/Container'
@@ -25,7 +25,9 @@ const CartPage = (props: Props) => {
   }
 
   return (
-    <CartContent {...cartProps} />
+    <View style={{ flex: 1, backgroundColor: '#fff' }} >
+      <CartContent {...cartProps} />
+    </View>
   );
 };
 

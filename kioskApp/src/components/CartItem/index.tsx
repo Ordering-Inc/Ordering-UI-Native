@@ -1,14 +1,18 @@
 import React from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { StyledCartItem } from './styles';
 import { OButton, OImage, OText } from '../shared';
 import { IMAGES } from '../../config/constants';
 import { colors } from '../../theme.json';
 import { Product } from '../../types';
+import QuantityControl from '../QuantityControl';
 
 const _dim = Dimensions.get('window');
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen")
 
 const CartItem = (props: CartItemProps) => {
 	const [, t] = useLanguage();
@@ -22,7 +26,7 @@ const CartItem = (props: CartItemProps) => {
     onDeleteProduct,
     onEditProduct,
     isFromCheckout,
-  } = props
+	} = props
 
 	return (
 		<StyledCartItem>
@@ -67,12 +71,15 @@ const CartItem = (props: CartItemProps) => {
 					{`$${product?.price}`}
 				</OText>
 
-				<OText
-					size={_dim.width * 0.023}
-					weight="500"
-				>
-					{`${product?.quantity.toString()}`}
-				</OText>
+				<QuantityControl
+					val={product?.quantity || 0}
+					onDecremet={(product?.quantity||0 > 1)
+						? (() => { changeQuantity && changeQuantity(product, (product?.quantity || 0) - 1) })
+						: undefined
+					}
+					onIncrement={changeQuantity && (() => { changeQuantity(product, (product?.quantity || 0) + 1) })}
+					onDelete={onDeleteProduct && (() => { onDeleteProduct(product) })}
+				/>
 			</View>
 		</StyledCartItem>
 	);
