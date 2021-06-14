@@ -25,7 +25,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     titleContent,
     customArray,
     loadMoreOrders,
-    onNavigationRedirect
+    onNavigationRedirect,
+    orderStatus
   } = props
 
   const [, t] = useLanguage()
@@ -37,7 +38,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     ? images.general.emptyActiveOrders
     : images.general.emptyPastOrders
 
-  const orders = customArray || values
+  const orders = customArray || values || []
 
   const [reorderLoading, setReorderLoading] = useState(false)
 
@@ -145,7 +146,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {!loading && !error && orders.length > 0 && (
         activeOrders ? (
           <ActiveOrders
-            orders={orders}
+            orders={orders.filter((order: any) => orderStatus.includes(order.status))}
             pagination={pagination}
             loadMoreOrders={loadMoreOrders}
             reorderLoading={reorderLoading}
@@ -156,7 +157,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         ) : (
           <PreviousOrders
             reorderLoading={reorderLoading}
-            orders={orders}
+            orders={orders.filter((order: any) => orderStatus.includes(order.status))}
             pagination={pagination}
             loadMoreOrders={loadMoreOrders}
             getOrderStatus={getOrderStatus}
@@ -173,7 +174,9 @@ export const OrdersOption = (props: OrdersOptionParams) => {
   const MyOrdersProps = {
     ...props,
     UIComponent: OrdersOptionUI,
-    orderStatus: props.activeOrders ? [0, 3, 4, 7, 8, 9, 13, 14, 15, 18, 19, 20, 21] : [1, 2, 5, 6, 10, 11, 12, 16, 17],
+    orderStatus: props.activeOrders
+      ? [0, 3, 4, 7, 8, 9, 13, 14, 15, 18, 19, 20, 21]
+      : [1, 2, 5, 6, 10, 11, 12, 16, 17],
     useDefualtSessionManager: true,
     paginationSettings: {
       initialPage: 1,
