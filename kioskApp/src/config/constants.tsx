@@ -20,6 +20,7 @@ export const IMAGES = {
   pushPin: require('../assets/icons/push_pin.png'),
   shoppingCart: require('../assets/icons/shopping_cart.png'),
   edit: require('../assets/icons/edit.png'),
+  check_decagram: require('../assets/icons/check_decagram.png')
 }
 
 export const USER_TYPE = {

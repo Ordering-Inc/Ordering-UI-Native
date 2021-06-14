@@ -1,12 +1,7 @@
 import * as React from 'react';
-import styled from 'styled-components/native';
-import { useOrder, useLanguage } from 'ordering-components/native';
-import { Platform, View } from 'react-native';
-import { colors } from '../theme.json'
+import { useOrder } from 'ordering-components/native';
+import { View } from 'react-native';
 import { CartContent } from '../components/CartContent';
-import { Container } from '../layouts/Container'
-import NavBar from '../components/NavBar';
-import { OButton } from '../components/shared';
 
 interface Props {
   navigation: any;

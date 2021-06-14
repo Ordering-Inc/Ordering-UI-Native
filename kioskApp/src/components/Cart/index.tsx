@@ -16,7 +16,7 @@ import { ProductItemAccordion } from '../ProductItemAccordion';
 import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
-import { OButton, OModal, OText } from '../shared';
+import { OButton, OIcon, OModal, OText } from '../shared';
 import { colors } from '../../theme.json';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
@@ -24,7 +24,8 @@ import { verifyDecimals } from '../../utils';
 import { Cart as TypeCart } from '../../types';
 import CartItem from '../CartItem';
 import NavBar from '../NavBar';
-import { Dimensions, ScrollView, Platform } from 'react-native';
+import { Dimensions, ScrollView, Platform, View } from 'react-native';
+import { IMAGES } from '../../config/constants';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -148,8 +149,7 @@ const CartUI = (props: any) => {
 
       <ScrollView
         style={{
-          height: windowHeight * 0.53,
-          backgroundColor: colors.white
+          height: windowHeight * 0.58
         }}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any) => (
@@ -169,22 +169,55 @@ const CartUI = (props: any) => {
 
       <Actions
         style={{
-          height: windowHeight * 0.22
+          height: windowHeight * 0.17
         }}
       >
         {cart?.valid_products && (
           <OSBill>
             {cart?.discount > 0 && cart?.total >= 0 && (
-              <OSTable>
-                {cart?.discount_type === 1 ? (
-                  <OText>
-                    {t('DISCOUNT', 'Discount')}
-                    <OText>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</OText>
-                  </OText>
-                ) : (
-                  <OText>{t('DISCOUNT', 'Discount')}</OText>
-                )}
-                <OText>- {parsePrice(cart?.discount || 0)}</OText>
+              <OSTable
+                style={{
+                  backgroundColor: colors.success,
+                  borderRadius: 6,
+                  maxHeight: 60,
+                  padding: 10
+                }}
+              >
+                <View
+                  style={{
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                  }}
+                >
+                  <OIcon
+                    src={IMAGES.check_decagram}
+                  />
+
+                  {cart?.discount_type === 1 ? (
+                    <OText
+                      mLeft={15}
+                    >
+                      <OText color={colors.green} size={16}>{`${t('VALID_CODE', 'Valid code')}! ${t('YOU_GOT', 'you got')} `}</OText>
+                      <OText color={colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parsePrice)}% `}</OText>
+                      <OText color={colors.green} size={16}>{`${t('OFF', 'off')}`}</OText>
+                    </OText>
+                  ) : (
+                    <OText
+                      size={16}
+                      mLeft={15}
+                      color={colors.green}
+                    >
+                      {`${t('VALID_CODE', 'Valid code')}! `}
+                    </OText>
+                  )}
+                </View>
+                
+
+                <OText
+                  size={16}
+                  color={colors.green}
+                  weight="700"
+                >- {parsePrice(cart?.discount || 0)}</OText>
               </OSTable>
             )}
             {cart.business.tax_type !== 1 && (
@@ -225,7 +258,7 @@ const CartUI = (props: any) => {
                 <OText>{parsePrice(cart?.service_fee)}</OText>
               </OSTable>
             )}
-            {isCouponEnabled && !isCartPending && (
+            {/* {isCouponEnabled && !isCartPending && (
               <OSTable>
                 <OSCoupon>
                   <CouponControl
@@ -234,7 +267,7 @@ const CartUI = (props: any) => {
                   />
                 </OSCoupon>
               </OSTable>
-            )}
+            )} */}
             <OSTotal>
               <OSTable style={{ marginTop: 15 }}>
                 <OText style={{ fontWeight: 'bold' }}>
