@@ -27,6 +27,10 @@ export const USER_TYPE = {
   DRIVER : 'driver'
 }
 
+export const STORAGE_KEY = {
+  CUSTOMER_NAME : 'customer_name'
+}
+
 export const ORDER_STATUS_IMAGES = {
   orderStatus0: require('../assets/images/status-0.png'),
   orderStatus1: require('../assets/images/status-1.png'),
