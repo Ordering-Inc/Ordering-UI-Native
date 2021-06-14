@@ -64,7 +64,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
           showsHorizontalScrollIndicator={false}
         >
           {
-            !upsellingProducts.loading ? (
+            !upsellingProducts.loading && (
               <>
                 {
                   !upsellingProducts.error ? upsellingProducts.products.map((product: any) => (
@@ -89,8 +89,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                   )
                 }
               </>
-            ) : (
-              <Spinner visible={upsellingProducts.loading} />
             )
           }
         </UpsellingContainer>

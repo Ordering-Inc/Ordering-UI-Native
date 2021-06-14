@@ -49,11 +49,11 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
     <BusinessContainer>
       <BusinessHeader
         style={isBusinessInfoShow ? styles.businesInfoheaderStyle : { ...styles.headerStyle, backgroundColor: colors.backgroundGray }}
-        source={{ uri: header || businessState?.business?.header }}
+        source={{ uri: header || optimizeImage(businessState?.business?.header, 'h_400,c_limit') }}
       >
         <BusinessLogo>
           {!isBusinessInfoShow && (
-            <OIcon url={logo || businessState?.business?.logo} style={styles.businessLogo} />
+            <OIcon url={logo || optimizeImage(businessState?.business?.logo, 'h_300,c_limit')} style={styles.businessLogo} />
           )}
         </BusinessLogo>
       </BusinessHeader>
@@ -155,6 +155,8 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         titleSectionStyle={styles.modalTitleSectionStyle}
         open={openBusinessInformation}
         onClose={() => setOpenBusinessInformation(false)}
+        styleCloseButton={{color: colors.white, backgroundColor: 'rgba(0,0,0,0.3)'}}
+        isNotDecoration
       >
         <BusinessInformation
           businessState={businessState}
@@ -165,6 +167,8 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         titleSectionStyle={styles.modalTitleSectionStyle}
         open={openBusinessReviews}
         onClose={() => setOpenBusinessReviews(false)}
+        styleCloseButton={{color: colors.white, backgroundColor: 'rgba(0,0,0,0.3)'}}
+        isNotDecoration
       >
         <BusinessReviews
           businessState={businessState}
