@@ -8,7 +8,7 @@ import {
   useValidationFields,
 } from 'ordering-components/native';
 
-import { CContainer, CheckoutAction, Actions, KeyboardView } from './styles';
+import { CContainer, CheckoutAction, Actions, KeyboardView, OrderTypeWrapper } from './styles';
 
 import { OSBill, OSTable, OSCoupon, OSTotal } from '../OrderSummary/styles';
 
@@ -86,6 +86,14 @@ const CartUI = (props: any) => {
     }
   }
 
+  const handleChangeOrderType = () => {
+    try {
+      
+    } catch (error) {
+      setIsCartsLoading && setIsCartsLoading(false)
+    }
+  }
+
   const handleUpsellingPage = () => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
@@ -102,20 +110,45 @@ const CartUI = (props: any) => {
       <NavBar
         title={t('CONFIRM_YOUR_ORDER', 'Confirm your order')}
         onActionLeft={goToBack}
+        style={{ height: windowHeight * 0.08 }}
         rightComponent={(
           <OButton
             text={t('CANCEL_ORDER', 'Cancel order')}
             bgColor="transparent"
             borderColor="transparent"
-            textStyle={{ color: colors.primary }}
+            style={{ paddingEnd: 0 }}
+            textStyle={{ color: colors.primary, marginEnd: 0 }}
             onClick={handleClearProducts}
           />
         )}
       />
 
+      <OrderTypeWrapper
+        style={{ height: windowHeight * 0.08 }}
+      >
+        <OText
+          weight="500"
+          size={21}
+          color={colors.black}
+        >
+          {t('THIS_ORDER_IS_TO', 'this orderis to')}
+          {' '}
+          {t('TAKE_OUT', 'Take out')}
+        </OText>
+
+        <OButton
+          text={t('I_CHANGED_MY_MIND', 'I changed my mind')}
+          bgColor="transparent"
+          borderColor="transparent"
+          style={{ paddingEnd: 0 }}
+          textStyle={{ color: colors.primary, marginEnd: 0 }}
+          onClick={handleChangeOrderType}
+        />
+      </OrderTypeWrapper>
+
       <ScrollView
         style={{
-          height: windowHeight * 0.65,
+          height: windowHeight * 0.53,
           backgroundColor: colors.white
         }}
       >
@@ -141,10 +174,6 @@ const CartUI = (props: any) => {
       >
         {cart?.valid_products && (
           <OSBill>
-            <OSTable>
-              <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
-              <OText>{parsePrice(cart?.subtotal || 0)}</OText>
-            </OSTable>
             {cart?.discount > 0 && cart?.total >= 0 && (
               <OSTable>
                 {cart?.discount_type === 1 ? (
@@ -221,7 +250,7 @@ const CartUI = (props: any) => {
         <CheckoutAction>
           <OButton
             text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-              !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
+              !openUpselling !== canOpenUpselling ? `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`: t('LOADING', 'Loading')
             ) : !cart?.valid_address ? (
               `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
             ) : (

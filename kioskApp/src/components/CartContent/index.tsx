@@ -20,8 +20,8 @@ export const CartContent = (props: any) => {
 
   let cart: TypeCart | undefined;
 
-  if (!isCartsLoading) {
-    cart = carts?.find((item) => item.original.business_id == '41');
+  if (!isCartsLoading && carts?.length > 0) {
+    cart = carts?.find((item) => item?.original?.business_id == '41');
   }
 
   return (

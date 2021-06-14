@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components/native';
+import { colors } from '../../theme.json'
 
 export const CContainer = styled.View`
   padding: 0 20px;
@@ -38,4 +39,15 @@ export const Actions = styled.View`
 export const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
   padding-bottom: 15px;
+`;
+
+export const OrderTypeWrapper = styled.View`
+  background-color: ${colors.white};
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  border-bottom-color: #E1E8ED;
+  border-bottom-width: 1px;
+  margin-bottom: 30px;
 `;
