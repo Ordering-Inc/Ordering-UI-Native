@@ -37,7 +37,6 @@ import { Placeholder,PlaceholderLine,Fade } from 'rn-placeholder'
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width
 
-console.log(windowWidth, windowHeight)
 export const ProductOptionsUI = (props: any) => {
   const {
     navigation,
