@@ -54,18 +54,16 @@ interface Props {
 }
 
 const NavBar = (props: Props) => {
-  const safeAreaInset = useSafeAreaInsets();
-  const goSupport = () => {
-    props.navigation.navigate('Supports', {});
-  }
   return (
     <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
-      <OButton
-        imgLeftSrc={props.leftImg || IMAGES.arrow_left}
-        imgRightSrc={null}
-        style={{ ...btnBackArrow, ...props.btnStyle }}
-        onClick={props.onActionLeft}
-      />
+      {(props?.onActionLeft || props?.leftImg) && (
+        <OButton
+          imgLeftSrc={props.leftImg || IMAGES.arrow_left}
+          imgRightSrc={null}
+          style={{ ...btnBackArrow, ...props.btnStyle }}
+          onClick={props.onActionLeft}
+        />)
+      }
       <TitleTopWrapper>
         {props.withIcon
           ? (

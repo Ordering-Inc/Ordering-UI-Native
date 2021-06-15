@@ -17,13 +17,13 @@ export const CartContent = (props: any) => {
   
   const [, t] = useLanguage()
   const [isCartsLoading, setIsCartsLoading] = useState(false)
-
+  
   let cart: TypeCart | undefined;
-
-  if (!isCartsLoading && carts?.length > 0) {
-    cart = carts?.find((item) => item?.original?.business_id == '41');
+  
+  if (carts?.length > 0) {
+    cart = carts?.find((item) => item.business_id == '41');
   }
-
+  
   return (
     <CCContainer>
       {isOrderStateCarts && cart && (

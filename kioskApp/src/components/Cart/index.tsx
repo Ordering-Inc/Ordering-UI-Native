@@ -8,13 +8,9 @@ import {
   useValidationFields,
 } from 'ordering-components/native';
 
-import { CContainer, CheckoutAction, Actions, KeyboardView, OrderTypeWrapper } from './styles';
+import { CheckoutAction, Actions, KeyboardView, OrderTypeWrapper } from './styles';
 
-import { OSBill, OSTable, OSCoupon, OSTotal } from '../OrderSummary/styles';
-
-import { ProductItemAccordion } from '../ProductItemAccordion';
-import { BusinessItemAccordion } from '../BusinessItemAccordion';
-import { CouponControl } from '../CouponControl';
+import { OSBill, OSTable, OSTotal } from '../OrderSummary/styles';
 
 import { OButton, OIcon, OModal, OText } from '../shared';
 import { colors } from '../../theme.json';
@@ -88,11 +84,10 @@ const CartUI = (props: any) => {
   }
 
   const handleChangeOrderType = () => {
-    try {
-      
-    } catch (error) {
-      setIsCartsLoading && setIsCartsLoading(false)
-    }
+    navigation.push('DeliveryType', {
+      callback : () => {navigation.pop(1)},
+      goBack: () => {navigation.pop(1)},
+    });
   }
 
   const handleUpsellingPage = () => {
@@ -101,7 +96,7 @@ const CartUI = (props: any) => {
     props.onNavigationRedirect('CheckoutNavigator', { screen: 'CheckoutPage', cartUuid: cart?.uuid })
   }
 	
-	const goToBack = () => navigation.goBack();
+  const goToBack = () => navigation.goBack();
 
   return (
     <KeyboardView
@@ -132,9 +127,9 @@ const CartUI = (props: any) => {
           size={21}
           color={colors.black}
         >
-          {t('THIS_ORDER_IS_TO', 'this orderis to')}
+          {t('THIS_ORDER_IS_TO', 'This order is to')}
           {' '}
-          {t('TAKE_OUT', 'Take out')}
+          {t('TAKE_OUT', 'take out')}
         </OText>
 
         <OButton

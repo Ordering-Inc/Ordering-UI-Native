@@ -14,6 +14,17 @@ export interface BusinessProductsListingParams {
   logo?: any;
 }
 
+export interface OrderTypeSelectParams {
+  handleChangeOrderType: (value: any) => {};
+  typeSelected?: number;
+  defaultValue?: number;
+  configTypes?: Array<any>;
+  orderTypes: Array<any>;
+  navigation: any;
+  callback?: () => void;
+  goBack?: () => void;
+}
+
 export interface LanguageSelectorParams {
   languagesState?: any;
   currentLanguage?: string;
