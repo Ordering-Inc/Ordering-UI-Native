@@ -76,10 +76,12 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
    }*/
 
   const handleChangeQuantity = (value: string) => {
-    if (parseInt(value) === 0) {
-      onDeleteProduct && onDeleteProduct(product)
-    } else {
-      changeQuantity && changeQuantity(product, parseInt(value))
+    if(!orderState.loading){
+      if (parseInt(value) === 0) {
+        onDeleteProduct && onDeleteProduct(product)
+      } else {     
+        changeQuantity && changeQuantity(product, parseInt(value))
+      }
     }
   }
 

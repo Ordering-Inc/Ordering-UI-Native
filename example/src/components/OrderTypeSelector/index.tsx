@@ -31,12 +31,17 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     }
   })
 
+  const handleChangeOrderTypeCallback = (orderType : number) => {
+    if(!orderState.loading){
+      handleChangeOrderType(orderType)
+    }
+  }
 
   return (
     typeSelected !== undefined && (
       <OrderTypeWrapper>
         <RNPickerSelect
-          onValueChange={(orderType) => handleChangeOrderType(orderType)}
+          onValueChange={(orderType) => handleChangeOrderTypeCallback(orderType)}
           items={items}
           placeholder={{}}
           style={pickerStyle}
