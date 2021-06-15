@@ -51,6 +51,8 @@ const CartUI = (props: any) => {
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
 
+  const selectedOrderType = orderState?.options?.type;
+
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
 
@@ -129,7 +131,8 @@ const CartUI = (props: any) => {
         >
           {t('THIS_ORDER_IS_TO', 'This order is to')}
           {' '}
-          {t('TAKE_OUT', 'take out')}
+          {selectedOrderType === 2 && t('TAKE_OUT', 'Take out')}
+          {selectedOrderType === 3 && t('EAT_IN', 'Eat in')}
         </OText>
 
         <OButton
@@ -224,7 +227,7 @@ const CartUI = (props: any) => {
                 <OText>{parsePrice(cart?.tax || 0)}</OText>
               </OSTable>
             )}
-            {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
+            {selectedOrderType === 1 && cart?.delivery_price > 0 && (
               <OSTable>
                 <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
                 <OText>{parsePrice(cart?.delivery_price)}</OText>
