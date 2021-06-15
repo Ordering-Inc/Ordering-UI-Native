@@ -2,7 +2,9 @@ import { Platform } from 'react-native';
 import styled, { css } from 'styled-components/native';
 import { colors } from '../../theme.json';
 
-export const ChContainer = styled.View``
+export const ChContainer = styled.View`
+  margin-bottom: 60px;
+`
 
 export const ChSection = styled.View``
 

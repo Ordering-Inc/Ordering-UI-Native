@@ -682,11 +682,7 @@ export const Checkout = (props: any) => {
 
   return (
     <>
-    {cartState.loading && !orderState.loading ? (
-      <Spinner visible={cartState.loading} />
-    ) : (
       <CheckoutController {...checkoutProps} />
-    )}
     </>
   )
 }

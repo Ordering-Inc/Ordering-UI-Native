@@ -219,6 +219,7 @@ export interface OrdersOptionParams {
   customArray?: Array<any>,
   loadMoreOrders?: () => {},
   onNavigationRedirect?: any,
+  orderStatus?: any,
 }
 export interface ActiveOrdersParams {
   orders?: any,

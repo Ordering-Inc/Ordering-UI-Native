@@ -20,7 +20,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 
   const [{configs}] = useConfig()
   const [, t] = useLanguage()
-  const [{ parseDate, parsePrice }] = useUtils()
+  const [{ parseDate, parsePrice, optimizeImage }] = useUtils()
 
   const handleClickCard = (uuid: string) => {
     onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid })
@@ -45,7 +45,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
         <Information>
           {order.business?.logo && (
             <Logo>
-              <OIcon url={order.business?.logo} style={styles.logo} />
+              <OIcon url={optimizeImage(order.business?.logo, 'h_300,c_limit')} style={styles.logo} />
             </Logo>
           )}
           <OrderInformation>
