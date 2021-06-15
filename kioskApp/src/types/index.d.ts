@@ -25,6 +25,19 @@ export interface OrderTypeSelectParams {
   goBack?: () => void;
 }
 
+export interface UpsellingProductsParams {
+  navigation?: any;
+  isCustomMode?: boolean;
+  upsellingProducts?: any;
+  business?: any;
+  businessId?: string;
+  cartProducts?: Array<any>; 
+  handleUpsellingPage: () => void;
+  openUpselling: boolean;
+  canOpenUpselling?: boolean;
+  setCanOpenUpselling?: (value: any) => void;
+}
+
 export interface LanguageSelectorParams {
   languagesState?: any;
   currentLanguage?: string;

@@ -319,6 +319,7 @@ const CartUI = (props: any) => {
 
       {openUpselling && (
         <UpsellingProducts
+          navigation={navigation}
           handleUpsellingPage={handleUpsellingPage}
           openUpselling={openUpselling}
           businessId={cart?.business_id}

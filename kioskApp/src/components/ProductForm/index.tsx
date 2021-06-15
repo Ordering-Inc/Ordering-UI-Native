@@ -86,7 +86,7 @@ export const ProductOptionsUI = (props: any) => {
 
   const handleRedirectLogin = () => {
     onClose()
-    navigation.navigate('Login')
+    navigation?.navigate('Login')
   }
 
   const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0
@@ -124,14 +124,14 @@ export const ProductOptionsUI = (props: any) => {
     extrapolate: 'clamp'
   });
 
-  const goToBack = () => navigation.goBack();
+  const goToBack = () => navigation?.goBack();
 
   const navBarProps = {
     style: { backgroundColor: 'transparent', width: SCREEN_WIDTH },
     paddingTop: 20,
     title: t('YOUR_DISH', 'Your dish'),
     btnStyle: { backgroundColor: 'transparent' },
-    onActionLeft: goToBack
+    onActionLeft: navigation ? goToBack : undefined
   };
 
   return (
@@ -141,7 +141,7 @@ export const ProductOptionsUI = (props: any) => {
           <NavBar
             {...navBarProps}
             titleColor={colors.white}
-            leftImg={IMAGES.arrow_left_white}
+            {...(navigation && { leftImg: IMAGES.arrow_left_white })}
           />
         </Animated.View>
         <Animated.View style={{ opacity: navBar2ContainerOpacity, position: 'absolute' }}>
@@ -411,7 +411,7 @@ export const ProductOptionsUI = (props: any) => {
                 />
               ) : (
                 <OButton
-                  onClick={navigation.navigate('AddressList')}
+                  onClick={navigation?.navigate('AddressList')}
                 />
               )
             )}

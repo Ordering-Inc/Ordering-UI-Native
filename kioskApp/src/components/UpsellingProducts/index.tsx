@@ -1,26 +1,31 @@
 import React,{ useState, useEffect } from 'react'
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { StyleSheet } from 'react-native'
+import { Dimensions, StyleSheet, View } from 'react-native'
 import {
   UpsellingPage as UpsellingPageController,
   useUtils,
   useLanguage
 } from 'ordering-components/native'
-import { OText, OIcon, OModal, OBottomPopup, OButton } from '../shared'
+import { OText, OIcon, OModal, OBottomPopup, OButton, OImage } from '../shared'
 import { colors } from '../../theme.json'
 import { UpsellingProductsParams } from '../../types'
 import {
-  Container,
-  UpsellingContainer,
   Item,
   Details,
   AddButton,
   CloseUpselling
 } from './styles'
 import { ProductForm } from '../ProductForm';
+import NavBar from '../NavBar';
+import { Container } from '../../layouts/Container';
+import GridContainer from '../../layouts/GridContainer';
+
+const _dim = Dimensions.get('window');
+
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const {
+    navigation,
     isCustomMode,
     upsellingProducts,
     business,
@@ -56,31 +61,80 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     setModalIsOpen(false)
   }
 
+  const goToBack = () => navigation.goBack()
+
   const UpsellingLayout = () => {
     return (
       <Container>
-        <UpsellingContainer
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        >
-          {
-            !upsellingProducts.loading ? (
-              <>
+        {
+          !upsellingProducts.loading ? (
+            <>
+              <NavBar
+                title={t('BEFORE_YOU_GO', 'Before you go')}
+                onActionLeft={goToBack}
+              />
+
+              <View style={{ marginVertical: _dim.height * 0.03 }}>
+                <OText
+                  size={_dim.width * 0.05}
+                >
+                  {t('DO_YOU_WANT', 'Do you want')} {'\n'}
+                  <OText
+                    size={_dim.width * 0.05}
+                    weight={'700'}
+                  >
+                    {t('SOMETHING_ELSE', 'something else')} {'?'}
+                  </OText>
+                </OText>
+              </View>
+
+
+              <GridContainer>
                 {
                   !upsellingProducts.error ? upsellingProducts.products.map((product: any) => (
                     <Item key={product.id}>
-                      <OIcon url={product.images} style={styles.imageStyle} />
+                      <OImage source={{ uri: product.images }} style={styles.imageStyle} />
                       <Details>
-                        <OText size={12} numberOfLines={1} ellipsizeMode='tail'>{product.name}</OText>
-                        <OText color={colors.primary} weight='bold'>{parsePrice(product.price)}</OText>
+                        <OText
+                          weight="500"
+                          size={18}
+                          numberOfLines={2}
+                          mBottom={10}
+                        >
+                          {product.name}
+                        </OText>
+
+                        {product?.price && (
+                          <OText>
+                            <OText
+                              color={colors.primary}
+                              weight="500"
+                            >
+                              {`$${product.price}`}
+                            </OText>
+
+                            <OText
+                              color={colors.mediumGray}
+                              size={12}
+                              style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
+                            >
+                              {product?.offer_price ? `  $${product?.offer_price}  ` : ''}
+                            </OText>
+                          </OText>
+                        )}
+                        
+                        
+                      
                       </Details>
-                      <AddButton onPress={() => handleFormProduct(product)}>
-                        <MaterialComIcon
-                          name='plus-circle'
-                          color={colors.primary}
-                          size={35}
-                        />
-                      </AddButton>
+
+                      <OButton
+                        text={t('ADD_PRODUCT', 'add product')}
+                        textStyle={{ color: colors.primary }}
+                        style={{ height: 40, width: '100%' }}
+                        bgColor="#EAF2FE"
+                        borderColor="#EAF2FE"
+                        onClick={() => handleFormProduct(product)}
+                      />
                     </Item>
                   )) : (
                     <OText>
@@ -88,12 +142,14 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                     </OText>
                   )
                 }
-              </>
-            ) : (
-              <Spinner visible={upsellingProducts.loading} />
-            )
-          }
-        </UpsellingContainer>
+              </GridContainer>
+
+              <View  style={{ height: _dim.height * 0.03 }} />
+            </>
+          ) : (
+            <Spinner visible={upsellingProducts.loading} />
+          )
+        }
       </Container>
     )
   }
@@ -106,21 +162,22 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
           {!canOpenUpselling || upsellingProducts?.products?.length === 0 ? null : (
             <>
             {!modalIsOpen && (
-              <OBottomPopup
-                title={t('WANT_SOMETHING_ELSE', 'Do you want something else?')}
+              <OModal
                 open={openUpselling}
                 onClose={() => handleUpsellingPage()}
+                entireModal
+                customClose
               >
                <UpsellingLayout />
                 <CloseUpselling>
                   <OButton
                     imgRightSrc=''
-                    text={t('NO_THANKS', 'No Thanks')}
+                    text={t('I_AM_FINE_THANK_YOU', 'I’m fine, thank you')}
                     style={styles.closeUpsellingButton}
                     onClick={() => handleUpsellingPage()}
                   />
                 </CloseUpselling>
-              </OBottomPopup>
+              </OModal>
             )}
             </>
           )}
@@ -148,18 +205,14 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 
 const styles = StyleSheet.create({
   imageStyle: {
-    width: 120,
-    height: 90,
+    width: '100%',
+    height: 180,
     resizeMode: 'cover',
-    borderRadius: 10
+    borderRadius: 10,
   },
   closeUpsellingButton: {
-    borderRadius: 25,
-    borderColor: colors.primary,
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    height: 42,
-    marginBottom: 10
+    marginVertical: 10,
+    marginHorizontal: 20,
   },
   upsellingModal: {
     height: '50%',
