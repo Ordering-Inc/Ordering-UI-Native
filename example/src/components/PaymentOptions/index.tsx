@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ToastType, useToast } from '../../providers/ToastProvider';
 import {
   Placeholder,
   // PlaceholderMedia,
@@ -32,6 +33,7 @@ import {
 } from './styles'
 import { colors, images } from '../../theme.json';
 import { getIconCard, flatArray } from '../../utils';
+import { WebView } from 'react-native-webview';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 // const stripeRedirectOptions = [
@@ -85,6 +87,11 @@ const PaymentOptionsUI = (props: any) => {
   } = props
   const [, t] = useLanguage();
   const [addCardOpen, setAddCardOpen] = useState(false);
+  const [showGateway, setShowGateway] = useState(false);
+  const [prog, setProg] = useState(false);
+  const [progClr, setProgClr] = useState('#000');
+  const { showToast } = useToast();
+
   // const [{ token }] = useSession()
 
   // const [card, setCard] = useState(null);
@@ -92,6 +99,18 @@ const PaymentOptionsUI = (props: any) => {
   // const stripeRedirectValues = [
   //   { name: t('SELECT_A_PAYMENT_METHOD', 'Select a payment method'), value: '-1' },
   // ]
+
+  const onMessage = (e) => {
+    let data = e.nativeEvent.data;
+    let payment = JSON.parse(data);
+    if (payment.status === 'COMPLETED') {
+      showToast(ToastType.Success, 'PAYMENT MADE SUCCESSFULLY!');
+    } else {
+      showToast(ToastType.Error,'PAYMENT FAILED. PLEASE TRY AGAIN.');
+    }
+    setShowGateway(false);
+    console.log(data);
+  }
 
   useEffect(() => {
     if (paymethodsList.paymethods.length === 1) {
@@ -107,8 +126,8 @@ const PaymentOptionsUI = (props: any) => {
 
   useEffect(() => {
     !isPaymethodNull &&
-    handlePaymethodClick &&
-    handlePaymethodClick(isPaymethodNull)
+      handlePaymethodClick &&
+      handlePaymethodClick(isPaymethodNull)
   }, [isPaymethodNull])
 
   const renderPaymethods = ({ item }: any) => {
@@ -126,7 +145,7 @@ const PaymentOptionsUI = (props: any) => {
             width={40}
             height={40}
             color={paymethodSelected?.id === item.id ? colors.white : colors.backgroundDark}
-            />
+          />
           <OText
             size={12}
             style={{ margin: 0 }}
@@ -154,16 +173,24 @@ const PaymentOptionsUI = (props: any) => {
         />
       )}
 
+      <View style={styles.btnCon}>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => setShowGateway(true)}>
+          <OText style={styles.btnTxt}>Pay Using PayPal</OText>
+        </TouchableOpacity>
+      </View>
+
       {(paymethodsList.loading || isLoading) && (
         <Placeholder style={{ marginTop: 10 }} Animation={Fade}>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             {[...Array(3)].map((_, i) => (
               <PlaceholderLine
-              key={i}
-              width={37}
-              height={80}
-              noMargin
-              style={{ borderRadius: 10, marginRight: 10 }}
+                key={i}
+                width={37}
+                height={80}
+                noMargin
+                style={{ borderRadius: 10, marginRight: 10 }}
               />
             ))}
           </View>
@@ -179,11 +206,11 @@ const PaymentOptionsUI = (props: any) => {
       {!(paymethodsList.loading || isLoading) &&
         !paymethodsList.error &&
         (!paymethodsList?.paymethods || paymethodsList.paymethods.length === 0) &&
-      (
-        <OText size={12} style={{ margin: 0 }}>
-          {t('NO_PAYMENT_METHODS', 'No payment methods!')}
-        </OText>
-      )}
+        (
+          <OText size={12} style={{ margin: 0 }}>
+            {t('NO_PAYMENT_METHODS', 'No payment methods!')}
+          </OText>
+        )}
 
       {paymethodSelected?.gateway === 'cash' && (
         <PaymentOptionCash
@@ -196,31 +223,31 @@ const PaymentOptionsUI = (props: any) => {
       {stripeOptions.includes(paymethodSelected?.gateway) &&
         paymethodData?.brand &&
         paymethodData?.last4 &&
-      (
-        <PMCardSelected>
-          <PMCardItemContent>
-            <View style={styles.viewStyle}>
-              <MaterialCommunityIcons
-                name='radiobox-marked'
-                size={24}
-                color={colors.primary}
-              />
-            </View>
-            <View style={styles.viewStyle}>
-              <OText>
-                {getIconCard(paymethodData?.brand, 26)}
-              </OText>
-            </View>
-            <View style={styles.viewStyle}>
-              <OText
-                size={20}
-              >
-                XXXX-XXXX-XXXX-{paymethodData?.last4}
-              </OText>
-            </View>
-          </PMCardItemContent>
-        </PMCardSelected>
-      )}
+        (
+          <PMCardSelected>
+            <PMCardItemContent>
+              <View style={styles.viewStyle}>
+                <MaterialCommunityIcons
+                  name='radiobox-marked'
+                  size={24}
+                  color={colors.primary}
+                />
+              </View>
+              <View style={styles.viewStyle}>
+                <OText>
+                  {getIconCard(paymethodData?.brand, 26)}
+                </OText>
+              </View>
+              <View style={styles.viewStyle}>
+                <OText
+                  size={20}
+                >
+                  XXXX-XXXX-XXXX-{paymethodData?.last4}
+                </OText>
+              </View>
+            </PMCardItemContent>
+          </PMCardSelected>
+        )}
 
       {/* Stripe */}
       {paymethodSelected?.gateway === 'stripe' && !paymethodData.id && (
@@ -230,7 +257,7 @@ const PaymentOptionsUI = (props: any) => {
             bgColor={colors.primary}
             borderColor={colors.primary}
             style={styles.btnAddStyle}
-            textStyle={{color: 'white'}}
+            textStyle={{ color: 'white' }}
             imgRightSrc={null}
             onClick={() => setAddCardOpen(true)}
           />
@@ -354,6 +381,46 @@ const PaymentOptionsUI = (props: any) => {
           />
         )}
       </Modal> */}
+      <OModal
+        open={showGateway}
+        onCancel={() => setShowGateway(false)}
+        onAccept={() => setShowGateway(false)}
+        onClose={() => setShowGateway(false)}
+        entireModal
+      >
+        <OText
+          style={{
+            textAlign: 'center',
+            fontSize: 16,
+            fontWeight: 'bold',
+            color: '#00457C',
+            marginBottom: 5
+          }}>
+          PayPal GateWay
+        </OText>
+        <View style={{padding: 13, opacity: prog ? 1 : 0}}>
+          <ActivityIndicator size={24} color={progClr} />
+        </View>
+        <WebView
+          source={{ uri: 'https://my-pay-web-21cf8.web.app' }}
+          onMessage={onMessage}
+          style={{ flex: 1 }}
+          onLoadStart={() => {
+            setProg(true);
+            setProgClr('#000');
+          }}
+          onLoadProgress={() => {
+            setProg(true);
+            setProgClr('#00457C');
+          }}
+          onLoadEnd={() => {
+            setProg(false);
+          }}
+          onLoad={() => {
+            setProg(false);
+          }}
+        />
+      </OModal>
     </PMContainer>
   )
 }
@@ -370,6 +437,22 @@ const styles = StyleSheet.create({
   },
   btnAddStyle: {
     marginVertical: 20,
+  },
+  btnCon: {
+    height: 45,
+    width: '70%',
+    elevation: 1,
+    backgroundColor: '#00457C',
+    borderRadius: 3,
+  },
+  btn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnTxt: {
+    color: '#fff',
+    fontSize: 18,
   },
 })
 
