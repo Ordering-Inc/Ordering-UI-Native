@@ -10,7 +10,7 @@ import {
 
 import { CheckoutAction, Actions, KeyboardView, OrderTypeWrapper } from './styles';
 
-import { OSBill, OSTable, OSTotal } from '../OrderSummary/styles';
+import { OSBill, OSCoupon, OSTable, OSTotal } from '../OrderSummary/styles';
 
 import { OButton, OIcon, OModal, OText } from '../shared';
 import { colors } from '../../theme.json';
@@ -22,6 +22,7 @@ import CartItem from '../CartItem';
 import NavBar from '../NavBar';
 import { Dimensions, ScrollView, Platform, View } from 'react-native';
 import { IMAGES } from '../../config/constants';
+import { CouponControl } from '../CouponControl';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -256,7 +257,7 @@ const CartUI = (props: any) => {
                 <OText>{parsePrice(cart?.service_fee)}</OText>
               </OSTable>
             )}
-            {/* {isCouponEnabled && !isCartPending && (
+            {!cart?.discount_type && isCouponEnabled && !isCartPending && (
               <OSTable>
                 <OSCoupon>
                   <CouponControl
@@ -265,7 +266,7 @@ const CartUI = (props: any) => {
                   />
                 </OSCoupon>
               </OSTable>
-            )} */}
+            )}
             <OSTotal>
               <OSTable style={{ marginTop: 15 }}>
                 <OText style={{ fontWeight: 'bold' }}>
