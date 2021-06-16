@@ -19,7 +19,6 @@ const ProductDetailsPage = (props:any) => {
       onSave={() => {
         navigation.navigate('Cart');
       }}
-      onClose={() => {}}
       navigation={navigation}
     />
   );

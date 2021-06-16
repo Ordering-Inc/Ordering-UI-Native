@@ -61,8 +61,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     setModalIsOpen(false)
   }
 
-  const goToBack = () => navigation.goBack()
-
   const UpsellingLayout = () => {
     return (
       <Container>
@@ -71,7 +69,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
             <>
               <NavBar
                 title={t('BEFORE_YOU_GO', 'Before you go')}
-                onActionLeft={goToBack}
+                onActionLeft={handleUpsellingPage}
               />
 
               <View style={{ marginVertical: _dim.height * 0.03 }}>
@@ -122,9 +120,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                             </OText>
                           </OText>
                         )}
-                        
-                        
-                      
                       </Details>
 
                       <OButton

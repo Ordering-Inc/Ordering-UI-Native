@@ -131,7 +131,7 @@ export const ProductOptionsUI = (props: any) => {
     paddingTop: 20,
     title: t('YOUR_DISH', 'Your dish'),
     btnStyle: { backgroundColor: 'transparent' },
-    onActionLeft: navigation ? goToBack : undefined
+    onActionLeft: onClose ? onClose : navigation ? goToBack : undefined,
   };
 
   return (
@@ -141,11 +141,14 @@ export const ProductOptionsUI = (props: any) => {
           <NavBar
             {...navBarProps}
             titleColor={colors.white}
-            {...(navigation && { leftImg: IMAGES.arrow_left_white })}
+            {...((navigation || onClose) && { leftImg: IMAGES.arrow_left_white })}
           />
         </Animated.View>
         <Animated.View style={{ opacity: navBar2ContainerOpacity, position: 'absolute' }}>
-          <NavBar {...navBarProps} />
+          <NavBar
+            {...navBarProps}
+            {...((navigation || onClose) && { leftImg: IMAGES.arrow_left })}
+          />
         </Animated.View>
 
         <Animated.View style={{
