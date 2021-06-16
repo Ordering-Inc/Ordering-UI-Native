@@ -58,7 +58,7 @@ const HomeNavigator = (is_online: boolean) => {
   ).current
 
   const resetInactivityTimeout = () => {
-    if(!socket.socket.connected){
+    if(!socket?.socket?.connected){
       socket.connect()
     }
   }
