@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -83,6 +83,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     onRedirect('CheckoutNavigator', { cartUuid: currentCart?.uuid })
     setOpenUpselling(false)
   }
+
+  useEffect(() => {
+    if(!orderState.loading){
+      handleCloseProductModal()
+    }
+  }, [orderState.loading])
 
   return (
     <>
