@@ -7047,10 +7047,8 @@ ora@^3.4.0:
     "@stripe/react-stripe-js" "^1.1.2"
     "@stripe/stripe-js" "^1.9.0"
     dayjs "^1.9.3"
-    libphonenumber-js "^1.9.17"
-    ordering-api-sdk "github:Ordering-Inc/ordering-api-sdk#release"
+    ordering-api-sdk "github:sergioaok/ordering-api-sdk#development"
     prop-types "^15.7.2"
-    react-google-recaptcha latest
     socket.io-client "^2.3.0"
 
 os-tmpdir@^1.0.0, os-tmpdir@~1.0.2:
@@ -7763,10 +7761,10 @@ react-native-vector-icons@^7.1.0:
     prop-types "^15.7.2"
     yargs "^15.0.2"
 
-react-native-webview@^10.10.0:
-  version "10.10.2"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-10.10.2.tgz#13208aef17c9ccfd28355363688f4cbe2143f10a"
-  integrity sha512-98Dh7q1gEflicFZ8KNL3nK5XRjx50OZXqw87jHofVjKfjbK0LKmvI5X8ymgUMGg61JVgI3AF+g8qpDvqjgQsfg==
+react-native-webview@^11.6.4:
+  version "11.6.4"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.6.4.tgz#bd2d072ea0157b3fcb10961b5d1866470b22c3c3"
+  integrity sha512-ahW9KL/iBooDRdQwBgPEWOl5Awjwvmo5FtV83WzbgUpQxDJ+ZRzZDpbmwcjLtd6R67yWg6dk1inqKQTrmkWiXQ==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
