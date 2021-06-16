@@ -93,6 +93,24 @@ const MessagesUI = (props: MessagesParams) => {
         return 'ORDER_DELIVERY_COMPLETED_BY_DRIVER'
       case 12:
         return 'ORDER_DELIVERY_FAILED_BY_DRIVER'
+      case 13:
+        return 'PREORDER'
+      case 14:
+        return 'ORDER_NOT_READY'
+      case 15:
+        return 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER'
+      case 16:
+        return 'ORDER_STATUS_CANCELLED_BY_CUSTOMER'
+      case 17:
+        return 'ORDER_NOT_PICKEDUP_BY_CUSTOMER'
+      case 18:
+        return 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS'
+      case 19:
+        return 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER'
+      case 20:
+        return 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS'
+      case 21:
+        return 'ORDER_CUSTOMER_ARRIVED_BUSINESS'
       default:
         return status
     }
