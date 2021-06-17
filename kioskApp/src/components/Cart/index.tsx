@@ -279,12 +279,10 @@ const CartUI = (props: any) => {
             borderColor={colors.primary}
             imgRightSrc={null}
             textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-            onClick={() => {
-              console.log('ir a payment method');    
-            }}
+            onClick={() => { navigation?.navigate('CustomerName') }}
             style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
           />
-        </CheckoutAction>  
+        </CheckoutAction>
       </Actions>
 
       <OModal
