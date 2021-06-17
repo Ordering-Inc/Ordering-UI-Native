@@ -164,7 +164,7 @@ export const ProductOptionsUI = (props: any) => {
             }}
           >
             <OImage
-              source={{uri: product.images}}
+              source={{uri: product?.images}}
               width={80}
               height={80}
               resizeMode="cover"
@@ -176,7 +176,7 @@ export const ProductOptionsUI = (props: any) => {
               mLeft={20}
               numberOfLines={2}
             >
-              {product.name}
+              {product?.name}
             </OText>
           </View>
           <View
@@ -198,7 +198,7 @@ export const ProductOptionsUI = (props: any) => {
           transform: [{translateY: heroTranslateY }],
         }}>
           <OImage
-            source={{uri: product.images}}
+            source={{uri: product?.images}}
             width={SCREEN_WIDTH}
             height={HEADER_EXPANDED_HEIGHT}
             resizeMode="cover"
@@ -233,7 +233,7 @@ export const ProductOptionsUI = (props: any) => {
               mBottom={10}
               numberOfLines={2}
             >
-              {product?.name || productCart.name}
+              {product?.name || productCart?.name}
             </OText>
 
             <OText
@@ -283,7 +283,7 @@ export const ProductOptionsUI = (props: any) => {
                         <ProductIngredient
                           key={ingredient.id}
                           ingredient={ingredient}
-                          state={productCart.ingredients[`id:${ingredient.id}`]}
+                          state={productCart?.ingredients[`id:${ingredient.id}`]}
                           onChange={handleChangeIngredientState}
                         />
                       ))}

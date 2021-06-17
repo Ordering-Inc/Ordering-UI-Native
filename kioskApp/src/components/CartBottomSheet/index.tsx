@@ -140,7 +140,6 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
         onClose={() => setModalIsOpen(false)}
       >
         <ProductForm
-          isCartProduct
           productCart={curProduct}
           businessSlug={cart?.business?.slug}
           businessId={curProduct?.business_id}
