@@ -424,7 +424,7 @@ const CheckoutUI = (props: any) => {
               errorCash={errorCash}
               setErrorCash={setErrorCash}
               onNavigationRedirect={onNavigationRedirect}
-              isPaymethodNull={paymethodSelected}
+              paySelected={paymethodSelected}
             />
           </ChPaymethods>
         </ChSection>
