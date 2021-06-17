@@ -52,8 +52,16 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         source={{ uri: header || optimizeImage(businessState?.business?.header, 'h_400,c_limit') }}
       >
         <BusinessLogo>
-          {!isBusinessInfoShow && (
-            <OIcon url={logo || optimizeImage(businessState?.business?.logo, 'h_300,c_limit')} style={styles.businessLogo} />
+          {loading ? (
+            <View style={{ marginLeft: 20 }}>
+              <Placeholder Animation={Fade}>
+                <PlaceholderLine height={50} width={20} />
+              </Placeholder>
+            </View>
+          ) : (
+            !isBusinessInfoShow && (
+              <OIcon url={logo || optimizeImage(businessState?.business?.logo, 'h_300,c_limit')} style={styles.businessLogo} />
+            )
           )}
         </BusinessLogo>
       </BusinessHeader>
