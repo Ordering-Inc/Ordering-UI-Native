@@ -25,14 +25,14 @@ const _dim = Dimensions.get('window');
 
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const {
-    navigation,
     isCustomMode,
     upsellingProducts,
     business,
     handleUpsellingPage,
     openUpselling,
     canOpenUpselling,
-    setCanOpenUpselling
+    setCanOpenUpselling,
+    onClose,
   } = props
   const [actualProduct, setActualProduct] = useState<any>(null)
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -69,7 +69,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
             <>
               <NavBar
                 title={t('BEFORE_YOU_GO', 'Before you go')}
-                onActionLeft={handleUpsellingPage}
+                onActionLeft={onClose}
               />
 
               <View style={{ marginVertical: _dim.height * 0.03 }}>

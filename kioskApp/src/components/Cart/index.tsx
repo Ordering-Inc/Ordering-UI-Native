@@ -15,7 +15,6 @@ import { OSBill, OSCoupon, OSTable, OSTotal } from '../OrderSummary/styles';
 import { OButton, OIcon, OModal, OText } from '../shared';
 import { colors } from '../../theme.json';
 import { ProductForm } from '../ProductForm';
-import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
 import { Cart as TypeCart } from '../../types';
 import CartItem from '../CartItem';
@@ -34,9 +33,7 @@ const CartUI = (props: any) => {
     getProductMax,
     offsetDisabled,
     removeProduct,
-    handleCartOpen,
     setIsCartsLoading,
-    isFromCart,
     navigation,
   } : CartUIProps = props
   
@@ -49,17 +46,11 @@ const CartUI = (props: any) => {
 
   const [openProduct, setModalIsOpen] = useState(false)
   const [curProduct, setCurProduct] = useState<any>(null)
-  const [openUpselling, setOpenUpselling] = useState(false)
-  const [canOpenUpselling, setCanOpenUpselling] = useState(false)
 
   const selectedOrderType = orderState?.options?.type;
 
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
-
-  const momentFormatted = !orderState?.option?.moment
-    ? t('RIGHT_NOW', 'Right Now')
-    : parseDate(orderState?.option?.moment, { outputFormat: 'YYYY-MM-DD HH:mm' })
 
   const handleDeleteClick = (product: any) => {
     removeProduct(product)
@@ -81,6 +72,7 @@ const CartUI = (props: any) => {
       setIsCartsLoading && setIsCartsLoading(true)
       const result = await clearCart(cart?.uuid)
       setIsCartsLoading && setIsCartsLoading(false)
+      navigation?.pop(2)
     } catch (error) {
       setIsCartsLoading && setIsCartsLoading(false)
     }
@@ -91,12 +83,6 @@ const CartUI = (props: any) => {
       callback : () => {navigation.pop(1)},
       goBack: () => {navigation.pop(1)},
     });
-  }
-
-  const handleUpsellingPage = () => {
-    setOpenUpselling(false)
-    setCanOpenUpselling(false)
-    props.onNavigationRedirect('CheckoutNavigator', { screen: 'CheckoutPage', cartUuid: cart?.uuid })
   }
 	
   const goToBack = () => navigation.goBack();
@@ -282,18 +268,20 @@ const CartUI = (props: any) => {
         <CheckoutAction>
           <OButton
             text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-              !openUpselling !== canOpenUpselling ? `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`: t('LOADING', 'Loading')
+              `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`
             ) : !cart?.valid_address ? (
               `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
             ) : (
               `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
             )}
             bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
-            isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
+            isDisabled={cart?.subtotal < cart?.minimum || !cart?.valid_address}
             borderColor={colors.primary}
             imgRightSrc={null}
             textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-            onClick={() => setOpenUpselling(true)}
+            onClick={() => {
+              console.log('ir a payment method');    
+            }}
             style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
           />
         </CheckoutAction>  
@@ -317,19 +305,6 @@ const CartUI = (props: any) => {
         />
 
       </OModal>
-
-      {openUpselling && (
-        <UpsellingProducts
-          navigation={navigation}
-          handleUpsellingPage={handleUpsellingPage}
-          openUpselling={openUpselling}
-          businessId={cart?.business_id}
-          business={cart?.business}
-          cartProducts={cart?.products}
-          canOpenUpselling={canOpenUpselling}
-          setCanOpenUpselling={setCanOpenUpselling}
-        />
-      )}
     </KeyboardView>
   )
 }

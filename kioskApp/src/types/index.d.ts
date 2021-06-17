@@ -26,7 +26,6 @@ export interface OrderTypeSelectParams {
 }
 
 export interface UpsellingProductsParams {
-  navigation?: any;
   isCustomMode?: boolean;
   upsellingProducts?: any;
   business?: any;
@@ -36,6 +35,7 @@ export interface UpsellingProductsParams {
   openUpselling: boolean;
   canOpenUpselling?: boolean;
   setCanOpenUpselling?: (value: any) => void;
+  onClose?: () => void;
 }
 
 export interface LanguageSelectorParams {

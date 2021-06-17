@@ -15,10 +15,12 @@ import {
 	StyledContent,
 	StyledTopBar,
 } from './styles';
-import { OButton, OText } from '../shared';
+import { OButton, OModal, OText } from '../shared';
 import CartItem from '../CartItem';
 import { colors } from '../../theme.json';
 import { Cart as TypeCart } from '../../types';
+import { ProductForm } from '../ProductForm';
+import { UpsellingProducts } from '../UpsellingProducts';
 
 const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | null => {
 	const {
@@ -71,17 +73,14 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
     }
   }
 
-  const handleChangeOrderType = () => {
-    navigation.push('DeliveryType', {
-      callback : () => {navigation.pop(1)},
-      goBack: () => {navigation.pop(1)},
-    });
+  const onCloseUpselling = () => {
+    setOpenUpselling(false)
+    setCanOpenUpselling(false)
   }
 
   const handleUpsellingPage = () => {
-    setOpenUpselling(false)
-    setCanOpenUpselling(false)
-    props.onNavigationRedirect('CheckoutNavigator', { screen: 'CheckoutPage', cartUuid: cart?.uuid })
+    onCloseUpselling()
+    navigation?.navigate('Cart')
   }
 
 	if (!props?.visible) return null;
@@ -133,7 +132,39 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
 					style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
 				/>
 			</StyledBottomContent>
-		</StyledContainer>
+
+      <OModal
+        open={openProduct}
+        entireModal
+        customClose
+        onClose={() => setModalIsOpen(false)}
+      >
+        <ProductForm
+          isCartProduct
+          productCart={curProduct}
+          businessSlug={cart?.business?.slug}
+          businessId={curProduct?.business_id}
+          categoryId={curProduct?.category_id}
+          productId={curProduct?.id}
+          onSave={handlerProductAction}
+          onClose={() => setModalIsOpen(false)}
+        />
+
+      </OModal>
+
+      {openUpselling && (
+        <UpsellingProducts
+          handleUpsellingPage={handleUpsellingPage}
+          openUpselling={openUpselling}
+          businessId={cart?.business_id}
+          business={cart?.business}
+          cartProducts={cart?.products}
+          canOpenUpselling={canOpenUpselling}
+          setCanOpenUpselling={setCanOpenUpselling}
+          onClose={onCloseUpselling}
+        />
+      )}
+		</StyledContainer>		
 	);
 }
 
