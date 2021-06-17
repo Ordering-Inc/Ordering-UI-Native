@@ -99,7 +99,7 @@ export const BusinessItemAccordion = (props: any) => {
         )}
 
         <BIActions>
-          {props.onNavigationRedirect && (
+          {props.onNavigationRedirect && !isClosed && (
             <MaterialCommunityIcon
               name='store'
               size={26}
