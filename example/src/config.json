@@ -1,13 +1,13 @@
 {
   "app_id": "react-native-app",
   "app_name": "Ordering",
-  "project": "luisv4",
+  "project": "reactdemo",
   "api": {
     "url": "https://apiv4.ordering.co",
     "language": "en",
     "version": "v400"
   },
   "socket": {
-    "url": "https://socket.ordering.co"
+    "url": "https://socket-v2.ordering.co"
   }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { createRef, useEffect, useRef, useState } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -23,14 +23,13 @@ import {
 
 import { LoginWith as SignupWith, OTab, OTabs } from '../LoginForm/styles'
 
-import { IMAGES } from '../../config/constants';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import NavBar from '../NavBar'
 import { VerifyPhone } from '../VerifyPhone';
 
 import { OText, OButton, OInput, OModal } from '../shared';
 import { SignupParams } from '../../types';
-import { colors } from '../../theme.json'
+import { colors,images } from '../../theme.json'
 import { sortInputFields } from '../../utils';
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']
@@ -78,6 +77,68 @@ const SignupFormUI = (props: SignupParams) => {
       cellphone: null
     }
   });
+
+  const nameRef = useRef<any>(null)
+  const lastnameRef = useRef<any>(null)
+  const middleNameRef = useRef<any>(null)
+  const secondLastnameRef = useRef<any>(null)
+  const emailRef = useRef<any>(null)
+  const phoneRef = useRef<any>(null)
+  const passwordRef = useRef<any>(null)
+
+  const handleRefs = (ref : any, code : string) => {
+    switch(code){
+      case 'name': {
+        nameRef.current = ref
+        break
+      }
+      case 'middle_name': {
+        middleNameRef.current = ref
+      }
+      case 'lastname': {
+        lastnameRef.current = ref
+        break
+      }
+      case 'second_lastname': {
+        secondLastnameRef.current = ref
+        break
+      }
+      case 'email': {
+        emailRef.current = ref
+        break
+      }
+    }
+  }
+
+  const handleFocusRef = (code : string) => {
+    switch(code) {
+      case 'name': {
+        nameRef?.current?.focus()
+        break
+      }
+      case 'middle_name': {
+        middleNameRef?.current?.focus()
+        break
+      }
+      case 'lastname': {
+        lastnameRef?.current?.focus()
+        break
+      }
+      case 'second_lastname': {
+        secondLastnameRef?.current?.focus()
+        break
+      }
+      case 'email': {
+        emailRef?.current?.focus()
+        break
+      }
+    }
+  }
+
+  const getNextFieldCode = (index : number) => {
+    const fields = sortInputFields({ values: validationFields?.fields?.checkout })?.filter((field : any) => !notValidationFields.includes(field.code) && showField(field.code))
+    return fields[index + 1]?.code
+  }
 
   const handleSuccessFacebook = (user: any) => {
     login({
@@ -212,7 +273,7 @@ const SignupFormUI = (props: SignupParams) => {
       <NavBar
         title={t('SIGNUP', 'Signup')}
         titleAlign={'center'}
-        onActionLeft={() => navigation.goBack()}
+        onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
       />
@@ -247,23 +308,28 @@ const SignupFormUI = (props: SignupParams) => {
         <FormInput>
           {!(useChekoutFileds && validationFields?.loading) ? (
             <>
-              {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any) =>
+              {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any, i : number) =>
                 !notValidationFields.includes(field.code) &&
                 (
                   showField && showField(field.code) && (
                     <Controller
                       key={field.id}
                       control={control}
-                      render={({ onChange, value }) => (
+                      render={({ onChange, value }: any) => (
                         <OInput
                           placeholder={t(field.name)}
                           style={style.inputStyle}
-                          icon={field.code === 'email' ? IMAGES.email : IMAGES.user}
+                          icon={field.code === 'email' ? images.general.email : images.general.user}
                           value={value}
                           onChange={(val: any) => field.code !== 'email' ? onChange(val) : handleChangeInputEmail(val, onChange)}
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                           autoCorrect={field.code === 'email' && false}
                           type={field.code === 'email' ? 'email-address' : 'default'}
+                          autoCompleteType={field.code === 'email' ? 'email' : 'off'}
+                          returnKeyType='next'
+                          blurOnSubmit={false}
+                          forwardRef={(ref : any) => handleRefs(ref,field.code)}
+                          onSubmitEditing={() => field.code === 'email' ? phoneRef.current.focus() : handleFocusRef(getNextFieldCode(i))}
                         />
                       )}
                       name={field.code}
@@ -279,6 +345,11 @@ const SignupFormUI = (props: SignupParams) => {
                   <PhoneInputNumber
                     data={phoneInputData}
                     handleData={(val: any) => setPhoneInputData(val)}
+                    forwardRef={phoneRef}
+                    textInputProps={{
+                      returnKeyType: 'next',
+                      onSubmitEditing: () => passwordRef.current.focus()
+                    }}
                   />
                 </View>
               )}
@@ -286,12 +357,12 @@ const SignupFormUI = (props: SignupParams) => {
               {signupTab !== 'cellphone' && (
                 <Controller
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ onChange, value }: any) => (
                     <OInput
                       isSecured={!passwordSee ? true : false}
                       placeholder={t('PASSWORD', 'Password')}
                       style={style.inputStyle}
-                      icon={IMAGES.lock}
+                      icon={images.general.lock}
                       iconCustomRight={
                         !passwordSee ?
                           <MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
@@ -299,6 +370,10 @@ const SignupFormUI = (props: SignupParams) => {
                       }
                       value={value}
                       onChange={(val: any) => onChange(val)}
+                      returnKeyType='done'
+                      onSubmitEditing={handleSubmit(onSubmit)}
+                      blurOnSubmit
+                      forwardRef={passwordRef}
                     />
                   )}
                   name="password"
@@ -360,7 +435,7 @@ const SignupFormUI = (props: SignupParams) => {
           )
         }
 
-        {
+        {/* {
           configs && Object.keys(configs).length > 0 && (
             (configs?.facebook_login?.value === 'true' ||
               configs?.facebook_login?.value === '1') &&
@@ -381,7 +456,7 @@ const SignupFormUI = (props: SignupParams) => {
               </ButtonsSection>
             )
           )
-        }
+        } */}
       </FormSide >
       <OModal
         open={isModalVisible}

@@ -20,7 +20,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 
   const [, t] = useLanguage()
   const [reorderSelected,setReorderSelected] = useState<number | null>(null)
-  const [{ parseDate }] = useUtils()
+  const [{ parseDate, optimizeImage }] = useUtils()
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12]
 
   const handleClickViewOrder = (uuid: string) => {
@@ -35,8 +35,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
     setReorderSelected(id)
     handleReorder(id)
   }
-  return (
 
+  return (
     <ScrollView
       style={{ height: '60%', marginBottom: 30 }}
     >
@@ -44,7 +44,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
         <Card key={order.id}>
           {order.business?.logo && (
             <Logo>
-              <OIcon url={order.business?.logo} style={styles.logo} />
+              <OIcon url={optimizeImage(order.business?.logo, 'h_300,c_limit')} style={styles.logo} />
             </Logo>
           )}
           <Information>
@@ -80,7 +80,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
               textStyle={styles.buttonText}
               style={reorderLoading && order.id === reorderSelected ? styles.reorderLoading : styles.reorderbutton}
               onClick={() => handleReorderClick(order.id)}
-              isLoading={order.id === reorderSelected && reorderLoading}
+              isLoading={reorderLoading && order.id === reorderSelected}
             />
           </Status>
 

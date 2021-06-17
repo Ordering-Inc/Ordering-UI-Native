@@ -1,10 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
 import { OButton, OIcon, OText } from '../shared'
-import { colors } from '../../theme.json'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Platform, TextStyle } from 'react-native'
-import { IMAGES } from '../../config/constants'
+import { colors,images } from '../../theme.json'
+import { TextStyle } from 'react-native'
 
 const Wrapper = styled.View`
   background-color: ${colors.white};
@@ -52,14 +50,13 @@ interface Props {
 }
 
 const NavBar = (props: Props) => {
-  const safeAreaInset = useSafeAreaInsets();
   const goSupport = () => {
     props.navigation.navigate('Supports', {});
   }
   return (
     <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
       <OButton
-        imgLeftSrc={props.leftImg || IMAGES.arrow_left}
+        imgLeftSrc={props.leftImg || images.general.arrow_left}
         imgRightSrc={null}
         style={{ ...btnBackArrow, ...props.btnStyle }}
         onClick={props.onActionLeft}
@@ -108,7 +105,7 @@ const NavBar = (props: Props) => {
           borderColor={colors.primary}
           imgRightSrc={null}
           imgLeftStyle={{ tintColor: 'white', width: 30, height: 30 }}
-          imgLeftSrc={IMAGES.support}
+          imgLeftSrc={images.general.support}
           onClick={props.onRightAction || goSupport} />)
         : null
       }

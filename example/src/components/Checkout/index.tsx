@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { View, StyleSheet } from 'react-native';
-// import stripe from 'tipsi-stripe';
+import { initStripe, useConfirmPayment  } from '@stripe/stripe-react-native';
 
 import {
   Checkout as CheckoutController,
@@ -15,8 +15,7 @@ import {
 } from 'ordering-components/native';
 
 import { OText, OButton, OIcon } from '../shared';
-import { IMAGES } from '../../config/constants';
-import { colors } from '../../theme.json';
+import { colors, images } from '../../theme.json';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -31,7 +30,6 @@ import {
   ChSection,
   ChHeader,
   ChTotal,
-  ChTotalWrap,
   ChAddress,
   ChMoment,
   CHMomentWrapper,
@@ -47,6 +45,9 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { FloatingButton } from '../FloatingButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Container } from '../../layouts/Container';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -158,18 +159,26 @@ const CheckoutUI = (props: any) => {
     }
   }, [errors])
 
+  // useEffect(() => {
+  //   handlePaymethodChange(null)
+  // }, [cart?.total])
+
   useEffect(() => {
-    handlePaymethodChange(null)
-  }, [cart?.total])
+    if (cart?.products?.length === 0) {
+      navigation?.canGoBack() && navigation.goBack();
+    }
+  }, [cart?.products])
 
   return (
+    <>
+      <Container>
     <ChContainer>
       <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
         <OButton
-          imgLeftSrc={IMAGES.arrow_left}
+          imgLeftSrc={images.general.arrow_left}
           imgRightSrc={null}
           style={style.btnBackArrow}
-          onClick={() => navigation.goBack()}
+          onClick={() => navigation?.canGoBack() && navigation.goBack()}
         />
         <ChHeader>
           <OText size={24}>{t('CHECKOUT', 'Checkout')}</OText>
@@ -365,6 +374,7 @@ const CheckoutUI = (props: any) => {
 
       {!cartState.loading &&
         cart &&
+        cart?.valid &&
         options.type === 1 &&
         cart?.status !== 2 &&
         validationFields?.fields?.checkout?.driver_tip?.enabled &&
@@ -389,7 +399,7 @@ const CheckoutUI = (props: any) => {
           </ChSection>
         )}
 
-      {!cartState.loading && cart && cart?.status !== 2 && (
+      {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
         <ChSection style={style.paddSectionH}>
           <ChPaymethods>
             <OText size={20}>
@@ -444,29 +454,8 @@ const CheckoutUI = (props: any) => {
         </ChSection>
       )}
 
-      {!cartState.loading && cart && cart?.status !== 2 && (
-        <ChSection style={style.paddSectionH}>
-          <ChPlaceOrderBtn>
-            <OButton
-              onClick={() => handlePlaceOrder()}
-              bgColor={cart?.subtotal < cart?.minimum ? colors.secundary : colors.primary}
-              borderColor={colors.primary}
-              textStyle={{ color: 'white', fontSize: 20 }}
-              imgRightSrc={null}
-              // isLoading={formState.loading}
-              isDisabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
-              text={cart?.subtotal >= cart?.minimum ? (
-                placing ? t('PLACING', 'Placing') : t('PLACE_ORDER', 'Place Order')
-              ) : (
-                `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
-              )}
-            />
-          </ChPlaceOrderBtn>
-        </ChSection>
-      )}
-
       {!cartState.loading && cart && (
-        <ChSection style={style.paddSection}>
+        <ChSection style={{ paddingTop: 0, paddingBottom: 20, paddingHorizontal: 20 }}>
           <ChErrors>
             {!cart?.valid_address && cart?.status !== 2 && (
               <OText
@@ -478,7 +467,7 @@ const CheckoutUI = (props: any) => {
               </OText>
             )}
 
-            {!paymethodSelected && cart?.status !== 2 && (
+            {!paymethodSelected && cart?.status !== 2 && cart?.valid && (
               <OText
                 style={{ textAlign: 'center' }}
                 color={colors.error}
@@ -501,6 +490,24 @@ const CheckoutUI = (props: any) => {
         </ChSection>
       )}
     </ChContainer>
+    </Container>
+    {!cartState.loading && cart && cart?.status !== 2 && (
+        <>
+          <>
+            <FloatingButton
+              handleClick={() => handlePlaceOrder()}
+              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+              btnText={cart?.subtotal >= cart?.minimum ? (
+                placing ? t('PLACING', 'Placing') : t('PLACE_ORDER', 'Place Order')
+              ) : (
+                `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+              )}
+            />
+          </>
+        </>
+      )}
+    </>
   )
 }
 
@@ -536,6 +543,7 @@ export const Checkout = (props: any) => {
   const [{ token }] = useSession();
   const [ordering] = useApi();
   const [,{ confirmCart }] = useOrder();
+  const { confirmPayment, loading: confirmPaymentLoading } = useConfirmPayment();
 
   const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null });
   const [orderState] = useOrder()
@@ -584,69 +592,55 @@ export const Checkout = (props: any) => {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
       } else if (result.status === 2 && stripePaymentOptions.includes(result.paymethod_data?.gateway)) {
-        // const clientSecret = result.paymethod_data?.result?.client_secret
-        // const paymentMethodId = result.paymethod_data?.data?.source_id;
+        const clientSecret = result.paymethod_data?.result?.client_secret
+        const paymentMethodId = result.paymethod_data?.data?.source_id;
 
-        // stripe.setOptions({
-        //   publishableKey: publicKey,
-        //   // androidPayMode: 'test', // Android only
-        // })
+        initStripe({ publishableKey: publicKey });
 
-    //     try {
-    //       const confirmPaymentIntent = await stripe.confirmPaymentIntent({
-    //         clientSecret,
-    //         paymentMethodId
-    //       });
+        try {
+          const { paymentIntent, error } = await confirmPayment(clientSecret, {
+            type: 'Card',
+            paymentMethodId
+          });
 
-    //       if (confirmPaymentIntent?.status === 'succeeded') {
-    //         try {
-    //           const confirmCartRes = await confirmCart(cartUuid)
-    //           if (confirmCartRes.error) {
-    //             showToast(ToastType.Error, confirmCartRes.error.message)
-    //           }
-    //           if (confirmCartRes.result.order?.uuid) {
-    //             onNavigationRedirect('OrderDetails', { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true })
-    //           }
-    //         } catch (error) {
-    //           showToast(ToastType.Error, error?.toString() || error.message)
-    //         }
-    //         setCartState({
-    //           ...cartState,
-    //           loading: false,
-    //           cart: result
-    //         })
-    //         return
-    //       }
-    //     } catch (error) {
-    //       const e = error.message === 'failed'
-    //         ? t('FAILED_PAYMENT', 'Failed payment')
-    //         : error?.toString() || error.message
-    //       if (e.includes('The provided PaymentMethod was previously used with a PaymentIntent')) {
-    //         showToast(ToastType.Error, t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again'))
-    //         try {
-    //           const confirmCartRes = await confirmCart(cartUuid)
-    //           if (confirmCartRes.error) {
-    //             showToast(ToastType.Error, confirmCartRes.error.message)
-    //           }
-    //           setCartState({
-    //             ...cartState,
-    //             loading: false,
-    //             cart: result
-    //           })
-    //         } catch (error) {
-    //           showToast(ToastType.Error, error?.toString() || error.message)
-    //         }
-    //         return
-    //       }
-    //       showToast(ToastType.Error, e)
-    //       const cart = Array.isArray(result) ? null : result
-    //       setCartState({
-    //         ...cartState,
-    //         loading: false,
-    //         cart,
-    //         error: cart ? null : result
-    //       })
-        // }
+          try {
+            const confirmCartRes = await confirmCart(cartUuid)
+            if (confirmCartRes.error) {
+              showToast(ToastType.Error, confirmCartRes.error.message)
+              setCartState({
+                ...cartState,
+                loading: false,
+                cart: result
+              })
+              return
+            }
+            if (confirmCartRes.result.order?.uuid) {
+              onNavigationRedirect('OrderDetails', { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true })
+              setCartState({ ...cartState, loading: false })
+            } else {
+              showToast(ToastType.Error, t('FAILED_PAYMENT', 'The payment has failed'));
+              const cart = Array.isArray(result) ? null : result
+              setCartState({
+                ...cartState,
+                loading: false,
+                cart,
+                error: cart ? null : result
+              })
+              return
+            }
+          } catch (error) {
+            showToast(ToastType.Error, error?.toString() || error.message)
+          }
+        } catch (error) {
+          showToast(ToastType.Error, t('FAILED_PAYMENT', 'The payment has failed'));
+          const cart = Array.isArray(result) ? null : result
+          setCartState({
+            ...cartState,
+            loading: false,
+            cart,
+            error: cart ? null : result
+          })
+        }
       } else {
         const cart = Array.isArray(result) ? null : result
         setCartState({
@@ -688,11 +682,7 @@ export const Checkout = (props: any) => {
 
   return (
     <>
-    {cartState.loading && !orderState.loading ? (
-      <Spinner visible={cartState.loading} />
-    ) : (
       <CheckoutController {...checkoutProps} />
-    )}
     </>
   )
 }

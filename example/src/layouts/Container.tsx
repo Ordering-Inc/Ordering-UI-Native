@@ -11,17 +11,17 @@ const ContainerStyled = styled.ScrollView`
   background-color: ${colors.backgroundPage};
 `;
 
-const SafeAreStyled = styled.SafeAreaView`
+const SafeAreaStyled = styled.SafeAreaView`
   flex: 1;
   background-color: ${colors.backgroundPage};
 `;
 
 export const Container = (props: any) => {
   return (
-    <SafeAreStyled>
-      <ContainerStyled>
+    <SafeAreaStyled>
+      <ContainerStyled keyboardShouldPersistTaps='handled'>
         {props.children}
       </ContainerStyled>
-    </SafeAreStyled>
+    </SafeAreaStyled>
   )
 }

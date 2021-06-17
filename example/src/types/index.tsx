@@ -1,4 +1,4 @@
-import { ViewStyle } from 'react-native';
+import { TextInputProps, ViewStyle } from 'react-native';
 export interface LoginParams {
   navigation?: any;
   formState?: any;
@@ -46,6 +46,7 @@ export interface AddressListParams {
   actionStatus?: any;
   isFromBusinesses?: boolean;
   isFromProductsList?: boolean;
+  afterSignup?: boolean;
 }
 
 export interface AddressFormParams {
@@ -93,6 +94,8 @@ export interface PhoneInputParams {
   handleData?: any;
   defaultValue?: any;
   defaultCode?: number | null;
+  forwardRef?: any;
+  textInputProps?: TextInputProps
 }
 
 export interface LanguageSelectorParams {
@@ -104,7 +107,7 @@ export interface BusinessesListingParams {
   navigation?: any;
   businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
   searchValue: string;
-  getBusinesses: () => void;
+  getBusinesses: (newFetch?: boolean) => void;
   handleChangeBusinessType?: any;
   handleBusinessClick?: void;
   paginationProps?: any;
@@ -216,6 +219,7 @@ export interface OrdersOptionParams {
   customArray?: Array<any>,
   loadMoreOrders?: () => {},
   onNavigationRedirect?: any,
+  orderStatus?: any,
 }
 export interface ActiveOrdersParams {
   orders?: any,

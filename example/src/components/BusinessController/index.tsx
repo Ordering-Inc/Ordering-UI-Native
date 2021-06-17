@@ -28,7 +28,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
   const { business, handleClick } = props;
-  const [{ parsePrice, parseDistance, parseNumber }] = useUtils();
+  const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
   const [orderState] = useOrder();
   const [, t] = useLanguage();
 
@@ -48,7 +48,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
   return (
     <Card activeOpacity={1} onPress={() => handleClick(business)}>
       <BusinessHero
-        source={{ uri: business?.header }}
+        source={{ uri: optimizeImage(business?.header, 'h_400,c_limit') }}
         imageStyle={styles.headerStyle}
         isClosed={business?.open}
       >
@@ -63,7 +63,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
           </View>
         )}
         <BusinessLogo>
-          <OIcon url={business?.logo} style={styles.businessLogo} />
+          <OIcon url={optimizeImage(business?.logo, 'h_300,c_limit')} style={styles.businessLogo} />
         </BusinessLogo>
         <BusinessState>
           {!business?.open && (

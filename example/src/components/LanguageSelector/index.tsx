@@ -28,6 +28,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   _languages && _languages.sort((a: any, b: any) =>
     (a.content > b.content) ? 1 : ((b.content > a.content) ? -1 : 0)
   )
+
   return (
     <Container>
       {languagesState?.languages && (

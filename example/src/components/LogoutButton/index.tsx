@@ -3,8 +3,7 @@ import { TouchableOpacity } from 'react-native';
 import { LogoutAction } from 'ordering-components/native';
 
 import { OIcon } from '../shared';
-import { IMAGES } from '../../config/constants';
-import { colors } from '../../theme.json';
+import { colors,images } from '../../theme.json';
 
 const LogoutButtonUI = (props: any) => {
   const { handleLogoutClick } = props
@@ -14,7 +13,7 @@ const LogoutButtonUI = (props: any) => {
       onPress={() => handleLogoutClick()}
     >
       <OIcon
-        src={IMAGES.menulogout}
+        src={images.general.menulogout}
         width={28}
         height={28}
         color={colors.disabledContrast}

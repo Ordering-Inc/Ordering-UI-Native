@@ -66,7 +66,7 @@ interface Props {
   parentStyle?: ViewStyle;
   disabledStyle?: ViewStyle;
   textStyle?: TextStyle;
-  imgLeftSrc?: ImageSourcePropType;
+  imgLeftSrc?: ImageSourcePropType | string;
   imgLeftStyle?: ImageStyle;
   imgRightSrc?: any;
   imgRightStyle?: ImageStyle;

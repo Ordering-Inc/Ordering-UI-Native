@@ -9,7 +9,7 @@ export const StripeElementsForm = (props: any) => {
 
   const [ordering] = useApi();
   const [{ token }] = useSession();
-  const [state, setState] = useState({ loading: false, error: null, requirements: null });
+  const [state, setState] = useState({ loading: false, loadingAdd: false, error: null, requirements: null });
 
   const getRequirements = async () => {
     try {
@@ -40,8 +40,42 @@ export const StripeElementsForm = (props: any) => {
     }
   }
 
+  const stripeTokenHandler = async (tokenId: string, user: any, businessId: string) => {
+    try {
+      setState({
+        ...state,
+        loadingAdd: true
+      })
+      const result = await fetch(`${ordering.root}/payments/stripe/cards`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${user?.session?.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          business_id: businessId,
+          gateway: 'stripe',
+          token_id: tokenId,
+          user_id: user?.id
+        })
+      })
+      const response = await result.json();
+      props.onSelectCard && props.onSelectCard(response.result);
+      setState({
+        ...state,
+        loadingAdd: false
+      })
+    } catch (error) {
+      setState({
+        ...state,
+        loadingAdd: false,
+        error
+      })
+    }
+  }
+
   useEffect(() => {
-    if (!token) return
+    if (!token || state.requirements) return
     toSave && getRequirements()
   }, [token])
 
@@ -50,6 +84,7 @@ export const StripeElementsForm = (props: any) => {
       {...props}
       values={state}
       requirements={state.requirements}
+      stripeTokenHandler={stripeTokenHandler}
     />
   )
 }
