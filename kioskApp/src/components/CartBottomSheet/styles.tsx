@@ -4,12 +4,26 @@ import { colors } from '../../theme.json';
 
 const _dim = Dimensions.get('window');
 
+export const StyledContainer = styled.ScrollView`
+	position: absolute;
+	zIndex: 1000;
+	width: 100%;
+	background-color: #fff;
+	padding: 20px;
+	bottom: 0;
+	shadow-color: #000;
+	shadow-offset: { width: 1px, height: 1px };
+	shadow-opacity:  0.4;
+	shadow-radius: 3px;
+	elevation: 15;
+`
+
 export const StyledContent = styled.ScrollView`
 	padding: 0 20px;
 	margin: 20px;
 	border-radius: 6px;
 	background-color: ${colors.whiteGray};
-	height: ${_dim.height * 0.38}px;
+	height: ${_dim.height * 0.36}px;
 `
 export const StyledTopBar = styled.View`
 	padding: 20px 0;

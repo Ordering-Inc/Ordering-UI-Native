@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
-import { Button, Dimensions, View } from 'react-native';
-import { useLanguage } from 'ordering-components/native';
+import React, { useState } from 'react';
+import { Dimensions, View } from 'react-native';
+import { useLanguage, useOrder } from 'ordering-components/native';
 
 import { Container } from '../layouts/Container';
 import GridContainer from '../layouts/GridContainer';
@@ -10,7 +10,9 @@ import {
   OSegment,
   OText
 } from '../components/shared';
-import CartBottomSheet from '../components/CartBottomSheet';
+import { CartBottomSheet } from '../components/CartBottomSheet';
+import { Category } from '../types';
+import { CartContent } from '../components/CartContent';
 
 const CategoryPage = (props: any): React.ReactElement => {
 
@@ -19,35 +21,63 @@ const CategoryPage = (props: any): React.ReactElement => {
     route,
   } = props;
   
-  const { category, categories } = route.params;
+  const {
+    category,
+    categories,
+    businessId,
+    businessSlug,
+  }: Params = route.params;
 
   const [, t] = useLanguage();
   const [curIndexCateg, setIndexCateg] = useState(categories.indexOf(category));
-  const refRBSheet = useRef<any>(null);
-  
   const onChangeTabs = (idx: number) => setIndexCateg(idx);
 
   const goToBack = () => navigation.goBack()
 
-  return (
-		<Container nopadding>
-      <View style={{ paddingVertical: 20 }}>
-        <NavBar
-          title={t('CATEGORY', 'Category')}
-          onActionLeft={goToBack}
-        />
-        <OSegment
-          items={categories.map((category:any) => ({
-            text: category.name
-          }))}
-          selectedIdx={curIndexCateg} 
-          onSelectItem={onChangeTabs}
-        />
-      </View>
+  const [{ carts }] = useOrder();
+  const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
 
-      <CartBottomSheet
-        refRBSheet={refRBSheet}
-      >
+  let cart;
+  
+  if (cartsList?.length > 0) {
+    cart = cartsList?.find((item: any) => item.business_id == '41');
+  }
+
+  const cartProps = {
+    ...props,
+    cart,
+    isOrderStateCarts: !!carts,
+    onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params),
+    CustomCartComponent: CartBottomSheet,
+    extraPropsCustomCartComponent: {
+      height: VISIBLE_CART_BOTTOM_SHEET_HEIGHT,
+      visible: !!cart,
+    },
+    showNotFound: false,
+  }
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        paddingBottom: !!cart ? VISIBLE_CART_BOTTOM_SHEET_HEIGHT : 0,
+      }}
+    >
+      <Container nopadding nestedScrollEnabled>
+        <View style={{ paddingVertical: 20 }}>
+          <NavBar
+            title={t('CATEGORY', 'Category')}
+            onActionLeft={goToBack}
+          />
+          <OSegment
+            items={categories.map((category) => ({
+              text: category.name
+            }))}
+            selectedIdx={curIndexCateg} 
+            onSelectItem={onChangeTabs}
+          />
+        </View>
+        
         <View style={{ paddingHorizontal: 20, paddingVertical: 8 }}>
           <OText
             size={_dim.width * 0.05}
@@ -58,25 +88,41 @@ const CategoryPage = (props: any): React.ReactElement => {
         </View>
 
         <GridContainer>
-          {categories[curIndexCateg].products.map((product:any) => (
+          {categories[curIndexCateg].products.map((product) => (
             <OCard
               key={product.id}
-              title={!!product?.name && product?.name}
+              title={product?.name}
               image={{ uri: product?.images }}
-              price={product?.price && `$${product?.price}`}
-              prevPrice={product?.in_offer && `$${product?.offer_price}`}
-              description={!!product?.description && product?.description}
               onPress={() => {
-                refRBSheet.current.open()
+                navigation.navigate('ProductDetails', {
+                  businessId,
+                  businessSlug,
+                  product,
+                });
               }}
+              {...(!!product?.description && { description: product?.description } )}
+              {...(!!product?.price && { price: `$${product?.price}` } )}
+              {...(product?.in_offer && { prevPrice: `$${product?.offer_price}` } )}
             />
           ))}
         </GridContainer>
-      </CartBottomSheet>
-		</Container>
+      </Container>
+      
+      <CartContent
+        {...cartProps}
+      />
+    </View>
 	);
 };
 
+interface Params {
+  category: Category;
+  categories: Category[];
+  businessId: string;
+  businessSlug: string;
+}
+
 const _dim = Dimensions.get('window');
+const VISIBLE_CART_BOTTOM_SHEET_HEIGHT = _dim.height * 0.5;
 
 export default CategoryPage;

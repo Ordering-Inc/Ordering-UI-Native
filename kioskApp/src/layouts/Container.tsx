@@ -20,13 +20,20 @@ const SafeAreStyled = styled.SafeAreaView`
 
 export const Container = (props: Props) => {
   return (
-    <SafeAreStyled>
+    <SafeAreStyled
+      nestedScrollEnabled={props.nestedScrollEnabled}
+    >
       <ContainerStyled {...props}>{props.children}</ContainerStyled>
     </SafeAreStyled>
   );
 };
 
+Container.defaultProps = {
+  nestedScrollEnabled: false
+}
+
 interface Props {
+  nestedScrollEnabled: boolean,
   nopadding?: boolean;
   children?: any;
 }

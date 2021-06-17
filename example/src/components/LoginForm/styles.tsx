@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components/native';
 import { colors } from '../../theme.json'
 
-export const Container = styled.View`
+export const Container = styled.ScrollView`
   padding-bottom: 40px;
 `
 

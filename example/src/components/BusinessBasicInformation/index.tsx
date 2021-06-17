@@ -44,16 +44,17 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
     ))
     return _types.join(', ')
   }
+
   return (
     <BusinessContainer>
       <BusinessHeader
-        style={isBusinessInfoShow ? styles.businesInfoheaderStyle : {...styles.headerStyle, backgroundColor: colors.backgroundGray}}
-        source={{ uri: header || business?.header }}
+        style={isBusinessInfoShow ? styles.businesInfoheaderStyle : { ...styles.headerStyle, backgroundColor: colors.backgroundGray }}
+        source={{ uri: header || optimizeImage(businessState?.business?.header, 'h_400,c_limit') }}
       >
         <BusinessLogo>
-        {!isBusinessInfoShow && (
-          <OIcon url={optimizeImage(logo || business?.logo, 'h_200,c_limit')} style={styles.businessLogo} />
-        )}
+          {!isBusinessInfoShow && (
+            <OIcon url={logo || optimizeImage(businessState?.business?.logo, 'h_300,c_limit')} style={styles.businessLogo} />
+          )}
         </BusinessLogo>
       </BusinessHeader>
       <BusinessInfo style={styles.businessInfo}>
@@ -154,6 +155,8 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         titleSectionStyle={styles.modalTitleSectionStyle}
         open={openBusinessInformation}
         onClose={() => setOpenBusinessInformation(false)}
+        styleCloseButton={{color: colors.white, backgroundColor: 'rgba(0,0,0,0.3)'}}
+        isNotDecoration
       >
         <BusinessInformation
           businessState={businessState}
@@ -164,6 +167,8 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         titleSectionStyle={styles.modalTitleSectionStyle}
         open={openBusinessReviews}
         onClose={() => setOpenBusinessReviews(false)}
+        styleCloseButton={{color: colors.white, backgroundColor: 'rgba(0,0,0,0.3)'}}
+        isNotDecoration
       >
         <BusinessReviews
           businessState={businessState}

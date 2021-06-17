@@ -1,9 +1,8 @@
 import React from 'react'
 import { View } from 'react-native'
-import { colors } from '../../theme.json'
+import { colors,images } from '../../theme.json'
 import { OButton, OIcon, OText } from '../shared'
 import {NotFoundSourceParams} from '../../types'
-import { GENERAL_IMAGES } from '../../config/constants'
 
 import {
   NotFound,
@@ -19,13 +18,13 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
     onClickButton
   } = props
 
-  const errorImage = image || GENERAL_IMAGES.notFound
+  const errorImage = image || images.general.notFound
 
   return (
     <NotFound>
       {errorImage && (
         <NotFoundImage>
-          <OIcon src={errorImage} width={300} height={260} />
+          <OIcon src={errorImage} width={260} height={220} />
         </NotFoundImage>
       )}
         {content && conditioned && !errorImage && <OText color={colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}

@@ -1,96 +1,169 @@
-import React from 'react';
+import React, { useState} from 'react';
 import { Dimensions, View, TouchableOpacity } from 'react-native';
-import RBSheet from "react-native-raw-bottom-sheet";
-import { useLanguage } from 'ordering-components/native';
+import {
+  Cart as CartController,
+	useLanguage,
+	useOrder,
+	useConfig,
+	useValidationFields,
+	useUtils,
+} from 'ordering-components/native';
 
-import { colors } from '../../theme.json';
-import { OButton, OImage, OText } from '../shared';
 import {
 	StyledBottomContent,
-	StyledCartItem,
+	StyledContainer,
 	StyledContent,
 	StyledTopBar,
 } from './styles';
-import { DELIVERY_TYPE_IMAGES, IMAGES } from '../../config/constants';
+import { OButton, OModal, OText } from '../shared';
+import CartItem from '../CartItem';
+import { colors } from '../../theme.json';
+import { Cart as TypeCart } from '../../types';
+import { ProductForm } from '../ProductForm';
+import { UpsellingProducts } from '../UpsellingProducts';
 
-const _dim = Dimensions.get('window');
+const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | null => {
+	const {
+    cart,
+    clearCart,
+    changeQuantity,
+    getProductMax,
+    offsetDisabled,
+    removeProduct,
+    setIsCartsLoading,
+		isFromCart,
+		navigation,
+	}  = props
 
-const CartBottomSheet = (props: Props): React.ReactElement => {
+  const [, t] = useLanguage()
+  const [orderState] = useOrder()
+  const [{ parsePrice }] = useUtils()
 
-	const [, t] = useLanguage();
+  const [openProduct, setModalIsOpen] = useState(false)
+  const [curProduct, setCurProduct] = useState<any>(null)
+  const [openUpselling, setOpenUpselling] = useState(false)
+  const [canOpenUpselling, setCanOpenUpselling] = useState(false)
+
+  const selectedOrderType = orderState?.options?.type;
+
+	const isCartPending = cart?.status === 2
+
+  const handleDeleteClick = (product: any) => {
+    removeProduct(product)
+  }
+
+  const handleEditProduct = (product: any) => {
+    setCurProduct(product)
+    setModalIsOpen(true)
+  }
+
+  const handlerProductAction = (product: any) => {
+    if (Object.keys(product).length) {
+      setModalIsOpen(false)
+    }
+  }
+
+  const handleClearProducts = async () => {
+    try {
+      setIsCartsLoading && setIsCartsLoading(true)
+      const result = await clearCart(cart?.uuid)
+			setIsCartsLoading && setIsCartsLoading(false)
+    } catch (error) {
+      setIsCartsLoading && setIsCartsLoading(false)
+    }
+  }
+
+  const onCloseUpselling = () => {
+    setOpenUpselling(false)
+    setCanOpenUpselling(false)
+  }
+
+  const handleUpsellingPage = () => {
+    onCloseUpselling()
+    navigation?.navigate('Cart')
+  }
+
+	if (!props?.visible) return null;
 
 	return (
-		<>
-			{props.children}
+		<StyledContainer
+			nestedScrollEnabled
+			style={{
+				height: props.height,
+			}}
+		>
+			<StyledContent nestedScrollEnabled>
+				<TopBar
+					handleClearProducts={handleClearProducts}
+					selectedOrderType={selectedOrderType}
+				/>
 
-			<RBSheet
-				ref={props.refRBSheet}
-        closeOnDragDown={false}
-				height={_dim.height * 0.5}
-        customStyles={{
-					wrapper: {
-						backgroundColor: "rgba(0,0,0,0.5)"
-          },
-        }}
+				{cart?.products?.length > 0 && cart?.products.map((product: any) => (
+          <CartItem
+            key={product.code}
+            isCartPending={isCartPending}
+            isCartProduct
+            product={product}
+            changeQuantity={changeQuantity}
+            getProductMax={getProductMax}
+            offsetDisabled={offsetDisabled}
+            onDeleteProduct={handleDeleteClick}
+            onEditProduct={handleEditProduct}
+          />
+        ))}
+
+			</StyledContent>
+
+			<StyledBottomContent>
+				<OButton
+					text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
+						!openUpselling !== canOpenUpselling ? `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`: t('LOADING', 'Loading')
+					) : !cart?.valid_address ? (
+						`${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
+					) : (
+						`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+					)}
+					bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
+					isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
+					borderColor={colors.primary}
+					imgRightSrc={null}
+					textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+					onClick={() => setOpenUpselling(true)}
+					style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
+				/>
+			</StyledBottomContent>
+
+      <OModal
+        open={openProduct}
+        entireModal
+        customClose
+        onClose={() => setModalIsOpen(false)}
       >
-				<View>
-					<StyledContent>
-						<TopBar/>
+        <ProductForm
+          productCart={curProduct}
+          businessSlug={cart?.business?.slug}
+          businessId={curProduct?.business_id}
+          categoryId={curProduct?.category_id}
+          productId={curProduct?.id}
+          onSave={handlerProductAction}
+          onClose={() => setModalIsOpen(false)}
+        />
 
+      </OModal>
 
-						<CartItem
-							name="Product name #1"
-							price={20.29}
-							quantity={1}
-							image={DELIVERY_TYPE_IMAGES.eatIn}
-							onEdit={() => {}}
-							onDecrease={() => {}}
-							onIncrease={() => {}}
-						/>
-
-						<CartItem
-							name="Product name #2"
-							price={8.97}
-							quantity={1}
-							image={DELIVERY_TYPE_IMAGES.takeOut}
-							onEdit={() => {}}
-							onDecrease={() => {}}
-							onIncrease={() => {}}
-						/>
-
-						<CartItem
-							name="Product name #3"
-							price={23.49}
-							quantity={1}
-							image={DELIVERY_TYPE_IMAGES.eatIn}
-							onEdit={() => {}}
-							onDecrease={() => {}}
-							onIncrease={() => {}}
-						/>
-
-						<CartItem
-							name="Product name #4"
-							price={10.99}
-							quantity={1}
-							image={DELIVERY_TYPE_IMAGES.takeOut}
-							onEdit={() => {}}
-							onDecrease={() => {}}
-							onIncrease={() => {}}
-						/>
-
-					</StyledContent>
-
-					<StyledBottomContent>
-						<OButton
-							text={t('CONFIRM THIS ORDER', 'Confirm this ${{price}} order')}
-							onClick={() => {
-								console.log('Confirm order')
-							}}
-						/>
-					</StyledBottomContent>
-				</View>
-      </RBSheet>
-		</>
+      {openUpselling && (
+        <UpsellingProducts
+          handleUpsellingPage={handleUpsellingPage}
+          openUpselling={openUpselling}
+          businessId={cart?.business_id}
+          business={cart?.business}
+          cartProducts={cart?.products}
+          canOpenUpselling={canOpenUpselling}
+          setCanOpenUpselling={setCanOpenUpselling}
+          onClose={onCloseUpselling}
+        />
+      )}
+		</StyledContainer>		
 	);
 }
 
@@ -112,14 +185,13 @@ const TopBar = (props:any) => {
 					weight="500"
 					color={colors.mediumGray}
 				>
-					{t('TAKE_OUT', 'Take out')}
+					{props?.selectedOrderType === 2 && t('TAKE_OUT', 'Take out')}
+          {props?.selectedOrderType === 3 && t('EAT_IN', 'Eat in')}
 				</OText>
 			</View>
 
 			<TouchableOpacity
-				onPress={() => {
-					console.log('cancel order')
-				}}
+				onPress={props?.handleClearProducts}
 			>
 				<View>
 					<OText
@@ -135,76 +207,30 @@ const TopBar = (props:any) => {
 	);
 }
 
-const CartItem = (props: CartItemProps) => {
-	const [, t] = useLanguage();
+const _dim = Dimensions.get('window');
 
-	return (
-		<StyledCartItem>
-			<View style={{ flexDirection: 'row' }}>
-				<OImage
-					source={props.image}
-					height={60}
-					width={60}
-					resizeMode="cover"
-					borderRadius={6}
-				/>
-
-				<View style={{ flexDirection: 'column', justifyContent: 'space-evenly', marginHorizontal: 15 }}>
-					<OText
-						size={_dim.width * 0.025}
-						weight="700"
-					>
-						{props.name}
-					</OText>
-
-					<OButton
-						bgColor="transparent"
-						borderColor="transparent"
-						imgLeftSrc={IMAGES.edit}
-						text={t('EDIT', 'Edit')}
-						style={{ justifyContent: 'flex-start', paddingLeft: 0 }}
-						textStyle={{
-							color: colors.primary,
-							marginLeft: 6,
-						}}
-						onClick={props.onEdit}
-					/>
-				</View>
-			</View>
-			
-			<View style={{ alignItems: "flex-end" }} >
-				<OText
-					size={_dim.width * 0.025}
-					weight="700"
-					color={colors.primary}
-				>
-					{`$${props.price}`}
-				</OText>
-
-				<OText
-					size={_dim.width * 0.023}
-					weight="500"
-				>
-					{`${props.quantity}`}
-				</OText>
-			</View>
-		</StyledCartItem>
-	);
+interface CartBottomSheetUIProps {
+	visible: boolean;
+	height: number | string;
+	cart: TypeCart,
+  clearCart: any,
+  changeQuantity: any,
+  getProductMax: any,
+  offsetDisabled: any,
+  removeProduct: any,
+  setIsCartsLoading: any,
+	isFromCart: any,
+	navigation: any,
+	onNavigationRedirect: any,
 }
 
-interface Props {
-	refRBSheet: React.RefObject<any>;
-	children: any;
-}
+export const CartBottomSheet = (props: any) => {
+  const cartProps = {
+    ...props,
+    UIComponent: CartBottomSheetUI
+  }
 
-interface CartItemProps {
-	image: string | { uri: string; };
-	name: string;
-	price: number;
-	quantity: number;
-	onEdit: () => void;
-	onIncrease: () => void;
-	onDecrease: () => void;
+  return (
+    <CartController {...cartProps} />
+  )
 }
-
-export default CartBottomSheet;

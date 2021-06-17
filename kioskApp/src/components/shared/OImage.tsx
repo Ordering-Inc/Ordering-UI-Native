@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ImageStyle } from 'react-native';
 import styled, {css} from 'styled-components/native';
 
 const SImage = styled.Image`
@@ -16,6 +17,7 @@ interface Props {
 	resizeMode?: string,
   overflow?: string,
   borderRadius?:number,
+  style?:ImageStyle,
 }
 
 const OImage = (props: Props): React.ReactElement => {

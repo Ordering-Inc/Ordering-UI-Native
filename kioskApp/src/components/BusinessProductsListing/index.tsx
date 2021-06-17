@@ -6,7 +6,7 @@ import {
 } from 'ordering-components/native'
 import Carousel from 'react-native-snap-carousel';
 
-import { BusinessProductsListingParams } from '../../types'
+import { BusinessProductsListingParams, Business } from '../../types'
 import { OCard, OText } from '../shared'
 import GridContainer from '../../layouts/GridContainer'
 import PromoCard from '../PromoCard';
@@ -28,9 +28,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     logo
   } = props;
 
+  const business: Business = businessState.business;
+
   const [, t] = useLanguage();
 
-  const _categories:any = businessState?.business?.original?.categories;
+  const _categories:any = business?.original?.categories;
   let _promos:any = [];
 
   _categories?.forEach((categ:any) => {
@@ -104,7 +106,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               onPress={() => {
                 navigation.navigate('Category', {
                   category,
-                  categories: businessState.business.original.categories,
+                  categories: business.original.categories,
+                  businessId: business?.api?.businessId,
+                  businessSlug: business?.slug,
                 });
               }}
               titleStyle={{ textAlign: 'center' }}

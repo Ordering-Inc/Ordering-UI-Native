@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   OrderTypeControl,
   useLanguage,
@@ -19,6 +19,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     orderTypes
   } = props
   const [orderState] = useOrder()
+  const [open,setOpen] = useState(false)
 
   const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value))
 
@@ -30,17 +31,25 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     }
   })
 
+  const handleChangeOrderTypeCallback = (orderType : number) => {
+    if(!orderState.loading){
+      handleChangeOrderType(orderType)
+    }
+  }
+
   return (
     typeSelected !== undefined && (
       <OrderTypeWrapper>
         <RNPickerSelect
-          onValueChange={(orderType: any) => handleChangeOrderType(orderType)}
+          onValueChange={(orderType) => handleChangeOrderTypeCallback(orderType)}
           items={items}
           placeholder={{}}
           style={pickerStyle}
           value={defaultValue || typeSelected}
+          onOpen={() => setOpen(true)}
+          onClose={() => setOpen(false)}
           useNativeAndroidPickerStyle={false}
-          disabled={orderState.loading}
+          disabled={orderState.loading && !open}
         />
       </OrderTypeWrapper>
     )
@@ -52,19 +61,21 @@ const pickerStyle = StyleSheet.create({
     color: colors.secundaryContrast,
     borderWidth: 1,
     borderColor: 'transparent',
-    borderRadius: 15,
-    paddingHorizontal: 10,
+    borderRadius: 10,
+    paddingHorizontal: 20,
     backgroundColor: colors.inputDisabled,
+    fontSize: 15
   },
   inputIOS: {
     color: colors.secundaryContrast,
     paddingEnd: 20,
-    height: 40,
+    height: 50,
     borderWidth: 1,
     borderColor: 'transparent',
-    borderRadius: 15,
-    paddingHorizontal: 10,
-    backgroundColor: colors.inputDisabled
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    backgroundColor: colors.inputDisabled,
+    fontSize: 15
   },
   icon: {
     top: Platform.OS === 'ios' ? 10 : 15,

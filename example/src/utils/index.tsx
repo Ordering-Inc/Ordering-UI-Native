@@ -25,7 +25,9 @@ export const getTraduction = (key: string) => {
     YOU_DO_NOT_HAVE_PERMISSION: 'You do not have permission',
     INVALID_CODE: 'Invalid verify code',
     STRIPE_ERROR: 'Payment service error. Try again later.',
-    ERROR_AUTH_TWILIO_DISABLED: 'Auth error, twilio is disabled'
+    ERROR_AUTH_TWILIO_DISABLED: 'Auth error, twilio is disabled',
+    ERROR_CART_SELECT_PAYMETHOD: 'An error occurred with selected pay method',
+    ERROR_YOU_HAVE_ACTIVE_CART: 'You can\'t reorder this cart'
   }
 
   return keyList[key] ? t(key, keyList[key]) : t(key)

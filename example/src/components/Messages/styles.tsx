@@ -5,7 +5,6 @@ import { colors } from '../../theme.json'
 export const Wrapper = styled.View`
   flex: 1;
   background-color: ${colors.white};
-  padding: 0
 `
 export const Header = styled.View`
   flex-direction: row;

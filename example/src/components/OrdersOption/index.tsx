@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { OrderList, useLanguage, useOrder } from 'ordering-components/native'
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
-import { GENERAL_IMAGES } from '../../config/constants';
 
 import { OptionTitle } from './styles'
-import { colors } from '../../theme.json'
+import { colors, images } from '../../theme.json'
 import { OrdersOptionParams } from '../../types'
 import { ToastType, useToast } from '../../providers/ToastProvider'
 
 import {
   Placeholder,
-  PlaceholderMedia,
   PlaceholderLine,
   Fade
 } from "rn-placeholder";
@@ -27,7 +25,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     titleContent,
     customArray,
     loadMoreOrders,
-    onNavigationRedirect
+    onNavigationRedirect,
+    orderStatus
   } = props
 
   const [, t] = useLanguage()
@@ -36,12 +35,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const { loading, error, orders: values } = orderList
 
   const imageFails = activeOrders
-    ? GENERAL_IMAGES.emptyActiveOrders
-    : GENERAL_IMAGES.emptyPastOrders
+    ? images.general.emptyActiveOrders
+    : images.general.emptyPastOrders
 
-  const orders = customArray || values
-
-  const [ordersSorted, setOrdersSorted] = useState<Array<any>>([])
+  const orders = customArray || values || []
 
   const [reorderLoading, setReorderLoading] = useState(false)
 
@@ -52,9 +49,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       const { error, result } = await reorder(orderId)
       if (!error) {
         onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: result.uuid })
+        setReorderLoading(false)
         return
       }
       setReorderLoading(false)
+
     } catch (err) {
       showToast(ToastType.Error, t('ERROR', err.message))
       setReorderLoading(false)
@@ -76,23 +75,22 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       { key: 9, value: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver') },
       { key: 10, value: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver') },
       { key: 11, value: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver') },
-      { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver') }
+      { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver') },
+      { key: 13, value: t('PREORDER', 'PreOrder')},
+      { key: 14, value: t('ORDER_NOT_READY', 'Order not ready')},
+      { key: 15, value: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Order picked up completed by customer') },
+      { key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer')},
+      { key: 17, value: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer')  },
+      { key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business') },
+      { key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer') },
+      { key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business') },
+      { key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business')}
     ]
 
     const objectStatus = orderStatus.find((o) => o.key === status)
 
     return objectStatus && objectStatus
   }
-
-  useEffect(() => {
-    const ordersSorted = orders.sort((a: any, b: any) => {
-      if (activeOrders) {
-        return Math.abs(new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      }
-      return Math.abs(new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-    })
-    setOrdersSorted(ordersSorted)
-  }, [orders])
 
   return (
     <>
@@ -105,14 +103,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 : t('PREVIOUS_ORDERS', 'Previous Orders'))}
             </OText>
           </OptionTitle>
-          {!loading && ordersSorted.length === 0 && (
-            <NotFoundSource
-              content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
-              image={imageFails}
-              conditioned
-            />
-          )}
         </>
+      )}
+      {!loading && orders.length === 0 && (
+        <NotFoundSource
+          content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
+          image={imageFails}
+          conditioned
+        />
       )}
       {loading && (
         <>
@@ -148,7 +146,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {!loading && !error && orders.length > 0 && (
         activeOrders ? (
           <ActiveOrders
-            orders={ordersSorted}
+            orders={orders.filter((order: any) => orderStatus.includes(order.status))}
             pagination={pagination}
             loadMoreOrders={loadMoreOrders}
             reorderLoading={reorderLoading}
@@ -159,7 +157,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         ) : (
           <PreviousOrders
             reorderLoading={reorderLoading}
-            orders={ordersSorted}
+            orders={orders.filter((order: any) => orderStatus.includes(order.status))}
             pagination={pagination}
             loadMoreOrders={loadMoreOrders}
             getOrderStatus={getOrderStatus}
@@ -176,7 +174,9 @@ export const OrdersOption = (props: OrdersOptionParams) => {
   const MyOrdersProps = {
     ...props,
     UIComponent: OrdersOptionUI,
-    orderStatus: props.activeOrders ? [0, 3, 4, 7, 8, 9] : [1, 2, 5, 6, 10, 11, 12],
+    orderStatus: props.activeOrders
+      ? [0, 3, 4, 7, 8, 9, 13, 14, 15, 18, 19, 20, 21]
+      : [1, 2, 5, 6, 10, 11, 12, 16, 17],
     useDefualtSessionManager: true,
     paginationSettings: {
       initialPage: 1,

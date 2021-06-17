@@ -44,7 +44,15 @@ const IntroPage = (props: any): React.ReactElement => {
 						width: _dim.width - _offset
 					}}
 					onClick={() => {
-						navigation.navigate('DeliveryType');
+						navigation.navigate('DeliveryType', {
+								callback: () => {
+									navigation.navigate('Business');
+								},
+								goBack: () => {
+									navigation.goBack();
+								},
+							}
+						);
 					}}
 				/>
 

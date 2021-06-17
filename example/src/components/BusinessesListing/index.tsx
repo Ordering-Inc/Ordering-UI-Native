@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
-import { View, StyleSheet, ScrollView, Platform } from 'react-native'
+import { View, StyleSheet, ScrollView, Platform, PanResponder } from 'react-native'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { 
+import {
   BusinessList as BusinessesListingController,
   useLanguage,
   useSession,
@@ -16,7 +16,7 @@ import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOp
 import NavBar from '../NavBar'
 import { colors } from '../../theme.json'
 import { SearchBar } from '../SearchBar'
-import { OText, OIcon, OModal } from '../shared'
+import { OText } from '../shared'
 import { BusinessesListingParams } from '../../types'
 import { NotFoundSource } from '../NotFoundSource'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
@@ -42,6 +42,17 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const [{ configs }] = useConfig()
   const [{ parseDate }] = useUtils()
 
+  const timerId = useRef<any>(false)
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (e, gestureState) => {
+        const {dx, dy} = gestureState;
+        resetInactivityTimeout()
+        return (Math.abs(dx) > 20) || (Math.abs(dy) > 20);
+      },
+    })
+  ).current
+
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
   const handleScroll = ({ nativeEvent }: any) => {
@@ -54,11 +65,22 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     }
   }
 
+  const resetInactivityTimeout = () => {
+    clearTimeout(timerId.current)
+    timerId.current = setInterval(() => {
+      getBusinesses(true)
+    }, 600000)
+  }
+
+  useEffect(() => {
+    resetInactivityTimeout()
+  }, [])
+
   return (
-    <ScrollView style={styles.container} onScroll={(e) => handleScroll(e)}>
+    <ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} {...panResponder.panHandlers}>
       {!auth && (
         <NavBar
-          onActionLeft={() => navigation.goBack()}
+          onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
           style={{ paddingBottom: 0 }}
@@ -92,7 +114,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           <OrderTypeSelector configTypes={configTypes} />
           <WrapMomentOption
             onPress={() => navigation.navigate('MomentOption')}
-            disabled={orderState.loading}
           >
             <OText size={14} numberOfLines={1} ellipsizeMode='tail'>
               {orderState.options?.moment

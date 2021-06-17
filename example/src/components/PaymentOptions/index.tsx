@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Placeholder,
-  PlaceholderMedia,
+  // PlaceholderMedia,
   PlaceholderLine,
   Fade
 } from "rn-placeholder";
@@ -15,14 +15,14 @@ import {
 } from 'ordering-components/native';
 
 import { PaymentOptionCash } from '../PaymentOptionCash';
-import { PaymentOptionStripe } from '../PaymentOptionStripe';
 import { StripeElementsForm } from '../StripeElementsForm';
-import { StripeRedirectForm } from '../StripeRedirectForm';
+import { StripeCardsList } from '../StripeCardsList';
+// import { PaymentOptionStripe } from '../PaymentOptionStripe';
+// import { StripeRedirectForm } from '../StripeRedirectForm';
 // import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
 // import { NotFoundSource } from '../NotFoundSource'
 
-import { IMAGES, PAYMENT_IMAGES } from '../../config/constants';
-import { OText, OButton, OIcon, OModal } from '../shared';
+import { OText, OIcon, OModal, OButton } from '../shared';
 
 import {
   PMContainer,
@@ -30,44 +30,44 @@ import {
   PMCardSelected,
   PMCardItemContent
 } from './styles'
-import { colors } from '../../theme.json';
+import { colors, images } from '../../theme.json';
 import { getIconCard, flatArray } from '../../utils';
 
-const stripeOptions = ['stripe_direct', 'stripe', 'stripe_connect']
-const stripeRedirectOptions = [
-  { name: 'Bancontact', value: 'bancontact' },
-  { name: 'Alipay', value: 'alipay' },
-  { name: 'Giropay', value: 'giropay' },
-  { name: 'iDEAL', value: 'ideal' }
-]
+const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
+// const stripeRedirectOptions = [
+//   { name: 'Bancontact', value: 'bancontact' },
+//   { name: 'Alipay', value: 'alipay' },
+//   { name: 'Giropay', value: 'giropay' },
+//   { name: 'iDEAL', value: 'ideal' }
+// ]
 
 const getPayIcon = (method: string) => {
   switch (method) {
     case 'cash':
-      return PAYMENT_IMAGES.cash
+      return images.general.cash
     case 'card_delivery':
-      return PAYMENT_IMAGES.carddelivery
+      return images.general.carddelivery
     case 'paypal':
-      return PAYMENT_IMAGES.paypal
+      return images.general.paypal
     case 'stripe':
-      return PAYMENT_IMAGES.stripe
+      return images.general.stripe
     case 'stripe_direct':
-      return PAYMENT_IMAGES.stripecc
+      return images.general.stripecc
     case 'stripe_connect':
-      return PAYMENT_IMAGES.stripes
+      return images.general.stripes
     case 'stripe_redirect':
-      return PAYMENT_IMAGES.stripesb
+      return images.general.stripesb
     default:
-      return PAYMENT_IMAGES.creditCard
+      return images.general.creditCard
   }
 }
 
-const paypalBtnStyle = {
-  color: 'gold',
-  shape: 'pill',
-  label: 'paypal',
-  size: 'responsive'
-}
+// const paypalBtnStyle = {
+//   color: 'gold',
+//   shape: 'pill',
+//   label: 'paypal',
+//   size: 'responsive'
+// }
 
 const PaymentOptionsUI = (props: any) => {
   const {
@@ -84,11 +84,14 @@ const PaymentOptionsUI = (props: any) => {
     handlePaymethodDataChange
   } = props
   const [, t] = useLanguage();
+  const [addCardOpen, setAddCardOpen] = useState(false);
   // const [{ token }] = useSession()
 
-  const stripeRedirectValues = [
-    { name: t('SELECT_A_PAYMENT_METHOD', 'Select a payment method'), value: '-1' },
-  ]
+  // const [card, setCard] = useState(null);
+
+  // const stripeRedirectValues = [
+  //   { name: t('SELECT_A_PAYMENT_METHOD', 'Select a payment method'), value: '-1' },
+  // ]
 
   useEffect(() => {
     if (paymethodsList.paymethods.length === 1) {
@@ -136,7 +139,7 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeIds = [3, 22, 28, 31, 32]; //exclude paypal & connect & redirect
+  const excludeIds: any = [3, 28, 31, 32, 66]; //exclude paypal & connect & redirect
 
   return (
     <PMContainer>
@@ -147,7 +150,7 @@ const PaymentOptionsUI = (props: any) => {
           // data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
           data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeIds.includes(p.id))}
           renderItem={renderPaymethods}
-          keyExtractor={paymethod => paymethod.id.toString()}
+          keyExtractor={(paymethod: any) => paymethod.id.toString()}
         />
       )}
 
@@ -190,7 +193,10 @@ const PaymentOptionsUI = (props: any) => {
         />
       )}
 
-      {stripeOptions.includes(paymethodSelected?.gateway) && paymethodData?.card && (
+      {stripeOptions.includes(paymethodSelected?.gateway) &&
+        paymethodData?.brand &&
+        paymethodData?.last4 &&
+      (
         <PMCardSelected>
           <PMCardItemContent>
             <View style={styles.viewStyle}>
@@ -202,12 +208,14 @@ const PaymentOptionsUI = (props: any) => {
             </View>
             <View style={styles.viewStyle}>
               <OText>
-                {getIconCard(paymethodData?.card?.brand, 26)}
+                {getIconCard(paymethodData?.brand, 26)}
               </OText>
             </View>
             <View style={styles.viewStyle}>
-              <OText>
-                XXXX-XXXX-XXXX-{paymethodData?.card?.last4}
+              <OText
+                size={20}
+              >
+                XXXX-XXXX-XXXX-{paymethodData?.last4}
               </OText>
             </View>
           </PMCardItemContent>
@@ -215,14 +223,18 @@ const PaymentOptionsUI = (props: any) => {
       )}
 
       {/* Stripe */}
-      <OModal
-        isNotDecoration
-        open={paymethodSelected?.gateway === 'stripe' && !paymethodData.id}
-        title={t('SELECT_A_CARD', 'Select a card')}
-        onClose={() => handlePaymethodClick(null)}
-      >
-        {paymethodSelected?.gateway === 'stripe' && (
-          <PaymentOptionStripe
+      {paymethodSelected?.gateway === 'stripe' && !paymethodData.id && (
+        <View>
+          <OButton
+            text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
+            bgColor={colors.primary}
+            borderColor={colors.primary}
+            style={styles.btnAddStyle}
+            textStyle={{color: 'white'}}
+            imgRightSrc={null}
+            onClick={() => setAddCardOpen(true)}
+          />
+          <StripeCardsList
             paymethod={paymethodSelected}
             businessId={props.businessId}
             publicKey={paymethodSelected.credentials.publishable}
@@ -231,11 +243,33 @@ const PaymentOptionsUI = (props: any) => {
             onNavigationRedirect={onNavigationRedirect}
             onCancel={() => handlePaymethodClick(null)}
           />
-        )}
+        </View>
+      )}
+
+      <OModal
+        entireModal
+        title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
+        open={addCardOpen}
+        onClose={() => setAddCardOpen(false)}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
+          enabled={Platform.OS === 'ios' ? true : false}
+        >
+          <StripeElementsForm
+            toSave
+            businessId={props.businessId}
+            publicKey={paymethodSelected?.credentials?.publishable}
+            requirements={props.clientSecret}
+            onSelectCard={handlePaymethodDataChange}
+            onCancel={() => setAddCardOpen(false)}
+          />
+        </KeyboardAvoidingView>
       </OModal>
 
       {/* Stripe direct */}
-      <OModal
+      {/* <OModal
         isNotDecoration
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
         open={paymethodSelected?.gateway === 'stripe_direct' && !paymethodData.id}
@@ -255,7 +289,7 @@ const PaymentOptionsUI = (props: any) => {
             />
           </KeyboardAvoidingView>
         )}
-      </OModal>
+      </OModal> */}
 
       {/* Stripe Connect */}
       {/* <OModal
@@ -327,6 +361,15 @@ const PaymentOptionsUI = (props: any) => {
 const styles = StyleSheet.create({
   viewStyle: {
     marginRight: 10
+  },
+  cardsList: {
+    borderWidth: 1,
+    borderColor: 'red',
+    flex: 1,
+    height: 120
+  },
+  btnAddStyle: {
+    marginVertical: 20,
   },
 })
 

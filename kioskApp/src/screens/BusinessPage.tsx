@@ -1,16 +1,16 @@
-import React, { useRef } from 'react';
-import { Button, View } from 'react-native';
-import { useLanguage, useApi } from 'ordering-components/native';
+import React from 'react';
+import { Dimensions, View } from 'react-native';
+import { useLanguage, useApi, useOrder } from 'ordering-components/native';
 
 import { Container } from '../layouts/Container';
 import { BusinessProductsListing } from '../components/BusinessProductsListing';
 import NavBar from '../components/NavBar';
-import CartBottomSheet from '../components/CartBottomSheet';
+import { CartBottomSheet } from '../components/CartBottomSheet';
+import { CartContent } from '../components/CartContent';
 
 const BusinessPage = (props:any): React.ReactElement => {
   const [, t] = useLanguage()
   const [ordering] = useApi()
-  const refRBSheet = useRef<any>(null);
 
   const {
     navigation
@@ -61,28 +61,57 @@ const BusinessPage = (props:any): React.ReactElement => {
     onCheckoutRedirect: (cartUuid:any) => {}
   }
 
+  const [{ carts }] = useOrder();
+  const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
+
+  let cart;
+  
+  if (cartsList?.length > 0) {
+    cart = cartsList?.find((item: any) => item.business_id == '41');
+  }
+  const cartProps = {
+    ...props,
+    cart,
+    isOrderStateCarts: !!carts,
+    onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params),
+    CustomCartComponent: CartBottomSheet,
+    extraPropsCustomCartComponent: {
+      height: VISIBLE_CART_BOTTOM_SHEET_HEIGHT,
+      visible: !!cart,
+    },
+    showNotFound: false,
+  }
+
   const goToBack = () => navigation.goBack()  
 
   return (
-    <Container nopadding>
-      <View style={{ paddingVertical: 20 }}>
-        <NavBar
-          title={t('MENU', 'Menu')}
-          onActionLeft={goToBack}
-        />
-      </View>
+    <View
+      style={{
+        flex: 1,
+        paddingBottom: !!cart ? VISIBLE_CART_BOTTOM_SHEET_HEIGHT : 0,
+      }}
+    >
+      <Container nopadding nestedScrollEnabled>
+        <View style={{ paddingVertical: 20 }}>
+          <NavBar
+            title={t('MENU', 'Menu')}
+            onActionLeft={goToBack}
+          />
+        </View>
 
-      <CartBottomSheet
-        refRBSheet={refRBSheet}
-      >
         <BusinessProductsListing
           { ...businessProductsListingProps }
-        />
-      </CartBottomSheet>
+        /> 
+      </Container>
 
-      <Button title="CART" onPress={() => refRBSheet.current.open()} />
-    </Container>
+      <CartContent
+        {...cartProps}
+      />
+    </View>
   );
 };
+
+const _dim = Dimensions.get('window');
+const VISIBLE_CART_BOTTOM_SHEET_HEIGHT = _dim.height * 0.5;
 
 export default BusinessPage;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View, Keyboard } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber'
@@ -29,13 +29,12 @@ import {
   SkeletonWrapper
 } from './styles';
 
-import { IMAGES } from '../../config/constants';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import NavBar from '../NavBar'
 
 import { OText, OButton, OInput, OModal } from '../shared';
 import { LoginParams } from '../../types';
-import { colors } from '../../theme.json'
+import { colors, images } from '../../theme.json'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 
 const LoginFormUI = (props: LoginParams) => {
@@ -74,12 +73,15 @@ const LoginFormUI = (props: LoginParams) => {
     }
   });
 
+  const inputRef = useRef<any>({})
+
   const handleChangeTab = (val: string) => {
     props.handleChangeTab(val);
     setPasswordSee(false);
   }
 
   const onSubmit = (values: any) => {
+    Keyboard.dismiss()
     if (phoneInputData.error) {
       showToast(ToastType.Error, phoneInputData.error);
       return
@@ -122,7 +124,9 @@ const LoginFormUI = (props: LoginParams) => {
     if (!formState.loading && formState.result?.error) {
       formState.result?.result && showToast(
         ToastType.Error,
-        formState.result?.result[0]
+        typeof formState.result?.result === 'string'
+          ? formState.result?.result
+          : formState.result?.result[0]
       )
     }
   }, [formState])
@@ -177,7 +181,7 @@ const LoginFormUI = (props: LoginParams) => {
       <NavBar
         title={t('LOGIN', 'Login')}
         titleAlign={'center'}
-        onActionLeft={() => navigation.goBack()}
+        onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
         paddingTop={0}
@@ -213,11 +217,11 @@ const LoginFormUI = (props: LoginParams) => {
             {useLoginByEmail && loginTab === 'email' && (
               <Controller
                 control={control}
-                render={({ onChange, value }) => (
+                render={({ onChange, value }: any) => (
                   <OInput
                     placeholder={t('EMAIL', 'Email')}
                     style={loginStyle.inputStyle}
-                    icon={IMAGES.email}
+                    icon={images.general.email}
                     onChange={(e: any) => {
                       handleChangeInputEmail(e, onChange)
                     }}
@@ -225,6 +229,10 @@ const LoginFormUI = (props: LoginParams) => {
                     autoCapitalize='none'
                     autoCorrect={false}
                     type='email-address'
+                    autoCompleteType='email'
+                    returnKeyType='next'
+                    onSubmitEditing={() => inputRef.current?.focus()}
+                    blurOnSubmit={false}
                   />
                 )}
                 name="email"
@@ -243,32 +251,39 @@ const LoginFormUI = (props: LoginParams) => {
                 <PhoneInputNumber
                   data={phoneInputData}
                   handleData={(val: any) => setPhoneInputData(val)}
+                  textInputProps={{
+                    returnKeyType: 'next',
+                    onSubmitEditing: () => inputRef.current.focus(),
+                  }}
                 />
               </View>
             )}
 
             <Controller
               control={control}
-              render={({ onChange, value }) => (
+              render={({ onChange, value }: any) => (
                 <OInput
                   isSecured={!passwordSee ? true : false}
                   placeholder={t('PASSWORD', 'Password')}
                   style={loginStyle.inputStyle}
-                  icon={IMAGES.lock}
+                  icon={images.general.lock}
                   iconCustomRight={
                     !passwordSee ?
                       <MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
                       <MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
                   }
                   value={value}
+                  forwardRef={inputRef}
                   onChange={(val: any) => onChange(val)}
+                  returnKeyType='done'
+                  onSubmitEditing={handleSubmit(onSubmit)}
+                  blurOnSubmit
                 />
               )}
               name="password"
               rules={{ required: t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'Password')) }}
               defaultValue=""
             />
-
             <OButton
               onClick={handleSubmit(onSubmit)}
               text={loginButtonText}
