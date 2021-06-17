@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { View, ViewStyle } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 
-import { CCContainer, CCNotCarts } from './styles';
+import { CCNotCarts } from './styles';
 
 import { Cart } from '../Cart';
 import { OText } from '../shared';
@@ -10,32 +11,39 @@ import { Cart as TypeCart } from '../../types';
 
 export const CartContent = (props: any) => {
   const {
-    carts,
+    cart,
     navigation,
-    isOrderStateCarts
+    isOrderStateCarts,
+    CustomCartComponent,
+    extraPropsCustomCartComponent,
+    showNotFound,
   }: Props = props
   
   const [, t] = useLanguage()
   const [isCartsLoading, setIsCartsLoading] = useState(false)
-  
-  let cart: TypeCart | undefined;
-  
-  if (carts?.length > 0) {
-    cart = carts?.find((item) => item.business_id == '41');
+ 
+  const cartProps = {
+    navigation,
+    cart,
+    onNavigationRedirect: props.onNavigationRedirect,
+    isCartsLoading,
+    setIsCartsLoading,
   }
-  
-  return (
-    <CCContainer>
-      {isOrderStateCarts && cart && (
-        <Cart
-          navigation={navigation}
-          cart={cart}
-          onNavigationRedirect={props.onNavigationRedirect}
-          isCartsLoading={isCartsLoading}
-          setIsCartsLoading={setIsCartsLoading}
-        />
+
+  const content = (
+    <>
+      {(isOrderStateCarts && cart) && (
+        <>
+          {CustomCartComponent
+            ? <CustomCartComponent
+                {...cartProps}
+                {...(extraPropsCustomCartComponent || {})}
+              />
+            : <Cart {...cartProps} />
+          }
+        </>
       )}
-      {(!cart || carts?.length === 0) && (
+      {(!cart && showNotFound) && (
         <CCNotCarts>
           <OText size={24} style={{ textAlign: 'center' }}>
             {t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
@@ -43,13 +51,24 @@ export const CartContent = (props: any) => {
         </CCNotCarts>
       )}
       <Spinner visible={isCartsLoading} />
-    </CCContainer>
+    </>
   )
+
+  return props?.style
+    ?(<View style={props?.style}>{content}</View>)
+    : content;
 }
 
+CartContent.defaultProps = {
+  showNotFound: true
+}
 
 interface Props {
-  carts: TypeCart[], 
+  cart: TypeCart,
   isOrderStateCarts: any,
   navigation: any,
+  CustomCartComponent?: any,
+  extraPropsCustomCartComponent?: JSON,
+  showNotFound?: boolean,
+  style?: ViewStyle,
 }

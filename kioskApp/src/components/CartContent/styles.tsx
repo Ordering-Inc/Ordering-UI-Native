@@ -1,10 +1,5 @@
 import styled from 'styled-components/native';
 
-export const CCContainer = styled.View`
-  padding: 20px;
-  background-color: #fff;
-`
-
 export const CCNotCarts = styled.View`
   height: 300px;
   display: flex;

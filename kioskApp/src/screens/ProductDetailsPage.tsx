@@ -17,7 +17,7 @@ const ProductDetailsPage = (props:any) => {
       businessId={businessId}
       businessSlug={businessSlug}
       onSave={() => {
-        navigation.navigate('Cart');
+        navigation?.pop();
       }}
       navigation={navigation}
     />
