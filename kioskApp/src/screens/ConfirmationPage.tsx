@@ -1,23 +1,36 @@
 import React from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 import styled from 'styled-components/native'
 
 import { Container } from '../layouts/Container';
 import NavBar from '../components/NavBar';
-import { OButton, OIcon, OImage, OText } from '../components/shared';
+import { OButton, OImage, OInput, OText } from '../components/shared';
 import { colors } from '../theme.json'
-import { color } from 'react-native-reanimated';
 import GridContainer from '../layouts/GridContainer';
 import { DELIVERY_TYPE_IMAGES } from '../config/constants';
+import OptionSwitch, { Opt } from '../components/shared/OOptionToggle';
 
 const ConfirmationPage = (props:any): React.ReactElement => {
 	const {
 		navigation,
-		route,
 	} = props;
-	
 	const [, t] = useLanguage();
+
+	const optionsToSendReceipt: Opt[] = [
+		{
+			key: 'email',
+			label: t('EMAIL', 'Email'),
+			value: 'email',
+			isDefault: true,
+		},
+		{
+			key: 'sms',
+			label: t('SMS', 'SMS'),
+			value: 'sms',
+		}
+	]
+	
 
   const goToBack = () => navigation.goBack();
 
@@ -139,8 +152,41 @@ const ConfirmationPage = (props:any): React.ReactElement => {
 			</Container>
 
 			<OSActions>
+				<OSInputWrapper>
+					<OSTable
+						style={{
+							alignItems: 'center',
+							marginBottom: 10,
+						}}
+					>
+
+						<OText>{t('SEND_RECEIPT', 'Send receipt')}</OText>
+
+						<OptionSwitch
+							options={optionsToSendReceipt}
+							onChange={(opt) => {
+								console.log(opt.value)
+							}}
+						/>
+						
+					</OSTable>
+
+					<OSTable>
+						<OInput
+							placeholder="yourname@mailhost.com"
+							onChange={(e: any) => {}}
+							style={styles.inputsStyle}
+						/>
+						<OButton
+							onClick={() => {}}
+							text={t('SEND', 'Send')}
+						/>
+					</OSTable>
+				</OSInputWrapper>
+
 				<OButton
 					text={`${t('YOU ARE DONE', 'You are done')}!`}
+					onClick={() => {}}
 				/>
 			</OSActions>
 		</>
@@ -168,6 +214,19 @@ const OSActions = styled.View`
 	z-index: 1000;
 	padding: 20px;
 `
+
+const OSInputWrapper = styled.View`
+	width: 100%;
+	min-height: 150px;
+  background-color: #FFF;
+`
+
+const styles = StyleSheet.create({
+  inputsStyle: {
+    borderColor: colors.secundaryContrast,
+		marginRight: 30,
+  },
+});
 
 const _dim = Dimensions.get('window');
 

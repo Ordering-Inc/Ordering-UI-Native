@@ -7,7 +7,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 const Wrapper = styled.View`
   background-color: ${colors.backgroundLight};
-  border-radius: 25px;
+  border-radius: 6px;
   border-width: 1px;
   padding-horizontal: 16px;
   height: 50px;
