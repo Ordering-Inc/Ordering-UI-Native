@@ -34,6 +34,7 @@ import {
 import { colors, images } from '../../theme.json';
 import { getIconCard, flatArray } from '../../utils';
 import { WebView } from 'react-native-webview';
+import { useRef } from 'react';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 // const stripeRedirectOptions = [
@@ -91,8 +92,9 @@ const PaymentOptionsUI = (props: any) => {
   const [prog, setProg] = useState(false);
   const [progClr, setProgClr] = useState('#000');
   const { showToast } = useToast();
+  const webviewRef = useRef<any>(null)
 
-  // const [{ token }] = useSession()
+  const [{ token, user }] = useSession()
 
   // const [card, setCard] = useState(null);
 
@@ -100,17 +102,12 @@ const PaymentOptionsUI = (props: any) => {
   //   { name: t('SELECT_A_PAYMENT_METHOD', 'Select a payment method'), value: '-1' },
   // ]
 
-  const onMessage = (e) => {
+  const onMessage = (e : any) => {
     let data = e.nativeEvent.data;
-    let payment = JSON.parse(data);
-    if (payment.status === 'COMPLETED') {
-      showToast(ToastType.Success, 'PAYMENT MADE SUCCESSFULLY!');
-    } else {
-      showToast(ToastType.Error,'PAYMENT FAILED. PLEASE TRY AGAIN.');
-    }
-    setShowGateway(false);
-    console.log(data);
+    let payment = data;
   }
+
+
 
   useEffect(() => {
     if (paymethodsList.paymethods.length === 1) {
@@ -402,8 +399,13 @@ const PaymentOptionsUI = (props: any) => {
           <ActivityIndicator size={24} color={progClr} />
         </View>
         <WebView
-          source={{ uri: 'https://my-pay-web-21cf8.web.app' }}
+          source={{ uri: 'https://test-90135.web.app' }}
           onMessage={onMessage}
+          ref={webviewRef}
+          javaScriptEnabled={true}
+          javaScriptEnabledAndroid={true}
+          cacheEnabled={false}
+          cacheMode='LOAD_NO_CACHE'
           style={{ flex: 1 }}
           onLoadStart={() => {
             setProg(true);
@@ -413,7 +415,21 @@ const PaymentOptionsUI = (props: any) => {
             setProg(true);
             setProgClr('#00457C');
           }}
-          onLoadEnd={() => {
+          onLoadEnd={(e) => {
+            const message = {
+              action: 'init',
+              data: {
+                urlPlace: "https://apiv4.ordering.co/v400/en/luisv4/carts/21f23018-1990-4840-8455-6bf67b015829/place",
+                payData: {
+                  paymethod_id: 3,
+                  amount: 24,
+                  delivery_zone_id: 5,
+                  user_id: user?.id
+                },
+                userToken: token,
+              }
+            }
+            webviewRef.current.postMessage(JSON.stringify(message))
             setProg(false);
           }}
           onLoad={() => {

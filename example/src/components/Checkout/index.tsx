@@ -242,7 +242,8 @@ const CheckoutUI = (props: any) => {
             )}
         </ChTotal>
       </ChSection>
-      <ChSection style={style.paddSection}>
+      {/**devolver esto */}
+      {/* <ChSection style={style.paddSection}>
         <ChAddress>
           {(businessDetails?.loading || cartState.loading) ? (
             <Placeholder Animation={Fade}>
@@ -261,7 +262,7 @@ const CheckoutUI = (props: any) => {
             />
           )}
         </ChAddress>
-      </ChSection>
+      </ChSection> */}
       <ChSection style={style.paddSectionH}>
         <ChMoment>
           <CHMomentWrapper
