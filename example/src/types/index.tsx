@@ -66,7 +66,8 @@ export interface AddressFormParams {
   isSelectedAfterAdd?: boolean,
   onSaveAddress?: any,
   isFromProductsList?: boolean,
-  hasAddressDefault?: any
+  hasAddressDefault?: any,
+  afterSignup?: boolean
 }
 export interface SignupParams {
   navigation?: any;
