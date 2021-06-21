@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components/native'
 
 export const AccordionSection = styled.View`
   background: #FFF;
-  padding: 10px;
+  padding-vertical: 10px;
   border-bottom-width: 1px;
   border-bottom-color: #d9d9d9;
 `
@@ -27,13 +27,12 @@ export const ContentInfo = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding-horizontal: 10px;
   overflow: hidden;
   width: 85%;
 `
 
 export const ProductImage = styled.View`
-  margin-right: 10px;
+  margin-right: 5px;
 `
 
 export const AccordionContent = styled.View`

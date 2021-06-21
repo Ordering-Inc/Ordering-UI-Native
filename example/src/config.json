@@ -9,6 +9,6 @@
     "version": "v400"
   },
   "socket": {
-    "url": "https://orderingsockets.loca.lt"
+    "url": "https://socket-v2.ordering.co"
   }
 }

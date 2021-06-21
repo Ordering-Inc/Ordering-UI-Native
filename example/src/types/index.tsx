@@ -1,4 +1,4 @@
-import { ViewStyle } from 'react-native';
+import { TextInputProps, ViewStyle } from 'react-native';
 export interface LoginParams {
   navigation?: any;
   formState?: any;
@@ -96,6 +96,8 @@ export interface PhoneInputParams {
   handleData?: any;
   defaultValue?: any;
   defaultCode?: number | null;
+  forwardRef?: any;
+  textInputProps?: TextInputProps
 }
 
 export interface LanguageSelectorParams {
@@ -219,6 +221,7 @@ export interface OrdersOptionParams {
   customArray?: Array<any>,
   loadMoreOrders?: () => {},
   onNavigationRedirect?: any,
+  orderStatus?: any,
 }
 export interface ActiveOrdersParams {
   orders?: any,

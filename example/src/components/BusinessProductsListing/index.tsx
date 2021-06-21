@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -84,6 +84,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setOpenUpselling(false)
   }
 
+  useEffect(() => {
+    if(!orderState.loading){
+      handleCloseProductModal()
+    }
+  }, [orderState.loading])
+
   return (
     <>
       <BusinessProductsListingContainer style={styles.mainContainer} isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}>
@@ -131,7 +137,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                   <SearchBar
                     onSearch={handleChangeSearch}
                     onCancel={() => handleCancel()}
-                    isCancelXButtonShow={!!searchValue}
+                    isCancelXButtonShow
                     noBorderShow
                     placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
                     lazyLoad={businessState?.business?.lazy_load_products_recommended}
@@ -217,7 +223,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           handleClick={() => setOpenUpselling(true)}
         />
       )}
-      <OModal open={!!curProduct} onClose={handleCloseProductModal} entireModal customClose>
+      <OModal
+        open={!!curProduct} 
+        onClose={handleCloseProductModal}
+        entireModal
+        customClose
+      >
         <ProductForm
           product={curProduct}
           businessSlug={business.slug}

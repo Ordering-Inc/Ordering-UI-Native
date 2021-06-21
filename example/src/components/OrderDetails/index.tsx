@@ -166,7 +166,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }, [driverLocation])
 
   return (
-    <OrderDetailsContainer>
+    <OrderDetailsContainer keyboardShouldPersistTaps='handled'>
       <Spinner visible={!order || Object.keys(order).length === 0} />
       {order && Object.keys(order).length > 0 && (
         <>
