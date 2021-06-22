@@ -27,7 +27,12 @@ export const getTraduction = (key: string) => {
     STRIPE_ERROR: 'Payment service error. Try again later.',
     ERROR_AUTH_TWILIO_DISABLED: 'Auth error, twilio is disabled',
     ERROR_CART_SELECT_PAYMETHOD: 'An error occurred with selected pay method',
-    ERROR_YOU_HAVE_ACTIVE_CART: 'You can\'t reorder this cart'
+    ERROR_YOU_HAVE_ACTIVE_CART: 'You can\'t reorder this cart',
+    ERROR_YOU_HAVE_NOT_CART: 'Cart not found',
+    ERROR_PLACE_PAY_WITH_REDIRECT: 'An error occurred while trying to pay by redirect',
+    ERROR_PLACE_PAY_WITH_CARD1: 'An error occurred while trying to pay by card',
+    ERROR_PLACE_PAY_WITH_PAYPAL_CAPTURE: 'An error occurred while trying to pay by PayPal',
+    ERROR_ADD_PRODUCT_VERY_FAR_FOR_DELIVERY: 'Error adding product, very far for delivery'
   }
 
   return keyList[key] ? t(key, keyList[key]) : t(key)
