@@ -85,7 +85,7 @@ export const ProductOptionsUI = (props: any) => {
   }
 
   const handleRedirectLogin = () => {
-    onClose()
+    onClose && onClose()
     navigation?.navigate('Login')
   }
 
