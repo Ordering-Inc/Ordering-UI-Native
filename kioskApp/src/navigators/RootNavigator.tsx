@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
 
 const RootNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="Confirmation">
+    <Stack.Navigator initialRouteName="Intro">
       <Stack.Screen
         name="Login"
         component={LoginPage}
