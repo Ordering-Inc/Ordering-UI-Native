@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import {
-  ProductOptionSuboption as ProductSubOptionController,
   useUtils,
   useLanguage
 } from 'ordering-components/native'
@@ -17,7 +16,7 @@ import {
 } from './styles'
 import { colors } from '../../theme.json'
 import { OText } from '../shared'
-
+import {ProductOptionSuboption as ProductSubOptionController} from './test'
 export const ProductOptionSubOptionUI = (props: any) => {
   const {
     state,
@@ -51,9 +50,9 @@ export const ProductOptionSubOptionUI = (props: any) => {
     if (!isSelected && balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1)) {
       setShowMessage(true)
     }
-    toggleSelect()
+    toggleSelect(!isSelected)
   }
-  
+
   const handleClickContainer = () => {
     if(!option?.allow_suboption_quantity){
       handleSuboptionClick(state?.selected)
