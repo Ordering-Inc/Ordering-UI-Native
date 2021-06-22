@@ -137,7 +137,7 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeIds: any = [3, 28, 31, 32, 66]; //exclude paypal & connect & redirect
+  const excludeIds: any = [3, 31, 32, 66]; //exclude paypal & connect & redirect
 
   return (
     <PMContainer>
@@ -193,8 +193,8 @@ const PaymentOptionsUI = (props: any) => {
       )}
 
       {stripeOptions.includes(paymethodSelected?.gateway) &&
-        paymethodData?.brand &&
-        paymethodData?.last4 &&
+        (paymethodData?.brand || paymethodData?.card?.brand) &&
+        (paymethodData?.last4 || paymethodData?.card?.last4) &&
       (
         <PMCardSelected>
           <PMCardItemContent>
@@ -207,14 +207,14 @@ const PaymentOptionsUI = (props: any) => {
             </View>
             <View style={styles.viewStyle}>
               <OText>
-                {getIconCard(paymethodData?.brand, 26)}
+                {getIconCard((paymethodData?.brand || paymethodData?.card?.brand), 26)}
               </OText>
             </View>
             <View style={styles.viewStyle}>
               <OText
                 size={20}
               >
-                XXXX-XXXX-XXXX-{paymethodData?.last4}
+                XXXX-XXXX-XXXX-{(paymethodData?.last4 || paymethodData?.card?.last4)}
               </OText>
             </View>
           </PMCardItemContent>
@@ -268,6 +268,25 @@ const PaymentOptionsUI = (props: any) => {
       </OModal>
 
       {/* Stripe direct */}
+      <OModal
+        entireModal
+        title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
+        open={isOpenMethod.paymethod?.gateway === 'stripe_direct' && !paymethodData.id}
+        onClose={() => handlePaymethodClick(null)}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
+          enabled={Platform.OS === 'ios' ? true : false}
+        >
+          <StripeElementsForm
+            businessId={props.businessId}
+            publicKey={isOpenMethod.paymethod?.credentials?.publishable}
+            handleSource={handlePaymethodDataChange}
+            onCancel={() => handlePaymethodClick(false)}
+          />
+        </KeyboardAvoidingView>
+      </OModal>
       {/* <OModal
         isNotDecoration
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
