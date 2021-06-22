@@ -105,7 +105,7 @@ const UserDetailsUI = (props: any) => {
                 </OText>
                 {userData?.email}
               </OText>
-              {(userData?.cellphone || user?.cellphone) && (
+              {!!(userData?.cellphone || user?.cellphone) && (
                 <>
                   <OText size={16}>
                     <OText size={18} weight='bold'>
@@ -113,7 +113,7 @@ const UserDetailsUI = (props: any) => {
                     </OText>
                     {(userData?.country_phone_code) && `+${(userData?.country_phone_code)} `}{(userData?.cellphone)}
                   </OText>
-                  {phoneUpdate && (
+                  {!!phoneUpdate && (
                     <OText color={colors.error} style={{ textAlign: 'center' }}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
                   )}
                 </>
