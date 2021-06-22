@@ -77,7 +77,7 @@ const PaymentOptionsUI = (props: any) => {
   } = props
   const [, t] = useLanguage();
   const [addCardOpen, setAddCardOpen] = useState(false);
-  const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod.paymethod
+  const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
   // const [{ token }] = useSession()
 
   // const [card, setCard] = useState(null);
@@ -105,7 +105,7 @@ const PaymentOptionsUI = (props: any) => {
 
   useEffect(() => {
     if (props.paySelected && props.paySelected?.data) {
-      setPaymethodData(props.paySelected?.data)
+      setPaymethodData && setPaymethodData(props.paySelected?.data)
     }
   }, [props.paySelected])
 
@@ -222,7 +222,7 @@ const PaymentOptionsUI = (props: any) => {
       )}
 
       {/* Stripe */}
-      {isOpenMethod.paymethod?.gateway === 'stripe' && !paymethodData.id && (
+      {isOpenMethod?.paymethod?.gateway === 'stripe' && !paymethodData.id && (
         <View>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
@@ -234,9 +234,9 @@ const PaymentOptionsUI = (props: any) => {
             onClick={() => setAddCardOpen(true)}
           />
           <StripeCardsList
-            paymethod={isOpenMethod.paymethod}
+            paymethod={isOpenMethod?.paymethod}
             businessId={props.businessId}
-            publicKey={isOpenMethod.paymethod?.credentials.publishable}
+            publicKey={isOpenMethod?.paymethod?.credentials.publishable}
             payType={paymethodsList?.name}
             onSelectCard={handlePaymethodDataChange}
             onNavigationRedirect={onNavigationRedirect}
@@ -259,7 +259,7 @@ const PaymentOptionsUI = (props: any) => {
           <StripeElementsForm
             toSave
             businessId={props.businessId}
-            publicKey={isOpenMethod.paymethod?.credentials?.publishable}
+            publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
             requirements={props.clientSecret}
             onSelectCard={handlePaymethodDataChange}
             onCancel={() => setAddCardOpen(false)}
