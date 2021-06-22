@@ -279,7 +279,7 @@ const CartUI = (props: any) => {
             borderColor={colors.primary}
             imgRightSrc={null}
             textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-            onClick={() => { navigation?.navigate('CustomerName') }}
+            onClick={() => { navigation?.navigate('CustomerName', { cartUuid: cart?.uuid }) }}
             style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
           />
         </CheckoutAction>

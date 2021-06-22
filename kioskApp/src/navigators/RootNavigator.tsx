@@ -10,6 +10,7 @@ import ProductDetailsPage from '../screens/ProductDetailsPage';
 import CartPage from '../screens/CartPage';
 import CustomerNamePage from "../screens/CustomerNamePage";
 import ConfirmationPage from '../screens/ConfirmationPage';
+import PaymentMethodsPage from '../screens/PaymentMethodsPage';
 
 const Stack = createStackNavigator();
 
@@ -59,6 +60,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name="Confirmation"
         component={ConfirmationPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PaymentMethods"
+        component={PaymentMethodsPage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
