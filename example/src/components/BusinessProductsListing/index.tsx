@@ -80,7 +80,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   }
 
   const handleUpsellingPage = () => {
-    console.log('logo', logo)
     onRedirect('CheckoutNavigator', {
       screen: 'CheckoutPage',
       cartUuid: currentCart?.uuid,
@@ -188,6 +187,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 searchValue={searchValue}
                 handleClearSearch={handleChangeSearch}
                 errorQuantityProducts={errorQuantityProducts}
+                handleCancelSearch={handleCancel}
               />
             </WrapContent>
           </>

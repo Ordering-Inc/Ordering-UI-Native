@@ -175,8 +175,8 @@ export interface BusinessProductsListParams {
   searchValue?: any;
   handleClearSearch?: (value: any) => {};
   isBusinessLoading?: any,
-  errorQuantityProducts?: boolean
-
+  errorQuantityProducts?: boolean,
+  handleCancelSearch?: () => void
 }
 export interface SingleProductCardParams {
   businessId: any,
