@@ -50,7 +50,7 @@ const RootNavigator = () => {
     }
 
     //OneSignal.setAppId('f4d9d806-882e-4b96-b7d1-4f3e478e8726'); // delete this
-    //OneSignal.setAppId('3ed1ab98-1ada-4414-ad95-ef8180af5ecd'); // delete this
+    OneSignal.setAppId('3ed1ab98-1ada-4414-ad95-ef8180af5ecd'); // delete this
 
     if (Platform.OS === 'ios') {
       OneSignal.promptForPushNotificationsWithUserResponse(response => {
