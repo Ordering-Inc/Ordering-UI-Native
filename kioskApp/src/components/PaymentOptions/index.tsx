@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Placeholder,
@@ -19,49 +19,12 @@ import { PaymentOptionCash } from '../PaymentOptionCash';
 // import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
 // import { NotFoundSource } from '../NotFoundSource'
 
-import { OText, OIcon, OModal, OButton } from '../shared';
+import { OText } from '../shared';
 
-import {
-  PMContainer,
-  PMItem,
-  PMCardSelected,
-  PMCardItemContent
-} from './styles'
-import { colors, images } from '../../theme.json';
-import { getIconCard, flatArray } from '../../utils';
 import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
 import OptionCard from '../OptionCard';
 import { DELIVERY_TYPE_IMAGES, IMAGES } from '../../config/constants';
-
-const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
-// const stripeRedirectOptions = [
-//   { name: 'Bancontact', value: 'bancontact' },
-//   { name: 'Alipay', value: 'alipay' },
-//   { name: 'Giropay', value: 'giropay' },
-//   { name: 'iDEAL', value: 'ideal' }
-// ]
-
-const getPayIcon = (method: string) => {
-  switch (method) {
-    case 'cash':
-      return images.general.cash
-    case 'card_delivery':
-      return images.general.carddelivery
-    case 'paypal':
-      return images.general.paypal
-    case 'stripe':
-      return images.general.stripe
-    case 'stripe_direct':
-      return images.general.stripecc
-    case 'stripe_connect':
-      return images.general.stripes
-    case 'stripe_redirect':
-      return images.general.stripesb
-    default:
-      return images.general.creditCard
-  }
-}
 
 const _dim = Dimensions.get('window');
 
@@ -78,24 +41,11 @@ const PaymentOptionsUI = (props: any) => {
     handlePaymethodClick,
     handlePaymethodDataChange,
     isOpenMethod,
-    goBack,
+    navigation,
   } = props
 
   const [, t] = useLanguage();
-  const [addCardOpen, setAddCardOpen] = useState(false);
   const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod.paymethod
-  // const [{ token }] = useSession()
-
-  // const [card, setCard] = useState(null);
-
-  // const stripeRedirectValues = [
-  //   { name: t('SELECT_A_PAYMENT_METHOD', 'Select a payment method'), value: '-1' },
-  // ]
-
-  const handlePaymentMethodClick = (paymethod: any) => {
-    const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
-    handlePaymethodClick(paymethod, isPopupMethod)
-  }
 
   useEffect(() => {
     if (paymethodsList.paymethods.length === 1) {
@@ -126,6 +76,11 @@ const PaymentOptionsUI = (props: any) => {
   const cashIndex: number = supportedMethods?.findIndex((item: any) => item?.id === CASH_ID);
   const cardOnDeliveryIndex = supportedMethods?.findIndex((item: any) => item?.id === CARD_ON_DELIVERY_ID);
   
+  const onSelectPaymethod = (paymethod: any, isPopupMethod: boolean) => {
+    handlePaymethodClick(paymethod, isPopupMethod);
+    navigation?.navigate('Confirmation');
+  }
+
   const propsOfItems = {
     CASH_ID:  cashIndex !== -1 ? {
       title: t('CASH', supportedMethods[cashIndex]?.name),
@@ -133,7 +88,7 @@ const PaymentOptionsUI = (props: any) => {
       bgImage: DELIVERY_TYPE_IMAGES.eatIn,
       icon: IMAGES.shoppingCart,
       callToActionText: t('TAKE_MY_RECEIPT', 'Take my receipt'),
-      onClick: null,
+      onClick: () => onSelectPaymethod(supportedMethods[cashIndex], false),
       ...supportedMethods[cashIndex],
     } : null,
 
@@ -143,16 +98,18 @@ const PaymentOptionsUI = (props: any) => {
       bgImage: DELIVERY_TYPE_IMAGES.eatIn,
       icon: IMAGES.pushPin,
       callToActionText: t('LET\'S GO', 'Let\'s go'),
-      onClick: null,
+      onClick: () => onSelectPaymethod(supportedMethods[cardOnDeliveryIndex], false),
       ...supportedMethods[cardOnDeliveryIndex],
     } : null,
   };
+
+  const goToBack = () => navigation?.goBack();
 
   return (
     <Container nestedScrollEnabled>
       <NavBar
         title={t('PAYMENT_METHODS', 'Payment methods')}
-        {...(goBack && { onActionLeft: goBack } )}
+        onActionLeft={goToBack}
       />
 
       <View style={{ marginVertical: _dim.height * 0.03 }}>
