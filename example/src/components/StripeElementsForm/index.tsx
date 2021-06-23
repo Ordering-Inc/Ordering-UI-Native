@@ -47,7 +47,6 @@ const StripeElementsFormUI = (props: any) => {
       });
 
       setCreatePmLoading(false)
-      console.log(paymentMethod.Card);
       handleSource && handleSource({
         id: paymentMethod.id,
         type: 'card',
