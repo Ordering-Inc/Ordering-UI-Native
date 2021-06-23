@@ -3,7 +3,6 @@ import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Pla
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Placeholder,
-  // PlaceholderMedia,
   PlaceholderLine,
   Fade
 } from "rn-placeholder";
@@ -62,29 +61,23 @@ const getPayIcon = (method: string) => {
   }
 }
 
-// const paypalBtnStyle = {
-//   color: 'gold',
-//   shape: 'pill',
-//   label: 'paypal',
-//   size: 'responsive'
-// }
-
 const PaymentOptionsUI = (props: any) => {
   const {
     cart,
     errorCash,
     isLoading,
     isDisabled,
-    paymethodSelected,
     paymethodData,
     paymethodsList,
-    isPaymethodNull,
+    setPaymethodData,
     onNavigationRedirect,
     handlePaymethodClick,
-    handlePaymethodDataChange
+    handlePaymethodDataChange,
+    isOpenMethod
   } = props
   const [, t] = useLanguage();
   const [addCardOpen, setAddCardOpen] = useState(false);
+  const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod.paymethod
   // const [{ token }] = useSession()
 
   // const [card, setCard] = useState(null);
@@ -92,6 +85,11 @@ const PaymentOptionsUI = (props: any) => {
   // const stripeRedirectValues = [
   //   { name: t('SELECT_A_PAYMENT_METHOD', 'Select a payment method'), value: '-1' },
   // ]
+
+  const handlePaymentMethodClick = (paymethod: any) => {
+    const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
+    handlePaymethodClick(paymethod, isPopupMethod)
+  }
 
   useEffect(() => {
     if (paymethodsList.paymethods.length === 1) {
@@ -106,15 +104,15 @@ const PaymentOptionsUI = (props: any) => {
   }, [paymethodSelected])
 
   useEffect(() => {
-    !isPaymethodNull &&
-    handlePaymethodClick &&
-    handlePaymethodClick(isPaymethodNull)
-  }, [isPaymethodNull])
+    if (props.paySelected && props.paySelected?.data) {
+      setPaymethodData(props.paySelected?.data)
+    }
+  }, [props.paySelected])
 
   const renderPaymethods = ({ item }: any) => {
     return (
       <TouchableOpacity
-        onPress={() => handlePaymethodClick(item)}
+        onPress={() => handlePaymentMethodClick(item)}
       >
         <PMItem
           key={item.id}
@@ -188,6 +186,7 @@ const PaymentOptionsUI = (props: any) => {
       {paymethodSelected?.gateway === 'cash' && (
         <PaymentOptionCash
           orderTotal={cart.total}
+          defaultValue={paymethodSelected?.data?.cash}
           onChangeData={handlePaymethodDataChange}
           setErrorCash={props.setErrorCash}
         />
@@ -223,7 +222,7 @@ const PaymentOptionsUI = (props: any) => {
       )}
 
       {/* Stripe */}
-      {paymethodSelected?.gateway === 'stripe' && !paymethodData.id && (
+      {isOpenMethod.paymethod?.gateway === 'stripe' && !paymethodData.id && (
         <View>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
@@ -235,9 +234,9 @@ const PaymentOptionsUI = (props: any) => {
             onClick={() => setAddCardOpen(true)}
           />
           <StripeCardsList
-            paymethod={paymethodSelected}
+            paymethod={isOpenMethod.paymethod}
             businessId={props.businessId}
-            publicKey={paymethodSelected.credentials.publishable}
+            publicKey={isOpenMethod.paymethod?.credentials.publishable}
             payType={paymethodsList?.name}
             onSelectCard={handlePaymethodDataChange}
             onNavigationRedirect={onNavigationRedirect}
@@ -260,7 +259,7 @@ const PaymentOptionsUI = (props: any) => {
           <StripeElementsForm
             toSave
             businessId={props.businessId}
-            publicKey={paymethodSelected?.credentials?.publishable}
+            publicKey={isOpenMethod.paymethod?.credentials?.publishable}
             requirements={props.clientSecret}
             onSelectCard={handlePaymethodDataChange}
             onCancel={() => setAddCardOpen(false)}

@@ -15,7 +15,9 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
     data,
     handleData,
     defaultValue,
-    defaultCode
+    defaultCode,
+    forwardRef,
+    textInputProps
   } = props
 
   const [, t] = useLanguage()
@@ -70,11 +72,12 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         ref={phoneInput}
         defaultValue={userphoneNumber || defaultValue}
         defaultCode={defaultCode ? transformCountryCode(defaultCode) : configs?.default_country_code?.value}
-        onChangeFormattedText={(text) => handleChangeNumber(text)}
+        onChangeFormattedText={(text : string) => handleChangeNumber(text)}
         withDarkTheme
         countryPickerProps={{withAlphaFilter:true}}
         textContainerStyle={style.input}
         placeholder={t('PHONE_NUMBER', 'Phone Number')}
+        textInputProps={{autoCompleteType: 'tel', ref: forwardRef, ...textInputProps}}
       />
       {!!data?.error && (
         <OText
