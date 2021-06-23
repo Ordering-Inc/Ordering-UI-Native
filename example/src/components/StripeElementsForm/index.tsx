@@ -19,6 +19,7 @@ const StripeElementsFormUI = (props: any) => {
     publicKey,
     handleSource,
     values,
+    accountId,
     businessId,
     requirements,
     stripeTokenHandler,
@@ -31,6 +32,10 @@ const StripeElementsFormUI = (props: any) => {
   const [errors, setErrors] = useState('')
   const { confirmSetupIntent, loading: confirmSetupLoading } = useConfirmSetupIntent();
   const [createPmLoading, setCreatePmLoading] = useState(false);
+
+  const stripeParams = accountId
+    ? { publishableKey: publicKey, stripeAccountId: accountId}
+    : { publishableKey: publicKey };
 
   const billingDetails = {
     name: `${user.name} ${user.lastname}`,
@@ -113,7 +118,9 @@ const StripeElementsFormUI = (props: any) => {
     <View style={styles.container}>
       {publicKey ? (
         <View style={{ flex: 1 }}>
-          <StripeProvider publishableKey={publicKey}>
+          <StripeProvider
+            {...stripeParams}
+          >
             <CardField
               postalCodeEnabled={true}
               cardStyle={{
