@@ -55,7 +55,7 @@ const pickerStyle = StyleSheet.create({
     borderRadius: 15,
     paddingHorizontal: 10,
     backgroundColor: colors.inputDisabled,
-    width: 60,
+    width: 80,
   },
   inputIOS: {
     color: colors.secundaryContrast,
