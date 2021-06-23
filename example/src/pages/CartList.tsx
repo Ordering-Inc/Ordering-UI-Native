@@ -15,8 +15,12 @@ interface Props {
 }
 
 const CartList = (props: Props) => {
-  const [{ carts }] = useOrder();
+  const [{ carts }, { refreshOrderOptions }] = useOrder();
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
+
+  React.useEffect(() => {
+    refreshOrderOptions()
+  }, [])
 
   const cartProps = {
     ...props,
