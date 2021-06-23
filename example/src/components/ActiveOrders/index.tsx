@@ -32,7 +32,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
         isMiniCard={configs?.google_maps_api_key?.value}
         onPress={() => handleClickCard(order?.uuid)}
       >
-        {(configs?.google_maps_api_key?.value) && (
+        {!!(configs?.google_maps_api_key?.value) && (
           <Map>
             <OIcon
               url={getGoogleMapImage(order?.business?.location, configs?.google_maps_api_key?.value)}
@@ -43,7 +43,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
           </Map>
         )}
         <Information>
-          {order.business?.logo && (
+          {!!order.business?.logo && (
             <Logo>
               <OIcon url={optimizeImage(order.business?.logo, 'h_300,c_limit')} style={styles.logo} />
             </Logo>
