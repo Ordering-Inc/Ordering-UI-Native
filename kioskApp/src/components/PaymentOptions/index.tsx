@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Placeholder,
@@ -30,6 +30,9 @@ import {
 import { colors, images } from '../../theme.json';
 import { getIconCard, flatArray } from '../../utils';
 import NavBar from '../NavBar';
+import { Container } from '../../layouts/Container';
+import OptionCard from '../OptionCard';
+import { DELIVERY_TYPE_IMAGES, IMAGES } from '../../config/constants';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 // const stripeRedirectOptions = [
@@ -60,6 +63,8 @@ const getPayIcon = (method: string) => {
   }
 }
 
+const _dim = Dimensions.get('window');
+
 const PaymentOptionsUI = (props: any) => {
   const {
     cart,
@@ -72,11 +77,9 @@ const PaymentOptionsUI = (props: any) => {
     onNavigationRedirect,
     handlePaymethodClick,
     handlePaymethodDataChange,
-    isOpenMethod
+    isOpenMethod,
+    goBack,
   } = props
-
-
-  console.log(props)
 
   const [, t] = useLanguage();
   const [addCardOpen, setAddCardOpen] = useState(false);
@@ -112,247 +115,83 @@ const PaymentOptionsUI = (props: any) => {
     }
   }, [props.paySelected])
 
-  const renderPaymethods = ({ item }: any) => {
-    return (
-      <TouchableOpacity
-        onPress={() => handlePaymentMethodClick(item)}
-      >
-        <PMItem
-          key={item.id}
-          isDisabled={isDisabled}
-          isActive={paymethodSelected?.id === item.id}
-        >
-          <OIcon
-            src={getPayIcon(item.gateway)}
-            width={40}
-            height={40}
-            color={paymethodSelected?.id === item.id ? colors.white : colors.backgroundDark}
-            />
-          <OText
-            size={12}
-            style={{ margin: 0 }}
-            color={paymethodSelected?.id === item.id ? colors.white : '#000'}
-          >
-            {t(item.gateway.toUpperCase(), item.name)}
-          </OText>
-        </PMItem>
-      </TouchableOpacity>
-    )
-  }
+  const CASH_ID: number = 1;
+  const CARD_ON_DELIVERY_ID: number = 2;
 
-  const excludeIds: any = [3, 28, 31, 32, 66]; //exclude paypal & connect & redirect
+  const includeIds = [CASH_ID, CARD_ON_DELIVERY_ID]; // cash & card on delivery
+  
+  const supportedMethods = paymethodsList.paymethods
+    .sort((a: any, b: any) => a.id - b.id).filter((p: any) => includeIds.includes(p.id));
+  
+  const cashIndex: number = supportedMethods?.findIndex((item: any) => item?.id === CASH_ID);
+  const cardOnDeliveryIndex = supportedMethods?.findIndex((item: any) => item?.id === CARD_ON_DELIVERY_ID);
+  
+  const propsOfItems = {
+    CASH_ID:  cashIndex !== -1 ? {
+      title: t('CASH', supportedMethods[cashIndex]?.name),
+      description: t('GO_FOR_YOR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER', 'Go for yor receipt and go to the front counter'),
+      bgImage: DELIVERY_TYPE_IMAGES.eatIn,
+      icon: IMAGES.shoppingCart,
+      callToActionText: t('TAKE_MY_RECEIPT', 'Take my receipt'),
+      onClick: null,
+      ...supportedMethods[cashIndex],
+    } : null,
+
+    CARD_ON_DELIVERY_ID: cardOnDeliveryIndex !== -1 ? {
+      title: t('CARD', supportedMethods[cardOnDeliveryIndex]?.name),
+      description: t('WE_ACCEPT_EVERY_DEBIT_OR_CREDIT_CARD', 'We accept every debit or credit card'),
+      bgImage: DELIVERY_TYPE_IMAGES.eatIn,
+      icon: IMAGES.pushPin,
+      callToActionText: t('LET\'S GO', 'Let\'s go'),
+      onClick: null,
+      ...supportedMethods[cardOnDeliveryIndex],
+    } : null,
+  };
 
   return (
-    <PMContainer>
+    <Container nestedScrollEnabled>
+      <NavBar
+        title={t('PAYMENT_METHODS', 'Payment methods')}
+        {...(goBack && { onActionLeft: goBack } )}
+      />
 
-      {paymethodsList.paymethods.length > 0 && (
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          // data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
-          data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeIds.includes(p.id))}
-          renderItem={renderPaymethods}
-          keyExtractor={(paymethod: any) => paymethod.id.toString()}
-        />
-      )}
-
-      {(paymethodsList.loading || isLoading) && (
-        <Placeholder style={{ marginTop: 10 }} Animation={Fade}>
-          <View style={{ display: 'flex', flexDirection: 'row' }}>
-            {[...Array(3)].map((_, i) => (
-              <PlaceholderLine
-              key={i}
-              width={37}
-              height={80}
-              noMargin
-              style={{ borderRadius: 10, marginRight: 10 }}
-              />
-            ))}
-          </View>
-        </Placeholder>
-      )}
-
-      {paymethodsList.error && paymethodsList.error.length > 0 && (
-        <OText size={12} style={{ margin: 0 }}>
-          {paymethodsList?.error[0]?.message || paymethodsList?.error[0]}
-        </OText>
-      )}
-
-      {!(paymethodsList.loading || isLoading) &&
-        !paymethodsList.error &&
-        (!paymethodsList?.paymethods || paymethodsList.paymethods.length === 0) &&
-      (
-        <OText size={12} style={{ margin: 0 }}>
-          {t('NO_PAYMENT_METHODS', 'No payment methods!')}
-        </OText>
-      )}
-
-      {paymethodSelected?.gateway === 'cash' && (
-        <PaymentOptionCash
-          orderTotal={cart.total}
-          defaultValue={paymethodSelected?.data?.cash}
-          onChangeData={handlePaymethodDataChange}
-          setErrorCash={props.setErrorCash}
-        />
-      )}
-
-      {stripeOptions.includes(paymethodSelected?.gateway) &&
-        paymethodData?.brand &&
-        paymethodData?.last4 &&
-      (
-        <PMCardSelected>
-          <PMCardItemContent>
-            <View style={styles.viewStyle}>
-              <MaterialCommunityIcons
-                name='radiobox-marked'
-                size={24}
-                color={colors.primary}
-              />
-            </View>
-            <View style={styles.viewStyle}>
-              <OText>
-                {getIconCard(paymethodData?.brand, 26)}
-              </OText>
-            </View>
-            <View style={styles.viewStyle}>
-              <OText
-                size={20}
-              >
-                XXXX-XXXX-XXXX-{paymethodData?.last4}
-              </OText>
-            </View>
-          </PMCardItemContent>
-        </PMCardSelected>
-      )}
-
-      {/* Stripe */}
-      {/* {isOpenMethod.paymethod?.gateway === 'stripe' && !paymethodData.id && (
-        <View>
-          <OButton
-            text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
-            bgColor={colors.primary}
-            borderColor={colors.primary}
-            style={styles.btnAddStyle}
-            textStyle={{color: 'white'}}
-            imgRightSrc={null}
-            onClick={() => setAddCardOpen(true)}
-          />
-          <StripeCardsList
-            paymethod={isOpenMethod.paymethod}
-            businessId={props.businessId}
-            publicKey={isOpenMethod.paymethod?.credentials.publishable}
-            payType={paymethodsList?.name}
-            onSelectCard={handlePaymethodDataChange}
-            onNavigationRedirect={onNavigationRedirect}
-            onCancel={() => handlePaymethodClick(null)}
-          />
-        </View>
-      )} */}
-
-      {/* Stripe direct */}
-      {/* <OModal
-        isNotDecoration
-        title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-        open={paymethodSelected?.gateway === 'stripe_direct' && !paymethodData.id}
-        onClose={() => handlePaymethodClick(null)}
-      >
-        {paymethodSelected?.gateway === 'stripe_direct' && (
-          <KeyboardAvoidingView
-            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
-            enabled={Platform.OS === 'ios' ? true : false}
+      <View style={{ marginVertical: _dim.height * 0.03 }}>
+        <OText
+          size={_dim.width * 0.05}
+        >
+          {t('HOW_WOULD_YOU', 'How would you')} {'\n'}
+          <OText
+            size={_dim.width * 0.05}
+            weight={'700'}
           >
-            <StripeElementsForm
-              businessId={props.businessId}
-              publicKey={paymethodSelected.credentials.publishable}
-              handleSource={handlePaymethodDataChange}
-              onCancel={() => handlePaymethodClick(null)}
+            {`${t('LIKE_TO_PAY', 'like to pay')}?`}
+          </OText>
+        </OText>
+      </View>
+
+
+      {supportedMethods?.length > 0 && (
+        <>
+          {propsOfItems.CARD_ON_DELIVERY_ID && (
+            <OptionCard
+              {...propsOfItems?.CARD_ON_DELIVERY_ID}
             />
-          </KeyboardAvoidingView>
-        )}
-      </OModal> */}
+          )}
 
-      {/* Stripe Connect */}
-      {/* <OModal
-        isNotDecoration
-        open={paymethodSelected?.gateway === 'stripe_connect' && !paymethodData.id}
-        title={t('SELECT_A_CARD', 'Select a card')}
-        onClose={() => handlePaymethodClick(null)}
-      >
-        {paymethodSelected?.gateway === 'stripe_connect' && (
-          <PaymentOptionStripe
-            paymethod={paymethodSelected}
-            businessId={props.businessId}
-            publicKey={paymethodSelected.credentials.stripe.publishable}
-            clientSecret={paymethodSelected.credentials.publishable}
-            payType={paymethodsList?.name}
-            onSelectCard={handlePaymethodDataChange}
-            onCancel={() => handlePaymethodClick(null)}
-          />
-        )}
-      </OModal> */}
+          <View style={{ height: _dim.height * 0.02 }} />
 
-      {/* Stripe Redirect */}
-      {/* <OModal
-        isNotDecoration
-        open={['stripe_redirect'].includes(paymethodSelected?.gateway) && !paymethodData.type}
-        title={t('STRIPE_REDIRECT', 'Stripe Redirect')}
-        onClose={() => handlePaymethodClick(null)}
-      >
-        <StripeRedirectForm
-          businessId={props.businessId}
-          currency={props.currency}
-          // paymethods={flatArray([stripeRedirectValues, stripeRedirectOptions])}
-          publicKey={paymethodSelected?.credentials?.publishable}
-          paymethods={stripeRedirectOptions}
-          handleStripeRedirect={handlePaymethodDataChange}
-        />
-      </OModal> */}
-
-      {/* Paypal */}
-      {/* <Modal
-        className='modal-info'
-        open={paymethodSelected?.gateway === 'paypal' && !paymethodData.id}
-        onClose={() => handlePaymethodClick(null)}
-        title={t('PAY_WITH_PAYPAL', 'Pay with PayPal')}
-      >
-        {paymethodSelected?.gateway === 'paypal' && (
-          <PaymentOptionPaypal
-            clientId={paymethodSelected?.credentials?.client_id}
-            body={{
-              paymethod_id: paymethodSelected.id,
-              amount: cart.total,
-              delivery_zone_id: cart.delivery_zone_id,
-              cartUuid: cart.uuid
-            }}
-            btnStyle={paypalBtnStyle}
-            noAuthMessage={
-              !token
-                ? t('NEED_LOGIN_TO_USE', 'Sorry, you need to login to use this method')
-                : null
-            }
-            handlerChangePaypal={(uuid) => onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid })}
-          />
-        )}
-      </Modal> */}
-    </PMContainer>
+          {propsOfItems?.CASH_ID && (
+            <OptionCard
+              {...propsOfItems?.CASH_ID}
+            />
+          )}
+        </>
+      )}
+      
+      <View style={{ height: _dim.height * 0.05 }} />
+    </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  viewStyle: {
-    marginRight: 10
-  },
-  cardsList: {
-    borderWidth: 1,
-    borderColor: 'red',
-    flex: 1,
-    height: 120
-  },
-  btnAddStyle: {
-    marginVertical: 20,
-  },
-})
 
 export const PaymentOptions = (props: any) => {
   const paymentOptions = {

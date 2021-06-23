@@ -9,7 +9,7 @@ import { } from './styles'
 import { OrderTypeSelectParams } from '../../types'
 import { OText } from '../shared'
 import { DELIVERY_TYPE_IMAGES, IMAGES } from '../../config/constants'
-import DeliveryTypeCard from '../DeliveryTypeCard'
+import OptionCard from '../OptionCard'
 import { Container } from '../../layouts/Container'
 import NavBar from '../NavBar'
 
@@ -59,7 +59,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
           </OText>
         </View>
 
-        <DeliveryTypeCard
+        <OptionCard
           title={t('EAT_IN','Eat In')}
           description={t('EAT_IN_DESCRIPTION', 'We are very glad to have you here. Bon appetit!')}
           bgImage={DELIVERY_TYPE_IMAGES.eatIn}
@@ -73,7 +73,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 
         <View style={{ height: _dim.height * 0.02 }} />
 
-        <DeliveryTypeCard
+        <OptionCard
           title={t('TAKE_OUT','Take out')}
           description={t('TAKE_OUT_DESCRIPTION', 'You are very welcome anytime you visit us!')}
           bgImage={DELIVERY_TYPE_IMAGES.takeOut}
