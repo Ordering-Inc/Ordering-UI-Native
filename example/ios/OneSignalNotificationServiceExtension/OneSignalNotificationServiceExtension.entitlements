@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.groupco.ordering.reactnative.OneSignalNotificationServiceExtension.onsesignal</string>
+		<string>group.com.ordering.app1.onesignal</string>
 	</array>
 </dict>
 </plist>

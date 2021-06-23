@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Platform } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import { useOrder, useSession, useConfig } from 'ordering-components/native';
 import dayjs from 'dayjs'
@@ -48,12 +49,14 @@ const RootNavigator = () => {
       OneSignal.setAppId(configs?.onesignal_orderingapp_id);
     }
 
-    OneSignal.setAppId('f4d9d806-882e-4b96-b7d1-4f3e478e8726'); // delete this
-    // OneSignal.setAppId('3ed1ab98-1ada-4414-ad95-ef8180af5ecd'); // delete this
+    //OneSignal.setAppId('f4d9d806-882e-4b96-b7d1-4f3e478e8726'); // delete this
+    //OneSignal.setAppId('3ed1ab98-1ada-4414-ad95-ef8180af5ecd'); // delete this
 
-    // OneSignal.promptForPushNotificationsWithUserResponse(response => {
-    //   console.log('Prompt response:', response);
-    // });
+    if (Platform.OS === 'ios') {
+      OneSignal.promptForPushNotificationsWithUserResponse(response => {
+        console.log('Prompt response:', response);
+      });
+    }
 
     OneSignal.setNotificationOpenedHandler(({ notification }: any) => {
       if (notification?.additionalData?.order_uuid) {
@@ -69,6 +72,13 @@ const RootNavigator = () => {
     });
 
     const deviceState: any = await OneSignal.getDeviceState();
+
+    if (!deviceState?.isSubscribed) {
+      OneSignal.addTrigger("prompt_ios", "true");
+    }
+
+    OneSignal.disablePush(false);
+
     const data = {
       ...oneSignalState,
       notification_token: deviceState?.userId,
@@ -76,7 +86,6 @@ const RootNavigator = () => {
     }
     setOneSignalState(data);
     _setStoreData('notification_state', data);
-    console.log(data);
   };
 
   useEffect(() => {

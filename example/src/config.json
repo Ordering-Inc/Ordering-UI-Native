@@ -2,13 +2,13 @@
   "app_id": "react-native-app",
   "notification_app": "orderingapp",
   "app_name": "Ordering",
-  "project": "development",
+  "project": "reactdemo",
   "api": {
-    "url": "https://orderingapiv4.loca.lt",
+    "url": "https://apiv4.ordering.co",
     "language": "en",
     "version": "v400"
   },
   "socket": {
-    "url": "https://orderingsockets.loca.lt"
+    "url": "https://socket-v2.ordering.co"
   }
 }
