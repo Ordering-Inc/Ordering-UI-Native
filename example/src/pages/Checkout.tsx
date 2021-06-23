@@ -34,11 +34,11 @@ export const CheckoutPage = (props: any) => {
 
       if (cart?.status === 2 && stripePaymentOptions.includes(paymethod?.gateway)) {
         const clientSecret = cart?.paymethod_data?.result?.client_secret;
-        const paymentMethodId = cart.paymethod_data?.data?.source_id;
+        const paymentMethodId = paymethod?.gateway === 'stripe_connect'
+          ? cart.paymethod_data?.result?.payment_method_id
+          : cart.paymethod_data?.data?.source_id
         const stripeAccountId = paymethod?.paymethod?.credentials?.user;
-        const publicKey = paymethod?.gateway === 'stripe_connect'
-          ? paymethod?.paymethod?.credentials?.stripe.publishable
-          : paymethod?.paymethod?.credentials?.publishable;
+        const publicKey = paymethod?.paymethod?.credentials?.publishable;
 
         try {
           const stripeParams = stripeAccountId

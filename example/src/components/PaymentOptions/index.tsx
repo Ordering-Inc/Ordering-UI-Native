@@ -326,7 +326,7 @@ const PaymentOptionsUI = (props: any) => {
           <StripeElementsForm
             toSave
             businessId={props.businessId}
-            publicKey={isOpenMethod.paymethod?.credentials?.publishable}
+            publicKey={isOpenMethod.paymethod?.credentials?.stripe?.publishable}
             requirements={isOpenMethod.paymethod?.credentials?.publishable}
             accountId={isOpenMethod.paymethod?.credentials?.user}
             onSelectCard={handlePaymethodDataChange}
