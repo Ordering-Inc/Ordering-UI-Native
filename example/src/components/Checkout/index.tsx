@@ -51,10 +51,10 @@ import {
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { FloatingButton } from '../FloatingButton';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Container } from '../../layouts/Container';
+import { verifyDecimals } from '../../utils';
+import { CouponControl } from '../CouponControl';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -91,7 +91,7 @@ const CheckoutUI = (props: any) => {
   const [, t] = useLanguage();
   const [{ user }] = useSession();
   const [{ configs }] = useConfig();
-  const [{ parsePrice, parseDate }] = useUtils();
+  const [{ parsePrice, parseDate, parseNumber }] = useUtils();
   const [{ options, carts, loading }] = useOrder();
   const [validationFields] = useValidationFields();
 
@@ -489,7 +489,7 @@ const CheckoutUI = (props: any) => {
                         <OText>{parsePrice(cart?.tax || 0)}</OText>
                       </OSTable>
                     )}
-                    {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
+                    {options?.type === 1 && cart?.delivery_price > 0 && (
                       <OSTable>
                         <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
                         <OText>{parsePrice(cart?.delivery_price)}</OText>
