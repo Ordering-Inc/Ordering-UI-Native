@@ -81,7 +81,7 @@ const OrderSummaryUI = (props: any) => {
               />
             ))}
           </OSProductList>
-          {cart?.valid && (
+          {/*cart?.valid && (
             <OSBill>
               <OSTable>
                 <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
@@ -165,7 +165,7 @@ const OrderSummaryUI = (props: any) => {
                 </OSTotal>
               )}
             </OSBill>
-          )}
+          )*/}
           <OModal
             open={openProduct}
             entireModal

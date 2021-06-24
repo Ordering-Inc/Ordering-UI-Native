@@ -1,16 +1,17 @@
 import styled from 'styled-components/native';
 
 export const OSContainer = styled.View`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: yellow;
 `
 
 export const OSProductList = styled.View``
 
 export const OSBill = styled.View`
-  padding-horizontal: 10px;
-  padding-top: 10px;
+  padding: 10px 10px 0px;
   flex: 1;
 `
 
