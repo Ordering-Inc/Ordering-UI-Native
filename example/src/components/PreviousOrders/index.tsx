@@ -42,7 +42,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
     >
       {orders.map((order: any) => (
         <Card key={order.id}>
-          {order.business?.logo && (
+          {!!order.business?.logo && (
             <Logo>
               <OIcon url={optimizeImage(order.business?.logo, 'h_300,c_limit')} style={styles.logo} />
             </Logo>
