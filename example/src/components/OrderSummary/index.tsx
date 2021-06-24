@@ -83,44 +83,44 @@ const OrderSummaryUI = (props: any) => {
             ))}
           </OSProductList>
           {cart?.valid && (
-            <View>
-              <View>
-                <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
-                <OText>{cart.business.tax_type === 1
+            <View style={{ paddingHorizontal: 10, paddingTop: 10 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <OText size={18}>{t('SUBTOTAL', 'Subtotal')}</OText>
+                <OText size={18}>{cart.business.tax_type === 1
                     ? parsePrice((cart?.subtotal + cart?.tax) || 0)
                     : parsePrice(cart?.subtotal || 0)}</OText>
               </View>
               {cart?.discount > 0 && cart?.total >= 0 && (
-                <View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   {cart?.discount_type === 1 ? (
-                    <OText>
+                    <OText size={18}>
                       {t('DISCOUNT', 'Discount')}
-                      <OText>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</OText>
+                      <OText size={18}>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</OText>
                     </OText>
                   ) : (
-                    <OText>{t('DISCOUNT', 'Discount')}</OText>
+                    <OText size={18}>{t('DISCOUNT', 'Discount')}</OText>
                   )}
-                  <OText>- {parsePrice(cart?.discount || 0)}</OText>
+                  <OText size={18}>- {parsePrice(cart?.discount || 0)}</OText>
                 </View>
               )}
               {cart.business.tax_type !== 1 && (
-                <View>
-                  <OText>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <OText size={18}>
                     {t('TAX', 'Tax')}
                     {`(${verifyDecimals(cart?.business?.tax, parseNumber)}%)`}
                   </OText>
-                  <OText>{parsePrice(cart?.tax || 0)}</OText>
+                  <OText size={18}>{parsePrice(cart?.tax || 0)}</OText>
                 </View>
               )}
               {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
-                <View>
-                  <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                  <OText>{parsePrice(cart?.delivery_price)}</OText>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <OText size={18}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
+                  <OText size={18}>{parsePrice(cart?.delivery_price)}</OText>
                 </View>
               )}
               {cart?.driver_tip > 0 && (
-                <View>
-                  <OText>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <OText size={18}>
                     {t('DRIVER_TIP', 'Driver tip')}
                     {cart?.driver_tip_rate > 0 &&
                       parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
@@ -129,16 +129,16 @@ const OrderSummaryUI = (props: any) => {
                       `(${verifyDecimals(cart?.driver_tip_rate, parseNumber)}%)`
                     )}
                   </OText>
-                  <OText>{parsePrice(cart?.driver_tip)}</OText>
+                  <OText size={18}>{parsePrice(cart?.driver_tip)}</OText>
                 </View>
               )}
               {cart?.service_fee > 0 && (
-                <View>
-                  <OText>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <OText size={18}>
                     {t('SERVICE_FEE', 'Service Fee')}
                     {`(${verifyDecimals(cart?.business?.service_fee, parseNumber)}%)`}
                   </OText>
-                  <OText>{parsePrice(cart?.service_fee)}</OText>
+                  <OText size={18}>{parsePrice(cart?.service_fee)}</OText>
                 </View>
               )}
               {isCouponEnabled && !isCartPending && (
@@ -152,12 +152,12 @@ const OrderSummaryUI = (props: any) => {
                 </View>
               )}
               {cart?.total >= 1 && (
-                <View>
-                  <View style={{ marginTop: 15 }}>
-                    <OText style={{ fontWeight: 'bold' }}>
+                <View style={{ marginTop: 15, borderTopWidth: 1, borderTopColor: '#d9d9d9' }}>
+                  <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <OText size={18} style={{ fontWeight: 'bold' }}>
                       {t('TOTAL', 'Total')}
                     </OText>
-                    <OText style={{ fontWeight: 'bold' }} color={colors.primary}>
+                    <OText size={18} style={{ fontWeight: 'bold' }} color={colors.primary}>
                       {parsePrice(cart?.total)}
                     </OText>
                   </View>

@@ -5,7 +5,6 @@ export const OSContainer = styled.View`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: yellow;
 `
 
 export const OSProductList = styled.View``
