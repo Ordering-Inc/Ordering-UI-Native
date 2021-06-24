@@ -56,14 +56,8 @@ export const DELIVERY_TYPE_IMAGES = {
 }
 
 export const PAYMENT_IMAGES = {
-  cash: require('../assets/icons/cash.png'),
-  carddelivery: require('../assets/icons/card-delivery.png'),
-  paypal: require('../assets/icons/paypal.png'),
-  stripe: require('../assets/icons/stripe.png'),
-  stripecc: require('../assets/icons/cc-stripe.png'),
-  stripes: require('../assets/icons/stripe-s.png'),
-  stripesb: require('../assets/icons/stripe-sb.png'),
-  creditCard: require('../assets/icons/credit-card.png')
+  cash: require('../assets/images/cash.png'),
+  carddelivery: require('../assets/images/card-delivery.png'),
 }
 
 export const DUMMIES_IMAGES = {

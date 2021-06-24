@@ -24,7 +24,7 @@ import { OText } from '../shared';
 import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
 import OptionCard from '../OptionCard';
-import { DELIVERY_TYPE_IMAGES, IMAGES } from '../../config/constants';
+import { DELIVERY_TYPE_IMAGES, IMAGES, PAYMENT_IMAGES } from '../../config/constants';
 
 const _dim = Dimensions.get('window');
 
@@ -85,7 +85,7 @@ const PaymentOptionsUI = (props: any) => {
     CASH_ID:  cashIndex !== -1 ? {
       title: t('CASH', supportedMethods[cashIndex]?.name),
       description: t('GO_FOR_YOR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER', 'Go for yor receipt and go to the front counter'),
-      bgImage: DELIVERY_TYPE_IMAGES.eatIn,
+      bgImage: PAYMENT_IMAGES.cash,
       icon: IMAGES.shoppingCart,
       callToActionText: t('TAKE_MY_RECEIPT', 'Take my receipt'),
       onClick: () => onSelectPaymethod(supportedMethods[cashIndex], false),
@@ -95,7 +95,7 @@ const PaymentOptionsUI = (props: any) => {
     CARD_ON_DELIVERY_ID: cardOnDeliveryIndex !== -1 ? {
       title: t('CARD', supportedMethods[cardOnDeliveryIndex]?.name),
       description: t('WE_ACCEPT_EVERY_DEBIT_OR_CREDIT_CARD', 'We accept every debit or credit card'),
-      bgImage: DELIVERY_TYPE_IMAGES.eatIn,
+      bgImage: PAYMENT_IMAGES.carddelivery,
       icon: IMAGES.pushPin,
       callToActionText: t('LET\'S GO', 'Let\'s go'),
       onClick: () => onSelectPaymethod(supportedMethods[cardOnDeliveryIndex], false),
