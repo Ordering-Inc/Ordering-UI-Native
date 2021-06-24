@@ -5,7 +5,7 @@ import { IMAGES } from '../../config/constants';
 import { OButton, OIcon, OText } from '../shared';
 import { Container, InnerContainer } from './styles';
 
-const DeliveryTypeCard = (props: Props) => {
+const OptionCard = (props: Props) => {
 	return (
 		<TouchableOpacity
 			onPress={props.onClick}
@@ -83,9 +83,9 @@ interface Props {
 	callToActionIconStyle?: ImageStyle;
 }
 
-DeliveryTypeCard.defaultProps = {
+OptionCard.defaultProps = {
   callToActionIcon: IMAGES.arrow_right_circular_outlined
 };
 
-export default DeliveryTypeCard;
+export default OptionCard;
   

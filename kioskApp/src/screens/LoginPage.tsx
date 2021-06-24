@@ -11,7 +11,9 @@ export const LoginPage = ({ navigation }: any) => {
       navigation.navigate(page);
     },
     handleSuccessLogin: () => {
-      navigation.navigate('Intro');
+      navigation.reset({
+        routes: [{ name: 'Intro' }]
+      });
     }
   };
 

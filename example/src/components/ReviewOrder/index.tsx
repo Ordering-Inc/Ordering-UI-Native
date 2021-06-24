@@ -164,11 +164,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             multiline
             bgColor={colors.inputDisabled}
             />
-            )}
-            rules={{
-              required: t('FIELD_COMMENT_REQUIRED', 'The field comments is required')
-            }}
-            />
+          )}
+        />
       </FormReviews>
       <OButton
         textStyle={{ color: colors.white }}

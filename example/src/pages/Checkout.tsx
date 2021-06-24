@@ -39,7 +39,11 @@ export const CheckoutPage = (props: any) => {
           ? paymethod?.paymethod?.credentials?.stripe.publishable
           : paymethod?.paymethod?.credentials?.publishable;
 
-        initStripe({ publishableKey: publicKey });
+        try {
+          initStripe({ publishableKey: publicKey });
+        } catch (error) {
+          showToast(ToastType.Error, error?.toString() || error.message)
+        }
 
         try {
           const { paymentIntent, error } = await confirmPayment(clientSecret, {
