@@ -83,7 +83,7 @@ const OrderSummaryUI = (props: any) => {
             ))}
           </OSProductList>
           {cart?.valid && (
-            <View style={{ paddingHorizontal: 10, paddingTop: 10 }}>
+            <View style={{ paddingTop: 10 }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <OText size={18}>{t('SUBTOTAL', 'Subtotal')}</OText>
                 <OText size={18}>{cart.business.tax_type === 1
