@@ -141,6 +141,16 @@ const OrderSummaryUI = (props: any) => {
                   <OText>{parsePrice(cart?.service_fee)}</OText>
                 </View>
               )}
+              {isCouponEnabled && !isCartPending && (
+                <View>
+                  <View>
+                    <CouponControl
+                      businessId={cart.business_id}
+                      price={cart.total}
+                    />
+                  </View>
+                </View>
+              )}
               {cart?.total >= 1 && (
                 <View>
                   <View style={{ marginTop: 15 }}>
