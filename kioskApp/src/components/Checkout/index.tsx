@@ -50,6 +50,7 @@ const CheckoutUI = (props: any) => {
           onNavigationRedirect={onNavigationRedirect}
           paySelected={paymethodSelected}
           navigation={navigation}
+          handlerClickPlaceOrder={handlerClickPlaceOrder}
         />
       )}
     </>

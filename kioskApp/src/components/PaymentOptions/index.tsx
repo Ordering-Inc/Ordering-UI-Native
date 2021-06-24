@@ -42,6 +42,7 @@ const PaymentOptionsUI = (props: any) => {
     handlePaymethodDataChange,
     isOpenMethod,
     navigation,
+    handlerClickPlaceOrder,
   } = props
 
   const [, t] = useLanguage();
@@ -78,7 +79,7 @@ const PaymentOptionsUI = (props: any) => {
   
   const onSelectPaymethod = (paymethod: any, isPopupMethod: boolean) => {
     handlePaymethodClick(paymethod, isPopupMethod);
-    navigation?.navigate('Confirmation');
+    handlerClickPlaceOrder();
   }
 
   const propsOfItems = {

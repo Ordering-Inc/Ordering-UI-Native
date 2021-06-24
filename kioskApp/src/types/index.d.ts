@@ -14,6 +14,19 @@ export interface BusinessProductsListingParams {
   logo?: any;
 }
 
+export interface OrderDetailsParams {
+  navigation?: any,
+  messagesReadList?: any,
+  urlToShare?: string,
+  messages?: any,
+  order?: any,
+  handleOrderRedirect?: () => {},
+  setMessages?: () => {},
+  readMessages?: () => {},
+  isFromCheckout?: boolean,
+  driverLocation?: any,
+}
+
 export interface OrderTypeSelectParams {
   handleChangeOrderType: (value: any) => {};
   typeSelected?: number;
