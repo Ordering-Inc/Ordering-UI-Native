@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import {
   useUtils,
-  useLanguage
+  useLanguage,
+  ProductOptionSuboption as ProductSubOptionController
 } from 'ordering-components/native'
 import { StyleSheet } from 'react-native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -16,7 +17,7 @@ import {
 } from './styles'
 import { colors } from '../../theme.json'
 import { OText } from '../shared'
-import {ProductOptionSuboption as ProductSubOptionController} from './test'
+
 export const ProductOptionSubOptionUI = (props: any) => {
   const {
     state,
