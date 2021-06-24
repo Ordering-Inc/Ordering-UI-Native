@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { View } from 'react-native'
 import {
   Cart,
   useOrder,
@@ -81,7 +82,80 @@ const OrderSummaryUI = (props: any) => {
               />
             ))}
           </OSProductList>
-          {/*cart?.valid && (
+          {cart?.valid && (
+            <View>
+              <View>
+                <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
+                <OText>{cart.business.tax_type === 1
+                    ? parsePrice((cart?.subtotal + cart?.tax) || 0)
+                    : parsePrice(cart?.subtotal || 0)}</OText>
+              </View>
+              {cart?.discount > 0 && cart?.total >= 0 && (
+                <View>
+                  {cart?.discount_type === 1 ? (
+                    <OText>
+                      {t('DISCOUNT', 'Discount')}
+                      <OText>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</OText>
+                    </OText>
+                  ) : (
+                    <OText>{t('DISCOUNT', 'Discount')}</OText>
+                  )}
+                  <OText>- {parsePrice(cart?.discount || 0)}</OText>
+                </View>
+              )}
+              {cart.business.tax_type !== 1 && (
+                <View>
+                  <OText>
+                    {t('TAX', 'Tax')}
+                    {`(${verifyDecimals(cart?.business?.tax, parseNumber)}%)`}
+                  </OText>
+                  <OText>{parsePrice(cart?.tax || 0)}</OText>
+                </View>
+              )}
+              {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
+                <View>
+                  <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
+                  <OText>{parsePrice(cart?.delivery_price)}</OText>
+                </View>
+              )}
+              {cart?.driver_tip > 0 && (
+                <View>
+                  <OText>
+                    {t('DRIVER_TIP', 'Driver tip')}
+                    {cart?.driver_tip_rate > 0 &&
+                      parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
+                      !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
+                    (
+                      `(${verifyDecimals(cart?.driver_tip_rate, parseNumber)}%)`
+                    )}
+                  </OText>
+                  <OText>{parsePrice(cart?.driver_tip)}</OText>
+                </View>
+              )}
+              {cart?.service_fee > 0 && (
+                <View>
+                  <OText>
+                    {t('SERVICE_FEE', 'Service Fee')}
+                    {`(${verifyDecimals(cart?.business?.service_fee, parseNumber)}%)`}
+                  </OText>
+                  <OText>{parsePrice(cart?.service_fee)}</OText>
+                </View>
+              )}
+              {cart?.total >= 1 && (
+                <View>
+                  <View style={{ marginTop: 15 }}>
+                    <OText style={{ fontWeight: 'bold' }}>
+                      {t('TOTAL', 'Total')}
+                    </OText>
+                    <OText style={{ fontWeight: 'bold' }} color={colors.primary}>
+                      {parsePrice(cart?.total)}
+                    </OText>
+                  </View>
+                </View>
+              )}
+            </View>
+          )}
+          {/* {cart?.valid && (
             <OSBill>
               <OSTable>
                 <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
@@ -165,7 +239,7 @@ const OrderSummaryUI = (props: any) => {
                 </OSTotal>
               )}
             </OSBill>
-          )*/}
+          )} */}
           <OModal
             open={openProduct}
             entireModal
