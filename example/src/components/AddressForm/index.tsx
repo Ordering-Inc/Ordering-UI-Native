@@ -1,20 +1,34 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder } from 'ordering-components/native'
 import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native'
-import { OInput, OButton, OText, OModal } from '../shared'
-import { getTraduction } from '../../utils'
-import NavBar from '../NavBar'
-import { colors } from '../../theme.json'
-import { ToastType, useToast } from '../../providers/ToastProvider';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
-import { AddressFormContainer, AutocompleteInput, IconsContainer, GoogleMapContainer, FormInput } from './styles'
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { useForm, Controller } from 'react-hook-form'
-import { AddressFormParams } from '../../types'
-import { GoogleMap } from '../GoogleMap'
-import Spinner from 'react-native-loading-spinner-overlay'
+import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder } from 'ordering-components/native'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { useForm, Controller } from 'react-hook-form';
+import Geocoder from 'react-native-geocoding';
 
-const inputNames = [{ name: 'address', code: 'Address' }, { name: 'internal_number', code: 'Internal number' }, { name: 'zipcode', code: 'Zipcode' }, { name: 'address_notes', code: 'Address notes' }]
+import { ToastType, useToast } from '../../providers/ToastProvider';
+import { OInput, OButton, OText, OModal } from '../shared'
+import { AddressFormParams } from '../../types'
+import { getTraduction } from '../../utils'
+import { colors } from '../../theme.json'
+import { GoogleMap } from '../GoogleMap'
+import NavBar from '../NavBar'
+
+import {
+  AddressFormContainer,
+  AutocompleteInput,
+  IconsContainer,
+  GoogleMapContainer,
+  FormInput
+} from './styles'
+
+const inputNames = [
+  { name: 'address', code: 'Address' },
+  { name: 'internal_number', code: 'Internal number' },
+  { name: 'zipcode', code: 'Zipcode' },
+  { name: 'address_notes', code: 'Address notes' }
+]
 const tagsName = [
   { icon: 'home', value: 'home' },
   { icon: 'office-building', value: 'office' },
@@ -75,6 +89,75 @@ const AddressFormUI = (props: AddressFormParams) => {
   const continueAsGuest = () => navigation.navigate('BusinessList')
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
+  const getAddressFormatted = (address: any) => {
+    const data: any = { address: null, error: null }
+    Geocoder.init(googleMapsApiKey);
+    Geocoder.from(address)
+      .then(json => {
+        if (json.results && json.results?.length > 0) {
+          let postalCode = null
+          for (const component of json.results?.[0].address_components) {
+            const addressType = component.types?.[0]
+            if (addressType === 'postal_code') {
+              postalCode = component.short_name
+              break
+            }
+          }
+          data.address = {
+            address,
+            location: json.results[0].geometry.location,
+            map_data: {
+              library: 'google',
+              place_id: json.results?.[0].place_id
+            }
+          }
+          if (postalCode) {
+            data.address.zipcode = postalCode
+          }
+
+          const arrayList = isEditing
+            ? addressesList?.addresses?.filter((address: any) => address.id !== addressState?.address?.id) || []
+            : addressesList || []
+          const addressToCompare = isEditing
+            ? { ...addressState.address, ...data.address, ...formState.changes }
+            : { ...data.address, ...formState?.changes }
+
+          const isAddressAlreadyExist = arrayList
+            .map((address: any) => checkAddress(address, addressToCompare))
+            .some((value: any) => value) ?? false
+
+          if (!isAddressAlreadyExist) {
+            saveAddress(data.address)
+            if (isGuestUser) {
+              continueAsGuest()
+            }
+            if (!isGuestUser && !auth) {
+              !isFromProductsList
+                ? navigation.navigate('Business')
+                : navigation?.canGoBack() && navigation.goBack()
+            }
+            return
+          }
+
+          setAlertState({
+            open: true,
+            content: [t('ADDRESS_ALREADY_EXIST', 'The address already exists')]
+          })
+        } else {
+          setAlertState({
+            open: true,
+            content: [t('ERROR_NOT_FOUND_ADDRESS', 'Error, address not found')]
+          })
+        }
+      })
+      .catch(error => {
+        setAlertState({
+          open: true,
+          content: [error?.message || error?.toString()]
+        })
+      });
+  }
+
   const onSubmit = () => {
     if (!auth && formState?.changes?.address === '' && addressState?.address?.address) {
       setAlertState({
@@ -91,6 +174,8 @@ const AddressFormUI = (props: AddressFormParams) => {
         })
         return
       }
+      getAddressFormatted(formState?.changes?.address)
+      return
     }
 
     const arrayList = isEditing
@@ -484,10 +569,10 @@ const AddressFormUI = (props: AddressFormParams) => {
             )}
           </View>
           <OModal open={toggleMap} onClose={() => handleToggleMap()} entireModal customClose >
-            {locationChange && (
+            {(locationChange || formState.changes?.location) && (
               <GoogleMapContainer>
                 <GoogleMap
-                  location={locationChange}
+                  location={(locationChange || formState.changes?.location)}
                   handleChangeAddressMap={handleChangeAddress}
                   maxLimitLocation={maxLimitLocation}
                   saveLocation={saveMapLocation}

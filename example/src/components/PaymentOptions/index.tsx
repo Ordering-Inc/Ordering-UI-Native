@@ -76,8 +76,9 @@ const PaymentOptionsUI = (props: any) => {
     isOpenMethod
   } = props
   const [, t] = useLanguage();
-  const [addCardOpen, setAddCardOpen] = useState(false);
-  const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
+
+  const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
+  const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod.paymethod
   // const [{ token }] = useSession()
 
   // const [card, setCard] = useState(null);
@@ -137,7 +138,7 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeIds: any = [3, 28, 31, 32, 66]; //exclude paypal & connect & redirect
+  const excludeIds: any = [3, 32, 66]; //exclude paypal & connect & redirect
 
   return (
     <PMContainer>
@@ -193,8 +194,8 @@ const PaymentOptionsUI = (props: any) => {
       )}
 
       {stripeOptions.includes(paymethodSelected?.gateway) &&
-        paymethodData?.brand &&
-        paymethodData?.last4 &&
+        (paymethodData?.brand || paymethodData?.card?.brand) &&
+        (paymethodData?.last4 || paymethodData?.card?.last4) &&
       (
         <PMCardSelected>
           <PMCardItemContent>
@@ -207,14 +208,14 @@ const PaymentOptionsUI = (props: any) => {
             </View>
             <View style={styles.viewStyle}>
               <OText>
-                {getIconCard(paymethodData?.brand, 26)}
+                {getIconCard((paymethodData?.brand || paymethodData?.card?.brand), 26)}
               </OText>
             </View>
             <View style={styles.viewStyle}>
               <OText
                 size={20}
               >
-                XXXX-XXXX-XXXX-{paymethodData?.last4}
+                XXXX-XXXX-XXXX-{(paymethodData?.last4 || paymethodData?.card?.last4)}
               </OText>
             </View>
           </PMCardItemContent>
@@ -231,7 +232,7 @@ const PaymentOptionsUI = (props: any) => {
             style={styles.btnAddStyle}
             textStyle={{color: 'white'}}
             imgRightSrc={null}
-            onClick={() => setAddCardOpen(true)}
+            onClick={() => setAddCardOpen({ ...addCardOpen, stripe: true })}
           />
           <StripeCardsList
             paymethod={isOpenMethod?.paymethod}
@@ -248,8 +249,8 @@ const PaymentOptionsUI = (props: any) => {
       <OModal
         entireModal
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-        open={addCardOpen}
-        onClose={() => setAddCardOpen(false)}
+        open={addCardOpen.stripe}
+        onClose={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
       >
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
@@ -262,53 +263,78 @@ const PaymentOptionsUI = (props: any) => {
             publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
             requirements={props.clientSecret}
             onSelectCard={handlePaymethodDataChange}
-            onCancel={() => setAddCardOpen(false)}
+            onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
           />
         </KeyboardAvoidingView>
       </OModal>
 
       {/* Stripe direct */}
-      {/* <OModal
-        isNotDecoration
+      <OModal
+        entireModal
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-        open={paymethodSelected?.gateway === 'stripe_direct' && !paymethodData.id}
+        open={isOpenMethod.paymethod?.gateway === 'stripe_direct' && !paymethodData.id}
         onClose={() => handlePaymethodClick(null)}
       >
-        {paymethodSelected?.gateway === 'stripe_direct' && (
-          <KeyboardAvoidingView
-            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
-            enabled={Platform.OS === 'ios' ? true : false}
-          >
-            <StripeElementsForm
-              businessId={props.businessId}
-              publicKey={paymethodSelected.credentials.publishable}
-              handleSource={handlePaymethodDataChange}
-              onCancel={() => handlePaymethodClick(null)}
-            />
-          </KeyboardAvoidingView>
-        )}
-      </OModal> */}
+        <KeyboardAvoidingView
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
+          enabled={Platform.OS === 'ios' ? true : false}
+        >
+          <StripeElementsForm
+            businessId={props.businessId}
+            publicKey={isOpenMethod.paymethod?.credentials?.publishable}
+            handleSource={handlePaymethodDataChange}
+            onCancel={() => handlePaymethodClick(false)}
+          />
+        </KeyboardAvoidingView>
+      </OModal>
 
       {/* Stripe Connect */}
-      {/* <OModal
-        isNotDecoration
-        open={paymethodSelected?.gateway === 'stripe_connect' && !paymethodData.id}
-        title={t('SELECT_A_CARD', 'Select a card')}
-        onClose={() => handlePaymethodClick(null)}
-      >
-        {paymethodSelected?.gateway === 'stripe_connect' && (
-          <PaymentOptionStripe
-            paymethod={paymethodSelected}
+      {isOpenMethod.paymethod?.gateway === 'stripe_connect' && !paymethodData.id && (
+        <View>
+          <OButton
+            text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
+            bgColor={colors.primary}
+            borderColor={colors.primary}
+            style={styles.btnAddStyle}
+            textStyle={{color: 'white'}}
+            imgRightSrc={null}
+            onClick={() => setAddCardOpen({ ...addCardOpen, stripeConnect: true })}
+          />
+          <StripeCardsList
+            paymethod={isOpenMethod.paymethod}
             businessId={props.businessId}
-            publicKey={paymethodSelected.credentials.stripe.publishable}
-            clientSecret={paymethodSelected.credentials.publishable}
+            publicKey={isOpenMethod.paymethod?.credentials.publishable}
             payType={paymethodsList?.name}
             onSelectCard={handlePaymethodDataChange}
+            onNavigationRedirect={onNavigationRedirect}
             onCancel={() => handlePaymethodClick(null)}
           />
-        )}
-      </OModal> */}
+        </View>
+      )}
+
+      <OModal
+        entireModal
+        title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
+        open={addCardOpen.stripeConnect}
+        onClose={() => setAddCardOpen({ ...addCardOpen, stripeConnect: false })}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
+          enabled={Platform.OS === 'ios' ? true : false}
+        >
+          <StripeElementsForm
+            toSave
+            businessId={props.businessId}
+            publicKey={isOpenMethod.paymethod?.credentials?.stripe?.publishable}
+            requirements={isOpenMethod.paymethod?.credentials?.publishable}
+            accountId={isOpenMethod.paymethod?.credentials?.user}
+            onSelectCard={handlePaymethodDataChange}
+            onCancel={() => setAddCardOpen({ ...addCardOpen, stripeConnect: false })}
+          />
+        </KeyboardAvoidingView>
+      </OModal>
 
       {/* Stripe Redirect */}
       {/* <OModal
