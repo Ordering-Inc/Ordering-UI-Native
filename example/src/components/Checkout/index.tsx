@@ -41,7 +41,6 @@ import {
   ChBusinessDetails,
   ChUserDetails
 } from './styles';
-
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
@@ -83,7 +82,7 @@ const CheckoutUI = (props: any) => {
   const [, t] = useLanguage();
   const [{ user }] = useSession();
   const [{ configs }] = useConfig();
-  const [{ parsePrice, parseDate, parseNumber }] = useUtils();
+  const [{ parsePrice, parseDate }] = useUtils();
   const [{ options, carts, loading }] = useOrder();
   const [validationFields] = useValidationFields();
 
@@ -167,8 +166,6 @@ const CheckoutUI = (props: any) => {
       navigation?.canGoBack() && navigation.goBack();
     }
   }, [cart?.products])
-
-  const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
 
   return (
     <>
