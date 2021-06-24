@@ -44,9 +44,7 @@ import {
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { FloatingButton } from '../FloatingButton';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Container } from '../../layouts/Container';
 
 const mapConfigs = {
