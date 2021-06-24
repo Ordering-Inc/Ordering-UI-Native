@@ -10,14 +10,12 @@ export const OSContainer = styled.View`
 export const OSProductList = styled.View``
 
 export const OSBill = styled.View`
-  padding: 10px 10px 0px;
-  flex: 1;
+  padding-top: 10px;
 `
 
 export const OSTable = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  flex: 1;
   align-items: center;
 `
 
@@ -29,5 +27,5 @@ export const OSTotal = styled.View`
 
 export const OSCoupon = styled.View`
   width: 100%;
-  /* padding: 5px 0px; */
+  padding: 5px 0px;
 `

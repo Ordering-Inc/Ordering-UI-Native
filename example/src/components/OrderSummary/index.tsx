@@ -13,9 +13,7 @@ import {
   OSContainer,
   OSProductList,
   OSBill,
-  OSTable,
-  OSTotal,
-  OSCoupon
+  OSTable
 } from './styles';
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -83,15 +81,15 @@ const OrderSummaryUI = (props: any) => {
             ))}
           </OSProductList>
           {cart?.valid && (
-            <View style={{ paddingTop: 10 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <OSBill>
+              <OSTable>
                 <OText size={18}>{t('SUBTOTAL', 'Subtotal')}</OText>
                 <OText size={18}>{cart.business.tax_type === 1
                     ? parsePrice((cart?.subtotal + cart?.tax) || 0)
                     : parsePrice(cart?.subtotal || 0)}</OText>
-              </View>
+              </OSTable>
               {cart?.discount > 0 && cart?.total >= 0 && (
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <OSTable>
                   {cart?.discount_type === 1 ? (
                     <OText size={18}>
                       {t('DISCOUNT', 'Discount')}
@@ -101,25 +99,25 @@ const OrderSummaryUI = (props: any) => {
                     <OText size={18}>{t('DISCOUNT', 'Discount')}</OText>
                   )}
                   <OText size={18}>- {parsePrice(cart?.discount || 0)}</OText>
-                </View>
+                </OSTable>
               )}
               {cart.business.tax_type !== 1 && (
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <OSTable>
                   <OText size={18}>
                     {t('TAX', 'Tax')}
                     {`(${verifyDecimals(cart?.business?.tax, parseNumber)}%)`}
                   </OText>
                   <OText size={18}>{parsePrice(cart?.tax || 0)}</OText>
-                </View>
+                </OSTable>
               )}
               {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <OSTable>
                   <OText size={18}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
                   <OText size={18}>{parsePrice(cart?.delivery_price)}</OText>
-                </View>
+                </OSTable>
               )}
               {cart?.driver_tip > 0 && (
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <OSTable>
                   <OText size={18}>
                     {t('DRIVER_TIP', 'Driver tip')}
                     {cart?.driver_tip_rate > 0 &&
@@ -130,20 +128,20 @@ const OrderSummaryUI = (props: any) => {
                     )}
                   </OText>
                   <OText size={18}>{parsePrice(cart?.driver_tip)}</OText>
-                </View>
+                </OSTable>
               )}
               {cart?.service_fee > 0 && (
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <OSTable>
                   <OText size={18}>
                     {t('SERVICE_FEE', 'Service Fee')}
                     {`(${verifyDecimals(cart?.business?.service_fee, parseNumber)}%)`}
                   </OText>
                   <OText size={18}>{parsePrice(cart?.service_fee)}</OText>
-                </View>
+                </OSTable>
               )}
               {isCouponEnabled && !isCartPending && (
                 <View>
-                  <View>
+                  <View style={{ paddingVertical: 5 }}>
                     <CouponControl
                       businessId={cart.business_id}
                       price={cart.total}
@@ -153,103 +151,18 @@ const OrderSummaryUI = (props: any) => {
               )}
               {cart?.total >= 1 && (
                 <View style={{ marginTop: 15, borderTopWidth: 1, borderTopColor: '#d9d9d9' }}>
-                  <View style={{ marginTop: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <OSTable style={{ marginTop: 15 }}>
                     <OText size={18} style={{ fontWeight: 'bold' }}>
                       {t('TOTAL', 'Total')}
                     </OText>
                     <OText size={18} style={{ fontWeight: 'bold' }} color={colors.primary}>
                       {parsePrice(cart?.total)}
                     </OText>
-                  </View>
+                  </OSTable>
                 </View>
               )}
-            </View>
-          )}
-          {/* {cart?.valid && (
-            <OSBill>
-              <OSTable>
-                <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
-                <OText>
-                  {cart.business.tax_type === 1
-                    ? parsePrice((cart?.subtotal + cart?.tax) || 0)
-                    : parsePrice(cart?.subtotal || 0)}
-                </OText>
-              </OSTable>
-              {cart?.discount > 0 && cart?.total >= 0 && (
-                <OSTable>
-                  {cart?.discount_type === 1 ? (
-                    <OText>
-                      {t('DISCOUNT', 'Discount')}
-                      <OText>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</OText>
-                    </OText>
-                  ) : (
-                    <OText>{t('DISCOUNT', 'Discount')}</OText>
-                  )}
-                  <OText>- {parsePrice(cart?.discount || 0)}</OText>
-                </OSTable>
-              )}
-              {cart.business.tax_type !== 1 && (
-                <OSTable>
-                  <OText>
-                    {t('TAX', 'Tax')}
-                    {`(${verifyDecimals(cart?.business?.tax, parseNumber)}%)`}
-                  </OText>
-                  <OText>{parsePrice(cart?.tax || 0)}</OText>
-                </OSTable>
-              )}
-              {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
-                <OSTable>
-                  <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                  <OText>{parsePrice(cart?.delivery_price)}</OText>
-                </OSTable>
-              )}
-              {cart?.driver_tip > 0 && (
-                <OSTable>
-                  <OText>
-                    {t('DRIVER_TIP', 'Driver tip')}
-                    {cart?.driver_tip_rate > 0 &&
-                      parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
-                      !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                    (
-                      `(${verifyDecimals(cart?.driver_tip_rate, parseNumber)}%)`
-                    )}
-                  </OText>
-                  <OText>{parsePrice(cart?.driver_tip)}</OText>
-                </OSTable>
-              )}
-              {cart?.service_fee > 0 && (
-                <OSTable>
-                  <OText>
-                    {t('SERVICE_FEE', 'Service Fee')}
-                    {`(${verifyDecimals(cart?.business?.service_fee, parseNumber)}%)`}
-                  </OText>
-                  <OText>{parsePrice(cart?.service_fee)}</OText>
-                </OSTable>
-              )}
-              {isCouponEnabled && !isCartPending && (
-                <OSTable>
-                  <OSCoupon>
-                    <CouponControl
-                      businessId={cart.business_id}
-                      price={cart.total}
-                    />
-                  </OSCoupon>
-                </OSTable>
-              )}
-              {cart?.total >= 1 && (
-                <OSTotal>
-                  <OSTable style={{ marginTop: 15 }}>
-                    <OText style={{ fontWeight: 'bold' }}>
-                      {t('TOTAL', 'Total')}
-                    </OText>
-                    <OText style={{ fontWeight: 'bold' }} color={colors.primary}>
-                      {parsePrice(cart?.total)}
-                    </OText>
-                  </OSTable>
-                </OSTotal>
-              )}
             </OSBill>
-          )} */}
+          )}
           <OModal
             open={openProduct}
             entireModal
