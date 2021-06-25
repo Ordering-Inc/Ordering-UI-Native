@@ -95,11 +95,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     return objectStatus && objectStatus
   }
 
-  useFocusEffect(
-    React.useCallback(() => {
-      loadOrders()
-    }, [navigation])
-  )
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     loadOrders()
+  //   }, [navigation])
+  // )
 
   return (
     <>

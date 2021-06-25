@@ -221,6 +221,9 @@ export interface OrdersOptionParams {
   loadMoreOrders?: () => {},
   onNavigationRedirect?: any,
   orderStatus?: any,
+  navigation?: any,
+  loadOrders?: any,
+  setOrderList?: any,
 }
 export interface ActiveOrdersParams {
   orders?: any,

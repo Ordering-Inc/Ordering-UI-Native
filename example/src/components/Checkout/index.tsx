@@ -482,11 +482,16 @@ const CheckoutUI = (props: any) => {
               handleClick={() => handlePlaceOrder()}
               isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
               disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
-              btnText={cart?.subtotal >= cart?.minimum ? (
-                placing ? t('PLACING', 'Placing') : t('PLACE_ORDER', 'Place Order')
-              ) : (
-                `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
-              )}
+              btnText={cart?.subtotal >= cart?.minimum
+                ? (
+                  placing
+                    ? t('PLACING', 'Placing')
+                    : loading
+                      ? t('LOADING', 'Loading')
+                      : t('PLACE_ORDER', 'Place Order')
+                )
+                : (`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`)
+              }
             />
           </>
         </>
