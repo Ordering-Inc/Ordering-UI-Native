@@ -1,30 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { View, Dimensions } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-  Placeholder,
-  PlaceholderLine,
-  Fade
-} from "rn-placeholder";
 
 import {
   PaymentOptions as PaymentOptionsController,
   useLanguage,
-  useSession
 } from 'ordering-components/native';
 
-import { PaymentOptionCash } from '../PaymentOptionCash';
-// import { PaymentOptionStripe } from '../PaymentOptionStripe';
-// import { StripeRedirectForm } from '../StripeRedirectForm';
-// import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
-// import { NotFoundSource } from '../NotFoundSource'
 
 import { OText } from '../shared';
 
 import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
 import OptionCard from '../OptionCard';
-import { DELIVERY_TYPE_IMAGES, IMAGES, PAYMENT_IMAGES } from '../../config/constants';
+import { IMAGES, PAYMENT_IMAGES } from '../../config/constants';
+import { ToastType, useToast } from '../../providers/ToastProvider';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const _dim = Dimensions.get('window');
 
@@ -45,7 +35,11 @@ const PaymentOptionsUI = (props: any) => {
     handlerClickPlaceOrder,
   } = props
 
+  const { showToast } = useToast();
   const [, t] = useLanguage();
+
+  const [userErrors, setUserErrors] = useState<any>([]);
+
   const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod.paymethod
 
   useEffect(() => {
@@ -79,7 +73,22 @@ const PaymentOptionsUI = (props: any) => {
   
   const onSelectPaymethod = (paymethod: any, isPopupMethod: boolean) => {
     handlePaymethodClick(paymethod, isPopupMethod);
-    handlerClickPlaceOrder();
+    handlePlaceOrder();
+  }
+
+  const handlePlaceOrder = () => {
+    if (!userErrors.length) {
+      handlerClickPlaceOrder && handlerClickPlaceOrder()
+      return
+    }
+    let stringError = ''
+    Object.values(userErrors).map((item: any, i: number) => {
+      stringError += (i + 1) === userErrors.length ? `- ${item?.message || item}` : `- ${item?.message || item}\n`
+    })
+
+    console.log(ToastType.Error, stringError)
+
+    showToast(ToastType.Error, stringError)
   }
 
   const propsOfItems = {
@@ -107,47 +116,51 @@ const PaymentOptionsUI = (props: any) => {
   const goToBack = () => navigation?.goBack();
 
   return (
-    <Container nestedScrollEnabled>
-      <NavBar
-        title={t('PAYMENT_METHODS', 'Payment methods')}
-        onActionLeft={goToBack}
-      />
+    <>
+      <Spinner visible={isLoading} />
 
-      <View style={{ marginVertical: _dim.height * 0.03 }}>
-        <OText
-          size={_dim.width * 0.05}
-        >
-          {t('HOW_WOULD_YOU', 'How would you')} {'\n'}
+      <Container nestedScrollEnabled>
+        <NavBar
+          title={t('PAYMENT_METHODS', 'Payment methods')}
+          onActionLeft={goToBack}
+        />
+
+        <View style={{ marginVertical: _dim.height * 0.03 }}>
           <OText
             size={_dim.width * 0.05}
-            weight={'700'}
           >
-            {`${t('LIKE_TO_PAY', 'like to pay')}?`}
+            {t('HOW_WOULD_YOU', 'How would you')} {'\n'}
+            <OText
+              size={_dim.width * 0.05}
+              weight={'700'}
+            >
+              {`${t('LIKE_TO_PAY', 'like to pay')}?`}
+            </OText>
           </OText>
-        </OText>
-      </View>
+        </View>
 
 
-      {supportedMethods?.length > 0 && (
-        <>
-          {propsOfItems.CARD_ON_DELIVERY_ID && (
-            <OptionCard
-              {...propsOfItems?.CARD_ON_DELIVERY_ID}
-            />
-          )}
+        {supportedMethods?.length > 0 && (
+          <>
+            {propsOfItems.CARD_ON_DELIVERY_ID && (
+              <OptionCard
+                {...propsOfItems?.CARD_ON_DELIVERY_ID}
+              />
+            )}
 
-          <View style={{ height: _dim.height * 0.02 }} />
+            <View style={{ height: _dim.height * 0.02 }} />
 
-          {propsOfItems?.CASH_ID && (
-            <OptionCard
-              {...propsOfItems?.CASH_ID}
-            />
-          )}
-        </>
-      )}
-      
-      <View style={{ height: _dim.height * 0.05 }} />
-    </Container>
+            {propsOfItems?.CASH_ID && (
+              <OptionCard
+                {...propsOfItems?.CASH_ID}
+              />
+            )}
+          </>
+        )}
+        
+        <View style={{ height: _dim.height * 0.05 }} />
+      </Container>
+    </>
   )
 }
 

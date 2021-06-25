@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { View, StyleSheet, BackHandler, Dimensions } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
   useUtils,
-  useConfig,
-  useSession
 } from 'ordering-components/native'
 import {
   OSOrderDetailsWrapper,
@@ -15,7 +12,6 @@ import {
   OSActions,
   OSInputWrapper,
 } from './styles'
-import { ProductItemAccordion } from '../ProductItemAccordion'
 import { OrderDetailsParams, Product } from '../../types'
 
 import { Container } from '../../layouts/Container';
@@ -23,8 +19,8 @@ import NavBar from '../../components/NavBar';
 import { OButton, OImage, OInput, OText } from '../../components/shared';
 import { colors } from '../../theme.json'
 import GridContainer from '../../layouts/GridContainer';
-import { DELIVERY_TYPE_IMAGES } from '../../config/constants';
 import OptionSwitch, { Opt } from '../../components/shared/OOptionToggle';
+import { verifyDecimals } from '../../utils'
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
@@ -34,7 +30,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   } = props
 
   const [, t] = useLanguage()
-  const [{ parsePrice, parseDate }] = useUtils()
+  const [{ parsePrice, parseNumber }] = useUtils()
 
   const { order } = props.order
 
@@ -151,12 +147,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     color={colors.primary}
                     weight="bold"
                   >
-                    {parsePrice(order?.summary?.total || order?.total)}
+                    {parsePrice((order?.summary?.total || order?.total) - (order?.summary?.discount || order?.discount))}
                   </OText>
                 </OSTable>
               )}
 
-              {/* <OSTable>
+              {((order?.summary?.discount || order?.discount) > 0 && (order?.summary?.total || order?.total) >= 0) && (<OSTable>
                 <OText
                   weight="bold"
                   mBottom={15}
@@ -164,7 +160,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {t('PROMO_CODE', 'Promo code')}
                   {'\n'}
                   <OText weight="400">
-                    $25 off
+                    { order?.offer_type  === 1 ? `${verifyDecimals(order?.offer_rate, parseNumber)}%` : parsePrice(order?.summary?.discount || order?.discount) } {t('OFF', 'off')}
                   </OText>
                 </OText>
 
@@ -172,9 +168,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   color={colors.primary}
                   weight="bold"
                 >
-                  -$12.00
+                  {`-${parsePrice(order?.summary?.discount || order?.discount)}`}
                 </OText>
-              </OSTable> */}
+              </OSTable>)}
 
               <OSTable style={{ justifyContent: 'flex-end' }}>
                 <OText
