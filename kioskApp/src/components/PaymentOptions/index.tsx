@@ -7,7 +7,7 @@ import {
 } from 'ordering-components/native';
 
 
-import { OText } from '../shared';
+import { OButton, OText } from '../shared';
 
 import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
@@ -15,6 +15,7 @@ import OptionCard from '../OptionCard';
 import { IMAGES, PAYMENT_IMAGES } from '../../config/constants';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { colors } from '../../theme.json';
 
 const _dim = Dimensions.get('window');
 
@@ -33,6 +34,8 @@ const PaymentOptionsUI = (props: any) => {
     isOpenMethod,
     navigation,
     handlerClickPlaceOrder,
+    placing,
+    errors,
   } = props
 
   const { showToast } = useToast();
@@ -72,7 +75,7 @@ const PaymentOptionsUI = (props: any) => {
   const cardOnDeliveryIndex = supportedMethods?.findIndex((item: any) => item?.id === CARD_ON_DELIVERY_ID);
   
   const onSelectPaymethod = (paymethod: any, isPopupMethod: boolean) => {
-    handlePaymethodClick(paymethod, isPopupMethod);
+    handlePaymethodClick(paymethod, isPopupMethod)
     handlePlaceOrder();
   }
 
@@ -85,8 +88,6 @@ const PaymentOptionsUI = (props: any) => {
     Object.values(userErrors).map((item: any, i: number) => {
       stringError += (i + 1) === userErrors.length ? `- ${item?.message || item}` : `- ${item?.message || item}\n`
     })
-
-    console.log(ToastType.Error, stringError)
 
     showToast(ToastType.Error, stringError)
   }
@@ -117,7 +118,7 @@ const PaymentOptionsUI = (props: any) => {
 
   return (
     <>
-      <Spinner visible={isLoading} />
+      <Spinner visible={isLoading || placing} />
 
       <Container nestedScrollEnabled>
         <NavBar

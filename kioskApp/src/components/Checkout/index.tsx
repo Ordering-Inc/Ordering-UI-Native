@@ -39,18 +39,21 @@ const CheckoutUI = (props: any) => {
     <>
       {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
         <PaymentOptions
+          navigation={navigation}
           cart={cart}
+          errors={errors}
+          onPaymentChange={handlePaymethodChange}
+          onNavigationRedirect={onNavigationRedirect}
+          paySelected={paymethodSelected}
+          handlerClickPlaceOrder={handlerClickPlaceOrder}
+          placing={placing}
+
+          errorCash={errorCash}
           isDisabled={cart?.status === 2}
           businessId={businessDetails?.business?.id}
           isLoading={businessDetails.loading}
           paymethods={businessDetails?.business?.paymethods}
-          onPaymentChange={handlePaymethodChange}
-          errorCash={errorCash}
           setErrorCash={setErrorCash}
-          onNavigationRedirect={onNavigationRedirect}
-          paySelected={paymethodSelected}
-          navigation={navigation}
-          handlerClickPlaceOrder={handlerClickPlaceOrder}
         />
       )}
     </>
