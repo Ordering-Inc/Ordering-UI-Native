@@ -9,7 +9,6 @@ import { getGoogleMapImage } from '../../utils'
 import { ActiveOrdersParams } from '../../types'
 
 export const ActiveOrders = (props: ActiveOrdersParams) => {
-
   const {
     onNavigationRedirect,
     orders,
@@ -79,6 +78,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
             borderColor={colors.white}
             style={{ paddingLeft: 30, paddingRight: 30 }}
+            onClick={loadMoreOrders}
           />
         </Card>
       )}

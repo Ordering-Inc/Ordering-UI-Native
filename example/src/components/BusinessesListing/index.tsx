@@ -90,10 +90,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         <WelcomeTitle>
           <View style={styles.welcome}>
             <OText style={{ fontWeight: 'bold' }} size={28} >
-              {t('WELCOME_TITLE_APP', 'Hello there, ')}
+              {t('WELCOME_TITLE_APP', 'Hello there')}
             </OText>
             <OText style={{ fontWeight: 'bold' }} size={28} color={colors.primary}>
-              {user?.name}
+              {', '}{user?.name}
             </OText>
           </View>
         </WelcomeTitle>
