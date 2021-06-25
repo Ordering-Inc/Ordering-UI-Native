@@ -36,6 +36,7 @@ const PaymentOptionsUI = (props: any) => {
     handlerClickPlaceOrder,
     placing,
     errors,
+    paySelected,
   } = props
 
   const { showToast } = useToast();
@@ -43,7 +44,7 @@ const PaymentOptionsUI = (props: any) => {
 
   const [userErrors, setUserErrors] = useState<any>([]);
 
-  const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod.paymethod
+  const paymethodSelected = paySelected || props.paymethodSelected || isOpenMethod.paymethod
 
   useEffect(() => {
     if (paymethodsList.paymethods.length === 1) {
@@ -59,9 +60,15 @@ const PaymentOptionsUI = (props: any) => {
 
   useEffect(() => {
     if (props.paySelected && props.paySelected?.data) {
-      setPaymethodData(props.paySelected?.data)
+      setPaymethodData && setPaymethodData(props.paySelected?.data)
     }
-  }, [props.paySelected])
+  }, [paySelected])
+
+  useEffect(() => {
+    if (!errors && !errorCash && isOpenMethod?.paymethod && !placing && !isLoading && paySelected) {
+      handlePlaceOrder();
+    }
+  }, [isOpenMethod.paymethod, placing, isLoading, paySelected])
 
   const CASH_ID: number = 1;
   const CARD_ON_DELIVERY_ID: number = 2;
@@ -75,8 +82,7 @@ const PaymentOptionsUI = (props: any) => {
   const cardOnDeliveryIndex = supportedMethods?.findIndex((item: any) => item?.id === CARD_ON_DELIVERY_ID);
   
   const onSelectPaymethod = (paymethod: any, isPopupMethod: boolean) => {
-    handlePaymethodClick(paymethod, isPopupMethod)
-    handlePlaceOrder();
+    handlePaymethodClick(paymethod, isPopupMethod);
   }
 
   const handlePlaceOrder = () => {
