@@ -51,13 +51,11 @@ export const ProductOptionSubOptionUI = (props: any) => {
     if (!isSelected && balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1)) {
       setShowMessage(true)
     }
-    toggleSelect(!isSelected)
-  }
-
-  const handleClickContainer = () => {
-    if(!option?.allow_suboption_quantity){
-      handleSuboptionClick(state?.selected)
+    if (!option?.allow_suboption_quantity) {
+      toggleSelect(state?.selected)
+      return
     }
+    toggleSelect(!isSelected)
   }
 
   useEffect(() => {
@@ -70,13 +68,13 @@ export const ProductOptionSubOptionUI = (props: any) => {
   const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
 
   return (
-    <Container onPress={() => handleClickContainer()} disabled={disabled}>
-      <IconControl>
+    <Container disabled={disabled}>
+      <IconControl onPress={() => handleSuboptionClick(state?.selected)}>
         {((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
           state?.selected ? (
-            <MaterialCommunityIcon onPress={() => option?.allow_suboption_quantity && handleSuboptionClick(state?.selected)} name='checkbox-marked' color={colors.primary} size={24} />
+            <MaterialCommunityIcon  name='checkbox-marked' color={colors.primary} size={24} />
           ) : (
-            <MaterialCommunityIcon onPress={() => option?.allow_suboption_quantity && handleSuboptionClick(state?.selected)} name='checkbox-blank-outline' color={colors.backgroundDark} size={24} />
+            <MaterialCommunityIcon  name='checkbox-blank-outline' color={colors.backgroundDark} size={24} />
           )
         ) : (
           state?.selected ? (
@@ -111,33 +109,32 @@ export const ProductOptionSubOptionUI = (props: any) => {
           </Checkbox>
         </QuantityControl>
       )}
-      {
-        option?.with_half_option && (
-          <PositionControl>
-            <Circle onPress={() => handlePosition('left')}>
-              <MaterialCommunityIcon
-                name='circle-half-full'
-                color={state.selected && state.position === 'left' ? colors.primary : '#cbcbcb'}
-                size={24}
-                style={styles.inverse}
-              />
-            </Circle>
-            <Circle onPress={() => handlePosition('whole')}>
-              <MaterialCommunityIcon
-                name='checkbox-blank-circle'
-                color={state.selected && state.position === 'whole' ? colors.primary : '#cbcbcb'}
-                size={24}
-              />
-            </Circle>
-            <Circle onPress={() => handlePosition('right')}>
-              <MaterialCommunityIcon
-                name='circle-half-full'
-                color={state.selected && state.position === 'right' ? colors.primary : '#cbcbcb'}
-                size={24}
-              />
-            </Circle>
-          </PositionControl>
-        )
+      {option?.with_half_option && (
+        <PositionControl>
+          <Circle onPress={() => handlePosition('left')}>
+            <MaterialCommunityIcon
+              name='circle-half-full'
+              color={state.selected && state.position === 'left' ? colors.primary : '#cbcbcb'}
+              size={24}
+              style={styles.inverse}
+            />
+          </Circle>
+          <Circle onPress={() => handlePosition('whole')}>
+            <MaterialCommunityIcon
+              name='checkbox-blank-circle'
+              color={state.selected && state.position === 'whole' ? colors.primary : '#cbcbcb'}
+              size={24}
+            />
+          </Circle>
+          <Circle onPress={() => handlePosition('right')}>
+            <MaterialCommunityIcon
+              name='circle-half-full'
+              color={state.selected && state.position === 'right' ? colors.primary : '#cbcbcb'}
+              size={24}
+            />
+          </Circle>
+        </PositionControl>
+      )
       }
       <OText color='#555'>
         + {parsePrice(price)}
