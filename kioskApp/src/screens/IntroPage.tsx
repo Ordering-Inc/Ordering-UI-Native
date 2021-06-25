@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Dimensions, FlatList, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 
 import { Container } from '../layouts/Container';
@@ -14,17 +14,45 @@ const IntroPage = (props: any): React.ReactElement => {
     navigation,
   } = props;
 
-	const [, t] = useLanguage()
+	const _dim = Dimensions.get('window');
+
+	const [, t] = useLanguage();
 	const [refreshing] = useState(false);
 	const [showLogoutPopup, setShowLogoutPopup] = useState(false);
 
+	const [isPortrait, setPortrait] = useState(_dim.width < _dim.height);
+
+	const goBusiness = () => {
+		navigation.navigate('DeliveryType', {
+				callback: () => {
+					navigation.navigate('Business');
+				},
+				goBack: () => {
+					navigation.goBack();
+				},
+			}
+		);
+	};
+
 	const onShowLogout = () => {
 		setShowLogoutPopup(true);
-	}
+	};
 
 	const onHideLogout = () => {
 		setShowLogoutPopup(false);
-	}
+	};
+
+	const onLogoutDone = () => {
+		navigation.reset({
+			routes: [{ name: 'Login' }]
+		});
+	};
+
+	useEffect(() => {
+		Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+			setPortrait(width < height);
+		})
+	}, []);
 
   return (
 		<FlatList
@@ -34,57 +62,97 @@ const IntroPage = (props: any): React.ReactElement => {
 			data={[1]}
 			renderItem={() => {
 				return (
-					<Container key="1">
-						<View
-							style={{
-								height: _dim.height - _offset,
-								padding: 4,
-								justifyContent: 'space-around',
-								alignItems: 'center'
-							}}
-						>
-							<OImage
-								source={LOGO_IMAGES.logotype}
-								width={(_dim.width * 0.4) - _offset}
-								height={_dim.height * 0.1}
-							/>
-							
-							<OImage
-								source={GENERAL_IMAGES.homeHero}
-								width={_dim.width}
-								height={_dim.height * 0.6}
-							/>
+					<Container key="1" nopadding={ !isPortrait }>
+						{ isPortrait ?
+							<View
+								style={{
+									height: _dim.height - _offset,
+									padding: 4,
+									justifyContent: 'space-around',
+									alignItems: 'center'
+								}}
+							>
+								<OImage
+									source={LOGO_IMAGES.logotype}
+									width={(_dim.width * 0.4) - _offset}
+									height={_dim.height * 0.1}
+								/>
 
-							<OButton
-								text={t('TOUCH_TO_ORDER', 'Touch to order')}
-								parentStyle={{
+								<OImage
+									source={GENERAL_IMAGES.homeHero}
+									width={_dim.width}
+									height={_dim.height * 0.6}
+								/>
+
+								<OButton
+									text={t('TOUCH_TO_ORDER', 'Touch to order')}
+									parentStyle={{
+										alignItems: 'center',
+										width: _dim.width - _offset
+									}}
+									onClick={goBusiness}
+								/>
+
+								<LanguageSelector/>
+							</View>
+							:
+							<View
+								style={{
+									flexDirection: 'row',
+									justifyContent: 'flex-start',
 									alignItems: 'center',
-									width: _dim.width - _offset
+									padding: 0,
+									margin: 0
 								}}
-								onClick={() => {
-									navigation.navigate('DeliveryType', {
-											callback: () => {
-												navigation.navigate('Business');
-											},
-											goBack: () => {
-												navigation.goBack();
-											},
-										}
-									);
-								}}
-							/>
+							>
+								<OImage
+									source={GENERAL_IMAGES.homeLandHero}
+									width={_dim.width * 0.40}
+									height={_dim.height}
+									resizeMode={'cover'}
+								/>
 
-							<LanguageSelector />
-						</View>
-						
+								<View
+									style={{
+										height: _dim.height,
+										width: '50%',
+										justifyContent: 'space-around',
+										alignItems: 'center',
+										paddingBottom: '5%',
+										paddingTop: '10%',
+									}}
+								>
+									<OImage
+										source={LOGO_IMAGES.logotype}
+										width={(_dim.width * 0.4) - _offset}
+										height={_dim.height * 0.1}
+									/>
+
+									<View style={{
+										justifyContent: 'space-around',
+										alignItems: 'center'
+									}}>
+
+										<OButton
+											style={styles.buttonLandStyle}
+											text={t('TOUCH_TO_ORDER', 'Touch to order')}
+											parentStyle={{
+												alignItems: 'center',
+												width: _dim.width - _offset
+											}}
+											onClick={goBusiness}
+										/>
+
+										<LanguageSelector />
+									</View>
+								</View>
+							</View>
+						}
+
 						<LogoutPopup
 							open={showLogoutPopup}
 							onClose={onHideLogout}
-							onLogoutDone={() => {
-								navigation.reset({
-									routes: [{ name: 'Login' }]
-								});
-							}}
+							onLogoutDone={onLogoutDone}
 						/>
 					</Container>
 				);
@@ -93,7 +161,13 @@ const IntroPage = (props: any): React.ReactElement => {
 	);
 };
 
-const _dim = Dimensions.get('window');
+const styles = StyleSheet.create({
+	buttonLandStyle: {
+		width: 260,
+		marginBottom: 16
+	}
+});
+
 const _offset = 50;
 
 export default IntroPage;
