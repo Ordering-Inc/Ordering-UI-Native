@@ -1840,9 +1840,9 @@
   integrity sha512-Sj9DzX1CSnmYiuEQ5fQhExoo4XjSKoZkqLPAAybycq6RHtCuWppf+eJXRMCOJki25BlKSSt+qVqg0fIe//ujNQ==
 
 "@react-native-picker/picker@^1.8.3":
-  version "1.16.1"
-  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-1.16.1.tgz#cc5d05b0d651445afa519c67824d8af3e43fa10c"
-  integrity sha512-sk07ARwL0cMXwkXsqcxyprL/KiEVD0xRFXFqznTnZs1YXqwxEqz6GiGtq2vQlK64CzXDpHX8gw1QQz47abBY1Q==
+  version "1.16.2"
+  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-1.16.2.tgz#7ed9d62623ba20997130a80d8518749760b84a8f"
+  integrity sha512-q1ydcrcCDfqO9Gn4qGs1cXgOx9zaxzRqekrd4mJTGktpdrKtD6bVr1qJT7CkmgYM3Ttn4PfxqLQtwYZKNAp+sg==
 
 "@react-native/assets@1.0.0":
   version "1.0.0"
@@ -2095,9 +2095,9 @@
     tslib "^1.9.3"
 
 "@sentry/wizard@^1.2.2":
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/@sentry/wizard/-/wizard-1.2.8.tgz#83ab5d199d4d177942d65a9c4005be7da3ed74c7"
-  integrity sha512-2gHVOT7YcoG56hUgzVG53ID7eThQJxN7Fu+jNZH1WBCG3qSuj+ied2CZ3U+/VsxB6l13GBVwqlHH9GaVptrh3g==
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/@sentry/wizard/-/wizard-1.2.9.tgz#ddccec63f766d87cb1863e7c5f33618d80277ec7"
+  integrity sha512-j6OdWF2W3Q24EmIXnNiomspJWKXicAPYnAUF1kcE4c+RuKxv/WFmPkSgg57BZRQ4613GUeHrs3eHGW6FDovolg==
   dependencies:
     "@sentry/cli" "^1.52.4"
     chalk "^2.4.1"
@@ -2555,9 +2555,9 @@ acorn@^7.1.1, acorn@^7.4.0:
   integrity sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==
 
 acorn@^8.2.4:
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.4.0.tgz#af53266e698d7cffa416714b503066a82221be60"
-  integrity sha512-ULr0LDaEqQrMFGyQ3bhJkLsbtrQ8QibAseGZeaSUiT/6zb9IvIkomWHJIvgvwad+hinRAgsI51JcWk2yvwyL+w==
+  version "8.4.1"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.4.1.tgz#56c36251fc7cabc7096adc18f05afe814321a28c"
+  integrity sha512-asabaBSkEKosYKMITunzX177CXxQ4Q8BSSzMTKD+FefUhipQC70gfW5SiUDhYQ3vk8G+81HqQk7Fv9OXwwn9KA==
 
 after@0.8.2:
   version "0.8.2"
@@ -3712,9 +3712,9 @@ decamelize@^1.2.0:
   integrity sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=
 
 decimal.js@^10.2.1:
-  version "10.3.0"
-  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.3.0.tgz#96fd481189818e0d5810c18ac147824b9e4c0026"
-  integrity sha512-MrQRs2gyD//7NeHi9TtsfClkf+cFAewDz+PZHR8ILKglLmBMyVX3ymQ+oeznE3tjrS7beTN+6JXb2C3JDHm7ug==
+  version "10.3.1"
+  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.3.1.tgz#d8c3a444a9c6774ba60ca6ad7261c3a94fd5e783"
+  integrity sha512-V0pfhfr8suzyPGOx3nmq4aHqabehUZn6Ch9kyFpV79TGDTWFmHqUqXdabR7QHqxzrYolF4+tVmJhUG4OURg5dQ==
 
 decode-uri-component@^0.2.0:
   version "0.2.0"
@@ -3846,9 +3846,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.723:
-  version "1.3.754"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.754.tgz#afbe69177ad7aae968c3bbeba129dc70dcc37cf4"
-  integrity sha512-Q50dJbfYYRtwK3G9mFP/EsJVzlgcYwKxFjbXmvVa1lDAbdviPcT9QOpFoufDApub4j0hBfDRL6v3lWNLEdEDXQ==
+  version "1.3.758"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.758.tgz#0baeb8f0a89d1850cc65f92da5f669343e4f6241"
+  integrity sha512-StYtiDbgZdjcck3OLwsVVVif7QDuD5m5v2gF+XpETp5lHa7X0y3129YBlYaHRPyj1fep1oAaC6i//gAdp+rhbw==
 
 emittery@^0.7.1:
   version "0.7.2"
@@ -4479,9 +4479,9 @@ flatted@^3.1.0:
   integrity sha512-zAoAQiudy+r5SvnSw3KJy5os/oRJYHzrzja/tBDqrZtNhUw8bt6y8OBzMWcjWr+8liV8Eb6yOhw8WZ7VFZ5ZzA==
 
 flow-parser@0.*:
-  version "0.153.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.153.0.tgz#bac7e977c79f380b07088d36fd0fccea24435db8"
-  integrity sha512-qa7UODgbofQyruRWqNQ+KM5hO37CenByxhNfAztiwjBsPhWZ5AFh5g+gtLpTWPlzG7X66QdjBB9DuHNUBcaF+Q==
+  version "0.154.0"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.154.0.tgz#ea195e3c9f9a6488466e5e29e80b50cea8035485"
+  integrity sha512-cH9xY/ljOgmqG1n7PU1jffiHhRggoloauwOrOlCWBEX4Y+ml6GA8g//tCVKU+6PO4BXoPF22TFHkS5E1bN3JOQ==
 
 flow-parser@^0.121.0:
   version "0.121.0"
@@ -6778,9 +6778,9 @@ node-releases@^1.1.71:
   integrity sha512-uW7fodD6pyW2FZNZnp/Z3hvWKeEW1Y8R1+1CnErE8cXFXzl5blBOoVB41CvMer6P6Q0S5FXDwcHgFd1Wj0U9zg==
 
 node-stream-zip@^1.9.1:
-  version "1.13.5"
-  resolved "https://registry.yarnpkg.com/node-stream-zip/-/node-stream-zip-1.13.5.tgz#90c28b1b8fe8f7c40a72bd30a7c1a8cfae61b715"
-  integrity sha512-Lfi9xhSNvnJU35+4ZFlECXKJ70etAgJYWAVCdcEpksPnMrgwNqwkCJqdunoViVoFFV38C7AIodYE+2apuoK9Gw==
+  version "1.13.6"
+  resolved "https://registry.yarnpkg.com/node-stream-zip/-/node-stream-zip-1.13.6.tgz#8abdfdbc4bc96ee11e9438d94cc8c93c7df28959"
+  integrity sha512-c7tRSVkLNOHvasWgmZ2d86cDgTWEygnkuuHNOY9c0mR3yLZtQTTrGvMaJ/fPs6+LOJn3240y30l5sjLaXFtcvw==
 
 normalize-package-data@^2.5.0:
   version "2.5.0"
@@ -7038,7 +7038,7 @@ ora@^3.4.0:
 
 "ordering-components@github:Ordering-Inc/ordering-components#development":
   version "0.0.1"
-  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/e0949ec0c2539d21c3dbdf37da1c3243950e6c56"
+  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/0c9273d38acb1dce537fce3dddf3f5acef7819ff"
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@react-native-async-storage/async-storage" "^1.13.1"
