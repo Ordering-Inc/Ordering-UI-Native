@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useFocusEffect } from '@react-navigation/native'
 import styled from 'styled-components/native';
 import { useOrder } from 'ordering-components/native';
 import { Platform } from 'react-native';
@@ -15,8 +16,14 @@ interface Props {
 }
 
 const CartList = (props: Props) => {
-  const [{ carts }] = useOrder();
+  const [{ carts }, { refreshOrderOptions }] = useOrder();
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refreshOrderOptions()
+    }, [props.navigation])
+  )
 
   const cartProps = {
     ...props,

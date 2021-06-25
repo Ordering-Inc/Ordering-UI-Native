@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { OrderList, useLanguage, useOrder } from 'ordering-components/native'
+import { useFocusEffect } from '@react-navigation/native'
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
@@ -19,14 +20,16 @@ import { View } from 'react-native'
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
+    navigation,
     activeOrders,
     orderList,
     pagination,
     titleContent,
     customArray,
-    loadMoreOrders,
     onNavigationRedirect,
-    orderStatus
+    orderStatus,
+    loadMoreOrders,
+    loadOrders
   } = props
 
   const [, t] = useLanguage()
@@ -91,6 +94,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
     return objectStatus && objectStatus
   }
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     loadOrders()
+  //   }, [navigation])
+  // )
 
   return (
     <>

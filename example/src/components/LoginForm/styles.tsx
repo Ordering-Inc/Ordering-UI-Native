@@ -14,12 +14,13 @@ export const FormSide = styled.View`
 `;
 
 export const OTabs = styled.View`
-  display: flex;
   flex-direction: row;
+  width: 100%;
+  flex-wrap: wrap;
 `;
 
 export const OTab = styled.View`
-  padding: 0px 15px;
+  padding-horizontal: 10px;
 `;
 
 export const LoginWith = styled.View`
