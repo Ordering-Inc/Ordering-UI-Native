@@ -51,7 +51,8 @@ const AddressFormUI = (props: AddressFormParams) => {
     isGuestUser,
     isRequiredField,
     isFromProductsList,
-    hasAddressDefault
+    hasAddressDefault,
+    afterSignup
   } = props
 
   const [, t] = useLanguage()
@@ -191,7 +192,7 @@ const AddressFormUI = (props: AddressFormParams) => {
       if (isGuestUser) {
         continueAsGuest()
       }
-      if (!isGuestUser && !auth) {
+      if (!isGuestUser && !auth && !afterSignup) {
         !isFromProductsList
           ? navigation.navigate('Business')
           : navigation?.canGoBack() && navigation.goBack()
@@ -253,7 +254,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   }
 
   useEffect(() => {
-    if (orderState.loading && !addressesList && orderState.options.address && auth) {
+    if (orderState.loading && !addressesList && orderState.options.address && auth && !afterSignup) {
       !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business')
     }
   }, [orderState.options.address])

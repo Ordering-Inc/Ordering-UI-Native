@@ -42,16 +42,16 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const [{ configs }] = useConfig()
   const [{ parseDate }] = useUtils()
 
-  const timerId = useRef<any>(false)
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (e, gestureState) => {
-        const {dx, dy} = gestureState;
-        resetInactivityTimeout()
-        return (Math.abs(dx) > 20) || (Math.abs(dy) > 20);
-      },
-    })
-  ).current
+  // const timerId = useRef<any>(false)
+  // const panResponder = useRef(
+  //   PanResponder.create({
+  //     onMoveShouldSetPanResponder: (e, gestureState) => {
+  //       const {dx, dy} = gestureState;
+  //       resetInactivityTimeout()
+  //       return (Math.abs(dx) > 20) || (Math.abs(dy) > 20);
+  //     },
+  //   })
+  // ).current
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
@@ -65,19 +65,19 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     }
   }
 
-  const resetInactivityTimeout = () => {
-    clearTimeout(timerId.current)
-    timerId.current = setInterval(() => {
-      getBusinesses(true)
-    }, 600000)
-  }
+  // const resetInactivityTimeout = () => {
+  //   clearTimeout(timerId.current)
+  //   timerId.current = setInterval(() => {
+  //     getBusinesses(true)
+  //   }, 600000)
+  // }
 
-  useEffect(() => {
-    resetInactivityTimeout()
-  }, [])
+  // useEffect(() => {
+  //   resetInactivityTimeout()
+  // }, [])
 
   return (
-    <ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} {...panResponder.panHandlers}>
+    <ScrollView style={styles.container} onScroll={(e) => handleScroll(e)}>
       {!auth && (
         <NavBar
           onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}

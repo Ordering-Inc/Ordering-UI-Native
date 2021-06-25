@@ -75,7 +75,10 @@ const CheckoutUI = (props: any) => {
     paymethodSelected,
     handlePaymethodChange,
     handlerClickPlaceOrder,
-    onNavigationRedirect
+    onNavigationRedirect,
+    businessLogo,
+    businessName,
+    cartTotal
   } = props
 
   const { showToast } = useToast();
@@ -203,37 +206,20 @@ const CheckoutUI = (props: any) => {
       <ChSection>
         <ChTotal>
           {
-            (businessDetails?.loading || cartState.loading) &&
-            !businessDetails?.error &&
-            (
-              <>
-                <Placeholder Animation={Fade}>
-                  <View style={{ flexDirection: 'row' }}>
-                    <PlaceholderLine width={25} height={70} style={{ marginBottom: 10, marginRight: 10 }} />
-                    <PlaceholderLine width={75} height={20} style={{ marginTop: 25 }} />
-                  </View>
-                </Placeholder>
-              </>
-            )}
-          {
-            !cartState.loading &&
-            !businessDetails?.loading &&
-            businessDetails?.business &&
-            Object.values(businessDetails?.business).length > 0 &&
             (
               <>
                 <OIcon
-                  url={businessDetails?.business?.logo}
+                  url={businessLogo || businessDetails?.business?.logo}
                   width={80}
                   height={80}
                   borderRadius={80}
                 />
                 <View style={{ marginLeft: 15, width: '85%' }}>
                   <OText size={22} numberOfLines={2} ellipsizeMode='tail' style={{ width: '85%' }}>
-                    {businessDetails?.business?.name}
+                    {businessName || businessDetails?.business?.name}
                   </OText>
                   <OText size={22}>
-                    {cart?.total >= 1 && parsePrice(cart?.total)}
+                    {cart?.total >= 1 && parsePrice(cart?.total) || cartTotal >= 1 && parsePrice(cartTotal)}
                   </OText>
                 </View>
               </>

@@ -20,10 +20,12 @@ export const CheckoutPage = (props: any) => {
   const [, t] = useLanguage();
   const [, { confirmCart }] = useOrder();
   const { confirmPayment, loading: confirmPaymentLoading } = useConfirmPayment();
-
   const checkoutProps = {
     ...props,
     cartUuid: props?.cartUuid || props.route?.params?.cartUuid,
+    businessLogo: props.route?.params?.businessLogo,
+    businessName: props.route?.params?.businessName,
+    cartTotal: props.route?.params?.cartTotal,
     stripePaymentOptions,
     onPlaceOrderClick: async (data: any, paymethod: any, cart: any) => {
       if (cart?.order?.uuid) {
