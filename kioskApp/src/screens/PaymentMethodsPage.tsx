@@ -18,7 +18,9 @@ const PaymentMethodsPage = (props:any): React.ReactElement => {
     cartUuid: cartUuid || route?.params?.cartUuid,
     onPlaceOrderClick: async (data: any, paymethod: any, cart: any) => {
       if (cart?.order?.uuid) {
-        navigation.navigate('OrderDetails', { orderId: cart.order?.uuid, isFromCheckout: true });
+        navigation.reset({
+          routes: [{ name: 'OrderDetails', params: { orderId: cart.order?.uuid, isFromCheckout: true } }],
+        });
         return
       }
     },

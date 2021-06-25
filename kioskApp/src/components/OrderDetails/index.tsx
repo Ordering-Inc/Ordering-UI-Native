@@ -63,8 +63,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 		}
 	]
 
-  const goToBack = () => navigation.goBack();
-
   return (
     <>
       
@@ -75,7 +73,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           <Container>
             <NavBar
               title={t('TAKE_YOUR_RECEIPT', 'Take your receipt')}
-              onActionLeft={goToBack}
             />
 
             <View style={{ marginVertical: _dim.height * 0.03 }}>
@@ -225,7 +222,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
             <OButton
               text={`${t('YOU ARE DONE', 'You are done')}!`}
-              onClick={() => {}}
+              onClick={() => {
+                navigation.reset({
+                  routes: [{ name: 'Intro' }],
+                });
+              }}
             />
           </OSActions>
         </>
