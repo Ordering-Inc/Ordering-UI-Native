@@ -32,9 +32,10 @@ const IntroPage = (props: any): React.ReactElement => {
 			onRefresh={onShowLogout}
 			scrollEnabled={false}
 			data={[1]}
+			keyExtractor={item => `${item}`}
 			renderItem={() => {
 				return (
-					<Container key="1">
+					<Container>
 						<View
 							style={{
 								height: _dim.height - _offset,

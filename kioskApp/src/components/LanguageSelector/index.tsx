@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { LanguageSelector as LanguageSelectorController } from 'ordering-components/native'
 import CountryPicker, { Flag } from 'react-native-country-picker-modal'
 
 import { Container, LanguageItem } from './styles'
 import langCountries from './lang_country.json';
 import { LanguageSelectorParams } from '../../types'
+import { OText } from '../shared'
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   const {
@@ -52,11 +53,12 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 									flagSize={24}
 									countryCode={currentLanguageData?.countryCode}
 								/>
-								<Text>{currentLanguageData?.label}</Text>
+								<OText>{currentLanguageData?.label}</OText>
 							</LanguageItem>
 						</TouchableOpacity>
 					)}
 					flatListProps={{
+						keyExtractor: (item) => item.cca2,
 						data: _languages || [],
 						renderItem: ({item}) => (
 							<TouchableOpacity
@@ -67,16 +69,17 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 								}}
 							>
 								<LanguageItem>
+									<View style={{ width: 40 }} />
 									<Flag
 										withEmoji
 										flagSize={24}
 										/* @ts-ignore */
 										countryCode={item.countryCode}
 									/>
-									<Text>{
+									<OText>{
 										/* @ts-ignore */
 										item.label
-									}</Text>
+									}</OText>
 								</LanguageItem>
 							</TouchableOpacity>
 						)

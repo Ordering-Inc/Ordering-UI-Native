@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, StyleSheet, BackHandler, Dimensions } from 'react-native'
+import { View, StyleSheet, BackHandler, Dimensions, Alert } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import {
   useLanguage,
@@ -61,11 +61,35 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 			label: t('SMS', 'SMS'),
 			value: 'sms',
 		}
-	]
+  ]
+  
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert(`${t('HOLD_ON', 'Hold on')}!`, `${t('ARE_YOU_SURE_YOU_WANT_TO_GO_BACK', 'Are you sure you want to go back')}?`, [
+        {
+          text: t('CANCEL', 'cancel'),
+          onPress: () => null,
+          style: "cancel"
+        },
+        { text: t('YES', 'yes'), onPress: () => {
+          navigation.reset({
+            routes: [{ name: 'Intro' }]
+          });
+        }}
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <>
-      
       <Spinner visible={!order || Object.keys(order).length === 0} />
       
       {order && Object.keys(order).length > 0 && (
