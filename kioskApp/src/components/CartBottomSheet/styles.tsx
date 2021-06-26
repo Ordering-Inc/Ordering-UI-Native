@@ -12,7 +12,6 @@ export const StyledContainer = styled.ScrollView`
 	padding: 20px;
 	bottom: 0;
 	shadow-color: #000;
-	shadow-offset: { width: 1px, height: 1px };
 	shadow-opacity:  0.4;
 	shadow-radius: 3px;
 	elevation: 15;

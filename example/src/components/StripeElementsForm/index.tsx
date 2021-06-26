@@ -4,7 +4,8 @@ import { useLanguage, useSession } from 'ordering-components/native';
 import {
   StripeProvider,
   CardField,
-  useConfirmSetupIntent
+  useConfirmSetupIntent,
+  createPaymentMethod
 } from '@stripe/stripe-react-native';
 
 import { ErrorMessage } from './styles';
@@ -16,11 +17,10 @@ import { colors } from '../../theme.json';
 const StripeElementsFormUI = (props: any) => {
   const {
     publicKey,
-    // handleSource,
+    handleSource,
     values,
     businessId,
     requirements,
-    onCancel,
     stripeTokenHandler,
   } = props;
 
@@ -30,14 +30,50 @@ const StripeElementsFormUI = (props: any) => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [errors, setErrors] = useState('')
   const { confirmSetupIntent, loading: confirmSetupLoading } = useConfirmSetupIntent();
+  const [createPmLoading, setCreatePmLoading] = useState(false);
+
+  const billingDetails = {
+    name: `${user.name} ${user.lastname}`,
+    email: user.email,
+    addressLine1: user.address
+  };
+
+  const createPayMethod = async () => {
+    try {
+      setCreatePmLoading(true)
+      const { paymentMethod } = await createPaymentMethod({
+        type: 'Card',
+        billingDetails,
+      });
+
+      setCreatePmLoading(false)
+      handleSource && handleSource({
+        id: paymentMethod.id,
+        type: 'card',
+        card: {
+          brand: paymentMethod.Card.brand,
+          last4: paymentMethod.Card.last4
+        }
+      })
+
+      // if (error) {
+      //   setErrors(
+      //     error?.code === 'Unknown'
+      //       ? t('ERROR_ADD_CARD', 'An error occurred while trying to add a card')
+      //       : error.message
+      //   );
+      // }
+    } catch (error) {
+      setErrors(error?.message || error?.toString());
+    }
+  }
 
   const handleSaveCard = async () => {
     setErrors('');
-    const billingDetails = {
-      name: `${user.name} ${user.lastname}`,
-      email: user.email,
-      addressLine1: user.address
-    };
+    if (!requirements) {
+      createPayMethod();
+      return
+    }
     try {
       const { setupIntent, error } = await confirmSetupIntent(requirements, {
         type: 'Card',
@@ -100,7 +136,7 @@ const StripeElementsFormUI = (props: any) => {
             textStyle={{color: 'white'}}
             imgRightSrc={null}
             onClick={isCompleted ? () => handleSaveCard() : () => {}}
-            isLoading={confirmSetupLoading || values.loadingAdd}
+            isLoading={confirmSetupLoading || values.loadingAdd || createPmLoading}
           />
           {!!errors && (
             <ErrorMessage>

@@ -6,10 +6,11 @@ import {
 } from 'ordering-components/native'
 import Carousel from 'react-native-snap-carousel';
 
-import { BusinessProductsListingParams, Business } from '../../types'
+import { BusinessProductsListingParams, Business, Product } from '../../types'
 import { OCard, OText } from '../shared'
 import GridContainer from '../../layouts/GridContainer'
 import PromoCard from '../PromoCard';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
@@ -57,12 +58,19 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     </View>
   );
 
-  const _renderItem = ({item, index} : any) => {
+  const _renderItem = ({item, index} : { item: Product, index: number }) => {
     return (
       <PromoCard
         title={item?.name}
-        description={!!item?.description && item?.description}
+        {...(!!item?.description && { description: item?.description } )}
         image={{uri: item?.images}}
+        onPress={() => {
+          navigation.navigate('ProductDetails', {
+            businessId: business?.api?.businessId,
+            businessSlug: business?.slug,
+            product: item,
+          });
+        }}
       />
     );
   }
@@ -119,16 +127,14 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     </>
   );
 
-  if (businessState?.loading) {
-    return <OText>cargando...</OText>
-  }
-
   if (businessState?.error) {
     return <OText>error!</OText>
   }
 
   return (
     <>
+      <Spinner visible={businessState?.loading} />
+
       {_promos?.length > 0
         && _renderPromos()}
       

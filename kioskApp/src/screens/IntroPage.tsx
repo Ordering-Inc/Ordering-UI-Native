@@ -60,9 +60,10 @@ const IntroPage = (props: any): React.ReactElement => {
 			onRefresh={onShowLogout}
 			scrollEnabled={false}
 			data={[1]}
+			keyExtractor={item => `${item}`}
 			renderItem={() => {
 				return (
-					<Container key="1" nopadding={ !isPortrait }>
+					<Container nopadding={ !isPortrait }>
 						{ isPortrait ?
 							<View
 								style={{

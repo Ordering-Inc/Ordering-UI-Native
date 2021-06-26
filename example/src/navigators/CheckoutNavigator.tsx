@@ -19,6 +19,7 @@ const CheckoutNavigator = (props: any) => {
 
   const checkoutProps = {
     navigation,
+    route,
     cartUuid: route?.params?.cartUuid
   }
 

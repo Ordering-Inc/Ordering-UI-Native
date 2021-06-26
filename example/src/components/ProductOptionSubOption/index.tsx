@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import {
-  ProductOptionSuboption as ProductSubOptionController,
   useUtils,
-  useLanguage
+  useLanguage,
+  ProductOptionSuboption as ProductSubOptionController
 } from 'ordering-components/native'
 import { StyleSheet } from 'react-native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -51,9 +51,9 @@ export const ProductOptionSubOptionUI = (props: any) => {
     if (!isSelected && balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1)) {
       setShowMessage(true)
     }
-    toggleSelect()
+    toggleSelect(!isSelected)
   }
-  
+
   const handleClickContainer = () => {
     if(!option?.allow_suboption_quantity){
       handleSuboptionClick(state?.selected)

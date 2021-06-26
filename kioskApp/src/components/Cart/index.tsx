@@ -183,7 +183,7 @@ const CartUI = (props: any) => {
                       mLeft={15}
                     >
                       <OText color={colors.green} size={16}>{`${t('VALID_CODE', 'Valid code')}! ${t('YOU_GOT', 'you got')} `}</OText>
-                      <OText color={colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parsePrice)}% `}</OText>
+                      <OText color={colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parseNumber)}% `}</OText>
                       <OText color={colors.green} size={16}>{`${t('OFF', 'off')}`}</OText>
                     </OText>
                   ) : (

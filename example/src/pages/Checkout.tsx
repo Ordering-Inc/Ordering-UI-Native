@@ -1,7 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { Checkout } from '../components/Checkout';
-import { Container } from '../layouts/Container';
 
 import { initStripe, useConfirmPayment  } from '@stripe/stripe-react-native';
 import styled from 'styled-components/native';
@@ -21,10 +20,12 @@ export const CheckoutPage = (props: any) => {
   const [, t] = useLanguage();
   const [, { confirmCart }] = useOrder();
   const { confirmPayment, loading: confirmPaymentLoading } = useConfirmPayment();
-
   const checkoutProps = {
     ...props,
     cartUuid: props?.cartUuid || props.route?.params?.cartUuid,
+    businessLogo: props.route?.params?.businessLogo,
+    businessName: props.route?.params?.businessName,
+    cartTotal: props.route?.params?.cartTotal,
     stripePaymentOptions,
     onPlaceOrderClick: async (data: any, paymethod: any, cart: any) => {
       if (cart?.order?.uuid) {
@@ -34,13 +35,17 @@ export const CheckoutPage = (props: any) => {
 
       if (cart?.status === 2 && stripePaymentOptions.includes(paymethod?.gateway)) {
         const clientSecret = cart?.paymethod_data?.result?.client_secret;
-        const paymentMethodId = cart.paymethod_data?.data?.source_id;
-        const publicKey = paymethod?.gateway === 'stripe_connect'
-          ? paymethod?.paymethod?.credentials?.stripe.publishable
-          : paymethod?.paymethod?.credentials?.publishable;
+        const paymentMethodId = paymethod?.gateway === 'stripe_connect'
+          ? cart.paymethod_data?.result?.payment_method_id
+          : cart.paymethod_data?.data?.source_id
+        const stripeAccountId = paymethod?.paymethod?.credentials?.user;
+        const publicKey = paymethod?.paymethod?.credentials?.publishable;
 
         try {
-          initStripe({ publishableKey: publicKey });
+          const stripeParams = stripeAccountId
+            ? { publishableKey: publicKey, stripeAccountId: stripeAccountId}
+            : { publishableKey: publicKey };
+          initStripe(stripeParams);
         } catch (error) {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
@@ -50,6 +55,10 @@ export const CheckoutPage = (props: any) => {
             type: 'Card',
             paymentMethodId
           });
+
+          if (error) {
+            showToast(ToastType.Error, error.message)
+          }
 
           props.handleIsRedirect && props.handleIsRedirect(true);
           try {

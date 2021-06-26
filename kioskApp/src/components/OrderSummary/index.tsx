@@ -91,7 +91,7 @@ const OrderSummaryUI = (props: any) => {
                 {cart?.discount_type === 1 ? (
                   <OText>
                     {t('DISCOUNT', 'Discount')}
-                    <OText>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</OText>
+                    <OText>{`(${verifyDecimals(cart?.discount_rate, parseNumber)}%)`}</OText>
                   </OText>
                 ) : (
                   <OText>{t('DISCOUNT', 'Discount')}</OText>

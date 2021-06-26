@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Animated, StyleSheet } from 'react-native'
+import { View, Animated, StyleSheet, Platform } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
@@ -235,7 +235,7 @@ const pickerStyle = StyleSheet.create({
   icon: {
     width: 10,
     height: 10,
-    top: 17,
+    top: Platform.OS === 'ios' ? 0 : 17,
     right: 10,
     position: 'absolute',
   },
