@@ -80,7 +80,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
 
   const handleUpsellingPage = () => {
     onCloseUpselling()
-    navigation?.navigate('Cart')
+    navigation?.navigate('Cart', { businessId: cart?.business_id })
   }
 
 	if (!props?.visible) return null;

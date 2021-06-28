@@ -9,20 +9,26 @@ interface Props {
 }
 
 const CartPage = (props: Props) => {
+
+  const {
+    navigation,
+    route
+  } = props;
+
   const [{ carts }] = useOrder();
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
 
   let cart;
   
   if (cartsList?.length > 0) {
-    cart = cartsList?.find((item: any) => item.business_id == '41');
+    cart = cartsList?.find((item: any) => item.business_id == route?.params?.businessId);
   }
 
   const cartProps = {
     ...props,
     cart,
     isOrderStateCarts: !!carts,
-    onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params),
+    onNavigationRedirect: (route: string, params: any) => navigation.navigate(route, params),
     style: { padding: 20, backgroundColor: '#fff' },
   }
 
