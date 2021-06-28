@@ -8,6 +8,8 @@ import NavBar from '../components/NavBar';
 import { CartBottomSheet } from '../components/CartBottomSheet';
 import { CartContent } from '../components/CartContent';
 
+import config from '../config.json';
+
 const BusinessPage = (props:any): React.ReactElement => {
   const [, t] = useLanguage()
   const [ordering] = useApi()
@@ -21,7 +23,7 @@ const BusinessPage = (props:any): React.ReactElement => {
     ordering,
     isSearchByName: true,
     isSearchByDescription: true,
-    slug: '41',
+    slug: config.businessSlug,
     categoryId: null,
     productId: null,
     langFallbacks: null,
@@ -67,7 +69,7 @@ const BusinessPage = (props:any): React.ReactElement => {
   let cart;
   
   if (cartsList?.length > 0) {
-    cart = cartsList?.find((item: any) => item.business_id == '41');
+    cart = cartsList?.find((item: any) => item.business_id == config.businessSlug);
   }
   const cartProps = {
     ...props,
