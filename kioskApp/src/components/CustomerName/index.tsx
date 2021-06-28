@@ -3,15 +3,20 @@ import { useLanguage } from 'ordering-components/native';
 import { _setStoreData } from '../../providers/StoreUtil';
 
 import { OButton, OInput, OText } from '../shared';
-import { StyledContent } from './styles';
 import { Controller, useForm } from 'react-hook-form';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { colors } from '../../theme.json';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { STORAGE_KEY } from '../../config/constants';
+import { Container } from '../../layouts/Container';
+import NavBar from '../NavBar';
+import { OSActions } from '../OrderDetails/styles';
+
+const _dim = Dimensions.get('window');
 
 const CustomerName = (props: Props): React.ReactElement => {
   const {
+    navigation,
     onProceedToPay
   } = props;
 
@@ -36,68 +41,82 @@ const CustomerName = (props: Props): React.ReactElement => {
     }
   }, [errors]);
 
-  return (
-    <View style={styles.container}>
-      <StyledContent>
-        <OText size={28}>
-          {t('WHOM_MIGHT_THIS', 'Whom might this')}
-        </OText>
-        <OText size={28} weight={'bold'}>
-          {t('ORDER_BE_FOR', 'order be for?')}
-        </OText>
+  const goToBack = () => navigation?.goBack();
 
-        <Controller
-          control={control}
-          render={(p: any) => (
-            <OInput
-              placeholder={t('WHITE_YOUR_NAME', 'White your name')}
-              style={styles.inputStyle}
-              value={p.field.value}
-              autoCapitalize="words"
-              autoCorrect={false}
-              onChange={(val: any) => p.field.onChange(val)}
-            />
-          )}
-          name="name"
-          rules={{
-            required: t(
-              'VALIDATION_ERROR_CUSTOMER_NAME_REQUIRED',
-              'The field Customer Name is required',
-            ).replace('_attribute_', t('CUSTOMER_NAME', 'Customer Name'))
-          }}
-          defaultValue=""
+  return (
+    <>
+      <Container>
+        <NavBar
+          title={t('YOUR_NAME', 'Your name')}
+          onActionLeft={goToBack}
         />
 
-      </StyledContent>
+        <View style={{ marginVertical: _dim.height * 0.03 }}>
+          <OText
+            size={_dim.width * 0.05}
+          >
+            {t('WHOM_MIGHT_THIS', 'Whom might this')} {'\n'}
+            <OText
+              size={_dim.width * 0.05}
+              weight={'700'}
+            >
+              {`${t('ORDER_BE_FOR', 'order be for?')}?`}
+            </OText>
+          </OText>
+        </View>
 
-      <OButton
-        style={styles.buttonStyle}
-        text={t('PROCEED_TO_PAY', 'Proceed to Pay')}
-        onClick={handleSubmit(onSubmit)}/>
+        <KeyboardAvoidingView
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
+          enabled={Platform.OS === 'ios' ? true : false}
+        >
+          <Controller
+            control={control}
+            render={(p: any) => (
+              <OInput
+                placeholder={t('WHITE_YOUR_NAME', 'White your name')}
+                style={styles.inputStyle}
+                value={p.field.value}
+                autoCapitalize="words"
+                autoCorrect={false}
+                onChange={(val: any) => p.field.onChange(val)}
+              />
+            )}
+            name="name"
+            rules={{
+              required: t(
+                'VALIDATION_ERROR_CUSTOMER_NAME_REQUIRED',
+                'The field Customer Name is required',
+              ).replace('_attribute_', t('CUSTOMER_NAME', 'Customer Name'))
+            }}
+            defaultValue=""
+          />
+        </KeyboardAvoidingView>
 
-    </View>
+      </Container>
+
+      <OSActions>
+        <OButton
+          text={t('PROCEED_TO_PAY', 'Proceed to Pay')}
+          onClick={handleSubmit(onSubmit)}
+        />
+      </OSActions>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
   inputStyle: {
-    marginTop: 36,
     borderRadius: 4,
     marginBottom: 12,
     borderWidth: 1,
     borderColor: colors.disabled,
     height: 44
   },
-  buttonStyle: {
-    height: 44,
-    margin: 16
-  },
 });
 
 interface Props {
+  navigation: any;
   onProceedToPay: any;
 }
 
