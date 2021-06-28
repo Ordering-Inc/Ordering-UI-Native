@@ -36,7 +36,7 @@ const CartUI = (props: any) => {
     setIsCartsLoading,
     navigation,
   } : CartUIProps = props
-  
+
 
   const [, t] = useLanguage()
   const [orderState] = useOrder()
@@ -84,7 +84,7 @@ const CartUI = (props: any) => {
       goBack: () => {navigation.pop(1)},
     });
   }
-	
+
   const goToBack = () => navigation.goBack();
 
   return (
@@ -196,7 +196,7 @@ const CartUI = (props: any) => {
                     </OText>
                   )}
                 </View>
-                
+
 
                 <OText
                   size={16}

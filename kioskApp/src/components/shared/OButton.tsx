@@ -67,6 +67,7 @@ interface Props {
   parentStyle?: ViewStyle;
   disabledStyle?: ViewStyle;
   textStyle?: TextStyle;
+  disabledTextStyle?: TextStyle;
   imgLeftSrc?: ImageSourcePropType;
   imgLeftStyle?: ImageStyle;
   imgRightSrc?: any;
@@ -84,7 +85,7 @@ const OButton = (props: Props): React.ReactElement => {
     return (
       <View style={props.parentStyle}>
       <StyledButtonDisabled style={props.style}>
-        <StyledTextDisabled style={props.textStyle}>
+        <StyledTextDisabled style={props.disabledTextStyle ? props.disabledTextStyle : props.textStyle}>
           {props.text}
         </StyledTextDisabled>
       </StyledButtonDisabled>

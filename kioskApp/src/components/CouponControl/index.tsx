@@ -77,15 +77,17 @@ const CouponControlUI = (props: any) => {
       ) : (
         <CCWrapper>
           <OInput
-            placeholder={t('DISCOUNT_COUPON', 'Discount coupon')}
+            placeholder={t('HAVE_PROMO_CODE', 'Do you have a promo code?')}
             onChange={(e: any) => onChangeInputCoupon(e)}
             style={styles.inputsStyle}
           />
           <OButton
             onClick={() => handleButtonApplyClick()}
-            bgColor={colors.primary}
-            borderColor={colors.primary}
-            textStyle={{color: 'white'}}
+            bgColor={colors.primaryLight}
+            borderColor={colors.primaryLight}
+            textStyle={styles.textButtonApplyStyle}
+            disabledTextStyle={styles.disabledTextButtonApplyStyle}
+            style={styles.buttonApplyStyle}
             imgRightSrc={null}
             text={t('APPLY', 'Apply')}
             isDisabled={!couponInput}
@@ -97,11 +99,29 @@ const CouponControlUI = (props: any) => {
 }
 const styles = StyleSheet.create({
   inputsStyle: {
-    borderColor: colors.secundaryContrast,
-    borderRadius: 50,
+    borderColor: colors.disabled,
+    borderRadius: 4,
     flex: 1,
-    marginRight: 30
+    height: 56,
+    paddingEnd: 106
   },
+  buttonApplyStyle: {
+    position: 'absolute',
+    right: 8,
+    top: 0,
+    marginTop: -21,
+    height: 42
+  },
+  textButtonApplyStyle: {
+    color: colors.primary,
+    marginLeft: 0,
+    marginRight: 0
+  },
+  disabledTextButtonApplyStyle: {
+    color: colors.white,
+    marginLeft: 0,
+    marginRight: 0
+  }
 });
 
 export const CouponControl = (props: any) => {
