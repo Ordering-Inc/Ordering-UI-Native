@@ -118,8 +118,9 @@ export const ProductOptionsUI = (props: any) => {
     outputRange: [0, 1],
     extrapolate: 'clamp'
   });
+
   const collapsedBarContainerOpacity = scrollY.interpolate({
-    inputRange: [180, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    inputRange: [HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT - ((HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT) * 0.08), HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
     outputRange: [0, 1],
     extrapolate: 'clamp'
   });
