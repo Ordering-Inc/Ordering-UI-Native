@@ -193,8 +193,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <Logo>
                   <OIcon url={order?.business?.logo} style={styles.logo}></OIcon>
                 </Logo>
-                <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                  <OText size={20} style={styles.textBold}>{order?.business?.name}</OText>
+                <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '60%' }}>
+                  <View>
+                    <OText
+                      size={20}
+                      style={styles.textBold}
+                      numberOfLines={1}
+                      ellipsizeMode='tail'
+                    >
+                      {order?.business?.name}
+                    </OText>
+                  </View>
                   <OText size={17}>{order?.business?.email}</OText>
                   <OText size={17}>{order?.business?.cellphone}</OText>
                 </View>
