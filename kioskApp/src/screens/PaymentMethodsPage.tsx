@@ -4,6 +4,7 @@ import { useOrder, useLanguage } from 'ordering-components/native';
 
 import { Checkout } from '../components/Checkout';
 import { ToastType, useToast } from '../providers/ToastProvider';
+import { SafeAreaContainer } from '../layouts/SafeAreaContainer';
 
 const PaymentMethodsPage = (props:any): React.ReactElement => {
   
@@ -31,7 +32,9 @@ const PaymentMethodsPage = (props:any): React.ReactElement => {
   }
 
   return (
-		<Checkout {...checkoutProps} />
+    <SafeAreaContainer>
+      <Checkout {...checkoutProps} />
+    </SafeAreaContainer>
 	);
 };
 
