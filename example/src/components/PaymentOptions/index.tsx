@@ -78,7 +78,7 @@ const PaymentOptionsUI = (props: any) => {
   const [, t] = useLanguage();
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
-  const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod.paymethod
+  const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
   // const [{ token }] = useSession()
 
   // const [card, setCard] = useState(null);
@@ -272,7 +272,7 @@ const PaymentOptionsUI = (props: any) => {
       <OModal
         entireModal
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-        open={isOpenMethod.paymethod?.gateway === 'stripe_direct' && !paymethodData.id}
+        open={isOpenMethod?.paymethod?.gateway === 'stripe_direct' && !paymethodData.id}
         onClose={() => handlePaymethodClick(null)}
       >
         <KeyboardAvoidingView
@@ -282,7 +282,7 @@ const PaymentOptionsUI = (props: any) => {
         >
           <StripeElementsForm
             businessId={props.businessId}
-            publicKey={isOpenMethod.paymethod?.credentials?.publishable}
+            publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
             handleSource={handlePaymethodDataChange}
             onCancel={() => handlePaymethodClick(false)}
           />
@@ -290,7 +290,7 @@ const PaymentOptionsUI = (props: any) => {
       </OModal>
 
       {/* Stripe Connect */}
-      {isOpenMethod.paymethod?.gateway === 'stripe_connect' && !paymethodData.id && (
+      {isOpenMethod?.paymethod?.gateway === 'stripe_connect' && !paymethodData.id && (
         <View>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
@@ -302,9 +302,9 @@ const PaymentOptionsUI = (props: any) => {
             onClick={() => setAddCardOpen({ ...addCardOpen, stripeConnect: true })}
           />
           <StripeCardsList
-            paymethod={isOpenMethod.paymethod}
+            paymethod={isOpenMethod?.paymethod}
             businessId={props.businessId}
-            publicKey={isOpenMethod.paymethod?.credentials.publishable}
+            publicKey={isOpenMethod?.paymethod?.credentials.publishable}
             payType={paymethodsList?.name}
             onSelectCard={handlePaymethodDataChange}
             onNavigationRedirect={onNavigationRedirect}
@@ -327,9 +327,9 @@ const PaymentOptionsUI = (props: any) => {
           <StripeElementsForm
             toSave
             businessId={props.businessId}
-            publicKey={isOpenMethod.paymethod?.credentials?.stripe?.publishable}
-            requirements={isOpenMethod.paymethod?.credentials?.publishable}
-            accountId={isOpenMethod.paymethod?.credentials?.user}
+            publicKey={isOpenMethod?.paymethod?.credentials?.stripe?.publishable}
+            requirements={isOpenMethod?.paymethod?.credentials?.publishable}
+            accountId={isOpenMethod?.paymethod?.credentials?.user}
             onSelectCard={handlePaymethodDataChange}
             onCancel={() => setAddCardOpen({ ...addCardOpen, stripeConnect: false })}
           />

@@ -35,27 +35,11 @@ export const ProductOptionSubOptionUI = (props: any) => {
   const [{ parsePrice }] = useUtils()
   const [showMessage, setShowMessage] = useState(false)
 
-  const handleIncrement = () => {
-    increment()
-  }
-
-  const handleDecrement = () => {
-    decrement()
-  }
-
-  const handlePosition = (position: string) => {
-    changePosition(position)
-  }
-
-  const handleSuboptionClick = (isSelected : boolean) => {
-    if (!isSelected && balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1)) {
+  const handleSuboptionClick = () => {
+    toggleSelect()
+    if (balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1)) {
       setShowMessage(true)
     }
-    if (!option?.allow_suboption_quantity) {
-      toggleSelect(state?.selected)
-      return
-    }
-    toggleSelect(!isSelected)
   }
 
   useEffect(() => {
@@ -69,7 +53,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 
   return (
     <Container disabled={disabled}>
-      <IconControl onPress={() => handleSuboptionClick(state?.selected)}>
+      <IconControl onPress={() => handleSuboptionClick()}>
         {((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
           state?.selected ? (
             <MaterialCommunityIcon  name='checkbox-marked' color={colors.primary} size={24} />
@@ -90,7 +74,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
       {showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} color={colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
       {option?.allow_suboption_quantity && (
         <QuantityControl>
-          <Checkbox disabled={state.quantity === 0} onPress={handleDecrement}>
+          <Checkbox disabled={state.quantity === 0} onPress={decrement}>
             <MaterialCommunityIcon
               name='minus-circle-outline'
               size={24}
@@ -100,7 +84,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
           <OText mLeft={5} mRight={5}>
             {state.quantity}
           </OText>
-          <Checkbox disabled={disableIncrement} onPress={handleIncrement}>
+          <Checkbox disabled={disableIncrement} onPress={increment}>
             <MaterialCommunityIcon
               name='plus-circle-outline'
               size={24}
@@ -111,7 +95,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
       )}
       {option?.with_half_option && (
         <PositionControl>
-          <Circle onPress={() => handlePosition('left')}>
+          <Circle onPress={() => changePosition('left')}>
             <MaterialCommunityIcon
               name='circle-half-full'
               color={state.selected && state.position === 'left' ? colors.primary : '#cbcbcb'}
@@ -119,14 +103,14 @@ export const ProductOptionSubOptionUI = (props: any) => {
               style={styles.inverse}
             />
           </Circle>
-          <Circle onPress={() => handlePosition('whole')}>
+          <Circle onPress={() => changePosition('whole')}>
             <MaterialCommunityIcon
               name='checkbox-blank-circle'
               color={state.selected && state.position === 'whole' ? colors.primary : '#cbcbcb'}
               size={24}
             />
           </Circle>
-          <Circle onPress={() => handlePosition('right')}>
+          <Circle onPress={() => changePosition('right')}>
             <MaterialCommunityIcon
               name='circle-half-full'
               color={state.selected && state.position === 'right' ? colors.primary : '#cbcbcb'}
