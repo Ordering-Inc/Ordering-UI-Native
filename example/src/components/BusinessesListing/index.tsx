@@ -92,9 +92,16 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
             <OText style={{ fontWeight: 'bold' }} size={28} >
               {t('WELCOME_TITLE_APP', 'Hello there')}
             </OText>
-            <OText style={{ fontWeight: 'bold' }} size={28} color={colors.primary}>
-              {', '}{user?.name}
-            </OText>
+            <View style={{ width: '65%' }}>
+              <OText
+                style={{ fontWeight: 'bold' }}
+                size={28}
+                color={colors.primary}
+                numberOfLines={1} ellipsizeMode='tail'
+                >
+                {', '}{user?.name}
+              </OText>
+            </View>
           </View>
         </WelcomeTitle>
       )}
