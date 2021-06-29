@@ -569,10 +569,16 @@ const AddressFormUI = (props: AddressFormParams) => {
             )}
           </View>
           <OModal open={toggleMap} onClose={() => handleToggleMap()} entireModal customClose >
-            {(locationChange || formState.changes?.location) && (
+            {(!auth
+              ? (addressState?.address?.location || formState.changes?.location)
+              : (locationChange || formState.changes?.location)
+            ) && (
               <GoogleMapContainer>
                 <GoogleMap
-                  location={(locationChange || formState.changes?.location)}
+                  location={!auth
+                    ? (addressState?.address?.location || formState.changes?.location)
+                    : (locationChange || formState.changes?.location)
+                  }
                   handleChangeAddressMap={handleChangeAddress}
                   maxLimitLocation={maxLimitLocation}
                   saveLocation={saveMapLocation}
