@@ -97,8 +97,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
                 style={{ fontWeight: 'bold' }}
                 size={28}
                 color={colors.primary}
-                numberOfLines={1} ellipsizeMode='tail'
-                >
+                numberOfLines={1}
+                ellipsizeMode='tail'
+              >
                 {', '}{user?.name}
               </OText>
             </View>

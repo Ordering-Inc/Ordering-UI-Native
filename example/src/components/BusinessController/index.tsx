@@ -77,7 +77,15 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       </BusinessHero>
       <BusinessContent>
         <BusinessInfo>
-          <OText size={20}>{business?.name}</OText>
+          <View style={{ width: '70%' }}>
+            <OText
+              size={20}
+              numberOfLines={1}
+              ellipsizeMode='tail'
+              >
+              {business?.name}
+            </OText>
+          </View>
           {business?.reviews?.total > 0 && (
             <Reviews>
               <IconAntDesign
