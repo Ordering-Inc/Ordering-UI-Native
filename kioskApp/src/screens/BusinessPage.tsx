@@ -1,6 +1,7 @@
-import React from 'react';
-import { Dimensions, View } from 'react-native';
-import { useLanguage, useApi, useOrder } from 'ordering-components/native';
+import React, { useState } from 'react';
+import { Dimensions, TouchableOpacity, View } from 'react-native';
+import { useLanguage, useApi, useOrder, useUtils } from 'ordering-components/native';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { Container } from '../layouts/Container';
 import { BusinessProductsListing } from '../components/BusinessProductsListing';
@@ -9,10 +10,13 @@ import { CartBottomSheet } from '../components/CartBottomSheet';
 import { CartContent } from '../components/CartContent';
 
 import config from '../config.json';
+import { OText } from '../components/shared';
+import { colors } from '../theme.json';
 
 const BusinessPage = (props:any): React.ReactElement => {
   const [, t] = useLanguage()
   const [ordering] = useApi()
+  const [{ parsePrice }] = useUtils()
 
   const {
     navigation
@@ -66,11 +70,14 @@ const BusinessPage = (props:any): React.ReactElement => {
   const [{ carts }] = useOrder();
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
 
-  let cart;
+  let cart: any;
   
   if (cartsList?.length > 0) {
     cart = cartsList?.find((item: any) => item.business_id == config.businessSlug);
   }
+  
+  const [showCart, setShowCart] = useState(!!cart);
+  
   const cartProps = {
     ...props,
     cart,
@@ -79,18 +86,20 @@ const BusinessPage = (props:any): React.ReactElement => {
     CustomCartComponent: CartBottomSheet,
     extraPropsCustomCartComponent: {
       height: VISIBLE_CART_BOTTOM_SHEET_HEIGHT,
-      visible: !!cart,
+      visible: showCart,
     },
     showNotFound: false,
   }
+  
+  const goToBack = () => navigation.goBack()
 
-  const goToBack = () => navigation.goBack()  
+  const onToggleCart = () => { setShowCart(!showCart); }
 
   return (
     <View
       style={{
         flex: 1,
-        paddingBottom: !!cart ? VISIBLE_CART_BOTTOM_SHEET_HEIGHT : 0,
+        paddingBottom: showCart ? VISIBLE_CART_BOTTOM_SHEET_HEIGHT : 0,
       }}
     >
       <Container nopadding nestedScrollEnabled>
@@ -98,6 +107,24 @@ const BusinessPage = (props:any): React.ReactElement => {
           <NavBar
             title={t('MENU', 'Menu')}
             onActionLeft={goToBack}
+            rightComponent={cart && (
+              <TouchableOpacity
+                style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center' }}
+                onPress={onToggleCart}
+              >
+                <OText
+                  color={colors.mediumGray}
+                >
+                  {`${cart?.products?.length || 0} ${t('ITEMS', 'items')}`} {parsePrice(cart?.total || 0)} {' '}
+                </OText>
+
+                <MaterialIcon
+                  name={showCart ? "cart-off" : "cart-outline"}
+                  color={colors.primary}
+                  size={30}
+                />
+              </TouchableOpacity>
+            )}
           />
         </View>
 
