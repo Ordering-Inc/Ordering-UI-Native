@@ -22,8 +22,9 @@ import { NotFoundSource } from '../NotFoundSource'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { OrderTypeSelector } from '../OrderTypeSelector'
+import { ToastType, useToast } from '../../providers/ToastProvider'
 
-const PIXELS_TO_SCROLL = 1000
+const PIXELS_TO_SCROLL = 1200
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
   const {
@@ -41,6 +42,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const [orderState] = useOrder()
   const [{ configs }] = useConfig()
   const [{ parseDate }] = useUtils()
+  const {showToast} = useToast()
 
   // const timerId = useRef<any>(false)
   // const panResponder = useRef(
@@ -62,6 +64,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
     if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
       getBusinesses()
+      showToast(ToastType.Info, 'loading more business')
     }
   }
 
