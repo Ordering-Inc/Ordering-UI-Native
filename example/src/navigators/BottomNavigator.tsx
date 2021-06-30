@@ -34,7 +34,11 @@ const BottomNavigator = () => {
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
   const isIos = Platform.OS === 'ios'
   const platformIOS = Platform as PlatformIOSStatic
-  const androidStyles = isIos ? platformIOS.isPad ? { paddingBottom: 30 } : {} : {height: 40, position: 'relative', bottom: 15}
+  const androidStyles = isIos 
+    ? platformIOS.isPad 
+      ? { paddingBottom: 30 } 
+      : {} 
+    : {height: 40, position: 'relative', bottom: 15}
   return (
     <Tab.Navigator
       initialRouteName='BusinessList'
