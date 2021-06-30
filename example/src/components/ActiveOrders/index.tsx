@@ -48,8 +48,16 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
             </Logo>
           )}
           <OrderInformation>
-            <BusinessInformation>
-              <OText size={16}>{order.business?.name}</OText>
+            <BusinessInformation style={{ width: '60%' }}>
+              <View>
+                <OText
+                  size={16}
+                  numberOfLines={1}
+                  ellipsizeMode='tail'
+                >
+                  {order.business?.name}
+                </OText>
+              </View>
               <View style={styles.orderNumber}>
                 <OText size={12} space color={colors.textSecondary}>{t('ORDER_NUMBER', 'Order No.')}</OText>
                 <OText size={12} color={colors.textSecondary}>{order.id}</OText>
