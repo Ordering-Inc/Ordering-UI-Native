@@ -73,9 +73,16 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
                 <PlaceholderLine height={30} width={20} />
               </Placeholder>
             ) : (
-              <OText size={20} weight='bold'>
-                {business?.name}
-              </OText>
+              <View style={{ width: '65%' }}>
+                <OText
+                  size={20}
+                  weight='bold'
+                  numberOfLines={1}
+                  ellipsizeMode='tail'
+                >
+                  {business?.name}
+                </OText>
+              </View>
             )}
             {!isBusinessInfoShow && (
               <WrapBusinessInfo

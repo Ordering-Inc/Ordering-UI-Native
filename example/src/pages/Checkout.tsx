@@ -18,7 +18,7 @@ const KeyboardView = styled.KeyboardAvoidingView`
 export const CheckoutPage = (props: any) => {
   const { showToast } = useToast();
   const [, t] = useLanguage();
-  const [, { confirmCart }] = useOrder();
+  const [orderState, { confirmCart, changeMoment }] = useOrder();
   const { confirmPayment, loading: confirmPaymentLoading } = useConfirmPayment();
   const checkoutProps = {
     ...props,
@@ -29,6 +29,9 @@ export const CheckoutPage = (props: any) => {
     stripePaymentOptions,
     onPlaceOrderClick: async (data: any, paymethod: any, cart: any) => {
       if (cart?.order?.uuid) {
+        if (orderState?.options?.moment) {
+          changeMoment(null);
+        }
         props.navigation.navigate('OrderDetails', { orderId: cart.order?.uuid, isFromCheckout: true });
         return
       }

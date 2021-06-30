@@ -39,7 +39,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<string>, key?: string | null }>({ open: false, content: [], key: null })
   const mapErrors: any = {
     ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
-    ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
+    ERROR_MAX_LIMIT_LOCATION_TO: 'Sorry, You can only set the position to'
   }
   const MARKERS = locations && locations.map((location: { lat: number, lng: number }) => {
     return {
@@ -139,7 +139,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const setMapErrors = (errKey: string) => {
     setAlertState({
       open: true,
-      content: !(errKey === 'ERROR_MAX_LIMIT_LOCATION')
+      content: !(errKey === 'ERROR_MAX_LIMIT_LOCATION_TO')
         ? [t(errKey, mapErrors[errKey])]
         : [`${t(errKey, mapErrors[errKey])} ${maxLimitLocation} ${t('METTERS', 'meters')}`],
       key: errKey
