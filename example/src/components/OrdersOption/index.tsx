@@ -30,10 +30,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     orderStatus,
     loadMoreOrders,
     loadOrders,
-    activeOrdersLength,
-    previousOrdersLength,
-    setActiveOrdersLength,
-    setPreviousOrdersLength
+    ordersLength,
+    setOrdersLength
   } = props
 
   const [, t] = useLanguage()
@@ -109,16 +107,16 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   useEffect(() => {
     if(activeOrders){
-      setActiveOrdersLength && setActiveOrdersLength(orders.length)
+      setOrdersLength && setOrdersLength({...ordersLength, activeOrdersLength: orders.length})
     } else {
-      setPreviousOrdersLength && setPreviousOrdersLength(orders.length)
+      setOrdersLength && setOrdersLength({...ordersLength, previousOrdersLength: orders.length})
     }
   }, [orders.length])
 
   return (
     <>
       <OptionTitle>
-        {(!activeOrders || (activeOrders && activeOrdersLength > 0)) && (
+        {(!activeOrders || (activeOrders && ordersLength.activeOrdersLength > 0) || (ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength === 0 )) && (
         <OText size={16} color={colors.textSecondary} mBottom={10} >
           {titleContent || (activeOrders
             ? t('ACTIVE_ORDERS', 'Active Orders')
@@ -126,14 +124,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </OText>
         )}
       </OptionTitle>
-      {!loading && orders.length === 0 && !isLoadingFirstRender && activeOrders && previousOrdersLength === 0 && (
+      {!loading && orders.length === 0 && !isLoadingFirstRender && activeOrders && ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength !== 0 && (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           image={imageFails}
           conditioned
         />
       )}
-      {!loading && orders.length === 0 && !isLoadingFirstRender && previousOrdersLength === 0 && (
+      {!loading && orders.length === 0 && !isLoadingFirstRender && ordersLength.previousOrdersLength === 0 && (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           image={imageFails}

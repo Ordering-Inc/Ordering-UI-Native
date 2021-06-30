@@ -8,8 +8,7 @@ import { Container } from '../layouts/Container'
 const MyOrders = ({ navigation }: any) => {
 
   const [, t] = useLanguage()
-  const [activeOrdersLength,setActiveOrdersLength] = useState(null)
-  const [previousOrdersLength,setPreviousOrdersLength] = useState(null)
+  const [ordersLength,setOrdersLength] = useState({activeOrdersLength: 0, previousOrdersLength: 0})
   const MyOrderProps = {
     navigation,
     onNavigationRedirect: (page: string, params: any) => {
@@ -24,8 +23,8 @@ const MyOrders = ({ navigation }: any) => {
       <OText size={24} mBottom={20}>
         {t('MY_ORDERS', 'My Orders')}
       </OText>
-      <OrdersOption {...MyOrderProps} activeOrders activeOrdersLength={activeOrdersLength} setActiveOrdersLength={setActiveOrdersLength} />
-      <OrdersOption {...MyOrderProps} previousOrdersLength={previousOrdersLength} setPreviousOrdersLength={setPreviousOrdersLength}/>
+      <OrdersOption {...MyOrderProps} activeOrders ordersLength={ordersLength} setOrdersLength={setOrdersLength} />
+      <OrdersOption {...MyOrderProps} ordersLength={ordersLength} setOrdersLength={setOrdersLength}/>
     </Container>
   )
 }
