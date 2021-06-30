@@ -2,7 +2,6 @@ import styled from 'styled-components/native'
 import { colors } from '../../theme.json'
 
 export const OSOrderDetailsWrapper = styled.View`
-	min-height: 320px;
 	background-color: ${colors.whiteGray}
 	padding: 20px;
 	border-radius: 6px;
