@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { OrderList, useLanguage, useOrder } from 'ordering-components/native'
 import { useFocusEffect } from '@react-navigation/native'
 import { OText } from '../shared'
@@ -29,7 +29,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     onNavigationRedirect,
     orderStatus,
     loadMoreOrders,
-    loadOrders
+    loadOrders,
+    activeOrdersLength,
+    previousOrdersLength,
+    setActiveOrdersLength,
+    setPreviousOrdersLength
   } = props
 
   const [, t] = useLanguage()
@@ -103,16 +107,33 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     }, [navigation])
   )
 
+  useEffect(() => {
+    if(activeOrders){
+      setActiveOrdersLength(orders.length)
+    } else {
+      setPreviousOrdersLength(orders.length)
+    }
+  }, [orders.length])
+
   return (
     <>
       <OptionTitle>
+        {(!activeOrders || (activeOrders && activeOrdersLength > 0)) && (
         <OText size={16} color={colors.textSecondary} mBottom={10} >
           {titleContent || (activeOrders
             ? t('ACTIVE_ORDERS', 'Active Orders')
             : t('PREVIOUS_ORDERS', 'Previous Orders'))}
         </OText>
+        )}
       </OptionTitle>
-      {!loading && orders.length === 0 && !isLoadingFirstRender && (
+      {!loading && orders.length === 0 && !isLoadingFirstRender && activeOrders && previousOrdersLength === 0 && (
+        <NotFoundSource
+          content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
+          image={imageFails}
+          conditioned
+        />
+      )}
+      {!loading && orders.length === 0 && !isLoadingFirstRender && previousOrdersLength === 0 && (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           image={imageFails}
