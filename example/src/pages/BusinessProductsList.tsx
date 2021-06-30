@@ -5,7 +5,7 @@ import styled from 'styled-components/native'
 import { colors } from '../theme.json'
 
 const BusinessProductsList = (props: any) => {
-  const { store } = props.route.params
+  const store = props.route.params?.store
   const header = props.route.params?.header
   const logo = props.route.params?.logo
   const [ordering] = useApi()
