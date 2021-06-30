@@ -230,7 +230,22 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 const pickerStyle = StyleSheet.create({
   inputAndroid: {
     color: colors.secundaryContrast,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 15,
+    paddingHorizontal: 5,
+    backgroundColor: colors.inputDisabled,
     width: 50,
+  },
+  inputIOS: {
+    color: colors.secundaryContrast,
+    paddingEnd: 20,
+    height: 40,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    backgroundColor: colors.inputDisabled
   },
   icon: {
     width: 10,
