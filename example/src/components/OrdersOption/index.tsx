@@ -109,9 +109,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   useEffect(() => {
     if(activeOrders){
-      setActiveOrdersLength(orders.length)
+      setActiveOrdersLength && setActiveOrdersLength(orders.length)
     } else {
-      setPreviousOrdersLength(orders.length)
+      setPreviousOrdersLength && setPreviousOrdersLength(orders.length)
     }
   }, [orders.length])
 
