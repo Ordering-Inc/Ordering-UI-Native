@@ -290,10 +290,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </View>
             </View>
           </Container>
-
-          <OSActions>
-            {orientationState?.orientation === PORTRAIT && actionsContent}
-          </OSActions>
+          
+          {orientationState?.orientation === PORTRAIT && (
+            <OSActions>
+              {actionsContent}
+            </OSActions>
+          )}
         </>
       )}
     </>

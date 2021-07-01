@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, SafeAreaView, View } from 'react-native';
+import { View } from 'react-native';
 import { useLanguage, useOrder, useUtils } from 'ordering-components/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -16,7 +16,7 @@ import { Category } from '../types';
 import { CartContent } from '../components/CartContent';
 import { colors } from '../theme.json';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { PORTRAIT, useDeviceOrientation } from '../hooks/device_orientation_hook';
+import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../hooks/device_orientation_hook';
 
 const CategoryPage = (props: any): React.ReactElement => {
 
@@ -135,7 +135,9 @@ const CategoryPage = (props: any): React.ReactElement => {
                 title={product?.name}
                 image={{ uri: product?.images }}
                 style={{
-                  minWidth: orientationState?.dimensions?.width * 0.14,
+                  width: orientationState?.orientation === LANDSCAPE
+                    ? orientationState?.dimensions?.width * 0.16
+                    : orientationState?.dimensions?.width * 0.21,
                 }}
                 onPress={() => {
                   navigation.navigate('ProductDetails', {
@@ -156,7 +158,7 @@ const CategoryPage = (props: any): React.ReactElement => {
       {showCart &&  
         (<View
           style={{
-            flex: showCart && orientationState?.orientation === PORTRAIT ? 0 : 1,
+            flex: showCart && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
           }}
         >
           <CartContent
@@ -174,7 +176,5 @@ interface Params {
   businessId: string;
   businessSlug: string;
 }
-
-const _dim = Dimensions.get('window');
 
 export default CategoryPage;

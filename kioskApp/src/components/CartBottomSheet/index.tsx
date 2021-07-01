@@ -90,8 +90,8 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
     >
       <StyledContent      
         nestedScrollEnabled
-        minHeight={props.height * 0.75}
-        maxHeight={props.height * 0.75}
+        minHeight={props.height * 0.7}
+        maxHeight={props.height * 0.7}
       >
         <TopBar
           {...props}

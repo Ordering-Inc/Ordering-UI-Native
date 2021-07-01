@@ -37,7 +37,8 @@ export const StyledTopBar = styled.View`
 `
 
 export const StyledBottomContent = styled.View`
-	padding: 0 20px;
+	padding-horizontal: 20px;
+	padding-bottom: 10px;
 	width: 100%;
 	align-items: center;
 	justify-content: center;

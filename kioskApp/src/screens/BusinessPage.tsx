@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Dimensions, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import { useLanguage, useApi, useOrder, useUtils } from 'ordering-components/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -12,11 +12,13 @@ import { CartContent } from '../components/CartContent';
 import config from '../config.json';
 import { OText } from '../components/shared';
 import { colors } from '../theme.json';
+import { PORTRAIT, useDeviceOrientation } from '../hooks/device_orientation_hook';
 
 const BusinessPage = (props:any): React.ReactElement => {
   const [, t] = useLanguage()
   const [ordering] = useApi()
   const [{ parsePrice }] = useUtils()
+  const [orientationState] = useDeviceOrientation();
 
   const {
     navigation
@@ -69,6 +71,7 @@ const BusinessPage = (props:any): React.ReactElement => {
 
   const [{ carts }] = useOrder();
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
+  const VISIBLE_CART_BOTTOM_SHEET_HEIGHT = orientationState?.dimensions?.height * (orientationState.orientation === PORTRAIT ? 0.5 : 1);
 
   let cart: any;
   
@@ -77,7 +80,7 @@ const BusinessPage = (props:any): React.ReactElement => {
   }
   
   const [showCart, setShowCart] = useState(!!cart);
-  
+
   const cartProps = {
     ...props,
     cart,
@@ -85,6 +88,7 @@ const BusinessPage = (props:any): React.ReactElement => {
     onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params),
     CustomCartComponent: CartBottomSheet,
     extraPropsCustomCartComponent: {
+      orientationState,
       height: VISIBLE_CART_BOTTOM_SHEET_HEIGHT,
       visible: showCart,
     },
@@ -93,54 +97,70 @@ const BusinessPage = (props:any): React.ReactElement => {
   
   const goToBack = () => navigation.goBack()
 
+  useEffect(() => {
+    if (!!cart && showCart) setShowCart(false);
+  }, [cart])
+
   const onToggleCart = () => { setShowCart(!showCart); }
 
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingBottom: showCart ? VISIBLE_CART_BOTTOM_SHEET_HEIGHT : 0,
-      }}
-    >
-      <Container nopadding nestedScrollEnabled>
-        <View style={{ paddingVertical: 20 }}>
-          <NavBar
-            title={t('MENU', 'Menu')}
-            onActionLeft={goToBack}
-            rightComponent={cart && (
-              <TouchableOpacity
-                style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center' }}
-                onPress={onToggleCart}
-              >
-                <OText
-                  color={colors.mediumGray}
+    <View style={{
+      flex: 1,
+      flexDirection: orientationState?.orientation === PORTRAIT ? 'column' : 'row'
+    }}>
+      <View
+        style={{
+          flex: 1,
+          paddingBottom: showCart && !!cart && orientationState?.orientation === PORTRAIT
+            ? VISIBLE_CART_BOTTOM_SHEET_HEIGHT
+            : 0,
+        }}
+      >
+        <Container nopadding nestedScrollEnabled>
+          <View style={{ paddingVertical: 20 }}>
+            <NavBar
+              title={t('MENU', 'Menu')}
+              onActionLeft={goToBack}
+              rightComponent={cart && (
+                <TouchableOpacity
+                  style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center' }}
+                  onPress={onToggleCart}
                 >
-                  {`${cart?.products?.length || 0} ${t('ITEMS', 'items')}`} {parsePrice(cart?.total || 0)} {' '}
-                </OText>
+                  <OText
+                    color={colors.mediumGray}
+                  >
+                    {`${cart?.products?.length || 0} ${t('ITEMS', 'items')}`} {parsePrice(cart?.total || 0)} {' '}
+                  </OText>
 
-                <MaterialIcon
-                  name={showCart ? "cart-off" : "cart-outline"}
-                  color={colors.primary}
-                  size={30}
-                />
-              </TouchableOpacity>
-            )}
+                  <MaterialIcon
+                    name={showCart ? "cart-off" : "cart-outline"}
+                    color={colors.primary}
+                    size={30}
+                  />
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+
+          <BusinessProductsListing
+            { ...businessProductsListingProps }
+          /> 
+        </Container>
+      </View>
+
+      {showCart &&  
+        (<View
+          style={{
+            flex: showCart && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
+          }}
+        >
+          <CartContent
+            {...cartProps}
           />
-        </View>
-
-        <BusinessProductsListing
-          { ...businessProductsListingProps }
-        /> 
-      </Container>
-
-      <CartContent
-        {...cartProps}
-      />
+        </View>)
+      }
     </View>
   );
 };
-
-const _dim = Dimensions.get('window');
-const VISIBLE_CART_BOTTOM_SHEET_HEIGHT = _dim.height * 0.5;
 
 export default BusinessPage;
