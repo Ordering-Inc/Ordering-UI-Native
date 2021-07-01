@@ -54,6 +54,7 @@ const LoginFormUI = (props: LoginParams) => {
     handleSendVerifyCode,
     handleCheckPhoneCode,
     onNavigationRedirect,
+    notificationState
   } = props
 
   const { showToast } = useToast();
@@ -334,7 +335,7 @@ const LoginFormUI = (props: LoginParams) => {
           )
         }
 
-        {configs && Object.keys(configs).length > 0 ? (
+        {configs && Object.keys(configs).length > 0 && (
           (configs?.facebook_login?.value === 'true' ||
             configs?.facebook_login?.value === '1') &&
           configs?.facebook_id?.value &&
@@ -346,6 +347,7 @@ const LoginFormUI = (props: LoginParams) => {
 
               <SocialButtons>
                 <FacebookLogin
+                  notificationState={notificationState}
                   handleErrors={(err: any) => showToast(ToastType.Error, err)}
                   handleLoading={(val: boolean) => setIsFBLoading(val)}
                   handleSuccessFacebookLogin={handleSuccessFacebook}
@@ -353,13 +355,6 @@ const LoginFormUI = (props: LoginParams) => {
               </SocialButtons>
             </ButtonsWrapper>
           )
-        ) : (
-          <SkeletonWrapper>
-            <Placeholder Animation={Fade}>
-              <PlaceholderLine height={20} style={{marginBottom: 15, marginTop: 10}}/>
-              <PlaceholderLine height={50} style={{borderRadius: 25, marginBottom: 25}} />
-            </Placeholder>
-          </SkeletonWrapper>
         )}
 
         {onNavigationRedirect && registerButtonText && (
