@@ -233,7 +233,7 @@ const pickerStyle = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'transparent',
     borderRadius: 15,
-    paddingHorizontal: 5,
+    paddingHorizontal: 7,
     backgroundColor: colors.inputDisabled,
     width: 50,
   },
