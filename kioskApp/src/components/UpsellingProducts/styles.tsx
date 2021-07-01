@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const Item = styled.View`
   width: 30%;
@@ -12,12 +11,16 @@ export const Item = styled.View`
 export const Details = styled.View`
   flex-direction: column;
   justify-content: flex-start;
-  margin: 15px 0 40px 0;
+  margin: 15px 0;
   width: 100%;
-`
-export const AddButton = styled.TouchableOpacity`
+  min-height: 90px;
 `
 export const CloseUpselling = styled.View`
+  margin-vertical: 10px;
+  width: 100%;
+`
+export const CloseUpsellingLand = styled.View`
+  margin-top: 25%;
   margin-vertical: 10px;
   width: 100%;
 `
