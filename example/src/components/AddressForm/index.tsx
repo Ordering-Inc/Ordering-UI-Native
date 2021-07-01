@@ -8,10 +8,10 @@ import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
-import { OInput, OButton, OText, OModal } from '../shared'
+import { OInput, OButton, OText, OModal, OIcon } from '../shared'
 import { AddressFormParams } from '../../types'
 import { getTraduction } from '../../utils'
-import { colors } from '../../theme.json'
+import { colors, images } from '../../theme.json'
 import { GoogleMap } from '../GoogleMap'
 import NavBar from '../NavBar'
 
@@ -75,6 +75,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   const [saveMapLocation, setSaveMapLocation] = useState(false)
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
   const [isSignUpEffect, setIsSignUpEffect] = useState(false)
+  const [hasEditing, setAddressEditing] = useState(false);
 
   const googleInput: any = useRef(null)
   const internalNumberRef: any = useRef(null)
@@ -368,11 +369,14 @@ const AddressFormUI = (props: AddressFormParams) => {
   return (
     <>
       <NavBar
-        title={t('ADDRESS_FORM', 'Address Form')}
+        title={t('WHERE_DO_WE_DELIVERY', 'Where do we delivery?')}
         titleAlign={'center'}
         onActionLeft={goToBack}
         showCall={false}
         paddingTop={20}
+		  btnStyle={{paddingLeft: 40}}
+		  titleStyle={{fontSize: 14}}
+		  titleWrapStyle={{flexBasis: '75%'}}
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <AddressFormContainer style={{ height: 600, overflow: 'scroll' }}>
@@ -400,6 +404,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                             setValue('address', text)
                           }
                           setIsFirstTime(false)
+								  setAddressEditing(text.length == 0)
                         },
                         onSubmitEditing: () => internalNumberRef.current.focus(),
                         autoCorrect: false,
@@ -422,21 +427,27 @@ const AddressFormUI = (props: AddressFormParams) => {
                         },
                         textInput: {
                           borderWidth: 1,
-                          borderRadius: 10,
+                          borderRadius: 7.6,
+								  borderColor: colors.border,
                           flexGrow: 1,
                           fontSize: 15,
-                          paddingHorizontal: 20,
+                          paddingHorizontal: 16,
                           minHeight: 50,
                           fontFamily: 'Poppins-Regular',
-                          marginBottom: !isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) ? 10 : 20
-                        }
+                          marginBottom: 24,
+                        },
                       }}
                     />
                   )}
                 />
+					 {hasEditing ? (
+						<View style={styles.pinIcon}>
+							<OIcon src={images.general.pin} width={16} />
+						</View>
+					 ) : null}
               </AutocompleteInput>
 
-              {!isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) && (
+              {/* {!isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) && (
                 <TouchableOpacity onPress={handleToggleMap} style={{ marginBottom: 10 }}>
                   <OText
                     color={colors.primary}
@@ -445,7 +456,22 @@ const AddressFormUI = (props: AddressFormParams) => {
                     {t('VIEW_MAP', 'View map to modify the exact location')}
                   </OText>
                 </TouchableOpacity>
-              )}
+              )} */}
+
+				{(locationChange || formState.changes?.location) && hasEditing && (
+					<View style={{height: 189, borderRadius: 7.6, overflow: 'hidden', marginBottom: 24}}>
+						<GoogleMapContainer>
+							<GoogleMap
+								location={(locationChange || formState.changes?.location)}
+								handleChangeAddressMap={handleChangeAddress}
+								maxLimitLocation={maxLimitLocation}
+								saveLocation={saveMapLocation}
+								setSaveLocation={setSaveMapLocation}
+								handleToggleMap={handleToggleMap}
+							/>
+						</GoogleMapContainer>
+					</View>
+            )}
 
               <Controller
                 control={control}
@@ -626,6 +652,12 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     alignItems: 'flex-start'
   },
+  pinIcon: {
+	  position: 'absolute',
+	  end: 7,
+	  top: 12,
+	  zIndex: 1002
+  }
 })
 
 export const AddressForm = (props: AddressFormParams) => {

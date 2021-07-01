@@ -10,12 +10,12 @@ export const FormSide = styled.View`
 export const FormInput = styled.View`
   display: flex;
   flex-direction: column;
-  width: 90%;
-  padding: 0 0px 15px;
+  width: 100%;
+  padding: 20px 0px 15px;
 `
 export const ButtonsSection = styled.View`
   margin: 10px 0px 0px;
-  width: 90%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 `

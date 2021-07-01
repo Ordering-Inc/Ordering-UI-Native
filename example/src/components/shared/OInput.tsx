@@ -62,7 +62,7 @@ const OInput = (props: Props): React.ReactElement => {
         <OIcon
           src={props.icon}
           color={props.iconColor}
-          width={20}
+          width={16}
           height={20}
           style={{marginRight: 10}}
         />
@@ -92,8 +92,8 @@ const OInput = (props: Props): React.ReactElement => {
         <OIcon
           src={props.iconRight}
           color={props.iconRightColor}
-          width={20}
-          height={20}
+          width={16}
+          height={16}
           style={{ ...props.iconRightStyle }}
         />
       )}

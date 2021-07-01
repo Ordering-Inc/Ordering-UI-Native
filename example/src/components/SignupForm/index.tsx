@@ -1,38 +1,46 @@
-import React, { createRef, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { PhoneInputNumber } from '../PhoneInputNumber'
-import { FacebookLogin } from '../FacebookLogin'
+import { PhoneInputNumber } from '../PhoneInputNumber';
+import { FacebookLogin } from '../FacebookLogin';
 
 import {
   SignupForm as SignUpController,
   useLanguage,
   useConfig,
-  useSession
+  useSession,
 } from 'ordering-components/native';
 
-import {
-  FormSide,
-  FormInput,
-  ButtonsSection,
-  SocialButtons
-} from './styles'
+import { FormSide, FormInput, SocialButtons } from './styles';
 
-import { LoginWith as SignupWith, OTab, OTabs } from '../LoginForm/styles'
+import {
+  ButtonsWrapper,
+  LoginWith as SignupWith,
+  OTab,
+  OTabs,
+} from '../LoginForm/styles';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
-import NavBar from '../NavBar'
+import NavBar from '../NavBar';
 import { VerifyPhone } from '../VerifyPhone';
 
 import { OText, OButton, OInput, OModal } from '../shared';
 import { SignupParams } from '../../types';
-import { colors,images } from '../../theme.json'
+import { colors, images } from '../../theme.json';
 import { sortInputFields } from '../../utils';
+import { GoogleLogin } from '../GoogleLogin';
+import { AppleLogin } from '../AppleLogin';
 
-const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']
+const notValidationFields = [
+  'coupon',
+  'driver_tip',
+  'mobile_phone',
+  'address',
+  'address_notes',
+];
 
 const SignupFormUI = (props: SignupParams) => {
   const {
@@ -53,10 +61,11 @@ const SignupFormUI = (props: SignupParams) => {
     checkPhoneCodeState,
     setCheckPhoneCodeState,
     handleSendVerifyCode,
-    handleCheckPhoneCode
-  } = props
+    handleCheckPhoneCode,
+  } = props;
 
-  const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
+  const showInputPhoneNumber =
+    validationFields?.fields?.checkout?.cellphone?.enabled ?? false;
 
   const { showToast } = useToast();
   const [, t] = useLanguage();
@@ -65,98 +74,105 @@ const SignupFormUI = (props: SignupParams) => {
   const { control, handleSubmit, errors } = useForm();
 
   const [passwordSee, setPasswordSee] = useState(false);
-  const [formValues, setFormValues] = useState(null)
+  const [formValues, setFormValues] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
-  const [signupTab, setSignupTab] = useState(useSignupByCellphone && !useSignupByEmail ? 'cellphone' : 'email')
-  const [isFBLoading, setIsFBLoading] = useState(false)
+  const [signupTab, setSignupTab] = useState(
+    useSignupByCellphone && !useSignupByEmail ? 'cellphone' : 'email',
+  );
+  const [isFBLoading, setIsFBLoading] = useState(false);
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
     phone: {
       country_phone_code: null,
-      cellphone: null
-    }
+      cellphone: null,
+    },
   });
 
-  const nameRef = useRef<any>(null)
-  const lastnameRef = useRef<any>(null)
-  const middleNameRef = useRef<any>(null)
-  const secondLastnameRef = useRef<any>(null)
-  const emailRef = useRef<any>(null)
-  const phoneRef = useRef<any>(null)
-  const passwordRef = useRef<any>(null)
+  const nameRef = useRef<any>(null);
+  const lastnameRef = useRef<any>(null);
+  const middleNameRef = useRef<any>(null);
+  const secondLastnameRef = useRef<any>(null);
+  const emailRef = useRef<any>(null);
+  const phoneRef = useRef<any>(null);
+  const passwordRef = useRef<any>(null);
 
-  const handleRefs = (ref : any, code : string) => {
-    switch(code){
+  const handleRefs = (ref: any, code: string) => {
+    switch (code) {
       case 'name': {
-        nameRef.current = ref
-        break
+        nameRef.current = ref;
+        break;
       }
       case 'middle_name': {
-        middleNameRef.current = ref
+        middleNameRef.current = ref;
       }
       case 'lastname': {
-        lastnameRef.current = ref
-        break
+        lastnameRef.current = ref;
+        break;
       }
       case 'second_lastname': {
-        secondLastnameRef.current = ref
-        break
+        secondLastnameRef.current = ref;
+        break;
       }
       case 'email': {
-        emailRef.current = ref
-        break
+        emailRef.current = ref;
+        break;
       }
     }
-  }
+  };
 
-  const handleFocusRef = (code : string) => {
-    switch(code) {
+  const handleFocusRef = (code: string) => {
+    switch (code) {
       case 'name': {
-        nameRef?.current?.focus()
-        break
+        nameRef?.current?.focus();
+        break;
       }
       case 'middle_name': {
-        middleNameRef?.current?.focus()
-        break
+        middleNameRef?.current?.focus();
+        break;
       }
       case 'lastname': {
-        lastnameRef?.current?.focus()
-        break
+        lastnameRef?.current?.focus();
+        break;
       }
       case 'second_lastname': {
-        secondLastnameRef?.current?.focus()
-        break
+        secondLastnameRef?.current?.focus();
+        break;
       }
       case 'email': {
-        emailRef?.current?.focus()
-        break
+        emailRef?.current?.focus();
+        break;
       }
     }
-  }
+  };
 
-  const getNextFieldCode = (index : number) => {
-    const fields = sortInputFields({ values: validationFields?.fields?.checkout })?.filter((field : any) => !notValidationFields.includes(field.code) && showField(field.code))
-    return fields[index + 1]?.code
-  }
+  const getNextFieldCode = (index: number) => {
+    const fields = sortInputFields({
+      values: validationFields?.fields?.checkout,
+    })?.filter(
+      (field: any) =>
+        !notValidationFields.includes(field.code) && showField(field.code),
+    );
+    return fields[index + 1]?.code;
+  };
 
   const handleSuccessFacebook = (user: any) => {
     login({
       user,
-      token: user.session.access_token
-    })
+      token: user.session.access_token,
+    });
     navigation.navigate('Home');
-  }
+  };
 
   const handleChangeTab = (val: string) => {
     setSignupTab(val);
     setPasswordSee(false);
-  }
+  };
 
   const onSubmit = (values: any) => {
     if (phoneInputData.error) {
       showToast(ToastType.Error, phoneInputData.error);
-      return
+      return;
     }
     if (
       !phoneInputData.phone.country_phone_code &&
@@ -164,69 +180,84 @@ const SignupFormUI = (props: SignupParams) => {
       validationFields?.fields?.checkout?.cellphone?.enabled &&
       validationFields?.fields?.checkout?.cellphone?.required
     ) {
-      showToast(ToastType.Error, t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.'))
-      return
+      showToast(
+        ToastType.Error,
+        t(
+          'VALIDATION_ERROR_MOBILE_PHONE_REQUIRED',
+          'The field Mobile phone is required.',
+        ),
+      );
+      return;
     }
     if (signupTab === 'email' || !useSignupByCellphone) {
-      handleButtonSignupClick && handleButtonSignupClick({
-        ...values,
-        ...phoneInputData.phone
-      })
-      if (!formState.loading && formState.result.result && !formState.result.error) {
-        handleSuccessSignup && handleSuccessSignup(formState.result.result)
+      handleButtonSignupClick &&
+        handleButtonSignupClick({
+          ...values,
+          ...phoneInputData.phone,
+        });
+      if (
+        !formState.loading &&
+        formState.result.result &&
+        !formState.result.error
+      ) {
+        handleSuccessSignup && handleSuccessSignup(formState.result.result);
       }
-      return
+      return;
     }
-    setFormValues(values)
-    handleVerifyCodeClick(values)
-  }
+    setFormValues(values);
+    handleVerifyCodeClick(values);
+  };
 
   const handleVerifyCodeClick = (values: any) => {
-    const formData = values || formValues
-    handleSendVerifyCode && handleSendVerifyCode({
-      ...formData,
-      ...phoneInputData.phone
-    })
-    setIsLoadingVerifyModal(true)
-  }
+    const formData = values || formValues;
+    handleSendVerifyCode &&
+      handleSendVerifyCode({
+        ...formData,
+        ...phoneInputData.phone,
+      });
+    setIsLoadingVerifyModal(true);
+  };
 
   // get object with rules for hook form inputs
   const getInputRules = (field: any) => {
     const rules: any = {
       required: isRequiredField(field.code)
-        ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field.name} is required`)
-          .replace('_attribute_', t(field.name, field.code))
-        : null
-    }
+        ? t(
+            `VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`,
+            `${field.name} is required`,
+          ).replace('_attribute_', t(field.name, field.code))
+        : null,
+    };
     if (field.code && field.code === 'email') {
       rules.pattern = {
         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
-      }
+        message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace(
+          '_attribute_',
+          t('EMAIL', 'Email'),
+        ),
+      };
     }
-    return rules
-  }
+    return rules;
+  };
 
   const handleChangeInputEmail = (value: string, onChange: any) => {
-    onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
-  }
+    onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
+  };
 
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
-      formState.result?.result && showToast(
-        ToastType.Error,
-        formState.result?.result[0]
-      )
-      setIsLoadingVerifyModal(false)
+      formState.result?.result &&
+        showToast(ToastType.Error, formState.result?.result[0]);
+      setIsLoadingVerifyModal(false);
     }
-  }, [formState])
+  }, [formState]);
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       // Convert all errors in one string to show in toast provider
-      const list = Object.values(errors)
+      const list = Object.values(errors);
       if (phoneInputData.error) {
-        list.push({ message: phoneInputData.error })
+        list.push({ message: phoneInputData.error });
       }
       if (
         !phoneInputData.error &&
@@ -235,38 +266,42 @@ const SignupFormUI = (props: SignupParams) => {
         validationFields?.fields?.checkout?.cellphone?.enabled &&
         validationFields?.fields?.checkout?.cellphone?.required
       ) {
-        list.push({ message: t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.') })
+        list.push({
+          message: t(
+            'VALIDATION_ERROR_MOBILE_PHONE_REQUIRED',
+            'The field Mobile phone is required.',
+          ),
+        });
       }
-      let stringError = ''
+      let stringError = '';
       list.map((item: any, i: number) => {
-        stringError += (i + 1) === list.length ? `- ${item.message}` : `- ${item.message}\n`
-      })
-      showToast(ToastType.Error, stringError)
-      setIsLoadingVerifyModal(false)
+        stringError +=
+          i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
+      });
+      showToast(ToastType.Error, stringError);
+      setIsLoadingVerifyModal(false);
     }
-  }, [errors])
+  }, [errors]);
 
   useEffect(() => {
     if (verifyPhoneState && !verifyPhoneState?.loading) {
       if (verifyPhoneState.result?.error) {
-        const message = typeof verifyPhoneState?.result?.result === 'string'
-          ? verifyPhoneState?.result?.result
-          : verifyPhoneState?.result?.result[0]
-        verifyPhoneState.result?.result && showToast(
-          ToastType.Error,
-          message
-        )
-        setIsLoadingVerifyModal(false)
-        return
+        const message =
+          typeof verifyPhoneState?.result?.result === 'string'
+            ? verifyPhoneState?.result?.result
+            : verifyPhoneState?.result?.result[0];
+        verifyPhoneState.result?.result && showToast(ToastType.Error, message);
+        setIsLoadingVerifyModal(false);
+        return;
       }
 
-      const okResult = verifyPhoneState.result?.result === 'OK'
+      const okResult = verifyPhoneState.result?.result === 'OK';
       if (okResult) {
-        !isModalVisible && setIsModalVisible(true)
-        setIsLoadingVerifyModal(false)
+        !isModalVisible && setIsModalVisible(true);
+        setIsLoadingVerifyModal(false);
       }
     }
-  }, [verifyPhoneState])
+  }, [verifyPhoneState]);
 
   return (
     <View>
@@ -276,10 +311,14 @@ const SignupFormUI = (props: SignupParams) => {
         onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
+        style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+        titleWrapStyle={{ paddingHorizontal: 0 }}
       />
       <FormSide>
-        {useSignupByEmail && useSignupByCellphone &&
-          configs && Object.keys(configs).length > 0 &&
+        {useSignupByEmail &&
+          useSignupByCellphone &&
+          configs &&
+          Object.keys(configs).length > 0 &&
           (configs?.twilio_service_enabled?.value === 'true' ||
             configs?.twilio_service_enabled?.value === '1') && (
             <SignupWith style={{ paddingBottom: 25 }}>
@@ -287,7 +326,13 @@ const SignupFormUI = (props: SignupParams) => {
                 {useSignupByEmail && (
                   <Pressable onPress={() => handleChangeTab('email')}>
                     <OTab>
-                      <OText size={18} color={signupTab === 'email' ? colors.primary : colors.disabled}>
+                      <OText
+                        size={18}
+                        color={
+                          signupTab === 'email'
+                            ? colors.primary
+                            : colors.disabled
+                        }>
                         {t('SIGNUP_BY_EMAIL', 'Signup by Email')}
                       </OText>
                     </OTab>
@@ -296,7 +341,13 @@ const SignupFormUI = (props: SignupParams) => {
                 {useSignupByCellphone && (
                   <Pressable onPress={() => handleChangeTab('cellphone')}>
                     <OTab>
-                      <OText size={18} color={signupTab === 'cellphone' ? colors.primary : colors.disabled}>
+                      <OText
+                        size={18}
+                        color={
+                          signupTab === 'cellphone'
+                            ? colors.primary
+                            : colors.disabled
+                        }>
                         {t('SIGNUP_BY_PHONE', 'Signup by Phone')}
                       </OText>
                     </OTab>
@@ -308,10 +359,13 @@ const SignupFormUI = (props: SignupParams) => {
         <FormInput>
           {!(useChekoutFileds && validationFields?.loading) ? (
             <>
-              {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any, i : number) =>
-                !notValidationFields.includes(field.code) &&
-                (
-                  showField && showField(field.code) && (
+              {sortInputFields({
+                values: validationFields?.fields?.checkout,
+              }).map(
+                (field: any, i: number) =>
+                  !notValidationFields.includes(field.code) &&
+                  showField &&
+                  showField(field.code) && (
                     <Controller
                       key={field.id}
                       control={control}
@@ -319,26 +373,43 @@ const SignupFormUI = (props: SignupParams) => {
                         <OInput
                           placeholder={t(field.name)}
                           style={style.inputStyle}
-                          icon={field.code === 'email' ? images.general.email : images.general.user}
+                          icon={
+                            field.code === 'email'
+                              ? images.general.email
+                              : images.general.user
+                          }
                           value={value}
-                          onChange={(val: any) => field.code !== 'email' ? onChange(val) : handleChangeInputEmail(val, onChange)}
-                          autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
+                          onChange={(val: any) =>
+                            field.code !== 'email'
+                              ? onChange(val)
+                              : handleChangeInputEmail(val, onChange)
+                          }
+                          autoCapitalize={
+                            field.code === 'email' ? 'none' : 'sentences'
+                          }
                           autoCorrect={field.code === 'email' && false}
-                          type={field.code === 'email' ? 'email-address' : 'default'}
-                          autoCompleteType={field.code === 'email' ? 'email' : 'off'}
-                          returnKeyType='next'
+                          type={
+                            field.code === 'email' ? 'email-address' : 'default'
+                          }
+                          autoCompleteType={
+                            field.code === 'email' ? 'email' : 'off'
+                          }
+                          returnKeyType="next"
                           blurOnSubmit={false}
-                          forwardRef={(ref : any) => handleRefs(ref,field.code)}
-                          onSubmitEditing={() => field.code === 'email' ? phoneRef.current.focus() : handleFocusRef(getNextFieldCode(i))}
+                          forwardRef={(ref: any) => handleRefs(ref, field.code)}
+                          onSubmitEditing={() =>
+                            field.code === 'email'
+                              ? phoneRef.current.focus()
+                              : handleFocusRef(getNextFieldCode(i))
+                          }
                         />
                       )}
                       name={field.code}
                       rules={getInputRules(field)}
                       defaultValue=""
                     />
-                  )
-                ))
-              }
+                  ),
+              )}
 
               {!!showInputPhoneNumber && (
                 <View style={{ marginBottom: 25 }}>
@@ -348,7 +419,7 @@ const SignupFormUI = (props: SignupParams) => {
                     forwardRef={phoneRef}
                     textInputProps={{
                       returnKeyType: 'next',
-                      onSubmitEditing: () => passwordRef.current.focus()
+                      onSubmitEditing: () => passwordRef.current.focus(),
                     }}
                   />
                 </View>
@@ -364,13 +435,25 @@ const SignupFormUI = (props: SignupParams) => {
                       style={style.inputStyle}
                       icon={images.general.lock}
                       iconCustomRight={
-                        !passwordSee ?
-                          <MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
-                          <MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
+                        !passwordSee ? (
+                          <MaterialCommunityIcons
+                            name="eye-outline"
+                            color={colors.disabled}
+                            size={24}
+                            onPress={() => setPasswordSee(!passwordSee)}
+                          />
+                        ) : (
+                          <MaterialCommunityIcons
+                            name="eye-off-outline"
+                            color={colors.disabled}
+                            size={24}
+                            onPress={() => setPasswordSee(!passwordSee)}
+                          />
+                        )
                       }
                       value={value}
                       onChange={(val: any) => onChange(val)}
-                      returnKeyType='done'
+                      returnKeyType="done"
                       onSubmitEditing={handleSubmit(onSubmit)}
                       blurOnSubmit
                       forwardRef={passwordRef}
@@ -379,14 +462,20 @@ const SignupFormUI = (props: SignupParams) => {
                   name="password"
                   rules={{
                     required: isRequiredField('password')
-                      ? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required')
-                        .replace('_attribute_', t('PASSWORD', 'password'))
+                      ? t(
+                          'VALIDATION_ERROR_PASSWORD_REQUIRED',
+                          'The field Password is required',
+                        ).replace('_attribute_', t('PASSWORD', 'password'))
                       : null,
                     minLength: {
                       value: 8,
-                      message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.')
-                        .replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
-                    }
+                      message: t(
+                        'VALIDATION_ERROR_PASSWORD_MIN_STRING',
+                        'The Password must be at least 8 characters.',
+                      )
+                        .replace('_attribute_', t('PASSWORD', 'Password'))
+                        .replace('_min_', 8),
+                    },
                   }}
                   defaultValue=""
                 />
@@ -396,7 +485,9 @@ const SignupFormUI = (props: SignupParams) => {
             <Spinner visible />
           )}
 
-          {signupTab === 'cellphone' && useSignupByEmail && useSignupByCellphone ? (
+          {signupTab === 'cellphone' &&
+          useSignupByEmail &&
+          useSignupByCellphone ? (
             <OButton
               onClick={handleSubmit(onSubmit)}
               text={t('GET_VERIFY_CODE', 'Get Verify Code')}
@@ -405,6 +496,7 @@ const SignupFormUI = (props: SignupParams) => {
               textStyle={{ color: 'white' }}
               isLoading={isLoadingVerifyModal}
               indicatorColor={colors.white}
+              style={{ borderRadius: 7.6, marginTop: 6 }}
             />
           ) : (
             <OButton
@@ -415,12 +507,51 @@ const SignupFormUI = (props: SignupParams) => {
               textStyle={{ color: 'white' }}
               imgRightSrc={null}
               isDisabled={formState.loading || validationFields.loading}
+              style={{ borderRadius: 7.6, marginTop: 6 }}
             />
-
           )}
         </FormInput>
 
-        {
+        <View
+          style={{
+            flexDirection: 'row',
+            width: '100%',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginVertical: 30,
+          }}>
+          <View style={style.line} />
+          <OText
+            size={14}
+            mBottom={10}
+            style={{ paddingHorizontal: 19 }}
+            color={colors.disabled}>
+            {t('OR', 'or')}
+          </OText>
+          <View style={style.line} />
+        </View>
+
+        <ButtonsWrapper>
+          <SocialButtons>
+            <FacebookLogin
+              handleErrors={(err: any) => showToast(ToastType.Error, err)}
+              handleLoading={(val: boolean) => setIsFBLoading(val)}
+              handleSuccessFacebookLogin={handleSuccessFacebook}
+            />
+            <GoogleLogin
+              handleErrors={(err: any) => showToast(ToastType.Error, err)}
+              handleLoading={(val: boolean) => setIsFBLoading(val)}
+              handleSuccessFacebookLogin={handleSuccessFacebook}
+            />
+            <AppleLogin
+              handleErrors={(err: any) => showToast(ToastType.Error, err)}
+              handleLoading={(val: boolean) => setIsFBLoading(val)}
+              handleSuccessFacebookLogin={handleSuccessFacebook}
+            />
+          </SocialButtons>
+        </ButtonsWrapper>
+
+        {/* {
           onNavigationRedirect && loginButtonText && (
             <View style={style.wrappText}>
               <OText size={18} style={{ marginRight: 5 }}>
@@ -433,7 +564,7 @@ const SignupFormUI = (props: SignupParams) => {
               </Pressable>
             </View>
           )
-        }
+        } */}
 
         {/* {
           configs && Object.keys(configs).length > 0 && (
@@ -457,11 +588,8 @@ const SignupFormUI = (props: SignupParams) => {
             )
           )
         } */}
-      </FormSide >
-      <OModal
-        open={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
-      >
+      </FormSide>
+      <OModal open={isModalVisible} onClose={() => setIsModalVisible(false)}>
         <VerifyPhone
           phone={phoneInputData.phone}
           formValues={formValues}
@@ -472,27 +600,36 @@ const SignupFormUI = (props: SignupParams) => {
           handleVerifyCodeClick={onSubmit}
         />
       </OModal>
-      <Spinner visible={formState.loading || validationFields.loading || isFBLoading} />
-    </View >
+      <Spinner
+        visible={formState.loading || validationFields.loading || isFBLoading}
+      />
+    </View>
   );
 };
 
 const style = StyleSheet.create({
   btnOutline: {
     backgroundColor: '#FFF',
-    color: colors.primary
+    color: colors.primary,
   },
   inputStyle: {
-    marginBottom: 25,
+    marginBottom: 20,
     borderWidth: 1,
-    borderColor: colors.disabled
+    borderColor: colors.border,
+    borderRadius: 7.6,
   },
   wrappText: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 30
-  }
+    marginBottom: 30,
+  },
+  line: {
+    height: 1,
+    backgroundColor: colors.border,
+    flexGrow: 1,
+    marginBottom: 7,
+  },
 });
 
 export const SignupForm = (props: any) => {

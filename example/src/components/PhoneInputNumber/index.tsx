@@ -5,9 +5,9 @@ import { useLanguage, useConfig } from 'ordering-components/native';
 
 import { Wrapper } from './styles'
 
-import { colors } from '../../theme.json'
+import { colors, images } from '../../theme.json'
 import { PhoneInputParams } from '../../types';
-import { OText } from '../shared';
+import { OIcon, OText } from '../shared';
 import {transformCountryCode} from '../../utils'
 
 export const PhoneInputNumber = (props: PhoneInputParams) => {
@@ -76,8 +76,11 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         withDarkTheme
         countryPickerProps={{withAlphaFilter:true}}
         textContainerStyle={style.input}
+		  countryPickerButtonStyle={style.countryBtn}
         placeholder={t('PHONE_NUMBER', 'Phone Number')}
         textInputProps={{autoCompleteType: 'tel', ref: forwardRef, ...textInputProps}}
+		  containerStyle={{width: '100%'}}
+		  renderDropdownImage={<OIcon src={images.general.arrow_down} width={13} color={'#B1BCCC'}></OIcon>}
       />
       {!!data?.error && (
         <OText
@@ -95,12 +98,18 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 const style = StyleSheet.create({
   input: {
     backgroundColor: colors.white,
-    borderRadius: 25,
+    borderRadius: 7.6,
     borderWidth: 1,
-    borderColor: colors.disabled,
+    borderColor: colors.border,
     paddingVertical: 0,
     flexGrow: 1,
     flex: 1,
     height: 50,
+  },
+  countryBtn: {
+	borderWidth: 1,
+	borderColor: colors.border,
+	borderRadius: 7.6,
+	marginEnd: 9,
   }
 })

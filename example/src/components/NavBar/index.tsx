@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components/native'
 import { OButton, OIcon, OText } from '../shared'
 import { colors,images } from '../../theme.json'
-import { TextStyle } from 'react-native'
+import { TextStyle, ViewStyle } from 'react-native'
 
 const Wrapper = styled.View`
   background-color: ${colors.white};
@@ -45,7 +45,8 @@ interface Props {
   showCall?: boolean,
   titleStyle?: TextStyle,
   btnStyle?: TextStyle,
-  style?: TextStyle,
+  style?: ViewStyle,
+  titleWrapStyle?: ViewStyle,
   paddingTop?: number
 }
 
@@ -76,7 +77,7 @@ const NavBar = (props: Props) => {
           )
           : null
         }
-        <TitleWrapper>
+        <TitleWrapper style={{...props.titleWrapStyle}}>
           <OText
             size={22}
             weight={'600'}

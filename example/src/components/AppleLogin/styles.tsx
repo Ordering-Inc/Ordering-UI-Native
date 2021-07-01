@@ -2,7 +2,7 @@ import styled from 'styled-components/native'
 
 export const Container = styled.View``
 
-export const FacebookButton = styled.TouchableOpacity`
+export const AppleButton = styled.TouchableOpacity`
   background-color: #FFFFFF;
   border-radius: 7.6px;
   padding: 15px 30px;

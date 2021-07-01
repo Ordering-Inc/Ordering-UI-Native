@@ -1,36 +1,52 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ImageBackground,
+  ImageSourcePropType,
+} from 'react-native';
 import { Home as HomePage } from '../components/Home';
 import { useLanguage } from 'ordering-components/native';
-import { colors } from '../theme.json';
+import { colors, images } from '../theme.json';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-export const Home = ({navigation}: any) => {
+export const Home = ({ navigation }: any) => {
   const [, t] = useLanguage();
   const homeProps = {
     navigation,
     onNavigationRedirect: (page: string, params: any) => {
-      if (!page) return
+      if (!page) return;
       navigation.navigate(page, params);
     },
-  }
+  };
+  const homeImage: ImageSourcePropType = images.general
+    .homeHero as ImageSourcePropType;
 
   return (
-    <SafeAreaView style={styles.wrapper}>
-      <HomePage {...homeProps} />
-    </SafeAreaView>
+    <ImageBackground source={homeImage} style={styles.bg}>
+      <View style={styles.mask}>
+        <SafeAreaView style={styles.wrapper}>
+          <HomePage {...homeProps} />
+        </SafeAreaView>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  bg: {
+    flex: 1,
+  },
   wrapper: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  mask: {
+    width: '100%',
     height: '100%',
-    backgroundColor: colors.backgroundPage,
-  }
-})
+    backgroundColor: '#0000004D',
+  },
+});
 
 export default Home;

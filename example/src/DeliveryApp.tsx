@@ -58,6 +58,7 @@ theme.images = {
     lunch: require('./assets/icons/lunch.png'),
     arrow_up: require('./assets/icons/arrow_up.png'),
     arrow_left: require('./assets/icons/arrow_left.png'),
+    arrow_down: require('./assets/icons/arrow_down.png'),
     map: require('./assets/icons/map.png'),
     marker: require('./assets/images/marker.png'),
     email: require('./assets/icons/ic_email.png'),
@@ -77,7 +78,9 @@ theme.images = {
     stripecc: require('./assets/icons/cc-stripe.png'),
     stripes: require('./assets/icons/stripe-s.png'),
     stripesb: require('./assets/icons/stripe-sb.png'),
-    creditCard: require('./assets/icons/credit-card.png')
+    creditCard: require('./assets/icons/credit-card.png'),
+	 google: require('./assets/icons/ic_google.png'),
+	 pin: require('./assets/icons/ic_location_pin.png')
   },
   order: {
     status0: require('./assets/images/status-0.png'),

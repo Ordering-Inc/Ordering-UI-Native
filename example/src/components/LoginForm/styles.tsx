@@ -17,26 +17,34 @@ export const OTabs = styled.View`
   flex-direction: row;
   width: 100%;
   flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-bottom: -1px;
 `;
 
 export const OTab = styled.View`
-  padding-horizontal: 10px;
+  padding-bottom: 10px;
+  border-bottom-width: 1px;
+  margin-end: 14px;
 `;
 
 export const LoginWith = styled.View`
   font-size: 14px;
+  width: 100%;
+  align-items: flex-start;
+  border-bottom-width: 1px;
+  border-bottom-color: ${colors.border}
 `;
 
 export const FormInput = styled.View`
   display: flex;
   flex-direction: column;
-  width: 90%;
-  padding: 25px 0px 15px;
+  width: 100%;
+  padding: 40px 0px 15px;
 `
 
 export const ButtonsWrapper = styled.View`
   margin: 10px 0px 0px;
-  width: 90%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 

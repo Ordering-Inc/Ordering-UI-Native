@@ -1,8 +1,10 @@
 import styled from 'styled-components/native'
 
-export const Container = styled.View``
+export const Container = styled.View`
+	margin-vertical: 20px;
+`
 
-export const FacebookButton = styled.TouchableOpacity`
+export const GoogleButton = styled.TouchableOpacity`
   background-color: #FFFFFF;
   border-radius: 7.6px;
   padding: 15px 30px;

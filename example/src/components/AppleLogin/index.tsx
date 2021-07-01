@@ -5,14 +5,14 @@ import { useLanguage, useSession, useApi } from 'ordering-components/native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import { Container, FacebookButton } from './styles';
+import { Container, AppleButton } from './styles';
 import { colors } from '../../theme.json';
 
-export const FacebookLogin = (props: any) => {
+export const AppleLogin = (props: any) => {
   const {
     handleErrors,
     handleLoading,
-    handleSuccessFacebookLogin
+    handleSuccessAppleLogin
   } = props
 
   const [, t] = useLanguage()
@@ -20,8 +20,8 @@ export const FacebookLogin = (props: any) => {
   const [{ auth }] = useSession()
 
   const buttonText = auth
-    ? t('LOGOUT_WITH_FACEBOOK', 'Logout with Facebook')
-    : t('CONTINUE_WITH_FACEBOOK', 'Continue with Facebook');
+    ? t('CONTINUE_WITH_APPLE', 'Logout with Apple')
+    : t('CONTINUE_WITH_FACEBOOK', 'Continue with Apple');
 
   const logoutWithFacebook = () => {
     LoginManager.logOut();
@@ -31,8 +31,8 @@ export const FacebookLogin = (props: any) => {
     try {
       const response = await ordering.users().authFacebook({ access_token: accessToken })
       if (!response.content.error) {
-        if (handleSuccessFacebookLogin) {
-          handleSuccessFacebookLogin(response.content.result)
+        if (handleSuccessAppleLogin) {
+          handleSuccessAppleLogin(response.content.result)
           handleLoading && handleLoading(false)
         }
       } else {
@@ -76,19 +76,19 @@ export const FacebookLogin = (props: any) => {
 
   return (
     <Container>
-      <FacebookButton
+      <AppleButton
         onPress={onPressButton}
       >
         <Icon
-          name="facebook"
-          size={16}
-          color={colors.skyBlue}
+          name="apple"
+          size={20}
+          color={colors.black}
           style={style.fbBtn}
         />
         <Text style={style.textBtn}>
           {buttonText}
         </Text>
-      </FacebookButton>
+      </AppleButton>
     </Container>
   );
 }

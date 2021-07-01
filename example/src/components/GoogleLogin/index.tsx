@@ -5,14 +5,16 @@ import { useLanguage, useSession, useApi } from 'ordering-components/native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import { Container, FacebookButton } from './styles';
-import { colors } from '../../theme.json';
+import { Container, GoogleButton } from './styles';
+import { colors, images } from '../../theme.json';
+import { OIcon } from '../shared';
+import { View } from 'react-native';
 
-export const FacebookLogin = (props: any) => {
+export const GoogleLogin = (props: any) => {
   const {
     handleErrors,
     handleLoading,
-    handleSuccessFacebookLogin
+    handleSuccessGoogleLogin
   } = props
 
   const [, t] = useLanguage()
@@ -20,8 +22,8 @@ export const FacebookLogin = (props: any) => {
   const [{ auth }] = useSession()
 
   const buttonText = auth
-    ? t('LOGOUT_WITH_FACEBOOK', 'Logout with Facebook')
-    : t('CONTINUE_WITH_FACEBOOK', 'Continue with Facebook');
+    ? t('LOGOUT_WITH_FACEBOOK', 'Logout with Google')
+    : t('CONTINUE_WITH_GOOGLE', 'Continue with Google');
 
   const logoutWithFacebook = () => {
     LoginManager.logOut();
@@ -31,8 +33,8 @@ export const FacebookLogin = (props: any) => {
     try {
       const response = await ordering.users().authFacebook({ access_token: accessToken })
       if (!response.content.error) {
-        if (handleSuccessFacebookLogin) {
-          handleSuccessFacebookLogin(response.content.result)
+        if (handleSuccessGoogleLogin) {
+          handleSuccessGoogleLogin(response.content.result)
           handleLoading && handleLoading(false)
         }
       } else {
@@ -76,19 +78,25 @@ export const FacebookLogin = (props: any) => {
 
   return (
     <Container>
-      <FacebookButton
+      <GoogleButton
         onPress={onPressButton}
       >
-        <Icon
-          name="facebook"
+			<View style={style.fbBtn}>
+			<OIcon
+			src={images.general.google}
+			width={16}
+			/>
+			</View>
+        {/* <Icon
+          name="google"
           size={16}
           color={colors.skyBlue}
           style={style.fbBtn}
-        />
+        /> */}
         <Text style={style.textBtn}>
           {buttonText}
         </Text>
-      </FacebookButton>
+      </GoogleButton>
     </Container>
   );
 }
@@ -97,7 +105,7 @@ const style = StyleSheet.create({
   fbBtn: {
     position: 'absolute',
     left: 0,
-    marginHorizontal: 16
+    marginHorizontal: 16,
   },
   textBtn: {
     fontSize: 14,

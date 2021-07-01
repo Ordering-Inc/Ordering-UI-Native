@@ -22,7 +22,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     return {
       value: language?.code,
       label: language?.name,
-      inputLabel: language?.code.toUpperCase()
+      inputLabel: language?.name
     }
   })
   _languages && _languages.sort((a: any, b: any) =>
@@ -51,27 +51,26 @@ const pickerStyle = StyleSheet.create({
   inputAndroid: {
     color: colors.secundaryContrast,
     borderWidth: 1,
-    borderColor: 'transparent',
+    borderColor: colors.clear,
     borderRadius: 15,
     paddingHorizontal: 10,
     backgroundColor: colors.inputDisabled,
     width: 80,
   },
   inputIOS: {
-    color: colors.secundaryContrast,
-    paddingEnd: 20,
+    color: colors.white,
+    paddingEnd: 24,
     height: 40,
     borderWidth: 1,
-    borderColor: 'transparent',
-    borderRadius: 15,
-    paddingHorizontal: 10,
-    backgroundColor: colors.inputDisabled
+    borderColor: colors.clear,
+    backgroundColor: colors.clear
   },
   icon: {
-    top: Platform.OS === 'ios' ? 10 : 15,
+    top: Platform.OS === 'ios' ? 8 : 15,
     right: Platform.OS === 'ios' ? 0 : 7,
     position: 'absolute',
-    fontSize: 20
+    fontSize: 24,
+	 color: 'white'
   },
   placeholder: {
     color: colors.secundaryContrast

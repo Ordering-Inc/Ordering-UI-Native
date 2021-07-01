@@ -2,14 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Pressable, StyleSheet, View, Keyboard } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
-import { PhoneInputNumber } from '../PhoneInputNumber'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { PhoneInputNumber } from '../PhoneInputNumber';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   LoginForm as LoginFormController,
   useLanguage,
   useConfig,
-  useSession
+  useSession,
 } from 'ordering-components/native';
 
 import { FacebookLogin } from '../FacebookLogin';
@@ -26,16 +26,18 @@ import {
   SocialButtons,
   OrSeparator,
   LineSeparator,
-  SkeletonWrapper
+  SkeletonWrapper,
 } from './styles';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
-import NavBar from '../NavBar'
+import NavBar from '../NavBar';
 
 import { OText, OButton, OInput, OModal } from '../shared';
 import { LoginParams } from '../../types';
-import { colors, images } from '../../theme.json'
+import { colors, images } from '../../theme.json';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import { GoogleLogin } from '../GoogleLogin';
+import { AppleLogin } from '../AppleLogin';
 
 const LoginFormUI = (props: LoginParams) => {
   const {
@@ -54,12 +56,12 @@ const LoginFormUI = (props: LoginParams) => {
     handleSendVerifyCode,
     handleCheckPhoneCode,
     onNavigationRedirect,
-  } = props
+  } = props;
 
   const { showToast } = useToast();
-  const [, t] = useLanguage()
-  const [{ configs }] = useConfig()
-  const [, { login }] = useSession()
+  const [, t] = useLanguage();
+  const [{ configs }] = useConfig();
+  const [, { login }] = useSession();
   const { control, handleSubmit, errors } = useForm();
   const [passwordSee, setPasswordSee] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
@@ -69,97 +71,102 @@ const LoginFormUI = (props: LoginParams) => {
     error: '',
     phone: {
       country_phone_code: null,
-      cellphone: null
-    }
+      cellphone: null,
+    },
   });
 
-  const inputRef = useRef<any>({})
+  const inputRef = useRef<any>({});
 
   const handleChangeTab = (val: string) => {
     props.handleChangeTab(val);
     setPasswordSee(false);
-  }
+  };
 
   const onSubmit = (values: any) => {
-    Keyboard.dismiss()
+    Keyboard.dismiss();
     if (phoneInputData.error) {
       showToast(ToastType.Error, phoneInputData.error);
-      return
+      return;
     }
     handleButtonLoginClick({
       ...values,
-      ...phoneInputData.phone
+      ...phoneInputData.phone,
     });
-  }
+  };
 
   const handleVerifyCodeClick = () => {
     if (phoneInputData.error) {
       showToast(ToastType.Error, phoneInputData.error);
-      return
+      return;
     }
     if (
       !phoneInputData.error &&
       !phoneInputData.phone.country_phone_code &&
       !phoneInputData.phone.cellphone
     ) {
-      showToast(ToastType.Error, t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.'))
-      return
+      showToast(
+        ToastType.Error,
+        t(
+          'VALIDATION_ERROR_MOBILE_PHONE_REQUIRED',
+          'The field Mobile phone is required.',
+        ),
+      );
+      return;
     }
-    handleSendVerifyCode && handleSendVerifyCode(phoneInputData.phone)
-    setIsLoadingVerifyModal(true)
-  }
+    handleSendVerifyCode && handleSendVerifyCode(phoneInputData.phone);
+    setIsLoadingVerifyModal(true);
+  };
 
   const handleSuccessFacebook = (user: any) => {
     login({
       user,
-      token: user.session.access_token
-    })
-  }
+      token: user.session.access_token,
+    });
+  };
 
-  const handleChangeInputEmail = (value : string, onChange : any) => {
-    onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
-  }
+  const handleChangeInputEmail = (value: string, onChange: any) => {
+    onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
+  };
 
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
-      formState.result?.result && showToast(
-        ToastType.Error,
-        typeof formState.result?.result === 'string'
-          ? formState.result?.result
-          : formState.result?.result[0]
-      )
+      formState.result?.result &&
+        showToast(
+          ToastType.Error,
+          typeof formState.result?.result === 'string'
+            ? formState.result?.result
+            : formState.result?.result[0],
+        );
     }
-  }, [formState])
+  }, [formState]);
 
   useEffect(() => {
     if (verifyPhoneState && !verifyPhoneState?.loading) {
       if (verifyPhoneState.result?.error) {
-        const message = typeof verifyPhoneState?.result?.result === 'string'
-          ? verifyPhoneState?.result?.result
-          : verifyPhoneState?.result?.result[0]
-        verifyPhoneState.result?.result && showToast(
-          ToastType.Error,
-          message
-        )
-        setIsLoadingVerifyModal(false)
-        return
+        const message =
+          typeof verifyPhoneState?.result?.result === 'string'
+            ? verifyPhoneState?.result?.result
+            : verifyPhoneState?.result?.result[0];
+        verifyPhoneState.result?.result && showToast(ToastType.Error, message);
+        setIsLoadingVerifyModal(false);
+        return;
       }
 
-      const okResult = verifyPhoneState.result?.result === 'OK'
+      const okResult = verifyPhoneState.result?.result === 'OK';
       if (okResult) {
-        !isModalVisible && setIsModalVisible(true)
-        setIsLoadingVerifyModal(false)
+        !isModalVisible && setIsModalVisible(true);
+        setIsLoadingVerifyModal(false);
       }
     }
-  }, [verifyPhoneState])
+  }, [verifyPhoneState]);
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       // Convert all errors in one string to show in toast provider
-      const list = Object.values(errors)
-      let stringError = ''
+      const list = Object.values(errors);
+      let stringError = '';
       if (phoneInputData.error) {
-        list.unshift({ message: phoneInputData.error })
+        list.unshift({ message: phoneInputData.error });
       }
       if (
         loginTab === 'cellphone' &&
@@ -167,14 +174,20 @@ const LoginFormUI = (props: LoginParams) => {
         !phoneInputData.phone.country_phone_code &&
         !phoneInputData.phone.cellphone
       ) {
-        list.unshift({ message: t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.') })
+        list.unshift({
+          message: t(
+            'VALIDATION_ERROR_MOBILE_PHONE_REQUIRED',
+            'The field Mobile phone is required.',
+          ),
+        });
       }
       list.map((item: any, i: number) => {
-        stringError += (i + 1) === list.length ? `- ${item.message}` : `- ${item.message}\n`
-      })
-      showToast(ToastType.Error, stringError)
+        stringError +=
+          i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
+      });
+      showToast(ToastType.Error, stringError);
     }
-  }, [errors])
+  }, [errors]);
 
   return (
     <Container>
@@ -185,6 +198,8 @@ const LoginFormUI = (props: LoginParams) => {
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
         paddingTop={0}
+        style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+        titleWrapStyle={{ paddingHorizontal: 0 }}
       />
       <FormSide>
         {useLoginByEmail && useLoginByCellphone && (
@@ -192,18 +207,44 @@ const LoginFormUI = (props: LoginParams) => {
             <OTabs>
               {useLoginByEmail && (
                 <Pressable onPress={() => handleChangeTab('email')}>
-                  <OTab>
-                    <OText size={18} color={loginTab === 'email' ? colors.primary : colors.disabled}>
-                      {t('LOGIN_BY_EMAIL', 'Login by Email')}
+                  <OTab
+                    style={{
+                      borderBottomColor:
+                        loginTab === 'email'
+                          ? colors.textNormal
+                          : colors.border,
+                    }}>
+                    <OText
+                      size={14}
+                      color={
+                        loginTab === 'email'
+                          ? colors.textNormal
+                          : colors.disabled
+                      }
+                      weight={loginTab === 'email' ? 'bold' : 'normal'}>
+                      {t('LOGIN_BY_EMAIL', 'by Email')}
                     </OText>
                   </OTab>
                 </Pressable>
               )}
               {useLoginByCellphone && (
                 <Pressable onPress={() => handleChangeTab('cellphone')}>
-                  <OTab>
-                    <OText size={18} color={loginTab === 'cellphone' ? colors.primary : colors.disabled}>
-                      {t('LOGIN_BY_PHONE', 'Login by Phone')}
+                  <OTab
+                    style={{
+                      borderBottomColor:
+                        loginTab === 'cellphone'
+                          ? colors.textNormal
+                          : colors.border,
+                    }}>
+                    <OText
+                      size={14}
+                      color={
+                        loginTab === 'cellphone'
+                          ? colors.textNormal
+                          : colors.disabled
+                      }
+                      weight={loginTab === 'cellphone' ? 'bold' : 'normal'}>
+                      {t('LOGIN_BY_PHONE', 'by Phone')}
                     </OText>
                   </OTab>
                 </Pressable>
@@ -223,31 +264,37 @@ const LoginFormUI = (props: LoginParams) => {
                     style={loginStyle.inputStyle}
                     icon={images.general.email}
                     onChange={(e: any) => {
-                      handleChangeInputEmail(e, onChange)
+                      handleChangeInputEmail(e, onChange);
                     }}
                     value={value}
-                    autoCapitalize='none'
+                    autoCapitalize="none"
                     autoCorrect={false}
-                    type='email-address'
-                    autoCompleteType='email'
-                    returnKeyType='next'
+                    type="email-address"
+                    autoCompleteType="email"
+                    returnKeyType="next"
                     onSubmitEditing={() => inputRef.current?.focus()}
                     blurOnSubmit={false}
                   />
                 )}
                 name="email"
                 rules={{
-                  required: t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email')),
+                  required: t(
+                    'VALIDATION_ERROR_EMAIL_REQUIRED',
+                    'The field Email is required',
+                  ).replace('_attribute_', t('EMAIL', 'Email')),
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
-                  }
+                    message: t(
+                      'INVALID_ERROR_EMAIL',
+                      'Invalid email address',
+                    ).replace('_attribute_', t('EMAIL', 'Email')),
+                  },
                 }}
                 defaultValue=""
               />
             )}
             {useLoginByCellphone && loginTab === 'cellphone' && (
-              <View style={{ marginBottom: 25 }}>
+              <View style={{ marginBottom: 28 }}>
                 <PhoneInputNumber
                   data={phoneInputData}
                   handleData={(val: any) => setPhoneInputData(val)}
@@ -268,20 +315,37 @@ const LoginFormUI = (props: LoginParams) => {
                   style={loginStyle.inputStyle}
                   icon={images.general.lock}
                   iconCustomRight={
-                    !passwordSee ?
-                      <MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
-                      <MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
+                    !passwordSee ? (
+                      <MaterialCommunityIcons
+                        name="eye-outline"
+                        size={24}
+                        onPress={() => setPasswordSee(!passwordSee)}
+                        color={colors.disabled}
+                      />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="eye-off-outline"
+                        size={24}
+                        onPress={() => setPasswordSee(!passwordSee)}
+                        color={colors.disabled}
+                      />
+                    )
                   }
                   value={value}
                   forwardRef={inputRef}
                   onChange={(val: any) => onChange(val)}
-                  returnKeyType='done'
+                  returnKeyType="done"
                   onSubmitEditing={handleSubmit(onSubmit)}
                   blurOnSubmit
                 />
               )}
               name="password"
-              rules={{ required: t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'Password')) }}
+              rules={{
+                required: t(
+                  'VALIDATION_ERROR_PASSWORD_REQUIRED',
+                  'The field Password is required',
+                ).replace('_attribute_', t('PASSWORD', 'Password')),
+              }}
               defaultValue=""
             />
             <OButton
@@ -292,13 +356,14 @@ const LoginFormUI = (props: LoginParams) => {
               textStyle={{ color: 'white' }}
               imgRightSrc={null}
               isLoading={formState.loading}
+              style={{ borderRadius: 7.6, marginTop: 10 }}
             />
           </FormInput>
         )}
 
         {onNavigationRedirect && forgotButtonText && (
           <Pressable onPress={() => onNavigationRedirect('Forgot')}>
-            <OText size={20} mBottom={18}>
+            <OText size={16} mBottom={18}>
               {forgotButtonText}
             </OText>
           </Pressable>
@@ -306,10 +371,10 @@ const LoginFormUI = (props: LoginParams) => {
 
         {useLoginByCellphone &&
           loginTab === 'cellphone' &&
-          configs && Object.keys(configs).length > 0 &&
+          configs &&
+          Object.keys(configs).length > 0 &&
           (configs?.twilio_service_enabled?.value === 'true' ||
-            configs?.twilio_service_enabled?.value === '1') &&
-          (
+            configs?.twilio_service_enabled?.value === '1') && (
             <>
               <OrSeparator>
                 <LineSeparator />
@@ -331,21 +396,44 @@ const LoginFormUI = (props: LoginParams) => {
                 />
               </ButtonsWrapper>
             </>
-          )
-        }
+          )}
+
+        <View
+          style={{
+            flexDirection: 'row',
+            width: '100%',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+				marginVertical: 30
+          }}>
+          <View style={loginStyle.line} />
+          <OText
+            size={14}
+            mBottom={10}
+            style={{ paddingHorizontal: 19 }}
+            color={colors.disabled}>
+            {t('OR', 'or')}
+          </OText>
+          <View style={loginStyle.line} />
+        </View>
 
         {configs && Object.keys(configs).length > 0 ? (
           (configs?.facebook_login?.value === 'true' ||
             configs?.facebook_login?.value === '1') &&
-          configs?.facebook_id?.value &&
-          (
+          configs?.facebook_id?.value && (
             <ButtonsWrapper>
-              <OText size={18} mBottom={10} color={colors.disabled}>
-                {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
-              </OText>
-
               <SocialButtons>
                 <FacebookLogin
+                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleLoading={(val: boolean) => setIsFBLoading(val)}
+                  handleSuccessFacebookLogin={handleSuccessFacebook}
+                />
+                <GoogleLogin
+                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleLoading={(val: boolean) => setIsFBLoading(val)}
+                  handleSuccessFacebookLogin={handleSuccessFacebook}
+                />
+                <AppleLogin
                   handleErrors={(err: any) => showToast(ToastType.Error, err)}
                   handleLoading={(val: boolean) => setIsFBLoading(val)}
                   handleSuccessFacebookLogin={handleSuccessFacebook}
@@ -356,13 +444,19 @@ const LoginFormUI = (props: LoginParams) => {
         ) : (
           <SkeletonWrapper>
             <Placeholder Animation={Fade}>
-              <PlaceholderLine height={20} style={{marginBottom: 15, marginTop: 10}}/>
-              <PlaceholderLine height={50} style={{borderRadius: 25, marginBottom: 25}} />
+              <PlaceholderLine
+                height={20}
+                style={{ marginBottom: 15, marginTop: 10 }}
+              />
+              <PlaceholderLine
+                height={50}
+                style={{ borderRadius: 25, marginBottom: 25 }}
+              />
             </Placeholder>
           </SkeletonWrapper>
         )}
 
-        {onNavigationRedirect && registerButtonText && (
+        {/* {onNavigationRedirect && registerButtonText && (
           <ButtonsWrapper>
             <OButton
               onClick={() => onNavigationRedirect('Signup')}
@@ -372,12 +466,9 @@ const LoginFormUI = (props: LoginParams) => {
               imgRightSrc={null}
             />
           </ButtonsWrapper>
-        )}
+        )} */}
       </FormSide>
-      <OModal
-        open={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
-      >
+      <OModal open={isModalVisible} onClose={() => setIsModalVisible(false)}>
         <VerifyPhone
           phone={phoneInputData.phone}
           verifyPhoneState={verifyPhoneState}
@@ -395,13 +486,21 @@ const LoginFormUI = (props: LoginParams) => {
 const loginStyle = StyleSheet.create({
   btnOutline: {
     backgroundColor: '#FFF',
-    color: colors.primary
+    color: colors.primary,
+    borderRadius: 7.6,
   },
   inputStyle: {
-    marginBottom: 25,
+    marginBottom: 28,
     borderWidth: 1,
-    borderColor: colors.disabled
-  }
+    borderColor: colors.border,
+    borderRadius: 7.6,
+  },
+  line: {
+    height: 1,
+    backgroundColor: colors.border,
+    flexGrow: 1,
+    marginBottom: 7,
+  },
 });
 
 export const LoginForm = (props: any) => {
