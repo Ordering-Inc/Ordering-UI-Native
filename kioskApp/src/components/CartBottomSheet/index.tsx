@@ -1,11 +1,9 @@
 import React, { useState} from 'react';
-import { Dimensions, View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import {
   Cart as CartController,
 	useLanguage,
 	useOrder,
-	useConfig,
-	useValidationFields,
 	useUtils,
 } from 'ordering-components/native';
 
@@ -86,19 +84,22 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
 	if (!props?.visible) return null;
 
 	return (
-		<StyledContainer
-			nestedScrollEnabled
-			style={{
-				height: props.height,
-			}}
-		>
-			<StyledContent nestedScrollEnabled>
-				<TopBar
-					handleClearProducts={handleClearProducts}
-					selectedOrderType={selectedOrderType}
-				/>
+    <StyledContainer
+      nestedScrollEnabled
+      maxHeight={props.height}
+    >
+      <StyledContent      
+        nestedScrollEnabled
+        minHeight={props.height * 0.75}
+        maxHeight={props.height * 0.75}
+      >
+        <TopBar
+          {...props}
+          handleClearProducts={handleClearProducts}
+          selectedOrderType={selectedOrderType}
+        />
 
-				{cart?.products?.length > 0 && cart?.products.map((product: any) => (
+        {cart?.products?.length > 0 && cart?.products.map((product: any) => (
           <CartItem
             key={product.code}
             isCartPending={isCartPending}
@@ -112,26 +113,28 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
           />
         ))}
 
-			</StyledContent>
+      </StyledContent>
 
-			<StyledBottomContent>
-				<OButton
-					text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-						!openUpselling !== canOpenUpselling ? `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`: t('LOADING', 'Loading')
-					) : !cart?.valid_address ? (
-						`${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
-					) : (
-						`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
-					)}
-					bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
-					isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
-					borderColor={colors.primary}
-					imgRightSrc={null}
-					textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-					onClick={() => setOpenUpselling(true)}
-					style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
-				/>
-			</StyledBottomContent>
+      <StyledBottomContent
+        minHeight={props.height * 0.1}
+      >
+        <OButton
+          text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
+            !openUpselling !== canOpenUpselling ? `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`: t('LOADING', 'Loading')
+          ) : !cart?.valid_address ? (
+            `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
+          ) : (
+            `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+          )}
+          bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
+          isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
+          borderColor={colors.primary}
+          imgRightSrc={null}
+          textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+          onClick={() => setOpenUpselling(true)}
+          style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
+        />
+      </StyledBottomContent>
 
       <OModal
         open={openProduct}
@@ -163,7 +166,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
           onClose={onCloseUpselling}
         />
       )}
-		</StyledContainer>		
+    </StyledContainer>
 	);
 }
 
@@ -174,14 +177,14 @@ const TopBar = (props:any) => {
 		<StyledTopBar>
 			<View>
 				<OText
-					size={_dim.width * 0.026}
+					size={props?.orientationState?.dimensions?.width * 0.026}
 					weight="700"
 					mBottom={4}
 				>
 					{t('YOUR_ORDER', 'your order')}
 				</OText>
 				<OText
-					size={_dim.width * 0.023}
+					size={props?.orientationState?.dimensions?.width * 0.023}
 					weight="500"
 					color={colors.mediumGray}
 				>
@@ -195,7 +198,7 @@ const TopBar = (props:any) => {
 			>
 				<View>
 					<OText
-						size={_dim.width * 0.024}
+						size={props?.orientationState?.dimensions?.width * 0.024}
 						weight="500"
 						color={colors.primary}
 					>
@@ -207,11 +210,9 @@ const TopBar = (props:any) => {
 	);
 }
 
-const _dim = Dimensions.get('window');
-
 interface CartBottomSheetUIProps {
 	visible: boolean;
-	height: number | string;
+	height: number;
 	cart: TypeCart,
   clearCart: any,
   changeQuantity: any,
