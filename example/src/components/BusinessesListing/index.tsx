@@ -169,6 +169,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
             business={business}
             handleCustomClick={handleBusinessClick}
             orderType={orderState?.options?.type}
+            isBusinessOpen={business?.open}
           />
         ))
       }
