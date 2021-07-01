@@ -95,7 +95,6 @@ const CartLandUI = (props: any) => {
       <NavBar
         title={t('CONFIRM_YOUR_ORDER', 'Confirm your order')}
         onActionLeft={goToBack}
-        style={{ height: windowHeight * 0.08 }}
         rightComponent={(
           <OButton
             text={t('CANCEL_ORDER', 'Cancel order')}
@@ -253,16 +252,16 @@ const CartLandUI = (props: any) => {
                 </OSCoupon>
               </OSTable>
             )}
-            <OSTotal>
-              <OSTable style={{ marginTop: 15 }}>
-                <OText style={{ fontWeight: 'bold' }}>
-                  {t('TOTAL', 'Total')}
-                </OText>
-                <OText style={{ fontWeight: 'bold' }} color={colors.primary}>
-                  {cart?.total >= 1 && parsePrice(cart?.total)}
-                </OText>
-              </OSTable>
-            </OSTotal>
+            {/*<OSTotal>*/}
+            {/*  <OSTable style={{ marginTop: 15 }}>*/}
+            {/*    <OText style={{ fontWeight: 'bold' }}>*/}
+            {/*      {t('TOTAL', 'Total')}*/}
+            {/*    </OText>*/}
+            {/*    <OText style={{ fontWeight: 'bold' }} color={colors.primary}>*/}
+            {/*      {cart?.total >= 1 && parsePrice(cart?.total)}*/}
+            {/*    </OText>*/}
+            {/*  </OSTable>*/}
+            {/*</OSTotal>*/}
           </OSBill>
         )}
         <CheckoutAction>
