@@ -35,7 +35,7 @@ const StripeElementsFormUI = (props: any) => {
   const billingDetails = {
     name: `${user.name} ${user.lastname}`,
     email: user.email,
-    addressLine1: user.address
+    address: user.address
   };
 
   const createPayMethod = async () => {
@@ -69,6 +69,7 @@ const StripeElementsFormUI = (props: any) => {
   }
 
   const handleSaveCard = async () => {
+    if (!isCompleted) return 
     setErrors('');
     if (!requirements) {
       createPayMethod();
@@ -135,7 +136,8 @@ const StripeElementsFormUI = (props: any) => {
             style={styles.btnAddStyle}
             textStyle={{color: 'white'}}
             imgRightSrc={null}
-            onClick={isCompleted ? () => handleSaveCard() : () => {}}
+            onClick={() => handleSaveCard()}
+            isDisabled={!isCompleted}
             isLoading={confirmSetupLoading || values.loadingAdd || createPmLoading}
           />
           {!!errors && (
