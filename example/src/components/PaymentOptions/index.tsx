@@ -105,6 +105,7 @@ const PaymentOptionsUI = (props: any) => {
   const onMessage = (e : any) => {
     let data = e.nativeEvent.data;
     let payment = data;
+    console.log(data)
   }
 
 
@@ -419,18 +420,19 @@ const PaymentOptionsUI = (props: any) => {
             const message = {
               action: 'init',
               data: {
-                urlPlace: "https://apiv4.ordering.co/v400/en/luisv4/carts/21f23018-1990-4840-8455-6bf67b015829/place",
+                urlPlace: `https://apiv4.ordering.co/v400/en/luisv4/carts/${cart?.uuid}/place`,
+                urlConfirm: `https://apiv4.ordering.co/v400/en/luisv4/carts/${cart?.uuid}/confirm`,
                 payData: {
                   paymethod_id: 3,
-                  amount: 24,
-                  delivery_zone_id: 5,
+                  amount: cart?.total,
+                  delivery_zone_id: cart?.delivery_zone_id,
                   user_id: user?.id
                 },
                 userToken: token,
               }
             }
-            webviewRef.current.postMessage(JSON.stringify(message))
             setProg(false);
+            webviewRef.current.postMessage(JSON.stringify(message))
           }}
           onLoad={() => {
             setProg(false);
