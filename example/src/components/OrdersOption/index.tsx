@@ -47,7 +47,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const [reorderLoading, setReorderLoading] = useState(false)
   const [isLoadingFirstRender, setIsLoadingFirstRender] = useState(false)
-
+  const [screen,setScreen] = useState({name: '', uuid: null})
   const handleReorder = async (orderId: number) => {
     setReorderLoading(true)
     try {
@@ -101,7 +101,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     React.useCallback(() => {
       loadOrders()
       setIsLoadingFirstRender(false)
-      return () => setIsLoadingFirstRender(true)
+      return () => {
+        setIsLoadingFirstRender(true)
+      }
     }, [navigation])
   )
 
@@ -116,7 +118,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   return (
     <>
       <OptionTitle>
-        {(!activeOrders || (activeOrders && ordersLength.activeOrdersLength > 0) || (ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength === 0 )) && (
+        {(!activeOrders || (activeOrders && ordersLength.activeOrdersLength > 0) || (ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength === 0 )) && !isLoadingFirstRender && (
         <OText size={16} color={colors.textSecondary} mBottom={10} >
           {titleContent || (activeOrders
             ? t('ACTIVE_ORDERS', 'Active Orders')
@@ -179,6 +181,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             customArray={customArray}
             getOrderStatus={getOrderStatus}
             onNavigationRedirect={onNavigationRedirect}
+            setScreen={setScreen}
+            screen={screen}
           />
         ) : (
           <PreviousOrders
