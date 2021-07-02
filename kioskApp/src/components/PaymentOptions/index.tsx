@@ -16,6 +16,8 @@ import { IMAGES, PAYMENT_IMAGES } from '../../config/constants';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { colors } from '../../theme.json';
+import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
+import GridContainer from '../../layouts/GridContainer';
 
 const _dim = Dimensions.get('window');
 
@@ -41,7 +43,7 @@ const PaymentOptionsUI = (props: any) => {
 
   const { showToast } = useToast();
   const [, t] = useLanguage();
-
+  const [orientationState] = useDeviceOrientation();
   const [userErrors, setUserErrors] = useState<any>([]);
 
   const paymethodSelected = paySelected || props.paymethodSelected || isOpenMethod.paymethod
@@ -98,8 +100,14 @@ const PaymentOptionsUI = (props: any) => {
     showToast(ToastType.Error, stringError)
   }
 
+  const cardStyle = {
+    width: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.width : orientationState?.dimensions?.width * 0.47,
+    height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.34 : orientationState?.dimensions?.height * 0.55,
+  }
+
   const propsOfItems = {
     CASH_ID:  cashIndex !== -1 ? {
+      style: cardStyle,
       title: t('CASH', supportedMethods[cashIndex]?.name),
       description: t('GO_FOR_YOR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER', 'Go for yor receipt and go to the front counter'),
       bgImage: PAYMENT_IMAGES.cash,
@@ -110,6 +118,7 @@ const PaymentOptionsUI = (props: any) => {
     } : null,
 
     CARD_ON_DELIVERY_ID: cardOnDeliveryIndex !== -1 ? {
+      style: cardStyle,
       title: t('CARD', supportedMethods[cardOnDeliveryIndex]?.name),
       description: t('WE_ACCEPT_EVERY_DEBIT_OR_CREDIT_CARD', 'We accept every debit or credit card'),
       bgImage: PAYMENT_IMAGES.carddelivery,
@@ -148,21 +157,26 @@ const PaymentOptionsUI = (props: any) => {
 
 
         {supportedMethods?.length > 0 && (
-          <>
+          <GridContainer
+            style={{ justifyContent: 'space-between' }}
+          >
             {propsOfItems.CARD_ON_DELIVERY_ID && (
               <OptionCard
                 {...propsOfItems?.CARD_ON_DELIVERY_ID}
               />
             )}
 
-            <View style={{ height: _dim.height * 0.02 }} />
+            <View style={{
+              width: orientationState?.orientation === LANDSCAPE ? orientationState?.dimensions?.width * 0.0016 : 0,
+              height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.018 : 0,
+            }} />
 
             {propsOfItems?.CASH_ID && (
               <OptionCard
                 {...propsOfItems?.CASH_ID}
               />
             )}
-          </>
+          </GridContainer>
         )}
         
         <View style={{ height: _dim.height * 0.05 }} />

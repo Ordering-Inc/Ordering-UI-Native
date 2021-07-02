@@ -1,8 +1,5 @@
-import { Dimensions } from 'react-native';
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { colors } from '../../theme.json';
-
-const _dim = Dimensions.get('window');
 
 export const StyledContainer = styled.ScrollView`
 	position: absolute;
@@ -15,6 +12,9 @@ export const StyledContainer = styled.ScrollView`
 	shadow-opacity:  0.4;
 	shadow-radius: 3px;
 	elevation: 15;
+	${(props: any) => props.height && css`
+		maxHeight: ${props.height}px;
+	`}
 `
 
 export const StyledContent = styled.ScrollView`
@@ -22,7 +22,12 @@ export const StyledContent = styled.ScrollView`
 	margin: 20px;
 	border-radius: 6px;
 	background-color: ${colors.whiteGray};
-	height: ${_dim.height * 0.36}px;
+	${(props: any) => props.height && css`
+		minHeight: ${props.height}px;
+	`}
+	${(props: any) => props.height && css`
+		maxHeight: ${props.height}px;
+	`}
 `
 export const StyledTopBar = styled.View`
 	padding: 20px 0;
@@ -32,9 +37,14 @@ export const StyledTopBar = styled.View`
 `
 
 export const StyledBottomContent = styled.View`
-	padding: 0 20px;
-	height: ${_dim.height * 0.1}px;
-    width: 100%;
+	padding-horizontal: 20px;
+	padding-bottom: 10px;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+	${(props: any) => props.height && css`
+		minHeight: ${props.height}px;
+	`}
 `
 
 export const StyledCartItem = styled.View`

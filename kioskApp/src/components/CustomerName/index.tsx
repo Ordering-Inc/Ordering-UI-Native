@@ -11,6 +11,7 @@ import { STORAGE_KEY } from '../../config/constants';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OSActions } from '../OrderDetails/styles';
+import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
 
 const _dim = Dimensions.get('window');
 
@@ -23,6 +24,7 @@ const CustomerName = (props: Props): React.ReactElement => {
   const [, t] = useLanguage();
   const {control, handleSubmit, formState: {errors}} = useForm();
   const {showToast} = useToast();
+  const [orientationState] = useDeviceOrientation();
 
   const onSubmit = (values: any) => {
     _setStoreData(STORAGE_KEY.CUSTOMER_NAME, values.name);
@@ -42,6 +44,20 @@ const CustomerName = (props: Props): React.ReactElement => {
   }, [errors]);
 
   const goToBack = () => navigation?.goBack();
+
+  const submitButton  = (<OButton
+    text={t('PROCEED_TO_PAY', 'Proceed to Pay')}
+    onClick={handleSubmit(onSubmit)}
+    parentStyle={{
+      height: orientationState?.orientation === PORTRAIT
+         ? 50 : 100
+    }}
+    style={{
+      width: orientationState?.orientation === PORTRAIT
+        ? orientationState?.dimensions.width - 40
+        : orientationState?.dimensions.width * 0.5,
+    }}
+  />);
 
   return (
     <>
@@ -65,42 +81,41 @@ const CustomerName = (props: Props): React.ReactElement => {
           </OText>
         </View>
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
-          enabled={Platform.OS === 'ios' ? true : false}
-        >
-          <Controller
-            control={control}
-            render={(p: any) => (
-              <OInput
-                placeholder={t('WHITE_YOUR_NAME', 'White your name')}
-                style={styles.inputStyle}
-                value={p.field.value}
-                autoCapitalize="words"
-                autoCorrect={false}
-                onChange={(val: any) => p.field.onChange(val)}
-              />
-            )}
-            name="name"
-            rules={{
-              required: t(
-                'VALIDATION_ERROR_CUSTOMER_NAME_REQUIRED',
-                'The field Customer Name is required',
-              ).replace('_attribute_', t('CUSTOMER_NAME', 'Customer Name'))
-            }}
-            defaultValue=""
-          />
-        </KeyboardAvoidingView>
-
-      </Container>
-
-      <OSActions>
-        <OButton
-          text={t('PROCEED_TO_PAY', 'Proceed to Pay')}
-          onClick={handleSubmit(onSubmit)}
+        <Controller
+          control={control}
+          render={(p: any) => (
+            <OInput
+              placeholder={t('WHITE_YOUR_NAME', 'White your name')}
+              style={{
+                ...styles.inputStyle,
+                width: orientationState?.orientation === PORTRAIT
+                  ? orientationState?.dimensions.width - 40
+                  : orientationState?.dimensions.width * 0.5,
+              }}
+              value={p.field.value}
+              autoCapitalize="words"
+              autoCorrect={false}
+              onChange={(val: any) => p.field.onChange(val)}
+            />
+          )}
+          name="name"
+          rules={{
+            required: t(
+              'VALIDATION_ERROR_CUSTOMER_NAME_REQUIRED',
+              'The field Customer Name is required',
+            ).replace('_attribute_', t('CUSTOMER_NAME', 'Customer Name'))
+          }}
+          defaultValue=""
         />
-      </OSActions>
+
+        {orientationState?.orientation === LANDSCAPE && submitButton}
+      </Container>
+      
+      {(orientationState?.orientation === PORTRAIT) && (
+        <OSActions>
+          {submitButton}
+        </OSActions>
+      )}
     </>
   );
 };
@@ -108,7 +123,7 @@ const CustomerName = (props: Props): React.ReactElement => {
 const styles = StyleSheet.create({
   inputStyle: {
     borderRadius: 4,
-    marginBottom: 12,
+    marginBottom: 20,
     borderWidth: 1,
     borderColor: colors.disabled,
     height: 44
