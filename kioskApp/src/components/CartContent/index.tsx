@@ -8,7 +8,6 @@ import { Cart } from '../Cart';
 import { OText } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Cart as TypeCart } from '../../types';
-import {CartLand} from "../CartLand";
 
 export const CartContent = (props: any) => {
   const {
@@ -40,7 +39,7 @@ export const CartContent = (props: any) => {
                 {...cartProps}
                 {...(extraPropsCustomCartComponent || {})}
               />
-            : <CartLand {...cartProps} />
+            : <Cart {...cartProps} />
           }
         </>
       )}

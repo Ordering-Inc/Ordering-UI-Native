@@ -19,11 +19,10 @@ import { verifyDecimals } from '../../utils';
 import { Cart as TypeCart } from '../../types';
 import CartItem from '../CartItem';
 import NavBar from '../NavBar';
-import { Dimensions, ScrollView, Platform, View } from 'react-native';
+import { ScrollView, Platform, View } from 'react-native';
 import { IMAGES } from '../../config/constants';
 import { CouponControl } from '../CouponControl';
-
-const windowHeight = Dimensions.get('window').height;
+import { LANDSCAPE, PORTRAIT, useDeviceOrientation} from "../../hooks/device_orientation_hook";
 
 const CartUI = (props: any) => {
   const {
@@ -46,6 +45,7 @@ const CartUI = (props: any) => {
 
   const [openProduct, setModalIsOpen] = useState(false)
   const [curProduct, setCurProduct] = useState<any>(null)
+  const [orientationState] = useDeviceOrientation();
 
   const selectedOrderType = orderState?.options?.type;
 
@@ -89,13 +89,13 @@ const CartUI = (props: any) => {
 
   return (
     <KeyboardView
+      style={{ height: orientationState?.dimensions?.height - 40 }}
       enabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <NavBar
         title={t('CONFIRM_YOUR_ORDER', 'Confirm your order')}
         onActionLeft={goToBack}
-        style={{ height: windowHeight * 0.08 }}
         rightComponent={(
           <OButton
             text={t('CANCEL_ORDER', 'Cancel order')}
@@ -109,7 +109,7 @@ const CartUI = (props: any) => {
       />
 
       <OrderTypeWrapper
-        style={{ height: windowHeight * 0.08 }}
+        style={{ height: orientationState?.dimensions?.height * 0.08 }}
       >
         <OText
           weight="500"
@@ -134,7 +134,7 @@ const CartUI = (props: any) => {
 
       <ScrollView
         style={{
-          height: windowHeight * 0.58
+          height: orientationState?.dimensions?.height * 0.40
         }}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any) => (
@@ -154,12 +154,12 @@ const CartUI = (props: any) => {
 
       <Actions
         style={{
-          height: windowHeight * 0.17
+          height: orientationState?.dimensions?.height * 0.17
         }}
       >
         {cart?.valid_products && (
           <OSBill>
-            {cart?.discount > 0 && cart?.total >= 0 && (
+            {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == PORTRAIT && (
               <OSTable
                 style={{
                   backgroundColor: colors.success,
@@ -225,8 +225,8 @@ const CartUI = (props: any) => {
                 <OText>
                   {t('DRIVER_TIP', 'Driver tip')}
                   {cart?.driver_tip_rate > 0 &&
-                    parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
-                    !!!parseInt(configs?.driver_tip_use_custom?.value, 10) &&
+                  parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
+                  !!!parseInt(configs?.driver_tip_use_custom?.value, 10) &&
                   (
                     `(${parseNumber(cart?.driver_tip_rate)}%)`
                   )}
@@ -243,7 +243,7 @@ const CartUI = (props: any) => {
                 <OText>{parsePrice(cart?.service_fee)}</OText>
               </OSTable>
             )}
-            {!cart?.discount_type && isCouponEnabled && !isCartPending && (
+            {!cart?.discount_type && isCouponEnabled && !isCartPending && orientationState?.orientation == PORTRAIT && (
               <OSTable>
                 <OSCoupon>
                   <CouponControl
@@ -253,35 +253,99 @@ const CartUI = (props: any) => {
                 </OSCoupon>
               </OSTable>
             )}
-            <OSTotal>
-              <OSTable style={{ marginTop: 15 }}>
-                <OText style={{ fontWeight: 'bold' }}>
-                  {t('TOTAL', 'Total')}
-                </OText>
-                <OText style={{ fontWeight: 'bold' }} color={colors.primary}>
-                  {cart?.total >= 1 && parsePrice(cart?.total)}
-                </OText>
-              </OSTable>
-            </OSTotal>
+            {/*ESTE CODIGO GENERA UNA LINEA EN LA PAGINA QUE SE VE MAL, validar si es necesario este codigo*/}
+            {/*<OSTotal>*/}
+            {/*  <OSTable style={{ marginTop: 15 }}>*/}
+            {/*    <OText style={{ fontWeight: 'bold' }}>*/}
+            {/*      {t('TOTAL', 'Total')}*/}
+            {/*    </OText>*/}
+            {/*    <OText style={{ fontWeight: 'bold' }} color={colors.primary}>*/}
+            {/*      {cart?.total >= 1 && parsePrice(cart?.total)}*/}
+            {/*    </OText>*/}
+            {/*  </OSTable>*/}
+            {/*</OSTotal>*/}
           </OSBill>
         )}
         <CheckoutAction>
-          <OButton
-            text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-              `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`
-            ) : !cart?.valid_address ? (
-              `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
-            ) : (
-              `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+          <View style={{display: 'flex', flexDirection: 'row'}}>
+            {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == LANDSCAPE && (
+              <OSTable
+                style={{
+                  backgroundColor: colors.success,
+                  borderRadius: 6,
+                  maxHeight: 60,
+                  marginTop: 4,
+                  padding: 10
+                }}
+              >
+                <View
+                  style={{
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                  }}
+                >
+                  <OIcon
+                    src={IMAGES.check_decagram}
+                  />
+
+                  {cart?.discount_type === 1 ? (
+                    <OText
+                      mLeft={15}
+                    >
+                      <OText color={colors.green} size={16}>{`${t('VALID_CODE', 'Valid code')}! ${t('YOU_GOT', 'you got')} `}</OText>
+                      <OText color={colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parseNumber)}% `}</OText>
+                      <OText color={colors.green} size={16}>{`${t('OFF', 'off')}`}</OText>
+                    </OText>
+                  ) : (
+                    <OText
+                      size={16}
+                      mLeft={15}
+                      color={colors.green}
+                    >
+                      {`${t('VALID_CODE', 'Valid code')}! `}
+                    </OText>
+                  )}
+                </View>
+
+                <OText
+                  size={16}
+                  color={colors.green}
+                  weight="700"
+                >- {parsePrice(cart?.discount || 0)}</OText>
+              </OSTable>
             )}
-            bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
-            isDisabled={cart?.subtotal < cart?.minimum || !cart?.valid_address}
-            borderColor={colors.primary}
-            imgRightSrc={null}
-            textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-            onClick={() => { navigation?.navigate('CustomerName', { cartUuid: cart?.uuid }) }}
-            style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
-          />
+            {!cart?.discount_type && isCouponEnabled && !isCartPending && orientationState?.orientation == LANDSCAPE && (
+              <OSTable>
+                <OSCoupon>
+                  <CouponControl
+                    businessId={cart.business_id}
+                    price={cart.total}
+                  />
+                </OSCoupon>
+              </OSTable>
+            )}
+            <View style={{
+              width: orientationState?.orientation == LANDSCAPE ? '50%' : '100%',
+              marginLeft: orientationState?.orientation == LANDSCAPE ? 16 : 0
+            }}>
+              <OButton
+                text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
+                  `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`
+                ) : !cart?.valid_address ? (
+                  `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
+                ) : (
+                  `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+                )}
+                bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
+                isDisabled={cart?.subtotal < cart?.minimum || !cart?.valid_address}
+                borderColor={colors.primary}
+                imgRightSrc={null}
+                textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+                onClick={() => { navigation?.navigate('CustomerName', { cartUuid: cart?.uuid }) }}
+                style={{width: '100%', marginTop: 4}}
+              />
+            </View>
+          </View>
         </CheckoutAction>
       </Actions>
 
