@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     borderColor: colors.disabled,
     borderRadius: 4,
     flex: 1,
-    height: 56,
+    height: 52,
     paddingEnd: 106
   },
   buttonApplyStyle: {

@@ -19,8 +19,7 @@ import { ProductForm } from '../ProductForm';
 import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
 import GridContainer from '../../layouts/GridContainer';
-
-const _dim = Dimensions.get('window');
+import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from "../../hooks/device_orientation_hook";
 
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const {
@@ -37,7 +36,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [{ parsePrice }] = useUtils()
   const [, t] = useLanguage()
-  const [isPortrait, setPortrait] = useState(_dim.width < _dim.height);
+  const [orientationState] = useDeviceOrientation();
 
   useEffect(() => {
     if (!isCustomMode) {
@@ -50,12 +49,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
       }
     }
   }, [upsellingProducts.loading, upsellingProducts?.products.length])
-
-  useEffect(() => {
-    Dimensions.addEventListener('change', ({ window: { width, height } }) => {
-      setPortrait(width < height);
-    })
-  }, []);
 
   const handleFormProduct = (product: any) => {
     setActualProduct(product)
@@ -72,20 +65,20 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
       <Container>
         {
           !upsellingProducts.loading ? (
-            isPortrait ? (
+            orientationState.orientation == PORTRAIT ? (
             <>
               <NavBar
                 title={t('BEFORE_YOU_GO', 'Before you go')}
                 onActionLeft={onClose}
               />
 
-              <View style={{ marginVertical: _dim.height * 0.03 }}>
+              <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
                 <OText
-                  size={_dim.width * 0.05}
+                  size={orientationState?.dimensions?.width * 0.05}
                 >
                   {t('DO_YOU_WANT', 'Do you want')} {'\n'}
                   <OText
-                    size={_dim.width * 0.05}
+                    size={orientationState?.dimensions?.width * 0.05}
                     weight={'700'}
                   >
                     {t('SOMETHING_ELSE', 'something else')} {'?'}
@@ -146,7 +139,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                 }
               </GridContainer>
 
-              <View  style={{ height: _dim.height * 0.03 }} />
+              <View  style={{ height: orientationState?.dimensions?.height * 0.03 }} />
             </>
             ) : (
               <>
@@ -165,11 +158,11 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 
                   <View style={{ height: '100%', width: '35%' }}>
                     <OText
-                      size={_dim.width * 0.05}
+                      size={orientationState?.dimensions?.width * 0.05}
                     >
                       {t('DO_YOU_WANT', 'Do you want')} {'\n'}
                       <OText
-                        size={_dim.width * 0.05}
+                        size={orientationState?.dimensions?.width * 0.05}
                         weight={'700'}
                       >
                         {t('SOMETHING_ELSE', 'something else')} {'?'}
@@ -224,8 +217,8 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 
                             <OButton
                               text={t('ADD_PRODUCT', 'add product')}
-                              textStyle={{ color: colors.primary }}
-                              style={{ height: 40, width: '100%' }}
+                              textStyle={{ color: colors.primary, textAlign: "center" }}
+                              style={{ minHeight: 40, height: 'auto', width: '100%' }}
                               bgColor="#EAF2FE"
                               borderColor="#EAF2FE"
                               onClick={() => handleFormProduct(product)}
@@ -267,7 +260,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                 customClose
               >
                <UpsellingLayout />
-                {isPortrait && (
+                {orientationState.orientation == PORTRAIT && (
                   <CloseUpselling>
                     <OButton
                       imgRightSrc=''
