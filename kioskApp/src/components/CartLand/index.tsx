@@ -89,6 +89,7 @@ const CartLandUI = (props: any) => {
 
   return (
     <KeyboardView
+      style={{ height: windowHeight - 40, backgroundColor: 'blue' }}
       enabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
@@ -133,7 +134,8 @@ const CartLandUI = (props: any) => {
 
       <ScrollView
         style={{
-          height: windowHeight * 0.58
+          height: windowHeight * 0.40,
+          backgroundColor: 'red'
         }}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any) => (
@@ -157,7 +159,7 @@ const CartLandUI = (props: any) => {
         }}
       >
         {cart?.valid_products && (
-          <OSBill>
+          <OSBill style={{backgroundColor: colors.success}}>
             {cart?.discount > 0 && cart?.total >= 0 && (
               <OSTable
                 style={{
