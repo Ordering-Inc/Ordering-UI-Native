@@ -7,7 +7,7 @@ import {
   useUtils
 } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { View, TouchableOpacity, StyleSheet, Dimensions, Animated, ScrollView } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Animated, ScrollView } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 
 import { ProductIngredient } from '../ProductIngredient'
@@ -32,13 +32,8 @@ import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 import { IMAGES } from '../../config/constants'
+import { LANDSCAPE, useDeviceOrientation } from '../../hooks/device_orientation_hook'
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen")
-
-const HEADER_EXPANDED_HEIGHT = SCREEN_HEIGHT * 0.4;
-const HEADER_COLLAPSED_HEIGHT = 215;
-
-const windowHeight = Dimensions.get('window').height;
 export const ProductOptionsUI = (props: any) => {
   const {
     navigation,
@@ -57,13 +52,20 @@ export const ProductOptionsUI = (props: any) => {
     productObject,
     onClose,
     isFromCheckout
-  } = props
+  } = props;
 
-  const [{ parsePrice }] = useUtils()
-  const [, t] = useLanguage()
-  const [orderState] = useOrder()
-  const [{ auth }] = useSession()
-  const { product, loading, error } = productObject
+  const [{ parsePrice }] = useUtils();
+  const [, t] = useLanguage();
+  const [orderState] = useOrder();
+  const [{ auth }] = useSession();
+  const [orientationState] = useDeviceOrientation();
+
+  const { product, loading, error } = productObject;
+
+  const HEADER_EXPANDED_HEIGHT =  orientationState?.dimensions?.height * 0.4;
+  const HEADER_COLLAPSED_HEIGHT = orientationState?.dimensions?.height * 0.2;
+
+  console.log(HEADER_COLLAPSED_HEIGHT)
 
   const isError = (id: number) => {
     let bgColor = colors.white
@@ -128,12 +130,100 @@ export const ProductOptionsUI = (props: any) => {
   const goToBack = () => navigation?.goBack();
 
   const navBarProps = {
-    style: { backgroundColor: 'transparent', width: SCREEN_WIDTH },
+    style: { backgroundColor: 'transparent', width: orientationState?.dimensions?.width },
     paddingTop: 20,
     title: t('YOUR_DISH', 'Your dish'),
     btnStyle: { backgroundColor: 'transparent' },
     onActionLeft: onClose ? onClose : navigation ? goToBack : undefined,
   };
+
+  const styles = StyleSheet.create({
+    mainContainer: {
+      flex: 1,
+      height: orientationState?.dimensions?.height,
+      backgroundColor: colors.white,
+    },
+    headerItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginVertical: 15,
+      marginHorizontal: 20,
+      zIndex: 1
+    },
+    optionContainer: {
+      marginBottom: 20
+    },
+    comment: {
+      borderWidth: 1,
+      borderRadius: 0,
+      borderBottomLeftRadius: 10,
+      borderBottomRightRadius: 10,
+      borderColor: '#DBDCDB',
+      height: 100,
+      alignItems: 'flex-start',
+    },
+    quantityControl: {
+      flexDirection: 'row',
+      width: '30%',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flex: 1,
+      marginRight: 10,
+      backgroundColor: colors.paleGray,
+      paddingHorizontal: 4,
+      borderColor: colors.mediumGray,
+      borderWidth: 1,
+      borderRadius: 6,
+    },
+    quantityControlButton: {
+      color: colors.primary,
+    },
+    quantityControlButtonBorder: {
+      borderRadius: 6,
+      borderWidth: 2,
+      borderColor: colors.primary,
+    },
+    quantityControlButtonDisabled: {
+      opacity: 0.5,
+    },
+    btnBackArrow: {
+      borderWidth: 0,
+      color: '#FFF',
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      borderRadius: 24,
+      marginRight: 15,
+    },
+  
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+    },
+    scrollContainer: {
+      padding: 16,
+      paddingTop: HEADER_EXPANDED_HEIGHT
+    },
+    header: {
+      backgroundColor: '#fff',
+      position: 'absolute',
+      width: orientationState?.dimensions?.width,
+      top: 0,
+      left: 0,
+      zIndex: 9999,
+    },
+    title: {
+      marginVertical: 16,
+      color: "black",
+      fontWeight: "bold",
+      fontSize: 24
+    },
+    shadow: {
+      shadowColor: '#000',
+      shadowOffset: { width: 1, height: 1 },
+      shadowOpacity:  0.4,
+      shadowRadius: 3,
+      elevation: 5,
+    }
+  });
 
   return (
     <>
@@ -154,7 +244,7 @@ export const ProductOptionsUI = (props: any) => {
 
         <Animated.View style={{
           backgroundColor: 'white',
-          width: SCREEN_WIDTH,
+          width: orientationState?.dimensions?.width,
           opacity: collapsedBarContainerOpacity,
         }}>
           <View
@@ -172,7 +262,7 @@ export const ProductOptionsUI = (props: any) => {
               borderRadius={6}
             />
             <OText
-              size={SCREEN_WIDTH * 0.025}
+              size={orientationState?.dimensions?.width * 0.025}
               weight="bold"
               mLeft={20}
               numberOfLines={2}
@@ -186,7 +276,7 @@ export const ProductOptionsUI = (props: any) => {
               bottom: -2,
               height: 1,
               backgroundColor: 'white',
-              width: SCREEN_WIDTH,
+              width: orientationState?.dimensions?.width,
               ...styles.shadow,
             }}
           />
@@ -200,7 +290,7 @@ export const ProductOptionsUI = (props: any) => {
         }}>
           <OImage
             source={{uri: product?.images}}
-            width={SCREEN_WIDTH}
+            width={orientationState?.dimensions?.width}
             height={HEADER_EXPANDED_HEIGHT}
             resizeMode="cover"
             style={{ position: 'absolute', zIndex: -100 }}
@@ -208,7 +298,7 @@ export const ProductOptionsUI = (props: any) => {
 
           <View
             style={{
-              width: SCREEN_WIDTH,
+              width: orientationState?.dimensions?.width,
               height: HEADER_EXPANDED_HEIGHT,
               position: 'absolute',
               zIndex: 1,
@@ -219,7 +309,7 @@ export const ProductOptionsUI = (props: any) => {
           <Animated.View
             style={{
               transform: [{translateY: heroTranslateY }],
-              width: SCREEN_WIDTH * 0.75,
+              width: orientationState?.dimensions?.width * 0.75,
               height: HEADER_EXPANDED_HEIGHT / 2,
               position: 'relative',
               top: HEADER_EXPANDED_HEIGHT / 2,
@@ -229,7 +319,7 @@ export const ProductOptionsUI = (props: any) => {
           >
             <OText
               color={colors.white}
-              size={SCREEN_WIDTH * 0.05}
+              size={orientationState?.dimensions?.width * 0.05}
               weight="bold"
               mBottom={10}
               numberOfLines={2}
@@ -431,96 +521,8 @@ export const ProductOptionsUI = (props: any) => {
         </ProductActions>
       )}
     </>
-  )
+  );
 }
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    height: windowHeight,
-    backgroundColor: colors.white,
-  },
-  headerItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 15,
-    marginHorizontal: 20,
-    zIndex: 1
-  },
-  optionContainer: {
-    marginBottom: 20
-  },
-  comment: {
-    borderWidth: 1,
-    borderRadius: 0,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    borderColor: '#DBDCDB',
-    height: 100,
-    alignItems: 'flex-start',
-  },
-  quantityControl: {
-    flexDirection: 'row',
-    width: '30%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flex: 1,
-    marginRight: 10,
-    backgroundColor: colors.paleGray,
-    paddingHorizontal: 4,
-    borderColor: colors.mediumGray,
-    borderWidth: 1,
-    borderRadius: 6,
-  },
-  quantityControlButton: {
-    color: colors.primary,
-  },
-  quantityControlButtonBorder: {
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: colors.primary,
-  },
-  quantityControlButtonDisabled: {
-    opacity: 0.5,
-  },
-  btnBackArrow: {
-    borderWidth: 0,
-    color: '#FFF',
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    borderRadius: 24,
-    marginRight: 15,
-  },
-
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  scrollContainer: {
-    padding: 16,
-    paddingTop: HEADER_EXPANDED_HEIGHT
-  },
-  header: {
-    backgroundColor: '#fff',
-    position: 'absolute',
-    width: SCREEN_WIDTH,
-    top: 0,
-    left: 0,
-    zIndex: 9999,
-  },
-  title: {
-    marginVertical: 16,
-    color: "black",
-    fontWeight: "bold",
-    fontSize: 24
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity:  0.4,
-    shadowRadius: 3,
-    elevation: 5,
-  }
-})
 
 export const ProductForm = (props: any) => {
   const productOptionsProps = {

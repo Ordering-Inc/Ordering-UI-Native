@@ -11,6 +11,7 @@ import { OCard, OText } from '../shared'
 import GridContainer from '../../layouts/GridContainer'
 import PromoCard from '../PromoCard';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { LANDSCAPE, useDeviceOrientation } from '../../hooks/device_orientation_hook';
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
@@ -32,6 +33,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const business: Business = businessState.business;
 
   const [, t] = useLanguage();
+  const [orientationState] = useDeviceOrientation();
 
   const _categories:any = business?.original?.categories;
   let _promos:any = [];
@@ -50,7 +52,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const _renderTitle = (title: string): React.ReactElement => (
     <View style={{ paddingHorizontal: 20, paddingVertical: 40 }}>
       <OText
-        size={_dim.width * 0.05}
+        size={orientationState?.dimensions?.width * 0.05}
         weight="bold"
       >
         {title}
@@ -84,11 +86,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         ref={(_) => {}}
         data={_promos}
         renderItem={_renderItem}
-        sliderWidth={_dim.width}
-        itemWidth={_dim.width * 0.4}
+        sliderWidth={orientationState?.dimensions?.width}
+        itemWidth={orientationState?.dimensions?.width * 0.4}
         alwaysBounceHorizontal={false}
         slideStyle={{
-          width: _dim.width * 0.45,
+          width: orientationState?.dimensions?.width * 0.45,
           marginLeft: 20,
         }}
         inactiveSlideScale={1}
@@ -111,6 +113,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               key={category.id}
               title={category?.name || ''}
               image={{ uri: category?.image}}
+              style={{
+                width: orientationState?.orientation === LANDSCAPE
+                  ? orientationState?.dimensions?.width * 0.16
+                  : orientationState?.dimensions?.width * 0.21,
+              }}
               onPress={() => {
                 navigation.navigate('Category', {
                   category,
@@ -143,8 +150,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     </>
   );
 }
-
-const _dim = Dimensions.get('window');
 
 export const BusinessProductsListing = (props:any) => {
   const businessProductslistingProps = {
