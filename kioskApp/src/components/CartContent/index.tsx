@@ -18,10 +18,10 @@ export const CartContent = (props: any) => {
     extraPropsCustomCartComponent,
     showNotFound,
   }: Props = props
-  
+
   const [, t] = useLanguage()
   const [isCartsLoading, setIsCartsLoading] = useState(false)
- 
+
   const cartProps = {
     navigation,
     cart,
