@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import io.sentry.react.RNSentryPackage;
 import io.sentry.react.RNSentryPackage;
 // import com.gettipsi.stripe.StripeReactPackage;
