@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Platform } from 'react-native'
+import { View, Platform, PlatformIOSStatic } from 'react-native'
 import { useLanguage, useOrder } from 'ordering-components/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -33,7 +33,12 @@ const BottomNavigator = () => {
   const [{ carts }] = useOrder()
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
   const isIos = Platform.OS === 'ios'
-  const androidStyles = isIos ? {} : {height: 40, position: 'relative', bottom: 15}
+  const platformIOS = Platform as PlatformIOSStatic
+  const androidStyles = isIos 
+    ? platformIOS.isPad 
+      ? { paddingBottom: 30 } 
+      : {} 
+    : {height: 40, position: 'relative', bottom: 15}
   return (
     <Tab.Navigator
       initialRouteName='BusinessList'

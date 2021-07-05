@@ -34,7 +34,8 @@ LogBox.ignoreLogs([
   'The `value` prop is required for the `<Context.Provider>`',
   'Can\'t perform a React state update',
   'Remote debugger',
-  'Task orphaned for request'
+  'Task orphaned for request',
+  'JSON value \'<null>\''
 ])
 
 theme.images = {

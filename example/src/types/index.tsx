@@ -224,6 +224,8 @@ export interface OrdersOptionParams {
   navigation?: any,
   loadOrders?: any,
   setOrderList?: any,
+  setOrdersLength?: ({activeOrdersLength, previousOrdersLength} : {activeOrdersLength: number, previousOrdersLength: number}) => void,
+  ordersLength: {activeOrdersLength: number, previousOrdersLength: number}
 }
 export interface ActiveOrdersParams {
   orders?: any,

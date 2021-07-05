@@ -228,7 +228,7 @@ export const UserFormDetailsUI = (props: any) => {
         )}
       </UDForm>
       {!hideUpdateButton && (
-          <>
+        <>
           {((formState && Object.keys(formState?.changes).length > 0 && isEdit) || formState?.loading) && (
             <OButton
               text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}

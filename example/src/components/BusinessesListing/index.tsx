@@ -22,8 +22,9 @@ import { NotFoundSource } from '../NotFoundSource'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { OrderTypeSelector } from '../OrderTypeSelector'
+import { ToastType, useToast } from '../../providers/ToastProvider'
 
-const PIXELS_TO_SCROLL = 1000
+const PIXELS_TO_SCROLL = 1200
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
   const {
@@ -41,6 +42,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const [orderState] = useOrder()
   const [{ configs }] = useConfig()
   const [{ parseDate }] = useUtils()
+  const {showToast} = useToast()
 
   // const timerId = useRef<any>(false)
   // const panResponder = useRef(
@@ -62,6 +64,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
     if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
       getBusinesses()
+      showToast(ToastType.Info, 'loading more business')
     }
   }
 
@@ -92,9 +95,17 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
             <OText style={{ fontWeight: 'bold' }} size={28} >
               {t('WELCOME_TITLE_APP', 'Hello there')}
             </OText>
-            <OText style={{ fontWeight: 'bold' }} size={28} color={colors.primary}>
-              {', '}{user?.name}
-            </OText>
+            <View style={{ width: '65%' }}>
+              <OText
+                style={{ fontWeight: 'bold' }}
+                size={28}
+                color={colors.primary}
+                numberOfLines={1}
+                ellipsizeMode='tail'
+              >
+                {', '}{user?.name}
+              </OText>
+            </View>
           </View>
         </WelcomeTitle>
       )}
@@ -158,6 +169,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
             business={business}
             handleCustomClick={handleBusinessClick}
             orderType={orderState?.options?.type}
+            isBusinessOpen={business?.open}
           />
         ))
       }

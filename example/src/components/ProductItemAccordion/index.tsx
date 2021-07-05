@@ -3,7 +3,7 @@ import { View, Animated, StyleSheet, Platform } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
-import AntIcon from 'react-native-vector-icons/AntDesign'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import {
   Accordion,
@@ -120,7 +120,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 style={pickerStyle}
                 useNativeAndroidPickerStyle={false}
                 placeholder={{}}
-                Icon={() => <AntIcon name='caretdown' style={pickerStyle.icon} />}
+                Icon={() => <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />}
                 disabled={orderState.loading}
               />
             ) : (
@@ -230,14 +230,28 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 const pickerStyle = StyleSheet.create({
   inputAndroid: {
     color: colors.secundaryContrast,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 15,
+    paddingHorizontal: 7,
+    backgroundColor: colors.inputDisabled,
     width: 50,
   },
+  inputIOS: {
+    color: colors.secundaryContrast,
+    paddingEnd: 20,
+    height: 40,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    backgroundColor: colors.inputDisabled
+  },
   icon: {
-    width: 10,
-    height: 10,
-    top: Platform.OS === 'ios' ? 0 : 17,
-    right: 10,
+    top: Platform.OS === 'ios' ? 10 : 15,
+    right: Platform.OS === 'ios' ? 0 : 7,
     position: 'absolute',
+    fontSize: 20
   },
   placeholder: {
     color: colors.secundaryContrast

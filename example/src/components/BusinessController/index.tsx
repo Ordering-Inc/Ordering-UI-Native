@@ -27,7 +27,7 @@ import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-  const { business, handleClick } = props;
+  const { business, handleClick,isBusinessOpen } = props;
   const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
   const [orderState] = useOrder();
   const [, t] = useLanguage();
@@ -50,14 +50,14 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       <BusinessHero
         source={{ uri: optimizeImage(business?.header, 'h_400,c_limit') }}
         imageStyle={styles.headerStyle}
-        isClosed={business?.open}
+        isClosed={isBusinessOpen}
       >
         {business?.featured && (
           <View style={styles.featured}>
             <FontAwesomeIcon name='crown' size={26} color='gold' />
           </View>
         )}
-        {!business?.open && (
+        {!isBusinessOpen && (
           <View style={styles.closed}>
             <OText size={32} color={colors.white}>{t('CLOSED', 'CLOSED')}</OText>
           </View>
@@ -66,7 +66,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
           <OIcon url={optimizeImage(business?.logo, 'h_300,c_limit')} style={styles.businessLogo} />
         </BusinessLogo>
         <BusinessState>
-          {!business?.open && (
+          {!isBusinessOpen && (
             <View style={styles.businessStateView}>
               <OText color={colors.white} size={20} style={styles.businessStateText}>
                 {t('PREORDER', 'PREORDER')}
@@ -77,7 +77,15 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       </BusinessHero>
       <BusinessContent>
         <BusinessInfo>
-          <OText size={20}>{business?.name}</OText>
+          <View style={{ width: '70%' }}>
+            <OText
+              size={20}
+              numberOfLines={1}
+              ellipsizeMode='tail'
+              >
+              {business?.name}
+            </OText>
+          </View>
           {business?.reviews?.total > 0 && (
             <Reviews>
               <IconAntDesign
