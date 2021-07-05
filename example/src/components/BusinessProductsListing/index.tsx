@@ -41,7 +41,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     featuredProducts,
     errorQuantityProducts,
     header,
-    logo
+    logo,
+    setProductLogin
   } = props
 
   const [, t] = useLanguage()
@@ -243,6 +244,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           onClose={handleCloseProductModal}
           navigation={navigation}
           onSave={handlerProductAction}
+          setProductLogin={setProductLogin}
         />
       </OModal>
       {openUpselling && (

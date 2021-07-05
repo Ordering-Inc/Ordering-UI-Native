@@ -18,12 +18,11 @@ import Splash from '../pages/Splash';
 
 const Stack = createStackNavigator();
 
-const HomeNavigator = (is_online: boolean) => {
-
+const HomeNavigator = (e) => {
   const [orderState] = useOrder();
   const [{ auth }] = useSession();
   // const socket = useWebsocket()
-
+  console.log(e?.route?.params?.productLogin?.params?.product)
   // const appState = React.useRef<any>(AppState.currentState);
 
   // const _handleAppStateChange = (nextAppState: string) => {
@@ -62,7 +61,6 @@ const HomeNavigator = (is_online: boolean) => {
   //     socket.connect()
   //   }
   // }
-
   return (
     <Stack.Navigator>
       {!orderState.loading || (orderState?.options?.user_id && orderState.loading) || orderState?.options?.address?.location ? (
@@ -86,6 +84,14 @@ const HomeNavigator = (is_online: boolean) => {
                 </>
               ) : (
                 <>
+                  {e?.route?.params?.productLogin?.params?.product && (
+                    <Stack.Screen
+                      name="BusinessAfterLogin"
+                      component={BusinessProductsList}
+                      options={{headerShown: false}}
+                      initialParams={{productAfterLogin: e?.route?.params?.productLogin?.params?.product, slug: 'thelaundryhome'}}
+                    />
+                  )}
                   <Stack.Screen
                     name='BottomTab'
                     component={BottomNavigator}

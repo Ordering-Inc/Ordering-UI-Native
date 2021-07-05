@@ -25,6 +25,7 @@ const RootNavigator = () => {
   const [{ auth, loading }] = useSession();
   const [orderStatus, { changeMoment }] = useOrder();
   const [loaded, setLoaded] = useState(false);
+  const [productLogin, setProductLogin] = useState({})
 
   const validDate = (date : any) => {
     if (!date) return
@@ -87,6 +88,9 @@ const RootNavigator = () => {
                   name="Login"
                   component={Login}
                   options={{ headerShown: false }}
+                  listeners={{
+                    state: (e) => setProductLogin(e.data.state.routes.find(object => object?.params?.product))
+                  }}
                 />
                 <Stack.Screen
                   name="Signup"
@@ -107,12 +111,13 @@ const RootNavigator = () => {
                   name='BusinessList'
                   component={BusinessList}
                   options={{ headerShown: false }}
-                />
+                  />
                 <Stack.Screen
                   name='Business'
                   component={BusinessProductsList}
                   options={{ headerShown: false }}
-                />
+                  initialParams={{setProductLogin}}
+                  />
                 <Stack.Screen
                   name='MomentOption'
                   component={MomentOption}
@@ -124,6 +129,7 @@ const RootNavigator = () => {
                 name='MyAccount'
                 component={HomeNavigator}
                 options={{ headerShown: false }}
+                initialParams={{productLogin}}
               />
             )}
           </>

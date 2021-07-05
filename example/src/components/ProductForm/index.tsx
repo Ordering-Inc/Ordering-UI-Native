@@ -54,7 +54,7 @@ export const ProductOptionsUI = (props: any) => {
     handleChangeCommentState,
     productObject,
     onClose,
-    isFromCheckout
+    isFromCheckout,
   } = props
 
   const [{ parsePrice }] = useUtils()
@@ -82,9 +82,9 @@ export const ProductOptionsUI = (props: any) => {
     }
   }
 
-  const handleRedirectLogin = () => {
+  const handleRedirectLogin = (product : any) => {
     onClose()
-    navigation.navigate('Login')
+    navigation.navigate('Login', {product})
   }
 
   const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0
@@ -299,7 +299,7 @@ export const ProductOptionsUI = (props: any) => {
             {(!auth || isSoldOut || maxProductQuantity <= 0) && (
               <OButton
                 isDisabled={isSoldOut || maxProductQuantity <= 0}
-                onClick={() => handleRedirectLogin()}
+                onClick={() => handleRedirectLogin(productCart)}
                 text={isSoldOut || maxProductQuantity <= 0 ? t('SOLD_OUT', 'Sold out') : t('LOGIN_SIGNUP', 'Login / Sign Up')}
                 imgRightSrc=''
                 textStyle={{ color: colors.primary }}

@@ -9,13 +9,14 @@ const BusinessProductsList = (props: any) => {
   const header = props.route.params?.header
   const logo = props.route.params?.logo
   const [ordering] = useApi()
-
+  const product = props.route.params?.productLogin
+  console.log('product', props.route.params)
   const businessProductsProps = {
     ...props,
     ordering,
     isSearchByName: true,
     isSearchByDescription: true,
-    slug: store,
+    slug: 'thelaundryhome',
     businessProps: [
       'id',
       'name',
