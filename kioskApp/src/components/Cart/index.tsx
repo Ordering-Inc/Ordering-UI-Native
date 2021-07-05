@@ -23,6 +23,7 @@ import { ScrollView, Platform, View } from 'react-native';
 import { IMAGES } from '../../config/constants';
 import { CouponControl } from '../CouponControl';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation} from "../../hooks/device_orientation_hook";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CartUI = (props: any) => {
   const {
@@ -89,283 +90,294 @@ const CartUI = (props: any) => {
 
   return (
     <KeyboardView
-      style={{ height: orientationState?.dimensions?.height - 40 }}
       enabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <NavBar
-        title={t('CONFIRM_YOUR_ORDER', 'Confirm your order')}
-        onActionLeft={goToBack}
-        rightComponent={(
+      <SafeAreaView style={{
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#fff',
+      }}>
+
+        <NavBar
+          title={t('CONFIRM_YOUR_ORDER', 'Confirm your order')}
+          onActionLeft={goToBack}
+          style={{ height: orientationState?.dimensions?.height * 0.08 }}
+          rightComponent={(
+            <OButton
+              text={t('CANCEL_ORDER', 'Cancel order')}
+              bgColor="transparent"
+              borderColor="transparent"
+              style={{ paddingEnd: 0 }}
+              textStyle={{ color: colors.primary, marginEnd: 0 }}
+              onClick={handleClearProducts}
+            />
+          )}
+        />
+
+        <OrderTypeWrapper
+          style={{ height: orientationState?.dimensions?.height * 0.08 }}
+        >
+          <OText
+            weight="500"
+            size={21}
+            color={colors.black}
+          >
+            {t('THIS_ORDER_IS_TO', 'This order is to')}
+            {' '}
+            {selectedOrderType === 2 && t('TAKE_OUT', 'Take out')}
+            {selectedOrderType === 3 && t('EAT_IN', 'Eat in')}
+          </OText>
+
           <OButton
-            text={t('CANCEL_ORDER', 'Cancel order')}
+            text={t('I_CHANGED_MY_MIND', 'I changed my mind')}
             bgColor="transparent"
             borderColor="transparent"
             style={{ paddingEnd: 0 }}
             textStyle={{ color: colors.primary, marginEnd: 0 }}
-            onClick={handleClearProducts}
+            onClick={handleChangeOrderType}
           />
-        )}
-      />
+        </OrderTypeWrapper>
 
-      <OrderTypeWrapper
-        style={{ height: orientationState?.dimensions?.height * 0.08 }}
-      >
-        <OText
-          weight="500"
-          size={21}
-          color={colors.black}
+        <ScrollView
+          style={{
+            height: orientationState?.orientation === PORTRAIT
+            ? orientationState?.dimensions?.height * 0.59
+            : orientationState?.dimensions?.height * 0.55
+          }}
         >
-          {t('THIS_ORDER_IS_TO', 'This order is to')}
-          {' '}
-          {selectedOrderType === 2 && t('TAKE_OUT', 'Take out')}
-          {selectedOrderType === 3 && t('EAT_IN', 'Eat in')}
-        </OText>
+          {cart?.products?.length > 0 && cart?.products.map((product: any) => (
+            <CartItem
+              key={product.code}
+              isCartPending={isCartPending}
+              isCartProduct
+              product={product}
+              changeQuantity={changeQuantity}
+              getProductMax={getProductMax}
+              offsetDisabled={offsetDisabled}
+              onDeleteProduct={handleDeleteClick}
+              onEditProduct={handleEditProduct}
+            />
+          ))}
+        </ScrollView>
 
-        <OButton
-          text={t('I_CHANGED_MY_MIND', 'I changed my mind')}
-          bgColor="transparent"
-          borderColor="transparent"
-          style={{ paddingEnd: 0 }}
-          textStyle={{ color: colors.primary, marginEnd: 0 }}
-          onClick={handleChangeOrderType}
-        />
-      </OrderTypeWrapper>
-
-      <ScrollView
-        style={{
-          height: orientationState?.dimensions?.height * 0.40
-        }}
-      >
-        {cart?.products?.length > 0 && cart?.products.map((product: any) => (
-          <CartItem
-            key={product.code}
-            isCartPending={isCartPending}
-            isCartProduct
-            product={product}
-            changeQuantity={changeQuantity}
-            getProductMax={getProductMax}
-            offsetDisabled={offsetDisabled}
-            onDeleteProduct={handleDeleteClick}
-            onEditProduct={handleEditProduct}
-          />
-        ))}
-      </ScrollView>
-
-      <Actions
-        style={{
-          height: orientationState?.dimensions?.height * 0.17
-        }}
-      >
-        {cart?.valid_products && (
-          <OSBill>
-            {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == PORTRAIT && (
-              <OSTable
-                style={{
-                  backgroundColor: colors.success,
-                  borderRadius: 6,
-                  maxHeight: 60,
-                  padding: 10
-                }}
-              >
-                <View
+        <Actions
+          style={{
+            height: orientationState?.dimensions?.height * 0.17
+          }}
+        >
+          {cart?.valid_products && (
+            <OSBill>
+              {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == PORTRAIT && (
+                <OSTable
                   style={{
-                    alignItems: 'center',
-                    flexDirection: 'row',
+                    backgroundColor: colors.success,
+                    borderRadius: 6,
+                    maxHeight: 60,
+                    padding: 10
                   }}
                 >
-                  <OIcon
-                    src={IMAGES.check_decagram}
-                  />
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}
+                  >
+                    <OIcon
+                      src={IMAGES.check_decagram}
+                    />
 
-                  {cart?.discount_type === 1 ? (
-                    <OText
-                      mLeft={15}
-                    >
-                      <OText color={colors.green} size={16}>{`${t('VALID_CODE', 'Valid code')}! ${t('YOU_GOT', 'you got')} `}</OText>
-                      <OText color={colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parseNumber)}% `}</OText>
-                      <OText color={colors.green} size={16}>{`${t('OFF', 'off')}`}</OText>
-                    </OText>
-                  ) : (
-                    <OText
-                      size={16}
-                      mLeft={15}
-                      color={colors.green}
-                    >
-                      {`${t('VALID_CODE', 'Valid code')}! `}
-                    </OText>
-                  )}
-                </View>
+                    {cart?.discount_type === 1 ? (
+                      <OText
+                        mLeft={15}
+                      >
+                        <OText color={colors.green} size={16}>{`${t('VALID_CODE', 'Valid code')}! ${t('YOU_GOT', 'you got')} `}</OText>
+                        <OText color={colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parseNumber)}% `}</OText>
+                        <OText color={colors.green} size={16}>{`${t('OFF', 'off')}`}</OText>
+                      </OText>
+                    ) : (
+                      <OText
+                        size={16}
+                        mLeft={15}
+                        color={colors.green}
+                      >
+                        {`${t('VALID_CODE', 'Valid code')}! `}
+                      </OText>
+                    )}
+                  </View>
 
 
-                <OText
-                  size={16}
-                  color={colors.green}
-                  weight="700"
-                >- {parsePrice(cart?.discount || 0)}</OText>
-              </OSTable>
-            )}
-            {cart.business.tax_type !== 1 && (
-              <OSTable>
-                <OText>
-                  {t('TAX', 'Tax')}
-                  {`(${verifyDecimals(cart?.business?.tax, parseNumber)}%)`}
-                </OText>
-                <OText>{parsePrice(cart?.tax || 0)}</OText>
-              </OSTable>
-            )}
-            {selectedOrderType === 1 && cart?.delivery_price > 0 && (
-              <OSTable>
-                <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                <OText>{parsePrice(cart?.delivery_price)}</OText>
-              </OSTable>
-            )}
-            {cart?.driver_tip > 0 && (
-              <OSTable>
-                <OText>
-                  {t('DRIVER_TIP', 'Driver tip')}
-                  {cart?.driver_tip_rate > 0 &&
-                  parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
-                  !!!parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                  (
-                    `(${parseNumber(cart?.driver_tip_rate)}%)`
-                  )}
-                </OText>
-                <OText>{parsePrice(cart?.driver_tip)}</OText>
-              </OSTable>
-            )}
-            {cart?.service_fee > 0 && (
-              <OSTable>
-                <OText>
-                  {t('SERVICE_FEE', 'Service Fee')}
-                  {`(${verifyDecimals(cart?.business?.service_fee, parseNumber)}%)`}
-                </OText>
-                <OText>{parsePrice(cart?.service_fee)}</OText>
-              </OSTable>
-            )}
-            {!cart?.discount_type && isCouponEnabled && !isCartPending && orientationState?.orientation == PORTRAIT && (
-              <OSTable>
-                <OSCoupon>
-                  <CouponControl
-                    businessId={cart.business_id}
-                    price={cart.total}
-                  />
-                </OSCoupon>
-              </OSTable>
-            )}
-            {/*ESTE CODIGO GENERA UNA LINEA EN LA PAGINA QUE SE VE MAL, validar si es necesario este codigo*/}
-            {/*<OSTotal>*/}
-            {/*  <OSTable style={{ marginTop: 15 }}>*/}
-            {/*    <OText style={{ fontWeight: 'bold' }}>*/}
-            {/*      {t('TOTAL', 'Total')}*/}
-            {/*    </OText>*/}
-            {/*    <OText style={{ fontWeight: 'bold' }} color={colors.primary}>*/}
-            {/*      {cart?.total >= 1 && parsePrice(cart?.total)}*/}
-            {/*    </OText>*/}
-            {/*  </OSTable>*/}
-            {/*</OSTotal>*/}
-          </OSBill>
-        )}
-        <CheckoutAction>
-          <View style={{display: 'flex', flexDirection: 'row'}}>
-            {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == LANDSCAPE && (
-              <OSTable
-                style={{
-                  backgroundColor: colors.success,
-                  borderRadius: 6,
-                  maxHeight: 60,
-                  marginTop: 4,
-                  padding: 10
-                }}
-              >
-                <View
+                  <OText
+                    size={16}
+                    color={colors.green}
+                    weight="700"
+                  >
+                    - {parsePrice(cart?.discount || 0)}
+                  </OText>
+                </OSTable>
+              )}
+              {cart.business.tax_type !== 1 && (
+                <OSTable>
+                  <OText>
+                    {t('TAX', 'Tax')}
+                    {`(${verifyDecimals(cart?.business?.tax, parseNumber)}%)`}
+                  </OText>
+                  <OText>{parsePrice(cart?.tax || 0)}</OText>
+                </OSTable>
+              )}
+              {selectedOrderType === 1 && cart?.delivery_price > 0 && (
+                <OSTable>
+                  <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
+                  <OText>{parsePrice(cart?.delivery_price)}</OText>
+                </OSTable>
+              )}
+              {cart?.driver_tip > 0 && (
+                <OSTable>
+                  <OText>
+                    {t('DRIVER_TIP', 'Driver tip')}
+                    {cart?.driver_tip_rate > 0 &&
+                      parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
+                      !!!parseInt(configs?.driver_tip_use_custom?.value, 10) &&
+                    (
+                      `(${parseNumber(cart?.driver_tip_rate)}%)`
+                    )}
+                  </OText>
+                  <OText>{parsePrice(cart?.driver_tip)}</OText>
+                </OSTable>
+              )}
+              {cart?.service_fee > 0 && (
+                <OSTable>
+                  <OText>
+                    {t('SERVICE_FEE', 'Service Fee')}
+                    {`(${verifyDecimals(cart?.business?.service_fee, parseNumber)}%)`}
+                  </OText>
+                  <OText>{parsePrice(cart?.service_fee)}</OText>
+                </OSTable>
+              )}
+              {!cart?.discount_type && isCouponEnabled && !isCartPending && orientationState?.orientation == PORTRAIT && (
+                <OSTable>
+                  <OSCoupon>
+                    <CouponControl
+                      businessId={cart.business_id}
+                      price={cart.total}
+                    />
+                  </OSCoupon>
+                </OSTable>
+              )}
+              {/*ESTE CODIGO GENERA UNA LINEA EN LA PAGINA QUE SE VE MAL, validar si es necesario este codigo*/}
+              {/*<OSTotal>*/}
+              {/*  <OSTable style={{ marginTop: 15 }}>*/}
+              {/*    <OText style={{ fontWeight: 'bold' }}>*/}
+              {/*      {t('TOTAL', 'Total')}*/}
+              {/*    </OText>*/}
+              {/*    <OText style={{ fontWeight: 'bold' }} color={colors.primary}>*/}
+              {/*      {cart?.total >= 1 && parsePrice(cart?.total)}*/}
+              {/*    </OText>*/}
+              {/*  </OSTable>*/}
+              {/*</OSTotal>*/}
+            </OSBill>
+          )}
+          <CheckoutAction>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == LANDSCAPE && (
+                <OSTable
                   style={{
-                    alignItems: 'center',
-                    flexDirection: 'row',
+                    backgroundColor: colors.success,
+                    borderRadius: 6,
+                    maxHeight: 60,
+                    marginTop: 4,
+                    padding: 10
                   }}
                 >
-                  <OIcon
-                    src={IMAGES.check_decagram}
-                  />
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                    }}
+                  >
+                    <OIcon
+                      src={IMAGES.check_decagram}
+                    />
 
-                  {cart?.discount_type === 1 ? (
-                    <OText
-                      mLeft={15}
-                    >
-                      <OText color={colors.green} size={16}>{`${t('VALID_CODE', 'Valid code')}! ${t('YOU_GOT', 'you got')} `}</OText>
-                      <OText color={colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parseNumber)}% `}</OText>
-                      <OText color={colors.green} size={16}>{`${t('OFF', 'off')}`}</OText>
-                    </OText>
+                    {cart?.discount_type === 1 ? (
+                      <OText
+                        mLeft={15}
+                      >
+                        <OText color={colors.green} size={16}>{`${t('VALID_CODE', 'Valid code')}! ${t('YOU_GOT', 'you got')} `}</OText>
+                        <OText color={colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parseNumber)}% `}</OText>
+                        <OText color={colors.green} size={16}>{`${t('OFF', 'off')}`}</OText>
+                      </OText>
+                    ) : (
+                      <OText
+                        size={16}
+                        mLeft={15}
+                        color={colors.green}
+                      >
+                        {`${t('VALID_CODE', 'Valid code')}! `}
+                      </OText>
+                    )}
+                  </View>
+
+                  <OText
+                    size={16}
+                    color={colors.green}
+                    weight="700"
+                  >- {parsePrice(cart?.discount || 0)}</OText>
+                </OSTable>
+              )}
+              {!cart?.discount_type && isCouponEnabled && !isCartPending && orientationState?.orientation === LANDSCAPE && (
+                <OSTable>
+                  <OSCoupon>
+                    <CouponControl
+                      businessId={cart.business_id}
+                      price={cart.total}
+                    />
+                  </OSCoupon>
+                </OSTable>
+              )}
+              <View style={{
+                width: orientationState?.orientation == LANDSCAPE ? '50%' : '100%',
+                marginLeft: orientationState?.orientation == LANDSCAPE ? 16 : 0
+              }}>
+                <OButton
+                  text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
+                    `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`
+                  ) : !cart?.valid_address ? (
+                    `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
                   ) : (
-                    <OText
-                      size={16}
-                      mLeft={15}
-                      color={colors.green}
-                    >
-                      {`${t('VALID_CODE', 'Valid code')}! `}
-                    </OText>
+                    `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
                   )}
-                </View>
-
-                <OText
-                  size={16}
-                  color={colors.green}
-                  weight="700"
-                >- {parsePrice(cart?.discount || 0)}</OText>
-              </OSTable>
-            )}
-            {!cart?.discount_type && isCouponEnabled && !isCartPending && orientationState?.orientation == LANDSCAPE && (
-              <OSTable>
-                <OSCoupon>
-                  <CouponControl
-                    businessId={cart.business_id}
-                    price={cart.total}
-                  />
-                </OSCoupon>
-              </OSTable>
-            )}
-            <View style={{
-              width: orientationState?.orientation == LANDSCAPE ? '50%' : '100%',
-              marginLeft: orientationState?.orientation == LANDSCAPE ? 16 : 0
-            }}>
-              <OButton
-                text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-                  `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`
-                ) : !cart?.valid_address ? (
-                  `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
-                ) : (
-                  `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
-                )}
-                bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
-                isDisabled={cart?.subtotal < cart?.minimum || !cart?.valid_address}
-                borderColor={colors.primary}
-                imgRightSrc={null}
-                textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-                onClick={() => { navigation?.navigate('CustomerName', { cartUuid: cart?.uuid }) }}
-                style={{width: '100%', marginTop: 4}}
-              />
+                  bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
+                  isDisabled={cart?.subtotal < cart?.minimum || !cart?.valid_address}
+                  borderColor={colors.primary}
+                  imgRightSrc={null}
+                  textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+                  onClick={() => { navigation?.navigate('CustomerName', { cartUuid: cart?.uuid }) }}
+                  style={{width: '100%', marginTop: 4}}
+                />
+              </View>
             </View>
-          </View>
-        </CheckoutAction>
-      </Actions>
+          </CheckoutAction>
+        </Actions>
 
-      <OModal
-        open={openProduct}
-        entireModal
-        customClose
-        onClose={() => setModalIsOpen(false)}
-      >
-        <ProductForm
-          productCart={curProduct}
-          businessSlug={cart?.business?.slug}
-          businessId={curProduct?.business_id}
-          categoryId={curProduct?.category_id}
-          productId={curProduct?.id}
-          onSave={handlerProductAction}
+        <OModal
+          open={openProduct}
+          entireModal
+          customClose
           onClose={() => setModalIsOpen(false)}
-        />
+        >
+          <ProductForm
+            productCart={curProduct}
+            businessSlug={cart?.business?.slug}
+            businessId={curProduct?.business_id}
+            categoryId={curProduct?.category_id}
+            productId={curProduct?.id}
+            onSave={handlerProductAction}
+            onClose={() => setModalIsOpen(false)}
+          />
 
-      </OModal>
+        </OModal>
+      </SafeAreaView>
     </KeyboardView>
   )
 }

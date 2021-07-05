@@ -9,6 +9,7 @@ import { IMAGES } from '../../config/constants';
 import { colors } from '../../theme.json';
 import { Product } from '../../types';
 import QuantityControl from '../QuantityControl';
+import { LANDSCAPE, useDeviceOrientation } from '../../hooks/device_orientation_hook';
 
 const _dim = Dimensions.get('window');
 
@@ -16,6 +17,7 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen")
 
 const CartItem = (props: CartItemProps) => {
 	const [, t] = useLanguage();
+	const [orientationState] = useDeviceOrientation();
 
 	const {
     isCartPending,
@@ -41,7 +43,13 @@ const CartItem = (props: CartItemProps) => {
 
 				<View style={{ flexDirection: 'column', justifyContent: 'space-evenly', marginHorizontal: 15 }}>
 					<OText
-						size={_dim.width * 0.025}
+						style={{
+							maxWidth: orientationState?.orientation === LANDSCAPE
+								? orientationState.dimensions.width * 0.2
+								: orientationState.dimensions.width * 0.65,
+						}}
+						numberOfLines={2}
+						size={18}
 						weight="700"
 					>
 						{product?.name || ''}
@@ -64,7 +72,7 @@ const CartItem = (props: CartItemProps) => {
 			
 			<View style={{ alignItems: "flex-end" }} >
 				<OText
-					size={_dim.width * 0.025}
+					size={18}
 					weight="700"
 					color={colors.primary}
 				>

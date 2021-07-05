@@ -26,13 +26,13 @@ export const CheckoutAction = styled.View`
   align-items: center;
   margin-top: 10px;
   margin-bottom: 10px;
-  padding-horizontal: 9px;
 `
 
 export const Actions = styled.View`
   position: relative;
   bottom: 0px;
   width: 100%;
+  background-color: #FFF;
   z-index: 1000;
 `
 

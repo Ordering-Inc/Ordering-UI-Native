@@ -182,14 +182,14 @@ const TopBar = (props:any) => {
 		<StyledTopBar>
 			<View>
 				<OText
-					size={props?.orientationState?.dimensions?.width * 0.026}
+					size={20}
 					weight="700"
 					mBottom={4}
 				>
 					{t('YOUR_ORDER', 'your order')}
 				</OText>
 				<OText
-					size={props?.orientationState?.dimensions?.width * 0.023}
+					size={20}
 					weight="500"
 					color={colors.mediumGray}
 				>
@@ -203,7 +203,7 @@ const TopBar = (props:any) => {
 			>
 				<View>
 					<OText
-						size={props?.orientationState?.dimensions?.width * 0.024}
+						size={20}
 						weight="500"
 						color={colors.primary}
 					>

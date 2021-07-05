@@ -28,8 +28,7 @@ const CartPage = (props: Props) => {
     ...props,
     cart,
     isOrderStateCarts: !!carts,
-    onNavigationRedirect: (route: string, params: any) => navigation.navigate(route, params),
-    style: { padding: 20, backgroundColor: '#fff' },
+    onNavigationRedirect: (route: string, params: any) => navigation.navigate(route, params)
   }
 
   return (

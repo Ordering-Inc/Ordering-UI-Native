@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { View, ViewStyle } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 
 import { CCNotCarts } from './styles';
@@ -54,9 +53,7 @@ export const CartContent = (props: any) => {
     </>
   )
 
-  return props?.style
-    ?(<View style={props?.style}>{content}</View>)
-    : content;
+  return content;
 }
 
 CartContent.defaultProps = {
@@ -70,5 +67,4 @@ interface Props {
   CustomCartComponent?: any,
   extraPropsCustomCartComponent?: JSON,
   showNotFound?: boolean,
-  style?: ViewStyle,
 }
