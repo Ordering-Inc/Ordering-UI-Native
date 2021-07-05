@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import {
+  DriverTips as DriverTipsController,
   useUtils,
   useLanguage,
   useConfig,
@@ -9,8 +10,6 @@ import {
 
 import { colors } from '../../theme.json';
 import { OButton, OInput, OText } from '../shared';
-
-import {DriverTips as DriverTipsController} from './test'
 
 import {
   DTContainer,

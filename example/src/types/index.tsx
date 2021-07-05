@@ -367,6 +367,7 @@ export interface GoogleMapsParams {
   readOnly?: boolean
   markerTitle?: string,
   saveLocation?: boolean,
+  isSetInputs?: boolean,
   locations?: Array<any>,
   setSaveLocation?: (val : boolean) => void,
   handleToggleMap?: () => void
