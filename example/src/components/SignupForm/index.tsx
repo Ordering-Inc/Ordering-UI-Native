@@ -24,6 +24,7 @@ import {
 import { LoginWith as SignupWith, OTab, OTabs } from '../LoginForm/styles'
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
+import { _removeStoreData } from '../../providers/StoreUtil';
 import NavBar from '../NavBar'
 import { VerifyPhone } from '../VerifyPhone';
 
@@ -141,11 +142,11 @@ const SignupFormUI = (props: SignupParams) => {
   }
 
   const handleSuccessFacebook = (user: any) => {
+    _removeStoreData('isGuestUser')
     login({
       user,
       token: user.session.access_token
     })
-    navigation.navigate('Home');
   }
 
   const handleChangeTab = (val: string) => {
@@ -435,7 +436,7 @@ const SignupFormUI = (props: SignupParams) => {
           )
         }
 
-        {/* {
+        {
           configs && Object.keys(configs).length > 0 && (
             (configs?.facebook_login?.value === 'true' ||
               configs?.facebook_login?.value === '1') &&
@@ -456,7 +457,7 @@ const SignupFormUI = (props: SignupParams) => {
               </ButtonsSection>
             )
           )
-        } */}
+        }
       </FormSide >
       <OModal
         open={isModalVisible}
@@ -499,6 +500,7 @@ export const SignupForm = (props: any) => {
   const signupProps = {
     ...props,
     UIComponent: SignupFormUI,
+    handleSuccessSignup: () => _removeStoreData('isGuestUser')
   };
   return <SignUpController {...signupProps} />;
 };

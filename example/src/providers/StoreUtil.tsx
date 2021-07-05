@@ -19,10 +19,17 @@ export const _setStoreData = (key: string, val: any) => {
       key,
       typeof (val) === 'string' ? val : JSON.stringify(val)
     )
-  } catch (error) {
-    // Error retrieving data
-    console.log('--------------- Occured Storage Setting Data error --------------')
-    console.log(error)
+  } catch {
+    return null
+  }
+};
+
+export const _removeStoreData = (key: string) => {
+  if (!key) return
+  try {
+    AsyncStorage.removeItem(key)
+  } catch {
+    return null
   }
 };
 
