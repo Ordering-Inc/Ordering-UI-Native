@@ -229,11 +229,15 @@ const AddressFormUI = (props: AddressFormParams) => {
   }
 
   const handleChangeAddress = (data: any, details: any) => {
+    if (!data) {
+      updateChanges({ location: details?.geometry?.location })
+      return
+    }
     const addressSelected = {
       address: data?.description || data?.address,
       location: details?.geometry?.location,
       utc_offset: details?.utc_offset || null,
-      map_data: { library: 'google', place_id: data.place_id },
+      map_data: { library: 'google', place_id: data?.place_id },
       zip_code: data?.zip_code || null
     }
     updateChanges(addressSelected)
