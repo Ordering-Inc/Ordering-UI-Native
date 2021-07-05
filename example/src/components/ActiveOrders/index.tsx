@@ -9,7 +9,6 @@ import { getGoogleMapImage } from '../../utils'
 import { ActiveOrdersParams } from '../../types'
 
 export const ActiveOrders = (props: ActiveOrdersParams) => {
-
   const {
     onNavigationRedirect,
     orders,
@@ -32,7 +31,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
         isMiniCard={configs?.google_maps_api_key?.value}
         onPress={() => handleClickCard(order?.uuid)}
       >
-        {(configs?.google_maps_api_key?.value) && (
+        {!!(configs?.google_maps_api_key?.value) && (
           <Map>
             <OIcon
               url={getGoogleMapImage(order?.business?.location, configs?.google_maps_api_key?.value)}
@@ -43,14 +42,22 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
           </Map>
         )}
         <Information>
-          {order.business?.logo && (
+          {!!order.business?.logo && (
             <Logo>
               <OIcon url={optimizeImage(order.business?.logo, 'h_300,c_limit')} style={styles.logo} />
             </Logo>
           )}
           <OrderInformation>
-            <BusinessInformation>
-              <OText size={16}>{order.business?.name}</OText>
+            <BusinessInformation style={{ width: '60%' }}>
+              <View>
+                <OText
+                  size={16}
+                  numberOfLines={1}
+                  ellipsizeMode='tail'
+                >
+                  {order.business?.name}
+                </OText>
+              </View>
               <View style={styles.orderNumber}>
                 <OText size={12} space color={colors.textSecondary}>{t('ORDER_NUMBER', 'Order No.')}</OText>
                 <OText size={12} color={colors.textSecondary}>{order.id}</OText>
@@ -79,6 +86,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
             borderColor={colors.white}
             style={{ paddingLeft: 30, paddingRight: 30 }}
+            onClick={loadMoreOrders}
           />
         </Card>
       )}

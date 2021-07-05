@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import { useUtils, useLanguage } from 'ordering-components/native';
+import { useForm, Controller } from 'react-hook-form';
 
 import { PCContainer, PCForm, PCWrapper } from './styles';
 import { OInput, OText } from '../shared';
@@ -8,20 +9,28 @@ import { colors } from '../../theme.json';
 
 export const PaymentOptionCash = (props: any) => {
   const {
+    defaultValue,
     orderTotal,
     onChangeData,
     setErrorCash
   } = props;
   const [, t] = useLanguage();
   const [{ parsePrice }] = useUtils();
+  const { control } = useForm();
 
-  const [value, setvalue] = useState('');
+  const [value, setvalue] = useState(defaultValue?.toString() || '');
+  let timeout: any = null;
 
-  const handleChangeCash = (value: any) => {
-    let cash: any = parseFloat(value)
-    cash = isNaN(cash) ? '' : cash
-    setvalue(cash)
-    onChangeData && onChangeData({ cash })
+  const onChangeCash = (value: any) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      let cash: any = parseFloat(value)
+      cash = isNaN(cash) ? '' : cash
+      setvalue(cash.toString())
+      if (cash >= orderTotal || !cash) {
+        onChangeData && onChangeData(!cash ? { cash: null } : { cash })
+      }
+    }, 750)
   }
 
   useEffect(() => {
@@ -39,12 +48,21 @@ export const PaymentOptionCash = (props: any) => {
           <OText style={{ fontSize: 16, textAlign: 'center' }}>
             {t('NOT_EXACT_CASH_AMOUNT', 'Don\'t have exact amount? Let us know with how much will you pay')}
           </OText>
-          <OInput
-            placeholder='0'
-            onChange={(e: any) => handleChangeCash(e)}
-            style={styles.inputsStyle}
-            type='numeric'
-            returnKeyType='done'
+          <Controller
+            control={control}
+            name='cash'
+            defaultValue={value}
+            render={() => (
+              <OInput
+                name='cash'
+                placeholder='0'
+                style={styles.inputsStyle}
+                value={value}
+                onChange={(val: any) => onChangeCash(val?.target.value)}
+                type='numeric'
+                returnKeyType='done'
+              />
+            )}
           />
         </PCWrapper>
         {!!value && parseFloat(value) < orderTotal && (
@@ -74,4 +92,8 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
+
+PaymentOptionCash.defaultProps = {
+  defaultValue: ''
+}
 

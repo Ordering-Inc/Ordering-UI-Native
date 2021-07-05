@@ -66,7 +66,8 @@ export interface AddressFormParams {
   isSelectedAfterAdd?: boolean,
   onSaveAddress?: any,
   isFromProductsList?: boolean,
-  hasAddressDefault?: any
+  hasAddressDefault?: any,
+  afterSignup?: boolean
 }
 export interface SignupParams {
   navigation?: any;
@@ -174,8 +175,8 @@ export interface BusinessProductsListParams {
   searchValue?: any;
   handleClearSearch?: (value: any) => {};
   isBusinessLoading?: any,
-  errorQuantityProducts?: boolean
-
+  errorQuantityProducts?: boolean,
+  handleCancelSearch?: () => void
 }
 export interface SingleProductCardParams {
   businessId: any,
@@ -220,6 +221,11 @@ export interface OrdersOptionParams {
   loadMoreOrders?: () => {},
   onNavigationRedirect?: any,
   orderStatus?: any,
+  navigation?: any,
+  loadOrders?: any,
+  setOrderList?: any,
+  setOrdersLength?: ({activeOrdersLength, previousOrdersLength} : {activeOrdersLength: number, previousOrdersLength: number}) => void,
+  ordersLength: {activeOrdersLength: number, previousOrdersLength: number}
 }
 export interface ActiveOrdersParams {
   orders?: any,
@@ -361,6 +367,7 @@ export interface GoogleMapsParams {
   readOnly?: boolean
   markerTitle?: string,
   saveLocation?: boolean,
+  isSetInputs?: boolean,
   locations?: Array<any>,
   setSaveLocation?: (val : boolean) => void,
   handleToggleMap?: () => void

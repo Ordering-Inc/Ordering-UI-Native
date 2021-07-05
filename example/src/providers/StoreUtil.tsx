@@ -1,22 +1,7 @@
-
 import AsyncStorage from '@react-native-community/async-storage';
-import { useEffect, useState } from 'react'
-
-// localStorage Hook --------------------
-
-export const useLocalStorage = (key: string, defaultValue: string) => {
-  const stored = window.localStorage.getItem(key);
-  const initial = stored ? JSON.parse(stored) : defaultValue;
-  const [value, setValue] = useState(initial);
-
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  }, [key, value]);
-
-  return [value, setValue];
-};
 
 export const _retrieveStoreData = async (key: string) => {
+  if (!key) return
   try {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
@@ -28,6 +13,7 @@ export const _retrieveStoreData = async (key: string) => {
 };
 
 export const _setStoreData = (key: string, val: any) => {
+  if (!key) return
   try {
     AsyncStorage.setItem(
       key,
@@ -43,5 +29,5 @@ export const _setStoreData = (key: string, val: any) => {
 export const clearAllData = () => {
   AsyncStorage.getAllKeys()
     .then(keys => AsyncStorage.multiRemove(keys))
-    .then(() => alert('success'));
+    .then(() => console.log('success'));
 }

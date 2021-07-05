@@ -81,7 +81,13 @@ const CartUI = (props: any) => {
   const handleUpsellingPage = () => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
-    props.onNavigationRedirect('CheckoutNavigator', { screen: 'CheckoutPage', cartUuid: cart?.uuid })
+    props.onNavigationRedirect('CheckoutNavigator', {
+      screen: 'CheckoutPage',
+      cartUuid: cart?.uuid,
+      businessLogo: cart?.business?.logo,
+      businessName: cart?.business?.name,
+      cartTotal: cart?.total
+    })
   }
 
   return (
@@ -152,9 +158,9 @@ const CartUI = (props: any) => {
                   {cart?.driver_tip_rate > 0 &&
                     parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
                     !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                  (
-                    `(${verifyDecimals(cart?.driver_tip_rate, parseNumber)}%)`
-                  )}
+                    (
+                      `(${verifyDecimals(cart?.driver_tip_rate, parseNumber)}%)`
+                    )}
                 </OText>
                 <OText>{parsePrice(cart?.driver_tip)}</OText>
               </OSTable>
@@ -206,7 +212,7 @@ const CartUI = (props: any) => {
               imgRightSrc={null}
               textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
               onClick={() => setOpenUpselling(true)}
-              style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
+              style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}
             />
           </CheckoutAction>
         )}
@@ -221,7 +227,7 @@ const CartUI = (props: any) => {
           isCartProduct
           productCart={curProduct}
           businessSlug={cart?.business?.slug}
-          businessId={curProduct?.business_id}
+          businessId={cart?.business_id}
           categoryId={curProduct?.category_id}
           productId={curProduct?.id}
           onSave={handlerProductAction}

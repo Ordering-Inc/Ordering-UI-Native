@@ -26,7 +26,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     }
   })
   _languages && _languages.sort((a: any, b: any) =>
-    (a.content > b.content) ? 1 : ((b.content > a.content) ? -1 : 0)
+    (a.label > b.label) ? 1 : ((b.label > a.label) ? -1 : 0)
   )
 
   return (
@@ -55,7 +55,7 @@ const pickerStyle = StyleSheet.create({
     borderRadius: 15,
     paddingHorizontal: 10,
     backgroundColor: colors.inputDisabled,
-    width: 60,
+    width: 80,
   },
   inputIOS: {
     color: colors.secundaryContrast,

@@ -49,7 +49,7 @@ const AddressDetailsUI = (props: any) => {
           </View>
         </ADAddress>
       </ADHeader>
-      {apiKey && (
+      {!!apiKey && googleMapsUrl && (
         <ADMap>
           <OIcon
             url={googleMapsUrl}

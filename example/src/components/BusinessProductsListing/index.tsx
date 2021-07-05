@@ -80,12 +80,18 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   }
 
   const handleUpsellingPage = () => {
-    onRedirect('CheckoutNavigator', { cartUuid: currentCart?.uuid })
+    onRedirect('CheckoutNavigator', {
+      screen: 'CheckoutPage',
+      cartUuid: currentCart?.uuid,
+      businessLogo: logo,
+      businessName: business?.name,
+      cartTotal: currentCart?.total
+    })
     setOpenUpselling(false)
   }
 
   useEffect(() => {
-    if(!orderState.loading){
+    if (!orderState.loading) {
       handleCloseProductModal()
     }
   }, [orderState.loading])
@@ -181,6 +187,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 searchValue={searchValue}
                 handleClearSearch={handleChangeSearch}
                 errorQuantityProducts={errorQuantityProducts}
+                handleCancelSearch={handleCancel}
               />
             </WrapContent>
           </>
@@ -224,7 +231,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         />
       )}
       <OModal
-        open={!!curProduct} 
+        open={!!curProduct}
         onClose={handleCloseProductModal}
         entireModal
         customClose

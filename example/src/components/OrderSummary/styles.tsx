@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 
 export const OSContainer = styled.View`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -9,15 +10,12 @@ export const OSContainer = styled.View`
 export const OSProductList = styled.View``
 
 export const OSBill = styled.View`
-  padding-horizontal: 10px;
   padding-top: 10px;
-  flex: 1;
 `
 
 export const OSTable = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  flex: 1;
   align-items: center;
 `
 
@@ -29,5 +27,5 @@ export const OSTotal = styled.View`
 
 export const OSCoupon = styled.View`
   width: 100%;
-  /* padding: 5px 0px; */
+  padding: 5px 0px;
 `

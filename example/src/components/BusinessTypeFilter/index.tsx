@@ -16,7 +16,6 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
   } = props;
 
   const [, t] = useLanguage();
-  const { loading, error, types } = typesState;
 
   const renderTypes = ({ item }: any) => {
     return (
@@ -50,7 +49,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 
   return (
     <BCContainer>
-      {loading && (
+      {typesState?.loading && (
         <View>
           <Placeholder
             style={{ marginVertical: 10 }}
@@ -73,7 +72,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
           </Placeholder>
         </View>
       )}
-      {!loading && !error && types && types.length > 0 && (
+      {!typesState?.loading && !typesState?.error && typesState?.types && typesState?.types.length > 0 && (
         <>
           <BusinessCategoriesTitle>
             <OText
@@ -87,7 +86,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}
-              data={types}
+              data={typesState?.types}
               renderItem={renderTypes}
               keyExtractor={type => type.name}
             />

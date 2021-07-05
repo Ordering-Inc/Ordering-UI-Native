@@ -57,8 +57,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>The app requires access to the camera for the profile picture, to upload images to communicate via the messaging features of the app.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>app will require location access to get customer's location</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The app requires access to the photo library for the profile picture, to upload images to communicate via the messaging features of the app.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Poppins-Bold.ttf</string>
@@ -84,12 +88,19 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

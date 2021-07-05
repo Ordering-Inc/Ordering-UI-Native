@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { OrderList, useLanguage, useOrder } from 'ordering-components/native'
+import { useFocusEffect } from '@react-navigation/native'
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
@@ -19,14 +20,18 @@ import { View } from 'react-native'
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
+    navigation,
     activeOrders,
     orderList,
     pagination,
     titleContent,
     customArray,
-    loadMoreOrders,
     onNavigationRedirect,
-    orderStatus
+    orderStatus,
+    loadMoreOrders,
+    loadOrders,
+    ordersLength,
+    setOrdersLength
   } = props
 
   const [, t] = useLanguage()
@@ -41,8 +46,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const orders = customArray || values || []
 
   const [reorderLoading, setReorderLoading] = useState(false)
-
-
+  const [isLoadingFirstRender, setIsLoadingFirstRender] = useState(false)
+  const [screen,setScreen] = useState({name: '', uuid: null})
   const handleReorder = async (orderId: number) => {
     setReorderLoading(true)
     try {
@@ -76,15 +81,15 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       { key: 10, value: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver') },
       { key: 11, value: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver') },
       { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver') },
-      { key: 13, value: t('PREORDER', 'PreOrder')},
-      { key: 14, value: t('ORDER_NOT_READY', 'Order not ready')},
+      { key: 13, value: t('PREORDER', 'PreOrder') },
+      { key: 14, value: t('ORDER_NOT_READY', 'Order not ready') },
       { key: 15, value: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Order picked up completed by customer') },
-      { key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer')},
-      { key: 17, value: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer')  },
+      { key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer') },
+      { key: 17, value: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer') },
       { key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business') },
       { key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer') },
       { key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business') },
-      { key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business')}
+      { key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business') }
     ]
 
     const objectStatus = orderStatus.find((o) => o.key === status)
@@ -92,20 +97,43 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     return objectStatus && objectStatus
   }
 
+  useFocusEffect(
+    React.useCallback(() => {
+      loadOrders()
+      setIsLoadingFirstRender(false)
+      return () => {
+        setIsLoadingFirstRender(true)
+      }
+    }, [navigation])
+  )
+
+  useEffect(() => {
+    setOrdersLength && setOrdersLength({
+      ...ordersLength,
+      [activeOrders ? 'activeOrdersLength' : 'previousOrdersLength']: orders.length
+    })
+  }, [orders.length])
+
+
   return (
     <>
-      {(orders.length > 0) && (
-        <>
-          <OptionTitle>
-            <OText size={16} color={colors.textSecondary} mBottom={10} >
-              {titleContent || (activeOrders
-                ? t('ACTIVE_ORDERS', 'Active Orders')
-                : t('PREVIOUS_ORDERS', 'Previous Orders'))}
-            </OText>
-          </OptionTitle>
-        </>
+      <OptionTitle>
+        {(!activeOrders || (activeOrders && ordersLength.activeOrdersLength > 0) || (ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength === 0 )) && !isLoadingFirstRender && (
+        <OText size={16} color={colors.textSecondary} mBottom={10} >
+          {titleContent || (activeOrders
+            ? t('ACTIVE_ORDERS', 'Active Orders')
+            : t('PREVIOUS_ORDERS', 'Previous Orders'))}
+        </OText>
+        )}
+      </OptionTitle>
+      {!loading && orders.length === 0 && !isLoadingFirstRender && activeOrders && ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength !== 0 && (
+        <NotFoundSource
+          content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
+          image={imageFails}
+          conditioned
+        />
       )}
-      {!loading && orders.length === 0 && (
+      {!loading && orders.length === 0 && !isLoadingFirstRender && ordersLength.previousOrdersLength === 0 && (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           image={imageFails}
@@ -143,7 +171,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           )}
         </>
       )}
-      {!loading && !error && orders.length > 0 && (
+      {!loading && !error && orders.length > 0 && !isLoadingFirstRender && (
         activeOrders ? (
           <ActiveOrders
             orders={orders.filter((order: any) => orderStatus.includes(order.status))}
@@ -153,6 +181,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             customArray={customArray}
             getOrderStatus={getOrderStatus}
             onNavigationRedirect={onNavigationRedirect}
+            setScreen={setScreen}
+            screen={screen}
           />
         ) : (
           <PreviousOrders

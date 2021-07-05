@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components/native';
 import { colors } from '../../theme.json'
 
-export const Container = styled.ScrollView`
+export const Container = styled.View`
   padding-bottom: 40px;
 `
 
@@ -14,12 +14,13 @@ export const FormSide = styled.View`
 `;
 
 export const OTabs = styled.View`
-  display: flex;
   flex-direction: row;
+  width: 100%;
+  flex-wrap: wrap;
 `;
 
 export const OTab = styled.View`
-  padding: 0px 15px;
+  padding-horizontal: 10px;
 `;
 
 export const LoginWith = styled.View`
