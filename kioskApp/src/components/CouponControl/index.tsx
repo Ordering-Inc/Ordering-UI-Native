@@ -100,17 +100,18 @@ const CouponControlUI = (props: any) => {
 const styles = StyleSheet.create({
   inputsStyle: {
     borderColor: colors.disabled,
-    borderRadius: 4,
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 8,
+    borderTopRightRadius: 0,
+    borderTopLeftRadius: 8,
     flex: 1,
-    height: 52,
-    paddingEnd: 106
+    height: 52
   },
   buttonApplyStyle: {
-    position: 'absolute',
-    right: 8,
-    top: 0,
-    marginTop: -21,
-    height: 42
+    borderBottomRightRadius: 8,
+    borderBottomLeftRadius: 0,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 0,
   },
   textButtonApplyStyle: {
     color: colors.primary,
