@@ -65,8 +65,6 @@ export const ProductOptionsUI = (props: any) => {
   const HEADER_EXPANDED_HEIGHT =  orientationState?.dimensions?.height * 0.4;
   const HEADER_COLLAPSED_HEIGHT = orientationState?.dimensions?.height * 0.2;
 
-  console.log(HEADER_COLLAPSED_HEIGHT)
-
   const isError = (id: number) => {
     let bgColor = colors.white
     if (errors[`id:${id}`]) {
@@ -312,7 +310,7 @@ export const ProductOptionsUI = (props: any) => {
               width: orientationState?.dimensions?.width * 0.75,
               height: HEADER_EXPANDED_HEIGHT / 2,
               position: 'relative',
-              top: HEADER_EXPANDED_HEIGHT / 2,
+              top: HEADER_EXPANDED_HEIGHT / 3,
               zIndex: 100,
               padding: 20,
             }}

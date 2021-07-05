@@ -13,13 +13,12 @@ export const StyledContainer = styled.ScrollView`
 	shadow-radius: 3px;
 	elevation: 15;
 	${(props: any) => props.height && css`
-		maxHeight: ${props.height}px;
+		height: ${props.height}px;
 	`}
 `
 
 export const StyledContent = styled.ScrollView`
 	padding: 0 20px;
-	margin: 20px;
 	border-radius: 6px;
 	background-color: ${colors.whiteGray};
 	${(props: any) => props.height && css`
@@ -37,7 +36,6 @@ export const StyledTopBar = styled.View`
 `
 
 export const StyledBottomContent = styled.View`
-	padding-horizontal: 20px;
 	padding-bottom: 10px;
 	width: 100%;
 	align-items: center;

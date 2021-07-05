@@ -19,6 +19,7 @@ import { colors } from '../../theme.json';
 import { Cart as TypeCart } from '../../types';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
+import { PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
 
 const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | null => {
 	const {
@@ -36,6 +37,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
   const [, t] = useLanguage()
   const [orderState] = useOrder()
   const [{ parsePrice }] = useUtils()
+  const [orientationState] = useDeviceOrientation();
 
   const [openProduct, setModalIsOpen] = useState(false)
   const [curProduct, setCurProduct] = useState<any>(null)
@@ -86,12 +88,15 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
 	return (
     <StyledContainer
       nestedScrollEnabled
-      maxHeight={props.height}
+      height={props.height}
     >
-      <StyledContent      
+      <StyledContent
         nestedScrollEnabled
-        minHeight={props.height * 0.7}
-        maxHeight={props.height * 0.7}
+        minHeight={props.height * (orientationState.orientation === PORTRAIT ? 0.75 : 0.8)}
+        maxHeight={props.height * (orientationState.orientation === PORTRAIT ? 0.75 : 0.8)}
+        style={{
+          marginVertical: props.height * 0.025,
+        }}
       >
         <TopBar
           {...props}
