@@ -6,6 +6,7 @@ import { OButton, OIcon, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { _setStoreData } from '../../providers/StoreUtil';
 
 const windowHeight = Dimensions.get('window').height
 
@@ -15,7 +16,12 @@ export const Home = (props: any) => {
   } = props;
 
   const [, t] = useLanguage();
-  const [orderState] = useOrder()
+  const [orderState] = useOrder();
+
+  const handleGuessFlow = (page: string, params: any) => {
+    onNavigationRedirect(page, params);
+    _setStoreData('isGuestUser', true);
+  };
 
   return (
     <View style={styles.container}>
@@ -49,8 +55,8 @@ export const Home = (props: any) => {
         <TouchableOpacity
           style={{ ...styles.textLink, marginTop: 15 }}
           onPress={() => orderState?.options?.address?.address
-            ? onNavigationRedirect('BusinessList', { isGuestUser: true })
-            : onNavigationRedirect('AddressForm', { isGuestUser: true })
+            ? handleGuessFlow('BusinessList',{ isGuestUser: true } )
+            : handleGuessFlow('AddressForm',{ isGuestUser: true } )
           }
         >
           <OText weight='bold' size={18}>

@@ -68,6 +68,7 @@ export interface AddressFormParams {
   isFromProductsList?: boolean,
   hasAddressDefault?: any,
   afterSignup?: boolean
+  isGuestFromStore?: boolean
 }
 export interface SignupParams {
   navigation?: any;

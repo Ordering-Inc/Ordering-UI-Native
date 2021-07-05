@@ -30,7 +30,5 @@ export const WrapContent = styled.View`
 
 export const BusinessProductsListingContainer = styled.ScrollView`
   flex: 1;
-  ${({ isActiveFloatingButtom }: { isActiveFloatingButtom: boolean }) => isActiveFloatingButtom && css`
-    margin-bottom: 50px;
-  `}
+  margin-bottom: ${(props: any) => props.isActiveFloatingButtom ? '50px' : '0px' };
 `
