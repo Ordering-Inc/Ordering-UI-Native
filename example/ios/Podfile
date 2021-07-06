@@ -46,6 +46,5 @@ target 'delivery' do
 end
 
 target 'OneSignalNotificationServiceExtension' do
-  # pod 'OneSignal', '>= 3.0', '< 4.0'
-  pod 'OneSignal'
+  pod 'OneSignal', '>= 3.0', '< 4.0'
 end
