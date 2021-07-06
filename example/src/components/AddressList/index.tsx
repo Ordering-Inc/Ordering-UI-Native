@@ -4,13 +4,14 @@ import { AddressListContainer, AddressItem } from './styles'
 import { StyleSheet, View } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { colors } from '../../theme.json'
-import { OButton, OText, OAlert, OModal } from '../shared'
+import { colors, images } from '../../theme.json'
+import { OButton, OText, OAlert, OModal, OIcon } from '../shared'
 import { Container } from '../../layouts/Container'
 import { AddressFormParams, AddressListParams } from '../../types'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+import { TouchableRipple } from 'react-native-paper'
 
 const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
 
@@ -82,15 +83,15 @@ const AddressListUI = (props: AddressListParams) => {
   const addressIcon = (tag: string) => {
     switch (tag) {
       case 'other':
-        return 'plus'
+        return images.general.tag_plus
       case 'office':
-        return 'office-building'
+        return images.general.tag_building
       case 'home':
-        return 'home'
+        return images.general.tag_home
       case 'favorite':
-        return 'heart'
+        return images.general.tag_heart
       default:
-        return 'plus'
+        return images.general.tag_plus
     }
   }
 
@@ -133,7 +134,7 @@ const AddressListUI = (props: AddressListParams) => {
       {(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile)) && (
         <AddressListContainer>
           {isFromProfile && (
-            <OText size={24} mBottom={20}>{t('SAVED_PLACES', 'My saved places')}</OText>
+            <OText size={24} mBottom={20}>{t('MY_SAVED_PLACES', 'My saved places')}</OText>
           )}
           {
             route &&
@@ -151,12 +152,14 @@ const AddressListUI = (props: AddressListParams) => {
                 showCall={false}
                 btnStyle={{ paddingLeft: 0 }}
                 paddingTop={0}
+					 style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+        			 titleWrapStyle={{ paddingHorizontal: 0 }}
               />
             )}
           {addressList.loading && (
             <>
               {[...Array(5)].map((item, i) => (
-                <Placeholder key={i} style={{ padding: 20 }} Animation={Fade}>
+                <Placeholder key={i} style={{ paddingVertical: 20 }} Animation={Fade}>
                   <View style={{ flexDirection: 'row' }}>
                     <PlaceholderLine width={20} height={60} style={{ marginBottom: 0, marginRight: 15 }} />
                     <Placeholder>
@@ -178,18 +181,11 @@ const AddressListUI = (props: AddressListParams) => {
                     key={address.id}
                     isSelected={checkAddress(address)}
                     onPress={() => handleSetAddress(address)}
+						  style={{borderColor: checkAddress(address) ? colors.primary : colors.border}}
                   >
-                    <MaterialIcon
-                      name={addressIcon(address?.tag)}
-                      size={32}
-                      color={colors.primary}
-                      style={styles.icon}
-                    />
-                    <OText style={styles.address}>{address.address}</OText>
-                    <MaterialIcon
-                      name='pencil-outline'
-                      size={28}
-                      color={colors.green}
+						  <OIcon src={addressIcon(address?.tag)} width={24} color={checkAddress(address) ? colors.primary : colors.disabled} style={{marginEnd: 16}} />
+                    <OText style={styles.address} size={12}>{address.address}</OText>
+                    <TouchableRipple
                       onPress={() => !afterSignup ?  onNavigationRedirect(
                         'AddressForm',
                         {
@@ -212,17 +208,19 @@ const AddressListUI = (props: AddressListParams) => {
                           isFromProductsList: isFromProductsList,
                           hasAddressDefault: !!orderState.options?.address?.location
                         })}
-                    />
+                    >
+							  <OIcon src={images.general.pencil} width={16} style={{marginHorizontal: 4}} />
+						  </TouchableRipple>
                     <OAlert
                       title={t('DELETE_ADDRESS', 'Delete Address')}
                       message={t('QUESTION_DELETE_ADDRESS', 'Are you sure to you wants delete the selected address')}
                       onAccept={() => handleDelete(address)}
                       disabled={checkAddress(address)}
                     >
-                      <MaterialIcon
-                        name='trash-can-outline'
-                        size={28}
-                        color={!checkAddress(address) ? colors.primary : colors.disabled}
+                      <OIcon
+                        src={images.general.trash}
+                        width={16}
+                        color={colors.disabled}
                       />
                     </OAlert>
                   </AddressItem>
@@ -252,9 +250,7 @@ const AddressListUI = (props: AddressListParams) => {
               <OButton
                 text={t('ADD_NEW_ADDRESS', 'Add new Address')}
                 imgRightSrc=''
-                imgLeftSrc={addIcon}
                 bgColor={colors.white}
-                imgLeftStyle={styles.buttonIcon}
                 style={styles.button}
                 borderColor={colors.primary}
                 onClick={() => !afterSignup ? onNavigationRedirect(
@@ -308,7 +304,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   button: {
-    marginVertical: 30
+    marginTop: 30,
+    marginBottom: 0,
+	 borderRadius: 7.6,
+	 borderWidth: 1,
   }
 })
 

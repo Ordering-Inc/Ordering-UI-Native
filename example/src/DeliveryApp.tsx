@@ -8,15 +8,15 @@
 
 import * as React from 'react';
 import { LogBox, Platform } from 'react-native';
-import * as Sentry from "@sentry/react-native";
+import * as Sentry from '@sentry/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { OrderingProvider } from 'ordering-components/native';
-import RNBootSplash from "react-native-bootsplash";
+import RNBootSplash from 'react-native-bootsplash';
 
 import { ToastProvider } from './providers/ToastProvider';
 import RootNavigator from './navigators/RootNavigator';
 import { Toast } from './components/shared/OToast';
-import Alert from './providers/AlertProvider'
+import Alert from './providers/AlertProvider';
 
 import settings from './config.json';
 import theme from './theme.json';
@@ -24,18 +24,18 @@ import theme from './theme.json';
 Sentry.init({
   environment: Platform.OS === 'ios' ? 'ios' : 'android',
   dsn: 'https://90197fffe6a1431b8c3eb79e1e36f0ee@o460529.ingest.sentry.io/5722123',
-  release: "ordering-ui-native@" + process.env.npm_package_version
+  release: 'ordering-ui-native@' + process.env.npm_package_version,
 });
 
 LogBox.ignoreLogs([
-  'Sending \`onAnimatedValueUpdate` with no listeners registered.',
+  'Sending `onAnimatedValueUpdate` with no listeners registered.',
   'Non-serializable values were found in the navigation state.',
   'Setting a timer',
   'The `value` prop is required for the `<Context.Provider>`',
-  'Can\'t perform a React state update',
+  "Can't perform a React state update",
   'Remote debugger',
-  'Task orphaned for request'
-])
+  'Task orphaned for request',
+]);
 
 theme.images = {
   logos: {
@@ -65,7 +65,7 @@ theme.images = {
     lock: require('./assets/icons/ic_lock.png'),
     camera: require('./assets/icons/camera.png'),
     support: require('./assets/icons/help.png'),
-    trash: require('./assets/icons/trash.png'),
+    trash: require('./assets/icons/ic_trash.png'),
     phone: require('./assets/icons/phone.png'),
     mail: require('./assets/icons/mail.png'),
     chat: require('./assets/icons/chat.png'),
@@ -79,8 +79,23 @@ theme.images = {
     stripes: require('./assets/icons/stripe-s.png'),
     stripesb: require('./assets/icons/stripe-sb.png'),
     creditCard: require('./assets/icons/credit-card.png'),
-	 google: require('./assets/icons/ic_google.png'),
-	 pin: require('./assets/icons/ic_location_pin.png')
+    google: require('./assets/icons/ic_google.png'),
+    pin: require('./assets/icons/ic_location_pin.png'),
+    tag_home: require('./assets/icons/tag_home.png'),
+    tag_building: require('./assets/icons/tag_building.png'),
+    tag_heart: require('./assets/icons/tag_heart.png'),
+    tag_plus: require('./assets/icons/tag_plus.png'),
+    option_normal: require('./assets/icons/option_normal.png'),
+    option_checked: require('./assets/icons/option_checked.png'),
+    chevron_right: require('./assets/icons/chevron-right.png'),
+    chevron_left: require('./assets/icons/chevron-left.png'),
+    clock: require('./assets/icons/ic_clock.png'),
+    pencil: require('./assets/icons/ic_pencil.png'),
+    search: require('./assets/icons/ic_search.png'),
+    star: require('./assets/icons/ic_star.png'),
+  },
+  backgrounds: {
+    business_list_header: require('./assets/images/business_list_banner.jpg'),
   },
   order: {
     status0: require('./assets/images/status-0.png'),
@@ -96,18 +111,27 @@ theme.images = {
     status10: require('./assets/images/status-10.png'),
     status11: require('./assets/images/status-11.png'),
     status12: require('./assets/images/status-12.png'),
-    status13: require('./assets/images/status-13.png')
+    status13: require('./assets/images/status-13.png'),
+  },
+  tabs: {
+    explorer: require('./assets/icons/tab_explor.png'),
+    promotions: require('./assets/icons/tab_promotions.png'),
+    my_carts: require('./assets/icons/tab_mycarts.png'),
+    orders: require('./assets/icons/tab_orders.png'),
+    profile: require('./assets/icons/tab_profile.png'),
   },
   categories: {
-    all: require('./assets/images/categories/category-all.png')
+    all: require('./assets/images/categories/category-all.png'),
   },
   dummies: {
     product: require('./assets/images/dummies/product.png'),
     businessLogo: require('./assets/images/dummies/store.png'),
-    driverPhoto: 'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png',
-    customerPhoto: 'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png'
-  }
-}
+    driverPhoto:
+      'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png',
+    customerPhoto:
+      'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',
+  },
+};
 
 const DeliveryApp = () => {
   React.useEffect(() => {

@@ -10,8 +10,6 @@ export const BCContainer = styled.View`
 
 export const BusinessCategoriesTitle = styled.View`
   flex: 1;
-  margin-top: 10px;
-  margin-bottom: 5px;
 `
 
 export const BusinessCategories = styled.View`

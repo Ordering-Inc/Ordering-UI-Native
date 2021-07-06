@@ -27,7 +27,7 @@ const OImage = (props: Props): React.ReactElement => {
   return (
     <Wrapper style={{ borderRadius: props.style?.borderRadius, overflow: 'hidden', marginHorizontal: props.style?.marginHorizontal }}>
       <SImage
-        source={props.src ? props.src : props.url ? { uri: props.url } : props.dummy ? props.dummy : require('../../assets/icons/lunch.png')}
+        source={props.src ? props.src : props.url ? { uri: props.url } : props.dummy}
         style={{
           tintColor: props.color,
           flex: props.isWrap ? 1 : 0,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps} from 'react-native';
+import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps, TextStyle} from 'react-native';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
 import { colors } from '../../theme.json';
@@ -47,7 +47,8 @@ interface Props extends TextInputProps {
   multiline?: boolean;
   vertorIcon?: string;
   vectorIconColor?: string;
-  forwardRef?: any
+  forwardRef?: any;
+  inputStyle?: TextStyle;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -64,7 +65,7 @@ const OInput = (props: Props): React.ReactElement => {
           color={props.iconColor}
           width={16}
           height={20}
-          style={{marginRight: 10}}
+          style={{marginRight: 10, ...props.iconStyle}}
         />
       ) : null}
       {props.vertorIcon && (
@@ -87,6 +88,7 @@ const OInput = (props: Props): React.ReactElement => {
         onSubmitEditing={props.onSubmitEditing}
         blurOnSubmit={props.blurOnSubmit}
         ref={props.forwardRef}
+		  style={props.inputStyle}
       />
       {props.iconRight && (
         <OIcon

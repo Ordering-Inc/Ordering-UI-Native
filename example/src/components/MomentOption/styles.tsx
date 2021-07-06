@@ -37,9 +37,9 @@ export const Day = styled.TouchableOpacity`
 `
 export const WrapHours = styled.ScrollView`
   border-width: 1px;
-  border-color: ${colors.textSecondary};
-  border-radius: 10px;
-  margin: 20px 0;
+  border-color: ${colors.border};
+  border-radius: 7.6px;
+  margin-top: 6px;
   height: 140px;
   max-height: 140px;
 `
@@ -56,10 +56,10 @@ export const Hour = styled.TouchableOpacity`
   align-items: center;
   padding: 5px;
   border-width: 1px;
-  border-radius: 10px;
-  border-color: ${colors.textSecondary};
+  border-radius: 7.6px;
+  border-color: ${colors.border};
   width: 90px;
-  margin-vertical: 10px;
+  margin-vertical: 7px;
 `
 
 export const WrapDelveryTime = styled.View`

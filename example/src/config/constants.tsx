@@ -9,7 +9,7 @@ export const IMAGES = {
   lock: require('../assets/icons/ic_lock.png'),
   camera: require('../assets/icons/camera.png'),
   support: require('../assets/icons/help.png'),
-  trash: require('../assets/icons/trash.png'),
+  trash: require('../assets/icons/ic_trash.png'),
   phone: require('../assets/icons/phone.png'),
   mail: require('../assets/icons/mail.png'),
   chat: require('../assets/icons/chat.png'),

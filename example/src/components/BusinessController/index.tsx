@@ -6,8 +6,8 @@ import {
   useLanguage,
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme.json';
+import { ImageStore, StyleSheet, View } from 'react-native';
+import { colors, images } from '../../theme.json';
 import { BusinessControllerParams } from '../../types';
 import { convertHoursToMinutes } from '../../utils';
 import {
@@ -28,7 +28,8 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
   const { business, handleClick } = props;
-  const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
+  const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] =
+    useUtils();
   const [orderState] = useOrder();
   const [, t] = useLanguage();
 
@@ -50,25 +51,19 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       <BusinessHero
         source={{ uri: optimizeImage(business?.header, 'h_400,c_limit') }}
         imageStyle={styles.headerStyle}
-        isClosed={business?.open}
-      >
+        isClosed={business?.open}>
         {business?.featured && (
           <View style={styles.featured}>
-            <FontAwesomeIcon name='crown' size={26} color='gold' />
+            <FontAwesomeIcon name="crown" size={26} color="gold" />
           </View>
         )}
-        {!business?.open && (
-          <View style={styles.closed}>
-            <OText size={32} color={colors.white}>{t('CLOSED', 'CLOSED')}</OText>
-          </View>
-        )}
-        <BusinessLogo>
-          <OIcon url={optimizeImage(business?.logo, 'h_300,c_limit')} style={styles.businessLogo} />
-        </BusinessLogo>
         <BusinessState>
           {!business?.open && (
             <View style={styles.businessStateView}>
-              <OText color={colors.white} size={20} style={styles.businessStateText}>
+              <OText
+                color={colors.textThird}
+                size={10}
+                style={styles.businessStateText}>
                 {t('PREORDER', 'PREORDER')}
               </OText>
             </View>
@@ -77,45 +72,54 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       </BusinessHero>
       <BusinessContent>
         <BusinessInfo>
-          <OText size={20}>{business?.name}</OText>
+          <BusinessLogo style={styles.businessLogo}>
+            <OIcon
+              url={optimizeImage(business?.logo, 'h_300,c_limit')}
+              width={56}
+              height={56}
+            />
+          </BusinessLogo>
           {business?.reviews?.total > 0 && (
             <Reviews>
-              <IconAntDesign
-                name="star"
-                color={colors.primary}
-                size={16}
-                style={styles.starIcon}
-              />
-              <OText>{parseNumber(business?.reviews?.total, { separator: '.' })}</OText>
+              <OIcon src={images.general.star} width={12} style={styles.starIcon} />
+              <OText size={10} style={{lineHeight: 15}}>
+                {parseNumber(business?.reviews?.total, { separator: '.' })}
+              </OText>
             </Reviews>
           )}
         </BusinessInfo>
-        <BusinessCategory>
+        <OText
+          size={12}
+          style={{ lineHeight: 18, marginBottom: 6 }}
+          weight={'500'}>
+          {business?.name}
+        </OText>
+        <OText size={10} style={{ lineHeight: 15, marginBottom: 3 }}>
+          {business?.address}
+        </OText>
+        {/* <BusinessCategory>
           <OText>{getBusinessType()}</OText>
-        </BusinessCategory>
+        </BusinessCategory> */}
         <Metadata>
-          <View style={styles.bullet}>
-            <MaterialComIcon name='alarm' size={16} />
-            <OText style={styles.metadata}>
-              {convertHoursToMinutes(
-                orderState?.options?.type === 1
-                  ? business?.delivery_time
-                  : business?.pickup_time,
-              )}
+		  {!business?.open ? (
+          <View style={styles.closed}>
+            <OText size={10} color={colors.red}>
+              {t('CLOSED', 'Closed')}
             </OText>
           </View>
+        ) : (
           <View style={styles.bullet}>
-            <MaterialIcon name='location-on' size={16} />
-            <OText style={styles.metadata}>
-              {parseDistance(business?.distance)}
+            <OText size={10} color={colors.textSecondary}>
+					{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(business?.delivery_price) + ' \u2022 '}`}
             </OText>
+            <OText size={10} color={colors.textSecondary}>{`${convertHoursToMinutes(
+					orderState?.options?.type === 1
+					? business?.delivery_time
+					: business?.pickup_time,
+					)} \u2022 `}</OText>
+				<OText size={10} color={colors.textSecondary}>{parseDistance(business?.distance)}</OText>
           </View>
-          <View style={styles.bullet}>
-            <MaterialComIcon name='truck-delivery' size={16} style={{ marginBottom: -2 }} />
-            <OText style={styles.metadata}>
-              {parsePrice(business?.delivery_price)}
-            </OText>
-          </View>
+		  )}
         </Metadata>
       </BusinessContent>
     </Card>
@@ -124,35 +128,37 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
 const styles = StyleSheet.create({
   headerStyle: {
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
+    borderTopLeftRadius: 7.6,
+    borderTopRightRadius: 7.6,
   },
   businessLogo: {
-    width: 75,
-    height: 75,
-    marginLeft: 20,
-    marginBottom: 20,
-    borderRadius: 25,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    backgroundColor: 'white',
+    width: 62,
+    height: 62,
+    borderRadius: 7.6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: -32,
+	 shadowColor: '#000000',
+	 shadowOffset: {width: 0, height: 1},
+	 shadowOpacity: 0.1,
+	 shadowRadius: 1
   },
   businessStateView: {
-    backgroundColor: '#6C6C6C',
-    borderRadius: 10,
+    backgroundColor: '#DEE2E6',
+    borderRadius: 50,
+	 height: 20,
+	 alignItems: 'center',
+	 justifyContent: 'center',
+	 paddingHorizontal: 8,
   },
   businessStateText: {
-    color: colors.white,
     textAlign: 'center',
-    padding: 8,
   },
-  metadata: {
-    marginRight: 20,
-    marginLeft: 5,
-    marginBottom: -5,
-  },
+
   starIcon: {
-    marginTop: 1.5,
-    marginHorizontal: 5,
+    marginHorizontal: 2,
+	 marginTop: -2,
   },
   featured: {
     position: 'absolute',
@@ -161,23 +167,15 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     borderRadius: 10,
     left: 20,
-    top: 10
+    top: 10,
   },
   closed: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.backgroundDark,
-    opacity: 0.6,
-    borderTopRightRadius: 25,
-    borderTopLeftRadius: 25,
   },
   bullet: {
     flexDirection: 'row',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
 });
 
 export const BusinessController = (props: BusinessControllerParams) => {

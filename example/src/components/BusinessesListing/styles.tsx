@@ -13,8 +13,6 @@ export const BusinessList = styled.View`
 `
 
 export const Search = styled.View`
-  flex-direction: row;
-  flex: 1;
   justify-content: flex-end;
   align-items: center;
   margin-vertical: 10px;
@@ -22,14 +20,13 @@ export const Search = styled.View`
 
 export const AddressInput = styled.TouchableOpacity`
   flex-direction: row;
-  background-color: ${colors.inputDisabled};
-  border-radius: 10px;
+  background-color: ${colors.white};
+  border-radius: 22px;
+  padding-horizontal: 20px;
   align-items: center;
-  margin-horizontal: 10px;
-  padding: 15px;
-  flex: 1;
   width: 100%;
-  z-index: -10;
+  height: 44px;
+  max-height: 44px;
 `
 
 export const OrderControlContainer = styled.View`
@@ -43,9 +40,32 @@ export const OrderControlContainer = styled.View`
 `
 
 export const WrapMomentOption = styled.TouchableOpacity`
-  background-color: ${colors.inputDisabled};
-  border-radius: 10px;
-  margin-vertical: 5px;
-  padding: 15px 20px;
+  background-color: ${colors.backgroundGray100};
+  border-radius: 7.6px;
+  font-size: 12px;
   max-width: 240px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  padding-horizontal: 8px;
+  flex-direction: row;
+  margin-end: 12px;
 `
+
+export const HeaderWrapper = styled.ImageBackground`
+	width: 100%;
+	height: 370px;
+	padding: 20px 40px;
+	background-color: transparent;
+`;
+
+export const ListWrapper = styled.View`
+	background-color: ${colors.backgroundLight};
+	padding-horizontal: 40px;
+`;
+
+export const FeaturedWrapper = styled.View`
+	background-color: ${colors.backgroundLight};
+	height: 220px;
+	paddingVertical: 30px;
+`;

@@ -49,12 +49,11 @@ const StyledImage = styled.Image`
   resize-mode: contain;
 `
 const EndImage = styled.Image`
-  width: 15px;
+  width: 17px;
   height: 15px;
   resize-mode: contain;
-  right: 20px;
+  right: 17.5px;
   position: absolute;
-  right: 20px;
 `;
 
 interface Props {

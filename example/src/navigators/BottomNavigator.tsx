@@ -6,8 +6,8 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
-import { colors } from '../theme.json'
-import { OText } from '../components/shared'
+import { colors, images } from '../theme.json'
+import { OIcon, OText } from '../components/shared'
 
 import BusinessList from '../pages/BusinessesListing'
 import MyOrders from '../pages/MyOrders'
@@ -15,14 +15,15 @@ import CartList from '../pages/CartList'
 import Profile from '../pages/Profile'
 
 const CartsLenght = styled.View`
-  width: 25px;
-  height: 25px;
-  background-color: ${colors.primary};
+  width: 10px;
+  height: 10px;
+  background-color: ${colors.red};
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 0;
+  right: 10px;
+  top: 7px;
 `
 
 const Tab = createMaterialBottomTabNavigator();
@@ -48,8 +49,9 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0  }}>
-                <MaterialCommunityIcon name='home' size={46} color={color} />
+              <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: !isIos ? 10 : 0  }}>
+                <OIcon src={images.tabs.explorer} width={16} color={color} />
+					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('EXPLORE', 'Explore')}</OText>
               </View>
             )
         }}
@@ -61,8 +63,9 @@ const BottomNavigator = () => {
           {
             tabBarIcon:
               ({ color }) => (
-                <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0 }}>
-                  <MaterialIcon name='format-list-bulleted' size={46} color={color} />
+                <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: !isIos ? 10 : 0 }}>
+                  <OIcon src={images.tabs.orders} width={16} color={color} />
+					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('ORDERS', 'Orders')}</OText>
                 </View>
               ),
           }}
@@ -76,15 +79,16 @@ const BottomNavigator = () => {
               <View style={{
                   width: 50,
                   height: 50,
-                  justifyContent: !isIos ? 'flex-start' : 'space-evenly',
+                  justifyContent: 'center', alignItems: 'center',
                   position: 'relative',
                   bottom: !isIos ? 10 : 0
                 }}
               >
-                <MaterialIcon name='shopping-basket' size={46} color={color} />
+                <OIcon src={images.tabs.my_carts} width={16} color={color} />
+					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('MY_CARTS', 'My carts')}</OText>
                 {cartsList.length > 0 && (
                   <CartsLenght style={{ borderRadius: 100 / 2 }}>
-                    <OText
+                    <OText size={7}
                       color={colors.white}
                     >
                       {cartsList.length}
@@ -101,8 +105,9 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0  }}>
-                <MaterialIcon name='person' size={46} color={color} />
+              <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: !isIos ? 10 : 0  }}>
+                <OIcon src={images.tabs.profile} width={16} color={color} />
+					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('PROFILE', 'Profile')}</OText>
               </View>
             )
         }}
