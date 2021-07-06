@@ -11,14 +11,14 @@ const Wrapper = styled.TouchableOpacity`
     justify-content: center;
 `
 
-export interface OKeyButtonProps {
+interface Props {
     title?: string,
     subTitle?: string,
     onClick?: any,
     style?: ViewStyle
 }
 
-const OKeyButton = (props: OKeyButtonProps) => {
+const OKeyButton = (props: Props) => {
     return (
         <Wrapper 
             style={props.style}
@@ -32,4 +32,4 @@ const OKeyButton = (props: OKeyButtonProps) => {
     )
 }
 
-export default OKeyButton;
+export default OKeyButton
