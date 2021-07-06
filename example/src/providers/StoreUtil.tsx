@@ -33,8 +33,18 @@ export const _removeStoreData = (key: string) => {
   }
 };
 
-export const clearAllData = () => {
-  AsyncStorage.getAllKeys()
-    .then(keys => AsyncStorage.multiRemove(keys))
-    .then(() => console.log('success'));
+export const _clearStoreData = async () => {
+  try {
+    const keys = await AsyncStorage.getAllKeys()
+    AsyncStorage.multiRemove(keys)
+  } catch {
+    return null
+  }
+}
+
+export const StoreMethods = {
+  _retrieveStoreData,
+  _setStoreData,
+  _removeStoreData,
+  _clearStoreData
 }
