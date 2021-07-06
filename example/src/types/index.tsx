@@ -47,6 +47,7 @@ export interface AddressListParams {
   isFromBusinesses?: boolean;
   isFromProductsList?: boolean;
   afterSignup?: boolean;
+  isFromCheckout?: boolean
 }
 
 export interface AddressFormParams {
