@@ -52,7 +52,8 @@ const AddressFormUI = (props: AddressFormParams) => {
     isRequiredField,
     isFromProductsList,
     hasAddressDefault,
-    afterSignup
+    afterSignup,
+    isFromCheckout
   } = props
 
   const [, t] = useLanguage()
@@ -258,7 +259,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   }
 
   useEffect(() => {
-    if (orderState.loading && !addressesList && orderState.options.address && auth && !afterSignup) {
+    if (orderState.loading && !addressesList && orderState.options.address && auth && !afterSignup && !isFromCheckout) {
       !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business')
     }
   }, [orderState.options.address])
@@ -361,13 +362,6 @@ const AddressFormUI = (props: AddressFormParams) => {
       keyboardDidHideListener.remove()
     }
   }, [])
-
-  useEffect(() => {
-    if (!orderState.loading && auth && !hasAddressDefault && isSignUpEffect) {
-      navigation.navigate('BottomTab')
-    }
-    setIsSignUpEffect(true)
-  }, [orderState.loading])
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ToastType, useToast } from '../../providers/ToastProvider';
@@ -11,7 +11,9 @@ import {
 import {
   PaymentOptions as PaymentOptionsController,
   useLanguage,
-  useSession
+  useSession,
+  useApi,
+  useOrder
 } from 'ordering-components/native';
 
 import { PaymentOptionCash } from '../PaymentOptionCash';
@@ -31,9 +33,8 @@ import {
   PMCardItemContent
 } from './styles'
 import { colors, images } from '../../theme.json';
-import { getIconCard, flatArray } from '../../utils';
+import { getIconCard } from '../../utils';
 import { WebView } from 'react-native-webview';
-import { useRef } from 'react';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 // const stripeRedirectOptions = [
@@ -81,12 +82,13 @@ const PaymentOptionsUI = (props: any) => {
   const [, t] = useLanguage();
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
-  const [showGateway, setShowGateway] = useState(false);
-  const [prog, setProg] = useState(false);
-  const [progClr, setProgClr] = useState('#000');
+  const [showGateway, setShowGateway] = useState<any>({closedByUsed: false, open: false});
+  const [prog, setProg] = useState(true);
+  const [progClr, setProgClr] = useState('#424242');
   const { showToast } = useToast();
   const webviewRef = useRef<any>(null)
-
+  const [ordering] = useApi()
+  const [orderState,{confirmCart}] = useOrder()
   const [{ token, user }] = useSession()
   const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
   // const [{ token }] = useSession()
@@ -99,16 +101,33 @@ const PaymentOptionsUI = (props: any) => {
 
   const onMessage = (e : any) => {
     let data = e.nativeEvent.data;
-    let payment = data;
-    console.log(data)
+    let payment = JSON.parse(data);
+    if(payment.error){
+      showToast(ToastType.Error, payment.result)
+    } else {
+      showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfullyS'))
+      onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment.result.order.uuid, goToBusinessList: true })
+    }
+    setShowGateway({closedByUser: false, open: false})
   }
-
-
 
   const handlePaymentMethodClick = (paymethod: any) => {
     const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
     handlePaymethodClick(paymethod, isPopupMethod)
+    if(paymethod?.gateway === 'paypal'){
+      setShowGateway({closedByUser: false, open: true})
+    }
   }
+
+  const onFailPaypal = async () => {
+    if(showGateway.closedByUser === true){
+      const {result} = await confirmCart(cart.uuid)
+    }
+  }
+
+  useEffect(() => {
+    onFailPaypal()
+  }, [showGateway.closedByUser])
 
   useEffect(() => {
     if (paymethodsList.paymethods.length === 1) {
@@ -156,7 +175,7 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeIds: any = [3, 32, 66]; //exclude paypal & connect & redirect
+  const excludeIds: any = [32, 66]; //exclude connect & redirect
 
   return (
     <PMContainer>
@@ -170,15 +189,6 @@ const PaymentOptionsUI = (props: any) => {
           keyExtractor={(paymethod: any) => paymethod.id.toString()}
         />
       )}
-
-      <View style={styles.btnCon}>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => setShowGateway(true)}>
-          <OText style={styles.btnTxt}>Pay Using PayPal</OText>
-        </TouchableOpacity>
-      </View>
-
       {(paymethodsList.loading || isLoading) && (
         <Placeholder style={{ marginTop: 10 }} Animation={Fade}>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
@@ -406,10 +416,10 @@ const PaymentOptionsUI = (props: any) => {
         )}
       </Modal> */}
       <OModal
-        open={showGateway}
-        onCancel={() => setShowGateway(false)}
-        onAccept={() => setShowGateway(false)}
-        onClose={() => setShowGateway(false)}
+        open={showGateway.open && paymethodSelected.gateway === 'paypal'}
+        onCancel={() => setShowGateway({open: false, closedByUser: true})}
+        onAccept={() => setShowGateway({open: false, closedByUser: true})}
+        onClose={() => setShowGateway({open: false, closedByUser: true})}
         entireModal
       >
         <OText
@@ -420,7 +430,7 @@ const PaymentOptionsUI = (props: any) => {
             color: '#00457C',
             marginBottom: 5
           }}>
-          PayPal GateWay
+          {t('PAYPAL_GATEWAY', 'PayPal GateWay')}
         </OText>
         <View style={{padding: 13, opacity: prog ? 1 : 0}}>
           <ActivityIndicator size={24} color={progClr} />
@@ -436,7 +446,7 @@ const PaymentOptionsUI = (props: any) => {
           style={{ flex: 1 }}
           onLoadStart={() => {
             setProg(true);
-            setProgClr('#000');
+            setProgClr('#424242');
           }}
           onLoadProgress={() => {
             setProg(true);
@@ -446,22 +456,20 @@ const PaymentOptionsUI = (props: any) => {
             const message = {
               action: 'init',
               data: {
-                urlPlace: `https://apiv4.ordering.co/v400/en/luisv4/carts/${cart?.uuid}/place`,
-                urlConfirm: `https://apiv4.ordering.co/v400/en/luisv4/carts/${cart?.uuid}/confirm`,
+                urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
+                urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
                 payData: {
-                  paymethod_id: 3,
+                  paymethod_id: paymethodSelected?.id,
                   amount: cart?.total,
                   delivery_zone_id: cart?.delivery_zone_id,
                   user_id: user?.id
                 },
                 userToken: token,
+                clientId: isOpenMethod?.paymethod?.credentials?.client_id
               }
             }
             setProg(false);
             webviewRef.current.postMessage(JSON.stringify(message))
-          }}
-          onLoad={() => {
-            setProg(false);
           }}
         />
       </OModal>

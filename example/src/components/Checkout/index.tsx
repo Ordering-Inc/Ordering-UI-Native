@@ -164,12 +164,6 @@ const CheckoutUI = (props: any) => {
   //   handlePaymethodChange(null)
   // }, [cart?.total])
 
-  useEffect(() => {
-    if (cart?.products?.length === 0) {
-      navigation?.canGoBack() && navigation.goBack();
-    }
-  }, [cart?.products])
-
   return (
     <>
       <Container>
@@ -226,8 +220,7 @@ const CheckoutUI = (props: any) => {
             )}
         </ChTotal>
       </ChSection>
-      {/**devolver esto */}
-      {/* <ChSection style={style.paddSection}>
+      <ChSection style={style.paddSection}>
         <ChAddress>
           {(businessDetails?.loading || cartState.loading) ? (
             <Placeholder Animation={Fade}>
@@ -246,7 +239,7 @@ const CheckoutUI = (props: any) => {
             />
           )}
         </ChAddress>
-      </ChSection> */}
+      </ChSection>
       <ChSection style={style.paddSectionH}>
         <ChMoment>
           <CHMomentWrapper

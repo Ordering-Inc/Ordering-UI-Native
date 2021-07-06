@@ -238,7 +238,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       >
         <ProductForm
           product={curProduct}
-          businessSlug={business.slug}
+          businessSlug={business?.slug}
           businessId={business.id}
           onClose={handleCloseProductModal}
           navigation={navigation}

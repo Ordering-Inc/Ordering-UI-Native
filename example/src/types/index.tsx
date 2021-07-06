@@ -67,7 +67,8 @@ export interface AddressFormParams {
   onSaveAddress?: any,
   isFromProductsList?: boolean,
   hasAddressDefault?: any,
-  afterSignup?: boolean
+  afterSignup?: boolean,
+  isFromCheckout?: boolean
 }
 export interface SignupParams {
   navigation?: any;
@@ -257,6 +258,7 @@ export interface OrderDetailsParams {
   readMessages?: () => {},
   isFromCheckout?: boolean,
   driverLocation?: any,
+  goToBusinessList?: boolean
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean,
