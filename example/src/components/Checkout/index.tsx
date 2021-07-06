@@ -163,7 +163,6 @@ const CheckoutUI = (props: any) => {
   // useEffect(() => {
   //   handlePaymethodChange(null)
   // }, [cart?.total])
-
   return (
     <>
       <Container>
@@ -431,7 +430,7 @@ const CheckoutUI = (props: any) => {
           </ChCart>
         </ChSection>
       )}
-
+  
       {!cartState.loading && cart && (
         <ChSection style={{ paddingTop: 0, paddingBottom: 20, paddingHorizontal: 20 }}>
           <ChErrors>
@@ -474,8 +473,8 @@ const CheckoutUI = (props: any) => {
           <>
             <FloatingButton
               handleClick={() => handlePlaceOrder()}
-              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
-              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
+              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
               btnText={cart?.subtotal >= cart?.minimum
                 ? (
                   placing
