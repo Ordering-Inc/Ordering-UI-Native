@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet, Keyboard } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -155,6 +155,7 @@ const SignupFormUI = (props: SignupParams) => {
   }
 
   const onSubmit = (values: any) => {
+    Keyboard.dismiss()
     if (phoneInputData.error) {
       showToast(ToastType.Error, phoneInputData.error);
       return
