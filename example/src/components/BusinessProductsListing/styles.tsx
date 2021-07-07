@@ -3,15 +3,16 @@ import { colors } from '../../theme.json'
 
 export const WrapHeader = styled.View`
   position: relative;
+  padding-bottom: 35px;
 `
 export const TopHeader = styled.View`
-  position: absolute;
   width: 100%;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   z-index: 1;
-  flex: 1;
+  height: 60px;
+  min-height: 60px;
 `
 export const AddressInput = styled.TouchableOpacity`
   flex: 1;
@@ -20,12 +21,12 @@ export const AddressInput = styled.TouchableOpacity`
   border-radius: 24px;
 `
 export const WrapSearchBar = styled.View`
-  padding: 5px;
+  padding: 8px 30px;
   background-color: ${colors.white};
   flex: 1;
 `
 export const WrapContent = styled.View`
-  padding: 10px 20px;
+  padding: 10px 40px;
 `
 
 export const BusinessProductsListingContainer = styled.ScrollView`

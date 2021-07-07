@@ -1,37 +1,39 @@
-import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
+import styled from 'styled-components/native';
+import { colors } from '../../theme.json';
 
 export const BusinessContainer = styled.View`
   flex-direction: column;
-`
+`;
 export const BusinessHeader = styled.ImageBackground`
-  flex-direction: row;
   width: 100%;
-  height: 100%;
   position: relative;
-  max-height: 260px;
+  max-height: 258px;
+  height: 258px;
   resize-mode: cover;
-  min-height: 200px;
-`
+`;
 export const BusinessLogo = styled.View`
-  flex: 1;
-  align-self: flex-end;
-`
+  position: absolute;
+  start: 40px;
+  top: -36px;
+  z-index: 50;
+  box-shadow: 0 0 2px #0000001A;
+`;
 export const BusinessInfo = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   background-color: ${colors.backgroundPage};
-`
+`;
 export const BusinessInfoItem = styled.View`
   flex-direction: row;
   align-items: center;
-`
+`;
 export const WrapReviews = styled.View`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`
+`;
 export const WrapBusinessInfo = styled.TouchableOpacity`
-  margin-horizontal: 10px;
-`
+  position: absolute;
+  top: 16px;
+  end: 39px;
+`;

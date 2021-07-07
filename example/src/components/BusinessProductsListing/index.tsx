@@ -9,7 +9,7 @@ import {
   useSession,
   useUtils
 } from 'ordering-components/native'
-import { OButton, OModal, OText } from '../shared'
+import { OButton, OIcon, OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { SearchBar } from '../SearchBar'
 import { BusinessProductsCategories } from '../BusinessProductsCategories'
@@ -100,7 +100,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     <>
       <BusinessProductsListingContainer style={styles.mainContainer} isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}>
         <WrapHeader>
-          {!loading && business?.id && (
+          {/* {!loading && business?.id && ( */}
             <TopHeader>
               {!isOpenSearchBar && (
                 <>
@@ -110,9 +110,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                       imgRightSrc={null}
                       style={styles.btnBackArrow}
                       onClick={() => navigation?.canGoBack() && navigation.goBack()}
-                      imgLeftStyle={{ tintColor: '#fff' }}
+                      imgLeftStyle={{ tintColor: colors.textNormal }}
                     />
-                    <AddressInput
+                    {/* <AddressInput
                       onPress={() => auth
                         ? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
                         : onRedirect('AddressForm', { address: orderState.options?.address })}
@@ -120,7 +120,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                       <OText color={colors.white} numberOfLines={1}>
                         {orderState?.options?.address?.address}
                       </OText>
-                    </AddressInput>
+                    </AddressInput> */}
                   </View>
                   {!errorQuantityProducts && (
                     <View style={{ ...styles.headerItem }}>
@@ -128,11 +128,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                         onPress={() => setIsOpenSearchBar(true)}
                         style={styles.searchIcon}
                       >
-                        <MaterialIcon
-                          name='search'
-                          color={colors.white}
-                          size={25}
-                        />
+                        <OIcon src={images.general.search} color={colors.textNormal} width={16} />
                       </TouchableOpacity>
                     </View>
                   )}
@@ -151,7 +147,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 </WrapSearchBar>
               )}
             </TopHeader>
-          )}
+          {/* )} */}
           <BusinessBasicInformation
             businessState={businessState}
             openBusinessInformation={openBusinessInformation}
@@ -159,6 +155,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             logo={logo}
           />
         </WrapHeader>
+		  <View style={{height: 8, backgroundColor: colors.backgroundGray100}} />
         {!loading && business?.id && (
           <>
             {!(business?.categories?.length === 0) && (
@@ -270,23 +267,19 @@ const styles = StyleSheet.create({
   headerItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 15,
+    marginVertical: 2,
     marginHorizontal: 20,
   },
   btnBackArrow: {
     borderWidth: 0,
-    color: '#FFF',
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    borderRadius: 24,
-    marginRight: 15,
+    backgroundColor: colors.clear,
+	 shadowColor: colors.clear,
   },
   searchIcon: {
     borderWidth: 0,
-    color: '#FFF',
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    borderRadius: 24,
     padding: 15,
-    justifyContent: 'center'
+    justifyContent: 'center',
+	 shadowColor: colors.clear,
   }
 })
 

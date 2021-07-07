@@ -6,19 +6,19 @@ export const CardContainer = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 12px;
   border-radius: 10px;
   position: relative;
 `
 export const CardInfo = styled.View`
-  padding-left: 10px;
+  padding-start: 3px;
   flex: 1;
 `
 export const SoldOut = styled.View`
   position: absolute;
-  background: ${colors.lightGray} 0% 0% no-repeat padding-box;
+  background: ${colors.backgroundGray100} 0% 0% no-repeat padding-box;
   border-radius: 23px;
   padding: 5px 10px;
-  top: 5px;
-  right: 6px;
+  top: 37px;
+  end: 10px;
 `

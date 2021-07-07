@@ -347,7 +347,6 @@ const styles = StyleSheet.create({
   },
   btnBackArrow: {
     borderWidth: 0,
-    color: '#FFF',
     backgroundColor: 'rgba(0,0,0,0.3)',
     borderRadius: 24,
     marginRight: 15,

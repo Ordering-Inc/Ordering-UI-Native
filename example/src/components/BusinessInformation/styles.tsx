@@ -6,32 +6,35 @@ export const BusinessInformationContainer = styled.View`
   height: 100%;
 `
 export const GrayBackground = styled.View`
-  background-color: ${colors.inputDisabled};
-  border-radius: 10px;
-  padding: 10px 15px;
+  margin-top: 27px;
 `
 export const WrapMainContent = styled.ScrollView`
-  flex: 1;
   margin-top: 40px;
 `
-export const InnerContent = styled.View`
-  padding: 30px 20px;
+export const MediaWrapper = styled.ScrollView`
+  margin-top: 16px;
+  margin-bottom: 30px;
+  min-height: 127px;
+  height: 127px;
 `
-export const WrapScheduleBlock = styled.ScrollView`
+export const InnerContent = styled.View`
+  padding: 20px 40px;
+`
+export const WrapScheduleBlock = styled.View`
   margin: 20px 0;
-  max-height: 90px;
 `
 export const ScheduleBlock = styled.View`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 20px;
-  border-left-width: 1px;
-  border-color: ${colors.lightGray};
+	flex-direction: row;
+	align-items: center;
 `
 export const WrapBusinessMap = styled.View`
   max-height: 200px;
   height: 200px;
-  width: 100%;
-  flex: 1
+  flex: 1;
+  margin-horizontal: -40px;
 `
+export const DivideView = styled.View`
+	height: 8px;
+	background-color: ${colors.backgroundGray100};
+	margin-horizontal: -40px;
+`;

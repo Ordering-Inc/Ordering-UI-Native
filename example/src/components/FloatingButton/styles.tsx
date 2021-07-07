@@ -2,31 +2,27 @@ import styled, { css } from 'styled-components/native'
 import { colors } from '../../theme.json'
 export const Container = styled.View`
   position: absolute;
-  flex: 1;
   bottom: 0px;
   left: 0;
-  padding: 10px;
+  padding: 12px;
+  padding-end: 40px;
+  padding-start: 40px;
+  flex-direction: row;
   border-top-width: 1px;
-  border-color: ${colors.lightGray};
+  border-color: ${colors.border};
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   background-color: #FFF;
   z-index: 1000;
-
-  ${((props: any) => props.isIos && css `
-    padding-bottom: 20px;
-  `)}
 `
 
 export const Button = styled.TouchableOpacity`
   position: relative;
   display: flex;
   flex-direction: row;
-  width: 90%;
   justify-content: space-between;
   align-items: center;
-  border-radius: 25px;
+  border-radius: 0px;
   height: 50px;
+  background-color: transparent;
 `

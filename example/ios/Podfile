@@ -22,6 +22,8 @@ target 'delivery' do
   pod 'FBSDKLoginKit', :modular_headers => true
   pod 'FBSDKShareKit', :modular_headers => true
 
+  pod 'react-native-video', :path => '../node_modules/react-native-video'
+
   target 'deliveryTests' do
     inherit! :complete
     # Pods for testing

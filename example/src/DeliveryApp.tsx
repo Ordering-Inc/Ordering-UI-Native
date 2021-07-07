@@ -93,6 +93,8 @@ theme.images = {
     pencil: require('./assets/icons/ic_pencil.png'),
     search: require('./assets/icons/ic_search.png'),
     star: require('./assets/icons/ic_star.png'),
+    info: require('./assets/icons/ic_info.png'),
+    close: require('./assets/icons/ic_close.png'),
   },
   backgrounds: {
     business_list_header: require('./assets/images/business_list_banner.jpg'),

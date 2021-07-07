@@ -171,7 +171,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               imgRightSrc={null}
               style={styles.btnBackArrow}
               onClick={() => handleArrowBack()}
-              imgLeftStyle={{ tintColor: '#fff' }}
+              imgLeftStyle={{ tintColor: '#FFFFFF' }}
             />
             <HeaderInfo>
               <OIcon src={images.logos.logotypeInvert} height={50} width={180}></OIcon>

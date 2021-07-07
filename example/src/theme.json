@@ -20,7 +20,7 @@
     "colorPage": "#333",
     "red": "#D83520",
     "skyBlue": "#1977F2",
-    "white": "#fff",
+    "white": "#FFFFFF",
     "whiteGray": "#f7f6f3",
     "dusk": "rgb(65,77,107)",
     "green": "#0CAD63",
@@ -31,6 +31,8 @@
     "backgroundDark": "#484848",
     "backgroundGray": "#CCCCCC",
     "backgroundGray100": "#F8F9FA",
+    "backgroundGray200": "#E9ECEF",
+    "backgroundGray400": "#CED4DA",
     "clear": "transparent",
     "error": "#C90800",
     "success": "#90C68E",
@@ -92,7 +94,9 @@
 		"clock": "",
 		"pencil": "",
 		"search": "",
-		"star": ""
+		"star": "",
+		"info": "",
+		"close": ""
     },
 	 "backgrounds": {
 		 "business_list_header": ""

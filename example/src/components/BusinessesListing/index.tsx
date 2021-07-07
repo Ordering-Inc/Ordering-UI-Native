@@ -182,6 +182,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
               borderStyle={styles.borderStyle}
               onCancel={() => handleChangeSearch('')}
               placeholder={t('FIND_BUSINESS', 'Find a Business')}
+				  height={26}
             />
           </View>
         </OrderControlContainer>
@@ -214,7 +215,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           </ScrollView>
         </FeaturedWrapper>
       )}
-
+		<View style={{height: 8, backgroundColor: colors.backgroundGray100}} />
       <ListWrapper>
         <BusinessTypeFilter
           images={props.images}

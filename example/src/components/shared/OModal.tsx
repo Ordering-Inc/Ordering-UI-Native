@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Alert, Modal, StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpacity, View, TextStyle } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
-import { colors } from '../../theme.json';
+import { OIcon } from '.';
+import { colors, images } from '../../theme.json';
 
 interface Props {
   open?: boolean;
@@ -55,15 +56,14 @@ const OModal = (props: Props): React.ReactElement => {
         {!entireModal ? (
           <View style={styles.centeredView}>
             <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-              <View style={styles.wrapperIcon}>
-                <Icon
-                  name="x"
-                  size={35}
+            	<TouchableOpacity style={styles.wrapperIcon} onPress={onClose}>
+                <OIcon
+                  src={images.general.close}
+                  width={16}
                   style={isNotDecoration && (styleCloseButton || styles.cancelBtn)}
-                  onPress={onClose}
                 />
-              </View>
-              <Text style={styles.modalText}>{title}</Text>
+              </TouchableOpacity>
+              <Text style={styles.modalText}>{title || ''}</Text>
             </View>
             {children}
           </View>
@@ -71,13 +71,14 @@ const OModal = (props: Props): React.ReactElement => {
           <>
             {!customClose && (
               <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-                <Icon
-                  name="x"
-                  size={35}
-                  style={styleCloseButton || styles.cancelBtn}
-                  onPress={onClose}
-                />
-                <Text style={styles.modalText}>{title}</Text>
+					  <TouchableOpacity style={styles.wrapperIcon} onPress={onClose}>
+						<OIcon
+							src={images.general.close}
+							width={16}
+							style={styleCloseButton || styles.cancelBtn}
+						/>
+					  </TouchableOpacity>
+                <Text style={styles.modalText}>{title || ''}</Text>
               </View>
             )}
             {children}
@@ -100,15 +101,14 @@ const styles = StyleSheet.create({
   },
   titleSection: {
     width: '100%',
-    display: 'flex',
+    flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
   },
   cancelBtn: {
-    position: 'absolute',
-    left: 0,
-    margin: 15,
+   //  position: 'absolute',
+   //  left: 0,
+   //  margin: 15,
     zIndex: 10000
   },
   modalText: {
@@ -119,10 +119,13 @@ const styles = StyleSheet.create({
   },
   wrapperIcon: {
     overflow: 'hidden',
-    borderRadius: 50,
-    backgroundColor: '#CCCCCC80',
+    backgroundColor: colors.clear,
     width: 35,
-    margin: 15
+    height: 35,
+	 marginStart: 32,
+	 marginTop: 12,
+	 alignItems: 'center',
+	 justifyContent: 'center'
   },
 
   modalView: {

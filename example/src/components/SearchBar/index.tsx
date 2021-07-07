@@ -15,7 +15,8 @@ export const SearchBar = (props: any) => {
     isCancelButtonShow,
     isCancelXButtonShow,
     noBorderShow,
-    borderStyle
+    borderStyle,
+	 height
   } = props
 
   const [,t] = useLanguage()
@@ -37,7 +38,7 @@ export const SearchBar = (props: any) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {height: height}]}>
       <OInput
         value={searchValue}
         onChange={onChangeSearch}
@@ -61,11 +62,12 @@ export const SearchBar = (props: any) => {
       {isCancelXButtonShow && (
         <TouchableOpacity
           onPress={onCancel || handleClear}
+			 style={{position: 'absolute', end: 10}}
         >
           <Icon
             name='x-circle'
+				color={colors.disabled}
             size={16}
-            style={{ marginRight: 5 }}
           />
         </TouchableOpacity>
       )}
@@ -80,8 +82,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 1,
-	 maxHeight: 26,
-	 height: 26,
+	 maxHeight: 44,
+	 height: 44,
+	 borderColor: colors.clear
   },
   borderStyle: {
     borderColor: colors.primary,
@@ -89,10 +92,9 @@ const styles = StyleSheet.create({
     borderRadius: 7.6,
   },
   inputStyle: {
-    height: 26,
+    height: '100%',
 	 borderRadius: 7.6,
-	 paddingStart: 10,
-	 paddingEnd: 10,
+	 paddingHorizontal: 10,
 	 backgroundColor: colors.backgroundGray100,
   },
   buttonStyle: {
