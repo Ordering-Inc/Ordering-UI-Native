@@ -1,12 +1,15 @@
 import React from 'react'
 import { LanguageSelector as LanguageSelectorController, useOrder } from 'ordering-components/native'
 import { Platform, StyleSheet } from 'react-native'
+import RNRestart from 'react-native-restart'
 
 import RNPickerSelect from 'react-native-picker-select'
 import { Container } from './styles'
 import { colors } from '../../theme.json'
 import { LanguageSelectorParams } from '../../types'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { useEffect } from 'react'
+import { I18nManager } from 'react-native'
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
@@ -29,11 +32,29 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     (a.label > b.label) ? 1 : ((b.label > a.label) ? -1 : 0)
   )
 
+  const changeDirection = async (language) => {
+    if(language !== 'ar'){
+      if (I18nManager.isRTL){
+        await I18nManager.forceRTL(false)
+        RNRestart.Restart();
+      }
+    } else {
+      if(!I18nManager.isRTL){
+        await I18nManager.forceRTL(true)
+        RNRestart.Restart();
+      }
+    }
+  }
+  const handlerChangeLanguage = (language) => {
+    changeDirection(language)
+    handleChangeLanguage(language)
+  }
+
   return (
     <Container>
       {languagesState?.languages && (
         <RNPickerSelect
-          onValueChange={handleChangeLanguage}
+          onValueChange={handlerChangeLanguage}
           items={_languages || []}
           value={currentLanguage}
           style={pickerStyle}
