@@ -4,9 +4,10 @@ import { Home as HomePage } from '../components/Home';
 import { useLanguage } from 'ordering-components/native';
 import { colors } from '../theme.json';
 
-export const Home = ({navigation}: any) => {
+export const Home = ({navigation, route}: any) => {
   const [, t] = useLanguage();
   const homeProps = {
+    token: route?.params?.token,
     navigation,
     onNavigationRedirect: (page: string, params: any) => {
       if (!page) return

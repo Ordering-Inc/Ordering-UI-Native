@@ -27,7 +27,8 @@ const RootNavigator = () => {
   const [{ auth, loading }] = useSession();
   const [orderStatus, { changeMoment }] = useOrder();
   const [loaded, setLoaded] = useState(false);
-
+  const [token, settoken] = useState<any>(null);
+  
   const validDate = (date : any) => {
     if (!date) return
     const _date = dayjs(date, 'YYYY-MM-DD HH:mm').isSameOrAfter(dayjs(), 'day')
@@ -46,8 +47,9 @@ const RootNavigator = () => {
   
     if (enabled) {
       console.log('Authorization status:', authStatus);
-      const token = await messaging().getToken();
-      console.log('token: ', token);
+      const tokenA = await messaging().getToken();
+      console.log('token: ', tokenA);
+      settoken(tokenA)
       
       await messaging().onNotificationOpenedApp(remoteMessage => {
         console.log(
@@ -122,6 +124,7 @@ const RootNavigator = () => {
                   name="Home"
                   component={Home}
                   options={{ headerShown: false }}
+                  initialParams={{ token }}
                 />
                 <Stack.Screen
                   name="Login"

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLanguage, useOrder } from 'ordering-components/native';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, TextInput } from 'react-native';
 import { colors, images } from '../../theme.json';
-import { OButton, OIcon, OText } from '../shared';
+import { OButton, OIcon, OInput, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -12,11 +12,14 @@ const windowHeight = Dimensions.get('window').height
 
 export const Home = (props: any) => {
   const {
-    onNavigationRedirect
+    onNavigationRedirect,
+    token
   } = props;
 
   const [, t] = useLanguage();
   const [orderState] = useOrder();
+
+  const [value, onChangeText] = useState(token);
 
   const handleGuessFlow = (page: string, params: any) => {
     onNavigationRedirect(page, params);
@@ -26,6 +29,13 @@ export const Home = (props: any) => {
   return (
     <View style={styles.container}>
       <View style={styles.wrapperContent}>
+        <View style={{ marginHorizontal: 20 }}>
+        <TextInput
+          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+          onChangeText={text => onChangeText(text)}
+          value={value}
+        />
+        </View>
         <View style={styles.languageSelector}>
           <LanguageSelector />
         </View>
@@ -107,5 +117,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     marginBottom: 20
-  }
+  },
+  inputsStyle: {
+    borderColor: colors.primary,
+    borderRadius: 50,
+    marginTop: 10,
+    width: '100%',
+    height: 60,
+    maxHeight: 60
+  },
 });
