@@ -68,6 +68,7 @@ export interface AddressFormParams {
   isFromProductsList?: boolean,
   hasAddressDefault?: any,
   afterSignup?: boolean
+  isGuestFromStore?: boolean
 }
 export interface SignupParams {
   navigation?: any;
@@ -367,6 +368,7 @@ export interface GoogleMapsParams {
   readOnly?: boolean
   markerTitle?: string,
   saveLocation?: boolean,
+  isSetInputs?: boolean,
   locations?: Array<any>,
   setSaveLocation?: (val : boolean) => void,
   handleToggleMap?: () => void
