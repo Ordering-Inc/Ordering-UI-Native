@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {Alert} from 'react-native' 
 import { createStackNavigator } from '@react-navigation/stack';
 import { useOrder, useSession } from 'ordering-components/native';
 import dayjs from 'dayjs'
@@ -44,6 +45,24 @@ const RootNavigator = () => {
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      Alert.alert(
+        "Alert Title",
+        `Authorization status: ${authStatus}
+          AUTHORIZED: ${messaging.AuthorizationStatus.AUTHORIZED}
+          DENIED: ${messaging.AuthorizationStatus.DENIED}
+          NOT_DETERMINED: ${messaging.AuthorizationStatus.NOT_DETERMINED}
+          PROVISIONAL: ${messaging.AuthorizationStatus.PROVISIONAL}
+        `,
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ]
+      );
   
     if (enabled) {
       console.log('Authorization status:', authStatus);
