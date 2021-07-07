@@ -73,7 +73,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
                 <PlaceholderLine height={30} width={20} />
               </Placeholder>
             ) : (
-              <View style={{ width: '65%' }}>
+              <View style={{ maxWidth: '75%', justifyContent: 'flex-start' }}>
                 <OText
                   size={20}
                   weight='bold'

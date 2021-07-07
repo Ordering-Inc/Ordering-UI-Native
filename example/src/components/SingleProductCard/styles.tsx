@@ -13,6 +13,7 @@ export const CardContainer = styled.TouchableOpacity`
 export const CardInfo = styled.View`
   padding-left: 10px;
   flex: 1;
+  align-items: flex-start;
 `
 export const SoldOut = styled.View`
   position: absolute;

@@ -90,7 +90,7 @@ const pickerStyle = StyleSheet.create({
   },
   icon: {
     top: Platform.OS === 'ios' ? 10 : 15,
-    right: Platform.OS === 'ios' ? 0 : 7,
+    right: Platform.OS === 'ios' ? 0 : (I18nManager.isRTL ? 50 : 7),
     position: 'absolute',
     fontSize: 20
   },

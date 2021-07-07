@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Messages as MessagesController, useSession, useUtils, useLanguage } from 'ordering-components/native'
 import { launchImageLibrary } from 'react-native-image-picker'
-import { GiftedChat, Actions, ActionsProps, InputToolbar, Composer, Send, Bubble, MessageImage, InputToolbarProps, ComposerProps } from 'react-native-gifted-chat'
+import { GiftedChat, Actions, InputToolbar, Composer, Send, Bubble, MessageImage } from 'react-native-gifted-chat'
 import { USER_TYPE } from '../../config/constants'
 import { ToastType, useToast } from '../../providers/ToastProvider'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors } from '../../theme.json'
 import { OIcon, OIconButton, OText } from '../shared'
-import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard } from 'react-native'
+import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard,I18nManager } from 'react-native'
 import { Header, TitleHeader, Wrapper } from './styles'
 import { MessagesParams } from '../../types'
 
@@ -47,7 +47,7 @@ const MessagesUI = (props: MessagesParams) => {
   }
 
   const handleImagePicker = () => {
-    launchImageLibrary({ mediaType: 'photo', maxHeight: 300, maxWidth: 300, includeBase64: true }, (response) => {
+    launchImageLibrary({ mediaType: 'photo', maxHeight: 300, maxWidth: 300, includeBase64: true }, (response : any) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.errorMessage) {
@@ -212,17 +212,17 @@ const MessagesUI = (props: MessagesParams) => {
     )
   }
 
-  const renderInputToolbar = (props: InputToolbarProps) => (
+  const renderInputToolbar = (props : any) => (
     <InputToolbar
       {...props}
       containerStyle={{
         padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10
       }}
-      primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}      
+      primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}
     />
   )
 
-  const renderComposer = (props: ComposerProps) => (
+  const renderComposer = (props: any) => (
     <View style={{flexDirection: 'row', width: '80%'}}>
       <Composer
         {...props}
@@ -233,6 +233,7 @@ const MessagesUI = (props: MessagesParams) => {
           borderColor: '#DBDCDB',
           borderWidth: 1,
           color: '#010300',
+          textAlign: I18nManager.isRTL ? 'right' : 'left'
         }}
         textInputProps={{
           value: message,
@@ -258,19 +259,20 @@ const MessagesUI = (props: MessagesParams) => {
       alwaysShowSend
       containerStyle={styles.containerSend}
     >
-      <OIconButton
-        onClick={onSubmit}
-        style={{
-          height: 32,
-          borderRadius: 25,
-          opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
-          borderColor: colors.primary,
-        }}
-        iconStyle={{ marginTop: 3, marginRight: 2 }}
-        icon={paperIcon}
-        disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
-        disabledColor={colors.white}
-      />
+        <OIconButton
+          onClick={onSubmit}
+          style={{
+            height: 32,
+            borderRadius: 25,
+            opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
+            borderColor: colors.primary,
+          }}
+          iconStyle={{ marginTop: 3, marginRight: 2 }}
+          icon={!sendMessage?.loading ? paperIcon : undefined}
+          RenderIcon={sendMessage?.loading ? () => <ActivityIndicator size='small' color={colors.primary} /> : undefined}
+          disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
+          disabledColor={colors.white}
+        />
     </Send>
   )
 

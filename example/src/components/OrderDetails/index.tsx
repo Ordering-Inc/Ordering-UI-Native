@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, BackHandler } from 'react-native'
+import { View, StyleSheet, BackHandler, TouchableOpacity } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -39,7 +39,6 @@ import {
 import { OButton, OIcon, OModal, OText } from '../shared'
 import { colors, images } from '../../theme.json'
 import { ProductItemAccordion } from '../ProductItemAccordion'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { OrderDetailsParams } from '../../types'
 import { USER_TYPE } from '../../config/constants'
 import { GoogleMap } from '../GoogleMap'
@@ -62,8 +61,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ user }] = useSession()
   const [{ configs }] = useConfig()
 
-  const [openModalForBusiness,setOpenModalForBusiness] = useState(false)
-  const [openModalForDriver,setOpenModalForDriver] = useState(false)
+  const [openModalForBusiness, setOpenModalForBusiness] = useState(false)
+  const [openModalForDriver, setOpenModalForDriver] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
   const { order, businessData } = props.order
 
@@ -88,7 +87,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       { key: 14, value: t('ORDER_NOT_READY', 'Order not ready'), slug: 'ORDER_NOT_READY', percentage: 0, image: images.order.status13 },
       { key: 15, value: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Order picked up completed by customer'), slug: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', percentage: 100, image: images.order.status1 },
       { key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer'), slug: 'CANCELLED_BY_CUSTOMER', percentage: 0, image: images.order.status2 },
-      { key: 17, value: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer'), slug: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER', percentage: 0, image: images.order.status2  },
+      { key: 17, value: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer'), slug: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER', percentage: 0, image: images.order.status2 },
       { key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business'), slug: 'DRIVER_ALMOST_ARRIVED_TO_BUSINESS', percentage: 0.15, image: images.order.status3 },
       { key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer'), slug: 'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', percentage: 0.90, image: images.order.status11 },
       { key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business'), slug: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', percentage: 90, image: images.order.status7 },
@@ -104,13 +103,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const handleOpenMessagesForBusiness = () => {
     setOpenModalForBusiness(true)
     readMessages && readMessages()
-    setUnreadAlert({...unreadAlert, business: false})
+    setUnreadAlert({ ...unreadAlert, business: false })
   }
 
   const handleOpenMessagesForDriver = () => {
     setOpenModalForDriver(true)
     readMessages && readMessages()
-    setUnreadAlert({...unreadAlert, driver: false})
+    setUnreadAlert({ ...unreadAlert, driver: false })
   }
 
   const unreadMessages = () => {
@@ -174,9 +173,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               imgLeftStyle={{ tintColor: '#fff' }}
             />
             <HeaderInfo>
-              <OIcon src={images.logos.logotypeInvert} height={50} width={180}></OIcon>
-              <OText size={28} color={colors.white} style={{ fontWeight: '600' }}>
-                  {order?.customer?.name} {t('THANKS_ORDER', 'thanks for your order!')}
+              <OIcon src={images.logos.logotypeInvert} height={50} width={180} />
+              <OText size={28} color={colors.white} style={{ fontWeight: '600', alignItems: 'flex-start' }}>
+                {order?.customer?.name} {t('THANKS_ORDER', 'thanks for your order!')}
               </OText>
               <OText color={colors.white}>{t('ORDER_MESSAGE_HEADER_TEXT', 'Once business accepts your order, we will send you an email, thank you!')}</OText>
               <View style={{ ...styles.rowDirection, justifyContent: 'space-between' }}>
@@ -227,15 +226,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <View style={{ ...styles.rowDirection, backgroundColor: colors.white }}>
               <OrderInfo>
                 <OrderData>
-                  <OText size={20}>{t('ORDER', 'Order')} #{order?.id}</OText>
-                  <OText color={colors.textSecondary}>{t('DATE_TIME_FOR_ORDER', 'Date and time for your order')}</OText>
-                  <OText size={18}>
-                    {
-                      order?.delivery_datetime_utc
-                        ? parseDate(order?.delivery_datetime_utc)
-                        : parseDate(order?.delivery_datetime, { utc: false })
-                    }
-                  </OText>
+                  <View style={{ alignItems: 'flex-start' }}>
+                    <OText size={20}>{t('ORDER', 'Order')} #{order?.id}</OText>
+                    <OText color={colors.textSecondary}>{t('DATE_TIME_FOR_ORDER', 'Date and time for your order')}</OText>
+                    <OText size={18}>
+                      {
+                        order?.delivery_datetime_utc
+                          ? parseDate(order?.delivery_datetime_utc)
+                          : parseDate(order?.delivery_datetime, { utc: false })
+                      }
+                    </OText>
+                  </View>
                   <StaturBar>
                     <LinearGradient
                       start={{ x: 0.0, y: 0.0 }}
@@ -350,9 +351,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) &&
                     parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
                     !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                  (
-                    `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`
-                  )}
+                    (
+                      `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`
+                    )}
                 </OText>
                 <OText>{parsePrice(order?.summary?.driver_tip || order?.totalDriverTip)}</OText>
               </Table>

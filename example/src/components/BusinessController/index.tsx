@@ -27,7 +27,7 @@ import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-  const { business, handleClick,isBusinessOpen } = props;
+  const { business, handleClick, isBusinessOpen } = props;
   const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
   const [orderState] = useOrder();
   const [, t] = useLanguage();
@@ -77,11 +77,11 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       </BusinessHero>
       <BusinessContent>
         <BusinessInfo>
-          <View style={{ width: '70%' }}>
+          <View style={{ width: '70%', alignItems: 'flex-start' }}>
             <OText
-              size={20}
-              numberOfLines={1}
-              ellipsizeMode='tail'
+                size={20}
+                numberOfLines={1}
+                ellipsizeMode='tail'
               >
               {business?.name}
             </OText>
