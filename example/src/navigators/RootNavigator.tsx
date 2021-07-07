@@ -19,6 +19,8 @@ import BusinessList from '../pages/BusinessesListing';
 import BusinessProductsList from '../pages/BusinessProductsList';
 import HomeNavigator from './HomeNavigator';
 
+import messaging from '@react-native-firebase/messaging';
+
 const Stack = createStackNavigator();
 
 const RootNavigator = () => {
@@ -33,6 +35,44 @@ const RootNavigator = () => {
       : dayjs().format('YYYY-MM-DD HH:mm')
     return _date
   }
+
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    console.log(authStatus);
+    
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+      const token = await messaging().getToken();
+      console.log('token: ', token);
+      
+      await messaging().onNotificationOpenedApp(remoteMessage => {
+        console.log(
+          'Notification caused app to open from background state:',
+          remoteMessage.notification,
+        );
+      });
+      
+
+      const remoteMessage = await messaging().getInitialNotification()
+      console.log(remoteMessage);
+      
+      if (remoteMessage) {
+        console.log(
+          'Notification caused app to open from quit state:',
+          remoteMessage.notification,
+        );
+      }
+    }
+  }
+
+  useEffect(() => {
+    requestUserPermission();
+  }, []);
+
   useEffect(() => {
     if (!loaded && !orderStatus.loading) {
       setLoaded(true)
