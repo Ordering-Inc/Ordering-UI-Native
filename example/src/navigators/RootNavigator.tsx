@@ -67,6 +67,19 @@ const RootNavigator = () => {
     if (enabled) {
       console.log('Authorization status:', authStatus);
       const tokenA = await messaging().getToken();
+      Alert.alert(
+        "Alert Title",
+        `TOKEN: ${tokenA}
+        `,
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ]
+      );
       console.log('token: ', tokenA);
       settoken(tokenA)
       
