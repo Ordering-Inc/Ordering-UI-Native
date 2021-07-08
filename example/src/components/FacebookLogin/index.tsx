@@ -109,6 +109,7 @@ const style = StyleSheet.create({
   },
   textBtn: {
     fontSize: 16,
-    color: '#000000'
+    color: '#000000',
+    marginLeft: 20
   }
 })

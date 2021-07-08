@@ -24,6 +24,15 @@ export const _setStoreData = (key: string, val: any) => {
   }
 };
 
+export const _removeStoreData = (key: string) => {
+  if (!key) return
+  try {
+    AsyncStorage.removeItem(key)
+  } catch {
+    return null
+  }
+};
+
 export const _clearStoreData = async () => {
   try {
     const keys = await AsyncStorage.getAllKeys()
@@ -31,4 +40,11 @@ export const _clearStoreData = async () => {
   } catch {
     return null
   }
+}
+
+export const StoreMethods = {
+  _retrieveStoreData,
+  _setStoreData,
+  _removeStoreData,
+  _clearStoreData
 }

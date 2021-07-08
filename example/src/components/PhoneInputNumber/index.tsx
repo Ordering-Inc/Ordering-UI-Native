@@ -9,6 +9,7 @@ import { colors } from '../../theme.json'
 import { PhoneInputParams } from '../../types';
 import { OText } from '../shared';
 import {transformCountryCode} from '../../utils'
+import {I18nManager} from 'react-native'
 
 export const PhoneInputNumber = (props: PhoneInputParams) => {
   const {
@@ -74,6 +75,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         defaultCode={defaultCode ? transformCountryCode(defaultCode) : configs?.default_country_code?.value}
         onChangeFormattedText={(text : string) => handleChangeNumber(text)}
         withDarkTheme
+        textInputStyle={{textAlign: I18nManager.isRTL ? 'right' : 'left'}}
         countryPickerProps={{withAlphaFilter:true}}
         textContainerStyle={style.input}
         placeholder={t('PHONE_NUMBER', 'Phone Number')}

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ToastType, useToast } from '../../providers/ToastProvider';
 import {
   Placeholder,
   PlaceholderLine,
@@ -10,7 +11,9 @@ import {
 import {
   PaymentOptions as PaymentOptionsController,
   useLanguage,
-  useSession
+  useSession,
+  useApi,
+  useOrder
 } from 'ordering-components/native';
 
 import { PaymentOptionCash } from '../PaymentOptionCash';
@@ -30,7 +33,8 @@ import {
   PMCardItemContent
 } from './styles'
 import { colors, images } from '../../theme.json';
-import { getIconCard, flatArray } from '../../utils';
+import { getIconCard } from '../../utils';
+import { WebView } from 'react-native-webview';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 // const stripeRedirectOptions = [
@@ -78,6 +82,14 @@ const PaymentOptionsUI = (props: any) => {
   const [, t] = useLanguage();
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
+  const [showGateway, setShowGateway] = useState<any>({closedByUsed: false, open: false});
+  const [prog, setProg] = useState(true);
+  const [progClr, setProgClr] = useState('#424242');
+  const { showToast } = useToast();
+  const webviewRef = useRef<any>(null)
+  const [ordering] = useApi()
+  const [orderState,{confirmCart}] = useOrder()
+  const [{ token, user }] = useSession()
   const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
   // const [{ token }] = useSession()
 
@@ -87,10 +99,35 @@ const PaymentOptionsUI = (props: any) => {
   //   { name: t('SELECT_A_PAYMENT_METHOD', 'Select a payment method'), value: '-1' },
   // ]
 
+  const onMessage = (e : any) => {
+    let data = e.nativeEvent.data;
+    let payment = JSON.parse(data);
+    if(payment.error){
+      showToast(ToastType.Error, payment.result)
+    } else {
+      showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfullyS'))
+      onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment.result.order.uuid, goToBusinessList: true })
+    }
+    setShowGateway({closedByUser: false, open: false})
+  }
+
   const handlePaymentMethodClick = (paymethod: any) => {
     const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
     handlePaymethodClick(paymethod, isPopupMethod)
+    if(paymethod?.gateway === 'paypal'){
+      setShowGateway({closedByUser: false, open: true})
+    }
   }
+
+  const onFailPaypal = async () => {
+    if(showGateway.closedByUser === true){
+      const {result} = await confirmCart(cart.uuid)
+    }
+  }
+
+  useEffect(() => {
+    onFailPaypal()
+  }, [showGateway.closedByUser])
 
   useEffect(() => {
     if (paymethodsList.paymethods.length === 1) {
@@ -125,7 +162,7 @@ const PaymentOptionsUI = (props: any) => {
             width={40}
             height={40}
             color={paymethodSelected?.id === item.id ? colors.white : colors.backgroundDark}
-            />
+          />
           <OText
             size={12}
             style={{ margin: 0 }}
@@ -138,7 +175,7 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeIds: any = [3, 32, 66]; //exclude paypal & connect & redirect
+  const excludeIds: any = [32, 66]; //exclude connect & redirect
 
   return (
     <PMContainer>
@@ -152,17 +189,16 @@ const PaymentOptionsUI = (props: any) => {
           keyExtractor={(paymethod: any) => paymethod.id.toString()}
         />
       )}
-
       {(paymethodsList.loading || isLoading) && (
         <Placeholder style={{ marginTop: 10 }} Animation={Fade}>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             {[...Array(3)].map((_, i) => (
               <PlaceholderLine
-              key={i}
-              width={37}
-              height={80}
-              noMargin
-              style={{ borderRadius: 10, marginRight: 10 }}
+                key={i}
+                width={37}
+                height={80}
+                noMargin
+                style={{ borderRadius: 10, marginRight: 10 }}
               />
             ))}
           </View>
@@ -178,11 +214,11 @@ const PaymentOptionsUI = (props: any) => {
       {!(paymethodsList.loading || isLoading) &&
         !paymethodsList.error &&
         (!paymethodsList?.paymethods || paymethodsList.paymethods.length === 0) &&
-      (
-        <OText size={12} style={{ margin: 0 }}>
-          {t('NO_PAYMENT_METHODS', 'No payment methods!')}
-        </OText>
-      )}
+        (
+          <OText size={12} style={{ margin: 0 }}>
+            {t('NO_PAYMENT_METHODS', 'No payment methods!')}
+          </OText>
+        )}
 
       {paymethodSelected?.gateway === 'cash' && (
         <PaymentOptionCash
@@ -230,7 +266,7 @@ const PaymentOptionsUI = (props: any) => {
             bgColor={colors.primary}
             borderColor={colors.primary}
             style={styles.btnAddStyle}
-            textStyle={{color: 'white'}}
+            textStyle={{ color: 'white' }}
             imgRightSrc={null}
             onClick={() => setAddCardOpen({ ...addCardOpen, stripe: true })}
           />
@@ -379,6 +415,64 @@ const PaymentOptionsUI = (props: any) => {
           />
         )}
       </Modal> */}
+      <OModal
+        open={showGateway.open && paymethodSelected.gateway === 'paypal'}
+        onCancel={() => setShowGateway({open: false, closedByUser: true})}
+        onAccept={() => setShowGateway({open: false, closedByUser: true})}
+        onClose={() => setShowGateway({open: false, closedByUser: true})}
+        entireModal
+      >
+        <OText
+          style={{
+            textAlign: 'center',
+            fontSize: 16,
+            fontWeight: 'bold',
+            color: '#00457C',
+            marginBottom: 5
+          }}>
+          {t('PAYPAL_GATEWAY', 'PayPal GateWay')}
+        </OText>
+        <View style={{padding: 13, opacity: prog ? 1 : 0}}>
+          <ActivityIndicator size={24} color={progClr} />
+        </View>
+        <WebView
+          source={{ uri: 'https://test-90135.web.app' }}
+          onMessage={onMessage}
+          ref={webviewRef}
+          javaScriptEnabled={true}
+          javaScriptEnabledAndroid={true}
+          cacheEnabled={false}
+          cacheMode='LOAD_NO_CACHE'
+          style={{ flex: 1 }}
+          onLoadStart={() => {
+            setProg(true);
+            setProgClr('#424242');
+          }}
+          onLoadProgress={() => {
+            setProg(true);
+            setProgClr('#00457C');
+          }}
+          onLoadEnd={(e) => {
+            const message = {
+              action: 'init',
+              data: {
+                urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
+                urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
+                payData: {
+                  paymethod_id: paymethodSelected?.id,
+                  amount: cart?.total,
+                  delivery_zone_id: cart?.delivery_zone_id,
+                  user_id: user?.id
+                },
+                userToken: token,
+                clientId: isOpenMethod?.paymethod?.credentials?.client_id
+              }
+            }
+            setProg(false);
+            webviewRef.current.postMessage(JSON.stringify(message))
+          }}
+        />
+      </OModal>
     </PMContainer>
   )
 }
@@ -395,6 +489,22 @@ const styles = StyleSheet.create({
   },
   btnAddStyle: {
     marginVertical: 20,
+  },
+  btnCon: {
+    height: 45,
+    width: '70%',
+    elevation: 1,
+    backgroundColor: '#00457C',
+    borderRadius: 3,
+  },
+  btn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnTxt: {
+    color: '#fff',
+    fontSize: 18,
   },
 })
 
