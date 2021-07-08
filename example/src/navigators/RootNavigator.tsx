@@ -28,7 +28,7 @@ const Stack = createStackNavigator();
 const RootNavigator = () => {
   const [{ auth, loading }] = useSession();
   const [orderStatus, { changeMoment }] = useOrder();
-  const [{ configs }] = useConfig();
+  const [{ configs, loading: configsLoading }] = useConfig();
   const [loaded, setLoaded] = useState(false);
   const [oneSignalState, setOneSignalState] = useState<any>({
     notification_app: settings.notification_app
@@ -116,7 +116,7 @@ const RootNavigator = () => {
 
   useEffect(() => {
     oneSignalSetup();
-  }, []);
+  }, [configsLoading]);
 
   return (
     <Stack.Navigator>
