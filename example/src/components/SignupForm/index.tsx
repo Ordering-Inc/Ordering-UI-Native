@@ -501,7 +501,6 @@ export const SignupForm = (props: any) => {
   const signupProps = {
     ...props,
     UIComponent: SignupFormUI,
-    handleSuccessSignup: () => _removeStoreData('isGuestUser')
   };
   return <SignUpController {...signupProps} />;
 };
