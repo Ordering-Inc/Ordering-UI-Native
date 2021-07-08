@@ -37,7 +37,7 @@
     "@react-navigation/material-bottom-tabs": "^5.3.14",
     "@react-navigation/native": "^5.7.6",
     "@react-navigation/stack": "^5.9.3",
-    "@sentry/react-native": "^2.4.0",
+    "@sentry/react-native": "^2.6.0",
     "@stripe/stripe-react-native": "^0.1.4",
     "@types/react-native-loading-spinner-overlay": "^0.5.2",
     "@types/styled-components": "^5.1.3",
