@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components/native';
 import { colors } from '../../theme.json'
 
-export const LoginContainer = styled.View`
+export const LoginContainer = styled.SafeAreaView`
 	flex: 1;
 	padding-bottom: 40px;
 	justify-content: center;
@@ -21,4 +21,10 @@ export const LogoWrapper = styled.View`
 
 export const WelcomeTextContainer = styled.View`
   margin-bottom: 30px;
+`;
+
+export const KeyboardView = styled.KeyboardAvoidingView`
+  flex-grow: 1;
+  padding-bottom: 15px;
+  background-color: white;
 `;

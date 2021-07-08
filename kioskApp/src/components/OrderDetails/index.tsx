@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, BackHandler, Alert } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import {
@@ -22,6 +22,9 @@ import GridContainer from '../../layouts/GridContainer';
 import OptionSwitch, { Opt } from '../../components/shared/OOptionToggle';
 import { verifyDecimals } from '../../utils'
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook'
+
+const _EMAIL = 'email';
+const _SMS = 'sms';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
@@ -53,17 +56,31 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const optionsToSendReceipt: Opt[] = [
 		{
-			key: 'email',
+			key: _EMAIL,
 			label: t('EMAIL', 'Email'),
-			value: 'email',
+			value: _EMAIL,
 			isDefault: true,
 		},
 		{
-			key: 'sms',
+			key: _SMS,
 			label: t('SMS', 'SMS'),
-			value: 'sms',
-		}
-  ]
+			value: _SMS,
+		},
+  ];
+
+  const [optionToSendReceipt, setOptionToSendReceipt] = useState(optionsToSendReceipt?.find(o => o?.isDefault));
+
+  const handleSendReceipt = (optVal: 'sms' | 'email') => {
+    if (optVal === _EMAIL) {
+      console.log('send email');
+    }
+    else if (optVal === _SMS) {
+      console.log('send sms');
+    }
+    else {
+      console.error('Error: Invalid optVal');
+    }
+  }
   
   useEffect(() => {
     const backAction = () => {
@@ -106,23 +123,39 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
           <OptionSwitch
             options={optionsToSendReceipt}
-            onChange={(opt) => {
-              console.log(opt.value)
-            }}
+            onChange={setOptionToSendReceipt}
           />
           
         </OSTable>
 
         <OSTable>
-          <OInput
-            placeholder="yourname@mailhost.com"
-            onChange={(e: any) => {}}
-            style={styles.inputsStyle}
-          />
+          
+          {optionToSendReceipt?.value == _EMAIL && (
+            <OInput
+              placeholder="yourname@mailhost.com"
+              onChange={(e: any) => {}}
+              style={styles.inputsStyle}
+            />
+          )}
+
+          {optionToSendReceipt?.value == _SMS && (
+            <OInput
+              placeholder={`${t('PHONE_NUMBER', 'Phone number')}`}
+              onChange={(e: any) => {}}
+              style={styles.inputsStyle}
+            />
+          )}
+
           <OButton
-            onClick={() => {}}
+            onClick={() => handleSendReceipt(optionToSendReceipt?.value)}
             text={t('SEND', 'Send')}
+            bgColor={colors.primaryLight}
+            borderColor={colors.primaryLight}
+            textStyle={styles.textButtonApplyStyle}
+            disabledTextStyle={styles.disabledTextButtonApplyStyle}
+            style={styles.buttonApplyStyle}
           />
+          
         </OSTable>
       </OSInputWrapper>
 
@@ -304,9 +337,30 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
 const styles = StyleSheet.create({
   inputsStyle: {
-    borderColor: colors.secundaryContrast,
-		marginRight: 30,
+    borderColor: colors.disabled,
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 8,
+    borderTopRightRadius: 0,
+    borderTopLeftRadius: 8,
+    flex: 1,
+    height: 52
   },
+  buttonApplyStyle: {
+    borderBottomRightRadius: 8,
+    borderBottomLeftRadius: 0,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 0,
+  },
+  textButtonApplyStyle: {
+    color: colors.primary,
+    marginLeft: 0,
+    marginRight: 0
+  },
+  disabledTextButtonApplyStyle: {
+    color: colors.white,
+    marginLeft: 0,
+    marginRight: 0
+  }
 });
 
 export const OrderDetails = (props: OrderDetailsParams) => {

@@ -110,7 +110,7 @@ const NavBar = (props: Props) => {
       </TitleTopWrapper>
 
       {props?.includeOrderTypeSelector && (
-        <View style={{ paddingHorizontal: props.rightComponent ? 4 : 15 }}>
+        <View style={{ paddingHorizontal: props.rightComponent ? 4 : 20 }}>
           <OrderTypeSelector configTypes={configTypes} />
         </View>
       )}
