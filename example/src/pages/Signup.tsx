@@ -4,6 +4,7 @@ import { Container } from '../layouts/Container'
 import styled from 'styled-components/native';
 import { useLanguage, useSession } from 'ordering-components/native';
 import { Platform } from 'react-native';
+import { _setStoreData } from '../providers/StoreUtil';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;
@@ -33,6 +34,9 @@ export const Signup = (props: any) => {
       }
     }
   }
+
+  _setStoreData('notification_state', props.route?.params?.notification_state);
+
   return (
     <KeyboardView
       enabled

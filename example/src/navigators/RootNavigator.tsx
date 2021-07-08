@@ -22,7 +22,6 @@ import BusinessProductsList from '../pages/BusinessProductsList';
 import OrderDetails from '../pages/OrderDetails';
 import HomeNavigator from './HomeNavigator';
 import settings from '../config.json';
-import { _setStoreData } from '../providers/StoreUtil';
 
 const Stack = createStackNavigator();
 
@@ -31,7 +30,9 @@ const RootNavigator = () => {
   const [orderStatus, { changeMoment }] = useOrder();
   const [{ configs }] = useConfig();
   const [loaded, setLoaded] = useState(false);
-  const [oneSignalState, setOneSignalState] = useState<any>({});
+  const [oneSignalState, setOneSignalState] = useState<any>({
+    notification_app: settings.notification_app
+  });
   const [notificationData, setNotificationData] = useState<any>({});
 
   const validDate = (date : any) => {
@@ -45,12 +46,9 @@ const RootNavigator = () => {
   const oneSignalSetup = async () => {
     OneSignal.setLogLevel(6, 0);
 
-    if (configs?.onesignal_orderingapp_id) {
-      OneSignal.setAppId(configs?.onesignal_orderingapp_id);
+    if (configs?.onesignal_orderingapp_id?.value) {
+      OneSignal.setAppId(configs?.onesignal_orderingapp_id?.value);
     }
-
-    //OneSignal.setAppId('f4d9d806-882e-4b96-b7d1-4f3e478e8726'); // delete this
-    OneSignal.setAppId('3ed1ab98-1ada-4414-ad95-ef8180af5ecd'); // delete this
 
     if (Platform.OS === 'ios') {
       OneSignal.promptForPushNotificationsWithUserResponse(response => {
@@ -73,8 +71,6 @@ const RootNavigator = () => {
 
     const deviceState: any = await OneSignal.getDeviceState();
 
-    console.log(deviceState);
-
     if (!deviceState?.isSubscribed) {
       OneSignal.addTrigger("prompt_ios", "true");
     }
@@ -87,7 +83,6 @@ const RootNavigator = () => {
       notification_app: settings.notification_app
     }
     setOneSignalState(data);
-    _setStoreData('notification_state', data);
   };
 
   useEffect(() => {
@@ -148,11 +143,13 @@ const RootNavigator = () => {
                   name="Login"
                   component={Login}
                   options={{ headerShown: false }}
+                  initialParams={{ notification_state: oneSignalState }}
                 />
                 <Stack.Screen
                   name="Signup"
                   component={Signup}
                   options={{ headerShown: false }}
+                  initialParams={{ notification_state: oneSignalState }}
                 />
                 <Stack.Screen
                   name="Forgot"

@@ -6,6 +6,7 @@ import { colors } from '../theme.json';
 import { Container } from '../layouts/Container';
 
 import { useLanguage } from 'ordering-components/native';
+import { _setStoreData } from '../providers/StoreUtil';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;
@@ -28,6 +29,7 @@ export const Login = ({ navigation, route }: any) => {
     notificationState: route?.params?.notification_state
   }
 
+  _setStoreData('notification_state', route?.params?.notification_state);
 
   return (
     <KeyboardView
