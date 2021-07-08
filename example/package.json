@@ -1,7 +1,25 @@
 {
-  "name": "delivery",
-  "version": "0.0.1",
-  "private": true,
+  "name": "ordering-ui-react-native",
+  "version": "0.0.4",
+  "description": "Reusable components made in react native",
+  "main": "src/index.tsx",
+  "author": "ordering.inc",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ordering-Inc/Ordering-UI-Native.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ordering-Inc/Ordering-UI-Native/issues"
+  },
+  "homepage": "https://github.com/Ordering-Inc/Ordering-UI-Native#readme",
+  "keywords": [
+    "ordering",
+    "ui",
+    "component",
+    "native",
+    "ordering-native",
+    "react-native"
+  ],
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",

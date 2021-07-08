@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { useLanguage, useApi, useOrder, useUtils } from 'ordering-components/native';
+import {
+  useLanguage,
+  useApi,
+  useOrder,
+  useUtils,
+} from 'ordering-components/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { Container } from '../layouts/Container';
@@ -121,7 +126,9 @@ const BusinessPage = (props:any): React.ReactElement => {
             <NavBar
               title={t('MENU', 'Menu')}
               onActionLeft={goToBack}
+              includeOrderTypeSelector
               rightComponent={cart && (
+                
                 <TouchableOpacity
                   style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center' }}
                   onPress={onToggleCart}

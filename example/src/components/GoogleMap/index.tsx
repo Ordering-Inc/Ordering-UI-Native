@@ -18,7 +18,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     saveLocation,
     setSaveLocation,
     handleToggleMap,
-    locations
+    locations,
+    isSetInputs
   } = props
 
   const [, t] = useLanguage()
@@ -61,16 +62,19 @@ export const GoogleMap = (props: GoogleMapsParams) => {
             break
           }
         }
-        const address = {
-          address: results[0]?.formatted_address,
-          location: results[0]?.geometry?.location,
-          zipcode,
-          place_id: results[0]?.place_id,
-        }
+        let data = null
         const details = {
           geometry: { location: { lat: pos.latitude, lng: pos.longitude } }
         }
-        handleChangeAddressMap && handleChangeAddressMap(address, details)
+        if (isSetInputs) {
+          data = {
+            address: results[0]?.formatted_address,
+            location: results[0]?.geometry?.location,
+            zipcode,
+            place_id: results[0]?.place_id,
+          }
+        }
+        handleChangeAddressMap && handleChangeAddressMap(data, details)
         setSaveLocation && setSaveLocation(false)
         handleToggleMap && handleToggleMap()
       } else {

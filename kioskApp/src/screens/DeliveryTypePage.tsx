@@ -1,7 +1,7 @@
 import React from 'react';
 import { useConfig } from 'ordering-components/native';
 
-import { OrderTypeSelector } from '../components/OrderTypeSelector';
+import { OrderTypeCardSelector } from '../components/OrderTypeCardSelector';
 
 const DeliveryTypePage = (props:any): React.ReactElement => {
   const [{ configs }] = useConfig()
@@ -14,7 +14,7 @@ const DeliveryTypePage = (props:any): React.ReactElement => {
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
   return (
-		<OrderTypeSelector
+		<OrderTypeCardSelector
 			configTypes={configTypes}
 			navigation={navigation}
 			callback={route?.params?.callback}

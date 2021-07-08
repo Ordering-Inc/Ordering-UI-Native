@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import {
   DriverTips as DriverTipsController,
   useUtils,
   useLanguage,
-  useConfig
+  useConfig,
+  useOrder
 } from 'ordering-components/native';
 
 import { colors } from '../../theme.json';
@@ -32,8 +33,10 @@ const DriverTipsUI = (props: any) => {
   const [{ parsePrice }] = useUtils();
   const [, t] = useLanguage();
   const [{ configs }] = useConfig();
+  const [{loading}] = useOrder()
 
   const [value, setvalue] = useState(0);
+  const [valueOption,setValueOption] = useState(0)
 
   const placeholderCurrency = (configs?.currency_position?.value || 'left') === 'left'
     ? `${configs?.format_number_currency?.value}0`
@@ -45,6 +48,10 @@ const DriverTipsUI = (props: any) => {
     setvalue(tip)
   }
 
+  const handleChangeOptionCustom = (val : any) => {
+    setValueOption(val)
+    handlerChangeOption(val)
+  }
   return (
     <DTContainer>
       {!isDriverTipUseCustom ? (
@@ -53,15 +60,19 @@ const DriverTipsUI = (props: any) => {
             {driverTipsOptions.map((option: any, i: number) => (
               <TouchableOpacity
                 key={i}
-                onPress={() => handlerChangeOption(option)}
+                onPress={() => handleChangeOptionCustom(option)}
               >
                 <DTCard
                   style={style.circle}
                   isActive={option === optionSelected}
                 >
-                  <OText size={18} color={option === optionSelected ? '#FFF' : '#000'}>
-                    {`${isFixedPrice ? parsePrice(option) : `${option}%`}`}
-                  </OText>
+                  {loading && valueOption === option ? (
+                    <ActivityIndicator size='small' color={colors.primary} />
+                  ) : (
+                    <OText size={18} color={option === optionSelected ? '#FFF' : '#000'}>
+                      {`${isFixedPrice ? parsePrice(option) : `${option}%`}`}
+                    </OText>
+                  )}
                 </DTCard>
               </TouchableOpacity>
             ))}

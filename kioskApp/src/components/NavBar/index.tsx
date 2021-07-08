@@ -2,9 +2,10 @@ import * as React from 'react'
 import styled from 'styled-components/native'
 import { OIcon, OButton, OText } from '../shared'
 import { colors } from '../../theme.json'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { TextStyle } from 'react-native'
+import { TextStyle, View } from 'react-native'
 import { IMAGES } from '../../config/constants'
+import { OrderTypeSelector } from '../OrderTypeSelector'
+import { useConfig } from 'ordering-components/native'
 
 const Wrapper = styled.View`
   background-color: ${colors.white};
@@ -50,10 +51,15 @@ interface Props {
   titleStyle?: TextStyle,
   btnStyle?: TextStyle,
   style?: TextStyle,
-  paddingTop?: number
+  paddingTop?: number,
+  includeOrderTypeSelector?: boolean,
 }
 
 const NavBar = (props: Props) => {
+
+  const [{ configs }] = useConfig();
+  const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || [];
+
   return (
     <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
       {(props?.onActionLeft || props?.leftImg) && (
@@ -102,6 +108,13 @@ const NavBar = (props: Props) => {
           }
         </TitleWrapper>
       </TitleTopWrapper>
+
+      {props?.includeOrderTypeSelector && (
+        <View style={{ paddingHorizontal: props.rightComponent ? 4 : 15 }}>
+          <OrderTypeSelector configTypes={configTypes} />
+        </View>
+      )}
+
       { props.rightComponent }
     </Wrapper>
   )

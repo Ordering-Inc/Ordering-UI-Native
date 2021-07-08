@@ -1,19 +1,15 @@
-import React from 'react'
-import { View } from 'react-native'
+import React, { useState } from 'react'
 import {
   OrderTypeControl,
   useLanguage,
+  useOrder
 } from 'ordering-components/native'
-
-import { } from './styles'
+import {StyleSheet, Platform, View} from 'react-native'
+import { OrderTypeWrapper } from './styles'
 import { OrderTypeSelectParams } from '../../types'
+import { colors } from '../../theme.json'
+import ModalDropdown from 'react-native-modal-dropdown'
 import { OText } from '../shared'
-import { DELIVERY_TYPE_IMAGES, IMAGES } from '../../config/constants'
-import OptionCard from '../OptionCard'
-import { Container } from '../../layouts/Container'
-import NavBar from '../NavBar'
-import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook'
-import GridContainer from '../../layouts/GridContainer'
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const {
@@ -21,85 +17,57 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     typeSelected,
     defaultValue,
     configTypes,
-    orderTypes,
-    goBack,
-    callback
+    orderTypes
   } = props
 
-  const [, t] = useLanguage();
-  const [orientationState] = useDeviceOrientation();
-
+  const [orderState] = useOrder()
+  
+  
   const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value))
+  
+  const items = _orderTypes.map((type) => {
+    return {
+      value: type.value,
+      label: type.content,
+      inputLabel: type.content
+    }
+  })
+  
+  const _selectedValue: number | undefined = defaultValue || typeSelected;
+  const _selectedOrderType = items?.find((item) => item.value === _selectedValue);
 
-  const _takeOut = _orderTypes?.find(item => item?.value === 2);
-  const _eatIn = _orderTypes?.find(item => item?.value === 3);
-  const _selected: number | undefined = defaultValue || typeSelected;
-
-  const cardStyle = {
-    width: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.width : orientationState?.dimensions?.width * 0.47,
-    height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.34 : orientationState?.dimensions?.height * 0.55,
+  const handleChangeOrderTypeCallback = (orderType : number) => {
+    if(!orderState.loading){
+      handleChangeOrderType(orderType)
+    }
   }
-
+  
   return (
     typeSelected !== undefined && (
-      <Container>
-        <NavBar
-          title={t('DELIVERY_TYPE', 'Delivery type')}
-          {...(goBack && { onActionLeft: goBack } )}
-        />
-
-        <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
-          <OText
-            size={orientationState?.dimensions?.width * 0.05}
-          >
-            {t('WHERE_WILL_YOU_BE', 'Where will you be')} {'\n'}
-            <OText
-              size={orientationState?.dimensions?.width * 0.05}
-              weight={'700'}
-            >
-              {_selected === _takeOut?.value && _takeOut.content}
-              {_selected === _eatIn?.value && _eatIn.content}
-              {'?'}
-            </OText>
-          </OText>
-        </View>
-
-
-        <GridContainer
-          style={{ justifyContent: 'space-between' }}
-        >
-          <OptionCard
-            style={cardStyle}
-            title={t('EAT_IN','Eat In')}
-            description={t('EAT_IN_DESCRIPTION', 'We are very glad to have you here. Bon appetit!')}
-            bgImage={DELIVERY_TYPE_IMAGES.eatIn}
-            icon={IMAGES.pushPin}
-            callToActionText={t('START_MY_ORDER', 'Start my order')}
-            onClick={() => {
-              handleChangeOrderType(_eatIn?.value);
-              callback && callback();
-            }}
-          />
-
-          <View style={{
-            width: orientationState?.orientation === LANDSCAPE ? orientationState?.dimensions?.width * 0.0016 : 0,
-            height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.018 : 0,
-          }} />
-
-          <OptionCard
-            style={cardStyle}
-            title={t('TAKE_OUT','Take out')}
-            description={t('TAKE_OUT_DESCRIPTION', 'You are very welcome anytime you visit us!')}
-            bgImage={DELIVERY_TYPE_IMAGES.takeOut}
-            icon={IMAGES.shoppingCart}
-            callToActionText={t('START_MY_ORDER', 'Start my order')}
-            onClick={() => {
-              handleChangeOrderType(_takeOut?.value);
-              callback && callback();
-            }}
-          />
-        </GridContainer>
-      </Container>
+      <ModalDropdown
+        defaultValue={_selectedOrderType?.label}
+        options={items}
+        onSelect={(_, orderType) => {
+          handleChangeOrderTypeCallback(orderType?.value);
+        }}
+        /* @ts-ignore */
+        renderButtonText={(value) => value?.label}
+        renderRow={(item) => (
+          <View style={{ padding: 5, backgroundColor: colors.white }}>
+            <OText>{item.label}</OText>
+          </View>
+        )}
+        dropdownStyle={{
+          height: 100,
+          borderRadius: 6,
+          padding: 10,
+        }}
+        textStyle={{
+          fontSize: 18,
+          color: colors.primary,
+          maxWidth: 210,
+        }}
+      />
     )
   )
 }
@@ -113,11 +81,11 @@ export const OrderTypeSelector = (props: any) => {
     orderTypes: props.orderType || [
       {
         value: 2,
-        content: t('TAKE_OUT', 'Take out')
+        content: `${t('THIS_ORDER_IS_TO', 'This order is to')} ${t('TAKE_OUT', 'Take out')}`
       },
       {
         value: 3,
-        content: t('EAT_IN', 'Eat in')
+        content: `${t('THIS_ORDER_IS_TO', 'This order is to')} ${t('EAT_IN', 'Eat in')}`
       },
     ]
   }
