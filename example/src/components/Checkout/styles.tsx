@@ -20,7 +20,7 @@ export const ChTotal = styled.View`
   background-color: ${colors.inputDisabled};
   padding: 10px 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-direction: row;
   align-items: center;
 `

@@ -132,6 +132,7 @@ export interface BusinessControllerParams {
   handleCustomClick?: any;
   orderType?: any;
   handleClick?: any;
+  isBusinessOpen?: boolean
 }
 export interface BusinessProductsListingParams {
   navigation?: any;

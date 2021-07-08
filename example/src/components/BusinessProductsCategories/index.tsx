@@ -1,6 +1,6 @@
 import React from 'react'
 import { BusinessProductsCategories as ProductsCategories } from 'ordering-components/native'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { I18nManager, ScrollView, StyleSheet, View } from 'react-native'
 import { colors } from '../../theme.json'
 import { Tab } from './styles'
 import { OText } from '../shared'
@@ -23,20 +23,20 @@ const BusinessProductsCategoriesUI = (props: any) => {
           <View style={{ flexDirection: 'row' }}>
             {[...Array(4)].map((item, i) => (
               <PlaceholderLine key={i} width={10} style={{marginRight: 5}}/>
-            ))}
+              ))}
           </View>
         </Placeholder>
       )}
       {
         !loading && categories && categories.length && categories.map((category: any) => (
           <Tab
-            key={category.name}
-            onPress={() => handlerClickCategory(category)}
-            style={(category.id === 'featured') && !featured && styles.featuredStyle}
+          key={category.name}
+          onPress={() => handlerClickCategory(category)}
+          style={(category.id === 'featured') && !featured && styles.featuredStyle}
           >
             <OText
               color={categorySelected?.id === category.id ? colors.primary : ''}
-            >
+              >
               {category.name}
             </OText>
           </Tab>
