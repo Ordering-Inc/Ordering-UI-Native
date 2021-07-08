@@ -6,6 +6,8 @@ import { CCContainer, CCNotCarts, CCList } from './styles';
 import { Cart } from '../Cart';
 import { OIcon, OText } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { View } from 'react-native';
+import { colors } from '../../theme.json';
 
 export const CartContent = (props: any) => {
   const {
@@ -20,18 +22,21 @@ export const CartContent = (props: any) => {
     <CCContainer>
       {isOrderStateCarts && carts?.length > 0 && (
         <>
-          <OText style={{ fontSize: 28 }}>
-            {carts.length > 1 ? t('CARTS', 'Carts') : t('CART', 'Cart')}
+          <OText size={24} lineHeight={36} weight={'600'} style={{marginBottom: 20}}>
+            {carts.length > 1 ? t('MY_CARTS', 'My Carts') : t('CART', 'Cart')}
           </OText>
           {carts.map((cart: any) => (
-            <CCList key={cart.uuid}>
+            <CCList key={cart.uuid} style={{overflow: 'visible'}}>
               {cart.products.length > 0 &&  (
-                <Cart
-                  cart={cart}
-                  onNavigationRedirect={props.onNavigationRedirect}
-                  isCartsLoading={isCartsLoading}
-                  setIsCartsLoading={setIsCartsLoading}
-                />
+                <>
+						 <Cart
+							cart={cart}
+							onNavigationRedirect={props.onNavigationRedirect}
+							isCartsLoading={isCartsLoading}
+							setIsCartsLoading={setIsCartsLoading}
+						 />
+						 <View style={{height: 8, backgroundColor: colors.backgroundGray100, marginHorizontal: -40, marginTop: 20}} />
+					 </>
               )}
             </CCList>
           ))}

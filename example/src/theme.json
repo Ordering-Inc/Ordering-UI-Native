@@ -96,7 +96,16 @@
 		"search": "",
 		"star": "",
 		"info": "",
-		"close": ""
+		"close": "",
+		"plus": "",
+		"minus": "",
+		"radio_nor": "",
+		"radio_act": "",
+		"check_nor": "",
+		"check_act": "",
+		"half_l": "",
+		"half_f": "",
+		"half_r": ""
     },
 	 "backgrounds": {
 		 "business_list_header": ""

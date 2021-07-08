@@ -15,12 +15,10 @@ import {
   DivideView,
   MediaWrapper,
 } from './styles';
-import { Image, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { BusinessInformationParams } from '../../types';
 import { GoogleMap } from '../GoogleMap';
 import { colors } from '../../theme.json';
-import Video from 'react-native-video';
-import VideoFile from '../../assets/videos/howItWorks.mp4';
 import { WebView } from 'react-native-webview';
 
 const BusinessInformationUI = (props: BusinessInformationParams) => {
@@ -154,17 +152,6 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 								domStorageEnabled={true}
 								source={{uri: v.video }}
 						  />
-								// <Video 
-								// key={v.id}
-								// source={VideoFile} 
-								// resizeMode="cover"
-								// repeat={true}
-								// style={{
-								// 	width: 210,
-								// 	height: 127,
-								// }}
-								// />
-								// <OText key={v.id}>{JSON.stringify(v)}</OText>
 							))}
 						</MediaWrapper>
                 </>
@@ -182,7 +169,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 								i.file != null &&
 								<View key={i.id} style={{width: 210, height: 127, borderRadius: 7.6, marginEnd: 20, overflow: 'hidden'}}>
 									<OIcon cover url={optimizeImage(i?.file, 'h_150,c_limit')} width={210} height={127} />
-									<OText size={12} color={colors.red} style={{position: 'absolute'}}>{i.file}</OText>
+									{/* <OText size={12} color={colors.red} style={{position: 'absolute'}}>{i.file}</OText> */}
 								</View>
 							))}
                   </MediaWrapper>

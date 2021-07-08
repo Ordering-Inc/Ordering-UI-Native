@@ -49,16 +49,8 @@ export const BusinessItemAccordion = (props: any) => {
         activeOpacity={1}
       >
         <BIInfo>
-          {cart?.business?.logo && (
-            <OIcon
-              url={cart?.business?.logo}
-              width={70}
-              height={70}
-              style={{ borderRadius: 16 }}
-            />
-          )}
           <BIContentInfo>
-            <OText>{cart?.business?.name}</OText>
+            <OText size={16} lineHeight={24} weight={'600'}>{cart?.business?.name}</OText>
             {orderState?.options?.type === 1 ? (
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <MaterialCommunityIcon

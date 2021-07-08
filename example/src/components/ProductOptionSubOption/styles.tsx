@@ -4,7 +4,7 @@ export const Container = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: 10px 0;
 `
 
 export const IconControl = styled.TouchableOpacity`

@@ -7,9 +7,11 @@ export const BIContainer = styled.View`
   flex-direction: column;
   width: 100%;
   opacity: 1;
+  border-radius: 7.6px;
+  overflow: hidden;
 
   ${(props: any) => props.isClosed && css`
-    background-color: rgba(0, 0, 0, 0.5);
+	 opacity: 0.5;
   `}
 `
 
@@ -20,7 +22,7 @@ export const BIHeader = styled.TouchableOpacity`
   justify-content: space-between;
   position: relative;
   padding: 10px;
-  background-color: #F8F8F8;
+  background-color: ${colors.white};
 
   ${(props: any) => props.isClosed && css`
     background-color: rgba(0, 0, 0, 0.1);
