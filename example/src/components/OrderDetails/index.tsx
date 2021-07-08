@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, BackHandler, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -393,6 +393,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   statusBar: {
+    transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
     height: 10,
   },
   logo: {
