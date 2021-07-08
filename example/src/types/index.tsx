@@ -68,8 +68,9 @@ export interface AddressFormParams {
   onSaveAddress?: any,
   isFromProductsList?: boolean,
   hasAddressDefault?: any,
-  afterSignup?: boolean,
   isFromCheckout?: boolean
+  afterSignup?: boolean
+  isGuestFromStore?: boolean
 }
 export interface SignupParams {
   navigation?: any;
@@ -133,6 +134,7 @@ export interface BusinessControllerParams {
   handleCustomClick?: any;
   orderType?: any;
   handleClick?: any;
+  isBusinessOpen?: boolean
 }
 export interface BusinessProductsListingParams {
   navigation?: any;

@@ -30,6 +30,7 @@ import {
 } from './styles';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
+import { _removeStoreData } from '../../providers/StoreUtil';
 import NavBar from '../NavBar'
 
 import { OText, OButton, OInput, OModal } from '../shared';
@@ -110,6 +111,7 @@ const LoginFormUI = (props: LoginParams) => {
   }
 
   const handleSuccessFacebook = (user: any) => {
+    _removeStoreData('isGuestUser')
     login({
       user,
       token: user.session.access_token
@@ -408,6 +410,7 @@ export const LoginForm = (props: any) => {
   const loginProps = {
     ...props,
     UIComponent: LoginFormUI,
+    handleSuccessLogin: () => _removeStoreData('isGuestUser')
   };
   return <LoginFormController {...loginProps} />;
 };

@@ -198,25 +198,20 @@ const CheckoutUI = (props: any) => {
 
           <ChSection>
             <ChTotal>
-              {
-                (
-                  <>
-                    <OIcon
-                      url={businessLogo || businessDetails?.business?.logo}
-                      width={80}
-                      height={80}
-                      borderRadius={80}
-                    />
-                    <View style={{ marginLeft: 15, width: '85%' }}>
-                      <OText size={22} numberOfLines={2} ellipsizeMode='tail' style={{ width: '85%' }}>
-                        {businessName || businessDetails?.business?.name}
-                      </OText>
-                      <OText size={22}>
-                        {cart?.total >= 1 && parsePrice(cart?.total) || cartTotal >= 1 && parsePrice(cartTotal)}
-                      </OText>
-                    </View>
-                  </>
-                )}
+              <OIcon
+                url={businessLogo || businessDetails?.business?.logo}
+                width={80}
+                height={80}
+                borderRadius={80}
+              />
+              <View style={{ marginHorizontal: 15, flex: 1, alignItems: 'flex-start' }}>
+                <OText size={22} numberOfLines={2} ellipsizeMode='tail' >
+                  {businessName || businessDetails?.business?.name}
+                </OText>
+                <OText size={22}>
+                  {cart?.total >= 1 && parsePrice(cart?.total) || cartTotal >= 1 && parsePrice(cartTotal)}
+                </OText>
+              </View>
             </ChTotal>
           </ChSection>
           <ChSection style={style.paddSection}>

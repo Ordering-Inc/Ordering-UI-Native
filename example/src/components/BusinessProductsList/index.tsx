@@ -70,7 +70,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         !category.id && categories && categories.filter(category => category.id !== null).map((category, i, _categories) => {
           const products = categoryState.products?.filter((product: any) => product.category_id === category.id) || []
           return (
-            <React.Fragment key={category.id}>
+            <View key={category.id} style={{alignItems: 'flex-start'}}>
               {
                 products.length > 0 && (
                   <>
@@ -91,7 +91,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   </>
                 )
               }
-            </React.Fragment>
+            </View>
           )
         })
       }

@@ -8,6 +8,7 @@ import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
+import { _retrieveStoreData } from '../../providers/StoreUtil';
 import { OInput, OButton, OText, OModal } from '../shared'
 import { AddressFormParams } from '../../types'
 import { getTraduction } from '../../utils'
@@ -47,8 +48,6 @@ const AddressFormUI = (props: AddressFormParams) => {
     addressState,
     addressesList,
     saveAddress,
-    userCustomerSetup,
-    isGuestUser,
     isRequiredField,
     isFromProductsList,
     hasAddressDefault,
@@ -86,6 +85,8 @@ const AddressFormUI = (props: AddressFormParams) => {
   const isLocationRequired = configState.configs?.google_autocomplete_selection_required?.value === '1' ||
     configState.configs?.google_autocomplete_selection_required?.value === 'true'
   const maxLimitLocation = configState?.configs?.meters_to_change_address?.value
+
+  const isGuestUser = props.isGuestUser || props.isGuestFromStore;
 
   const continueAsGuest = () => navigation.navigate('BusinessList')
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()

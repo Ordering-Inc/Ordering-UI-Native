@@ -10,7 +10,7 @@ import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
 
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager } from 'react-native'
 import Icon from 'react-native-vector-icons/Feather';
 
 import {
@@ -29,7 +29,6 @@ import {
 } from './styles'
 import { colors, images } from '../../theme.json'
 import { OButton, OInput, OText } from '../shared'
-import { ScrollView } from 'react-native-gesture-handler'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
 import { Placeholder,PlaceholderLine,Fade } from 'rn-placeholder'
@@ -130,8 +129,8 @@ export const ProductOptionsUI = (props: any) => {
                   </Placeholder>
                 ) : (
                   <>
-                    <OText size={20} style={{ flex: 1 }}>{product?.name || productCart.name}</OText>
-                    <OText size={20} color={colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+                    <OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1 }}>{product?.name || productCart.name}</OText>
+                    <OText size={20} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
                   </>
                 )}
               </ProductTitle>

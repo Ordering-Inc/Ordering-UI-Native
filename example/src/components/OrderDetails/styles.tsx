@@ -92,6 +92,7 @@ export const InfoBlock = styled.View`
 
 export const HeaderInfo = styled.View`
   flex: 1;
+  align-items: flex-start;
   width: 80%;
 `
 
