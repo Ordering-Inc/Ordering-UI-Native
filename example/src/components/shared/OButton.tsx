@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  I18nManager,
   ImageSourcePropType,
   ImageStyle,
   TextStyle,
@@ -109,7 +110,7 @@ const OButton = (props: Props): React.ReactElement => {
     >
       <StyledButton style={props.bgColor ? { ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor } : props.style}>
         {props.imgLeftSrc ? (
-          <StyledImage style={props.imgLeftStyle} source={props.imgLeftSrc} />
+          <StyledImage style={{transform: [{scaleX: I18nManager.isRTL ? -1 : 1}], ...props.imgLeftStyle}} source={props.imgLeftSrc} />
         ) : null}
         {props.text ? (
           <StyledText style={props.textStyle}>{props.text}</StyledText>

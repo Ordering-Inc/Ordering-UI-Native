@@ -47,6 +47,7 @@ export interface AddressListParams {
   isFromBusinesses?: boolean;
   isFromProductsList?: boolean;
   afterSignup?: boolean;
+  isFromCheckout?: boolean
 }
 
 export interface AddressFormParams {
@@ -67,7 +68,9 @@ export interface AddressFormParams {
   onSaveAddress?: any,
   isFromProductsList?: boolean,
   hasAddressDefault?: any,
+  isFromCheckout?: boolean
   afterSignup?: boolean
+  isGuestFromStore?: boolean
 }
 export interface SignupParams {
   navigation?: any;
@@ -131,6 +134,7 @@ export interface BusinessControllerParams {
   handleCustomClick?: any;
   orderType?: any;
   handleClick?: any;
+  isBusinessOpen?: boolean
 }
 export interface BusinessProductsListingParams {
   navigation?: any;
@@ -257,6 +261,7 @@ export interface OrderDetailsParams {
   readMessages?: () => {},
   isFromCheckout?: boolean,
   driverLocation?: any,
+  goToBusinessList?: boolean
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean,
@@ -367,6 +372,7 @@ export interface GoogleMapsParams {
   readOnly?: boolean
   markerTitle?: string,
   saveLocation?: boolean,
+  isSetInputs?: boolean,
   locations?: Array<any>,
   setSaveLocation?: (val : boolean) => void,
   handleToggleMap?: () => void

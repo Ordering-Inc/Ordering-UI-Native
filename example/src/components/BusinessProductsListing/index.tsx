@@ -99,7 +99,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   return (
     <>
-      <BusinessProductsListingContainer style={styles.mainContainer} isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}>
+      <BusinessProductsListingContainer
+        style={styles.mainContainer}
+        isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
+      >
         <WrapHeader>
           {!loading && business?.id && (
             <TopHeader>
@@ -239,7 +242,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       >
         <ProductForm
           product={curProduct}
-          businessSlug={business.slug}
+          businessSlug={business?.slug}
           businessId={business.id}
           onClose={handleCloseProductModal}
           navigation={navigation}

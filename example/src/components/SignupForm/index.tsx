@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet, Keyboard } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -24,6 +24,7 @@ import {
 import { LoginWith as SignupWith, OTab, OTabs } from '../LoginForm/styles'
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
+import { _removeStoreData } from '../../providers/StoreUtil';
 import NavBar from '../NavBar'
 import { VerifyPhone } from '../VerifyPhone';
 
@@ -141,11 +142,11 @@ const SignupFormUI = (props: SignupParams) => {
   }
 
   const handleSuccessFacebook = (user: any) => {
+    _removeStoreData('isGuestUser')
     login({
       user,
       token: user.session.access_token
     })
-    navigation.navigate('Home');
   }
 
   const handleChangeTab = (val: string) => {
@@ -154,6 +155,7 @@ const SignupFormUI = (props: SignupParams) => {
   }
 
   const onSubmit = (values: any) => {
+    Keyboard.dismiss()
     if (phoneInputData.error) {
       showToast(ToastType.Error, phoneInputData.error);
       return
@@ -306,7 +308,7 @@ const SignupFormUI = (props: SignupParams) => {
             </SignupWith>
           )}
         <FormInput>
-          {!(useChekoutFileds && validationFields?.loading) ? (
+          {!(useChekoutFileds && validationFields?.loading && validationFields?.fields?.checkout) ? (
             <>
               {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any, i : number) =>
                 !notValidationFields.includes(field.code) &&
@@ -435,7 +437,7 @@ const SignupFormUI = (props: SignupParams) => {
           )
         }
 
-        {/* {
+        {
           configs && Object.keys(configs).length > 0 && (
             (configs?.facebook_login?.value === 'true' ||
               configs?.facebook_login?.value === '1') &&
@@ -456,7 +458,7 @@ const SignupFormUI = (props: SignupParams) => {
               </ButtonsSection>
             )
           )
-        } */}
+        }
       </FormSide >
       <OModal
         open={isModalVisible}
@@ -472,7 +474,7 @@ const SignupFormUI = (props: SignupParams) => {
           handleVerifyCodeClick={onSubmit}
         />
       </OModal>
-      <Spinner visible={formState.loading || validationFields.loading || isFBLoading} />
+      <Spinner visible={formState.loading || isFBLoading} />
     </View >
   );
 };

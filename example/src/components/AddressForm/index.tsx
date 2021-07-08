@@ -8,6 +8,7 @@ import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
+import { _retrieveStoreData } from '../../providers/StoreUtil';
 import { OInput, OButton, OText, OModal } from '../shared'
 import { AddressFormParams } from '../../types'
 import { getTraduction } from '../../utils'
@@ -47,12 +48,11 @@ const AddressFormUI = (props: AddressFormParams) => {
     addressState,
     addressesList,
     saveAddress,
-    userCustomerSetup,
-    isGuestUser,
     isRequiredField,
     isFromProductsList,
     hasAddressDefault,
-    afterSignup
+    afterSignup,
+    isFromCheckout
   } = props
 
   const [, t] = useLanguage()
@@ -85,6 +85,8 @@ const AddressFormUI = (props: AddressFormParams) => {
   const isLocationRequired = configState.configs?.google_autocomplete_selection_required?.value === '1' ||
     configState.configs?.google_autocomplete_selection_required?.value === 'true'
   const maxLimitLocation = configState?.configs?.meters_to_change_address?.value
+
+  const isGuestUser = props.isGuestUser || props.isGuestFromStore;
 
   const continueAsGuest = () => navigation.navigate('BusinessList')
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
@@ -229,11 +231,15 @@ const AddressFormUI = (props: AddressFormParams) => {
   }
 
   const handleChangeAddress = (data: any, details: any) => {
+    if (!data) {
+      updateChanges({ location: details?.geometry?.location })
+      return
+    }
     const addressSelected = {
       address: data?.description || data?.address,
       location: details?.geometry?.location,
       utc_offset: details?.utc_offset || null,
-      map_data: { library: 'google', place_id: data.place_id },
+      map_data: { library: 'google', place_id: data?.place_id },
       zip_code: data?.zip_code || null
     }
     updateChanges(addressSelected)
@@ -254,7 +260,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   }
 
   useEffect(() => {
-    if (orderState.loading && !addressesList && orderState.options.address && auth && !afterSignup) {
+    if (orderState.loading && !addressesList && orderState.options.address && auth && !afterSignup && !isFromCheckout) {
       !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business')
     }
   }, [orderState.options.address])
@@ -357,13 +363,6 @@ const AddressFormUI = (props: AddressFormParams) => {
       keyboardDidHideListener.remove()
     }
   }, [])
-
-  useEffect(() => {
-    if (!orderState.loading && auth && !hasAddressDefault && isSignUpEffect) {
-      navigation.navigate('BottomTab')
-    }
-    setIsSignUpEffect(true)
-  }, [orderState.loading])
 
   return (
     <>

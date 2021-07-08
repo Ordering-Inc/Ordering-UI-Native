@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
-import { View, StyleSheet, ScrollView, Platform, PanResponder } from 'react-native'
+import { View, StyleSheet, ScrollView, Platform, PanResponder, I18nManager } from 'react-native'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {
   BusinessList as BusinessesListingController,
@@ -95,7 +95,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
             <OText style={{ fontWeight: 'bold' }} size={28} >
               {t('WELCOME_TITLE_APP', 'Hello there')}
             </OText>
-            <View style={{ width: '65%' }}>
+            <View style={{ maxWidth: '65%' }}>
               <OText
                 style={{ fontWeight: 'bold' }}
                 size={28}
@@ -103,7 +103,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
                 numberOfLines={1}
                 ellipsizeMode='tail'
               >
-                {', '}{user?.name}
+                {I18nManager.isRTL ? `${user?.name}, ` : `, ${user?.name}`}
               </OText>
             </View>
           </View>
