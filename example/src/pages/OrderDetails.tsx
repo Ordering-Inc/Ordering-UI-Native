@@ -4,10 +4,12 @@ import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 
 const OrderDetails = ({ navigation, route } : any) => {
   const { orderId, isFromCheckout } = route.params
+  const goToBusinessList = route?.params?.goToBusinessList
   const orderDetailsProps = {
     navigation,
     orderId,
-    isFromCheckout
+    isFromCheckout,
+    goToBusinessList
   }
 
   return (

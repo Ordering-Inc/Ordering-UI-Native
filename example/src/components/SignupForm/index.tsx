@@ -308,7 +308,7 @@ const SignupFormUI = (props: SignupParams) => {
             </SignupWith>
           )}
         <FormInput>
-          {!(useChekoutFileds && validationFields?.loading) ? (
+          {!(useChekoutFileds && validationFields?.loading && validationFields?.fields?.checkout) ? (
             <>
               {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any, i : number) =>
                 !notValidationFields.includes(field.code) &&
@@ -474,7 +474,7 @@ const SignupFormUI = (props: SignupParams) => {
           handleVerifyCodeClick={onSubmit}
         />
       </OModal>
-      <Spinner visible={formState.loading || validationFields.loading || isFBLoading} />
+      <Spinner visible={formState.loading || isFBLoading} />
     </View >
   );
 };

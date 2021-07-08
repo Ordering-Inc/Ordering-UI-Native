@@ -29,7 +29,8 @@ const AddressListUI = (props: AddressListParams) => {
     actionStatus,
     isFromBusinesses,
     isFromProductsList,
-    afterSignup
+    afterSignup,
+    isFromCheckout
   } = props
 
   const [orderState] = useOrder()
@@ -199,7 +200,8 @@ const AddressListUI = (props: AddressListParams) => {
                           onSaveAddress: handleSaveAddress,
                           isSelectedAfterAdd: true,
                           isFromProductsList: isFromProductsList,
-                          hasAddressDefault: !!orderState.options?.address?.location
+                          hasAddressDefault: !!orderState.options?.address?.location,
+                          isFromCheckout: isFromCheckout
                         }
                       ) : onNavigationRedirect(
                         'AddressFormInitial',
@@ -265,7 +267,8 @@ const AddressListUI = (props: AddressListParams) => {
                     addressesList: addressList?.addresses,
                     nopadding: true,
                     isSelectedAfterAdd: true,
-                    hasAddressDefault: !!orderState.options?.address?.location
+                    hasAddressDefault: !!orderState.options?.address?.location,
+                    isFromCheckout: isFromCheckout
                   }) : onNavigationRedirect(
                     'AddressFormInitial',
                     {

@@ -9,7 +9,8 @@ import {
   OrderDetails as OrderDetailsConTableoller,
   useUtils,
   useConfig,
-  useSession
+  useSession,
+  useOrder
 } from 'ordering-components/native'
 import {
   OrderDetailsContainer,
@@ -53,16 +54,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     readMessages,
     messagesReadList,
     isFromCheckout,
-    driverLocation
+    driverLocation,
+    goToBusinessList
   } = props
 
   const [, t] = useLanguage()
   const [{ parsePrice, parseNumber, parseDate }] = useUtils()
   const [{ user }] = useSession()
   const [{ configs }] = useConfig()
-
-  const [openModalForBusiness, setOpenModalForBusiness] = useState(false)
-  const [openModalForDriver, setOpenModalForDriver] = useState(false)
+  const [, { refreshOrderOptions }] = useOrder()
+  const [openModalForBusiness,setOpenModalForBusiness] = useState(false)
+  const [openModalForDriver,setOpenModalForDriver] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
   const { order, businessData } = props.order
 
@@ -127,9 +129,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }
 
   const handleArrowBack: any = () => {
-    if (!isFromCheckout) {
+    if (!isFromCheckout && !goToBusinessList) {
       navigation?.canGoBack() && navigation.goBack();
       return
+    }
+    if(goToBusinessList){
+      refreshOrderOptions()
     }
     navigation.navigate('BottomTab');
   }

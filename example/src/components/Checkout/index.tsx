@@ -163,13 +163,6 @@ const CheckoutUI = (props: any) => {
   // useEffect(() => {
   //   handlePaymethodChange(null)
   // }, [cart?.total])
-
-  useEffect(() => {
-    if (cart?.products?.length === 0) {
-      navigation?.canGoBack() && navigation.goBack();
-    }
-  }, [cart?.products])
-
   return (
     <>
       <Container>
@@ -475,8 +468,8 @@ const CheckoutUI = (props: any) => {
           <>
             <FloatingButton
               handleClick={() => handlePlaceOrder()}
-              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
-              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
+              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
               btnText={cart?.subtotal >= cart?.minimum
                 ? (
                   placing
