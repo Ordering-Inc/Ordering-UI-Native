@@ -18,9 +18,7 @@ export const LoginPage = ({ navigation }: any) => {
   };
 
   return (
-    <Container>
-      <LoginForm {...loginProps} />
-    </Container>
+    <LoginForm {...loginProps} />
   );
 };
 

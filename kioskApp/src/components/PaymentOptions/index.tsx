@@ -19,8 +19,6 @@ import { colors } from '../../theme.json';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
 import GridContainer from '../../layouts/GridContainer';
 
-const _dim = Dimensions.get('window');
-
 const PaymentOptionsUI = (props: any) => {
   const {
     cart,
@@ -141,13 +139,13 @@ const PaymentOptionsUI = (props: any) => {
           onActionLeft={goToBack}
         />
 
-        <View style={{ marginVertical: _dim.height * 0.03 }}>
+        <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
           <OText
-            size={_dim.width * 0.05}
+            size={orientationState?.dimensions?.width * 0.05}
           >
             {t('HOW_WOULD_YOU', 'How would you')} {'\n'}
             <OText
-              size={_dim.width * 0.05}
+              size={orientationState?.dimensions?.width * 0.05}
               weight={'700'}
             >
               {`${t('LIKE_TO_PAY', 'like to pay')}?`}
@@ -179,7 +177,7 @@ const PaymentOptionsUI = (props: any) => {
           </GridContainer>
         )}
         
-        <View style={{ height: _dim.height * 0.05 }} />
+        <View style={{ height: orientationState?.dimensions?.height * 0.05 }} />
       </Container>
     </>
   )

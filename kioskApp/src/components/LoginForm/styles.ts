@@ -1,9 +1,12 @@
 import styled, { css } from 'styled-components/native';
 import { colors } from '../../theme.json'
 
-export const Container = styled.View`
-  padding-bottom: 40px;
-  align-items: center;
+export const LoginContainer = styled.View`
+	flex: 1;
+	padding-bottom: 40px;
+	justify-content: center;
+	align-items: center;
+	background-color: ${colors.white}
 `;
 
 export const FormSide = styled.View`

@@ -9,7 +9,7 @@ import {
 } from 'ordering-components/native';
 
 import {
-  Container,
+  LoginContainer,
   FormSide,
   WelcomeTextContainer,
   LogoWrapper
@@ -21,6 +21,7 @@ import { LOGO_IMAGES } from '../../config/constants';
 import { OText, OButton, OInput } from '../shared';
 import { LoginParams } from '../../types';
 import { colors } from '../../theme.json';
+import { useDeviceOrientation } from '../../hooks/device_orientation_hook';
 
 const LoginFormUI = (props: LoginParams) => {
   const {
@@ -31,6 +32,7 @@ const LoginFormUI = (props: LoginParams) => {
   const {showToast} = useToast();
   const [, t] = useLanguage();
   const {control, handleSubmit, formState: {errors}} = useForm();
+  const [orientationState] = useDeviceOrientation();
 
   const onSubmit = (values: any) => {
     handleButtonLoginClick(values);
@@ -39,6 +41,31 @@ const LoginFormUI = (props: LoginParams) => {
   const handleChangeInputEmail = (value: string, onChange: any) => {
     onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
   };
+
+  const styles = StyleSheet.create({
+    logo: {
+      height: 80,
+      width: 250,
+      marginTop: 10
+    },
+    welcomeTextB: {
+      marginBottom: 5
+    },
+    inputStyle: {
+      borderRadius: 4,
+      marginBottom: 12,
+      borderWidth: 1,
+      borderColor: colors.disabled,
+      minHeight: 44
+    },
+    forgotStyle: {
+      textAlign: 'center',
+      fontWeight: 'bold',
+      color: colors.skyBlue,
+      marginTop: orientationState?.dimensions?.height * 0.03,
+      marginBottom: orientationState?.dimensions?.height * 0.1,
+    }
+  });
 
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
@@ -63,8 +90,7 @@ const LoginFormUI = (props: LoginParams) => {
   }, [errors]);
 
   return (
-    <Container>
-
+    <LoginContainer>
       <LogoWrapper>
         <OIcon src={LOGO_IMAGES.logotype} style={styles.logo}/>
       </LogoWrapper>
@@ -73,19 +99,21 @@ const LoginFormUI = (props: LoginParams) => {
 
         <WelcomeTextContainer>
           <OText
-            size={22}>
+            size={orientationState?.dimensions?.width * 0.04}
+          >
             {t('WELCOME_TEXT_A', 'Hi There!')}
           </OText>
 
           <OText
-            size={28}
-            style={styles.welcomeTextB}
-            weight={'bold'}>
+            size={orientationState?.dimensions?.width * 0.05}
+            weight={'700'}
+          >
             {t('WELCOME_TEXT_B', 'Login To start')}
           </OText>
 
           <OText
-            size={20}>
+            size={orientationState?.dimensions?.width * 0.035}
+          >
             {t('WELCOME_TEXT_C', 'You just need to login once.')}
           </OText>
         </WelcomeTextContainer>
@@ -146,8 +174,6 @@ const LoginFormUI = (props: LoginParams) => {
         <OButton
           onClick={handleSubmit(onSubmit)}
           text={t('LOGIN', 'Login')}
-          textStyle={styles.buttonTextStyle}
-          style={styles.buttonStyle}
           imgRightSrc={null}
           isLoading={formState.loading}
         />
@@ -158,49 +184,19 @@ const LoginFormUI = (props: LoginParams) => {
           </OText>
         </Pressable>
 
-        <OText size={12} mBottom={18}>
+        <OText size={16} mBottom={18}>
           {t('IF_NOT_HAVE_ACCOUNT', 'If you don\'t have and account, please contact Ordering')}&nbsp;
-          <OText size={12} mBottom={18} color={colors.skyBlue}>
+          <OText size={16} mBottom={18} color={colors.skyBlue}>
             {t('SUPPORT_DEPARTMENT', 'support department')}
           </OText>
         </OText>
 
       </FormSide>
 
-    </Container>
+    </LoginContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  logo: {
-    height: 80,
-    width: 250,
-    marginTop: 10
-  },
-  welcomeTextB: {
-    marginBottom: 5
-  },
-  inputStyle: {
-    borderRadius: 4,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: colors.disabled,
-    height: 44
-  },
-  buttonStyle: {
-    height: 44,
-    marginBottom: 16
-  },
-  buttonTextStyle: {
-    color: 'white'
-  },
-  forgotStyle: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: colors.skyBlue,
-    marginBottom: 36
-  }
-});
 
 export const LoginForm = (props: any) => {
   const loginProps = {
