@@ -14,7 +14,6 @@ target 'delivery' do
 
   use_react_native!(:path => config["reactNativePath"])
 
-  pod 'RNSentry', :path => '../node_modules/@sentry/react-native'
 
   pod 'FBSDKCoreKit', :modular_headers => true
   pod 'FBSDKLoginKit', :modular_headers => true

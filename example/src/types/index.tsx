@@ -239,6 +239,8 @@ export interface ActiveOrdersParams {
   getOrderStatus?: any,
   reorderLoading?: boolean,
   customArray?: Array<any>
+  setScreen?: any,
+  screen?: any,
   loadMoreOrders?: () => {},
   onNavigationRedirect?: (route: string, params?: any) => {}
 }
