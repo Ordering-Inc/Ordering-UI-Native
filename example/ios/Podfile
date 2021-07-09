@@ -19,7 +19,7 @@ target 'delivery' do
   pod 'FBSDKLoginKit', :modular_headers => true
   pod 'FBSDKShareKit', :modular_headers => true
 
-  pod 'react-native-onesignal', :path => '../node_modules/react-native-onesignal'
+
 
   target 'deliveryTests' do
     inherit! :complete
