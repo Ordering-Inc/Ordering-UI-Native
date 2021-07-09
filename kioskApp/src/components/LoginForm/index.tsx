@@ -9,8 +9,6 @@ import {
 } from 'ordering-components/native';
 
 import {
-  LoginContainer,
-  FormSide,
   WelcomeTextContainer,
   LogoWrapper,
   KeyboardView
