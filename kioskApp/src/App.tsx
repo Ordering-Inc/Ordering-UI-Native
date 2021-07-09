@@ -10,17 +10,20 @@ import Alert from './providers/AlertProvider';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import settings from './config.json';
+import { CartBottomSheetProvider } from './providers/CartBottomSheetProvider';
 
 const App = () => {
   return (
     <SafeAreaProvider>
       <OrderingProvider settings={settings} alert={Alert}>
-        <ToastProvider>
-          <NavigationContainer>
-            <RootNavigator/>
-          </NavigationContainer>
-          <Toast/>
-        </ToastProvider>
+        <CartBottomSheetProvider>
+          <ToastProvider>
+            <NavigationContainer>
+              <RootNavigator/>
+            </NavigationContainer>
+            <Toast/>
+          </ToastProvider>
+        </CartBottomSheetProvider>
       </OrderingProvider>
     </SafeAreaProvider>
   );

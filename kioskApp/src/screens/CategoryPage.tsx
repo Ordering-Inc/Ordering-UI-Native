@@ -17,6 +17,7 @@ import { CartContent } from '../components/CartContent';
 import { colors } from '../theme.json';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../hooks/device_orientation_hook';
+import { useCartBottomSheet } from '../providers/CartBottomSheetProvider';
 
 const CategoryPage = (props: any): React.ReactElement => {
 
@@ -36,6 +37,11 @@ const CategoryPage = (props: any): React.ReactElement => {
   const [curIndexCateg, setIndexCateg] = useState(categories.indexOf(category));
   const [{ parsePrice }] = useUtils();
   const [orientationState] = useDeviceOrientation();
+  const {
+    bottomSheetVisibility,
+    showCartBottomSheet,
+    hideCartBottomSheet
+  } = useCartBottomSheet();
   
   const onChangeTabs = (idx: number) => setIndexCateg(idx);
   
@@ -51,8 +57,6 @@ const CategoryPage = (props: any): React.ReactElement => {
     cart = cartsList?.find((item: any) => item.business_id == businessId);
   }
 
-  const [showCart, setShowCart] = useState(!!cart);
-
   const cartProps = {
     ...props,
     cart,
@@ -62,16 +66,15 @@ const CategoryPage = (props: any): React.ReactElement => {
     extraPropsCustomCartComponent: {
       orientationState,
       height: VISIBLE_CART_BOTTOM_SHEET_HEIGHT,
-      visible: showCart,
+      visible: bottomSheetVisibility,
     },
     showNotFound: false,
   }
 
-  useEffect(() => {
-    if (!!cart && showCart) setShowCart(false);
-  }, [cart])
-
-  const onToggleCart = () => { setShowCart(!showCart); }
+  const onToggleCart = () => {
+    if (bottomSheetVisibility) hideCartBottomSheet();
+    else showCartBottomSheet();
+  }
 
   return (
     <View style={{
@@ -81,7 +84,7 @@ const CategoryPage = (props: any): React.ReactElement => {
       <View
         style={{
           flex: 1,
-          paddingBottom: showCart && !!cart && orientationState?.orientation === PORTRAIT
+          paddingBottom: bottomSheetVisibility && !!cart && orientationState?.orientation === PORTRAIT
             ? VISIBLE_CART_BOTTOM_SHEET_HEIGHT
             : 0,
         }}
@@ -103,7 +106,7 @@ const CategoryPage = (props: any): React.ReactElement => {
                   </OText>
 
                   <MaterialIcon
-                    name={showCart ? "cart-off" : "cart-outline"}
+                    name={bottomSheetVisibility ? "cart-off" : "cart-outline"}
                     color={colors.primary}
                     size={30}
                   />
@@ -155,10 +158,10 @@ const CategoryPage = (props: any): React.ReactElement => {
         </Container>
       </View>
 
-      {showCart &&  
+      {bottomSheetVisibility &&  
         (<View
           style={{
-            flex: showCart && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
+            flex: bottomSheetVisibility && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
           }}
         >
           <CartContent

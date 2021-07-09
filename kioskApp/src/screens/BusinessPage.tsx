@@ -18,12 +18,18 @@ import config from '../config.json';
 import { OText } from '../components/shared';
 import { colors } from '../theme.json';
 import { PORTRAIT, useDeviceOrientation } from '../hooks/device_orientation_hook';
+import { useCartBottomSheet } from '../providers/CartBottomSheetProvider';
 
 const BusinessPage = (props:any): React.ReactElement => {
   const [, t] = useLanguage()
   const [ordering] = useApi()
   const [{ parsePrice }] = useUtils()
   const [orientationState] = useDeviceOrientation();
+  const {
+    bottomSheetVisibility,
+    showCartBottomSheet,
+    hideCartBottomSheet
+  } = useCartBottomSheet();
 
   const {
     navigation
@@ -83,8 +89,6 @@ const BusinessPage = (props:any): React.ReactElement => {
   if (cartsList?.length > 0) {
     cart = cartsList?.find((item: any) => item.business_id == config.businessSlug);
   }
-  
-  const [showCart, setShowCart] = useState(!!cart);
 
   const cartProps = {
     ...props,
@@ -95,18 +99,17 @@ const BusinessPage = (props:any): React.ReactElement => {
     extraPropsCustomCartComponent: {
       orientationState,
       height: VISIBLE_CART_BOTTOM_SHEET_HEIGHT,
-      visible: showCart,
+      visible: bottomSheetVisibility,
     },
     showNotFound: false,
   }
   
   const goToBack = () => navigation.goBack()
 
-  useEffect(() => {
-    if (!!cart && showCart) setShowCart(false);
-  }, [cart])
-
-  const onToggleCart = () => { setShowCart(!showCart); }
+  const onToggleCart = () => {
+    if (bottomSheetVisibility) hideCartBottomSheet();
+    else showCartBottomSheet();
+  }
 
   return (
     <View style={{
@@ -116,7 +119,7 @@ const BusinessPage = (props:any): React.ReactElement => {
       <View
         style={{
           flex: 1,
-          paddingBottom: showCart && !!cart && orientationState?.orientation === PORTRAIT
+          paddingBottom: bottomSheetVisibility && !!cart && orientationState?.orientation === PORTRAIT
             ? VISIBLE_CART_BOTTOM_SHEET_HEIGHT
             : 0,
         }}
@@ -140,7 +143,7 @@ const BusinessPage = (props:any): React.ReactElement => {
                   </OText>
 
                   <MaterialIcon
-                    name={showCart ? "cart-off" : "cart-outline"}
+                    name={bottomSheetVisibility ? "cart-off" : "cart-outline"}
                     color={colors.primary}
                     size={30}
                   />
@@ -155,10 +158,10 @@ const BusinessPage = (props:any): React.ReactElement => {
         </Container>
       </View>
 
-      {showCart &&  
+      {bottomSheetVisibility &&  
         (<View
           style={{
-            flex: showCart && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
+            flex: bottomSheetVisibility && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
           }}
         >
           <CartContent
