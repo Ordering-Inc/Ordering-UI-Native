@@ -54,7 +54,8 @@ const SignupFormUI = (props: SignupParams) => {
     checkPhoneCodeState,
     setCheckPhoneCodeState,
     handleSendVerifyCode,
-    handleCheckPhoneCode
+    handleCheckPhoneCode,
+    notificationState
   } = props
 
   const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
@@ -450,6 +451,7 @@ const SignupFormUI = (props: SignupParams) => {
 
                 <SocialButtons>
                   <FacebookLogin
+                    notificationState={notificationState}
                     handleErrors={(err: any) => showToast(ToastType.Error, err)}
                     handleLoading={(val: boolean) => setIsFBLoading(val)}
                     handleSuccessFacebookLogin={handleSuccessFacebook}

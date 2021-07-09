@@ -2350,9 +2350,9 @@
   integrity sha512-YSBPTLTVm2e2OoQIDYx8HaeWJ5tTToLH67kXR7zYNGupXMEHa2++G8k+DczX2cFVgalypqtyZIcU19AFcmOpmg==
 
 "@types/node@*":
-  version "16.0.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.0.1.tgz#70cedfda26af7a2ca073fdcc9beb2fff4aa693f8"
-  integrity sha512-hBOx4SUlEPKwRi6PrXuTGw1z6lz0fjsibcWCM378YxsSu/6+C30L6CR49zIBKHiwNWCYIcOLjg4OHKZaFeLAug==
+  version "16.0.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.0.3.tgz#f99794f182a9ffeaf6a0b589e3d3dc652a623ad5"
+  integrity sha512-QhhSbE1wJMbh+lDsb9G6UFmyojhEgoO7dFVDBkli80sp3sPFojGh6TJXsht9Qbe2VWi91pbj08+1Kvue61RwsQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -2370,9 +2370,9 @@
   integrity sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==
 
 "@types/react-native-loading-spinner-overlay@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@types/react-native-loading-spinner-overlay/-/react-native-loading-spinner-overlay-0.5.2.tgz#e1ba291b48257fa171ebf34adfb6aefa030f50c1"
-  integrity sha512-bVO1B+92l40T1AtfEiuxeN+8RPLD46aQgs72AcrU15JPeAV1F9F8f1V7QHclU+tDh6MtZuFQ2kUe9BoM+NIwRA==
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@types/react-native-loading-spinner-overlay/-/react-native-loading-spinner-overlay-0.5.3.tgz#babb9a30fa4fb6abac1dae057209a891208c6dcf"
+  integrity sha512-TP6//QhdBEUQT0sB9iG3+a+YKsMzP4/MJNNxSyfWsbdDTbBnO0lD9ksXdwBI5KY91r8gTmBE7PwRS+eEazZpxg==
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -7050,12 +7050,15 @@ ora@^3.4.0:
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@react-native-async-storage/async-storage" "^1.13.1"
+    "@sentry/react" "^5.27.1"
+    "@sentry/tracing" "^5.27.1"
     "@stripe/react-stripe-js" "^1.1.2"
     "@stripe/stripe-js" "^1.9.0"
     dayjs "^1.9.3"
     libphonenumber-js "^1.9.17"
     ordering-api-sdk "github:Ordering-Inc/ordering-api-sdk#release"
     prop-types "^15.7.2"
+    react-google-recaptcha latest
     socket.io-client "^2.3.0"
 
 os-tmpdir@^1.0.0, os-tmpdir@~1.0.2:
@@ -7674,6 +7677,13 @@ react-native-maps@^0.28.0:
   integrity sha512-F+k5ZT9hhl+iXR1H+5ZcoHOEB5lPu9gCIwtA4lI/LoI9nfa9xFvr1vMiLIv44jzeGNzbE3+/R81IpcNDMJ5uDg==
   dependencies:
     "@types/geojson" "^7946.0.7"
+
+react-native-onesignal@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-4.1.1.tgz#c0e737eac020563f161c2da371b811fa3989e969"
+  integrity sha512-Rc9LmnT9Hpbz4AxbILnWg8ElbErhftFi+eDW54NoEMi6n5uDodGn5kEQv1nEcP3ET0CmTDNYClB4n8M12X6NgQ==
+  dependencies:
+    invariant "^2.2.2"
 
 react-native-paper@^4.7.2:
   version "4.9.2"

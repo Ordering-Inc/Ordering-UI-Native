@@ -104,6 +104,8 @@ PODS:
   - libwebp/mux (1.2.0):
     - libwebp/demux
   - libwebp/webp (1.2.0)
+  - OneSignal (3.5.3)
+  - OneSignalXCFramework (3.4.4)
   - OpenSSL-Universal (1.1.180)
   - RCT-Folly (2020.01.13.00):
     - boost-for-react-native
@@ -320,6 +322,9 @@ PODS:
     - React-Core
   - react-native-maps (0.28.0):
     - React-Core
+  - react-native-onesignal (4.1.1):
+    - OneSignalXCFramework (= 3.4.4)
+    - React (< 1.0.0, >= 0.13.0)
   - react-native-restart (0.0.22):
     - React-Core
   - react-native-safe-area-context (3.2.0):
@@ -462,6 +467,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Google-Maps-iOS-Utils
   - GoogleMaps
+  - OneSignal (< 4.0, >= 3.0)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -479,6 +485,7 @@ DEPENDENCIES:
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -525,6 +532,8 @@ SPEC REPOS:
     - GoogleMaps
     - libevent
     - libwebp
+    - OneSignal
+    - OneSignalXCFramework
     - OpenSSL-Universal
     - SDWebImage
     - SDWebImageWebPCoder
@@ -573,6 +582,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-onesignal:
+    :path: "../node_modules/react-native-onesignal"
   react-native-restart:
     :path: "../node_modules/react-native-restart"
   react-native-safe-area-context:
@@ -650,6 +661,8 @@ SPEC CHECKSUMS:
   GoogleMaps: 32ca02de09de357a10ac773f2c70f1986751392d
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
+  OneSignal: e12773ef3dfc68f42103c8cd28ad50660209528f
+  OneSignalXCFramework: eaf286b7438aa1f030f03e5fa9f1c79ede5d8f04
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: ec2ebc96b7bfba3ca5c32740f5a0c6a014a274d2
@@ -666,6 +679,7 @@ SPEC CHECKSUMS:
   react-native-google-maps: 46dea4aa4acb7300beff508f64d9f8c84e9fb106
   react-native-image-picker: 31971f6184e7c1dcb4fc1f122e1ba2c3fb11ef1e
   react-native-maps: 2d405b4e8cee0282e4c02bac434d81450dfea877
+  react-native-onesignal: 2a7c3a5f2aa1c599d94cda6cc583205e1548828d
   react-native-restart: 733a51ad137f15b0f8dc34c4082e55af7da00979
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   react-native-webview: 2e8fe70dc32b50d3231c23043f8e8b5a5525d346
@@ -699,6 +713,6 @@ SPEC CHECKSUMS:
   Yoga: a7de31c64fe738607e7a3803e3f591a4b1df7393
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 6b324d2acae05a27b4553aabcf49ccecb62c8ead
+PODFILE CHECKSUM: 00792c9817f340429822a4cc483ebe10ad5047e7
 
 COCOAPODS: 1.10.1
