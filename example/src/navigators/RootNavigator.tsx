@@ -34,8 +34,6 @@ const RootNavigator = () => {
     notification_app: settings.notification_app
   });
   const [notificationData, setNotificationData] = useState<any>({});
-  console.log(notificationData, oneSignalState);
-  
 
   const validDate = (date : any) => {
     if (!date) return
@@ -59,7 +57,6 @@ const RootNavigator = () => {
     }
 
     OneSignal.setNotificationOpenedHandler(({ notification }: any) => {
-      console.log('setNotificationOpenedHandler: ', notification);
       if (notification?.additionalData?.order_uuid) {
         setNotificationData({
           ...notificationData,

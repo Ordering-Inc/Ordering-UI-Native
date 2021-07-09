@@ -2,7 +2,6 @@ import * as React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ToastType, useToast } from "../../providers/ToastProvider";
-import { colors } from "../../theme.json";
 
 const fadeDuration = 300;
 const bottomPosition = 20;
@@ -53,7 +52,7 @@ export const Toast: React.FC = () => {
             backgroundColor = '#6ba4ff';
             break;
         case ToastType.Error:
-            backgroundColor = colors.primary;
+            backgroundColor = '#ff3d3d';
             break;
         case ToastType.Success:
             backgroundColor = '#73bd24';
@@ -78,8 +77,7 @@ const styles = StyleSheet.create({
     container: {
         alignSelf: "center",
         position: "absolute",
-        maxWidth: 480,
-        zIndex: 9999999999
+        maxWidth: 480
     },
     toast: {
         borderRadius: 16,

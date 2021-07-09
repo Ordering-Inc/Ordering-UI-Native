@@ -2,7 +2,7 @@
   "app_id": "react-native-app",
   "notification_app": "orderingapp",
   "app_name": "Ordering",
-  "project": "ramondemo",
+  "project": "luisv4",
   "api": {
     "url": "https://apiv4.ordering.co",
     "language": "en",

@@ -1,162 +1,133 @@
-import React, { useState, useEffect } from 'react'
-import styled, { css } from 'styled-components/native'
-import { ScrollView, TouchableOpacity  } from 'react-native-gesture-handler'
-import { ScrollView as CustomScrollView, TouchableOpacity as CustomTouchableOpacity } from 'react-native'
-import { colors } from '../../theme.json'
+import * as React from 'react'
+import { TouchableOpacity } from 'react-native'
+import styled from 'styled-components/native'
+import { colors } from '../../theme'
 
-interface Props {
-  secondary?: boolean,
-  options?: any;
-  defaultValue?: any,
-  placeholder?: string,
-  onSelect?: any,
-  style?: any,
-  dropViewMaxHeight?: any,
-  isModal?: any,
-  bgcolor?: string,
-  textcolor?: string,
+export interface ODropDownProps {
+    items?: Array<string>,
+    onSelect?: any,
+    selectedIndex?: number,
+    kindImage?: any,
+    placeholder?: string,
+    style?: any,
+    dropIconColor?: string
 }
 
 const Wrapper = styled.View`
-  position: relative;
+    background-color: white;
+    padding: 10px 14px;
+    border-radius: 20px;
+    border-width: 1px;
+    border-color: ${colors.primary}
+    flex-grow: 1;
+    flex-basis: 0;
+    align-items: center;
+    justify-content: center;
 `
-const Selected = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  padding: 15px;
-  border-radius: 10px;
-  border-width: 1px;
-  border-color: ${(props: any) => props.bgcolor || (props.secondary ? colors.lightGray : colors.primary)};
-  background-color: ${(props: any) => props.bgcolor || (props.secondary ? colors.white : colors.primary)};
+const InnerWrapper = styled.TouchableOpacity`
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 `
-const SelectedLabel = styled.Text`
-  font-size: 16px;
-  color: ${(props: any) => props.textcolor || (props.secondary ? colors.black : colors.white)};
+const SelLabel = styled.Text`
+    flex: 1;
+    font-family: 'Poppins-Regular';
+    color: grey;
+    flex-grow: 1;
+    margin: 0 10px;
 `
 const DropIcon = styled.Image`
-  tint-color: ${(props: any) => props.textcolor || (props.secondary ? colors.black : colors.white)};
-  resize-mode: contain;
-  width: 7px;
-  height: 7px;
-  margin-left: 5px;
+    tint-color: ${colors.primary};
+    resize-mode: contain;
+    width: 7px;
+    height: 7px;
+`
+const KindIcon = styled.Image`
+    tint-color: ${colors.primary};
+    resize-mode: contain;
+    width: 14px;
+    height: 14px;
 `
 const DropView = styled.View`
-  position: absolute;
-  z-index: 9999;
-  top: 54px;
-  border-width: 1px;
-  border-color: ${colors.lightGray};
-  background-color: ${colors.white};
-  border-radius: 10px;
-  width: 100%;
+    position: absolute;
+    box-shadow: 0 4px 3px #00000022;
+    background-color: white;
+    top: 42px;
+    left: 20px;
+    width: 100%;
+    padding: 4px 5px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 `
-const DropOption = styled.Text`
-  padding: 15px;
-  font-size: 16px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.lightGray};
-  ${(props: any) => props.selected && css`
-    color: ${colors.primary};
-  `};
+const DropItems = styled.Text`
+    padding: 9px 5px;
+    border-bottom-width: 1px;
+    border-bottom-color: red;
+    margin-bottom: 2px;
 `
-const ODropDown = (props: Props) => {
-  const {
-    secondary,
-    options,
-    defaultValue,
-    placeholder,
-    onSelect,
-    dropViewMaxHeight,
-    isModal
-  } = props
-  const [isOpen, setIsOpen] = useState(false)
-  const defaultOption = options?.find((option: any) => option.value === defaultValue)
-  const [selectedOption, setSelectedOption] = useState<any>(defaultOption)
-  const [value, setValue] = useState(defaultValue)
 
-  const onToggle = () => {
-    setIsOpen(!isOpen)
-  }
+const ODropDown = (props: ODropDownProps) => {
 
-  const onSelectOption = (option: any) => {
-    setSelectedOption(option)
-    setValue(option.value)
-    onSelect(option.value || option.name)
-    setIsOpen(false)
-  }
+    const [curIndex, onSelect] = React.useState(props.selectedIndex);
+    const [items, getItems] = React.useState(props.items);
+    const [isOpen, onOffToggle] = React.useState(false);
+    const [value, setValue] = React.useState(curIndex && items ? items[curIndex] : null);
 
-  useEffect(() => {
-    const _defaultOption = options?.find((option: any) => option.value === defaultValue)
-    setSelectedOption(_defaultOption)
-    setValue(defaultValue)
-  }, [defaultValue, options])
+    const onSelectItem = (index: number) => {
+        props.onSelect(index);
+        onSelect(index);
+        if (items) {
+            setValue(items[index]);
+        }
+        onOffToggle(false);
+    }
 
-  return (
-    <Wrapper style={props.style}>
-      <Selected
-        secondary={secondary}
-        bgcolor={props.bgcolor}
-        onPress={() => onToggle()}
-      >
-        <SelectedLabel
-          secondary={secondary}
-          textcolor={props.textcolor}
-        >
-          {selectedOption?.content || selectedOption?.name || placeholder}
-        </SelectedLabel>
-        <DropIcon
-          textcolor={props.textcolor}
-          secondary={secondary}
-          source={require('../../assets/icons/drop_down.png')}
-        />
-      </Selected>
-      {isOpen && options && (
-        <DropView
-          secondary={secondary}
-        >
-          {!isModal ? (
-            <ScrollView style={{
-              maxHeight: dropViewMaxHeight || null }}
+    React.useEffect(() => {
+        if (props.items) {
+            onSelect(0);
+        }
+        else
+            alert('Undefined Items')
+    }, [props.items])
+
+    const onToggle = () => {
+        onOffToggle(is_opened => !is_opened)
+    }
+        
+    return (
+        <Wrapper style={props.style}>
+            <InnerWrapper
+                onPress={onToggle}
             >
-              {options.map((option: any, index: number) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => onSelectOption(option)}
-                >
-                  <DropOption
-                    numberOfLines={1}
-                    selected={value === option.value}
-                  >
-                    {option.content || option.name}
-                  </DropOption>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          ) : (
-            <CustomScrollView style={{
-              maxHeight: dropViewMaxHeight || null }}
-            >
-              {options.map((option: any, index: number) => (
-                <CustomTouchableOpacity
-                  key={index}
-                  onPress={() => onSelectOption(option)}
-                >
-                  <DropOption
-                    numberOfLines={1}
-                    selected={value === option.value}
-                  >
-                    {option.content || option.name}
-                  </DropOption>
-                </CustomTouchableOpacity>
-              ))}
-            </CustomScrollView>
-          )}
-        </DropView>
-      )}
-    </Wrapper>
-  )
+                {props.kindImage 
+                    ? (<KindIcon source={props.kindImage} />)
+                    : null
+                }
+                <SelLabel numberOfLines={1} ellipsizeMode={'tail'}>{value || props.placeholder}</SelLabel>
+                <DropIcon style={{tintColor: props.dropIconColor || 'grey'}} source={require('../../assets/icons/drop_down.png')} />
+            </InnerWrapper>
+            {isOpen
+                ? (
+                    <DropView>
+                        {items
+                            ? items.map((item, index) => 
+                                (
+                                    <TouchableOpacity
+                                        key={`key_${index}`}
+                                        onPress={() => onSelectItem(index)}
+                                    >
+                                        <DropItems>{item}</DropItems>
+                                    </TouchableOpacity>
+                                )
+                            ) 
+                            : null
+                        }
+                    </DropView>
+                )
+                : null
+            }
+        </Wrapper>
+    )
 }
 
 export default ODropDown

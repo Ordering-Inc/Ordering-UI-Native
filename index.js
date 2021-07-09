@@ -1,9 +1,32 @@
-/**
- * @format
- */
+import {
+    OText, 
+    OButton, 
+    OInput, 
+    OSegment, 
+    ODropDown, 
+    OIcon, 
+    OIconText, 
+    OCheckbox, 
+    OIconButton, 
+    OTextarea,
+    OToggle
+} from './src/components/shared';
+import LoginForm from './src/components/LoginForm';
+import NumberKey from './src/components/NumberKey';
 
-import {AppRegistry} from 'react-native';
-import App from './App';
-import {name as appName} from './app.json';
+export { 
+    OText, 
+    OButton, 
+    OInput, 
+    OSegment, 
+    ODropDown, 
+    OIcon, 
+    OIconText, 
+    OCheckbox, 
+    OIconButton, 
+    OTextarea,
+    OToggle,
 
-AppRegistry.registerComponent(appName, () => App);
+    LoginForm,
+    NumberKey
+}

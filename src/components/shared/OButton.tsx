@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  I18nManager,
   ImageSourcePropType,
   ImageStyle,
   TextStyle,
@@ -11,9 +10,9 @@ import {
 
 import * as React from 'react';
 import styled from 'styled-components/native';
-import { colors } from '../../theme.json';
+import { colors } from '../../theme';
 
-const StyledButton = styled.View<Props>`
+const StyledButton = styled.View`
   background-color: ${colors.primary};
   border-radius: 26px;
   border-width: 2px;
@@ -23,13 +22,14 @@ const StyledButton = styled.View<Props>`
   align-items: center;
   justify-content: center;
   box-shadow: 1px 1px 2px #00000020;
+  elevation: 2;
   padding-left: 20px;
   padding-right: 20px;
   position: relative;
 `
 const StyledButtonDisabled = styled(StyledButton)`
-  background-color: ${colors.disabled};
-  border-color: ${colors.disabled};
+  background-color: ${colors.backgroundDark};
+  border-color: ${colors.backgroundDark};
 `
 
 const StyledText = styled.Text`
@@ -41,24 +41,24 @@ const StyledText = styled.Text`
 `
 
 const StyledTextDisabled = styled(StyledText)`
-  color: ${colors.primary};
+  color: ${colors.mediumGray};
 `
 
 const StyledImage = styled.Image`
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   resize-mode: contain;
 `
 const EndImage = styled.Image`
   width: 15px;
   height: 15px;
   resize-mode: contain;
-  right: 20px;
+  right 20px;
   position: absolute;
   right: 20px;
 `;
 
-interface Props {
+export interface OButtonProps {
   testID?: string;
   isLoading?: boolean;
   isDisabled?: boolean;
@@ -67,7 +67,7 @@ interface Props {
   parentStyle?: ViewStyle;
   disabledStyle?: ViewStyle;
   textStyle?: TextStyle;
-  imgLeftSrc?: ImageSourcePropType | string;
+  imgLeftSrc?: ImageSourcePropType;
   imgLeftStyle?: ImageStyle;
   imgRightSrc?: any;
   imgRightStyle?: ImageStyle;
@@ -77,10 +77,9 @@ interface Props {
   isCircle?: boolean;
   bgColor?: string;
   borderColor?: string;
-  loadingStyle?: ViewStyle;
 }
 
-const OButton = (props: Props): React.ReactElement => {
+const OButton = (props: OButtonProps): React.ReactElement => {
   if (props.isDisabled) {
     return (
       <View style={props.parentStyle}>
@@ -96,7 +95,7 @@ const OButton = (props: Props): React.ReactElement => {
   if (props.isLoading) {
     return (
       <StyledButton style={props.style}>
-        <ActivityIndicator size="small" color={props.indicatorColor} style={props.loadingStyle}/>
+        <ActivityIndicator size="small" color={props.indicatorColor} />
       </StyledButton>
     );
   }
@@ -110,7 +109,7 @@ const OButton = (props: Props): React.ReactElement => {
     >
       <StyledButton style={props.bgColor ? { ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor } : props.style}>
         {props.imgLeftSrc ? (
-          <StyledImage style={{transform: [{scaleX: I18nManager.isRTL ? -1 : 1}], ...props.imgLeftStyle}} source={props.imgLeftSrc} />
+          <StyledImage style={props.imgLeftStyle} source={props.imgLeftSrc} />
         ) : null}
         {props.text ? (
           <StyledText style={props.textStyle}>{props.text}</StyledText>
