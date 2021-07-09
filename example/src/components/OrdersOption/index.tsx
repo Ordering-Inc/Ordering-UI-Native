@@ -99,7 +99,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      loadOrders()
+      loadOrders && loadOrders()
       setIsLoadingFirstRender(false)
       return () => {
         setIsLoadingFirstRender(true)

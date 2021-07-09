@@ -4,7 +4,7 @@ import { Container } from '../layouts/Container'
 import styled from 'styled-components/native';
 import { useLanguage, useSession } from 'ordering-components/native';
 import { Platform } from 'react-native';
-import { _setStoreData } from '../providers/StoreUtil';
+import { _setStoreData, _removeStoreData } from '../providers/StoreUtil';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;
@@ -26,6 +26,7 @@ export const Signup = (props: any) => {
       props.navigation.navigate(page);
     },
     handleSuccessSignup: (user: any) => {
+      _removeStoreData('isGuestUser')
       if (user?.id) {
         login({
           user,

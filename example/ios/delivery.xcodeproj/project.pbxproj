@@ -25,7 +25,6 @@
 		C3080A522657E6A2001B703C /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3080A512657E6A1001B703C /* BootSplash.storyboard */; };
 		C3591496265E8ACB00C92599 /* fix.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3591495265E8ACB00C92599 /* fix.swift */; };
 		C398F2A1268E4AA6001EA8B7 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C398F2A0268E4AA6001EA8B7 /* NotificationService.swift */; };
-		C398F2A5268E4AA6001EA8B7 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C398F29E268E4AA6001EA8B7 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,20 +43,6 @@
 			remoteInfo = OneSignalNotificationServiceExtension;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		C398F2A9268E4AA6001EA8B7 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				C398F2A5268E4AA6001EA8B7 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
@@ -284,9 +269,8 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				3560D9023479BB277EB7F0D6 /* [CP] Copy Pods Resources */,
-				023B88591143482E8FD064B2 /* Upload Debug Symbols to Sentry */,
 				D5EDA44A416C82880B9A8A6B /* [CP] Embed Pods Frameworks */,
-				C398F2A9268E4AA6001EA8B7 /* Embed App Extensions */,
+				075D203FBA1A4901A1796636 /* Upload Debug Symbols to Sentry */,
 			);
 			buildRules = (
 			);
@@ -407,9 +391,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $DERIVED_FILE_DIR/main.jsbundle.map\"\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $DERIVED_FILE_DIR/main.jsbundle.map\"\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $DERIVED_FILE_DIR/main.jsbundle.map\"\nexport NODE_BINARY=node\n../node_modules/@sentry/cli/bin/sentry-cli react-native xcode ../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		023B88591143482E8FD064B2 /* Upload Debug Symbols to Sentry */ = {
+		075D203FBA1A4901A1796636 /* Upload Debug Symbols to Sentry */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
