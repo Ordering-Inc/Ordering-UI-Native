@@ -65,7 +65,6 @@ const LoginFormUI = (props: LoginParams) => {
       fontWeight: 'bold',
       color: colors.skyBlue,
       marginTop: orientationState?.dimensions?.height * 0.03,
-     /* marginBottom: orientationState?.dimensions?.height * 0.1, */
     }
   });
 
@@ -278,7 +277,6 @@ const LoginFormUI = (props: LoginParams) => {
           )}
         
         </View>
-
 
       </ScrollView>
     </KeyboardView>
