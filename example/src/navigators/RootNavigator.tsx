@@ -89,7 +89,9 @@ const RootNavigator = () => {
                   component={Login}
                   options={{ headerShown: false }}
                   listeners={{
-                    state: (e) => setProductLogin(e.data.state.routes.find(object => object?.params?.product))
+                    state: (e: any) => {
+                      setProductLogin(e.data.state.routes.find((object: any) => object?.params?.product)?.params?.product)
+                    }
                   }}
                 />
                 <Stack.Screen
@@ -111,13 +113,13 @@ const RootNavigator = () => {
                   name='BusinessList'
                   component={BusinessList}
                   options={{ headerShown: false }}
-                  />
+                />
                 <Stack.Screen
                   name='Business'
                   component={BusinessProductsList}
                   options={{ headerShown: false }}
-                  initialParams={{setProductLogin}}
-                  />
+                  initialParams={{ setProductLogin }}
+                />
                 <Stack.Screen
                   name='MomentOption'
                   component={MomentOption}
@@ -129,7 +131,7 @@ const RootNavigator = () => {
                 name='MyAccount'
                 component={HomeNavigator}
                 options={{ headerShown: false }}
-                initialParams={{productLogin}}
+                initialParams={{ productLogin }}
               />
             )}
           </>

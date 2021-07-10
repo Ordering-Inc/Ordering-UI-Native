@@ -22,7 +22,6 @@ const HomeNavigator = (e) => {
   const [orderState] = useOrder();
   const [{ auth }] = useSession();
   // const socket = useWebsocket()
-  console.log(e?.route?.params?.productLogin?.params?.product)
   // const appState = React.useRef<any>(AppState.currentState);
 
   // const _handleAppStateChange = (nextAppState: string) => {
@@ -61,6 +60,7 @@ const HomeNavigator = (e) => {
   //     socket.connect()
   //   }
   // }
+
   return (
     <Stack.Navigator>
       {!orderState.loading || (orderState?.options?.user_id && orderState.loading) || orderState?.options?.address?.location ? (
@@ -84,12 +84,12 @@ const HomeNavigator = (e) => {
                 </>
               ) : (
                 <>
-                  {e?.route?.params?.productLogin?.params?.product && (
+                  {!!Object.keys(e?.route?.params?.productLogin)?.length && (
                     <Stack.Screen
                       name="BusinessAfterLogin"
                       component={BusinessProductsList}
                       options={{headerShown: false}}
-                      initialParams={{productAfterLogin: e?.route?.params?.productLogin?.params?.product, slug: 'thelaundryhome'}}
+                      initialParams={{productLogin: e?.route?.params?.productLogin}}
                     />
                   )}
                   <Stack.Screen

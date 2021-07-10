@@ -5,18 +5,17 @@ import styled from 'styled-components/native'
 import { colors } from '../theme.json'
 
 const BusinessProductsList = (props: any) => {
-  const store = props.route.params?.store
+  const [ordering] = useApi()
+  const store = props.route.params?.store || props.route.params?.productLogin?.slug
   const header = props.route.params?.header
   const logo = props.route.params?.logo
-  const [ordering] = useApi()
   const product = props.route.params?.productLogin
-  console.log('product', props.route.params)
   const businessProductsProps = {
     ...props,
     ordering,
     isSearchByName: true,
     isSearchByDescription: true,
-    slug: 'thelaundryhome',
+    slug: store,
     businessProps: [
       'id',
       'name',
@@ -52,7 +51,8 @@ const BusinessProductsList = (props: any) => {
     onProductRedirect: ({ slug, category, product }: any) => {},
     onCheckoutRedirect: (cartUuid: any) => {},
     logo,
-    header
+    header,
+    product
   }
   return (
     <BusinessProductsListView>

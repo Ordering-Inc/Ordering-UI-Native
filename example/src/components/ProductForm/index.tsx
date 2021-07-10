@@ -54,6 +54,7 @@ export const ProductOptionsUI = (props: any) => {
     productObject,
     onClose,
     isFromCheckout,
+    businessSlug
   } = props
 
   const [{ parsePrice }] = useUtils()
@@ -83,7 +84,7 @@ export const ProductOptionsUI = (props: any) => {
 
   const handleRedirectLogin = (product : any) => {
     onClose()
-    navigation.navigate('Login', {product})
+    navigation.navigate('Login', {product: {...product, slug: businessSlug} })
   }
 
   const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0
@@ -163,7 +164,7 @@ export const ProductOptionsUI = (props: any) => {
                 </>
               ) : (
                 <ProductEditions>
-                  {product?.ingredients.length > 0 && (
+                  {product?.ingredients?.length > 0 && (
                     <View style={styles.optionContainer}>
                       <SectionTitle>
                         <OText size={16}>{t('INGREDIENTS', 'Ingredients')}</OText>
@@ -180,7 +181,7 @@ export const ProductOptionsUI = (props: any) => {
                       </WrapperIngredients>
                     </View>
                   )}
-                  {product?.extras.map((extra: any) => extra.options.map((option: any) => {
+                  {product?.extras?.map((extra: any) => extra.options.map((option: any) => {
                     const currentState = productCart.options[`id:${option.id}`] || {}
                     return (
                       <React.Fragment key={option.id}>

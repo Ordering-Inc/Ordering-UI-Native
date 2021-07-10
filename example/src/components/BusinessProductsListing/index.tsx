@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-
 import {
   BusinessAndProductList,
   useLanguage,
@@ -42,14 +41,15 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     errorQuantityProducts,
     header,
     logo,
-    setProductLogin
+    setProductLogin,
+    productModal,
+    updateProductModal
   } = props
 
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
   const [orderState] = useOrder()
   const [{ parsePrice }] = useUtils()
-
   const { business, loading, error } = businessState
   const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
   const [isOpenSearchBar, setIsOpenSearchBar] = useState(false)
@@ -74,6 +74,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const handleCloseProductModal = () => {
     setCurProduct(null)
+    updateProductModal(null)
   }
 
   const handlerProductAction = () => {
@@ -91,12 +92,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setOpenUpselling(false)
   }
 
-  useEffect(() => {
-    if (!orderState.loading) {
-      handleCloseProductModal()
-    }
-  }, [orderState.loading])
-
   return (
     <>
       <BusinessProductsListingContainer
@@ -113,7 +108,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                       imgLeftSrc={images.general.arrow_left}
                       imgRightSrc={null}
                       style={styles.btnBackArrow}
-                      onClick={() => navigation?.canGoBack() && navigation.goBack()}
+                      onClick={() => (navigation?.canGoBack() && navigation.goBack()) || (auth && navigation.navigate('BottomTab'))}
                       imgLeftStyle={{ tintColor: '#fff' }}
                     />
                     <AddressInput
@@ -235,15 +230,15 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         />
       )}
       <OModal
-        open={!!curProduct}
+        open={!!curProduct || !!productModal.product}
         onClose={handleCloseProductModal}
         entireModal
         customClose
       >
         <ProductForm
-          product={curProduct}
+          product={curProduct || productModal.product}
           businessSlug={business?.slug}
-          businessId={business.id}
+          businessId={business?.id || productModal?.product?.category?.business_id}
           onClose={handleCloseProductModal}
           navigation={navigation}
           onSave={handlerProductAction}
