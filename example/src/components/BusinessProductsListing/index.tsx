@@ -230,7 +230,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         />
       )}
       <OModal
-        open={!!curProduct || !!productModal.product}
+        open={!!curProduct || (!!productModal.product && !orderState.loading)}
         onClose={handleCloseProductModal}
         entireModal
         customClose

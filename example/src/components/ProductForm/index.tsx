@@ -84,7 +84,7 @@ export const ProductOptionsUI = (props: any) => {
 
   const handleRedirectLogin = (product : any) => {
     onClose()
-    navigation.navigate('Login', {product: {...product, slug: businessSlug} })
+    navigation.navigate('Login', {product: {businessId: product?.businessId, id: product?.id, categoryId: product?.categoryId, slug: businessSlug} })
   }
 
   const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0
