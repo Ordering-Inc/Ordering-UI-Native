@@ -1,6 +1,6 @@
 import * as React from 'react';
 // import { AppState } from 'react-native'
-import { createStackNavigator, StackScreenProps } from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import { useSession, useOrder } from 'ordering-components/native';
 
 import BottomNavigator from '../navigators/BottomNavigator';
