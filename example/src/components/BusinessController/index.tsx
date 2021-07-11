@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  BusinessController as BusinessSingleCard,
   useUtils,
   useOrder,
   useLanguage,
@@ -24,8 +25,6 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-
-import { BusinessController as BusinessSingleCard } from './test'
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
   const { business, handleClick, isBusinessOpen, businessWillCloseSoonMinutes } = props;
