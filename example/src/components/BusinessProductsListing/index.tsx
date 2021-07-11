@@ -92,6 +92,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setOpenUpselling(false)
   }
 
+  // useEffect(() => {
+  //   if (!orderState.loading) {
+  //     handleCloseProductModal()
+  //   }
+  // }, [orderState.loading])
+
   return (
     <>
       <BusinessProductsListingContainer
