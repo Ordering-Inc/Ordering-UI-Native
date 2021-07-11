@@ -1,6 +1,6 @@
 import * as React from 'react';
 // import { AppState } from 'react-native'
-import { createStackNavigator } from "@react-navigation/stack";
+import { createStackNavigator, StackScreenProps } from "@react-navigation/stack";
 import { useSession, useOrder } from 'ordering-components/native';
 
 import BottomNavigator from '../navigators/BottomNavigator';
@@ -14,11 +14,12 @@ import BusinessProductsList from '../pages/BusinessProductsList';
 import ReviewOrder from '../pages/ReviewOrder'
 import MomentOption from '../pages/MomentOption'
 import Splash from '../pages/Splash';
+import { EventEmitter, NativeEventSubscription } from 'react-native';
 // import { View, PanResponder } from 'react-native';
 
 const Stack = createStackNavigator();
 
-const HomeNavigator = (e) => {
+const HomeNavigator = (e : any) => {
   const [orderState] = useOrder();
   const [{ auth }] = useSession();
   // const socket = useWebsocket()

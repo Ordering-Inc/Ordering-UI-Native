@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {
@@ -35,14 +35,14 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleChangeSearch,
     categorySelected,
     searchValue,
-    handleChangeCategory,
     handleSearchRedirect,
     featuredProducts,
     errorQuantityProducts,
     header,
     logo,
-    setProductLogin,
     productModal,
+    handleChangeCategory,
+    setProductLogin,
     updateProductModal
   } = props
 
@@ -74,7 +74,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const handleCloseProductModal = () => {
     setCurProduct(null)
-    updateProductModal(null)
+    updateProductModal && updateProductModal(null)
   }
 
   const handlerProductAction = () => {
