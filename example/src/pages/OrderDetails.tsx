@@ -3,13 +3,12 @@ import { OrderDetails as OrderDetailsController } from '../components/OrderDetai
 import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 
 const OrderDetails = ({ navigation, route } : any) => {
-  const { orderId, isFromCheckout } = route.params
-  const goToBusinessList = route?.params?.goToBusinessList
   const orderDetailsProps = {
     navigation,
-    orderId,
-    isFromCheckout,
-    goToBusinessList
+    orderId: route.params?.orderId,
+    isFromCheckout: route.params?.isFromCheckout,
+    isFromRoot: route.params?.isFromRoot,
+    goToBusinessList: route?.params?.goToBusinessList
   }
 
   return (

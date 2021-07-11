@@ -54,6 +54,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     readMessages,
     messagesReadList,
     isFromCheckout,
+    isFromRoot,
     driverLocation,
     goToBusinessList
   } = props
@@ -129,6 +130,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }
 
   const handleArrowBack: any = () => {
+    if (isFromRoot) {
+      navigation.navigate('MyAccount');
+      return
+    }
     if (!isFromCheckout && !goToBusinessList) {
       navigation?.canGoBack() && navigation.goBack();
       return

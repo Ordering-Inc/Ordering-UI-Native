@@ -4,6 +4,7 @@ import { Container } from '../layouts/Container'
 import styled from 'styled-components/native';
 import { useLanguage, useSession } from 'ordering-components/native';
 import { Platform } from 'react-native';
+import { _setStoreData, _removeStoreData } from '../providers/StoreUtil';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;
@@ -19,11 +20,13 @@ export const Signup = (props: any) => {
     loginButtonText: t('LOGIN', 'Login'),
     signupButtonText: t('SIGNUP', 'Signup'),
     useSignupByEmail: true,
+    notificationState: props.route?.params?.notification_state,
     onNavigationRedirect: (page: string) => {
       if (!page) return
       props.navigation.navigate(page);
     },
     handleSuccessSignup: (user: any) => {
+      _removeStoreData('isGuestUser')
       if (user?.id) {
         login({
           user,
@@ -32,6 +35,9 @@ export const Signup = (props: any) => {
       }
     }
   }
+
+  _setStoreData('notification_state', props.route?.params?.notification_state);
+
   return (
     <KeyboardView
       enabled

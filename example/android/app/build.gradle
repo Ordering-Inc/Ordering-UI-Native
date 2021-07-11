@@ -86,6 +86,8 @@ apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
 
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -142,6 +144,7 @@ android {
         versionName "1.0"
         minSdkVersion 21
         multiDexEnabled true
+        manifestPlaceholders = [onesignal_app_id: "", onesignal_google_project_number: "REMOTE"]
     }
     splits {
         abi {
