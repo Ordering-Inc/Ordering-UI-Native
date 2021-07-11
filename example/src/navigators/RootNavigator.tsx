@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Platform } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
-import { useOrder, useSession } from 'ordering-components/native';
+import { useOrder, useSession, useConfig } from 'ordering-components/native';
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
+import OneSignal from 'react-native-onesignal';
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(utc)
@@ -17,15 +19,22 @@ import MomentOption from '../pages/MomentOption';
 import Splash from '../pages/Splash';
 import BusinessList from '../pages/BusinessesListing';
 import BusinessProductsList from '../pages/BusinessProductsList';
+import OrderDetails from '../pages/OrderDetails';
 import HomeNavigator from './HomeNavigator';
+import settings from '../config.json';
 
 const Stack = createStackNavigator();
 
 const RootNavigator = () => {
   const [{ auth, loading }] = useSession();
   const [orderStatus, { changeMoment }] = useOrder();
+  const [{ configs, loading: configsLoading }] = useConfig();
   const [loaded, setLoaded] = useState(false);
   const [productLogin, setProductLogin] = useState({})
+  const [oneSignalState, setOneSignalState] = useState<any>({
+    notification_app: settings.notification_app
+  });
+  const [notificationData, setNotificationData] = useState<any>({});
 
   const validDate = (date : any) => {
     if (!date) return
@@ -33,7 +42,50 @@ const RootNavigator = () => {
       ? dayjs(date).format('YYYY-MM-DD HH:mm')
       : dayjs().format('YYYY-MM-DD HH:mm')
     return _date
-  }
+  };
+
+  const oneSignalSetup = async () => {
+    OneSignal.setLogLevel(6, 0);
+
+    if (configs?.onesignal_orderingapp_id?.value) {
+      OneSignal.setAppId(configs?.onesignal_orderingapp_id?.value);
+    }
+
+    if (Platform.OS === 'ios') {
+      OneSignal.promptForPushNotificationsWithUserResponse(response => {
+        console.log('Prompt response:', response);
+      });
+    }
+
+    OneSignal.setNotificationOpenedHandler(({ notification }: any) => {
+      if (notification?.additionalData?.order_uuid) {
+        setNotificationData({
+          ...notificationData,
+          order_uuid: notification?.additionalData?.order_uuid
+        });
+      }
+    });
+
+    OneSignal.addSubscriptionObserver((event: any) => {
+      setOneSignalState({ ...oneSignalState, notification_token: event?.to?.userId });
+    });
+
+    const deviceState: any = await OneSignal.getDeviceState();
+
+    if (!deviceState?.isSubscribed) {
+      OneSignal.addTrigger("prompt_ios", "true");
+    }
+
+    OneSignal.disablePush(false);
+
+    const data = {
+      ...oneSignalState,
+      notification_token: deviceState?.userId,
+      notification_app: settings.notification_app
+    }
+    setOneSignalState(data);
+  };
+
   useEffect(() => {
     if (!loaded && !orderStatus.loading) {
       setLoaded(true)
@@ -62,6 +114,10 @@ const RootNavigator = () => {
       clearTimeout(checkTime)
     }
   }, [orderStatus.options?.moment])
+
+  useEffect(() => {
+    oneSignalSetup();
+  }, [configsLoading]);
 
   return (
     <Stack.Navigator>
@@ -93,11 +149,13 @@ const RootNavigator = () => {
                       setProductLogin(e.data.state.routes.find((object: any) => object?.params?.product)?.params?.product)
                     }
                   }}
+                  initialParams={{ notification_state: oneSignalState }}
                 />
                 <Stack.Screen
                   name="Signup"
                   component={Signup}
                   options={{ headerShown: false }}
+                  initialParams={{ notification_state: oneSignalState }}
                 />
                 <Stack.Screen
                   name="Forgot"
@@ -127,12 +185,22 @@ const RootNavigator = () => {
                 />
               </>
             ) : (
-              <Stack.Screen
-                name='MyAccount'
-                component={HomeNavigator}
-                options={{ headerShown: false }}
-                initialParams={{ productLogin }}
-              />
+              <>
+                {notificationData?.order_uuid && (
+                  <Stack.Screen
+                    name="OrderDetails"
+                    component={OrderDetails}
+                    options={{ headerShown: false }}
+                    initialParams={{ orderId: notificationData?.order_uuid, isFromRoot: true }}
+                  />
+                )}
+                <Stack.Screen
+                  name='MyAccount'
+                  component={HomeNavigator}
+                  options={{ headerShown: false }}
+                  initialParams={{ productLogin }}
+                />
+              </>
             )}
           </>
         )

@@ -16,6 +16,7 @@ export interface LoginParams {
   handleButtonLoginClick?: any;
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
+  notificationState?: any;
 }
 export interface ProfileParams {
   navigation?: any;
@@ -91,6 +92,7 @@ export interface SignupParams {
   setCheckPhoneCodeState?: any;
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
+  notificationState?: any;
 }
 
 export interface PhoneInputParams {
@@ -237,6 +239,8 @@ export interface ActiveOrdersParams {
   getOrderStatus?: any,
   reorderLoading?: boolean,
   customArray?: Array<any>
+  setScreen?: any,
+  screen?: any,
   loadMoreOrders?: () => {},
   onNavigationRedirect?: (route: string, params?: any) => {}
 }
@@ -261,6 +265,7 @@ export interface OrderDetailsParams {
   readMessages?: () => {},
   isFromCheckout?: boolean,
   driverLocation?: any,
+  isFromRoot?: any,
   goToBusinessList?: boolean
 }
 export interface ProductItemAccordionParams {
