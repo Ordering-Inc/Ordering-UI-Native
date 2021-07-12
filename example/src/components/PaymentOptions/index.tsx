@@ -122,13 +122,13 @@ const PaymentOptionsUI = (props: any) => {
         >
           <OIcon
             src={getPayIcon(item.gateway)}
-            width={40}
-            height={40}
+            width={20}
+            height={20}
             color={paymethodSelected?.id === item.id ? colors.white : colors.backgroundDark}
             />
           <OText
-            size={12}
-            style={{ margin: 0 }}
+            size={10}
+            style={{ margin: 0, marginTop: 4 }}
             color={paymethodSelected?.id === item.id ? colors.white : '#000'}
           >
             {t(item.gateway.toUpperCase(), item.name)}
@@ -200,20 +200,22 @@ const PaymentOptionsUI = (props: any) => {
         <PMCardSelected>
           <PMCardItemContent>
             <View style={styles.viewStyle}>
-              <MaterialCommunityIcons
-                name='radiobox-marked'
-                size={24}
+              <OIcon
+                src={images.general.radio_act}
+                width={16}
                 color={colors.primary}
               />
             </View>
             <View style={styles.viewStyle}>
               <OText>
-                {getIconCard((paymethodData?.brand || paymethodData?.card?.brand), 26)}
+                {getIconCard((paymethodData?.brand || paymethodData?.card?.brand), 20)}
               </OText>
             </View>
             <View style={styles.viewStyle}>
               <OText
-                size={20}
+                size={12}
+					 lineHeight={18}
+					 color={colors.textNormal}
               >
                 XXXX-XXXX-XXXX-{(paymethodData?.last4 || paymethodData?.card?.last4)}
               </OText>
@@ -227,10 +229,10 @@ const PaymentOptionsUI = (props: any) => {
         <View>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
-            bgColor={colors.primary}
+            bgColor={colors.white}
             borderColor={colors.primary}
             style={styles.btnAddStyle}
-            textStyle={{color: 'white'}}
+            textStyle={{color: colors.primary, fontSize: 12}}
             imgRightSrc={null}
             onClick={() => setAddCardOpen({ ...addCardOpen, stripe: true })}
           />
@@ -251,6 +253,7 @@ const PaymentOptionsUI = (props: any) => {
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
         open={addCardOpen.stripe}
         onClose={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
+		  style={{backgroundColor: 'red'}}
       >
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
@@ -294,10 +297,10 @@ const PaymentOptionsUI = (props: any) => {
         <View>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
-            bgColor={colors.primary}
+            bgColor={colors.white}
             borderColor={colors.primary}
             style={styles.btnAddStyle}
-            textStyle={{color: 'white'}}
+            textStyle={{color: colors.primary, fontSize: 12}}
             imgRightSrc={null}
             onClick={() => setAddCardOpen({ ...addCardOpen, stripeConnect: true })}
           />
@@ -395,6 +398,10 @@ const styles = StyleSheet.create({
   },
   btnAddStyle: {
     marginVertical: 20,
+	 borderRadius: 7.6,
+	 shadowOpacity: 0,
+	 height: 44,
+	 borderWidth: 1
   },
 })
 

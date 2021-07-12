@@ -9,8 +9,8 @@ export const Wrapper = styled.View`
 export const Header = styled.View`
   flex-direction: row;
   align-items: center;
-  border-bottom-width: 1px;
-  border-bottom-color: #d9d9d9;
+  background-color: ${colors.white};
+  box-shadow: 0 2px 2px #0000001A;
   padding-bottom: 10px;
   padding-horizontal: 20px;
 `

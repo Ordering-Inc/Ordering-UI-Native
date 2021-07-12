@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useLanguage, useSession } from 'ordering-components/native';
 import {
   StripeProvider,
@@ -13,6 +13,7 @@ import { ErrorMessage } from './styles';
 import { StripeElementsForm as StripeFormController } from './naked';
 import { OButton, OText } from '../shared';
 import { colors } from '../../theme.json';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const StripeElementsFormUI = (props: any) => {
   const {
@@ -31,6 +32,8 @@ const StripeElementsFormUI = (props: any) => {
   const [errors, setErrors] = useState('')
   const { confirmSetupIntent, loading: confirmSetupLoading } = useConfirmSetupIntent();
   const [createPmLoading, setCreatePmLoading] = useState(false);
+  const { height } = useWindowDimensions();
+  const { top, bottom } = useSafeAreaInsets();
 
   const billingDetails = {
     name: `${user.name} ${user.lastname}`,
@@ -109,7 +112,7 @@ const StripeElementsFormUI = (props: any) => {
   }, [card])
 
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, ...{height: height - top - bottom - 60}}}>
       {publicKey ? (
         <View style={{ flex: 1 }}>
           <StripeProvider publishableKey={publicKey}>
@@ -118,26 +121,21 @@ const StripeElementsFormUI = (props: any) => {
               cardStyle={{
                 backgroundColor: '#FFFFFF',
                 textColor: '#000000',
+					 styles: {
+						 
+					 }
               }}
               style={{
                 width: '100%',
                 height: 50,
-                marginVertical: 30,
-                zIndex: 9999,
+                marginVertical: 50,
+					 borderWidth: 1,
+					 borderColor: colors.border,
+					 borderRadius: 7.6
               }}
               onCardChange={(cardDetails: any) => setCard(cardDetails)}
             />
           </StripeProvider>
-          <OButton
-            text={t('SAVE_CARD', 'Save card')}
-            bgColor={isCompleted ? colors.primary : colors.backgroundGray}
-            borderColor={isCompleted ? colors.primary :colors.backgroundGray}
-            style={styles.btnAddStyle}
-            textStyle={{color: 'white'}}
-            imgRightSrc={null}
-            onClick={isCompleted ? () => handleSaveCard() : () => {}}
-            isLoading={confirmSetupLoading || values.loadingAdd || createPmLoading}
-          />
           {!!errors && (
             <ErrorMessage>
               <OText
@@ -161,6 +159,16 @@ const StripeElementsFormUI = (props: any) => {
           </OText>
         </ErrorMessage>
       )}
+		<OButton
+			text={t('SAVE_CARD', 'Save card')}
+			bgColor={isCompleted ? colors.primary : colors.backgroundGray}
+			borderColor={isCompleted ? colors.primary :colors.backgroundGray}
+			style={styles.btnAddStyle}
+			textStyle={{color: 'white', fontSize: 14}}
+			imgRightSrc={null}
+			onClick={isCompleted ? () => handleSaveCard() : () => {}}
+			isLoading={confirmSetupLoading || values.loadingAdd || createPmLoading}
+		/>
     </View>
   )
 }
@@ -168,13 +176,15 @@ const StripeElementsFormUI = (props: any) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 20
+    paddingHorizontal: 40,
+	 justifyContent: 'space-between',
+	 paddingBottom: 12
   },
   btnAddStyle: {
-    marginTop: 20
+    marginTop: 20,
+	 borderRadius: 7.6,
+	 shadowOpacity: 0,
+	 height: 44
   },
 })
 

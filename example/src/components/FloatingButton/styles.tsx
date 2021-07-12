@@ -17,12 +17,9 @@ export const Container = styled.View`
 `
 
 export const Button = styled.TouchableOpacity`
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-basis: 50%;
+  justify-content: center;
   align-items: center;
-  border-radius: 0px;
-  height: 50px;
-  background-color: transparent;
+  border-radius: 7.6px;
+  height: 44px;
 `

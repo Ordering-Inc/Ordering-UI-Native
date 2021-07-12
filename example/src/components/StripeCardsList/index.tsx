@@ -9,7 +9,7 @@ import { PlaceholderLine } from 'rn-placeholder';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { getIconCard } from '../../utils';
-import { OAlert, OText } from '../shared';
+import { OAlert, OIcon, OText } from '../shared';
 
 import { NotFoundSource } from '../NotFoundSource';
 
@@ -18,7 +18,7 @@ import {
   OSItemContent,
   OSItemActions,
 } from '../PaymentOptionStripe/styles';
-import { colors } from '../../theme.json';
+import { colors, images } from '../../theme.json';
 
 const StripeCardsListUI = (props: any) => {
   const {
@@ -79,24 +79,24 @@ const StripeCardsListUI = (props: any) => {
               <OSItemContent onPress={() => handleCardSelected(card)}>
                 <View style={styles.viewStyle}>
                   {card.id === cardSelected?.id ? (
-                    <MaterialCommunityIcons
-                      name='radiobox-marked'
-                      size={24}
+                    <OIcon
+                      src={images.general.radio_act}
+                      width={16}
                       color={colors.primary}
                     />
                   ) : (
-                    <MaterialCommunityIcons
-                      name='radiobox-blank'
-                      size={24}
-                      color={colors.primary}
+                    <OIcon
+                      src={images.general.radio_nor}
+                      width={16}
+                      color={colors.disabled}
                     />
                   )}
                 </View>
                 <View style={styles.viewStyle}>
-                  {getIconCard(card.brand, 26)}
+                  {getIconCard(card.brand, 20)}
                 </View>
                 <View style={styles.viewStyle}>
-                  <OText size={18}>
+                  <OText size={12} color={colors.textNormal}>
                     XXXX-XXXX-XXXX-{card.last4}
                   </OText>
                 </View>
@@ -107,10 +107,10 @@ const StripeCardsListUI = (props: any) => {
                   message={t('QUESTION_DELETE_CARD', 'Are you sure that you want to delete the card?')}
                   onAccept={() => deleteCard(card)}
                 >
-                  <MaterialCommunityIcons
-                    name='trash-can-outline'
-                    size={28}
-                    color={colors.primary}
+                  <OIcon
+                    src={images.general.trash}
+                    width={16}
+                    color={colors.disabled}
                   />
                 </OAlert>
               </OSItemActions>
@@ -124,7 +124,7 @@ const StripeCardsListUI = (props: any) => {
 
 const styles = StyleSheet.create({
   viewStyle: {
-    marginRight: 5
+    marginRight: 7
   },
   cardsList: {
     width: '100%',

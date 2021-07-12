@@ -6,11 +6,12 @@ export const ChContainer = styled.View`
   margin-bottom: 60px;
 `
 
-export const ChSection = styled.View``
+export const ChSection = styled.View`
+	padding-top: 30px;
+`
 
 export const ChHeader = styled.View`
-  display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-direction: row;
   align-items: center;
   margin: 0px;
@@ -33,13 +34,6 @@ export const ChTotalWrap = styled.View`
 
 export const ChAddress = styled.View`
   width: 100%;
-  padding: 20px 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.inputDisabled};
 `
 
 export const ChMoment = styled(ChAddress)`
@@ -47,13 +41,16 @@ export const ChMoment = styled(ChAddress)`
 `
 
 export const CHMomentWrapper = styled.TouchableOpacity`
-  background-color: ${colors.inputDisabled};
-  border-radius: 10px;
-  width: 100%;
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
+	background-color: ${colors.backgroundGray100};
+	border-radius: 7.6px;
+	font-size: 12px;
+	max-width: 240px;
+	height: 26px;
+	align-items: center;
+	justify-content: center;
+	padding-horizontal: 8px;
+	flex-direction: row;
+	margin-end: 12px;
 `
 
 export const ChUserDetails = styled.View`
@@ -61,20 +58,17 @@ export const ChUserDetails = styled.View`
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  padding: 0 0 20px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.inputDisabled};
+  padding-bottom: 34px;
 `
 
 export const ChBusinessDetails = styled(ChUserDetails)`
+	padding-top: 0;
 `
 
 export const ChPaymethods = styled.View`
   display: flex;
   flex-direction: column;
   padding: 0 0 20px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.inputDisabled};
 `
 
 export const ChDriverTips = styled(ChPaymethods)``

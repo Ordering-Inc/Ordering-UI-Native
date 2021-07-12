@@ -45,7 +45,7 @@ export const PaymentOptionCash = (props: any) => {
     <PCContainer>
       <PCForm>
         <PCWrapper>
-          <OText style={{ fontSize: 16, textAlign: 'center' }}>
+          <OText size={12} lineHeight={18} weight={'400'} color={colors.textNormal}>
             {t('NOT_EXACT_CASH_AMOUNT', 'Don\'t have exact amount? Let us know with how much will you pay')}
           </OText>
           <Controller
@@ -77,12 +77,12 @@ export const PaymentOptionCash = (props: any) => {
 
 const styles = StyleSheet.create({
   inputsStyle: {
-    borderColor: colors.secundaryContrast,
-    borderRadius: 50,
+    borderColor: colors.border,
+    borderRadius: 7.6,
     marginTop: 10,
     width: '100%',
-    height: 60,
-    maxHeight: 60
+    height: 44,
+    maxHeight: 44
   },
   errorMsg: {
     marginTop: 10,

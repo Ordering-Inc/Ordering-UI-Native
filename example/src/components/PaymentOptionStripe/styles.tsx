@@ -40,10 +40,6 @@ export const OSItem = styled.View`
   justify-content: space-between;
   align-items: center;
   padding: 20px 0px;
-  ${(props: any) => props.isUnique > 1 && css`
-    border-bottom-width: 1px;
-    border-bottom-color: #EAEAEA;
-  `}
 `;
 
 export const OSItemContent = styled.TouchableOpacity`

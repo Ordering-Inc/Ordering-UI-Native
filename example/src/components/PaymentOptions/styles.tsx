@@ -15,7 +15,7 @@ export const PMList = styled.View`
 
 export const PMItem = styled.View`
   width: 120px;
-  height: 80px;
+  height: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -50,7 +50,7 @@ export const PMCardItemContent = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   font-weight: bold;
 `

@@ -110,7 +110,10 @@
 		"drop_down": "",
 		"logout": "",
 		"language": "",
-		"help": ""
+		"help": "",
+		"enter": "",
+		"attach": "",
+		"image": ""
     },
 	 "backgrounds": {
 		 "business_list_header": ""

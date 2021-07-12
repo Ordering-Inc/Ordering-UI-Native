@@ -31,46 +31,39 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
     <Container
       isIos={Platform.OS === 'ios'}
       style={{ paddingBottom: bottom + 16 }}>
-      <Button
-        style={{ backgroundColor: colors.clear }}
+
+		<View style={styles.infoCont}>
+			<OText color={colors.textNormal} size={16} lineHeight={24} weight={'600'} mRight={20}>
+				{btnRightValueShow ? btnRightValue : ''}
+			</OText>
+			{btnLeftValueShow && (
+				<View style={styles.badge}>
+					<OText color={colors.textNormal} size={14} lineHeight={24}>
+						{btnLeftValueShow ? btnLeftValue : ''}
+					</OText>
+				</View>
+			)}
+		</View>
+		<Button
+        style={[isSecondaryBtn ? styles.secondaryBtn: styles.primaryBtn]}
         onPress={handleButtonClick}
-        disabled={disabled}>
-        <OText color={colors.textNormal} size={16} weight={'600'} mRight={20}>
-          {btnRightValueShow ? btnRightValue : ''}
-        </OText>
-        <View style={styles.quantity}>
-          <OText color={colors.white} size={16}>
-            {btnLeftValueShow ? btnLeftValue : ''}
-          </OText>
-        </View>
-        <OText
-          style={styles.btnTextStyle}
-          color={colors.white}
-          size={16}
-          weight="bold">
+        disabled={disabled}
+      >
+        <OText color={isSecondaryBtn ? colors.textSecondary : colors.white} lineHeight={24} size={14} weight={'400'}>
           {btnText}
         </OText>
       </Button>
-      <Button onPress={handleEmpty} style={styles.emptyBtn}>
-        <OText color={colors.textThird}>{t('EMPTY_CART', 'Empty cart')}</OText>
-      </Button>
+
     </Container>
   );
 };
 
 const styles = StyleSheet.create({
   primaryBtn: {
-    backgroundColor: colors.clear,
+    backgroundColor: colors.primary,
   },
-  secodaryBtn: {
-    backgroundColor: colors.clear,
-  },
-  btnTextStyle: {
-    position: 'absolute',
-    width: '100%',
-    paddingBottom: 5,
-    left: 0,
-    textAlign: 'center',
+  secondaryBtn: {
+    backgroundColor: colors.backgroundGray200,
   },
   emptyBtn: {
     height: 44,
@@ -78,12 +71,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundGray100,
     paddingHorizontal: 27,
   },
-  quantity: {
-	  paddingVertical: 6,
-	  paddingHorizontal: 12,
-	  borderRadius: 7.6,
-	  backgroundColor: colors.primary
+  infoCont: {
+	flexGrow: 1,
+	flexDirection: 'row',
+	alignItems: 'center',
+	justifyContent: 'flex-start'
   },
+  badge: {
+	alignItems: 'center',
+	justifyContent: 'center',
+	borderRadius: 7.6,
+	minWidth: 30,
+	minHeight: 30,
+	backgroundColor: colors.primaryContrast,
+	paddingHorizontal: 7
+  }
 });
 
 export const FloatingButton = (props: FloatingButtonParams) => {

@@ -12,13 +12,10 @@ export const ADHeader = styled.View`
 `
 
 export const ADAddress = styled.View`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
 `
 
 export const ADMap = styled.View`
   width: 100%;
-  margin: 0 auto;
 `

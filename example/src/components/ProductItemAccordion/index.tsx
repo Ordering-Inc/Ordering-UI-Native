@@ -33,7 +33,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     getProductMax,
     onDeleteProduct,
     onEditProduct,
-    // isFromCheckout,
+    isFromCheckout,
   } = props
   const [, t] = useLanguage()
   const [orderState] = useOrder()
@@ -110,15 +110,19 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
           : setActiveState(!isActive)}
         activeOpacity={1}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
           <ContentInfo>
             {product?.images && (
               <ProductImage>
-                <OIcon url={optimizeImage(product?.images, 'h_100,c_limit')} style={styles.productImage} />
+					  {isFromCheckout ? (
+                		<OIcon url={optimizeImage(product?.images, 'h_100,c_limit')} style={{...styles.productImage, ...{width: 82, height: 82}}} />
+					  ) : (
+							<OIcon url={optimizeImage(product?.images, 'h_100,c_limit')} style={styles.productImage} />
+					  )}
               </ProductImage>
             )}
+            {isCartProduct && !isCartPending && getProductMax && (
 				<ProductInfo>
-            {isCartProduct && !isCartPending && getProductMax ? (
               <RNPickerSelect
                 items={productOptions}
                 onValueChange={handleChangeQuantity}
@@ -129,14 +133,15 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 Icon={() => <View style={pickerStyle.icon}><OIcon src={images.general.arrow_down} color={colors.textNormal} width={8} /></View>}
                 disabled={orderState.loading}
               />
-            ) : (
+          	</ProductInfo>
+            )}
+				 {isFromCheckout && (
               <ProductQuantity>
-                <OText>
+                <OText size={12} lineHeight={18}>
                   {product?.quantity}
                 </OText>
               </ProductQuantity>
             )}
-          </ProductInfo>
             <View style={{flex: 1}}>
               <OText size={12} lineHeight={18} weight={'400'}>{product.name}</OText>
             </View>

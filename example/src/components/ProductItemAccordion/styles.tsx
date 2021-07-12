@@ -23,12 +23,17 @@ export const ProductInfo = styled.View`
 	border-radius: 7.6px;
 `
 
-export const ProductQuantity = styled.View``
+export const ProductQuantity = styled.View`
+	background-color: ${colors.clear};
+	margin-horizontal: 7px;
+	min-width: 16px;
+	align-items: center;
+`
 
 export const ContentInfo = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   overflow: hidden;
 `
 

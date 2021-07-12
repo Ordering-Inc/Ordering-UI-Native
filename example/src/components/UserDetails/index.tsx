@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { UDContainer, UDHeader, UDForm, UDInfo } from './styles';
+import { UDContainer, UDHeader, UDForm, UDInfo, EditBtn } from './styles';
 
 import {
   UserFormDetails as UserFormController,
@@ -10,8 +10,8 @@ import {
   useSession
 } from 'ordering-components/native';
 
-import { OText } from '../shared';
-import { colors } from '../../theme.json';
+import { OIcon, OText } from '../shared';
+import { colors, images } from '../../theme.json';
 
 import { UserFormDetailsUI } from '../UserFormDetails';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
@@ -67,50 +67,45 @@ const UserDetailsUI = (props: any) => {
       {!(validationFields.loading || formState.loading) && (
         <UDContainer>
           <UDHeader>
-            <OText size={20}>
+            <OText size={16} lineHeight={24} weight={'500'}>
               {t('CUSTOMER_DETAILS', 'Customer Details')}
             </OText>
             {cartStatus !== 2 && (
               !isEdit ? (
-                <MaterialIcon
-                  name='pencil-outline'
-                  size={28}
-                  color={colors.editColor}
-                  style={{ marginBottom: 10, marginLeft: 5 }}
-                  onPress={() => toggleIsEdit()}
-                />
+					  <EditBtn onPress={() => toggleIsEdit()} activeOpacity={0.7}>
+							<OIcon
+								src={images.general.pencil}
+								width={16}
+								height={16}
+								color={colors.editColor}
+								style={{ marginBottom: 10, marginLeft: 5 }}
+							/>
+					  </EditBtn>
               ) : (
-                <MaterialIcon
-                  name='cancel'
-                  color={colors.cancelColor}
-                  size={24}
-                  style={{ marginBottom: 5, marginLeft: 5 }}
-                  onPress={() => toggleEditState()}
-                />
+					  <EditBtn onPress={() => toggleEditState()} activeOpacity={0.7}>
+						  <OIcon
+							 src={images.general.close}
+							 color={colors.cancelColor}
+							 width={16}
+							 height={16}
+							 style={{ marginBottom: 5, marginLeft: 5 }}
+						  />
+					  </EditBtn>
               )
             )}
           </UDHeader>
 
           {!isEdit ? (
             <UDInfo>
-              <OText size={16}>
-                <OText size={18} weight='bold'>
-                  {t('NAME', 'Name')}:{' '}
-                </OText>
+              <OText size={12} lineHeight={18} weight={'400'}>
                 {userData?.name} {userData?.middle_name} {userData?.lastname} {userData?.second_lastname}
               </OText>
-              <OText size={16}>
-                <OText size={18} weight='bold'>
-                  {t('EMAIL', 'Email')}:{' '}
-                </OText>
+              <OText size={12} lineHeight={18} weight={'400'}>
                 {userData?.email}
               </OText>
               {!!(userData?.cellphone || user?.cellphone) && (
                 <>
-                  <OText size={16}>
-                    <OText size={18} weight='bold'>
-                      {t('CELLPHONE', 'Cellphone')}:{' '}
-                    </OText>
+                  <OText size={12} lineHeight={18} weight={'400'}>
                     {(userData?.country_phone_code) && `+${(userData?.country_phone_code)} `}{(userData?.cellphone)}
                   </OText>
                   {!!phoneUpdate && (

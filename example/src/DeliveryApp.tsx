@@ -109,6 +109,9 @@ theme.images = {
 	 logout: require('./assets/icons/ic_logout.png'),
 	 language: require('./assets/icons/ic_language.png'),
 	 help: require('./assets/icons/ic_help.png'),
+	 enter: require('./assets/icons/ic_enter.png'),
+	 attach: require('./assets/icons/ic_attach.png'),
+	 image: require('./assets/icons/ic_image.png'),
   },
   backgrounds: {
     business_list_header: require('./assets/images/business_list_banner.jpg'),

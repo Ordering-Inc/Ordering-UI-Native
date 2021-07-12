@@ -5,11 +5,13 @@ import { GiftedChat, Actions, ActionsProps, InputToolbar, Composer, Send, Bubble
 import { USER_TYPE } from '../../config/constants'
 import { ToastType, useToast } from '../../providers/ToastProvider'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { colors } from '../../theme.json'
+import { colors, images } from '../../theme.json'
 import { OIcon, OIconButton, OText } from '../shared'
 import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard } from 'react-native'
 import { Header, TitleHeader, Wrapper } from './styles'
 import { MessagesParams } from '../../types'
+import { useWindowDimensions } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const ImageDummy = require('../../assets/images/image.png')
 const paperIcon = require('../../assets/images/paper-plane.png')
@@ -28,6 +30,7 @@ const MessagesUI = (props: MessagesParams) => {
     handleSend,
     setImage,
     readMessages,
+	 onClose,
   } = props
 
   const [{ user }] = useSession()
@@ -37,6 +40,8 @@ const MessagesUI = (props: MessagesParams) => {
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
+  const { height } = useWindowDimensions();
+  const { top, bottom } = useSafeAreaInsets();
 
   const onChangeMessage = (val: string) => {
     setMessage && setMessage(val)
@@ -192,9 +197,9 @@ const MessagesUI = (props: MessagesParams) => {
           <>
             <OIconButton
               borderColor={colors.white}
-              style={{ width: 32, height: 32, borderRadius: 10 }}
-              icon={image ? { uri: image } : ImageDummy}
-              iconStyle={{ borderRadius: image ? 10 : 0, width: image ? 32 : 28, height: image ? 32 : 24 }}
+              style={{ width: 32, height: 44, borderRadius: 10, backgroundColor: colors.clear, borderColor: colors.clear }}
+              icon={image ? { uri: image } : images.general.image}
+              iconStyle={{ borderRadius: image ? 10 : 0, width: image ? 32 : 16, height: image ? 32 : 16 }}
               onClick={handleImagePicker}
               iconCover
             />
@@ -223,27 +228,29 @@ const MessagesUI = (props: MessagesParams) => {
   )
 
   const renderComposer = (props: ComposerProps) => (
-    <View style={{flexDirection: 'row', width: '80%'}}>
+    <View style={{flexDirection: 'row', width: '80%', alignItems: 'center', backgroundColor: colors.backgroundGray100,
+	 borderRadius: 7.6,}}>
       <Composer
         {...props}
         textInputStyle={{
-          backgroundColor: colors.white,
-          borderRadius: 25,
-          paddingHorizontal: 10,
-          borderColor: '#DBDCDB',
-          borderWidth: 1,
-          color: '#010300',
+				height: 32,
+				minHeight: 32,
+				alignItems: 'center',
+				justifyContent: 'center',
+				paddingHorizontal: 12,
+				borderColor: '#DBDCDB',
+				color: '#010300',
         }}
         textInputProps={{
-          value: message,
-          onSubmitEditing: onSubmit,
-          returnKeyType: message ? 'send' : 'done',
-          blurOnSubmit: true,
-          multiline: false,
-          numberOfLines: 1,
-          autoCorrect: false,
-          autoCompleteType: 'off',
-          enablesReturnKeyAutomatically: false
+				value: message,
+				onSubmitEditing: onSubmit,
+				returnKeyType: message ? 'send' : 'done',
+				blurOnSubmit: true,
+				multiline: false,
+				numberOfLines: 1,
+				autoCorrect: false,
+				autoCompleteType: 'off',
+				enablesReturnKeyAutomatically: false
         }}
         placeholder={t('WRITE_MESSAGE', 'Write message...')}
       />
@@ -261,13 +268,15 @@ const MessagesUI = (props: MessagesParams) => {
       <OIconButton
         onClick={onSubmit}
         style={{
-          height: 32,
-          borderRadius: 25,
+          height: 44,
+			 width: 44,
+          borderRadius: 7.6,
           opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
           borderColor: colors.primary,
+			 backgroundColor: colors.primary,
         }}
         iconStyle={{ marginTop: 3, marginRight: 2 }}
-        icon={paperIcon}
+        icon={images.general.enter}
         disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
         disabledColor={colors.white}
       />
@@ -282,8 +291,8 @@ const MessagesUI = (props: MessagesParams) => {
         right: { color: colors.white }
       }}
       containerStyle={{
-        left: { marginVertical: 5, borderBottomRightRadius: 12 },
-        right: { marginVertical: 5, borderBottomRightRadius: 12 }
+        left: { marginVertical: 5, borderBottomRightRadius: 7.6 },
+        right: { marginVertical: 5, borderBottomRightRadius: 7.6 }
       }}
       wrapperStyle={{
         left: { backgroundColor: '#f7f7f7', padding: 5, borderBottomLeftRadius: 0 },
@@ -303,19 +312,22 @@ const MessagesUI = (props: MessagesParams) => {
   )
 
   return (
-    <>
+    <View style={{height: height - top - bottom, width: '100%'}}>
       <Wrapper>
         <Header>
-         <OIcon
-            url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
-            width={60}
-            height={60}
-            style={{ borderRadius: 10, marginRight: 10 }}
-          />
-          <TitleHeader>
-            <OText size={18}>{type === USER_TYPE.DRIVER ? order?.driver?.name : order?.business?.name}</OText>
-            <OText>{t('ONLINE', 'Online')}</OText>
-          </TitleHeader>
+			  <OIconButton icon={images.general.arrow_left} style={{paddingStart: 10, borderColor: colors.clear}} onClick={() => onClose()} />
+				<View style={{marginRight: 10, shadowColor: colors.black, shadowOpacity: 0.1, shadowOffset: {width: 0, height: 1}, shadowRadius: 2 }}>
+					<OIcon
+						url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
+						width={32}
+						height={32}
+						style={{ borderRadius: 7.6 }}
+					/>
+				</View>
+				<TitleHeader>
+					<OText size={14} lineHeight={21} weight={'600'}>{type === USER_TYPE.DRIVER ? order?.driver?.name : order?.business?.name}</OText>
+					<OText size={12} color={colors.textSecondary}>{type === USER_TYPE.DRIVER ? t('DRIVER', 'Driver') : t('BUSINESS', 'Business')}</OText>
+				</TitleHeader>
         </Header>
         <GiftedChat
           messages={formattedMessages}
@@ -337,14 +349,15 @@ const MessagesUI = (props: MessagesParams) => {
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
           messagesContainerStyle={{
-            paddingBottom: 20
+            paddingVertical: 18,
+				paddingHorizontal: 28,
           }}
           isLoadingEarlier={messages.loading}
           renderLoading={() => <ActivityIndicator size="small" color="#000" />}
           keyboardShouldPersistTaps='handled'
         />
       </Wrapper>
-    </>
+    </View>
   )
 }
 

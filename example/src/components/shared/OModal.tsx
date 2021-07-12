@@ -68,7 +68,7 @@ const OModal = (props: Props): React.ReactElement => {
             {children}
           </View>
         ) :
-          <>
+          <View>
             {!customClose && (
               <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
 					  <TouchableOpacity style={styles.wrapperIcon} onPress={onClose}>
@@ -82,7 +82,7 @@ const OModal = (props: Props): React.ReactElement => {
               </View>
             )}
             {children}
-          </>
+          </View>
         }
       </SafeAreaView>
     </Modal>
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: 'flex-start',
     position: 'relative',
     width: '100%',
   },
@@ -103,7 +103,8 @@ const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+	 paddingHorizontal: 40
   },
   cancelBtn: {
    //  position: 'absolute',
@@ -113,7 +114,9 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginTop: 15,
-    fontSize: 25,
+    fontSize: 20,
+	 lineHeight: 30,
+	 fontWeight: '600',
     textAlign: "center",
     zIndex: 10
   },
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.clear,
     width: 35,
     height: 35,
-	 marginStart: 32,
+	 marginStart: -4,
 	 marginTop: 12,
 	 alignItems: 'center',
 	 justifyContent: 'center'

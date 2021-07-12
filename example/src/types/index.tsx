@@ -298,6 +298,7 @@ export interface MessagesParams {
   setMessage?: (comment: string) => {},
   setMessages?: () => {},
   readMessages?: () => {},
+  onClose?: () => void
 }
 export interface ViewInterface {
   navigation?: any;

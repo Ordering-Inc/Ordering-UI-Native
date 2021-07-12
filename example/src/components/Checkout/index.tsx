@@ -46,6 +46,7 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
+import NavBar from '../NavBar';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -173,102 +174,85 @@ const CheckoutUI = (props: any) => {
   return (
     <>
       <Container>
-    <ChContainer>
-      <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
-        <OButton
-          imgLeftSrc={images.general.arrow_left}
-          imgRightSrc={null}
-          style={style.btnBackArrow}
-          onClick={() => navigation?.canGoBack() && navigation.goBack()}
-        />
+		<NavBar isVertical onActionLeft={() => navigation?.canGoBack() && navigation.goBack()} title={t('CHECKOUT', 'Checkout')} />
+    	<ChContainer>
+      <ChSection style={{ paddingTop: 0 }}>
         <ChHeader>
-          <OText size={24}>{t('CHECKOUT', 'Checkout')}</OText>
           <OrderTypeSelector configTypes={configTypes} />
-        </ChHeader>
-      </ChSection>
-
-      {!cartState.loading && (cart?.status === 2 || cart?.status === 4) && (
-        <ChSection style={{ paddingBottom: 20 }}>
-          <ChErrors>
-            {!cartState.loading && cart?.status === 2 && (
-              <OText
-                style={{ textAlign: 'center' }}
-                color={colors.error}
-                size={17}
-              >
-                {t('CART_STATUS_PENDING_MESSAGE_APP', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the app')}
-              </OText>
-            )}
-          </ChErrors>
-        </ChSection>
-      )}
-
-      <ChSection>
-        <ChTotal>
-          {
-            (
-              <>
-                <OIcon
-                  url={businessLogo || businessDetails?.business?.logo}
-                  width={80}
-                  height={80}
-                  borderRadius={80}
-                />
-                <View style={{ marginLeft: 15, width: '85%' }}>
-                  <OText size={22} numberOfLines={2} ellipsizeMode='tail' style={{ width: '85%' }}>
-                    {businessName || businessDetails?.business?.name}
-                  </OText>
-                  <OText size={22}>
-                    {cart?.total >= 1 && parsePrice(cart?.total) || cartTotal >= 1 && parsePrice(cartTotal)}
-                  </OText>
-                </View>
-              </>
-            )}
-        </ChTotal>
-      </ChSection>
-      <ChSection style={style.paddSection}>
-        <ChAddress>
-          {(businessDetails?.loading || cartState.loading) ? (
-            <Placeholder Animation={Fade}>
-              <PlaceholderLine height={20} style={{ marginBottom: 50 }} />
-              <PlaceholderLine height={100} />
-            </Placeholder>
-          ) : (
-            <AddressDetails
-              navigation={navigation}
-              location={businessDetails?.business?.location}
-              businessLogo={businessDetails?.business?.logo}
-              isCartPending={cart?.status === 2}
-              businessId={cart?.business_id}
-              apiKey={configs?.google_maps_api_key?.value}
-              mapConfigs={mapConfigs}
-            />
-          )}
-        </ChAddress>
-      </ChSection>
-      <ChSection style={style.paddSectionH}>
-        <ChMoment>
-          <CHMomentWrapper
+			 <CHMomentWrapper
             onPress={() => navigation.navigate('MomentOption')}
             disabled={loading}
           >
-            <MaterialCommunityIcon
-              name='clock-outline'
-              size={24}
-              style={{ marginRight: 5 }}
-            />
-            <OText size={18} numberOfLines={1} ellipsizeMode='tail'>
+            <OText size={12} numberOfLines={1} ellipsizeMode='tail' color={colors.textSecondary}>
               {options?.moment
                 ? parseDate(options?.moment, {
                   outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
                 })
                 : t('ASAP_ABBREVIATION', 'ASAP')}
             </OText>
+				<OIcon
+					src={images.general.arrow_down}
+					width={10}
+					style={{ marginStart: 8 }}
+				/>
           </CHMomentWrapper>
-        </ChMoment>
+        </ChHeader>
+		  <View style={{height: 8, backgroundColor: colors.backgroundGray100, marginTop: 18, marginHorizontal: -40}} />
       </ChSection>
 
-      <ChSection style={style.paddSection}>
+      <ChSection>
+        <ChBusinessDetails>
+          {
+            (businessDetails?.loading || cartState.loading) &&
+            !businessDetails?.error &&
+            (
+              <Placeholder Animation={Fade}>
+                <PlaceholderLine height={20} width={70} />
+                <PlaceholderLine height={15} width={60} />
+                <PlaceholderLine height={15} width={60} />
+                <PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+              </Placeholder>
+            )}
+          {
+            !cartState.loading &&
+            businessDetails?.business &&
+            Object.values(businessDetails?.business).length > 0 &&
+            (
+              <>
+                <OText size={16} lineHeight={24} weight={'500'} mBottom={10}>
+                  {t('BUSINESS_DETAILS', 'Business Details')}
+                </OText>
+                <View>
+                  <OText size={12} lineHeight={18} weight={'400'}>
+                    {businessDetails?.business?.name}
+                  </OText>
+                  <OText size={12} lineHeight={18} weight={'400'}>
+                    {businessDetails?.business?.email}
+                  </OText>
+                  <OText size={12} lineHeight={18} weight={'400'}>
+                    {businessDetails?.business?.cellphone}
+                  </OText>
+                  <OText size={12} lineHeight={18} weight={'400'}>
+                    {businessDetails?.business?.address}
+                  </OText>
+                </View>
+              </>
+            )}
+          {businessDetails?.error && businessDetails?.error?.length > 0 && (
+            <View>
+					<OText size={16} lineHeight={24} weight={'500'}>
+						{t('BUSINESS_DETAILS', 'Business Details')}
+					</OText>
+              <NotFoundSource
+                content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
+              />
+            </View>
+          )}
+        </ChBusinessDetails>
+		  <View style={{height: 8, backgroundColor: colors.backgroundGray100, marginHorizontal: -40}} />
+      </ChSection>
+
+		<ChSection>
         <ChUserDetails>
           {cartState.loading ? (
             <Placeholder Animation={Fade}>
@@ -291,70 +275,71 @@ const CheckoutUI = (props: any) => {
             />
           )}
         </ChUserDetails>
+		  <View style={{height: 8, backgroundColor: colors.backgroundGray100, marginHorizontal: -40}} />
       </ChSection>
 
-      <ChSection style={style.paddSectionH}>
-        <ChBusinessDetails>
-          {
-            (businessDetails?.loading || cartState.loading) &&
-            !businessDetails?.error &&
-            (
-              <Placeholder Animation={Fade}>
-                <PlaceholderLine height={20} width={70} />
-                <PlaceholderLine height={15} width={60} />
-                <PlaceholderLine height={15} width={60} />
-                <PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
-              </Placeholder>
+
+
+      {!cartState.loading && (cart?.status === 2 || cart?.status === 4) && (
+        <ChSection style={{ paddingBottom: 20 }}>
+          <ChErrors>
+            {!cartState.loading && cart?.status === 2 && (
+              <OText
+                style={{ textAlign: 'center' }}
+                color={colors.error}
+                size={17}
+              >
+                {t('CART_STATUS_PENDING_MESSAGE_APP', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the app')}
+              </OText>
             )}
+          </ChErrors>
+        </ChSection>
+      )}
+
+      {/* <ChSection>
+        <ChTotal>
           {
-            !cartState.loading &&
-            businessDetails?.business &&
-            Object.values(businessDetails?.business).length > 0 &&
             (
-              <View>
-                <OText size={20}>
-                  {t('BUSINESS_DETAILS', 'Business Details')}
-                </OText>
-                <View>
-                  <OText size={16}>
-                    <OText size={18} weight='bold'>
-                      {t('NAME', 'Name')}:{' '}
-                    </OText>
-                    {businessDetails?.business?.name}
+              <>
+                <OIcon
+                  url={businessLogo || businessDetails?.business?.logo}
+                  width={80}
+                  height={80}
+                  borderRadius={80}
+                />
+                <View style={{ marginLeft: 15, width: '85%' }}>
+                  <OText size={22} numberOfLines={2} ellipsizeMode='tail' style={{ width: '85%' }}>
+                    {businessName || businessDetails?.business?.name}
                   </OText>
-                  <OText size={16}>
-                    <OText size={18} weight='bold'>
-                      {t('EMAIL', 'Email')}:{' '}
-                    </OText>
-                    {businessDetails?.business?.email}
-                  </OText>
-                  <OText size={16}>
-                    <OText size={18} weight='bold'>
-                      {t('CELLPHONE', 'Cellphone')}:{' '}
-                    </OText>
-                    {businessDetails?.business?.cellphone}
-                  </OText>
-                  <OText size={16}>
-                    <OText size={18} weight='bold'>
-                      {t('ADDRESS', 'Address')}:{' '}
-                    </OText>
-                    {businessDetails?.business?.address}
+                  <OText size={22}>
+                    {cart?.total >= 1 && parsePrice(cart?.total) || cartTotal >= 1 && parsePrice(cartTotal)}
                   </OText>
                 </View>
-              </View>
+              </>
             )}
-          {businessDetails?.error && businessDetails?.error?.length > 0 && (
-            <View>
-              <OText size={20}>
-                {t('BUSINESS_DETAILS', 'Business Details')}
-              </OText>
-              <NotFoundSource
-                content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
-              />
-            </View>
+        </ChTotal>
+      </ChSection> */}
+      <ChSection>
+        <ChAddress>
+          {(businessDetails?.loading || cartState.loading) ? (
+            <Placeholder Animation={Fade}>
+              <PlaceholderLine height={20} style={{ marginBottom: 50 }} />
+              <PlaceholderLine height={100} />
+            </Placeholder>
+          ) : (
+            <AddressDetails
+              navigation={navigation}
+              location={businessDetails?.business?.location}
+              businessLogo={businessDetails?.business?.logo}
+              isCartPending={cart?.status === 2}
+              businessId={cart?.business_id}
+              apiKey={configs?.google_maps_api_key?.value}
+              mapConfigs={mapConfigs}
+            />
           )}
-        </ChBusinessDetails>
-      </ChSection>
+        </ChAddress>
+		  <View style={{height: 8, backgroundColor: colors.backgroundGray100, marginTop: 13, marginHorizontal: -40}} />
+      </ChSection>      
 
       {!cartState.loading &&
         cart &&
@@ -364,9 +349,9 @@ const CheckoutUI = (props: any) => {
         validationFields?.fields?.checkout?.driver_tip?.enabled &&
         driverTipsOptions && driverTipsOptions?.length > 0 &&
         (
-          <ChSection style={style.paddSection}>
+          <ChSection>
             <ChDriverTips>
-              <OText size={20}>
+              <OText size={16} lineHeight={24} color={colors.textNormal}>
                 {t('DRIVER_TIPS', 'Driver Tips')}
               </OText>
               <DriverTips
@@ -384,9 +369,9 @@ const CheckoutUI = (props: any) => {
         )}
 
       {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
-        <ChSection style={style.paddSectionH}>
+        <ChSection>
           <ChPaymethods>
-            <OText size={20}>
+            <OText size={16} lineHeight={24} color={colors.textNormal}>
               {t('PAYMENT_METHOD', 'Payment Method')}
             </OText>
             {!cartState.loading && cart?.status === 4 && (
@@ -414,8 +399,8 @@ const CheckoutUI = (props: any) => {
         </ChSection>
       )}
 
-      {!cartState.loading && cart && (
-        <ChSection style={style.paddSection}>
+      {/* {!cartState.loading && cart && (
+        <ChSection>
           <ChCart>
             {cartsWithProducts && cart?.products?.length === 0 ? (
               <NotFoundSource
@@ -424,7 +409,7 @@ const CheckoutUI = (props: any) => {
               />
             ) : (
               <>
-                <OText size={20}>
+                <OText size={16} lineHeight={24} color={colors.textNormal}>
                   {t('ORDER_SUMMARY', 'Order Summary')}
                 </OText>
                 <OrderSummary
@@ -436,16 +421,15 @@ const CheckoutUI = (props: any) => {
             )}
           </ChCart>
         </ChSection>
-      )}
+      )} */}
 
       {!cartState.loading && cart && (
         <ChSection style={{ paddingTop: 0, paddingBottom: 20, paddingHorizontal: 20 }}>
           <ChErrors>
             {!cart?.valid_address && cart?.status !== 2 && (
               <OText
-                style={{ textAlign: 'center' }}
                 color={colors.error}
-                size={14}
+                size={12}
               >
                 {t('INVALID_CART_ADDRESS', 'Selected address is invalid, please select a closer address.')}
               </OText>
@@ -453,9 +437,8 @@ const CheckoutUI = (props: any) => {
 
             {!paymethodSelected && cart?.status !== 2 && cart?.valid && (
               <OText
-                style={{ textAlign: 'center' }}
                 color={colors.error}
-                size={14}
+                size={12}
               >
                 {t('WARNING_NOT_PAYMENT_SELECTED', 'Please, select a payment method to place order.')}
               </OText>
@@ -463,9 +446,8 @@ const CheckoutUI = (props: any) => {
 
             {!cart?.valid_products && cart?.status !== 2 && (
               <OText
-                style={{ textAlign: 'center' }}
                 color={colors.error}
-                size={14}
+                size={12}
               >
                 {t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
               </OText>
@@ -492,6 +474,8 @@ const CheckoutUI = (props: any) => {
                 )
                 : (`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`)
               }
+				  btnRightValueShow
+				  btnRightValue={parsePrice(cart?.total)}
             />
           </>
         </>
@@ -510,12 +494,6 @@ const style = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingLeft: 0,
   },
-  paddSection: {
-    padding: 20
-  },
-  paddSectionH: {
-    paddingHorizontal: 20
-  }
 })
 
 export const Checkout = (props: any) => {
