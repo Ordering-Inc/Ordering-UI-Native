@@ -11,6 +11,7 @@ import {
   useConfig,
   useSession
 } from 'ordering-components/native';
+//import { LoginForm as LoginFormController } from './test'
 
 import { FacebookLogin } from '../FacebookLogin';
 import { VerifyPhone } from '../VerifyPhone';
@@ -181,6 +182,7 @@ const LoginFormUI = (props: LoginParams) => {
 
   return (
     <Container>
+      <OText>TOKEN: {notificationState?.notification_token}</OText>
       <NavBar
         title={t('LOGIN', 'Login')}
         titleAlign={'center'}

@@ -46,9 +46,7 @@ const RootNavigator = () => {
   const oneSignalSetup = async () => {
     OneSignal.setLogLevel(6, 0);
 
-    if (configs?.onesignal_orderingapp_id?.value) {
-      OneSignal.setAppId(configs?.onesignal_orderingapp_id?.value);
-    }
+    OneSignal.setAppId(configs?.onesignal_orderingapp_id?.value);
 
     if (Platform.OS === 'ios') {
       OneSignal.promptForPushNotificationsWithUserResponse(response => {
@@ -115,7 +113,9 @@ const RootNavigator = () => {
   }, [orderStatus.options?.moment])
 
   useEffect(() => {
-    oneSignalSetup();
+    if (configs?.onesignal_orderingapp_id?.value) {
+      oneSignalSetup();
+    }
   }, [configsLoading]);
 
   return (
