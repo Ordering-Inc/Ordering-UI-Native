@@ -17,6 +17,7 @@ LogBox.ignoreLogs([
   'Warning: The `value` prop is required for the `<Context.Provider>`',
   'Non-serializable values were found in the navigation state.',
   'The action \'RESET\' with payload',
+  'Can\'t perform a React state update',
   'Warning: Failed prop type: Invalid prop `businessId` of type `string` supplied to `ProductForm`, expected `number`.',
   'Warning: Failed prop type: Invalid prop `businessId` of type `string` supplied to `UpsellingPage`, expected `number`.'
 ]);

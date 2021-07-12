@@ -58,7 +58,8 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 						</TouchableOpacity>
 					)}
 					flatListProps={{
-						keyExtractor: (item) => item.cca2,
+						/* @ts-ignore */
+						keyExtractor: (item) => item.value,
 						data: _languages || [],
 						renderItem: ({item}) => (
 							<TouchableOpacity
