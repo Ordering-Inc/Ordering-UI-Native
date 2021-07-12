@@ -59,7 +59,6 @@ const LogoutPopupUI = (props: Props) => {
 								isSecured
 								placeholder={t('PASSWORD', 'Password')}
 								onChange={(e: any) => {}}
-								type="password"
 								style={{
 									borderColor: colors.secundaryContrast,
 									borderRadius: 6,
