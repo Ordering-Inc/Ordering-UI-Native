@@ -27,7 +27,7 @@ import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-  const { business, handleClick, isBusinessOpen } = props;
+  const { business, handleClick, isBusinessOpen, businessWillCloseSoonMinutes } = props;
   const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
   const [orderState] = useOrder();
   const [, t] = useLanguage();
@@ -60,6 +60,11 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
         {!isBusinessOpen && (
           <View style={styles.closed}>
             <OText size={32} color={colors.white}>{t('CLOSED', 'CLOSED')}</OText>
+          </View>
+        )}
+        {!!businessWillCloseSoonMinutes && orderState.options?.moment === null && isBusinessOpen && (
+          <View style={styles.closed}>
+            <OText size={32} color={colors.white}>{businessWillCloseSoonMinutes} {t('MINUTES_TO_CLOSE', 'minutes to close')}</OText>
           </View>
         )}
         <BusinessLogo>
