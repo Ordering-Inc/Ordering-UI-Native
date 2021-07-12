@@ -2,21 +2,22 @@ import styled from 'styled-components/native'
 import { colors } from '../../theme.json'
 
 export const Card = styled.View`
-  border: 1px solid ${colors.backgroundGray};
-  flex: 1;
-  padding: 10px;
+  padding-vertical: 5px;
   margin-bottom: 10px;
-  border-radius: 20px;
   flex-direction: row;
+  width: 100%;
 `
 
 export const Logo = styled.View`
+	border-radius: 7.6px;
+	box-shadow: 0 1px 2px #0000001A;
 `
 
 export const Information = styled.View`
-  justify-content: space-between;
+  justify-content: center;
   align-items: flex-start;
-  margin-horizontal: 10px;
+  margin-start: 14px;
+  margin-end: 7px;
   flex: 1;
 `
 
@@ -28,7 +29,6 @@ export const MyOrderOptions = styled.View`
 export const Status = styled.View`
   align-items: center;
   justify-content: space-between;
-  width: 100px;
 `
 
 export const WrappButton = styled.View`

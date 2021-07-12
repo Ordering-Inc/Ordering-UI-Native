@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { useOrder, useLanguage, useUtils, useEvent } from 'ordering-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -15,6 +15,7 @@ import {
   BIActions
 } from './styles';
 import { OAlert, OIcon, OText } from '../shared';
+import { colors, images } from '../../theme.json';
 
 export const BusinessItemAccordion = (props: any) => {
   const {
@@ -51,7 +52,7 @@ export const BusinessItemAccordion = (props: any) => {
         <BIInfo>
           <BIContentInfo>
             <OText size={16} lineHeight={24} weight={'600'}>{cart?.business?.name}</OText>
-            {orderState?.options?.type === 1 ? (
+            {/* {orderState?.options?.type === 1 ? (
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <MaterialCommunityIcon
                   name='clock-outline'
@@ -67,20 +68,39 @@ export const BusinessItemAccordion = (props: any) => {
                 />
                 <OText>{convertHoursToMinutes(cart?.business?.pickup_time)}</OText>
               </View>
-            )}
+            )} */}
+				<View style={{flexDirection: 'row'}}>
+					{props.onNavigationRedirect && !isClosed && (
+						<>
+						<TouchableOpacity onPress={() => props.onNavigationRedirect('Business', { store: cart?.business?.slug })}>
+							<OText color={colors.primary} size={12} lineHeight={18} style={{textDecorationLine: 'underline'}}>{t('GO_TO_STORE', 'Go to store')}</OText>
+						</TouchableOpacity>
+						<OText color={colors.textSecondary}>{' \u2022 '}</OText>
+						</>
+					)}
+					{!isCartPending && !isClosed && (
+						<OAlert
+							title={t('DELETE_CART', 'Delete Cart')}
+							message={t('QUESTION_DELETE_CART', 'Are you sure to you wants delete the selected cart')}
+							onAccept={() => handleClearProducts()}
+						>
+							<OText size={12} lineHeight={18} color={colors.red} style={{textDecorationLine: 'underline'}}>{t('CLEAR_CART', 'Clear cart')}</OText>
+						</OAlert>
+					)}
+				</View>
           </BIContentInfo>
         </BIInfo>
 
-        {!isClosed && !!isProducts && cart?.valid_products && cart?.total > 0 && (
+        {/* {!isClosed && !!isProducts && cart?.valid_products && cart?.total > 0 && (
           <BITotal>
             <OText color='#000'>{parsePrice(cart?.total)}</OText>
             <OText>{t('CART_TOTAL', 'Total')}</OText>
           </BITotal>
-        )}
+        )} */}
 
         {isClosed && (
           <BITotal>
-            <OText>{t('CLOSED', 'Closed')} {moment}</OText>
+            <OText color={colors.red} size={12}>{t('CLOSED', 'Closed')} {moment}</OText>
           </BITotal>
         )}
 
@@ -91,30 +111,10 @@ export const BusinessItemAccordion = (props: any) => {
         )}
 
         <BIActions>
-          {props.onNavigationRedirect && !isClosed && (
-            <MaterialCommunityIcon
-              name='store'
-              size={26}
-              color='#CCC'
-              onPress={() => props.onNavigationRedirect('Business', { store: cart?.business?.slug })}
-            />
-          )}
+          
           {!isClosed && !!isProducts && (
             <>
-              {!isCartPending && (
-                <OAlert
-                  title={t('DELETE_CART', 'Delete Cart')}
-                  message={t('QUESTION_DELETE_CART', 'Are you sure to you wants delete the selected cart')}
-                  onAccept={() => handleClearProducts()}
-                >
-                  <MaterialCommunityIcon
-                    name='trash-can-outline'
-                    size={26}
-                    color='#D81212'
-                  />
-                </OAlert>
-              )}
-              <MaterialCommunityIcon name='chevron-down' size={20} />
+              <OIcon src={!isActive ? images.general.drop_down : images.general.drop_up} width={12} />
             </>
           )}
         </BIActions>

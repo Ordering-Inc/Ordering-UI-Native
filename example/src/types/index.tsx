@@ -96,13 +96,20 @@ export interface PhoneInputParams {
   defaultValue?: any;
   defaultCode?: number | null;
   forwardRef?: any;
-  textInputProps?: TextInputProps
+  textInputProps?: TextInputProps;
+  boxStyle?: any;
+  inputStyle?: any;
+  textStyle?: any;
+  noDropIcon?: boolean;
+  flagStyle?: any;
 }
 
 export interface LanguageSelectorParams {
   languagesState?: any;
   currentLanguage?: string;
   handleChangeLanguage?: any;
+  iconColor?: any;
+  pickerStyle?: any;
 }
 export interface BusinessesListingParams {
   navigation?: any;
@@ -224,6 +231,7 @@ export interface OrdersOptionParams {
   navigation?: any,
   loadOrders?: any,
   setOrderList?: any,
+  preOrders?: boolean,
 }
 export interface ActiveOrdersParams {
   orders?: any,
@@ -350,9 +358,11 @@ export interface UpsellingProductsParams {
   isCustomMode?: boolean;
   upsellingProducts?: any;
   business?: any;
+  cart?: any;
   businessId?: number;
   cartProducts?: Array<any>; 
   handleUpsellingPage: () => void;
+  handleCloseUpsellingPage: () => void;
   openUpselling: boolean;
   canOpenUpselling?: boolean;
   setCanOpenUpselling?: (value: any) => void;

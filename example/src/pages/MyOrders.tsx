@@ -20,7 +20,7 @@ const MyOrders = ({ navigation }: any) => {
 
   return (
     <Container>
-      <OText size={24} mBottom={20}>
+      <OText size={24} lineHeight={36} weight={'600'} mBottom={0}>
         {t('MY_ORDERS', 'My Orders')}
       </OText>
       <OrdersOption {...MyOrderProps} activeOrders />

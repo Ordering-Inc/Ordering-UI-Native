@@ -1,10 +1,9 @@
 import styled, { css } from 'styled-components/native'
+import { colors } from '../../theme.json';
 
 export const AccordionSection = styled.View`
   background: #FFF;
   padding-vertical: 10px;
-  border-bottom-width: 1px;
-  border-bottom-color: #d9d9d9;
 `
 
 export const Accordion = styled.TouchableOpacity`
@@ -18,7 +17,10 @@ export const Accordion = styled.TouchableOpacity`
 `
 
 export const ProductInfo = styled.View`
-  width: 15%;
+	margin-horizontal: 7px;
+	background-color: ${colors.backgroundGray100};
+	padding: 4px 12px 4px 0px;
+	border-radius: 7.6px;
 `
 
 export const ProductQuantity = styled.View``
@@ -28,11 +30,9 @@ export const ContentInfo = styled.View`
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-  width: 85%;
 `
 
 export const ProductImage = styled.View`
-  margin-right: 5px;
 `
 
 export const AccordionContent = styled.View`

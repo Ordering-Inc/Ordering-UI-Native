@@ -1,12 +1,13 @@
 import React from 'react'
 import { LanguageSelector as LanguageSelectorController, useOrder } from 'ordering-components/native'
-import { Platform, StyleSheet } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 
 import RNPickerSelect from 'react-native-picker-select'
 import { Container } from './styles'
-import { colors } from '../../theme.json'
+import { colors, images } from '../../theme.json'
 import { LanguageSelectorParams } from '../../types'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { OIcon } from '../shared'
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
@@ -16,6 +17,8 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     languagesState,
     currentLanguage,
     handleChangeLanguage,
+	 iconColor,
+	 pickerStyle
   } = props
 
   const _languages = languagesState?.languages?.map((language: any) => {
@@ -32,22 +35,25 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   return (
     <Container>
       {languagesState?.languages && (
-        <RNPickerSelect
-          onValueChange={handleChangeLanguage}
-          items={_languages || []}
-          value={currentLanguage}
-          style={pickerStyle}
-          useNativeAndroidPickerStyle={false}
-          placeholder={{}}
-          Icon={() => <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />}
-          disabled={orderState.loading}
-        />
+			<>
+				{iconColor && <OIcon src={images.general.language} color={iconColor} style={{marginEnd: 14}} width={16} />}
+				<RNPickerSelect
+					onValueChange={handleChangeLanguage}
+					items={_languages || []}
+					value={currentLanguage}
+					style={pickerStyle ? pickerStyle : _pickerStyle}
+					useNativeAndroidPickerStyle={false}
+					placeholder={{}}
+					Icon={() => <View style={pickerStyle ? pickerStyle.icon : _pickerStyle.icon}><OIcon src={images.general.arrow_down} color={iconColor} style={{width: '100%'}} /></View>}
+					disabled={orderState.loading}
+				/>
+		  </>
       )}
     </Container>
   )
 }
 
-const pickerStyle = StyleSheet.create({
+const _pickerStyle = StyleSheet.create({
   inputAndroid: {
     color: colors.secundaryContrast,
     borderWidth: 1,
@@ -66,11 +72,9 @@ const pickerStyle = StyleSheet.create({
     backgroundColor: colors.clear
   },
   icon: {
-    top: Platform.OS === 'ios' ? 8 : 15,
-    right: Platform.OS === 'ios' ? 0 : 7,
-    position: 'absolute',
-    fontSize: 24,
-	 color: 'white'
+    width: 10,
+	 marginTop: 9,
+	 marginEnd: 10
   },
   placeholder: {
     color: colors.secundaryContrast

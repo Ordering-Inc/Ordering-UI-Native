@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
-import { UserProfile as ProfileController } from '../components/UserProfile';
+import { UserProfileForm as ProfileController } from '../components/UserProfileForm';
 import { Container } from '../layouts/Container'
 
 const KeyboardView = styled.KeyboardAvoidingView`
@@ -12,7 +12,7 @@ interface Props {
   route: any;
 }
 
-const Profile = (props: Props) => {
+const ProfileForm = (props: Props) => {
   const profileProps = {
     ...props,
     useSessionUser: true,
@@ -35,4 +35,4 @@ const Profile = (props: Props) => {
   );
 };
 
-export default Profile;
+export default ProfileForm;

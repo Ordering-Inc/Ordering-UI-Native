@@ -6,7 +6,7 @@ import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
 
-import { OptionTitle } from './styles'
+import { ItemWrap, OptionTitle } from './styles'
 import { colors, images } from '../../theme.json'
 import { OrdersOptionParams } from '../../types'
 import { ToastType, useToast } from '../../providers/ToastProvider'
@@ -17,6 +17,7 @@ import {
   Fade
 } from "rn-placeholder";
 import { View } from 'react-native'
+import moment from 'moment'
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
@@ -64,6 +65,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     }
   }
 
+  const formatDate = (dateStr: string) => {
+	  return moment(dateStr).format('MMMM DD,YYYY - hh:mm a');
+  }
+
   const getOrderStatus = (s: string) => {
     const status = parseInt(s)
     const orderStatus = [
@@ -96,15 +101,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     return objectStatus && objectStatus
   }
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     loadOrders()
-  //   }, [navigation])
-  // )
-
   return (
     <>
-      {(orders.length > 0) && (
+      {/* {(orders.length > 0) && (
         <>
           <OptionTitle>
             <OText size={16} lineHeight={24} weight={'500'} color={colors.textNormal} mBottom={10} >
@@ -116,7 +115,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             </OText>
           </OptionTitle>
         </>
-      )}
+      )} */}
       {!loading && orders.length === 0 && (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
@@ -126,83 +125,42 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       )}
       {loading && (
         <>
-          {activeOrders ? (
-            <Placeholder style={{ marginTop: 30 }} Animation={Fade}>
-              <View style={{ width: '100%', flexDirection: 'row' }}>
-                <PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 35 }} />
-                <Placeholder>
-                  <PlaceholderLine width={30} style={{ marginTop: 5 }} />
-                  <PlaceholderLine width={50} />
-                  <PlaceholderLine width={70} />
-                </Placeholder>
-              </View>
-            </Placeholder>
-          ) : (
-            <View style={{ marginTop: 30 }}>
-              {[...Array(5)].map((item, i) => (
-                <Placeholder key={i} Animation={Fade}>
-                  <View style={{ width: '100%', flexDirection: 'row' }}>
-                    <PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 20 }} />
-                    <Placeholder>
-                      <PlaceholderLine width={30} style={{ marginTop: 5 }} />
-                      <PlaceholderLine width={50} />
-                      <PlaceholderLine width={20} />
-                    </Placeholder>
-                  </View>
-                </Placeholder>
-              ))}
-            </View>
-          )}
+			<View style={{ marginTop: 30 }}>
+				{[...Array(3)].map((item, i) => (
+					<Placeholder key={i} Animation={Fade}>
+					<View style={{ width: '100%', flexDirection: 'row' }}>
+						<PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 20 }} />
+						<Placeholder>
+							<PlaceholderLine width={30} style={{ marginTop: 5 }} />
+							<PlaceholderLine width={50} />
+							<PlaceholderLine width={20} />
+						</Placeholder>
+					</View>
+					</Placeholder>
+				))}
+			</View>
         </>
       )}
       {!loading && !error && orders.length > 0 && (
-			preOrders ? (
-				<ActiveOrders
-					orders={orders.filter((order: any) => orderStatus.includes(order.status))}
-					pagination={pagination}
-					loadMoreOrders={loadMoreOrders}
-					reorderLoading={reorderLoading}
-					customArray={customArray}
-					getOrderStatus={getOrderStatus}
-					onNavigationRedirect={onNavigationRedirect}
-				/>
-			) : activeOrders ? (
-				<ActiveOrders
-					orders={orders.filter((order: any) => orderStatus.includes(order.status))}
-					pagination={pagination}
-					loadMoreOrders={loadMoreOrders}
-					reorderLoading={reorderLoading}
-					customArray={customArray}
-					getOrderStatus={getOrderStatus}
-					onNavigationRedirect={onNavigationRedirect}
-				/>
-        ) : (
-				<PreviousOrders
-					reorderLoading={reorderLoading}
-					orders={orders.filter((order: any) => orderStatus.includes(order.status))}
-					pagination={pagination}
-					loadMoreOrders={loadMoreOrders}
-					getOrderStatus={getOrderStatus}
-					onNavigationRedirect={onNavigationRedirect}
-					handleReorder={handleReorder}
-				/>
-        )
+			orders.map((order: any) => 
+			<ItemWrap imageStyle={{opacity: 0.7}} source={order.business?.header ? { uri: order.business?.header } : images.dummies.product} key={order.id}>
+				<OText color={colors.white} size={12} lineHeight={18} weight={'600'}>{order?.business?.name}</OText>
+				<OText color={colors.white} size={10} lineHeight={15}>{`${getOrderStatus(order.status)?.value} on ${formatDate(order?.created_at)}`}</OText>
+			</ItemWrap>)
       )}
     </>
   )
 }
 
-export const OrdersOption = (props: OrdersOptionParams) => {
+export const LastOrder = (props: OrdersOptionParams) => {
   const MyOrdersProps = {
     ...props,
     UIComponent: OrdersOptionUI,
-    orderStatus: props.preOrders ? [13] : props.activeOrders
-      ? [0, 3, 4, 7, 8, 9, 14, 15, 18, 19, 20, 21]
-      : [1, 2, 5, 6, 10, 11, 12, 16, 17],
+    orderStatus: [1, 2, 5, 6, 10, 11, 12, 16, 17],
     useDefualtSessionManager: true,
     paginationSettings: {
       initialPage: 1,
-      pageSize: props.activeOrders || props.preOrders ? 0 : 10,
+      pageSize: 3,
       controlType: 'infinity'
     }
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PhoneInput from "react-native-phone-number-input";
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useLanguage, useConfig } from 'ordering-components/native';
 
 import { Wrapper } from './styles'
@@ -17,7 +17,12 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
     defaultValue,
     defaultCode,
     forwardRef,
-    textInputProps
+    textInputProps,
+	 boxStyle,
+	 inputStyle,
+	 textStyle,
+	 flagStyle,
+	 noDropIcon
   } = props
 
   const [, t] = useLanguage()
@@ -75,12 +80,15 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         onChangeFormattedText={(text : string) => handleChangeNumber(text)}
         withDarkTheme
         countryPickerProps={{withAlphaFilter:true}}
-        textContainerStyle={style.input}
-		  countryPickerButtonStyle={style.countryBtn}
+        textContainerStyle={{...style.input, ...inputStyle ? inputStyle : {}}}
+		  textInputStyle={textStyle}
+		  codeTextStyle={textStyle}
+		  flagButtonStyle={flagStyle}
+		  countryPickerButtonStyle={{...style.countryBtn, ...boxStyle ? boxStyle : {}}}
         placeholder={t('PHONE_NUMBER', 'Phone Number')}
         textInputProps={{autoCompleteType: 'tel', ref: forwardRef, ...textInputProps}}
 		  containerStyle={{width: '100%'}}
-		  renderDropdownImage={<OIcon src={images.general.arrow_down} width={13} color={'#B1BCCC'}></OIcon>}
+		  renderDropdownImage={noDropIcon ? <View /> : <OIcon src={images.general.arrow_down} width={13} color={'#B1BCCC'}></OIcon>}
       />
       {!!data?.error && (
         <OText

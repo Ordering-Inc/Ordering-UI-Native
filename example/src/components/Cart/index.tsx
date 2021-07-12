@@ -21,6 +21,7 @@ import { colors } from '../../theme.json';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
+import { View } from 'react-native';
 
 const CartUI = (props: any) => {
   const {
@@ -116,8 +117,8 @@ const CartUI = (props: any) => {
         {cart?.valid_products && (
           <OSBill>
             <OSTable>
-              <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
-              <OText>
+              <OText size={12} lineHeight={18}>{t('SUBTOTAL', 'Subtotal')}</OText>
+              <OText size={12} lineHeight={18}>
                 {cart.business.tax_type === 1
                   ? parsePrice((cart?.subtotal + cart?.tax) || 0)
                   : parsePrice(cart?.subtotal || 0)}
@@ -126,34 +127,34 @@ const CartUI = (props: any) => {
             {cart?.discount > 0 && cart?.total >= 0 && (
               <OSTable>
                 {cart?.discount_type === 1 ? (
-                  <OText>
+                  <OText size={12} lineHeight={18}>
                     {t('DISCOUNT', 'Discount')}
-                    <OText>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</OText>
+                    <OText size={12} lineHeight={18}>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</OText>
                   </OText>
                 ) : (
-                  <OText>{t('DISCOUNT', 'Discount')}</OText>
+                  <OText size={12} lineHeight={18}>{t('DISCOUNT', 'Discount')}</OText>
                 )}
-                <OText>- {parsePrice(cart?.discount || 0)}</OText>
+                <OText size={12} lineHeight={18}>- {parsePrice(cart?.discount || 0)}</OText>
               </OSTable>
             )}
             {cart.business.tax_type !== 1 && (
               <OSTable>
-                <OText>
+                <OText size={12} lineHeight={18}>
                   {t('TAX', 'Tax')}
                   {`(${verifyDecimals(cart?.business?.tax, parseNumber)}%)`}
                 </OText>
-                <OText>{parsePrice(cart?.tax || 0)}</OText>
+                <OText size={12} lineHeight={18}>{parsePrice(cart?.tax || 0)}</OText>
               </OSTable>
             )}
             {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
               <OSTable>
-                <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                <OText>{parsePrice(cart?.delivery_price)}</OText>
+                <OText size={12} lineHeight={18}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
+                <OText size={12} lineHeight={18}>{parsePrice(cart?.delivery_price)}</OText>
               </OSTable>
             )}
             {cart?.driver_tip > 0 && (
               <OSTable>
-                <OText>
+                <OText size={12} lineHeight={18}>
                   {t('DRIVER_TIP', 'Driver tip')}
                   {cart?.driver_tip_rate > 0 &&
                     parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
@@ -162,16 +163,16 @@ const CartUI = (props: any) => {
                       `(${verifyDecimals(cart?.driver_tip_rate, parseNumber)}%)`
                     )}
                 </OText>
-                <OText>{parsePrice(cart?.driver_tip)}</OText>
+                <OText size={12} lineHeight={18}>{parsePrice(cart?.driver_tip)}</OText>
               </OSTable>
             )}
             {cart?.service_fee > 0 && (
               <OSTable>
-                <OText>
+                <OText size={12} lineHeight={18}>
                   {t('SERVICE_FEE', 'Service Fee')}
                   {`(${verifyDecimals(cart?.business?.service_fee, parseNumber)}%)`}
                 </OText>
-                <OText>{parsePrice(cart?.service_fee)}</OText>
+                <OText size={12} lineHeight={18}>{parsePrice(cart?.service_fee)}</OText>
               </OSTable>
             )}
             {isCouponEnabled && !isCartPending && (
@@ -184,12 +185,13 @@ const CartUI = (props: any) => {
                 </OSCoupon>
               </OSTable>
             )}
+				
             <OSTotal>
               <OSTable style={{ marginTop: 15 }}>
-                <OText style={{ fontWeight: 'bold' }}>
+                <OText size={14} lineHeight={21} weight={'600'}>
                   {t('TOTAL', 'Total')}
                 </OText>
-                <OText style={{ fontWeight: 'bold' }} color={colors.primary}>
+                <OText size={14} lineHeight={21} weight={'600'}>
                   {cart?.total >= 1 && parsePrice(cart?.total)}
                 </OText>
               </OSTable>
@@ -212,7 +214,7 @@ const CartUI = (props: any) => {
               imgRightSrc={null}
               textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
               onClick={() => setOpenUpselling(true)}
-              style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}
+              style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
             />
           </CheckoutAction>
         )}

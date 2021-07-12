@@ -7,7 +7,7 @@ export const IMAGES = {
   marker: require('../assets/images/marker.png'),
   email: require('../assets/icons/ic_email.png'),
   lock: require('../assets/icons/ic_lock.png'),
-  camera: require('../assets/icons/camera.png'),
+  camera: require('../assets/icons/ic_camera.png'),
   support: require('../assets/icons/help.png'),
   trash: require('../assets/icons/ic_trash.png'),
   phone: require('../assets/icons/phone.png'),

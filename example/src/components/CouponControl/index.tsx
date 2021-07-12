@@ -66,7 +66,7 @@ const CouponControlUI = (props: any) => {
         >
           <CCButton>
             <OText
-              size={16}
+              size={12}
               color={colors.white}
               style={{ textAlign: 'center' }}
             >
@@ -80,15 +80,17 @@ const CouponControlUI = (props: any) => {
             placeholder={t('DISCOUNT_COUPON', 'Discount coupon')}
             onChange={(e: any) => onChangeInputCoupon(e)}
             style={styles.inputsStyle}
+				inputStyle={{fontSize: 12}}
           />
           <OButton
             onClick={() => handleButtonApplyClick()}
             bgColor={colors.primary}
             borderColor={colors.primary}
-            textStyle={{color: 'white'}}
+            textStyle={{color: 'white', fontSize: 12}}
             imgRightSrc={null}
             text={t('APPLY', 'Apply')}
             isDisabled={!couponInput}
+				style={{borderRadius: 7.6, height: 44, shadowOpacity: 0}}
           />
         </CCWrapper>
       )}
@@ -97,10 +99,11 @@ const CouponControlUI = (props: any) => {
 }
 const styles = StyleSheet.create({
   inputsStyle: {
-    borderColor: colors.secundaryContrast,
-    borderRadius: 50,
+    borderColor: colors.border,
+    borderRadius: 7.6,
     flex: 1,
-    marginRight: 30
+    marginRight: 20,
+	 height: 44
   },
 });
 

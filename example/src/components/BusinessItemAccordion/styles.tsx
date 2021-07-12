@@ -21,12 +21,8 @@ export const BIHeader = styled.TouchableOpacity`
   align-items: center;
   justify-content: space-between;
   position: relative;
-  padding: 10px;
+  padding: 10px 0;
   background-color: ${colors.white};
-
-  ${(props: any) => props.isClosed && css`
-    background-color: rgba(0, 0, 0, 0.1);
-  `}
 `
 
 export const BIInfo = styled.View`
@@ -40,12 +36,8 @@ export const BIContent = styled.View`
 `
 
 export const BIContentInfo = styled.View`
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   text-transform: capitalize;
-  margin-left: 10px;
-  width: 65%;
 `
 
 export const BITotal = styled.View`

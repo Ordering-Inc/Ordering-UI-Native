@@ -1,7 +1,9 @@
 import styled from 'styled-components/native'
 
 export const CenterView = styled.View`
-  align-items: center;
+	flex-direction: row;
+	justify-content: flex-start;
+  	align-items: center;
 `;
 
 export const UserData = styled.View`
@@ -27,3 +29,14 @@ export const Actions = styled.View`
 export const WrapperPhone = styled.View`
   padding: 8px 0px;
 `
+export const ListWrap = styled.View`
+  flex-grow: 1;
+  justify-content: space-between;
+`
+export const ListItem = styled.TouchableOpacity`
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	margin-bottom: 24px;
+`
+

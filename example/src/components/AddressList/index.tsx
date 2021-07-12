@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder, useSession } from 'ordering-components/native'
 import { AddressListContainer, AddressItem } from './styles'
 import { StyleSheet, View } from 'react-native'
-import Spinner from 'react-native-loading-spinner-overlay'
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors, images } from '../../theme.json'
 import { OButton, OText, OAlert, OModal, OIcon } from '../shared'
 import { Container } from '../../layouts/Container'
-import { AddressFormParams, AddressListParams } from '../../types'
+import { AddressListParams } from '../../types'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { TouchableRipple } from 'react-native-paper'
-
-const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
 
 const AddressListUI = (props: AddressListParams) => {
 
@@ -134,7 +130,16 @@ const AddressListUI = (props: AddressListParams) => {
       {(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile)) && (
         <AddressListContainer>
           {isFromProfile && (
-            <OText size={24} mBottom={20}>{t('MY_SAVED_PLACES', 'My saved places')}</OText>
+				<NavBar
+                title={t('MY_SAVED_PLACES', 'My saved places')}
+                titleAlign={'center'}
+                onActionLeft={() => goToBack()}
+                showCall={false}
+                btnStyle={{ paddingLeft: 0 }}
+                paddingTop={0}
+					 isVertical
+        			 titleWrapStyle={{ paddingHorizontal: 0 }}
+              />
           )}
           {
             route &&
@@ -251,6 +256,7 @@ const AddressListUI = (props: AddressListParams) => {
                 text={t('ADD_NEW_ADDRESS', 'Add new Address')}
                 imgRightSrc=''
                 bgColor={colors.white}
+					 textStyle={{color: colors.primary}}
                 style={styles.button}
                 borderColor={colors.primary}
                 onClick={() => !afterSignup ? onNavigationRedirect(
@@ -308,6 +314,8 @@ const styles = StyleSheet.create({
     marginBottom: 0,
 	 borderRadius: 7.6,
 	 borderWidth: 1,
+	 shadowOpacity: 0,
+	 height: 44,
   }
 })
 

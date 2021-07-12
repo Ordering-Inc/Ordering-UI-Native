@@ -43,13 +43,13 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
             {btnLeftValueShow ? btnLeftValue : ''}
           </OText>
         </View>
-        {/* <OText
+        <OText
           style={styles.btnTextStyle}
           color={colors.white}
           size={16}
           weight="bold">
           {btnText}
-        </OText> */}
+        </OText>
       </Button>
       <Button onPress={handleEmpty} style={styles.emptyBtn}>
         <OText color={colors.textThird}>{t('EMPTY_CART', 'Empty cart')}</OText>

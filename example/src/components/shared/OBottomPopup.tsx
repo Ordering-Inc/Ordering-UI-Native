@@ -1,5 +1,6 @@
 import React from 'react'
 import { Modal, TouchableWithoutFeedback, Dimensions, StyleSheet, View, Text } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { colors } from '../../theme.json'
 const deviceHeight = Dimensions.get('window').height
 
@@ -16,12 +17,14 @@ const OBottomPopup = (props: Props) => {
     onClose,
     children
   } = props
+  const { top, bottom } = useSafeAreaInsets();
   return (
     <Modal
-      animationType='fade'
-      transparent={true}
+      animationType='slide'
+      transparent={false}
       visible={open}
       onRequestClose={() => onClose()}
+		presentationStyle={'fullScreen'}
     >
       <View style={styles.container}>
         <TouchableWithoutFeedback
@@ -31,10 +34,12 @@ const OBottomPopup = (props: Props) => {
           <View style={styles.touchableOutsideStyle} />
         </TouchableWithoutFeedback>
         <View style={styles.bottomContainer}>
-          <View>
-            <Text style={styles.titleStyle}>
-              {title}
-            </Text>
+          <View style={{paddingTop: top, paddingBottom: bottom}}>
+				 {title != '' && (
+					<Text style={styles.titleStyle}>
+					{title}
+					</Text>
+				 )}
             {children}
           </View>
         </View>
@@ -56,10 +61,8 @@ const styles = StyleSheet.create({
   bottomContainer: {
     backgroundColor: colors.white,
     width: '100%',
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    paddingHorizontal: 20,
-    maxHeight: deviceHeight,
+    paddingHorizontal: 0,
+	 height: deviceHeight
   },
   titleStyle: {
     fontSize: 20,

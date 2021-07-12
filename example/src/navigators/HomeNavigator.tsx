@@ -14,6 +14,8 @@ import BusinessProductsList from '../pages/BusinessProductsList';
 import ReviewOrder from '../pages/ReviewOrder'
 import MomentOption from '../pages/MomentOption'
 import Splash from '../pages/Splash';
+import ProfileForm from '../pages/ProfileForm';
+import Help from '../pages/Help';
 // import { View, PanResponder } from 'react-native';
 
 const Stack = createStackNavigator();
@@ -125,6 +127,18 @@ const HomeNavigator = (is_online: boolean) => {
                   <Stack.Screen
                     name="AddressForm"
                     component={AddressForm}
+                    options={{ headerShown: false }}
+                    initialParams={{ afterSignup: false }}
+                  />
+                  <Stack.Screen
+                    name="ProfileForm"
+                    component={ProfileForm}
+                    options={{ headerShown: false }}
+                    initialParams={{ afterSignup: false }}
+                  />
+                  <Stack.Screen
+                    name="Help"
+                    component={Help}
                     options={{ headerShown: false }}
                     initialParams={{ afterSignup: false }}
                   />

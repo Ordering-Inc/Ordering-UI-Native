@@ -1,10 +1,18 @@
-import React, { useState } from 'react'
-import { useLanguage, useUtils } from 'ordering-components/native'
-import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
-import { OButton, OIcon, OText } from '../shared'
-import { Card, Logo, Information, MyOrderOptions, Status, WrappButton } from './styles'
-import { colors } from '../../theme.json'
-import { PreviousOrdersParams } from '../../types'
+import React, { useState } from 'react';
+import { useLanguage, useUtils } from 'ordering-components/native';
+import { StyleSheet, TouchableOpacity, ScrollView, View } from 'react-native';
+import { OButton, OIcon, OText } from '../shared';
+import {
+  Card,
+  Logo,
+  Information,
+  MyOrderOptions,
+  Status,
+  WrappButton,
+} from './styles';
+import { colors } from '../../theme.json';
+import { PreviousOrdersParams } from '../../types';
+import moment from 'moment';
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {
   const {
@@ -15,76 +23,104 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
     getOrderStatus,
     handleReorder,
     reorderLoading,
-    orderID
-  } = props
+    orderID,
+  } = props;
 
-  const [, t] = useLanguage()
-  const [reorderSelected,setReorderSelected] = useState<number | null>(null)
-  const [{ parseDate, optimizeImage }] = useUtils()
-  const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12]
+  const [, t] = useLanguage();
+  const [reorderSelected, setReorderSelected] = useState<number | null>(null);
+  const [{ parseDate, optimizeImage }] = useUtils();
+  const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12];
 
   const handleClickViewOrder = (uuid: string) => {
-    onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid })
-  }
+    onNavigationRedirect &&
+      onNavigationRedirect('OrderDetails', { orderId: uuid });
+  };
 
   const handleClickOrderReview = (order: any) => {
-    onNavigationRedirect && onNavigationRedirect('ReviewOrder', { order: { id: order?.id, business_id: order?.business_id, logo: order.business?.logo } })
-  }
+    onNavigationRedirect &&
+      onNavigationRedirect('ReviewOrder', {
+        order: {
+          id: order?.id,
+          business_id: order?.business_id,
+          logo: order.business?.logo,
+        },
+      });
+  };
 
-  const handleReorderClick = (id : number) => {
-    setReorderSelected(id)
-    handleReorder(id)
-  }
+  const formatDate = (date: string, option?: any) => {
+		return option?.utc ? moment.utc(date).format('DD/MM/YY \u2022 h:m a') : moment(date).format('DD/MM/YY \u2022 h:m a');
+	};
+
+  const handleReorderClick = (id: number) => {
+    setReorderSelected(id);
+    handleReorder(id);
+  };
 
   return (
-    <ScrollView
-      style={{ height: '60%', marginBottom: 30 }}
-    >
+    <View style={{ marginBottom: 30 }}>
       {orders.map((order: any) => (
-        <Card key={order.id}>
-          {!!order.business?.logo && (
-            <Logo>
-              <OIcon url={optimizeImage(order.business?.logo, 'h_300,c_limit')} style={styles.logo} />
-            </Logo>
-          )}
-          <Information>
-            <OText size={17} numberOfLines={1}>
-              {order.business?.name}
-            </OText>
-            <OText size={15} color={colors.textSecondary} numberOfLines={1}>
-              {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
-            </OText>
-            <MyOrderOptions>
-              <TouchableOpacity onPress={() => handleClickViewOrder(order?.uuid)}>
-                <OText size={16} color={colors.primary} mRight={5} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
-              </TouchableOpacity>
-              {
-                allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && (
-                  <TouchableOpacity onPress={() => handleClickOrderReview(order)}>
-                    <OText size={16} color={colors.primary} numberOfLines={1}>{t('REVIEW_ORDER', 'Review Order')}</OText>
+        <TouchableOpacity
+          onPress={() => handleClickViewOrder(order?.uuid)}
+          activeOpacity={0.7}
+          style={{ flexDirection: 'row' }}
+          key={order.id}>
+          <Card>
+            {!!order.business?.logo && (
+              <Logo>
+                <OIcon
+                  url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
+                  style={styles.logo}
+                />
+              </Logo>
+            )}
+            <Information>
+              <OText size={12} lineHeight={18} weight={'600'} numberOfLines={1} ellipsizeMode={'tail'}>
+                {order.business?.name}
+              </OText>
+              <OText
+                size={10}
+                lineHeight={15}
+                color={colors.textSecondary}
+					 style={{marginVertical: 3}}
+                numberOfLines={1}>
+                {order?.delivery_datetime_utc
+                  ? formatDate(order?.delivery_datetime_utc)
+                  : formatDate(order?.delivery_datetime, { utc: false })}
+              </OText>
+              <OText
+                color={colors.primary}
+                size={10}
+                lineHeight={15}
+                numberOfLines={1}>
+                {getOrderStatus(order.status)?.value}
+              </OText>
+            </Information>
+            <Status>
+              <OButton
+                text={t('REORDER', 'Reorder')}
+                imgRightSrc={''}
+                textStyle={styles.buttonText}
+                style={
+                  reorderLoading && order.id === reorderSelected
+                    ? styles.reorderLoading
+                    : styles.reorderbutton
+                }
+                onClick={() => handleReorderClick(order.id)}
+                isLoading={reorderLoading && order.id === reorderSelected}
+              />
+              {allowedOrderStatus.includes(parseInt(order?.status)) &&
+                !order.review && (
+                  <TouchableOpacity
+                    onPress={() => handleClickOrderReview(order)}
+                    style={styles.reviewButton}>
+                    <OText size={10} color={colors.primary} numberOfLines={1}>
+                      {t('REVIEW', 'Review')}
+                    </OText>
                   </TouchableOpacity>
                 )}
-            </MyOrderOptions>
-          </Information>
-          <Status>
-            <OText
-              color={colors.primary}
-              size={16}
-              numberOfLines={1}
-            >
-              {getOrderStatus(order.status)?.value}
-            </OText>
-            <OButton
-              text={t('REORDER', 'Reorder')}
-              imgRightSrc={''}
-              textStyle={styles.buttonText}
-              style={reorderLoading && order.id === reorderSelected ? styles.reorderLoading : styles.reorderbutton}
-              onClick={() => handleReorderClick(order.id)}
-              isLoading={reorderLoading && order.id === reorderSelected}
-            />
-          </Status>
-
-        </Card>
+            </Status>
+          </Card>
+        </TouchableOpacity>
       ))}
       {pagination.totalPages && pagination.currentPage < pagination.totalPages && (
         <WrappButton>
@@ -92,38 +128,50 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
             onClick={loadMoreOrders}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
             imgRightSrc={null}
-            textStyle={{color: colors.white}}
+            textStyle={{ color: colors.white }}
+				style={{borderRadius: 7.6, shadowOpacity: 0, marginTop: 20}}
           />
         </WrappButton>
       )}
-    </ScrollView>
-
-  )
-}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   logo: {
     borderRadius: 10,
-    width: 75,
-    height: 75
+    width: 64,
+    height: 64,
   },
   reorderbutton: {
-    width: 80,
-    height: 40,
-    paddingLeft: 0,
-    paddingRight: 0,
-    borderRadius: 10,
-    flex: 1
+    height: 23,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 23,
+    shadowOpacity: 0,
+    backgroundColor: colors.primaryContrast,
+    borderWidth: 0,
   },
   reorderLoading: {
     width: 80,
     height: 40,
     borderRadius: 10,
   },
+  reviewButton: {
+    height: 23,
+    maxHeight: 23,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    borderRadius: 23,
+    borderWidth: 1,
+    borderColor: colors.primaryContrast,
+  },
   buttonText: {
-    color: colors.white,
-    fontSize: 12,
+    color: colors.primary,
+    fontSize: 10,
     marginLeft: 2,
-    marginRight: 2
-  }
-})
+    marginRight: 2,
+  },
+});

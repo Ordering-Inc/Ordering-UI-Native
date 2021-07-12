@@ -105,7 +105,12 @@
 		"check_act": "",
 		"half_l": "",
 		"half_f": "",
-		"half_r": ""
+		"half_r": "",
+		"drop_up": "",
+		"drop_down": "",
+		"logout": "",
+		"language": "",
+		"help": ""
     },
 	 "backgrounds": {
 		 "business_list_header": ""

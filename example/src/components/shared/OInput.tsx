@@ -88,7 +88,7 @@ const OInput = (props: Props): React.ReactElement => {
         onSubmitEditing={props.onSubmitEditing}
         blurOnSubmit={props.blurOnSubmit}
         ref={props.forwardRef}
-		  style={props.inputStyle}
+		  style={props?.inputStyle}
       />
       {props.iconRight && (
         <OIcon

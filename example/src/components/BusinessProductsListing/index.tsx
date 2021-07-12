@@ -90,6 +90,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setOpenUpselling(false)
   }
 
+  const handleCloseUpsellingPage = () => {
+	setOpenUpselling(false)
+  }
+
   useEffect(() => {
     if (!orderState.loading) {
       handleCloseProductModal()
@@ -211,7 +215,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           </>
         )}
       </BusinessProductsListingContainer>
-      {!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
+      {!loading && auth && !openUpselling && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
         <FloatingButton
           btnText={
             currentCart?.subtotal >= currentCart?.minimum
@@ -247,7 +251,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           businessId={currentCart?.business_id}
           business={currentCart?.business}
           cartProducts={currentCart?.products}
+			 cart={currentCart}
           handleUpsellingPage={handleUpsellingPage}
+          handleCloseUpsellingPage={handleCloseUpsellingPage}
           openUpselling={openUpselling}
           canOpenUpselling={canOpenUpselling}
           setCanOpenUpselling={setCanOpenUpselling}

@@ -1,12 +1,22 @@
-import React from 'react'
-import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
-import { OButton, OIcon, OText } from '../shared'
-import { ActiveOrdersContainer, Card, Map, Information, Logo, OrderInformation, BusinessInformation, Price } from './styles'
-import { View, StyleSheet } from 'react-native'
-import { colors } from '../../theme.json'
-import { getGoogleMapImage } from '../../utils'
+import React from 'react';
+import { useLanguage, useUtils, useConfig } from 'ordering-components/native';
+import { OButton, OIcon, OText } from '../shared';
+import {
+  ActiveOrdersContainer,
+  Card,
+  Map,
+  Information,
+  Logo,
+  OrderInformation,
+  BusinessInformation,
+  Price,
+} from './styles';
+import { View, StyleSheet } from 'react-native';
+import { colors } from '../../theme.json';
+import { getGoogleMapImage } from '../../utils';
 
-import { ActiveOrdersParams } from '../../types'
+import { ActiveOrdersParams } from '../../types';
+import moment from 'moment';
 
 export const ActiveOrders = (props: ActiveOrdersParams) => {
   const {
@@ -14,24 +24,29 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
     orders,
     pagination,
     loadMoreOrders,
-    getOrderStatus
-  } = props
+    getOrderStatus,
+  } = props;
 
-  const [{configs}] = useConfig()
-  const [, t] = useLanguage()
-  const [{ parseDate, parsePrice, optimizeImage }] = useUtils()
+  const [{ configs }] = useConfig();
+  const [, t] = useLanguage();
+  const [{ parseDate, parsePrice, optimizeImage }] = useUtils();
+
+  const formatDate = (date: string, option?: any) => {
+    return option?.utc ? moment.utc(date).format('DD/MM/YY \u2022 h:m a') : moment(date).format('DD/MM/YY \u2022 h:m a');
+  };
 
   const handleClickCard = (uuid: string) => {
-    onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid })
-  }
+    onNavigationRedirect &&
+      onNavigationRedirect('OrderDetails', { orderId: uuid });
+  };
 
-  const Order = ({ order, index }: { order: any, index: number }) => (
+  const Order = ({ order, index }: { order: any; index: number }) => (
     <React.Fragment>
       <Card
         isMiniCard={configs?.google_maps_api_key?.value}
         onPress={() => handleClickCard(order?.uuid)}
-      >
-        {!!(configs?.google_maps_api_key?.value) && (
+        activeOpacity={0.7}>
+        {/* {!!(configs?.google_maps_api_key?.value) && (
           <Map>
             <OIcon
               url={getGoogleMapImage(order?.business?.location, configs?.google_maps_api_key?.value)}
@@ -40,83 +55,88 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
               style={{resizeMode: 'cover', borderTopRightRadius: 24, borderTopLeftRadius: 24}}
             />
           </Map>
-        )}
+        )} */}
         <Information>
           {!!order.business?.logo && (
             <Logo>
-              <OIcon url={optimizeImage(order.business?.logo, 'h_300,c_limit')} style={styles.logo} />
+              <OIcon
+                url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
+                style={styles.logo}
+              />
             </Logo>
           )}
           <OrderInformation>
             <BusinessInformation>
-              <OText size={16}>{order.business?.name}</OText>
+              <OText size={12} lineHeight={18} weight={600} numberOfLines={1} ellipsizeMode={'tail'}>
+                {order.business?.name}
+              </OText>
               <View style={styles.orderNumber}>
-                <OText size={12} space color={colors.textSecondary}>{t('ORDER_NUMBER', 'Order No.')}</OText>
-                <OText size={12} color={colors.textSecondary}>{order.id}</OText>
+                <OText size={10} space color={colors.textSecondary}>
+                  {t('ORDER_NO', 'Order No') + '.'}
+                </OText>
+                <OText size={10} color={colors.textSecondary}>
+                  {order.id + ` \u2022 `}
+                </OText>
+                <OText size={10} color={colors.textSecondary}>
+                  {order?.delivery_datetime_utc
+                    ? formatDate(order?.delivery_datetime_utc)
+                    : formatDate(order?.delivery_datetime, { utc: false })}
+                </OText>
               </View>
-              <OText size={12} color={colors.textSecondary}>{order?.delivery_datetime_utc
-                ? parseDate(order?.delivery_datetime_utc)
-                : parseDate(order?.delivery_datetime, { utc: false })}</OText>
+              {/* {order?.status !== 0 && ( */}
+              <OText
+                color={colors.primary}
+                size={10}
+                lineHeight={15}
+                weight={400}
+                numberOfLines={2}>
+                {getOrderStatus(order.status)?.value}
+              </OText>
+              {/* )} */}
             </BusinessInformation>
             <Price>
-              <OText size={16}>{parsePrice(order?.summary?.total || order?.total)}</OText>
-              {order?.status !== 0 && (
-                <OText color={colors.primary} size={12} numberOfLines={2}>{getOrderStatus(order.status)?.value}</OText>
-              )}
+              <OText size={12} lineHeight={18}>
+                {parsePrice(order?.summary?.total || order?.total)}
+              </OText>
             </Price>
           </OrderInformation>
         </Information>
       </Card>
-      {pagination?.totalPages && pagination?.currentPage < pagination?.totalPages && index === (10 * pagination?.currentPage) - 1 && (
-        <Card
-          style={{ ...styles.loadOrders, height: configs?.google_maps_api_key?.value ? 200 : 100 }}
-          onPress={loadMoreOrders}
-        >
-          <OButton
-            bgColor={colors.white}
-            textStyle={{ color: colors.primary, fontSize: 20 }}
-            text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-            borderColor={colors.white}
-            style={{ paddingLeft: 30, paddingRight: 30 }}
-            onClick={loadMoreOrders}
-          />
-        </Card>
-      )}
     </React.Fragment>
-  )
+  );
 
   return (
-    <ActiveOrdersContainer
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-      horizontal
-      isMiniCards={configs?.google_maps_api_key?.value}
-    >
-      {orders.length > 0 && (
-        orders.map((order: any, index: any) => (
-          <Order
-            key={order?.id || order?.uuid}
-            order={order}
-            index={index}
-          />
-        ))
-      )}
-    </ActiveOrdersContainer>
-  )
-}
+    <>
+      <ActiveOrdersContainer isMiniCards={configs?.google_maps_api_key?.value}>
+        {orders.length > 0 &&
+          orders.map((order: any, index: any) => (
+            <Order key={order?.id || order?.uuid} order={order} index={index} />
+          ))}
+      </ActiveOrdersContainer>
+      <View
+        style={{
+          height: 8,
+          backgroundColor: colors.backgroundGray100,
+          marginHorizontal: -40,
+        }}
+      />
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   logo: {
-    borderRadius: 10,
-    width: 75,
-    height: '100%'
+    borderRadius: 7.6,
+    width: 64,
+    height: 64,
   },
   orderNumber: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginVertical: 3,
   },
   loadOrders: {
     justifyContent: 'center',
     alignItems: 'center',
-    minWidth: 230
-  }
-})
+    minWidth: 230,
+  },
+});

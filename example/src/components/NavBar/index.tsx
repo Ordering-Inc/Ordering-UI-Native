@@ -47,7 +47,8 @@ interface Props {
   btnStyle?: TextStyle,
   style?: ViewStyle,
   titleWrapStyle?: ViewStyle,
-  paddingTop?: number
+  paddingTop?: number,
+  isVertical?: boolean
 }
 
 const NavBar = (props: Props) => {
@@ -55,12 +56,12 @@ const NavBar = (props: Props) => {
     props.navigation.navigate('Supports', {});
   }
   return (
-    <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
+    <Wrapper style={{ paddingTop: props.paddingTop, ...{flexDirection: props.isVertical ? 'column' : 'row', alignItems: props.isVertical ? 'flex-start' : 'center'}, ...props.style }}>
       <OButton
         imgLeftSrc={props.leftImg || images.general.arrow_left}
         imgRightSrc={null}
-        style={{ ...btnBackArrow, ...props.btnStyle }}
-        onClick={props.onActionLeft}
+        style={{ ...btnBackArrow, ...props.btnStyle, ...props.isVertical ? {paddingStart: 0} : {} }}
+        onClick={props?.onActionLeft}
       />
       <TitleTopWrapper>
         {props.withIcon
@@ -77,15 +78,16 @@ const NavBar = (props: Props) => {
           )
           : null
         }
-        <TitleWrapper style={{...props.titleWrapStyle}}>
+        <TitleWrapper style={{...{paddingStart: props.isVertical ? 0 : 10}, ...props.titleWrapStyle}}>
           <OText
-            size={22}
+            size={24}
+				lineHeight={36}
             weight={'600'}
             style={
               {
                 textAlign: props.titleAlign ? props.titleAlign : 'center',
                 marginRight: props.showCall ? 0 : 40,
-                color: props.titleColor || 'black',
+                color: props.titleColor || colors.textNormal,
                 paddingHorizontal: props.titleAlign == 'left' ? 12 : 0,
                 ...props.titleStyle
               }
