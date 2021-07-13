@@ -1,16 +1,14 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { Home as HomePage } from '../components/Home';
-import { useLanguage } from 'ordering-components/native';
 import { colors } from '../theme.json';
 
-export const Home = ({navigation}: any) => {
-  const [, t] = useLanguage();
+export const Home = (props: any) => {
   const homeProps = {
-    navigation,
+    ...props,
     onNavigationRedirect: (page: string, params: any) => {
       if (!page) return
-      navigation.navigate(page, params);
+      props.navigation.navigate(page, params);
     },
   }
 

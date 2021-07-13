@@ -130,11 +130,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }
 
   const handleArrowBack: any = () => {
-    if (isFromRoot) {
-      navigation.navigate('MyAccount');
-      return
-    }
-    if (!isFromCheckout && !goToBusinessList) {
+    if ((!isFromCheckout && !goToBusinessList) || isFromRoot) {
       navigation?.canGoBack() && navigation.goBack();
       return
     }

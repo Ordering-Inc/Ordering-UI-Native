@@ -18,6 +18,8 @@ import RootNavigator from './navigators/RootNavigator';
 import { Toast } from './components/shared/OToast';
 import Alert from './providers/AlertProvider'
 
+import { navigationRef } from './navigators/NavigationRef';
+
 import settings from './config.json';
 import theme from './theme.json';
 
@@ -117,7 +119,7 @@ const DeliveryApp = () => {
   return (
     <OrderingProvider settings={settings} Alert={Alert}>
       <ToastProvider>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <RootNavigator />
         </NavigationContainer>
         <Toast />
