@@ -21,5 +21,6 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+      <uses-feature android:name="android.hardware.telephony" android:required="false" />
     </application>
 </manifest>
