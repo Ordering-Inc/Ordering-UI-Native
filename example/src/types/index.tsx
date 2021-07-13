@@ -148,11 +148,14 @@ export interface BusinessProductsListingParams {
   featuredProducts: boolean;
   handleChangeSearch?: any;
   categorySelected: any;
-  handleChangeCategory: (value: any) => {};
   handleSearchRedirect: any;
   errorQuantityProducts?: boolean;
   header?: any;
   logo?: any;
+  productModal?: any;
+  handleChangeCategory: (value: any) => {};
+  setProductLogin?: () => {};
+  updateProductModal?: (value: any) => {}
 }
 export interface BusinessBasicInformationParams {
   businessState?: any;

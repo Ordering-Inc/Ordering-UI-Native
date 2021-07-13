@@ -31,6 +31,7 @@ const RootNavigator = () => {
   const [orderStatus, { changeMoment }] = useOrder();
   const [{ configs, loading: configsLoading }] = useConfig();
   const [loaded, setLoaded] = useState(false);
+  const [productLogin, setProductLogin] = useState({})
   const [oneSignalState, setOneSignalState] = useState<any>({
     notification_app: settings.notification_app
   });
@@ -151,6 +152,11 @@ const RootNavigator = () => {
                   name="Login"
                   component={Login}
                   options={{ headerShown: false }}
+                  listeners={{
+                    state: (e: any) => {
+                      setProductLogin(e.data.state.routes.find((object: any) => object?.params?.product)?.params?.product)
+                    }
+                  }}
                   initialParams={{ notification_state: oneSignalState }}
                 />
                 <Stack.Screen
@@ -178,6 +184,7 @@ const RootNavigator = () => {
                   name='Business'
                   component={BusinessProductsList}
                   options={{ headerShown: false }}
+                  initialParams={{ setProductLogin }}
                 />
                 <Stack.Screen
                   name='MomentOption'
@@ -191,6 +198,7 @@ const RootNavigator = () => {
                   name='MyAccount'
                   component={HomeNavigator}
                   options={{ headerShown: false }}
+                  initialParams={{ productLogin }}
                 />
               </>
             )}
