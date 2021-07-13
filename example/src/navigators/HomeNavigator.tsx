@@ -85,7 +85,7 @@ const HomeNavigator = (e : any) => {
                 </>
               ) : (
                 <>
-                  {!!Object.keys(e?.route?.params?.productLogin)?.length && (
+                  {!!Object.keys(e?.route?.params?.productLogin || {})?.length && (
                     <Stack.Screen
                       name="BusinessAfterLogin"
                       component={BusinessProductsList}
