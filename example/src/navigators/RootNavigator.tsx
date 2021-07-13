@@ -19,21 +19,23 @@ import MomentOption from '../pages/MomentOption';
 import Splash from '../pages/Splash';
 import BusinessList from '../pages/BusinessesListing';
 import BusinessProductsList from '../pages/BusinessProductsList';
-import OrderDetails from '../pages/OrderDetails';
 import HomeNavigator from './HomeNavigator';
 import settings from '../config.json';
+import * as RootNavigation from '../navigators/NavigationRef';
+import { _retrieveStoreData } from '../providers/StoreUtil';
 
 const Stack = createStackNavigator();
 
 const RootNavigator = () => {
-  const [{ auth, loading }] = useSession();
+  const [{ auth, loading: sessionLoading }] = useSession();
   const [orderStatus, { changeMoment }] = useOrder();
   const [{ configs, loading: configsLoading }] = useConfig();
   const [loaded, setLoaded] = useState(false);
   const [oneSignalState, setOneSignalState] = useState<any>({
     notification_app: settings.notification_app
   });
-  const [notificationData, setNotificationData] = useState<any>({});
+
+  const [isPushLoading, setIsPushLoading] = useState({ loading: true })
 
   const validDate = (date : any) => {
     if (!date) return
@@ -44,11 +46,10 @@ const RootNavigator = () => {
   };
 
   const oneSignalSetup = async () => {
+    setIsPushLoading({ loading: true });
     OneSignal.setLogLevel(6, 0);
 
-    if (configs?.onesignal_orderingapp_id?.value) {
-      OneSignal.setAppId(configs?.onesignal_orderingapp_id?.value);
-    }
+    OneSignal.setAppId(configs?.onesignal_orderingapp_id?.value);
 
     if (Platform.OS === 'ios') {
       OneSignal.promptForPushNotificationsWithUserResponse(response => {
@@ -58,9 +59,9 @@ const RootNavigator = () => {
 
     OneSignal.setNotificationOpenedHandler(({ notification }: any) => {
       if (notification?.additionalData?.order_uuid) {
-        setNotificationData({
-          ...notificationData,
-          order_uuid: notification?.additionalData?.order_uuid
+        RootNavigation.navigate('OrderDetails', {
+          orderId: notification?.additionalData?.order_uuid,
+          isFromRoot: true
         });
       }
     });
@@ -83,19 +84,20 @@ const RootNavigator = () => {
       notification_app: settings.notification_app
     }
     setOneSignalState(data);
+    setIsPushLoading({ loading: false });
   };
 
   useEffect(() => {
-    if (!loaded && !orderStatus.loading) {
+    if (!loaded && !orderStatus.loading && !isPushLoading.loading) {
       setLoaded(true)
     }
-  }, [orderStatus])
+  }, [orderStatus, isPushLoading])
 
   useEffect(() => {
-    if (!loading) {
+    if (!sessionLoading && !isPushLoading.loading && !auth) {
       setLoaded(!auth)
     }
-  }, [loading])
+  }, [sessionLoading, isPushLoading])
 
   useEffect(() => {
     const _currentDate = dayjs.utc(validDate(orderStatus.options?.moment)).local()
@@ -115,7 +117,13 @@ const RootNavigator = () => {
   }, [orderStatus.options?.moment])
 
   useEffect(() => {
-    oneSignalSetup();
+    if (configsLoading) return
+    if (configs?.onesignal_orderingapp_id?.value) {
+      oneSignalSetup();
+    }
+    if (!!!configs?.onesignal_orderingapp_id?.value) {
+      setIsPushLoading({ loading: false });
+    }
   }, [configsLoading]);
 
   return (
@@ -179,14 +187,6 @@ const RootNavigator = () => {
               </>
             ) : (
               <>
-                {notificationData?.order_uuid && (
-                  <Stack.Screen
-                    name="OrderDetails"
-                    component={OrderDetails}
-                    options={{ headerShown: false }}
-                    initialParams={{ orderId: notificationData?.order_uuid, isFromRoot: true }}
-                  />
-                )}
                 <Stack.Screen
                   name='MyAccount'
                   component={HomeNavigator}
