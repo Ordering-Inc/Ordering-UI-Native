@@ -3,7 +3,7 @@ import { useLanguage } from 'ordering-components/native';
 import { _setStoreData } from '../../providers/StoreUtil';
 
 import { OButton, OInput, OText } from '../shared';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { colors } from '../../theme.json';
 import { ToastType, useToast } from '../../providers/ToastProvider';
@@ -22,7 +22,7 @@ const CustomerName = (props: Props): React.ReactElement => {
   } = props;
 
   const [, t] = useLanguage();
-  const {control, handleSubmit, formState: {errors}} = useForm();
+  const { control, handleSubmit, errors } = useForm();
   const {showToast} = useToast();
   const [orientationState] = useDeviceOrientation();
 
@@ -83,7 +83,7 @@ const CustomerName = (props: Props): React.ReactElement => {
 
         <Controller
           control={control}
-          render={(p: any) => (
+          render={({ onChange, value }: any) => (
             <OInput
               placeholder={t('WHITE_YOUR_NAME', 'White your name')}
               style={{
@@ -92,10 +92,10 @@ const CustomerName = (props: Props): React.ReactElement => {
                   ? orientationState?.dimensions.width - 40
                   : orientationState?.dimensions.width * 0.5,
               }}
-              value={p.field.value}
+              value={value}
               autoCapitalize="words"
               autoCorrect={false}
-              onChange={(val: any) => p.field.onChange(val)}
+              onChange={(val: any) => onChange(val)}
             />
           )}
           name="name"
@@ -103,7 +103,15 @@ const CustomerName = (props: Props): React.ReactElement => {
             required: t(
               'VALIDATION_ERROR_CUSTOMER_NAME_REQUIRED',
               'The field Customer Name is required',
-            ).replace('_attribute_', t('CUSTOMER_NAME', 'Customer Name'))
+            ).replace('_attribute_', t('CUSTOMER_NAME', 'Customer Name')),
+            pattern: {
+              value: /^[a-zA-Z áéíóúüñçÁÉÍÓÚÜÑÇ]+$/i,
+              message: t(
+                'INVALID_ERROR_NAME',
+                'Invalid name',
+              ).replace('_attribute_', t('NAME', 'Name')),
+            }
+          
           }}
           defaultValue=""
         />
