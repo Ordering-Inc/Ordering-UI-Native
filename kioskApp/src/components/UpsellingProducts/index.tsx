@@ -1,6 +1,6 @@
 import React,{ useState, useEffect } from 'react'
 import Spinner from 'react-native-loading-spinner-overlay';
-import { Dimensions, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import {
   UpsellingPage as UpsellingPageController,
   useUtils,
@@ -19,7 +19,7 @@ import { ProductForm } from '../ProductForm';
 import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
 import GridContainer from '../../layouts/GridContainer';
-import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from "../../hooks/device_orientation_hook";
+import { PORTRAIT, useDeviceOrientation } from "../../hooks/device_orientation_hook";
 
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const {
@@ -108,7 +108,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                               color={colors.primary}
                               weight="500"
                             >
-                              {`$${product.price}`}
+                              {parsePrice(product.price)}
                             </OText>
 
                             <OText
@@ -116,7 +116,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                               size={12}
                               style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
                             >
-                              {product?.offer_price ? `  $${product?.offer_price}  ` : ''}
+                              {product?.offer_price ? `  ${parsePrice(product?.offer_price)}  ` : ''}
                             </OText>
                           </OText>
                         )}

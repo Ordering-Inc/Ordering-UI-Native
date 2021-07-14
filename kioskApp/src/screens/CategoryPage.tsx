@@ -150,7 +150,7 @@ const CategoryPage = (props: any): React.ReactElement => {
                   });
                 }}
                 {...(!!product?.description && { description: product?.description } )}
-                {...(!!product?.price && { price: `$${product?.price}` } )}
+                {...(!!product?.price && { price: parsePrice(product?.price) } )}
                 {...(product?.in_offer && { prevPrice: `$${product?.offer_price}` } )}
               />
             ))}

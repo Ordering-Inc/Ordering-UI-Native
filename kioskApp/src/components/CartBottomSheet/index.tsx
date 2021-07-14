@@ -125,7 +125,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
       >
         <OButton
           text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-            !openUpselling !== canOpenUpselling ? `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`: t('LOADING', 'Loading')
+            !openUpselling !== canOpenUpselling ? `${t('CONFIRM_THIS', 'Confirm this')} ${parsePrice(cart?.total)} ${t('ORDER', 'order')}`: t('LOADING', 'Loading')
           ) : !cart?.valid_address ? (
             `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
           ) : (

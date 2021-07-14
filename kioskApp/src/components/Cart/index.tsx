@@ -341,7 +341,7 @@ const CartUI = (props: any) => {
               }}>
                 <OButton
                   text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-                    `${t('CONFIRM_THIS', 'Confirm this')} $${cart?.total} ${t('ORDER', 'order')}`
+                    `${t('CONFIRM_THIS', 'Confirm this')} ${parsePrice(cart?.total)} ${t('ORDER', 'order')}`
                   ) : !cart?.valid_address ? (
                     `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
                   ) : (

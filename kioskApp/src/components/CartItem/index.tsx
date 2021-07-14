@@ -1,8 +1,7 @@
 import React from 'react';
-import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useLanguage } from 'ordering-components/native';
+import { View } from 'react-native';
+import { useLanguage, useUtils } from 'ordering-components/native';
 
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { StyledCartItem } from './styles';
 import { OButton, OImage, OText } from '../shared';
 import { IMAGES } from '../../config/constants';
@@ -11,13 +10,10 @@ import { Product } from '../../types';
 import QuantityControl from '../QuantityControl';
 import { LANDSCAPE, useDeviceOrientation } from '../../hooks/device_orientation_hook';
 
-const _dim = Dimensions.get('window');
-
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen")
-
 const CartItem = (props: CartItemProps) => {
 	const [, t] = useLanguage();
 	const [orientationState] = useDeviceOrientation();
+	const [{ parsePrice }] = useUtils();
 
 	const {
     isCartPending,
@@ -76,7 +72,7 @@ const CartItem = (props: CartItemProps) => {
 					weight="700"
 					color={colors.primary}
 				>
-					{`$${product?.price}`}
+					{parsePrice(product?.price)}
 				</OText>
 
 				<QuantityControl
