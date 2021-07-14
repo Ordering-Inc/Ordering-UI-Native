@@ -13,7 +13,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { OrderingProvider } from 'ordering-components/native';
 import RNBootSplash from "react-native-bootsplash";
 
-import { ToastProvider } from './providers/ToastProvider';
 import RootNavigator from './navigators/RootNavigator';
 import { Toast } from './components/shared/OToast';
 import Alert from './providers/AlertProvider'
@@ -126,12 +125,10 @@ const DeliveryApp = () => {
 
   return (
     <OrderingProvider settings={settings} Alert={Alert}>
-      <ToastProvider>
         <NavigationContainer ref={navigationRef}>
           <RootNavigator />
         </NavigationContainer>
         <Toast />
-      </ToastProvider>
     </OrderingProvider>
   );
 };
