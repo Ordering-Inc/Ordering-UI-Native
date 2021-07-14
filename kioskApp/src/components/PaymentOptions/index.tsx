@@ -99,7 +99,7 @@ const PaymentOptionsUI = (props: any) => {
   }
 
   const cardStyle = {
-    width: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.width : orientationState?.dimensions?.width * 0.47,
+    width: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.width - 40 : orientationState?.dimensions?.width * 0.47,
     height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.34 : orientationState?.dimensions?.height * 0.55,
   }
 
@@ -165,8 +165,8 @@ const PaymentOptionsUI = (props: any) => {
             )}
 
             <View style={{
-              width: orientationState?.orientation === LANDSCAPE ? orientationState?.dimensions?.width * 0.0016 : 0,
-              height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.018 : 0,
+              width: orientationState?.orientation === LANDSCAPE ? orientationState?.dimensions?.width * 0.0016 : 1,
+              height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.018 : 1,
             }} />
 
             {propsOfItems?.CASH_ID && (

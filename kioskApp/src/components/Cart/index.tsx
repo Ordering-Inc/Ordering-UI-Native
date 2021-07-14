@@ -24,6 +24,7 @@ import { IMAGES } from '../../config/constants';
 import { CouponControl } from '../CouponControl';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation} from "../../hooks/device_orientation_hook";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
 
 const CartUI = (props: any) => {
   const {
@@ -47,6 +48,7 @@ const CartUI = (props: any) => {
   const [openProduct, setModalIsOpen] = useState(false)
   const [curProduct, setCurProduct] = useState<any>(null)
   const [orientationState] = useDeviceOrientation();
+  const { hideCartBottomSheet } = useCartBottomSheet();
 
   const selectedOrderType = orderState?.options?.type;
 
@@ -74,6 +76,7 @@ const CartUI = (props: any) => {
       const result = await clearCart(cart?.uuid)
       setIsCartsLoading && setIsCartsLoading(false)
       navigation?.pop(2)
+      hideCartBottomSheet()
     } catch (error) {
       setIsCartsLoading && setIsCartsLoading(false)
     }

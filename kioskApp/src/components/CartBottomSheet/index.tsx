@@ -20,6 +20,7 @@ import { Cart as TypeCart } from '../../types';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
+import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
 
 const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | null => {
 	const {
@@ -43,6 +44,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
   const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
+  const { hideCartBottomSheet } = useCartBottomSheet();
 
   const selectedOrderType = orderState?.options?.type;
 
@@ -67,7 +69,8 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
     try {
       setIsCartsLoading && setIsCartsLoading(true)
       const result = await clearCart(cart?.uuid)
-			setIsCartsLoading && setIsCartsLoading(false)
+      setIsCartsLoading && setIsCartsLoading(false)
+      hideCartBottomSheet()
     } catch (error) {
       setIsCartsLoading && setIsCartsLoading(false)
     }

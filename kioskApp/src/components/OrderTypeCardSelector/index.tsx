@@ -36,7 +36,7 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
   const _selected: number | undefined = defaultValue || typeSelected;
 
   const cardStyle = {
-    width: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.width : orientationState?.dimensions?.width * 0.47,
+    width: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.width - 40 : orientationState?.dimensions?.width * 0.47,
     height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.34 : orientationState?.dimensions?.height * 0.55,
   }
 
@@ -82,8 +82,8 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
           />
 
           <View style={{
-            width: orientationState?.orientation === LANDSCAPE ? orientationState?.dimensions?.width * 0.0016 : 0,
-            height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.018 : 0,
+            width: orientationState?.orientation === LANDSCAPE ? orientationState?.dimensions?.width * 0.0016 : 1,
+            height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.018 : 1,
           }} />
 
           <OptionCard
