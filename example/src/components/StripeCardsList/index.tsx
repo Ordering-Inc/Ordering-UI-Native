@@ -18,10 +18,10 @@ import {
   OSItemContent,
   OSItemActions,
 } from '../PaymentOptionStripe/styles';
-import { colors } from '../../theme.json';
 
 const StripeCardsListUI = (props: any) => {
   const {
+    theme,
     onSelectCard,
     deleteCard,
     cardSelected,
@@ -82,13 +82,13 @@ const StripeCardsListUI = (props: any) => {
                     <MaterialCommunityIcons
                       name='radiobox-marked'
                       size={24}
-                      color={colors.primary}
+                      color={theme.colors.primary}
                     />
                   ) : (
                     <MaterialCommunityIcons
                       name='radiobox-blank'
                       size={24}
-                      color={colors.primary}
+                      color={theme.colors.primary}
                     />
                   )}
                 </View>
@@ -110,7 +110,7 @@ const StripeCardsListUI = (props: any) => {
                   <MaterialCommunityIcons
                     name='trash-can-outline'
                     size={28}
-                    color={colors.primary}
+                    color={theme.colors.primary}
                   />
                 </OAlert>
               </OSItemActions>

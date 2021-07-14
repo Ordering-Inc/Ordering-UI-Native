@@ -5,10 +5,10 @@ import {
   WrapHeader,
 } from './styles'
 import { OText } from '../shared'
-import { colors } from '../../theme.json'
 
 const ProductOptionUI = (props: any) => {
   const {
+    theme,
     children,
     option,
     error
@@ -26,8 +26,8 @@ const ProductOptionUI = (props: any) => {
   }
 
   return (
-    <Container style={{color: error ? 'orange' : colors.white}}>
-      <WrapHeader>
+    <Container style={{color: error ? 'orange' : theme.colors.white}}>
+      <WrapHeader colors={theme.colors}>
         <OText size={16}>{option.name}</OText>
         <OText color= '#A52121'>{maxMin}</OText>
       </WrapHeader>

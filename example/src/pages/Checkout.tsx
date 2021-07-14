@@ -1,6 +1,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { Checkout } from '../components/Checkout';
+import theme from '../theme.json';
 
 import { initStripe, useConfirmPayment  } from '@stripe/stripe-react-native';
 import styled from 'styled-components/native';
@@ -22,6 +23,7 @@ export const CheckoutPage = (props: any) => {
   const { confirmPayment, loading: confirmPaymentLoading } = useConfirmPayment();
   const checkoutProps = {
     ...props,
+    theme,
     cartUuid: props?.cartUuid || props.route?.params?.cartUuid,
     businessLogo: props.route?.params?.businessLogo,
     businessName: props.route?.params?.businessName,

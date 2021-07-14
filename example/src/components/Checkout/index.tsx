@@ -15,7 +15,6 @@ import {
 } from 'ordering-components/native';
 
 import { OText, OButton, OIcon } from '../shared';
-import { colors, images } from '../../theme.json';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -36,7 +35,6 @@ import {
   ChPaymethods,
   ChDriverTips,
   ChCart,
-  ChPlaceOrderBtn,
   ChErrors,
   ChBusinessDetails,
   ChUserDetails
@@ -66,6 +64,7 @@ const manageErrorsToShow = (array = []) => {
 
 const CheckoutUI = (props: any) => {
   const {
+    theme,
     navigation,
     cart,
     errors,
@@ -80,6 +79,24 @@ const CheckoutUI = (props: any) => {
     businessName,
     cartTotal
   } = props
+
+  const style = StyleSheet.create({
+    btnBackArrow: {
+      borderWidth: 0,
+      backgroundColor: theme.colors.white,
+      borderColor: theme.colors.white,
+      shadowColor: theme.colors.white,
+      display: 'flex',
+      justifyContent: 'flex-start',
+      paddingLeft: 0,
+    },
+    paddSection: {
+      padding: 20
+    },
+    paddSectionH: {
+      paddingHorizontal: 20
+    }
+  })
 
   const { showToast } = useToast();
   const [, t] = useLanguage();
@@ -169,7 +186,8 @@ const CheckoutUI = (props: any) => {
         <ChContainer>
           <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
             <OButton
-              imgLeftSrc={images.general.arrow_left}
+              colors={theme.colors}
+              imgLeftSrc={theme.images.general.arrow_left}
               imgRightSrc={null}
               style={style.btnBackArrow}
               onClick={() => navigation?.canGoBack() && navigation.goBack()}
@@ -186,7 +204,7 @@ const CheckoutUI = (props: any) => {
                 {!cartState.loading && cart?.status === 2 && (
                   <OText
                     style={{ textAlign: 'center' }}
-                    color={colors.error}
+                    color={theme.colors.error}
                     size={17}
                   >
                     {t('CART_STATUS_PENDING_MESSAGE_APP', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the app')}
@@ -197,8 +215,9 @@ const CheckoutUI = (props: any) => {
           )}
 
           <ChSection>
-            <ChTotal>
+            <ChTotal colors={theme.colors}>
               <OIcon
+                colors={theme.colors}
                 url={businessLogo || businessDetails?.business?.logo}
                 width={80}
                 height={80}
@@ -215,7 +234,7 @@ const CheckoutUI = (props: any) => {
             </ChTotal>
           </ChSection>
           <ChSection style={style.paddSection}>
-            <ChAddress>
+            <ChAddress colors={theme.colors}>
               {(businessDetails?.loading || cartState.loading) ? (
                 <Placeholder Animation={Fade}>
                   <PlaceholderLine height={20} style={{ marginBottom: 50 }} />
@@ -237,8 +256,9 @@ const CheckoutUI = (props: any) => {
           <ChSection style={style.paddSectionH}>
             <ChMoment>
               <CHMomentWrapper
-                onPress={() => navigation.navigate('MomentOption')}
+                colors={theme.colors}
                 disabled={loading}
+                onPress={() => navigation.navigate('MomentOption')}
               >
                 <MaterialCommunityIcon
                   name='clock-outline'
@@ -257,7 +277,7 @@ const CheckoutUI = (props: any) => {
           </ChSection>
 
           <ChSection style={style.paddSection}>
-            <ChUserDetails>
+            <ChUserDetails colors={theme.colors}>
               {cartState.loading ? (
                 <Placeholder Animation={Fade}>
                   <PlaceholderLine height={20} width={70} />
@@ -373,14 +393,14 @@ const CheckoutUI = (props: any) => {
 
           {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
             <ChSection style={style.paddSectionH}>
-              <ChPaymethods>
+              <ChPaymethods colors={theme.colors}>
                 <OText size={20}>
                   {t('PAYMENT_METHOD', 'Payment Method')}
                 </OText>
                 {!cartState.loading && cart?.status === 4 && (
                   <OText
                     style={{ textAlign: 'center', marginTop: 20 }}
-                    color={colors.error}
+                    color={theme.colors.error}
                     size={17}
                   >
                     {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
@@ -432,7 +452,7 @@ const CheckoutUI = (props: any) => {
                 {!cart?.valid_address && cart?.status !== 2 && (
                   <OText
                     style={{ textAlign: 'center' }}
-                    color={colors.error}
+                    color={theme.colors.error}
                     size={14}
                   >
                     {t('INVALID_CART_ADDRESS', 'Selected address is invalid, please select a closer address.')}
@@ -442,7 +462,7 @@ const CheckoutUI = (props: any) => {
                 {!paymethodSelected && cart?.status !== 2 && cart?.valid && (
                   <OText
                     style={{ textAlign: 'center' }}
-                    color={colors.error}
+                    color={theme.colors.error}
                     size={14}
                   >
                     {t('WARNING_NOT_PAYMENT_SELECTED', 'Please, select a payment method to place order.')}
@@ -452,7 +472,7 @@ const CheckoutUI = (props: any) => {
                 {!cart?.valid_products && cart?.status !== 2 && (
                   <OText
                     style={{ textAlign: 'center' }}
-                    color={colors.error}
+                    color={theme.colors.error}
                     size={14}
                   >
                     {t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
@@ -487,24 +507,6 @@ const CheckoutUI = (props: any) => {
     </>
   )
 }
-
-const style = StyleSheet.create({
-  btnBackArrow: {
-    borderWidth: 0,
-    backgroundColor: colors.white,
-    borderColor: colors.white,
-    shadowColor: colors.white,
-    display: 'flex',
-    justifyContent: 'flex-start',
-    paddingLeft: 0,
-  },
-  paddSection: {
-    padding: 20
-  },
-  paddSectionH: {
-    paddingHorizontal: 20
-  }
-})
 
 export const Checkout = (props: any) => {
   const {

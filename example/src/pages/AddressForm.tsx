@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 import { AddressForm as AddressFormController } from '../components/AddressForm'
 import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 import { _retrieveStoreData } from '../providers/StoreUtil';
-
+import theme from '../theme.json';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
@@ -13,8 +13,9 @@ const KeyboardView = styled.KeyboardAvoidingView`
 
 const AddressForm = ({ navigation, route }: any) => {
   const AddressFormProps = {
-    navigation: navigation,
-    route: route,
+    navigation,
+    route,
+    theme,
     address: route?.params?.address,
     addressId: route?.params?.address?.id,
     isEditing: route?.params?.isEditing,

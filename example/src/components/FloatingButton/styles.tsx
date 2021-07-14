@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme.json'
+
 export const Container = styled.View`
   position: absolute;
   flex: 1;
@@ -7,7 +7,7 @@ export const Container = styled.View`
   left: 0;
   padding: 10px;
   border-top-width: 1px;
-  border-color: ${colors.lightGray};
+  border-color: ${({ colors }: any) => colors.lightGray};
   width: 100%;
   display: flex;
   align-items: center;

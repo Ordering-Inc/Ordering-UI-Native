@@ -2,28 +2,7 @@ import * as React from 'react';
 import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps, I18nManager} from 'react-native';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
-import { colors } from '../../theme.json';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-
-const Wrapper = styled.View`
-  background-color: ${colors.backgroundLight};
-  border-radius: 25px;
-  border-width: 1px;
-  padding-horizontal: 16px;
-  height: 50px;
-  flex-direction: row;
-  align-items: center;
-  flex: 1;
-  justify-content: center;
-`;
-const Input = styled.TextInput`
-  flex-grow: 1;
-  flex: 1;
-  min-height: 30px;
-  font-size: 15px;
-  font-family: 'Poppins-Regular';
-  text-align: ${I18nManager.isRTL ? 'right' : 'left'};
-`;
 
 interface Props extends TextInputProps {
   bgColor?: string;
@@ -48,10 +27,37 @@ interface Props extends TextInputProps {
   multiline?: boolean;
   vertorIcon?: string;
   vectorIconColor?: string;
-  forwardRef?: any
+  forwardRef?: any;
+  autoCapitalize?: any;
+  autoCompleteType?: any;
+  autoCorrect?: any;
+  returnKeyType?: any;
+  onSubmitEditing?: any;
+  blurOnSubmit?: any;
+  colors: any;
 }
 
 const OInput = (props: Props): React.ReactElement => {
+  const Wrapper = styled.View`
+    background-color: ${props.colors.backgroundLight};
+    border-radius: 25px;
+    border-width: 1px;
+    padding-horizontal: 16px;
+    height: 50px;
+    flex-direction: row;
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+  `;
+  const Input = styled.TextInput`
+    flex-grow: 1;
+    flex: 1;
+    min-height: 30px;
+    font-size: 15px;
+    font-family: 'Poppins-Regular';
+    text-align: ${I18nManager.isRTL ? 'right' : 'left'};
+  `;
+
   return (
     <Wrapper
       style={{
@@ -61,6 +67,7 @@ const OInput = (props: Props): React.ReactElement => {
       }}>
       {props.icon ? (
         <OIcon
+          colors={props.colors}
           src={props.icon}
           color={props.iconColor}
           width={20}
@@ -91,6 +98,7 @@ const OInput = (props: Props): React.ReactElement => {
       />
       {props.iconRight && (
         <OIcon
+          colors={props.colors}
           src={props.iconRight}
           color={props.iconRightColor}
           width={20}

@@ -11,13 +11,13 @@ import {
 } from 'ordering-components/native';
 
 import { OText } from '../shared';
-import { colors } from '../../theme.json';
 
 import { UserFormDetailsUI } from '../UserFormDetails';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 const UserDetailsUI = (props: any) => {
   const {
+    theme,
     isEdit,
     formState,
     cleanFormState,
@@ -75,14 +75,14 @@ const UserDetailsUI = (props: any) => {
                 <MaterialIcon
                   name='pencil-outline'
                   size={28}
-                  color={colors.editColor}
+                  color={theme.colors.editColor}
                   style={{ marginBottom: 10, marginLeft: 5 }}
                   onPress={() => toggleIsEdit()}
                 />
               ) : (
                 <MaterialIcon
                   name='cancel'
-                  color={colors.cancelColor}
+                  color={theme.colors.cancelColor}
                   size={24}
                   style={{ marginBottom: 5, marginLeft: 5 }}
                   onPress={() => toggleEditState()}
@@ -114,7 +114,7 @@ const UserDetailsUI = (props: any) => {
                     {(userData?.country_phone_code) && `+${(userData?.country_phone_code)} `}{(userData?.cellphone)}
                   </OText>
                   {!!phoneUpdate && (
-                    <OText color={colors.error} style={{ textAlign: 'center' }}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
+                    <OText color={theme.colors.error} style={{ textAlign: 'center' }}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
                   )}
                 </>
               )}

@@ -5,11 +5,11 @@ import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 
 
 import { BusinessCategoriesTitle, BusinessCategories, Category, BCContainer } from './styles'
 import { OIcon, OText } from '../shared'
-import { colors,images } from '../../theme.json'
 import { BusinessTypeFilterParams } from '../../types'
 
 export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
   const {
+    theme,
     typesState,
     currentTypeSelected,
     handleChangeBusinessType,
@@ -26,19 +26,21 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
         <Category>
           {item.image ? (
             <OIcon
+              colors={theme.colors}
               url={item.image}
               style={styles.logo}
             />
           ) : (
             <OIcon
-              src={images.categories.all}
+              colors={theme.colors}
+              src={theme.images.categories.all}
               style={styles.logo}
             />
           )}
           <OText
             style={{ textAlign: 'center' }}
             size={20}
-            color={currentTypeSelected === item.id ? colors.primary : colors.textSecondary}
+            color={currentTypeSelected === item.id ? theme.colors.primary : theme.colors.textSecondary}
           >
             {t(`BUSINESS_TYPE_${item.name.replace(/\s/g, '_').toUpperCase()}`, item.name)}
           </OText>
@@ -77,7 +79,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
           <BusinessCategoriesTitle>
             <OText
               size={16}
-              color={colors.textSecondary}
+              color={theme.colors.textSecondary}
             >
               {t('BUSINESS_CATEGORIES', 'Business Categories')}
             </OText>
@@ -88,7 +90,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
               showsHorizontalScrollIndicator={false}
               data={typesState?.types}
               renderItem={renderTypes}
-              keyExtractor={type => type.name}
+              keyExtractor={(type: any) => type.name}
             />
           </BusinessCategories>
         </>

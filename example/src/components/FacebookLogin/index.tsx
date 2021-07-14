@@ -6,10 +6,10 @@ import { useLanguage, useSession, useApi } from 'ordering-components/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import { Container, FacebookButton } from './styles';
-import { colors } from '../../theme.json';
 
 export const FacebookLogin = (props: any) => {
   const {
+    theme,
     handleErrors,
     handleLoading,
     handleSuccessFacebookLogin,
@@ -90,7 +90,7 @@ export const FacebookLogin = (props: any) => {
         <Icon
           name="facebook"
           size={34}
-          color={colors.skyBlue}
+          color={theme.colors.skyBlue}
           style={style.fbBtn}
         />
         <Text style={style.textBtn}>

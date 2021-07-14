@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const WrapHeader = styled.View`
   position: relative;
@@ -51,7 +50,7 @@ export const ProductEditions = styled.View`
 
 export const SectionTitle = styled.View`
   padding: 15px 20px;
-  background-color: ${colors.paleGray};
+  background-color: ${({ colors }: any) => colors.paleGray};
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 `

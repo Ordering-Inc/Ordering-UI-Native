@@ -5,6 +5,7 @@ import { useOrder } from 'ordering-components/native';
 import { Platform } from 'react-native';
 import { CartContent } from '../components/CartContent';
 import { Container } from '../layouts/Container'
+import theme from '../theme.json';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
@@ -27,6 +28,7 @@ const CartList = (props: Props) => {
 
   const cartProps = {
     ...props,
+    theme,
     carts: cartsList,
     isOrderStateCarts: !!carts,
     onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params)

@@ -19,13 +19,13 @@ import {
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { CouponControl } from '../CouponControl';
 import { OModal, OText } from '../shared';
-import { colors } from '../../theme.json';
 import { ProductForm } from '../ProductForm';
 import { verifyDecimals } from '../../utils';
 
 
 const OrderSummaryUI = (props: any) => {
   const {
+    theme,
     cart,
     changeQuantity,
     getProductMax,
@@ -155,7 +155,7 @@ const OrderSummaryUI = (props: any) => {
                     <OText size={18} style={{ fontWeight: 'bold' }}>
                       {t('TOTAL', 'Total')}
                     </OText>
-                    <OText size={18} style={{ fontWeight: 'bold' }} color={colors.primary}>
+                    <OText size={18} style={{ fontWeight: 'bold' }} color={theme.colors.primary}>
                       {parsePrice(cart?.total)}
                     </OText>
                   </OSTable>

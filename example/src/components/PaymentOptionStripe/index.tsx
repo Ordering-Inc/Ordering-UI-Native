@@ -23,10 +23,10 @@ import {
   OSWrapper,
   OSActions
 } from './styles';
-import { colors } from '../../theme.json';
 
 const PaymentOptionStripeUI = (props: any) => {
   const {
+    theme,
     onSelectCard,
     onCancel,
     deleteCard,
@@ -59,13 +59,13 @@ const PaymentOptionStripeUI = (props: any) => {
               <MaterialCommunityIcons
                 name='radiobox-marked'
                 size={24}
-                color={colors.primary}
+                color={theme.colors.primary}
               />
             ) : (
               <MaterialCommunityIcons
                 name='radiobox-blank'
                 size={24}
-                color={colors.primary}
+                color={theme.colors.primary}
               />
             )}
           </View>
@@ -87,7 +87,7 @@ const PaymentOptionStripeUI = (props: any) => {
             <MaterialCommunityIcons
               name='trash-can-outline'
               size={28}
-              color={colors.primary}
+              color={theme.colors.primary}
             />
           </OAlert>
         </OSItemActions>
@@ -117,7 +117,7 @@ const PaymentOptionStripeUI = (props: any) => {
           showsHorizontalScrollIndicator={false}
           data={cardsList.cards}
           renderItem={renderCards}
-          keyExtractor={card => card.id?.toString()}
+          keyExtractor={(card: any) => card.id?.toString()}
           style={{ height: '65%', flexGrow: 0 }}
         />
       )}
@@ -125,9 +125,10 @@ const PaymentOptionStripeUI = (props: any) => {
       {token && !cardsList.loading && (
         <OSWrapper style={styles.bottom}>
           <OButton
+            colors={theme.colors}
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
-            bgColor={colors.backgroundGray}
-            borderColor={colors.backgroundGray}
+            bgColor={theme.colors.backgroundGray}
+            borderColor={theme.colors.backgroundGray}
             style={styles.btnAddStyle}
             textStyle={{color: 'white'}}
             imgRightSrc={null}
@@ -136,9 +137,10 @@ const PaymentOptionStripeUI = (props: any) => {
           <OSActions>
             <View style={{ width: '48%' }}>
               <OButton
+                colors={theme.colors}
                 text={t('CANCEL', 'Cancel')}
-                bgColor={colors.backgroundGray}
-                borderColor={colors.backgroundGray}
+                bgColor={theme.colors.backgroundGray}
+                borderColor={theme.colors.backgroundGray}
                 textStyle={{color: 'white'}}
                 style={styles.btnAction}
                 imgRightSrc={null}
@@ -147,9 +149,10 @@ const PaymentOptionStripeUI = (props: any) => {
             </View>
             <View style={{ width: '48%' }}>
               <OButton
+                colors={theme.colors}
                 text={t('ACCEPT', 'Accept')}
-                bgColor={colors.primary}
-                borderColor={colors.primary}
+                bgColor={theme.colors.primary}
+                borderColor={theme.colors.primary}
                 textStyle={{color: 'white'}}
                 style={styles.btnAction}
                 imgRightSrc={null}

@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { Home as HomePage } from '../components/Home';
-import { colors } from '../theme.json';
+import theme from '../theme.json';
 
 export const Home = (props: any) => {
   const homeProps = {
     ...props,
+    theme,
     onNavigationRedirect: (page: string, params: any) => {
       if (!page) return
       props.navigation.navigate(page, params);
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
-    backgroundColor: colors.backgroundPage,
+    backgroundColor: theme.colors.backgroundPage,
   }
 })
 

@@ -14,7 +14,6 @@ import {
 import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
 
 import NavBar from '../NavBar'
-import { colors } from '../../theme.json'
 import { SearchBar } from '../SearchBar'
 import { OText } from '../shared'
 import { BusinessesListingParams } from '../../types'
@@ -28,6 +27,7 @@ const PIXELS_TO_SCROLL = 1200
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
   const {
+    theme,
     navigation,
     businessesList,
     searchValue,
@@ -37,23 +37,42 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     paginationProps,
     handleChangeSearch
   } = props
+
+  const styles = StyleSheet.create({
+    container: {
+      padding: 20,
+      marginBottom: 20
+    },
+    welcome: {
+      flex: 1,
+      flexDirection: 'row'
+    },
+    inputStyle: {
+      backgroundColor: theme.colors.inputDisabled,
+      flex: 1
+    },
+    wrapperOrderOptions: {
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 10,
+      zIndex: 100
+    },
+    borderStyle: {
+      borderColor: theme.colors.backgroundGray,
+      borderWidth: 1,
+      borderRadius: 10,
+    }
+  })
+
   const [, t] = useLanguage()
   const [{ user, auth }] = useSession()
   const [orderState] = useOrder()
   const [{ configs }] = useConfig()
   const [{ parseDate }] = useUtils()
   const {showToast} = useToast()
-
-  // const timerId = useRef<any>(false)
-  // const panResponder = useRef(
-  //   PanResponder.create({
-  //     onMoveShouldSetPanResponder: (e, gestureState) => {
-  //       const {dx, dy} = gestureState;
-  //       resetInactivityTimeout()
-  //       return (Math.abs(dx) > 20) || (Math.abs(dy) > 20);
-  //     },
-  //   })
-  // ).current
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
@@ -68,21 +87,11 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     }
   }
 
-  // const resetInactivityTimeout = () => {
-  //   clearTimeout(timerId.current)
-  //   timerId.current = setInterval(() => {
-  //     getBusinesses(true)
-  //   }, 600000)
-  // }
-
-  // useEffect(() => {
-  //   resetInactivityTimeout()
-  // }, [])
-
   return (
-    <ScrollView style={styles.container} onScroll={(e) => handleScroll(e)}>
+    <ScrollView style={styles.container} onScroll={(e: any) => handleScroll(e)}>
       {!auth && (
         <NavBar
+          theme={theme}
           onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
@@ -99,7 +108,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
               <OText
                 style={{ fontWeight: 'bold' }}
                 size={28}
-                color={colors.primary}
+                color={theme.colors.primary}
                 numberOfLines={1}
                 ellipsizeMode='tail'
               >
@@ -124,6 +133,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         <View style={styles.wrapperOrderOptions}>
           <OrderTypeSelector configTypes={configTypes} />
           <WrapMomentOption
+            colors={theme.colors}
             onPress={() => navigation.navigate('MomentOption')}
           >
             <OText size={14} numberOfLines={1} ellipsizeMode='tail'>
@@ -134,13 +144,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           </WrapMomentOption>
         </View>
         <AddressInput
+          colors={theme.colors}
           onPress={() => auth
             ? navigation.navigate('AddressList', { isFromBusinesses: true })
             : navigation.navigate('AddressForm', { address: orderState.options?.address,isFromBusinesses: true  })}
         >
           <MaterialComIcon
             name='home-outline'
-            color={colors.primary}
+            color={theme.colors.primary}
             size={20}
             style={{ marginRight: 10 }}
           />
@@ -195,35 +206,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    marginBottom: 20
-  },
-  welcome: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  inputStyle: {
-    backgroundColor: colors.inputDisabled,
-    flex: 1
-  },
-  wrapperOrderOptions: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-    zIndex: 100
-  },
-  borderStyle: {
-    borderColor: colors.backgroundGray,
-    borderWidth: 1,
-    borderRadius: 10,
-  }
-})
 
 export const BusinessesListing = (props: BusinessesListingParams) => {
 

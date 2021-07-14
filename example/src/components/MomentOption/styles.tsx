@@ -1,12 +1,5 @@
 import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme.json'
 
-export const Container = styled.ScrollView`
-  flex: 1;
-  background-color: ${colors.backgroundPage};
-  padding: 0 20px;
-  padding-bottom: 20px;
-`
 export const HeaderTitle = styled.View`
   flex-direction: column;
   margin-bottom: 20px;
@@ -29,7 +22,7 @@ export const Day = styled.TouchableOpacity`
   border-right-width: 1px;
   width: 25%;
   margin-vertical: 10px;
-  border-color: ${colors.textSecondary};
+  border-color: ${({ colors }: any) => colors.textSecondary};
 
   ${(props: any) => props.borderLeftShow && css`
     border-left-width: 1px;
@@ -37,7 +30,7 @@ export const Day = styled.TouchableOpacity`
 `
 export const WrapHours = styled.ScrollView`
   border-width: 1px;
-  border-color: ${colors.textSecondary};
+  border-color: ${({ colors }: any) => colors.textSecondary};
   border-radius: 10px;
   margin: 20px 0;
   height: 140px;
@@ -57,7 +50,7 @@ export const Hour = styled.TouchableOpacity`
   padding: 5px;
   border-width: 1px;
   border-radius: 10px;
-  border-color: ${colors.textSecondary};
+  border-color: ${({ colors }: any) => colors.textSecondary};
   width: 90px;
   margin-vertical: 10px;
 `

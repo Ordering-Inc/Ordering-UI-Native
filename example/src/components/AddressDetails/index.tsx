@@ -10,12 +10,12 @@ import {
   ADMap
 } from './styles';
 
-import { colors } from '../../theme.json'
 import { OText, OIcon } from '../shared';
 
 const AddressDetailsUI = (props: any) => {
   const {
     navigation,
+    theme,
     addressToShow,
     isCartPending,
     googleMapsUrl,
@@ -41,7 +41,7 @@ const AddressDetailsUI = (props: any) => {
               <MaterialIcon
                 name='pencil-outline'
                 size={28}
-                color={colors.editColor}
+                color={theme.colors.editColor}
                 style={{ marginBottom: 5, marginLeft: 5 }}
                 onPress={() => navigation.navigate('AddressList', { isFromCheckout: true })}
               />
@@ -52,6 +52,7 @@ const AddressDetailsUI = (props: any) => {
       {!!apiKey && googleMapsUrl && (
         <ADMap>
           <OIcon
+            colors={theme.colors}
             url={googleMapsUrl}
             style={{borderRadius: 15, width: '100%'}}
             height={162}

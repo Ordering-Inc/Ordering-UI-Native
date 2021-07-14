@@ -5,6 +5,7 @@ import styled from 'styled-components/native';
 import { useLanguage, useSession } from 'ordering-components/native';
 import { Platform } from 'react-native';
 import { _setStoreData, _removeStoreData } from '../providers/StoreUtil';
+import theme from '../theme.json';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;
@@ -16,6 +17,7 @@ export const Signup = (props: any) => {
 
   const signupProps = {
     ...props,
+    theme,
     useChekoutFileds: true,
     loginButtonText: t('LOGIN', 'Login'),
     signupButtonText: t('SIGNUP', 'Signup'),

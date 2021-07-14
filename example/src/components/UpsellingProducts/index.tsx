@@ -1,14 +1,12 @@
 import React,{ useState, useEffect } from 'react'
-import Spinner from 'react-native-loading-spinner-overlay';
-import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { StyleSheet } from 'react-native'
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {
   UpsellingPage as UpsellingPageController,
   useUtils,
   useLanguage
 } from 'ordering-components/native'
 import { OText, OIcon, OModal, OBottomPopup, OButton } from '../shared'
-import { colors } from '../../theme.json'
 import { UpsellingProductsParams } from '../../types'
 import {
   Container,
@@ -21,6 +19,7 @@ import {
 import { ProductForm } from '../ProductForm';
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const {
+    theme,
     isCustomMode,
     upsellingProducts,
     business,
@@ -29,6 +28,28 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     canOpenUpselling,
     setCanOpenUpselling
   } = props
+
+  const styles = StyleSheet.create({
+    imageStyle: {
+      width: 120,
+      height: 90,
+      resizeMode: 'cover',
+      borderRadius: 10
+    },
+    closeUpsellingButton: {
+      borderRadius: 25,
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.white,
+      borderWidth: 1,
+      height: 42,
+      marginBottom: 10
+    },
+    upsellingModal: {
+      height: '50%',
+      top: 250
+    }
+  })
+
   const [actualProduct, setActualProduct] = useState<any>(null)
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [{ parsePrice }] = useUtils()
@@ -68,16 +89,23 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
               <>
                 {
                   !upsellingProducts.error ? upsellingProducts.products.map((product: any) => (
-                    <Item key={product.id}>
-                      <OIcon url={product.images} style={styles.imageStyle} />
+                    <Item
+                      key={product.id}
+                      colors={theme.colors}
+                    >
+                      <OIcon
+                        colors={theme.colors}
+                        url={product.images}
+                        style={styles.imageStyle}
+                      />
                       <Details>
                         <OText size={12} numberOfLines={1} ellipsizeMode='tail'>{product.name}</OText>
-                        <OText color={colors.primary} weight='bold'>{parsePrice(product.price)}</OText>
+                        <OText color={theme.colors.primary} weight='bold'>{parsePrice(product.price)}</OText>
                       </Details>
                       <AddButton onPress={() => handleFormProduct(product)}>
                         <MaterialComIcon
                           name='plus-circle'
-                          color={colors.primary}
+                          color={theme.colors.primary}
                           size={35}
                         />
                       </AddButton>
@@ -112,6 +140,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                <UpsellingLayout />
                 <CloseUpselling>
                   <OButton
+                    colors={theme.colors}
                     imgRightSrc=''
                     text={t('NO_THANKS', 'No Thanks')}
                     style={styles.closeUpsellingButton}
@@ -143,27 +172,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  imageStyle: {
-    width: 120,
-    height: 90,
-    resizeMode: 'cover',
-    borderRadius: 10
-  },
-  closeUpsellingButton: {
-    borderRadius: 25,
-    borderColor: colors.primary,
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    height: 42,
-    marginBottom: 10
-  },
-  upsellingModal: {
-    height: '50%',
-    top: 250
-  }
-})
 
 export const UpsellingProducts = (props : UpsellingProductsParams) => {
   const upsellingProductsProps = {

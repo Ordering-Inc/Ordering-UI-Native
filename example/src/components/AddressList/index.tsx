@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder, useSession } from 'ordering-components/native'
 import { AddressListContainer, AddressItem } from './styles'
 import { StyleSheet, View } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { colors } from '../../theme.json'
 import { OButton, OText, OAlert, OModal } from '../shared'
 import { Container } from '../../layouts/Container'
 import { AddressFormParams, AddressListParams } from '../../types'
@@ -15,10 +14,10 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
 
 const AddressListUI = (props: AddressListParams) => {
-
   const {
     navigation,
     route,
+    theme,
     addressList,
     isFromProfile,
     nopadding,
@@ -143,9 +142,10 @@ const AddressListUI = (props: AddressListParams) => {
               route?.params?.isFromCheckout ||
               route?.params?.isFromProductsList
             ) &&
-            !isFromProfile && 
+            !isFromProfile &&
             (
               <NavBar
+                theme={theme}
                 title={t('ADDRESS_LIST', 'Address List')}
                 titleAlign={'center'}
                 onActionLeft={() => goToBack()}
@@ -183,14 +183,14 @@ const AddressListUI = (props: AddressListParams) => {
                     <MaterialIcon
                       name={addressIcon(address?.tag)}
                       size={32}
-                      color={colors.primary}
+                      color={theme.colors.primary}
                       style={styles.icon}
                     />
                     <OText style={styles.address}>{address.address}</OText>
                     <MaterialIcon
                       name='pencil-outline'
                       size={28}
-                      color={colors.green}
+                      color={theme.colors.green}
                       onPress={() => !afterSignup ?  onNavigationRedirect(
                         'AddressForm',
                         {
@@ -224,7 +224,7 @@ const AddressListUI = (props: AddressListParams) => {
                       <MaterialIcon
                         name='trash-can-outline'
                         size={28}
-                        color={!checkAddress(address) ? colors.primary : colors.disabled}
+                        color={!checkAddress(address) ? theme.colors.primary : theme.colors.disabled}
                       />
                     </OAlert>
                   </AddressItem>
@@ -252,13 +252,14 @@ const AddressListUI = (props: AddressListParams) => {
                   </OText>
                 )}
               <OButton
+                colors={theme.colors}
                 text={t('ADD_NEW_ADDRESS', 'Add new Address')}
                 imgRightSrc=''
                 imgLeftSrc={addIcon}
-                bgColor={colors.white}
+                bgColor={theme.colors.white}
                 imgLeftStyle={styles.buttonIcon}
                 style={styles.button}
-                borderColor={colors.primary}
+                borderColor={theme.colors.primary}
                 onClick={() => !afterSignup ? onNavigationRedirect(
                   'AddressForm',
                   {
@@ -283,10 +284,11 @@ const AddressListUI = (props: AddressListParams) => {
           )}
           {!isFromProfile && addressList?.addresses?.length > 0 && (
             <OButton
+              colors={theme.colors}
               text={t('CONTINUE', 'Continue')}
               style={styles.button}
               onClick={() => onNavigatorRedirect()}
-              textStyle={{ color: colors.white }}
+              textStyle={{ color: theme.colors.white }}
             />
           )}
         </AddressListContainer>

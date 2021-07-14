@@ -1,93 +1,94 @@
 import * as React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ToastType, useToast } from "../../providers/ToastProvider";
-import { colors } from "../../theme.json";
 
 const fadeDuration = 300;
 const bottomPosition = 20;
 
-export const Toast: React.FC = () => {
-    // const insets = useSafeAreaInsets();
-    const { toastConfig, hideToast } = useToast();
-    const opacity = React.useRef(new Animated.Value(0)).current;
+interface Props {
+  colors: any
+}
 
-    const fadeIn = React.useCallback(() => {
-        Animated.timing(opacity, {
-            toValue: 1,
-            duration: fadeDuration,
-            useNativeDriver: true,
-        }).start();
-    }, [opacity]);
+export const Toast = (props: Props) => {
+  const { toastConfig, hideToast } = useToast();
+  const opacity = React.useRef(new Animated.Value(0)).current;
 
-    const fadeOut = React.useCallback(() => {
-        Animated.timing(opacity, {
-            toValue: 0,
-            duration: fadeDuration,
-            useNativeDriver: true,
-        }).start(() => {
-            hideToast();
-        });
-    }, [opacity, hideToast]);
+  const fadeIn = React.useCallback(() => {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: fadeDuration,
+      useNativeDriver: true,
+    }).start();
+  }, [opacity]);
 
-    React.useEffect(() => {
-        if (!toastConfig) {
-            return;
-        }
+  const fadeOut = React.useCallback(() => {
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: fadeDuration,
+      useNativeDriver: true,
+    }).start(() => {
+      hideToast();
+    });
+  }, [opacity, hideToast]);
 
-        fadeIn();
-        const timer = setTimeout(fadeOut, toastConfig.duration);
-
-        return () => clearTimeout(timer);
-    }, [toastConfig, fadeIn, fadeOut]);
-
+  React.useEffect(() => {
     if (!toastConfig) {
-        return null;
+      return;
     }
 
-    const { type, message } = toastConfig;
+    fadeIn();
+    const timer = setTimeout(fadeOut, toastConfig.duration);
 
-    let backgroundColor;
-    switch (type) {
-        case ToastType.Info:
-            backgroundColor = '#6ba4ff';
-            break;
-        case ToastType.Error:
-            backgroundColor = colors.primary;
-            break;
-        case ToastType.Success:
-            backgroundColor = '#73bd24';
-            break;
-    }
+    return () => clearTimeout(timer);
+  }, [toastConfig, fadeIn, fadeOut]);
 
-    return (
-        <Animated.View
-            style={[
-                styles.container,
-                { bottom: bottomPosition, opacity },
-            ]}
-        >
-            <View style={[styles.toast, { backgroundColor }]}>
-                <Text style={styles.message}>{message}</Text>
-            </View>
-        </Animated.View>
-    );
+  if (!toastConfig) {
+    return null;
+  }
+
+  const { type, message } = toastConfig;
+
+  let backgroundColor;
+  switch (type) {
+    case ToastType.Info:
+      backgroundColor = '#6ba4ff';
+      break;
+    case ToastType.Error:
+      backgroundColor = props.colors.primary;
+      break;
+    case ToastType.Success:
+      backgroundColor = '#73bd24';
+      break;
+  }
+
+  return (
+    <Animated.View
+      style={[
+        styles.container,
+        { bottom: bottomPosition, opacity },
+      ]}
+    >
+      <View style={[styles.toast, { backgroundColor }]}>
+        <Text style={styles.message}>{message}</Text>
+      </View>
+    </Animated.View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        alignSelf: "center",
-        position: "absolute",
-        maxWidth: 480,
-        zIndex: 9999999999
-    },
-    toast: {
-        borderRadius: 16,
-        padding: 16,
-    },
-    message: {
-        fontSize: 14,
-        textAlign: "center",
-        color: '#fff',
-    },
+  container: {
+    alignSelf: "center",
+    position: "absolute",
+    maxWidth: 480,
+    zIndex: 9999999999
+  },
+  toast: {
+    borderRadius: 16,
+    padding: 16,
+  },
+  message: {
+    fontSize: 14,
+    textAlign: "center",
+    color: '#fff',
+  },
 });

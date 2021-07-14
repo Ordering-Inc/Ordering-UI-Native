@@ -18,6 +18,7 @@ import { OAlert, OIcon, OText } from '../shared';
 
 export const BusinessItemAccordion = (props: any) => {
   const {
+    theme,
     cart,
     moment,
     handleClearProducts
@@ -51,6 +52,7 @@ export const BusinessItemAccordion = (props: any) => {
         <BIInfo>
           {cart?.business?.logo && (
             <OIcon
+              colors={theme.colors}
               url={cart?.business?.logo}
               width={70}
               height={70}

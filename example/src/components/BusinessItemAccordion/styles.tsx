@@ -1,6 +1,5 @@
 import React from 'react';
 import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const BIContainer = styled.View`
   display: flex;

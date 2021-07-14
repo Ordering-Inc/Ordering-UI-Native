@@ -5,12 +5,15 @@ import { OText } from '../components/shared'
 
 import { Container } from '../layouts/Container'
 
+import theme from '../theme.json';
+
 const MyOrders = ({ navigation }: any) => {
 
   const [, t] = useLanguage()
   const [ordersLength,setOrdersLength] = useState({activeOrdersLength: 0, previousOrdersLength: 0})
-  const MyOrderProps = {
+  const myOrderProps = {
     navigation,
+    theme,
     onNavigationRedirect: (page: string, params: any) => {
       if (!page) return
       navigation.navigate(page, params);
@@ -23,8 +26,8 @@ const MyOrders = ({ navigation }: any) => {
       <OText size={24} mBottom={20}>
         {t('MY_ORDERS', 'My Orders')}
       </OText>
-      <OrdersOption {...MyOrderProps} activeOrders ordersLength={ordersLength} setOrdersLength={setOrdersLength} />
-      <OrdersOption {...MyOrderProps} ordersLength={ordersLength} setOrdersLength={setOrdersLength}/>
+      <OrdersOption {...myOrderProps} activeOrders ordersLength={ordersLength} setOrdersLength={setOrdersLength} />
+      <OrdersOption {...myOrderProps} ordersLength={ordersLength} setOrdersLength={setOrdersLength}/>
     </Container>
   )
 }

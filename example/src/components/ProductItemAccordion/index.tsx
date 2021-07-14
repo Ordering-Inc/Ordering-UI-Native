@@ -21,11 +21,10 @@ import {
 import { OIcon, OText, OAlert } from '../shared'
 
 import { ProductItemAccordionParams } from '../../types'
-import { colors } from '../../theme.json'
 
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
-
   const {
+    theme,
     isCartPending,
     isCartProduct,
     product,
@@ -33,15 +32,43 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     getProductMax,
     onDeleteProduct,
     onEditProduct,
-    // isFromCheckout,
   } = props
+
+  const pickerStyle = StyleSheet.create({
+    inputAndroid: {
+      color: theme.colors.secundaryContrast,
+      borderWidth: 1,
+      borderColor: 'transparent',
+      borderRadius: 15,
+      backgroundColor: theme.colors.inputDisabled,
+      width: 50,
+    },
+    inputIOS: {
+      color: theme.colors.secundaryContrast,
+      paddingEnd: 20,
+      height: 40,
+      borderWidth: 1,
+      borderColor: 'transparent',
+      borderRadius: 15,
+      paddingHorizontal: 10,
+      backgroundColor: theme.colors.inputDisabled
+    },
+    icon: {
+      top: Platform.OS === 'ios' ? 10 : 15,
+      right: Platform.OS === 'ios' ? 0 : (I18nManager.isRTL ? 30 : 7),
+      position: 'absolute',
+      fontSize: 20
+    },
+    placeholder: {
+      color: theme.colors.secundaryContrast,
+    }
+  })
+
   const [, t] = useLanguage()
   const [orderState] = useOrder()
   const [{ parsePrice }] = useUtils()
 
   const [isActive, setActiveState] = useState(false)
-  // const [setHeight, setHeightState] = useState({ height: new Animated.Value(0) })
-  // const [setRotate, setRotateState] = useState({ angle: new Animated.Value(0) })
 
   const productInfo = () => {
     if (isCartProduct) {
@@ -134,7 +161,11 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
           <ContentInfo>
             {product?.images && (
               <ProductImage>
-                <OIcon url={product?.images} style={styles.productImage} />
+                <OIcon
+                  colors={theme.colors}
+                  url={product?.images}
+                  style={styles.productImage}
+                />
               </ProductImage>
             )}
             <View style={{flex: 1, alignItems: 'flex-start'}}>
@@ -152,7 +183,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                   <MaterialCommunityIcon
                     name='pencil-outline'
                     size={26}
-                    color={colors.green}
+                    color={theme.colors.green}
                     onPress={() => onEditProduct(product)}
                   />
                 )}
@@ -165,7 +196,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                     <MaterialCommunityIcon
                       name='trash-can-outline'
                       size={26}
-                      color={colors.red}
+                      color={theme.colors.red}
                     />
                   </OAlert>
                 )}
@@ -176,7 +207,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
         {((isCartProduct && !isCartPending && product?.valid_menu && !product?.valid_quantity) ||
           (!product?.valid_menu && isCartProduct && !isCartPending)) && (
-          <OText size={24} color={colors.red} style={{ textAlign: 'center', marginTop: 10 }}>
+          <OText size={24} color={theme.colors.red} style={{ textAlign: 'center', marginTop: 10 }}>
             {t('NOT_AVAILABLE', 'Not available')}
           </OText>
         )}
@@ -226,36 +257,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     </AccordionSection>
   )
 }
-
-const pickerStyle = StyleSheet.create({
-  inputAndroid: {
-    color: colors.secundaryContrast,
-    borderWidth: 1,
-    borderColor: 'transparent',
-    borderRadius: 15,
-    backgroundColor: colors.inputDisabled,
-    width: 50,
-  },
-  inputIOS: {
-    color: colors.secundaryContrast,
-    paddingEnd: 20,
-    height: 40,
-    borderWidth: 1,
-    borderColor: 'transparent',
-    borderRadius: 15,
-    paddingHorizontal: 10,
-    backgroundColor: colors.inputDisabled
-  },
-  icon: {
-    top: Platform.OS === 'ios' ? 10 : 15,
-    right: Platform.OS === 'ios' ? 0 : (I18nManager.isRTL ? 30 : 7),
-    position: 'absolute',
-    fontSize: 20
-  },
-  placeholder: {
-    color: colors.secundaryContrast,
-  }
-})
 
 const styles = StyleSheet.create({
   productImage: {

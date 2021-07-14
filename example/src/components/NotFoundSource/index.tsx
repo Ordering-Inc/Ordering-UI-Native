@@ -1,6 +1,5 @@
 import React from 'react'
 import { View } from 'react-native'
-import { colors,images } from '../../theme.json'
 import { OButton, OIcon, OText } from '../shared'
 import {NotFoundSourceParams} from '../../types'
 
@@ -11,6 +10,7 @@ import {
 
 export const NotFoundSource = (props: NotFoundSourceParams) => {
   const {
+    theme,
     image,
     content,
     btnTitle,
@@ -18,29 +18,35 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
     onClickButton
   } = props
 
-  const errorImage = image || images.general.notFound
+  const errorImage = image || theme.images.general.notFound
 
   return (
     <NotFound>
       {errorImage && (
         <NotFoundImage>
-          <OIcon src={errorImage} width={260} height={220} />
+          <OIcon
+            colors={theme.colors}
+            src={errorImage}
+            width={260}
+            height={220}
+          />
         </NotFoundImage>
       )}
-        {content && conditioned && !errorImage && <OText color={colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}
-        {content && !conditioned && <OText color={colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}
+        {content && conditioned && !errorImage && <OText color={theme.colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}
+        {content && !conditioned && <OText color={theme.colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}
       {!onClickButton && props.children && (
         props.children
       )}
       {onClickButton && (
         <View style={{marginTop: 10,width: '100%'}}>
           <OButton
+            colors={theme.colors}
             style={{width: '100%', height: 50}}
-            bgColor={colors.primary}
-            borderColor={colors.primary}
+            bgColor={theme.colors.primary}
+            borderColor={theme.colors.primary}
             onClick={() => onClickButton()}
             text={btnTitle}
-            textStyle={{color: colors.white}}
+            textStyle={{color: theme.colors.white}}
           />
         </View>
       )}

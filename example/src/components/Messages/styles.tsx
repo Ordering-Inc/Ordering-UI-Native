@@ -1,10 +1,9 @@
 
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const Wrapper = styled.View`
   flex: 1;
-  background-color: ${colors.white};
+  background-color: ${({ colors }: any) => colors.white};
 `
 export const Header = styled.View`
   flex-direction: row;

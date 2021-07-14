@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styled, { css } from 'styled-components/native'
 import { ScrollView, TouchableOpacity  } from 'react-native-gesture-handler'
-import { ScrollView as CustomScrollView, TouchableOpacity as CustomTouchableOpacity } from 'react-native'
-import { colors } from '../../theme.json'
+import {
+  ScrollView as CustomScrollView,
+  TouchableOpacity as CustomTouchableOpacity
+} from 'react-native'
 
 interface Props {
   secondary?: boolean,
@@ -15,52 +17,9 @@ interface Props {
   isModal?: any,
   bgcolor?: string,
   textcolor?: string,
+  colors?: any,
 }
 
-const Wrapper = styled.View`
-  position: relative;
-`
-const Selected = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  padding: 15px;
-  border-radius: 10px;
-  border-width: 1px;
-  border-color: ${(props: any) => props.bgcolor || (props.secondary ? colors.lightGray : colors.primary)};
-  background-color: ${(props: any) => props.bgcolor || (props.secondary ? colors.white : colors.primary)};
-`
-const SelectedLabel = styled.Text`
-  font-size: 16px;
-  color: ${(props: any) => props.textcolor || (props.secondary ? colors.black : colors.white)};
-`
-const DropIcon = styled.Image`
-  tint-color: ${(props: any) => props.textcolor || (props.secondary ? colors.black : colors.white)};
-  resize-mode: contain;
-  width: 7px;
-  height: 7px;
-  margin-left: 5px;
-`
-const DropView = styled.View`
-  position: absolute;
-  z-index: 9999;
-  top: 54px;
-  border-width: 1px;
-  border-color: ${colors.lightGray};
-  background-color: ${colors.white};
-  border-radius: 10px;
-  width: 100%;
-`
-const DropOption = styled.Text`
-  padding: 15px;
-  font-size: 16px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.lightGray};
-  ${(props: any) => props.selected && css`
-    color: ${colors.primary};
-  `};
-`
 const ODropDown = (props: Props) => {
   const {
     secondary,
@@ -71,6 +30,52 @@ const ODropDown = (props: Props) => {
     dropViewMaxHeight,
     isModal
   } = props
+
+  const Wrapper = styled.View`
+    position: relative;
+  `
+  const Selected = styled.TouchableOpacity`
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding: 15px;
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: ${(props: any) => props.bgcolor || (props.secondary ? props.colors.lightGray : props.colors.primary)};
+    background-color: ${(props: any) => props.bgcolor || (props.secondary ? props.colors.white : props.colors.primary)};
+  `
+  const SelectedLabel = styled.Text`
+    font-size: 16px;
+    color: ${(props: any) => props.textcolor || (props.secondary ? props.colors.black : props.colors.white)};
+  `
+  const DropIcon = styled.Image`
+    tint-color: ${(props: any) => props.textcolor || (props.secondary ? props.colors.black : props.colors.white)};
+    resize-mode: contain;
+    width: 7px;
+    height: 7px;
+    margin-left: 5px;
+  `
+  const DropView = styled.View`
+    position: absolute;
+    z-index: 9999;
+    top: 54px;
+    border-width: 1px;
+    border-color: ${props.colors.lightGray};
+    background-color: ${props.colors.white};
+    border-radius: 10px;
+    width: 100%;
+  `
+  const DropOption = styled.Text`
+    padding: 15px;
+    font-size: 16px;
+    border-bottom-width: 1px;
+    border-bottom-color: ${props.colors.lightGray};
+    ${(props: any) => props.selected && css`
+      color: ${props.colors.primary};
+    `};
+  `
+
   const [isOpen, setIsOpen] = useState(false)
   const defaultOption = options?.find((option: any) => option.value === defaultValue)
   const [selectedOption, setSelectedOption] = useState<any>(defaultOption)

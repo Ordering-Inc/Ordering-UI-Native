@@ -19,6 +19,7 @@ import { BusinessInformationParams } from '../../types'
 import { GoogleMap } from '../GoogleMap'
 const BusinessInformationUI = (props: BusinessInformationParams) => {
   const {
+    theme,
     businessState,
     businessSchedule,
     businessLocation
@@ -37,17 +38,6 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
     const checkTime = (val : number | string) => val < 10 ? `0${val}` : val
     return `${checkTime(hour)}:${checkTime(minute)}`
   }
-  const businessCoordinate = {
-    lat: businessState?.business?.location?.lat,
-    lng: businessState?.business?.location?.lng
-  }
-  const businessImage = {
-    uri: businessState?.business?.logo
-  }
-  const businessMarker = {
-    latlng: businessCoordinate,
-    image: businessImage
-  }
 
   return (
     <BusinessInformationContainer>
@@ -57,7 +47,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
       />
       <WrapMainContent>
         <InnerContent>
-          <GrayBackground>
+          <GrayBackground colors={theme.colors}>
             <OText size={16} weight='bold'>{t('BUSINESS_LOCATION', 'Business Location')}</OText>
           </GrayBackground>
           {businessLocation.location && (
@@ -72,7 +62,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
           <OText mBottom={20}>
             {businessState?.business?.address}
           </OText>
-          <GrayBackground>
+          <GrayBackground colors={theme.colors}>
             <OText size={16} weight='bold'>
               {t('BUSINESS_OPENING_TIME', 'Business Opening Time')}
             </OText>

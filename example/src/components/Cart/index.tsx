@@ -17,13 +17,13 @@ import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
 import { OButton, OModal, OText } from '../shared';
-import { colors } from '../../theme.json';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
 
 const CartUI = (props: any) => {
   const {
+    theme,
     cart,
     clearCart,
     changeQuantity,
@@ -32,7 +32,6 @@ const CartUI = (props: any) => {
     removeProduct,
     handleCartOpen,
     setIsCartsLoading,
-    // isFromCart
   } = props
 
   const [, t] = useLanguage()
@@ -189,7 +188,7 @@ const CartUI = (props: any) => {
                 <OText style={{ fontWeight: 'bold' }}>
                   {t('TOTAL', 'Total')}
                 </OText>
-                <OText style={{ fontWeight: 'bold' }} color={colors.primary}>
+                <OText style={{ fontWeight: 'bold' }} color={theme.colors.primary}>
                   {cart?.total >= 1 && parsePrice(cart?.total)}
                 </OText>
               </OSTable>
@@ -199,6 +198,7 @@ const CartUI = (props: any) => {
         {cart?.valid_products && (
           <CheckoutAction>
             <OButton
+              colors={theme.colors}
               text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
                 !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
               ) : !cart?.valid_address ? (
@@ -206,9 +206,9 @@ const CartUI = (props: any) => {
               ) : (
                 `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
               )}
-              bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
+              bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
               isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
-              borderColor={colors.primary}
+              borderColor={theme.colors.primary}
               imgRightSrc={null}
               textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
               onClick={() => setOpenUpselling(true)}

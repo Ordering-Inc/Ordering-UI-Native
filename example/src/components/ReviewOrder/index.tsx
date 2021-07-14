@@ -12,7 +12,6 @@ import {
 } from './styles'
 import { OButton, OIcon, OInput, OText } from '../shared'
 import { TouchableOpacity, StyleSheet,View } from 'react-native';
-import { colors } from '../../theme.json'
 import { useToast, ToastType } from '../../providers/ToastProvider'
 import NavBar from '../NavBar'
 import Spinner from 'react-native-loading-spinner-overlay'
@@ -21,6 +20,7 @@ import { ReviewOrderParams } from '../../types'
 
 export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const {
+    theme,
     order,
     stars,
     handleChangeInput,
@@ -29,6 +29,16 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     formState,
     navigation
   } = props
+
+  const styles = StyleSheet.create({
+    inputTextArea: {
+      borderColor: theme.colors.secundaryContrast,
+      borderRadius: 10,
+      marginVertical: 20,
+      height: 100,
+      alignItems: 'flex-start'
+    }
+  })
 
   const [, t] = useLanguage()
   const { showToast } = useToast()
@@ -44,10 +54,10 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   }
 
   const onSubmit = () => {
-    if (Object.values(stars).some(value => value === 0)) {
+    if (Object.values(stars).some((value: any) => value === 0)) {
       setAlertState({
         open: true,
-        content: Object.values(categories).map((category, i) => stars[category.name] === 0 ? `- ${t('CATEGORY_ATLEAST_ONE', `${category.show} must be at least one point`).replace('CATEGORY', category.name.toUpperCase())} ${i !== 3 && '\n'}` : ' ')
+        content: Object.values(categories).map((category: any, i: any) => stars[category.name] === 0 ? `- ${t('CATEGORY_ATLEAST_ONE', `${category.show} must be at least one point`).replace('CATEGORY', category.name.toUpperCase())} ${i !== 3 && '\n'}` : ' ')
       })
       return
     }
@@ -112,13 +122,13 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       case 0:
         return (
           <TouchableOpacity key={index} onPress={() => handleChangeRating({ target: { name: category, value: index + 1 } })}>
-            <MaterialCommunityIcon name='star-outline' size={24} color={colors.backgroundDark} />
+            <MaterialCommunityIcon name='star-outline' size={24} color={theme.colors.backgroundDark} />
           </TouchableOpacity>
         )
       case 1:
         return (
           <TouchableOpacity key={index} onPress={() => handleChangeRating({ target: { name: category, value: index + 1 } })}>
-            <MaterialCommunityIcon name='star' size={24} color={colors.primary} />
+            <MaterialCommunityIcon name='star' size={24} color={theme.colors.primary} />
           </TouchableOpacity>
         )
     }
@@ -133,15 +143,24 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
         paddingTop={0}
+        theme={theme}
       />
       <BusinessLogo>
-        <OIcon url={order?.logo} width={100} height={100} />
+        <OIcon
+          colors={theme.colors}
+          url={order?.logo}
+          width={100}
+          height={100}
+        />
       </BusinessLogo>
       <View style={{flex: 1, justifyContent: 'flex-end'}}>
 
       <FormReviews>
-        {Object.values(categories).map(category => (
-          <Category key={category.name}>
+        {Object.values(categories).map((category: any) => (
+          <Category
+            key={category.name}
+            colors={theme.colors}
+          >
             <OText>{category.show}</OText>
             <Stars>
               {getStarArr(stars[category?.name]).map((star, index) => getStar(star, index, category.name))}
@@ -154,21 +173,23 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
           name='comments'
           render={({ onChange }: any) => (
             <OInput
-            name='comments'
-            placeholder={t('COMMENTS', 'Comments')}
-            onChange={(val: string) => {
-              onChange(val)
-              handleChangeInput(val)
-            }}
-            style={styles.inputTextArea}
-            multiline
-            bgColor={colors.inputDisabled}
+              colors={theme.colors}
+              name='comments'
+              placeholder={t('COMMENTS', 'Comments')}
+              onChange={(val: string) => {
+                onChange(val)
+                handleChangeInput(val)
+              }}
+              style={styles.inputTextArea}
+              multiline
+              bgColor={theme.colors.inputDisabled}
             />
           )}
         />
       </FormReviews>
       <OButton
-        textStyle={{ color: colors.white }}
+        colors={theme.colors}
+        textStyle={{ color: theme.colors.white }}
         style={{ marginTop: 20 }}
         text={t('SAVE', 'Save')}
         imgRightSrc=''
@@ -179,16 +200,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     </ReviewOrderContainer>
   )
 }
-
-const styles = StyleSheet.create({
-  inputTextArea: {
-    borderColor: colors.secundaryContrast,
-    borderRadius: 10,
-    marginVertical: 20,
-    height: 100,
-    alignItems: 'flex-start'
-  }
-})
 
 export const ReviewOrder = (props: ReviewOrderParams) => {
   const reviewOrderProps = {

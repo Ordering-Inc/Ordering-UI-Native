@@ -1,6 +1,4 @@
-import { Platform } from 'react-native';
-import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme.json';
+import styled from 'styled-components/native';
 
 export const ChContainer = styled.View`
   margin-bottom: 60px;
@@ -17,7 +15,7 @@ export const ChHeader = styled.View`
 `
 
 export const ChTotal = styled.View`
-  background-color: ${colors.inputDisabled};
+  background-color: ${({ colors }: any) => colors.inputDisabled};
   padding: 10px 20px;
   display: flex;
   justify-content: flex-start;
@@ -39,7 +37,7 @@ export const ChAddress = styled.View`
   align-items: center;
   justify-content: space-between;
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.inputDisabled};
+  border-bottom-color: ${({ colors }: any) => colors.inputDisabled};
 `
 
 export const ChMoment = styled(ChAddress)`
@@ -47,7 +45,7 @@ export const ChMoment = styled(ChAddress)`
 `
 
 export const CHMomentWrapper = styled.TouchableOpacity`
-  background-color: ${colors.inputDisabled};
+  background-color: ${({ colors }: any) => colors.inputDisabled};
   border-radius: 10px;
   width: 100%;
   padding: 10px;
@@ -63,7 +61,7 @@ export const ChUserDetails = styled.View`
   width: 100%;
   padding: 0 0 20px;
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.inputDisabled};
+  border-bottom-color: ${({ colors }: any) => colors.inputDisabled};
 `
 
 export const ChBusinessDetails = styled(ChUserDetails)`
@@ -74,7 +72,7 @@ export const ChPaymethods = styled.View`
   flex-direction: column;
   padding: 0 0 20px;
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.inputDisabled};
+  border-bottom-color: ${({ colors }: any) => colors.inputDisabled};
 `
 
 export const ChDriverTips = styled(ChPaymethods)``

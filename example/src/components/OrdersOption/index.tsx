@@ -7,7 +7,6 @@ import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
 
 import { OptionTitle } from './styles'
-import { colors, images } from '../../theme.json'
 import { OrdersOptionParams } from '../../types'
 import { ToastType, useToast } from '../../providers/ToastProvider'
 
@@ -20,6 +19,7 @@ import { View } from 'react-native'
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
+    theme,
     navigation,
     activeOrders,
     orderList,
@@ -40,8 +40,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const { loading, error, orders: values } = orderList
 
   const imageFails = activeOrders
-    ? images.general.emptyActiveOrders
-    : images.general.emptyPastOrders
+    ? theme.images.general.emptyActiveOrders
+    : theme.images.general.emptyPastOrders
 
   const orders = customArray || values || []
 
@@ -119,7 +119,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     <>
       <OptionTitle>
         {(!activeOrders || (activeOrders && ordersLength.activeOrdersLength > 0) || (ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength === 0 )) && !isLoadingFirstRender && (
-        <OText size={16} color={colors.textSecondary} mBottom={10} >
+        <OText size={16} color={theme.colors.textSecondary} mBottom={10} >
           {titleContent || (activeOrders
             ? t('ACTIVE_ORDERS', 'Active Orders')
             : t('PREVIOUS_ORDERS', 'Previous Orders'))}

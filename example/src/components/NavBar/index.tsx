@@ -1,33 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
 import { OButton, OIcon, OText } from '../shared'
-import { colors,images } from '../../theme.json'
 import { TextStyle } from 'react-native'
-
-const Wrapper = styled.View`
-  background-color: ${colors.white};
-  padding: 10px 20px 20px 0px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`
-const TitleWrapper = styled.View`
-  flex-direction: column;
-  padding-horizontal: 10px;
-`
-const TitleTopWrapper = styled.View`
-  flex-grow: 1;
-  flex-direction: row;
-  align-items: center;
-`
-
-const btnBackArrow = {
-  borderWidth: 0,
-  backgroundColor: '#FFF',
-  borderColor: '#FFF',
-  shadowColor: '#FFF'
-}
 
 interface Props {
   navigation?: any,
@@ -46,17 +20,44 @@ interface Props {
   titleStyle?: TextStyle,
   btnStyle?: TextStyle,
   style?: TextStyle,
-  paddingTop?: number
+  paddingTop?: number,
+  theme: any,
 }
 
 const NavBar = (props: Props) => {
+  const Wrapper = styled.View`
+    background-color: ${props.theme.colors.white};
+    padding: 10px 20px 20px 0px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  `
+  const TitleWrapper = styled.View`
+    flex-direction: column;
+    padding-horizontal: 10px;
+  `
+  const TitleTopWrapper = styled.View`
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+  `
+
+  const btnBackArrow = {
+    borderWidth: 0,
+    backgroundColor: '#FFF',
+    borderColor: '#FFF',
+    shadowColor: '#FFF'
+  }
+
   const goSupport = () => {
     props.navigation.navigate('Supports', {});
   }
   return (
     <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
       <OButton
-        imgLeftSrc={props.leftImg || images.general.arrow_left}
+        colors={props.theme.colors}
+        imgLeftSrc={props.leftImg || props.theme.images.general.arrow_left}
         imgRightSrc={null}
         style={{ ...btnBackArrow, ...props.btnStyle }}
         onClick={props.onActionLeft}
@@ -65,13 +66,14 @@ const NavBar = (props: Props) => {
         {props.withIcon
           ? (
               <OIcon
+                colors={props.theme.colors}
                 url={props.icon}
                 style={{
-                  borderColor: colors.lightGray,
+                  borderColor: props.theme.colors.lightGray,
                   borderRadius: 20,
                 }}
                 width={60}
-                height={60} 
+                height={60}
               />
           )
           : null
@@ -100,12 +102,13 @@ const NavBar = (props: Props) => {
       </TitleTopWrapper>
       { props.showCall
         ? (<OButton
+          colors={props.theme.colors}
           isCircle={true}
-          bgColor={colors.primary}
-          borderColor={colors.primary}
+          bgColor={props.theme.colors.primary}
+          borderColor={props.theme.colors.primary}
           imgRightSrc={null}
           imgLeftStyle={{ tintColor: 'white', width: 30, height: 30 }}
-          imgLeftSrc={images.general.support}
+          imgLeftSrc={props.theme.images.general.support}
           onClick={props.onRightAction || goSupport} />)
         : null
       }

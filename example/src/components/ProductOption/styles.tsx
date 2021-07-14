@@ -1,8 +1,6 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
-export const Container = styled.View`
-`
+export const Container = styled.View``
 
 export const WrapHeader = styled.View`
   padding: 15px 20px;
@@ -10,7 +8,7 @@ export const WrapHeader = styled.View`
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
-  background-color: ${colors.paleGray};
+  background-color: ${({ colors }: any) => colors.paleGray};
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 `

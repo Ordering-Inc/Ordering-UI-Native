@@ -1,6 +1,7 @@
 import React from 'react'
 import { AddressList as AddressListController } from '../components/AddressList'
 import { useSession } from 'ordering-components/native'
+import theme from '../theme.json';
 
 const AddressList = ({ route, navigation }: any) => {
 
@@ -10,9 +11,10 @@ const AddressList = ({ route, navigation }: any) => {
   const isFromProductsList = route?.params?.isFromProductsList
   const isFromCheckout = route?.params?.isFromCheckout
   const afterSignup = route?.params?.afterSignup
-  const AddressListProps = {
+  const addressListProps = {
     navigation,
     route,
+    theme,
     userId: user?.id,
     isGoBack,
     isFromBusinesses,
@@ -22,7 +24,7 @@ const AddressList = ({ route, navigation }: any) => {
   }
 
   return (
-    <AddressListController {...AddressListProps} />
+    <AddressListController {...addressListProps} />
   )
 }
 

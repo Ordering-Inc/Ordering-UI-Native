@@ -15,11 +15,11 @@ import {
   PositionControl,
   Circle
 } from './styles'
-import { colors } from '../../theme.json'
 import { OText } from '../shared'
 
 export const ProductOptionSubOptionUI = (props: any) => {
   const {
+    theme,
     state,
     increment,
     decrement,
@@ -56,29 +56,29 @@ export const ProductOptionSubOptionUI = (props: any) => {
       <IconControl onPress={() => handleSuboptionClick()}>
         {((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
           state?.selected ? (
-            <MaterialCommunityIcon  name='checkbox-marked' color={colors.primary} size={24} />
+            <MaterialCommunityIcon  name='checkbox-marked' color={theme.colors.primary} size={24} />
           ) : (
-            <MaterialCommunityIcon  name='checkbox-blank-outline' color={colors.backgroundDark} size={24} />
+            <MaterialCommunityIcon  name='checkbox-blank-outline' color={theme.colors.backgroundDark} size={24} />
           )
         ) : (
           state?.selected ? (
-            <MaterialCommunityIcon name='radiobox-marked' color={colors.primary} size={24} />
+            <MaterialCommunityIcon name='radiobox-marked' color={theme.colors.primary} size={24} />
           ) : (
-            <MaterialCommunityIcon name='radiobox-blank' color={colors.backgroundDark} size={24} />
+            <MaterialCommunityIcon name='radiobox-blank' color={theme.colors.backgroundDark} size={24} />
           )
         )}
         <OText mLeft={10} style={{ flex: I18nManager.isRTL ? 0 : 1 }}>
           {suboption?.name}
         </OText>
       </IconControl>
-      {showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} color={colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
+      {showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} color={theme.colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
       {option?.allow_suboption_quantity && (
         <QuantityControl>
           <Checkbox disabled={state.quantity === 0} onPress={decrement}>
             <MaterialCommunityIcon
               name='minus-circle-outline'
               size={24}
-              color={state.quantity === 0 ? colors.backgroundDark : colors.primary}
+              color={state.quantity === 0 ? theme.colors.backgroundDark : theme.colors.primary}
             />
           </Checkbox>
           <OText mLeft={5} mRight={5}>
@@ -88,7 +88,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
             <MaterialCommunityIcon
               name='plus-circle-outline'
               size={24}
-              color={disableIncrement ? colors.backgroundDark : colors.primary}
+              color={disableIncrement ? theme.colors.backgroundDark : theme.colors.primary}
             />
           </Checkbox>
         </QuantityControl>
@@ -98,7 +98,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
           <Circle onPress={() => changePosition('left')}>
             <MaterialCommunityIcon
               name='circle-half-full'
-              color={state.selected && state.position === 'left' ? colors.primary : '#cbcbcb'}
+              color={state.selected && state.position === 'left' ? theme.colors.primary : '#cbcbcb'}
               size={24}
               style={styles.inverse}
             />
@@ -106,14 +106,14 @@ export const ProductOptionSubOptionUI = (props: any) => {
           <Circle onPress={() => changePosition('whole')}>
             <MaterialCommunityIcon
               name='checkbox-blank-circle'
-              color={state.selected && state.position === 'whole' ? colors.primary : '#cbcbcb'}
+              color={state.selected && state.position === 'whole' ? theme.colors.primary : '#cbcbcb'}
               size={24}
             />
           </Circle>
           <Circle onPress={() => changePosition('right')}>
             <MaterialCommunityIcon
               name='circle-half-full'
-              color={state.selected && state.position === 'right' ? colors.primary : '#cbcbcb'}
+              color={state.selected && state.position === 'right' ? theme.colors.primary : '#cbcbcb'}
               size={24}
             />
           </Circle>

@@ -11,10 +11,10 @@ import {
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OButton, ODropDown, OInput, OText } from '../shared';
-import { colors } from '../../theme.json';
 
 const StripeRedirectFormUI = (props: any) => {
   const {
+    theme,
     paymethods,
     publicKey,
     handleSubmitPaymentMethod
@@ -76,6 +76,7 @@ const StripeRedirectFormUI = (props: any) => {
       <FormGroup>
         <OText size={24}>{t('SELECT_A_PAYMENT_METHOD', 'Select a payment method')}</OText>
         <ODropDown
+          colors={theme.colors}
           options={paymethods}
           defaultValue={paymentValue}
           onSelect={(option: any) => handleChangeBankOption(option)}
@@ -95,6 +96,7 @@ const StripeRedirectFormUI = (props: any) => {
           control={control}
           render={({ onChange, value }) => (
             <OInput
+              colors={theme.colors}
               placeholder={t('TYPE_ACCOUNT_HOLDER', 'Type an Account holder')}
               // style={styles.inputStyle}
               icon={IMAGES.user}
@@ -115,6 +117,7 @@ const StripeRedirectFormUI = (props: any) => {
           control={control}
           render={({ onChange, value }) => (
             <OInput
+              colors={theme.colors}
               placeholder={t('TYPE_AN_EMAIL', 'Type an email')}
               icon={IMAGES.email}
               value={value}
@@ -135,10 +138,11 @@ const StripeRedirectFormUI = (props: any) => {
       </FormGroup> */}
 
       <OButton
+        colors={theme.colors}
         // text={formState.isSubmitting ? t('LOADING', 'Loading...') : t('OK', 'OK')}
         text={t('OK', 'OK')}
-        bgColor={colors.primary}
-        borderColor={colors.primary}
+        bgColor={theme.colors.primary}
+        borderColor={theme.colors.primary}
         textStyle={{color: 'white'}}
         imgRightSrc={null}
         // isDisabled={formState.isSubmitting}

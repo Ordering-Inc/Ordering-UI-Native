@@ -7,10 +7,10 @@ import {
 } from './styles'
 import { OText } from '../shared'
 import { StyleSheet, Platform } from 'react-native'
-import { colors } from '../../theme.json'
 
 const FloatingButtonUI = (props: FloatingButtonParams) => {
   const {
+    theme,
     btnLeftValue,
     btnRightValue,
     btnLeftValueShow,
@@ -21,42 +21,45 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
     isSecondaryBtn
   } = props
 
+  const styles = StyleSheet.create({
+    primaryBtn: {
+      backgroundColor: theme.colors.primary,
+    },
+    secodaryBtn: {
+      backgroundColor: theme.colors.textSecondary,
+    },
+    btnTextStyle: {
+      position: 'absolute',
+      width: '100%',
+      paddingBottom: 5,
+      left: 0,
+      textAlign: 'center',
+    }
+  })
+
   return (
-    <Container isIos={Platform.OS === 'ios'}>
+    <Container
+      colors={theme.colors}
+      isIos={Platform.OS === 'ios'}
+    >
       <Button
         style={[isSecondaryBtn ? styles.secodaryBtn: styles.primaryBtn]}
         onPress={handleButtonClick}
         disabled={disabled}
       >
-        <OText color={colors.white} size={16} mLeft={20}>
+        <OText color={theme.colors.white} size={16} mLeft={20}>
           {btnLeftValueShow ? btnLeftValue : ''}
         </OText>
-        <OText style={styles.btnTextStyle} color={colors.white} size={16} weight='bold'>
+        <OText style={styles.btnTextStyle} color={theme.colors.white} size={16} weight='bold'>
           {btnText}
         </OText>
-        <OText color={colors.white} size={16} mRight={20}>
+        <OText color={theme.colors.white} size={16} mRight={20}>
           {btnRightValueShow ? btnRightValue : ''}
         </OText>
       </Button>
     </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  primaryBtn: {
-    backgroundColor: colors.primary,
-  },
-  secodaryBtn: {
-    backgroundColor: colors.textSecondary,
-  },
-  btnTextStyle: {
-    position: 'absolute',
-    width: '100%',
-    paddingBottom: 5,
-    left: 0,
-    textAlign: 'center',
-  }
-})
 
 export const FloatingButton = (props: FloatingButtonParams) => {
   const floatingButtonProps = {

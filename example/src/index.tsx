@@ -60,19 +60,13 @@ import {
   OAlert,
   OBottomPopup,
   OButton,
-  OChatBubble,
-  OCheckbox,
   ODropDown,
   OIcon,
   OIconButton,
-  OIconText,
   OInput,
-  OKeyButton,
   OModal,
   OText,
-  OTextarea,
-  OToast,
-  OToggle
+  OToast
 } from './components/shared';
 
 // layouts
@@ -146,19 +140,13 @@ export {
   OAlert,
   OBottomPopup,
   OButton,
-  OChatBubble,
-  OCheckbox,
   ODropDown,
   OIcon,
   OIconButton,
-  OIconText,
   OInput,
-  OKeyButton,
   OModal,
   OText,
-  OTextarea,
   OToast,
-  OToggle,
   // layouts
   Container,
   SafeAreaContainer,

@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const ActiveOrdersContainer = styled.ScrollView`
   margin-bottom: 20px;
@@ -9,7 +8,7 @@ export const ActiveOrdersContainer = styled.ScrollView`
 
 export const Card = styled.TouchableOpacity`
   flex: 1;
-  border: 1px solid ${colors.primary};
+  border: 1px solid ${({ colors }: any) => colors.primary};
   border-radius: 20px;
   margin-right: 10px;
   min-width: 320px;
@@ -20,7 +19,7 @@ export const Card = styled.TouchableOpacity`
 export const Map = styled.View`
   flex: 1;
   height: 125px;
-  margin-bottom: 10px
+  margin-bottom: 10px;
 `
 
 export const Information = styled.View`
@@ -28,7 +27,7 @@ export const Information = styled.View`
   flex: 1;
   height: 100px;
   align-items: center;
-  padding: 10px
+  padding: 10px;
 `
 
 export const Logo = styled.View`

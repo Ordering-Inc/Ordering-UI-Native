@@ -125,12 +125,12 @@ const DeliveryApp = () => {
   }, []);
 
   return (
-    <OrderingProvider settings={settings} Alert={Alert}>
+    <OrderingProvider settings={settings} Alert={Alert} theme={theme}>
       <ToastProvider>
         <NavigationContainer ref={navigationRef}>
           <RootNavigator />
         </NavigationContainer>
-        <Toast />
+        <Toast colors={theme.colors} />
       </ToastProvider>
     </OrderingProvider>
   );

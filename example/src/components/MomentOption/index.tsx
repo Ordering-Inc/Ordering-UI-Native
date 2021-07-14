@@ -13,7 +13,6 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { MomentOptionParams } from '../../types'
 import NavBar from '../NavBar'
 import { OText } from '../shared'
-import { colors } from '../../theme.json'
 import {Container} from '../../layouts/Container'
 import {
   HeaderTitle,
@@ -28,6 +27,7 @@ import {
 
 const MomentOptionUI = (props: MomentOptionParams) => {
   const {
+    theme,
     navigation,
     nopadding,
     datesList,
@@ -88,6 +88,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
     <Container nopadding={nopadding}>
       <View style={{ paddingBottom: 10 }}>
         <NavBar
+          theme={theme}
           onActionLeft={() => goToBack()}
           btnStyle={{ paddingLeft: 0 }}
           paddingTop={0}
@@ -95,7 +96,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
         />
         <HeaderTitle>
           <OText size={28} weight='bold'>{t('DELIVERY_TIME', 'Delivery time')}</OText>
-          <OText color={colors.textSecondary}>{t('SELECT_A_DELIVERY_DATE', 'Select a Delivery Date')}</OText>
+          <OText color={theme.colors.textSecondary}>{t('SELECT_A_DELIVERY_DATE', 'Select a Delivery Date')}</OText>
         </HeaderTitle>
 
         <WrapSelectOption
@@ -106,14 +107,14 @@ const MomentOptionUI = (props: MomentOptionParams) => {
             <MaterialIcon
               name='radiobox-marked'
               size={32}
-              color={colors.primary}
+              color={theme.colors.primary}
               style={styles.icon}
             />
           ) : (
             <MaterialIcon
               name='radiobox-blank'
               size={32}
-              color={colors.textSecondary}
+              color={theme.colors.textSecondary}
               style={styles.icon}
             />
           )}
@@ -127,14 +128,14 @@ const MomentOptionUI = (props: MomentOptionParams) => {
             <MaterialIcon
               name='radiobox-marked'
               size={32}
-              color={colors.primary}
+              color={theme.colors.primary}
               style={styles.icon}
             />
           ) : (
             <MaterialIcon
               name='radiobox-blank'
               size={32}
-              color={colors.textSecondary}
+              color={theme.colors.textSecondary}
               style={styles.icon}
             />
           )}
@@ -145,7 +146,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
           <WrapDelveryTime>
             {datesList.length > 0 && (
               <>
-                <OText color={colors.textSecondary}>{t('DELIVERY_DATE', 'Delivery Date')}</OText>
+                <OText color={theme.colors.textSecondary}>{t('DELIVERY_DATE', 'Delivery Date')}</OText>
                 <Days>
                   {
                     datesList.slice(0, 6).map((date: any, i: any) => {
@@ -156,16 +157,17 @@ const MomentOptionUI = (props: MomentOptionParams) => {
                       return (
                         <Day
                           key={dayNumber}
+                          colors={theme.colors}
                           borderLeftShow={i === 0 || i === 4}
                           onPress={() => handleChangeDate(date)}
                         >
                           <OText
                             style={styles.dayNameStyle}
-                            color={(dateSelected === date && optionSelected.isSchedule) ? colors.primary : colors.textSecondary}
+                            color={(dateSelected === date && optionSelected.isSchedule) ? theme.colors.primary : theme.colors.textSecondary}
                           >{dayName}</OText>
                           <OText
                             size={28}
-                            color={(dateSelected === date && optionSelected.isSchedule) ? colors.primary : colors.textSecondary}
+                            color={(dateSelected === date && optionSelected.isSchedule) ? theme.colors.primary : theme.colors.textSecondary}
                           >{dayNumber}</OText>
                         </Day>
                       )
@@ -177,17 +179,21 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 
             {hoursList.length > 0 && optionSelected.isSchedule && (
               <>
-                <OText color={colors.textSecondary}>{t('DELIVERY_TIME', 'Delivery Time')}</OText>
-                <WrapHours nestedScrollEnabled={true}>
+                <OText color={theme.colors.textSecondary}>{t('DELIVERY_TIME', 'Delivery Time')}</OText>
+                <WrapHours
+                  colors={theme.colors}
+                  nestedScrollEnabled={true}
+                >
                   <Hours name='hours'>
                     {
                       hoursList.map((hour: any, i: any) => (
                         <Hour
                           key={i}
+                          colors={theme.colors}
                           onPress={() => handleChangeMoment(hour.startTime)}
                           disabled={orderState.loading}
                         >
-                          <OText color={timeSelected === hour.startTime ? colors.primary : colors.textSecondary}>
+                          <OText color={timeSelected === hour.startTime ? theme.colors.primary : theme.colors.textSecondary}>
                             {configs?.format_time?.value === '12' ? (
                               hour.startTime.includes('12')
                                 ? `${hour.startTime}PM`

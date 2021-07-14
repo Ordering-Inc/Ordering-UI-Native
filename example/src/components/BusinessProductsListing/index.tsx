@@ -22,12 +22,12 @@ import {
   WrapContent,
   BusinessProductsListingContainer
 } from './styles'
-import { colors, images } from '../../theme.json'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
+    theme,
     navigation,
     errors,
     businessState,
@@ -111,7 +111,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 <>
                   <View style={{ ...styles.headerItem, flex: 1 }}>
                     <OButton
-                      imgLeftSrc={images.general.arrow_left}
+                      colors={theme.colors}
+                      imgLeftSrc={theme.images.general.arrow_left}
                       imgRightSrc={null}
                       style={styles.btnBackArrow}
                       onClick={() => (navigation?.canGoBack() && navigation.goBack()) || (auth && navigation.navigate('BottomTab'))}
@@ -122,7 +123,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                         ? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
                         : onRedirect('AddressForm', { address: orderState.options?.address })}
                     >
-                      <OText color={colors.white} numberOfLines={1}>
+                      <OText color={theme.colors.white} numberOfLines={1}>
                         {orderState?.options?.address?.address}
                       </OText>
                     </AddressInput>
@@ -135,7 +136,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                       >
                         <MaterialIcon
                           name='search'
-                          color={colors.white}
+                          color={theme.colors.white}
                           size={25}
                         />
                       </TouchableOpacity>
@@ -144,7 +145,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 </>
               )}
               {isOpenSearchBar && (
-                <WrapSearchBar>
+                <WrapSearchBar colors={theme.colors}>
                   <SearchBar
                     onSearch={handleChangeSearch}
                     onCancel={() => handleCancel()}

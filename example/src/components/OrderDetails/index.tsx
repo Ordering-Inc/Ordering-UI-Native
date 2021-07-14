@@ -38,7 +38,6 @@ import {
   Map
 } from './styles'
 import { OButton, OIcon, OModal, OText } from '../shared'
-import { colors, images } from '../../theme.json'
 import { ProductItemAccordion } from '../ProductItemAccordion'
 import { OrderDetailsParams } from '../../types'
 import { USER_TYPE } from '../../config/constants'
@@ -46,8 +45,8 @@ import { GoogleMap } from '../GoogleMap'
 import { verifyDecimals } from '../../utils'
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
-
   const {
+    theme,
     navigation,
     messages,
     setMessages,
@@ -58,6 +57,34 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     driverLocation,
     goToBusinessList
   } = props
+
+  const styles = StyleSheet.create({
+    rowDirection: {
+      flexDirection: 'row'
+    },
+    statusBar: {
+      transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
+      height: 10,
+    },
+    logo: {
+      width: 75,
+      height: 75,
+      borderRadius: 10
+    },
+    textBold: {
+      fontWeight: 'bold'
+    },
+    btnBackArrow: {
+      borderWidth: 0,
+      backgroundColor: theme.colors.primary,
+      borderColor: theme.colors.primary,
+      shadowColor: theme.colors.primary,
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      paddingLeft: 0,
+      height: 30
+    },
+  })
 
   const [, t] = useLanguage()
   const [{ parsePrice, parseNumber, parseDate }] = useUtils()
@@ -73,28 +100,28 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const getOrderStatus = (s: string) => {
     const status = parseInt(s)
     const orderStatus = [
-      { key: 0, value: t('PENDING', 'Pending'), slug: 'PENDING', percentage: 0.25, image: images.order.status0 },
-      { key: 1, value: t('COMPLETED', 'Completed'), slug: 'COMPLETED', percentage: 1, image: images.order.status1 },
-      { key: 2, value: t('REJECTED', 'Rejected'), slug: 'REJECTED', percentage: 0, image: images.order.status2 },
-      { key: 3, value: t('DRIVER_IN_BUSINESS', 'Driver in business'), slug: 'DRIVER_IN_BUSINESS', percentage: 0.60, image: images.order.status3 },
-      { key: 4, value: t('PREPARATION_COMPLETED', 'Preparation Completed'), slug: 'PREPARATION_COMPLETED', percentage: 0.70, image: images.order.status4 },
-      { key: 5, value: t('REJECTED_BY_BUSINESS', 'Rejected by business'), slug: 'REJECTED_BY_BUSINESS', percentage: 0, image: images.order.status5 },
-      { key: 6, value: t('REJECTED_BY_DRIVER', 'Rejected by Driver'), slug: 'REJECTED_BY_DRIVER', percentage: 0, image: images.order.status6 },
-      { key: 7, value: t('ACCEPTED_BY_BUSINESS', 'Accepted by business'), slug: 'ACCEPTED_BY_BUSINESS', percentage: 0.35, image: images.order.status7 },
-      { key: 8, value: t('ACCEPTED_BY_DRIVER', 'Accepted by driver'), slug: 'ACCEPTED_BY_DRIVER', percentage: 0.45, image: images.order.status8 },
-      { key: 9, value: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver'), slug: 'PICK_UP_COMPLETED_BY_DRIVER', percentage: 0.80, image: images.order.status9 },
-      { key: 10, value: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver'), slug: 'PICK_UP_FAILED_BY_DRIVER', percentage: 0, image: images.order.status10 },
-      { key: 11, value: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver'), slug: 'DELIVERY_COMPLETED_BY_DRIVER', percentage: 1, image: images.order.status11 },
-      { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver'), slug: 'DELIVERY_FAILED_BY_DRIVER', percentage: 0, image: images.order.status12 },
-      { key: 13, value: t('PREORDER', 'PreOrder'), slug: 'PREORDER', percentage: 0, image: images.order.status13 },
-      { key: 14, value: t('ORDER_NOT_READY', 'Order not ready'), slug: 'ORDER_NOT_READY', percentage: 0, image: images.order.status14 },
-      { key: 15, value: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Order picked up completed by customer'), slug: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', percentage: 100, image: images.order.status15 },
-      { key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer'), slug: 'CANCELLED_BY_CUSTOMER', percentage: 0, image: images.order.status16 },
-      { key: 17, value: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer'), slug: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER', percentage: 0, image: images.order.status17 },
-      { key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business'), slug: 'DRIVER_ALMOST_ARRIVED_TO_BUSINESS', percentage: 0.15, image: images.order.status18 },
-      { key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer'), slug: 'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', percentage: 0.90, image: images.order.status19 },
-      { key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business'), slug: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', percentage: 90, image: images.order.status20 },
-      { key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business'), slug: 'ORDER_CUSTOMER_ARRIVED_BUSINESS', percentage: 95, image: images.order.status21 }
+      { key: 0, value: t('PENDING', 'Pending'), slug: 'PENDING', percentage: 0.25, image: theme.images.order.status0 },
+      { key: 1, value: t('COMPLETED', 'Completed'), slug: 'COMPLETED', percentage: 1, image: theme.images.order.status1 },
+      { key: 2, value: t('REJECTED', 'Rejected'), slug: 'REJECTED', percentage: 0, image: theme.images.order.status2 },
+      { key: 3, value: t('DRIVER_IN_BUSINESS', 'Driver in business'), slug: 'DRIVER_IN_BUSINESS', percentage: 0.60, image: theme.images.order.status3 },
+      { key: 4, value: t('PREPARATION_COMPLETED', 'Preparation Completed'), slug: 'PREPARATION_COMPLETED', percentage: 0.70, image: theme.images.order.status4 },
+      { key: 5, value: t('REJECTED_BY_BUSINESS', 'Rejected by business'), slug: 'REJECTED_BY_BUSINESS', percentage: 0, image: theme.images.order.status5 },
+      { key: 6, value: t('REJECTED_BY_DRIVER', 'Rejected by Driver'), slug: 'REJECTED_BY_DRIVER', percentage: 0, image: theme.images.order.status6 },
+      { key: 7, value: t('ACCEPTED_BY_BUSINESS', 'Accepted by business'), slug: 'ACCEPTED_BY_BUSINESS', percentage: 0.35, image: theme.images.order.status7 },
+      { key: 8, value: t('ACCEPTED_BY_DRIVER', 'Accepted by driver'), slug: 'ACCEPTED_BY_DRIVER', percentage: 0.45, image: theme.images.order.status8 },
+      { key: 9, value: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver'), slug: 'PICK_UP_COMPLETED_BY_DRIVER', percentage: 0.80, image: theme.images.order.status9 },
+      { key: 10, value: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver'), slug: 'PICK_UP_FAILED_BY_DRIVER', percentage: 0, image: theme.images.order.status10 },
+      { key: 11, value: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver'), slug: 'DELIVERY_COMPLETED_BY_DRIVER', percentage: 1, image: theme.images.order.status11 },
+      { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver'), slug: 'DELIVERY_FAILED_BY_DRIVER', percentage: 0, image: theme.images.order.status12 },
+      { key: 13, value: t('PREORDER', 'PreOrder'), slug: 'PREORDER', percentage: 0, image: theme.images.order.status13 },
+      { key: 14, value: t('ORDER_NOT_READY', 'Order not ready'), slug: 'ORDER_NOT_READY', percentage: 0, image: theme.images.order.status14 },
+      { key: 15, value: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Order picked up completed by customer'), slug: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', percentage: 100, image: theme.images.order.status15 },
+      { key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer'), slug: 'CANCELLED_BY_CUSTOMER', percentage: 0, image: theme.images.order.status16 },
+      { key: 17, value: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer'), slug: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER', percentage: 0, image: theme.images.order.status17 },
+      { key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business'), slug: 'DRIVER_ALMOST_ARRIVED_TO_BUSINESS', percentage: 0.15, image: theme.images.order.status18 },
+      { key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer'), slug: 'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', percentage: 0.90, image: theme.images.order.status19 },
+      { key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business'), slug: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', percentage: 90, image: theme.images.order.status20 },
+      { key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business'), slug: 'ORDER_CUSTOMER_ARRIVED_BUSINESS', percentage: 95, image: theme.images.order.status21 }
     ]
 
 
@@ -155,7 +182,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const locations = [
     { ...order?.driver?.location, title: t('DRIVER', 'Driver'), icon: order?.driver?.photo || 'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png' },
-    { ...order?.business?.location, title: order?.business?.name, icon: order?.business?.logo || images.dummies.businessLogo },
+    { ...order?.business?.location, title: order?.business?.name, icon: order?.business?.logo || theme.images.dummies.businessLogo },
     { ...order?.customer?.location, title: t('YOUR_LOCATION', 'Your Location'), icon: order?.customer?.photo || 'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png' }
   ]
 
@@ -170,33 +197,43 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       <Spinner visible={!order || Object.keys(order).length === 0} />
       {order && Object.keys(order).length > 0 && (
         <>
-          <Header>
+          <Header colors={theme.colors}>
             <OButton
-              imgLeftSrc={images.general.arrow_left}
+              colors={theme.colors}
+              imgLeftSrc={theme.images.general.arrow_left}
               imgRightSrc={null}
               style={styles.btnBackArrow}
               onClick={() => handleArrowBack()}
               imgLeftStyle={{ tintColor: '#fff' }}
             />
             <HeaderInfo>
-              <OIcon src={images.logos.logotypeInvert} height={50} width={180} />
-              <OText size={28} color={colors.white} style={{ fontWeight: '600', alignItems: 'flex-start' }}>
+              <OIcon
+                colors={theme.colors}
+                src={theme.images.logos.logotypeInvert}
+                height={50}
+                width={180}
+              />
+              <OText size={28} color={theme.colors.white} style={{ fontWeight: '600', alignItems: 'flex-start' }}>
                 {order?.customer?.name} {t('THANKS_ORDER', 'thanks for your order!')}
               </OText>
-              <OText color={colors.white}>{t('ORDER_MESSAGE_HEADER_TEXT', 'Once business accepts your order, we will send you an email, thank you!')}</OText>
+              <OText color={theme.colors.white}>{t('ORDER_MESSAGE_HEADER_TEXT', 'Once business accepts your order, we will send you an email, thank you!')}</OText>
               <View style={{ ...styles.rowDirection, justifyContent: 'space-between' }}>
-                <OText size={20} color={colors.white} space>
+                <OText size={20} color={theme.colors.white} space>
                   {t('TOTAL', 'Total')}
                 </OText>
-                <OText size={20} color={colors.white}>{parsePrice(order?.summary?.total || order?.total)}</OText>
+                <OText size={20} color={theme.colors.white}>{parsePrice(order?.summary?.total || order?.total)}</OText>
               </View>
             </HeaderInfo>
           </Header>
           <OrderContent>
-            <OrderBusiness>
+            <OrderBusiness colors={theme.colors}>
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <Logo>
-                  <OIcon url={order?.business?.logo} style={styles.logo}></OIcon>
+                  <OIcon
+                    colors={theme.colors}
+                    url={order?.business?.logo}
+                    style={styles.logo}
+                  />
                 </Logo>
                 <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '60%' }}>
                   <View>
@@ -217,24 +254,24 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <MaterialCommunityIcon
                   name='store'
                   size={28}
-                  color={colors.backgroundDark}
+                  color={theme.colors.backgroundDark}
                   onPress={() => props.navigation.navigate('Business', { store: businessData?.slug })}
                 />
                 <TouchableOpacity onPress={() => handleOpenMessagesForBusiness()}>
                   <MaterialCommunityIcon
                     name='message-text-outline'
                     size={26}
-                    color={colors.backgroundDark}
+                    color={theme.colors.backgroundDark}
                   />
                 </TouchableOpacity>
               </Icons>
             </OrderBusiness>
-            <View style={{ ...styles.rowDirection, backgroundColor: colors.white }}>
+            <View style={{ ...styles.rowDirection, backgroundColor: theme.colors.white }}>
               <OrderInfo>
                 <OrderData>
                   <View style={{ alignItems: 'flex-start' }}>
                     <OText size={20}>{t('ORDER', 'Order')} #{order?.id}</OText>
-                    <OText color={colors.textSecondary}>{t('DATE_TIME_FOR_ORDER', 'Date and time for your order')}</OText>
+                    <OText color={theme.colors.textSecondary}>{t('DATE_TIME_FOR_ORDER', 'Date and time for your order')}</OText>
                     <OText size={18}>
                       {
                         order?.delivery_datetime_utc
@@ -248,7 +285,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       start={{ x: 0.0, y: 0.0 }}
                       end={{ x: getOrderStatus(order?.status)?.percentage || 0, y: 0 }}
                       locations={[.9999, .9999]}
-                      colors={[colors.primary, colors.disabled]}
+                      colors={[theme.colors.primary, theme.colors.disabled]}
                       style={styles.statusBar}
                     />
                   </StaturBar>
@@ -256,16 +293,27 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderInfo>
               <OrderStatus>
                 <StatusImage>
-                  <OIcon src={getOrderStatus(order?.status)?.image} width={80} height={80} />
+                  <OIcon
+                    colors={theme.colors}
+                    src={getOrderStatus(order?.status)?.image}
+                    width={80}
+                    height={80}
+                  />
                 </StatusImage>
-                <OText color={colors.primary}>{getOrderStatus(order?.status)?.value}</OText>
+                <OText color={theme.colors.primary}>{getOrderStatus(order?.status)?.value}</OText>
               </OrderStatus>
             </View>
-            <OrderCustomer>
+            <OrderCustomer colors={theme.colors}>
               <OText size={18}>{t('CUSTOMER', 'Customer')}</OText>
               <Customer>
                 <CustomerPhoto>
-                  <OIcon url={user?.photo} width={100} height={100} style={styles.logo} />
+                  <OIcon
+                    colors={theme.colors}
+                    url={user?.photo}
+                    width={100}
+                    height={100}
+                    style={styles.logo}
+                  />
                 </CustomerPhoto>
                 <InfoBlock>
                   <OText size={18}>{order?.customer?.name} {order?.customer?.lastname}</OText>
@@ -291,7 +339,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <OText size={18}>{t('YOUR_DRIVER', 'Your Driver')}</OText>
                 <Customer>
                   <CustomerPhoto>
-                    <OIcon url={order?.driver?.photo} width={100} height={100} style={styles.logo} />
+                    <OIcon
+                      colors={theme.colors}
+                      url={order?.driver?.photo}
+                      width={100}
+                      height={100}
+                      style={styles.logo}
+                    />
                   </CustomerPhoto>
                   <InfoBlock>
                     <OText size={18}>{order?.driver?.name} {order?.driver?.lastname}</OText>
@@ -300,7 +354,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         <MaterialCommunityIcon
                           name='message-text-outline'
                           size={24}
-                          color={colors.backgroundDark}
+                          color={theme.colors.backgroundDark}
                         />
                       </TouchableOpacity>
                     </Icons>
@@ -318,7 +372,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 />
               ))}
             </OrderProducts>
-            <OrderBill>
+            <OrderBill colors={theme.colors}>
               <Table>
                 <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
                 <OText>{parsePrice(order?.summary?.subtotal || order?.subtotal)}</OText>
@@ -373,7 +427,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <Total>
                 <Table>
                   <OText style={styles.textBold}>{t('TOTAL', 'Total')}</OText>
-                  <OText style={styles.textBold} color={colors.primary}>{parsePrice(order?.summary?.total || order?.total)}</OText>
+                  <OText style={styles.textBold} color={theme.colors.primary}>{parsePrice(order?.summary?.total || order?.total)}</OText>
                 </Table>
               </Total>
             </OrderBill>
@@ -393,35 +447,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     </OrderDetailsContainer>
   )
 }
-
-const styles = StyleSheet.create({
-  rowDirection: {
-    flexDirection: 'row'
-  },
-  statusBar: {
-    transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
-    height: 10,
-  },
-  logo: {
-    width: 75,
-    height: 75,
-    borderRadius: 10
-  },
-  textBold: {
-    fontWeight: 'bold'
-  },
-  btnBackArrow: {
-    borderWidth: 0,
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-    shadowColor: colors.primary,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    paddingLeft: 0,
-    height: 30
-  },
-})
-
 
 export const OrderDetails = (props: OrderDetailsParams) => {
   const orderDetailsProps = {

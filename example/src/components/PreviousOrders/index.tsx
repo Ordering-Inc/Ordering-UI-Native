@@ -3,20 +3,46 @@ import { useLanguage, useUtils } from 'ordering-components/native'
 import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import { OButton, OIcon, OText } from '../shared'
 import { Card, Logo, Information, MyOrderOptions, Status, WrappButton } from './styles'
-import { colors } from '../../theme.json'
 import { PreviousOrdersParams } from '../../types'
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {
   const {
+    theme,
     orders,
     pagination,
     onNavigationRedirect,
     loadMoreOrders,
     getOrderStatus,
     handleReorder,
-    reorderLoading,
-    orderID
+    reorderLoading
   } = props
+
+  const styles = StyleSheet.create({
+    logo: {
+      borderRadius: 10,
+      width: 75,
+      height: 75
+    },
+    reorderbutton: {
+      width: 80,
+      height: 40,
+      paddingLeft: 0,
+      paddingRight: 0,
+      borderRadius: 10,
+      flex: 1
+    },
+    reorderLoading: {
+      width: 80,
+      height: 40,
+      borderRadius: 10,
+    },
+    buttonText: {
+      color: theme.colors.white,
+      fontSize: 12,
+      marginLeft: 2,
+      marginRight: 2
+    }
+  })
 
   const [, t] = useLanguage()
   const [reorderSelected,setReorderSelected] = useState<number | null>(null)
@@ -41,40 +67,48 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       style={{ height: '60%', marginBottom: 30 }}
     >
       {orders.map((order: any) => (
-        <Card key={order.id}>
+        <Card
+          key={order.id}
+          colors={theme.colors}
+        >
           {!!order.business?.logo && (
             <Logo>
-              <OIcon url={optimizeImage(order.business?.logo, 'h_300,c_limit')} style={styles.logo} />
+              <OIcon
+                colors={theme.colors}
+                url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
+                style={styles.logo}
+              />
             </Logo>
           )}
           <Information>
             <OText size={17} numberOfLines={1}>
               {order.business?.name}
             </OText>
-            <OText size={15} color={colors.textSecondary} numberOfLines={1}>
+            <OText size={15} color={theme.colors.textSecondary} numberOfLines={1}>
               {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
             </OText>
             <MyOrderOptions>
               <TouchableOpacity onPress={() => handleClickViewOrder(order?.uuid)}>
-                <OText size={16} color={colors.primary} mRight={5} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
+                <OText size={16} color={theme.colors.primary} mRight={5} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
               </TouchableOpacity>
               {
                 allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && (
                   <TouchableOpacity onPress={() => handleClickOrderReview(order)}>
-                    <OText size={16} color={colors.primary} numberOfLines={1}>{t('REVIEW_ORDER', 'Review Order')}</OText>
+                    <OText size={16} color={theme.colors.primary} numberOfLines={1}>{t('REVIEW_ORDER', 'Review Order')}</OText>
                   </TouchableOpacity>
                 )}
             </MyOrderOptions>
           </Information>
           <Status>
             <OText
-              color={colors.primary}
+              color={theme.colors.primary}
               size={16}
               numberOfLines={1}
             >
               {getOrderStatus(order.status)?.value}
             </OText>
             <OButton
+              colors={theme.colors}
               text={t('REORDER', 'Reorder')}
               imgRightSrc={''}
               textStyle={styles.buttonText}
@@ -89,10 +123,11 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       {pagination.totalPages && pagination.currentPage < pagination.totalPages && (
         <WrappButton>
           <OButton
+            colors={theme.colors}
             onClick={loadMoreOrders}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
             imgRightSrc={null}
-            textStyle={{color: colors.white}}
+            textStyle={{color: theme.colors.white}}
           />
         </WrappButton>
       )}
@@ -100,30 +135,3 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 
   )
 }
-
-const styles = StyleSheet.create({
-  logo: {
-    borderRadius: 10,
-    width: 75,
-    height: 75
-  },
-  reorderbutton: {
-    width: 80,
-    height: 40,
-    paddingLeft: 0,
-    paddingRight: 0,
-    borderRadius: 10,
-    flex: 1
-  },
-  reorderLoading: {
-    width: 80,
-    height: 40,
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: colors.white,
-    fontSize: 12,
-    marginLeft: 2,
-    marginRight: 2
-  }
-})

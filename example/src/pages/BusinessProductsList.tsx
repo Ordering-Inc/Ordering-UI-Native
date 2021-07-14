@@ -2,7 +2,7 @@ import React from 'react'
 import { useApi, useEvent } from 'ordering-components/native'
 import { BusinessProductsListing as BusinessProductsListController } from '../components/BusinessProductsListing'
 import styled from 'styled-components/native'
-import { colors } from '../theme.json'
+import theme from '../theme.json';
 
 const BusinessProductsList = (props: any) => {
   const [ordering] = useApi()
@@ -12,6 +12,7 @@ const BusinessProductsList = (props: any) => {
   const product = props.route.params?.productLogin
   const businessProductsProps = {
     ...props,
+    theme,
     ordering,
     isSearchByName: true,
     isSearchByDescription: true,
@@ -63,7 +64,7 @@ const BusinessProductsList = (props: any) => {
 
 const BusinessProductsListView = styled.SafeAreaView`
   flex: 1;
-  background-color: ${colors.backgroundPage};
+  background-color: ${theme.colors.backgroundPage};
 `
 
 export default BusinessProductsList

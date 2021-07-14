@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 import { Platform } from 'react-native';
 import { UserProfileForm as ProfileController } from '../components/UserProfileForm';
 import { Container } from '../layouts/Container'
+import theme from '../theme.json';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
@@ -15,6 +16,7 @@ interface Props {
 const Profile = (props: Props) => {
   const profileProps = {
     ...props,
+    theme,
     useSessionUser: true,
     useValidationFields: true,
     goToBack: () => props.navigation?.canGoBack() && props.navigation.goBack(),

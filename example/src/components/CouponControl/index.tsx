@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Alert, Text } from 'react-native';
+import { StyleSheet, Alert } from 'react-native';
 import { CouponControl as CouponController, useLanguage } from 'ordering-components/native';
 
 import {
@@ -9,10 +9,10 @@ import {
 } from './styles';
 
 import { OInput, OButton, OAlert, OText } from '../shared';
-import { colors } from '../../theme.json';
 
 const CouponControlUI = (props: any) => {
   const {
+    theme,
     couponDefault,
     couponInput,
     handleButtonApplyClick,
@@ -21,6 +21,15 @@ const CouponControlUI = (props: any) => {
     confirm,
     setConfirm
   } = props
+
+  const styles = StyleSheet.create({
+    inputsStyle: {
+      borderColor: theme.colors.secundaryContrast,
+      borderRadius: 50,
+      flex: 1,
+      marginRight: 30
+    },
+  });
 
   const [, t] = useLanguage()
 
@@ -64,10 +73,10 @@ const CouponControlUI = (props: any) => {
           message={t('QUESTION_DELETE_COUPON', 'Are you sure that you want to delete the coupon?')}
           onAccept={() => handleOnAccept()}
         >
-          <CCButton>
+          <CCButton colors={theme.colors}>
             <OText
               size={16}
-              color={colors.white}
+              color={theme.colors.white}
               style={{ textAlign: 'center' }}
             >
               {`${t('REMOVE_COUPON', 'Remove Coupon')} ${couponDefault}`}
@@ -77,14 +86,16 @@ const CouponControlUI = (props: any) => {
       ) : (
         <CCWrapper>
           <OInput
+            colors={theme.colors}
             placeholder={t('DISCOUNT_COUPON', 'Discount coupon')}
             onChange={(e: any) => onChangeInputCoupon(e)}
             style={styles.inputsStyle}
           />
           <OButton
+            colors={theme.colors}
             onClick={() => handleButtonApplyClick()}
-            bgColor={colors.primary}
-            borderColor={colors.primary}
+            bgColor={theme.colors.primary}
+            borderColor={theme.colors.primary}
             textStyle={{color: 'white'}}
             imgRightSrc={null}
             text={t('APPLY', 'Apply')}
@@ -95,14 +106,6 @@ const CouponControlUI = (props: any) => {
     </CContainer>
   )
 }
-const styles = StyleSheet.create({
-  inputsStyle: {
-    borderColor: colors.secundaryContrast,
-    borderRadius: 50,
-    flex: 1,
-    marginRight: 30
-  },
-});
 
 export const CouponControl = (props: any) => {
   const couponProp = {

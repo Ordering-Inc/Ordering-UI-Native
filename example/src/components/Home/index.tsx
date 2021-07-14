@@ -1,7 +1,6 @@
 import React from 'react';
 import { useLanguage, useOrder } from 'ordering-components/native';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import { colors, images } from '../../theme.json';
 import { OButton, OIcon, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
@@ -12,6 +11,7 @@ const windowHeight = Dimensions.get('window').height
 
 export const Home = (props: any) => {
   const {
+    theme,
     onNavigationRedirect
   } = props;
 
@@ -27,28 +27,38 @@ export const Home = (props: any) => {
     <View style={styles.container}>
       <View style={styles.wrapperContent}>
         <View style={styles.languageSelector}>
-          <LanguageSelector />
+          <LanguageSelector theme={theme} />
         </View>
         <LogoWrapper>
-          <OIcon src={images.logos.logotype} style={styles.logo} />
+          <OIcon
+            colors={theme.colors}
+            src={theme.images.logos.logotype}
+            style={styles.logo}
+          />
         </LogoWrapper>
         <Slogan>
-          <OIcon src={images.general.homeHero} style={styles.slogan} />
+          <OIcon
+            colors={theme.colors}
+            src={theme.images.general.homeHero}
+            style={styles.slogan}
+          />
         </Slogan>
       </View>
       <View style={styles.wrapperBtn}>
         <OButton
+          colors={theme.colors}
           text={t('LOGIN_NOW', 'Login now')}
-          bgColor={colors.primary}
-          borderColor={colors.primary}
+          bgColor={theme.colors.primary}
+          borderColor={theme.colors.primary}
           style={styles.buttons}
           textStyle={{ color: 'white' }}
           onClick={() => onNavigationRedirect('Login')}
         />
         <OButton
+          colors={theme.colors}
           text={t('SIGNUP', 'Signup')}
-          bgColor={colors.white}
-          borderColor={colors.primary}
+          bgColor={theme.colors.white}
+          borderColor={theme.colors.primary}
           style={styles.buttons}
           onClick={() => onNavigationRedirect('Signup')}
         />

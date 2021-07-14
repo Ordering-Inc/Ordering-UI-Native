@@ -2,8 +2,8 @@ import * as React from 'react'
 import AwesomeAlert from 'react-native-awesome-alerts'
 import { getTraduction } from '../utils'
 import { useLanguage } from 'ordering-components/native'
-import { colors } from '../theme.json'
 interface Props {
+  colors: any,
   open: boolean,
   title: string,
   content: Array<string>,
@@ -37,7 +37,7 @@ const Alert = (props: Props) => {
       closeOnHardwareBackPress={false}
       showConfirmButton={true}
       confirmText={t('ACCEPT', 'Accept')}
-      confirmButtonColor={colors.primary}
+      confirmButtonColor={props?.colors?.primary}
       onCancelPressed={() => onClose()}
       onConfirmPressed={() => onAccept()}
     />
