@@ -4,6 +4,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Messages } from '../Messages'
+import {ShareComponent} from '../ShareComponent'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -194,7 +195,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </Header>
           <OrderContent>
             <OrderBusiness>
-              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                 <Logo>
                   <OIcon url={order?.business?.logo} style={styles.logo}></OIcon>
                 </Logo>
@@ -214,6 +215,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </View>
               </View>
               <Icons>
+                {order.uuid && order.hash_key && (
+                  <ShareComponent orderId={order.uuid} hashkey={order.hash_key} />
+                )}
                 <MaterialCommunityIcon
                   name='store'
                   size={28}
