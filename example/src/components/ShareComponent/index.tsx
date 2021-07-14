@@ -3,8 +3,9 @@ import { Share } from 'react-native';
 import {useLanguage} from 'ordering-components/native'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {useToast, ToastType} from '../../providers/ToastProvider'
+import { ShareComponentParams } from '../../types';
 
-export const ShareComponent = (props) => {
+export const ShareComponent = (props : ShareComponentParams) => {
 
   const {orderId, hashkey} = props
   const [ ,t] = useLanguage()
@@ -15,7 +16,7 @@ export const ShareComponent = (props) => {
       const result = await Share.share({
         title: t('SHARE_YOUR_ORDER', 'Share your order'),
         message:
-          `My order ${url}`,
+          `${t('MY_ORDER', 'My order')} ${url}`,
         url: `https://reactdemo.ordering.co/orders/${orderId}?=${hashkey}`
       });
       if (result.action === Share.sharedAction && result.activityType) {

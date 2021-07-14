@@ -386,3 +386,8 @@ export interface GoogleMapsParams {
   setSaveLocation?: (val : boolean) => void,
   handleToggleMap?: () => void
 }
+
+export interface ShareComponentParams {
+  orderId?: number;
+  hashkey?: string;
+}
