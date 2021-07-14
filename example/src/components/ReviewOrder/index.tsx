@@ -27,8 +27,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     handleChangeRating,
     handleSendReview,
     formState,
-    setIsReviewed,
-    navigation
+    navigation,
+    setIsReviewed
   } = props
 
   const [, t] = useLanguage()

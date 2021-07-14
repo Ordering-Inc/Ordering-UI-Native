@@ -290,7 +290,8 @@ export interface ReviewOrderParams {
   handleChangeRating?: any,
   handleSendReview?: any,
   formState?: any,
-  navigation?: any
+  navigation?: any,
+  setIsReviewed?: (isReviewed: boolean) => {}
 }
 export interface MessagesParams {
   type?: string,
