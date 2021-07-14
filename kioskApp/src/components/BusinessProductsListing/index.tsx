@@ -1,5 +1,5 @@
-import React from 'react'
-import { Dimensions, View } from 'react-native'
+import React, { useRef } from 'react'
+import { Dimensions, FlatList, View } from 'react-native'
 import {
   BusinessAndProductList,
   useLanguage,
@@ -77,13 +77,15 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     );
   }
 
+  let _carousel: Carousel<Product> | null;
+
   const _renderPromos = (): React.ReactElement => (
     <>
       {_renderTitle(t('PROMOS', 'Promos'))}
       
       <Carousel
         keyExtractor={(item:any) => item.id}
-        ref={(_) => {}}
+        ref={(c) => { _carousel = c; }}
         data={_promos}
         renderItem={_renderItem}
         sliderWidth={orientationState?.dimensions?.width}
@@ -97,6 +99,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         snapToAlignment="start"
         activeSlideAlignment="start"
         inactiveSlideOpacity={1}
+        initialScrollIndex={_carousel?.currentIndex}
+        onScrollToIndexFailed={(_)=> {}}
       />
 
     </>

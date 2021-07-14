@@ -58,7 +58,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
           </View>
         )}
         dropdownStyle={{
-          height: 100,
+          height: 110,
           borderRadius: 6,
           padding: 10,
         }}

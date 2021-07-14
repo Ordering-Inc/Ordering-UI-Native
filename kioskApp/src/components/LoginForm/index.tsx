@@ -98,16 +98,16 @@ const LoginFormUI = (props: LoginParams) => {
     <>
       <Controller
         control={control}
-        render={(p: any) => (
+        render={({ onChange, value }: any) => (
           <OInput
             placeholder={t('USER', 'User')}
             style={styles.inputStyle}
-            value={p.field.value}
+            value={value}
             autoCapitalize="none"
             autoCorrect={false}
             type="email-address"
             onChange={(e: any) => {
-              handleChangeInputEmail(e, p.field.onChange);
+              handleChangeInputEmail(e, onChange);
             }}
           />
         )}
@@ -130,13 +130,13 @@ const LoginFormUI = (props: LoginParams) => {
 
       <Controller
         control={control}
-        render={(p: any) => (
+        render={({ onChange, value }: any) => (
           <OInput
             isSecured={true}
             placeholder={t('PASSWORD', 'Password')}
             style={styles.inputStyle}
-            value={p.field.value}
-            onChange={(val: any) => p.field.onChange(val)}
+            value={value}
+            onChange={(val: any) => onChange(val)}
           />
         )}
         name="password"
