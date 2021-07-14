@@ -94,9 +94,9 @@ interface CartItemProps {
   isCartProduct?: boolean,
   product?: Product,
   getProductMax?: any,
-  changeQuantity?: (product: any, quantity: number) => {},
-  onDeleteProduct?: (product: any) => void,
-  onEditProduct?: (product: any) => void,
+  changeQuantity: (product: any, quantity: number) => {},
+  onDeleteProduct: (product: any) => void,
+  onEditProduct: (product: any) => void,
   offsetDisabled?: any,
   isFromCheckout?: any
 }

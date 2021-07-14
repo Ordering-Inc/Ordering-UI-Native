@@ -55,8 +55,8 @@ const CartUI = (props: any) => {
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
 
-  const handleDeleteClick = (product: any) => {
-    removeProduct(product)
+  const handleDeleteClick = (product: any) => {    
+    removeProduct(product, cart)
   }
 
   const handleEditProduct = (product: any) => {
@@ -391,7 +391,7 @@ interface CartUIProps {
   changeQuantity: any,
   getProductMax: any,
   offsetDisabled: any,
-  removeProduct: any,
+  removeProduct: (product: any, cart: any) => void,
   handleCartOpen: any,
   setIsCartsLoading: any,
   isFromCart: any,

@@ -51,7 +51,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
 	const isCartPending = cart?.status === 2
 
   const handleDeleteClick = (product: any) => {
-    removeProduct(product)
+    removeProduct(product, cart)
   }
 
   const handleEditProduct = (product: any) => {
@@ -226,7 +226,7 @@ interface CartBottomSheetUIProps {
   changeQuantity: any,
   getProductMax: any,
   offsetDisabled: any,
-  removeProduct: any,
+  removeProduct: (product: any, cart: any) => void,
   setIsCartsLoading: any,
 	isFromCart: any,
 	navigation: any,
