@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import {
   Placeholder,
   PlaceholderLine,
@@ -13,7 +12,9 @@ import {
   useLanguage,
   useSession,
   useApi,
-  useOrder
+  useOrder,
+  ToastType,
+  useToast
 } from 'ordering-components/native';
 
 import { PaymentOptionCash } from '../PaymentOptionCash';
@@ -85,10 +86,10 @@ const PaymentOptionsUI = (props: any) => {
   const [showGateway, setShowGateway] = useState<any>({closedByUsed: false, open: false});
   const [prog, setProg] = useState(true);
   const [progClr, setProgClr] = useState('#424242');
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const webviewRef = useRef<any>(null)
   const [ordering] = useApi()
-  const [orderState,{confirmCart}] = useOrder()
+  const [,{confirmCart}] = useOrder()
   const [{ token, user }] = useSession()
   const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
   // const [{ token }] = useSession()

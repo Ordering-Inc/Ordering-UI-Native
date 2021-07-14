@@ -3,13 +3,14 @@ import {
   UserFormDetails as UserProfileController,
   useSession,
   useLanguage,
+  ToastType,
+  useToast
 } from 'ordering-components/native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { StyleSheet, View } from 'react-native';
 import { colors,images } from '../../theme.json';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { ProfileParams } from '../../types';
 import { AddressList } from '../AddressList'
 import { LogoutButton } from '../LogoutButton'
@@ -46,7 +47,7 @@ const ProfileUI = (props: ProfileParams) => {
 
   const [{ user }] = useSession();
   const [, t] = useLanguage();
-  const { showToast } = useToast();
+  const [, { showToast }]= useToast();
   const { handleSubmit, errors, setValue, control } = useForm();
 
   const [phoneInputData, setPhoneInputData] = useState({
@@ -83,7 +84,7 @@ const ProfileUI = (props: ProfileParams) => {
   }
 
   const handleImagePicker = () => {
-    launchImageLibrary({ mediaType: 'photo', maxHeight: 200, maxWidth: 200, includeBase64: true }, (response) => {
+    launchImageLibrary({ mediaType: 'photo', maxHeight: 200, maxWidth: 200, includeBase64: true }, (response : any) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.errorMessage) {

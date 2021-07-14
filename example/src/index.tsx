@@ -82,7 +82,6 @@ import { SafeAreaContainer } from './layouts/SafeAreaContainer';
 // providers
 import Alert from './providers/AlertProvider';
 import { StoreMethods } from './providers/StoreUtil';
-import { ToastType, useToast, ToastContext, ToastProvider } from './providers/ToastProvider';
 
 export {
   ActiveOrders,
@@ -165,8 +164,4 @@ export {
   // providers
   Alert,
   StoreMethods,
-  ToastType,
-  useToast,
-  ToastContext,
-  ToastProvider,
 }

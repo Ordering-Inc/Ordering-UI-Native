@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react'
-import { OrderList, useLanguage, useOrder } from 'ordering-components/native'
+import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { useFocusEffect } from '@react-navigation/native'
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
@@ -9,7 +9,6 @@ import { PreviousOrders } from '../PreviousOrders'
 import { OptionTitle } from './styles'
 import { colors, images } from '../../theme.json'
 import { OrdersOptionParams } from '../../types'
-import { ToastType, useToast } from '../../providers/ToastProvider'
 
 import {
   Placeholder,
@@ -36,7 +35,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const [, t] = useLanguage()
   const [, { reorder }] = useOrder()
-  const { showToast } = useToast()
+  const [, { showToast }] = useToast()
   const { loading, error, orders: values } = orderList
 
   const imageFails = activeOrders

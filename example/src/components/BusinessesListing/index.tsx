@@ -8,7 +8,9 @@ import {
   useSession,
   useOrder,
   useConfig,
-  useUtils
+  useUtils,
+  ToastType,
+  useToast
 } from 'ordering-components/native'
 
 import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
@@ -22,7 +24,6 @@ import { NotFoundSource } from '../NotFoundSource'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { OrderTypeSelector } from '../OrderTypeSelector'
-import { ToastType, useToast } from '../../providers/ToastProvider'
 
 const PIXELS_TO_SCROLL = 1200
 
@@ -42,7 +43,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const [orderState] = useOrder()
   const [{ configs }] = useConfig()
   const [{ parseDate }] = useUtils()
-  const {showToast} = useToast()
+  const [, {showToast}] = useToast()
 
   // const timerId = useRef<any>(false)
   // const panResponder = useRef(

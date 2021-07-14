@@ -4,13 +4,14 @@ import { useForm, Controller } from 'react-hook-form';
 
 import {
   ForgotPasswordForm as ForgotPasswordController,
-  useLanguage
+  useLanguage,
+  ToastType,
+  useToast
 } from 'ordering-components/native';
 
 import NavBar from '../NavBar';
 import { FormInput, FormSide } from '../../components/LoginForm/styles'
 import {Container} from './styles'
-import { ToastType, useToast } from '../../providers/ToastProvider';
 
 import { OButton, OInput, OText } from '../shared';
 import { colors,images } from '../../theme.json';
@@ -22,7 +23,7 @@ const ForgotPasswordUI = (props: any) => {
     handleButtonForgotPasswordClick,
   } = props;
   const [, t] = useLanguage();
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const { control, handleSubmit, errors } = useForm();
 
   const [emailSent, setEmailSent] = useState(null);

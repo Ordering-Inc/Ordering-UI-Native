@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Messages as MessagesController, useSession, useUtils, useLanguage } from 'ordering-components/native'
+import { Messages as MessagesController, useSession, useUtils, useLanguage, ToastType, useToast } from 'ordering-components/native'
 import { launchImageLibrary } from 'react-native-image-picker'
 import { GiftedChat, Actions, InputToolbar, Composer, Send, Bubble, MessageImage } from 'react-native-gifted-chat'
 import { USER_TYPE } from '../../config/constants'
-import { ToastType, useToast } from '../../providers/ToastProvider'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { colors } from '../../theme.json'
 import { OIcon, OIconButton, OText } from '../shared'
@@ -33,7 +32,7 @@ const MessagesUI = (props: MessagesParams) => {
   const [{ user }] = useSession()
   const [{ parseDate }] = useUtils()
   const [, t] = useLanguage()
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)

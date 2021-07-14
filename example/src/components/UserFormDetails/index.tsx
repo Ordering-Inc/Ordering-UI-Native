@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { useSession, useLanguage } from 'ordering-components/native';
+import { useSession, useLanguage, ToastType, useToast } from 'ordering-components/native';
 import { useForm, Controller } from 'react-hook-form';
 
 import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
 
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OText, OButton, OInput } from '../shared';
 import { colors,images } from '../../theme.json';
 
@@ -28,7 +27,7 @@ export const UserFormDetailsUI = (props: any) => {
   } = props
 
   const [, t] = useLanguage();
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const { handleSubmit, control, errors, setValue } = useForm();
 
   const [{ user }] = useSession()

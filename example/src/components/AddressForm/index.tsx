@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native'
-import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder } from 'ordering-components/native'
+import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
 
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { _retrieveStoreData } from '../../providers/StoreUtil';
 import { OInput, OButton, OText, OModal } from '../shared'
 import { AddressFormParams } from '../../types'
@@ -57,11 +56,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
-  const { showToast } = useToast()
+  const [, {showToast}] = useToast()
   const [configState] = useConfig()
   const [orderState] = useOrder()
   const { handleSubmit, errors, control, setValue } = useForm()
-
   const [toggleMap, setToggleMap] = useState(false)
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<string>, key?: string | null }>({ open: false, content: [], key: null })
   const [addressTag, setAddressTag] = useState(addressState?.address?.tag)

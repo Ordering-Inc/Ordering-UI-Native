@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { StripeRedirectForm as StripeRedirectFormController, useSession, useLanguage } from 'ordering-components/native';
+import { StripeRedirectForm as StripeRedirectFormController, useSession, useLanguage, ToastType, useToast } from 'ordering-components/native';
 // import stripe from 'tipsi-stripe';
 
 import {
@@ -9,7 +9,6 @@ import {
   ErrorMessage
 } from './styles';
 
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OButton, ODropDown, OInput, OText } from '../shared';
 import { colors } from '../../theme.json';
 
@@ -25,7 +24,7 @@ const StripeRedirectFormUI = (props: any) => {
   //   // androidPayMode: 'test', // Android only
   // })
 
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const { control, handleSubmit, errors } = useForm();
 
   const [{ user }] = useSession();

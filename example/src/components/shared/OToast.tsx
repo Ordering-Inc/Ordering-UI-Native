@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ToastType, useToast } from "../../providers/ToastProvider";
+import { ToastType, useToast } from "ordering-components/native";
 import { colors } from "../../theme.json";
 
 const fadeDuration = 300;
@@ -9,7 +9,7 @@ const bottomPosition = 20;
 
 export const Toast: React.FC = () => {
     // const insets = useSafeAreaInsets();
-    const { toastConfig, hideToast } = useToast();
+    const [toastConfig, { hideToast }] = useToast();
     const opacity = React.useRef(new Animated.Value(0)).current;
 
     const fadeIn = React.useCallback(() => {
