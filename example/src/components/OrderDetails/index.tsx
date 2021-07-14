@@ -4,7 +4,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Messages } from '../Messages'
-import {ShareComponent} from '../ShareComponent'
+import { ShareComponent } from '../ShareComponent'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -65,9 +65,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ user }] = useSession()
   const [{ configs }] = useConfig()
   const [, { refreshOrderOptions }] = useOrder()
-  const [openModalForBusiness,setOpenModalForBusiness] = useState(false)
-  const [openModalForDriver,setOpenModalForDriver] = useState(false)
+  const [openModalForBusiness, setOpenModalForBusiness] = useState(false)
+  const [openModalForDriver, setOpenModalForDriver] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
+  const [isReviewed, setIsReviewed] = useState(false)
   const { order, businessData } = props.order
 
 
@@ -135,10 +136,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       navigation?.canGoBack() && navigation.goBack();
       return
     }
-    if(goToBusinessList){
+    if (goToBusinessList) {
       refreshOrderOptions()
     }
     navigation.navigate('BottomTab');
+  }
+
+  const handleClickOrderReview = (order: any) => {
+    navigation.navigate('ReviewOrder', { order: { id: order?.id, business_id: order?.business_id, logo: order.business?.logo }, setIsReviewed })
   }
 
   useEffect(() => {
@@ -380,6 +385,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText style={styles.textBold} color={colors.primary}>{parsePrice(order?.summary?.total || order?.total)}</OText>
                 </Table>
               </Total>
+              {
+                (
+                  parseInt(order?.status) === 1 ||
+                  parseInt(order?.status) === 2 ||
+                  parseInt(order?.status) === 5 ||
+                  parseInt(order?.status) === 6 ||
+                  parseInt(order?.status) === 10 ||
+                  parseInt(order?.status) === 11 ||
+                  parseInt(order?.status) === 12
+                ) && !order.review && !isReviewed && (
+                  <OButton
+                    onClick={() => handleClickOrderReview(order)}
+                    text={t('REVIEW_YOUR_ORDER', 'Review your order')}
+                    textStyle={{ color: colors.white }}
+                    imgRightSrc=''
+                  />
+                )}
             </OrderBill>
           </OrderContent>
         </>
@@ -403,7 +425,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   statusBar: {
-    transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
+    transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
     height: 10,
   },
   logo: {

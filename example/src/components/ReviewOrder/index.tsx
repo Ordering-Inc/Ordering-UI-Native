@@ -27,6 +27,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     handleChangeRating,
     handleSendReview,
     formState,
+    setIsReviewed,
     navigation
   } = props
 
@@ -52,6 +53,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       return
     }
     handleSendReview()
+    setIsReviewed && setIsReviewed(true)
     setAlertState({ ...alertState, success: true })
   }
 
