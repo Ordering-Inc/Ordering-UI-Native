@@ -35,7 +35,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const [, t] = useLanguage()
   const [{ parsePrice, parseNumber }] = useUtils()
-  const [orientationState] = useDeviceOrientation();
+  const [orientationState] = useDeviceOrientation()
 
   const { order } = props.order
 
@@ -290,12 +290,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               }}>
                 <View>
                   <OText
-                    size={orientationState?.dimensions?.width * 0.05}
+                    size={orientationState?.dimensions?.width * 0.045}
                     mBottom={15}
                   >
                     {t('WE_KNOW_YOU_ARE', 'We know you are')} {'\n'}
                     <OText
-                      size={orientationState?.dimensions?.width * 0.05}
+                      size={orientationState?.dimensions?.width * 0.048}
                       weight="700"
                     >
                       {`${t('HUNGRY', 'hungry')}, Cuco!`}
@@ -303,7 +303,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </OText>
 
                   <OText
-                    size={orientationState?.dimensions?.width * (orientationState?.orientation === PORTRAIT ? 0.04 : 0.03)}
+                    size={orientationState?.dimensions?.width * (orientationState?.orientation === PORTRAIT ? 0.04 : 0.025)}
                   >
                     {t('TO_FINISH_TAKE_YOUR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER', 'To finish take your receipt and go to the front counter.')}
                   </OText>

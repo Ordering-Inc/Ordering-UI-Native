@@ -74,11 +74,11 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 
               <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
                 <OText
-                  size={orientationState?.dimensions?.width * 0.05}
+                  size={orientationState?.dimensions?.width * 0.048}
                 >
                   {t('DO_YOU_WANT', 'Do you want')} {'\n'}
                   <OText
-                    size={orientationState?.dimensions?.width * 0.05}
+                    size={orientationState?.dimensions?.width * 0.048}
                     weight={'700'}
                   >
                     {t('SOMETHING_ELSE', 'something else')} {'?'}
@@ -158,11 +158,11 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 
                   <View style={{ height: '100%', width: '35%' }}>
                     <OText
-                      size={orientationState?.dimensions?.width * 0.05}
+                      size={orientationState?.dimensions?.width * 0.048}
                     >
                       {t('DO_YOU_WANT', 'Do you want')} {'\n'}
                       <OText
-                        size={orientationState?.dimensions?.width * 0.05}
+                        size={orientationState?.dimensions?.width * 0.048}
                         weight={'700'}
                       >
                         {t('SOMETHING_ELSE', 'something else')} {'?'}

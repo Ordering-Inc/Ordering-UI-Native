@@ -52,7 +52,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const _renderTitle = (title: string): React.ReactElement => (
     <View style={{ paddingHorizontal: 20, paddingVertical: 40 }}>
       <OText
-        size={orientationState?.dimensions?.width * 0.05}
+        size={orientationState?.dimensions?.width * 0.048}
         weight="bold"
       >
         {title}

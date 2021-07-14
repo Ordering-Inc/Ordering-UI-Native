@@ -4,7 +4,7 @@ import { _setStoreData } from '../../providers/StoreUtil';
 
 import { OButton, OInput, OText } from '../shared';
 import { useForm, Controller } from 'react-hook-form';
-import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { colors } from '../../theme.json';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { STORAGE_KEY } from '../../config/constants';
@@ -12,8 +12,6 @@ import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OSActions } from '../OrderDetails/styles';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
-
-const _dim = Dimensions.get('window');
 
 const CustomerName = (props: Props): React.ReactElement => {
   const {
@@ -32,7 +30,7 @@ const CustomerName = (props: Props): React.ReactElement => {
   };
 
   useEffect(() => {
-    if (Object.keys(errors).length > 0) {
+    if (Object.keys(errors)?.length > 0) {
       // Convert all errors in one string to show in toast provider
       const list = Object.values(errors);
       let stringError = '';
@@ -67,13 +65,13 @@ const CustomerName = (props: Props): React.ReactElement => {
           onActionLeft={goToBack}
         />
 
-        <View style={{ marginVertical: _dim.height * 0.03 }}>
+        <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
           <OText
-            size={_dim.width * 0.05}
+            size={orientationState?.dimensions?.width * 0.05}
           >
             {t('WHOM_MIGHT_THIS', 'Whom might this')} {'\n'}
             <OText
-              size={_dim.width * 0.05}
+              size={orientationState?.dimensions?.width * 0.05}
               weight={'700'}
             >
               {`${t('ORDER_BE_FOR', 'order be for?')}?`}

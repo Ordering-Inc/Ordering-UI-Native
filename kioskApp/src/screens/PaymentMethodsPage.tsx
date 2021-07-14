@@ -1,10 +1,8 @@
 import React from 'react';
-import { Platform, Text } from 'react-native';
-import { useOrder, useLanguage } from 'ordering-components/native';
 
 import { Checkout } from '../components/Checkout';
-import { ToastType, useToast } from '../providers/ToastProvider';
 import { SafeAreaContainer } from '../layouts/SafeAreaContainer';
+import { useCartBottomSheet } from '../providers/CartBottomSheetProvider';
 
 const PaymentMethodsPage = (props:any): React.ReactElement => {
   
@@ -12,7 +10,9 @@ const PaymentMethodsPage = (props:any): React.ReactElement => {
     navigation,
     cartUuid,
     route,
-	} = props;
+  } = props;
+  
+  const { hideCartBottomSheet } = useCartBottomSheet();
 
   const checkoutProps = {
     ...props,
@@ -22,6 +22,9 @@ const PaymentMethodsPage = (props:any): React.ReactElement => {
         navigation.reset({
           routes: [{ name: 'OrderDetails', params: { orderId: cart.order?.uuid, isFromCheckout: true } }],
         });
+
+        hideCartBottomSheet();
+
         return
       }
     },

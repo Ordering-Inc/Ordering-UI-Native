@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
-import { Dimensions, Modal, View } from 'react-native';
+import React from 'react';
+import { Modal, View } from 'react-native';
 import { useLanguage, LogoutAction } from 'ordering-components/native';
 
 import NavBar from '../NavBar';
 import { OSBody, OSContainer, OSContent } from './styles';
 import { OButton, OInput, OText } from '../shared';
 import { colors } from '../../theme.json';
+import { useDeviceOrientation } from '../../hooks/device_orientation_hook';
 
 const LogoutPopupUI = (props: Props) => {
 	const {
@@ -16,6 +17,7 @@ const LogoutPopupUI = (props: Props) => {
 	} = props;
 
 	const [, t] = useLanguage();
+	const [orientationState] = useDeviceOrientation();
 
   return (
 		<Modal
@@ -46,7 +48,7 @@ const LogoutPopupUI = (props: Props) => {
 
 					<OSBody>
 						<OText
-							size={_dim.width * 0.032}
+							size={orientationState?.dimensions?.width * 0.032}
 							mBottom={20}
 						>
 							{t('ONLY_MANAGER_LOGOUT', 'Only the manager has the password to sign out this App.')}
@@ -93,8 +95,6 @@ interface Props {
 	onClose: () => void;
 	onLogoutDone?: () => void;
 }
-
-const _dim = Dimensions.get('window');
 
 export const LogoutPopup = (props: any) => {
   const logoutProps = {

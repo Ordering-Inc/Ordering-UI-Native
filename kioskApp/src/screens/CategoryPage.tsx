@@ -124,7 +124,7 @@ const CategoryPage = (props: any): React.ReactElement => {
           
           <View style={{ paddingHorizontal: 20, paddingVertical: 8 }}>
             <OText
-              size={orientationState?.dimensions?.width * 0.05}
+              size={orientationState?.dimensions?.width * 0.048}
               weight="bold"
             >
               {categories[curIndexCateg].name}

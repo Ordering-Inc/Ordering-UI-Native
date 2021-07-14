@@ -141,11 +141,11 @@ const PaymentOptionsUI = (props: any) => {
 
         <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
           <OText
-            size={orientationState?.dimensions?.width * 0.05}
+            size={orientationState?.dimensions?.width * 0.048}
           >
             {t('HOW_WOULD_YOU', 'How would you')} {'\n'}
             <OText
-              size={orientationState?.dimensions?.width * 0.05}
+              size={orientationState?.dimensions?.width * 0.048}
               weight={'700'}
             >
               {`${t('LIKE_TO_PAY', 'like to pay')}?`}

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Image, ImageSourcePropType, Text, TextStyle } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import styled from 'styled-components/native'
 import { normalize } from '../../providers/Responsive'
@@ -52,7 +51,7 @@ const OSegment = (props: Props) => {
                     onPress={() => onSelectItem(index)}
                 >
                     <SegItem style={{borderBottomColor: index == curIndex ? colors.primary : 'transparent'}}>
-                        <ItemLabel style={{ fontSize: normalize(8), color: index == curIndex ? '#344050' : '#ADADAD' }}>{ props.labelStyle == 'uppercase' ? item.text?.toUpperCase() : item.text}</ItemLabel>
+                        <ItemLabel style={{ fontSize: 18, color: index == curIndex ? '#344050' : '#ADADAD' }}>{ props.labelStyle == 'uppercase' ? item.text?.toUpperCase() : item.text}</ItemLabel>
                     </SegItem>
                 </TouchableOpacity>
             ))}

@@ -50,11 +50,11 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
 
         <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
           <OText
-            size={orientationState?.dimensions?.width * 0.05}
+            size={orientationState?.dimensions?.width * 0.048}
           >
             {t('WHERE_WILL_YOU_BE', 'Where will you be')} {'\n'}
             <OText
-              size={orientationState?.dimensions?.width * 0.05}
+              size={orientationState?.dimensions?.width * 0.048}
               weight={'700'}
             >
               {_selected === _takeOut?.value && _takeOut.content}

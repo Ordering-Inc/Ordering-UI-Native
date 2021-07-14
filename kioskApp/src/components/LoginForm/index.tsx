@@ -77,7 +77,7 @@ const LoginFormUI = (props: LoginParams) => {
 
 
   useEffect(() => {
-    if (Object.keys(errors).length > 0) {
+    if (Object.keys(errors)?.length > 0) {
       // Convert all errors in one string to show in toast provider
       const list = Object.values(errors);
       let stringError = '';
@@ -173,7 +173,7 @@ const LoginFormUI = (props: LoginParams) => {
       </OText>
 
       <OText
-        size={orientationState?.dimensions?.width * 0.05}
+        size={orientationState?.dimensions?.width * 0.048}
         weight={'700'}
       >
         {t('WELCOME_TEXT_B', 'Login To start')}

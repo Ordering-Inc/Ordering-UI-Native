@@ -89,7 +89,7 @@ export const ProductOptionsUI = (props: any) => {
     navigation?.navigate('Login')
   }
 
-  const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0
+  const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors)?.length > 0
 
   const [scrollY] = useState(new Animated.Value(0));
   
@@ -317,7 +317,7 @@ export const ProductOptionsUI = (props: any) => {
           >
             <OText
               color={colors.white}
-              size={orientationState?.dimensions?.width * 0.05}
+              size={orientationState?.dimensions?.width * 0.048}
               weight="bold"
               mBottom={10}
               numberOfLines={2}
