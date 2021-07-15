@@ -78,6 +78,9 @@ import Alert from './providers/AlertProvider';
 import { StoreMethods } from './providers/StoreUtil';
 import { ToastType, useToast, ToastContext, ToastProvider } from './providers/ToastProvider';
 
+// contexts
+import { ThemeProvider, useTheme } from './context/Theme';
+
 export {
   ActiveOrders,
   AddressDetails,
@@ -157,4 +160,7 @@ export {
   useToast,
   ToastContext,
   ToastProvider,
+  // contexts
+  ThemeProvider,
+  useTheme
 }
