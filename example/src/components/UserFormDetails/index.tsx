@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSession, useLanguage, ToastType, useToast } from 'ordering-components/native';
 import { useForm, Controller } from 'react-hook-form';
 
-import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
+import { UDForm, UDLoader, UDWrapper, WrapperPhone, EditButton } from './styles';
 
 import { OText, OButton, OInput } from '../shared';
-import { colors,images } from '../../theme.json';
+import { colors, images } from '../../theme.json';
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import { sortInputFields } from '../../utils';
@@ -23,7 +23,10 @@ export const UserFormDetailsUI = (props: any) => {
     handleChangeInput,
     handleButtonUpdateClick,
     phoneUpdate,
-    hideUpdateButton
+    hideUpdateButton,
+    handleCancelEdit,
+    toggleIsEdit,
+    isCheckout
   } = props
 
   const [, t] = useLanguage();
@@ -166,9 +169,9 @@ export const UserFormDetailsUI = (props: any) => {
       <UDForm>
         {!validationFields?.loading &&
           sortInputFields({ values: validationFields?.fields?.checkout }).length > 0 &&
-        (
-          <UDWrapper>
-            {sortInputFields({ values: validationFields.fields?.checkout }).map((field: any) =>
+          (
+            <UDWrapper>
+              {sortInputFields({ values: validationFields.fields?.checkout }).map((field: any) =>
               (
                 showField && showField(field.code) && (
                   <React.Fragment key={field.id}>
@@ -184,10 +187,10 @@ export const UserFormDetailsUI = (props: any) => {
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                           isDisabled={!isEdit}
                           value={formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
-                            onChange={(val: any) => {
-                              field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
-                              field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({target: {name : 'email', value: val.target.value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, '')}})
-                            }}
+                          onChange={(val: any) => {
+                            field.code !== 'email' ? setValue(field.code, val.target.value) : setValue(field.code, val.target.value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
+                            field.code !== 'email' ? handleChangeInput(val) : handleChangeInput({ target: { name: 'email', value: val.target.value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, '') } })
+                          }}
                           autoCorrect={field.code === 'email' && false}
                           type={field.code === 'email' ? 'email-address' : 'default'}
                           returnKeyType='done'
@@ -202,22 +205,22 @@ export const UserFormDetailsUI = (props: any) => {
                 )
               ))}
 
-            {!!showInputPhoneNumber && (
-              <WrapperPhone>
-                <PhoneInputNumber
-                  data={phoneInputData}
-                  handleData={(val: any) => handleChangePhoneNumber(val)}
-                  defaultValue={phoneUpdate ? '' : user?.cellphone}
-                  defaultCode={user?.country_phone_code || null}
-                />
-                {phoneUpdate && (
-                  <OText color={colors.error} style={{ marginHorizontal: 10, textAlign: 'center' }}>{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}</OText>
-                )}
-              </WrapperPhone>
-            )}
+              {!!showInputPhoneNumber && (
+                <WrapperPhone>
+                  <PhoneInputNumber
+                    data={phoneInputData}
+                    handleData={(val: any) => handleChangePhoneNumber(val)}
+                    defaultValue={phoneUpdate ? '' : user?.cellphone}
+                    defaultCode={user?.country_phone_code || null}
+                  />
+                  {phoneUpdate && (
+                    <OText color={colors.error} style={{ marginHorizontal: 10, textAlign: 'center' }}>{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}</OText>
+                  )}
+                </WrapperPhone>
+              )}
 
-          </UDWrapper>
-        )}
+            </UDWrapper>
+          )}
         {validationFields?.loading && (
           <UDLoader>
             <OText size={20}>
@@ -226,21 +229,50 @@ export const UserFormDetailsUI = (props: any) => {
           </UDLoader>
         )}
       </UDForm>
-      {!hideUpdateButton && (
-        <>
-          {((formState && Object.keys(formState?.changes).length > 0 && isEdit) || formState?.loading) && (
-            <OButton
-              text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
-              bgColor={colors.primary}
-              textStyle={{ color: 'white' }}
-              borderColor={colors.primary}
-              isDisabled={formState.loading}
-              imgRightSrc={null}
-              onClick={handleSubmit(onSubmit)}
-            />
-          )}
-        </>
-      )}
+      <>
+        {!validationFields.loading && !isCheckout && (
+          <EditButton>
+            <View style={{ flex: 1 }}>
+              <OButton
+                text={t('CANCEL', 'Cancel')}
+                bgColor={colors.white}
+                borderColor={colors.primary}
+                isDisabled={formState.loading}
+                imgRightSrc={null}
+                style={{ ...styles.editButton }}
+                onClick={handleCancelEdit}
+              />
+            </View>
+            {((formState &&
+              Object.keys(formState?.changes).length > 0 && isEdit) || formState?.loading) &&
+              (
+                <View style={{ flex: 1, marginLeft: 5 }}>
+                  <OButton
+                    text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
+                    bgColor={colors.primary}
+                    textStyle={{ color: formState.loading ? 'black' : 'white' }}
+                    borderColor={colors.primary}
+                    isDisabled={formState.loading}
+                    imgRightSrc={null}
+                    style={{ ...styles.editButton }}
+                    onClick={handleSubmit(onSubmit)}
+                  />
+                </View>
+              )}
+          </EditButton>
+        )}
+        {((formState && Object.keys(formState?.changes).length > 0 && isEdit) || formState?.loading) && isCheckout && (
+          <OButton
+            text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
+            bgColor={colors.primary}
+            textStyle={{ color: 'white' }}
+            borderColor={colors.primary}
+            isDisabled={formState.loading}
+            imgRightSrc={null}
+            onClick={handleSubmit(onSubmit)}
+          />
+        )}
+      </>
     </>
   )
 }
@@ -254,5 +286,17 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     borderWidth: 1,
     borderColor: colors.disabled
-  }
+  },
+  editButton: {
+    // flex:0,
+    borderRadius: 25,
+    borderColor: colors.primary,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    color: colors.primary,
+    // width: 100,
+    // height: 50,
+    marginVertical: 8,
+    // flex: 1,
+  },
 });
