@@ -8,7 +8,6 @@ import Alert from '../../providers/AlertProvider'
 import { OIcon } from '../shared';
 
 export const GoogleMap = (props: GoogleMapsParams) => {
-
   const {
     location,
     handleChangeAddressMap,
@@ -52,7 +51,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     Geocoder.from({
       latitude: pos.latitude,
       longitude: pos.longitude
-    }).then(({ results }) => {
+    }).then(({ results }: any) => {
       let zipcode = null
       if (results && results.length > 0) {
         for (const component of results[0].address_components) {
@@ -80,7 +79,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       } else {
         setMapErrors && setMapErrors('ERROR_NOT_FOUND_ADDRESS')
       }
-    }).catch(err => {
+    }).catch((err: any) => {
       setMapErrors && setMapErrors(err.message)
     })
   }
@@ -201,7 +200,11 @@ export const GoogleMap = (props: GoogleMapsParams) => {
                     title={locations[i]?.title}
                   >
                     <View>
-                      <OIcon url={locations[i].icon} width={50} height={50} />
+                      <OIcon
+                        url={locations[i].icon}
+                        width={50}
+                        height={50}
+                      />
                     </View>
                   </Marker>
                 }

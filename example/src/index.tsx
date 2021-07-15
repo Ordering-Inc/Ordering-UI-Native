@@ -60,19 +60,13 @@ import {
   OAlert,
   OBottomPopup,
   OButton,
-  OChatBubble,
-  OCheckbox,
   ODropDown,
   OIcon,
   OIconButton,
-  OIconText,
   OInput,
-  OKeyButton,
   OModal,
   OText,
-  OTextarea,
-  OToast,
-  OToggle
+  OToast
 } from './components/shared';
 
 // layouts
@@ -82,6 +76,9 @@ import { SafeAreaContainer } from './layouts/SafeAreaContainer';
 // providers
 import Alert from './providers/AlertProvider';
 import { StoreMethods } from './providers/StoreUtil';
+
+// contexts
+import { ThemeProvider, useTheme } from './context/Theme';
 
 export {
   ActiveOrders,
@@ -145,23 +142,20 @@ export {
   OAlert,
   OBottomPopup,
   OButton,
-  OChatBubble,
-  OCheckbox,
   ODropDown,
   OIcon,
   OIconButton,
-  OIconText,
   OInput,
-  OKeyButton,
   OModal,
   OText,
-  OTextarea,
   OToast,
-  OToggle,
   // layouts
   Container,
   SafeAreaContainer,
   // providers
   Alert,
   StoreMethods,
+  // contexts
+  ThemeProvider,
+  useTheme
 }

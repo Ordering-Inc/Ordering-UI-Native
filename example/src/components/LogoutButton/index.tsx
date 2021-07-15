@@ -4,11 +4,12 @@ import { LogoutAction, ToastType, useToast } from 'ordering-components/native';
 import { _retrieveStoreData, _clearStoreData } from '../../providers/StoreUtil';
 
 import { OIcon } from '../shared';
-import { colors,images } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 const LogoutButtonUI = (props: any) => {
   const { handleLogoutClick, formState } = props
 
+  const theme = useTheme();
   const [, { showToast }] = useToast();
 
   const handleClick = async () => {
@@ -35,10 +36,10 @@ const LogoutButtonUI = (props: any) => {
       onPress={() => handleClick()}
     >
       <OIcon
-        src={images.general.menulogout}
+        src={theme.images.general.menulogout}
         width={28}
         height={28}
-        color={colors.disabledContrast}
+        color={theme.colors.disabledContrast}
       />
     </TouchableOpacity>
   )

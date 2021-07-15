@@ -33,9 +33,9 @@ import {
   PMCardSelected,
   PMCardItemContent
 } from './styles'
-import { colors, images } from '../../theme.json';
 import { getIconCard } from '../../utils';
 import { WebView } from 'react-native-webview';
+import { useTheme } from 'styled-components/native';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 // const stripeRedirectOptions = [
@@ -44,27 +44,6 @@ const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 //   { name: 'Giropay', value: 'giropay' },
 //   { name: 'iDEAL', value: 'ideal' }
 // ]
-
-const getPayIcon = (method: string) => {
-  switch (method) {
-    case 'cash':
-      return images.general.cash
-    case 'card_delivery':
-      return images.general.carddelivery
-    case 'paypal':
-      return images.general.paypal
-    case 'stripe':
-      return images.general.stripe
-    case 'stripe_direct':
-      return images.general.stripecc
-    case 'stripe_connect':
-      return images.general.stripes
-    case 'stripe_redirect':
-      return images.general.stripesb
-    default:
-      return images.general.creditCard
-  }
-}
 
 const PaymentOptionsUI = (props: any) => {
   const {
@@ -80,6 +59,8 @@ const PaymentOptionsUI = (props: any) => {
     handlePaymethodDataChange,
     isOpenMethod
   } = props
+
+  const theme = useTheme();
   const [, t] = useLanguage();
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
@@ -89,16 +70,30 @@ const PaymentOptionsUI = (props: any) => {
   const [, { showToast }] = useToast();
   const webviewRef = useRef<any>(null)
   const [ordering] = useApi()
-  const [,{confirmCart}] = useOrder()
+  const [, {confirmCart}] = useOrder()
   const [{ token, user }] = useSession()
   const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
-  // const [{ token }] = useSession()
 
-  // const [card, setCard] = useState(null);
-
-  // const stripeRedirectValues = [
-  //   { name: t('SELECT_A_PAYMENT_METHOD', 'Select a payment method'), value: '-1' },
-  // ]
+  const getPayIcon = (method: string) => {
+    switch (method) {
+      case 'cash':
+        return theme.images.general.cash
+      case 'card_delivery':
+        return theme.images.general.carddelivery
+      case 'paypal':
+        return theme.images.general.paypal
+      case 'stripe':
+        return theme.images.general.stripe
+      case 'stripe_direct':
+        return theme.images.general.stripecc
+      case 'stripe_connect':
+        return theme.images.general.stripes
+      case 'stripe_redirect':
+        return theme.images.general.stripesb
+      default:
+        return theme.images.general.creditCard
+    }
+  }
 
   const onMessage = (e : any) => {
     let data = e.nativeEvent.data;
@@ -162,12 +157,12 @@ const PaymentOptionsUI = (props: any) => {
             src={getPayIcon(item.gateway)}
             width={40}
             height={40}
-            color={paymethodSelected?.id === item.id ? colors.white : colors.backgroundDark}
+            color={paymethodSelected?.id === item.id ? theme.colors.white : theme.colors.backgroundDark}
           />
           <OText
             size={12}
             style={{ margin: 0 }}
-            color={paymethodSelected?.id === item.id ? colors.white : '#000'}
+            color={paymethodSelected?.id === item.id ? theme.colors.white : '#000'}
           >
             {t(item.gateway.toUpperCase(), item.name)}
           </OText>
@@ -240,7 +235,7 @@ const PaymentOptionsUI = (props: any) => {
               <MaterialCommunityIcons
                 name='radiobox-marked'
                 size={24}
-                color={colors.primary}
+                color={theme.colors.primary}
               />
             </View>
             <View style={styles.viewStyle}>
@@ -264,8 +259,8 @@ const PaymentOptionsUI = (props: any) => {
         <View>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
-            bgColor={colors.primary}
-            borderColor={colors.primary}
+            bgColor={theme.colors.primary}
+            borderColor={theme.colors.primary}
             style={styles.btnAddStyle}
             textStyle={{ color: 'white' }}
             imgRightSrc={null}
@@ -331,8 +326,8 @@ const PaymentOptionsUI = (props: any) => {
         <View>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
-            bgColor={colors.primary}
-            borderColor={colors.primary}
+            bgColor={theme.colors.primary}
+            borderColor={theme.colors.primary}
             style={styles.btnAddStyle}
             textStyle={{color: 'white'}}
             imgRightSrc={null}

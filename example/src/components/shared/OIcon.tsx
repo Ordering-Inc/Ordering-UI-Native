@@ -2,12 +2,11 @@
 import * as React from 'react'
 import { ImageStyle } from 'react-native'
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 const Wrapper = styled.View``
 
 const SImage = styled.Image`
-  tint-color: ${colors.primary};
+  tint-color: ${(props: any) => props.theme.colors.primary};
 `
 interface Props {
   src?: any,

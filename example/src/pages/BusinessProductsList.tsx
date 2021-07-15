@@ -1,11 +1,13 @@
 import React from 'react'
-import { useApi, useEvent } from 'ordering-components/native'
+import { useApi } from 'ordering-components/native'
 import { BusinessProductsListing as BusinessProductsListController } from '../components/BusinessProductsListing'
 import styled from 'styled-components/native'
-import { colors } from '../theme.json'
+import { useTheme } from 'styled-components/native'
 
 const BusinessProductsList = (props: any) => {
+  const theme = useTheme()
   const [ordering] = useApi()
+
   const store = props.route.params?.store || props.route.params?.productLogin?.slug
   const header = props.route.params?.header
   const logo = props.route.params?.logo
@@ -54,16 +56,17 @@ const BusinessProductsList = (props: any) => {
     header,
     product
   }
+
+  const BusinessProductsListView = styled.SafeAreaView`
+    flex: 1;
+    background-color: ${theme.colors.backgroundPage};
+  `
+
   return (
     <BusinessProductsListView>
       <BusinessProductsListController {...businessProductsProps} />
     </BusinessProductsListView>
   )
 }
-
-const BusinessProductsListView = styled.SafeAreaView`
-  flex: 1;
-  background-color: ${colors.backgroundPage};
-`
 
 export default BusinessProductsList

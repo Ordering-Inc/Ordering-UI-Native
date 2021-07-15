@@ -1,11 +1,9 @@
 import React from 'react'
-import { BusinessReviews as BusinessReviewController, useLanguage, useOrder } from 'ordering-components/native'
+import { BusinessReviews as BusinessReviewController, useLanguage } from 'ordering-components/native'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
-import Spinner from 'react-native-loading-spinner-overlay'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { View, StyleSheet } from 'react-native'
 import { OText } from '../shared'
-import { colors } from '../../theme.json'
 import {
   BusinessReviewsContainer,
   ScoreView,
@@ -16,29 +14,32 @@ import {
 import { ScrollView } from 'react-native-gesture-handler'
 import { GrayBackground } from '../BusinessInformation/styles'
 import { BusinessReviewsParams } from '../../types'
-
-const Score = ({ star, text }: any) => (
-  <ScoreView>
-    <View style={styles.reviewScoreStyle}>
-      <IconAntDesign
-        name="star"
-        color={colors.primary}
-        size={16}
-        style={styles.starIcon}
-      />
-      <OText>{star}</OText>
-    </View>
-    <OText>{text}</OText>
-  </ScoreView>
-)
+import { useTheme } from 'styled-components/native'
 
 const BusinessReviewsUI = (props: BusinessReviewsParams) => {
   const {
     businessState,
     reviewsList,
   } = props
-  const [, t] = useLanguage()
-  const [orderState] = useOrder()
+
+  const theme = useTheme();
+  const [, t] = useLanguage();
+
+  const Score = ({ star, text }: any) => (
+    <ScoreView>
+      <View style={styles.reviewScoreStyle}>
+        <IconAntDesign
+          name="star"
+          color={theme.colors.primary}
+          size={16}
+          style={styles.starIcon}
+        />
+        <OText>{star}</OText>
+      </View>
+      <OText>{text}</OText>
+    </ScoreView>
+  )
+
   return (
     <BusinessReviewsContainer>
       <BusinessBasicInformation
@@ -69,7 +70,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
                   <View style={styles.reviewScoreStyle}>
                     <IconAntDesign
                       name="star"
-                      color={colors.primary}
+                      color={theme.colors.primary}
                       size={16}
                       style={styles.starIcon}
                     />

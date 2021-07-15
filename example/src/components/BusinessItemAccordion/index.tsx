@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
-import { useOrder, useLanguage, useUtils, useEvent } from 'ordering-components/native';
+import { useOrder, useLanguage, useUtils } from 'ordering-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { convertHoursToMinutes } from '../../utils';

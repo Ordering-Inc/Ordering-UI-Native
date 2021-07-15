@@ -6,10 +6,10 @@ import { useForm, Controller } from 'react-hook-form';
 import { UDForm, UDLoader, UDWrapper, WrapperPhone, EditButton } from './styles';
 
 import { OText, OButton, OInput } from '../shared';
-import { colors, images } from '../../theme.json';
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import { sortInputFields } from '../../utils';
+import { useTheme } from 'styled-components/native';
 
 export const UserFormDetailsUI = (props: any) => {
   const {
@@ -28,6 +28,32 @@ export const UserFormDetailsUI = (props: any) => {
     toggleIsEdit,
     isCheckout
   } = props
+
+  const theme = useTheme()
+
+  const styles = StyleSheet.create({
+    btnOutline: {
+      backgroundColor: '#FFF',
+      color: theme.colors.primary
+    },
+    inputStyle: {
+      marginBottom: 25,
+      borderWidth: 1,
+      borderColor: theme.colors.disabled
+    },
+    editButton: {
+      // flex:0,
+      borderRadius: 25,
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.white,
+      borderWidth: 1,
+      color: theme.colors.primary,
+      // width: 100,
+      // height: 50,
+      marginVertical: 8,
+      // flex: 1,
+    },
+  });
 
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
@@ -183,7 +209,7 @@ export const UserFormDetailsUI = (props: any) => {
                           name={field.code}
                           placeholder={t(field.code.toUpperCase(), field?.name)}
                           style={styles.inputStyle}
-                          icon={field.code === 'email' ? images.general.email : images.general.user}
+                          icon={field.code === 'email' ? theme.images.general.email : theme.images.general.user}
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
                           isDisabled={!isEdit}
                           value={formState?.changes[field.code] ?? (user && user[field.code]) ?? ''}
@@ -214,7 +240,7 @@ export const UserFormDetailsUI = (props: any) => {
                     defaultCode={user?.country_phone_code || null}
                   />
                   {phoneUpdate && (
-                    <OText color={colors.error} style={{ marginHorizontal: 10, textAlign: 'center' }}>{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}</OText>
+                    <OText color={theme.colors.error} style={{ marginHorizontal: 10, textAlign: 'center' }}>{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}</OText>
                   )}
                 </WrapperPhone>
               )}
@@ -235,8 +261,8 @@ export const UserFormDetailsUI = (props: any) => {
             <View style={{ flex: 1 }}>
               <OButton
                 text={t('CANCEL', 'Cancel')}
-                bgColor={colors.white}
-                borderColor={colors.primary}
+                bgColor={theme.colors.white}
+                borderColor={theme.colors.primary}
                 isDisabled={formState.loading}
                 imgRightSrc={null}
                 style={{ ...styles.editButton }}
@@ -249,9 +275,9 @@ export const UserFormDetailsUI = (props: any) => {
                 <View style={{ flex: 1, marginLeft: 5 }}>
                   <OButton
                     text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
-                    bgColor={colors.primary}
+                    bgColor={theme.colors.primary}
                     textStyle={{ color: formState.loading ? 'black' : 'white' }}
-                    borderColor={colors.primary}
+                    borderColor={theme.colors.primary}
                     isDisabled={formState.loading}
                     imgRightSrc={null}
                     style={{ ...styles.editButton }}
@@ -264,9 +290,9 @@ export const UserFormDetailsUI = (props: any) => {
         {((formState && Object.keys(formState?.changes).length > 0 && isEdit) || formState?.loading) && isCheckout && (
           <OButton
             text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
-            bgColor={colors.primary}
+            bgColor={theme.colors.primary}
             textStyle={{ color: 'white' }}
-            borderColor={colors.primary}
+            borderColor={theme.colors.primary}
             isDisabled={formState.loading}
             imgRightSrc={null}
             onClick={handleSubmit(onSubmit)}
@@ -276,27 +302,3 @@ export const UserFormDetailsUI = (props: any) => {
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  btnOutline: {
-    backgroundColor: '#FFF',
-    color: colors.primary
-  },
-  inputStyle: {
-    marginBottom: 25,
-    borderWidth: 1,
-    borderColor: colors.disabled
-  },
-  editButton: {
-    // flex:0,
-    borderRadius: 25,
-    borderColor: colors.primary,
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    color: colors.primary,
-    // width: 100,
-    // height: 50,
-    marginVertical: 8,
-    // flex: 1,
-  },
-});

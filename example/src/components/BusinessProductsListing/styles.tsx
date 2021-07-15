@@ -1,5 +1,4 @@
-import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme.json'
+import styled from 'styled-components/native'
 
 export const WrapHeader = styled.View`
   position: relative;
@@ -21,7 +20,7 @@ export const AddressInput = styled.TouchableOpacity`
 `
 export const WrapSearchBar = styled.View`
   padding: 5px;
-  background-color: ${colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
   flex: 1;
 `
 export const WrapContent = styled.View`

@@ -11,14 +11,13 @@ import {
 
 import * as React from 'react';
 import styled from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 const StyledButton = styled.View<Props>`
-  background-color: ${colors.primary};
+  background-color: ${(props: any) => props.theme.colors.primary};
   border-radius: 26px;
   border-width: 2px;
   height: 52px;
-  border-color: ${colors.primary};
+  border-color: ${(props: any) => props.theme.colors.primary};
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -28,20 +27,20 @@ const StyledButton = styled.View<Props>`
   position: relative;
 `
 const StyledButtonDisabled = styled(StyledButton)`
-  background-color: ${colors.disabled};
-  border-color: ${colors.disabled};
+  background-color: ${(props: any) => props.theme.colors.disabled};
+  border-color: ${(props: any) => props.theme.colors.disabled};
 `
 
 const StyledText = styled.Text`
   font-size: 16px;
-  color: ${colors.btnFont};
+  color: ${(props: any) => props.theme.colors.btnFont};
   margin-left: 10px;
   margin-right: 10px;
   font-family: 'Poppins-Regular';
 `
 
 const StyledTextDisabled = styled(StyledText)`
-  color: ${colors.primary};
+  color: ${(props: any) => props.theme.colors.primary};
 `
 
 const StyledImage = styled.Image`
@@ -78,6 +77,7 @@ interface Props {
   bgColor?: string;
   borderColor?: string;
   loadingStyle?: ViewStyle;
+  theme?: any;
 }
 
 const OButton = (props: Props): React.ReactElement => {

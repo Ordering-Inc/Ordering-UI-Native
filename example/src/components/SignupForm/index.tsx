@@ -31,8 +31,8 @@ import { VerifyPhone } from '../VerifyPhone';
 
 import { OText, OButton, OInput, OModal } from '../shared';
 import { SignupParams } from '../../types';
-import { colors,images } from '../../theme.json'
 import { sortInputFields } from '../../utils';
+import { useTheme } from 'styled-components/native';
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']
 
@@ -58,6 +58,26 @@ const SignupFormUI = (props: SignupParams) => {
     handleCheckPhoneCode,
     notificationState
   } = props
+
+  const theme = useTheme()
+
+  const style = StyleSheet.create({
+    btnOutline: {
+      backgroundColor: '#FFF',
+      color: theme.colors.primary
+    },
+    inputStyle: {
+      marginBottom: 25,
+      borderWidth: 1,
+      borderColor: theme.colors.disabled
+    },
+    wrappText: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 30
+    }
+  });
 
   const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
 
@@ -291,7 +311,7 @@ const SignupFormUI = (props: SignupParams) => {
                 {useSignupByEmail && (
                   <Pressable onPress={() => handleChangeTab('email')}>
                     <OTab>
-                      <OText size={18} color={signupTab === 'email' ? colors.primary : colors.disabled}>
+                      <OText size={18} color={signupTab === 'email' ? theme.colors.primary : theme.colors.disabled}>
                         {t('SIGNUP_BY_EMAIL', 'Signup by Email')}
                       </OText>
                     </OTab>
@@ -300,7 +320,7 @@ const SignupFormUI = (props: SignupParams) => {
                 {useSignupByCellphone && (
                   <Pressable onPress={() => handleChangeTab('cellphone')}>
                     <OTab>
-                      <OText size={18} color={signupTab === 'cellphone' ? colors.primary : colors.disabled}>
+                      <OText size={18} color={signupTab === 'cellphone' ? theme.colors.primary : theme.colors.disabled}>
                         {t('SIGNUP_BY_PHONE', 'Signup by Phone')}
                       </OText>
                     </OTab>
@@ -323,7 +343,7 @@ const SignupFormUI = (props: SignupParams) => {
                         <OInput
                           placeholder={t(field.name)}
                           style={style.inputStyle}
-                          icon={field.code === 'email' ? images.general.email : images.general.user}
+                          icon={field.code === 'email' ? theme.images.general.email : theme.images.general.user}
                           value={value}
                           onChange={(val: any) => field.code !== 'email' ? onChange(val) : handleChangeInputEmail(val, onChange)}
                           autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
@@ -366,7 +386,7 @@ const SignupFormUI = (props: SignupParams) => {
                       isSecured={!passwordSee ? true : false}
                       placeholder={t('PASSWORD', 'Password')}
                       style={style.inputStyle}
-                      icon={images.general.lock}
+                      icon={theme.images.general.lock}
                       iconCustomRight={
                         !passwordSee ?
                           <MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
@@ -404,18 +424,18 @@ const SignupFormUI = (props: SignupParams) => {
             <OButton
               onClick={handleSubmit(onSubmit)}
               text={t('GET_VERIFY_CODE', 'Get Verify Code')}
-              borderColor={colors.primary}
+              borderColor={theme.colors.primary}
               imgRightSrc={null}
               textStyle={{ color: 'white' }}
               isLoading={isLoadingVerifyModal}
-              indicatorColor={colors.white}
+              indicatorColor={theme.colors.white}
             />
           ) : (
             <OButton
               onClick={handleSubmit(onSubmit)}
               text={signupButtonText}
-              bgColor={colors.primary}
-              borderColor={colors.primary}
+              bgColor={theme.colors.primary}
+              borderColor={theme.colors.primary}
               textStyle={{ color: 'white' }}
               imgRightSrc={null}
               isDisabled={formState.loading || validationFields.loading}
@@ -431,7 +451,7 @@ const SignupFormUI = (props: SignupParams) => {
                 {t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
               </OText>
               <Pressable onPress={() => onNavigationRedirect('Login')}>
-                <OText size={18} color={colors.primary}>
+                <OText size={18} color={theme.colors.primary}>
                   {loginButtonText}
                 </OText>
               </Pressable>
@@ -446,7 +466,7 @@ const SignupFormUI = (props: SignupParams) => {
             configs?.facebook_id?.value &&
             (
               <ButtonsSection>
-                <OText size={18} color={colors.disabled}>
+                <OText size={18} color={theme.colors.disabled}>
                   {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
                 </OText>
 
@@ -481,24 +501,6 @@ const SignupFormUI = (props: SignupParams) => {
     </View >
   );
 };
-
-const style = StyleSheet.create({
-  btnOutline: {
-    backgroundColor: '#FFF',
-    color: colors.primary
-  },
-  inputStyle: {
-    marginBottom: 25,
-    borderWidth: 1,
-    borderColor: colors.disabled
-  },
-  wrappText: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 30
-  }
-});
 
 export const SignupForm = (props: any) => {
   const signupProps = {

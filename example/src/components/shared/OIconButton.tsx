@@ -1,33 +1,32 @@
 import * as React from 'react'
 import { ImageStyle, TextStyle, ViewStyle } from 'react-native'
-import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
+import styled, { useTheme } from 'styled-components/native'
 
 const Wrapper = styled.TouchableOpacity`
-    height: 40px;
-    border-radius: 20px;
-    flex-direction: row;
-    border: 1px solid white;
-    padding-horizontal: 20px;
-    align-items: center;
-    justify-content: center;
+  height: 40px;
+  border-radius: 20px;
+  flex-direction: row;
+  border: 1px solid white;
+  padding-horizontal: 20px;
+  align-items: center;
+  justify-content: center;
 `
 const DisabledWrapper = styled.View`
-    height: 40px;
-    border-radius: 20px;
-    flex-direction: row;
-    border: 1px solid white;
-    padding-horizontal: 20px;
-    align-items: center;
+  height: 40px;
+  border-radius: 20px;
+  flex-direction: row;
+  border: 1px solid white;
+  padding-horizontal: 20px;
+  align-items: center;
     justify-content: center;
 `
 const Icon = styled.Image`
-    width: 22px;
-    height: 22px;
+  width: 22px;
+  height: 22px;
 `
 const Title = styled.Text`
-    font-size: 16px;
-    margin-horizontal: 7px;
+  font-size: 16px;
+  margin-horizontal: 7px;
 `
 
 interface Props {
@@ -52,7 +51,9 @@ interface Props {
   RenderIcon?: React.FunctionComponent
 }
 const OIconButton = (props: Props) => {
-  const {RenderIcon} = props
+  const { RenderIcon } = props
+  const theme = useTheme()
+
   return (
     <>
       {!props.disabled ? (
@@ -91,8 +92,8 @@ const OIconButton = (props: Props) => {
       ) : (
         <DisabledWrapper
           style={{
-            borderColor: colors.backgroundDark,
-            backgroundColor: props.disabledColor ? props.disabledColor : colors.backgroundDark,
+            borderColor: theme.colors.backgroundDark,
+            backgroundColor: props.disabledColor ? props.disabledColor : theme.colors.backgroundDark,
             height: props.height || 40,
             borderRadius: props.height ? props.height * 0.5 : 20,
             ...props.style
@@ -100,7 +101,7 @@ const OIconButton = (props: Props) => {
         >
           {props.icon ? (
             <Icon
-              source={props.urlIcon ? {uri: props.icon} : props.icon}
+              source={props.urlIcon ? { uri: props.icon } : props.icon}
               resizeMode={props.cover ? 'cover' : 'contain'}
               style={{
                 tintColor: props.iconColor,

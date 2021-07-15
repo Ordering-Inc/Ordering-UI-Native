@@ -1,11 +1,10 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json';
 
 export const AddressFormContainer = styled.View`
-    flex: 1;
-    padding: 0px 20px 20px;
-    background-color: ${colors.backgroundPage};
-    justify-content: space-between;
+  flex: 1;
+  padding: 0px 20px 20px;
+  background-color: ${(props: any) => props.theme.colors.backgroundPage};
+  justify-content: space-between;
 `
 
 export const IconsContainer = styled.View`

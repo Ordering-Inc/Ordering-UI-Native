@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLanguage, useOrder } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import { colors, images } from '../../theme.json';
 import { OButton, OIcon, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
@@ -11,10 +11,9 @@ import { _setStoreData } from '../../providers/StoreUtil';
 const windowHeight = Dimensions.get('window').height
 
 export const Home = (props: any) => {
-  const {
-    onNavigationRedirect
-  } = props;
+  const { onNavigationRedirect } = props;
 
+  const theme = useTheme();
   const [, t] = useLanguage();
   const [orderState] = useOrder();
 
@@ -30,25 +29,31 @@ export const Home = (props: any) => {
           <LanguageSelector />
         </View>
         <LogoWrapper>
-          <OIcon src={images.logos.logotype} style={styles.logo} />
+          <OIcon
+            src={theme.images.logos.logotype}
+            style={styles.logo}
+          />
         </LogoWrapper>
         <Slogan>
-          <OIcon src={images.general.homeHero} style={styles.slogan} />
+          <OIcon
+            src={theme.images.general.homeHero}
+            style={styles.slogan}
+          />
         </Slogan>
       </View>
       <View style={styles.wrapperBtn}>
         <OButton
           text={t('LOGIN_NOW', 'Login now')}
-          bgColor={colors.primary}
-          borderColor={colors.primary}
+          bgColor={theme.colors.primary}
+          borderColor={theme.colors.primary}
           style={styles.buttons}
           textStyle={{ color: 'white' }}
           onClick={() => onNavigationRedirect('Login')}
         />
         <OButton
           text={t('SIGNUP', 'Signup')}
-          bgColor={colors.white}
-          borderColor={colors.primary}
+          bgColor={theme.colors.white}
+          borderColor={theme.colors.primary}
           style={styles.buttons}
           onClick={() => onNavigationRedirect('Signup')}
         />

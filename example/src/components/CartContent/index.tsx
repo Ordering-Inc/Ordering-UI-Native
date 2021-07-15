@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useLanguage, useOrder } from 'ordering-components/native';
+import React, { useState } from 'react';
+import { useLanguage } from 'ordering-components/native';
 
 import { CCContainer, CCNotCarts, CCList } from './styles';
 
 import { Cart } from '../Cart';
-import { OIcon, OText } from '../shared';
+import { OText } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 export const CartContent = (props: any) => {
@@ -39,11 +39,6 @@ export const CartContent = (props: any) => {
       )}
       {(!carts || carts?.length === 0) && (
         <CCNotCarts>
-          {/* <OIcon
-            url={props.icon}
-            width={200}
-            height={122}
-          /> */}
           <OText size={24} style={{ textAlign: 'center' }}>
             {t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
           </OText>

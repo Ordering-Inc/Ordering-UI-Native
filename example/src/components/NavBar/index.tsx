@@ -1,11 +1,10 @@
 import * as React from 'react'
-import styled from 'styled-components/native'
+import styled, { useTheme } from 'styled-components/native'
 import { OButton, OIcon, OText } from '../shared'
-import { colors,images } from '../../theme.json'
 import { TextStyle } from 'react-native'
 
 const Wrapper = styled.View`
-  background-color: ${colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
   padding: 10px 20px 20px 0px;
   flex-direction: row;
   justify-content: center;
@@ -28,7 +27,6 @@ const btnBackArrow = {
   borderColor: '#FFF',
   shadowColor: '#FFF'
 }
-
 interface Props {
   navigation?: any,
   route?: any,
@@ -46,17 +44,20 @@ interface Props {
   titleStyle?: TextStyle,
   btnStyle?: TextStyle,
   style?: TextStyle,
-  paddingTop?: number
+  paddingTop?: number,
 }
 
 const NavBar = (props: Props) => {
+  const theme = useTheme()
+
   const goSupport = () => {
     props.navigation.navigate('Supports', {});
   }
+
   return (
     <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
       <OButton
-        imgLeftSrc={props.leftImg || images.general.arrow_left}
+        imgLeftSrc={props.leftImg || theme.images.general.arrow_left}
         imgRightSrc={null}
         style={{ ...btnBackArrow, ...props.btnStyle }}
         onClick={props.onActionLeft}
@@ -67,11 +68,11 @@ const NavBar = (props: Props) => {
               <OIcon
                 url={props.icon}
                 style={{
-                  borderColor: colors.lightGray,
+                  borderColor: theme.colors.lightGray,
                   borderRadius: 20,
                 }}
                 width={60}
-                height={60} 
+                height={60}
               />
           )
           : null
@@ -101,11 +102,11 @@ const NavBar = (props: Props) => {
       { props.showCall
         ? (<OButton
           isCircle={true}
-          bgColor={colors.primary}
-          borderColor={colors.primary}
+          bgColor={theme.colors.primary}
+          borderColor={theme.colors.primary}
           imgRightSrc={null}
           imgLeftStyle={{ tintColor: 'white', width: 30, height: 30 }}
-          imgLeftSrc={images.general.support}
+          imgLeftSrc={theme.images.general.support}
           onClick={props.onRightAction || goSupport} />)
         : null
       }
