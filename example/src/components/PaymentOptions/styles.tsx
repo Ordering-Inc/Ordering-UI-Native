@@ -31,7 +31,7 @@ export const PMItem = styled.View`
   `}
 
   ${(props: any) => props.isActive ? css`
-    background-color: ${props.colors.primary};
+    background-color: ${(props: any) => props.theme.colors.primary};
   ` : css`
     border: 1px solid #EAEAEA;
   `}

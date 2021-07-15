@@ -33,6 +33,28 @@ const AddressListUI = (props: AddressListParams) => {
   } = props
 
   const theme = useTheme()
+
+  const styles = StyleSheet.create({
+    address: {
+      flex: 1,
+      marginHorizontal: 5
+    },
+    icon: {
+      flex: 0.2
+    },
+    buttonIcon: {
+      width: 20,
+      height: 20,
+      resizeMode: 'contain',
+      left: 20,
+      position: 'absolute',
+      tintColor: theme.colors.primary
+    },
+    button: {
+      marginVertical: 30
+    }
+  })
+
   const [orderState] = useOrder()
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
@@ -294,26 +316,6 @@ const AddressListUI = (props: AddressListParams) => {
     </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  address: {
-    flex: 1,
-    marginHorizontal: 5
-  },
-  icon: {
-    flex: 0.2
-  },
-  buttonIcon: {
-    width: 20,
-    height: 20,
-    resizeMode: 'contain',
-    left: 20,
-    position: 'absolute',
-  },
-  button: {
-    marginVertical: 30
-  }
-})
 
 export const AddressList = (props: AddressListParams) => {
   const addressListProps = {
