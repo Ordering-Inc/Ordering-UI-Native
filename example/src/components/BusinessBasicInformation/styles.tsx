@@ -20,7 +20,7 @@ export const BusinessInfo = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: ${({ colors }: any) => colors.backgroundPage};
+  background-color: ${(props: any) => props.theme.colors.backgroundPage};
 `
 export const BusinessInfoItem = styled.View`
   flex-direction: row;

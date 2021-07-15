@@ -3,7 +3,7 @@ import styled from 'styled-components/native'
 
 export const Wrapper = styled.View`
   flex: 1;
-  background-color: ${({ colors }: any) => colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
 `
 export const Header = styled.View`
   flex-direction: row;
