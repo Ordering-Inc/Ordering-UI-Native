@@ -1,9 +1,11 @@
 import React from 'react'
 import { BusinessesListing as BusinessListingController } from '../components/BusinessesListing'
 import styled from 'styled-components/native'
-import { colors } from '../theme.json'
+import { useTheme } from 'styled-components/native'
 
 const BusinessesListing = (props: any) => {
+  const theme = useTheme()
+
   const BusinessesListingProps = {
     ...props,
     isSearchByName: true,
@@ -16,9 +18,8 @@ const BusinessesListing = (props: any) => {
 
   const BusinessListView = styled.SafeAreaView`
     flex: 1;
-    background-color: ${colors.backgroundPage};
+    background-color: ${theme.colors.backgroundPage};
   `
-
 
   return (
     <BusinessListView>

@@ -1,9 +1,9 @@
 import React from 'react'
 import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
+import { useTheme } from 'styled-components/native';
 import { OButton, OIcon, OText } from '../shared'
 import { ActiveOrdersContainer, Card, Map, Information, Logo, OrderInformation, BusinessInformation, Price } from './styles'
 import { View, StyleSheet } from 'react-native'
-import { colors } from '../../theme.json'
 import { getGoogleMapImage } from '../../utils'
 
 import { ActiveOrdersParams } from '../../types'
@@ -17,6 +17,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
     getOrderStatus
   } = props
 
+  const theme = useTheme()
   const [{configs}] = useConfig()
   const [, t] = useLanguage()
   const [{ parseDate, parsePrice, optimizeImage }] = useUtils()
@@ -44,7 +45,10 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
         <Information>
           {!!order.business?.logo && (
             <Logo>
-              <OIcon url={optimizeImage(order.business?.logo, 'h_300,c_limit')} style={styles.logo} />
+              <OIcon
+                url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
+                style={styles.logo}
+              />
             </Logo>
           )}
           <OrderInformation>
@@ -59,17 +63,17 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
                 </OText>
               </View>
               <View style={styles.orderNumber}>
-                <OText size={12} space color={colors.textSecondary}>{t('ORDER_NUMBER', 'Order No.')}</OText>
-                <OText size={12} color={colors.textSecondary}>{order.id}</OText>
+                <OText size={12} space color={theme.colors.textSecondary}>{t('ORDER_NUMBER', 'Order No.')}</OText>
+                <OText size={12} color={theme.colors.textSecondary}>{order.id}</OText>
               </View>
-              <OText size={12} color={colors.textSecondary}>{order?.delivery_datetime_utc
+              <OText size={12} color={theme.colors.textSecondary}>{order?.delivery_datetime_utc
                 ? parseDate(order?.delivery_datetime_utc)
                 : parseDate(order?.delivery_datetime, { utc: false })}</OText>
             </BusinessInformation>
             <Price>
               <OText size={16}>{parsePrice(order?.summary?.total || order?.total)}</OText>
               {order?.status !== 0 && (
-                <OText color={colors.primary} size={12} numberOfLines={2}>{getOrderStatus(order.status)?.value}</OText>
+                <OText color={theme.colors.primary} size={12} numberOfLines={2}>{getOrderStatus(order.status)?.value}</OText>
               )}
             </Price>
           </OrderInformation>
@@ -81,10 +85,10 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
           onPress={loadMoreOrders}
         >
           <OButton
-            bgColor={colors.white}
-            textStyle={{ color: colors.primary, fontSize: 20 }}
+            bgColor={theme.colors.white}
+            textStyle={{ color: theme.colors.primary, fontSize: 20 }}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-            borderColor={colors.white}
+            borderColor={theme.colors.white}
             style={{ paddingLeft: 30, paddingRight: 30 }}
             onClick={loadMoreOrders}
           />

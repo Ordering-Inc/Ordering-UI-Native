@@ -13,7 +13,7 @@ import {Container} from './styles'
 import { ToastType, useToast } from '../../providers/ToastProvider';
 
 import { OButton, OInput, OText } from '../shared';
-import { colors,images } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 const ForgotPasswordUI = (props: any) => {
   const {
@@ -21,6 +21,17 @@ const ForgotPasswordUI = (props: any) => {
     formState,
     handleButtonForgotPasswordClick,
   } = props;
+
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    inputStyle: {
+      marginBottom: 25,
+      borderWidth: 1,
+      borderColor: theme.colors.disabled
+    }
+  });
+
   const [, t] = useLanguage();
   const { showToast } = useToast();
   const { control, handleSubmit, errors } = useForm();
@@ -90,7 +101,7 @@ const ForgotPasswordUI = (props: any) => {
               <OInput
                 placeholder={t('EMAIL', 'Email')}
                 style={styles.inputStyle}
-                icon={images.general.email}
+                icon={theme.images.general.email}
                 onChange={(e: any) => {
                   handleChangeInputEmail(e, onChange)
                 }}
@@ -118,8 +129,8 @@ const ForgotPasswordUI = (props: any) => {
           <OButton
             text={emailSent && !formState.result?.error ? t('LINK_SEND_FORGOT_PASSWORD', 'Link Sent') : t('FRONT_RECOVER_PASSWORD', 'Recover Password')}
             textStyle={{ color: 'white' }}
-            bgColor={emailSent && !formState.result?.error ? colors.disabled : colors.primary}
-            borderColor={emailSent && !formState.result?.error ? colors.disabled : colors.primary}
+            bgColor={emailSent && !formState.result?.error ? theme.colors.disabled : theme.colors.primary}
+            borderColor={emailSent && !formState.result?.error ? theme.colors.disabled : theme.colors.primary}
             isLoading={formState.loading}
             onClick={emailSent && !formState.result?.error ? () => {} : handleSubmit(onSubmit)}
           />
@@ -128,14 +139,6 @@ const ForgotPasswordUI = (props: any) => {
     </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  inputStyle: {
-    marginBottom: 25,
-    borderWidth: 1,
-    borderColor: colors.disabled
-  }
-});
 
 export const ForgotPasswordForm = (props:  any) => {
   const ForgotPasswordProps = {

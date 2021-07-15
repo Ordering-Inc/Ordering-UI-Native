@@ -11,7 +11,7 @@ import {
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OButton, ODropDown, OInput, OText } from '../shared';
-import { colors } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 const StripeRedirectFormUI = (props: any) => {
   const {
@@ -19,6 +19,8 @@ const StripeRedirectFormUI = (props: any) => {
     publicKey,
     handleSubmitPaymentMethod
   } = props;
+
+  const theme = useTheme()
 
   // stripe.setOptions({
   //   publishableKey: publicKey,
@@ -137,8 +139,8 @@ const StripeRedirectFormUI = (props: any) => {
       <OButton
         // text={formState.isSubmitting ? t('LOADING', 'Loading...') : t('OK', 'OK')}
         text={t('OK', 'OK')}
-        bgColor={colors.primary}
-        borderColor={colors.primary}
+        bgColor={theme.colors.primary}
+        borderColor={theme.colors.primary}
         textStyle={{color: 'white'}}
         imgRightSrc={null}
         // isDisabled={formState.isSubmitting}

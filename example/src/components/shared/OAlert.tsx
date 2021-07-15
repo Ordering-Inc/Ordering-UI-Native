@@ -1,15 +1,13 @@
 import * as React from 'react'
-import styled, { css } from 'styled-components/native'
+import styled from 'styled-components/native'
 import { Alert } from 'react-native'
 import { useLanguage } from 'ordering-components/native'
 
-const Wrapper = styled.TouchableOpacity`
-	
-`
+const Wrapper = styled.TouchableOpacity``
 
 interface Props {
-  children: any,
-  title: string,
+  children?: any,
+  title?: string,
   message?: string,
   onCancel?: any,
   onAccept?: any,
@@ -23,7 +21,7 @@ const OAlert = (props: Props) => {
 
   const createTwoButtonAlert = () => {
     Alert.alert(
-      props.title,
+      props.title || '',
       props.message,
       [
         {

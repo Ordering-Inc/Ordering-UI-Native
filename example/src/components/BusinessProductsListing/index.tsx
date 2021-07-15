@@ -22,10 +22,11 @@ import {
   WrapContent,
   BusinessProductsListingContainer
 } from './styles'
-import { colors, images } from '../../theme.json'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
+import { useTheme } from 'styled-components/native'
+
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -46,6 +47,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     updateProductModal
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
   const [orderState] = useOrder()
@@ -92,12 +94,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setOpenUpselling(false)
   }
 
-  // useEffect(() => {
-  //   if (!orderState.loading) {
-  //     handleCloseProductModal()
-  //   }
-  // }, [orderState.loading])
-
   return (
     <>
       <BusinessProductsListingContainer
@@ -111,7 +107,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 <>
                   <View style={{ ...styles.headerItem, flex: 1 }}>
                     <OButton
-                      imgLeftSrc={images.general.arrow_left}
+                      imgLeftSrc={theme.images.general.arrow_left}
                       imgRightSrc={null}
                       style={styles.btnBackArrow}
                       onClick={() => (navigation?.canGoBack() && navigation.goBack()) || (auth && navigation.navigate('BottomTab'))}
@@ -122,7 +118,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                         ? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
                         : onRedirect('AddressForm', { address: orderState.options?.address })}
                     >
-                      <OText color={colors.white} numberOfLines={1}>
+                      <OText color={theme.colors.white} numberOfLines={1}>
                         {orderState?.options?.address?.address}
                       </OText>
                     </AddressInput>
@@ -135,7 +131,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                       >
                         <MaterialIcon
                           name='search'
-                          color={colors.white}
+                          color={theme.colors.white}
                           size={25}
                         />
                       </TouchableOpacity>

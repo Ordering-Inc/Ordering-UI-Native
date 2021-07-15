@@ -1,9 +1,11 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { Home as HomePage } from '../components/Home';
-import { colors } from '../theme.json';
+import { useTheme } from 'styled-components/native';
 
 export const Home = (props: any) => {
+  const theme = useTheme();
+
   const homeProps = {
     ...props,
     onNavigationRedirect: (page: string, params: any) => {
@@ -12,23 +14,23 @@ export const Home = (props: any) => {
     },
   }
 
+  const styles = StyleSheet.create({
+    wrapper: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100%',
+      backgroundColor: theme.colors.backgroundPage,
+    }
+  })
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <HomePage {...homeProps} />
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    backgroundColor: colors.backgroundPage,
-  }
-})
 
 export default Home;

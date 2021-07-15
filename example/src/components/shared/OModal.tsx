@@ -1,26 +1,21 @@
 import * as React from 'react';
-import { Alert, Modal, StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpacity, View, TextStyle } from "react-native";
+import { Modal, StyleSheet, Text, SafeAreaView, View } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
-import styled from 'styled-components';
-import { colors } from '../../theme.json';
 
 interface Props {
   open?: boolean;
   title?: string;
   children?: any;
-  onAccept?: any;
-  onCancel?: any;
   onClose?: any;
-  style?: any;
-  acceptText?: string;
-  cancelText?: string;
+  onCancel?: any;
+  onAccept?: any;
   isTransparent?: boolean;
-  hideCloseDefault?: boolean;
   entireModal?: boolean;
   customClose?: boolean;
   titleSectionStyle?: any;
   isNotDecoration?: boolean;
-  styleCloseButton?: any
+  style?: any;
+  styleCloseButton?: any;
 }
 
 const OModal = (props: Props): React.ReactElement => {
@@ -28,13 +23,8 @@ const OModal = (props: Props): React.ReactElement => {
     open,
     title,
     children,
-    onAccept,
-    onCancel,
     onClose,
-    acceptText,
-    cancelText,
     isTransparent,
-    hideCloseDefault,
     entireModal,
     customClose,
     titleSectionStyle,

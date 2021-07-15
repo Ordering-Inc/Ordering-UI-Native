@@ -4,11 +4,11 @@ import {
   useSession,
   useLanguage,
 } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { StyleSheet, View } from 'react-native';
-import { colors,images } from '../../theme.json';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { ProfileParams } from '../../types';
 import { AddressList } from '../AddressList'
@@ -36,7 +36,6 @@ const ProfileUI = (props: ProfileParams) => {
     isEdit,
     formState,
     validationFields,
-    showField,
     isRequiredField,
     toggleIsEdit,
     cleanFormState,
@@ -44,10 +43,33 @@ const ProfileUI = (props: ProfileParams) => {
     handleButtonUpdateClick
   } = props;
 
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    dropdown: {
+      borderColor: theme.colors.whiteGray,
+      height: 50,
+      borderRadius: 25,
+      marginTop: 16,
+    },
+    inputbox: {
+      marginVertical: 8,
+      width: '90%'
+    },
+    editButton: {
+      borderRadius: 25,
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.white,
+      borderWidth: 1,
+      color: theme.colors.primary,
+      marginVertical: 8,
+    },
+  });
+
   const [{ user }] = useSession();
   const [, t] = useLanguage();
   const { showToast } = useToast();
-  const { handleSubmit, errors, setValue, control } = useForm();
+  const { handleSubmit, errors } = useForm();
 
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -83,7 +105,7 @@ const ProfileUI = (props: ProfileParams) => {
   }
 
   const handleImagePicker = () => {
-    launchImageLibrary({ mediaType: 'photo', maxHeight: 200, maxWidth: 200, includeBase64: true }, (response) => {
+    launchImageLibrary({ mediaType: 'photo', maxHeight: 200, maxWidth: 200, includeBase64: true }, (response: any) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.errorMessage) {
@@ -183,14 +205,14 @@ const ProfileUI = (props: ProfileParams) => {
       <CenterView>
         <OIcon
           url={user?.photo}
-          src={!user?.photo && images.general.user}
+          src={!user?.photo && theme.images.general.user}
           width={100}
           height={100}
           style={{ borderRadius: 12 }}
         />
         <OIconButton
-          icon={images.general.camera}
-          borderColor={colors.clear}
+          icon={theme.images.general.camera}
+          borderColor={theme.colors.clear}
           iconStyle={{ width: 30, height: 30 }}
           style={{ maxWidth: 40 }}
           onClick={() => handleImagePicker()}
@@ -213,7 +235,7 @@ const ProfileUI = (props: ProfileParams) => {
           {!!user?.cellphone && <OText>{user?.cellphone}</OText>}
           {!!phoneUpdate && (
             <OText
-              color={colors.error}
+              color={theme.colors.error}
             >
               {t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}
             </OText>
@@ -232,8 +254,8 @@ const ProfileUI = (props: ProfileParams) => {
           {!isEdit ? (
             <OButton
               text={t('EDIT', 'Edit')}
-              bgColor={colors.white}
-              borderColor={colors.primary}
+              bgColor={theme.colors.white}
+              borderColor={theme.colors.primary}
               isDisabled={formState.loading}
               imgRightSrc={null}
               textStyle={{ fontSize: 20 }}
@@ -245,8 +267,8 @@ const ProfileUI = (props: ProfileParams) => {
               <View style={{ flex: 1 }}>
                 <OButton
                   text={t('CANCEL', 'Cancel')}
-                  bgColor={colors.white}
-                  borderColor={colors.primary}
+                  bgColor={theme.colors.white}
+                  borderColor={theme.colors.primary}
                   isDisabled={formState.loading}
                   imgRightSrc={null}
                   style={{ ...styles.editButton }}
@@ -259,9 +281,9 @@ const ProfileUI = (props: ProfileParams) => {
                 <View style={{ flex: 1, marginLeft: 5 }}>
                   <OButton
                     text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
-                    bgColor={colors.primary}
+                    bgColor={theme.colors.primary}
                     textStyle={{ color: formState.loading ? 'black' : 'white' }}
-                    borderColor={colors.primary}
+                    borderColor={theme.colors.primary}
                     isDisabled={formState.loading}
                     imgRightSrc={null}
                     style={{ ...styles.editButton }}
@@ -285,31 +307,6 @@ const ProfileUI = (props: ProfileParams) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  dropdown: {
-    borderColor: colors.whiteGray,
-    height: 50,
-    borderRadius: 25,
-    marginTop: 16,
-  },
-  inputbox: {
-    marginVertical: 8,
-    width: '90%'
-  },
-  editButton: {
-    // flex:0,
-    borderRadius: 25,
-    borderColor: colors.primary,
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    color: colors.primary,
-    // width: 100,
-    // height: 50,
-    marginVertical: 8,
-    // flex: 1,
-  },
-});
 
 export const UserProfileForm = (props: any) => {
   const profileProps = {

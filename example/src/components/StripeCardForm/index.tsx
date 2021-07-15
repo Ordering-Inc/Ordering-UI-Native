@@ -12,14 +12,15 @@ import {
 } from './styles';
 
 import { OButton, OText } from '../shared';
-import { colors } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 const StripeCardFormUI = (props:  any) => {
   const {
     stateCardForm,
-    handleCancel,
-    publicKey
+    handleCancel
   } = props;
+
+  const theme = useTheme();
 
   const { error, loading } = stateCardForm;
 
@@ -39,12 +40,12 @@ const StripeCardFormUI = (props:  any) => {
           labelStyle={styles.label}
           inputStyle={styles.input}
           validColor={'#000000'}
-          invalidColor={colors.cancelColor}
-          placeholderColor={colors.backgroundGray}
+          invalidColor={theme.colors.cancelColor}
+          placeholderColor={theme.colors.backgroundGray}
           onChange={handleChange}
         />
         <ErrorMessage>
-          <OText color={colors.error} style={{ textAlign: 'center' }}>
+          <OText color={theme.colors.error} style={{ textAlign: 'center' }}>
             {error}
           </OText>
         </ErrorMessage>
@@ -53,8 +54,8 @@ const StripeCardFormUI = (props:  any) => {
         <View style={{ width: '49%' }}>
           <OButton
             text={t('CANCEL', 'Cancel')}
-            bgColor={colors.backgroundGray}
-            borderColor={colors.backgroundGray}
+            bgColor={theme.colors.backgroundGray}
+            borderColor={theme.colors.backgroundGray}
             textStyle={{color: 'white'}}
             imgRightSrc={null}
             onClick={() => handleCancel()}
@@ -64,8 +65,8 @@ const StripeCardFormUI = (props:  any) => {
           <OButton
             text={loading ? t('LOADING', 'Loading...') : t('ADD', 'Add')}
             isDisabled={!cardState?.valid || loading}
-            bgColor={colors.primary}
-            borderColor={colors.primary}
+            bgColor={theme.colors.primary}
+            borderColor={theme.colors.primary}
             textStyle={{color: 'white'}}
             imgRightSrc={null}
             onClick={handleSubmit}

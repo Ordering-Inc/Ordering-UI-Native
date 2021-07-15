@@ -4,18 +4,14 @@ import styled from 'styled-components/native';
 import {ReviewOrder as ReviewOrderController} from '../components/ReviewOrder'
 import { Container } from '../layouts/Container';
 
-
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;
 `;
 
 const ReviewOrder = ({navigation, route} : any) => {
-
-  const {order} = route.params
-
   const reviewOrderProps = {
     navigation,
-    order
+    order: route?.params?.order
   }
 
   return (

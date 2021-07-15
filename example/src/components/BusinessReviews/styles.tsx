@@ -1,8 +1,6 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
-export const BusinessReviewsContainer = styled.View`
-`
+export const BusinessReviewsContainer = styled.View``
 
 export const ScoreView = styled.View`
   display: flex;
@@ -10,7 +8,7 @@ export const ScoreView = styled.View`
   justify-content: center;
   align-items: center;
   border-width: 1px;
-  border-color: ${colors.lightGray};
+  border-color: ${(props: any) => props.theme.colors.lightGray};
   border-radius: 10px;
   padding: 10px;
   width: 170px;
@@ -25,7 +23,7 @@ export const BusinessReviewContent = styled.ScrollView`
 export const WrapCustomerReview = styled.View`
   padding: 20px 0;
   border-bottom-width: 1px;
-  border-color: ${colors.lightGray};
+  border-color: ${(props: any) => props.theme.colors.lightGray};
 `
 export const WrapCustomerReviewTotal = styled.View`
   display: flex;

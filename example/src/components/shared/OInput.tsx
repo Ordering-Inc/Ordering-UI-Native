@@ -2,11 +2,10 @@ import * as React from 'react';
 import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps, I18nManager} from 'react-native';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
-import { colors } from '../../theme.json';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 const Wrapper = styled.View`
-  background-color: ${colors.backgroundLight};
+  background-color: ${(props: any) => props.theme.colors.backgroundLight};
   border-radius: 25px;
   border-width: 1px;
   padding-horizontal: 16px;
@@ -16,6 +15,7 @@ const Wrapper = styled.View`
   flex: 1;
   justify-content: center;
 `;
+
 const Input = styled.TextInput`
   flex-grow: 1;
   flex: 1;
@@ -24,7 +24,6 @@ const Input = styled.TextInput`
   font-family: 'Poppins-Regular';
   text-align: ${I18nManager.isRTL ? 'right' : 'left'};
 `;
-
 interface Props extends TextInputProps {
   bgColor?: string;
   borderColor?: string;
@@ -48,7 +47,13 @@ interface Props extends TextInputProps {
   multiline?: boolean;
   vertorIcon?: string;
   vectorIconColor?: string;
-  forwardRef?: any
+  forwardRef?: any;
+  autoCapitalize?: any;
+  autoCompleteType?: any;
+  autoCorrect?: any;
+  returnKeyType?: any;
+  onSubmitEditing?: any;
+  blurOnSubmit?: any;
 }
 
 const OInput = (props: Props): React.ReactElement => {

@@ -6,13 +6,13 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
+import { useTheme } from 'styled-components/native';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { _retrieveStoreData } from '../../providers/StoreUtil';
 import { OInput, OButton, OText, OModal } from '../shared'
 import { AddressFormParams } from '../../types'
 import { getTraduction } from '../../utils'
-import { colors } from '../../theme.json'
 import { GoogleMap } from '../GoogleMap'
 import NavBar from '../NavBar'
 
@@ -50,10 +50,43 @@ const AddressFormUI = (props: AddressFormParams) => {
     saveAddress,
     isRequiredField,
     isFromProductsList,
-    hasAddressDefault,
     afterSignup,
     isFromCheckout
   } = props
+
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    iconContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 10,
+      paddingHorizontal: 18,
+      paddingVertical: 5,
+    },
+    icons: {
+      borderRadius: 20,
+      color: theme.colors.white
+    },
+    inputsStyle: {
+      borderColor: theme.colors.secundaryContrast,
+      borderRadius: 10,
+      marginBottom: 20,
+      height: 50,
+      maxHeight: 50,
+      minHeight: 50
+    },
+    textAreaStyles: {
+      borderColor: theme.colors.secundaryContrast,
+      borderRadius: 10,
+      marginBottom: 20,
+      height: 90,
+      maxHeight: 90,
+      textAlignVertical: 'top',
+      alignItems: 'flex-start'
+    },
+  })
 
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
@@ -95,7 +128,7 @@ const AddressFormUI = (props: AddressFormParams) => {
     const data: any = { address: null, error: null }
     Geocoder.init(googleMapsApiKey);
     Geocoder.from(address)
-      .then(json => {
+      .then((json: any) => {
         if (json.results && json.results?.length > 0) {
           let postalCode = null
           for (const component of json.results?.[0].address_components) {
@@ -152,7 +185,7 @@ const AddressFormUI = (props: AddressFormParams) => {
           })
         }
       })
-      .catch(error => {
+      .catch((error: any) => {
         setAlertState({
           open: true,
           content: [error?.message || error?.toString()]
@@ -374,7 +407,9 @@ const AddressFormUI = (props: AddressFormParams) => {
         paddingTop={20}
       />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <AddressFormContainer style={{ height: 600, overflow: 'scroll' }}>
+        <AddressFormContainer
+          style={{ height: 600, overflow: 'scroll' }}
+        >
           <View>
             <FormInput>
               <AutocompleteInput>
@@ -386,14 +421,14 @@ const AddressFormUI = (props: AddressFormParams) => {
                   render={() => (
                     <GooglePlacesAutocomplete
                       placeholder={t('ADD_ADDRESS', 'Add a address')}
-                      onPress={(data, details: any) => {
+                      onPress={(data: any, details: any) => {
                         handleChangeAddress(data, details)
                       }}
                       query={{ key: googleMapsApiKey }}
                       fetchDetails
                       ref={googleInput}
                       textInputProps={{
-                        onChangeText: (text) => {
+                        onChangeText: (text: any) => {
                           if (!isFirstTime) {
                             handleChangeInput({ target: { name: 'address', value: text } })
                             setValue('address', text)
@@ -405,7 +440,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                         blurOnSubmit: false,
                         returnKeyType: 'next'
                       }}
-                      onFail={(error) => setAlertState({ open: true, content: getTraduction(error) })}
+                      onFail={(error: any) => setAlertState({ open: true, content: getTraduction(error) })}
                       styles={{
                         listView: {
                           position: 'relative',
@@ -438,7 +473,7 @@ const AddressFormUI = (props: AddressFormParams) => {
               {!isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) && (
                 <TouchableOpacity onPress={handleToggleMap} style={{ marginBottom: 10 }}>
                   <OText
-                    color={colors.primary}
+                    color={theme.colors.primary}
                     style={{ textAlign: 'center' }}
                   >
                     {t('VIEW_MAP', 'View map to modify the exact location')}
@@ -525,11 +560,11 @@ const AddressFormUI = (props: AddressFormParams) => {
                       style={{
                         ...styles.iconContainer,
                         backgroundColor: addressTag === tag.value
-                          ? colors.primary
-                          : colors.backgroundGray,
+                          ? theme.colors.primary
+                          : theme.colors.backgroundGray,
                         borderColor: addressTag === tag.value
-                          ? colors.primary
-                          : colors.backgroundGray
+                          ? theme.colors.primary
+                          : theme.colors.backgroundGray
                       }}
                     >
                       <MaterialIcon
@@ -556,13 +591,13 @@ const AddressFormUI = (props: AddressFormParams) => {
                 }
                 imgRightSrc=''
                 onClick={handleSubmit(onSubmit)}
-                textStyle={{ color: colors.white }}
+                textStyle={{ color: theme.colors.white }}
                 isDisabled={formState.loading}
               />
             ) : (
               <OButton
                 text={t('CANCEL', 'Cancel')}
-                style={{ backgroundColor: colors.white }}
+                style={{ backgroundColor: theme.colors.white }}
                 onClick={() => navigation?.canGoBack() && navigation.goBack()}
               />
             )}
@@ -588,7 +623,7 @@ const AddressFormUI = (props: AddressFormParams) => {
             )}
             <OButton
               text={t('SAVE', 'Save')}
-              textStyle={{ color: colors.white }}
+              textStyle={{ color: theme.colors.white }}
               imgRightSrc={null}
               style={{ marginHorizontal: 30, marginBottom: 10 }}
               onClick={() => setSaveMapLocation(true)}
@@ -600,38 +635,6 @@ const AddressFormUI = (props: AddressFormParams) => {
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  iconContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    paddingHorizontal: 18,
-    paddingVertical: 5,
-  },
-  icons: {
-    borderRadius: 20,
-    color: colors.white
-  },
-  inputsStyle: {
-    borderColor: colors.secundaryContrast,
-    borderRadius: 10,
-    marginBottom: 20,
-    height: 50,
-    maxHeight: 50,
-    minHeight: 50
-  },
-  textAreaStyles: {
-    borderColor: colors.secundaryContrast,
-    borderRadius: 10,
-    marginBottom: 20,
-    height: 90,
-    maxHeight: 90,
-    textAlignVertical: 'top',
-    alignItems: 'flex-start'
-  },
-})
 
 export const AddressForm = (props: AddressFormParams) => {
   const addressFormProps = {

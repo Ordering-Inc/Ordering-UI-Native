@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Messages as MessagesController, useSession, useUtils, useLanguage } from 'ordering-components/native'
 import { launchImageLibrary } from 'react-native-image-picker'
+import { useTheme } from 'styled-components/native';
 import { GiftedChat, Actions, InputToolbar, Composer, Send, Bubble, MessageImage } from 'react-native-gifted-chat'
 import { USER_TYPE } from '../../config/constants'
 import { ToastType, useToast } from '../../providers/ToastProvider'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { colors } from '../../theme.json'
 import { OIcon, OIconButton, OText } from '../shared'
 import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard,I18nManager } from 'react-native'
 import { Header, TitleHeader, Wrapper } from './styles'
@@ -14,8 +14,32 @@ import { MessagesParams } from '../../types'
 const ImageDummy = require('../../assets/images/image.png')
 const paperIcon = require('../../assets/images/paper-plane.png')
 
-const MessagesUI = (props: MessagesParams) => {
+const ORDER_STATUS: any = {
+  0: 'ORDER_STATUS_PENDING',
+  1: 'ORDERS_COMPLETED',
+  2: 'ORDER_REJECTED',
+  3: 'ORDER_STATUS_IN_BUSINESS',
+  4: 'ORDER_READY',
+  5: 'ORDER_REJECTED_RESTAURANT',
+  6: 'ORDER_STATUS_CANCELLEDBYDRIVER',
+  7: 'ORDER_STATUS_ACCEPTEDBYRESTAURANT',
+  8: 'ORDER_CONFIRMED_ACCEPTED_BY_DRIVER',
+  9: 'ORDER_PICKUP_COMPLETED_BY_DRIVER',
+  10: 'ORDER_PICKUP_FAILED_BY_DRIVER',
+  11: 'ORDER_DELIVERY_COMPLETED_BY_DRIVER',
+  12: 'ORDER_DELIVERY_FAILED_BY_DRIVER',
+  13: 'PREORDER',
+  14: 'ORDER_NOT_READY',
+  15: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
+  16: 'ORDER_STATUS_CANCELLED_BY_CUSTOMER',
+  17: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
+  18: 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS',
+  19: 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER',
+  20: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
+  21: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
+}
 
+const MessagesUI = (props: MessagesParams) => {
   const {
     type,
     order,
@@ -26,13 +50,13 @@ const MessagesUI = (props: MessagesParams) => {
     sendMessage,
     setMessage,
     handleSend,
-    setImage,
-    readMessages,
+    setImage
   } = props
 
-  const [{ user }] = useSession()
-  const [{ parseDate }] = useUtils()
-  const [, t] = useLanguage()
+  const theme = useTheme();
+  const [{ user }] = useSession();
+  const [{ parseDate }] = useUtils();
+  const [, t] = useLanguage();
   const { showToast } = useToast();
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
@@ -64,59 +88,7 @@ const MessagesUI = (props: MessagesParams) => {
     });
   };
 
-  const getStatus = (status: number) => {
-
-    switch (status) {
-      case 0:
-        return 'ORDER_STATUS_PENDING'
-      case 1:
-        return 'ORDERS_COMPLETED'
-      case 2:
-        return 'ORDER_REJECTED'
-      case 3:
-        return 'ORDER_STATUS_IN_BUSINESS'
-      case 4:
-        return 'ORDER_READY'
-      case 5:
-        return 'ORDER_REJECTED_RESTAURANT'
-      case 6:
-        return 'ORDER_STATUS_CANCELLEDBYDRIVER'
-      case 7:
-        return 'ORDER_STATUS_ACCEPTEDBYRESTAURANT'
-      case 8:
-        return 'ORDER_CONFIRMED_ACCEPTED_BY_DRIVER'
-      case 9:
-        return 'ORDER_PICKUP_COMPLETED_BY_DRIVER'
-      case 10:
-        return 'ORDER_PICKUP_FAILED_BY_DRIVER'
-      case 11:
-        return 'ORDER_DELIVERY_COMPLETED_BY_DRIVER'
-      case 12:
-        return 'ORDER_DELIVERY_FAILED_BY_DRIVER'
-      case 13:
-        return 'PREORDER'
-      case 14:
-        return 'ORDER_NOT_READY'
-      case 15:
-        return 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER'
-      case 16:
-        return 'ORDER_STATUS_CANCELLED_BY_CUSTOMER'
-      case 17:
-        return 'ORDER_NOT_PICKEDUP_BY_CUSTOMER'
-      case 18:
-        return 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS'
-      case 19:
-        return 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER'
-      case 20:
-        return 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS'
-      case 21:
-        return 'ORDER_CUSTOMER_ARRIVED_BUSINESS'
-      default:
-        return status
-    }
-  }
-
-  const onSubmit = (values: any) => {
+  const onSubmit = () => {
     handleSend && handleSend()
     setImage && setImage(null)
     setMessage && setMessage('')
@@ -125,7 +97,7 @@ const MessagesUI = (props: MessagesParams) => {
   const messageConsole = (message: any) => {
     return message.change?.attribute !== 'driver_id'
       ?
-      `${t('ORDER', 'Order')} ${message.change.attribute} ${t('CHANGED_FROM', 'Changed from')} ${message.change.old !== null && t(getStatus(parseInt(message.change.old, 10)))} ${t('TO', 'to')} ${t(getStatus(parseInt(message.change.new, 10)))}`
+      `${t('ORDER', 'Order')} ${message.change.attribute} ${t('CHANGED_FROM', 'Changed from')} ${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
       : message.change.new
         ?
         `${message.driver?.name} ${message.driver?.lastname !== null ? message.driver.lastname : ''} ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${message.comment ? message.comment.length : ''}`
@@ -191,7 +163,7 @@ const MessagesUI = (props: MessagesParams) => {
         icon={() => (
           <>
             <OIconButton
-              borderColor={colors.white}
+              borderColor={theme.colors.white}
               style={{ width: 32, height: 32, borderRadius: 10 }}
               icon={image ? { uri: image } : ImageDummy}
               iconStyle={{ borderRadius: image ? 10 : 0, width: image ? 32 : 28, height: image ? 32 : 24 }}
@@ -200,10 +172,10 @@ const MessagesUI = (props: MessagesParams) => {
             />
             {image && (
               <TouchableOpacity
-                style={{ position: 'absolute', top: -5, right: -5, borderColor: colors.backgroundDark, backgroundColor: colors.white, borderRadius: 25 }}
+                style={{ position: 'absolute', top: -5, right: -5, borderColor: theme.colors.backgroundDark, backgroundColor: theme.colors.white, borderRadius: 25 }}
                 onPress={() => removeImage()}
               >
-                <MaterialCommunityIcon name='close-circle-outline' color={colors.backgroundDark} size={24} />
+                <MaterialCommunityIcon name='close-circle-outline' color={theme.colors.backgroundDark} size={24} />
               </TouchableOpacity>
             )}
           </>
@@ -227,7 +199,7 @@ const MessagesUI = (props: MessagesParams) => {
       <Composer
         {...props}
         textInputStyle={{
-          backgroundColor: colors.white,
+          backgroundColor: theme.colors.white,
           borderRadius: 25,
           paddingHorizontal: 10,
           borderColor: '#DBDCDB',
@@ -265,13 +237,13 @@ const MessagesUI = (props: MessagesParams) => {
             height: 32,
             borderRadius: 25,
             opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
-            borderColor: colors.primary,
+            borderColor: theme.colors.primary,
           }}
           iconStyle={{ marginTop: 3, marginRight: 2 }}
           icon={!sendMessage?.loading ? paperIcon : undefined}
-          RenderIcon={sendMessage?.loading ? () => <ActivityIndicator size='small' color={colors.primary} /> : undefined}
+          RenderIcon={sendMessage?.loading ? () => <ActivityIndicator size='small' color={theme.colors.primary} /> : undefined}
           disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
-          disabledColor={colors.white}
+          disabledColor={theme.colors.white}
         />
     </Send>
   )
@@ -281,7 +253,7 @@ const MessagesUI = (props: MessagesParams) => {
       {...props}
       textStyle={{
         left: {},
-        right: { color: colors.white }
+        right: { color: theme.colors.white }
       }}
       containerStyle={{
         left: { marginVertical: 5, borderBottomRightRadius: 12 },
@@ -289,7 +261,7 @@ const MessagesUI = (props: MessagesParams) => {
       }}
       wrapperStyle={{
         left: { backgroundColor: '#f7f7f7', padding: 5, borderBottomLeftRadius: 0 },
-        right: { backgroundColor: colors.primary, padding: 5, borderBottomRightRadius: 0}
+        right: { backgroundColor: theme.colors.primary, padding: 5, borderBottomRightRadius: 0}
       }}
     />
   )

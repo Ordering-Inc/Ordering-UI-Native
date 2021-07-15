@@ -37,17 +37,6 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
     const checkTime = (val : number | string) => val < 10 ? `0${val}` : val
     return `${checkTime(hour)}:${checkTime(minute)}`
   }
-  const businessCoordinate = {
-    lat: businessState?.business?.location?.lat,
-    lng: businessState?.business?.location?.lng
-  }
-  const businessImage = {
-    uri: businessState?.business?.logo
-  }
-  const businessMarker = {
-    latlng: businessCoordinate,
-    image: businessImage
-  }
 
   return (
     <BusinessInformationContainer>

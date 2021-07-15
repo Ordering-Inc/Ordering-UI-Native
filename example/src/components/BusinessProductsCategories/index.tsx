@@ -1,11 +1,11 @@
 import React from 'react'
 import { BusinessProductsCategories as ProductsCategories } from 'ordering-components/native'
-import { I18nManager, ScrollView, StyleSheet, View } from 'react-native'
-import { colors } from '../../theme.json'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { Tab } from './styles'
 import { OText } from '../shared'
 import { BusinessProductsCategoriesParams } from '../../types'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+import { useTheme } from 'styled-components/native'
 
 const BusinessProductsCategoriesUI = (props: any) => {
   const {
@@ -16,12 +16,25 @@ const BusinessProductsCategoriesUI = (props: any) => {
     loading
   } = props
 
+  const theme = useTheme()
+
+  const styles = StyleSheet.create({
+    container: {
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      borderBottomColor: theme.colors.lightGray,
+    },
+    featuredStyle: {
+      display: 'none'
+    }
+  })
+
   return (
     <ScrollView horizontal style={{...styles.container, borderBottomWidth: loading ? 0 : 1}} showsHorizontalScrollIndicator={false}>
       {loading && (
         <Placeholder Animation={Fade}>
           <View style={{ flexDirection: 'row' }}>
-            {[...Array(4)].map((item, i) => (
+            {[...Array(4)].map((_, i) => (
               <PlaceholderLine key={i} width={10} style={{marginRight: 5}}/>
               ))}
           </View>
@@ -35,7 +48,7 @@ const BusinessProductsCategoriesUI = (props: any) => {
           style={(category.id === 'featured') && !featured && styles.featuredStyle}
           >
             <OText
-              color={categorySelected?.id === category.id ? colors.primary : ''}
+              color={categorySelected?.id === category.id ? theme.colors.primary : ''}
               >
               {category.name}
             </OText>
@@ -45,17 +58,6 @@ const BusinessProductsCategoriesUI = (props: any) => {
     </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderBottomColor: colors.lightGray,
-  },
-  featuredStyle: {
-    display: 'none'
-  }
-})
 
 export const BusinessProductsCategories = (props: BusinessProductsCategoriesParams) => {
   const businessProductsCategoriesProps = {
