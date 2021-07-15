@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps} from 'react-native';
+import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps, I18nManager} from 'react-native';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
 import { colors } from '../../theme.json';
@@ -22,6 +22,7 @@ const Input = styled.TextInput`
   min-height: 30px;
   font-size: 15px;
   font-family: 'Poppins-Regular';
+  text-align: ${I18nManager.isRTL ? 'right' : 'left'};
 `;
 
 interface Props extends TextInputProps {

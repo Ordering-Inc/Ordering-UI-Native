@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, BackHandler } from 'react-native'
+import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -9,7 +9,8 @@ import {
   OrderDetails as OrderDetailsConTableoller,
   useUtils,
   useConfig,
-  useSession
+  useSession,
+  useOrder
 } from 'ordering-components/native'
 import {
   OrderDetailsContainer,
@@ -39,7 +40,6 @@ import {
 import { OButton, OIcon, OModal, OText } from '../shared'
 import { colors, images } from '../../theme.json'
 import { ProductItemAccordion } from '../ProductItemAccordion'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { OrderDetailsParams } from '../../types'
 import { USER_TYPE } from '../../config/constants'
 import { GoogleMap } from '../GoogleMap'
@@ -54,14 +54,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     readMessages,
     messagesReadList,
     isFromCheckout,
-    driverLocation
+    isFromRoot,
+    driverLocation,
+    goToBusinessList
   } = props
 
   const [, t] = useLanguage()
   const [{ parsePrice, parseNumber, parseDate }] = useUtils()
   const [{ user }] = useSession()
   const [{ configs }] = useConfig()
-
+  const [, { refreshOrderOptions }] = useOrder()
   const [openModalForBusiness,setOpenModalForBusiness] = useState(false)
   const [openModalForDriver,setOpenModalForDriver] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
@@ -85,14 +87,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       { key: 11, value: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver'), slug: 'DELIVERY_COMPLETED_BY_DRIVER', percentage: 1, image: images.order.status11 },
       { key: 12, value: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver'), slug: 'DELIVERY_FAILED_BY_DRIVER', percentage: 0, image: images.order.status12 },
       { key: 13, value: t('PREORDER', 'PreOrder'), slug: 'PREORDER', percentage: 0, image: images.order.status13 },
-      { key: 14, value: t('ORDER_NOT_READY', 'Order not ready'), slug: 'ORDER_NOT_READY', percentage: 0, image: images.order.status13 },
-      { key: 15, value: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Order picked up completed by customer'), slug: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', percentage: 100, image: images.order.status1 },
-      { key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer'), slug: 'CANCELLED_BY_CUSTOMER', percentage: 0, image: images.order.status2 },
-      { key: 17, value: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer'), slug: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER', percentage: 0, image: images.order.status2  },
-      { key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business'), slug: 'DRIVER_ALMOST_ARRIVED_TO_BUSINESS', percentage: 0.15, image: images.order.status3 },
-      { key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer'), slug: 'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', percentage: 0.90, image: images.order.status11 },
-      { key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business'), slug: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', percentage: 90, image: images.order.status7 },
-      { key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business'), slug: 'ORDER_CUSTOMER_ARRIVED_BUSINESS', percentage: 95, image: images.order.status7 }
+      { key: 14, value: t('ORDER_NOT_READY', 'Order not ready'), slug: 'ORDER_NOT_READY', percentage: 0, image: images.order.status14 },
+      { key: 15, value: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Order picked up completed by customer'), slug: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', percentage: 100, image: images.order.status15 },
+      { key: 16, value: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer'), slug: 'CANCELLED_BY_CUSTOMER', percentage: 0, image: images.order.status16 },
+      { key: 17, value: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer'), slug: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER', percentage: 0, image: images.order.status17 },
+      { key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business'), slug: 'DRIVER_ALMOST_ARRIVED_TO_BUSINESS', percentage: 0.15, image: images.order.status18 },
+      { key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer'), slug: 'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', percentage: 0.90, image: images.order.status19 },
+      { key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business'), slug: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', percentage: 90, image: images.order.status20 },
+      { key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business'), slug: 'ORDER_CUSTOMER_ARRIVED_BUSINESS', percentage: 95, image: images.order.status21 }
     ]
 
 
@@ -104,13 +106,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const handleOpenMessagesForBusiness = () => {
     setOpenModalForBusiness(true)
     readMessages && readMessages()
-    setUnreadAlert({...unreadAlert, business: false})
+    setUnreadAlert({ ...unreadAlert, business: false })
   }
 
   const handleOpenMessagesForDriver = () => {
     setOpenModalForDriver(true)
     readMessages && readMessages()
-    setUnreadAlert({...unreadAlert, driver: false})
+    setUnreadAlert({ ...unreadAlert, driver: false })
   }
 
   const unreadMessages = () => {
@@ -128,9 +130,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }
 
   const handleArrowBack: any = () => {
-    if (!isFromCheckout) {
+    if ((!isFromCheckout && !goToBusinessList) || isFromRoot) {
       navigation?.canGoBack() && navigation.goBack();
       return
+    }
+    if(goToBusinessList){
+      refreshOrderOptions()
     }
     navigation.navigate('BottomTab');
   }
@@ -174,9 +179,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               imgLeftStyle={{ tintColor: '#fff' }}
             />
             <HeaderInfo>
-              <OIcon src={images.logos.logotypeInvert} height={50} width={180}></OIcon>
-              <OText size={28} color={colors.white} style={{ fontWeight: '600' }}>
-                  {order?.customer?.name} {t('THANKS_ORDER', 'thanks for your order!')}
+              <OIcon src={images.logos.logotypeInvert} height={50} width={180} />
+              <OText size={28} color={colors.white} style={{ fontWeight: '600', alignItems: 'flex-start' }}>
+                {order?.customer?.name} {t('THANKS_ORDER', 'thanks for your order!')}
               </OText>
               <OText color={colors.white}>{t('ORDER_MESSAGE_HEADER_TEXT', 'Once business accepts your order, we will send you an email, thank you!')}</OText>
               <View style={{ ...styles.rowDirection, justifyContent: 'space-between' }}>
@@ -227,15 +232,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <View style={{ ...styles.rowDirection, backgroundColor: colors.white }}>
               <OrderInfo>
                 <OrderData>
-                  <OText size={20}>{t('ORDER', 'Order')} #{order?.id}</OText>
-                  <OText color={colors.textSecondary}>{t('DATE_TIME_FOR_ORDER', 'Date and time for your order')}</OText>
-                  <OText size={18}>
-                    {
-                      order?.delivery_datetime_utc
-                        ? parseDate(order?.delivery_datetime_utc)
-                        : parseDate(order?.delivery_datetime, { utc: false })
-                    }
-                  </OText>
+                  <View style={{ alignItems: 'flex-start' }}>
+                    <OText size={20}>{t('ORDER', 'Order')} #{order?.id}</OText>
+                    <OText color={colors.textSecondary}>{t('DATE_TIME_FOR_ORDER', 'Date and time for your order')}</OText>
+                    <OText size={18}>
+                      {
+                        order?.delivery_datetime_utc
+                          ? parseDate(order?.delivery_datetime_utc)
+                          : parseDate(order?.delivery_datetime, { utc: false })
+                      }
+                    </OText>
+                  </View>
                   <StaturBar>
                     <LinearGradient
                       start={{ x: 0.0, y: 0.0 }}
@@ -350,9 +357,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) &&
                     parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
                     !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                  (
-                    `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`
-                  )}
+                    (
+                      `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`
+                    )}
                 </OText>
                 <OText>{parsePrice(order?.summary?.driver_tip || order?.totalDriverTip)}</OText>
               </Table>
@@ -392,6 +399,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   statusBar: {
+    transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
     height: 10,
   },
   logo: {

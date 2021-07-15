@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-
 import {
   BusinessAndProductList,
   useLanguage,
@@ -36,19 +35,21 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleChangeSearch,
     categorySelected,
     searchValue,
-    handleChangeCategory,
     handleSearchRedirect,
     featuredProducts,
     errorQuantityProducts,
     header,
-    logo
+    logo,
+    productModal,
+    handleChangeCategory,
+    setProductLogin,
+    updateProductModal
   } = props
 
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
   const [orderState] = useOrder()
   const [{ parsePrice }] = useUtils()
-
   const { business, loading, error } = businessState
   const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
   const [isOpenSearchBar, setIsOpenSearchBar] = useState(false)
@@ -73,6 +74,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const handleCloseProductModal = () => {
     setCurProduct(null)
+    updateProductModal && updateProductModal(null)
   }
 
   const handlerProductAction = () => {
@@ -90,11 +92,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setOpenUpselling(false)
   }
 
-  useEffect(() => {
-    if (!orderState.loading) {
-      handleCloseProductModal()
-    }
-  }, [orderState.loading])
+  // useEffect(() => {
+  //   if (!orderState.loading) {
+  //     handleCloseProductModal()
+  //   }
+  // }, [orderState.loading])
 
   return (
     <>
@@ -112,7 +114,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                       imgLeftSrc={images.general.arrow_left}
                       imgRightSrc={null}
                       style={styles.btnBackArrow}
-                      onClick={() => navigation?.canGoBack() && navigation.goBack()}
+                      onClick={() => (navigation?.canGoBack() && navigation.goBack()) || (auth && navigation.navigate('BottomTab'))}
                       imgLeftStyle={{ tintColor: '#fff' }}
                     />
                     <AddressInput
@@ -234,18 +236,19 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         />
       )}
       <OModal
-        open={!!curProduct}
+        open={!!curProduct || (!!productModal.product && !orderState.loading)}
         onClose={handleCloseProductModal}
         entireModal
         customClose
       >
         <ProductForm
-          product={curProduct}
-          businessSlug={business.slug}
-          businessId={business.id}
+          product={curProduct || productModal.product}
+          businessSlug={business?.slug}
+          businessId={business?.id || productModal?.product?.category?.business_id}
           onClose={handleCloseProductModal}
           navigation={navigation}
           onSave={handlerProductAction}
+          setProductLogin={setProductLogin}
         />
       </OModal>
       {openUpselling && (

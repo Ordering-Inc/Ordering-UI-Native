@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Animated, StyleSheet, Platform } from 'react-native'
+import { View, Animated, StyleSheet, Platform, I18nManager } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
@@ -137,7 +137,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 <OIcon url={product?.images} style={styles.productImage} />
               </ProductImage>
             )}
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, alignItems: 'flex-start'}}>
               <OText>{product.name}</OText>
             </View>
             <View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end' }}>
@@ -233,7 +233,6 @@ const pickerStyle = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'transparent',
     borderRadius: 15,
-    paddingHorizontal: 7,
     backgroundColor: colors.inputDisabled,
     width: 50,
   },
@@ -249,12 +248,12 @@ const pickerStyle = StyleSheet.create({
   },
   icon: {
     top: Platform.OS === 'ios' ? 10 : 15,
-    right: Platform.OS === 'ios' ? 0 : 7,
+    right: Platform.OS === 'ios' ? 0 : (I18nManager.isRTL ? 30 : 7),
     position: 'absolute',
     fontSize: 20
   },
   placeholder: {
-    color: colors.secundaryContrast
+    color: colors.secundaryContrast,
   }
 })
 
@@ -263,8 +262,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: 75,
     height: 75
-  },
-  test: {
-    overflow: 'hidden',
   }
 })

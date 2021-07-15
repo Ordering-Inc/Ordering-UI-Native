@@ -27,7 +27,7 @@ import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-  const { business, handleClick,isBusinessOpen } = props;
+  const { business, handleClick, isBusinessOpen, businessWillCloseSoonMinutes, isBusinessClose} = props;
   const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
   const [orderState] = useOrder();
   const [, t] = useLanguage();
@@ -50,16 +50,21 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       <BusinessHero
         source={{ uri: optimizeImage(business?.header, 'h_400,c_limit') }}
         imageStyle={styles.headerStyle}
-        isClosed={isBusinessOpen}
+        isClosed={isBusinessOpen || isBusinessClose}
       >
         {business?.featured && (
           <View style={styles.featured}>
             <FontAwesomeIcon name='crown' size={26} color='gold' />
           </View>
         )}
-        {!isBusinessOpen && (
+        {!isBusinessOpen || isBusinessClose && (
           <View style={styles.closed}>
             <OText size={32} color={colors.white}>{t('CLOSED', 'CLOSED')}</OText>
+          </View>
+        )}
+        {!!businessWillCloseSoonMinutes && orderState.options?.moment === null && isBusinessOpen && (
+          <View style={styles.closed}>
+            <OText size={32} color={colors.white}>{businessWillCloseSoonMinutes} {t('MINUTES_TO_CLOSE', 'minutes to close')}</OText>
           </View>
         )}
         <BusinessLogo>
@@ -77,11 +82,11 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       </BusinessHero>
       <BusinessContent>
         <BusinessInfo>
-          <View style={{ width: '70%' }}>
+          <View style={{ width: '70%', alignItems: 'flex-start' }}>
             <OText
-              size={20}
-              numberOfLines={1}
-              ellipsizeMode='tail'
+                size={20}
+                numberOfLines={1}
+                ellipsizeMode='tail'
               >
               {business?.name}
             </OText>

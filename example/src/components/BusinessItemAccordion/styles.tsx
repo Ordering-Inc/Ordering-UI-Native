@@ -40,10 +40,10 @@ export const BIContent = styled.View`
 export const BIContentInfo = styled.View`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   text-transform: capitalize;
   margin-left: 10px;
-  width: 65%;
+  max-width: 65%;
 `
 
 export const BITotal = styled.View`

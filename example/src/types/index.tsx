@@ -16,6 +16,7 @@ export interface LoginParams {
   handleButtonLoginClick?: any;
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
+  notificationState?: any;
 }
 export interface ProfileParams {
   navigation?: any;
@@ -47,6 +48,7 @@ export interface AddressListParams {
   isFromBusinesses?: boolean;
   isFromProductsList?: boolean;
   afterSignup?: boolean;
+  isFromCheckout?: boolean
 }
 
 export interface AddressFormParams {
@@ -67,6 +69,7 @@ export interface AddressFormParams {
   onSaveAddress?: any,
   isFromProductsList?: boolean,
   hasAddressDefault?: any,
+  isFromCheckout?: boolean
   afterSignup?: boolean
   isGuestFromStore?: boolean
 }
@@ -89,6 +92,7 @@ export interface SignupParams {
   setCheckPhoneCodeState?: any;
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
+  notificationState?: any;
 }
 
 export interface PhoneInputParams {
@@ -132,6 +136,8 @@ export interface BusinessControllerParams {
   handleCustomClick?: any;
   orderType?: any;
   handleClick?: any;
+  isBusinessOpen?: boolean;
+  businessWillCloseSoonMinutes?: number
 }
 export interface BusinessProductsListingParams {
   navigation?: any;
@@ -142,11 +148,14 @@ export interface BusinessProductsListingParams {
   featuredProducts: boolean;
   handleChangeSearch?: any;
   categorySelected: any;
-  handleChangeCategory: (value: any) => {};
   handleSearchRedirect: any;
   errorQuantityProducts?: boolean;
   header?: any;
   logo?: any;
+  productModal?: any;
+  handleChangeCategory: (value: any) => {};
+  setProductLogin?: () => {};
+  updateProductModal?: (value: any) => {}
 }
 export interface BusinessBasicInformationParams {
   businessState?: any;
@@ -234,6 +243,8 @@ export interface ActiveOrdersParams {
   getOrderStatus?: any,
   reorderLoading?: boolean,
   customArray?: Array<any>
+  setScreen?: any,
+  screen?: any,
   loadMoreOrders?: () => {},
   onNavigationRedirect?: (route: string, params?: any) => {}
 }
@@ -258,6 +269,8 @@ export interface OrderDetailsParams {
   readMessages?: () => {},
   isFromCheckout?: boolean,
   driverLocation?: any,
+  isFromRoot?: any,
+  goToBusinessList?: boolean
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean,

@@ -1,0 +1,5 @@
+{
+  "ios_project": "delivery",
+  "ios_bundle": "co.ordering.reactnative",
+  "android_package": "com.delivery"
+}

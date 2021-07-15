@@ -14,16 +14,15 @@ import BusinessProductsList from '../pages/BusinessProductsList';
 import ReviewOrder from '../pages/ReviewOrder'
 import MomentOption from '../pages/MomentOption'
 import Splash from '../pages/Splash';
+import { EventEmitter, NativeEventSubscription } from 'react-native';
 // import { View, PanResponder } from 'react-native';
 
 const Stack = createStackNavigator();
 
-const HomeNavigator = (is_online: boolean) => {
-
+const HomeNavigator = (e : any) => {
   const [orderState] = useOrder();
   const [{ auth }] = useSession();
   // const socket = useWebsocket()
-
   // const appState = React.useRef<any>(AppState.currentState);
 
   // const _handleAppStateChange = (nextAppState: string) => {
@@ -86,6 +85,14 @@ const HomeNavigator = (is_online: boolean) => {
                 </>
               ) : (
                 <>
+                  {!!Object.keys(e?.route?.params?.productLogin || {})?.length && (
+                    <Stack.Screen
+                      name="BusinessAfterLogin"
+                      component={BusinessProductsList}
+                      options={{headerShown: false}}
+                      initialParams={{productLogin: e?.route?.params?.productLogin}}
+                    />
+                  )}
                   <Stack.Screen
                     name='BottomTab'
                     component={BottomNavigator}

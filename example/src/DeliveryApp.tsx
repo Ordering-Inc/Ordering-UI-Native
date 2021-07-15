@@ -18,6 +18,8 @@ import RootNavigator from './navigators/RootNavigator';
 import { Toast } from './components/shared/OToast';
 import Alert from './providers/AlertProvider'
 
+import { navigationRef } from './navigators/NavigationRef';
+
 import settings from './config.json';
 import theme from './theme.json';
 
@@ -94,7 +96,15 @@ theme.images = {
     status10: require('./assets/images/status-10.png'),
     status11: require('./assets/images/status-11.png'),
     status12: require('./assets/images/status-12.png'),
-    status13: require('./assets/images/status-13.png')
+    status13: require('./assets/images/status-13.png'),
+    status14: require('./assets/images/status-14.png'),
+    status15: require('./assets/images/status-15.png'),
+    status16: require('./assets/images/status-16.png'),
+    status17: require('./assets/images/status-17.png'),
+    status18: require('./assets/images/status-18.png'),
+    status19: require('./assets/images/status-19.png'),
+    status20: require('./assets/images/status-20.png'),
+    status21: require('./assets/images/status-21.png'),
   },
   categories: {
     all: require('./assets/images/categories/category-all.png')
@@ -117,7 +127,7 @@ const DeliveryApp = () => {
   return (
     <OrderingProvider settings={settings} Alert={Alert}>
       <ToastProvider>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <RootNavigator />
         </NavigationContainer>
         <Toast />

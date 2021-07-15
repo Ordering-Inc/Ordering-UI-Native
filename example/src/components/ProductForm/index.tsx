@@ -10,7 +10,7 @@ import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
 
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager } from 'react-native'
 import Icon from 'react-native-vector-icons/Feather';
 
 import {
@@ -29,7 +29,6 @@ import {
 } from './styles'
 import { colors, images } from '../../theme.json'
 import { OButton, OInput, OText } from '../shared'
-import { ScrollView } from 'react-native-gesture-handler'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
 import { Placeholder,PlaceholderLine,Fade } from 'rn-placeholder'
@@ -54,7 +53,8 @@ export const ProductOptionsUI = (props: any) => {
     handleChangeCommentState,
     productObject,
     onClose,
-    isFromCheckout
+    isFromCheckout,
+    businessSlug
   } = props
 
   const [{ parsePrice }] = useUtils()
@@ -82,9 +82,9 @@ export const ProductOptionsUI = (props: any) => {
     }
   }
 
-  const handleRedirectLogin = () => {
+  const handleRedirectLogin = (product : any) => {
     onClose()
-    navigation.navigate('Login')
+    navigation.navigate('Login', {product: {businessId: product?.businessId, id: product?.id, categoryId: product?.categoryId, slug: businessSlug} })
   }
 
   const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0
@@ -130,8 +130,8 @@ export const ProductOptionsUI = (props: any) => {
                   </Placeholder>
                 ) : (
                   <>
-                    <OText size={20} style={{ flex: 1 }}>{product?.name || productCart.name}</OText>
-                    <OText size={20} color={colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+                    <OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1 }}>{product?.name || productCart.name}</OText>
+                    <OText size={20} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
                   </>
                 )}
               </ProductTitle>
@@ -164,7 +164,7 @@ export const ProductOptionsUI = (props: any) => {
                 </>
               ) : (
                 <ProductEditions>
-                  {product?.ingredients.length > 0 && (
+                  {product?.ingredients?.length > 0 && (
                     <View style={styles.optionContainer}>
                       <SectionTitle>
                         <OText size={16}>{t('INGREDIENTS', 'Ingredients')}</OText>
@@ -181,7 +181,7 @@ export const ProductOptionsUI = (props: any) => {
                       </WrapperIngredients>
                     </View>
                   )}
-                  {product?.extras.map((extra: any) => extra.options.map((option: any) => {
+                  {product?.extras?.map((extra: any) => extra.options.map((option: any) => {
                     const currentState = productCart.options[`id:${option.id}`] || {}
                     return (
                       <React.Fragment key={option.id}>
@@ -299,7 +299,7 @@ export const ProductOptionsUI = (props: any) => {
             {(!auth || isSoldOut || maxProductQuantity <= 0) && (
               <OButton
                 isDisabled={isSoldOut || maxProductQuantity <= 0}
-                onClick={() => handleRedirectLogin()}
+                onClick={() => handleRedirectLogin(productCart)}
                 text={isSoldOut || maxProductQuantity <= 0 ? t('SOLD_OUT', 'Sold out') : t('LOGIN_SIGNUP', 'Login / Sign Up')}
                 imgRightSrc=''
                 textStyle={{ color: colors.primary }}

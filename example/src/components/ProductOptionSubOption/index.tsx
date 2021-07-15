@@ -4,7 +4,7 @@ import {
   useLanguage,
   ProductOptionSuboption as ProductSubOptionController
 } from 'ordering-components/native'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, I18nManager } from 'react-native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import {
@@ -67,7 +67,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
             <MaterialCommunityIcon name='radiobox-blank' color={colors.backgroundDark} size={24} />
           )
         )}
-        <OText mLeft={10} style={{ flex: 1 }}>
+        <OText mLeft={10} style={{ flex: I18nManager.isRTL ? 0 : 1 }}>
           {suboption?.name}
         </OText>
       </IconControl>

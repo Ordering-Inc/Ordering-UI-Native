@@ -24,6 +24,7 @@ const AddressForm = ({ navigation, route }: any) => {
     isGuestUser: route?.params?.isGuestUser,
     isFromBusinesses: route?.params?.isFromBusinesses,
     isFromProductsList: route?.params?.isFromProductsList,
+    isFromCheckout: route?.params?.isFromCheckout,
     hasAddressDefault: route?.params?.hasAddressDefault,
     afterSignup: route?.params?.afterSignup
   }
