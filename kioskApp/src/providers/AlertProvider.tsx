@@ -1,26 +1,33 @@
-import React from 'react';
-import AwesomeAlert from 'react-native-awesome-alerts';
-import {getTraduction} from '../utils';
-import {useLanguage} from 'ordering-components/native';
-import {colors} from '../theme.json';
+import * as React from 'react'
+import AwesomeAlert from 'react-native-awesome-alerts'
+import { getTraduction } from '../utils'
+import { useLanguage } from 'ordering-components/native'
+import { colors } from '../theme.json'
 interface Props {
-  open: boolean;
-  title: string;
-  content: Array<string>;
-  onClose: () => void;
-  onAccept: () => void;
+  open: boolean,
+  title: string,
+  content: Array<string>,
+  onClose: () => void,
+  onAccept: () => void
 }
 
 const Alert = (props: Props) => {
-  const {open, title, content, onClose, onAccept} = props;
-  const [, t] = useLanguage();
-  //   const parseContent = (list: Array<string>) => {
-  //     let allMessages: string = '';
-  //     list?.map((message: string) => {
-  //       allMessages = `* ${getTraduction(message)}\n` + allMessages;
-  //     });
-  //     return allMessages;
-  //   };
+  const {
+    open,
+    title,
+    content,
+    onClose,
+    onAccept,
+  } = props
+  const [, t] = useLanguage()
+  const parseContent = (list: Array<string>) => {
+    let allMessages: string = ''
+    list?.map((message: string) => {
+      allMessages = `* ${getTraduction(message)}\n` + allMessages
+    })
+    return allMessages
+  }
+
   return (
     <AwesomeAlert
       show={open}
@@ -35,7 +42,7 @@ const Alert = (props: Props) => {
       onCancelPressed={() => onClose()}
       onConfirmPressed={() => onAccept()}
     />
-  );
-};
+  )
+}
 
 export default Alert;

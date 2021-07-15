@@ -5501,13 +5501,13 @@ ora@^3.4.0:
 
 "ordering-api-sdk@github:Ordering-Inc/ordering-api-sdk#release":
   version "0.0.4"
-  resolved "https://codeload.github.com/Ordering-Inc/ordering-api-sdk/tar.gz/dd6f85a93c92586b3802065effb8e6526d674313"
+  resolved "https://codeload.github.com/Ordering-Inc/ordering-api-sdk/tar.gz/28bbf6019dce0e8db40f5001e2417e6802bb07a0"
   dependencies:
     "@babel/runtime" "^7.10.4"
 
 "ordering-components@github:Ordering-Inc/ordering-components#development":
   version "0.0.1"
-  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/381c2afa6ee6ec1b584e5f554b48fcbcb39ad204"
+  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/506c71abc438243acfdd5bc0296fdebbb63a8cb0"
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@react-native-async-storage/async-storage" "^1.13.1"

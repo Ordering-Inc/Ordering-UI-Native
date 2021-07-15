@@ -25,15 +25,15 @@ LogBox.ignoreLogs([
 const App = () => {
   return (
     <SafeAreaProvider>
-      <OrderingProvider settings={settings} alert={Alert}>
-        <CartBottomSheetProvider>
-          <ToastProvider>
+      <OrderingProvider settings={settings} Alert={Alert}>
+        <ToastProvider>
+          <CartBottomSheetProvider>
             <NavigationContainer>
               <RootNavigator/>
             </NavigationContainer>
-            <Toast/>
-          </ToastProvider>
-        </CartBottomSheetProvider>
+          </CartBottomSheetProvider>
+          <Toast/>
+        </ToastProvider>
       </OrderingProvider>
     </SafeAreaProvider>
   );
