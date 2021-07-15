@@ -22,7 +22,7 @@ export const Home = (props: any) => {
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%',
-      backgroundColor: theme.colors.secundary,
+      backgroundColor: theme.colors.backgroundPage,
     }
   })
 
