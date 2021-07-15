@@ -1,5 +1,6 @@
 import React from 'react'
 import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
+import { useTheme } from 'styled-components/native';
 import { OButton, OIcon, OText } from '../shared'
 import { ActiveOrdersContainer, Card, Map, Information, Logo, OrderInformation, BusinessInformation, Price } from './styles'
 import { View, StyleSheet } from 'react-native'
@@ -9,7 +10,6 @@ import { ActiveOrdersParams } from '../../types'
 
 export const ActiveOrders = (props: ActiveOrdersParams) => {
   const {
-    theme,
     onNavigationRedirect,
     orders,
     pagination,
@@ -17,6 +17,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
     getOrderStatus
   } = props
 
+  const theme = useTheme()
   const [{configs}] = useConfig()
   const [, t] = useLanguage()
   const [{ parseDate, parsePrice, optimizeImage }] = useUtils()
@@ -30,12 +31,10 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
       <Card
         isMiniCard={configs?.google_maps_api_key?.value}
         onPress={() => handleClickCard(order?.uuid)}
-        colors={theme.colors}
       >
         {!!(configs?.google_maps_api_key?.value) && (
           <Map>
             <OIcon
-              colors={theme.colors}
               url={getGoogleMapImage(order?.business?.location, configs?.google_maps_api_key?.value)}
               height={100}
               width={320}
@@ -47,7 +46,6 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
           {!!order.business?.logo && (
             <Logo>
               <OIcon
-                colors={theme.colors}
                 url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
                 style={styles.logo}
               />
@@ -87,7 +85,6 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
           onPress={loadMoreOrders}
         >
           <OButton
-            colors={theme.colors}
             bgColor={theme.colors.white}
             textStyle={{ color: theme.colors.primary, fontSize: 20 }}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}

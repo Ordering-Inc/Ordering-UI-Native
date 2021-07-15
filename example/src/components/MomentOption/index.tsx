@@ -24,10 +24,10 @@ import {
   Hour,
   WrapDelveryTime
 } from './styles'
+import { useTheme } from 'styled-components/native'
 
 const MomentOptionUI = (props: MomentOptionParams) => {
   const {
-    theme,
     navigation,
     nopadding,
     datesList,
@@ -39,6 +39,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
     handleChangeTime
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
   const [{ parseTime }] = useUtils()
@@ -88,7 +89,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
     <Container nopadding={nopadding}>
       <View style={{ paddingBottom: 10 }}>
         <NavBar
-          theme={theme}
           onActionLeft={() => goToBack()}
           btnStyle={{ paddingLeft: 0 }}
           paddingTop={0}
@@ -157,7 +157,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
                       return (
                         <Day
                           key={dayNumber}
-                          colors={theme.colors}
                           borderLeftShow={i === 0 || i === 4}
                           onPress={() => handleChangeDate(date)}
                         >
@@ -181,7 +180,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
               <>
                 <OText color={theme.colors.textSecondary}>{t('DELIVERY_TIME', 'Delivery Time')}</OText>
                 <WrapHours
-                  colors={theme.colors}
                   nestedScrollEnabled={true}
                 >
                   <Hours name='hours'>
@@ -189,7 +187,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
                       hoursList.map((hour: any, i: any) => (
                         <Hour
                           key={i}
-                          colors={theme.colors}
                           onPress={() => handleChangeMoment(hour.startTime)}
                           disabled={orderState.loading}
                         >

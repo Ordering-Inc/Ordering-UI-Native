@@ -6,15 +6,16 @@ import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 
 import { BusinessCategoriesTitle, BusinessCategories, Category, BCContainer } from './styles'
 import { OIcon, OText } from '../shared'
 import { BusinessTypeFilterParams } from '../../types'
+import { useTheme } from 'styled-components/native'
 
 export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
   const {
-    theme,
     typesState,
     currentTypeSelected,
     handleChangeBusinessType,
   } = props;
 
+  const theme = useTheme();
   const [, t] = useLanguage();
 
   const renderTypes = ({ item }: any) => {
@@ -26,13 +27,11 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
         <Category>
           {item.image ? (
             <OIcon
-              colors={theme.colors}
               url={item.image}
               style={styles.logo}
             />
           ) : (
             <OIcon
-              colors={theme.colors}
               src={theme.images.categories.all}
               style={styles.logo}
             />

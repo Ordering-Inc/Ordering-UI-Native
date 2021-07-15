@@ -9,10 +9,10 @@ import {
 } from './styles';
 
 import { OInput, OButton, OAlert, OText } from '../shared';
+import { useTheme } from 'styled-components/native';
 
 const CouponControlUI = (props: any) => {
   const {
-    theme,
     couponDefault,
     couponInput,
     handleButtonApplyClick,
@@ -21,6 +21,8 @@ const CouponControlUI = (props: any) => {
     confirm,
     setConfirm
   } = props
+
+  const theme = useTheme();
 
   const styles = StyleSheet.create({
     inputsStyle: {
@@ -73,7 +75,7 @@ const CouponControlUI = (props: any) => {
           message={t('QUESTION_DELETE_COUPON', 'Are you sure that you want to delete the coupon?')}
           onAccept={() => handleOnAccept()}
         >
-          <CCButton colors={theme.colors}>
+          <CCButton>
             <OText
               size={16}
               color={theme.colors.white}
@@ -86,13 +88,11 @@ const CouponControlUI = (props: any) => {
       ) : (
         <CCWrapper>
           <OInput
-            colors={theme.colors}
             placeholder={t('DISCOUNT_COUPON', 'Discount coupon')}
             onChange={(e: any) => onChangeInputCoupon(e)}
             style={styles.inputsStyle}
           />
           <OButton
-            colors={theme.colors}
             onClick={() => handleButtonApplyClick()}
             bgColor={theme.colors.primary}
             borderColor={theme.colors.primary}

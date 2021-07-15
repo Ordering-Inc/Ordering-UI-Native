@@ -17,10 +17,10 @@ import NavBar from '../NavBar'
 import Spinner from 'react-native-loading-spinner-overlay'
 
 import { ReviewOrderParams } from '../../types'
+import { useTheme } from 'styled-components/native'
 
 export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const {
-    theme,
     order,
     stars,
     handleChangeInput,
@@ -29,6 +29,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     formState,
     navigation
   } = props
+
+  const theme = useTheme()
 
   const styles = StyleSheet.create({
     inputTextArea: {
@@ -143,11 +145,9 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
         showCall={false}
         btnStyle={{ paddingLeft: 0 }}
         paddingTop={0}
-        theme={theme}
       />
       <BusinessLogo>
         <OIcon
-          colors={theme.colors}
           url={order?.logo}
           width={100}
           height={100}
@@ -159,7 +159,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
         {Object.values(categories).map((category: any) => (
           <Category
             key={category.name}
-            colors={theme.colors}
           >
             <OText>{category.show}</OText>
             <Stars>
@@ -173,7 +172,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
           name='comments'
           render={({ onChange }: any) => (
             <OInput
-              colors={theme.colors}
               name='comments'
               placeholder={t('COMMENTS', 'Comments')}
               onChange={(val: string) => {
@@ -188,7 +186,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
         />
       </FormReviews>
       <OButton
-        colors={theme.colors}
         textStyle={{ color: theme.colors.white }}
         style={{ marginTop: 20 }}
         text={t('SAVE', 'Save')}

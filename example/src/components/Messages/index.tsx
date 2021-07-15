@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Messages as MessagesController, useSession, useUtils, useLanguage } from 'ordering-components/native'
 import { launchImageLibrary } from 'react-native-image-picker'
+import { useTheme } from 'styled-components/native';
 import { GiftedChat, Actions, InputToolbar, Composer, Send, Bubble, MessageImage } from 'react-native-gifted-chat'
 import { USER_TYPE } from '../../config/constants'
 import { ToastType, useToast } from '../../providers/ToastProvider'
@@ -40,7 +41,6 @@ const ORDER_STATUS: any = {
 
 const MessagesUI = (props: MessagesParams) => {
   const {
-    theme,
     type,
     order,
     messages,
@@ -53,9 +53,10 @@ const MessagesUI = (props: MessagesParams) => {
     setImage
   } = props
 
-  const [{ user }] = useSession()
-  const [{ parseDate }] = useUtils()
-  const [, t] = useLanguage()
+  const theme = useTheme();
+  const [{ user }] = useSession();
+  const [{ parseDate }] = useUtils();
+  const [, t] = useLanguage();
   const { showToast } = useToast();
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
@@ -162,7 +163,6 @@ const MessagesUI = (props: MessagesParams) => {
         icon={() => (
           <>
             <OIconButton
-              colors={theme.colors}
               borderColor={theme.colors.white}
               style={{ width: 32, height: 32, borderRadius: 10 }}
               icon={image ? { uri: image } : ImageDummy}
@@ -232,7 +232,6 @@ const MessagesUI = (props: MessagesParams) => {
       containerStyle={styles.containerSend}
     >
         <OIconButton
-          colors={theme.colors}
           onClick={onSubmit}
           style={{
             height: 32,
@@ -279,10 +278,9 @@ const MessagesUI = (props: MessagesParams) => {
 
   return (
     <>
-      <Wrapper colors={theme.colors}>
+      <Wrapper>
         <Header>
          <OIcon
-            colors={theme.colors}
             url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
             width={60}
             height={60}

@@ -14,17 +14,19 @@ import {
 import { ScrollView } from 'react-native-gesture-handler'
 import { GrayBackground } from '../BusinessInformation/styles'
 import { BusinessReviewsParams } from '../../types'
+import { useTheme } from 'styled-components/native'
 
 const BusinessReviewsUI = (props: BusinessReviewsParams) => {
   const {
-    theme,
     businessState,
     reviewsList,
   } = props
+
+  const theme = useTheme();
   const [, t] = useLanguage();
 
   const Score = ({ star, text }: any) => (
-    <ScoreView colors={theme.colors}>
+    <ScoreView>
       <View style={styles.reviewScoreStyle}>
         <IconAntDesign
           name="star"
@@ -63,7 +65,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
               <OText weight='bold' size={16}>{t('CUSTOMERS_REVIEWS', 'Customers Reviews')}</OText>
             </GrayBackground>
             {reviewsList?.reviews.map((review: any) =>(
-              <WrapCustomerReview key={review.id} colors={theme.colors}>
+              <WrapCustomerReview key={review.id}>
                 <WrapCustomerReviewTotal>
                   <View style={styles.reviewScoreStyle}>
                     <IconAntDesign

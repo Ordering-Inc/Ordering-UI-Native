@@ -2,11 +2,12 @@ import React, { useEffect } from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder, useSession } from 'ordering-components/native'
 import { AddressListContainer, AddressItem } from './styles'
 import { StyleSheet, View } from 'react-native'
-import Spinner from 'react-native-loading-spinner-overlay'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { OButton, OText, OAlert, OModal } from '../shared'
+import { useTheme } from 'styled-components/native';
+
+import { OButton, OText, OAlert } from '../shared'
 import { Container } from '../../layouts/Container'
-import { AddressFormParams, AddressListParams } from '../../types'
+import { AddressListParams } from '../../types'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
@@ -17,7 +18,6 @@ const AddressListUI = (props: AddressListParams) => {
   const {
     navigation,
     route,
-    theme,
     addressList,
     isFromProfile,
     nopadding,
@@ -32,6 +32,7 @@ const AddressListUI = (props: AddressListParams) => {
     isFromCheckout
   } = props
 
+  const theme = useTheme()
   const [orderState] = useOrder()
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
@@ -145,7 +146,6 @@ const AddressListUI = (props: AddressListParams) => {
             !isFromProfile &&
             (
               <NavBar
-                theme={theme}
                 title={t('ADDRESS_LIST', 'Address List')}
                 titleAlign={'center'}
                 onActionLeft={() => goToBack()}
@@ -252,7 +252,6 @@ const AddressListUI = (props: AddressListParams) => {
                   </OText>
                 )}
               <OButton
-                colors={theme.colors}
                 text={t('ADD_NEW_ADDRESS', 'Add new Address')}
                 imgRightSrc=''
                 imgLeftSrc={addIcon}
@@ -284,7 +283,6 @@ const AddressListUI = (props: AddressListParams) => {
           )}
           {!isFromProfile && addressList?.addresses?.length > 0 && (
             <OButton
-              colors={theme.colors}
               text={t('CONTINUE', 'Continue')}
               style={styles.button}
               onClick={() => onNavigatorRedirect()}

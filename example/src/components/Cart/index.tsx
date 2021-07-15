@@ -20,10 +20,10 @@ import { OButton, OModal, OText } from '../shared';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
+import { useTheme } from 'styled-components/native';
 
 const CartUI = (props: any) => {
   const {
-    theme,
     cart,
     clearCart,
     changeQuantity,
@@ -34,6 +34,7 @@ const CartUI = (props: any) => {
     setIsCartsLoading,
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [orderState] = useOrder()
   const [{ configs }] = useConfig();
@@ -198,7 +199,6 @@ const CartUI = (props: any) => {
         {cart?.valid_products && (
           <CheckoutAction>
             <OButton
-              colors={theme.colors}
               text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
                 !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
               ) : !cart?.valid_address ? (

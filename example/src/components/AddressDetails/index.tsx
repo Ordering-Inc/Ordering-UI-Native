@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useTheme } from 'styled-components/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AddressDetails as AddressDetailsController, useOrder } from 'ordering-components/native';
 
@@ -15,13 +16,13 @@ import { OText, OIcon } from '../shared';
 const AddressDetailsUI = (props: any) => {
   const {
     navigation,
-    theme,
     addressToShow,
     isCartPending,
     googleMapsUrl,
     apiKey
   } = props;
 
+  const theme = useTheme();
   const [orderState] = useOrder();
 
   return (
@@ -52,7 +53,6 @@ const AddressDetailsUI = (props: any) => {
       {!!apiKey && googleMapsUrl && (
         <ADMap>
           <OIcon
-            colors={theme.colors}
             url={googleMapsUrl}
             style={{borderRadius: 15, width: '100%'}}
             height={162}

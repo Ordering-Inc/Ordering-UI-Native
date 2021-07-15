@@ -1,12 +1,13 @@
 import React from 'react'
 import { BusinessesListing as BusinessListingController } from '../components/BusinessesListing'
 import styled from 'styled-components/native'
-import theme from '../theme.json';
+import { useTheme } from 'styled-components/native'
 
 const BusinessesListing = (props: any) => {
+  const theme = useTheme()
+
   const BusinessesListingProps = {
     ...props,
-    theme,
     isSearchByName: true,
     isSearchByDescription: true,
     propsToFetch: ['id', 'name', 'header', 'logo', 'location', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug'],
@@ -19,7 +20,6 @@ const BusinessesListing = (props: any) => {
     flex: 1;
     background-color: ${theme.colors.backgroundPage};
   `
-
 
   return (
     <BusinessListView>

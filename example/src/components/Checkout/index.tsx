@@ -44,6 +44,7 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
+import { useTheme } from 'styled-components/native';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -64,7 +65,6 @@ const manageErrorsToShow = (array = []) => {
 
 const CheckoutUI = (props: any) => {
   const {
-    theme,
     navigation,
     cart,
     errors,
@@ -79,6 +79,8 @@ const CheckoutUI = (props: any) => {
     businessName,
     cartTotal
   } = props
+
+  const theme = useTheme();
 
   const style = StyleSheet.create({
     btnBackArrow: {
@@ -177,16 +179,12 @@ const CheckoutUI = (props: any) => {
     }
   }, [errors])
 
-  // useEffect(() => {
-  //   handlePaymethodChange(null)
-  // }, [cart?.total])
   return (
     <>
       <Container>
         <ChContainer>
           <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
             <OButton
-              colors={theme.colors}
               imgLeftSrc={theme.images.general.arrow_left}
               imgRightSrc={null}
               style={style.btnBackArrow}
@@ -215,9 +213,8 @@ const CheckoutUI = (props: any) => {
           )}
 
           <ChSection>
-            <ChTotal colors={theme.colors}>
+            <ChTotal>
               <OIcon
-                colors={theme.colors}
                 url={businessLogo || businessDetails?.business?.logo}
                 width={80}
                 height={80}
@@ -234,7 +231,7 @@ const CheckoutUI = (props: any) => {
             </ChTotal>
           </ChSection>
           <ChSection style={style.paddSection}>
-            <ChAddress colors={theme.colors}>
+            <ChAddress>
               {(businessDetails?.loading || cartState.loading) ? (
                 <Placeholder Animation={Fade}>
                   <PlaceholderLine height={20} style={{ marginBottom: 50 }} />
@@ -256,7 +253,6 @@ const CheckoutUI = (props: any) => {
           <ChSection style={style.paddSectionH}>
             <ChMoment>
               <CHMomentWrapper
-                colors={theme.colors}
                 disabled={loading}
                 onPress={() => navigation.navigate('MomentOption')}
               >
@@ -277,7 +273,7 @@ const CheckoutUI = (props: any) => {
           </ChSection>
 
           <ChSection style={style.paddSection}>
-            <ChUserDetails colors={theme.colors}>
+            <ChUserDetails>
               {cartState.loading ? (
                 <Placeholder Animation={Fade}>
                   <PlaceholderLine height={20} width={70} />
@@ -393,7 +389,7 @@ const CheckoutUI = (props: any) => {
 
           {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
             <ChSection style={style.paddSectionH}>
-              <ChPaymethods colors={theme.colors}>
+              <ChPaymethods>
                 <OText size={20}>
                   {t('PAYMENT_METHOD', 'Payment Method')}
                 </OText>

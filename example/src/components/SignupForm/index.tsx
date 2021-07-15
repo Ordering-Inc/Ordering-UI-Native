@@ -31,12 +31,12 @@ import { VerifyPhone } from '../VerifyPhone';
 import { OText, OButton, OInput, OModal } from '../shared';
 import { SignupParams } from '../../types';
 import { sortInputFields } from '../../utils';
+import { useTheme } from 'styled-components/native';
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']
 
 const SignupFormUI = (props: SignupParams) => {
   const {
-    theme,
     navigation,
     loginButtonText,
     signupButtonText,
@@ -57,6 +57,8 @@ const SignupFormUI = (props: SignupParams) => {
     handleCheckPhoneCode,
     notificationState
   } = props
+
+  const theme = useTheme()
 
   const style = StyleSheet.create({
     btnOutline: {
@@ -292,7 +294,6 @@ const SignupFormUI = (props: SignupParams) => {
   return (
     <View>
       <NavBar
-        theme={theme}
         title={t('SIGNUP', 'Signup')}
         titleAlign={'center'}
         onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
@@ -339,7 +340,6 @@ const SignupFormUI = (props: SignupParams) => {
                       control={control}
                       render={({ onChange, value }: any) => (
                         <OInput
-                          colors={theme.colors}
                           placeholder={t(field.name)}
                           style={style.inputStyle}
                           icon={field.code === 'email' ? theme.images.general.email : theme.images.general.user}
@@ -382,7 +382,6 @@ const SignupFormUI = (props: SignupParams) => {
                   control={control}
                   render={({ onChange, value }: any) => (
                     <OInput
-                      colors={theme.colors}
                       isSecured={!passwordSee ? true : false}
                       placeholder={t('PASSWORD', 'Password')}
                       style={style.inputStyle}
@@ -422,7 +421,6 @@ const SignupFormUI = (props: SignupParams) => {
 
           {signupTab === 'cellphone' && useSignupByEmail && useSignupByCellphone ? (
             <OButton
-              colors={theme.colors}
               onClick={handleSubmit(onSubmit)}
               text={t('GET_VERIFY_CODE', 'Get Verify Code')}
               borderColor={theme.colors.primary}
@@ -433,7 +431,6 @@ const SignupFormUI = (props: SignupParams) => {
             />
           ) : (
             <OButton
-              colors={theme.colors}
               onClick={handleSubmit(onSubmit)}
               text={signupButtonText}
               bgColor={theme.colors.primary}

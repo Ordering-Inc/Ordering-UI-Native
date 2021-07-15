@@ -15,10 +15,6 @@ export const OSMessage = styled.Text`
   padding-left: 10px;
   font-weight: bold;
   opacity: 0.8;
-  /* ${(props: any) => props.theme?.rtl && css`
-    padding-right: 10px;
-    padding-left: 0;
-  `} */
 `;
 
 export const OSWrapper = styled.View`
@@ -51,13 +47,6 @@ export const OSItemContent = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   width: 90%;
-
-  /* > * {
-    ${(props: any) => props.theme?.rtl && css`
-      margin-left: 10px;
-      margin-right: 0;
-    `}
-  } */
 `;
 
 export const OSItemActions = styled.View`

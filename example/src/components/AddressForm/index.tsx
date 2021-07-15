@@ -6,6 +6,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
+import { useTheme } from 'styled-components/native';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { _retrieveStoreData } from '../../providers/StoreUtil';
@@ -39,7 +40,6 @@ const tagsName = [
 const AddressFormUI = (props: AddressFormParams) => {
   const {
     navigation,
-    theme,
     updateChanges,
     address,
     formState,
@@ -53,6 +53,8 @@ const AddressFormUI = (props: AddressFormParams) => {
     afterSignup,
     isFromCheckout
   } = props
+
+  const theme = useTheme();
 
   const styles = StyleSheet.create({
     iconContainer: {
@@ -398,7 +400,6 @@ const AddressFormUI = (props: AddressFormParams) => {
   return (
     <>
       <NavBar
-        theme={theme}
         title={t('ADDRESS_FORM', 'Address Form')}
         titleAlign={'center'}
         onActionLeft={goToBack}
@@ -408,7 +409,6 @@ const AddressFormUI = (props: AddressFormParams) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <AddressFormContainer
           style={{ height: 600, overflow: 'scroll' }}
-          colors={theme.colors}
         >
           <View>
             <FormInput>
@@ -488,7 +488,6 @@ const AddressFormUI = (props: AddressFormParams) => {
                 defaultValue={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
                 render={() => (
                   <OInput
-                    colors={theme.colors}
                     name='internal_number'
                     placeholder={t('INTERNAL_NUMBER', 'Internal number')}
                     onChange={(text: string) => {
@@ -512,7 +511,6 @@ const AddressFormUI = (props: AddressFormParams) => {
                 defaultValue={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
                 render={() => (
                   <OInput
-                    colors={theme.colors}
                     name='zipcode'
                     placeholder={t('ZIP_CODE', 'Zip code')}
                     onChange={(text: string) => {
@@ -535,7 +533,6 @@ const AddressFormUI = (props: AddressFormParams) => {
                 defaultValue={address?.address_notes || formState.changes?.address_notes || addressState.address.address_notes || ''}
                 render={() => (
                   <OInput
-                    colors={theme.colors}
                     name='address_notes'
                     placeholder={t('ADDRESS_NOTES', 'Address notes')}
                     onChange={(text: any) => {
@@ -585,7 +582,6 @@ const AddressFormUI = (props: AddressFormParams) => {
           <View>
             {Object.keys(formState?.changes).length > 0 ? (
               <OButton
-                colors={theme.colors}
                 text={
                   !formState.loading ? (
                     isEditing || (!auth && orderState.options?.address?.address)
@@ -600,7 +596,6 @@ const AddressFormUI = (props: AddressFormParams) => {
               />
             ) : (
               <OButton
-                colors={theme.colors}
                 text={t('CANCEL', 'Cancel')}
                 style={{ backgroundColor: theme.colors.white }}
                 onClick={() => navigation?.canGoBack() && navigation.goBack()}
@@ -627,7 +622,6 @@ const AddressFormUI = (props: AddressFormParams) => {
               </GoogleMapContainer>
             )}
             <OButton
-              colors={theme.colors}
               text={t('SAVE', 'Save')}
               textStyle={{ color: theme.colors.white }}
               imgRightSrc={null}

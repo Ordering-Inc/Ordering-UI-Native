@@ -8,7 +8,7 @@ export const UpsellingContainer = styled.ScrollView`
 `
 export const Item = styled.View`
   border-width: 1px;
-  border-color: ${({ colors }: any) => colors.lightGray};
+  border-color: ${(props: any) => props.theme.colors.lightGray};
   border-radius: 10px;
   flex-direction: column;
   align-items: center;

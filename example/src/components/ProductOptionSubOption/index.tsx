@@ -16,10 +16,10 @@ import {
   Circle
 } from './styles'
 import { OText } from '../shared'
+import { useTheme } from 'styled-components/native'
 
 export const ProductOptionSubOptionUI = (props: any) => {
   const {
-    theme,
     state,
     increment,
     decrement,
@@ -31,6 +31,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
     disabled
   } = props
 
+  const theme = useTheme();
   const [, t] = useLanguage()
   const [{ parsePrice }] = useUtils()
   const [showMessage, setShowMessage] = useState(false)

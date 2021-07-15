@@ -5,9 +5,12 @@ import { _retrieveStoreData, _clearStoreData } from '../../providers/StoreUtil';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 
 import { OIcon } from '../shared';
+import { useTheme } from 'styled-components/native';
 
 const LogoutButtonUI = (props: any) => {
-  const { handleLogoutClick, formState, theme } = props
+  const { handleLogoutClick, formState } = props
+
+  const theme = useTheme();
 
   const { showToast } = useToast();
 
@@ -35,7 +38,6 @@ const LogoutButtonUI = (props: any) => {
       onPress={() => handleClick()}
     >
       <OIcon
-        colors={theme.colors}
         src={theme.images.general.menulogout}
         width={28}
         height={28}

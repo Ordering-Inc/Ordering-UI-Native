@@ -9,7 +9,6 @@ import { OIcon } from '../shared';
 
 export const GoogleMap = (props: GoogleMapsParams) => {
   const {
-    theme,
     location,
     handleChangeAddressMap,
     maxLimitLocation,
@@ -202,7 +201,6 @@ export const GoogleMap = (props: GoogleMapsParams) => {
                   >
                     <View>
                       <OIcon
-                        colors={theme.colors}
                         url={locations[i].icon}
                         width={50}
                         height={50}
@@ -221,7 +219,6 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         )}
       </MapView>
       <Alert
-        colors={theme.colors}
         open={alertState.open}
         onAccept={closeAlert}
         onClose={closeAlert}

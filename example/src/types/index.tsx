@@ -1,6 +1,5 @@
 import { TextInputProps, ViewStyle } from 'react-native';
 export interface LoginParams {
-  theme?: any;
   navigation?: any;
   formState?: any;
   useLoginByEmail?: boolean;
@@ -20,7 +19,6 @@ export interface LoginParams {
   notificationState?: any;
 }
 export interface ProfileParams {
-  theme?: any;
   navigation?: any;
   isEdit?: boolean;
   formState?: any;
@@ -36,7 +34,6 @@ export interface ProfileParams {
 }
 
 export interface AddressListParams {
-  theme?: any;
   navigation?: any;
   addressList?: any;
   isFromProfile?: boolean;
@@ -55,7 +52,6 @@ export interface AddressListParams {
 }
 
 export interface AddressFormParams {
-  theme?: any;
   navigation?: any,
   updateChanges?: any,
   address?: any,
@@ -78,7 +74,6 @@ export interface AddressFormParams {
   isGuestFromStore?: boolean
 }
 export interface SignupParams {
-  theme?: any;
   navigation?: any;
   loginButtonText?: string;
   signupButtonText?: string;
@@ -101,7 +96,6 @@ export interface SignupParams {
 }
 
 export interface PhoneInputParams {
-  theme?: any;
   data?: any;
   handleData?: any;
   defaultValue?: any;
@@ -111,13 +105,11 @@ export interface PhoneInputParams {
 }
 
 export interface LanguageSelectorParams {
-  theme?: any;
   languagesState?: any;
   currentLanguage?: string;
   handleChangeLanguage?: any;
 }
 export interface BusinessesListingParams {
-  theme?: any;
   navigation?: any;
   businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
   searchValue: string;
@@ -131,7 +123,6 @@ export interface BusinessesListingParams {
   defaultBusinessType?: any;
 }
 export interface BusinessTypeFilterParams {
-  theme?: any;
   businessTypes?: Array<any>;
   handleChangeBusinessType: any;
   currentTypeSelected?: string | null;
@@ -140,7 +131,6 @@ export interface BusinessTypeFilterParams {
   typesState?: any
 }
 export interface BusinessControllerParams {
-  theme?: any;
   key?: number;
   business?: any;
   handleCustomClick?: any;
@@ -151,7 +141,6 @@ export interface BusinessControllerParams {
   isBusinessClose?: number
 }
 export interface BusinessProductsListingParams {
-  theme?: any;
   navigation?: any;
   errors: any;
   businessState: { business: any, loading: boolean, error: null };
@@ -170,7 +159,6 @@ export interface BusinessProductsListingParams {
   updateProductModal?: (value: any) => {}
 }
 export interface BusinessBasicInformationParams {
-  theme?: any;
   businessState?: any;
   openBusinessInformation?: any;
   isBusinessInfoShow?: boolean;
@@ -178,7 +166,6 @@ export interface BusinessBasicInformationParams {
   logo?: any;
 }
 export interface BusinessProductsCategoriesParams {
-  theme?: any;
   categories: Array<any>;
   // handlerClickCategory: any;
   onClickCategory: any;
@@ -188,7 +175,6 @@ export interface BusinessProductsCategoriesParams {
   loading?: any;
 }
 export interface BusinessProductsListParams {
-  theme?: any;
   errors?: any;
   businessId?: number;
   category?: any;
@@ -204,14 +190,12 @@ export interface BusinessProductsListParams {
   handleCancelSearch?: () => void
 }
 export interface SingleProductCardParams {
-  theme?: any;
   businessId: any,
   product: any;
   isSoldOut: boolean;
   onProductClick: any;
 }
 export interface BusinessInformationParams {
-  theme?: any;
   navigation?: any,
   businessState?: any;
   businessSchedule?: Array<any>;
@@ -219,12 +203,10 @@ export interface BusinessInformationParams {
   business?: any
 }
 export interface BusinessReviewsParams {
-  theme?: any;
   businessState: { business: any, loading: boolean, error: null };
   reviewsList: { reviews: any, loading: boolean, error: null };
 }
 export interface SearchBarParams {
-  theme?: any;
   searchValue?: any;
   lazyLoad?: boolean;
   placeholder: string;
@@ -234,7 +216,6 @@ export interface SearchBarParams {
   onCancel?: any;
 }
 export interface NotFoundSourceParams {
-  theme?: any;
   image?: any,
   content?: string,
   btnTitle?: string,
@@ -243,7 +224,6 @@ export interface NotFoundSourceParams {
   children?: any
 }
 export interface OrdersOptionParams {
-  theme?: any;
   orderList?: any,
   activeOrders?: boolean,
   pagination?: any,
@@ -259,7 +239,6 @@ export interface OrdersOptionParams {
   ordersLength: {activeOrdersLength: number, previousOrdersLength: number}
 }
 export interface ActiveOrdersParams {
-  theme?: any;
   orders?: any,
   pagination?: any,
   getOrderStatus?: any,
@@ -271,7 +250,6 @@ export interface ActiveOrdersParams {
   onNavigationRedirect?: (route: string, params?: any) => {}
 }
 export interface PreviousOrdersParams {
-  theme?: any;
   orders?: any,
   pagination?: any,
   getOrderStatus?: any,
@@ -282,7 +260,6 @@ export interface PreviousOrdersParams {
   onNavigationRedirect?: (route: string, params?: any) => {}
 }
 export interface OrderDetailsParams {
-  theme?: any;
   navigation?: any,
   messagesReadList?: any,
   urlToShare?: string,
@@ -298,7 +275,6 @@ export interface OrderDetailsParams {
 }
 export interface ProductItemAccordionParams {
   key?: any;
-  theme?: any;
   isCartPending?: boolean,
   isCartProduct?: boolean,
   product?: any,
@@ -310,7 +286,6 @@ export interface ProductItemAccordionParams {
   isFromCheckout?: any
 }
 export interface ReviewOrderParams {
-  theme?: any;
   order?: { orderId: number, businessId: number, logo: string },
   stars?: any,
   handleChangeInput?: any,
@@ -320,7 +295,6 @@ export interface ReviewOrderParams {
   navigation?: any
 }
 export interface MessagesParams {
-  theme?: any;
   type?: string,
   order?: any,
   orderId?: number,
@@ -336,7 +310,6 @@ export interface MessagesParams {
   readMessages?: () => {},
 }
 export interface ViewInterface {
-  theme?: any;
   navigation?: any;
   onLogin?: any;
   title?: string;
@@ -361,7 +334,6 @@ export interface ViewInterface {
   forgotButtonText?: string;
 }
 export interface FloatingButtonParams {
-  theme?: any;
   btnLeftValue?: string;
   btnRightValue?: string;
   btnText: string
@@ -373,7 +345,6 @@ export interface FloatingButtonParams {
   handleClick?: any;
 }
 export interface MomentOptionParams {
-  theme?: any;
   navigation: any;
   nopadding?: boolean;
   datesList: Array<any>;
@@ -386,7 +357,6 @@ export interface MomentOptionParams {
   handleChangeTime: (value: any) => {};
 }
 export interface OrderTypeSelectParams {
-  theme?: any;
   handleChangeOrderType: (value: any) => {};
   typeSelected?: number;
   defaultValue?: number;
@@ -394,7 +364,6 @@ export interface OrderTypeSelectParams {
   orderTypes: Array<any>;
 }
 export interface UpsellingProductsParams {
-  theme?: any;
   isCustomMode?: boolean;
   upsellingProducts?: any;
   business?: any;
@@ -407,7 +376,6 @@ export interface UpsellingProductsParams {
 }
 
 export interface GoogleMapsParams {
-  theme?: any;
   location: {lat: number, lng: number}
   handleChangeAddressMap?: (address : any, details : any) => void
   setErrors?: (error : string) => void

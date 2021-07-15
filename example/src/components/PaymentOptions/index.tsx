@@ -34,6 +34,7 @@ import {
 } from './styles'
 import { getIconCard } from '../../utils';
 import { WebView } from 'react-native-webview';
+import { useTheme } from 'styled-components/native';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 // const stripeRedirectOptions = [
@@ -45,7 +46,6 @@ const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 
 const PaymentOptionsUI = (props: any) => {
   const {
-    theme,
     cart,
     errorCash,
     isLoading,
@@ -58,6 +58,8 @@ const PaymentOptionsUI = (props: any) => {
     handlePaymethodDataChange,
     isOpenMethod
   } = props
+
+  const theme = useTheme();
   const [, t] = useLanguage();
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
@@ -147,12 +149,10 @@ const PaymentOptionsUI = (props: any) => {
       >
         <PMItem
           key={item.id}
-          colors={theme.colors}
           isDisabled={isDisabled}
           isActive={paymethodSelected?.id === item.id}
         >
           <OIcon
-            colors={theme.colors}
             src={getPayIcon(item.gateway)}
             width={40}
             height={40}
@@ -257,7 +257,6 @@ const PaymentOptionsUI = (props: any) => {
       {isOpenMethod?.paymethod?.gateway === 'stripe' && !paymethodData.id && (
         <View>
           <OButton
-            colors={theme.colors}
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
             bgColor={theme.colors.primary}
             borderColor={theme.colors.primary}
@@ -325,7 +324,6 @@ const PaymentOptionsUI = (props: any) => {
       {isOpenMethod?.paymethod?.gateway === 'stripe_connect' && !paymethodData.id && (
         <View>
           <OButton
-            colors={theme.colors}
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
             bgColor={theme.colors.primary}
             borderColor={theme.colors.primary}

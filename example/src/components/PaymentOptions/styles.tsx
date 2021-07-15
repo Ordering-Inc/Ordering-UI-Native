@@ -23,16 +23,12 @@ export const PMItem = styled.View`
   margin-right: 10px;
   margin-top: 10px;
   text-align: center;
-  background-color: ${({ colors }: any) => colors.inputDisabled};
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
 
   ${(props: any) => props.theme?.rtl && css`
     margin-left: 10px;
     margin-right: 0;
   `}
-
-  /* ${(props: any) => props.isDisabled && css`
-    pointer-events: none;
-  `} */
 
   ${(props: any) => props.isActive ? css`
     background-color: ${props.colors.primary};

@@ -6,7 +6,7 @@ export const NavBack = styled.TouchableOpacity``
 
 export const Header = styled.View`
   padding: 20px;
-  background-color: ${({ colors }: any) => colors.primary};
+  background-color: ${(props: any) => props.theme.colors.primary};
   flex: 1;
 `
 
@@ -24,7 +24,7 @@ export const OrderBusiness = styled.View`
   padding-horizontal: 20px;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
-  background-color: ${({ colors }: any) => colors.whiteGray};
+  background-color: ${(props: any) => props.theme.colors.whiteGray};
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -60,7 +60,7 @@ export const SectionTitle = styled.View``
 
 export const OrderCustomer = styled.View`
   padding: 20px;
-  background-color: ${({ colors }: any) => colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
 `
 
 export const OrderDriver = styled(OrderCustomer)``
@@ -97,7 +97,7 @@ export const OrderBill = styled.View`
   padding-horizontal: 30px;
   padding-vertical: 10px;
   flex: 1;
-  background-color: ${({ colors }: any) => colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
 `
 
 export const Total = styled.View`

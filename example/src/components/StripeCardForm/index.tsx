@@ -12,13 +12,15 @@ import {
 } from './styles';
 
 import { OButton, OText } from '../shared';
+import { useTheme } from 'styled-components/native';
 
 const StripeCardFormUI = (props:  any) => {
   const {
-    theme,
     stateCardForm,
     handleCancel
   } = props;
+
+  const theme = useTheme();
 
   const { error, loading } = stateCardForm;
 
@@ -51,7 +53,6 @@ const StripeCardFormUI = (props:  any) => {
       <FormActions>
         <View style={{ width: '49%' }}>
           <OButton
-            colors={theme.colors}
             text={t('CANCEL', 'Cancel')}
             bgColor={theme.colors.backgroundGray}
             borderColor={theme.colors.backgroundGray}
@@ -62,7 +63,6 @@ const StripeCardFormUI = (props:  any) => {
         </View>
         <View style={{ width: '49%' }}>
           <OButton
-            colors={theme.colors}
             text={loading ? t('LOADING', 'Loading...') : t('ADD', 'Add')}
             isDisabled={!cardState?.valid || loading}
             bgColor={theme.colors.primary}

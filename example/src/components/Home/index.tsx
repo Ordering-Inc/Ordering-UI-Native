@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLanguage, useOrder } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { OButton, OIcon, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
@@ -10,11 +11,9 @@ import { _setStoreData } from '../../providers/StoreUtil';
 const windowHeight = Dimensions.get('window').height
 
 export const Home = (props: any) => {
-  const {
-    theme,
-    onNavigationRedirect
-  } = props;
+  const { onNavigationRedirect } = props;
 
+  const theme = useTheme();
   const [, t] = useLanguage();
   const [orderState] = useOrder();
 
@@ -27,18 +26,16 @@ export const Home = (props: any) => {
     <View style={styles.container}>
       <View style={styles.wrapperContent}>
         <View style={styles.languageSelector}>
-          <LanguageSelector theme={theme} />
+          <LanguageSelector />
         </View>
         <LogoWrapper>
           <OIcon
-            colors={theme.colors}
             src={theme.images.logos.logotype}
             style={styles.logo}
           />
         </LogoWrapper>
         <Slogan>
           <OIcon
-            colors={theme.colors}
             src={theme.images.general.homeHero}
             style={styles.slogan}
           />
@@ -46,7 +43,6 @@ export const Home = (props: any) => {
       </View>
       <View style={styles.wrapperBtn}>
         <OButton
-          colors={theme.colors}
           text={t('LOGIN_NOW', 'Login now')}
           bgColor={theme.colors.primary}
           borderColor={theme.colors.primary}
@@ -55,7 +51,6 @@ export const Home = (props: any) => {
           onClick={() => onNavigationRedirect('Login')}
         />
         <OButton
-          colors={theme.colors}
           text={t('SIGNUP', 'Signup')}
           bgColor={theme.colors.white}
           borderColor={theme.colors.primary}

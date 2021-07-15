@@ -2,6 +2,12 @@
 import * as React from 'react'
 import { ImageStyle } from 'react-native'
 import styled from 'styled-components/native'
+
+const Wrapper = styled.View``
+
+const SImage = styled.Image`
+  tint-color: ${(props: any) => props.theme.colors.primary};
+`
 interface Props {
   src?: any,
   url?: string,
@@ -14,16 +20,9 @@ interface Props {
   cover?: boolean,
   children?: any,
   borderRadius?: number,
-  colors: any,
 }
 
 const OImage = (props: Props): React.ReactElement => {
-  const Wrapper = styled.View``
-
-  const SImage = styled.Image`
-    tint-color: ${props.colors.primary};
-  `
-
   return (
     <Wrapper style={{ borderRadius: props.style?.borderRadius, overflow: 'hidden', marginHorizontal: props.style?.marginHorizontal }}>
       <SImage

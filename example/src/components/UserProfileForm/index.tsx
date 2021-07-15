@@ -4,6 +4,7 @@ import {
   useSession,
   useLanguage,
 } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -31,7 +32,6 @@ import {
 
 const ProfileUI = (props: ProfileParams) => {
   const {
-    theme,
     navigation,
     isEdit,
     formState,
@@ -42,6 +42,8 @@ const ProfileUI = (props: ProfileParams) => {
     handleChangeInput,
     handleButtonUpdateClick
   } = props;
+
+  const theme = useTheme();
 
   const styles = StyleSheet.create({
     dropdown: {
@@ -197,12 +199,11 @@ const ProfileUI = (props: ProfileParams) => {
   return (
     <>
       <Actions>
-        <LanguageSelector theme={theme} />
-        <LogoutButton theme={theme} />
+        <LanguageSelector />
+        <LogoutButton />
       </Actions>
       <CenterView>
         <OIcon
-          colors={theme.colors}
           url={user?.photo}
           src={!user?.photo && theme.images.general.user}
           width={100}
@@ -210,7 +211,6 @@ const ProfileUI = (props: ProfileParams) => {
           style={{ borderRadius: 12 }}
         />
         <OIconButton
-          colors={theme.colors}
           icon={theme.images.general.camera}
           borderColor={theme.colors.clear}
           iconStyle={{ width: 30, height: 30 }}
@@ -253,7 +253,6 @@ const ProfileUI = (props: ProfileParams) => {
         <EditButton>
           {!isEdit ? (
             <OButton
-              colors={theme.colors}
               text={t('EDIT', 'Edit')}
               bgColor={theme.colors.white}
               borderColor={theme.colors.primary}
@@ -267,7 +266,6 @@ const ProfileUI = (props: ProfileParams) => {
             <>
               <View style={{ flex: 1 }}>
                 <OButton
-                  colors={theme.colors}
                   text={t('CANCEL', 'Cancel')}
                   bgColor={theme.colors.white}
                   borderColor={theme.colors.primary}
@@ -282,7 +280,6 @@ const ProfileUI = (props: ProfileParams) => {
               (
                 <View style={{ flex: 1, marginLeft: 5 }}>
                   <OButton
-                    colors={theme.colors}
                     text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
                     bgColor={theme.colors.primary}
                     textStyle={{ color: formState.loading ? 'black' : 'white' }}

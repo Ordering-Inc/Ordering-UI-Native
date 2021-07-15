@@ -6,16 +6,17 @@ import { useLanguage, useSession, useApi } from 'ordering-components/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import { Container, FacebookButton } from './styles';
+import { useTheme } from 'styled-components/native';
 
 export const FacebookLogin = (props: any) => {
   const {
-    theme,
     handleErrors,
     handleLoading,
     handleSuccessFacebookLogin,
     notificationState
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [ordering] = useApi()
   const [{ auth }] = useSession()

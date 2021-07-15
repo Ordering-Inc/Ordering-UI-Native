@@ -12,10 +12,10 @@ import { ErrorMessage } from './styles';
 
 import { StripeElementsForm as StripeFormController } from './naked';
 import { OButton, OText } from '../shared';
+import { useTheme } from 'styled-components/native';
 
 const StripeElementsFormUI = (props: any) => {
   const {
-    theme,
     publicKey,
     handleSource,
     values,
@@ -24,6 +24,7 @@ const StripeElementsFormUI = (props: any) => {
     stripeTokenHandler,
   } = props;
 
+  const theme = useTheme();
   const [, t] = useLanguage();
   const [{ user }] = useSession();
   const [card, setCard] = useState<any>(null);
@@ -122,7 +123,6 @@ const StripeElementsFormUI = (props: any) => {
             />
           </StripeProvider>
           <OButton
-            colors={theme.colors}
             text={t('SAVE_CARD', 'Save card')}
             bgColor={isCompleted ? theme.colors.primary : theme.colors.backgroundGray}
             borderColor={isCompleted ? theme.colors.primary :theme.colors.backgroundGray}
@@ -134,7 +134,7 @@ const StripeElementsFormUI = (props: any) => {
             isLoading={confirmSetupLoading || values.loadingAdd || createPmLoading}
           />
           {!!errors && (
-            <ErrorMessage colors={theme.colors}>
+            <ErrorMessage>
               <OText
                 size={20}
                 color={theme.colors.error}
@@ -146,7 +146,7 @@ const StripeElementsFormUI = (props: any) => {
           )}
         </View>
       ) : (
-        <ErrorMessage colors={theme.colors}>
+        <ErrorMessage>
           <OText
             size={20}
             color={theme.colors.error}

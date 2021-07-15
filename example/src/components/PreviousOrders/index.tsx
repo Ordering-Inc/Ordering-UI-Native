@@ -4,10 +4,10 @@ import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import { OButton, OIcon, OText } from '../shared'
 import { Card, Logo, Information, MyOrderOptions, Status, WrappButton } from './styles'
 import { PreviousOrdersParams } from '../../types'
+import { useTheme } from 'styled-components/native'
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {
   const {
-    theme,
     orders,
     pagination,
     onNavigationRedirect,
@@ -16,6 +16,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
     handleReorder,
     reorderLoading
   } = props
+
+  const theme = useTheme();
 
   const styles = StyleSheet.create({
     logo: {
@@ -69,12 +71,10 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       {orders.map((order: any) => (
         <Card
           key={order.id}
-          colors={theme.colors}
         >
           {!!order.business?.logo && (
             <Logo>
               <OIcon
-                colors={theme.colors}
                 url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
                 style={styles.logo}
               />
@@ -108,7 +108,6 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
               {getOrderStatus(order.status)?.value}
             </OText>
             <OButton
-              colors={theme.colors}
               text={t('REORDER', 'Reorder')}
               imgRightSrc={''}
               textStyle={styles.buttonText}
@@ -123,7 +122,6 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       {pagination.totalPages && pagination.currentPage < pagination.totalPages && (
         <WrappButton>
           <OButton
-            colors={theme.colors}
             onClick={loadMoreOrders}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
             imgRightSrc={null}

@@ -8,16 +8,18 @@ import {StyleSheet, Platform} from 'react-native'
 import { OrderTypeWrapper } from './styles'
 import { OrderTypeSelectParams } from '../../types'
 import RNPickerSelect from 'react-native-picker-select'
+import { useTheme } from 'styled-components/native'
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const {
-    theme,
     handleChangeOrderType,
     typeSelected,
     defaultValue,
     configTypes,
     orderTypes
   } = props
+
+  const theme = useTheme();
 
   const pickerStyle = StyleSheet.create({
     inputAndroid: {

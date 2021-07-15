@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import IconEvilIcons from 'react-native-vector-icons/EvilIcons'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native'
+import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native'
+import { useTheme } from 'styled-components/native';
+
 import { OIcon, OText, OModal } from '../shared'
 import { BusinessBasicInformationParams } from '../../types'
 import { convertHoursToMinutes } from '../../utils'
@@ -23,7 +25,6 @@ const types = ['food', 'laundry', 'alcohol', 'groceries']
 
 export const BusinessBasicInformation = (props: BusinessBasicInformationParams) => {
   const {
-    theme,
     businessState,
     isBusinessInfoShow,
     logo,
@@ -31,6 +32,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
   } = props
   const { business, loading } = businessState
 
+  const theme = useTheme()
   const [orderState] = useOrder()
   const [, t] = useLanguage()
   const [{ parsePrice, parseDistance, optimizeImage }] = useUtils()
@@ -64,7 +66,6 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
           ) : (
             !isBusinessInfoShow && (
               <OIcon
-                colors={theme.colors}
                 url={logo || optimizeImage(businessState?.business?.logo, 'h_300,c_limit')}
                 style={styles.businessLogo}
               />
@@ -74,7 +75,6 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
       </BusinessHeader>
       <BusinessInfo
         style={styles.businessInfo}
-        colors={theme.colors}
       >
         <View>
           <BusinessInfoItem>

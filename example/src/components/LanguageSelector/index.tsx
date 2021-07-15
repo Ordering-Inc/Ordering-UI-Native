@@ -8,14 +8,16 @@ import { Container } from './styles'
 import { LanguageSelectorParams } from '../../types'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { I18nManager } from 'react-native'
+import { useTheme } from 'styled-components/native'
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   const {
-    theme,
     languagesState,
     currentLanguage,
     handleChangeLanguage,
   } = props
+
+  const theme = useTheme()
 
   const pickerStyle = StyleSheet.create({
     inputAndroid: {

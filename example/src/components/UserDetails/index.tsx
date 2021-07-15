@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import React, { useEffect } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { UDContainer, UDHeader, UDForm, UDInfo } from './styles';
+import { UDContainer, UDHeader, UDInfo } from './styles';
 
 import {
   UserFormDetails as UserFormController,
@@ -14,10 +13,10 @@ import { OText } from '../shared';
 
 import { UserFormDetailsUI } from '../UserFormDetails';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
+import { useTheme } from 'styled-components/native';
 
 const UserDetailsUI = (props: any) => {
   const {
-    theme,
     isEdit,
     formState,
     cleanFormState,
@@ -29,6 +28,7 @@ const UserDetailsUI = (props: any) => {
     togglePhoneUpdate
   } = props
 
+  const theme = useTheme();
   const [, t] = useLanguage()
   const [{ user }] = useSession()
   const userData = props.userData || (!formState.result.error && formState.result?.result) || user

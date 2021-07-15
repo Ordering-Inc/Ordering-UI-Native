@@ -18,10 +18,10 @@ import {
   OSItemContent,
   OSItemActions,
 } from '../PaymentOptionStripe/styles';
+import { useTheme } from 'styled-components/native';
 
 const StripeCardsListUI = (props: any) => {
   const {
-    theme,
     onSelectCard,
     deleteCard,
     cardSelected,
@@ -29,6 +29,7 @@ const StripeCardsListUI = (props: any) => {
     handleCardClick,
   } = props;
 
+  const theme = useTheme();
   const [{ token }] = useSession();
   const [, t] = useLanguage();
 

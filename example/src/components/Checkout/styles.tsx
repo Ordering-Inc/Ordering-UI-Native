@@ -15,7 +15,7 @@ export const ChHeader = styled.View`
 `
 
 export const ChTotal = styled.View`
-  background-color: ${({ colors }: any) => colors.inputDisabled};
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
   padding: 10px 20px;
   display: flex;
   justify-content: flex-start;
@@ -37,7 +37,7 @@ export const ChAddress = styled.View`
   align-items: center;
   justify-content: space-between;
   border-bottom-width: 1px;
-  border-bottom-color: ${({ colors }: any) => colors.inputDisabled};
+  border-bottom-color: ${(props: any) => props.theme.colors.inputDisabled};
 `
 
 export const ChMoment = styled(ChAddress)`
@@ -45,7 +45,7 @@ export const ChMoment = styled(ChAddress)`
 `
 
 export const CHMomentWrapper = styled.TouchableOpacity`
-  background-color: ${({ colors }: any) => colors.inputDisabled};
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
   border-radius: 10px;
   width: 100%;
   padding: 10px;
@@ -61,7 +61,7 @@ export const ChUserDetails = styled.View`
   width: 100%;
   padding: 0 0 20px;
   border-bottom-width: 1px;
-  border-bottom-color: ${({ colors }: any) => colors.inputDisabled};
+  border-bottom-color: ${(props: any) => props.theme.colors.inputDisabled};
 `
 
 export const ChBusinessDetails = styled(ChUserDetails)`
@@ -72,7 +72,7 @@ export const ChPaymethods = styled.View`
   flex-direction: column;
   padding: 0 0 20px;
   border-bottom-width: 1px;
-  border-bottom-color: ${({ colors }: any) => colors.inputDisabled};
+  border-bottom-color: ${(props: any) => props.theme.colors.inputDisabled};
 `
 
 export const ChDriverTips = styled(ChPaymethods)``

@@ -10,10 +10,10 @@ import { OText, OButton, OInput } from '../shared';
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import { sortInputFields } from '../../utils';
+import { useTheme } from 'styled-components/native';
 
 export const UserFormDetailsUI = (props: any) => {
   const {
-    theme,
     isEdit,
     formState,
     showField,
@@ -26,6 +26,8 @@ export const UserFormDetailsUI = (props: any) => {
     phoneUpdate,
     hideUpdateButton
   } = props
+
+  const theme = useTheme()
 
   const styles = StyleSheet.create({
     btnOutline: {
@@ -190,7 +192,6 @@ export const UserFormDetailsUI = (props: any) => {
                       control={control}
                       render={() => (
                         <OInput
-                          colors={theme.colors}
                           name={field.code}
                           placeholder={t(field.code.toUpperCase(), field?.name)}
                           style={styles.inputStyle}
@@ -244,7 +245,6 @@ export const UserFormDetailsUI = (props: any) => {
         <>
           {((formState && Object.keys(formState?.changes).length > 0 && isEdit) || formState?.loading) && (
             <OButton
-              colors={theme.colors}
               text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
               bgColor={theme.colors.primary}
               textStyle={{ color: 'white' }}

@@ -32,7 +32,6 @@ import {
   Table,
   OrderBill,
   Total,
-  NavBack,
   Icons,
   OrderDriver,
   Map
@@ -43,10 +42,10 @@ import { OrderDetailsParams } from '../../types'
 import { USER_TYPE } from '../../config/constants'
 import { GoogleMap } from '../GoogleMap'
 import { verifyDecimals } from '../../utils'
+import { useTheme } from 'styled-components/native'
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
-    theme,
     navigation,
     messages,
     setMessages,
@@ -57,6 +56,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     driverLocation,
     goToBusinessList
   } = props
+
+  const theme = useTheme()
 
   const styles = StyleSheet.create({
     rowDirection: {
@@ -197,9 +198,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       <Spinner visible={!order || Object.keys(order).length === 0} />
       {order && Object.keys(order).length > 0 && (
         <>
-          <Header colors={theme.colors}>
+          <Header>
             <OButton
-              colors={theme.colors}
               imgLeftSrc={theme.images.general.arrow_left}
               imgRightSrc={null}
               style={styles.btnBackArrow}
@@ -208,7 +208,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             />
             <HeaderInfo>
               <OIcon
-                colors={theme.colors}
                 src={theme.images.logos.logotypeInvert}
                 height={50}
                 width={180}
@@ -226,11 +225,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             </HeaderInfo>
           </Header>
           <OrderContent>
-            <OrderBusiness colors={theme.colors}>
+            <OrderBusiness>
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <Logo>
                   <OIcon
-                    colors={theme.colors}
                     url={order?.business?.logo}
                     style={styles.logo}
                   />
@@ -294,7 +292,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <OrderStatus>
                 <StatusImage>
                   <OIcon
-                    colors={theme.colors}
                     src={getOrderStatus(order?.status)?.image}
                     width={80}
                     height={80}
@@ -303,12 +300,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <OText color={theme.colors.primary}>{getOrderStatus(order?.status)?.value}</OText>
               </OrderStatus>
             </View>
-            <OrderCustomer colors={theme.colors}>
+            <OrderCustomer>
               <OText size={18}>{t('CUSTOMER', 'Customer')}</OText>
               <Customer>
                 <CustomerPhoto>
                   <OIcon
-                    colors={theme.colors}
                     url={user?.photo}
                     width={100}
                     height={100}
@@ -340,7 +336,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <Customer>
                   <CustomerPhoto>
                     <OIcon
-                      colors={theme.colors}
                       url={order?.driver?.photo}
                       width={100}
                       height={100}
@@ -372,7 +367,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 />
               ))}
             </OrderProducts>
-            <OrderBill colors={theme.colors}>
+            <OrderBill>
               <Table>
                 <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
                 <OText>{parsePrice(order?.summary?.subtotal || order?.subtotal)}</OText>

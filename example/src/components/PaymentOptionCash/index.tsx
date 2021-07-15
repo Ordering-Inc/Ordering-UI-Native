@@ -5,15 +5,17 @@ import { useForm, Controller } from 'react-hook-form';
 
 import { PCContainer, PCForm, PCWrapper } from './styles';
 import { OInput, OText } from '../shared';
+import { useTheme } from 'styled-components/native';
 
 export const PaymentOptionCash = (props: any) => {
   const {
-    theme,
     defaultValue,
     orderTotal,
     onChangeData,
     setErrorCash
   } = props;
+
+  const theme = useTheme()
 
   const styles = StyleSheet.create({
     inputsStyle: {
@@ -73,7 +75,6 @@ export const PaymentOptionCash = (props: any) => {
             defaultValue={value}
             render={() => (
               <OInput
-                colors={theme.colors}
                 name='cash'
                 placeholder='0'
                 style={styles.inputsStyle}

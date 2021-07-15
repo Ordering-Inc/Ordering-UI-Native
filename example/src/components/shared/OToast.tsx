@@ -1,15 +1,13 @@
 import * as React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { ToastType, useToast } from "../../providers/ToastProvider";
+import { useTheme } from 'styled-components/native';
 
 const fadeDuration = 300;
 const bottomPosition = 20;
 
-interface Props {
-  colors: any
-}
-
-export const Toast = (props: Props) => {
+export const Toast = () => {
+  const theme = useTheme();
   const { toastConfig, hideToast } = useToast();
   const opacity = React.useRef(new Animated.Value(0)).current;
 
@@ -54,7 +52,7 @@ export const Toast = (props: Props) => {
       backgroundColor = '#6ba4ff';
       break;
     case ToastType.Error:
-      backgroundColor = props.colors.primary;
+      backgroundColor = theme.colors.primary;
       break;
     case ToastType.Success:
       backgroundColor = '#73bd24';

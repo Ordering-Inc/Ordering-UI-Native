@@ -20,7 +20,7 @@ export const AddressInput = styled.TouchableOpacity`
 `
 export const WrapSearchBar = styled.View`
   padding: 5px;
-  background-color: ${({ colors }: any) => colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
   flex: 1;
 `
 export const WrapContent = styled.View`

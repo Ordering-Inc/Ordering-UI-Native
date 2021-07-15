@@ -61,7 +61,7 @@ export const OrSeparator = styled.View`
 export const LineSeparator = styled.View`
   width: 40%;
   height: 1px;
-  background-color: ${({ colors }: any) => colors.disabled};
+  background-color: ${(props: any) => props.theme.colors.disabled};
 `
 
 export const SkeletonWrapper = styled.View`

@@ -7,13 +7,15 @@ interface Props {
   title?: string;
   children?: any;
   onClose?: any;
+  onCancel?: any;
+  onAccept?: any;
   isTransparent?: boolean;
   entireModal?: boolean;
   customClose?: boolean;
   titleSectionStyle?: any;
   isNotDecoration?: boolean;
   style?: any;
-  styleCloseButton?: boolean;
+  styleCloseButton?: any;
 }
 
 const OModal = (props: Props): React.ReactElement => {

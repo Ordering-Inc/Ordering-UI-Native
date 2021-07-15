@@ -21,10 +21,10 @@ import {
 import { OIcon, OText, OAlert } from '../shared'
 
 import { ProductItemAccordionParams } from '../../types'
+import { useTheme } from 'styled-components/native'
 
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const {
-    theme,
     isCartPending,
     isCartProduct,
     product,
@@ -33,6 +33,8 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     onDeleteProduct,
     onEditProduct,
   } = props
+
+  const theme = useTheme();
 
   const pickerStyle = StyleSheet.create({
     inputAndroid: {
@@ -162,7 +164,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
             {product?.images && (
               <ProductImage>
                 <OIcon
-                  colors={theme.colors}
                   url={product?.images}
                   style={styles.productImage}
                 />

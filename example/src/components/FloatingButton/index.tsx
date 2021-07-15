@@ -7,10 +7,10 @@ import {
 } from './styles'
 import { OText } from '../shared'
 import { StyleSheet, Platform } from 'react-native'
+import { useTheme } from 'styled-components/native'
 
 const FloatingButtonUI = (props: FloatingButtonParams) => {
   const {
-    theme,
     btnLeftValue,
     btnRightValue,
     btnLeftValueShow,
@@ -20,6 +20,8 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
     disabled,
     isSecondaryBtn
   } = props
+
+  const theme = useTheme()
 
   const styles = StyleSheet.create({
     primaryBtn: {
@@ -39,7 +41,6 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
 
   return (
     <Container
-      colors={theme.colors}
       isIos={Platform.OS === 'ios'}
     >
       <Button

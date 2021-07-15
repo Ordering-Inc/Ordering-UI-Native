@@ -16,10 +16,10 @@ import {
   Fade
 } from "rn-placeholder";
 import { View } from 'react-native'
+import { useTheme } from 'styled-components/native'
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
-    theme,
     navigation,
     activeOrders,
     orderList,
@@ -34,6 +34,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     setOrdersLength
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [, { reorder }] = useOrder()
   const { showToast } = useToast()

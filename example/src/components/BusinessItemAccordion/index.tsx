@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
-import { useOrder, useLanguage, useUtils, useEvent } from 'ordering-components/native';
+import { useOrder, useLanguage, useUtils } from 'ordering-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { convertHoursToMinutes } from '../../utils';
@@ -18,7 +18,6 @@ import { OAlert, OIcon, OText } from '../shared';
 
 export const BusinessItemAccordion = (props: any) => {
   const {
-    theme,
     cart,
     moment,
     handleClearProducts
@@ -52,7 +51,6 @@ export const BusinessItemAccordion = (props: any) => {
         <BIInfo>
           {cart?.business?.logo && (
             <OIcon
-              colors={theme.colors}
               url={cart?.business?.logo}
               width={70}
               height={70}

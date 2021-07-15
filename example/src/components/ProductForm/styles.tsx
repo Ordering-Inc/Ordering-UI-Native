@@ -50,7 +50,7 @@ export const ProductEditions = styled.View`
 
 export const SectionTitle = styled.View`
   padding: 15px 20px;
-  background-color: ${({ colors }: any) => colors.paleGray};
+  background-color: ${(props: any) => props.theme.colors.paleGray};
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 `

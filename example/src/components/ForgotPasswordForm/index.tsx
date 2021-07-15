@@ -13,14 +13,16 @@ import {Container} from './styles'
 import { ToastType, useToast } from '../../providers/ToastProvider';
 
 import { OButton, OInput, OText } from '../shared';
+import { useTheme } from 'styled-components/native';
 
 const ForgotPasswordUI = (props: any) => {
   const {
-    theme,
     navigation,
     formState,
     handleButtonForgotPasswordClick,
   } = props;
+
+  const theme = useTheme();
 
   const styles = StyleSheet.create({
     inputStyle: {
@@ -77,7 +79,6 @@ const ForgotPasswordUI = (props: any) => {
   return (
     <Container>
       <NavBar
-        theme={theme}
         title={t('FORGOT_YOUR_PASSWORD', 'Forgot your password?')}
         titleAlign={'center'}
         onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
@@ -98,7 +99,6 @@ const ForgotPasswordUI = (props: any) => {
             control={control}
             render={({ onChange, value }: any) => (
               <OInput
-                colors={theme.colors}
                 placeholder={t('EMAIL', 'Email')}
                 style={styles.inputStyle}
                 icon={theme.images.general.email}
@@ -127,7 +127,6 @@ const ForgotPasswordUI = (props: any) => {
           />
 
           <OButton
-            colors={theme.colors}
             text={emailSent && !formState.result?.error ? t('LINK_SEND_FORGOT_PASSWORD', 'Link Sent') : t('FRONT_RECOVER_PASSWORD', 'Recover Password')}
             textStyle={{ color: 'white' }}
             bgColor={emailSent && !formState.result?.error ? theme.colors.disabled : theme.colors.primary}

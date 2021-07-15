@@ -22,12 +22,12 @@ import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { OrderTypeSelector } from '../OrderTypeSelector'
 import { ToastType, useToast } from '../../providers/ToastProvider'
+import { useTheme } from 'styled-components/native'
 
 const PIXELS_TO_SCROLL = 1200
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
   const {
-    theme,
     navigation,
     businessesList,
     searchValue,
@@ -37,6 +37,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     paginationProps,
     handleChangeSearch
   } = props
+
+  const theme = useTheme();
 
   const styles = StyleSheet.create({
     container: {
@@ -91,7 +93,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     <ScrollView style={styles.container} onScroll={(e: any) => handleScroll(e)}>
       {!auth && (
         <NavBar
-          theme={theme}
           onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
@@ -133,7 +134,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         <View style={styles.wrapperOrderOptions}>
           <OrderTypeSelector configTypes={configTypes} />
           <WrapMomentOption
-            colors={theme.colors}
             onPress={() => navigation.navigate('MomentOption')}
           >
             <OText size={14} numberOfLines={1} ellipsizeMode='tail'>
@@ -144,7 +144,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           </WrapMomentOption>
         </View>
         <AddressInput
-          colors={theme.colors}
           onPress={() => auth
             ? navigation.navigate('AddressList', { isFromBusinesses: true })
             : navigation.navigate('AddressForm', { address: orderState.options?.address,isFromBusinesses: true  })}

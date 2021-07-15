@@ -3,10 +3,10 @@ import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { OInput, OButton } from '../shared'
 import { useLanguage } from 'ordering-components/native'
 import Icon from 'react-native-vector-icons/Feather'
+import { useTheme } from 'styled-components/native'
 
 export const SearchBar = (props: any) => {
   const {
-    theme,
     searchValue,
     placeholder,
     onSearch,
@@ -17,6 +17,8 @@ export const SearchBar = (props: any) => {
     noBorderShow,
     borderStyle
   } = props
+
+  const theme = useTheme()
 
   const styles = StyleSheet.create({
     container: {
@@ -62,7 +64,6 @@ export const SearchBar = (props: any) => {
   return (
     <View style={[styles.container, !noBorderShow && (borderStyle || styles.borderStyle)]}>
       <OInput
-        colors={theme.colors}
         value={searchValue}
         onChange={onChangeSearch}
         style={styles.inputStyle}
@@ -73,7 +74,6 @@ export const SearchBar = (props: any) => {
       />
       {isCancelButtonShow && (
         <OButton
-          colors={theme.colors}
           imgRightSrc=''
           text={t('CANCEL', 'Cancel')}
           bgColor='transparent'

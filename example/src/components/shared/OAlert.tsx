@@ -21,7 +21,7 @@ const OAlert = (props: Props) => {
 
   const createTwoButtonAlert = () => {
     Alert.alert(
-      props.title,
+      props.title || '',
       props.message,
       [
         {

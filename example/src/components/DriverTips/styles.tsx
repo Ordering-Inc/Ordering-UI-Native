@@ -23,7 +23,7 @@ export const DTCard = styled.View`
   justify-content: center;
   align-items: center;
   padding: 10px;
-  border: 1px solid ${({ colors }: any) => colors.primary};
+  border: 1px solid ${(props: any) => props.theme.colors.primary};
   text-transform: capitalize;
   min-height: 60px;
   min-width: 60px;
@@ -31,7 +31,7 @@ export const DTCard = styled.View`
   margin-top: 10px;
 
   ${(props: any) => props.isActive && css`
-    background-color: ${props.colors.primary};
+    background-color: ${(props: any) => props.theme.colors.primary};;
   `}
 `
 

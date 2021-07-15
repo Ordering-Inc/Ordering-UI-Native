@@ -9,10 +9,10 @@ import { PhoneInputParams } from '../../types';
 import { OText } from '../shared';
 import {transformCountryCode} from '../../utils'
 import {I18nManager} from 'react-native'
+import { useTheme } from 'styled-components/native';
 
 export const PhoneInputNumber = (props: PhoneInputParams) => {
   const {
-    theme,
     data,
     handleData,
     defaultValue,
@@ -20,6 +20,8 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
     forwardRef,
     textInputProps
   } = props
+
+  const theme = useTheme();
 
   const style = StyleSheet.create({
     input: {

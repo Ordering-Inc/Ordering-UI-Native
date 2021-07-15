@@ -25,9 +25,10 @@ import {
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
+import { useTheme } from 'styled-components/native'
+
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
-    theme,
     navigation,
     errors,
     businessState,
@@ -46,6 +47,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     updateProductModal
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
   const [orderState] = useOrder()
@@ -92,12 +94,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setOpenUpselling(false)
   }
 
-  // useEffect(() => {
-  //   if (!orderState.loading) {
-  //     handleCloseProductModal()
-  //   }
-  // }, [orderState.loading])
-
   return (
     <>
       <BusinessProductsListingContainer
@@ -111,7 +107,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 <>
                   <View style={{ ...styles.headerItem, flex: 1 }}>
                     <OButton
-                      colors={theme.colors}
                       imgLeftSrc={theme.images.general.arrow_left}
                       imgRightSrc={null}
                       style={styles.btnBackArrow}
@@ -145,7 +140,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 </>
               )}
               {isOpenSearchBar && (
-                <WrapSearchBar colors={theme.colors}>
+                <WrapSearchBar>
                   <SearchBar
                     onSearch={handleChangeSearch}
                     onCancel={() => handleCancel()}

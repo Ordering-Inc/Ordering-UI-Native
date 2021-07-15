@@ -17,9 +17,10 @@ import {
   CloseUpselling
 } from './styles'
 import { ProductForm } from '../ProductForm';
+import { useTheme } from 'styled-components/native'
+
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const {
-    theme,
     isCustomMode,
     upsellingProducts,
     business,
@@ -28,6 +29,8 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     canOpenUpselling,
     setCanOpenUpselling
   } = props
+
+  const theme = useTheme();
 
   const styles = StyleSheet.create({
     imageStyle: {
@@ -91,10 +94,8 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                   !upsellingProducts.error ? upsellingProducts.products.map((product: any) => (
                     <Item
                       key={product.id}
-                      colors={theme.colors}
                     >
                       <OIcon
-                        colors={theme.colors}
                         url={product.images}
                         style={styles.imageStyle}
                       />
@@ -140,7 +141,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                <UpsellingLayout />
                 <CloseUpselling>
                   <OButton
-                    colors={theme.colors}
                     imgRightSrc=''
                     text={t('NO_THANKS', 'No Thanks')}
                     style={styles.closeUpsellingButton}

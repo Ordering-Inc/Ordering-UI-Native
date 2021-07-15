@@ -5,16 +5,18 @@ import { Tab } from './styles'
 import { OText } from '../shared'
 import { BusinessProductsCategoriesParams } from '../../types'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+import { useTheme } from 'styled-components/native'
 
 const BusinessProductsCategoriesUI = (props: any) => {
   const {
-    theme,
     featured,
     categories,
     handlerClickCategory,
     categorySelected,
     loading
   } = props
+
+  const theme = useTheme()
 
   const styles = StyleSheet.create({
     container: {

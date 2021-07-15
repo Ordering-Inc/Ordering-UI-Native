@@ -2,11 +2,11 @@ import React from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
 import { LoginForm } from '../components/LoginForm';
-import theme from '../theme.json';
 import { Container } from '../layouts/Container';
 
 import { useLanguage } from 'ordering-components/native';
 import { _setStoreData } from '../providers/StoreUtil';
+import { useTheme } from 'styled-components/native';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;
@@ -14,10 +14,10 @@ const KeyboardView = styled.KeyboardAvoidingView`
 
 export const Login = ({ navigation, route }: any) => {
   const [, t] = useLanguage()
+  const theme = useTheme()
 
   const loginProps = {
     navigation,
-    theme,
     useLoginByCellphone: true,
     loginButtonText: t('LOGIN', 'Login'),
     loginButtonBackground: theme.colors.primary,

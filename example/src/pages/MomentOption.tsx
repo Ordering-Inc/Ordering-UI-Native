@@ -1,7 +1,6 @@
 import React from 'react'
 import { useConfig } from 'ordering-components/native'
 import { MomentOption as MomentOptionController } from '../components/MomentOption'
-import theme from '../theme.json';
 
 const MomentOption = ({ navigation, props }: any) => {
   const [{ configs }] = useConfig()
@@ -16,7 +15,6 @@ const MomentOption = ({ navigation, props }: any) => {
   currentDate.setMinutes(59)
   const momentOptionProps = {
     ...props,
-    theme,
     navigation: navigation,
     maxDate: currentDate
   }

@@ -14,12 +14,12 @@ import {
   InputsSection,
   ErrorSection
 } from './styles'
+import { useTheme } from 'styled-components/native';
 
 const TIME_COUNTDOWN = 60 * 10 // 10 minutes
 
 export const VerifyPhone = (props: any) => {
   const {
-    theme,
     phone,
     formValues,
     verifyPhoneState,
@@ -28,6 +28,8 @@ export const VerifyPhone = (props: any) => {
     handleCheckPhoneCode,
     handleVerifyCodeClick
   } = props
+
+  const theme = useTheme();
 
   const styles = StyleSheet.create({
     inputStyle: {

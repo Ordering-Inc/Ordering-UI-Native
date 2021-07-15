@@ -31,13 +31,13 @@ import { OButton, OInput, OText } from '../shared'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
 import { Placeholder,PlaceholderLine,Fade } from 'rn-placeholder'
+import { useTheme } from 'styled-components/native'
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width
 
 export const ProductOptionsUI = (props: any) => {
   const {
-    theme,
     navigation,
     editMode,
     isSoldOut,
@@ -55,6 +55,8 @@ export const ProductOptionsUI = (props: any) => {
     onClose,
     businessSlug
   } = props
+
+  const theme = useTheme();
 
   const [{ parsePrice }] = useUtils()
   const [, t] = useLanguage()
@@ -165,7 +167,7 @@ export const ProductOptionsUI = (props: any) => {
                 <ProductEditions>
                   {product?.ingredients?.length > 0 && (
                     <View style={styles.optionContainer}>
-                      <SectionTitle colors={theme.colors}>
+                      <SectionTitle>
                         <OText size={16}>{t('INGREDIENTS', 'Ingredients')}</OText>
                       </SectionTitle>
                       <WrapperIngredients style={{ backgroundColor: isSoldOut || maxProductQuantity <= 0 ? 'hsl(0, 0%, 72%)' : theme.colors.white }}>
@@ -223,7 +225,6 @@ export const ProductOptionsUI = (props: any) => {
                       <OText size={16}>{t('SPECIAL_COMMENT', 'Special comment')}</OText>
                     </SectionTitle>
                     <OInput
-                      colors={theme.colors}
                       multiline
                       placeholder={t('SPECIAL_COMMENT', 'Special comment')}
                       value={productCart.comment}
@@ -273,7 +274,6 @@ export const ProductOptionsUI = (props: any) => {
           <View style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : '70%' }}>
             {productCart && !isSoldOut && maxProductQuantity > 0 && auth && orderState.options?.address_id && (
               <OButton
-                colors={theme.colors}
                 onClick={() => handleSaveProduct()}
                 imgRightSrc=''
                 text={`${orderState.loading ? t('LOADING', 'Loading') : editMode ? t('UPDATE', 'Update') : t('ADD_TO_CART', 'Add to Cart')} ${productCart.total ? parsePrice(productCart?.total) : ''}`}
@@ -287,21 +287,18 @@ export const ProductOptionsUI = (props: any) => {
             {auth && !orderState.options?.address_id && (
               orderState.loading ? (
                 <OButton
-                  colors={theme.colors}
                   isDisabled
                   text={t('LOADING', 'Loading')}
                   imgRightSrc=''
                 />
               ) : (
                 <OButton
-                  colors={theme.colors}
                   onClick={navigation.navigate('AddressList')}
                 />
               )
             )}
             {(!auth || isSoldOut || maxProductQuantity <= 0) && (
               <OButton
-                colors={theme.colors}
                 isDisabled={isSoldOut || maxProductQuantity <= 0}
                 onClick={() => handleRedirectLogin(productCart)}
                 text={isSoldOut || maxProductQuantity <= 0 ? t('SOLD_OUT', 'Sold out') : t('LOGIN_SIGNUP', 'Login / Sign Up')}

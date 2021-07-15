@@ -5,6 +5,8 @@ import {
   useOrder,
   useLanguage,
 } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
+
 import { OIcon, OText } from '../shared';
 import { StyleSheet, View } from 'react-native';
 import { BusinessControllerParams } from '../../types';
@@ -27,13 +29,14 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
   const {
-    theme,
     business,
     handleClick,
     isBusinessOpen,
     businessWillCloseSoonMinutes,
     isBusinessClose
   } = props;
+
+  const theme = useTheme()
 
   const styles = StyleSheet.create({
     headerStyle: {
@@ -134,7 +137,6 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
         )}
         <BusinessLogo>
           <OIcon
-            colors={theme.colors}
             url={optimizeImage(business?.logo, 'h_300,c_limit')}
             style={styles.businessLogo}
           />

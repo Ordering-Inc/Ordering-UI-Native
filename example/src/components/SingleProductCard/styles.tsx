@@ -16,7 +16,7 @@ export const CardInfo = styled.View`
 `
 export const SoldOut = styled.View`
   position: absolute;
-  background: ${({ colors }: any) => colors.lightGray} 0% 0% no-repeat padding-box;
+  background: ${(props: any) => props.theme.colors.lightGray} 0% 0% no-repeat padding-box;
   border-radius: 23px;
   padding: 5px 10px;
   top: 5px;

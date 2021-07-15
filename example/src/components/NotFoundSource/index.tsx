@@ -7,16 +7,18 @@ import {
   NotFound,
   NotFoundImage
 } from './styles'
+import { useTheme } from 'styled-components/native'
 
 export const NotFoundSource = (props: NotFoundSourceParams) => {
   const {
-    theme,
     image,
     content,
     btnTitle,
     conditioned,
     onClickButton
   } = props
+
+  const theme = useTheme()
 
   const errorImage = image || theme.images.general.notFound
 
@@ -25,7 +27,6 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
       {errorImage && (
         <NotFoundImage>
           <OIcon
-            colors={theme.colors}
             src={errorImage}
             width={260}
             height={220}
@@ -40,7 +41,6 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
       {onClickButton && (
         <View style={{marginTop: 10,width: '100%'}}>
           <OButton
-            colors={theme.colors}
             style={{width: '100%', height: 50}}
             bgColor={theme.colors.primary}
             borderColor={theme.colors.primary}

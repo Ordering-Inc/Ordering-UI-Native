@@ -7,7 +7,7 @@ export const Container = styled.View`
   left: 0;
   padding: 10px;
   border-top-width: 1px;
-  border-color: ${({ colors }: any) => colors.lightGray};
+  border-color: ${(props: any) => props.theme.colors.lightGray};
   width: 100%;
   display: flex;
   align-items: center;

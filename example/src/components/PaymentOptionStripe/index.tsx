@@ -16,17 +16,16 @@ import { StripeElementsForm } from '../StripeElementsForm';
 
 import {
   OSContainer,
-  OSMessage,
   OSItem,
   OSItemContent,
   OSItemActions,
   OSWrapper,
   OSActions
 } from './styles';
+import { useTheme } from 'styled-components/native';
 
 const PaymentOptionStripeUI = (props: any) => {
   const {
-    theme,
     onSelectCard,
     onCancel,
     deleteCard,
@@ -36,6 +35,7 @@ const PaymentOptionStripeUI = (props: any) => {
     handleNewCard
   } = props;
 
+  const theme = useTheme();
   const [{ token }] = useSession();
   const [, t] = useLanguage();
 
@@ -125,7 +125,6 @@ const PaymentOptionStripeUI = (props: any) => {
       {token && !cardsList.loading && (
         <OSWrapper style={styles.bottom}>
           <OButton
-            colors={theme.colors}
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
             bgColor={theme.colors.backgroundGray}
             borderColor={theme.colors.backgroundGray}
@@ -137,7 +136,6 @@ const PaymentOptionStripeUI = (props: any) => {
           <OSActions>
             <View style={{ width: '48%' }}>
               <OButton
-                colors={theme.colors}
                 text={t('CANCEL', 'Cancel')}
                 bgColor={theme.colors.backgroundGray}
                 borderColor={theme.colors.backgroundGray}
@@ -149,7 +147,6 @@ const PaymentOptionStripeUI = (props: any) => {
             </View>
             <View style={{ width: '48%' }}>
               <OButton
-                colors={theme.colors}
                 text={t('ACCEPT', 'Accept')}
                 bgColor={theme.colors.primary}
                 borderColor={theme.colors.primary}

@@ -18,10 +18,10 @@ import {
   DTLabel,
   DTWrapperInput
 } from './styles'
+import { useTheme } from 'styled-components/native';
 
 const DriverTipsUI = (props: any) => {
   const {
-    theme,
     driverTip,
     driverTipsOptions,
     optionSelected,
@@ -29,6 +29,8 @@ const DriverTipsUI = (props: any) => {
     isDriverTipUseCustom,
     handlerChangeOption
   } = props;
+
+  const theme = useTheme();
 
   const style = StyleSheet.create({
     circle: {
@@ -75,7 +77,6 @@ const DriverTipsUI = (props: any) => {
                 onPress={() => handleChangeOptionCustom(option)}
               >
                 <DTCard
-                  colors={theme.colors}
                   style={style.circle}
                   isActive={option === optionSelected}
                 >
@@ -107,7 +108,6 @@ const DriverTipsUI = (props: any) => {
           </DTLabel>
           <DTWrapperInput>
             <OInput
-              colors={theme.colors}
               placeholder={placeholderCurrency}
               style={style.inputStyle}
               onChange={handleChangeDriverTip}
@@ -115,7 +115,6 @@ const DriverTipsUI = (props: any) => {
               autoCorrect={false}
             />
             <OButton
-              colors={theme.colors}
               text={t('APPLY_TIP', 'Apply Tip')}
               bgColor={theme.colors.primary}
               borderColor={theme.colors.primary}

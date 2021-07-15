@@ -21,11 +21,10 @@ import { CouponControl } from '../CouponControl';
 import { OModal, OText } from '../shared';
 import { ProductForm } from '../ProductForm';
 import { verifyDecimals } from '../../utils';
-
+import { useTheme } from 'styled-components/native';
 
 const OrderSummaryUI = (props: any) => {
   const {
-    theme,
     cart,
     changeQuantity,
     getProductMax,
@@ -35,6 +34,7 @@ const OrderSummaryUI = (props: any) => {
     isFromCheckout
   } = props;
 
+  const theme = useTheme();
   const [, t] = useLanguage();
   const [{ configs }] = useConfig();
   const [orderState] = useOrder();

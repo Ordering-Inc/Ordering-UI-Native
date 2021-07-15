@@ -34,10 +34,10 @@ import NavBar from '../NavBar'
 
 import { OText, OButton, OInput, OModal } from '../shared';
 import { LoginParams } from '../../types';
+import { useTheme } from 'styled-components/native';
 
 const LoginFormUI = (props: LoginParams) => {
   const {
-    theme,
     loginTab,
     formState,
     navigation,
@@ -55,6 +55,8 @@ const LoginFormUI = (props: LoginParams) => {
     onNavigationRedirect,
     notificationState
   } = props
+
+  const theme = useTheme()
 
   const loginStyle = StyleSheet.create({
     btnOutline: {
@@ -192,7 +194,6 @@ const LoginFormUI = (props: LoginParams) => {
   return (
     <Container>
       <NavBar
-        theme={theme}
         title={t('LOGIN', 'Login')}
         titleAlign={'center'}
         onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
@@ -233,7 +234,6 @@ const LoginFormUI = (props: LoginParams) => {
                 control={control}
                 render={({ onChange, value }: any) => (
                   <OInput
-                    colors={theme.colors}
                     placeholder={t('EMAIL', 'Email')}
                     style={loginStyle.inputStyle}
                     icon={theme.images.general.email}
@@ -278,7 +278,6 @@ const LoginFormUI = (props: LoginParams) => {
               control={control}
               render={({ onChange, value }: any) => (
                 <OInput
-                  colors={theme.colors}
                   isSecured={!passwordSee ? true : false}
                   placeholder={t('PASSWORD', 'Password')}
                   style={loginStyle.inputStyle}
@@ -301,7 +300,6 @@ const LoginFormUI = (props: LoginParams) => {
               defaultValue=""
             />
             <OButton
-              colors={theme.colors}
               onClick={handleSubmit(onSubmit)}
               text={loginButtonText}
               bgColor={theme.colors.primary}
@@ -329,16 +327,15 @@ const LoginFormUI = (props: LoginParams) => {
           (
             <>
               <OrSeparator>
-                <LineSeparator colors={theme.colors} />
+                <LineSeparator />
                 <OText size={18} mRight={20} mLeft={20}>
                   {t('OR', 'Or')}
                 </OText>
-                <LineSeparator colors={theme.colors} />
+                <LineSeparator />
               </OrSeparator>
 
               <ButtonsWrapper mBottom={20}>
                 <OButton
-                  colors={theme.colors}
                   onClick={handleVerifyCodeClick}
                   text={t('GET_VERIFY_CODE', 'Get Verify Code')}
                   borderColor={theme.colors.primary}
@@ -377,7 +374,6 @@ const LoginFormUI = (props: LoginParams) => {
         {onNavigationRedirect && registerButtonText && (
           <ButtonsWrapper>
             <OButton
-              colors={theme.colors}
               onClick={() => onNavigationRedirect('Signup')}
               text={registerButtonText}
               style={loginStyle.btnOutline}

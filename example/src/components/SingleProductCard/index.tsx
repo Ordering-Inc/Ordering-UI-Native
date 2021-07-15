@@ -8,15 +8,17 @@ import {
 } from './styles'
 import { StyleSheet } from 'react-native'
 import { OText, OIcon } from '../shared'
+import { useTheme } from 'styled-components/native'
 
 export const SingleProductCard = (props: SingleProductCardParams) => {
   const {
-    theme,
     businessId,
     product,
     isSoldOut,
     onProductClick
   } = props
+
+  const theme = useTheme();
 
   const styles = StyleSheet.create({
     container: {
@@ -66,7 +68,6 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
       onPress={() => onProductClick(product)}
     >
       <OIcon
-        colors={theme.colors}
         url={optimizeImage(product?.images, 'h_200,c_limit')}
         style={styles.productStyle}
       />
@@ -77,7 +78,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
       </CardInfo>
 
       {(isSoldOut || maxProductQuantity <= 0) && (
-        <SoldOut colors={theme.colors}>
+        <SoldOut>
           <OText weight='bold' style={styles.soldOutTextStyle}>{t('SOLD_OUT', 'SOLD OUT')}</OText>
         </SoldOut>
       )}
