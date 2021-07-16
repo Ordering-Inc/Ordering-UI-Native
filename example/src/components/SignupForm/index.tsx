@@ -32,6 +32,7 @@ import { OText, OButton, OInput, OModal } from '../shared';
 import { SignupParams } from '../../types';
 import { sortInputFields } from '../../utils';
 import { useTheme } from 'styled-components/native';
+import { AppleLogin } from '../AppleLogin';
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']
 
@@ -91,7 +92,7 @@ const SignupFormUI = (props: SignupParams) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [signupTab, setSignupTab] = useState(useSignupByCellphone && !useSignupByEmail ? 'cellphone' : 'email')
-  const [isFBLoading, setIsFBLoading] = useState(false)
+  const [isLoadingSocialButton, setIsLoadingSocialButton] = useState(false);
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
     phone: {
@@ -167,6 +168,14 @@ const SignupFormUI = (props: SignupParams) => {
     login({
       user,
       token: user.session.access_token
+    })
+  }
+
+  const handleSuccessApple = (user : any) => {
+    _removeStoreData('isGuestUser')
+    login({
+      user,
+      token: user?.session?.access_token
     })
   }
 
@@ -473,8 +482,14 @@ const SignupFormUI = (props: SignupParams) => {
                   <FacebookLogin
                     notificationState={notificationState}
                     handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                    handleLoading={(val: boolean) => setIsFBLoading(val)}
+                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
                     handleSuccessFacebookLogin={handleSuccessFacebook}
+                  />
+                  <AppleLogin
+                    notificationState={notificationState}
+                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                    handleSuccessApple={handleSuccessApple}
                   />
                 </SocialButtons>
               </ButtonsSection>
@@ -496,7 +511,7 @@ const SignupFormUI = (props: SignupParams) => {
           handleVerifyCodeClick={onSubmit}
         />
       </OModal>
-      <Spinner visible={formState.loading || isFBLoading} />
+      <Spinner visible={formState.loading || isLoadingSocialButton} />
     </View >
   );
 };

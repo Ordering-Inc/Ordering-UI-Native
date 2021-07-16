@@ -908,6 +908,11 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.0.tgz#87de7af9c231826fdd68ac7258f77c429e0e5fcf"
   integrity sha512-wdppn25U8z/2yiaT6YGquE6X8sSv7hNMWSXYSSU1jGv/yd6XqjXgTDJ8KP4NgjTXfJ3GbRjeeb8RTV7a/VpM+w==
 
+"@invertase/react-native-apple-authentication@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@invertase/react-native-apple-authentication/-/react-native-apple-authentication-2.1.2.tgz#af5ffde838a0e3151364b80418f6d25668a05107"
+  integrity sha512-FzY+CApZLgGS9fmPBDB2kFBMePB37bH0+4h4e8gHtnHm/hF3/iqANAS6oXQq7W3SC+bgciuq38jeLFqNLgAmCA==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -1935,9 +1940,9 @@
     tslib "^1.9.3"
 
 "@sentry/cli@^1.52.4":
-  version "1.67.1"
-  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.67.1.tgz#0ae0a892851913083e31f64c7b0ffcdf9f59da58"
-  integrity sha512-TKPBC/mMaC6EageH3s4QM4PVr/QFSfgRuGqfc7cAzRRLnMLTvXsvxlEkVnRGCDglvSru0/NwHf1XSv/Z084zkQ==
+  version "1.67.2"
+  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.67.2.tgz#dbb5631cb3637e10298f67915013592cb22f04ff"
+  integrity sha512-lPn0Sffbjg2UmCkHl2iw8pKlqpPhy85mW0za5kz3LEqC9JGUXHo9eSyyCkiRktlemMXKk+DeS/nyFy/LTRUG2Q==
   dependencies:
     https-proxy-agent "^5.0.0"
     mkdirp "^0.5.5"
@@ -2350,9 +2355,9 @@
   integrity sha512-YSBPTLTVm2e2OoQIDYx8HaeWJ5tTToLH67kXR7zYNGupXMEHa2++G8k+DczX2cFVgalypqtyZIcU19AFcmOpmg==
 
 "@types/node@*":
-  version "16.3.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.3.2.tgz#655432817f83b51ac869c2d51dd8305fb8342e16"
-  integrity sha512-jJs9ErFLP403I+hMLGnqDRWT0RYKSvArxuBVh2veudHV7ifEC1WAmjJADacZ7mRbA2nWgHtn8xyECMAot0SkAw==
+  version "16.3.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.3.3.tgz#0c30adff37bbbc7a50eb9b58fae2a504d0d88038"
+  integrity sha512-8h7k1YgQKxKXWckzFCMfsIwn0Y61UK6tlD6y2lOb3hTOIMlK3t9/QwHOhc81TwU+RMf0As5fj7NPjroERCnejQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -2589,9 +2594,9 @@ ajv@^6.10.0, ajv@^6.12.4:
     uri-js "^4.2.2"
 
 ajv@^8.0.1:
-  version "8.6.1"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.6.1.tgz#ae65764bf1edde8cd861281cda5057852364a295"
-  integrity sha512-42VLtQUOLefAvKFAQIxIZDaThq6om/PrfP0CYk3/vn+y4BMNkKnbli8ON2QCiHov4KkzOSJ/xSoBJdayiiYvVQ==
+  version "8.6.2"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.6.2.tgz#2fb45e0e5fcbc0813326c1c3da535d1881bb0571"
+  integrity sha512-9807RlWAgT564wT+DjeyU5OFMPjmzxVobvDFmNAhY+5zD6A2ly3jDp6sgnfyDtlIQ+7H97oc/DGCzzfu9rjw9w==
   dependencies:
     fast-deep-equal "^3.1.1"
     json-schema-traverse "^1.0.0"
@@ -3853,9 +3858,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.723:
-  version "1.3.775"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.775.tgz#046517d1f2cea753e06fff549995b9dc45e20082"
-  integrity sha512-EGuiJW4yBPOTj2NtWGZcX93ZE8IGj33HJAx4d3ouE2zOfW2trbWU+t1e0yzLr1qQIw81++txbM3BH52QwSRE6Q==
+  version "1.3.778"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.778.tgz#bf01048736c95b78f2988e88005e0ebb385942a4"
+  integrity sha512-Lw04qJaPtWdq0d7qKHJTgkam+FhFi3hm/scf1EyqJWdjO3ZIGUJhNmZJRXWb7yb/bRYXQyVGSpa9RqVpjjWMQw==
 
 emittery@^0.7.1:
   version "0.7.2"
@@ -7046,7 +7051,7 @@ ora@^3.4.0:
 
 "ordering-components@github:Ordering-Inc/ordering-components#development":
   version "0.0.1"
-  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/5445a37c1fa39cc8eccd559544db5bfdf960a920"
+  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/cff53fbfab353f1a860bbe92dcb0188bd94cad98"
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@react-native-async-storage/async-storage" "^1.13.1"
@@ -7471,9 +7476,9 @@ react-async-script@^1.1.1:
     prop-types "^15.5.0"
 
 react-devtools-core@^4.6.0:
-  version "4.13.5"
-  resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-4.13.5.tgz#803e9ae8f7ab46deaa04129b376f3f21b2eb6ef1"
-  integrity sha512-k+P5VSKM6P22Go9IQ8dJmjj9fbztvKt1iRDI/4wS5oTvd1EnytIJMYB59wZt+D3kgp64jklNX/MRmY42xAQ08g==
+  version "4.14.0"
+  resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-4.14.0.tgz#4b9dc50937ed4cf4c04fa293430cac62d829fa8b"
+  integrity sha512-cE7tkSUkGCDxTA79pntDGJCBgzNN/XxA3kgPdXujdfSfEfVhzrItQIEsN0kCN/hJJACDvH2Q8p5+tJb/K4B3qA==
   dependencies:
     shell-quote "^1.6.1"
     ws "^7"
@@ -7768,6 +7773,11 @@ react-native-typing-animation@^0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/react-native-typing-animation/-/react-native-typing-animation-0.1.7.tgz#8f2cf08d9400ae543a110292eb7d71523dda5528"
   integrity sha512-4H3rF9M+I2yAZpYJcY0Mb29TXkn98QK12rrKSY6LZj1BQD9NNmRZuNXzwX4XHapsIz+N/J8M3p27FOQPbfzqeg==
+
+react-native-uuid@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-uuid/-/react-native-uuid-2.0.1.tgz#ed4e2dfb1683eddb66967eb5dca140dfe1abddb9"
+  integrity sha512-cptnoIbL53GTCrWlb/+jrDC6tvb7ypIyzbXNJcpR3Vab0mkeaaVd5qnB3f0whXYzS+SMoSQLcUUB0gEWqkPC0g==
 
 react-native-vector-icons@^7.1.0:
   version "7.1.0"
