@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useOrder } from 'ordering-components/native';
-import { View } from 'react-native';
 import { CartContent } from '../components/CartContent';
+import { SafeAreaContainer } from '../layouts/SafeAreaContainer';
 
 interface Props {
   navigation: any;
@@ -32,9 +32,9 @@ const CartPage = (props: Props) => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }} >
+    <SafeAreaContainer>
       <CartContent {...cartProps} />
-    </View>
+    </SafeAreaContainer>
   );
 };
 
