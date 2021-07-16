@@ -3,10 +3,6 @@
   "version": "0.0.10",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
-  "exports": {
-    ".": "src/index.tsx",
-    "./theme_kiosk": "src/themes/kiosk/index.tsx"
-  },
   "author": "ordering.inc",
   "repository": {
     "type": "git",
