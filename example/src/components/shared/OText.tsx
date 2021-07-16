@@ -38,12 +38,12 @@ interface Props {
   mLeft?: number;
   numberOfLines?: number;
   ellipsizeMode?: string;
-  key?: any;
+  lineHeight?: number;
 }
 
 const OText = (props: Props): React.ReactElement => {
   return (
-    <SText {...props} style={props.style}>
+    <SText {...props} style={[props.style, {lineHeight: props.lineHeight}]}>
       {props.children}{props.space && ' '}
     </SText>
   );

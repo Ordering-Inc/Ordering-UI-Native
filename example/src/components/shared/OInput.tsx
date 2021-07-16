@@ -1,11 +1,12 @@
 import * as React from 'react';
-import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps, I18nManager} from 'react-native';
+import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps, TextStyle} from 'react-native';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
+import { colors } from '../../theme.json';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 const Wrapper = styled.View`
-  background-color: ${(props: any) => props.theme.colors.backgroundLight};
+  background-color: ${colors.backgroundLight};
   border-radius: 25px;
   border-width: 1px;
   padding-horizontal: 16px;
@@ -15,15 +16,14 @@ const Wrapper = styled.View`
   flex: 1;
   justify-content: center;
 `;
-
 const Input = styled.TextInput`
   flex-grow: 1;
   flex: 1;
   min-height: 30px;
   font-size: 15px;
   font-family: 'Poppins-Regular';
-  text-align: ${I18nManager.isRTL ? 'right' : 'left'};
 `;
+
 interface Props extends TextInputProps {
   bgColor?: string;
   borderColor?: string;
@@ -48,12 +48,7 @@ interface Props extends TextInputProps {
   vertorIcon?: string;
   vectorIconColor?: string;
   forwardRef?: any;
-  autoCapitalize?: any;
-  autoCompleteType?: any;
-  autoCorrect?: any;
-  returnKeyType?: any;
-  onSubmitEditing?: any;
-  blurOnSubmit?: any;
+  inputStyle?: TextStyle;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -68,9 +63,9 @@ const OInput = (props: Props): React.ReactElement => {
         <OIcon
           src={props.icon}
           color={props.iconColor}
-          width={20}
+          width={16}
           height={20}
-          style={{marginRight: 10}}
+          style={{marginRight: 10, ...props.iconStyle}}
         />
       ) : null}
       {props.vertorIcon && (
@@ -93,13 +88,14 @@ const OInput = (props: Props): React.ReactElement => {
         onSubmitEditing={props.onSubmitEditing}
         blurOnSubmit={props.blurOnSubmit}
         ref={props.forwardRef}
+		  style={props?.inputStyle}
       />
       {props.iconRight && (
         <OIcon
           src={props.iconRight}
           color={props.iconRightColor}
-          width={20}
-          height={20}
+          width={16}
+          height={16}
           style={{ ...props.iconRightStyle }}
         />
       )}

@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  I18nManager,
   ImageSourcePropType,
   ImageStyle,
   TextStyle,
@@ -11,13 +10,14 @@ import {
 
 import * as React from 'react';
 import styled from 'styled-components/native';
+import { colors } from '../../theme.json';
 
 const StyledButton = styled.View<Props>`
-  background-color: ${(props: any) => props.theme.colors.primary};
+  background-color: ${colors.primary};
   border-radius: 26px;
   border-width: 2px;
   height: 52px;
-  border-color: ${(props: any) => props.theme.colors.primary};
+  border-color: ${colors.primary};
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -27,20 +27,20 @@ const StyledButton = styled.View<Props>`
   position: relative;
 `
 const StyledButtonDisabled = styled(StyledButton)`
-  background-color: ${(props: any) => props.theme.colors.disabled};
-  border-color: ${(props: any) => props.theme.colors.disabled};
+  background-color: ${colors.disabled};
+  border-color: ${colors.disabled};
 `
 
 const StyledText = styled.Text`
   font-size: 16px;
-  color: ${(props: any) => props.theme.colors.btnFont};
+  color: ${colors.btnFont};
   margin-left: 10px;
   margin-right: 10px;
   font-family: 'Poppins-Regular';
 `
 
 const StyledTextDisabled = styled(StyledText)`
-  color: ${(props: any) => props.theme.colors.primary};
+  color: ${colors.primary};
 `
 
 const StyledImage = styled.Image`
@@ -49,12 +49,11 @@ const StyledImage = styled.Image`
   resize-mode: contain;
 `
 const EndImage = styled.Image`
-  width: 15px;
+  width: 17px;
   height: 15px;
   resize-mode: contain;
-  right: 20px;
+  right: 17.5px;
   position: absolute;
-  right: 20px;
 `;
 
 interface Props {
@@ -77,7 +76,6 @@ interface Props {
   bgColor?: string;
   borderColor?: string;
   loadingStyle?: ViewStyle;
-  theme?: any;
 }
 
 const OButton = (props: Props): React.ReactElement => {
@@ -110,7 +108,7 @@ const OButton = (props: Props): React.ReactElement => {
     >
       <StyledButton style={props.bgColor ? { ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor } : props.style}>
         {props.imgLeftSrc ? (
-          <StyledImage style={{transform: [{scaleX: I18nManager.isRTL ? -1 : 1}], ...props.imgLeftStyle}} source={props.imgLeftSrc} />
+          <StyledImage style={props.imgLeftStyle} source={props.imgLeftSrc} />
         ) : null}
         {props.text ? (
           <StyledText style={props.textStyle}>{props.text}</StyledText>

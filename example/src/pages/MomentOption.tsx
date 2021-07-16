@@ -1,6 +1,6 @@
 import React from 'react'
 import { useConfig } from 'ordering-components/native'
-import { MomentOption as MomentOptionController } from '../components/MomentOption'
+import { MomentOption as MomentOptionController } from '../themes/five/components'
 
 const MomentOption = ({ navigation, props }: any) => {
   const [{ configs }] = useConfig()

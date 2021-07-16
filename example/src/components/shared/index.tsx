@@ -1,23 +1,29 @@
-import OAlert from './OAlert'
-import OBottomPopup from './OBottomPopup'
+import OText from './OText'
 import OButton from './OButton'
+import OInput from './OInput'
 import ODropDown from './ODropDown'
 import OIcon from './OIcon'
+import OIconText from './OIconText'
 import OIconButton from './OIconButton'
-import OInput from './OInput'
+import OTextarea from './OTextarea'
+import OToggle from './OToggle'
+import OKeyButton from './OKeyButton'
 import OModal from './OModal'
-import OText from './OText'
-import { Toast as OToast } from './OToast'
+import OAlert from './OAlert'
+import OBottomPopup from './OBottomPopup'
 
 export {
-  OAlert,
-  OBottomPopup,
-  OButton,
-  ODropDown,
-  OIcon,
-  OIconButton,
-  OInput,
-  OModal,
-  OText,
-  OToast
+	OText,
+	OButton,
+	OInput,
+	ODropDown,
+	OIcon,
+	OIconText,
+	OIconButton,
+	OTextarea,
+	OToggle,
+	OKeyButton,
+	OAlert,
+  	OModal,
+	OBottomPopup
 }

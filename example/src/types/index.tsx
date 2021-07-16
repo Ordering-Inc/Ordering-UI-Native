@@ -96,18 +96,25 @@ export interface SignupParams {
 }
 
 export interface PhoneInputParams {
-  data?: any;
-  handleData?: any;
-  defaultValue?: any;
-  defaultCode?: number | null;
-  forwardRef?: any;
-  textInputProps?: TextInputProps
+	data?: any;
+	handleData?: any;
+	defaultValue?: any;
+	defaultCode?: number | null;
+	forwardRef?: any;
+	textInputProps?: TextInputProps;
+	boxStyle?: any;
+	inputStyle?: any;
+	textStyle?: any;
+	noDropIcon?: boolean;
+	flagStyle?: any;
 }
 
 export interface LanguageSelectorParams {
   languagesState?: any;
   currentLanguage?: string;
   handleChangeLanguage?: any;
+  iconColor?: any;
+  pickerStyle?: any;
 }
 export interface BusinessesListingParams {
   navigation?: any;
@@ -235,6 +242,7 @@ export interface OrdersOptionParams {
   navigation?: any,
   loadOrders?: any,
   setOrderList?: any,
+  preOrders?: boolean,
   setOrdersLength?: ({activeOrdersLength, previousOrdersLength} : {activeOrdersLength: number, previousOrdersLength: number}) => void,
   ordersLength: {activeOrdersLength: number, previousOrdersLength: number}
 }
@@ -308,6 +316,7 @@ export interface MessagesParams {
   setMessage?: (comment: string) => {},
   setMessages?: () => {},
   readMessages?: () => {},
+  onClose?: () => void,
 }
 export interface ViewInterface {
   navigation?: any;
@@ -343,6 +352,7 @@ export interface FloatingButtonParams {
   btnLeftValueShow?: boolean;
   btnRightValueShow?: boolean;
   handleClick?: any;
+  handleEmpty?: any;
 }
 export interface MomentOptionParams {
   navigation: any;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import { LoginForm } from '../components/LoginForm';
+import { LoginForm } from '../themes/five/components';
 import { Container } from '../layouts/Container';
 
 import { useLanguage } from 'ordering-components/native';

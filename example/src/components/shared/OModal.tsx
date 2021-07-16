@@ -1,21 +1,27 @@
 import * as React from 'react';
-import { Modal, StyleSheet, Text, SafeAreaView, View } from "react-native";
+import { Alert, Modal, StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpacity, View, TextStyle } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
+import styled from 'styled-components';
+import { OIcon } from '.';
+import { colors, images } from '../../theme.json';
 
 interface Props {
   open?: boolean;
   title?: string;
   children?: any;
-  onClose?: any;
-  onCancel?: any;
   onAccept?: any;
+  onCancel?: any;
+  onClose?: any;
+  style?: any;
+  acceptText?: string;
+  cancelText?: string;
   isTransparent?: boolean;
+  hideCloseDefault?: boolean;
   entireModal?: boolean;
   customClose?: boolean;
   titleSectionStyle?: any;
   isNotDecoration?: boolean;
-  style?: any;
-  styleCloseButton?: any;
+  styleCloseButton?: any
 }
 
 const OModal = (props: Props): React.ReactElement => {
@@ -23,8 +29,13 @@ const OModal = (props: Props): React.ReactElement => {
     open,
     title,
     children,
+    onAccept,
+    onCancel,
     onClose,
+    acceptText,
+    cancelText,
     isTransparent,
+    hideCloseDefault,
     entireModal,
     customClose,
     titleSectionStyle,
@@ -45,33 +56,33 @@ const OModal = (props: Props): React.ReactElement => {
         {!entireModal ? (
           <View style={styles.centeredView}>
             <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-              <View style={styles.wrapperIcon}>
-                <Icon
-                  name="x"
-                  size={35}
+            	<TouchableOpacity style={styles.wrapperIcon} onPress={onClose}>
+                <OIcon
+                  src={images.general.close}
+                  width={16}
                   style={isNotDecoration && (styleCloseButton || styles.cancelBtn)}
-                  onPress={onClose}
                 />
-              </View>
-              <Text style={styles.modalText}>{title}</Text>
+              </TouchableOpacity>
+              <Text style={styles.modalText}>{title || ''}</Text>
             </View>
             {children}
           </View>
         ) :
-          <>
+          <View>
             {!customClose && (
               <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-                <Icon
-                  name="x"
-                  size={35}
-                  style={styleCloseButton || styles.cancelBtn}
-                  onPress={onClose}
-                />
-                <Text style={styles.modalText}>{title}</Text>
+					  <TouchableOpacity style={styles.wrapperIcon} onPress={onClose}>
+						<OIcon
+							src={images.general.close}
+							width={16}
+							style={styleCloseButton || styles.cancelBtn}
+						/>
+					  </TouchableOpacity>
+                <Text style={styles.modalText}>{title || ''}</Text>
               </View>
             )}
             {children}
-          </>
+          </View>
         }
       </SafeAreaView>
     </Modal>
@@ -84,35 +95,40 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: 'flex-start',
     position: 'relative',
     width: '100%',
   },
   titleSection: {
     width: '100%',
-    display: 'flex',
+    flex: 1,
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
+    alignItems: 'flex-start',
+	 paddingHorizontal: 40
   },
   cancelBtn: {
-    position: 'absolute',
-    left: 0,
-    margin: 15,
+   //  position: 'absolute',
+   //  left: 0,
+   //  margin: 15,
     zIndex: 10000
   },
   modalText: {
     marginTop: 15,
-    fontSize: 25,
+    fontSize: 20,
+	 lineHeight: 30,
+	 fontWeight: '600',
     textAlign: "center",
     zIndex: 10
   },
   wrapperIcon: {
     overflow: 'hidden',
-    borderRadius: 50,
-    backgroundColor: '#CCCCCC80',
+    backgroundColor: colors.clear,
     width: 35,
-    margin: 15
+    height: 35,
+	 marginStart: -4,
+	 marginTop: 12,
+	 alignItems: 'center',
+	 justifyContent: 'center'
   },
 
   modalView: {
