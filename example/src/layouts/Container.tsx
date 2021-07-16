@@ -19,7 +19,7 @@ const SafeAreaStyled = styled.SafeAreaView`
 export const Container = (props: any) => {
   return (
     <SafeAreaStyled>
-      <ContainerStyled keyboardShouldPersistTaps='handled'>
+      <ContainerStyled style={props?.style} keyboardShouldPersistTaps='handled'>
         {props.children}
       </ContainerStyled>
     </SafeAreaStyled>

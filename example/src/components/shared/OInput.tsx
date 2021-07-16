@@ -49,6 +49,7 @@ interface Props extends TextInputProps {
   vertorIcon?: string;
   vectorIconColor?: string;
   forwardRef?: any
+  inputStyle?: any
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -88,6 +89,7 @@ const OInput = (props: Props): React.ReactElement => {
         onSubmitEditing={props.onSubmitEditing}
         blurOnSubmit={props.blurOnSubmit}
         ref={props.forwardRef}
+		  style={props.inputStyle}
       />
       {props.iconRight && (
         <OIcon

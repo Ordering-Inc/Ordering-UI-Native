@@ -17,6 +17,7 @@ export interface LoginParams {
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
   notificationState?: any;
+  hasNav?: boolean;
 }
 export interface ProfileParams {
   navigation?: any;
@@ -93,6 +94,7 @@ export interface SignupParams {
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
   notificationState?: any;
+  hasNav?: boolean;
 }
 
 export interface PhoneInputParams {
@@ -101,7 +103,10 @@ export interface PhoneInputParams {
   defaultValue?: any;
   defaultCode?: number | null;
   forwardRef?: any;
-  textInputProps?: TextInputProps
+  textInputProps?: TextInputProps;
+  countryButtonStyle?: ViewStyle;
+  textWrapStyle?: ViewStyle;
+  renderDropImage?: any;
 }
 
 export interface LanguageSelectorParams {

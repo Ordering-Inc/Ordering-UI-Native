@@ -20,7 +20,8 @@ interface Props {
   customClose?: boolean;
   titleSectionStyle?: any;
   isNotDecoration?: boolean;
-  styleCloseButton?: any
+  styleCloseButton?: any;
+  transition?: any;
 }
 
 const OModal = (props: Props): React.ReactElement => {
@@ -40,7 +41,8 @@ const OModal = (props: Props): React.ReactElement => {
     titleSectionStyle,
     isNotDecoration,
     style,
-    styleCloseButton
+    styleCloseButton,
+	 transition
   } = props
 
   return (
@@ -48,6 +50,7 @@ const OModal = (props: Props): React.ReactElement => {
       animationType="slide"
       transparent={isTransparent}
       visible={open}
+		presentationStyle={transition || 'fullScreen'}
       onRequestClose={() => { onClose() }}
       style={{ height: '100%', flex: 1, position: 'absolute', ...style, zIndex: 9999 }}
     >

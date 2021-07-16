@@ -14,6 +14,7 @@ import OText from './OText'
 import OTextarea from './OTextarea'
 import { Toast as OToast } from './OToast'
 import OToggle from './OToggle'
+import OButtonGroup from './OButtonGroup'
 
 export {
   OAlert,
@@ -31,5 +32,6 @@ export {
   OText,
   OTextarea,
   OToast,
-  OToggle
+  OToggle,
+  OButtonGroup
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { Home as HomePage } from '../components/Home';
-import { colors } from '../theme.json';
+import { HomePage } from '../themes/two/components';
+import { colors } from '../themes/two/theme.json';
 
 export const Home = (props: any) => {
   const homeProps = {
