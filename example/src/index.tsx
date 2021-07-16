@@ -81,6 +81,9 @@ import { ToastType, useToast, ToastContext, ToastProvider } from './providers/To
 // contexts
 import { ThemeProvider, useTheme } from './context/Theme';
 
+// themes
+import ThemeKiosk from './themes/kiosk'
+
 export {
   ActiveOrders,
   AddressDetails,
@@ -162,5 +165,7 @@ export {
   ToastProvider,
   // contexts
   ThemeProvider,
-  useTheme
+  useTheme,
+  // themes
+  ThemeKiosk
 }
