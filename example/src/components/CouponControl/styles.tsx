@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const CContainer = styled.View`
   display: flex;
@@ -17,7 +16,7 @@ export const CCWrapper = styled.View`
 
 export const CCButton = styled.View`
   width: 100%;
-  background-color: ${colors.backgroundGray};
+  background-color: ${(props: any) => props.theme.colors.backgroundGray};
   padding: 10px;
   border-radius: 50px;
 `

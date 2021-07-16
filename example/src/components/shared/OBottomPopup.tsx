@@ -1,6 +1,5 @@
 import React from 'react'
 import { Modal, TouchableWithoutFeedback, Dimensions, StyleSheet, View, Text } from 'react-native'
-import { colors } from '../../theme.json'
 const deviceHeight = Dimensions.get('window').height
 
 interface Props {
@@ -54,7 +53,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   bottomContainer: {
-    backgroundColor: colors.white,
+    backgroundColor: '#FFFFFF',
     width: '100%',
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,

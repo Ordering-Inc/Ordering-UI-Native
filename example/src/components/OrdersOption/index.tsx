@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react'
-import { OrderList, useLanguage, useOrder } from 'ordering-components/native'
+import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { useFocusEffect } from '@react-navigation/native'
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
@@ -7,9 +7,7 @@ import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
 
 import { OptionTitle } from './styles'
-import { colors, images } from '../../theme.json'
 import { OrdersOptionParams } from '../../types'
-import { ToastType, useToast } from '../../providers/ToastProvider'
 
 import {
   Placeholder,
@@ -17,6 +15,7 @@ import {
   Fade
 } from "rn-placeholder";
 import { View } from 'react-native'
+import { useTheme } from 'styled-components/native'
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
@@ -34,14 +33,15 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     setOrdersLength
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [, { reorder }] = useOrder()
-  const { showToast } = useToast()
+  const [, { showToast }] = useToast()
   const { loading, error, orders: values } = orderList
 
   const imageFails = activeOrders
-    ? images.general.emptyActiveOrders
-    : images.general.emptyPastOrders
+    ? theme.images.general.emptyActiveOrders
+    : theme.images.general.emptyPastOrders
 
   const orders = customArray || values || []
 
@@ -119,7 +119,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     <>
       <OptionTitle>
         {(!activeOrders || (activeOrders && ordersLength.activeOrdersLength > 0) || (ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength === 0 )) && !isLoadingFirstRender && (
-        <OText size={16} color={colors.textSecondary} mBottom={10} >
+        <OText size={16} color={theme.colors.textSecondary} mBottom={10} >
           {titleContent || (activeOrders
             ? t('ACTIVE_ORDERS', 'Active Orders')
             : t('PREVIOUS_ORDERS', 'Previous Orders'))}

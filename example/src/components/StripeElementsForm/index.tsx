@@ -12,7 +12,7 @@ import { ErrorMessage } from './styles';
 
 import { StripeElementsForm as StripeFormController } from './naked';
 import { OButton, OText } from '../shared';
-import { colors } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 const StripeElementsFormUI = (props: any) => {
   const {
@@ -24,6 +24,7 @@ const StripeElementsFormUI = (props: any) => {
     stripeTokenHandler,
   } = props;
 
+  const theme = useTheme();
   const [, t] = useLanguage();
   const [{ user }] = useSession();
   const [card, setCard] = useState<any>(null);
@@ -55,21 +56,13 @@ const StripeElementsFormUI = (props: any) => {
           last4: paymentMethod.Card.last4
         }
       })
-
-      // if (error) {
-      //   setErrors(
-      //     error?.code === 'Unknown'
-      //       ? t('ERROR_ADD_CARD', 'An error occurred while trying to add a card')
-      //       : error.message
-      //   );
-      // }
     } catch (error) {
       setErrors(error?.message || error?.toString());
     }
   }
 
   const handleSaveCard = async () => {
-    if (!isCompleted) return 
+    if (!isCompleted) return
     setErrors('');
     if (!requirements) {
       createPayMethod();
@@ -131,8 +124,8 @@ const StripeElementsFormUI = (props: any) => {
           </StripeProvider>
           <OButton
             text={t('SAVE_CARD', 'Save card')}
-            bgColor={isCompleted ? colors.primary : colors.backgroundGray}
-            borderColor={isCompleted ? colors.primary :colors.backgroundGray}
+            bgColor={isCompleted ? theme.colors.primary : theme.colors.backgroundGray}
+            borderColor={isCompleted ? theme.colors.primary :theme.colors.backgroundGray}
             style={styles.btnAddStyle}
             textStyle={{color: 'white'}}
             imgRightSrc={null}
@@ -144,7 +137,7 @@ const StripeElementsFormUI = (props: any) => {
             <ErrorMessage>
               <OText
                 size={20}
-                color={colors.error}
+                color={theme.colors.error}
                 style={{ marginTop: 20, textAlign: 'center' }}
                 >
                 {errors}
@@ -156,7 +149,7 @@ const StripeElementsFormUI = (props: any) => {
         <ErrorMessage>
           <OText
             size={20}
-            color={colors.error}
+            color={theme.colors.error}
             style={{ marginTop: 20 }}
           >
             {t('SOMETHING_WRONG', 'Something is wrong!')}

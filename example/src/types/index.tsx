@@ -138,6 +138,7 @@ export interface BusinessControllerParams {
   handleClick?: any;
   isBusinessOpen?: boolean;
   businessWillCloseSoonMinutes?: number
+  isBusinessClose?: number
 }
 export interface BusinessProductsListingParams {
   navigation?: any;
@@ -273,6 +274,7 @@ export interface OrderDetailsParams {
   goToBusinessList?: boolean
 }
 export interface ProductItemAccordionParams {
+  key?: any;
   isCartPending?: boolean,
   isCartProduct?: boolean,
   product?: any,
