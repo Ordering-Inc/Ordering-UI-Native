@@ -80,6 +80,9 @@ import { StoreMethods } from './providers/StoreUtil';
 // contexts
 import { ThemeProvider, useTheme } from './context/Theme';
 
+// themes
+import ThemeKiosk from './themes/kiosk'
+
 export {
   ActiveOrders,
   AddressDetails,
@@ -157,5 +160,7 @@ export {
   StoreMethods,
   // contexts
   ThemeProvider,
-  useTheme
+  useTheme,
+  // themes
+  ThemeKiosk
 }
