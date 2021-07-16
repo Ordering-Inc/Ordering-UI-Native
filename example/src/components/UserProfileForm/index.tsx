@@ -3,13 +3,14 @@ import {
   UserFormDetails as UserProfileController,
   useSession,
   useLanguage,
+  ToastType,
+  useToast
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { StyleSheet, View } from 'react-native';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { ProfileParams } from '../../types';
 import { AddressList } from '../AddressList'
 import { LogoutButton } from '../LogoutButton'
@@ -68,7 +69,7 @@ const ProfileUI = (props: ProfileParams) => {
 
   const [{ user }] = useSession();
   const [, t] = useLanguage();
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const { handleSubmit, errors } = useForm();
 
   const [phoneInputData, setPhoneInputData] = useState({
@@ -246,56 +247,25 @@ const ProfileUI = (props: ProfileParams) => {
           <UserFormDetailsUI
             {...props}
             hideUpdateButton
+            handleCancelEdit={handleCancelEdit}
+            toggleIsEdit={toggleIsEdit}
           />
         </View>
       )}
-      {!validationFields.loading && (
+      {!validationFields.loading && !isEdit && (
         <EditButton>
-          {!isEdit ? (
-            <OButton
-              text={t('EDIT', 'Edit')}
-              bgColor={theme.colors.white}
-              borderColor={theme.colors.primary}
-              isDisabled={formState.loading}
-              imgRightSrc={null}
-              textStyle={{ fontSize: 20 }}
-              style={{ ...styles.editButton }}
-              onClick={toggleIsEdit}
-            />
-          ) : (
-            <>
-              <View style={{ flex: 1 }}>
-                <OButton
-                  text={t('CANCEL', 'Cancel')}
-                  bgColor={theme.colors.white}
-                  borderColor={theme.colors.primary}
-                  isDisabled={formState.loading}
-                  imgRightSrc={null}
-                  style={{ ...styles.editButton }}
-                  onClick={handleCancelEdit}
-                />
-              </View>
-              {((formState &&
-                Object.keys(formState?.changes).length > 0 && isEdit) || formState?.loading) &&
-              (
-                <View style={{ flex: 1, marginLeft: 5 }}>
-                  <OButton
-                    text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
-                    bgColor={theme.colors.primary}
-                    textStyle={{ color: formState.loading ? 'black' : 'white' }}
-                    borderColor={theme.colors.primary}
-                    isDisabled={formState.loading}
-                    imgRightSrc={null}
-                    style={{ ...styles.editButton }}
-                    onClick={handleSubmit(onSubmit)}
-                  />
-                </View>
-              )}
-            </>
-          )}
+          <OButton
+            text={t('EDIT', 'Edit')}
+            bgColor={theme.colors.white}
+            borderColor={theme.colors.primary}
+            isDisabled={formState.loading}
+            imgRightSrc={null}
+            textStyle={{ fontSize: 20 }}
+            style={{ ...styles.editButton }}
+            onClick={toggleIsEdit}
+          />
         </EditButton>
       )}
-
       {user?.id && (
         <AddressList
           nopadding
