@@ -1,5 +1,4 @@
-import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme.json'
+import styled from 'styled-components/native';
 
 export const CContainer = styled.View`
   padding: 0 20px;
@@ -42,7 +41,7 @@ export const KeyboardView = styled.KeyboardAvoidingView`
 `;
 
 export const OrderTypeWrapper = styled.View`
-  background-color: ${colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
   flex-direction: row;
   justify-content: space-between;
   align-items: center;

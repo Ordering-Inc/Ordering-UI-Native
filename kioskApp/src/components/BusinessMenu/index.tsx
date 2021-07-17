@@ -16,11 +16,12 @@ import { CartContent } from '../../components/CartContent';
 
 import config from '../../config.json';
 import { OText } from '../../components/shared';
-import { colors } from '../../theme.json';
 import { PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
 import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
+import { useTheme } from 'styled-components/native';
 
 const BusinessMenu = (props:any): React.ReactElement => {
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [ordering] = useApi()
   const [{ parsePrice }] = useUtils()
@@ -137,14 +138,14 @@ const BusinessMenu = (props:any): React.ReactElement => {
                   onPress={onToggleCart}
                 >
                   <OText
-                    color={colors.mediumGray}
+                    color={theme.colors.mediumGray}
                   >
                     {`${cart?.products?.length || 0} ${t('ITEMS', 'items')}`} {parsePrice(cart?.total || 0)} {' '}
                   </OText>
 
                   <MaterialIcon
                     name={bottomSheetVisibility ? "cart-off" : "cart-outline"}
-                    color={colors.primary}
+                    color={theme.colors.primary}
                     size={30}
                   />
                 </TouchableOpacity>

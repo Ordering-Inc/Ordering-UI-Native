@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const OSContainer = styled.View`
 	display: flex;
@@ -14,7 +13,7 @@ export const OSContent = styled.View`
 	max-width: 400px;
 	border-radius: 6px;
 	padding: 10px;
-	background-color: ${colors.white}
+	background-color: ${(props: any) => props.theme.colors.white}
 `
 
 export const OSBody = styled.View`

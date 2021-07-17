@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import styled, { css } from 'styled-components/native'
 import { ScrollView, TouchableOpacity  } from 'react-native-gesture-handler'
 import { ScrollView as CustomScrollView, TouchableOpacity as CustomTouchableOpacity } from 'react-native'
-import { colors } from '../../theme.json'
 
 interface Props {
   secondary?: boolean,
@@ -28,15 +27,15 @@ const Selected = styled.TouchableOpacity`
   padding: 15px;
   border-radius: 10px;
   border-width: 1px;
-  border-color: ${(props: any) => props.bgcolor || (props.secondary ? colors.lightGray : colors.primary)};
-  background-color: ${(props: any) => props.bgcolor || (props.secondary ? colors.white : colors.primary)};
+  border-color: ${(props: any) => props.bgcolor || (props.secondary ? props.theme.colors.lightGray : props.theme.colors.primary)};
+  background-color: ${(props: any) => props.bgcolor || (props.secondary ? props.theme.colors.white : props.theme.colors.primary)};
 `
 const SelectedLabel = styled.Text`
   font-size: 16px;
-  color: ${(props: any) => props.textcolor || (props.secondary ? colors.black : colors.white)};
+  color: ${(props: any) => props.textcolor || (props.secondary ? props.theme.colors.black : props.theme.colors.white)};
 `
 const DropIcon = styled.Image`
-  tint-color: ${(props: any) => props.textcolor || (props.secondary ? colors.black : colors.white)};
+  tint-color: ${(props: any) => props.textcolor || (props.secondary ? props.theme.colors.black : props.theme.colors.white)};
   resize-mode: contain;
   width: 7px;
   height: 7px;
@@ -47,8 +46,8 @@ const DropView = styled.View`
   z-index: 9999;
   top: 54px;
   border-width: 1px;
-  border-color: ${colors.lightGray};
-  background-color: ${colors.white};
+  border-color: ${(props: any) => props.theme.colors.lightGray};
+  background-color: ${(props: any) => props.theme.colors.white};
   border-radius: 10px;
   width: 100%;
 `
@@ -56,9 +55,9 @@ const DropOption = styled.Text`
   padding: 15px;
   font-size: 16px;
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.lightGray};
+  border-bottom-color: ${(props: any) => props.theme.colors.lightGray};
   ${(props: any) => props.selected && css`
-    color: ${colors.primary};
+    color: ${(props: any) => props.theme.colors.primary};
   `};
 `
 const ODropDown = (props: Props) => {

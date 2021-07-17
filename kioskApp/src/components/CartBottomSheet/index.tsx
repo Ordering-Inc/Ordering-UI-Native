@@ -15,12 +15,12 @@ import {
 } from './styles';
 import { OButton, OModal, OText } from '../shared';
 import CartItem from '../CartItem';
-import { colors } from '../../theme.json';
 import { Cart as TypeCart } from '../../types';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
 import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
+import { useTheme } from 'styled-components/native';
 
 const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | null => {
 	const {
@@ -35,6 +35,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
 		navigation,
 	}  = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [orderState] = useOrder()
   const [{ parsePrice }] = useUtils()
@@ -134,9 +135,9 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
           ) : (
             `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
           )}
-          bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
+          bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
           isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
-          borderColor={colors.primary}
+          borderColor={theme.colors.primary}
           imgRightSrc={null}
           textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
           onClick={() => setOpenUpselling(true)}
@@ -179,7 +180,8 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
 }
 
 const TopBar = (props:any) => {
-	const [, t] = useLanguage();
+  const theme = useTheme()
+  const [, t] = useLanguage()
 
 	return (
 		<StyledTopBar>
@@ -194,7 +196,7 @@ const TopBar = (props:any) => {
 				<OText
 					size={20}
 					weight="500"
-					color={colors.mediumGray}
+					color={theme.colors.mediumGray}
 				>
 					{props?.selectedOrderType === 2 && t('TAKE_OUT', 'Take out')}
           {props?.selectedOrderType === 3 && t('EAT_IN', 'Eat in')}
@@ -208,7 +210,7 @@ const TopBar = (props:any) => {
 					<OText
 						size={20}
 						weight="500"
-						color={colors.primary}
+						color={theme.colors.primary}
 					>
 						{t('CANCEL_ORDER', 'Cancel order')}
 					</OText>

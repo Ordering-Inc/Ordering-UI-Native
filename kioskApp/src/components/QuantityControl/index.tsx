@@ -4,9 +4,25 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 
 import { StyledQuantityControl } from './styles';
 import { OText } from '../shared';
-import { colors } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 const QuantityControl = (props: Props) => {
+
+	const theme = useTheme()
+
+	const styles = StyleSheet.create({
+		quantityControlButton: {
+			color: theme.colors.black,
+		},
+		quantityControlButtonBorder: {
+			borderWidth: 1,
+			borderColor: theme.colors.black,
+		},
+		quantityControlButtonDisabled: {
+			opacity: 0.5,
+		},
+	});
+
 	return (
 		<StyledQuantityControl>
 			{(!!props?.onDelete && props.val <= 1)
@@ -64,19 +80,6 @@ const QuantityControl = (props: Props) => {
 		</StyledQuantityControl>
 	);
 }
-
-const styles = StyleSheet.create({
-  quantityControlButton: {
-    color: colors.black,
-  },
-  quantityControlButtonBorder: {
-    borderWidth: 1,
-    borderColor: colors.black,
-  },
-  quantityControlButtonDisabled: {
-    opacity: 0.5,
-  },
-});
 
 interface Props {
 	onDecremet?: () => void;

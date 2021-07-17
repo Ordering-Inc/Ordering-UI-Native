@@ -1,6 +1,5 @@
 import * as React from 'react'
-import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
+import styled, { useTheme } from 'styled-components/native'
 
 const Wrapper = styled.View`
 
@@ -45,15 +44,17 @@ const OCheckbox = (props: Props) => {
     const checkToggle = (state: boolean) => {
         onChanged(!state)
         props.onChange(!state)
-    }
+		}
+		
+		const theme = useTheme()
 
     return (
         <>
         <Wrapper>
             <Inner onPress={() => checkToggle(is_checked || false)}>
                 <Box style={{
-                    backgroundColor: is_checked ? colors.primary : 'white',
-                    borderColor: is_checked ? colors.primary : props.checkColor, 
+                    backgroundColor: is_checked ? theme.colors.primary : 'white',
+                    borderColor: is_checked ? theme.colors.primary : props.checkColor, 
                     width: props.size ? props.size + 5 : 20, 
                     height: props.size ? props.size + 5 : 20}}
                 >

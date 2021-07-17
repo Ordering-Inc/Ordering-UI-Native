@@ -21,8 +21,8 @@ import {
 import { OIcon, OText, OAlert } from '../shared'
 
 import { ProductItemAccordionParams } from '../../types'
-import { colors } from '../../theme.json'
 import Spinner from 'react-native-loading-spinner-overlay'
+import { useTheme } from 'styled-components/native'
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   const {
@@ -38,6 +38,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const [, t] = useLanguage()
   const [orderState] = useOrder()
   const [{ parsePrice }] = useUtils()
+  const theme = useTheme()
 
   const [isActive, setActiveState] = useState(false)
   const [setHeight, setHeightState] = useState({ height: new Animated.Value(0) })
@@ -148,7 +149,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 <MaterialCommunityIcon
                   name='pencil-outline'
                   size={20}
-                  color={colors.green}
+                  color={theme.colors.green}
                   onPress={() => onEditProduct(product)}
                 />
               )}
@@ -161,7 +162,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                   <MaterialCommunityIcon
                     name='trash-can-outline'
                     size={20}
-                    color={colors.red}
+                    color={theme.colors.red}
                   />
                 </OAlert>
               )}
@@ -216,7 +217,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 const pickerStyle = StyleSheet.create({
   inputAndroid: {
-    color: colors.secundaryContrast,
+    color: theme.colors.secundaryContrast,
     width: 50,
   },
   icon: {
@@ -227,7 +228,7 @@ const pickerStyle = StyleSheet.create({
     position: 'absolute',
   },
   placeholder: {
-    color: colors.secundaryContrast
+    color: theme.colors.secundaryContrast
   }
 })
 

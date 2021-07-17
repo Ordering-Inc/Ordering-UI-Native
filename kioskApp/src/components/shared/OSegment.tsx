@@ -1,11 +1,9 @@
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import styled from 'styled-components/native'
-import { normalize } from '../../providers/Responsive'
-import { colors } from '../../theme.json'
+import styled, { useTheme } from 'styled-components/native'
 
 const Wrapper = styled.ScrollView`
-	background-color: ${colors.whiteGray};
+	background-color: ${(props: any) => props.theme.colors.whiteGray};
 	flex-direction: row;
 `
 const SegItem = styled.View`
@@ -40,6 +38,8 @@ const OSegment = (props: Props) => {
         onSelected(idx)
         props.onSelectItem(idx)
     }
+    const theme = useTheme()
+
     return (
         <Wrapper
 					horizontal
@@ -50,7 +50,7 @@ const OSegment = (props: Props) => {
                     key={`SegmentItem_${index}`}
                     onPress={() => onSelectItem(index)}
                 >
-                    <SegItem style={{borderBottomColor: index == curIndex ? colors.primary : 'transparent'}}>
+                    <SegItem style={{borderBottomColor: index == curIndex ? theme.colors.primary : 'transparent'}}>
                         <ItemLabel style={{ fontSize: 18, color: index == curIndex ? '#344050' : '#ADADAD' }}>{ props.labelStyle == 'uppercase' ? item.text?.toUpperCase() : item.text}</ItemLabel>
                     </SegItem>
                 </TouchableOpacity>

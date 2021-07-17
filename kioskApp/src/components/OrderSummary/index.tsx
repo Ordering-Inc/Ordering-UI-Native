@@ -20,9 +20,9 @@ import {
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { CouponControl } from '../CouponControl';
 import { OModal, OText } from '../shared';
-import { colors } from '../../theme.json';
 import { ProductForm } from '../ProductForm';
 import { verifyDecimals } from '../../utils';
+import { useTheme } from 'styled-components/native';
 
 
 const OrderSummaryUI = (props: any) => {
@@ -36,6 +36,7 @@ const OrderSummaryUI = (props: any) => {
     isFromCheckout
   } = props;
 
+  const theme = useTheme();
   const [, t] = useLanguage();
   const [{ configs }] = useConfig();
   const [orderState] = useOrder();
@@ -152,7 +153,7 @@ const OrderSummaryUI = (props: any) => {
                 <OText style={{ fontWeight: 'bold' }}>
                   {t('TOTAL', 'Total')}
                 </OText>
-                <OText style={{ fontWeight: 'bold' }} color={colors.primary}>
+                <OText style={{ fontWeight: 'bold' }} color={theme.colors.primary}>
                   {cart?.total >= 1 && parsePrice(cart?.total)}
                 </OText>
               </OSTable>

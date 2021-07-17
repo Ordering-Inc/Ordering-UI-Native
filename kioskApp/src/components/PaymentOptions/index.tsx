@@ -15,7 +15,6 @@ import OptionCard from '../OptionCard';
 import { IMAGES, PAYMENT_IMAGES } from '../../config/constants';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { colors } from '../../theme.json';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
 import GridContainer from '../../layouts/GridContainer';
 

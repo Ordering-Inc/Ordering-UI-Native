@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const StyledContainer = styled.ScrollView`
 	position: absolute;
@@ -20,7 +19,7 @@ export const StyledContainer = styled.ScrollView`
 export const StyledContent = styled.ScrollView`
 	padding: 0 20px;
 	border-radius: 6px;
-	background-color: ${colors.whiteGray};
+	background-color: ${(props: any) => props.theme.colors.whiteGray};
 	${(props: any) => props.height && css`
 		minHeight: ${props.height}px;
 	`}

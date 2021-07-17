@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Alert, Modal, StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
-import { colors } from '../../theme.json';
 
 interface Props {
   open?: boolean;

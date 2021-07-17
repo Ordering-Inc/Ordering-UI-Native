@@ -5,7 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 
 import { PCContainer, PCForm, PCWrapper } from './styles';
 import { OInput, OText } from '../shared';
-import { colors } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 export const PaymentOptionCash = (props: any) => {
   const {
@@ -14,12 +14,31 @@ export const PaymentOptionCash = (props: any) => {
     onChangeData,
     setErrorCash
   } = props;
+  const theme = useTheme();
   const [, t] = useLanguage();
   const [{ parsePrice }] = useUtils();
   const { control } = useForm();
 
   const [value, setvalue] = useState(defaultValue?.toString() || '');
   let timeout: any = null;
+
+  const styles = StyleSheet.create({
+    inputsStyle: {
+      borderColor: theme.colors.secundaryContrast,
+      borderRadius: 50,
+      marginTop: 10,
+      width: '100%',
+      height: 60,
+      maxHeight: 60
+    },
+    errorMsg: {
+      marginTop: 10,
+      color: theme.colors.error,
+      fontSize: 16,
+      fontWeight: 'bold',
+      textAlign: 'center'
+    }
+  });
 
   const onChangeCash = (value: any) => {
     clearTimeout(timeout)
@@ -74,24 +93,6 @@ export const PaymentOptionCash = (props: any) => {
     </PCContainer>
   )
 }
-
-const styles = StyleSheet.create({
-  inputsStyle: {
-    borderColor: colors.secundaryContrast,
-    borderRadius: 50,
-    marginTop: 10,
-    width: '100%',
-    height: 60,
-    maxHeight: 60
-  },
-  errorMsg: {
-    marginTop: 10,
-    color: colors.error,
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center'
-  }
-});
 
 PaymentOptionCash.defaultProps = {
   defaultValue: ''

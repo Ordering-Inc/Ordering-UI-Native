@@ -1,11 +1,10 @@
 import * as React from 'react'
-import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
+import styled, { useTheme } from 'styled-components/native'
 
 const Wrapper = styled.View`
     padding: 10px;
     border-radius: 10px;
-    border: 1px solid ${colors.lightGray};
+    border: 1px solid ${(props: any) => props.theme.colors.lightGray};
 `
 const Inner = styled.TextInput`
     height: 150px;
@@ -18,11 +17,13 @@ interface Props {
 }
 
 const OTextarea = (props: Props) => {
+    const theme = useTheme()
+
     return (
         <Wrapper>
             <Inner
                 placeholder={props.placeholder}
-                placeholderTextColor={colors.lightGray}
+                placeholderTextColor={theme.colors.lightGray}
                 numberOfLines={props.lines}
                 underlineColorAndroid={'transparent'}
                 value={props.value}

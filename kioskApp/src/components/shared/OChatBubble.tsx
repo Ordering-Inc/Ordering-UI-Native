@@ -1,8 +1,7 @@
 import * as React from 'react'
-import styled from 'styled-components/native'
+import styled, { useTheme } from 'styled-components/native'
 import { OIcon } from '.'
 import { DIRECTION } from '../../config/constants'
-import { colors } from '../../theme.json'
 import OText from './OText'
 
 const Wrapper = styled.View`
@@ -30,20 +29,22 @@ interface Props {
 }
 
 const OChatBubble = (props: Props) => {
+  const theme = useTheme()
+    
   return (
     <Wrapper style={
       props?.side ? props.side === DIRECTION.RIGHT
-        ? { borderBottomRightRadius: 0, backgroundColor: props.bgColor ? props.bgColor : colors.primary, alignSelf: 'flex-end' }
-        : { borderBottomLeftRadius: 0, backgroundColor: props.bgColor ? props.bgColor : colors.backgroundGray, alignSelf: 'flex-start' }
-        : { borderRadius: 5, backgroundColor: props.bgColor ? props.bgColor : colors.backgroundGray, alignSelf: 'center' }
+        ? { borderBottomRightRadius: 0, backgroundColor: props.bgColor ? props.bgColor : theme.colors.primary, alignSelf: 'flex-end' }
+        : { borderBottomLeftRadius: 0, backgroundColor: props.bgColor ? props.bgColor : theme.colors.backgroundGray, alignSelf: 'flex-start' }
+        : { borderRadius: 5, backgroundColor: props.bgColor ? props.bgColor : theme.colors.backgroundGray, alignSelf: 'center' }
     }>
       {props?.image && (
         <ImageContainer onPress={props.onClick}>
           <OIcon cover url={props.image} width={250} height={250} />
         </ImageContainer>
       )}
-      <OText color={props.textColor ? props.textColor : props.side == DIRECTION.RIGHT ? colors.white : 'black'}>{props.contents}</OText>
-      <OText color={props.textColor ? props.textColor : props.side == DIRECTION.RIGHT ? colors.white : 'black'} style={{ textAlign: 'right' }} size={9}>{props.datetime}</OText>
+      <OText color={props.textColor ? props.textColor : props.side == DIRECTION.RIGHT ? theme.colors.white : 'black'}>{props.contents}</OText>
+      <OText color={props.textColor ? props.textColor : props.side == DIRECTION.RIGHT ? theme.colors.white : 'black'} style={{ textAlign: 'right' }} size={9}>{props.datetime}</OText>
     </Wrapper>
   )
 }

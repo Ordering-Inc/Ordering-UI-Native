@@ -2,11 +2,10 @@ import * as React from 'react';
 import {ImageSourcePropType, ImageStyle, ViewStyle} from 'react-native';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
-import { colors } from '../../theme.json';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 const Wrapper = styled.View`
-  background-color: ${colors.backgroundLight};
+  background-color: ${(props: any) => props.theme.colors.backgroundLight};
   border-radius: 6px;
   border-width: 1px;
   padding-horizontal: 16px;

@@ -7,9 +7,9 @@ import {
 import {StyleSheet, Platform, View} from 'react-native'
 import { OrderTypeWrapper } from './styles'
 import { OrderTypeSelectParams } from '../../types'
-import { colors } from '../../theme.json'
 import ModalDropdown from 'react-native-modal-dropdown'
 import { OText } from '../shared'
+import { useTheme } from 'styled-components/native'
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const {
@@ -20,6 +20,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     orderTypes
   } = props
 
+  const theme = useTheme()
   const [orderState] = useOrder()
   
   
@@ -53,7 +54,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
         /* @ts-ignore */
         renderButtonText={(value) => value?.label}
         renderRow={(item) => (
-          <View style={{ padding: 5, backgroundColor: colors.white }}>
+          <View style={{ padding: 5, backgroundColor: theme.colors.white }}>
             <OText>{item.label}</OText>
           </View>
         )}
@@ -64,7 +65,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
         }}
         textStyle={{
           fontSize: 18,
-          color: colors.primary,
+          color: theme.colors.primary,
           maxWidth: 210,
         }}
       />

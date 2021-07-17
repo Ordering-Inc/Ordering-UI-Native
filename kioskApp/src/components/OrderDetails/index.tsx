@@ -17,11 +17,11 @@ import { OrderDetailsParams, Product } from '../../types'
 import { Container } from '../../layouts/Container';
 import NavBar from '../../components/NavBar';
 import { OButton, OImage, OInput, OText } from '../../components/shared';
-import { colors } from '../../theme.json'
 import GridContainer from '../../layouts/GridContainer';
 import OptionSwitch, { Opt } from '../../components/shared/OOptionToggle';
 import { verifyDecimals } from '../../utils'
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook'
+import { useTheme } from 'styled-components/native'
 
 const _EMAIL = 'email';
 const _SMS = 'sms';
@@ -32,12 +32,41 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     navigation,
     isFromCheckout,
   } = props
-
+  
+  const theme = useTheme();
   const [, t] = useLanguage()
   const [{ parsePrice, parseNumber }] = useUtils()
   const [orientationState] = useDeviceOrientation()
 
-  const { order } = props.order
+  const { order } = props.order;
+
+  const styles = StyleSheet.create({
+    inputsStyle: {
+      borderColor: theme.colors.disabled,
+      borderBottomRightRadius: 0,
+      borderBottomLeftRadius: 8,
+      borderTopRightRadius: 0,
+      borderTopLeftRadius: 8,
+      flex: 1,
+      height: 52
+    },
+    buttonApplyStyle: {
+      borderBottomRightRadius: 8,
+      borderBottomLeftRadius: 0,
+      borderTopRightRadius: 8,
+      borderTopLeftRadius: 0,
+    },
+    textButtonApplyStyle: {
+      color: theme.colors.primary,
+      marginLeft: 0,
+      marginRight: 0
+    },
+    disabledTextButtonApplyStyle: {
+      color: theme.colors.white,
+      marginLeft: 0,
+      marginRight: 0
+    }
+  });
 
   const handleArrowBack: any = () => {
     if (!isFromCheckout) {
@@ -149,8 +178,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           <OButton
             onClick={() => handleSendReceipt(optionToSendReceipt?.value)}
             text={t('SEND', 'Send')}
-            bgColor={colors.primaryLight}
-            borderColor={colors.primaryLight}
+            bgColor={theme.colors.primaryLight}
+            borderColor={theme.colors.primaryLight}
             textStyle={styles.textButtonApplyStyle}
             disabledTextStyle={styles.disabledTextButtonApplyStyle}
             style={styles.buttonApplyStyle}
@@ -189,7 +218,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           <OText
             size={orientationState?.dimensions?.width * 0.04}
             weight="700"
-            color={colors.primary}
+            color={theme.colors.primary}
           >
             {order?.id}
           </OText>
@@ -222,7 +251,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </View>
 
           <OText
-            color={colors.primary}
+            color={theme.colors.primary}
             weight="bold"
           >
             {parsePrice((order?.summary?.total || order?.total) - (order?.summary?.discount || order?.discount))}
@@ -243,7 +272,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         </OText>
 
         <OText
-          color={colors.primary}
+          color={theme.colors.primary}
           weight="bold"
         >
           {`-${parsePrice(order?.summary?.discount || order?.discount)}`}
@@ -258,7 +287,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           {t('TOTAL', 'Total')}
           {'\n'}
           <OText
-            color={colors.primary}
+            color={theme.colors.primary}
             weight="bold"
           >
             {parsePrice(order?.summary?.total || order?.total)}
@@ -334,34 +363,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  inputsStyle: {
-    borderColor: colors.disabled,
-    borderBottomRightRadius: 0,
-    borderBottomLeftRadius: 8,
-    borderTopRightRadius: 0,
-    borderTopLeftRadius: 8,
-    flex: 1,
-    height: 52
-  },
-  buttonApplyStyle: {
-    borderBottomRightRadius: 8,
-    borderBottomLeftRadius: 0,
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 0,
-  },
-  textButtonApplyStyle: {
-    color: colors.primary,
-    marginLeft: 0,
-    marginRight: 0
-  },
-  disabledTextButtonApplyStyle: {
-    color: colors.white,
-    marginLeft: 0,
-    marginRight: 0
-  }
-});
 
 export const OrderDetails = (props: OrderDetailsParams) => {
   const orderDetailsProps = {

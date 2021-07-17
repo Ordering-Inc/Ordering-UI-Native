@@ -19,15 +19,16 @@ import { LOGO_IMAGES } from '../../config/constants';
 
 import { OText, OButton, OInput } from '../shared';
 import { LoginParams } from '../../types';
-import { colors } from '../../theme.json';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
+import { useTheme } from 'styled-components/native';
 
 const LoginFormUI = (props: LoginParams) => {
   const {
     formState,
     handleButtonLoginClick,
   } = props;
-
+  
+  const theme = useTheme()
   const {showToast} = useToast();
   const [, t] = useLanguage();
   const {control, handleSubmit, formState: {errors}} = useForm();
@@ -54,14 +55,14 @@ const LoginFormUI = (props: LoginParams) => {
       borderRadius: 4,
       marginBottom: 12,
       borderWidth: 1,
-      borderColor: colors.disabled,
+      borderColor: theme.colors.disabled,
       minHeight: 44,
       maxHeight: 44
     },
     forgotStyle: {
       textAlign: 'center',
       fontWeight: 'bold',
-      color: colors.skyBlue,
+      color: theme.colors.skyBlue,
       marginTop: orientationState?.dimensions?.height * 0.03,
     }
   });
@@ -190,7 +191,7 @@ const LoginFormUI = (props: LoginParams) => {
   const note = (
     <OText size={16} mBottom={18}>
       {t('IF_NOT_HAVE_ACCOUNT', 'If you don\'t have and account, please contact Ordering')}&nbsp;
-      <OText size={16} mBottom={18} color={colors.skyBlue}>
+      <OText size={16} mBottom={18} color={theme.colors.skyBlue}>
         {t('SUPPORT_DEPARTMENT', 'support department')}
       </OText>
     </OText>

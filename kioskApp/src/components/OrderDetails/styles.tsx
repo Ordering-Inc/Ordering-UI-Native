@@ -1,8 +1,7 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const OSOrderDetailsWrapper = styled.View`
-	background-color: ${colors.whiteGray}
+	background-color: ${(props: any) => props.theme.colors.whiteGray}
 	padding: 20px;
 	border-radius: 6px;
 `

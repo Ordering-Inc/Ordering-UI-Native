@@ -14,10 +14,10 @@ import {
 import { CartBottomSheet } from '../../components/CartBottomSheet';
 import { Category } from '../../types';
 import { CartContent } from '../../components/CartContent';
-import { colors } from '../../theme.json';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
 import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
+import { useTheme } from 'styled-components/native';
 
 const CategoriesMenu = (props: any): React.ReactElement => {
 
@@ -33,6 +33,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
     businessSlug,
   }: Params = route.params;
 
+  const theme = useTheme()
   const [, t] = useLanguage();
   const [curIndexCateg, setIndexCateg] = useState(categories.indexOf(category));
   const [{ parsePrice }] = useUtils();
@@ -100,14 +101,14 @@ const CategoriesMenu = (props: any): React.ReactElement => {
                   onPress={onToggleCart}
                 >
                   <OText
-                    color={colors.mediumGray}
+                    color={theme.colors.mediumGray}
                   >
                     {`${cart?.products?.length || 0} ${t('ITEMS', 'items')}`} {parsePrice(cart?.total || 0)} {' '}
                   </OText>
 
                   <MaterialIcon
                     name={bottomSheetVisibility ? "cart-off" : "cart-outline"}
-                    color={colors.primary}
+                    color={theme.colors.primary}
                     size={30}
                   />
                 </TouchableOpacity>

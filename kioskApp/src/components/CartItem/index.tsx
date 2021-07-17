@@ -5,12 +5,13 @@ import { useLanguage, useUtils } from 'ordering-components/native';
 import { StyledCartItem } from './styles';
 import { OButton, OImage, OText } from '../shared';
 import { IMAGES } from '../../config/constants';
-import { colors } from '../../theme.json';
 import { Product } from '../../types';
 import QuantityControl from '../QuantityControl';
 import { LANDSCAPE, useDeviceOrientation } from '../../hooks/device_orientation_hook';
+import { useTheme } from 'styled-components/native';
 
 const CartItem = (props: CartItemProps) => {
+	const theme = useTheme()
 	const [, t] = useLanguage();
 	const [orientationState] = useDeviceOrientation();
 	const [{ parsePrice }] = useUtils();
@@ -58,7 +59,7 @@ const CartItem = (props: CartItemProps) => {
 						text={t('EDIT', 'Edit')}
 						style={{ justifyContent: 'flex-start', paddingLeft: 0 }}
 						textStyle={{
-							color: colors.primary,
+							color: theme.colors.primary,
 							marginLeft: 6,
 						}}
 						onClick={() => { onEditProduct ? onEditProduct(product) : null }}
@@ -70,7 +71,7 @@ const CartItem = (props: CartItemProps) => {
 				<OText
 					size={18}
 					weight="700"
-					color={colors.primary}
+					color={theme.colors.primary}
 				>
 					{parsePrice(product?.price)}
 				</OText>

@@ -5,8 +5,8 @@ import { useLanguage, LogoutAction } from 'ordering-components/native';
 import NavBar from '../NavBar';
 import { OSBody, OSContainer, OSContent } from './styles';
 import { OButton, OInput, OText } from '../shared';
-import { colors } from '../../theme.json';
 import { useDeviceOrientation } from '../../hooks/device_orientation_hook';
+import { useTheme } from 'styled-components/native';
 
 const LogoutPopupUI = (props: Props) => {
 	const {
@@ -16,6 +16,7 @@ const LogoutPopupUI = (props: Props) => {
 		onLogoutDone,
 	} = props;
 
+	const theme = useTheme();
 	const [, t] = useLanguage();
 	const [orientationState] = useDeviceOrientation();
 
@@ -41,7 +42,7 @@ const LogoutPopupUI = (props: Props) => {
 							bgColor="transparent"
 							borderColor="transparent"
 							style={{ paddingEnd: 20 }}
-							textStyle={{ color: colors.primary, marginEnd: 0 }}
+							textStyle={{ color: theme.colors.primary, marginEnd: 0 }}
 							onClick={onClose}
 						/>}
 					/>
@@ -62,7 +63,7 @@ const LogoutPopupUI = (props: Props) => {
 								placeholder={t('PASSWORD', 'Password')}
 								onChange={(e: any) => {}}
 								style={{
-									borderColor: colors.secundaryContrast,
+									borderColor: theme.colors.secundaryContrast,
 									borderRadius: 6,
 									flex: 1,
 									minHeight: 40,

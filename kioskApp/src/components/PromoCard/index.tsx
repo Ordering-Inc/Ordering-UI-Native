@@ -1,14 +1,14 @@
 import React from 'react';
 import { TextStyle, ViewStyle } from 'react-native';
+import { useTheme } from 'styled-components/native';
 
 import styled from 'styled-components/native';
-import { colors } from '../../theme.json';
 import { OImage, OText } from '../shared';
 
 const CardContainer = styled.TouchableOpacity`
 	width: 100%;
 	overflow: hidden;
-	background-color: ${colors.mediumGray};
+	background-color: ${(props: any) => props.theme.colors.mediumGray};
 	border-radius: 16px;
 `
 
@@ -24,6 +24,9 @@ const CardBody = styled.View`
 `
 
 const PromoCard = (props: Props): React.ReactElement => {
+
+	const theme = useTheme();
+
 	return (
 		<CardContainer
 		 style={{...props.style}}
@@ -40,7 +43,7 @@ const PromoCard = (props: Props): React.ReactElement => {
 
 				{props?.subtitle && (
 					<OText
-						color={colors.white}
+						color={theme.colors.white}
 						numberOfLines={1}
 						mBottom={8}
 						style={{...props?.subtitleStyle}}
@@ -52,7 +55,7 @@ const PromoCard = (props: Props): React.ReactElement => {
 				)}
 
 				<OText
-					color={colors.white}
+					color={theme.colors.white}
 					mLeft={0}
 					size={32}
 					numberOfLines={1}
@@ -65,7 +68,7 @@ const PromoCard = (props: Props): React.ReactElement => {
 
 				{props?.description && (
 					<OText
-						color={colors.white}
+						color={theme.colors.white}
 						numberOfLines={2}
 						mBottom={4}
 						size={18}

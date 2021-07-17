@@ -15,8 +15,8 @@ import {
   PositionControl,
   Circle
 } from './styles'
-import { colors } from '../../theme.json'
 import { OText } from '../shared'
+import { useTheme } from 'styled-components/native'
 
 export const ProductOptionSubOptionUI = (props: any) => {
   const {
@@ -31,6 +31,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
     disabled
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [{ parsePrice }] = useUtils()
   const [showMessage, setShowMessage] = useState(false)
@@ -82,14 +83,14 @@ export const ProductOptionSubOptionUI = (props: any) => {
         </OText>
       </View>
 
-      {showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} color={colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
+      {showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} color={theme.colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
       {option?.allow_suboption_quantity && (
         <QuantityControl>
           <Checkbox disabled={state.quantity === 0} onPress={handleDecrement}>
             <MaterialCommunityIcon
               name='minus-circle-outline'
               size={24}
-              color={state.quantity === 0 ? colors.backgroundDark : colors.primary}
+              color={state.quantity === 0 ? theme.colors.backgroundDark : theme.colors.primary}
             />
           </Checkbox>
           <OText mLeft={5} mRight={5}>
@@ -99,7 +100,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
             <MaterialCommunityIcon
               name='plus-circle-outline'
               size={24}
-              color={disableIncrement ? colors.backgroundDark : colors.primary}
+              color={disableIncrement ? theme.colors.backgroundDark : theme.colors.primary}
             />
           </Checkbox>
         </QuantityControl>
@@ -110,7 +111,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
             <Circle onPress={() => handlePosition('left')}>
               <MaterialCommunityIcon
                 name='circle-half-full'
-                color={state.selected && state.position === 'left' ? colors.primary : colors.backgroundDark}
+                color={state.selected && state.position === 'left' ? theme.colors.primary : theme.colors.backgroundDark}
                 size={24}
                 style={styles.inverse}
               />
@@ -118,14 +119,14 @@ export const ProductOptionSubOptionUI = (props: any) => {
             <Circle onPress={() => handlePosition('whole')}>
               <MaterialCommunityIcon
                 name='checkbox-blank-circle'
-                color={state.selected && state.position === 'whole' ? colors.primary : colors.backgroundDark}
+                color={state.selected && state.position === 'whole' ? theme.colors.primary : theme.colors.backgroundDark}
                 size={24}
               />
             </Circle>
             <Circle onPress={() => handlePosition('right')}>
               <MaterialCommunityIcon
                 name='circle-half-full'
-                color={state.selected && state.position === 'right' ? colors.primary : colors.backgroundDark}
+                color={state.selected && state.position === 'right' ? theme.colors.primary : theme.colors.backgroundDark}
                 size={24}
               />
             </Circle>
@@ -135,15 +136,15 @@ export const ProductOptionSubOptionUI = (props: any) => {
       <>
         {((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
           state?.selected ? (
-            <MaterialCommunityIcon name='checkbox-marked' color={colors.primary} size={24} />
+            <MaterialCommunityIcon name='checkbox-marked' color={theme.colors.primary} size={24} />
           ) : (
-            <MaterialCommunityIcon name='checkbox-blank-outline' color={colors.backgroundDark} size={24} />
+            <MaterialCommunityIcon name='checkbox-blank-outline' color={theme.colors.backgroundDark} size={24} />
           )
         ) : (
           state?.selected ? (
-            <MaterialCommunityIcon name='radiobox-marked' color={colors.primary} size={24} />
+            <MaterialCommunityIcon name='radiobox-marked' color={theme.colors.primary} size={24} />
           ) : (
-            <MaterialCommunityIcon name='radiobox-blank' color={colors.backgroundDark} size={24} />
+            <MaterialCommunityIcon name='radiobox-blank' color={theme.colors.backgroundDark} size={24} />
           )
         )}
       </>

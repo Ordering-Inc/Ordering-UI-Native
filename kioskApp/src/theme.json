@@ -55,6 +55,8 @@
       "lunch": "",
       "arrow_up": "",
       "arrow_left": "",
+      "arrow_left_white": "",
+      "arrow_right_circular_outlined": "",
       "map": "",
       "marker": "",
       "email": "",
@@ -67,6 +69,10 @@
       "chat": "",
       "user": "",
       "menulogout": "",
+      "pushPin": "",
+      "shoppingCart": "",
+      "edit": "",
+      "check_decagram": "",
       "cash": "",
       "carddelivery": "",
       "paypal": "",
@@ -75,22 +81,6 @@
       "stripes": "",
       "stripesb": "",
       "creditCard": ""
-    },
-    "order": {
-      "status0": "",
-      "status1": "",
-      "status2": "",
-      "status3": "",
-      "status4": "",
-      "status5": "",
-      "status6": "",
-      "status7": "",
-      "status8": "",
-      "status9": "",
-      "status10": "",
-      "status11": "",
-      "status12": "",
-      "status13": ""
     },
     "categories": {
       "all": ""

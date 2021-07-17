@@ -1,6 +1,5 @@
 import React from 'react'
 import { View } from 'react-native'
-import { colors } from '../../theme.json'
 import { OButton, OIcon, OText } from '../shared'
 import {NotFoundSourceParams} from '../../types'
 import { GENERAL_IMAGES } from '../../config/constants'
@@ -9,6 +8,7 @@ import {
   NotFound,
   NotFoundImage
 } from './styles'
+import { useTheme } from 'styled-components/native'
 
 export const NotFoundSource = (props: NotFoundSourceParams) => {
   const {
@@ -21,6 +21,8 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
 
   const errorImage = image || GENERAL_IMAGES.notFound
 
+  const theme = useTheme();
+
   return (
     <NotFound>
       {errorImage && (
@@ -28,8 +30,8 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
           <OIcon src={errorImage} width={300} height={260} />
         </NotFoundImage>
       )}
-        {content && conditioned && !errorImage && <OText color={colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}
-        {content && !conditioned && <OText color={colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}
+        {content && conditioned && !errorImage && <OText color={theme.colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}
+        {content && !conditioned && <OText color={theme.colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}
       {!onClickButton && props.children && (
         props.children
       )}
@@ -37,11 +39,11 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
         <View style={{marginTop: 10,width: '100%'}}>
           <OButton
             style={{width: '100%', height: 50}}
-            bgColor={colors.primary}
-            borderColor={colors.primary}
+            bgColor={theme.colors.primary}
+            borderColor={theme.colors.primary}
             onClick={() => onClickButton()}
             text={btnTitle}
-            textStyle={{color: colors.white}}
+            textStyle={{color: theme.colors.white}}
           />
         </View>
       )}

@@ -5,13 +5,13 @@ import { _setStoreData } from '../../providers/StoreUtil';
 import { OButton, OInput, OText } from '../shared';
 import { useForm, Controller } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme.json';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { STORAGE_KEY } from '../../config/constants';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OSActions } from '../OrderDetails/styles';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
+import { useTheme } from 'styled-components/native';
 
 const CustomerName = (props: Props): React.ReactElement => {
   const {
@@ -19,6 +19,7 @@ const CustomerName = (props: Props): React.ReactElement => {
     onProceedToPay
   } = props;
 
+  const theme = useTheme()
   const [, t] = useLanguage();
   const { control, handleSubmit, errors } = useForm();
   const {showToast} = useToast();
@@ -28,6 +29,16 @@ const CustomerName = (props: Props): React.ReactElement => {
     _setStoreData(STORAGE_KEY.CUSTOMER_NAME, values.name);
     onProceedToPay()
   };
+
+  const styles = StyleSheet.create({
+    inputStyle: {
+      borderRadius: 4,
+      marginBottom: 20,
+      borderWidth: 1,
+      borderColor: theme.colors.disabled,
+      height: 44
+    },
+  });
 
   useEffect(() => {
     if (Object.keys(errors)?.length > 0) {
@@ -125,16 +136,6 @@ const CustomerName = (props: Props): React.ReactElement => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  inputStyle: {
-    borderRadius: 4,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: colors.disabled,
-    height: 44
-  },
-});
 
 interface Props {
   navigation: any;

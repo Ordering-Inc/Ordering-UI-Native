@@ -13,7 +13,6 @@ import { CheckoutAction, Actions, KeyboardView, OrderTypeWrapper } from './style
 import { OSBill, OSCoupon, OSTable, OSTotal } from '../OrderSummary/styles';
 
 import { OButton, OIcon, OModal, OText } from '../shared';
-import { colors } from '../../theme.json';
 import { ProductForm } from '../ProductForm';
 import { verifyDecimals } from '../../utils';
 import { Cart as TypeCart } from '../../types';
@@ -25,6 +24,7 @@ import { CouponControl } from '../CouponControl';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation} from "../../hooks/device_orientation_hook";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
+import { useTheme } from 'styled-components/native';
 
 const CartUI = (props: any) => {
   const {
@@ -38,7 +38,7 @@ const CartUI = (props: any) => {
     navigation,
   } : CartUIProps = props
 
-
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [orderState] = useOrder()
   const [{ configs }] = useConfig();
@@ -112,7 +112,7 @@ const CartUI = (props: any) => {
               bgColor="transparent"
               borderColor="transparent"
               style={{ paddingEnd: 0 }}
-              textStyle={{ color: colors.primary, marginEnd: 0 }}
+              textStyle={{ color: theme.colors.primary, marginEnd: 0 }}
               onClick={handleClearProducts}
             />
           )}
@@ -124,7 +124,7 @@ const CartUI = (props: any) => {
           <OText
             weight="500"
             size={21}
-            color={colors.black}
+            color={theme.colors.black}
           >
             {t('THIS_ORDER_IS_TO', 'This order is to')}
             {' '}
@@ -137,7 +137,7 @@ const CartUI = (props: any) => {
             bgColor="transparent"
             borderColor="transparent"
             style={{ paddingEnd: 0 }}
-            textStyle={{ color: colors.primary, marginEnd: 0 }}
+            textStyle={{ color: theme.colors.primary, marginEnd: 0 }}
             onClick={handleChangeOrderType}
           />
         </OrderTypeWrapper>
@@ -174,7 +174,7 @@ const CartUI = (props: any) => {
               {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == PORTRAIT && (
                 <OSTable
                   style={{
-                    backgroundColor: colors.success,
+                    backgroundColor: theme.colors.success,
                     borderRadius: 6,
                     maxHeight: 60,
                     padding: 10
@@ -194,15 +194,15 @@ const CartUI = (props: any) => {
                       <OText
                         mLeft={15}
                       >
-                        <OText color={colors.green} size={16}>{`${t('VALID_CODE', 'Valid code')}! ${t('YOU_GOT', 'you got')} `}</OText>
-                        <OText color={colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parseNumber)}% `}</OText>
-                        <OText color={colors.green} size={16}>{`${t('OFF', 'off')}`}</OText>
+                        <OText color={theme.colors.green} size={16}>{`${t('VALID_CODE', 'Valid code')}! ${t('YOU_GOT', 'you got')} `}</OText>
+                        <OText color={theme.colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parseNumber)}% `}</OText>
+                        <OText color={theme.colors.green} size={16}>{`${t('OFF', 'off')}`}</OText>
                       </OText>
                     ) : (
                       <OText
                         size={16}
                         mLeft={15}
-                        color={colors.green}
+                        color={theme.colors.green}
                       >
                         {`${t('VALID_CODE', 'Valid code')}! `}
                       </OText>
@@ -212,7 +212,7 @@ const CartUI = (props: any) => {
 
                   <OText
                     size={16}
-                    color={colors.green}
+                    color={theme.colors.green}
                     weight="700"
                   >
                     - {parsePrice(cart?.discount || 0)}
@@ -273,7 +273,7 @@ const CartUI = (props: any) => {
               {/*    <OText style={{ fontWeight: 'bold' }}>*/}
               {/*      {t('TOTAL', 'Total')}*/}
               {/*    </OText>*/}
-              {/*    <OText style={{ fontWeight: 'bold' }} color={colors.primary}>*/}
+              {/*    <OText style={{ fontWeight: 'bold' }} color={theme.colors.primary}>*/}
               {/*      {cart?.total >= 1 && parsePrice(cart?.total)}*/}
               {/*    </OText>*/}
               {/*  </OSTable>*/}
@@ -285,7 +285,7 @@ const CartUI = (props: any) => {
               {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == LANDSCAPE && (
                 <OSTable
                   style={{
-                    backgroundColor: colors.success,
+                    backgroundColor: theme.colors.success,
                     borderRadius: 6,
                     maxHeight: 60,
                     marginTop: 4,
@@ -306,15 +306,15 @@ const CartUI = (props: any) => {
                       <OText
                         mLeft={15}
                       >
-                        <OText color={colors.green} size={16}>{`${t('VALID_CODE', 'Valid code')}! ${t('YOU_GOT', 'you got')} `}</OText>
-                        <OText color={colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parseNumber)}% `}</OText>
-                        <OText color={colors.green} size={16}>{`${t('OFF', 'off')}`}</OText>
+                        <OText color={theme.colors.green} size={16}>{`${t('VALID_CODE', 'Valid code')}! ${t('YOU_GOT', 'you got')} `}</OText>
+                        <OText color={theme.colors.green} size={16} weight="700">{`${verifyDecimals(cart?.discount_rate, parseNumber)}% `}</OText>
+                        <OText color={theme.colors.green} size={16}>{`${t('OFF', 'off')}`}</OText>
                       </OText>
                     ) : (
                       <OText
                         size={16}
                         mLeft={15}
-                        color={colors.green}
+                        color={theme.colors.green}
                       >
                         {`${t('VALID_CODE', 'Valid code')}! `}
                       </OText>
@@ -323,7 +323,7 @@ const CartUI = (props: any) => {
 
                   <OText
                     size={16}
-                    color={colors.green}
+                    color={theme.colors.green}
                     weight="700"
                   >- {parsePrice(cart?.discount || 0)}</OText>
                 </OSTable>
@@ -350,9 +350,9 @@ const CartUI = (props: any) => {
                   ) : (
                     `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
                   )}
-                  bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
+                  bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
                   isDisabled={cart?.subtotal < cart?.minimum || !cart?.valid_address}
-                  borderColor={colors.primary}
+                  borderColor={theme.colors.primary}
                   imgRightSrc={null}
                   textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
                   onClick={() => { navigation?.navigate('CustomerName', { cartUuid: cart?.uuid }) }}

@@ -1,14 +1,14 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
 import { OIcon, OButton, OText } from '../shared'
-import { colors } from '../../theme.json'
 import { TextStyle, View } from 'react-native'
 import { IMAGES } from '../../config/constants'
 import { OrderTypeSelector } from '../OrderTypeSelector'
 import { useConfig } from 'ordering-components/native'
+import { useTheme } from 'styled-components/native'
 
 const Wrapper = styled.View`
-  background-color: ${colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
   padding: 10px 0px 20px 0px;
   flex-direction: row;
   justify-content: center;
@@ -56,7 +56,7 @@ interface Props {
 }
 
 const NavBar = (props: Props) => {
-
+  const theme = useTheme();
   const [{ configs }] = useConfig();
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || [];
 
@@ -76,7 +76,7 @@ const NavBar = (props: Props) => {
               <OIcon
                 url={props.icon}
                 style={{
-                  borderColor: colors.lightGray,
+                  borderColor: theme.colors.lightGray,
                   borderRadius: 20,
                 }}
                 width={60}

@@ -7,7 +7,6 @@ import {
   useLanguage
 } from 'ordering-components/native'
 import { OText, OModal, OButton, OImage } from '../shared'
-import { colors } from '../../theme.json'
 import { UpsellingProductsParams } from '../../types'
 import {
   Item,
@@ -20,6 +19,7 @@ import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
 import GridContainer from '../../layouts/GridContainer';
 import { PORTRAIT, useDeviceOrientation } from "../../hooks/device_orientation_hook";
+import { useTheme } from 'styled-components/native';
 
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const {
@@ -61,6 +61,9 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   }
 
   const UpsellingLayout = () => {
+
+    const theme = useTheme()
+
     return (
       <Container>
         {
@@ -105,14 +108,14 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                         {product?.price && (
                           <OText>
                             <OText
-                              color={colors.primary}
+                              color={theme.colors.primary}
                               weight="500"
                             >
                               {parsePrice(product.price)}
                             </OText>
 
                             <OText
-                              color={colors.mediumGray}
+                              color={theme.colors.mediumGray}
                               size={12}
                               style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
                             >
@@ -124,7 +127,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 
                       <OButton
                         text={t('ADD_PRODUCT', 'add product')}
-                        textStyle={{ color: colors.primary }}
+                        textStyle={{ color: theme.colors.primary }}
                         style={{ height: 40, width: '100%' }}
                         bgColor="#EAF2FE"
                         borderColor="#EAF2FE"
@@ -198,14 +201,14 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                               {product?.price && (
                                 <OText>
                                   <OText
-                                    color={colors.primary}
+                                    color={theme.colors.primary}
                                     weight="500"
                                   >
                                     {`$${product.price}`}
                                   </OText>
 
                                   <OText
-                                    color={colors.mediumGray}
+                                    color={theme.colors.mediumGray}
                                     size={12}
                                     style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
                                   >
@@ -217,7 +220,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 
                             <OButton
                               text={t('ADD_PRODUCT', 'add product')}
-                              textStyle={{ color: colors.primary, textAlign: "center" }}
+                              textStyle={{ color: theme.colors.primary, textAlign: "center" }}
                               style={{ minHeight: 40, height: 'auto', width: '100%' }}
                               bgColor="#EAF2FE"
                               borderColor="#EAF2FE"

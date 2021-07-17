@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const PMContainer = styled.View`
   width: 100%;
@@ -24,7 +23,7 @@ export const PMItem = styled.View`
   margin-right: 10px;
   margin-top: 10px;
   text-align: center;
-  background-color: ${colors.inputDisabled};
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
 
   ${(props: any) => props.theme?.rtl && css`
     margin-left: 10px;
@@ -36,7 +35,7 @@ export const PMItem = styled.View`
   `} */
 
   ${(props: any) => props.isActive ? css`
-    background-color: ${colors.primary};
+    background-color: ${(props: any) => props.theme.colors.primary};
   ` : css`
     border: 1px solid #EAEAEA;
   `}

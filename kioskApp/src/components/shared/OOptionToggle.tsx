@@ -7,12 +7,49 @@ import {
 	StyleSheet,
 	TextStyle,
 } from 'react-native';
-import { colors } from '../../theme.json'
+import { useTheme } from 'styled-components/native';
 
 const OOptionSwitch = (props: Props) => {
 	const [selectedOption, setSelectedOption] = useState<String|null>(props.options.find((option) => option?.isDefault)?.key || null);
 	const [value, setValue] = useState(props.options.find((option) => option?.isDefault)?.value || null);
+	const theme = useTheme()
 
+	const styles = StyleSheet.create({
+		container: {
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+			alignSelf: 'center',
+			backgroundColor: '#EAF2FE',
+			borderRadius: 6,
+		},
+		item: {
+			borderRadius: 6,
+			alignItems: 'center',
+			padding: 10,
+			minWidth: 70,
+		},
+		selectedItem: {
+			backgroundColor: '#FFF',
+			shadowColor: '#000',
+		shadowOffset: { width: 1, height: 1 },
+		shadowOpacity:  0.4,
+		shadowRadius: 3,
+		elevation: 2,
+		},
+		selectedLabel: {
+			color: theme.colors.primary,
+			opacity: 1,
+		},
+		label: {
+			lineHeight: 24,
+			fontSize: 14,
+			textTransform: 'uppercase',
+			fontWeight: '700',
+			color: theme.colors.black,
+			opacity: 0.5,
+		},
+	})
 
 	const onChange = (option: Opt) => {
 		if (props.isNullable && selectedOption === option.key) {
@@ -69,43 +106,6 @@ const OOptionSwitch = (props: Props) => {
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		alignSelf: 'center',
-		backgroundColor: '#EAF2FE',
-		borderRadius: 6,
-	},
-	item: {
-		borderRadius: 6,
-		alignItems: 'center',
-		padding: 10,
-		minWidth: 70,
-	},
-	selectedItem: {
-		backgroundColor: '#FFF',
-		shadowColor: '#000',
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity:  0.4,
-    shadowRadius: 3,
-    elevation: 2,
-	},
-	selectedLabel: {
-		color: colors.primary,
-		opacity: 1,
-	},
-	label: {
-		lineHeight: 24,
-		fontSize: 14,
-		textTransform: 'uppercase',
-		fontWeight: '700',
-		color: colors.black,
-		opacity: 0.5,
-	},
-})
 
 export interface Opt {
 	key: string;

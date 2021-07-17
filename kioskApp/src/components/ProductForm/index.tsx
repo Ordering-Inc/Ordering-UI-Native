@@ -26,13 +26,13 @@ import {
   ProductComment,
   ProductActions
 } from './styles'
-import { colors } from '../../theme.json'
 import { OButton, OImage, OInput, OText } from '../shared'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 import { IMAGES } from '../../config/constants'
 import { LANDSCAPE, useDeviceOrientation } from '../../hooks/device_orientation_hook'
+import { useTheme } from 'styled-components/native'
 
 export const ProductOptionsUI = (props: any) => {
   const {
@@ -54,6 +54,7 @@ export const ProductOptionsUI = (props: any) => {
     isFromCheckout
   } = props;
 
+  const theme = useTheme();
   const [{ parsePrice }] = useUtils();
   const [, t] = useLanguage();
   const [orderState] = useOrder();
@@ -66,7 +67,7 @@ export const ProductOptionsUI = (props: any) => {
   const HEADER_COLLAPSED_HEIGHT = orientationState?.dimensions?.height * 0.2;
 
   const isError = (id: number) => {
-    let bgColor = colors.white
+    let bgColor = theme.colors.white
     if (errors[`id:${id}`]) {
       bgColor = 'rgba(255, 0, 0, 0.05)'
     }
@@ -139,7 +140,7 @@ export const ProductOptionsUI = (props: any) => {
     mainContainer: {
       flex: 1,
       height: orientationState?.dimensions?.height,
-      backgroundColor: colors.white,
+      backgroundColor: theme.colors.white,
     },
     headerItem: {
       flexDirection: 'row',
@@ -167,19 +168,19 @@ export const ProductOptionsUI = (props: any) => {
       alignItems: 'center',
       flex: 1,
       marginRight: 10,
-      backgroundColor: colors.paleGray,
+      backgroundColor: theme.colors.paleGray,
       paddingHorizontal: 4,
-      borderColor: colors.mediumGray,
+      borderColor: theme.colors.mediumGray,
       borderWidth: 1,
       borderRadius: 6,
     },
     quantityControlButton: {
-      color: colors.primary,
+      color: theme.colors.primary,
     },
     quantityControlButtonBorder: {
       borderRadius: 6,
       borderWidth: 2,
-      borderColor: colors.primary,
+      borderColor: theme.colors.primary,
     },
     quantityControlButtonDisabled: {
       opacity: 0.5,
@@ -229,7 +230,7 @@ export const ProductOptionsUI = (props: any) => {
         <Animated.View style={{ opacity: navBar1ContainerOpacity }}>
           <NavBar
             {...navBarProps}
-            titleColor={colors.white}
+            titleColor={theme.colors.white}
             {...((navigation || onClose) && { leftImg: IMAGES.arrow_left_white })}
           />
         </Animated.View>
@@ -316,7 +317,7 @@ export const ProductOptionsUI = (props: any) => {
             }}
           >
             <OText
-              color={colors.white}
+              color={theme.colors.white}
               size={orientationState?.dimensions?.width * 0.048}
               weight="bold"
               mBottom={10}
@@ -326,7 +327,7 @@ export const ProductOptionsUI = (props: any) => {
             </OText>
 
             <OText
-              color={colors.white}
+              color={theme.colors.white}
               numberOfLines={4}
             >
               {product?.description || productCart?.description}
@@ -367,7 +368,7 @@ export const ProductOptionsUI = (props: any) => {
                     <SectionTitle>
                       <OText size={28} weight="bold">{t('INGREDIENTS', 'Ingredients')}</OText>
                     </SectionTitle>
-                    <WrapperIngredients style={{ backgroundColor: isSoldOut || maxProductQuantity <= 0 ? 'hsl(0, 0%, 72%)' : colors.white }}>
+                    <WrapperIngredients style={{ backgroundColor: isSoldOut || maxProductQuantity <= 0 ? 'hsl(0, 0%, 72%)' : theme.colors.white }}>
                       {product?.ingredients.map((ingredient: any) => (
                         <ProductIngredient
                           key={ingredient.id}
@@ -487,9 +488,9 @@ export const ProductOptionsUI = (props: any) => {
                 onClick={() => handleSaveProduct()}
                 imgRightSrc=''
                 text={`${orderState.loading ? t('LOADING', 'Loading') : editMode ? t('UPDATE', 'Update') : t('ADD_TO_CART', 'Add to Cart')} ${productCart.total ? parsePrice(productCart?.total) : ''}`}
-                textStyle={{ color: saveErrors ? colors.primary : colors.white }}
+                textStyle={{ color: saveErrors ? theme.colors.primary : theme.colors.white }}
                 style={{
-                  backgroundColor: saveErrors ? colors.white : colors.primary,
+                  backgroundColor: saveErrors ? theme.colors.white : theme.colors.primary,
                   opacity: saveErrors ? 0.3 : 1
                 }}
               />
