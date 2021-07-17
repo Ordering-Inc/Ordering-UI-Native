@@ -23,69 +23,81 @@ export const AppleLogin = (props) => {
   const [,t] = useLanguage()
   const theme = useTheme()
 
+  const [credentialStateForUser, updateCredentialStateForUser] = useState<any>(-1);
+
+
   const buttonText = t('LOGIN_WITH_APPLE', 'Login with Apple');
+  let user : any = null
 
-
-  const onAppleButtonPress = async () => {
-    // Generate secure, random values for state and nonce
-    const rawNonce = uuid.v4()
-    const state = uuid.v4()
+  const onAppleButtonPress = async (updateCredentialStateForUser : any) => {
+    const rawNonce : any = uuid.v4()
+    const state : any = uuid.v4()
 
     if (Platform.OS === 'ios') {
-      const appleAuthRequestResponse = await appleAuth.performRequest({
-        requestedOperation: appleAuth.Operation.LOGIN,
-        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-      });
+      try{
+        const appleAuthRequestResponse = await appleAuth.performRequest({
+          requestedOperation: appleAuth.Operation.LOGIN,
+          requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+          nonce: rawNonce,
+          state
+        });
+        console.log('appleAuthRequestResponse', appleAuthRequestResponse);
 
-      // get current authentication state for user
-      // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
-      const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+        const {
+          user : newUser,
+          email,
+          identityToken,
+          realUserStatus,
+          authorizationCode,
+        } = appleAuthRequestResponse;
 
-      // use credentialState response to ensure the user is authenticated
-      if (credentialState === appleAuth.State.AUTHORIZED) {
-        // user is authenticated
+        user = newUser
+
+        if(identityToken && authorizationCode){
+          console.log('auth code: ', authorizationCode)
+          handleLoginApple(authorizationCode)
+        } else {
+          console.log('failed login')
+        }
+
+        if (realUserStatus === appleAuth.UserStatus.LIKELY_REAL) {
+          console.log("I'm a real person!");
+        }
+
+        console.warn(`Apple Authentication Completed, ${user}, ${email}`);
+      } catch (error){
+        if (error.code === appleAuth.Error.CANCELED) {
+          console.warn('User canceled Apple Sign in.');
+        } else {
+          console.error(error);
+        }
       }
     } else {
-      // Configure the request
       appleAuthAndroid.configure({
-        // The Service ID you registered with Apple
         clientId: configs?.apple_login_client_id?.value,
-
-        // Return URL added to your Apple dev console. We intercept this redirect, but it must still match
-        // the URL you provided to Apple. It can be an empty route on your backend as it's never called.
         redirectUri: 'https://example-app.com/redirect',
-
-        // The type of response requested - code, id_token, or both.
         responseType: appleAuthAndroid.ResponseType.ALL,
-
-        // The amount of user information requested from Apple.
         scope: appleAuthAndroid.Scope.ALL,
-
-        // Random nonce value that will be SHA256 hashed before sending to Apple.
         nonce: rawNonce,
-
-        // Unique state value used to prevent CSRF attacks. A UUID will be generated if nothing is provided.
         state,
       });
-      // Open the browser window for user sign in
       const {code} = await appleAuthAndroid.signIn();
 
-      // Send the authorization code to your backend for verification
       handleLoginApple(code)
     }
   }
-  const handleLoginApple = async (code) => {
-    const body = {
+  const handleLoginApple = async (code : string) => {
+    const body : any = {
       code,
     }
     if (notificationState?.notification_token) {
       body.notification_token = notificationState.notification_token
       body.notification_app = notificationState.notification_app
     }
-    console.log(body)
+
     try {
       handleLoading && handleLoading(true)
-      const response = await fetch(`${ordering.root}/auth/apple`, {
+      const response : any = await fetch(`${ordering.root}/auth/apple`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -105,17 +117,16 @@ export const AppleLogin = (props) => {
   }
 
   useEffect(() => {
-    if(Platform.OS === 'ios'){
+    if(Platform.OS !== 'ios' && !appleAuth.isSupported) return
       return appleAuth.onCredentialRevoked(async () => {
-        console.warn('If this function executes, User Credentials have been Revoked');
+        console.warn('User Credentials have been Revoked');
       });
-    }
   }, []);
 
   return (
     <Container>
       <AppleButton
-        onPress={onAppleButtonPress}
+        onPress={() => onAppleButtonPress(credentialStateForUser)}
       >
         <Icon
           name="apple"
