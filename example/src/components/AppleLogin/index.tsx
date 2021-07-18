@@ -1,40 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { appleAuthAndroid, appleAuth } from '@invertase/react-native-apple-authentication';
-import {useConfig, useApi, useLanguage} from 'ordering-components/native'
+import { useConfig, useApi, useLanguage } from 'ordering-components/native'
 import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import { Container, AppleButton } from './styles';
 import { useTheme } from 'styled-components/native';
 import { OText } from '../shared';
+import { AppleLoginParams } from '../../types';
 
-export const AppleLogin = (props) => {
+export const AppleLogin = (props : AppleLoginParams) => {
 
   const {
+    notificationState,
     handleErrors,
     handleLoading,
     handleSuccessApple,
-    notificationState,
   } = props
 
-  const [{configs}] = useConfig()
+  const [{ configs }] = useConfig()
   const [ordering] = useApi()
-  const [,t] = useLanguage()
+  const [, t] = useLanguage()
   const theme = useTheme()
 
-  const [credentialStateForUser, updateCredentialStateForUser] = useState<any>(-1);
-
-
   const buttonText = t('LOGIN_WITH_APPLE', 'Login with Apple');
-  let user : any = null
 
-  const onAppleButtonPress = async (updateCredentialStateForUser : any) => {
-    const rawNonce : any = uuid.v4()
-    const state : any = uuid.v4()
+  const onAppleButtonPress = async () => {
+    const rawNonce: any = uuid.v4()
+    const state: any = uuid.v4()
 
     if (Platform.OS === 'ios') {
-      try{
+      try {
         const appleAuthRequestResponse = await appleAuth.performRequest({
           requestedOperation: appleAuth.Operation.LOGIN,
           requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
@@ -44,50 +41,42 @@ export const AppleLogin = (props) => {
         console.log('appleAuthRequestResponse', appleAuthRequestResponse);
 
         const {
-          user : newUser,
+          user,
           email,
           identityToken,
-          realUserStatus,
           authorizationCode,
         } = appleAuthRequestResponse;
 
-        user = newUser
-
-        if(identityToken && authorizationCode){
+        if (identityToken && authorizationCode) {
           console.log('auth code: ', authorizationCode)
           handleLoginApple(authorizationCode)
+          console.warn(`Apple Authentication Completed, ${user}, ${email}`);
         } else {
-          console.log('failed login')
+          handleErrors && handleErrors(t('ERROR_LOGIN_APPLE', 'Error login with apple'))
         }
 
-        if (realUserStatus === appleAuth.UserStatus.LIKELY_REAL) {
-          console.log("I'm a real person!");
-        }
-
-        console.warn(`Apple Authentication Completed, ${user}, ${email}`);
-      } catch (error){
-        if (error.code === appleAuth.Error.CANCELED) {
-          console.warn('User canceled Apple Sign in.');
-        } else {
-          console.error(error);
-        }
+      } catch (error) {
+        handleErrors && handleErrors(error.message)
       }
     } else {
-      appleAuthAndroid.configure({
-        clientId: configs?.apple_login_client_id?.value,
-        redirectUri: 'https://example-app.com/redirect',
-        responseType: appleAuthAndroid.ResponseType.ALL,
-        scope: appleAuthAndroid.Scope.ALL,
-        nonce: rawNonce,
-        state,
-      });
-      const {code} = await appleAuthAndroid.signIn();
-
-      handleLoginApple(code)
+      try {
+        appleAuthAndroid.configure({
+          clientId: configs?.apple_login_client_id?.value,
+          redirectUri: 'https://example-app.com/redirect',
+          responseType: appleAuthAndroid.ResponseType.ALL,
+          scope: appleAuthAndroid.Scope.ALL,
+          nonce: rawNonce,
+          state,
+        });
+        const { code } = await appleAuthAndroid.signIn();
+        handleLoginApple(code)
+      } catch (error) {
+        handleErrors && handleErrors(error.message)
+      }
     }
   }
-  const handleLoginApple = async (code : string) => {
-    const body : any = {
+  const handleLoginApple = async (code: string) => {
+    const body: any = {
       code,
     }
     if (notificationState?.notification_token) {
@@ -97,36 +86,35 @@ export const AppleLogin = (props) => {
 
     try {
       handleLoading && handleLoading(true)
-      const response : any = await fetch(`${ordering.root}/auth/apple`, {
+      const response: any = await fetch(`${ordering.root}/auth/apple`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       })
+      const { error, result } = await response.json()
       handleLoading && handleLoading(false)
-      if (!response?.content?.error && response?.content?.result) {
-          handleSuccessApple(response?.content?.result)
+      if (!error && result) {
+        handleSuccessApple && handleSuccessApple(result)
       } else {
-        if (handleErrors) {
-          handleErrors(response?.content?.result || t('ERROR_API_RESPONSE', 'Error Api response'))
-        }
+        handleErrors && handleErrors(result?.error || t('ERROR_LOGIN_APPLE', 'Error login with apple'))
       }
-    } catch (err) {
+    } catch (error) {
       handleLoading && handleLoading(false)
-      handleErrors && handleErrors(err)
+      handleErrors && handleErrors(error)
     }
   }
 
   useEffect(() => {
-    if(Platform.OS !== 'ios' && !appleAuth.isSupported) return
-      return appleAuth.onCredentialRevoked(async () => {
-        console.warn('User Credentials have been Revoked');
-      });
+    if (Platform.OS !== 'ios' && !appleAuth.isSupported) return
+    return appleAuth.onCredentialRevoked(async () => {
+      handleErrors && handleErrors(t('USER_CREDENTIALS_REVOKED', 'User credentials revoked'))
+    });
   }, []);
 
   return (
     <Container>
       <AppleButton
-        onPress={() => onAppleButtonPress(credentialStateForUser)}
+        onPress={onAppleButtonPress}
       >
         <Icon
           name="apple"

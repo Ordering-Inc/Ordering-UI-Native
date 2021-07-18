@@ -388,3 +388,10 @@ export interface GoogleMapsParams {
   setSaveLocation?: (val : boolean) => void,
   handleToggleMap?: () => void
 }
+
+export interface AppleLoginParams {
+  handleErrors?: (error: string) => {},
+  handleLoading?: (val: boolean) => void,
+  handleSuccessApple?: (result: any) => void,
+  notificationState?: any,
+}

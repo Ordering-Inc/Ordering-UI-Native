@@ -100,7 +100,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           style={{ paddingBottom: 0 }}
         />
       )}
-      {auth && (
+      {auth && user?.name && (
         <WelcomeTitle>
           <View style={styles.welcome}>
             <OText style={{ fontWeight: 'bold' }} size={28} >

@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Platform, PlatformIOSStatic } from 'react-native'
-import { useOrder } from 'ordering-components/native'
+import { useOrder, useSession } from 'ordering-components/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
@@ -29,6 +29,7 @@ const Tab = createMaterialBottomTabNavigator();
 const BottomNavigator = () => {
   const theme = useTheme()
   const [{ carts }] = useOrder()
+  const [{user}] = useSession()
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
   const isIos = Platform.OS === 'ios'
   const platformIOS = Platform as PlatformIOSStatic
@@ -39,7 +40,7 @@ const BottomNavigator = () => {
     : {height: 40, position: 'relative', bottom: 15}
   return (
     <Tab.Navigator
-      initialRouteName='BusinessList'
+      initialRouteName={user?.name ? "BusinessList" : "Profile"}
       activeColor={theme.colors.primary}
       barStyle={{ backgroundColor: theme.colors.white, ...androidStyles }}
       labeled={false}

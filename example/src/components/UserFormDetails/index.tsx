@@ -23,9 +23,7 @@ export const UserFormDetailsUI = (props: any) => {
     handleChangeInput,
     handleButtonUpdateClick,
     phoneUpdate,
-    hideUpdateButton,
     handleCancelEdit,
-    toggleIsEdit,
     isCheckout
   } = props
 
@@ -231,12 +229,12 @@ export const UserFormDetailsUI = (props: any) => {
                 )
               ))}
 
-              {!!showInputPhoneNumber && (
+               {!!showInputPhoneNumber && (
                 <WrapperPhone>
                   <PhoneInputNumber
                     data={phoneInputData}
                     handleData={(val: any) => handleChangePhoneNumber(val)}
-                    defaultValue={phoneUpdate ? '' : user?.cellphone}
+                    defaultValue={phoneUpdate ? '' : user?.cellphone || ''}
                     defaultCode={user?.country_phone_code || null}
                   />
                   {phoneUpdate && (
