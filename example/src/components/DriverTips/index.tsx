@@ -8,7 +8,6 @@ import {
   useOrder
 } from 'ordering-components/native';
 
-import { colors } from '../../theme.json';
 import { OButton, OInput, OText } from '../shared';
 
 import {
@@ -19,6 +18,7 @@ import {
   DTLabel,
   DTWrapperInput
 } from './styles'
+import { useTheme } from 'styled-components/native';
 
 const DriverTipsUI = (props: any) => {
   const {
@@ -29,6 +29,20 @@ const DriverTipsUI = (props: any) => {
     isDriverTipUseCustom,
     handlerChangeOption
   } = props;
+
+  const theme = useTheme();
+
+  const style = StyleSheet.create({
+    circle: {
+      borderRadius: 20
+    },
+    inputStyle: {
+      flex: 1,
+      borderWidth: 1,
+      borderColor: theme.colors.disabled,
+      marginRight: 10
+    }
+  })
 
   const [{ parsePrice }] = useUtils();
   const [, t] = useLanguage();
@@ -67,7 +81,7 @@ const DriverTipsUI = (props: any) => {
                   isActive={option === optionSelected}
                 >
                   {loading && valueOption === option ? (
-                    <ActivityIndicator size='small' color={colors.primary} />
+                    <ActivityIndicator size='small' color={theme.colors.primary} />
                   ) : (
                     <OText size={18} color={option === optionSelected ? '#FFF' : '#000'}>
                       {`${isFixedPrice ? parsePrice(option) : `${option}%`}`}
@@ -79,7 +93,7 @@ const DriverTipsUI = (props: any) => {
           </DTWrapperTips>
           {!driverTipsOptions.includes(driverTip) && driverTip > 0 && (
             <OText
-              color={colors.error}
+              color={theme.colors.error}
               size={20}
               style={{ marginTop: 10, textAlign: 'center' }}
             >
@@ -102,8 +116,8 @@ const DriverTipsUI = (props: any) => {
             />
             <OButton
               text={t('APPLY_TIP', 'Apply Tip')}
-              bgColor={colors.primary}
-              borderColor={colors.primary}
+              bgColor={theme.colors.primary}
+              borderColor={theme.colors.primary}
               textStyle={{ color: 'white', fontSize: 20 }}
               imgRightSrc={null}
               isDisabled={!(value > 0 && value !== driverTip) || !value}
@@ -115,7 +129,7 @@ const DriverTipsUI = (props: any) => {
           </DTWrapperInput>
           {parseFloat(driverTip || 0) > 0 && (
             <OText
-              color={colors.error}
+              color={theme.colors.error}
               size={20}
               style={{ marginTop: 10, textAlign: 'center' }}
             >
@@ -127,18 +141,6 @@ const DriverTipsUI = (props: any) => {
     </DTContainer>
   )
 }
-
-const style = StyleSheet.create({
-  circle: {
-    borderRadius: 20
-  },
-  inputStyle: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: colors.disabled,
-    marginRight: 10
-  }
-})
 
 export const DriverTips = (props: any) => {
   const driverTipsProps = {

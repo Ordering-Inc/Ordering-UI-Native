@@ -5,7 +5,7 @@ import {
   WrapHeader,
 } from './styles'
 import { OText } from '../shared'
-import { colors } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 
 const ProductOptionUI = (props: any) => {
   const {
@@ -14,6 +14,7 @@ const ProductOptionUI = (props: any) => {
     error
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
 
   let maxMin = `(${t('MIN', 'Min')}: ${option.min} / ${t('MAX', 'Max')}: ${option.max})`
@@ -26,7 +27,7 @@ const ProductOptionUI = (props: any) => {
   }
 
   return (
-    <Container style={{color: error ? 'orange' : colors.white}}>
+    <Container style={{color: error ? 'orange' : theme.colors.white}}>
       <WrapHeader>
         <OText size={16}>{option.name}</OText>
         <OText color= '#A52121'>{maxMin}</OText>

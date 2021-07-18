@@ -7,8 +7,8 @@ import {
   SoldOut
 } from './styles'
 import { StyleSheet } from 'react-native'
-import { colors } from '../../theme.json'
 import { OText, OIcon } from '../shared'
+import { useTheme } from 'styled-components/native'
 
 export const SingleProductCard = (props: SingleProductCardParams) => {
   const {
@@ -17,6 +17,31 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
     isSoldOut,
     onProductClick
   } = props
+
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      borderWidth: 1,
+      borderRadius: 10,
+      borderColor: theme.colors.lightGray,
+      marginBottom: 15,
+    },
+    textStyle: {
+      flex: 1,
+    },
+    soldOutBackgroundStyle: {
+      backgroundColor: '#B8B8B8',
+    },
+    soldOutTextStyle : {
+      textTransform: 'uppercase'
+    },
+    productStyle: {
+      width: 75,
+      height: 75,
+      borderRadius: 10,
+    }
+  })
 
   const [, t] = useLanguage()
   const [stateConfig] = useConfig()
@@ -49,7 +74,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
       <CardInfo>
         <OText numberOfLines={1} ellipsizeMode='tail' style={styles.textStyle}>{product?.name}</OText>
         <OText size={12} numberOfLines={2} ellipsizeMode='tail' style={styles.textStyle}>{product?.description}</OText>
-        <OText color={colors.primary}>{parsePrice(product?.price)}</OText>
+        <OText color={theme.colors.primary}>{parsePrice(product?.price)}</OText>
       </CardInfo>
 
       {(isSoldOut || maxProductQuantity <= 0) && (
@@ -60,26 +85,3 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
     </CardContainer>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: colors.lightGray,
-    marginBottom: 15,
-  },
-  textStyle: {
-    flex: 1,
-  },
-  soldOutBackgroundStyle: {
-    backgroundColor: '#B8B8B8',
-  },
-  soldOutTextStyle : {
-    textTransform: 'uppercase'
-  },
-  productStyle: {
-    width: 75,
-    height: 75,
-    borderRadius: 10,
-  }
-})

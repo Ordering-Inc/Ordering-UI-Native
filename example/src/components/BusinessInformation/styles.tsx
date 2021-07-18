@@ -1,12 +1,11 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const BusinessInformationContainer = styled.View`
   width: 100%;
   height: 100%;
 `
 export const GrayBackground = styled.View`
-  background-color: ${colors.inputDisabled};
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
   border-radius: 10px;
   padding: 10px 15px;
 `
@@ -27,7 +26,7 @@ export const ScheduleBlock = styled.View`
   align-items: center;
   padding: 0 20px;
   border-left-width: 1px;
-  border-color: ${colors.lightGray};
+  border-color: ${(props: any) => props.theme.colors.lightGray};
 `
 export const WrapBusinessMap = styled.View`
   max-height: 200px;

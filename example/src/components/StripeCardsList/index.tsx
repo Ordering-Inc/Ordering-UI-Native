@@ -18,7 +18,7 @@ import {
   OSItemContent,
   OSItemActions,
 } from '../PaymentOptionStripe/styles';
-import { colors } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 const StripeCardsListUI = (props: any) => {
   const {
@@ -29,6 +29,7 @@ const StripeCardsListUI = (props: any) => {
     handleCardClick,
   } = props;
 
+  const theme = useTheme();
   const [{ token }] = useSession();
   const [, t] = useLanguage();
 
@@ -82,13 +83,13 @@ const StripeCardsListUI = (props: any) => {
                     <MaterialCommunityIcons
                       name='radiobox-marked'
                       size={24}
-                      color={colors.primary}
+                      color={theme.colors.primary}
                     />
                   ) : (
                     <MaterialCommunityIcons
                       name='radiobox-blank'
                       size={24}
-                      color={colors.primary}
+                      color={theme.colors.primary}
                     />
                   )}
                 </View>
@@ -110,7 +111,7 @@ const StripeCardsListUI = (props: any) => {
                   <MaterialCommunityIcons
                     name='trash-can-outline'
                     size={28}
-                    color={colors.primary}
+                    color={theme.colors.primary}
                   />
                 </OAlert>
               </OSItemActions>

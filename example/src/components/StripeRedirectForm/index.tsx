@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { StripeRedirectForm as StripeRedirectFormController, useSession, useLanguage } from 'ordering-components/native';
+import { StripeRedirectForm as StripeRedirectFormController, useSession, useLanguage, ToastType, useToast } from 'ordering-components/native';
 // import stripe from 'tipsi-stripe';
 
 import {
@@ -9,9 +9,8 @@ import {
   ErrorMessage
 } from './styles';
 
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OButton, ODropDown, OInput, OText } from '../shared';
-import { colors } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 const StripeRedirectFormUI = (props: any) => {
   const {
@@ -20,12 +19,14 @@ const StripeRedirectFormUI = (props: any) => {
     handleSubmitPaymentMethod
   } = props;
 
+  const theme = useTheme()
+
   // stripe.setOptions({
   //   publishableKey: publicKey,
   //   // androidPayMode: 'test', // Android only
   // })
 
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const { control, handleSubmit, errors } = useForm();
 
   const [{ user }] = useSession();
@@ -137,8 +138,8 @@ const StripeRedirectFormUI = (props: any) => {
       <OButton
         // text={formState.isSubmitting ? t('LOADING', 'Loading...') : t('OK', 'OK')}
         text={t('OK', 'OK')}
-        bgColor={colors.primary}
-        borderColor={colors.primary}
+        bgColor={theme.colors.primary}
+        borderColor={theme.colors.primary}
         textStyle={{color: 'white'}}
         imgRightSrc={null}
         // isDisabled={formState.isSubmitting}
