@@ -91,7 +91,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   }
 
   return (
-    <ScrollView style={styles.container} onScroll={(e: any) => handleScroll(e)}>
+    <ScrollView style={styles.container} onScroll={(e: any) => handleScroll(e)} scrollEventThrottle={99999}>
       {!auth && (
         <NavBar
           onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
