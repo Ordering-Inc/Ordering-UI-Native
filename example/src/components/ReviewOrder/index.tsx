@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { OrderReview as ReviewOrderController, useLanguage } from 'ordering-components/native'
+import { OrderReview as ReviewOrderController, useLanguage, useToast, ToastType } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useForm, Controller } from 'react-hook-form'
 
@@ -12,7 +12,6 @@ import {
 } from './styles'
 import { OButton, OIcon, OInput, OText } from '../shared'
 import { TouchableOpacity, StyleSheet,View } from 'react-native';
-import { useToast, ToastType } from '../../providers/ToastProvider'
 import NavBar from '../NavBar'
 import Spinner from 'react-native-loading-spinner-overlay'
 
@@ -43,7 +42,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   })
 
   const [, t] = useLanguage()
-  const { showToast } = useToast()
+  const [, { showToast }] = useToast()
   const { handleSubmit, control, errors } = useForm()
 
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<any>, success?: boolean }>({ open: false, content: [], success: false })

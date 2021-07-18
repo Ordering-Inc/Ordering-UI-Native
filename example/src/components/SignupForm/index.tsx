@@ -11,7 +11,9 @@ import {
   SignupForm as SignUpController,
   useLanguage,
   useConfig,
-  useSession
+  useSession,
+  ToastType,
+  useToast
 } from 'ordering-components/native';
 
 import {
@@ -23,7 +25,6 @@ import {
 
 import { LoginWith as SignupWith, OTab, OTabs } from '../LoginForm/styles'
 
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { _removeStoreData } from '../../providers/StoreUtil';
 import NavBar from '../NavBar'
 import { VerifyPhone } from '../VerifyPhone';
@@ -81,7 +82,7 @@ const SignupFormUI = (props: SignupParams) => {
 
   const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
 
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const [, { login }] = useSession();
   const [{ configs }] = useConfig();

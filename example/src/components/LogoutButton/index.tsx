@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { LogoutAction } from 'ordering-components/native';
+import { LogoutAction, ToastType, useToast } from 'ordering-components/native';
 import { _retrieveStoreData, _clearStoreData } from '../../providers/StoreUtil';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 
 import { OIcon } from '../shared';
 import { useTheme } from 'styled-components/native';
@@ -11,8 +10,7 @@ const LogoutButtonUI = (props: any) => {
   const { handleLogoutClick, formState } = props
 
   const theme = useTheme();
-
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
 
   const handleClick = async () => {
     const data = await _retrieveStoreData('notification_state');

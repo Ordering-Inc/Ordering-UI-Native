@@ -11,7 +11,9 @@ import {
   useLanguage,
   useUtils,
   useValidationFields,
-  useConfig
+  useConfig,
+  ToastType,
+  useToast
 } from 'ordering-components/native';
 
 import { OText, OButton, OIcon } from '../shared';
@@ -41,7 +43,6 @@ import {
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import { useTheme } from 'styled-components/native';
@@ -100,7 +101,7 @@ const CheckoutUI = (props: any) => {
     }
   })
 
-  const { showToast } = useToast();
+  const [, { showToast }]= useToast();
   const [, t] = useLanguage();
   const [{ user }] = useSession();
   const [{ configs }] = useConfig();
@@ -513,7 +514,7 @@ export const Checkout = (props: any) => {
     onNavigationRedirect,
   } = props
 
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const [{ token }] = useSession();
   const [ordering] = useApi();

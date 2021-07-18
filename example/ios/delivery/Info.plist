@@ -100,7 +100,9 @@
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>
 	<key>UIUserInterfaceStyle</key>
-    <string>Light</string>
+	<string>Light</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -111,7 +113,5 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
 </dict>
 </plist>

@@ -9,7 +9,9 @@ import {
   LoginForm as LoginFormController,
   useLanguage,
   useConfig,
-  useSession
+  useSession,
+  ToastType,
+  useToast
 } from 'ordering-components/native';
 
 import { FacebookLogin } from '../FacebookLogin';
@@ -28,7 +30,6 @@ import {
   LineSeparator
 } from './styles';
 
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { _removeStoreData } from '../../providers/StoreUtil';
 import NavBar from '../NavBar'
 
@@ -71,7 +72,7 @@ const LoginFormUI = (props: LoginParams) => {
     }
   });
 
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
   const [, { login }] = useSession()

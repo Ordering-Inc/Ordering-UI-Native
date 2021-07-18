@@ -1,15 +1,15 @@
 import * as React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
-import { ToastType, useToast } from "../../providers/ToastProvider";
+import { ToastType, useToast } from "ordering-components/native";
 import { useTheme } from 'styled-components/native';
 
 const fadeDuration = 300;
 const bottomPosition = 20;
 
 export const Toast = () => {
-  const theme = useTheme();
-  const { toastConfig, hideToast } = useToast();
+  const [toastConfig, { hideToast }] = useToast();
   const opacity = React.useRef(new Animated.Value(0)).current;
+  const theme = useTheme();
 
   const fadeIn = React.useCallback(() => {
     Animated.timing(opacity, {
