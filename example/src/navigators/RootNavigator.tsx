@@ -14,6 +14,7 @@ import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import Forgot from '../pages/ForgotPassword';
 import Home from '../pages/Home';
+import IntroductoryTutorial from '../pages/IntroductoryTutorial';
 import AddressForm from '../pages/AddressForm';
 import MomentOption from '../pages/MomentOption';
 import Splash from '../pages/Splash';
@@ -22,10 +23,9 @@ import BusinessProductsList from '../pages/BusinessProductsList';
 import HomeNavigator from './HomeNavigator';
 import settings from '../config.json';
 import * as RootNavigation from '../navigators/NavigationRef';
-import { _retrieveStoreData } from '../providers/StoreUtil';
+import { _retrieveStoreData, _setStoreData } from '../providers/StoreUtil';
 
 const Stack = createStackNavigator();
-
 const RootNavigator = () => {
   const [{ auth, loading: sessionLoading }] = useSession();
   const [orderStatus, { changeMoment }] = useOrder();
@@ -35,7 +35,7 @@ const RootNavigator = () => {
   const [oneSignalState, setOneSignalState] = useState<any>({
     notification_app: settings.notification_app
   });
-
+  const [ isTutorial, setTutorial] = useState(true)
   const [isPushLoading, setIsPushLoading] = useState({ loading: true })
 
   const validDate = (date : any) => {
@@ -87,13 +87,22 @@ const RootNavigator = () => {
     setOneSignalState(data);
     setIsPushLoading({ loading: false });
   };
-
   useEffect(() => {
     if (!loaded && !orderStatus.loading && !isPushLoading.loading) {
       setLoaded(true)
     }
   }, [orderStatus, isPushLoading])
 
+  useEffect(() => {
+    const setTutorialLocal = async () => {
+      const data = await _retrieveStoreData('isTutorial');
+      if(data === false){
+        setTutorial(false)
+      }
+    }
+    setTutorialLocal();
+  }, [isTutorial])
+  
   useEffect(() => {
     if (!sessionLoading && !isPushLoading.loading && !auth) {
       setLoaded(!auth)
@@ -143,11 +152,18 @@ const RootNavigator = () => {
           <>
             {!auth ? (
               <>
+              { isTutorial ? (
+                <Stack.Screen
+                  name="IntroductoryTutorial"
+                  component={IntroductoryTutorial}
+                  options={{ headerShown: false }}
+                  initialParams={{ setTutorial }}
+                />):(
                 <Stack.Screen
                   name="Home"
                   component={Home}
                   options={{ headerShown: false }}
-                />
+                />)}
                 <Stack.Screen
                   name="Login"
                   component={Login}
@@ -208,5 +224,4 @@ const RootNavigator = () => {
     </Stack.Navigator>
   );
 };
-
 export default RootNavigator;
