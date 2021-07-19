@@ -1,13 +1,15 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useTheme } from 'styled-components/native';
 
-import { LOGO_IMAGES } from '../config/constants';
 import { OIcon } from '../components/shared';
 
 const Splash = () => {
+  const theme = useTheme();
+
   return (
     <View style={styles.wrapper}>
-      <OIcon src={LOGO_IMAGES.logotype} style={styles.logo} />
+      <OIcon src={theme.images.logos.logotype} style={styles.logo} />
     </View>
   );
 };

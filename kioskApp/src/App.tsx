@@ -43,6 +43,7 @@ theme.images = {
   },
   general: {
     homeHero: require('./assets/images/home-hero.png'),
+    homeHeroLandscape: require('./assets/images/home-hero-landscape.png'),
     notFound: require('./assets/images/not-found.png'),
     //   notFound404,
     //   notFoundLighting,
@@ -73,14 +74,16 @@ theme.images = {
     shoppingCart: require('./assets/icons/shopping_cart.png'),
     edit: require('./assets/icons/edit.png'),
     check_decagram: require('./assets/icons/check_decagram.png'),
-    cash: require('./assets/icons/cash.png'),
-    carddelivery: require('./assets/icons/card-delivery.png'),
+    cash: require('./assets/images/cash.png'),
+    carddelivery: require('./assets/images/card-delivery.png'),
     paypal: require('./assets/icons/paypal.png'),
     stripe: require('./assets/icons/stripe.png'),
     stripecc: require('./assets/icons/cc-stripe.png'),
     stripes: require('./assets/icons/stripe-s.png'),
     stripesb: require('./assets/icons/stripe-sb.png'),
-    creditCard: require('./assets/icons/credit-card.png')
+    creditCard: require('./assets/icons/credit-card.png'),
+    eatIn: require('./assets/images/take-out.png'),
+    takeOut: require('./assets/images/eat-in.png'),
   },
   categories: {
     all: require('./assets/images/categories/category-all.png')

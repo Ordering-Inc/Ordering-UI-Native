@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-import OIcon from '../../components/shared/OIcon';
+import { useTheme } from 'styled-components/native';
 
 import {
   LoginForm as LoginFormController,
@@ -15,12 +15,10 @@ import {
 } from './styles';
 
 import { ToastType, useToast } from '../../providers/ToastProvider';
-import { LOGO_IMAGES } from '../../config/constants';
 
-import { OText, OButton, OInput } from '../shared';
+import { OText, OButton, OInput, OIcon } from '../shared';
 import { LoginParams } from '../../types';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
-import { useTheme } from 'styled-components/native';
 
 const LoginFormUI = (props: LoginParams) => {
   const {
@@ -91,7 +89,7 @@ const LoginFormUI = (props: LoginParams) => {
 
   const logo = (
     <LogoWrapper>
-      <OIcon src={LOGO_IMAGES.logotype} style={styles.logo}/>
+      <OIcon src={theme.images.logos.logotype} style={styles.logo}/>
     </LogoWrapper>
   );
 

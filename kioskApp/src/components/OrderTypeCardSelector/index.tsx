@@ -4,11 +4,11 @@ import {
   OrderTypeControl,
   useLanguage,
 } from 'ordering-components/native'
+import { useTheme } from 'styled-components/native'
 
 import { } from './styles'
 import { OrderTypeSelectParams } from '../../types'
 import { OText } from '../shared'
-import { DELIVERY_TYPE_IMAGES, IMAGES } from '../../config/constants'
 import OptionCard from '../OptionCard'
 import { Container } from '../../layouts/Container'
 import NavBar from '../NavBar'
@@ -26,6 +26,7 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
     callback
   } = props
 
+	const theme = useTheme();
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
 
@@ -72,8 +73,8 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
             style={cardStyle}
             title={t('EAT_IN','Eat In')}
             description={t('EAT_IN_DESCRIPTION', 'We are very glad to have you here. Bon appetit!')}
-            bgImage={DELIVERY_TYPE_IMAGES.eatIn}
-            icon={IMAGES.pushPin}
+            bgImage={theme.images.general.eatIn}
+            icon={theme.images.general.pushPin}
             callToActionText={t('START_MY_ORDER', 'Start my order')}
             onClick={() => {
               handleChangeOrderType(_eatIn?.value);
@@ -90,8 +91,8 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
             style={cardStyle}
             title={t('TAKE_OUT','Take out')}
             description={t('TAKE_OUT_DESCRIPTION', 'You are very welcome anytime you visit us!')}
-            bgImage={DELIVERY_TYPE_IMAGES.takeOut}
-            icon={IMAGES.shoppingCart}
+            bgImage={theme.images.general.takeOut}
+            icon={theme.images.general.shoppingCart}
             callToActionText={t('START_MY_ORDER', 'Start my order')}
             onClick={() => {
               handleChangeOrderType(_takeOut?.value);

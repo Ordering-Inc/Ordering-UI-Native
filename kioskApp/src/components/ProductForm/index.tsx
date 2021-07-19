@@ -1,4 +1,10 @@
 import React, { useState } from 'react'
+import { View,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+  ScrollView,
+} from 'react-native'
 import {
   ProductForm as ProductOptions,
   useSession,
@@ -7,8 +13,8 @@ import {
   useUtils
 } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { View, TouchableOpacity, StyleSheet, Animated, ScrollView } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
+import { useTheme } from 'styled-components/native'
 
 import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
@@ -30,9 +36,7 @@ import { OButton, OImage, OInput, OText } from '../shared'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
-import { IMAGES } from '../../config/constants'
-import { LANDSCAPE, useDeviceOrientation } from '../../hooks/device_orientation_hook'
-import { useTheme } from 'styled-components/native'
+import { useDeviceOrientation } from '../../hooks/device_orientation_hook'
 
 export const ProductOptionsUI = (props: any) => {
   const {
@@ -231,13 +235,13 @@ export const ProductOptionsUI = (props: any) => {
           <NavBar
             {...navBarProps}
             titleColor={theme.colors.white}
-            {...((navigation || onClose) && { leftImg: IMAGES.arrow_left_white })}
+            {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left_white })}
           />
         </Animated.View>
         <Animated.View style={{ opacity: navBar2ContainerOpacity, position: 'absolute' }}>
           <NavBar
             {...navBarProps}
-            {...((navigation || onClose) && { leftImg: IMAGES.arrow_left })}
+            {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left })}
           />
         </Animated.View>
 

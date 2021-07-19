@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Dimensions } from 'react-native';
+import { View } from 'react-native';
+import { useTheme } from 'styled-components/native';
 
 import {
   PaymentOptions as PaymentOptionsController,
@@ -7,12 +8,11 @@ import {
 } from 'ordering-components/native';
 
 
-import { OButton, OText } from '../shared';
+import { OText } from '../shared';
 
 import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
 import OptionCard from '../OptionCard';
-import { IMAGES, PAYMENT_IMAGES } from '../../config/constants';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../hooks/device_orientation_hook';
@@ -38,6 +38,7 @@ const PaymentOptionsUI = (props: any) => {
     paySelected,
   } = props
 
+  const theme = useTheme();
   const { showToast } = useToast();
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
@@ -107,8 +108,8 @@ const PaymentOptionsUI = (props: any) => {
       style: cardStyle,
       title: t('CASH', supportedMethods[cashIndex]?.name),
       description: t('GO_FOR_YOR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER', 'Go for yor receipt and go to the front counter'),
-      bgImage: PAYMENT_IMAGES.cash,
-      icon: IMAGES.shoppingCart,
+      bgImage: theme.images.general.cash,
+      icon: theme.images.general.shoppingCart,
       callToActionText: t('TAKE_MY_RECEIPT', 'Take my receipt'),
       onClick: () => onSelectPaymethod(supportedMethods[cashIndex], false),
       ...supportedMethods[cashIndex],
@@ -118,8 +119,8 @@ const PaymentOptionsUI = (props: any) => {
       style: cardStyle,
       title: t('CARD', supportedMethods[cardOnDeliveryIndex]?.name),
       description: t('WE_ACCEPT_EVERY_DEBIT_OR_CREDIT_CARD', 'We accept every debit or credit card'),
-      bgImage: PAYMENT_IMAGES.carddelivery,
-      icon: IMAGES.pushPin,
+      bgImage: theme.images.general.carddelivery,
+      icon: theme.images.general.pushPin,
       callToActionText: t('LET\'S GO', 'Let\'s go'),
       onClick: () => onSelectPaymethod(supportedMethods[cardOnDeliveryIndex], false),
       ...supportedMethods[cardOnDeliveryIndex],

@@ -1,11 +1,14 @@
 import React from 'react';
 import { ImageSourcePropType, ImageStyle, TextStyle, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { IMAGES } from '../../config/constants';
+import { useTheme } from 'styled-components/native';
+
 import { OButton, OIcon, OText } from '../shared';
 import { Container, InnerContainer } from './styles';
 
 const OptionCard = (props: Props) => {
+	const theme = useTheme();
+
 	return (
 		<TouchableOpacity
 			onPress={props.onClick}
@@ -56,7 +59,9 @@ const OptionCard = (props: Props) => {
 							height: 24,
 							...props.callToActionIconStyle,
 						}}
-						imgRightSrc={props.callToActionIcon}
+						imgRightSrc={
+							props.callToActionIcon || theme.images.general.arrow_right_circular_outlined
+						}
 						style={{ justifyContent: 'flex-start', paddingLeft: 0 }}
 					/>
 				</InnerContainer>
@@ -82,10 +87,6 @@ interface Props {
 	callToActionIcon?: ImageSourcePropType;
 	callToActionIconStyle?: ImageStyle;
 }
-
-OptionCard.defaultProps = {
-  callToActionIcon: IMAGES.arrow_right_circular_outlined
-};
 
 export default OptionCard;
   

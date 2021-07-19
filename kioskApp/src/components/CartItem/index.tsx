@@ -4,7 +4,6 @@ import { useLanguage, useUtils } from 'ordering-components/native';
 
 import { StyledCartItem } from './styles';
 import { OButton, OImage, OText } from '../shared';
-import { IMAGES } from '../../config/constants';
 import { Product } from '../../types';
 import QuantityControl from '../QuantityControl';
 import { LANDSCAPE, useDeviceOrientation } from '../../hooks/device_orientation_hook';
@@ -55,7 +54,7 @@ const CartItem = (props: CartItemProps) => {
 					<OButton
 						bgColor="transparent"
 						borderColor="transparent"
-						imgLeftSrc={IMAGES.edit}
+						imgLeftSrc={theme.images.general.edit}
 						text={t('EDIT', 'Edit')}
 						style={{ justifyContent: 'flex-start', paddingLeft: 0 }}
 						textStyle={{

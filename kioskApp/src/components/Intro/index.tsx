@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 
 import { Container } from '../../layouts/Container';
 import OImage from '../../components/shared/OImage';
 import OButton from '../../components/shared/OButton';
 import { LanguageSelector } from '../../components/LanguageSelector';
-import { GENERAL_IMAGES, LOGO_IMAGES } from '../../config/constants'
 import { LogoutPopup } from '../../components/LogoutPopup';
 import {PORTRAIT, LANDSCAPE, useDeviceOrientation} from "../../hooks/device_orientation_hook";
 
@@ -15,6 +15,7 @@ const Intro = (props: any): React.ReactElement => {
     navigation,
   } = props;
 
+	const theme = useTheme();
 	const [, t] = useLanguage();
 	const [refreshing] = useState(false);
 	const [showLogoutPopup, setShowLogoutPopup] = useState(false);
@@ -66,13 +67,13 @@ const Intro = (props: any): React.ReactElement => {
 								}}
 							>
 								<OImage
-									source={LOGO_IMAGES.logotype}
+									source={theme.images.logos.logotype}
 									width={(orientationState?.dimensions?.width * 0.4) - _offset}
 									height={orientationState?.dimensions?.height * 0.1}
 								/>
 
 								<OImage
-									source={GENERAL_IMAGES.homeHero}
+									source={theme.images.general.homeHero}
 									width={orientationState?.dimensions?.width}
 									height={orientationState?.dimensions?.height * 0.6}
 								/>
@@ -99,7 +100,7 @@ const Intro = (props: any): React.ReactElement => {
 								}}
 							>
 								<OImage
-									source={GENERAL_IMAGES.homeLandHero}
+									source={theme.images.general.homeHeroLandscape}
 									width={orientationState?.dimensions?.width * 0.40}
 									height={orientationState?.dimensions?.height}
 									resizeMode={'cover'}
@@ -116,7 +117,7 @@ const Intro = (props: any): React.ReactElement => {
 									}}
 								>
 									<OImage
-										source={LOGO_IMAGES.logotype}
+										source={theme.images.logos.logotype}
 										width={(orientationState?.dimensions?.width * 0.4) - _offset}
 										height={orientationState?.dimensions?.height * 0.1}
 									/>

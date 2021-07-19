@@ -1,14 +1,14 @@
 import React from 'react'
 import { View } from 'react-native'
+import { useTheme } from 'styled-components/native'
+
 import { OButton, OIcon, OText } from '../shared'
 import {NotFoundSourceParams} from '../../types'
-import { GENERAL_IMAGES } from '../../config/constants'
 
 import {
   NotFound,
   NotFoundImage
 } from './styles'
-import { useTheme } from 'styled-components/native'
 
 export const NotFoundSource = (props: NotFoundSourceParams) => {
   const {
@@ -19,9 +19,9 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
     onClickButton
   } = props
 
-  const errorImage = image || GENERAL_IMAGES.notFound
-
   const theme = useTheme();
+
+  const errorImage = image || theme.images.general.notFound
 
   return (
     <NotFound>

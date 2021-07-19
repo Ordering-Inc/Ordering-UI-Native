@@ -74,7 +74,7 @@ export const GENERAL_IMAGES = {
   emptyPastOrders: require('../assets/images/empty-past-orders.png'),
   notFound: require('../assets/images/not-found.png'),
   homeHero: require('../assets/images/home-hero.png'),
-  homeLandHero: require('../assets/images/home-land-hero.png')
+  homeHeroLandscape: require('../assets/images/home-hero-landscape.png')
 }
 
 export const LOGO_IMAGES = {

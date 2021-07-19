@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { ScrollView, Platform, View } from 'react-native';
+import { useTheme } from 'styled-components/native';
 import {
   Cart as CartController,
   useOrder,
@@ -18,13 +20,10 @@ import { verifyDecimals } from '../../utils';
 import { Cart as TypeCart } from '../../types';
 import CartItem from '../CartItem';
 import NavBar from '../NavBar';
-import { ScrollView, Platform, View } from 'react-native';
-import { IMAGES } from '../../config/constants';
 import { CouponControl } from '../CouponControl';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation} from "../../hooks/device_orientation_hook";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
-import { useTheme } from 'styled-components/native';
 
 const CartUI = (props: any) => {
   const {
@@ -187,7 +186,7 @@ const CartUI = (props: any) => {
                     }}
                   >
                     <OIcon
-                      src={IMAGES.check_decagram}
+                      src={theme.images.general.check_decagram}
                     />
 
                     {cart?.discount_type === 1 ? (
@@ -299,7 +298,7 @@ const CartUI = (props: any) => {
                     }}
                   >
                     <OIcon
-                      src={IMAGES.check_decagram}
+                      src={theme.images.general.check_decagram}
                     />
 
                     {cart?.discount_type === 1 ? (

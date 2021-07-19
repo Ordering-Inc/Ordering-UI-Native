@@ -2,7 +2,6 @@ import * as React from 'react'
 import styled from 'styled-components/native'
 import { OIcon, OButton, OText } from '../shared'
 import { TextStyle, View } from 'react-native'
-import { IMAGES } from '../../config/constants'
 import { OrderTypeSelector } from '../OrderTypeSelector'
 import { useConfig } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
@@ -64,7 +63,7 @@ const NavBar = (props: Props) => {
     <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
       {(props?.onActionLeft || props?.leftImg) && (
         <OButton
-          imgLeftSrc={props.leftImg || IMAGES.arrow_left}
+          imgLeftSrc={props.leftImg || theme.images.general.arrow_left}
           imgRightSrc={null}
           style={{ ...btnBackArrow, ...props.btnStyle }}
           onClick={props.onActionLeft}

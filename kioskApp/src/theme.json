@@ -48,6 +48,7 @@
     },
     "general": {
       "homeHero": "",
+      "homeHeroLandscape": "",
       "notFound": "",
       "emptyActiveOrders": "",
       "emptyPastOrders": "",
@@ -80,7 +81,9 @@
       "stripecc": "",
       "stripes": "",
       "stripesb": "",
-      "creditCard": ""
+      "creditCard": "",
+      "eatIn": "",
+      "takeOut": ""
     },
     "categories": {
       "all": ""
