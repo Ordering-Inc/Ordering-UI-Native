@@ -385,6 +385,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText>- {parsePrice(order?.summary?.discount || order?.discount)}</OText>
                 </Table>
               )}
+              {order?.summary?.subtotal_with_discount > 0 && order?.summary?.discount > 0 && order?.summary?.total >= 0 && (
+                <Table>
+                  <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                  <OText>{parsePrice(order?.summary?.subtotal_with_discount || 0)}</OText>
+                </Table>
+              )}
               {order?.tax_type !== 1 && (
                 <Table>
                   <OText>
