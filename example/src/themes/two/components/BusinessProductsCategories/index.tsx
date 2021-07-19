@@ -13,11 +13,12 @@ const BusinessProductsCategoriesUI = (props: any) => {
     categories,
     handlerClickCategory,
     categorySelected,
-    loading
+    loading,
+	 contentStyle,
   } = props
 
   return (
-    <ScrollView horizontal style={{...styles.container, borderBottomWidth: loading ? 0 : 1}} showsHorizontalScrollIndicator={false}>
+    <ScrollView horizontal contentContainerStyle={contentStyle} style={{...styles.container, borderBottomWidth: loading ? 0 : 1}} showsHorizontalScrollIndicator={false}>
       {loading && (
         <Placeholder Animation={Fade}>
           <View style={{ flexDirection: 'row' }}>
@@ -30,15 +31,16 @@ const BusinessProductsCategoriesUI = (props: any) => {
       {
         !loading && categories && categories.length && categories.map((category: any) => (
           <Tab
-          key={category.name}
-          onPress={() => handlerClickCategory(category)}
-          style={(category.id === 'featured') && !featured && styles.featuredStyle}
+				key={category.name}
+				onPress={() => handlerClickCategory(category)}
+				style={{...(category.id === 'featured') && !featured && styles.featuredStyle}}
           >
             <OText
-              color={categorySelected?.id === category.id ? colors.primary : ''}
+              color={categorySelected?.id === category.id ? colors.textPrimary : colors.textSecondary}
               >
               {category.name}
             </OText>
+				<View style={categorySelected?.id === category.id ? styles.tabStyle : styles.tabDeactived} />
           </Tab>
         ))
       }
@@ -48,12 +50,23 @@ const BusinessProductsCategoriesUI = (props: any) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
     paddingVertical: 10,
-    borderBottomColor: colors.lightGray,
+    borderBottomWidth: 0,
+	 borderBottomColor: colors.clear,
   },
   featuredStyle: {
     display: 'none'
+  },
+  tabStyle: {
+	marginTop: 10,
+	height: 4,
+	borderTopStartRadius: 4,
+	borderTopEndRadius: 4,
+	backgroundColor: colors.textPrimary,
+  },
+  tabDeactived: {
+	marginTop: 10,
+	height: 4
   }
 })
 

@@ -21,7 +21,7 @@ import {
   OIconButton,
   OText,
   OButton,
-} from '../../components/shared';
+} from '../../../../components/shared';
 import {
   CenterView,
   UserData,
@@ -83,7 +83,7 @@ const ProfileUI = (props: ProfileParams) => {
   }
 
   const handleImagePicker = () => {
-    launchImageLibrary({ mediaType: 'photo', maxHeight: 200, maxWidth: 200, includeBase64: true }, (response) => {
+    launchImageLibrary({ mediaType: 'photo', maxHeight: 200, maxWidth: 200, includeBase64: true }, (response: any) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.errorMessage) {

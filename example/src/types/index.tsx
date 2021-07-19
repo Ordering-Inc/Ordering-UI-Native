@@ -142,7 +142,10 @@ export interface BusinessControllerParams {
   orderType?: any;
   handleClick?: any;
   isBusinessOpen?: boolean;
-  businessWillCloseSoonMinutes?: number
+  businessWillCloseSoonMinutes?: number;
+  isBusinessClose?: boolean;
+  isHorizontal?: boolean;
+  noImages?: boolean;
 }
 export interface BusinessProductsListingParams {
   navigation?: any;
@@ -168,6 +171,7 @@ export interface BusinessBasicInformationParams {
   isBusinessInfoShow?: boolean;
   header?: any;
   logo?: any;
+  noImage?: boolean;
 }
 export interface BusinessProductsCategoriesParams {
   categories: Array<any>;
@@ -177,6 +181,7 @@ export interface BusinessProductsCategoriesParams {
   categorySelected: any;
   featured: boolean;
   loading?: any;
+  contentStyle?: ViewStyle;
 }
 export interface BusinessProductsListParams {
   errors?: any;
@@ -376,6 +381,7 @@ export interface UpsellingProductsParams {
   openUpselling: boolean;
   canOpenUpselling?: boolean;
   setCanOpenUpselling?: (value: any) => void;
+  scrollContainerStyle?: ViewStyle;
 }
 
 export interface GoogleMapsParams {

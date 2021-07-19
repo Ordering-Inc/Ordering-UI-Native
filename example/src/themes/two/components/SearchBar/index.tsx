@@ -1,6 +1,6 @@
 import React from 'react'
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
-import { colors } from '../../theme.json'
+import { StyleSheet, View, TouchableOpacity, TextStyle } from 'react-native'
+import { colors, images } from '../../theme.json'
 import { OInput, OButton } from '../../../../components/shared'
 import { useLanguage } from 'ordering-components/native'
 import Icon from 'react-native-vector-icons/Feather'
@@ -15,7 +15,8 @@ export const SearchBar = (props: any) => {
     isCancelButtonShow,
     isCancelXButtonShow,
     noBorderShow,
-    borderStyle
+    borderStyle,
+	 inputWrapStyle
   } = props
 
   const [,t] = useLanguage()
@@ -41,10 +42,10 @@ export const SearchBar = (props: any) => {
       <OInput
         value={searchValue}
         onChange={onChangeSearch}
-        style={styles.inputStyle}
+        style={{...styles.inputStyle, ...inputWrapStyle}}
         placeholder={placeholder}
-        vertorIcon='search'
-        vectorIconColor={colors.disabled}
+        icon={images.general.search}
+		  iconStyle={{width: 16}}
         returnKeyType='done'
       />
       {isCancelButtonShow && (
@@ -63,7 +64,8 @@ export const SearchBar = (props: any) => {
         >
           <Icon
             name='x-circle'
-            size={30}
+            size={16}
+				color={colors.disabled}
             style={{ marginRight: 5 }}
           />
         </TouchableOpacity>
@@ -89,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonStyle: {
-    maxHeight: 40,
+    maxHeight: 30,
     paddingRight: 5,
     paddingLeft: 5,
   }

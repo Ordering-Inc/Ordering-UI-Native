@@ -24,8 +24,7 @@ export const BusinessInfo = styled.View`
   background-color: ${colors.backgroundPage};
 `
 export const BusinessInfoItem = styled.View`
-  flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
 `
 export const WrapReviews = styled.View`
   flex-direction: column;

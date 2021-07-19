@@ -2,26 +2,21 @@ import styled, {css} from 'styled-components/native';
 
 export const Card = styled.TouchableOpacity`
   margin-vertical: 20px;
-  border-radius: 25px;
+  border-radius: 7.6px;
   flex: 1;
   width: 100%;
 `;
 
 export const BusinessHero = styled.ImageBackground`
-  height: 200px;
+  height: 128px;
   resize-mode: cover;
-  border-radius: 25px;
+  border-radius: 7.6px;
   flex-direction: row;
   position: relative;
 `;
 
 export const BusinessContent = styled.View`
-    padding-horizontal: 10px;
-    padding-vertical: 15px;
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
-    border-width: 1px;
-    border-color: #ddd;
+    padding-vertical: 6px;
 `;
 
 export const BusinessInfo = styled.View`
@@ -35,11 +30,13 @@ export const BusinessCategory = styled.View`
 
 export const Metadata = styled.View`
   flex-direction: row;
+  justify-content: space-between;
 `;
 
 export const BusinessState = styled.View`
-    margin-right: 20px;
-    margin-top: 20px;
+	position: absolute;
+	end: 10px;
+	top: 10px;
 `
 
 export const BusinessLogo = styled.View`

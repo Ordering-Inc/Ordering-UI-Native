@@ -5,28 +5,24 @@ export const Container = styled.View`
   flex: 1;
   bottom: 0px;
   left: 0;
-  padding: 10px;
+  padding-vertical: 10px;
+  padding-horizontal: 40px;
   border-top-width: 1px;
-  border-color: ${colors.lightGray};
+  border-color: ${colors.clear};
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FFF;
   z-index: 1000;
-
-  ${((props: any) => props.isIos && css `
-    padding-bottom: 20px;
-  `)}
 `
 
 export const Button = styled.TouchableOpacity`
   position: relative;
   display: flex;
   flex-direction: row;
-  width: 90%;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   border-radius: 25px;
-  height: 50px;
+  height: 40px;
 `

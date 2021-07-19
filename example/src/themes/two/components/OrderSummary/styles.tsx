@@ -7,22 +7,25 @@ export const OSContainer = styled.View`
   justify-content: center;
 `
 
-export const OSProductList = styled.View``
+export const OSProductList = styled.View`
+	padding-horizontal: 40px;
+`
 
 export const OSBill = styled.View`
   padding-top: 10px;
+  padding-horizontal: 40px;
 `
 
 export const OSTable = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding-vertical: 4px;
 `
 
 export const OSTotal = styled.View`
   border-top-width: 1px;
   border-top-color: #d9d9d9;
-  margin-top: 15px;
 `
 
 export const OSCoupon = styled.View`

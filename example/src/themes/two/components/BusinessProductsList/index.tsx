@@ -49,7 +49,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         !category.id && (
           featured && categoryState?.products?.find((product: any) => product.featured) && (
             <>
-              <OText size={18} weight='bold' mBottom={10}>{t('FEATURED', 'Featured')}</OText>
+              <OText size={16} weight={'600'} mBottom={20}>{t('FEATURED', 'Featured')}</OText>
               <>
                 {categoryState.products?.map((product: any) => product.featured && (
                   <SingleProductCard
@@ -74,7 +74,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               {
                 products.length > 0 && (
                   <>
-                    <OText size={18} weight='bold' mBottom={10}>{category.name}</OText>
+                    <OText size={16} weight={'600'} mBottom={20}>{category.name}</OText>
                     <>
                       {
                         products.map((product: any) => (

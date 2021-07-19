@@ -45,7 +45,7 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 import { ToastType, useToast } from '../../../../providers/ToastProvider';
 import { FloatingButton } from '../FloatingButton';
-import { Container } from '../../layouts/Container';
+import { Container } from '../../../../layouts/Container';
 
 const mapConfigs = {
   mapZoom: 16,

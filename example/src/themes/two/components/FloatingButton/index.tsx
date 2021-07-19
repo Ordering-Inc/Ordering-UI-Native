@@ -8,6 +8,7 @@ import {
 import { OText } from '../../../../components/shared'
 import { StyleSheet, Platform } from 'react-native'
 import { colors } from '../../theme.json'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const FloatingButtonUI = (props: FloatingButtonParams) => {
   const {
@@ -21,8 +22,10 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
     isSecondaryBtn
   } = props
 
+  const { bottom } = useSafeAreaInsets();
+
   return (
-    <Container isIos={Platform.OS === 'ios'}>
+    <Container isIos={Platform.OS === 'ios'} style={{paddingBottom: bottom + 10 }}>
       <Button
         style={[isSecondaryBtn ? styles.secodaryBtn: styles.primaryBtn]}
         onPress={handleButtonClick}
@@ -31,7 +34,7 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
         <OText color={colors.white} size={16} mLeft={20}>
           {btnLeftValueShow ? btnLeftValue : ''}
         </OText>
-        <OText style={styles.btnTextStyle} color={colors.white} size={16} weight='bold'>
+        <OText style={styles.btnTextStyle} color={colors.white} size={14} weight={'600'}>
           {btnText}
         </OText>
         <OText color={colors.white} size={16} mRight={20}>
@@ -50,10 +53,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.textSecondary,
   },
   btnTextStyle: {
-    position: 'absolute',
-    width: '100%',
-    paddingBottom: 5,
-    left: 0,
     textAlign: 'center',
   }
 })

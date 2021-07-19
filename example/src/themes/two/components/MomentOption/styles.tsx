@@ -14,32 +14,28 @@ export const HeaderTitle = styled.View`
 export const WrapSelectOption = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  margin-vertical: 5px;
+  margin-bottom: 18px;
 `
 export const Days = styled.View`
   flex-wrap: wrap;
   flex-direction: row;
   margin-vertical: 10px;
+  justify-content: space-between;
+  margin-top: 20px;
 `
 export const Day = styled.TouchableOpacity`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-right-width: 1px;
-  width: 25%;
   margin-vertical: 10px;
-  border-color: ${colors.textSecondary};
-
-  ${(props: any) => props.borderLeftShow && css`
-    border-left-width: 1px;
-  `}
+  min-width: 26px;
 `
 export const WrapHours = styled.ScrollView`
   border-width: 1px;
-  border-color: ${colors.textSecondary};
-  border-radius: 10px;
-  margin: 20px 0;
+  border-color: ${colors.clear};
+  border-radius: 7.6px;
+  margin: 0px 0;
   height: 140px;
   max-height: 140px;
 `
@@ -56,10 +52,10 @@ export const Hour = styled.TouchableOpacity`
   align-items: center;
   padding: 5px;
   border-width: 1px;
-  border-radius: 10px;
-  border-color: ${colors.textSecondary};
+  border-radius: 7.6px;
+  border-color: ${colors.border};
   width: 90px;
-  margin-vertical: 10px;
+  margin-vertical: 7px;
 `
 
 export const WrapDelveryTime = styled.View`

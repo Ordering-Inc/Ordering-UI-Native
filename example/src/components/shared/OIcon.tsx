@@ -23,7 +23,7 @@ interface Props {
   borderRadius?: number,
 }
 
-const OImage = (props: Props): React.ReactElement => {
+const OIcon = (props: Props): React.ReactElement => {
   return (
     <Wrapper style={{ borderRadius: props.style?.borderRadius, overflow: 'hidden', marginHorizontal: props.style?.marginHorizontal }}>
       <SImage
@@ -45,9 +45,9 @@ const OImage = (props: Props): React.ReactElement => {
   )
 }
 
-OImage.defaultProps = {
+OIcon.defaultProps = {
   width: 26,
   height: 26
 }
 
-export default OImage;
+export default OIcon;

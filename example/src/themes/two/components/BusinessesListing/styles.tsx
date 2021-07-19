@@ -21,12 +21,8 @@ export const Search = styled.View`
 `
 
 export const AddressInput = styled.TouchableOpacity`
-  flex-direction: row;
-  background-color: ${colors.inputDisabled};
-  border-radius: 10px;
   align-items: center;
-  margin-horizontal: 10px;
-  padding: 15px;
+  padding-horizontal: 20px;
   flex: 1;
   width: 100%;
   z-index: -10;
@@ -49,3 +45,15 @@ export const WrapMomentOption = styled.TouchableOpacity`
   padding: 15px 20px;
   max-width: 240px;
 `
+
+export const HeaderCont = styled.View`
+	flex-direction: row;
+	height: 60px;
+	min-height: 60px;
+	align-items: center;
+`;
+
+export const FeaturedBussiCont = styled.ScrollView`
+	min-height: 190px;
+	margin-horizontal: -40px;
+`;

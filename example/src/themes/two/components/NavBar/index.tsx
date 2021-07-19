@@ -1,12 +1,13 @@
 import * as React from 'react'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import { OButton, OIcon, OText } from '../../../../components/shared'
-import { colors,images } from '../../theme.json'
+import { colors, images, labels } from '../../theme.json'
 import { TextStyle } from 'react-native'
+import { ViewStyle } from 'react-native'
 
 const Wrapper = styled.View`
   background-color: ${colors.white};
-  padding: 10px 20px 20px 0px;
+  padding: 4px 40px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -20,13 +21,16 @@ const TitleTopWrapper = styled.View`
   flex-grow: 1;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 `
 
 const btnBackArrow = {
   borderWidth: 0,
   backgroundColor: '#FFF',
   borderColor: '#FFF',
-  shadowColor: '#FFF'
+  shadowColor: '#FFF',
+  paddingStart: 0,
+  height: 40,
 }
 
 interface Props {
@@ -42,11 +46,12 @@ interface Props {
   isBackStyle?: boolean,
   onActionLeft?: () => void,
   onRightAction?: () => void,
-  showCall?: boolean,
+  rightImg?: any,
   titleStyle?: TextStyle,
   btnStyle?: TextStyle,
-  style?: TextStyle,
-  paddingTop?: number
+  style?: ViewStyle,
+  paddingTop?: number,
+  noBorder?: boolean,
 }
 
 const NavBar = (props: Props) => {
@@ -54,14 +59,15 @@ const NavBar = (props: Props) => {
     props.navigation.navigate('Supports', {});
   }
   return (
-    <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
+    <Wrapper style={{ paddingTop: props.paddingTop, borderBottomWidth: props.noBorder ? 0 : 1, borderBottomColor: colors.border, ...props.style}}>
       <OButton
         imgLeftSrc={props.leftImg || images.general.arrow_left}
+		  imgLeftStyle={{width: 14}}
         imgRightSrc={null}
         style={{ ...btnBackArrow, ...props.btnStyle }}
         onClick={props.onActionLeft}
       />
-      <TitleTopWrapper>
+      <TitleTopWrapper style={{marginEnd: !props.rightImg ? 34 : 0}}>
         {props.withIcon
           ? (
               <OIcon
@@ -78,14 +84,13 @@ const NavBar = (props: Props) => {
         }
         <TitleWrapper>
           <OText
-            size={22}
             weight={'600'}
             style={
               {
                 textAlign: props.titleAlign ? props.titleAlign : 'center',
-                marginRight: props.showCall ? 0 : 40,
                 color: props.titleColor || 'black',
                 paddingHorizontal: props.titleAlign == 'left' ? 12 : 0,
+					 ...labels.middle as TextStyle,
                 ...props.titleStyle
               }
             }
@@ -98,16 +103,14 @@ const NavBar = (props: Props) => {
           }
         </TitleWrapper>
       </TitleTopWrapper>
-      { props.showCall
-        ? (<OButton
-          isCircle={true}
-          bgColor={colors.primary}
-          borderColor={colors.primary}
+      { props.rightImg != null && (<OButton
+          bgColor={colors.clear}
+          borderColor={colors.clear}
+			 style={{paddingEnd: 0}}
           imgRightSrc={null}
-          imgLeftStyle={{ tintColor: 'white', width: 30, height: 30 }}
-          imgLeftSrc={images.general.support}
+          imgLeftStyle={{ tintColor: colors.textPrimary, width: 16, height: 16 }}
+          imgLeftSrc={props.rightImg || images.general.support}
           onClick={props.onRightAction || goSupport} />)
-        : null
       }
     </Wrapper>
   )
