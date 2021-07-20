@@ -16,37 +16,37 @@ const IntroductoryTutorial = ({ navigation, route }: any)  => {
     {
       title: t('DELIVERY_BY_ADDRESS', 'Delivery by Address'),
       text: t('DELIVERY_BY_ADDRESS_INST', 'DELIVERY_BY_ADDRESS_INST'),
-      image: require('../assets/images/slide1.png'),
+      image: theme.images.tutorials.slide1,
       bg: theme.colors.primary
     },
     {
       title: t('SELECT_A_BUSINESS', 'SELECT_A_BUSINESS'),
       text: t('SELECT_A_BUSINESS_INST', 'SELECT_A_BUSINESS_INST'),
-      image: require('../assets/images/slide2.png'),
+      image: theme.images.tutorials.slide2,
       bg: theme.colors.primary
     },
     {
       title: t('BUSINESS_MENU', 'BUSINESS_MENU'),
       text: t('BUSINESS_MENU_INST', 'BUSINESS_MENU_INST'),
-      image: require('../assets/images/slide3.png'),
+      image: theme.images.tutorials.slide3,
       bg: theme.colors.primary
     },
     {
       title: t('PRODUCT_LIST', 'PRODUCT_LIST'),
       text: t('PRODUCT_LIST_INST', 'PRODUCT_LIST_INST'),
-      image: require('../assets/images/slide4.png'),
+      image: theme.images.tutorials.slide4,
       bg: theme.colors.primary
     },
     {
       title: t('CHECKOUT_SCREEN', 'CHECKOUT_SCREEN'),
       text: t('CHECKOUT_SCREEN_INST', 'CHECKOUT_SCREEN_INST'),
-      image: require('../assets/images/slide5.png'),
+      image: theme.images.tutorials.slide5,
       bg: theme.colors.primary
     },
     {
       title: t('TUTORIAL_ORDER_COMPLETED', 'TUTORIAL_ORDER_COMPLETED'),
       text: t('TUTORIAL_ORDER_COMPLETED_INST', 'TUTORIAL_ORDER_COMPLETED_INST'),
-      image: require('../assets/images/slide6.png'),
+      image: theme.images.tutorials.slide6,
       bg: theme.colors.primary
     },
   ];

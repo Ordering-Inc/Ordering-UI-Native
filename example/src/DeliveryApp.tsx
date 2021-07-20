@@ -47,6 +47,14 @@ theme.images = {
     // isotype,
     // isotypeInvert
   },
+  tutorials: {
+    slide1: require('./assets/images/slide1.png'),
+    slide2: require('./assets/images/slide1.png'),
+    slide3: require('./assets/images/slide1.png'),
+    slide4: require('./assets/images/slide1.png'),
+    slide5: require('./assets/images/slide1.png'),
+    slide6: require('./assets/images/slide1.png')
+  },
   general: {
     homeHero: require('./assets/images/home-hero.png'),
     notFound: require('./assets/images/not-found.png'),
