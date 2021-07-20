@@ -1,5 +1,6 @@
 {
-    "ios_project": "delivery",
+    "ios_project": "kioskApp",
     "ios_bundle": "co.ordering.reactnative",
-    "android_package": "com.delivery"
+    "android_package": "com.kioskapp",
+    "root_path": "kioskApp"
 }
