@@ -45,7 +45,7 @@ export const AppleLogin = (props : AppleLoginParams) => {
           email,
           identityToken,
           authorizationCode,
-        } = appleAuthRequestResponse;
+        } = appleAuthRequestResponse
 
         if (identityToken && authorizationCode) {
           console.log('auth code: ', authorizationCode)
@@ -78,6 +78,7 @@ export const AppleLogin = (props : AppleLoginParams) => {
   const handleLoginApple = async (code: string) => {
     const body: any = {
       code,
+      platform: Platform.OS === 'ios' && 'ios'
     }
     if (notificationState?.notification_token) {
       body.notification_token = notificationState.notification_token
@@ -96,7 +97,7 @@ export const AppleLogin = (props : AppleLoginParams) => {
       if (!error && result) {
         handleSuccessApple && handleSuccessApple(result)
       } else {
-        handleErrors && handleErrors(result?.error || t('ERROR_LOGIN_APPLE', 'Error login with apple'))
+        handleErrors && handleErrors(result?.error || t('ERROR_LOGIN_AUTH_APPLE', 'Error login auth with apple'))
       }
     } catch (error) {
       handleLoading && handleLoading(false)
