@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
+import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator, TextStyle } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ToastType, useToast } from '../../../../providers/ToastProvider';
 import {
@@ -32,7 +32,7 @@ import {
   PMCardSelected,
   PMCardItemContent
 } from './styles'
-import { colors, images } from '../../theme.json';
+import { colors, images, labels } from '../../theme.json';
 import { getIconCard } from '../../../../utils';
 import { WebView } from 'react-native-webview';
 
@@ -243,13 +243,13 @@ const PaymentOptionsUI = (props: any) => {
               />
             </View>
             <View style={styles.viewStyle}>
-              <OText>
+              <OText size={12}>
                 {getIconCard((paymethodData?.brand || paymethodData?.card?.brand), 26)}
               </OText>
             </View>
             <View style={styles.viewStyle}>
               <OText
-                size={20}
+                size={12}
               >
                 XXXX-XXXX-XXXX-{(paymethodData?.last4 || paymethodData?.card?.last4)}
               </OText>
@@ -266,7 +266,7 @@ const PaymentOptionsUI = (props: any) => {
             bgColor={colors.primary}
             borderColor={colors.primary}
             style={styles.btnAddStyle}
-            textStyle={{ color: 'white' }}
+            textStyle={{ color: 'white', ...labels.middle} as TextStyle}
             imgRightSrc={null}
             onClick={() => setAddCardOpen({ ...addCardOpen, stripe: true })}
           />
@@ -333,7 +333,7 @@ const PaymentOptionsUI = (props: any) => {
             bgColor={colors.primary}
             borderColor={colors.primary}
             style={styles.btnAddStyle}
-            textStyle={{color: 'white'}}
+            textStyle={{color: 'white', ...labels}}
             imgRightSrc={null}
             onClick={() => setAddCardOpen({ ...addCardOpen, stripeConnect: true })}
           />
@@ -489,9 +489,11 @@ const styles = StyleSheet.create({
   },
   btnAddStyle: {
     marginVertical: 20,
+	 height: 40,
+	 shadowOpacity: 0
   },
   btnCon: {
-    height: 45,
+    height: 40,
     width: '70%',
     elevation: 1,
     backgroundColor: '#00457C',

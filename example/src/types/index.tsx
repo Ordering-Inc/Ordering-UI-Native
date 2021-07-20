@@ -292,6 +292,7 @@ export interface ProductItemAccordionParams {
   onEditProduct?: (product: any) => void,
   offsetDisabled?: any,
   isFromCheckout?: any
+  isMini?: boolean,
 }
 export interface ReviewOrderParams {
   order?: { orderId: number, businessId: number, logo: string },

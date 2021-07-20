@@ -1,10 +1,13 @@
 import styled, { css } from 'styled-components/native'
+import { colors } from '../../theme.json';
 
 export const Container = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding-vertical: 10px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${colors.border}
 `
 
 export const IconControl = styled.TouchableOpacity`

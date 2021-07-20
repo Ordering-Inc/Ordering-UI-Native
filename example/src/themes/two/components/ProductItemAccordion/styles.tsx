@@ -18,21 +18,25 @@ export const Accordion = styled.TouchableOpacity`
 `
 
 export const ProductInfo = styled.View`
-  width: 15%;
+  width: 24px;
+  position: absolute;
+  start: 0;
+  top: 14px;
+  z-index: 10;
 `
-
-export const ProductQuantity = styled.View``
+export const ProductQuantity = styled.View`
+	margin-end: 7px;
+`
 
 export const ContentInfo = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   overflow: hidden;
-  width: 85%;
 `
-
 export const ProductImage = styled.View`
-  margin-right: 5px;
+  margin-end: 7px;
+  margin-start: 12px;
 `
 
 export const AccordionContent = styled.View`
@@ -40,8 +44,7 @@ export const AccordionContent = styled.View`
 `
 
 export const ProductOptionsList = styled.View`
-  margin-top: 20px;
-  margin-left: 20px;
+  flex-wrap: wrap;
 `
 
 export const ProductOption = styled.View``

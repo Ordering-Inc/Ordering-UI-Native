@@ -45,7 +45,7 @@ export const PaymentOptionCash = (props: any) => {
     <PCContainer>
       <PCForm>
         <PCWrapper>
-          <OText style={{ fontSize: 16, textAlign: 'center' }}>
+          <OText style={{ fontSize: 12, textAlign: 'center' }}>
             {t('NOT_EXACT_CASH_AMOUNT', 'Don\'t have exact amount? Let us know with how much will you pay')}
           </OText>
           <Controller
@@ -66,7 +66,7 @@ export const PaymentOptionCash = (props: any) => {
           />
         </PCWrapper>
         {!!value && parseFloat(value) < orderTotal && (
-          <OText style={styles.errorMsg}>
+          <OText size={12} style={styles.errorMsg}>
             {`${t('VALUE_GREATER_THAN_TOTAL', 'This value must be greater than order total')}: ${parsePrice(orderTotal)}`}
           </OText>
         )}
@@ -77,12 +77,13 @@ export const PaymentOptionCash = (props: any) => {
 
 const styles = StyleSheet.create({
   inputsStyle: {
-    borderColor: colors.secundaryContrast,
-    borderRadius: 50,
+    borderColor: colors.clear,
+	 backgroundColor: colors.inputDisabled,
+    borderRadius: 7.6,
     marginTop: 10,
     width: '100%',
-    height: 60,
-    maxHeight: 60
+    height: 40,
+    maxHeight: 40
   },
   errorMsg: {
     marginTop: 10,

@@ -85,11 +85,11 @@ const CouponControlUI = (props: any) => {
             onClick={() => handleButtonApplyClick()}
             bgColor={colors.primary}
             borderColor={colors.primary}
-            textStyle={{color: 'white'}}
+            textStyle={{color: colors.white, fontSize: 14, fontWeight: '600'}}
             imgRightSrc={null}
             text={t('APPLY', 'Apply')}
             isDisabled={!couponInput}
-				style={{height: 40}}
+				style={{height: 40, shadowOpacity: 0, maxWidth: 105, paddingHorizontal: 10}}
           />
         </CCWrapper>
       )}
@@ -98,11 +98,13 @@ const CouponControlUI = (props: any) => {
 }
 const styles = StyleSheet.create({
   inputsStyle: {
-    borderColor: colors.border,
-    borderRadius: 30,
+    borderRadius: 7.6,
     flex: 1,
-    marginRight: 30,
+    marginRight: 14,
 	 height: 40,
+	 flexBasis: '70%',
+	 borderWidth: 0,
+	 backgroundColor: colors.inputDisabled
   },
 });
 

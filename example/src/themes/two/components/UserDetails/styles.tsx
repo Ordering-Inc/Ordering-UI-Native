@@ -1,11 +1,14 @@
 import styled, { css } from 'styled-components/native';
 
-export const UDContainer = styled.View``
+export const UDContainer = styled.View`
+
+`
 
 export const UDHeader = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 `
 
 export const UDForm = styled.View`

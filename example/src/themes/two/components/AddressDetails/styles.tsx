@@ -20,5 +20,7 @@ export const ADAddress = styled.View`
 
 export const ADMap = styled.View`
   width: 100%;
-  margin: 0 auto;
+  border-radius: 7.6px;
+  overflow: hidden;
+  margin-vertical: 16px;
 `

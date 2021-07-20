@@ -41,7 +41,7 @@ const StripeCardsListUI = (props: any) => {
     <>
       {token && !cardsList.loading && cardsList.cards && cardsList.cards.length === 0 && (
         <OSItem style={{ justifyContent: 'center', paddingTop: 0 }}>
-          <OText size={22}>
+          <OText size={12}>
             {t('YOU_DONT_HAVE_CARDS', 'You don\'t have cards')}
           </OText>
         </OSItem>
@@ -96,7 +96,7 @@ const StripeCardsListUI = (props: any) => {
                   {getIconCard(card.brand, 26)}
                 </View>
                 <View style={styles.viewStyle}>
-                  <OText size={18}>
+                  <OText size={12}>
                     XXXX-XXXX-XXXX-{card.last4}
                   </OText>
                 </View>

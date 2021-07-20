@@ -98,6 +98,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const handleUpsellingPage = () => {
+		console.log(`---- PASSED BUTTON PRESS ----`);
 		onRedirect('CheckoutNavigator', {
 			screen: 'CheckoutPage',
 			cartUuid: currentCart?.uuid,
@@ -105,7 +106,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 			businessName: business?.name,
 			cartTotal: currentCart?.total
 		})
-		setOpenUpselling(false)
+		setOpenCart(false)
 	}
 
 	const handlePageScroll = (event: any) => {
@@ -272,6 +273,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				onClose={handleCloseProductModal}
 				entireModal
 				customClose
+				transition={'pageSheet'}
 			>
 				<ProductForm
 					product={curProduct || productModal.product}
@@ -289,7 +291,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				entireModal
 				customClose
 			>
-				<ScrollView stickyHeaderIndices={[0]}>
+				<ScrollView stickyHeaderIndices={[0]} contentContainerStyle={{paddingBottom: 100}}>
 					<NavBar title={t('CART', 'Cart')} onActionLeft={handleCloseCartModal} leftImg={images.general.close} noBorder />
 					<OrderSummary
 						cart={currentCart}
@@ -297,8 +299,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						hasUpSelling={true}
 						isFromCheckout
 						title={t('ITEMS', 'Items')}
+						paddingH={40}
 					/>
 				</ScrollView>
+				<FloatingButton btnText={t('CHECKOUT', 'Checkout')} handleClick={() => handleUpsellingPage()} />
 			</OModal>
 		</>
 	)

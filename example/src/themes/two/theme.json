@@ -50,7 +50,7 @@
 	  "white": "#fff",
 	  "whiteGray": "#f7f6f3",
 	  "dusk": "rgb(65,77,107)",
-	  "green": "#0CAD63",
+	  "green": "#00838A",
 	  "mediumGray": "rgb(134,154,183)",
 	  "paleGray": "#FAFAFA",
 	  "lightGray": "#D2D2D2",
@@ -129,7 +129,11 @@
 		 "tab_orders": "",
 		 "tab_profile": "",
 		 "share": "",
-		 "star": ""
+		 "star": "",
+		 "pencil": "",
+		 "plus": "",
+		 "minus": "",
+		 "pencil_line": ""
 	  },
 	  "order": {
 		 "status0": "",

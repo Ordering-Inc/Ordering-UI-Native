@@ -35,7 +35,9 @@ const OrderSummaryUI = (props: any) => {
 		isCartPending,
 		isFromCheckout,
 		hasUpSelling,
-		title
+		title,
+		paddingH,
+		isMini,
 	} = props;
 
 	const [, t] = useLanguage();
@@ -67,8 +69,8 @@ const OrderSummaryUI = (props: any) => {
 		<OSContainer>
 			{cart?.products?.length > 0 && (
 				<>
-					<OSProductList>
-						{title && <OText style={[labels.middle, {marginVertical: 12}] as TextStyle}>{title}</OText>}
+					<OSProductList style={{ paddingHorizontal: paddingH }}>
+						{title && <OText style={[labels.middle, { marginVertical: 12 }] as TextStyle}>{title}</OText>}
 						{cart?.products.map((product: any) => (
 							<ProductItemAccordion
 								key={product.code}
@@ -81,48 +83,53 @@ const OrderSummaryUI = (props: any) => {
 								onDeleteProduct={handleDeleteClick}
 								onEditProduct={handleEditProduct}
 								isFromCheckout={isFromCheckout}
+								isMini={isMini}
 							/>
 						))}
 					</OSProductList>
 					{hasUpSelling && (
 						<View style={{ marginVertical: 28, paddingBottom: 36, borderBottomWidth: 8, borderBottomColor: colors.inputDisabled }}>
-							<OText style={[labels.middle, {paddingHorizontal: 40, marginBottom: 10}] as TextStyle}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
+							<OText style={[labels.middle, { paddingHorizontal: paddingH, marginBottom: 10 }] as TextStyle}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
 							<View>
 								<UpsellingProducts
 									businessId={cart?.business_id}
 									business={cart?.business}
 									cartProducts={cart?.products}
-									handleUpsellingPage={() => {}}
+									handleUpsellingPage={() => { }}
 									openUpselling={true}
 									canOpenUpselling={true}
 									isCustomMode
-									scrollContainerStyle={{paddingHorizontal: 40}}
+									scrollContainerStyle={{ paddingHorizontal: paddingH }}
 								/>
 							</View>
 						</View>
 					)}
 					{cart?.valid && (
-						<OSBill>
-							{cart?.total >= 1 && (
-								<View style={{ borderBottomWidth: 1, borderBottomColor: colors.border, paddingBottom: 12, marginBottom: 4 }}>
-									<OSTable>
-										<OText style={labels.middle as TextStyle}>
-											{t('TOTAL', 'Total')}
-										</OText>
-										<OText style={labels.middle as TextStyle}>
-											{parsePrice(cart?.total)}
-										</OText>
-									</OSTable>
+						<OSBill style={{ paddingHorizontal: paddingH }}>
+							{!isMini ? (
+								<View>
+									{cart?.total >= 1 && (
+										<View style={{ borderBottomWidth: 1, borderBottomColor: colors.border, paddingBottom: 12, marginBottom: 4 }}>
+											<OSTable>
+												<OText style={labels.middle as TextStyle}>
+													{t('TOTAL', 'Total')}
+												</OText>
+												<OText style={labels.middle as TextStyle}>
+													{parsePrice(cart?.total)}
+												</OText>
+											</OSTable>
+										</View>
+									)}
+									{isCouponEnabled && !isCartPending && (
+										<View style={{ paddingVertical: 5, marginBottom: 7 }}>
+											<CouponControl
+												businessId={cart.business_id}
+												price={cart.total}
+											/>
+										</View>
+									)}
 								</View>
-							)}
-							{isCouponEnabled && !isCartPending && (
-								<View style={{ paddingVertical: 5, marginBottom: 7 }}>
-									<CouponControl
-										businessId={cart.business_id}
-										price={cart.total}
-									/>
-								</View>
-							)}
+							) : null}
 							<OSTable>
 								<OText style={labels.normal as TextStyle}>{t('SUBTOTAL', 'Subtotal')}</OText>
 								<OText style={labels.normal as TextStyle}>{cart.business.tax_type === 1
@@ -180,7 +187,32 @@ const OrderSummaryUI = (props: any) => {
 									<OText style={labels.normal as TextStyle}>{parsePrice(cart?.service_fee)}</OText>
 								</OSTable>
 							)}
-							
+
+							{isMini ? (
+								<View style={{marginTop: 10}}>
+									{cart?.total >= 1 && (
+										<View style={{ borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 12, marginBottom: 4 }}>
+											<OSTable>
+												<OText style={labels.middle as TextStyle}>
+													{t('TOTAL', 'Total')}
+												</OText>
+												<OText style={labels.middle as TextStyle}>
+													{parsePrice(cart?.total)}
+												</OText>
+											</OSTable>
+										</View>
+									)}
+									{isCouponEnabled && !isCartPending && (
+										<View style={{ paddingVertical: 5, marginBottom: 7 }}>
+											<CouponControl
+												businessId={cart.business_id}
+												price={cart.total}
+											/>
+										</View>
+									)}
+								</View>
+							) : null}
+
 						</OSBill>
 					)}
 					<OModal

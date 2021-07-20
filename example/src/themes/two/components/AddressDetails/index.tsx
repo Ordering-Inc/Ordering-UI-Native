@@ -1,73 +1,71 @@
 import React from 'react';
-import { View } from 'react-native';
+import { TextStyle, TouchableOpacity, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AddressDetails as AddressDetailsController, useOrder } from 'ordering-components/native';
 
 import {
-  ADContainer,
-  ADHeader,
-  ADAddress,
-  ADMap
+	ADContainer,
+	ADHeader,
+	ADAddress,
+	ADMap
 } from './styles';
 
-import { colors } from '../../theme.json'
+import { colors, labels, images } from '../../theme.json'
 import { OText, OIcon } from '../../../../components/shared';
 
 const AddressDetailsUI = (props: any) => {
-  const {
-    navigation,
-    addressToShow,
-    isCartPending,
-    googleMapsUrl,
-    apiKey
-  } = props;
+	const {
+		navigation,
+		addressToShow,
+		isCartPending,
+		googleMapsUrl,
+		apiKey,
+		title
+	} = props;
 
-  const [orderState] = useOrder();
+	const [orderState] = useOrder();
 
-  return (
-    <ADContainer>
-      <ADHeader>
-        <ADAddress>
-          <OText
-            size={20}
-            numberOfLines={1}
-            ellipsizeMode='tail'
-            style={{ width: '85%' }}
-          >
-            {addressToShow || orderState?.options?.address?.address}
-          </OText>
-          <View>
-            {orderState?.options?.type === 1 && !isCartPending &&
-              <MaterialIcon
-                name='pencil-outline'
-                size={28}
-                color={colors.editColor}
-                style={{ marginBottom: 5, marginLeft: 5 }}
-                onPress={() => navigation.navigate('AddressList', { isFromCheckout: true })}
-              />
-            }
-          </View>
-        </ADAddress>
-      </ADHeader>
-      {!!apiKey && googleMapsUrl && (
-        <ADMap>
-          <OIcon
-            url={googleMapsUrl}
-            style={{borderRadius: 15, width: '100%'}}
-            height={162}
-          />
-        </ADMap>
-      )}
-    </ADContainer>
-  )
+	return (
+		<ADContainer>
+			<ADHeader>
+				{!!apiKey && googleMapsUrl && (
+					<ADMap>
+						<OIcon
+							url={googleMapsUrl}
+							style={{ borderRadius: 7.6, width: '100%', resizeMode: 'cover' }}
+							height={110}
+						/>
+					</ADMap>
+				)}
+				{title ? <OText style={labels.middle as TextStyle}>{title}</OText> : null}
+				<ADAddress>
+					<OText
+						numberOfLines={1}
+						ellipsizeMode='tail'
+						style={{ width: '85%', ...labels.normal } as TextStyle}
+					>
+						{addressToShow || orderState?.options?.address?.address}
+					</OText>
+					<View>
+						{orderState?.options?.type === 1 && !isCartPending &&
+							<TouchableOpacity onPress={() => navigation.navigate('AddressList', { isFromCheckout: true })}>
+								<OIcon src={images.general.pencil} width={16} color={colors.textSecondary} />
+							</TouchableOpacity>
+						}
+					</View>
+				</ADAddress>
+			</ADHeader>
+
+		</ADContainer>
+	)
 }
 
 export const AddressDetails = (props: any) => {
-  const addressDetailsProps = {
-    ...props,
-    UIComponent: AddressDetailsUI
-  }
-  return (
-    <AddressDetailsController {...addressDetailsProps} />
-  )
+	const addressDetailsProps = {
+		...props,
+		UIComponent: AddressDetailsUI
+	}
+	return (
+		<AddressDetailsController {...addressDetailsProps} />
+	)
 }

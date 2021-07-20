@@ -1,12 +1,12 @@
 import {
-  ActivityIndicator,
-  I18nManager,
-  ImageSourcePropType,
-  ImageStyle,
-  TextStyle,
-  TouchableOpacity,
-  View,
-  ViewStyle,
+	ActivityIndicator,
+	I18nManager,
+	ImageSourcePropType,
+	ImageStyle,
+	TextStyle,
+	TouchableOpacity,
+	View,
+	ViewStyle,
 } from 'react-native';
 
 import * as React from 'react';
@@ -59,76 +59,80 @@ const EndImage = styled.Image`
 `;
 
 interface Props {
-  testID?: string;
-  isLoading?: boolean;
-  isDisabled?: boolean;
-  onClick?: () => void;
-  style?: ViewStyle;
-  parentStyle?: ViewStyle;
-  disabledStyle?: ViewStyle;
-  textStyle?: TextStyle;
-  imgLeftSrc?: ImageSourcePropType | string;
-  imgLeftStyle?: ImageStyle;
-  imgRightSrc?: any;
-  imgRightStyle?: ImageStyle;
-  indicatorColor?: string;
-  activeOpacity?: number;
-  text?: string;
-  isCircle?: boolean;
-  bgColor?: string;
-  borderColor?: string;
-  loadingStyle?: ViewStyle;
+	testID?: string;
+	isLoading?: boolean;
+	isDisabled?: boolean;
+	onClick?: () => void;
+	style?: ViewStyle;
+	parentStyle?: ViewStyle;
+	disabledStyle?: ViewStyle;
+	textStyle?: TextStyle;
+	imgLeftSrc?: ImageSourcePropType | string;
+	imgLeftStyle?: ImageStyle;
+	imgRightSrc?: any;
+	imgRightStyle?: ImageStyle;
+	indicatorColor?: string;
+	activeOpacity?: number;
+	text?: string;
+	textSub?: string;
+	isCircle?: boolean;
+	bgColor?: string;
+	borderColor?: string;
+	loadingStyle?: ViewStyle;
 }
 
 const OButton = (props: Props): React.ReactElement => {
-  if (props.isDisabled) {
-    return (
-      <View style={props.parentStyle}>
-      <StyledButtonDisabled style={props.style}>
-        <StyledTextDisabled style={props.textStyle}>
-          {props.text}
-        </StyledTextDisabled>
-      </StyledButtonDisabled>
-      </View>
-    );
-  }
+	if (props.isDisabled) {
+		return (
+			<View style={props.parentStyle}>
+				<StyledButtonDisabled style={props.style}>
+					<StyledTextDisabled style={props.textStyle}>
+						{props.text}
+					</StyledTextDisabled>
+				</StyledButtonDisabled>
+			</View>
+		);
+	}
 
-  if (props.isLoading) {
-    return (
-      <StyledButton style={props.style}>
-        <ActivityIndicator size="small" color={props.indicatorColor} style={props.loadingStyle}/>
-      </StyledButton>
-    );
-  }
+	if (props.isLoading) {
+		return (
+			<StyledButton style={props.style}>
+				<ActivityIndicator size="small" color={props.indicatorColor} style={props.loadingStyle} />
+			</StyledButton>
+		);
+	}
 
-  return (
-    <TouchableOpacity
-      testID={props.testID}
-      activeOpacity={props.activeOpacity}
-      onPress={props.onClick}
-      style={{ width: props.isCircle ? 52 : props.style?.width, ...props.parentStyle }}
-    >
-      <StyledButton style={props.bgColor ? { ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor } : props.style}>
-        {props.imgLeftSrc ? (
-          <StyledImage style={{transform: [{scaleX: I18nManager.isRTL ? -1 : 1}], ...props.imgLeftStyle}} source={props.imgLeftSrc} />
-        ) : null}
-        {props.text ? (
-          <StyledText style={props.textStyle}>{props.text}</StyledText>
-        ) : null}
-        {props.imgRightSrc ? (
-          <EndImage style={props.imgRightStyle} source={props.imgRightSrc} />
-        ) : null}
-      </StyledButton>
-    </TouchableOpacity>
-  );
+	return (
+		<TouchableOpacity
+			testID={props.testID}
+			activeOpacity={props.activeOpacity}
+			onPress={props.onClick}
+			style={{ width: props.isCircle ? 52 : props.style?.width, ...props.parentStyle }}
+		>
+			<StyledButton style={props.bgColor ? { ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor } : props.style}>
+				{props.imgLeftSrc ? (
+					<StyledImage style={{ transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }], ...props.imgLeftStyle }} source={props.imgLeftSrc} />
+				) : null}
+				{props.text ? (
+					<View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: props.textSub ? 'space-between' : 'center' }}>
+						<StyledText style={props.textStyle}>{props.text}</StyledText>
+						{props.textSub ? <StyledText style={props.textStyle}>{props.textSub}</StyledText> : null}
+					</View>
+				) : null}
+				{props.imgRightSrc ? (
+					<EndImage style={props.imgRightStyle} source={props.imgRightSrc} />
+				) : null}
+			</StyledButton>
+		</TouchableOpacity>
+	);
 }
 
 OButton.defaultProps = {
-  isLoading: false,
-  isDisabled: false,
-  indicatorColor: 'white',
-  activeOpacity: 0.5,
-  imgRightSrc: require('../../assets/icons/arrow_right.png')
+	isLoading: false,
+	isDisabled: false,
+	indicatorColor: 'white',
+	activeOpacity: 0.5,
+	imgRightSrc: require('../../assets/icons/arrow_right.png')
 };
 
 export default OButton;

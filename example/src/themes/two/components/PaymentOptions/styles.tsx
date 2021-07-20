@@ -20,7 +20,7 @@ export const PMItem = styled.View`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 7.6px;
   margin-right: 10px;
   margin-top: 10px;
   text-align: center;

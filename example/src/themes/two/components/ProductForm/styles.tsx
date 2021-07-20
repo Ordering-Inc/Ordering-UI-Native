@@ -13,27 +13,25 @@ export const TopHeader = styled.View`
   align-items: center;
   justify-content: space-between;
   z-index: 1;
+  start: 40px;
+  top: 10px;
 `
 
 export const ProductHeader = styled.ImageBackground`
   flex-direction: row;
   width: 100%;
   position: relative;
-  max-height: 260px;
-  height: 260px;
+  max-height: 216px;
+  height: 216px;
   resize-mode: cover;
-  min-height: 200px;
+  min-height: 216px;
   z-index: 0;
 `
 
 export const WrapContent = styled.View`
-  padding: 10px 20px;
+  padding: 18px 40px;
   position: relative;
-  bottom: 20px;
   background-color: white;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  z-index: 100;
 `
 
 export const ProductTitle = styled.View`
@@ -42,6 +40,7 @@ export const ProductTitle = styled.View`
 `
 
 export const ProductDescription = styled.View`
+  margin-top: 10px;
   margin-bottom: 30px;
 `
 
@@ -50,10 +49,8 @@ export const ProductEditions = styled.View`
 `
 
 export const SectionTitle = styled.View`
-  padding: 15px 20px;
-  background-color: ${colors.paleGray};
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  padding-vertical: 15px;
+  background-color: ${colors.white};
 `
 
 export const WrapperIngredients = styled.View`
@@ -62,8 +59,7 @@ export const WrapperIngredients = styled.View`
 `
 
 export const WrapperSubOption = styled.View`
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-radius: 7.6px;
 `
 
 export const ProductComment = styled.View`
@@ -73,13 +69,9 @@ export const ProductActions = styled.View`
   position: absolute;
   flex: 1;
   bottom: 0px;
-  padding: 20px;
+  padding-horizontal: 40px;
   width: 100%;
   flex-direction: row;
-  background-color: #FFF;
+  background-color: ${colors.clear};
   z-index: 1000;
-
-  ${((props: any) => props.isIos && css `
-    padding-bottom: 20px;
-  `)}
 `

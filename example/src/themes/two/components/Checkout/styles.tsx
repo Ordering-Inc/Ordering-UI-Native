@@ -3,10 +3,15 @@ import styled, { css } from 'styled-components/native';
 import { colors } from '../../theme.json';
 
 export const ChContainer = styled.View`
+	padding-horizontal: 20px;
   margin-bottom: 60px;
 `
 
-export const ChSection = styled.View``
+export const ChSection = styled.View`
+	border-bottom-width: 1px;
+  border-bottom-color: ${colors.border};
+  padding-vertical: 16px;
+`
 
 export const ChHeader = styled.View`
   display: flex;
@@ -33,13 +38,10 @@ export const ChTotalWrap = styled.View`
 
 export const ChAddress = styled.View`
   width: 100%;
-  padding: 20px 0;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.inputDisabled};
 `
 
 export const ChMoment = styled(ChAddress)`
@@ -61,9 +63,6 @@ export const ChUserDetails = styled.View`
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  padding: 0 0 20px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.inputDisabled};
 `
 
 export const ChBusinessDetails = styled(ChUserDetails)`
@@ -73,8 +72,6 @@ export const ChPaymethods = styled.View`
   display: flex;
   flex-direction: column;
   padding: 0 0 20px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${colors.inputDisabled};
 `
 
 export const ChDriverTips = styled(ChPaymethods)``
