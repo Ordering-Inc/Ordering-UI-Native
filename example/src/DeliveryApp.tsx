@@ -49,11 +49,11 @@ theme.images = {
   },
   tutorials: {
     slide1: require('./assets/images/slide1.png'),
-    slide2: require('./assets/images/slide1.png'),
-    slide3: require('./assets/images/slide1.png'),
-    slide4: require('./assets/images/slide1.png'),
-    slide5: require('./assets/images/slide1.png'),
-    slide6: require('./assets/images/slide1.png')
+    slide2: require('./assets/images/slide2.png'),
+    slide3: require('./assets/images/slide3.png'),
+    slide4: require('./assets/images/slide4.png'),
+    slide5: require('./assets/images/slide5.png'),
+    slide6: require('./assets/images/slide6.png')
   },
   general: {
     homeHero: require('./assets/images/home-hero.png'),
