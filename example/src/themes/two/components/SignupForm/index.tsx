@@ -283,7 +283,7 @@ const SignupFormUI = (props: SignupParams) => {
 					title={t('SIGNUP', 'Signup')}
 					titleAlign={'center'}
 					onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-					showCall={false}
+					rightImg={null}
 					btnStyle={{ paddingLeft: 0 }}
 				/>
 			)}

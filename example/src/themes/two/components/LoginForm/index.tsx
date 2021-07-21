@@ -191,7 +191,7 @@ const LoginFormUI = (props: LoginParams) => {
 					title={t('LOGIN', 'Login')}
 					titleAlign={'center'}
 					onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-					showCall={false}
+					rightImg={null}
 					btnStyle={{ paddingLeft: 0 }}
 					paddingTop={0}
 				/>

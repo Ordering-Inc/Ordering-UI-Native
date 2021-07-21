@@ -388,7 +388,7 @@ const CheckoutUI = (props: any) => {
 												{businessName || businessDetails?.business?.name}
 											</OText>
 											<View style={{flexDirection: 'row', alignItems: 'center'}}>
-												<TouchableOpacity onPress={() => navigation.navigate('ProductListing', {})}>
+												<TouchableOpacity onPress={() => navigation.navigate('Business', { store: businessDetails?.business?.slug })}>
 													<OText color={colors.green} style={{...labels.normal, textDecorationLine: 'underline'} as TextStyle}>{t('GO_TO_STORE', 'Go to store')}</OText>
 												</TouchableOpacity>
 												<OText>{' \u2022 '}</OText>

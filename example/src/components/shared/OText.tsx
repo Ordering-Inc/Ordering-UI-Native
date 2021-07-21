@@ -5,7 +5,7 @@ import styled, {css} from 'styled-components/native';
 const SText = styled.Text`
   color: ${(props: any) => props.color || 'black'};
   font-family: 'Poppins-Regular';
-  font-size: ${(props: any) => (props.size ? `${props.size}px` : '14px')};
+  font-size: ${(props: any) => (props.size ? `${props.size}px` : '12px')};
   flex-wrap: wrap;
   margin-bottom: ${(props: any) =>
     props.hasBottom ? '10px' : props.mBottom ? `${props.mBottom}px` : 0};

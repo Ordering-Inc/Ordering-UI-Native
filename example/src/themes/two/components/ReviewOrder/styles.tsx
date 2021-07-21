@@ -4,6 +4,8 @@ import { colors } from '../../theme.json'
 export const ReviewOrderContainer = styled.View`
   width: 100%;
   flex: 1;
+  padding-horizontal: 40px;
+  padding-vertical: 20px;
 `
 export const ReviewOrderTitle = styled.View`
 
@@ -22,11 +24,12 @@ export const FormReviews = styled.View`
 export const Category = styled.View`
   padding: 10px;
   border-width: 1px;
-  border-color: ${colors.secundaryContrast};
+  border-color: ${colors.border};
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   margin-vertical: 5px;
-  border-radius: 10px;
+  border-radius: 7.6px;
 `
 
 export const Stars = styled.View`

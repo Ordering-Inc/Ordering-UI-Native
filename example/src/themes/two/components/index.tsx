@@ -77,6 +77,7 @@ theme.images = {
 		plus: require('../assets/icons/ic_plus_circle.png'),
 		minus: require('../assets/icons/ic_minus_circle.png'),
 		pencil_line: require('../assets/icons/ic_pencil_line.png'),
+		share_fill: require('../assets/icons/ic_share_fill.png'),
 	},
 	order: {
 		status0: require('../assets/images/status-0.png'),

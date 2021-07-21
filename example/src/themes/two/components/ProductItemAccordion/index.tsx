@@ -183,23 +183,25 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 								</Animated.View>
 							)}
 							<View style={{...styles.actions, justifyContent: isMini ? 'flex-end' : 'space-between'}}>
-								<OText style={{...labels.normal, marginEnd: 12} as TextStyle}>{parsePrice(product.total || product.price)}</OText>
-								<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
-									{onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
-										<TouchableOpacity onPress={() => onEditProduct(product)} style={{ marginEnd: 8 }}>
-											<OIcon src={isMini ? images.general.pencil_line : images.general.pencil} width={isMini ? 10 : 16} color={colors.textPrimary} />
-										</TouchableOpacity>
-									)}
-									{onDeleteProduct && isCartProduct && !isCartPending && (
-										<OAlert
-											title={t('DELETE_PRODUCT', 'Delete Product')}
-											message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
-											onAccept={() => onDeleteProduct(product)}
-										>
-											<OIcon src={isMini ? images.general.close : images.general.trash} width={isMini ? 7 : 16} color={colors.textPrimary} />
-										</OAlert>
-									)}
-								</View>
+								<OText style={{...labels.normal} as TextStyle}>{parsePrice(product.total || product.price)}</OText>
+								{isCartProduct && !isCartPending && (
+									<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', marginStart: 12 }}>
+										{onEditProduct && product?.valid_menu && (
+											<TouchableOpacity onPress={() => onEditProduct(product)} style={{ marginEnd: 8 }}>
+												<OIcon src={isMini ? images.general.pencil_line : images.general.pencil} width={isMini ? 10 : 16} color={colors.textPrimary} />
+											</TouchableOpacity>
+										)}
+										{onDeleteProduct && (
+											<OAlert
+												title={t('DELETE_PRODUCT', 'Delete Product')}
+												message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
+												onAccept={() => onDeleteProduct(product)}
+											>
+												<OIcon src={isMini ? images.general.close : images.general.trash} width={isMini ? 7 : 16} color={colors.textPrimary} />
+											</OAlert>
+										)}
+									</View>
+								)}
 							</View>
 
 						</View>

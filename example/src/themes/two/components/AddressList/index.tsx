@@ -149,7 +149,7 @@ const AddressListUI = (props: AddressListParams) => {
                 title={t('ADDRESS_LIST', 'Address List')}
                 titleAlign={'center'}
                 onActionLeft={() => goToBack()}
-                showCall={false}
+                rightImg={null}
                 btnStyle={{ paddingLeft: 0 }}
                 paddingTop={0}
               />

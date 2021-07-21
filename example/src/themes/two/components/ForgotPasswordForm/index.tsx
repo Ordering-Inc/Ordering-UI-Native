@@ -71,7 +71,7 @@ const ForgotPasswordUI = (props: any) => {
         title={t('FORGOT_YOUR_PASSWORD', 'Forgot your password?')}
         titleAlign={'center'}
         onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-        showCall={false}
+        rightImg={null}
         paddingTop={0}
       />
       <FormSide>

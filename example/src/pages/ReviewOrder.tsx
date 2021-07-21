@@ -23,7 +23,7 @@ const ReviewOrder = ({navigation, route} : any) => {
       enabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <Container>
+      <Container style={{paddingStart: 0, paddingEnd: 0}}>
         <ReviewOrderController {...reviewOrderProps} />
       </Container>
     </KeyboardView>
