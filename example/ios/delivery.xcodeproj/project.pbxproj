@@ -18,13 +18,12 @@
 		47FCB097EBEA4A789DC6A253 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 767A2DE94FBA41A8ACD03828 /* Poppins-Light.ttf */; };
 		5D1AB63793F3EA720AA23477 /* libPods-delivery-deliveryTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A5D2E8BA97713FF884D65844 /* libPods-delivery-deliveryTests.a */; };
 		6222DEE082B74CA0A77679F2 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF0FF41B79C04170BB3B50FD /* Poppins-Regular.ttf */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A242F3056FE34C58B7BA63BC /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1505D7F951614631AFC5EBDE /* Poppins-Bold.ttf */; };
 		A26AD19825FA5C03003870C2 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26AD19725FA5C03003870C2 /* File.swift */; };
 		A3EED803A6FC4F27BEA5CBA3 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0E2D6C9B74954133AD7088EC /* Poppins-SemiBold.ttf */; };
-		C3080A522657E6A2001B703C /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3080A512657E6A1001B703C /* BootSplash.storyboard */; };
 		C3591496265E8ACB00C92599 /* fix.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3591495265E8ACB00C92599 /* fix.swift */; };
 		C398F2A1268E4AA6001EA8B7 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C398F2A0268E4AA6001EA8B7 /* NotificationService.swift */; };
+		C3C33D9426A77C11004989FC /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3C33D9326A77C11004989FC /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,17 +64,16 @@
 		632429A694BF7BB7DAF6B35D /* Pods-delivery-deliveryTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-delivery-deliveryTests.release.xcconfig"; path = "Target Support Files/Pods-delivery-deliveryTests/Pods-delivery-deliveryTests.release.xcconfig"; sourceTree = "<group>"; };
 		767A2DE94FBA41A8ACD03828 /* Poppins-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Light.ttf"; path = "../src/assets/fonts/Poppins-Light.ttf"; sourceTree = "<group>"; };
 		7C8CEF2CF278F703D5BA4042 /* Pods-delivery.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-delivery.debug.xcconfig"; path = "Target Support Files/Pods-delivery/Pods-delivery.debug.xcconfig"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = delivery/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A26AD19625FA5C02003870C2 /* delivery-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "delivery-Bridging-Header.h"; sourceTree = "<group>"; };
 		A26AD19725FA5C03003870C2 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		A5D2E8BA97713FF884D65844 /* libPods-delivery-deliveryTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-delivery-deliveryTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C3080A512657E6A1001B703C /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = delivery/BootSplash.storyboard; sourceTree = "<group>"; };
 		C3591495265E8ACB00C92599 /* fix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = fix.swift; sourceTree = "<group>"; };
 		C398F299268E49A0001EA8B7 /* delivery.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = delivery.entitlements; path = delivery/delivery.entitlements; sourceTree = "<group>"; };
 		C398F29E268E4AA6001EA8B7 /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		C398F2A0268E4AA6001EA8B7 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		C398F2A2268E4AA6001EA8B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C398F2AA268E50CF001EA8B7 /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
+		C3C33D9326A77C11004989FC /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		C7FF579BB2A7040F58B6348F /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		CF0FF41B79C04170BB3B50FD /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		D05C81F023B19A082D0C9D73 /* libPods-delivery.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-delivery.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -139,10 +137,9 @@
 				C3591495265E8ACB00C92599 /* fix.swift */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
-				C3080A512657E6A1001B703C /* BootSplash.storyboard */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				C3C33D9326A77C11004989FC /* Launch Screen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				A26AD19725FA5C03003870C2 /* File.swift */,
 				A26AD19625FA5C02003870C2 /* delivery-Bridging-Header.h */,
@@ -357,10 +354,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				A242F3056FE34C58B7BA63BC /* Poppins-Bold.ttf in Resources */,
-				C3080A522657E6A2001B703C /* BootSplash.storyboard in Resources */,
+				C3C33D9426A77C11004989FC /* Launch Screen.storyboard in Resources */,
 				47FCB097EBEA4A789DC6A253 /* Poppins-Light.ttf in Resources */,
 				068A016FBA3D4574A8BA1ED6 /* Poppins-Medium.ttf in Resources */,
 				6222DEE082B74CA0A77679F2 /* Poppins-Regular.ttf in Resources */,

@@ -7,7 +7,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
-#import "RNBootSplash.h"
+#import "RNSplashScreen.h"
 
 #if RCT_DEV
 #import <React/RCTDevLoadingView.h>
@@ -55,7 +55,8 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
-  [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];
+  //[RNSplashScreen showSplash:@"LaunchScreen" inRootView:rootView];
+  [RNSplashScreen show];
   return YES;
 }
 

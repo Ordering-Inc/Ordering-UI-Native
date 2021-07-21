@@ -11,7 +11,7 @@ import { LogBox, Platform } from 'react-native';
 import * as Sentry from "@sentry/react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { OrderingProvider } from 'ordering-components/native';
-import RNBootSplash from "react-native-bootsplash";
+import SplashScreen from 'react-native-splash-screen'
 
 import RootNavigator from './navigators/RootNavigator';
 import { Toast } from './components/shared/OToast';
@@ -118,11 +118,11 @@ theme.images = {
 }
 
 const DeliveryApp = () => {
-  React.useEffect(() => {
+  /*React.useEffect(() => {
     setTimeout(() => {
-      RNBootSplash.hide();
+      SplashScreen.hide();
     }, 1000);
-  }, []);
+  }, []);*/
 
   return (
     <ThemeProvider theme={theme}>

@@ -23,11 +23,6 @@
         android:inputType="textNoSuggestions|textVisiblePassword"
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
-      </activity>
-      <activity
-        android:name="com.zoontek.rnbootsplash.RNBootSplashActivity"
-        android:theme="@style/BootTheme"
-        android:launchMode="singleTask">
         <intent-filter>
           <action android:name="android.intent.action.MAIN" />
           <category
