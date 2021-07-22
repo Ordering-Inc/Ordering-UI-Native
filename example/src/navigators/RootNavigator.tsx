@@ -19,6 +19,7 @@ import MomentOption from '../pages/MomentOption';
 import Splash from '../pages/Splash';
 import BusinessList from '../pages/BusinessesListing';
 import BusinessProductsList from '../pages/BusinessProductsList';
+import NotFound from '../pages/NotFound'
 import HomeNavigator from './HomeNavigator';
 import settings from '../config.json';
 import * as RootNavigation from '../navigators/NavigationRef';
@@ -205,6 +206,10 @@ const RootNavigator = () => {
           </>
         )
       }
+      <Stack.Screen
+        name='NotFound'
+        component={NotFound}
+      />
     </Stack.Navigator>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {
@@ -42,6 +42,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     header,
     logo,
     productModal,
+    businessId,
+    categoryId,
+    productId,
     handleChangeCategory,
     setProductLogin,
     updateProductModal
@@ -58,7 +61,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [curProduct, setCurProduct] = useState(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
-
+  const [openModalProduct,setOpenModalProduct] = useState(false)
   const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
   const onRedirect = (route: string, params?: any) => {
@@ -76,6 +79,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const handleCloseProductModal = () => {
     setCurProduct(null)
+    setOpenModalProduct(false)
     updateProductModal && updateProductModal(null)
   }
 
@@ -93,6 +97,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     })
     setOpenUpselling(false)
   }
+
+  useEffect(() => {
+    if(businessId && categoryId && productId){
+      setOpenModalProduct(true)
+    }
+  }, [])
 
   return (
     <>
@@ -232,7 +242,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         />
       )}
       <OModal
-        open={!!curProduct || (!!productModal.product && !orderState.loading)}
+        open={openModalProduct || !!curProduct || (!!productModal.product && !orderState.loading)}
         onClose={handleCloseProductModal}
         entireModal
         customClose
@@ -240,11 +250,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         <ProductForm
           product={curProduct || productModal.product}
           businessSlug={business?.slug}
-          businessId={business?.id || productModal?.product?.category?.business_id}
+          businessId={businessId || business?.id || productModal?.product?.category?.business_id}
           onClose={handleCloseProductModal}
           navigation={navigation}
           onSave={handlerProductAction}
           setProductLogin={setProductLogin}
+          categoryId={categoryId}
+          productId={productId}
         />
       </OModal>
       {openUpselling && (
