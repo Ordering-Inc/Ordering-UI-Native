@@ -106,7 +106,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     const hasMore = !(categoryState.pagination.totalPages === categoryState.pagination.currentPage)
     if (y + PIXELS_TO_SCROLL > height && !loading && hasMore && getNextProducts) {
       getNextProducts()
-      showToast(ToastType.Info, 'loading more products')
+      showToast(ToastType.Info, t('LOADING_MORE_PRODUCTS', 'Loading more products'))
     }
   }
 
