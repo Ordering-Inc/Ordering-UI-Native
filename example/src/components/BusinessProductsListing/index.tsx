@@ -6,7 +6,9 @@ import {
   useLanguage,
   useOrder,
   useSession,
-  useUtils
+  useUtils,
+  useToast,
+  ToastType
 } from 'ordering-components/native'
 import { OButton, OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -27,6 +29,8 @@ import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
 import { useTheme } from 'styled-components/native'
 
+const PIXELS_TO_SCROLL = 1000
+
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -42,9 +46,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     header,
     logo,
     productModal,
+    getNextProducts,
     handleChangeCategory,
     setProductLogin,
-    updateProductModal
+    updateProductModal,
   } = props
 
   const theme = useTheme()
@@ -52,6 +57,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [{ auth }] = useSession()
   const [orderState] = useOrder()
   const [{ parsePrice }] = useUtils()
+  const [ ,{showToast}] = useToast()
   const { business, loading, error } = businessState
   const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
   const [isOpenSearchBar, setIsOpenSearchBar] = useState(false)
@@ -94,11 +100,22 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setOpenUpselling(false)
   }
 
+  const handleScroll = ({ nativeEvent }: any) => {
+    const y = nativeEvent.contentOffset.y
+    const height = nativeEvent.contentSize.height
+    const hasMore = !(categoryState.pagination.totalPages === categoryState.pagination.currentPage)
+    if (y + PIXELS_TO_SCROLL > height && !loading && hasMore && getNextProducts) {
+      getNextProducts()
+      showToast(ToastType.Info, 'loading more products')
+    }
+  }
+
   return (
     <>
       <BusinessProductsListingContainer
         style={styles.mainContainer}
         isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
+        onScroll={(e: any) => handleScroll(e)}
       >
         <WrapHeader>
           {!loading && business?.id && (
