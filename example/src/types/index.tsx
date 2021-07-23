@@ -17,6 +17,8 @@ export interface LoginParams {
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
   notificationState?: any;
+  isNavBar?: boolean;
+  onHandleOpenSignup?: any;
 }
 export interface ProfileParams {
   navigation?: any;
@@ -93,6 +95,8 @@ export interface SignupParams {
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
   notificationState?: any;
+  isNavBar?: boolean;
+  onHandleOpenLogin?: any;
 }
 
 export interface PhoneInputParams {

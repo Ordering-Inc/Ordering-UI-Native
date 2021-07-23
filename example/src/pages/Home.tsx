@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { Home as HomePage } from '../components/Home';
+import { HomePage } from '../themes/instacart';
 import { useTheme } from 'styled-components/native';
 
 export const Home = (props: any) => {

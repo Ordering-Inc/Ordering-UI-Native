@@ -1,5 +1,5 @@
 import React from 'react';
-import { SignupForm } from '../components/SignupForm';
+import { SignupForm } from '../themes/instacart';
 import { Container } from '../layouts/Container'
 import styled from 'styled-components/native';
 import { useLanguage, useSession } from 'ordering-components/native';
