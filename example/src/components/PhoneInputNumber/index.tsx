@@ -42,11 +42,12 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
   const [userphoneNumber, setUserphoneNumber] = useState('');
 
   const handleChangeNumber = (number: any) => {
-    setUserphoneNumber(number)
+    setUserphoneNumber(number)    
   }
 
   useEffect(() => {
-    if((defaultValue && userphoneNumber) || defaultValue === undefined || defaultValue === ''){
+    if((defaultValue && userphoneNumber) || defaultValue === undefined || defaultValue === '' || defaultValue === null){
+     if (userphoneNumber === '') return;
       if (userphoneNumber) {
         const checkValid = phoneInput.current?.isValidNumber(userphoneNumber);
         const callingCode = phoneInput.current?.getCallingCode();
