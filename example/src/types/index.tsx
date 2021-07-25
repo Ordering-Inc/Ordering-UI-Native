@@ -131,8 +131,10 @@ export interface BusinessTypeFilterParams {
   handleChangeBusinessType: any;
   currentTypeSelected?: string | null;
   defaultBusinessType?: string | null;
-  images?: any
-  typesState?: any
+  images?: any;
+  typesState?: any;
+  noTitle?: boolean;
+  isMini?: boolean;
 }
 export interface BusinessControllerParams {
   key?: number;

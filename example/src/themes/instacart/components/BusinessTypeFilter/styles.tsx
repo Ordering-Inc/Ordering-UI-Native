@@ -5,16 +5,15 @@ export const BCContainer = styled.View`
   width: 100%;
   justify-content: flex-start;
   text-align: center;
+  min-height: 60px;
+  margin-bottom: 17px;
 `
 
 export const BusinessCategoriesTitle = styled.View`
-  flex: 1;
-  margin-top: 10px;
-  margin-bottom: 5px;
+  min-height: 20px;
 `
 
 export const BusinessCategories = styled.View`
-  flex: 1;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -23,7 +22,6 @@ export const BusinessCategories = styled.View`
 `
 export const Category = styled.View`
   height: 150px;
-  min-width: 90px;
   margin-right: 15px;
   display: flex;
   flex-direction: column;

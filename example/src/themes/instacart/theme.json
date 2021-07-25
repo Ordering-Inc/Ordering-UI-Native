@@ -56,6 +56,7 @@
 		"disabled": "#CBCBCB",
 		"disabledContrast": "#000",
 		"backgroundPage": "#FFFFFF",
+		"backgroundTab": "#FDFDFD",
 		"colorPage": "#333",
 		"red": "#D83520",
 		"skyBlue": "#1977F2",
@@ -132,7 +133,8 @@
 			"tab_explore": "",
 			"tab_promotion": "",
 			"tab_orders": "",
-			"tab_profile": ""
+			"tab_profile": "",
+			"filter": ""
 		},
 		"order": {
 			"status0": "",

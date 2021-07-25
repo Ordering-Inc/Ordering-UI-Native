@@ -71,7 +71,7 @@ const OInput = (props: Props): React.ReactElement => {
           color={props.iconColor}
           width={20}
           height={20}
-          style={{marginRight: 10}}
+          style={{marginRight: 10, ...props.iconStyle}}
         />
       ) : null}
       {props.vertorIcon && (

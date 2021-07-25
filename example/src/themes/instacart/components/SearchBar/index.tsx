@@ -35,6 +35,7 @@ export const SearchBar = (props: any) => {
     },
     inputStyle: {
       flex: 1,
+		paddingStart: 0,
     },
     buttonStyle: {
       maxHeight: 40,
@@ -68,8 +69,8 @@ export const SearchBar = (props: any) => {
         onChange={onChangeSearch}
         style={styles.inputStyle}
         placeholder={placeholder}
-        vertorIcon='search'
-        vectorIconColor={theme.colors.disabled}
+        icon={theme.images.general.tab_explore}
+		  iconStyle={{width: 16, height: 16}}
         returnKeyType='done'
       />
       {isCancelButtonShow && (
@@ -88,8 +89,9 @@ export const SearchBar = (props: any) => {
         >
           <Icon
             name='x-circle'
-            size={30}
+            size={16}
             style={{ marginRight: 5 }}
+				color={theme.colors.textSecondary}
           />
         </TouchableOpacity>
       )}

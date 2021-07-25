@@ -6,6 +6,7 @@ import { AddressList } from './components/AddressList';
 import { ForgotPasswordForm } from './components/ForgotPasswordForm';
 import { BusinessesListing } from './components/BusinessesListing';
 import { BusinessProductsListing } from './components/BusinessProductsListing';
+import { SearchBusiness } from './components/SearchBusiness';
 
 import theme from './theme.json';
 
@@ -57,6 +58,7 @@ theme.images = {
 		tab_promotion: require('./assets/icons/tab_promotion.png'),
 		tab_orders: require('./assets/icons/tab_orders.png'),
 		tab_profile: require('./assets/icons/tab_profile.png'),
+		filter: require('./assets/icons/ic_filter.png'),
 	},
 	order: {
 		status0: require('./assets/images/status-0.png'),
@@ -104,5 +106,6 @@ export {
 	AddressList,
 	ForgotPasswordForm,
 	BusinessesListing,
-	BusinessProductsListing
+	BusinessProductsListing,
+	SearchBusiness
 }
