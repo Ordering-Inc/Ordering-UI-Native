@@ -1,10 +1,14 @@
 import styled, {css} from 'styled-components/native';
 
 export const Card = styled.TouchableOpacity`
-  margin-vertical: 20px;
-  border-radius: 25px;
+  flex-direction: row;
+	margin-bottom: 20px;
+  border-radius: 3px;
+  border-width: 1px;
+  border-color: ${(props: any) => props.theme.colors.border};
   flex: 1;
-  width: 100%;
+  padding: 13px 17px;
+  align-items: center;
 `;
 
 export const BusinessHero = styled.ImageBackground`
@@ -16,12 +20,7 @@ export const BusinessHero = styled.ImageBackground`
 `;
 
 export const BusinessContent = styled.View`
-    padding-horizontal: 10px;
-    padding-vertical: 15px;
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
-    border-width: 1px;
-    border-color: #ddd;
+    padding-start: 18px;
 `;
 
 export const BusinessInfo = styled.View`
@@ -43,8 +42,10 @@ export const BusinessState = styled.View`
 `
 
 export const BusinessLogo = styled.View`
-    flex: 1;
-    align-self: flex-end;
+    width: 51px;
+	 height: 51px;
+	 border: 1px solid ${(props: any) => props.theme.colors.border};
+	 border-radius: 26px;
 `
 
 export const Reviews = styled.View`

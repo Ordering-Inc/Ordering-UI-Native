@@ -12,6 +12,7 @@ import MyOrders from '../pages/MyOrders'
 import CartList from '../pages/CartList'
 import Profile from '../pages/Profile'
 import { useTheme } from 'styled-components/native'
+import { OIcon } from '../themes/instacart/components/shared'
 
 const CartsLenght = styled.View`
   width: 25px;
@@ -52,7 +53,7 @@ const BottomNavigator = () => {
           tabBarIcon:
             ({ color }) => (
               <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0  }}>
-                <MaterialCommunityIcon name='home' size={46} color={color} />
+                <OIcon src={theme.images.general.tab_home} color={color} />
               </View>
             )
         }}
@@ -65,7 +66,7 @@ const BottomNavigator = () => {
             tabBarIcon:
               ({ color }) => (
                 <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0 }}>
-                  <MaterialIcon name='format-list-bulleted' size={46} color={color} />
+                  <OIcon src={theme.images.general.tab_orders} color={color} />
                 </View>
               ),
           }}
@@ -84,7 +85,7 @@ const BottomNavigator = () => {
                   bottom: !isIos ? 10 : 0
                 }}
               >
-                <MaterialIcon name='shopping-basket' size={46} color={color} />
+                <OIcon src={theme.images.general.tab_promotion} color={color} />
                 {cartsList.length > 0 && (
                   <CartsLenght style={{ borderRadius: 100 / 2 }}>
                     <OText
@@ -105,7 +106,7 @@ const BottomNavigator = () => {
           tabBarIcon:
             ({ color }) => (
               <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0  }}>
-                <MaterialIcon name='person' size={46} color={color} />
+                <OIcon src={theme.images.general.tab_profile} color={color} />
               </View>
             )
         }}

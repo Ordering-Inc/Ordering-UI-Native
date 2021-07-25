@@ -21,11 +21,11 @@ export const Search = styled.View`
 
 export const AddressInput = styled.TouchableOpacity`
   flex-direction: row;
-  background-color: ${(props: any) => props.theme.colors.inputDisabled};
-  border-radius: 10px;
+  background-color: ${(props: any) => props.theme.colors.white};
+  border-radius: 3px;
   align-items: center;
-  margin-horizontal: 10px;
-  padding: 15px;
+  padding-vertical: 4px;
+  margin-bottom: 10px;
   flex: 1;
   width: 100%;
   z-index: -10;
@@ -43,8 +43,9 @@ export const OrderControlContainer = styled.View`
 
 export const WrapMomentOption = styled.TouchableOpacity`
   background-color: ${(props: any) => props.theme.colors.inputDisabled};
-  border-radius: 10px;
-  margin-vertical: 5px;
-  padding: 15px 20px;
+  border-radius: 3px;
+  padding-horizontal: 10px;
   max-width: 240px;
+  flex-direction: row;
+  align-items: center;
 `

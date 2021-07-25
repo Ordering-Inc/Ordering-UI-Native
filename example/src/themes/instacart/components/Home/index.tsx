@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useLanguage, useOrder, useApi, useSession } from 'ordering-components/native';
+import { useLanguage, useOrder, useApi, useSession, useUtils } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { StyleSheet, View, Dimensions, TextStyle, Animated, PanResponder } from 'react-native';
 import { OBottomPopup, OButton, OIcon, OText } from '../shared';
@@ -22,6 +22,7 @@ export const Home = (props: any) => {
 	const [orderState] = useOrder();
 	const [ordering] = useApi()
 	const [, { login }] = useSession()
+	const [{ optimizeImage }] = useUtils()
 
 	const [allBusinesses, setAllBusinesses] = useState([]);
 	const [openLogin, setOpenLogin] = useState(false);
@@ -168,7 +169,7 @@ export const Home = (props: any) => {
 						<ScrollView horizontal style={{ minHeight: 86 }} contentContainerStyle={{ paddingHorizontal: 40 }} showsHorizontalScrollIndicator={false}>
 							{allBusinesses.map(({ logo, id }): any =>
 								<View key={`busies_id_${id}`} style={{ ...styles.logoWrap, borderColor: theme.colors.border }}>
-									<OIcon url={logo} width={80} height={80} style={{ borderRadius: 40 }} />
+									<OIcon url={optimizeImage(logo, 'h_100,c_limit')} width={80} height={80} style={{ borderRadius: 40 }} />
 								</View>
 							)}
 						</ScrollView>

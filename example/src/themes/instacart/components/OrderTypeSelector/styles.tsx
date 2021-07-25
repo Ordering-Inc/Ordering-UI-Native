@@ -1,6 +1,6 @@
 import styled from 'styled-components/native'
 
 export const OrderTypeWrapper = styled.View`
-  flex: 1;
-  max-width: 140px;
+	align-items: center;
+	justify-content: center;
 `

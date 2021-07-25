@@ -1,5 +1,5 @@
 import React from 'react'
-import { BusinessesListing as BusinessListingController } from '../components/BusinessesListing'
+import { BusinessesListing as BusinessListingController } from '../themes/instacart'
 import styled from 'styled-components/native'
 import { useTheme } from 'styled-components/native'
 

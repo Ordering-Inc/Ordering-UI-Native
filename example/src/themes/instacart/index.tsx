@@ -4,6 +4,8 @@ import { SignupForm } from './components/SignupForm';
 import { AddressForm } from './components/AddressForm';
 import { AddressList } from './components/AddressList';
 import { ForgotPasswordForm } from './components/ForgotPasswordForm';
+import { BusinessesListing } from './components/BusinessesListing';
+import { BusinessProductsListing } from './components/BusinessProductsListing';
 
 import theme from './theme.json';
 
@@ -49,6 +51,12 @@ theme.images = {
 		tag_favorite: require('./assets/icons/tag_favorite.png'),
 		tag_office: require('./assets/icons/tag_office.png'),
 		tag_other: require('./assets/icons/tag_other.png'),
+		drop_down: require('./assets/icons/chevron-down.png'),
+		tab_home: require('./assets/icons/tab_home.png'),
+		tab_explore: require('./assets/icons/tab_explore.png'),
+		tab_promotion: require('./assets/icons/tab_promotion.png'),
+		tab_orders: require('./assets/icons/tab_orders.png'),
+		tab_profile: require('./assets/icons/tab_profile.png'),
 	},
 	order: {
 		status0: require('./assets/images/status-0.png'),
@@ -94,5 +102,7 @@ export {
 	SignupForm,
 	AddressForm,
 	AddressList,
-	ForgotPasswordForm
+	ForgotPasswordForm,
+	BusinessesListing,
+	BusinessProductsListing
 }

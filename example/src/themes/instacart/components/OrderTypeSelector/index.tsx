@@ -4,11 +4,12 @@ import {
   useLanguage,
   useOrder
 } from 'ordering-components/native'
-import {StyleSheet, Platform} from 'react-native'
+import {StyleSheet, Platform, View} from 'react-native'
 import { OrderTypeWrapper } from './styles'
 import { OrderTypeSelectParams } from '../../../../types'
 import RNPickerSelect from 'react-native-picker-select'
 import { useTheme } from 'styled-components/native'
+import { OIcon } from '../shared'
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const {
@@ -26,27 +27,27 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
       color: theme.colors.secundaryContrast,
       borderWidth: 1,
       borderColor: 'transparent',
-      borderRadius: 10,
+      borderRadius: 3,
       paddingHorizontal: 20,
       backgroundColor: theme.colors.inputDisabled,
-      fontSize: 15
+      fontSize: 12,
+		lineHeight: 18
     },
     inputIOS: {
       color: theme.colors.secundaryContrast,
-      paddingEnd: 20,
-      height: 50,
+      paddingEnd: 25,
+		paddingStart: 10,
+      height: 28,
       borderWidth: 1,
       borderColor: 'transparent',
-      borderRadius: 10,
-      paddingHorizontal: 20,
+      borderRadius: 3,
       backgroundColor: theme.colors.inputDisabled,
-      fontSize: 15
+      fontSize: 12
     },
     icon: {
-      top: Platform.OS === 'ios' ? 10 : 15,
-      right: Platform.OS === 'ios' ? 0 : 7,
+      top: 2.5,
+      right: 10,
       position: 'absolute',
-      fontSize: 20
     },
     placeholder: {
       color: theme.colors.secundaryContrast
@@ -85,6 +86,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
           onClose={() => setOpen(false)}
           useNativeAndroidPickerStyle={false}
           disabled={orderState.loading && !open}
+			 Icon={() => <View style={pickerStyle.icon}><OIcon src={theme.images.general.drop_down} color={theme.colors.textPrimary} width={10} /></View>}
         />
       </OrderTypeWrapper>
     )
