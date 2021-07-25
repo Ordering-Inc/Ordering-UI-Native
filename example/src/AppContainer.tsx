@@ -10,13 +10,14 @@ const AppContainer = () => {
 
   const linking : any = {
     prefixes: [
-      'delivery://',
-      'https://delivery.ordering.co'
+      'delivery://ordering',
+      'https://delivery.ordering.co',
+      'https://*.ordering.co'
     ],
     config: {
       screens: {
         AddressForm: {
-          path: !orderState?.options?.address?.location && 'business/:store/:businessId?/:categoryId?/:productId?',
+          path: !orderState?.options?.address?.location && !auth && 'business/:store/:businessId?/:categoryId?/:productId?',
           parse: {
             store: (store : string) => `${store}`,
             businessId: (id: string) => parseInt(id),
@@ -25,13 +26,13 @@ const AppContainer = () => {
           }
         },
         Business: {
-          path: orderState?.options?.address?.location && 'business/:store/:businessId?/:categoryId?/:productId?',
+          path: orderState?.options?.address?.location && !auth && 'business/:store/:businessId?/:categoryId?/:productId?',
           parse: {
             store: (store : string) => `${store}`,
             businessId: (id: string) => parseInt(id),
             categoryId: (id: string) => parseInt(id),
             productId: (id: string) => parseInt(id)
-          }
+          },
         },
         MyAccount: {
           screens: {

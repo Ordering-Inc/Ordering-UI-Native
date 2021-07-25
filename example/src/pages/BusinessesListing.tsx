@@ -11,8 +11,9 @@ const BusinessesListing = (props: any) => {
   const store =  props.route.params?.store
 
   useEffect(() => {
-    if(businessId && categoryId && productId && store){
+    if(store){
       props.navigation.navigate('Business', {store,businessId,categoryId,productId})
+      return
     }
   }, [businessId, categoryId, productId, store])
 
@@ -22,7 +23,7 @@ const BusinessesListing = (props: any) => {
     isSearchByDescription: true,
     propsToFetch: ['id', 'name', 'header', 'logo', 'location', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug'],
     onBusinessClick: (business: any) => {
-      props.navigation.navigate('Business', { store: props?.route?.params?.store || business.slug, header: business.header, logo: business.logo })
+      props.navigation.navigate('Business', { store: store || business.slug, header: business.header, logo: business.logo })
     }
   }
 
