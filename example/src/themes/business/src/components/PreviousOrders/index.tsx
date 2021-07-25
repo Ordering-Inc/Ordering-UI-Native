@@ -22,6 +22,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
     cardButton: {
       flex: 1,
       minHeight: 64,
+      marginBottom: 30,
     },
     icon: {
       borderRadius: 7.6,

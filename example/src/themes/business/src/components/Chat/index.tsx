@@ -161,7 +161,7 @@ const ChatUI = (props: MessagesParams) => {
         maxWidth: 300,
         includeBase64: true,
       },
-      (response:any) => {
+      (response: any) => {
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.errorMessage) {

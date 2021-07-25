@@ -81,7 +81,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
-      fontSize: 16,
+      fontSize: 14,
       marginBottom: 10,
     },
     tagsContainer: {
@@ -101,7 +101,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       borderRadius: 7.6,
       height: 44,
       marginBottom: 40,
-      marginTop: 20,
+      marginTop: 5,
     },
     loadButtonText: {
       color: theme.colors.white,
@@ -202,13 +202,18 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
 
       {loading && (
         <>
-          <View style={{ marginTop: 12, paddingLeft: 10 }}>
+          <View>
             {[...Array(5)].map((item, i) => (
               <Placeholder key={i} Animation={Fade}>
-                <View style={{ width: '100%', flexDirection: 'row' }}>
+                <View
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    marginBottom: 10,
+                  }}>
                   <PlaceholderLine
                     width={22}
-                    height={72}
+                    height={74}
                     style={{
                       marginRight: 20,
                       marginBottom: 20,
@@ -259,7 +264,7 @@ export const MessagesOption = (props: MessagesOptionParams) => {
     useDefualtSessionManager: true,
     paginationSettings: {
       initialPage: 1,
-      pageSize: 5,
+      pageSize: 6,
       controlType: 'infinity',
     },
 

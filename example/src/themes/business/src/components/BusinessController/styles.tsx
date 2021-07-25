@@ -1,10 +1,9 @@
-import styled, { css } from 'styled-components/native';
+import styled from 'styled-components/native';
 
 export const Card = styled.View`
   flex: 1;
-  padding: 10px;
   flex-direction: row;
-  margin-bottom: 24px;
+  margin-bottom: 30px;
   min-height: 64px;
 `;
 
@@ -18,6 +17,8 @@ export const Information = styled.View`
 `;
 
 export const Logo = styled.View`
+  align-items: center;
+  justify-content: center;
   shadow-color: ${(props: any) => props.theme.colors.shadow};
   elevation: 1;
   width: 75px;

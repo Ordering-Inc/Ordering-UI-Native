@@ -197,8 +197,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       marginBottom: 10,
     },
     tagsContainer: {
-      alignItems: 'center',
-      marginBottom: 20,
+      marginBottom: 25,
     },
     tag: {
       fontFamily: 'Poppins',
@@ -215,11 +214,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       borderRadius: 7.6,
       height: 44,
       marginBottom: 40,
-      marginTop: 20,
+      marginTop: 5,
     },
     loadButtonText: {
       color: theme.colors.inputTextColor,
-      fontSize: 17,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 18,
     },
   });
 
@@ -233,7 +235,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             icon={theme.images.general.reload}
             borderColor={theme.colors.clear}
             iconStyle={{ width: 25, height: 25 }}
-            style={{ maxWidth: 40, marginRight: 0 }}
+            style={{ maxWidth: 40, height: 35 }}
             onClick={() => loadOrders && loadOrders(false, tabsFilter)}
           />
 
@@ -241,7 +243,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             icon={theme.images.general.search}
             borderColor={theme.colors.clear}
             iconStyle={{ width: 25, height: 25 }}
-            style={{ maxWidth: 40 }}
+            style={{ maxWidth: 40, height: 35 }}
             onClick={() => {}}
           /> */}
         </View>
@@ -325,13 +327,18 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
       {loading && (
         <>
-          <View style={{ marginTop: 12, paddingLeft: 10 }}>
+          <View>
             {[...Array(5)].map((item, i) => (
               <Placeholder key={i} Animation={Fade}>
-                <View style={{ width: '100%', flexDirection: 'row' }}>
+                <View
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    marginBottom: 10,
+                  }}>
                   <PlaceholderLine
                     width={22}
-                    height={72}
+                    height={74}
                     style={{
                       marginRight: 20,
                       marginBottom: 20,

@@ -2,11 +2,12 @@ import styled from 'styled-components/native';
 
 export const Card = styled.View`
   flex: 1;
-  padding: 10px;
   flex-direction: row;
 `;
 
 export const Logo = styled.View`
+  align-items: center;
+  justify-content: center;
   shadow-color: ${(props: any) => props.theme.colors.shadow};
   elevation: 1;
   width: 75px;
@@ -25,10 +26,4 @@ export const Information = styled.View`
 export const MyOrderOptions = styled.View`
   flex-direction: column;
   justify-content: space-between;
-`;
-
-export const Status = styled.View`
-  align-items: center;
-  justify-content: space-between;
-  width: 100px;
 `;

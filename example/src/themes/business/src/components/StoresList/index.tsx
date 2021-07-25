@@ -15,7 +15,7 @@ import { SearchBar } from '../SearchBar';
 import { BusinessesListingParams } from '../../types';
 import { BusinessController } from '../BusinessController';
 
-const PIXELS_TO_SCROLL = 1200;
+const PIXELS_TO_SCROLL = 1100;
 
 const StoresListUI = (props: BusinessesListingParams) => {
   const {
@@ -108,29 +108,30 @@ const StoresListUI = (props: BusinessesListingParams) => {
         />
       )}
 
-      {!error && (
-        <View style={{ marginBottom: 30 }}>
-          {businesses?.map((business: any) => (
-            <BusinessController
-              key={business.id}
-              business={business}
-              handleCustomClick={handleBusinessClick}
-              orderType={orderState?.options?.type}
-              isBusinessOpen={business?.open}
-            />
-          ))}
-        </View>
-      )}
+      {!error &&
+        businesses?.map((business: any) => (
+          <BusinessController
+            key={business.id}
+            business={business}
+            handleCustomClick={handleBusinessClick}
+            orderType={orderState?.options?.type}
+            isBusinessOpen={business?.open}
+          />
+        ))}
 
       {loading && (
         <View>
-          {[...Array(5)].map((item, i) => (
+          {[...Array(6)].map((item, i) => (
             <Placeholder key={i} Animation={Fade}>
-              <View style={{ flex: 1, flexDirection: 'row' }}>
+              <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
                 <PlaceholderLine
-                  width={20}
-                  height={70}
-                  style={{ marginRight: 20, marginBottom: 20 }}
+                  width={22}
+                  height={74}
+                  style={{
+                    marginRight: 20,
+                    marginBottom: 20,
+                    borderRadius: 7.6,
+                  }}
                 />
                 <Placeholder>
                   <PlaceholderLine width={30} style={{ marginTop: 5 }} />

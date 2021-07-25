@@ -199,7 +199,7 @@ export const PreviousMessages = (props: PreviousOrdersParams) => {
     cardButton: {
       flex: 1,
       minHeight: 64,
-      marginBottom: 0,
+      marginBottom: 30,
     },
     icon: {
       borderRadius: 7.6,
