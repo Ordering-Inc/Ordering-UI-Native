@@ -1,10 +1,20 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { BusinessesListing as BusinessListingController } from '../components/BusinessesListing'
 import styled from 'styled-components/native'
 import { useTheme } from 'styled-components/native'
 
 const BusinessesListing = (props: any) => {
   const theme = useTheme()
+  const businessId =  props.route.params?.businessId
+  const categoryId = props.route.params?.categoryId
+  const productId =  props.route.params?.productId
+  const store =  props.route.params?.store
+
+  useEffect(() => {
+    if(businessId && categoryId && productId && store){
+      props.navigation.navigate('Business', {store,businessId,categoryId,productId})
+    }
+  }, [businessId, categoryId, productId, store])
 
   const BusinessesListingProps = {
     ...props,

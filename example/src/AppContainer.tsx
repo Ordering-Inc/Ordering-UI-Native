@@ -7,7 +7,8 @@ import {useSession, useOrder} from 'ordering-components/native'
 const AppContainer = () => {
   const [{auth}] = useSession()
   const [orderState] = useOrder()
-  const linking = {
+
+  const linking : any = {
     prefixes: [
       'delivery://',
       'https://delivery.ordering.co'
@@ -15,13 +16,13 @@ const AppContainer = () => {
     config: {
       screens: {
         AddressForm: {
-          path: !orderState?.options?.address?.location && 'business/:store/:businessId?/:categoryId?/:productId?'
-        },
-        Login: {
-          path: 'login'
-        },
-        NotFound: {
-          path: '*'
+          path: !orderState?.options?.address?.location && 'business/:store/:businessId?/:categoryId?/:productId?',
+          parse: {
+            store: (store : string) => `${store}`,
+            businessId: (id: string) => parseInt(id),
+            categoryId: (id: string) => parseInt(id),
+            productId: (id: string) => parseInt(id)
+          }
         },
         Business: {
           path: orderState?.options?.address?.location && 'business/:store/:businessId?/:categoryId?/:productId?',
@@ -31,38 +32,11 @@ const AppContainer = () => {
             categoryId: (id: string) => parseInt(id),
             productId: (id: string) => parseInt(id)
           }
-        }
-      }
-    },
-  };
-
-  const linkingLogged = {
-    prefixes: [
-      'delivery://',
-      'https://delivery.ordering.co'
-    ],
-    config: {
-      screens: {
+        },
         MyAccount: {
           screens: {
-            BottomTab: {
-              screens: {
-                BusinessList: {
-                  path: 'businesslist'
-                },
-                Profile: {
-                  path: 'profile'
-                },
-                MyOrders: {
-                  path: 'myorders'
-                },
-                Cart: {
-                  path: 'cart'
-                }
-              }
-            },
             Business: {
-              path: 'business/:store/:businessId?/:categoryId?/:productId?',
+              path: auth && 'business/:store/:businessId?/:categoryId?/:productId?',
               parse: {
                 store: (store : string) => `${store}`,
                 businessId: (id: string) => parseInt(id),
@@ -71,13 +45,13 @@ const AppContainer = () => {
               }
             },
             CheckoutNavigator: {
-              path: 'checkout/:cartUuid',
+              path: auth && 'checkout/:cartUuid',
               parse: {
                 cartUuid: (id : string) => `${id}`
               }
             },
             OrderDetails: {
-              path: 'order/:orderId',
+              path: auth && 'order/:orderId',
               parse: {
                 orderId: (id : string) => `${id}`
               }
@@ -92,7 +66,7 @@ const AppContainer = () => {
   }
 
   return (
-    <NavigationContainer linking={auth ? linkingLogged : linking} ref={navigationRef}>
+    <NavigationContainer linking={linking} ref={navigationRef}>
       <RootNavigator />
     </NavigationContainer>
   )

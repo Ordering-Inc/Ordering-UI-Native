@@ -15,7 +15,7 @@ const BusinessProductsList = (props: any) => {
   const businessId = props.route.params?.businessId
   const categoryId = props.route.params?.categoryId
   const productId = props.route.params?.productId
-  console.log(store)
+
   const businessProductsProps = {
     ...props,
     ordering,
