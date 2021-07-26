@@ -246,6 +246,8 @@ export interface ActiveOrdersParams {
   customArray?: Array<any>
   setScreen?: any,
   screen?: any,
+  isPreorders?: boolean,
+  preordersLength: number,
   loadMoreOrders?: () => {},
   onNavigationRedirect?: (route: string, params?: any) => {}
 }

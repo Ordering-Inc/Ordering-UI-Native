@@ -233,7 +233,10 @@ const ProfileUI = (props: ProfileParams) => {
             </Names>
           )}
           <OText>{user?.email}</OText>
-          {!!user?.cellphone && <OText>{user?.cellphone}</OText>}
+          <Names>
+            {!!user?.country_phone_code && <OText space>+{user?.country_phone_code}</OText>}
+            {!!user?.cellphone && <OText>{user?.cellphone}</OText>}
+          </Names>
           {!!phoneUpdate && (
             <OText
               color={theme.colors.error}
