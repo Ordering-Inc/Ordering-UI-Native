@@ -101,7 +101,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
   const [, t] = useLanguage();
 
   const types = ['food', 'laundry', 'alcohol', 'groceries'];
-
+  console.log(isBusinessClose, isBusinessOpen)
   const getBusinessType = () => {
     if (Object.keys(business).length <= 0) return t('GENERAL', 'General');
     const _types: any = [];
