@@ -136,6 +136,21 @@ const CartUI = (props: any) => {
                 <OText>- {parsePrice(cart?.discount || 0)}</OText>
               </OSTable>
             )}
+            {cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
+              <OSTable>
+                {cart?.discount_type === 1 ? (
+                  <>
+                    <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                    <OText>{parsePrice(cart?.subtotal_with_discount + cart?.tax || 0)}</OText>
+                  </>
+                ) : (
+                  <>
+                    <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                    <OText>{parsePrice(cart?.subtotal_with_discount || 0)}</OText>
+                  </>
+                )}
+              </OSTable>
+            )}
             {cart.business.tax_type !== 1 && (
               <OSTable>
                 <OText>

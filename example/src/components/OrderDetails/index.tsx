@@ -310,7 +310,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderStatus>
             </View>
             <OrderCustomer>
-              <OText size={18}>{t('CUSTOMER', 'Customer')}</OText>
+              <OText size={18} style={{textAlign: 'left'}}>{t('CUSTOMER', 'Customer')}</OText>
               <Customer>
                 <CustomerPhoto>
                   <OIcon
@@ -321,8 +321,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   />
                 </CustomerPhoto>
                 <InfoBlock>
-                  <OText size={18}>{order?.customer?.name} {order?.customer?.lastname}</OText>
-                  <OText>{order?.customer?.address}</OText>
+                  <OText size={18} style={{textAlign: 'left'}} >{order?.customer?.name} {order?.customer?.lastname}</OText>
+                  <OText style={{textAlign: 'left'}}>{order?.customer?.address}</OText>
                 </InfoBlock>
               </Customer>
               {order?.driver && (
@@ -368,7 +368,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderDriver>
             )}
             <OrderProducts>
-              <OText size={18}>{t('YOUR_ORDER', 'Your Order')}</OText>
+              <OText size={18} style={{textAlign: 'left'}}>{t('YOUR_ORDER', 'Your Order')}</OText>
               {order?.products?.length && order?.products.map((product: any, i: number) => (
                 <ProductItemAccordion
                   key={product?.id || i}
@@ -392,6 +392,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     <OText>{t('DISCOUNT', 'Discount')}</OText>
                   )}
                   <OText>- {parsePrice(order?.summary?.discount || order?.discount)}</OText>
+                </Table>
+              )}
+              {order?.summary?.subtotal_with_discount > 0 && order?.summary?.discount > 0 && order?.summary?.total >= 0 && (
+                <Table>
+                  <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                  <OText>{parsePrice(order?.summary?.subtotal_with_discount || 0)}</OText>
                 </Table>
               )}
               {order?.tax_type !== 1 && (

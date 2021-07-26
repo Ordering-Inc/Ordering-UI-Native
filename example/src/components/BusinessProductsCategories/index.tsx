@@ -1,6 +1,6 @@
 import React from 'react'
 import { BusinessProductsCategories as ProductsCategories } from 'ordering-components/native'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, View, I18nManager, Platform } from 'react-native'
 import { Tab } from './styles'
 import { OText } from '../shared'
 import { BusinessProductsCategoriesParams } from '../../types'
@@ -20,9 +20,11 @@ const BusinessProductsCategoriesUI = (props: any) => {
 
   const styles = StyleSheet.create({
     container: {
-      paddingHorizontal: 20,
+      paddingHorizontal: I18nManager.isRTL && Platform.OS === 'android' ? 0 : 20,
       paddingVertical: 10,
-      borderBottomColor: theme.colors.lightGray,
+      borderBottomColor: I18nManager.isRTL && Platform.OS === 'android' ? '#fff' : theme.colors.lightGray,
+      flexDirection: 'row',
+      alignSelf: 'flex-start',
     },
     featuredStyle: {
       display: 'none'
