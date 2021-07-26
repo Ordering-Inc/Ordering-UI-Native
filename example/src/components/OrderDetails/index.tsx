@@ -43,6 +43,7 @@ import { USER_TYPE } from '../../config/constants'
 import { GoogleMap } from '../GoogleMap'
 import { verifyDecimals } from '../../utils'
 import { useTheme } from 'styled-components/native'
+import { NotFoundSource } from '../NotFoundSource'
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -195,8 +196,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   return (
     <OrderDetailsContainer keyboardShouldPersistTaps='handled'>
-      <Spinner visible={!order || Object.keys(order).length === 0} />
-      {order && Object.keys(order).length > 0 && (
+      <Spinner visible={props.order?.error?.length === 0 && (!order || Object.keys(order).length === 0)} />
+      {props.order?.error?.length > 0 && (
+        <NotFoundSource
+          btnTitle={t('GO_TO_BUSINESSLIST', 'Go to business list')}
+          content={props.order.error[0]}
+          onClickButton={() => navigation.navigate('BusinessList')}
+        />
+      )}
+      {order && Object.keys(order).length > 0 && !props.order?.error?.length && (
         <>
           <Header>
             <OButton

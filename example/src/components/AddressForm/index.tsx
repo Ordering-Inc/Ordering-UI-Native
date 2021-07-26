@@ -230,7 +230,7 @@ const AddressFormUI = (props: AddressFormParams) => {
       }
       if (!isGuestUser && !auth && !afterSignup) {
         !isFromProductsList
-          ? navigation.navigate('Business')
+          ? navigation.navigate('Business', {store})
           : navigation?.canGoBack() && navigation.goBack()
       }
       return
@@ -295,7 +295,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 
   useEffect(() => {
     if (orderState.loading && !addressesList && orderState.options.address && auth && !afterSignup && !isFromCheckout) {
-      !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business')
+      !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business', {store})
     }
   }, [orderState.options.address])
 
