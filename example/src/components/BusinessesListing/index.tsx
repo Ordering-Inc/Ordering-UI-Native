@@ -86,7 +86,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
     if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
       getBusinesses()
-      showToast(ToastType.Info, 'loading more business')
+      showToast(ToastType.Info, t('LOADING_MORE_BUSINESS', 'Loading more business'))
     }
   }
 
