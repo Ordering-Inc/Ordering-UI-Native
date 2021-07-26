@@ -160,8 +160,8 @@ export {
   Alert,
   StoreMethods,
   // contexts
-  ThemeProvider,
   useTheme,
+  ThemeProvider,
   // themes
   ThemeKiosk,
   ThemeUberEats
