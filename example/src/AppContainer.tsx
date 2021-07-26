@@ -10,7 +10,7 @@ const AppContainer = () => {
 
   const linking : any = {
     prefixes: [
-      'delivery://ordering',
+      'delivery://',
       'https://delivery.ordering.co',
       'https://*.ordering.co'
     ],
