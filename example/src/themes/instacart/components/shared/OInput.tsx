@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps, I18nManager} from 'react-native';
+import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps, I18nManager, TextInput} from 'react-native';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
@@ -8,7 +8,8 @@ const Wrapper = styled.View`
   background-color: ${(props: any) => props.theme.colors.backgroundLight};
   border-radius: 25px;
   border-width: 1px;
-  padding-horizontal: 16px;
+  padding-start: 16px;
+  padding-end: 0;
   height: 50px;
   flex-direction: row;
   align-items: center;
@@ -55,6 +56,7 @@ interface Props extends TextInputProps {
   onSubmitEditing?: any;
   blurOnSubmit?: any;
   inputStyle?: any;
+  clearButtonMode?: any;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -95,6 +97,7 @@ const OInput = (props: Props): React.ReactElement => {
         blurOnSubmit={props.blurOnSubmit}
         ref={props.forwardRef}
 		  style={{fontSize: 14, ...props.inputStyle}}
+		  clearButtonMode={props.clearButtonMode || 'while-editing'}
       />
       {props.iconRight && (
         <OIcon

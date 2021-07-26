@@ -17,6 +17,9 @@ export const Search = styled.View`
   justify-content: flex-end;
   align-items: center;
   margin-vertical: 10px;
+  height: 60px;
+  min-height: 60px;
+  padding-horizontal: 40px;
 `
 
 export const AddressInput = styled.TouchableOpacity`
@@ -48,4 +51,11 @@ export const WrapMomentOption = styled.TouchableOpacity`
   max-width: 240px;
   flex-direction: row;
   align-items: center;
+`
+export const WrapContent = styled.View`
+  padding: 20px 40px;
+`
+export const BusinessProductsListingContainer = styled.ScrollView`
+  flex: 1;
+  margin-bottom: ${(props: any) => props.isActiveFloatingButtom ? '50px' : '0px' };
 `

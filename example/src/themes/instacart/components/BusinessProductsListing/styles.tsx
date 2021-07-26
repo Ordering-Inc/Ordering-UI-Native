@@ -2,6 +2,8 @@ import styled from 'styled-components/native'
 
 export const WrapHeader = styled.View`
   position: relative;
+  border-bottom-width: 16px;
+  border-bottom-color: ${(props: any) => props.theme.colors.secundary}
 `
 export const TopHeader = styled.View`
   position: absolute;
@@ -24,7 +26,7 @@ export const WrapSearchBar = styled.View`
   flex: 1;
 `
 export const WrapContent = styled.View`
-  padding: 10px 20px;
+  padding: 20px 40px;
 `
 
 export const BusinessProductsListingContainer = styled.ScrollView`

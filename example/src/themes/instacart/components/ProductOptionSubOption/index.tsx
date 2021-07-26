@@ -15,7 +15,7 @@ import {
   PositionControl,
   Circle
 } from './styles'
-import { OText } from '../shared'
+import { OIcon, OText } from '../shared'
 import { useTheme } from 'styled-components/native'
 
 export const ProductOptionSubOptionUI = (props: any) => {
@@ -57,18 +57,18 @@ export const ProductOptionSubOptionUI = (props: any) => {
       <IconControl onPress={() => handleSuboptionClick()}>
         {((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
           state?.selected ? (
-            <MaterialCommunityIcon  name='checkbox-marked' color={theme.colors.primary} size={24} />
+            <OIcon src={theme.images.general.check_act} width={16} color={theme.colors.primary} />
           ) : (
-            <MaterialCommunityIcon  name='checkbox-blank-outline' color={theme.colors.backgroundDark} size={24} />
+            <OIcon src={theme.images.general.check_nor} width={16} color={theme.colors.secundary} />
           )
         ) : (
           state?.selected ? (
-            <MaterialCommunityIcon name='radiobox-marked' color={theme.colors.primary} size={24} />
+            <OIcon src={theme.images.general.radio_act} width={16} color={theme.colors.primary} />
           ) : (
-            <MaterialCommunityIcon name='radiobox-blank' color={theme.colors.backgroundDark} size={24} />
+            <OIcon src={theme.images.general.radio_nor} width={16} color={theme.colors.backgroundGray} />
           )
         )}
-        <OText mLeft={10} style={{ flex: I18nManager.isRTL ? 0 : 1 }}>
+        <OText mLeft={10} size={12} lineHeight={18} color={theme.colors.textSecondary} style={{ flex: I18nManager.isRTL ? 0 : 1 }}>
           {suboption?.name}
         </OText>
       </IconControl>
@@ -76,19 +76,19 @@ export const ProductOptionSubOptionUI = (props: any) => {
       {option?.allow_suboption_quantity && (
         <QuantityControl>
           <Checkbox disabled={state.quantity === 0} onPress={decrement}>
-            <MaterialCommunityIcon
-              name='minus-circle-outline'
-              size={24}
+            <OIcon
+              src={theme.images.general.minus}
+              width={16}
               color={state.quantity === 0 ? theme.colors.backgroundDark : theme.colors.primary}
             />
           </Checkbox>
-          <OText mLeft={5} mRight={5}>
+          <OText mLeft={5} mRight={5} size={12} lineHeight={18} color={theme.colors.textSecondary}>
             {state.quantity}
           </OText>
           <Checkbox disabled={disableIncrement} onPress={increment}>
-            <MaterialCommunityIcon
-              name='plus-circle-outline'
-              size={24}
+            <OIcon
+              src={theme.images.general.plus}
+              width={16}
               color={disableIncrement ? theme.colors.backgroundDark : theme.colors.primary}
             />
           </Checkbox>
@@ -97,31 +97,31 @@ export const ProductOptionSubOptionUI = (props: any) => {
       {option?.with_half_option && (
         <PositionControl>
           <Circle onPress={() => changePosition('left')}>
-            <MaterialCommunityIcon
-              name='circle-half-full'
+            <OIcon
+              src={theme.images.general.half_left}
               color={state.selected && state.position === 'left' ? theme.colors.primary : '#cbcbcb'}
-              size={24}
+              width={16}
               style={styles.inverse}
             />
           </Circle>
           <Circle onPress={() => changePosition('whole')}>
-            <MaterialCommunityIcon
-              name='checkbox-blank-circle'
+            <OIcon
+              src={theme.images.general.half_full}
               color={state.selected && state.position === 'whole' ? theme.colors.primary : '#cbcbcb'}
-              size={24}
+              width={16}
             />
           </Circle>
           <Circle onPress={() => changePosition('right')}>
-            <MaterialCommunityIcon
-              name='circle-half-full'
+            <OIcon
+              src={theme.images.general.half_right}
               color={state.selected && state.position === 'right' ? theme.colors.primary : '#cbcbcb'}
-              size={24}
+              width={16}
             />
           </Circle>
         </PositionControl>
       )
       }
-      <OText color='#555'>
+      <OText  size={12} lineHeight={18} color={theme.colors.textSecondary}>
         + {parsePrice(price)}
       </OText>
     </Container>

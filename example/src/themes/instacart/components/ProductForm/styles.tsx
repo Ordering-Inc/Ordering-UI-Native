@@ -10,28 +10,27 @@ export const TopHeader = styled.View`
   width: 100%;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   z-index: 1;
+  padding-horizontal: 20px;
+  padding-top: 10px;
 `
 
 export const ProductHeader = styled.ImageBackground`
   flex-direction: row;
   width: 100%;
   position: relative;
-  max-height: 260px;
-  height: 260px;
+  max-height: 294px;
+  height: 294px;
   resize-mode: cover;
-  min-height: 200px;
-  z-index: 0;
+  min-height: 290px;
 `
 
 export const WrapContent = styled.View`
-  padding: 10px 20px;
+  padding: 10px 40px;
   position: relative;
   bottom: 20px;
   background-color: white;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
   z-index: 100;
 `
 
@@ -49,20 +48,14 @@ export const ProductEditions = styled.View`
 `
 
 export const SectionTitle = styled.View`
-  padding: 15px 20px;
-  background-color: ${(props: any) => props.theme.colors.paleGray};
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  padding: 15px 0px;
 `
 
 export const WrapperIngredients = styled.View`
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
 `
 
 export const WrapperSubOption = styled.View`
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+
 `
 
 export const ProductComment = styled.View`
@@ -72,13 +65,11 @@ export const ProductActions = styled.View`
   position: absolute;
   flex: 1;
   bottom: 0px;
-  padding: 20px;
+  padding: 12px 40px;
   width: 100%;
   flex-direction: row;
   background-color: #FFF;
   z-index: 1000;
-
-  ${((props: any) => props.isIos && css `
-    padding-bottom: 20px;
-  `)}
+  border-top-width: 1px;
+  border-top-color: ${(props: any) => props.theme.colors.border};
 `

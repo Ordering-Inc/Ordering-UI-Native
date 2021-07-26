@@ -1,6 +1,6 @@
 import React from 'react'
 import { useApi } from 'ordering-components/native'
-import { BusinessProductsListing as BusinessProductsListController } from '../components/BusinessProductsListing'
+import { BusinessProductsListing as BusinessProductsListController } from '../themes/instacart'
 import styled from 'styled-components/native'
 import { useTheme } from 'styled-components/native'
 
@@ -57,7 +57,7 @@ const BusinessProductsList = (props: any) => {
     product
   }
 
-  const BusinessProductsListView = styled.SafeAreaView`
+  const BusinessProductsListView = styled.View`
     flex: 1;
     background-color: ${theme.colors.backgroundPage};
   `

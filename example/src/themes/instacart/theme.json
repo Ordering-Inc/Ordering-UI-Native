@@ -50,7 +50,8 @@
 	},
 	"colors": {
 		"primary": "#4FAB34",
-		"primaryContrast": "#FFF",
+		"primaryDark": "#499C31",
+		"primaryContrast": "#FFFFFF",
 		"secundary": "#EFEFEF",
 		"secundaryContrast": "#000",
 		"disabled": "#CBCBCB",
@@ -134,7 +135,19 @@
 			"tab_promotion": "",
 			"tab_orders": "",
 			"tab_profile": "",
-			"filter": ""
+			"filter": "",
+			"pencil": "",
+			"info": "",
+			"plus_circle": "",
+			"check_act": "",
+			"check_nor": "",
+			"radio_act": "",
+			"radio_nor": "",
+			"half_full": "",
+			"half_left": "",
+			"half_right": "",
+			"minus": "",
+			"plus": ""
 		},
 		"order": {
 			"status0": "",

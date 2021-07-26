@@ -6,7 +6,7 @@ import {
   CardInfo,
   SoldOut
 } from './styles'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
 
@@ -22,9 +22,6 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 
   const styles = StyleSheet.create({
     container: {
-      borderWidth: 1,
-      borderRadius: 10,
-      borderColor: theme.colors.lightGray,
       marginBottom: 15,
     },
     textStyle: {
@@ -37,10 +34,17 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
       textTransform: 'uppercase'
     },
     productStyle: {
-      width: 75,
-      height: 75,
-      borderRadius: 10,
-    }
+      width: 100,
+      height: 100,
+      borderRadius: 3,
+		marginTop: 5
+    },
+	 addBtn: {
+		 position: 'absolute',
+		 top: 0,
+		 end: 9,
+		 padding: 4
+	 }
   })
 
   const [, t] = useLanguage()
@@ -65,21 +69,26 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 
   return (
     <CardContainer style={[styles.container, (isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle]}
-      onPress={() => onProductClick(product)}
+      onPress={() => {}}
+		activeOpacity={0.8}
     >
       <OIcon
         url={optimizeImage(product?.images, 'h_200,c_limit')}
         style={styles.productStyle}
       />
       <CardInfo>
-        <OText numberOfLines={1} ellipsizeMode='tail' style={styles.textStyle}>{product?.name}</OText>
-        <OText size={12} numberOfLines={2} ellipsizeMode='tail' style={styles.textStyle}>{product?.description}</OText>
-        <OText color={theme.colors.primary}>{parsePrice(product?.price)}</OText>
+        <OText color={theme.colors.textPrimary} style={{...theme.labels.normal, marginTop: 9}}>{parsePrice(product?.price)}</OText>
+        <OText numberOfLines={1} ellipsizeMode='tail' style={{...styles.textStyle, ...theme.labels.small}}>{product?.name}</OText>
+        <OText color={theme.colors.textSecondary} size={9} numberOfLines={2} ellipsizeMode='tail' style={{...styles.textStyle, ...theme.labels.small}}>{product?.description}</OText>
       </CardInfo>
+
+		<TouchableOpacity style={styles.addBtn} onPress={() => onProductClick(product)} activeOpacity={0.7}>
+			<OIcon src={theme.images.general.plus_circle} />
+		</TouchableOpacity>
 
       {(isSoldOut || maxProductQuantity <= 0) && (
         <SoldOut>
-          <OText weight='bold' style={styles.soldOutTextStyle}>{t('SOLD_OUT', 'SOLD OUT')}</OText>
+          <OText size={10} weight='bold' style={styles.soldOutTextStyle}>{t('SOLD_OUT', 'SOLD OUT')}</OText>
         </SoldOut>
       )}
     </CardContainer>

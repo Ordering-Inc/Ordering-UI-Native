@@ -6,7 +6,7 @@ import { AddressList } from './components/AddressList';
 import { ForgotPasswordForm } from './components/ForgotPasswordForm';
 import { BusinessesListing } from './components/BusinessesListing';
 import { BusinessProductsListing } from './components/BusinessProductsListing';
-import { SearchBusiness } from './components/SearchBusiness';
+import { SearchList } from './components/SearchList';
 
 import theme from './theme.json';
 
@@ -59,6 +59,18 @@ theme.images = {
 		tab_orders: require('./assets/icons/tab_orders.png'),
 		tab_profile: require('./assets/icons/tab_profile.png'),
 		filter: require('./assets/icons/ic_filter.png'),
+		pencil: require('./assets/icons/ic_pencil.png'),
+		info: require('./assets/icons/ic_info.png'),
+		plus_circle: require('./assets/icons/ic_plus_circle.png'),
+		radio_act: require('./assets/icons/ic_radio_act.png'),
+		radio_nor: require('./assets/icons/ic_radio_nor.png'),
+		check_act: require('./assets/icons/ic_check_act.png'),
+		check_nor: require('./assets/icons/ic_check_nor.png'),
+		half_full: require('./assets/icons/ic_full.png'),
+		half_left: require('./assets/icons/ic_half_l.png'),
+		half_right: require('./assets/icons/ic_half_r.png'),
+		minus: require('./assets/icons/ic_minus.png'),
+		plus: require('./assets/icons/ic_plus.png'),
 	},
 	order: {
 		status0: require('./assets/images/status-0.png'),
@@ -107,5 +119,5 @@ export {
 	ForgotPasswordForm,
 	BusinessesListing,
 	BusinessProductsListing,
-	SearchBusiness
+	SearchList
 }

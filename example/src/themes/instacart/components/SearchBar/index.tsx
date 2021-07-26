@@ -15,7 +15,8 @@ export const SearchBar = (props: any) => {
     isCancelButtonShow,
     isCancelXButtonShow,
     noBorderShow,
-    borderStyle
+    borderStyle,
+	 inputStyle
   } = props
 
   const theme = useTheme()
@@ -36,9 +37,10 @@ export const SearchBar = (props: any) => {
     inputStyle: {
       flex: 1,
 		paddingStart: 0,
+		height: 40
     },
     buttonStyle: {
-      maxHeight: 40,
+      maxHeight: 30,
       paddingRight: 5,
       paddingLeft: 5,
     }
@@ -72,6 +74,8 @@ export const SearchBar = (props: any) => {
         icon={theme.images.general.tab_explore}
 		  iconStyle={{width: 16, height: 16}}
         returnKeyType='done'
+		  inputStyle={inputStyle}
+		  clearButtonMode={isCancelXButtonShow ? 'while-editing' : 'never'}
       />
       {isCancelButtonShow && (
         <OButton
@@ -83,7 +87,7 @@ export const SearchBar = (props: any) => {
           onClick={onCancel || handleClear}
         />
       )}
-      {isCancelXButtonShow && (
+      {/* {isCancelXButtonShow && (
         <TouchableOpacity
           onPress={onCancel || handleClear}
         >
@@ -94,7 +98,7 @@ export const SearchBar = (props: any) => {
 				color={theme.colors.textSecondary}
           />
         </TouchableOpacity>
-      )}
+      )} */}
     </View>
   )
 }

@@ -5,28 +5,26 @@ export const Container = styled.View`
   flex: 1;
   bottom: 0px;
   left: 0;
-  padding: 10px;
+  padding: 12px 40px;
   border-top-width: 1px;
-  border-color: ${(props: any) => props.theme.colors.lightGray};
+  border-color: ${(props: any) => props.theme.colors.border};
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #FFF;
   z-index: 1000;
-
-  ${((props: any) => props.isIos && css `
-    padding-bottom: 20px;
-  `)}
 `
 
 export const Button = styled.TouchableOpacity`
   position: relative;
   display: flex;
   flex-direction: row;
-  width: 90%;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
-  border-radius: 25px;
-  height: 50px;
+  border-radius: 3px;
+  height: 42px;
+  padding: 5px;
+  background-color: ${(props: any) => props.theme.colors.primary};
 `

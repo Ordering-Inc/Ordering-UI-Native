@@ -11,6 +11,8 @@ import {
 } from './styles'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { View } from 'react-native'
+import { useTheme } from 'styled-components/native'
+import { ScrollView } from 'react-native-gesture-handler'
 
 const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   const {
@@ -30,6 +32,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   } = props
 
   const [, t] = useLanguage()
+  const theme = useTheme()
 
   return (
     <ProductsContainer>
@@ -49,8 +52,8 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         !category.id && (
           featured && categoryState?.products?.find((product: any) => product.featured) && (
             <>
-              <OText size={18} weight='bold' mBottom={10}>{t('FEATURED', 'Featured')}</OText>
-              <>
+              <OText style={theme.labels.subtitle} mBottom={10}>{t('FEATURED', 'Featured')}</OText>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {categoryState.products?.map((product: any) => product.featured && (
                   <SingleProductCard
                     key={product.id}
@@ -60,7 +63,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                     onProductClick={onProductClick}
                   />
                 ))}
-              </>
+              </ScrollView>
             </>
           )
         )
@@ -74,8 +77,8 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               {
                 products.length > 0 && (
                   <>
-                    <OText size={18} weight='bold' mBottom={10}>{category.name}</OText>
-                    <>
+                    <OText style={theme.labels.subtitle} mBottom={10}>{category.name}</OText>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                       {
                         products.map((product: any) => (
                           <SingleProductCard
@@ -87,7 +90,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                           />
                         ))
                       }
-                    </>
+                    </ScrollView>
                   </>
                 )
               }
