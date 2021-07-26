@@ -44,7 +44,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const styles = StyleSheet.create({
     container: {
       padding: 20,
-      marginBottom: 20
+      marginBottom: 20,
+      left: Platform.OS === 'ios' && I18nManager.isRTL ? 20 : 0
     },
     welcome: {
       flex: 1,

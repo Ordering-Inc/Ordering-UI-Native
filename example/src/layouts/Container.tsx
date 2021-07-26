@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform , I18nManager } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
 const ContainerStyled = styled.ScrollView`
@@ -8,6 +8,7 @@ const ContainerStyled = styled.ScrollView`
     padding: ${Platform.OS === 'ios' ? '0px 20px 20px' : '20px'};
   `}
   background-color: ${(props: any) => props.theme.colors.backgroundPage};
+  left: ${Platform.OS === 'ios' && I18nManager.isRTL ? '20px' : '0px'} ;
 `;
 
 const SafeAreaStyled = styled.SafeAreaView`
