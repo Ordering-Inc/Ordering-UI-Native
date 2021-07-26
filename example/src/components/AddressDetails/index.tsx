@@ -33,7 +33,7 @@ const AddressDetailsUI = (props: any) => {
             size={20}
             numberOfLines={1}
             ellipsizeMode='tail'
-            style={{ width: '85%' }}
+            style={{ maxWidth: '85%' , alignItems: 'flex-start', textAlign: 'left'}}
           >
             {addressToShow || orderState?.options?.address?.address}
           </OText>

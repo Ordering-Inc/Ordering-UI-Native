@@ -63,7 +63,12 @@ export const ChUserDetails = styled.View`
   border-bottom-width: 1px;
   border-bottom-color: ${(props: any) => props.theme.colors.inputDisabled};
 `
-
+export const TextDetails = styled.Text`
+  align-items: flex-start;
+  text-align: left;
+  font-size: 18px;
+  font-weight: bold;
+`
 export const ChBusinessDetails = styled(ChUserDetails)`
 `
 

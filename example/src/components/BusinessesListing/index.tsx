@@ -44,7 +44,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const styles = StyleSheet.create({
     container: {
       padding: 20,
-      marginBottom: 20
+      marginBottom: 20,
+      left: Platform.OS === 'ios' && I18nManager.isRTL ? 20 : 0
     },
     welcome: {
       flex: 1,
@@ -86,7 +87,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
     if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
       getBusinesses()
-      showToast(ToastType.Info, 'loading more business')
+      showToast(ToastType.Info, t('LOADING_MORE_BUSINESS', 'Loading more business'))
     }
   }
 
