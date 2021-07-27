@@ -1,7 +1,7 @@
 import React from 'react'
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import {ReviewOrder as ReviewOrderController} from '../themes/five/components'
+import {ReviewOrder as ReviewOrderController} from '../themes/original/components'
 import { Container } from '../layouts/Container';
 
 const KeyboardView = styled.KeyboardAvoidingView`

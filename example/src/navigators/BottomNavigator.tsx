@@ -1,49 +1,47 @@
 import React from 'react'
-import { View, Platform, PlatformIOSStatic } from 'react-native'
-import { useOrder } from 'ordering-components/native'
+import { View, Platform } from 'react-native'
+import { useLanguage, useOrder } from 'ordering-components/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
-import { OText } from '../components/shared'
+import { colors, images } from '../themes/original/theme.json'
+import { OIcon, OText } from '../components/shared'
+
 import BusinessList from '../pages/BusinessesListing'
 import MyOrders from '../pages/MyOrders'
 import CartList from '../pages/CartList'
 import Profile from '../pages/Profile'
-import { useTheme } from 'styled-components/native'
 
 const CartsLenght = styled.View`
-  width: 25px;
-  height: 25px;
-  background-color: ${(props: any) => props.theme.colors.primary};
+  width: 10px;
+  height: 10px;
+  background-color: ${colors.red};
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 0;
+  right: 10px;
+  top: 7px;
 `
 
 const Tab = createMaterialBottomTabNavigator();
 
 const BottomNavigator = () => {
-  const theme = useTheme()
+
+  const [, t] = useLanguage()
   const [{ carts }] = useOrder()
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
   const isIos = Platform.OS === 'ios'
-  const platformIOS = Platform as PlatformIOSStatic
-  const androidStyles = isIos
-    ? platformIOS.isPad
-      ? { paddingBottom: 30 }
-      : {}
-    : {height: 40, position: 'relative', bottom: 15}
+  const androidStyles = isIos ? {} : {height: 40, position: 'relative', bottom: 15}
   return (
     <Tab.Navigator
       initialRouteName='BusinessList'
-      activeColor={theme.colors.primary}
-      barStyle={{ backgroundColor: theme.colors.white, ...androidStyles }}
+      activeColor={colors.primary}
+      barStyle={{ backgroundColor: colors.white }}
       labeled={false}
-      inactiveColor={theme.colors.disabled}
+      inactiveColor={colors.disabled}
     >
       <Tab.Screen
         name="BusinessList"
@@ -51,8 +49,9 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0  }}>
-                <MaterialCommunityIcon name='home' size={46} color={color} />
+              <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: !isIos ? 10 : 0  }}>
+                <OIcon src={images.tabs.explorer} width={16} color={color} />
+					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('EXPLORE', 'Explore')}</OText>
               </View>
             )
         }}
@@ -64,8 +63,9 @@ const BottomNavigator = () => {
           {
             tabBarIcon:
               ({ color }) => (
-                <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0 }}>
-                  <MaterialIcon name='format-list-bulleted' size={46} color={color} />
+                <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: !isIos ? 10 : 0 }}>
+                  <OIcon src={images.tabs.orders} width={16} color={color} />
+					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('ORDERS', 'Orders')}</OText>
                 </View>
               ),
           }}
@@ -79,16 +79,17 @@ const BottomNavigator = () => {
               <View style={{
                   width: 50,
                   height: 50,
-                  justifyContent: !isIos ? 'flex-start' : 'space-evenly',
+                  justifyContent: 'center', alignItems: 'center',
                   position: 'relative',
                   bottom: !isIos ? 10 : 0
                 }}
               >
-                <MaterialIcon name='shopping-basket' size={46} color={color} />
+                <OIcon src={images.tabs.my_carts} width={16} color={color} />
+					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('MY_CARTS', 'My carts')}</OText>
                 {cartsList.length > 0 && (
                   <CartsLenght style={{ borderRadius: 100 / 2 }}>
-                    <OText
-                      color={theme.colors.white}
+                    <OText size={7}
+                      color={colors.white}
                     >
                       {cartsList.length}
                     </OText>
@@ -104,8 +105,9 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0  }}>
-                <MaterialIcon name='person' size={46} color={color} />
+              <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: !isIos ? 10 : 0  }}>
+                <OIcon src={images.tabs.profile} width={16} color={color} />
+					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('PROFILE', 'Profile')}</OText>
               </View>
             )
         }}

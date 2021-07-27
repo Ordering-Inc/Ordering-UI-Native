@@ -1,5 +1,5 @@
 import React from 'react'
-import { AddressList as AddressListController } from '../themes/five/components';
+import { AddressList as AddressListController } from '../themes/original/components';
 import { useSession } from 'ordering-components/native'
 
 const AddressList = ({ route, navigation }: any) => {

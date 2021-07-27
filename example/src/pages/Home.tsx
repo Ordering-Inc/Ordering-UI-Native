@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, ImageBackground, View, ImageSourcePropType } from 'react-native';
-import { HomeView } from '../themes/five/components';
-import { images } from '../themes/five/theme.json';
+import { HomeView } from '../themes/original/components';
+import { images } from '../themes/original/theme.json';
 
 export const Home = (props: any) => {
 

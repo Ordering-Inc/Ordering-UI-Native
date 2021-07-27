@@ -1,5 +1,5 @@
 import React from 'react'
-import { OrderDetails as OrderDetailsController } from '../themes/five/components'
+import { OrderDetails as OrderDetailsController } from '../themes/original/components'
 import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 
 const OrderDetails = ({ navigation, route } : any) => {

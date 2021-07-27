@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { Checkout } from '../themes/five/components';
+import { Checkout } from '../themes/original/components';
 
 import { initStripe, useConfirmPayment  } from '@stripe/stripe-react-native';
 import styled from 'styled-components/native';
