@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -45,7 +45,7 @@
     "axios": "^0.21.0",
     "moment": "^2.29.1",
     "ordering-components": "github:Ordering-Inc/ordering-components#development",
-    "patch-package": "^6.2.2",
+    "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
     "prop-types": "^15.7.2",
     "react": "17.0.1",
