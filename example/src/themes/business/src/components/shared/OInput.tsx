@@ -106,6 +106,7 @@ const OInput = (props: Props): React.ReactElement => {
         onSubmitEditing={props.onSubmitEditing}
         blurOnSubmit={props.blurOnSubmit}
         ref={props.forwardRef}
+        onEndEditing={props.onSubmitEditing}
         selectionColor={props.selectionColor}
         color={props.selectionColor}
         maxLength={props.maxLength || 1000}

@@ -261,19 +261,19 @@ const ChatUI = (props: MessagesParams) => {
     return (
       <View style={{ flexDirection: 'row' }}>
         <OIcon
-          src={order?.business?.logo}
+          url={order?.business?.logo || theme?.images?.dummies?.businessLogo}
           width={16}
           height={16}
           style={{ marginHorizontal: 2 }}
         />
         <OIcon
-          src={order?.customer?.logo}
+          url={order?.customer?.logo || theme?.images?.dummies?.customerPhoto}
           width={16}
           height={16}
           style={{ marginHorizontal: 2 }}
         />
         <OIcon
-          src={order?.driver?.logo}
+          url={order?.driver?.logo || theme?.images?.dummies?.driverPhoto}
           width={16}
           height={16}
           style={{ marginHorizontal: 2 }}
@@ -515,7 +515,6 @@ const ChatUI = (props: MessagesParams) => {
         {...props}
         textInputStyle={{
           borderRadius: 7.6,
-          // marginTop: 40,
           paddingHorizontal: 10,
           borderColor: theme.colors.transparent,
           borderWidth: 0,

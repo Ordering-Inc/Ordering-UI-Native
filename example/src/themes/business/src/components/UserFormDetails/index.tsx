@@ -266,8 +266,8 @@ export const UserFormDetailsUI = (props: any) => {
                             autoCompleteType={
                               field.code === 'email' ? 'email' : 'off'
                             }
-                            blurOnSubmit={true}
                             onSubmitEditing={submitEvent}
+                            onEndEditing={submitEvent}
                           />
                         )}
                         name={field.code}
