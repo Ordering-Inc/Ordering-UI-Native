@@ -77,6 +77,7 @@ const OrderSummaryUI = (props: any) => {
                 onDeleteProduct={handleDeleteClick}
                 onEditProduct={handleEditProduct}
                 isFromCheckout={isFromCheckout}
+					 isExpanded
               />
             ))}
           </OSProductList>

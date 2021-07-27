@@ -18,7 +18,8 @@ export const Accordion = styled.TouchableOpacity`
 `
 
 export const ProductInfo = styled.View`
-  width: 15%;
+  width: 36px;
+  height: 30px;
 `
 
 export const ProductQuantity = styled.View``
@@ -28,7 +29,6 @@ export const ContentInfo = styled.View`
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-  width: 85%;
 `
 
 export const ProductImage = styled.View`
@@ -40,8 +40,6 @@ export const AccordionContent = styled.View`
 `
 
 export const ProductOptionsList = styled.View`
-  margin-top: 20px;
-  margin-left: 20px;
 `
 
 export const ProductOption = styled.View``

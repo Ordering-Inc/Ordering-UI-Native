@@ -292,7 +292,8 @@ export interface ProductItemAccordionParams {
 	onDeleteProduct?: (product: any) => void,
 	onEditProduct?: (product: any) => void,
 	offsetDisabled?: any,
-	isFromCheckout?: any
+	isFromCheckout?: any,
+	isExpanded?: boolean,
 }
 export interface ReviewOrderParams {
 	order?: { orderId: number, businessId: number, logo: string },
@@ -352,6 +353,7 @@ export interface FloatingButtonParams {
 	btnLeftValueShow?: boolean;
 	btnRightValueShow?: boolean;
 	handleClick?: any;
+	inSafeArea?: boolean;
 }
 export interface MomentOptionParams {
 	navigation: any;

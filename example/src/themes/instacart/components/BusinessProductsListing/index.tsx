@@ -215,10 +215,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					}
 					isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum}
 					btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && !openUpselling && currentCart?.products?.length > 0}
-					btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && !openUpselling && currentCart?.products?.length > 0}
+					btnRightValueShow={false}
 					btnRightValue={parsePrice(currentCart?.total)}
 					disabled={openUpselling || currentCart?.subtotal < currentCart?.minimum}
-					handleClick={() => setOpenCart(true)}
+					handleClick={() => onRedirect('CartPage', { cart: currentCart })}
 				/>
 			)}
 			<OModal
@@ -236,26 +236,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					onSave={handlerProductAction}
 					setProductLogin={setProductLogin}
 				/>
-			</OModal>
-			
-			<OModal
-				open={openCart && currentCart && !orderState.loading}
-				onClose={() => setOpenCart(false)}
-				entireModal
-				customClose
-			>
-				{/* <OrderSummary
-					cart={currentCart}
-					isCartPending={currentCart?.status === 2}
-					isFromCheckout
-				/> */}
-				<Cart
-                  cart={currentCart}
-                  onNavigationRedirect={onRedirect}
-                  isCartsLoading={false}
-                  setIsCartsLoading={false}
-						handleCartOpen
-                />
 			</OModal>
 
 			{openUpselling && (

@@ -4,8 +4,8 @@ import styled from 'styled-components/native';
 import { useOrder } from 'ordering-components/native';
 import { Platform } from 'react-native';
 import { Container } from '../layouts/Container'
-import { OrderSummary } from '../themes/instacart/components/OrderSummary';
 import { useEffect } from 'react';
+import { CartSingle } from '../themes/instacart/components/CartSingle';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
@@ -14,22 +14,15 @@ const KeyboardView = styled.KeyboardAvoidingView`
 interface Props {
 	navigation?: any;
 	route?: any;
-	cart?: any;
 }
 
-const CartPage = (props: Props) => {
-	const { navigation, route, cart } = props;
+const CartSinglePage = (props: Props) => {
+	const { navigation, route } = props;
 	const cartProps = {
 		...props,
 		cart: route.params.cart,
-		isCartPending: route.params.cart?.status === 2,
-		isFromCheckout: true,
 		onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params)
 	}
-
-	useEffect(() => {
-		console.log(cart);
-	}, [])
 
 	return (
 		<>
@@ -37,12 +30,12 @@ const CartPage = (props: Props) => {
 				enabled
 				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 			>
-				<Container>
-					<OrderSummary {...cartProps} />
+				<Container noScroll>
+					<CartSingle {...cartProps} />
 				</Container>
 			</KeyboardView>
 		</>
 	);
 };
 
-export default CartPage;
+export default CartSinglePage;

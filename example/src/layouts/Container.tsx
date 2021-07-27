@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
 const ContainerStyled = styled.ScrollView`
@@ -18,9 +18,15 @@ const SafeAreaStyled = styled.SafeAreaView`
 export const Container = (props: any) => {
   return (
     <SafeAreaStyled>
-      <ContainerStyled keyboardShouldPersistTaps='handled'>
-        {props.children}
-      </ContainerStyled>
+		 {props.noScroll ? (
+			 <View style={{flex: 1}}>
+				{props.children} 
+			 </View>
+		 ) : (
+			 <ContainerStyled keyboardShouldPersistTaps='handled'>
+				{props.children}
+			 </ContainerStyled>
+		 )}
     </SafeAreaStyled>
   )
 }

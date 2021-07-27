@@ -13,20 +13,13 @@ import BusinessProductsList from '../pages/BusinessProductsList';
 import ReviewOrder from '../pages/ReviewOrder'
 import MomentOption from '../pages/MomentOption'
 import Splash from '../pages/Splash';
-import CartPage from '../pages/Cart';
+import CartSinglePage from '../pages/CartSingle';
 
 const Stack = createStackNavigator();
 
 const HomeNavigator = (e: any) => {
 	const [orderState] = useOrder();
 	const [{ auth }] = useSession();
-
-
-	const cartProps = {
-		navigation: e?.navigation,
-		route: e?.route,
-		cart: e?.route?.params?.cart
-	}
 
 	return (
 		<Stack.Navigator>
@@ -103,8 +96,9 @@ const HomeNavigator = (e: any) => {
 									/>
 									<Stack.Screen
 										name="CartPage"
-										children={() => <CartPage {...cartProps} />}
+										component={CartSinglePage}
 										options={{ headerShown: false }}
+										initialParams={{ afterSignup: false }}
 									/>
 								</>
 							)}

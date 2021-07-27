@@ -20,7 +20,8 @@ export const BusinessItemAccordion = (props: any) => {
   const {
     cart,
     moment,
-    handleClearProducts
+    handleClearProducts,
+	 isExpanded
   } = props
 
   const [orderState] = useOrder();
@@ -31,7 +32,7 @@ export const BusinessItemAccordion = (props: any) => {
   const isClosed = !cart?.valid_schedule
   const isProducts = cart?.products?.length
 
-  const [isActive, setActiveState] = useState(false)
+  const [isActive, setActiveState] = useState(isExpanded)
 
   useEffect(() => {
     const cartsArray = Object.values(orderState?.carts)
@@ -45,7 +46,7 @@ export const BusinessItemAccordion = (props: any) => {
     <BIContainer isClosed={isClosed}>
       <BIHeader
         isClosed={isClosed}
-        onPress={() => !isClosed ? setActiveState(!isActive) : isClosed}
+        onPress={() => isExpanded ? {} : !isClosed ? setActiveState(!isActive) : isClosed}
         activeOpacity={1}
       >
         <BIInfo>
@@ -122,7 +123,7 @@ export const BusinessItemAccordion = (props: any) => {
                   />
                 </OAlert>
               )}
-              <MaterialCommunityIcon name='chevron-down' size={20} />
+				  {!isExpanded && <MaterialCommunityIcon name='chevron-down' size={20} />}
             </>
           )}
         </BIActions>

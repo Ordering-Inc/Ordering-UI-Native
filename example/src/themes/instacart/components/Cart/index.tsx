@@ -32,6 +32,7 @@ const CartUI = (props: any) => {
     removeProduct,
     handleCartOpen,
     setIsCartsLoading,
+	 isExpanded
   } = props
 
   const theme = useTheme()
@@ -98,6 +99,7 @@ const CartUI = (props: any) => {
         handleClearProducts={handleClearProducts}
         handleCartOpen={handleCartOpen}
         onNavigationRedirect={props.onNavigationRedirect}
+		  isExpanded
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any) => (
           <ProductItemAccordion
