@@ -1,8 +1,7 @@
 import React from 'react';
 import { Share } from 'react-native';
-import {useLanguage} from 'ordering-components/native'
+import {useLanguage, useToast, ToastType} from 'ordering-components/native'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import {useToast, ToastType} from '../../providers/ToastProvider'
 import { ShareComponentParams } from '../../types';
 
 export const ShareComponent = (props : ShareComponentParams) => {
