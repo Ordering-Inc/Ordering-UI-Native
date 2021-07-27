@@ -82,7 +82,7 @@ import { ThemeProvider, useTheme } from './context/Theme';
 
 // themes
 import ThemeKiosk from './themes/kiosk'
-import ThemeUberEats from './themes/uberEats'
+// import ThemeUberEats from './themes/uberEats'
 
 export {
   ActiveOrders,
@@ -164,5 +164,5 @@ export {
   useTheme,
   // themes
   ThemeKiosk,
-  ThemeUberEats
+  // ThemeUberEats
 }
