@@ -6,7 +6,7 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OIconButton, OButton } from '../shared';
 import { PreviousOrders } from '../PreviousOrders';
 import { NotFoundSource } from '../NotFoundSource';
-import { FiltersTab, OTabs, Tag } from './styles';
+import { FiltersTab, TabsContainer, Tag } from './styles';
 import { OrdersOptionParams } from '../../types';
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
@@ -123,7 +123,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const handleChangeTab = (tags: number[]) => {
     setTabsFilter(tags);
     setUpdateOtherStatus(tags);
-    loadOrders && loadOrders(true, tags);
+    loadOrders && loadOrders(false, tags, true);
     setTagsToggle(tags);
 
     const ordersTab = values.filter((order: any) =>
@@ -236,7 +236,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             borderColor={theme.colors.clear}
             iconStyle={{ width: 25, height: 25 }}
             style={{ maxWidth: 40, height: 35 }}
-            onClick={() => loadOrders && loadOrders(false, tabsFilter)}
+            onClick={() => loadOrders && loadOrders(true, tabsFilter, true)}
           />
 
           {/* <OIconButton
@@ -250,7 +250,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       </View>
 
       <FiltersTab>
-        <OTabs>
+        <TabsContainer>
           {tabs.map(tab => (
             <Pressable
               key={tab.key}
@@ -277,7 +277,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 }}></View>
             </Pressable>
           ))}
-        </OTabs>
+        </TabsContainer>
       </FiltersTab>
 
       <View>

@@ -2,22 +2,15 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Pressable, StyleSheet, Keyboard, Text, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import {
   LoginForm as LoginFormController,
   useLanguage,
 } from 'ordering-components/native';
-
+import { useTheme } from 'styled-components/native';
 import { Container, FormSide, FormInput } from './styles';
-
 import { ToastType, useToast } from '../../providers/ToastProvider';
-
 import { OText, OButton, OInput } from '../shared';
 import { LoginParams } from '../../types';
-
-import { useTheme } from 'styled-components/native';
-
-const theme = useTheme();
 
 const LoginFormUI = (props: LoginParams) => {
   const {
@@ -32,7 +25,9 @@ const LoginFormUI = (props: LoginParams) => {
 
   const { showToast } = useToast();
   const [, t] = useLanguage();
+  const theme = useTheme();
   const { control, handleSubmit, errors } = useForm();
+
   const [passwordSee, setPasswordSee] = useState(false);
 
   const inputRef = useRef<any>({});
@@ -59,6 +54,65 @@ const LoginFormUI = (props: LoginParams) => {
         );
     }
   }, [formState]);
+
+  const loginStyle = StyleSheet.create({
+    container: {
+      justifyContent: 'flex-end',
+    },
+    welcomeView: {
+      flex: 1,
+      width: '90%',
+      marginBottom: 20,
+    },
+    emailInput: {
+      color: theme.colors.inputTextColor,
+      marginBottom: 25,
+      borderWidth: 1,
+      borderRadius: 7.6,
+      borderColor: theme.colors.inputTextColor,
+      backgroundColor: theme.colors.transparent,
+    },
+    passwordInput: {
+      color: theme.colors.inputTextColor,
+      marginBottom: 13,
+      borderWidth: 1,
+      borderRadius: 7.6,
+      borderColor: theme.colors.inputTextColor,
+      backgroundColor: theme.colors.transparent,
+    },
+    button: {
+      borderRadius: 7.6,
+      height: 44,
+    },
+    textButton: {
+      color: theme.colors.inputTextColor,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 18,
+    },
+    textTitle: {
+      color: theme.colors.inputTextColor,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: '500',
+      fontSize: 45,
+    },
+    textSubtitle: {
+      color: theme.colors.inputTextColor,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 16,
+    },
+    textForgot: {
+      color: theme.colors.inputTextColor,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 16,
+    },
+  });
 
   return (
     <Container contentContainerStyle={loginStyle.container}>
@@ -185,52 +239,6 @@ const LoginFormUI = (props: LoginParams) => {
     </Container>
   );
 };
-
-const loginStyle = StyleSheet.create({
-  container: {
-    justifyContent: 'flex-end',
-  },
-  welcomeView: {
-    flex: 1,
-    width: '90%',
-    marginBottom: 20,
-  },
-  emailInput: {
-    color: theme.colors.inputTextColor,
-    marginBottom: 25,
-    borderWidth: 1,
-    borderRadius: 7.6,
-    borderColor: theme.colors.inputTextColor,
-    backgroundColor: theme.colors.transparent,
-  },
-  passwordInput: {
-    color: theme.colors.inputTextColor,
-    marginBottom: 13,
-    borderWidth: 1,
-    borderRadius: 7.6,
-    borderColor: theme.colors.inputTextColor,
-    backgroundColor: theme.colors.transparent,
-  },
-  button: {
-    borderRadius: 7.6,
-    height: 44,
-  },
-  textButton: {
-    color: theme.colors.inputTextColor,
-    fontSize: 18,
-  },
-  textTitle: {
-    color: theme.colors.inputTextColor,
-    fontSize: 40,
-  },
-  textSubtitle: {
-    color: theme.colors.inputTextColor,
-  },
-  textForgot: {
-    color: theme.colors.inputTextColor,
-    fontSize: 16,
-  },
-});
 
 export const LoginForm = (props: any) => {
   const loginProps = {

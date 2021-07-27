@@ -4,7 +4,7 @@ export const FiltersTab = styled.View`
   margin-bottom: 20px;
 `;
 
-export const OTabs = styled.View`
+export const TabsContainer = styled.View`
   display: flex;
   flex-direction: row;
 `;

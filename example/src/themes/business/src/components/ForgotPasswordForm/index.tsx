@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-
 import {
   ForgotPasswordForm as ForgotPasswordController,
   useLanguage,
 } from 'ordering-components/native';
-
+import { useTheme } from 'styled-components/native';
 import NavBar from '../NavBar';
 import { FormInput, FormSide } from '../../components/LoginForm/styles';
 import { Container } from './styles';
 import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OButton, OInput, OText } from '../shared';
 
-import { useTheme } from 'styled-components/native';
-
-const theme = useTheme();
-
 const ForgotPasswordUI = (props: any) => {
   const { navigation, formState, handleButtonForgotPasswordClick } = props;
+
+  const theme = useTheme();
   const [, t] = useLanguage();
   const { showToast } = useToast();
   const { control, handleSubmit, errors } = useForm();
@@ -65,6 +62,29 @@ const ForgotPasswordUI = (props: any) => {
     }
   }, [errors]);
 
+  const styles = StyleSheet.create({
+    title: {
+      backgroundColor: theme.colors.transparent,
+    },
+    inputStyle: {
+      marginBottom: 25,
+      borderWidth: 1,
+      borderColor: theme.colors.disabled,
+      borderRadius: 7.6,
+    },
+    ButtonText: {
+      color: theme.colors.primaryContrast,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 17,
+    },
+    button: {
+      borderRadius: 7.6,
+      height: 44,
+    },
+  });
+
   return (
     <Container>
       <NavBar
@@ -78,7 +98,7 @@ const ForgotPasswordUI = (props: any) => {
       />
       <FormSide>
         <OText
-          color={'gray'}
+          color={theme.colors.gray}
           size={16}
           weight={'400'}
           style={{ marginBottom: 30 }}>
@@ -155,29 +175,6 @@ const ForgotPasswordUI = (props: any) => {
     </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  title: {
-    backgroundColor: theme.colors.transparent,
-  },
-  inputStyle: {
-    marginBottom: 25,
-    borderWidth: 1,
-    borderColor: theme.colors.disabled,
-    borderRadius: 7.6,
-  },
-  ButtonText: {
-    color: '#FFFFFF',
-    fontFamily: 'Poppins',
-    fontStyle: 'normal',
-    fontWeight: 'normal',
-    fontSize: 17,
-  },
-  button: {
-    borderRadius: 7.6,
-    height: 44,
-  },
-});
 
 export const ForgotPasswordForm = (props: any) => {
   const ForgotPasswordProps = {

@@ -51,7 +51,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
     },
     address: {
       fontSize: 14,
-      color: theme.colors.addres,
+      color: theme.colors.unselectText,
     },
   });
 

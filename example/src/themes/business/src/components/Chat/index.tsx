@@ -13,8 +13,10 @@ import {
   ActionsProps,
   InputToolbar,
   Composer,
+  Avatar,
   Send,
   Bubble,
+  Message,
   MessageImage,
   InputToolbarProps,
   ComposerProps,
@@ -255,22 +257,54 @@ const ChatUI = (props: MessagesParams) => {
       : `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`;
   };
 
+  const AvatarsConsole = () => {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        <OIcon
+          src={order?.business?.logo}
+          width={16}
+          height={16}
+          style={{ marginHorizontal: 2 }}
+        />
+        <OIcon
+          src={order?.customer?.logo}
+          width={16}
+          height={16}
+          style={{ marginHorizontal: 2 }}
+        />
+        <OIcon
+          src={order?.driver?.logo}
+          width={16}
+          height={16}
+          style={{ marginHorizontal: 2 }}
+        />
+      </View>
+    );
+  };
+
   useEffect(() => {
     let newMessages: Array<any> = [];
     const console = (
-      <View style={styles.firstMessage}>
-        <OText style={styles.firstMessageText}>
-          {t('ORDER_PLACED_FOR', 'Order placed for')}{' '}
-          <OText style={{ ...styles.firstMessageText, fontWeight: 'bold' }}>
-            {parseDate(order?.created_at)}
+      <View style={{ flexDirection: 'column' }}>
+        <View style={styles.firstMessage}>
+          <OText style={styles.firstMessageText}>
+            {t('ORDER_PLACED_FOR', 'Order placed for')}{' '}
+            <OText style={{ ...styles.firstMessageText, fontWeight: 'bold' }}>
+              {parseDate(order?.created_at)}
+            </OText>
           </OText>
+
+          <OText style={{ ...styles.firstMessageText, textAlign: 'center' }}>
+            {t('VIA', 'Via')}{' '}
+            {order?.app_id
+              ? t(order?.app_id.toUpperCase(), order?.app_id)
+              : t('OTHER', 'Other')}
+          </OText>
+        </View>
+        <OText size={9} color={theme.colors.textGray}>
+          {t('SENT_TO', 'Sent to:')}
         </OText>
-        <OText style={{ ...styles.firstMessageText, textAlign: 'center' }}>
-          {t('VIA', 'Via')}{' '}
-          {order?.app_id
-            ? t(order?.app_id.toUpperCase(), order?.app_id)
-            : t('OTHER', 'Other')}
-        </OText>
+        <AvatarsConsole />
       </View>
     );
     const firstMessage = {
@@ -584,6 +618,47 @@ const ChatUI = (props: MessagesParams) => {
     <MaterialCommunityIcon name="chevron-double-down" size={32} />
   );
 
+  const customMessage = (props: any) => {
+    return (
+      <Message
+        {...props}
+        containerStyle={{
+          right: {
+            flexDirection: 'column',
+          },
+          left: {
+            flexDirection: 'column-reverse',
+            alignItems: 'flex-start',
+          },
+        }}
+      />
+    );
+  };
+
+  const renderAvatar = (props: any) => (
+    <>
+      <OText size={9} color={theme.colors.textGray}>
+        {t('SENT_TO', 'Sent to:')}
+      </OText>
+      <View style={{ flexDirection: 'row' }}>
+        <Avatar
+          {...props}
+          imageStyle={{
+            left: { width: 23, height: 23 },
+            right: { width: 23, height: 23 },
+          }}
+        />
+        <Avatar
+          {...props}
+          imageStyle={{
+            left: { width: 23, height: 23 },
+            right: { width: 23, height: 23 },
+          }}
+        />
+      </View>
+    </>
+  );
+
   return (
     <>
       <Wrapper>
@@ -598,17 +673,18 @@ const ChatUI = (props: MessagesParams) => {
           onInputTextChanged={onChangeMessage}
           alignTop
           scrollToBottom
-          renderAvatarOnTop
-          renderUsernameOnMessage
+          renderAvatar={renderAvatar}
           renderInputToolbar={renderInputToolbar}
           renderComposer={renderComposer}
           renderSend={renderSend}
+          renderMessage={(props: any) => customMessage(props)}
           renderBubble={renderBubble}
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
           messagesContainerStyle={{
             paddingBottom: 80,
           }}
+          showUserAvatar={true}
           isLoadingEarlier={messages.loading}
           renderLoading={() => (
             <ActivityIndicator size="small" color={theme.colors.black} />

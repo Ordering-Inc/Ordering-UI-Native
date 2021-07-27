@@ -22,13 +22,6 @@ const TitleTopWrapper = styled.View`
   align-items: center;
 `;
 
-const btnBackArrow = {
-  borderWidth: 0,
-  backgroundColor: '#FFF',
-  borderColor: '#FFF',
-  shadowColor: '#FFF',
-};
-
 interface Props {
   navigation?: any;
   route?: any;
@@ -50,10 +43,19 @@ interface Props {
 }
 
 const NavBar = (props: Props) => {
+  const theme = useTheme();
+
   const goSupport = () => {
     props.navigation.navigate('Supports', {});
   };
-  const theme = useTheme();
+
+  const btnBackArrow = {
+    borderWidth: 0,
+    backgroundColor: theme.colors.white,
+    borderColor: theme.colors.white,
+    shadowColor: theme.colors.white,
+  };
+
   return (
     <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
       <OButton

@@ -205,7 +205,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
     </div>`;
   };
 
-  const deliveryStatus = {
+  const deliveryStatus:any = {
     1: t('DELIVERY', 'Delivery'),
     2: t('PICK_UP', 'Pick up'),
     3: t('EAT_IN', 'Eat In'),

@@ -20,6 +20,10 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const [comments, setComments] = useState('');
   const [, t] = useLanguage();
   const theme = useTheme();
+  const phoneNumber = route?.order?.customer?.cellphone;
+  const codeNumberPhone = phoneNumber.slice(0, 3);
+  const numberPhone = phoneNumber.slice(3, phoneNumber?.length);
+  const numberToShow = `(${codeNumberPhone}) ${numberPhone}`;
 
   useEffect(() => {
     if (orderState?.order !== null) {
@@ -172,8 +176,10 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                     size={15}
                     color={theme.colors.textGray}
                     style={{ marginTop: 10 }}>
-                    Call your customer to resolve the issue as politely as
-                    possible
+                    {t(
+                      'CALL_YOUR_CUSTOMER_TO_RESOLVE_THE_ISSUE_AS_POLITELY_AS_POSSIBLE',
+                      'Call your customer to resolve the issue as politely as possible',
+                    )}
                   </OText>
 
                   <OButton
@@ -190,7 +196,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                       position: 'absolute',
                     }}
                     imgLeftSrc={theme.images.general.cellphone}
-                    text={route.order.customer.cellphone}
+                    text={numberToShow}
                     onClick={() =>
                       Linking.openURL(`tel:${route.order.customer.cellphone}`)
                     }

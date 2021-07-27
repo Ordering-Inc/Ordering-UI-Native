@@ -6,7 +6,7 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OButton } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { PreviousMessages } from '../PreviousMessages';
-import { FiltersTab, OTabs, TagsContainer, Tag } from './styles';
+import { FiltersTab, TabsContainer, TagsContainer, Tag } from './styles';
 import { MessagesOptionParams } from '../../types';
 
 const MessagesOptionUI = (props: MessagesOptionParams) => {
@@ -119,7 +119,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       </View>
 
       <FiltersTab>
-        <OTabs>
+        <TabsContainer>
           {tabs.map((value: any) => (
             <Pressable
               key={value.key}
@@ -146,7 +146,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
                 }}></View>
             </Pressable>
           ))}
-        </OTabs>
+        </TabsContainer>
       </FiltersTab>
 
       <View>

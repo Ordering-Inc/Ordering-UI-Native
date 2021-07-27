@@ -15,6 +15,7 @@ export const PreviousMessages = (props: PreviousOrdersParams) => {
   const [, t] = useLanguage();
   const theme = useTheme();
   const [{ parseDate, optimizeImage }] = useUtils();
+  const [order, setOrder] = useState({});
 
   const [messageModal, setMessageModal] = useState(1);
   const [openModal, setOpenModal] = useState(false);
@@ -27,6 +28,10 @@ export const PreviousMessages = (props: PreviousOrdersParams) => {
   const handlePressOrder = (uuid: number) => {
     if (messages) {
       loadMessages && loadMessages(uuid);
+      const orderToMessage = orders.find(
+        (ordermap: any) => ordermap.id === uuid,
+      );
+      setOrder(orderToMessage);
       setOpenModal(!openModal);
       setMessageModal(uuid);
     }
@@ -283,7 +288,7 @@ export const PreviousMessages = (props: PreviousOrdersParams) => {
               type={USER_TYPE.BUSINESS}
               orderId={messageModal}
               messages={messages}
-              order={messageModal}
+              order={order}
               setMessages={setMessages}
             />
           </OModal>

@@ -65,9 +65,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   });
   const { order, businessData, driversGroupsData, loading } = props.order;
 
-  const itemsDrivers: any = [
-    { label: `${t('NOT_DRIVER', 'Not driver')}`, value: null },
-  ];
+  const itemsDrivers: any = [];
 
   if (driversGroupsData?.length > 0) {
     driversGroupsData.forEach((drivers: any) => {
@@ -492,7 +490,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <Header>
               <OIconButton
                 icon={theme.images.general.arrow_left}
-                iconStyle={{ width: 23, height: 23 }}
+                iconStyle={{ width: 20, height: 20 }}
                 borderColor={theme.colors.clear}
                 style={{
                   maxWidth: 40,
@@ -504,14 +502,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <Actions>
                 <OIconButton
                   icon={theme.images.general.map}
-                  iconStyle={{ width: 23, height: 23 }}
+                  iconStyle={{ width: 20, height: 20 }}
                   borderColor={theme.colors.clear}
                   style={{ maxWidth: 40, marginRight: 20 }}
                   onClick={() => handleViewMapView()}
                 />
                 <OIconButton
                   icon={theme.images.general.messages}
-                  iconStyle={{ width: 23, height: 23 }}
+                  iconStyle={{ width: 20, height: 20 }}
                   borderColor={theme.colors.clear}
                   style={{ maxWidth: 40 }}
                   onClick={() => handleOpenMessagesForBusiness()}
@@ -680,7 +678,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   value={driverId}
                   style={pickerStyle}
                   useNativeAndroidPickerStyle={false}
-                  placeholder={{}}
+                  placeholder={{
+                    label: `${t('NOT_DRIVER', 'Not driver')}`,
+                    value: null,
+                  }}
                   Icon={() => (
                     <MaterialIcons
                       name="keyboard-arrow-down"
