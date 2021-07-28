@@ -46,7 +46,8 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
   }
 
   useEffect(() => {
-    if((defaultValue && userphoneNumber) || defaultValue === undefined || defaultValue === ''){
+    if((defaultValue && userphoneNumber) || !defaultValue){
+     if (userphoneNumber === '') return;
       if (userphoneNumber) {
         const checkValid = phoneInput.current?.isValidNumber(userphoneNumber);
         const callingCode = phoneInput.current?.getCallingCode();
