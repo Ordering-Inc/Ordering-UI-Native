@@ -513,6 +513,7 @@ export const Checkout = (props: any) => {
     cartUuid,
     stripePaymentOptions,
     onNavigationRedirect,
+    navigation
   } = props
 
   const [, { showToast }] = useToast();
@@ -659,7 +660,15 @@ export const Checkout = (props: any) => {
 
   return (
     <>
-      <CheckoutController {...checkoutProps} />
+    {cartState?.error?.length > 0 ? (
+        <NotFoundSource
+          content={t(cartState.error)}
+          btnTitle={t('GO_TO_BUSINESSLIST', 'Go to business list')}
+          onClickButton={() => navigation.navigate('BusinessList')}
+        />
+      ) : (
+        <CheckoutController {...checkoutProps} />
+      )}
     </>
   )
 }

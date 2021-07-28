@@ -25,7 +25,11 @@ const AddressForm = ({ navigation, route }: any) => {
     isFromProductsList: route?.params?.isFromProductsList,
     isFromCheckout: route?.params?.isFromCheckout,
     hasAddressDefault: route?.params?.hasAddressDefault,
-    afterSignup: route?.params?.afterSignup
+    afterSignup: route?.params?.afterSignup,
+    businessId: route.params?.businessId,
+    categoryId: route.params?.categoryId,
+    productId: route.params?.productId,
+    store: route.params?.store
   }
 
   const [isGuestFromStore, setIsGuestFromStore] = useState(false)
