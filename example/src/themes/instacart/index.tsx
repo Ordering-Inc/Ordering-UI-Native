@@ -7,6 +7,7 @@ import { ForgotPasswordForm } from './components/ForgotPasswordForm';
 import { BusinessesListing } from './components/BusinessesListing';
 import { BusinessProductsListing } from './components/BusinessProductsListing';
 import { SearchList } from './components/SearchList';
+import { Checkout } from './components/Checkout';
 
 import theme from './theme.json';
 
@@ -71,6 +72,7 @@ theme.images = {
 		half_right: require('./assets/icons/ic_half_r.png'),
 		minus: require('./assets/icons/ic_minus.png'),
 		plus: require('./assets/icons/ic_plus.png'),
+		edit: require('./assets/icons/ic_edit.png'),
 	},
 	order: {
 		status0: require('./assets/images/status-0.png'),
@@ -119,5 +121,6 @@ export {
 	ForgotPasswordForm,
 	BusinessesListing,
 	BusinessProductsListing,
-	SearchList
+	SearchList,
+	Checkout
 }

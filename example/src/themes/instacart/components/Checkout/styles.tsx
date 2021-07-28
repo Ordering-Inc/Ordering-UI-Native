@@ -2,16 +2,20 @@ import styled from 'styled-components/native';
 
 export const ChContainer = styled.View`
   margin-bottom: 60px;
+  padding-horizontal: 40px;
 `
 
 export const ChSection = styled.View``
 
 export const ChHeader = styled.View`
-  display: flex;
-  justify-content: space-between;
   flex-direction: row;
   align-items: center;
   margin: 0px;
+  padding-bottom: 10px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
+  margin-bottom: 16px;
+  padding-horizontal: 40px;
 `
 
 export const ChTotal = styled.View`
@@ -31,13 +35,10 @@ export const ChTotalWrap = styled.View`
 
 export const ChAddress = styled.View`
   width: 100%;
-  padding: 20px 0;
-  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  border-bottom-width: 1px;
-  border-bottom-color: ${(props: any) => props.theme.colors.inputDisabled};
+  margin-bottom: 17px;
 `
 
 export const ChMoment = styled(ChAddress)`
@@ -46,12 +47,12 @@ export const ChMoment = styled(ChAddress)`
 
 export const CHMomentWrapper = styled.TouchableOpacity`
   background-color: ${(props: any) => props.theme.colors.inputDisabled};
-  border-radius: 10px;
-  width: 100%;
-  padding: 10px;
-  display: flex;
+  border-radius: 3px;
+  padding-horizontal: 10px;
   justify-content: center;
+  align-items: center;
   flex-direction: row;
+  margin-start: 15px;
 `
 
 export const ChUserDetails = styled.View`
@@ -91,4 +92,10 @@ export const ChErrors = styled.View`
   flex-direction: column;
   align-items: center;
   margin-bottom: 20px;
+`
+
+export const DivideLine = styled.View`
+	height: 1px;
+	background-color: ${(props: any) => props.theme.colors.border};
+	margin-horizontal: -40px;
 `

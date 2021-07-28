@@ -17,6 +17,7 @@ export const CCWrapper = styled.View`
 export const CCButton = styled.View`
   width: 100%;
   background-color: ${(props: any) => props.theme.colors.backgroundGray};
-  padding: 10px;
-  border-radius: 50px;
+  padding-horizontal: 10px;
+  border-radius: 3px;
+  height: 42px;
 `

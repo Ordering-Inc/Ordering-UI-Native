@@ -76,7 +76,7 @@
 		"success": "#90C68E",
 		"btnFont": "black",
 		"inputDisabled": "#F7F7F7",
-		"textPrimary": "#000000",
+		"textPrimary": "#474747",
 		"textSecondary": "#B4B4B4",
 		"textThird": "#B1BCCC",
 		"editColor": "#F2BB40",
@@ -147,7 +147,8 @@
 			"half_left": "",
 			"half_right": "",
 			"minus": "",
-			"plus": ""
+			"plus": "",
+			"edit": ""
 		},
 		"order": {
 			"status0": "",

@@ -26,10 +26,11 @@ const CouponControlUI = (props: any) => {
 
   const styles = StyleSheet.create({
     inputsStyle: {
-      borderColor: theme.colors.secundaryContrast,
-      borderRadius: 50,
+      borderColor: theme.colors.border,
+      borderRadius: 3,
       flex: 1,
-      marginRight: 30
+      marginEnd: 20,
+		height: 42
     },
   });
 
@@ -77,7 +78,8 @@ const CouponControlUI = (props: any) => {
         >
           <CCButton>
             <OText
-              size={16}
+              size={12}
+				  weight={'600'}
               color={theme.colors.white}
               style={{ textAlign: 'center' }}
             >
@@ -100,6 +102,7 @@ const CouponControlUI = (props: any) => {
             imgRightSrc={null}
             text={t('APPLY', 'Apply')}
             isDisabled={!couponInput}
+				style={{height: 42, borderRadius: 3}}
           />
         </CCWrapper>
       )}

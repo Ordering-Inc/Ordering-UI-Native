@@ -75,9 +75,9 @@ const OBottomPopup = (props: Props) => {
 					<View style={styles.touchableOutsideStyle} />
 				</TouchableWithoutFeedback>
 				<Animated.View style={[styles.container, { top }]} {...panResponders.panHandlers}>
-					<Text style={styles.titleStyle}>
+					{title && <Text style={styles.titleStyle}>
 						{title}
-					</Text>
+					</Text>}
 					{children}
 				</Animated.View>
 			</View>

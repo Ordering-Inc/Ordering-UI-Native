@@ -123,7 +123,7 @@ const CartSingleUI = (props: any) => {
 			{cart?.valid_products && (
 				<FloatingButton
 					btnText={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-						!openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
+						!openUpselling !== canOpenUpselling ? t('GO_TO_CHECKOUT', 'Go to checkout') : t('LOADING', 'Loading')
 					) : !cart?.valid_address ? (
 						`${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
 					) : (

@@ -4,28 +4,28 @@ export const Container = styled.View`
   margin: 20px 0;
 `
 export const UpsellingContainer = styled.ScrollView`
-  max-height: 220px;
+  
 `
-export const Item = styled.View`
-  border-width: 1px;
-  border-color: ${(props: any) => props.theme.colors.lightGray};
-  border-radius: 10px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 15px;
-  margin-right: 15px;
+export const Item = styled.TouchableOpacity`
+  padding: 20px 15px 15px;
+  width: 50%;
 `
 export const Details = styled.View`
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
   margin: 15px 0 10px 0;
-  max-width: 120px;
 `
 export const AddButton = styled.TouchableOpacity`
+	position: absolute;
+	top: 0;
+	end: 10px;
 `
 export const CloseUpselling = styled.View`
-  margin-vertical: 10px;
-  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: ${(props: any) => props.theme.colors.backgroundTab};
+  padding: 12px 40px;
+  border-top-width: 1px;
+  border-top-color: ${(props: any) => props.theme.colors.border}
 `

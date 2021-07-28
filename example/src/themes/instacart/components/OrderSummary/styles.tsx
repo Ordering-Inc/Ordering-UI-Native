@@ -7,7 +7,11 @@ export const OSContainer = styled.View`
   justify-content: center;
 `
 
-export const OSProductList = styled.View``
+export const OSProductList = styled.View`
+	border-bottom-width: 1px;
+	border-bottom-color: ${(props:any) => props.theme.colors.border};
+	margin-bottom: 5px;
+`
 
 export const OSBill = styled.View`
   padding-top: 10px;
@@ -17,6 +21,7 @@ export const OSTable = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 10px;
 `
 
 export const OSTotal = styled.View`

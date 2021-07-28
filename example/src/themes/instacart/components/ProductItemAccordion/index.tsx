@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Animated, StyleSheet, Platform, I18nManager } from 'react-native'
+import { View, Animated, StyleSheet, Platform, I18nManager, TouchableOpacity } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
@@ -39,22 +39,25 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const pickerStyle = StyleSheet.create({
 		inputAndroid: {
-			color: theme.colors.secundaryContrast,
+			color: theme.colors.textPrimary,
 			borderWidth: 1,
-			borderColor: 'transparent',
-			borderRadius: 15,
-			backgroundColor: theme.colors.inputDisabled,
-			width: 50,
+			borderColor: theme.colors.border,
+			borderRadius: 3,
+			paddingHorizontal: 4,
+			backgroundColor: theme.colors.white,
+			height: 30,
+			fontSize: 10
 		},
 		inputIOS: {
-			color: theme.colors.secundaryContrast,
-			paddingEnd: 20,
-			height: 40,
+			color: theme.colors.textPrimary,
+			height: 30,
 			borderWidth: 1,
-			borderColor: 'transparent',
-			borderRadius: 15,
-			paddingHorizontal: 10,
-			backgroundColor: theme.colors.inputDisabled
+			borderColor: theme.colors.border,
+			borderRadius: 3,
+			paddingHorizontal: 4,
+			backgroundColor: theme.colors.white,
+			fontSize: 10,
+			textAlign: 'center'
 		},
 		icon: {
 			top: Platform.OS === 'ios' ? 10 : 15,
@@ -140,21 +143,18 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 					: setActiveState(!isActive)}
 				activeOpacity={1}
 			>
-				<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-					{product?.images && (
-						<ProductImage>
-							<OIcon
-								url={product?.images}
-								style={styles.productImage}
-							/>
-						</ProductImage>
-					)}
-					<ContentInfo>
-						<View style={{ flex: 1, alignItems: 'flex-start' }}>
-							<OText>{product.name}</OText>
-						</View>
-						<View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end' }}>
+				{product?.images && (
+					<ProductImage>
+						<OIcon
+							url={product?.images}
+							style={styles.productImage}
+						/>
+					</ProductImage>
+				)}
+				<ContentInfo>
+					<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+						<OText style={theme.labels.small} color={theme.colors.textPrimary}>{product.name}</OText>
+						<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 							<ProductInfo>
 								{isCartProduct && !isCartPending && getProductMax ? (
 									<RNPickerSelect
@@ -164,19 +164,18 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										style={pickerStyle}
 										useNativeAndroidPickerStyle={false}
 										placeholder={{}}
-										Icon={() => <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />}
 										disabled={orderState.loading}
 									/>
 								) : (
 									<ProductQuantity>
-										<OText>
+										<OText style={theme.labels.small} color={theme.colors.textPrimary}>
 											{product?.quantity}
 										</OText>
 									</ProductQuantity>
 								)}
 							</ProductInfo>
-							<View style={{ flexDirection: 'row' }}>
-								<OText size={18}>{parsePrice(product.total || product.price)}</OText>
+							<View style={{ flexDirection: 'row', alignItems: 'center', minWidth: 50, justifyContent: 'flex-end' }}>
+								<OText style={theme.labels.small} color={theme.colors.textPrimary}>{parsePrice(product.total || product.price)}</OText>
 								{(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
 									<>
 										{!isExpanded && <MaterialCommunityIcon name='chevron-down' size={18} />}
@@ -184,8 +183,76 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 								)}
 							</View>
 						</View>
-					</ContentInfo>
-				</View>
+					</View>
+					<AccordionContent style={{ display: isActive ? 'flex' : 'none', width: '80%' }}>
+						<Animated.View>
+							{productInfo().ingredients.length > 0 && productInfo().ingredients.some((ingredient: any) => !ingredient.selected) && (
+								<ProductOptionsList>
+									<OText style={theme.labels.small} color={theme.colors.textSecondary}>{t('INGREDIENTS', 'Ingredients')}</OText>
+									{productInfo().ingredients.map((ingredient: any) => !ingredient.selected && (
+										<OText style={theme.labels.small} color={theme.colors.textSecondary} key={ingredient.id}>{t('NO', 'No')} {ingredient.name}</OText>
+									))}
+								</ProductOptionsList>
+							)}
+							{productInfo().options.length > 0 && (
+								<ProductOptionsList>
+									{productInfo().options.map((option: any, i: number) => (
+										<ProductOption key={option.id + i}>
+											<OText style={theme.labels.small} color={theme.colors.textSecondary}>{option.name}</OText>
+											{option.suboptions.map((suboption: any) => (
+												<ProductSubOption key={suboption.id}>
+													<OText style={theme.labels.small} color={theme.colors.textSecondary}>
+														{getFormattedSubOptionName({
+															quantity: suboption.quantity,
+															name: suboption.name,
+															position: (suboption.position !== 'whole') ? t(suboption.position.toUpperCase(), suboption.position) : '',
+															price: parsePrice(suboption.price)
+														})}
+													</OText>
+												</ProductSubOption>
+											))}
+										</ProductOption>
+									))}
+								</ProductOptionsList>
+							)}
+							{product.comment && (
+								<ProductComment>
+									<OText style={theme.labels.small} color={theme.colors.textThird}>{t('SPECIAL_COMMENT', 'Special Comment')}</OText>
+									<OText style={theme.labels.small} color={theme.colors.textThird}>{product.comment}</OText>
+								</ProductComment>
+							)}
+						</Animated.View>
+					</AccordionContent>
+					<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', paddingTop: 7 }}>
+						{onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
+							
+							<TouchableOpacity onPress={() => onEditProduct(product)} style={{flexDirection: 'row', alignItems: 'center'}}>
+								<OIcon
+									src={theme.images.general.edit}
+									width={16}
+									color={theme.colors.primary}
+								/>
+								<OText style={{...theme.labels.small, marginStart: 4, marginEnd: 12}} color={theme.colors.textSecondary}>{t('EDIT', 'Edit')}</OText>
+							</TouchableOpacity>
+						)}
+						{onDeleteProduct && isCartProduct && !isCartPending && (
+							<OAlert
+								title={t('DELETE_PRODUCT', 'Delete Product')}
+								message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
+								onAccept={() => onDeleteProduct(product)}
+							>
+								<View style={{flexDirection: 'row', alignItems: 'center'}}>
+									<OIcon
+										src={theme.images.general.trash}
+										width={16}
+										color={theme.colors.primary}
+									/>
+									<OText style={{...theme.labels.small, marginStart: 4}} color={theme.colors.textSecondary}>{t('REMOVE', 'Remove')}</OText>
+								</View>
+							</OAlert>
+						)}
+					</View>
+				</ContentInfo>
 
 				{((isCartProduct && !isCartPending && product?.valid_menu && !product?.valid_quantity) ||
 					(!product?.valid_menu && isCartProduct && !isCartPending)) && (
@@ -193,79 +260,17 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 							{t('NOT_AVAILABLE', 'Not available')}
 						</OText>
 					)}
-				<Animated.View style={{ display: isActive ? 'flex' : 'none', backgroundColor: 'red' }}>
-					<AccordionContent>
-						{productInfo().ingredients.length > 0 && productInfo().ingredients.some((ingredient: any) => !ingredient.selected) && (
-							<ProductOptionsList>
-								<OText>{t('INGREDIENTS', 'Ingredients')}</OText>
-								{productInfo().ingredients.map((ingredient: any) => !ingredient.selected && (
-									<OText key={ingredient.id} style={{ marginLeft: 10 }}>{t('NO', 'No')} {ingredient.name}</OText>
-								))}
-							</ProductOptionsList>
-						)}
-						{productInfo().options.length > 0 && (
-							<ProductOptionsList>
-								{productInfo().options.map((option: any, i: number) => (
-									<ProductOption key={option.id + i}>
-										<OText>{option.name}</OText>
-										{option.suboptions.map((suboption: any) => (
-											<ProductSubOption key={suboption.id}>
-												<OText>
-													{getFormattedSubOptionName({
-														quantity: suboption.quantity,
-														name: suboption.name,
-														position: (suboption.position !== 'whole') ? t(suboption.position.toUpperCase(), suboption.position) : '',
-														price: parsePrice(suboption.price)
-													})}
-												</OText>
-											</ProductSubOption>
-										))}
-									</ProductOption>
-								))}
-							</ProductOptionsList>
-						)}
-						{product.comment && (
-							<ProductComment>
-								<OText>{t('SPECIAL_COMMENT', 'Special Comment')}</OText>
-								<OText>{product.comment}</OText>
-							</ProductComment>
-						)}
-					</AccordionContent>
-				</Animated.View>
 
 			</Accordion>
 
-			<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
-				{onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
-					<MaterialCommunityIcon
-						name='pencil-outline'
-						size={26}
-						color={theme.colors.green}
-						onPress={() => onEditProduct(product)}
-					/>
-				)}
-				{onDeleteProduct && isCartProduct && !isCartPending && (
-					<OAlert
-						title={t('DELETE_PRODUCT', 'Delete Product')}
-						message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
-						onAccept={() => onDeleteProduct(product)}
-					>
-						<MaterialCommunityIcon
-							name='trash-can-outline'
-							size={26}
-							color={theme.colors.red}
-						/>
-					</OAlert>
-				)}
-			</View>
 		</AccordionSection>
 	)
 }
 
 const styles = StyleSheet.create({
 	productImage: {
-		borderRadius: 10,
-		width: 75,
-		height: 75
+		borderRadius: 3,
+		width: 42,
+		height: 42
 	}
 })

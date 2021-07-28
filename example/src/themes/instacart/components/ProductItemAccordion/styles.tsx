@@ -2,15 +2,13 @@ import styled, { css } from 'styled-components/native'
 
 export const AccordionSection = styled.View`
   background: #FFF;
-  padding-vertical: 10px;
-  border-bottom-width: 1px;
-  border-bottom-color: #d9d9d9;
+  padding-vertical: 12px;
 `
 
 export const Accordion = styled.TouchableOpacity`
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 
   ${(props: any) => !props.isValid && css`
     background-color: rgba(0, 0, 0, 0.1);
@@ -20,19 +18,18 @@ export const Accordion = styled.TouchableOpacity`
 export const ProductInfo = styled.View`
   width: 36px;
   height: 30px;
+  margin-end: 12px;
 `
 
 export const ProductQuantity = styled.View``
 
 export const ContentInfo = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  overflow: hidden;
+  flex-direction: column;
+  flex-grow: 1;
 `
 
 export const ProductImage = styled.View`
-  margin-right: 5px;
+  margin-right: 12px;
 `
 
 export const AccordionContent = styled.View`
