@@ -119,11 +119,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const [tabsFilter, setTabsFilter] = useState(tabs[0].tags);
   const [tagsToggle, setTagsToggle] = useState(tabs[0].tags);
+  const [reload, setReload] = useState(false);
 
   const handleChangeTab = (tags: number[]) => {
     setTabsFilter(tags);
     setUpdateOtherStatus(tags);
-    loadOrders && loadOrders(false, tags, true);
+    loadOrders && loadOrders(true, tags);
     setTagsToggle(tags);
 
     const ordersTab = values.filter((order: any) =>
@@ -161,6 +162,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     }
   };
 
+  const handleReload = () => {
+    setReload(true);
+    loadOrders && loadOrders(true, tabsFilter, true);
+  };
+
   const getOrderStatus = (key: number) => {
     return orderStatus.find(status => status.key === key)?.text;
   };
@@ -172,6 +178,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
     setOrdersToShow(ordersTab);
   }, [values]);
+
+  useEffect(() => {
+    if (reload && !loading) {
+      setReload(!reload);
+    }
+  }, [loading]);
 
   const styles = StyleSheet.create({
     header: {
@@ -236,7 +248,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             borderColor={theme.colors.clear}
             iconStyle={{ width: 25, height: 25 }}
             style={{ maxWidth: 40, height: 35 }}
-            onClick={() => loadOrders && loadOrders(true, tabsFilter, true)}
+            onClick={handleReload}
           />
 
           {/* <OIconButton
@@ -318,7 +330,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         />
       )}
 
-      {!error && orders.length > 0 && (
+      {!reload && !error && orders.length > 0 && (
         <PreviousOrders
           orders={ordersToShow}
           onNavigationRedirect={onNavigationRedirect}

@@ -243,7 +243,7 @@ export interface OrdersOptionParams {
   titleContent?: string;
   customArray?: Array<any>;
   loadMoreOrders?: (status: any) => {};
-  loadOrders?: (isNextPage: any, status: any, value: any) => {};
+  loadOrders?: (isNextPage: any, status: any, keepOrders?: any) => {};
   messages?: any;
   setMessages?: () => {};
   loadMessages?: () => {};

@@ -30,7 +30,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
   const orders = customArray || values || [];
 
   const tabs = [
-    { key: 0, text: t('ORDERS', 'Orders'), tags: [0, 1] },
+    { key: 0, text: t('ORDERS', 'Orders'), tags: [1] }, // before [0, 1]
     // { key: 1, text: t('CONTACTS', 'Contacts'), tags: [2, 3, 4] },
   ];
 
