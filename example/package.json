@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -20,7 +20,6 @@
     "ordering-native",
     "react-native"
   ],
-  "license": "ISC",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -121,5 +120,6 @@
       "<rootDir>/node_modules/"
     ],
     "cacheDirectory": ".jest/cache"
-  }
+  },
+  "license": "ISC"
 }
