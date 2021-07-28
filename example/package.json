@@ -20,6 +20,7 @@
     "ordering-native",
     "react-native"
   ],
+  "license": "ISC",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
