@@ -295,7 +295,8 @@ export interface ReviewOrderParams {
   handleChangeRating?: any,
   handleSendReview?: any,
   formState?: any,
-  navigation?: any
+  navigation?: any,
+  setIsReviewed?: (isReviewed: boolean) => {}
 }
 export interface MessagesParams {
   type?: string,
@@ -390,4 +391,9 @@ export interface GoogleMapsParams {
   locations?: Array<any>,
   setSaveLocation?: (val : boolean) => void,
   handleToggleMap?: () => void
+}
+
+export interface ShareComponentParams {
+  orderId?: number;
+  hashkey?: string;
 }
