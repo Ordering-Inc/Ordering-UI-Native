@@ -82,6 +82,7 @@ import { ThemeProvider, useTheme } from './context/Theme';
 
 // themes
 import ThemeKiosk from './themes/kiosk'
+import ThemeBusiness from './themes/business'
 // import ThemeUberEats from './themes/uberEats'
 
 export {
@@ -164,5 +165,6 @@ export {
   useTheme,
   // themes
   ThemeKiosk,
+  ThemeBusiness,
   // ThemeUberEats
 }
