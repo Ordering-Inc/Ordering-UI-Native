@@ -7081,10 +7081,8 @@ ora@^3.4.0:
     "@stripe/react-stripe-js" "^1.1.2"
     "@stripe/stripe-js" "^1.9.0"
     dayjs "^1.9.3"
-    libphonenumber-js "^1.9.17"
-    ordering-api-sdk "github:Ordering-Inc/ordering-api-sdk#release"
+    ordering-api-sdk "github:Ordering-Inc/ordering-api-sdk#development"
     prop-types "^15.7.2"
-    react-google-recaptcha latest
     socket.io-client "^2.3.0"
 
 os-tmpdir@^1.0.0, os-tmpdir@~1.0.2:
@@ -7609,6 +7607,11 @@ react-native-credit-card-input@^0.4.1:
     lodash.values "^4.3.0"
     prop-types "^15.6.0"
     react-native-flip-card "^3.4.1"
+
+react-native-document-picker@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-5.2.0.tgz#1fb2185a56ba6b2509acdc418a8a75906c31e58e"
+  integrity sha512-zXK34hW6fM0gXoo6v7edZZxKvLT7DyjOdBXi7WrxbKqZchDokTEQ/tNTeZxky+7oI8sVz8T3uXBBEW0sp+VfXQ==
 
 react-native-elements@^3.0.0-alpha.1:
   version "3.4.2"

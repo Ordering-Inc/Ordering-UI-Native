@@ -57,6 +57,7 @@
     "react-native-awesome-loading": "^1.0.15",
     "react-native-bootsplash": "^3.2.3",
     "react-native-credit-card-input": "^0.4.1",
+    "react-native-document-picker": "^5.2.0",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-fast-image": "^8.3.3",
     "react-native-fbsdk": "^3.0.0",
