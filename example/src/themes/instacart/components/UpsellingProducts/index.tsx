@@ -104,9 +104,8 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 									!upsellingProducts.error ? upsellingProducts.products.map((product: any, idx: number) => (
 										<>
 											{idx % 2 == 1 && (
-												<View key={idx} style={{ flexDirection: 'row' }}>
+												<View key={upsellingProducts.products[idx].id} style={{ flexDirection: 'row' }}>
 													<Item
-														key={upsellingProducts.products[idx - 1].id}
 														activeOpacity={1}
 													>
 														<OIcon
@@ -123,7 +122,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 													</Item>
 
 													<Item
-														key={upsellingProducts.products[idx].id}
 														activeOpacity={1}
 													>
 														<OIcon
@@ -140,7 +138,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 													</Item>
 												</View>
 											)}
-											{upsellingProducts.products.length % 2 == 1 && (
+											{upsellingProducts.products.length % 2 == 1 && upsellingProducts.products.length - idx === 1 && (
 												<View key={idx} style={{ flexDirection: 'row' }}>
 													<Item
 														key={upsellingProducts.products[upsellingProducts.products.length - 1].id}

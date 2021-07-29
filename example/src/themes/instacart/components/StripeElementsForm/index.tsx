@@ -115,9 +115,11 @@ const StripeElementsFormUI = (props: any) => {
               }}
               style={{
                 width: '100%',
-                height: 50,
-                marginVertical: 30,
+                height: 42,
+                marginVertical: 20,
                 zIndex: 9999,
+					 borderWidth: 1,
+					 borderColor: '#F4F4F4',
               }}
               onCardChange={(cardDetails: any) => setCard(cardDetails)}
             />
@@ -166,10 +168,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20
+    paddingHorizontal: 40
   },
   btnAddStyle: {
-    marginTop: 20
+    marginTop: 20,
+	 borderRadius: 3,
+	 height: 42
   },
 })
 

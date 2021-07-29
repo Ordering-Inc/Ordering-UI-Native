@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 
-export const UDContainer = styled.View``
+export const UDContainer = styled.View`
+`
 
 export const UDHeader = styled.View`
   display: flex;

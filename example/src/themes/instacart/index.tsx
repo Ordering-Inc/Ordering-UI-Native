@@ -8,6 +8,8 @@ import { BusinessesListing } from './components/BusinessesListing';
 import { BusinessProductsListing } from './components/BusinessProductsListing';
 import { SearchList } from './components/SearchList';
 import { Checkout } from './components/Checkout';
+import { MomentOption } from './components/MomentOption';
+import { OrderDetails } from './components/OrderDetails';
 
 import theme from './theme.json';
 
@@ -34,7 +36,7 @@ theme.images = {
 		trash: require('./assets/icons/trash.png'),
 		phone: require('./assets/icons/phone.png'),
 		mail: require('./assets/icons/mail.png'),
-		chat: require('./assets/icons/chat.png'),
+		chat: require('./assets/icons/ic_chat.png'),
 		user: require('./assets/icons/menu-user.png'),
 		menulogout: require('./assets/icons/menu-logout.png'),
 		cash: require('./assets/icons/cash.png'),
@@ -73,6 +75,14 @@ theme.images = {
 		minus: require('./assets/icons/ic_minus.png'),
 		plus: require('./assets/icons/ic_plus.png'),
 		edit: require('./assets/icons/ic_edit.png'),
+		clock_history: require('./assets/icons/clock-history.png'),
+		shop_bag: require('./assets/icons/shop-bag.png'),
+		bicycle: require('./assets/icons/bicycle.png'),
+		card: require('./assets/icons/card.png'),
+		close: require('./assets/icons/close.png'),
+		clock: require('./assets/icons/ic_clock.png'),
+		share: require('./assets/icons/ic_share.png'),
+		call: require('./assets/icons/ic_call.png'),
 	},
 	order: {
 		status0: require('./assets/images/status-0.png'),
@@ -122,5 +132,7 @@ export {
 	BusinessesListing,
 	BusinessProductsListing,
 	SearchList,
-	Checkout
+	Checkout,
+	MomentOption,
+	OrderDetails
 }

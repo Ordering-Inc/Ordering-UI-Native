@@ -3,12 +3,13 @@ import styled, { css } from 'styled-components/native'
 export const AccordionSection = styled.View`
   background: #FFF;
   padding-vertical: 12px;
+  width: 100%;
 `
 
 export const Accordion = styled.TouchableOpacity`
   flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
+  width: 100%;
+  overflow: hidden;
 
   ${(props: any) => !props.isValid && css`
     background-color: rgba(0, 0, 0, 0.1);
@@ -21,11 +22,14 @@ export const ProductInfo = styled.View`
   margin-end: 12px;
 `
 
-export const ProductQuantity = styled.View``
+export const ProductQuantity = styled.View`
+	min-height: 30px;
+	align-items: center;
+	justify-content: center;
+`
 
 export const ContentInfo = styled.View`
-  flex-direction: column;
-  flex-grow: 1;
+  flex: 1;
 `
 
 export const ProductImage = styled.View`

@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { Modal, StyleSheet, Text, SafeAreaView, View } from "react-native";
+import { Modal, StyleSheet, Text, SafeAreaView, View, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
+import { useTheme } from 'styled-components/native';
+import { OIcon } from '.';
 
 interface Props {
   open?: boolean;
@@ -33,9 +35,12 @@ const OModal = (props: Props): React.ReactElement => {
     styleCloseButton
   } = props
 
+  const theme = useTheme();
+
   return (
     <Modal
       animationType="slide"
+		presentationStyle="pageSheet"
       transparent={isTransparent}
       visible={open}
       onRequestClose={() => { onClose() }}
@@ -58,20 +63,21 @@ const OModal = (props: Props): React.ReactElement => {
             {children}
           </View>
         ) :
-          <>
+          <View>
             {!customClose && (
               <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-                <Icon
-                  name="x"
-                  size={35}
-                  style={styleCloseButton || styles.cancelBtn}
-                  onPress={onClose}
-                />
+                <TouchableOpacity onPress={() => onClose()} style={{ padding: 12, paddingStart: 0, zIndex: 10000}}>
+						<OIcon
+							src={theme.images.general.close}
+							width={16}
+							style={styleCloseButton || styles.cancelBtn}
+						/>
+					 </TouchableOpacity>
                 <Text style={styles.modalText}>{title}</Text>
               </View>
             )}
             {children}
-          </>
+          </View>
         }
       </SafeAreaView>
     </Modal>
@@ -90,22 +96,22 @@ const styles = StyleSheet.create({
   },
   titleSection: {
     width: '100%',
+	 minHeight: 57,
     display: 'flex',
-    justifyContent: 'space-between',
+	 flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+	 paddingHorizontal: 40
   },
   cancelBtn: {
-    position: 'absolute',
-    left: 0,
-    margin: 15,
-    zIndex: 10000
   },
   modalText: {
-    marginTop: 15,
-    fontSize: 25,
+    fontSize: 20,
     textAlign: "center",
-    zIndex: 10
+    zIndex: 10,
+	 fontWeight: '600',
+	 paddingStart: 12,
+	 flex: 1
   },
   wrapperIcon: {
     overflow: 'hidden',

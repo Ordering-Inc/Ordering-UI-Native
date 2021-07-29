@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 import {
@@ -16,7 +16,7 @@ import {
 	useToast
 } from 'ordering-components/native';
 
-import { OText, OButton, OIcon } from '../shared';
+import { OText, OButton, OIcon, OModal } from '../shared';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -40,13 +40,15 @@ import {
 	ChErrors,
 	ChBusinessDetails,
 	ChUserDetails,
-	DivideLine
+	DivideLine,
+	PayActionCont
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../../../layouts/Container';
 import { useTheme } from 'styled-components/native';
+import NavBar from '../NavBar';
 
 const mapConfigs = {
 	mapZoom: 16,
@@ -115,10 +117,7 @@ const CheckoutUI = (props: any) => {
 	const [userErrors, setUserErrors] = useState<any>([]);
 	const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
 	const [phoneUpdate, setPhoneUpdate] = useState(false);
-
-	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
-		? JSON.parse(configs?.driver_tip_options?.value) || []
-		: configs?.driver_tip_options?.value || []
+	const [isOpenPaymethods, setOpenPaymethods] = useState(false);
 
 	const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
@@ -165,6 +164,27 @@ const CheckoutUI = (props: any) => {
 		setUserErrors(errors)
 	}
 
+	const getPayIcon = (method: string) => {
+		switch (method) {
+			case 'cash':
+				return theme.images.general.cash
+			case 'card_delivery':
+				return theme.images.general.carddelivery
+			case 'paypal':
+				return theme.images.general.paypal
+			case 'stripe':
+				return theme.images.general.stripe
+			case 'stripe_direct':
+				return theme.images.general.stripecc
+			case 'stripe_connect':
+				return theme.images.general.stripes
+			case 'stripe_redirect':
+				return theme.images.general.stripesb
+			default:
+				return theme.images.general.creditCard
+		}
+	}
+
 	const togglePhoneUpdate = (val: boolean) => {
 		setPhoneUpdate(val)
 	}
@@ -190,16 +210,16 @@ const CheckoutUI = (props: any) => {
 						imgLeftSrc={theme.images.general.arrow_left}
 						imgRightSrc={null}
 						style={style.btnBackArrow}
+						imgLeftStyle={{ tintColor: theme.colors.primary }}
 						onClick={() => navigation?.canGoBack() && navigation.goBack()}
 					/>
-					<OText size={24} style={{ flexBasis: '74%', textAlign: 'center' }}>{`${businessName || businessDetails?.business?.name} ${t('ORDER', 'Order')}`}</OText>
+					<OText size={20} weight="600" style={{ flexBasis: '74%', textAlign: 'center' }}>{`${businessName || businessDetails?.business?.name} ${t('ORDER', 'Order')}`}</OText>
 				</ChHeader>
 				<ChContainer>
 					<ChAddress>
 						{(businessDetails?.loading || cartState.loading) ? (
 							<Placeholder Animation={Fade}>
 								<PlaceholderLine height={20} style={{ marginBottom: 20 }} />
-								<PlaceholderLine height={100} />
 							</Placeholder>
 						) : (
 							<AddressDetails
@@ -247,14 +267,9 @@ const CheckoutUI = (props: any) => {
 					)}
 
 					<DivideLine />
-					
-					<ChSection style={style.paddSectionH}>
-						<ChMoment>
 
-						</ChMoment>
-					</ChSection>
-
-					<ChSection style={style.paddSection}>
+					<ChSection>
+						<OIcon src={theme.images.general.user} color={theme.colors.primary} width={16} style={{ marginEnd: 7 }} />
 						<ChUserDetails>
 							{cartState.loading ? (
 								<Placeholder Animation={Fade}>
@@ -278,130 +293,48 @@ const CheckoutUI = (props: any) => {
 							)}
 						</ChUserDetails>
 					</ChSection>
-
-					<ChSection style={style.paddSectionH}>
-						<ChBusinessDetails>
-							{
-								(businessDetails?.loading || cartState.loading) &&
-								!businessDetails?.error &&
-								(
-									<Placeholder Animation={Fade}>
-										<PlaceholderLine height={20} width={70} />
-										<PlaceholderLine height={15} width={60} />
-										<PlaceholderLine height={15} width={60} />
-										<PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
-									</Placeholder>
-								)}
-							{
-								!cartState.loading &&
-								businessDetails?.business &&
-								Object.values(businessDetails?.business).length > 0 &&
-								(
-									<View>
-										<OText size={20}>
-											{t('BUSINESS_DETAILS', 'Business Details')}
-										</OText>
-										<View>
-											<OText size={16}>
-												<OText size={18} weight='bold'>
-													{t('NAME', 'Name')}:{' '}
-												</OText>
-												{businessDetails?.business?.name}
-											</OText>
-											<OText size={16}>
-												<OText size={18} weight='bold'>
-													{t('EMAIL', 'Email')}:{' '}
-												</OText>
-												{businessDetails?.business?.email}
-											</OText>
-											<OText size={16}>
-												<OText size={18} weight='bold'>
-													{t('CELLPHONE', 'Cellphone')}:{' '}
-												</OText>
-												{businessDetails?.business?.cellphone}
-											</OText>
-											<OText size={16}>
-												<OText size={18} weight='bold'>
-													{t('ADDRESS', 'Address')}:{' '}
-												</OText>
-												{businessDetails?.business?.address}
-											</OText>
-										</View>
-									</View>
-								)}
-							{businessDetails?.error && businessDetails?.error?.length > 0 && (
-								<View>
-									<OText size={20}>
-										{t('BUSINESS_DETAILS', 'Business Details')}
-									</OText>
-									<NotFoundSource
-										content={businessDetails?.error[0]?.message || businessDetails?.error[0]}
-									/>
-								</View>
-							)}
-						</ChBusinessDetails>
-					</ChSection>
-
-					{!cartState.loading &&
-						cart &&
-						cart?.valid &&
-						options.type === 1 &&
-						cart?.status !== 2 &&
-						validationFields?.fields?.checkout?.driver_tip?.enabled &&
-						driverTipsOptions && driverTipsOptions?.length > 0 &&
-						(
-							<ChSection style={style.paddSection}>
-								<ChDriverTips>
-									<OText size={20}>
-										{t('DRIVER_TIPS', 'Driver Tips')}
-									</OText>
-									<DriverTips
-										businessId={cart?.business_id}
-										driverTipsOptions={driverTipsOptions}
-										isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)}
-										isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
-										driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)
-											? cart?.driver_tip
-											: cart?.driver_tip_rate}
-										useOrderContext
-									/>
-								</ChDriverTips>
-							</ChSection>
-						)}
-
+					<DivideLine />
 					{!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
-						<ChSection style={style.paddSectionH}>
+						<ChSection>
+							<OIcon src={theme.images.general.card} color={theme.colors.primary} width={16} style={{ marginEnd: 7 }} />
 							<ChPaymethods>
-								<OText size={20}>
+								<OText style={{ ...theme.labels.middle, fontWeight: '500', marginBottom: 4 }}>
 									{t('PAYMENT_METHOD', 'Payment Method')}
 								</OText>
 								{!cartState.loading && cart?.status === 4 && (
 									<OText
 										style={{ textAlign: 'center', marginTop: 20 }}
 										color={theme.colors.error}
-										size={17}
+										size={12}
 									>
 										{t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
 									</OText>
 								)}
-								<PaymentOptions
-									cart={cart}
-									isDisabled={cart?.status === 2}
-									businessId={businessDetails?.business?.id}
-									isLoading={businessDetails.loading}
-									paymethods={businessDetails?.business?.paymethods}
-									onPaymentChange={handlePaymethodChange}
-									errorCash={errorCash}
-									setErrorCash={setErrorCash}
-									onNavigationRedirect={onNavigationRedirect}
-									paySelected={paymethodSelected}
-								/>
+								<PayActionCont onPress={() => setOpenPaymethods(true)} activeOpacity={0.7}>
+									<OIcon src={getPayIcon(paymethodSelected?.gateway)} color={theme.colors.textSecondary} width={16} style={{ marginEnd: 15 }} />
+									<Animated.View>
+										{paymethodSelected ? (
+											<>
+												{paymethodSelected?.data?.last4 ? (
+													<OText size={12} color={theme.colors.textSecondary}>{`${paymethodSelected?.paymethod?.name}  \u2022\u2022\u2022 ${paymethodSelected.data.last4}`}</OText>
+												) : (
+													<OText size={12} color={theme.colors.textSecondary}>{`${paymethodSelected?.paymethod?.name}`}</OText>
+												)}
+											</>
+										) : (
+											<OText size={12} color={theme.colors.textSecondary}>{t('SELECT_PAYMENT_METHOD', 'Please select a payment method')}</OText>
+										)}
+									</Animated.View>
+								</PayActionCont>
 							</ChPaymethods>
+							<TouchableOpacity onPress={() => setOpenPaymethods(true)} activeOpacity={0.7}>
+								<OIcon width={16} src={theme.images.general.arrow_left} style={{ transform: [{ rotate: '180deg' }] }} />
+							</TouchableOpacity>
 						</ChSection>
 					)}
-
+					<DivideLine />
 					{!cartState.loading && cart && (
-						<ChSection style={style.paddSection}>
+						<ChSection style={{ flexDirection: 'column' }}>
 							<ChCart>
 								{cartsWithProducts && cart?.products?.length === 0 ? (
 									<NotFoundSource
@@ -410,13 +343,22 @@ const CheckoutUI = (props: any) => {
 									/>
 								) : (
 									<>
-										<OText size={20}>
-											{t('ORDER_SUMMARY', 'Order Summary')}
-										</OText>
+										<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
+											<OIcon src={theme.images.general.shop_bag} color={theme.colors.primary} width={16} style={{ marginEnd: 7 }} />
+											<OText style={{ ...theme.labels.middle, fontWeight: '600' }}>
+												{t('ORDER_SUMMARY', 'Order Summary')}
+											</OText>
+										</View>
 										<OrderSummary
 											cart={cart}
 											isCartPending={cart?.status === 2}
 											isFromCheckout
+											isDriverTips={!cartState.loading &&
+												cart &&
+												cart?.valid &&
+												options.type === 1 &&
+												cart?.status !== 2 &&
+												validationFields?.fields?.checkout?.driver_tip?.enabled}
 										/>
 									</>
 								)}
@@ -482,6 +424,42 @@ const CheckoutUI = (props: any) => {
 					</>
 				</>
 			)}
+
+			<OModal
+				entireModal
+				customClose
+				open={isOpenPaymethods}
+				onClose={() => setOpenPaymethods(false)}
+			>
+				<View style={{ paddingHorizontal: 40, paddingVertical: 12 }}>
+					<NavBar
+						title={t('SELECT_A_PAYMENT_METHOD', 'Select a payment method')}
+						onActionLeft={() => setOpenPaymethods(false)}
+					/>
+					<PaymentOptions
+						cart={cart}
+						isDisabled={cart?.status === 2}
+						businessId={businessDetails?.business?.id}
+						isLoading={businessDetails.loading}
+						paymethods={businessDetails?.business?.paymethods}
+						onPaymentChange={handlePaymethodChange}
+						errorCash={errorCash}
+						setErrorCash={setErrorCash}
+						onNavigationRedirect={onNavigationRedirect}
+						paySelected={paymethodSelected}
+						renderFooter={
+							<OButton
+								text={t('CONFIRM', 'Confirm')}
+								bgColor={theme.colors.white}
+								borderColor={theme.colors.primary}
+								style={{ height: 42, borderWidth: 1, borderRadius: 3, marginTop: 100 }}
+								textStyle={{color: theme.colors.primary, fontSize: 14, fontWeight: '600'}}
+								onClick={() => setOpenPaymethods(false)}
+							/>
+						}
+					/>
+				</View>
+			</OModal>
 		</>
 	)
 }

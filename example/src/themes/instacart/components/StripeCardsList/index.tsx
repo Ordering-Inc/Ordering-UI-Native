@@ -9,7 +9,7 @@ import { PlaceholderLine } from 'rn-placeholder';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { getIconCard } from '../../../../utils';
-import { OAlert, OText } from '../shared';
+import { OAlert, OIcon, OText } from '../shared';
 
 import { NotFoundSource } from '../NotFoundSource';
 
@@ -42,7 +42,7 @@ const StripeCardsListUI = (props: any) => {
     <>
       {token && !cardsList.loading && cardsList.cards && cardsList.cards.length === 0 && (
         <OSItem style={{ justifyContent: 'center', paddingTop: 0 }}>
-          <OText size={22}>
+          <OText size={14}>
             {t('YOU_DONT_HAVE_CARDS', 'You don\'t have cards')}
           </OText>
         </OSItem>
@@ -59,7 +59,7 @@ const StripeCardsListUI = (props: any) => {
           {[...Array(2)].map((_, i) => (
             <PlaceholderLine
               key={i}
-              height={50}
+              height={30}
               noMargin
               style={{ marginBottom: 20 }}
             />
@@ -78,26 +78,26 @@ const StripeCardsListUI = (props: any) => {
           {cardsList.cards.map((card: any) => (
             <OSItem key={card.id} isUnique={cardsList.cards.length}>
               <OSItemContent onPress={() => handleCardSelected(card)}>
-                <View style={styles.viewStyle}>
+                <View style={{...styles.viewStyle, marginEnd: 17}}>
                   {card.id === cardSelected?.id ? (
-                    <MaterialCommunityIcons
-                      name='radiobox-marked'
-                      size={24}
+                    <OIcon
+                      src={theme.images.general.radio_act}
+                      width={16}
                       color={theme.colors.primary}
                     />
                   ) : (
-                    <MaterialCommunityIcons
-                      name='radiobox-blank'
-                      size={24}
+                    <OIcon
+                      src={theme.images.general.radio_nor}
+                      width={16}
                       color={theme.colors.primary}
                     />
                   )}
                 </View>
                 <View style={styles.viewStyle}>
-                  {getIconCard(card.brand, 26)}
+                  {getIconCard(card.brand, 17)}
                 </View>
                 <View style={styles.viewStyle}>
-                  <OText size={18}>
+                  <OText size={12} color={theme.colors.textSecondary}>
                     XXXX-XXXX-XXXX-{card.last4}
                   </OText>
                 </View>
@@ -108,10 +108,10 @@ const StripeCardsListUI = (props: any) => {
                   message={t('QUESTION_DELETE_CARD', 'Are you sure that you want to delete the card?')}
                   onAccept={() => deleteCard(card)}
                 >
-                  <MaterialCommunityIcons
-                    name='trash-can-outline'
-                    size={28}
-                    color={theme.colors.primary}
+                  <OIcon
+                    src={theme.images.general.trash}
+                    width={16}
+                    color={theme.colors.red}
                   />
                 </OAlert>
               </OSItemActions>
@@ -125,7 +125,7 @@ const StripeCardsListUI = (props: any) => {
 
 const styles = StyleSheet.create({
   viewStyle: {
-    marginRight: 5
+    marginEnd: 9
   },
   cardsList: {
     width: '100%',

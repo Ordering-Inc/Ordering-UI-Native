@@ -13,39 +13,31 @@ export const PMList = styled.View`
 `
 
 export const PMItem = styled.View`
-  width: 120px;
-  height: 80px;
+  min-width: 120px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  margin-right: 10px;
+  border-radius: 3px;
   margin-top: 10px;
-  text-align: center;
-  background-color: ${(props: any) => props.theme.colors.inputDisabled};
+  padding: 12px 0 14px;
+  padding-end: 20px;
 
   ${(props: any) => props.theme?.rtl && css`
     margin-left: 10px;
     margin-right: 0;
   `}
-
-  ${(props: any) => props.isActive ? css`
-    background-color: ${(props: any) => props.theme.colors.primary};
-  ` : css`
-    border: 1px solid #EAEAEA;
-  `}
+  border-bottom-width: 1px;
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
 `
 
 export const PMCardSelected = styled.View`
-  padding: 30px 0px 0px;
+  padding: 20px 0px 0px;
 `
 
 export const PMCardItemContent = styled.View`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
   width: 100%;
   font-weight: bold;
 `

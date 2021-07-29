@@ -5,7 +5,11 @@ export const ChContainer = styled.View`
   padding-horizontal: 40px;
 `
 
-export const ChSection = styled.View``
+export const ChSection = styled.View`
+	flex-direction: row;
+	padding-vertical: 16px;
+	flex: 1;
+`
 
 export const ChHeader = styled.View`
   flex-direction: row;
@@ -38,7 +42,6 @@ export const ChAddress = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 17px;
 `
 
 export const ChMoment = styled(ChAddress)`
@@ -60,25 +63,23 @@ export const ChUserDetails = styled.View`
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  padding: 0 0 20px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${(props: any) => props.theme.colors.inputDisabled};
 `
 
 export const ChBusinessDetails = styled(ChUserDetails)`
 `
 
 export const ChPaymethods = styled.View`
-  display: flex;
+  flex: 1;
   flex-direction: column;
-  padding: 0 0 20px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${(props: any) => props.theme.colors.inputDisabled};
 `
 
-export const ChDriverTips = styled(ChPaymethods)``
+export const ChDriverTips = styled(ChPaymethods)`
+	overflow: hidden;
+`
 
-export const ChCart = styled(ChPaymethods)``
+export const ChCart = styled(ChPaymethods)`
+	
+`
 
 export const ChPlaceOrderBtn = styled.View`
   width: 100%;
@@ -99,3 +100,7 @@ export const DivideLine = styled.View`
 	background-color: ${(props: any) => props.theme.colors.border};
 	margin-horizontal: -40px;
 `
+export const PayActionCont = styled.TouchableOpacity`
+	flex-direction: row;
+	align-items: center;
+`;

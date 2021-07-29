@@ -3,7 +3,7 @@ import { Messages as MessagesController, useSession, useUtils, useLanguage, Toas
 import { launchImageLibrary } from 'react-native-image-picker'
 import { useTheme } from 'styled-components/native';
 import { GiftedChat, Actions, InputToolbar, Composer, Send, Bubble, MessageImage } from 'react-native-gifted-chat'
-import { USER_TYPE } from '../../config/constants'
+import { USER_TYPE } from '../../../../config/constants'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { OIcon, OIconButton, OText } from '../shared'
 import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard,I18nManager } from 'react-native'

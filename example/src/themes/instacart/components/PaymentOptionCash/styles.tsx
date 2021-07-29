@@ -11,8 +11,5 @@ export const PCForm = styled.View`
 `
 
 export const PCWrapper = styled.View`
-  display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
 `

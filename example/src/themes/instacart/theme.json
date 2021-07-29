@@ -35,7 +35,7 @@
 		"button": {
 			"fontSize": 14,
 			"lineHeight": 24,
-			"fontWeight": "500"
+			"fontWeight": "600"
 		},
 		"title": {
 			"fontSize": 20,
@@ -70,10 +70,10 @@
 		"lightGray": "#D2D2D2",
 		"backgroundLight": "white",
 		"backgroundDark": "#484848",
-		"backgroundGray": "#CCCCCC",
+		"backgroundGray": "#EFEEEE",
 		"clear": "transparent",
 		"error": "#C90800",
-		"success": "#90C68E",
+		"success": "#C2E791",
 		"btnFont": "black",
 		"inputDisabled": "#F7F7F7",
 		"textPrimary": "#474747",
@@ -148,7 +148,15 @@
 			"half_right": "",
 			"minus": "",
 			"plus": "",
-			"edit": ""
+			"edit": "",
+			"clock_history": "",
+			"shop_bag": "",
+			"bicycle": "",
+			"card": "",
+			"close": "",
+			"clock": "",
+			"share": "",
+			"call": ""
 		},
 		"order": {
 			"status0": "",

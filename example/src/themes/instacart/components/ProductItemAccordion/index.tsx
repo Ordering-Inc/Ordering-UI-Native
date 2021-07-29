@@ -153,7 +153,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 				)}
 				<ContentInfo>
 					<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-						<OText style={theme.labels.small} color={theme.colors.textPrimary}>{product.name}</OText>
+						<OText style={{...theme.labels.small, flexWrap: 'wrap', flex: 1, paddingEnd: 6}} color={theme.colors.textPrimary}>{product.name}</OText>
 						<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 							<ProductInfo>
 								{isCartProduct && !isCartPending && getProductMax ? (
@@ -169,7 +169,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 								) : (
 									<ProductQuantity>
 										<OText style={theme.labels.small} color={theme.colors.textPrimary}>
-											{product?.quantity}
+											{product?.quantity + ' x'}
 										</OText>
 									</ProductQuantity>
 								)}
