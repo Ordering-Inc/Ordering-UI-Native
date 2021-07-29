@@ -33,10 +33,13 @@ export const _removeStoreData = (key: string) => {
   }
 };
 
-export const _clearStoreData = async () => {
+export const _clearStoreData = async (option: {}) => {
   try {
     const keys = await AsyncStorage.getAllKeys()
-    AsyncStorage.multiRemove(keys)
+    option = {
+        includeKeys: keys.filter((item) => item !== "isTutorial")
+      }
+    AsyncStorage.multiRemove(option.includeKeys)
   } catch {
     return null
   }
