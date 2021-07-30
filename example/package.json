@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -26,8 +26,7 @@
     "start": "react-native start",
     "start-cache": "react-native start --reset-cache",
     "test": "jest",
-    "lint": "eslint .",
-    "postinstall": "patch-package"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.5",
