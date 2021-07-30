@@ -85,7 +85,7 @@ const BottomNavigator = () => {
               ),
           }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Cart"
         component={CartList}
         options={{
@@ -115,7 +115,7 @@ const BottomNavigator = () => {
               </View>
             )
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Profile"
         component={Profile}
