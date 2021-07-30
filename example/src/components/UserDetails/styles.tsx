@@ -17,4 +17,5 @@ export const UDInfo = styled.View`
   flex-direction: column;
   width: 100%;
   text-align: left;
+  align-items: flex-start;
 `

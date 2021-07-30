@@ -221,7 +221,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
               <ProductOptionsList>
                 <OText>{t('INGREDIENTS', 'Ingredients')}</OText>
                 {productInfo().ingredients.map((ingredient: any) => !ingredient.selected && (
-                  <OText key={ingredient.id} style={{ marginLeft: 10 }}>{t('NO', 'No')} {ingredient.name}</OText>
+                  <OText key={ingredient.id} style={{ marginLeft: 10 }}>{ingredient.selected !== undefined && t('NO', 'No')} {ingredient.name}</OText>
                 ))}
               </ProductOptionsList>
             )}

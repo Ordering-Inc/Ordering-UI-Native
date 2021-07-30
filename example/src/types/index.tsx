@@ -72,6 +72,10 @@ export interface AddressFormParams {
   isFromCheckout?: boolean
   afterSignup?: boolean
   isGuestFromStore?: boolean
+  businessId?: number
+  productId?: number
+  categoryId?: number
+  store?: string
 }
 export interface SignupParams {
   navigation?: any;
@@ -154,6 +158,10 @@ export interface BusinessProductsListingParams {
   header?: any;
   logo?: any;
   productModal?: any;
+  businessId?: number;
+  categoryId?: number;
+  productId?: number;
+  getNextProducts?: () => {};
   handleChangeCategory: (value: any) => {};
   setProductLogin?: () => {};
   updateProductModal?: (value: any) => {}
@@ -246,6 +254,8 @@ export interface ActiveOrdersParams {
   customArray?: Array<any>
   setScreen?: any,
   screen?: any,
+  isPreorders?: boolean,
+  preordersLength: number,
   loadMoreOrders?: () => {},
   onNavigationRedirect?: (route: string, params?: any) => {}
 }
@@ -292,7 +302,8 @@ export interface ReviewOrderParams {
   handleChangeRating?: any,
   handleSendReview?: any,
   formState?: any,
-  navigation?: any
+  navigation?: any,
+  setIsReviewed?: (isReviewed: boolean) => {}
 }
 export interface MessagesParams {
   type?: string,
@@ -387,4 +398,9 @@ export interface GoogleMapsParams {
   locations?: Array<any>,
   setSaveLocation?: (val : boolean) => void,
   handleToggleMap?: () => void
+}
+
+export interface ShareComponentParams {
+  orderId?: number;
+  hashkey?: string;
 }

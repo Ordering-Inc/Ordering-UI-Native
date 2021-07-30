@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform , I18nManager } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 import {
@@ -39,7 +39,8 @@ import {
   ChCart,
   ChErrors,
   ChBusinessDetails,
-  ChUserDetails
+  ChUserDetails,
+  TextDetails
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
@@ -316,33 +317,33 @@ const CheckoutUI = (props: any) => {
                 businessDetails?.business &&
                 Object.values(businessDetails?.business).length > 0 &&
                 (
-                  <View>
+                  <View style={{alignItems: 'flex-start'}}>
                     <OText size={20}>
                       {t('BUSINESS_DETAILS', 'Business Details')}
                     </OText>
                     <View>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails>
                           {t('NAME', 'Name')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.name}
                       </OText>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails size={18} weight='bold'>
                           {t('EMAIL', 'Email')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.email}
                       </OText>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails size={18} weight='bold'>
                           {t('CELLPHONE', 'Cellphone')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.cellphone}
                       </OText>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails size={18} weight='bold'>
                           {t('ADDRESS', 'Address')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.address}
                       </OText>
                     </View>
@@ -391,12 +392,12 @@ const CheckoutUI = (props: any) => {
           {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
             <ChSection style={style.paddSectionH}>
               <ChPaymethods>
-                <OText size={20}>
+                <OText size={20} style= {{alignItems: 'flex-start', textAlign: 'left'}}>
                   {t('PAYMENT_METHOD', 'Payment Method')}
                 </OText>
                 {!cartState.loading && cart?.status === 4 && (
                   <OText
-                    style={{ textAlign: 'center', marginTop: 20 }}
+                    style={{ textAlign: 'center', marginTop: 20}}
                     color={theme.colors.error}
                     size={17}
                   >
@@ -429,7 +430,7 @@ const CheckoutUI = (props: any) => {
                   />
                 ) : (
                   <>
-                    <OText size={20}>
+                    <OText size={20} style= {{alignItems: 'flex-start', textAlign: 'left'}}>
                       {t('ORDER_SUMMARY', 'Order Summary')}
                     </OText>
                     <OrderSummary
@@ -512,6 +513,7 @@ export const Checkout = (props: any) => {
     cartUuid,
     stripePaymentOptions,
     onNavigationRedirect,
+    navigation
   } = props
 
   const [, { showToast }] = useToast();
@@ -658,7 +660,15 @@ export const Checkout = (props: any) => {
 
   return (
     <>
-      <CheckoutController {...checkoutProps} />
+    {cartState?.error?.length > 0 ? (
+        <NotFoundSource
+          content={t(cartState.error)}
+          btnTitle={t('GO_TO_BUSINESSLIST', 'Go to business list')}
+          onClickButton={() => navigation.navigate('BusinessList')}
+        />
+      ) : (
+        <CheckoutController {...checkoutProps} />
+      )}
     </>
   )
 }

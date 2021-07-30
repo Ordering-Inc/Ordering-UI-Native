@@ -9,19 +9,17 @@
 import * as React from 'react';
 import { LogBox, Platform } from 'react-native';
 import * as Sentry from "@sentry/react-native";
-import { NavigationContainer } from '@react-navigation/native';
 import { OrderingProvider } from 'ordering-components/native';
 import RNBootSplash from "react-native-bootsplash";
 
-import RootNavigator from './navigators/RootNavigator';
 import { Toast } from './components/shared/OToast';
 import Alert from './providers/AlertProvider';
 import { ThemeProvider } from './context/Theme';
 
-import { navigationRef } from './navigators/NavigationRef';
 
 import settings from './config.json';
 import theme from './theme.json';
+import AppContainer from './AppContainer';
 
 Sentry.init({
   environment: Platform.OS === 'ios' ? 'ios' : 'android',
@@ -46,6 +44,14 @@ theme.images = {
     logotypeInvert: require('./assets/images/logotype-invert.png'),
     // isotype,
     // isotypeInvert
+  },
+  tutorials: {
+    slide1: require('./assets/images/slide1.png'),
+    slide2: require('./assets/images/slide2.png'),
+    slide3: require('./assets/images/slide3.png'),
+    slide4: require('./assets/images/slide4.png'),
+    slide5: require('./assets/images/slide5.png'),
+    slide6: require('./assets/images/slide6.png')
   },
   general: {
     homeHero: require('./assets/images/home-hero.png'),
@@ -127,9 +133,7 @@ const DeliveryApp = () => {
   return (
     <ThemeProvider theme={theme}>
       <OrderingProvider settings={settings} Alert={Alert}>
-        <NavigationContainer ref={navigationRef}>
-          <RootNavigator />
-        </NavigationContainer>
+        <AppContainer />
         <Toast />
       </OrderingProvider>
     </ThemeProvider>
