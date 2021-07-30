@@ -33,7 +33,7 @@ const LoginFormUI = (props: LoginParams) => {
 
   const inputRef = useRef<any>({});
 
-  const onSubmit = () => {
+  const handleLogin = () => {
     const email = getValues('email');
     const message =
       !Object.keys(errors).length && !email
@@ -48,13 +48,15 @@ const LoginFormUI = (props: LoginParams) => {
     } else if (errors?.password) {
       showToast(ToastType.Error, errors.password?.message);
     } else {
-      handleSubmit((values: any) => {
-        Keyboard.dismiss();
-        handleButtonLoginClick({
-          ...values,
-        });
-      });
+      handleSubmit(onSubmit);
     }
+  };
+
+  const onSubmit = (values: any) => {
+    Keyboard.dismiss();
+    handleButtonLoginClick({
+      ...values,
+    });
   };
 
   const handleChangeInputEmail = (value: string, onChange: any) => {
@@ -248,7 +250,7 @@ const LoginFormUI = (props: LoginParams) => {
           )}
 
           <OButton
-            onClick={onSubmit}
+            onClick={handleLogin}
             text={loginButtonText}
             bgColor={theme.colors.primary}
             borderColor={theme.colors.primary}

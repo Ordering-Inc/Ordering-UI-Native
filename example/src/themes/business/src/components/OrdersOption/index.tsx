@@ -164,7 +164,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const handleReload = () => {
     setReload(true);
-    loadOrders && loadOrders(true, tabsFilter, true);
+    loadOrders &&
+      loadOrders(
+        true,
+        tabsFilter,
+        pagination.pageSize * pagination.currentPage <= 50,
+      );
   };
 
   const getOrderStatus = (key: number) => {
