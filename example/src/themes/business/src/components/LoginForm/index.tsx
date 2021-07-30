@@ -26,17 +26,34 @@ const LoginFormUI = (props: LoginParams) => {
   const { showToast } = useToast();
   const [, t] = useLanguage();
   const theme = useTheme();
-  const { control, handleSubmit, errors } = useForm();
+  const { control, handleSubmit, getValues, errors } = useForm();
 
   const [passwordSee, setPasswordSee] = useState(false);
 
   const inputRef = useRef<any>({});
 
-  const onSubmit = (values: any) => {
-    Keyboard.dismiss();
-    handleButtonLoginClick({
-      ...values,
-    });
+  const onSubmit = () => {
+    const email = getValues('email');
+    const message =
+      !Object.keys(errors).length && !email
+        ? t(
+            'VALIDATION_ERROR_EMAIL_REQUIRED',
+            'The field Email is required',
+          ).replace('_attribute_', t('EMAIL', 'Email'))
+        : '';
+
+    if (errors?.email || !email) {
+      showToast(ToastType.Error, errors.email?.message || message);
+    } else if (errors?.password) {
+      showToast(ToastType.Error, errors.password?.message);
+    } else {
+      handleSubmit((values: any) => {
+        Keyboard.dismiss();
+        handleButtonLoginClick({
+          ...values,
+        });
+      });
+    }
   };
 
   const handleChangeInputEmail = (value: string, onChange: any) => {
@@ -118,9 +135,7 @@ const LoginFormUI = (props: LoginParams) => {
     <Container contentContainerStyle={loginStyle.container}>
       <FormSide>
         <View style={loginStyle.welcomeView}>
-          <Text style={loginStyle.textTitle}>
-            {t('BUSINESS_WELCOME_TITLE', 'Welcome')}
-          </Text>
+          <Text style={loginStyle.textTitle}>{t('TITLE_HOME', 'Welcome')}</Text>
           <Text style={loginStyle.textSubtitle}>
             {t(
               'BUSINESS_WELCOME_SUBTITLE',
@@ -212,6 +227,13 @@ const LoginFormUI = (props: LoginParams) => {
                 'VALIDATION_ERROR_PASSWORD_REQUIRED',
                 'The field Password is required',
               ).replace('_attribute_', t('PASSWORD', 'Password')),
+              pattern: {
+                value: /.{8,}/,
+                message: t(
+                  'AT_LEAST_8_CHARACTERS_FOR_THE_PASSWORD',
+                  'At least 8 characters for the Password',
+                ).replace('_attribute_', t('PASSWORD', 'Password')),
+              },
             }}
             defaultValue=""
           />
@@ -225,7 +247,7 @@ const LoginFormUI = (props: LoginParams) => {
           )}
 
           <OButton
-            onClick={handleSubmit(onSubmit)}
+            onClick={onSubmit}
             text={loginButtonText}
             bgColor={theme.colors.primary}
             borderColor={theme.colors.primary}
