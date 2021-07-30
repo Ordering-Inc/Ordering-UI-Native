@@ -262,9 +262,10 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                   min,
                   comments,
                   action:
-                  route?.action === 'accept'
-                    ? 'acceptByBusiness'
-                    : 'rejectByBusiness',
+                    route?.action === 'accept'
+                      ? 'acceptByBusiness'
+                      : 'rejectByBusiness',
+                  orderId: route?.order?.id,
                 })
               }
               btnText={

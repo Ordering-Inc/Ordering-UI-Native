@@ -11,6 +11,7 @@ import { BusinessControllerParams } from '../../types';
 import { Card, Information, Logo } from './styles';
 import ToggleSwitch from 'toggle-switch-react-native';
 import { useTheme } from 'styled-components/native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
   const {
@@ -57,6 +58,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
   return (
     <>
+      <Spinner visible={loading} />
       {business && (
         <Card key={business.id}>
           {!!business?.logo && (

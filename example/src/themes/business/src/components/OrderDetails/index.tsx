@@ -64,23 +64,24 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     driver: false,
   });
   const { order, businessData, driversGroupsData, loading } = props.order;
-
   const itemsDrivers: any = [];
 
-  if (driversGroupsData?.length > 0) {
-    driversGroupsData.forEach((drivers: any) => {
-      const isThereInBussines = drivers.business.some(
-        (business: any) => business.id === businessData.id,
-      );
-      if (isThereInBussines) {
-        drivers.drivers.forEach((driversgroup: any) =>
-          itemsDrivers.push({
-            label: driversgroup.name,
-            value: driversgroup.id,
-          }),
+  if (user?.level === 2) {
+    if (driversGroupsData?.length > 0) {
+      driversGroupsData.forEach((drivers: any) => {
+        const isThereInBussines = drivers.business.some(
+          (business: any) => business?.id === businessData?.id,
         );
-      }
-    });
+        if (isThereInBussines) {
+          drivers.drivers.forEach((driversgroup: any) =>
+            itemsDrivers.push({
+              label: driversgroup?.name,
+              value: driversgroup?.id,
+            }),
+          );
+        }
+      });
+    }
   }
 
   const handleCopyClipboard = () => {
@@ -482,7 +483,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   icon={theme.images.general.map}
                   iconStyle={{ width: 20, height: 20 }}
                   borderColor={theme.colors.clear}
-                  style={{ maxWidth: 40, marginRight: 20 }}
+                  style={{ maxWidth: 40 }}
                   onClick={() => handleViewMapView()}
                 />
                 <OIconButton
@@ -643,33 +644,35 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderBill>
             </OrderContent>
 
-            {order?.status === 7 && order?.delivery_type === 1 && (
-              <AssignDriver>
-                <OText style={{ marginBottom: 5 }} size={16} weight="bold">
-                  {t('ASSIGN_DRIVER', 'Assign driver')}
-                </OText>
+            {order?.status === 7 &&
+              order?.delivery_type === 1 &&
+              user.level === 2 && (
+                <AssignDriver>
+                  <OText style={{ marginBottom: 5 }} size={16} weight="bold">
+                    {t('ASSIGN_DRIVER', 'Assign driver')}
+                  </OText>
 
-                <RNPickerSelect
-                  key={order}
-                  items={itemsDrivers}
-                  onValueChange={(value: any) => onChangeDriver(value)}
-                  value={driverId}
-                  style={pickerStyle}
-                  useNativeAndroidPickerStyle={false}
-                  placeholder={{
-                    label: `${t('NOT_DRIVER', 'Not driver')}`,
-                    value: null,
-                  }}
-                  Icon={() => (
-                    <MaterialIcons
-                      name="keyboard-arrow-down"
-                      style={pickerStyle.icon}
-                    />
-                  )}
-                  disabled={loading}
-                />
-              </AssignDriver>
-            )}
+                  <RNPickerSelect
+                    key={order}
+                    items={itemsDrivers}
+                    onValueChange={(value: any) => onChangeDriver(value)}
+                    value={driverId}
+                    style={pickerStyle}
+                    useNativeAndroidPickerStyle={false}
+                    placeholder={{
+                      label: `${t('NOT_DRIVER', 'Not driver')}`,
+                      value: null,
+                    }}
+                    Icon={() => (
+                      <MaterialIcons
+                        name="keyboard-arrow-down"
+                        style={pickerStyle.icon}
+                      />
+                    )}
+                    disabled={loading}
+                  />
+                </AssignDriver>
+              )}
 
             {order?.status === 7 && order?.delivery_type === 2 && (
               <Pickup>
@@ -677,7 +680,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   style={styles.btnPickUp}
                   textStyle={{ color: theme.colors.primary }}
                   text={t('READY_FOR_PICKUP', 'Ready for pickup')}
-                  onClick={() => handleChangeOrderStatus && handleChangeOrderStatus(4)}
+                  onClick={() =>
+                    handleChangeOrderStatus && handleChangeOrderStatus(4)
+                  }
                   imgLeftStyle={{ tintColor: theme.colors.backArrow }}
                 />
               </Pickup>

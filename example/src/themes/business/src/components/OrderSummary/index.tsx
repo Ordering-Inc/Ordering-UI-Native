@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { OText, OButton } from '../shared';
-import { StyleSheet, View, Text, Button, Platform } from 'react-native';
+import { OText, OIconButton } from '../shared';
+import { StyleSheet, View, Platform } from 'react-native';
 import {
   Content,
   OrderCustomer,
@@ -248,9 +248,6 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
     btnBackArrow: {
       borderWidth: 0,
       padding: 40,
-      backgroundColor: theme.colors.backgroundLight,
-      borderColor: theme.colors.primary,
-      shadowColor: theme.colors.primary,
       alignItems: 'flex-start',
       justifyContent: 'flex-start',
       height: 14,
@@ -263,12 +260,12 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
   return (
     <>
       <Content>
-        <OButton
-          imgLeftSrc={theme.images.general.arrow_left}
-          imgRightSrc={null}
+        <OIconButton
+          icon={theme.images.general.arrow_left}
+          iconStyle={{ width: 20, height: 20 }}
+          borderColor={theme.colors.clear}
           style={styles.btnBackArrow}
           onClick={() => handleArrowBack()}
-          imgLeftStyle={{ tintColor: '#748194' }}
         />
 
         <OrderContent>
