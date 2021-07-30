@@ -3,12 +3,13 @@ import {
   UserFormDetails as UserProfileController,
   useSession,
   useLanguage,
+  ToastType,
+  useToast
 } from 'ordering-components/native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { View } from 'react-native';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { ProfileParams } from '../../types';
 import { LogoutButton } from '../LogoutButton';
 import { LanguageSelector } from '../LanguageSelector';
@@ -24,7 +25,7 @@ const ProfileUI = (props: ProfileParams) => {
 
   const [{ user }] = useSession();
   const [, t] = useLanguage();
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const { handleSubmit, errors, setValue, control } = useForm();
 
   const theme = useTheme();

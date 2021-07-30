@@ -4,6 +4,8 @@ import {
   useSession,
   useUtils,
   useLanguage,
+  ToastType,
+  useToast
 } from 'ordering-components/native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
@@ -22,7 +24,6 @@ import {
   ComposerProps,
 } from 'react-native-gifted-chat';
 import { USER_TYPE } from '../../config/constants';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OIconButton, OText } from '../shared';
@@ -55,7 +56,7 @@ const ChatUI = (props: MessagesParams) => {
   const [{ user }] = useSession();
   const [{ parseDate }] = useUtils();
   const [, t] = useLanguage();
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast()
   const theme = useTheme();
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([]);

@@ -5,9 +5,10 @@ import { useClipboard } from '@react-native-clipboard/clipboard';
 import { FloatingButton } from '../FloatingButton';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { Chat } from '../Chat';
 import {
+  ToastType,
+  useToast,
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
   useUtils,
@@ -57,7 +58,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ parsePrice, parseNumber, parseDate }] = useUtils();
   const [{ user, token }] = useSession();
   const [{ configs }] = useConfig();
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
   const [unreadAlert, setUnreadAlert] = useState({
     business: false,

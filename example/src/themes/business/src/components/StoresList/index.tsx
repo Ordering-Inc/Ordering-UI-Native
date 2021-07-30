@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import {
+  ToastType,
+  useToast,
   useLanguage,
   useOrder,
   BusinessList,
@@ -10,7 +12,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'styled-components/native';
 import { OText } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { SearchBar } from '../SearchBar';
 import { BusinessesListingParams } from '../../types';
 import { BusinessController } from '../BusinessController';
@@ -32,7 +33,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
   const [, t] = useLanguage();
   const [orderState] = useOrder();
   const theme = useTheme();
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
 
   const { loading, error, businesses } = businessesList;
 

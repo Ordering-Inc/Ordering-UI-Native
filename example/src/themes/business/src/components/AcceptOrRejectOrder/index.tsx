@@ -3,9 +3,10 @@ import { Content, Timer, TimeField, Header, Action, Comments } from './styles';
 import { Linking } from 'react-native';
 import { OText, OButton, OTextarea } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { FloatingButton } from '../FloatingButton';
 import {
+  useToast,
+  ToastType,
   useLanguage,
   OrderChange as OrderChangeConTableoller,
 } from 'ordering-components/native';
@@ -16,7 +17,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const { navigation, route, orderState, updateStateOrder } = props;
   const [hour, setHour] = useState('00');
   const [min, setMin] = useState('00');
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast()
   const [comments, setComments] = useState('');
   const [, t] = useLanguage();
   const theme = useTheme();

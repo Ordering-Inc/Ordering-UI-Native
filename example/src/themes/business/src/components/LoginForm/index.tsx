@@ -3,12 +3,13 @@ import { Pressable, StyleSheet, Keyboard, Text, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
+  ToastType,
+  useToast,
   LoginForm as LoginFormController,
   useLanguage,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Container, FormSide, FormInput } from './styles';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OText, OButton, OInput } from '../shared';
 import { LoginParams } from '../../types';
 
@@ -23,7 +24,7 @@ const LoginFormUI = (props: LoginParams) => {
     passwordInputIcon,
   } = props;
 
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const theme = useTheme();
   const { control, handleSubmit, errors } = useForm();

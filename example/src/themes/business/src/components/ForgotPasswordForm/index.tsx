@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import {
+  ToastType,
+  useToast,
   ForgotPasswordForm as ForgotPasswordController,
   useLanguage,
 } from 'ordering-components/native';
@@ -9,7 +11,6 @@ import { useTheme } from 'styled-components/native';
 import NavBar from '../NavBar';
 import { FormInput, FormSide } from '../../components/LoginForm/styles';
 import { Container } from './styles';
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { OButton, OInput, OText } from '../shared';
 
 const ForgotPasswordUI = (props: any) => {
@@ -17,7 +18,7 @@ const ForgotPasswordUI = (props: any) => {
 
   const theme = useTheme();
   const [, t] = useLanguage();
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const { control, handleSubmit, errors } = useForm();
 
   const [emailSent, setEmailSent] = useState(null);
