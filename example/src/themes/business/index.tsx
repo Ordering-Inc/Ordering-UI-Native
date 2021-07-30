@@ -21,6 +21,7 @@ import { ProductItemAccordion } from './src/components/ProductItemAccordion'
 import { SearchBar } from './src/components/SearchBar'
 import { StoresList } from './src/components/StoresList'
 import { UserFormDetailsUI } from './src/components/UserFormDetails'
+import { UserProfileForm } from './src/components/UserProfileForm'
 import { VerifyPhone } from './src/components/VerifyPhone'
 
 //OComponents
@@ -63,6 +64,7 @@ export default {
     SearchBar,
     StoresList,
     UserFormDetailsUI,
+    UserProfileForm,
     VerifyPhone,
     //OComponents
     OText,
