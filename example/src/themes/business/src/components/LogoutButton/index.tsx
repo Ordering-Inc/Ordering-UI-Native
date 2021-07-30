@@ -5,14 +5,23 @@ import { useLanguage } from 'ordering-components/native';
 import styled from 'styled-components/native';
 import { OIcon, OText } from '../shared';
 import { useTheme } from 'styled-components/native';
+import { _retrieveStoreData, _clearStoreData } from '../../providers/StoreUtil';
 
 const LogoutButtonUI = (props: any) => {
   const { handleLogoutClick } = props;
   const [, t] = useLanguage();
   const theme = useTheme();
 
+  const handleClick = async () => {
+    const data = await _retrieveStoreData('notification_state');
+    const res = await handleLogoutClick(data);
+    if (res) {
+      _clearStoreData()
+    }
+  }
+
   return (
-    <TouchableOpacity onPress={() => handleLogoutClick()}>
+    <TouchableOpacity onPress={() => handleClick()}>
       <Container>
         <OText color={theme.colors.textGray} space weight="bold" mRight={10}>
           {t('LOGOUT', 'logout')}
