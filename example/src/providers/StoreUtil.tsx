@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { flatArray } from '../utils'
 
 export const _retrieveStoreData = async (key: string) => {
   if (!key) return
@@ -33,10 +34,17 @@ export const _removeStoreData = (key: string) => {
   }
 };
 
-export const _clearStoreData = async () => {
+export const _clearStoreData = async (options: any = {}) => {
   try {
-    const keys = await AsyncStorage.getAllKeys()
-    AsyncStorage.multiRemove(keys.filter((item) => item !== 'isTutorial'))
+    const keys: any = await AsyncStorage.getAllKeys()
+    let filterKeys: any = keys
+    if (options?.excludedKeys) {
+      filterKeys = filterKeys.filter((k: any) => !options?.excludedKeys.includes(k))
+    }
+    if (options?.includedKeys) {
+      filterKeys.push(options?.includedKeys)
+    }
+    AsyncStorage.multiRemove(flatArray(filterKeys))
   } catch {
     return null
   }
