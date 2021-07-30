@@ -46,7 +46,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     readMessages,
     messagesReadList,
     handleAssignDriver,
-    handleChangeOrderStatus,
+    handleReadyForPickUp,
     isFromCheckout,
     driverLocation,
   } = props;
@@ -677,9 +677,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   style={styles.btnPickUp}
                   textStyle={{ color: theme.colors.primary }}
                   text={t('READY_FOR_PICKUP', 'Ready for pickup')}
-                  onClick={() =>
-                    handleChangeOrderStatus && handleChangeOrderStatus(4)
-                  }
+                  onClick={() => handleReadyForPickUp && handleReadyForPickUp()}
                   imgLeftStyle={{ tintColor: theme.colors.backArrow }}
                 />
               </Pickup>

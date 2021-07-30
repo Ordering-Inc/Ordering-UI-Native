@@ -45,8 +45,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     inputIOS: {
       color: theme.colors.secundaryContrast,
       paddingEnd: 20,
-      height: 44,
-      width: 296,
+      height: 40,
       borderWidth: 1,
       borderColor: 'transparent',
       borderRadius: 15,

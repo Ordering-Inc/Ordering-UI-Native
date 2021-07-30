@@ -261,10 +261,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                   hour,
                   min,
                   comments,
-                  action:
-                    route?.action === 'accept'
-                      ? 'acceptByBusiness'
-                      : 'rejectByBusiness',
+                  action: route?.action === 'accept' ? 'accept' : 'reject',
                   orderId: route?.order?.id,
                 })
               }
