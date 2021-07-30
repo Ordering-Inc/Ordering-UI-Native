@@ -33,6 +33,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
       color: theme.colors.secundaryContrast,
       paddingEnd: 20,
       height: 40,
+      width: 250,
       borderWidth: 1,
       borderColor: 'transparent',
       borderRadius: 15,
