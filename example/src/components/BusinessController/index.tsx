@@ -121,7 +121,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       <BusinessHero
         source={{ uri: optimizeImage(business?.header, 'h_400,c_limit') }}
         imageStyle={styles.headerStyle}
-        isClosed={isBusinessOpen || isBusinessClose || true}
+        isClosed={isBusinessOpen || isBusinessClose}
       >
         {business?.featured && (
           <View style={styles.featured}>
@@ -135,7 +135,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
         )}
         {!!businessWillCloseSoonMinutes && orderState.options?.moment === null && isBusinessOpen && (
           <View style={{...styles.closed}}>
-            <OText size={32} color={theme.colors.white} style={styles.textClosed}>{businessWillCloseSoonMinutes || 30} {t('MINUTES_TO_CLOSE', 'minutes to close')}</OText>
+            <OText size={32} color={theme.colors.white} style={styles.textClosed}>{businessWillCloseSoonMinutes} {t('MINUTES_TO_CLOSE', 'minutes to close')}</OText>
           </View>
         )}
         <BusinessLogo>
