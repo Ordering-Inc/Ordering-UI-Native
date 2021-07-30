@@ -16,7 +16,7 @@ const LogoutButtonUI = (props: any) => {
     const data = await _retrieveStoreData('notification_state');
     const res = await handleLogoutClick(data);
     if (res) {
-      _clearStoreData();
+      _clearStoreData()
     }
   }
 

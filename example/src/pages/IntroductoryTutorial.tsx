@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet, StatusBar} from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
-import Icon from 'react-native-vector-icons/AntDesign';
 import { _setStoreData } from '../providers/StoreUtil';
 import { useTheme } from 'styled-components/native';
 import { useLanguage } from 'ordering-components/native';
@@ -52,14 +51,16 @@ const IntroductoryTutorial = ({ navigation, route }: any)  => {
   type Item = typeof data[0];
   const styles = StyleSheet.create({
     slide: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 80,
     },
     image: {
       flex: 0,
+      top: 30,
       width: '100%',
-      height: '70%',
+      height: '75%',
       resizeMode: 'contain',
     },
     text: {
@@ -77,12 +78,17 @@ const IntroductoryTutorial = ({ navigation, route }: any)  => {
     },
     buttonCircle: {
       top: '15%',
-      width: 40,
+      width: 50,
       height: 40,
-      borderRadius: 20,
       justifyContent: 'center',
       alignItems: 'center',
+      position:'relative'
     },
+    tutorialText: {
+      fontSize: 18,
+      fontWeight: '200',
+      color: theme.colors.primary
+    }
   });
   
   const _renderItem = ({item}: {item: Item}) => {
@@ -95,20 +101,32 @@ const IntroductoryTutorial = ({ navigation, route }: any)  => {
           },
         ]}>
         <Text style={styles.title}>{item.title}</Text>
-        <Image source={item.image} style={styles.image} />
         <Text style={styles.text}>{item.text}</Text>
+        <Image source={item.image} style={styles.image} />
       </View>
     );
   };
+
   const RenderNextButton = () => {
     return (
       <View style={styles.buttonCircle}>
-        <Icon
-          name="right"
-          color= {theme.colors.primary}
-          size={24}
-          style={{backgroundColor: 'transparent'}}
-        />
+        <Text style={styles.tutorialText}>{t('TUTORIAL_NEXT', 'Next')}</Text>
+      </View>
+    );
+  };
+
+  const RenderSkipButton = () => {
+    return (
+      <View style={styles.buttonCircle}>
+        <Text style={styles.tutorialText}>{t('TUTORIAL_SKIP', 'Skip')}</Text>
+      </View>
+    );
+  };
+
+  const RenderPrevButton = () => {
+    return (
+      <View style={styles.buttonCircle}>
+        <Text style={styles.tutorialText}>{t('TUTORIAL_BACK', 'Back')}</Text>
       </View>
     );
   };
@@ -116,19 +134,16 @@ const IntroductoryTutorial = ({ navigation, route }: any)  => {
   const RenderDoneButton = () => {
     return (
       <View style={styles.buttonCircle}>
-        <Icon
-          name="checkcircleo"
-          color= {theme.colors.primary}
-          size={24}
-          style={{backgroundColor: 'transparent'}}
-        />
+        <Text style={styles.tutorialText}>{t('TUTORIAL_DONE', 'Done')}</Text>
       </View>
     );
   }
- const _onDone = () => {
+
+  const _onDone = () => {
     setTutorial(false)
     _setStoreData('isTutorial', false)
   }
+
   const _keyExtractor = (item: Item) => item.title;
 
     return (
@@ -142,6 +157,10 @@ const IntroductoryTutorial = ({ navigation, route }: any)  => {
           activeDotStyle= {{backgroundColor: theme.colors.primary}}
           renderDoneButton={RenderDoneButton}
           renderNextButton={RenderNextButton}
+          renderSkipButton={RenderSkipButton}
+          renderPrevButton={RenderPrevButton}
+          showSkipButton
+          showPrevButton
         />
       </View>
     );

@@ -280,7 +280,7 @@ export interface OrderDetailsParams {
   urlToShare?: string;
   messages?: any;
   handleAssignDriver?: (id: any) => {};
-  handleReadyForPickUp?: () => {};
+  handleChangeOrderStatus?: (status: any) => {};
   order?: any;
   handleOrderRedirect?: () => {};
   setMessages?: () => {};
