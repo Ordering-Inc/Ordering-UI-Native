@@ -46,6 +46,7 @@ export const FacebookLogin = (props: any) => {
         }
       } else {
         handleLoading && handleLoading(false)
+        handleErrors && handleErrors(response.content.result)
         logoutWithFacebook()
       }
     } catch (err) {
@@ -66,6 +67,9 @@ export const FacebookLogin = (props: any) => {
           AccessToken.getCurrentAccessToken().then((data: any) => {
             const accessToken = data.accessToken.toString();
             handleLoginClick(accessToken)
+          }).catch((err : any) => {
+            handleErrors && handleErrors(err.message)
+            handleLoading && handleLoading(false)
           });
         }
       },
@@ -76,7 +80,10 @@ export const FacebookLogin = (props: any) => {
         handleLoading && handleLoading(false)
         handleErrors && handleErrors(err)
       },
-    );
+    ).catch((err : any) => {
+        handleErrors && handleErrors(err.message)
+        handleLoading && handleLoading(false)
+    });
   };
 
   const onPressButton = auth
