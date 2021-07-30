@@ -134,7 +134,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
           </View>
         )}
         {!!businessWillCloseSoonMinutes && orderState.options?.moment === null && isBusinessOpen && (
-          <View style={{...styles.closed}}>
+          <View style={styles.closed}>
             <OText size={32} color={theme.colors.white} style={styles.textClosed}>{businessWillCloseSoonMinutes} {t('MINUTES_TO_CLOSE', 'minutes to close')}</OText>
           </View>
         )}
