@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components/native'
 import { OButton, OIcon, OText } from '../../../../components/shared'
 import { colors,images } from '../../theme.json'
-import { TextStyle, ViewStyle } from 'react-native'
+import { Platform, TextStyle, ViewStyle, I18nManager } from 'react-native'
 
 const Wrapper = styled.View`
   background-color: ${colors.white};
@@ -60,7 +60,7 @@ const NavBar = (props: Props) => {
       <OButton
         imgLeftSrc={props.leftImg || images.general.arrow_left}
         imgRightSrc={null}
-        style={{ ...btnBackArrow, ...props.btnStyle, ...props.isVertical ? {paddingStart: 0} : {} }}
+        style={{ ...btnBackArrow, ...props.btnStyle, ...props.isVertical ? (I18nManager.isRTL ? {paddingRight: 0} : {paddingLeft: 0}) : {} }}
         onClick={props?.onActionLeft}
       />
       <TitleTopWrapper>
@@ -82,7 +82,7 @@ const NavBar = (props: Props) => {
           <OText
             size={24}
 				lineHeight={36}
-            weight={'600'}
+            weight={Platform.OS === 'ios' ? '600' : 'bold'}
             style={
               {
                 textAlign: props.titleAlign ? props.titleAlign : 'center',

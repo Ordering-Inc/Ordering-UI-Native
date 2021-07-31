@@ -28,9 +28,9 @@ export const BusinessInfoItem = styled.View`
   align-items: center;
 `;
 export const WrapReviews = styled.View`
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 `;
 export const WrapBusinessInfo = styled.TouchableOpacity`
   position: absolute;

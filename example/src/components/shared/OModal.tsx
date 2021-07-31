@@ -3,7 +3,7 @@ import { Alert, Modal, StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpac
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
 import { OIcon } from '.';
-import { colors, images } from '../../theme.json';
+import { colors, images } from '../../themes/original/theme.json';
 
 interface Props {
   open?: boolean;
@@ -104,7 +104,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-	 paddingHorizontal: 40
+	 paddingLeft: 40,
+	 paddingRight: 40
   },
   cancelBtn: {
    //  position: 'absolute',

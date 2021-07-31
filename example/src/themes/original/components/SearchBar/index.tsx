@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, TouchableOpacity, ImageStore } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, ImageStore, Platform, TextInput } from 'react-native'
 import { colors, images } from '../../theme.json'
 import { OInput, OButton } from '../../../../components/shared'
 import { useLanguage } from 'ordering-components/native'
@@ -16,7 +16,8 @@ export const SearchBar = (props: any) => {
     isCancelXButtonShow,
     noBorderShow,
     borderStyle,
-	 height
+	 height,
+	 inputStyle
   } = props
 
   const [,t] = useLanguage()
@@ -47,7 +48,7 @@ export const SearchBar = (props: any) => {
         icon={images.general.search}
 		  iconStyle={{width: 12}}
         returnKeyType='done'
-		  inputStyle={{fontSize: 12}}
+		  inputStyle={inputStyle}
       />
       {isCancelButtonShow && (
         <OButton

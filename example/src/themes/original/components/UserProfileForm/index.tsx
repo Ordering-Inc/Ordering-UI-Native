@@ -16,6 +16,7 @@ import { UserFormDetailsUI } from '../UserFormDetails';
 import { OIcon, OIconButton } from '../../../../components/shared';
 import { CenterView } from './styles';
 import NavBar from '../NavBar';
+import { Container } from '../../../../layouts/Container';
 
 const ProfileUI = (props: ProfileParams) => {
   const {
@@ -189,14 +190,15 @@ const ProfileUI = (props: ProfileParams) => {
   }, [user?.country_phone_code]);
 
   return (
-    <View>
+    <Container>
       <NavBar
         onActionLeft={() => navigation.goBack()}
         btnStyle={{ paddingStart: 0 }}
         title={t('ACCOUNT', 'Account')}
         isVertical
+		  style={styles.pagePadding}
       />
-      <CenterView>
+      <CenterView style={styles.pagePadding}>
 			<View style={styles.photo}>
 				<OIcon
 					url={user?.photo}
@@ -213,13 +215,13 @@ const ProfileUI = (props: ProfileParams) => {
           onClick={() => handleImagePicker()}
         />
       </CenterView>
-		<View style={{height: 8, marginHorizontal: -40, backgroundColor: colors.backgroundGray100, marginVertical: 32}} />
+		<View style={{height: 8, marginLeft: -40, marginRight: -40, backgroundColor: colors.backgroundGray100, marginVertical: 32, zIndex: 10}} />
       <Spinner visible={formState?.loading} />
-      <View>
+      <View style={styles.pagePadding}>
          <UserFormDetailsUI {...props} isEdit />
 		</View>
       
-    </View>
+    </Container>
   );
 };
 
@@ -232,6 +234,10 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.2,
 		backgroundColor: colors.white,
 	},
+	pagePadding: {
+		paddingLeft: 40,
+		paddingRight: 40
+	}
 });
 
 export const UserProfileForm = (props: any) => {

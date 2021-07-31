@@ -16,6 +16,7 @@ import { OrdersOption } from './OrdersOption';
 import { OrderDetails } from './OrderDetails';
 import { UserProfileForm } from './UserProfileForm';
 import { ReviewOrder } from './ReviewOrder';
+import { UserProfile } from './UserProfile';
 
 import theme from '../theme.json';
 
@@ -145,5 +146,6 @@ export {
 	OrdersOption,
 	OrderDetails,
 	UserProfileForm,
-	ReviewOrder
+	ReviewOrder,
+	UserProfile
 }

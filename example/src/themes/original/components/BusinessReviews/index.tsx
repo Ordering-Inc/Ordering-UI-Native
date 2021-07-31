@@ -5,8 +5,6 @@ import {
   useOrder,
 } from 'ordering-components/native';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import Spinner from 'react-native-loading-spinner-overlay';
-import { BusinessBasicInformation } from '../BusinessBasicInformation';
 import { View, StyleSheet } from 'react-native';
 import { OIcon, OInput, OText } from '../../../../components/shared';
 import { colors, images } from '../../theme.json';
@@ -21,8 +19,6 @@ import {
   ReviewProgressView,
   PrincipalWrapView,
 } from './styles';
-import { ScrollView } from 'react-native-gesture-handler';
-import { GrayBackground } from '../BusinessInformation/styles';
 import { BusinessReviewsParams } from '../../../../types';
 import { ProgressBar, TouchableRipple } from 'react-native-paper';
 import moment from 'moment';

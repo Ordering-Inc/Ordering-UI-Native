@@ -63,11 +63,8 @@ export const ProductComment = styled.View`
 `
 
 export const ProductActions = styled.View`
-  position: absolute;
-  flex: 1;
-  bottom: 0px;
-  padding-horizontal: 40px;
-  padding-vertical: 12px;
+	min-height: 70px;
+  padding: 12px 40px;
   width: 100%;
   flex-direction: row;
   background-color: #FFF;

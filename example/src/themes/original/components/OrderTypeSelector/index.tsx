@@ -60,12 +60,15 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 
 const pickerStyle = StyleSheet.create({
   inputAndroid: {
-    color: colors.textSecondary,
-    borderRadius: 7.6,
-    paddingStart: 10,
-	 height: 26,
-    backgroundColor: colors.backgroundGray100,
-    fontSize: 12
+	color: colors.textSecondary,
+	height: 26,
+	borderRadius: 7.6,
+	backgroundColor: colors.backgroundGray100,
+	fontSize: 12,
+	paddingStart: 10,
+	paddingRight: 24,
+	paddingBottom: 2,
+	paddingTop: 0
   },
   inputIOS: {
     color: colors.textSecondary,

@@ -72,10 +72,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 27,
   },
   infoCont: {
-	flexGrow: 1,
 	flexDirection: 'row',
 	alignItems: 'center',
-	justifyContent: 'flex-start'
+	justifyContent: 'flex-start',
   },
   badge: {
 	alignItems: 'center',

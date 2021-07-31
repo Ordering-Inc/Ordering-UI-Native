@@ -10,6 +10,7 @@ import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { TouchableRipple } from 'react-native-paper'
+import { useState } from 'react'
 
 const AddressListUI = (props: AddressListParams) => {
 
@@ -32,6 +33,8 @@ const AddressListUI = (props: AddressListParams) => {
   const [orderState] = useOrder()
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
+
+  const [isProfile, setIsProfile] = useState(isFromProfile || route?.params?.isFromProfile);
 
   const onNavigatorRedirect = () => {
     if (route && (isFromBusinesses || isGoBack)) {
@@ -125,11 +128,15 @@ const AddressListUI = (props: AddressListParams) => {
     }
   }, [orderState.options.address])
 
+  useEffect(() => {
+	  console.log('From profile : ' + isProfile)
+  }, [])
+
   return (
-    <Container nopadding={nopadding}>
-      {(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile)) && (
+    <Container>
+      {(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile || isProfile)) && (
         <AddressListContainer>
-          {isFromProfile && (
+          {isProfile && (
 				<NavBar
                 title={t('MY_SAVED_PLACES', 'My saved places')}
                 titleAlign={'center'}

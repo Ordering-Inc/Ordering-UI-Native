@@ -6,7 +6,7 @@ import {
 } from 'ordering-components/native';
 import { useForm } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { colors,images } from '../../theme.json';
 import { ToastType, useToast } from '../../../../providers/ToastProvider';
 import { ProfileParams } from '../../../../types';
@@ -67,10 +67,16 @@ const ProfileListUI = (props: ProfileParams) => {
     }
   }, [errors]);
 
+  const detailProps = {
+	
+	goToBack: () => props.navigation?.canGoBack() && props.navigation.goBack(),
+	onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params)
+  }
+
   return (
-    <View style={{ flex: 1, height: height - top - bottom - 60}}>
-	 	<OText size={24} color={colors.textNormal} lineHeight={36} weight={'600'} style={{marginTop: 14, marginBottom: 24}}>{t('PROFILE', 'Profile')}</OText>
-      <CenterView>
+    <View style={{ flex: 1, height: height - top - bottom - 62}}>
+	 	<OText size={24} color={colors.textNormal} lineHeight={36} weight={Platform.OS === 'ios' ? '600' : 'bold'} style={{marginTop: 14, marginBottom: 24, ...styles.pagePadding}}>{t('PROFILE', 'Profile')}</OText>
+      <CenterView style={styles.pagePadding}>
 			<View style={styles.photo}>
 				<OIcon
 					url={user?.photo}
@@ -80,15 +86,15 @@ const ProfileListUI = (props: ProfileParams) => {
 				/>
 			</View>
 		  <View style={{flexBasis: '70%'}}>
-			  <OText size={20} lineHeight={30} weight={'500'} color={colors.textNormal}>{`${user?.name} ${user?.lastname}`}</OText>
-			  <TouchableOpacity onPress={() => navigation.navigate('ProfileForm', {})}>
+			  <OText size={20} lineHeight={30} weight={Platform.OS === 'ios' ? '500' : 'bold'} color={colors.textNormal}>{`${user?.name} ${user?.lastname}`}</OText>
+			  <TouchableOpacity onPress={() => navigation.navigate('ProfileForm', {...detailProps})}>
 				  <OText size={12} lineHeight={18} color={colors.primary} style={{textDecorationLine: 'underline'}}>{t('VIEW_ACCOUNT', 'View account')}</OText>
 			  </TouchableOpacity>
 		  </View>
       </CenterView>
-		<View style={{height: 8, marginHorizontal: -40, backgroundColor: colors.backgroundGray100, marginVertical: 32}} />
+		<View style={{height: 8, backgroundColor: colors.backgroundGray100, marginVertical: 32}} />
       <Spinner visible={formState?.loading} />
-      <ListWrap>
+      <ListWrap style={{...styles.pagePadding}}>
 			<Actions>
 				<ListItem onPress={() => onRedirect('AddressList', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
 					<OIcon src={images.general.pin} width={16} color={colors.textNormal} style={{marginEnd: 14}} />
@@ -112,13 +118,15 @@ const ProfileListUI = (props: ProfileParams) => {
 
 const langPickerStyle = StyleSheet.create({
 	inputAndroid: {
-		color: colors.secundaryContrast,
+		color: colors.textNormal,
+		fontSize: 14,
+		fontWeight: '500',
+		paddingEnd: 24,
+		paddingStart: 0,
+		height: 40,
 		borderWidth: 1,
 		borderColor: colors.clear,
-		borderRadius: 15,
-		paddingHorizontal: 10,
-		backgroundColor: colors.inputDisabled,
-		width: 80,
+		backgroundColor: colors.clear
 	 },
 	 inputIOS: {
 		color: colors.textNormal,
@@ -146,6 +154,10 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.2,
 		backgroundColor: colors.white,
 		marginEnd: 14
+	},
+	pagePadding: {
+		paddingLeft: 40,
+		paddingRight: 40
 	}
 });
 

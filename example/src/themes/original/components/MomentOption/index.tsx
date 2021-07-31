@@ -132,7 +132,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
   };
 
   return (
-    <Container>
+    <Container style={{paddingLeft: 40, paddingRight: 40}}>
       <View style={{ paddingBottom: 10 }}>
         <NavBar
           onActionLeft={() => goToBack()}

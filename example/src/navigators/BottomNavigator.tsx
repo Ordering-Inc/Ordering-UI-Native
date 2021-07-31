@@ -49,7 +49,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: !isIos ? 10 : 0  }}>
+              <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: 10 }}>
                 <OIcon src={images.tabs.explorer} width={16} color={color} />
 					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('EXPLORE', 'Explore')}</OText>
               </View>
@@ -63,7 +63,7 @@ const BottomNavigator = () => {
           {
             tabBarIcon:
               ({ color }) => (
-                <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: !isIos ? 10 : 0 }}>
+                <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: 10 }}>
                   <OIcon src={images.tabs.orders} width={16} color={color} />
 					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('ORDERS', 'Orders')}</OText>
                 </View>
@@ -81,7 +81,7 @@ const BottomNavigator = () => {
                   height: 50,
                   justifyContent: 'center', alignItems: 'center',
                   position: 'relative',
-                  bottom: !isIos ? 10 : 0
+                  bottom: 10
                 }}
               >
                 <OIcon src={images.tabs.my_carts} width={16} color={color} />
@@ -105,7 +105,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon:
             ({ color }) => (
-              <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: !isIos ? 10 : 0  }}>
+              <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: 10  }}>
                 <OIcon src={images.tabs.profile} width={16} color={color} />
 					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('PROFILE', 'Profile')}</OText>
               </View>

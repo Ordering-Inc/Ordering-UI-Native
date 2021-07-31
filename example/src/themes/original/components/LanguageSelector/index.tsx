@@ -44,7 +44,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 					style={pickerStyle ? pickerStyle : _pickerStyle}
 					useNativeAndroidPickerStyle={false}
 					placeholder={{}}
-					Icon={() => <View style={pickerStyle ? pickerStyle.icon : _pickerStyle.icon}><OIcon src={images.general.arrow_down} color={iconColor} style={{width: '100%'}} /></View>}
+					Icon={() => <View style={pickerStyle ? pickerStyle.icon : _pickerStyle.icon}><OIcon src={images.general.arrow_down} color={colors.white} style={{width: '100%'}} /></View>}
 					disabled={orderState.loading}
 				/>
 		  </>
@@ -55,13 +55,13 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
 const _pickerStyle = StyleSheet.create({
   inputAndroid: {
-    color: colors.secundaryContrast,
+    color: colors.white,
     borderWidth: 1,
     borderColor: colors.clear,
-    borderRadius: 15,
     paddingHorizontal: 10,
-    backgroundColor: colors.inputDisabled,
-    width: 80,
+	 paddingEnd: 24,
+	 height: 40,
+    backgroundColor: colors.clear,
   },
   inputIOS: {
     color: colors.white,
