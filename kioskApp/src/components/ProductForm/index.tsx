@@ -4,6 +4,7 @@ import { View,
   StyleSheet,
   Animated,
   ScrollView,
+  Platform,
 } from 'react-native'
 import {
   ProductForm as ProductOptions,
@@ -67,7 +68,7 @@ export const ProductOptionsUI = (props: any) => {
 
   const { product, loading, error } = productObject;
 
-  const HEADER_EXPANDED_HEIGHT =  orientationState?.dimensions?.height * 0.4;
+  const HEADER_EXPANDED_HEIGHT =  Platform.OS === 'ios' ? orientationState?.dimensions?.height * 0.65 : orientationState?.dimensions?.height * 0.4;
   const HEADER_COLLAPSED_HEIGHT = orientationState?.dimensions?.height * 0.2;
 
   const isError = (id: number) => {
@@ -97,7 +98,7 @@ export const ProductOptionsUI = (props: any) => {
   const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors)?.length > 0
 
   const [scrollY] = useState(new Animated.Value(0));
-  
+
   const headerHeight = scrollY.interpolate({
     inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
     outputRange: [HEADER_EXPANDED_HEIGHT, HEADER_COLLAPSED_HEIGHT],
@@ -196,7 +197,6 @@ export const ProductOptionsUI = (props: any) => {
       borderRadius: 24,
       marginRight: 15,
     },
-  
     container: {
       flex: 1,
       backgroundColor: '#fff',
@@ -353,7 +353,7 @@ export const ProductOptionsUI = (props: any) => {
           <Spinner visible={loading} />
         )}
         {!loading && !error && product && (
-          <View style={{ paddingTop: 20, paddingBottom: 80 }}> 
+          <View style={{ paddingTop: 20, paddingBottom: 80 }}>
             <WrapContent>
               <ProductDescription>
                 {(

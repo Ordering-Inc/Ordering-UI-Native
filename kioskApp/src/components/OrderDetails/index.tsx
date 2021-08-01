@@ -32,7 +32,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     navigation,
     isFromCheckout,
   } = props
-  
+
   const theme = useTheme();
   const [, t] = useLanguage()
   const [{ parsePrice, parseNumber }] = useUtils()
@@ -110,7 +110,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       console.error('Error: Invalid optVal');
     }
   }
-  
+
   useEffect(() => {
     const backAction = () => {
       Alert.alert(`${t('HOLD_ON', 'Hold on')}!`, `${t('ARE_YOU_SURE_YOU_WANT_TO_GO_BACK', 'Are you sure you want to go back')}?`, [
@@ -154,11 +154,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             options={optionsToSendReceipt}
             onChange={setOptionToSendReceipt}
           />
-          
+
         </OSTable>
 
         <OSTable>
-          
+
           {optionToSendReceipt?.value == _EMAIL && (
             <OInput
               placeholder="yourname@mailhost.com"
@@ -184,7 +184,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             disabledTextStyle={styles.disabledTextButtonApplyStyle}
             style={styles.buttonApplyStyle}
           />
-          
         </OSTable>
       </OSInputWrapper>
 
@@ -300,7 +299,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   return (
     <>
       <Spinner visible={!order || Object.keys(order).length === 0} />
-      
+
       {order && Object.keys(order).length > 0 && (
         <>
           <Container>
@@ -341,7 +340,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
                 {orientationState?.orientation === LANDSCAPE && actionsContent}
               </View>
-            
+
               <View
                 style={{
                   flex: 1.4,
@@ -352,7 +351,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </View>
             </View>
           </Container>
-          
+
           {orientationState?.orientation === PORTRAIT && (
             <OSActions>
               {actionsContent}

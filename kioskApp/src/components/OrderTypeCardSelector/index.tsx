@@ -58,9 +58,7 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
               size={orientationState?.dimensions?.width * 0.048}
               weight={'700'}
             >
-              {_selected === _takeOut?.value && _takeOut.content}
-              {_selected === _eatIn?.value && _eatIn.content}
-              {'?'}
+              {t('EATING_TODAY', 'eating today')}{'?'}
             </OText>
           </OText>
         </View>

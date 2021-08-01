@@ -85,7 +85,7 @@ const CustomerName = (props: Props): React.ReactElement => {
               size={orientationState?.dimensions?.width * 0.05}
               weight={'700'}
             >
-              {`${t('ORDER_BE_FOR', 'order be for?')}?`}
+              {`${t('ORDER_BE_FOR', 'order be for?')}`}
             </OText>
           </OText>
         </View>
@@ -120,14 +120,14 @@ const CustomerName = (props: Props): React.ReactElement => {
                 'Invalid name',
               ).replace('_attribute_', t('NAME', 'Name')),
             }
-          
+
           }}
           defaultValue=""
         />
 
         {orientationState?.orientation === LANDSCAPE && submitButton}
       </Container>
-      
+
       {(orientationState?.orientation === PORTRAIT) && (
         <OSActions>
           {submitButton}
