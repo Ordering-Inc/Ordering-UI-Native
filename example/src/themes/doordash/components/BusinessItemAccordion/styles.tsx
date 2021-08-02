@@ -9,7 +9,7 @@ export const BIContainer = styled.View`
   opacity: 1;
 
   ${(props: any) => props.isClosed && css`
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.1);
   `}
 `
 
@@ -20,7 +20,9 @@ export const BIHeader = styled.TouchableOpacity`
   justify-content: space-between;
   position: relative;
   padding: 10px;
-  background-color: #F8F8F8;
+  border: 1px solid ${colors.border};
+  border-radius: 3px;
+  overflow: hidden;
 
   ${(props: any) => props.isClosed && css`
     background-color: rgba(0, 0, 0, 0.1);
@@ -47,10 +49,9 @@ export const BIContentInfo = styled.View`
 `
 
 export const BITotal = styled.View`
-  width: 25%;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  flex-direction: row;
 `
 
 export const BIActions = styled.View`

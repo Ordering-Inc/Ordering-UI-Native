@@ -1,7 +1,7 @@
 import React from 'react'
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import {ReviewOrder as ReviewOrderController} from '../themes/two/components'
+import {ReviewOrder as ReviewOrderController} from '../themes/doordash/components'
 import { Container } from '../layouts/Container';
 
 

@@ -20,7 +20,7 @@ export const CartContent = (props: any) => {
     <CCContainer>
       {isOrderStateCarts && carts?.length > 0 && (
         <>
-          <OText style={{ fontSize: 28 }}>
+          <OText style={{ fontSize: 14, fontWeight: '600', textAlign: 'center' }} lineHeight={21}>
             {carts.length > 1 ? t('CARTS', 'Carts') : t('CART', 'Cart')}
           </OText>
           {carts.map((cart: any) => (

@@ -1,5 +1,5 @@
 import React from 'react'
-import { BusinessesListing as BusinessListingController } from '../themes/two/components'
+import { BusinessesListing as BusinessListingController } from '../themes/doordash/components'
 import styled from 'styled-components/native'
 import { colors } from '../theme.json'
 

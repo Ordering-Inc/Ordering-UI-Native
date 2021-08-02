@@ -210,9 +210,9 @@ const CartUI = (props: any) => {
               isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
               borderColor={colors.primary}
               imgRightSrc={null}
-              textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+              textStyle={{ color: 'white', textAlign: 'center', flex: 1, fontWeight: '600' }}
               onClick={() => setOpenUpselling(true)}
-              style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}
+              style={{ width: '100%', height: 40, shadowOpacity: 0, flexDirection: 'row', justifyContent: 'center' }}
             />
           </CheckoutAction>
         )}

@@ -6,7 +6,7 @@ import { colors } from '../theme.json';
 const ContainerStyled = styled.ScrollView`
   flex: 1;
   ${(props: any) => !props.nopadding && css`
-    padding: ${Platform.OS === 'ios' ? '0px 20px 20px' : '20px'};
+    padding: ${Platform.OS === 'ios' ? '0px 40px 20px' : '40px'};
   `}
   background-color: ${colors.backgroundPage};
 `;

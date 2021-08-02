@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { HomePage } from '../themes/two/components';
-import { colors } from '../themes/two/theme.json';
+import { HomePage } from '../themes/doordash/components';
+import { colors } from '../themes/doordash/theme.json';
 
 export const Home = (props: any) => {
   const homeProps = {

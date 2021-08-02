@@ -244,6 +244,7 @@ export interface OrdersOptionParams {
   navigation?: any,
   loadOrders?: any,
   setOrderList?: any,
+  paddingHorizontal?: number,
   setOrdersLength?: ({activeOrdersLength, previousOrdersLength} : {activeOrdersLength: number, previousOrdersLength: number}) => void,
   ordersLength: {activeOrdersLength: number, previousOrdersLength: number}
 }
@@ -255,6 +256,7 @@ export interface ActiveOrdersParams {
   customArray?: Array<any>
   setScreen?: any,
   screen?: any,
+  padding?: number,
   loadMoreOrders?: () => {},
   onNavigationRedirect?: (route: string, params?: any) => {}
 }

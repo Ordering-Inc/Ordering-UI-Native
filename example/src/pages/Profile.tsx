@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
-import { UserProfileForm as ProfileController } from '../themes/two/components';
+import { UserProfileForm as ProfileController } from '../themes/doordash/components';
 import { Container } from '../layouts/Container'
 
 const KeyboardView = styled.KeyboardAvoidingView`
@@ -27,7 +27,7 @@ const Profile = (props: Props) => {
         enabled
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <Container>
+        <Container style={{paddingLeft: 0, paddingRight: 0}}>
           <ProfileController {...profileProps} />
         </Container>
       </KeyboardView>

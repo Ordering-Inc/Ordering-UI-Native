@@ -5,7 +5,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
-import { colors, images } from '../themes/two/theme.json'
+import { colors, images } from '../themes/doordash/theme.json'
 import { OIcon, OText } from '../components/shared'
 
 import BusinessList from '../pages/BusinessesListing'

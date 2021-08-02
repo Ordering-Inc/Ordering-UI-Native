@@ -1,5 +1,5 @@
 import React from 'react'
-import { OrderDetails as OrderDetailsController } from '../themes/two/components'
+import { OrderDetails as OrderDetailsController } from '../themes/doordash/components'
 import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 
 const OrderDetails = ({ navigation, route } : any) => {

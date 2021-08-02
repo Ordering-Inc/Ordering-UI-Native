@@ -38,7 +38,7 @@
 	},
 	"colors": {
 	  "primary": "#EB1700",
-	  "primaryContrast": "#FFF",
+	  "primaryContrast": "#FFF0ED",
 	  "secundary": "#EFEFEF",
 	  "secundaryContrast": "#000",
 	  "disabled": "#B1BCCC",
@@ -134,7 +134,8 @@
 		 "plus": "",
 		 "minus": "",
 		 "pencil_line": "",
-		 "share_fill": ""
+		 "share_fill": "",
+		 "home": ""
 	  },
 	  "order": {
 		 "status0": "",

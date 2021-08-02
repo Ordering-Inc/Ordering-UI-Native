@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { colors } from '../../theme.json';
 
 export const UDForm = styled.View`
   display: flex;
@@ -29,3 +30,10 @@ export const UDLoader = styled.View`
 export const WrapperPhone = styled.View`
   margin-bottom: 25px;
 `
+export const InputWrap = styled.View`
+	flex-direction: row;
+	align-items: center;
+	padding-vertical: 4px;
+	border-bottom-width: 1px;
+	border-bottom-color: ${colors.border};
+`;

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useApi, useEvent } from 'ordering-components/native'
-import { BusinessProductsListing as BusinessProductsListController } from '../themes/two/components';
+import { BusinessProductsListing as BusinessProductsListController } from '../themes/doordash/components';
 import styled from 'styled-components/native'
 import { colors } from '../theme.json'
 

@@ -2,12 +2,14 @@ import styled from 'styled-components/native'
 import { colors } from '../../theme.json'
 
 export const Card = styled.View`
-  border: 1px solid ${colors.backgroundGray};
+  border: 1px solid ${colors.border};
   flex: 1;
   padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 20px;
+  margin-bottom: 24px;
+  border-radius: 2px;
   flex-direction: row;
+  min-height: 97px;
+  height: 97px;
 `
 
 export const Logo = styled.View`
@@ -21,13 +23,13 @@ export const Information = styled.View`
 `
 
 export const MyOrderOptions = styled.View`
-  flex-direction: column;
-  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
 `
 
 export const Status = styled.View`
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 100px;
 `
 

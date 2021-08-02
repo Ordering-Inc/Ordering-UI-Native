@@ -1,6 +1,6 @@
 import React from 'react'
 import { useConfig } from 'ordering-components/native'
-import { MomentOption as MomentOptionController } from '../themes/two/components'
+import { MomentOption as MomentOptionController } from '../themes/doordash/components'
 const MomentOption = ({ navigation, props }: any) => {
   const [{ configs }] = useConfig()
   const limitDays = configs?.max_days_preorder?.value
