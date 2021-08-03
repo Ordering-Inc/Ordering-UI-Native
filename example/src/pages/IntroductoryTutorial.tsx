@@ -69,12 +69,13 @@ const IntroductoryTutorial = ({ navigation, route }: any)  => {
       fontSize: 17,
       paddingRight: '2%',
       paddingLeft: '2%',
+      top: '4%',
     },
     title: {
+      top: '2%',
       fontSize: 25,
       color: theme.colors.colorTextTutorial,
       textAlign: 'center',
-      bottom: '3%',
     },
     buttonCircle: {
       top: '15%',
@@ -86,7 +87,7 @@ const IntroductoryTutorial = ({ navigation, route }: any)  => {
     },
     tutorialText: {
       fontSize: 18,
-      fontWeight: '200',
+      fontWeight: '300',
       color: theme.colors.primary
     }
   });
