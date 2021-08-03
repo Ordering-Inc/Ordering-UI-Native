@@ -274,6 +274,21 @@ export interface PreviousOrdersParams {
   handleReorder?: (order: any) => {};
   onNavigationRedirect?: (route: string, params?: any) => {};
 }
+
+export interface PreviousMessagesParams {
+  orders?: any;
+  pagination?: any;
+  getOrderStatus?: any;
+  orderID?: number;
+  reorderLoading?: boolean;
+  messages?: any;
+  setMessages?: (state?: any) => {};
+  tabsFilter?: any;
+  loadMoreOrders?: (status: any) => {};
+  loadMessages?: (id: any) => {};
+  handleReorder?: (order: any) => {};
+  onNavigationRedirect?: (route: string, params?: any) => {};
+}
 export interface OrderDetailsParams {
   navigation?: any;
   messagesReadList?: any;
@@ -321,7 +336,7 @@ export interface MessagesParams {
   handleSend?: () => {};
   setImage?: (image: string | null) => {};
   setMessage?: (comment: string) => {};
-  setMessages?: () => {};
+  setMessages?: (state?: any) => {};
   readMessages?: () => {};
 }
 export interface ViewInterface {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { OText, OIconButton } from '../shared';
-import { StyleSheet, View, Platform } from 'react-native';
+import { StyleSheet, View, Platform, Alert } from 'react-native';
 import {
   Content,
   OrderCustomer,
@@ -29,7 +29,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
   const [, t] = useLanguage();
   const [{ configs }] = useConfig();
   const [state, setState] = useState({
-    selectedPrinter: null,
+    selectedPrinter: { url: undefined },
   });
 
   const theme = useTheme();
@@ -215,14 +215,14 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
   // @NOTE iOS Only
   const selectPrinter = async () => {
-    const selectedPrinter = await RNPrint.selectPrinter({ x: 100, y: 100 });
+    const selectedPrinter = await RNPrint.selectPrinter({ x: '100', y: '100' });
     setState({ selectedPrinter });
   };
 
   // @NOTE iOS Only
   const silentPrint = async () => {
     if (!state?.selectedPrinter) {
-      alert('Must Select Printer First');
+      Alert.alert('Must Select Printer First');
     }
 
     const jobName = await RNPrint.print({

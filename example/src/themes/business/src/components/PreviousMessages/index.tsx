@@ -5,36 +5,33 @@ import { useLanguage, useUtils } from 'ordering-components/native';
 import { OIcon, OText, OModal } from '../shared';
 import { Card, Logo, Information } from './styles';
 import { useTheme } from 'styled-components/native';
-import { PreviousOrdersParams } from '../../types';
+import { PreviousMessagesParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
 import { Chat } from '../Chat';
 
-export const PreviousMessages = (props: PreviousOrdersParams) => {
+export const PreviousMessages = (props: PreviousMessagesParams) => {
   const { orders, messages, setMessages, loadMessages } = props;
 
   const [, t] = useLanguage();
   const theme = useTheme();
   const [{ parseDate, optimizeImage }] = useUtils();
-  const [order, setOrder] = useState({});
 
-  const [messageModal, setMessageModal] = useState(1);
+  const [order, setOrder] = useState({});
+  const [messageModal, setMessageModal] = useState(undefined);
   const [openModal, setOpenModal] = useState(false);
 
   const handleCloseModal = () => {
     setMessages && setMessages({ ...messages, messages: [] });
-    setOpenModal(!openModal);
+    setOpenModal(false);
   };
 
-  const handlePressOrder = (uuid: number) => {
-    if (messages) {
-      loadMessages && loadMessages(uuid);
-      const orderToMessage = orders.find(
-        (ordermap: any) => ordermap.id === uuid,
-      );
-      setOrder(orderToMessage);
-      setOpenModal(!openModal);
-      setMessageModal(uuid);
-    }
+  const handlePressOrder = (order: any) => {
+    const uuid = order?.id;
+
+    loadMessages && loadMessages(uuid);
+    setOrder(order);
+    setMessageModal(uuid);
+    setOpenModal(true);
   };
 
   const getOrderStatus = (s: string) => {
@@ -242,16 +239,16 @@ export const PreviousMessages = (props: PreviousOrdersParams) => {
       <Spinner visible={messages?.loading} />
 
       <ScrollView style={{ height: '80%' }}>
-        {orders.map((order: any) => (
+        {orders?.map((order: any) => (
           <TouchableOpacity
-            key={order.id}
-            onPress={() => handlePressOrder(order.id)}
+            key={order?.id}
+            onPress={() => handlePressOrder(order)}
             style={styles.cardButton}>
-            <Card key={order.id}>
-              {!!order.business?.logo && (
+            <Card key={order?.id}>
+              {!!order?.business?.logo && (
                 <Logo>
                   <OIcon
-                    url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
+                    url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
                     style={styles.icon}
                   />
                 </Logo>
@@ -259,18 +256,18 @@ export const PreviousMessages = (props: PreviousOrdersParams) => {
 
               <Information>
                 <OText numberOfLines={1} style={styles.title}>
-                  {order.business?.name}
+                  {order?.business?.name}
                 </OText>
 
                 <OText style={styles.date} numberOfLines={1}>
-                  Order No.{order.id + ' · '}
+                  {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
                   {order?.delivery_datetime_utc
                     ? parseDate(order?.delivery_datetime_utc)
                     : parseDate(order?.delivery_datetime, { utc: false })}
                 </OText>
 
                 <OText style={styles.orderType} mRight={5} numberOfLines={1}>
-                  {getOrderStatus(order.status)?.value}
+                  {getOrderStatus(order?.status)?.value}
                 </OText>
               </Information>
             </Card>
@@ -279,16 +276,16 @@ export const PreviousMessages = (props: PreviousOrdersParams) => {
 
         {openModal && (
           <OModal
-            open={openModal}
+            open={openModal && !!messages?.messages && !messages?.loading}
             title={`Order No. ${messageModal}`}
             order={messageModal}
             entireModal
             onClose={() => handleCloseModal()}>
             <Chat
               type={USER_TYPE.BUSINESS}
+              order={order}
               orderId={messageModal}
               messages={messages}
-              order={order}
               setMessages={setMessages}
             />
           </OModal>

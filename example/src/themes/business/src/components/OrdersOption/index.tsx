@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Pressable, StyleSheet, ScrollView } from 'react-native';
+import {
+  View,
+  Pressable,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import { OrderList, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -20,8 +26,18 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     onNavigationRedirect,
   } = props;
 
+  const [orientation, setOrientation] = useState(
+    Dimensions.get('window').width < Dimensions.get('window').height
+      ? 'Portrait'
+      : 'Landscape',
+  );
+  const [windowsWidth, setWindowsWidth] = useState(
+    parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
+  );
+
   const theme = useTheme();
   const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
+  const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
   const [, t] = useLanguage();
 
   const { loading, error, orders: values } = orderList;
@@ -131,6 +147,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       tags.some(tag => tag === order.status),
     );
 
+    if (JSON.stringify(tags) === JSON.stringify(tabs[3].tags)) {
+      scrollRefTab.current?.scrollToEnd({ animated: true });
+    }
+
+    if (JSON.stringify(tags) === JSON.stringify(tabs[0].tags)) {
+      scrollRefTab.current?.scrollTo({ animated: true });
+    }
+
     scrollRef.current?.scrollTo({
       y: 0,
       animated: true,
@@ -167,9 +191,17 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     loadOrders &&
       loadOrders(
         true,
-        tabsFilter,
+        tagsToggle,
         pagination.pageSize * pagination.currentPage <= 50,
       );
+  };
+
+  const handleLoadMore = () => {
+    if (ordersToShow.length !== 0) {
+      loadMoreOrders && loadMoreOrders(tagsToggle);
+    } else {
+      handleReload();
+    }
   };
 
   const getOrderStatus = (key: number) => {
@@ -189,6 +221,18 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       setReload(!reload);
     }
   }, [loading]);
+
+  Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+    setWindowsWidth(
+      parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
+    );
+
+    if (width < height) {
+      setOrientation('Portrait');
+    } else {
+      setOrientation('Landscape');
+    }
+  });
 
   const styles = StyleSheet.create({
     header: {
@@ -212,6 +256,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       fontWeight: 'normal',
       fontSize: 14,
       marginBottom: 10,
+      paddingLeft: 8,
+      paddingRight: 8,
     },
     tagsContainer: {
       marginBottom: 25,
@@ -224,7 +270,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     },
     pressable: {
       flex: 1,
-      minWidth: 75,
+      minWidth: 88,
       alignItems: 'center',
     },
     loadButton: {
@@ -267,34 +313,40 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       </View>
 
       <FiltersTab>
-        <TabsContainer>
-          {tabs.map(tab => (
-            <Pressable
-              key={tab.key}
-              style={styles.pressable}
-              onPress={() => handleChangeTab(tab.tags)}>
-              <OText
-                style={styles.tab}
-                color={
-                  JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
-                    ? theme.colors.textGray
-                    : theme.colors.unselectText
-                }>
-                {tab.text}
-              </OText>
-
-              <View
-                style={{
-                  width: '100%',
-                  borderBottomColor:
+        <ScrollView
+          ref={scrollRefTab}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal>
+          <TabsContainer width={windowsWidth - 42}>
+            {tabs.map(tab => (
+              <Pressable
+                key={tab.key}
+                style={styles.pressable}
+                onPress={() => handleChangeTab(tab.tags)}>
+                <OText
+                  style={styles.tab}
+                  color={
                     JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
                       ? theme.colors.textGray
-                      : theme.colors.tabBar,
-                  borderBottomWidth: 2,
-                }}></View>
-            </Pressable>
-          ))}
-        </TabsContainer>
+                      : theme.colors.unselectText
+                  }>
+                  {tab.text}
+                </OText>
+
+                <View
+                  style={{
+                    width: '100%',
+                    borderBottomColor:
+                      JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
+                        ? theme.colors.textGray
+                        : theme.colors.tabBar,
+                    borderBottomWidth: 2,
+                  }}></View>
+              </Pressable>
+            ))}
+          </TabsContainer>
+        </ScrollView>
       </FiltersTab>
 
       <View>
@@ -354,7 +406,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                     marginBottom: 10,
                   }}>
                   <PlaceholderLine
-                    width={22}
+                    width={orientation === 'Portrait' ? 22 : 11}
                     height={74}
                     style={{
                       marginRight: 20,
@@ -377,7 +429,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {pagination.totalPages &&
         pagination.currentPage < pagination.totalPages && (
           <OButton
-            onClick={() => loadMoreOrders && loadMoreOrders(tabsFilter)}
+            onClick={handleLoadMore}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
             imgRightSrc={null}
             textStyle={styles.loadButtonText}

@@ -32,7 +32,7 @@ import {
   AssignDriver,
 } from './styles';
 
-import { OButton, OIcon, OModal, OText, OIconButton } from '../shared';
+import { OButton, OModal, OText, OIconButton } from '../shared';
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { OrderDetailsParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
@@ -482,14 +482,22 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <Actions>
                 <OIconButton
                   icon={theme.images.general.map}
-                  iconStyle={{ width: 20, height: 20 }}
+                  iconStyle={{
+                    width: 20,
+                    height: 20,
+                    tintColor: theme.colors.backArrow,
+                  }}
                   borderColor={theme.colors.clear}
-                  style={{ maxWidth: 40 }}
+                  style={{ maxWidth: 40, left: 5 }}
                   onClick={() => handleViewMapView()}
                 />
                 <OIconButton
                   icon={theme.images.general.messages}
-                  iconStyle={{ width: 20, height: 20 }}
+                  iconStyle={{
+                    width: 20,
+                    height: 20,
+                    tintColor: theme.colors.backArrow,
+                  }}
                   borderColor={theme.colors.clear}
                   style={{ maxWidth: 40 }}
                   onClick={() => handleOpenMessagesForBusiness()}

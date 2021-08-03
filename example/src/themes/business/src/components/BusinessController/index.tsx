@@ -29,7 +29,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
   const handleSwitch = () => {
     updateBusiness &&
-      updateBusiness(business.id, { enabled: !business.enabled });
+      updateBusiness(business?.id, { enabled: !business?.enabled });
   };
 
   const { loading } = businessState;
@@ -59,8 +59,9 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
   return (
     <>
       <Spinner visible={loading} />
+
       {business && (
-        <Card key={business.id}>
+        <Card key={business?.id}>
           {!!business?.logo && (
             <Logo>
               <OIcon
@@ -75,6 +76,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
               <OText style={styles.title} numberOfLines={1}>
                 {business?.name}
               </OText>
+
               <ToggleSwitch
                 isOn={business?.enabled}
                 onColor={theme.colors.primary}

@@ -1,25 +1,23 @@
 import React, { useState } from 'react';
 import { View, Animated } from 'react-native';
-import { useUtils, useLanguage } from 'ordering-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { useUtils, useLanguage } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 import {
   Accordion,
   AccordionSection,
-  ProductInfo,
-  ProductQuantity,
+  // ProductInfo,
+  // ProductQuantity,
   ContentInfo,
-  ProductImage,
+  // ProductImage,
   AccordionContent,
   ProductOptionsList,
   ProductOption,
   ProductSubOption,
   ProductComment,
 } from './styles';
-import { OIcon, OText, OAlert } from '../shared';
-
+import { OText, OAlert } from '../shared';
 import { ProductItemAccordionParams } from '../../types';
-import { useTheme } from 'styled-components/native';
 
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const {

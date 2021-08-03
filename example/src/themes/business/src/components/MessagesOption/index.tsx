@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet, Dimensions } from 'react-native';
 import { OrderList, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -44,6 +44,11 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
 
   const [tabsFilter, setTabsFilter] = useState(tabs[0].tags);
   const [tagsFilter, setTagsFilter] = useState(tags.map(value => value.key));
+  const [orientation, setOrientation] = useState(
+    Dimensions.get('window').width < Dimensions.get('window').height
+      ? 'Portrait'
+      : 'Landscape',
+  );
 
   const getTagFilter = (key: number) => {
     return tags.find(value => value.key === key)?.text;
@@ -60,6 +65,14 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       setTagsFilter(tagsFilter.concat(key));
     }
   };
+
+  Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+    if (width < height) {
+      setOrientation('Portrait');
+    } else {
+      setOrientation('Landscape');
+    }
+  });
 
   const styles = StyleSheet.create({
     header: {
@@ -212,7 +225,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
                     marginBottom: 10,
                   }}>
                   <PlaceholderLine
-                    width={22}
+                    width={orientation === 'Portrait' ? 22 : 11}
                     height={74}
                     style={{
                       marginRight: 20,

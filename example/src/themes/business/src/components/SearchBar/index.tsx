@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { OInput, OButton, OIconButton } from '../shared';
-import { useLanguage } from 'ordering-components/native';
 import Icon from 'react-native-vector-icons/Feather';
+import { useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
+import { OInput, OButton, OIconButton } from '../shared';
 
 export const SearchBar = (props: any) => {
   const {
@@ -75,22 +75,26 @@ export const SearchBar = (props: any) => {
         style={styles.inputStyle}
         placeholder={placeholder}
         returnKeyType="done"
+        blurOnSubmit
       />
+
       {isCancelButtonShow && (
         <OButton
           imgRightSrc=""
           text={t('CANCEL', 'Cancel')}
-          bgColor="transparent"
+          bgColor={theme.colors.clear}
           borderColor={theme.colors.lightGray}
           style={styles.buttonStyle}
           onClick={onCancel || handleClear}
         />
       )}
+
       {isCancelXButtonShow && (
         <TouchableOpacity onPress={onCancel || handleClear}>
           <Icon name="x-circle" size={22} />
         </TouchableOpacity>
       )}
+
       <OIconButton
         icon={theme.images.general.search}
         borderColor={theme.colors.clear}

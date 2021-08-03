@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
+  ToastType,
+  useToast,
   UserFormDetails as UserProfileController,
   useSession,
   useLanguage,
-  ToastType,
-  useToast
 } from 'ordering-components/native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -15,7 +15,7 @@ import { LogoutButton } from '../LogoutButton';
 import { LanguageSelector } from '../LanguageSelector';
 import { UserFormDetailsUI } from '../UserFormDetails';
 import { useTheme } from 'styled-components/native';
-import { OIcon, OIconButton, OText } from '../../components/shared';
+import { OIcon, OIconButton } from '../../components/shared';
 import { CenterView, Actions } from './styles';
 import NavBar from '../NavBar';
 
@@ -24,11 +24,11 @@ const ProfileUI = (props: ProfileParams) => {
     props;
 
   const [{ user }] = useSession();
-  const [, t] = useLanguage();
+  const [state, t] = useLanguage();
   const [, { showToast }] = useToast();
-  const { handleSubmit, errors, setValue, control } = useForm();
-
+  const { handleSubmit, errors } = useForm();
   const theme = useTheme();
+
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
     phone: {
@@ -148,6 +148,7 @@ const ProfileUI = (props: ProfileParams) => {
           fontSize: 26,
         }}
       />
+
       <CenterView>
         <OIcon
           url={user?.photo}
@@ -156,6 +157,7 @@ const ProfileUI = (props: ProfileParams) => {
           height={120}
           style={{ borderRadius: 2 }}
         />
+
         <OIconButton
           icon={theme.images.general.camera}
           borderColor={theme.colors.clear}
@@ -164,7 +166,8 @@ const ProfileUI = (props: ProfileParams) => {
           onClick={() => handleImagePicker()}
         />
       </CenterView>
-      <Spinner visible={formState?.loading} />
+
+      <Spinner visible={formState?.loading || state.loading} />
 
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         <UserFormDetailsUI
@@ -174,6 +177,7 @@ const ProfileUI = (props: ProfileParams) => {
           submitEvent={handleSubmit(onSubmit)}
         />
       </View>
+
       <Actions>
         <LanguageSelector />
         <LogoutButton />

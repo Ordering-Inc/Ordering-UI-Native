@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
+// import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ToastType, useToast } from 'ordering-components/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 
 const fadeDuration = 300;
 const bottomPosition = 70;
 
-export const Toast: React.FC = () => {
+export const OToast: React.FC = () => {
   const theme = useTheme();
   // const insets = useSafeAreaInsets();
   const [toastConfig, { hideToast }] = useToast();
