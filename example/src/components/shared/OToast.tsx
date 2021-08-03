@@ -49,13 +49,13 @@ export const Toast = () => {
   let backgroundColor;
   switch (type) {
     case ToastType.Info:
-      backgroundColor = '#6ba4ff';
+      backgroundColor = theme.colors.toastInfo || '#6BA4FF';
       break;
     case ToastType.Error:
-      backgroundColor = theme.colors.primary;
+      backgroundColor = theme.colors.toastError || '#D83520' ;
       break;
     case ToastType.Success:
-      backgroundColor = '#73bd24';
+      backgroundColor = theme.colors.toastSuccess || '#90C68E';
       break;
   }
 
