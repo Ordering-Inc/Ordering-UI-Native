@@ -5,6 +5,8 @@ export const FiltersTab = styled.View`
 `;
 
 export const TabsContainer = styled.View`
+  min-width: ${({ width }: { width: number }) => `${width}px`};
+  width: auto;
   display: flex;
   flex-direction: row;
 `;

@@ -5,8 +5,7 @@ import {
   useOrder,
 } from 'ordering-components/native';
 import { Platform, StyleSheet } from 'react-native';
-
-import { OIcon, OIconButton, OText, OButton } from '../../components/shared';
+import { OText } from '../../components/shared';
 import RNPickerSelect from 'react-native-picker-select';
 import { Container } from './styles';
 import { useTheme } from 'styled-components/native';
@@ -14,9 +13,10 @@ import { LanguageSelectorParams } from '../../types';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
+  const { languagesState, currentLanguage, handleChangeLanguage } = props;
+
   const [orderState] = useOrder();
   const [, t] = useLanguage();
-  const { languagesState, currentLanguage, handleChangeLanguage } = props;
   const theme = useTheme();
 
   const _languages = languagesState?.languages?.map((language: any) => {
@@ -26,6 +26,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
       inputLabel: language?.code.toUpperCase(),
     };
   });
+
   _languages &&
     _languages.sort((a: any, b: any) =>
       a.content > b.content ? 1 : b.content > a.content ? -1 : 0,
@@ -35,10 +36,10 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     inputAndroid: {
       color: theme.colors.secundaryContrast,
       borderWidth: 1,
-      borderColor: 'transparent',
+      borderColor: theme.colors.clear,
       borderRadius: 15,
       paddingHorizontal: 10,
-      backgroundColor: '#F8F9FA',
+      backgroundColor: theme.colors.inputDisabled,
       width: 296,
       height: 44,
     },
@@ -48,7 +49,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
       width: 296,
       height: 44,
       borderWidth: 1,
-      borderColor: 'transparent',
+      borderColor: theme.colors.clear,
       borderRadius: 15,
       paddingHorizontal: 10,
       backgroundColor: theme.colors.inputDisabled,
@@ -71,6 +72,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
           <OText color={theme.colors.textGray} mBottom={18} weight="bold">
             {t('LANGUAGE', 'Language')}
           </OText>
+
           <RNPickerSelect
             onValueChange={handleChangeLanguage}
             items={_languages || []}

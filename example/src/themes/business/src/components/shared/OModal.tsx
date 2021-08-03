@@ -1,18 +1,8 @@
 import * as React from 'react';
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  View,
-  TextStyle,
-} from 'react-native';
+import { Modal, StyleSheet, Text, SafeAreaView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import OIcon from './OIcon';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import OIconButton from './OIconButton';
 import { useTheme } from 'styled-components/native';
 
 interface Props {
@@ -79,6 +69,7 @@ const OModal = (props: Props): React.ReactElement => {
       borderBottomColor: '#e6e6e6',
     },
     titleGroups: {
+      alignItems: 'center',
       flexDirection: 'row',
     },
     titleIcons: {
@@ -97,8 +88,10 @@ const OModal = (props: Props): React.ReactElement => {
       shadowColor: theme.colors.shadow,
     },
     cancelBtn: {
-      marginRight: 10,
+      marginRight: 5,
       zIndex: 10000,
+      height: 30,
+      width: 20,
     },
     modalText: {
       fontFamily: 'Poppins',
@@ -191,12 +184,14 @@ const OModal = (props: Props): React.ReactElement => {
             {!customClose && (
               <View style={styles.titleSection}>
                 <View style={styles.titleGroups}>
-                  <MaterialIcon
-                    name="arrow-left"
-                    size={25}
+                  <OIconButton
+                    icon={theme.images.general.arrow_left}
+                    iconStyle={{ width: 23, height: 23 }}
+                    borderColor={theme.colors.clear}
                     style={styleCloseButton || styles.cancelBtn}
-                    onPress={onClose}
+                    onClick={onClose}
                   />
+
                   <Text style={styles.modalText}>{title}</Text>
                 </View>
                 <View style={styles.titleGroups}>

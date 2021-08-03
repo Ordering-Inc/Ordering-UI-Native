@@ -36,6 +36,9 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
     },
     btnTextStyle: {
       fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 18,
       position: 'absolute',
       width: '100%',
       paddingBottom: 5,
@@ -64,16 +67,19 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
         <OText color={theme.colors.white} size={16} mLeft={20}>
           {btnLeftValueShow ? btnLeftValue : ''}
         </OText>
+
         <OText
           style={styles.btnTextStyle}
           color={colorTxt1 ? colorTxt1 : theme.colors.white}
           size={16}>
           {btnText}
         </OText>
+
         <OText color={theme.colors.white} size={16} mRight={20}>
           {btnRightValueShow ? btnRightValue : ''}
         </OText>
       </Button>
+
       {secondButton && (
         <Button
           secondButton={secondButton}
@@ -89,12 +95,14 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
           <OText color={theme.colors.white} size={16} mLeft={20}>
             {btnLeftValueShow ? btnLeftValue : ''}
           </OText>
+
           <OText
             style={styles.btnTextStyle}
             color={theme.colors.white}
             size={16}>
             {secondBtnText}
           </OText>
+
           <OText color={theme.colors.white} size={16} mRight={20}>
             {btnRightValueShow ? btnRightValue : ''}
           </OText>

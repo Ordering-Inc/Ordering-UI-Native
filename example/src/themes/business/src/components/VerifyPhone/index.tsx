@@ -3,10 +3,8 @@ import { Pressable, StyleSheet, TextInput } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { getTraduction } from '../../utils';
-
 import { OText } from '../shared';
 import { useTheme } from 'styled-components/native';
-
 import {
   Container,
   CountDownContainer,

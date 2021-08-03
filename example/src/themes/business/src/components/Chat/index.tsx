@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
+  ToastType,
+  useToast,
   Messages as MessagesController,
   useSession,
   useUtils,
   useLanguage,
-  ToastType,
-  useToast
 } from 'ordering-components/native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
@@ -56,7 +56,7 @@ const ChatUI = (props: MessagesParams) => {
   const [{ user }] = useSession();
   const [{ parseDate }] = useUtils();
   const [, t] = useLanguage();
-  const [, { showToast }] = useToast()
+  const [, { showToast }] = useToast();
   const theme = useTheme();
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([]);
@@ -314,7 +314,7 @@ const ChatUI = (props: MessagesParams) => {
       createdAt: order?.created_at,
       system: true,
     };
-    messages.messages.map((message: any) => {
+    messages?.messages.map((message: any) => {
       let newMessage;
       if (
         message.type !== 0 &&
@@ -332,7 +332,7 @@ const ChatUI = (props: MessagesParams) => {
             _id: message.author.id,
             name: message.author.name,
             avatar:
-              message.author.id !== user.id && type === USER_TYPE.DRIVER
+              message.author.id !== user?.id && type === USER_TYPE.DRIVER
                 ? order?.driver?.photo
                 : order?.business?.logo,
           },
@@ -344,7 +344,7 @@ const ChatUI = (props: MessagesParams) => {
       newMessages = [...newMessages, newMessage];
     });
     setFormattedMessages([...newMessages.reverse()]);
-  }, [messages.messages.length]);
+  }, [messages?.messages?.length]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -665,9 +665,9 @@ const ChatUI = (props: MessagesParams) => {
         <GiftedChat
           messages={formattedMessages}
           user={{
-            _id: user.id,
-            name: user.name,
-            avatar: user.photo,
+            _id: user?.id,
+            name: user?.name,
+            avatar: user?.photo,
           }}
           onSend={onSubmit}
           onInputTextChanged={onChangeMessage}
@@ -681,11 +681,9 @@ const ChatUI = (props: MessagesParams) => {
           renderBubble={renderBubble}
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
-          messagesContainerStyle={{
-            paddingBottom: 80,
-          }}
+          messagesContainerStyle={{ paddingBottom: 80 }}
           showUserAvatar={true}
-          isLoadingEarlier={messages.loading}
+          isLoadingEarlier={messages?.loading}
           renderLoading={() => (
             <ActivityIndicator size="small" color={theme.colors.black} />
           )}

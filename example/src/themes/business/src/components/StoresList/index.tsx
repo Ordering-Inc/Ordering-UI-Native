@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ToastType,
   useToast,
@@ -7,7 +7,7 @@ import {
   BusinessList,
 } from 'ordering-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'styled-components/native';
 import { OText } from '../shared';
@@ -15,8 +15,6 @@ import { NotFoundSource } from '../NotFoundSource';
 import { SearchBar } from '../SearchBar';
 import { BusinessesListingParams } from '../../types';
 import { BusinessController } from '../BusinessController';
-
-const PIXELS_TO_SCROLL = 1100;
 
 const StoresListUI = (props: BusinessesListingParams) => {
   const {
@@ -30,12 +28,22 @@ const StoresListUI = (props: BusinessesListingParams) => {
     handleChangeSearch,
   } = props;
 
+  const { loading, error, businesses } = businessesList;
+
   const [, t] = useLanguage();
   const [orderState] = useOrder();
   const theme = useTheme();
   const [, { showToast }] = useToast();
 
-  const { loading, error, businesses } = businessesList;
+  const [loadBusinesses, setLoadBusinesses] = useState(loading);
+  const [orientation, setOrientation] = useState(
+    Dimensions.get('window').width < Dimensions.get('window').height
+      ? 'Portrait'
+      : 'Landscape',
+  );
+  const [windowsHeight, setWindowsHeight] = useState(
+    parseInt(parseFloat(String(Dimensions.get('window').height)).toFixed(0)),
+  );
 
   const handleScroll = ({ nativeEvent }: any) => {
     const y = nativeEvent.contentOffset.y;
@@ -44,7 +52,8 @@ const StoresListUI = (props: BusinessesListingParams) => {
       paginationProps.totalPages === paginationProps.currentPage
     );
 
-    if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
+    if (y + windowsHeight > height && !businessesList?.loading && hasMore) {
+      setLoadBusinesses(true);
       getBusinesses();
       showToast(ToastType.Info, 'loading more business');
     }
@@ -54,7 +63,23 @@ const StoresListUI = (props: BusinessesListingParams) => {
     if (error) {
       showToast(ToastType.Error, error);
     }
-  }, []);
+
+    if (loadBusinesses && !loading) {
+      setLoadBusinesses(false);
+    }
+  }, [loading]);
+
+  Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+    setWindowsHeight(
+      parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
+    );
+
+    if (width < height) {
+      setOrientation('Portrait');
+    } else {
+      setOrientation('Landscape');
+    }
+  });
 
   const styles = StyleSheet.create({
     container: {
@@ -96,12 +121,12 @@ const StoresListUI = (props: BusinessesListingParams) => {
             lazyLoad
             isCancelXButtonShow={!!searchValue}
             onCancel={() => handleChangeSearch('')}
-            placeholder={t('FIND_BUSINESS', 'Find a Business')}
+            placeholder={t('FIND_BUSINESS', 'Find a business')}
           />
         </View>
       </View>
 
-      {!loading && businesses.length === 0 && (
+      {!loading && businesses?.length === 0 && (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           image={theme.images.general.notFound}
@@ -120,13 +145,13 @@ const StoresListUI = (props: BusinessesListingParams) => {
           />
         ))}
 
-      {loading && (
+      {loadBusinesses && (
         <View>
           {[...Array(6)].map((item, i) => (
             <Placeholder key={i} Animation={Fade}>
               <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
                 <PlaceholderLine
-                  width={22}
+                  width={orientation === 'Portrait' ? 22 : 11}
                   height={74}
                   style={{
                     marginRight: 20,

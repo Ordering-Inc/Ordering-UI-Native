@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Image, ImageSourcePropType, Text, TextStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 import { normalize } from '../../providers/Responsive';

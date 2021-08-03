@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { useSession, useLanguage, ToastType, useToast } from 'ordering-components/native';
 import { useForm, Controller } from 'react-hook-form';
-
-import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
-
-import { OText, OButton, OInput } from '../shared';
+import {
+  ToastType,
+  useToast,
+  useSession,
+  useLanguage,
+} from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-
+import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
 import { PhoneInputNumber } from '../PhoneInputNumber';
+import { OText, OButton, OInput } from '../shared';
 import { sortInputFields } from '../../utils';
 
 export const UserFormDetailsUI = (props: any) => {
@@ -174,13 +176,13 @@ export const UserFormDetailsUI = (props: any) => {
 
   const styles = StyleSheet.create({
     btnOutline: {
-      backgroundColor: '#FFF',
+      backgroundColor: theme.colors.primaryContrast,
       color: theme.colors.primary,
     },
     inputStyle: {
       marginBottom: 25,
       borderWidth: 1,
-      borderColor: '#E9ECEF',
+      borderColor: theme.colors.tabBar,
       borderTopWidth: 0,
       borderRightWidth: 0,
       borderLeftWidth: 0,
@@ -202,11 +204,12 @@ export const UserFormDetailsUI = (props: any) => {
                   showField(field.code) && (
                     <React.Fragment key={field.id}>
                       <OText
-                        color="#344050"
+                        color={theme.colors.textGray}
                         weight="bold"
                         style={{ paddingHorizontal: 16 }}>
                         {t(field?.code.toUpperCase(), field?.name)}
                       </OText>
+
                       <Controller
                         key={field.id}
                         control={control}
@@ -287,6 +290,7 @@ export const UserFormDetailsUI = (props: any) => {
                     defaultCode={user?.country_phone_code || null}
                     onSubmitEditing={submitEvent}
                   />
+
                   {phoneUpdate && (
                     <OText
                       color={theme.colors.error}
@@ -299,12 +303,14 @@ export const UserFormDetailsUI = (props: any) => {
               )}
             </UDWrapper>
           )}
+
         {validationFields?.loading && (
           <UDLoader>
             <OText size={20}>{t('LOADING', 'Loading')}</OText>
           </UDLoader>
         )}
       </UDForm>
+
       {!hideUpdateButton && (
         <>
           {((formState &&

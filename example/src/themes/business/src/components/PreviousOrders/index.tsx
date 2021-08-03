@@ -80,7 +80,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
               </OText>
 
               <OText style={styles.date} numberOfLines={1}>
-                Order No.{order.id + ' · '}
+                {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
                 {order?.delivery_datetime_utc
                   ? parseDate(order?.delivery_datetime_utc)
                   : parseDate(order?.delivery_datetime, { utc: false })}

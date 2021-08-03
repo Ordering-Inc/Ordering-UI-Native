@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Content, Timer, TimeField, Header, Action, Comments } from './styles';
 import { Linking } from 'react-native';
-import { OText, OButton, OTextarea } from '../shared';
+import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { FloatingButton } from '../FloatingButton';
 import {
-  useToast,
   ToastType,
+  useToast,
   useLanguage,
   OrderChange as OrderChangeConTableoller,
 } from 'ordering-components/native';
@@ -17,7 +17,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const { navigation, route, orderState, updateStateOrder } = props;
   const [hour, setHour] = useState('00');
   const [min, setMin] = useState('00');
-  const [, { showToast }] = useToast()
+  const [, { showToast }] = useToast();
   const [comments, setComments] = useState('');
   const [, t] = useLanguage();
   const theme = useTheme();
@@ -143,28 +143,24 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   return (
     <>
       <Spinner visible={orderState?.loading} />
+
       {!orderState?.loading && (
         <>
           <Content>
             <Header>
-              <OButton
-                imgLeftSrc={theme.images.general.arrow_left}
-                imgRightSrc={null}
+              <OIconButton
+                icon={theme.images.general.arrow_left}
+                borderColor={theme.colors.clear}
+                iconStyle={{ width: 20, height: 20 }}
                 style={{
-                  borderWidth: 0,
-                  backgroundColor: theme.colors.backgroundLight,
-                  borderColor: theme.colors.primary,
-                  shadowColor: theme.colors.primary,
-                  alignItems: 'flex-start',
-                  justifyContent: 'flex-start',
-                  paddingLeft: 0,
-                  height: 14,
-                  width: 14,
-                  marginBottom: 40,
+                  maxWidth: 40,
+                  height: 35,
+                  justifyContent: 'flex-end',
+                  marginBottom: 30,
                 }}
                 onClick={() => handleArrowBack()}
-                imgLeftStyle={{ tintColor: theme.colors.backArrow }}
               />
+
               <OText size={20} color={theme.colors.textGray} weight="bold">
                 {route.action === 'accept'
                   ? `${t('PREPARATION_TIME', 'Preparation time')}:`
@@ -231,7 +227,9 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                   value={hour}
                   onChangeText={handleChangeHour}
                 />
+
                 <OText size={55}>:</OText>
+
                 <TimeField
                   keyboardType="numeric"
                   placeholder={'00'}
@@ -254,6 +252,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
               </Comments>
             )}
           </Content>
+
           <Action>
             <FloatingButton
               firstButtonClick={() =>

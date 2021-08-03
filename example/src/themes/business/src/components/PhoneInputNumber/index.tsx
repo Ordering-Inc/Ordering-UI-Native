@@ -4,7 +4,6 @@ import { StyleSheet } from 'react-native';
 import { useLanguage, useConfig } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Wrapper } from './styles';
-
 import { PhoneInputParams } from '../../types';
 import { OText } from '../shared';
 import { transformCountryCode } from '../../utils';
