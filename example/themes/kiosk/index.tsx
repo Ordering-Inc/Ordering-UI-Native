@@ -56,6 +56,12 @@ import { Container } from './src/layouts/Container'
 import { SafeAreaContainer } from './src/layouts/SafeAreaContainer'
 import GridContainer from './src/layouts/GridContainer'
 
+// providers
+import {
+  CartBottomSheetProvider,
+  useCartBottomSheet
+} from './src/providers/CartBottomSheetProvider'
+
 export {
   BusinessItemAccordion,
   BusinessMenu,
@@ -109,5 +115,8 @@ export {
   // layouts
   Container,
   SafeAreaContainer,
-  GridContainer
+  GridContainer,
+  // providers
+  CartBottomSheetProvider,
+  useCartBottomSheet
 }

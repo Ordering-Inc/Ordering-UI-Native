@@ -15,7 +15,7 @@ import { CartContent } from '../../components/CartContent';
 
 import { OText } from '../../components/shared';
 import { PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
-import { useCartBottomSheet } from '../../../../../src/providers/CartBottomSheetProvider';
+import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider'
 import { useTheme } from 'styled-components/native';
 
 const BusinessMenu = (props:any): React.ReactElement => {
@@ -23,11 +23,11 @@ const BusinessMenu = (props:any): React.ReactElement => {
   const [, t] = useLanguage()
   const [{ parsePrice }] = useUtils()
   const [orientationState] = useDeviceOrientation();
-  const {
+  const [
     bottomSheetVisibility,
     showCartBottomSheet,
     hideCartBottomSheet
-  } = useCartBottomSheet();
+  ] = useCartBottomSheet();
 
   const { navigation, businessProductsListingProps } = props;
 
@@ -104,11 +104,11 @@ const BusinessMenu = (props:any): React.ReactElement => {
 
           <BusinessProductsListing
             { ...businessProductsListingProps }
-          /> 
+          />
         </Container>
       </View>
 
-      {bottomSheetVisibility &&  
+      {bottomSheetVisibility &&
         (<View
           style={{
             flex: bottomSheetVisibility && orientationState?.orientation === PORTRAIT ? 0 : 0.8,

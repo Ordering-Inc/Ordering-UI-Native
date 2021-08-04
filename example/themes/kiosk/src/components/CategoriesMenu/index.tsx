@@ -16,7 +16,7 @@ import { Category } from '../../types';
 import { CartContent } from '../../components/CartContent';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
-import { useCartBottomSheet } from '../../../../../src/providers/CartBottomSheetProvider';
+import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
 import { useTheme } from 'styled-components/native';
 
 const CategoriesMenu = (props: any): React.ReactElement => {
@@ -25,7 +25,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
     navigation,
     route,
   } = props;
-  
+
   const {
     category,
     categories,
@@ -38,22 +38,22 @@ const CategoriesMenu = (props: any): React.ReactElement => {
   const [curIndexCateg, setIndexCateg] = useState(categories.indexOf(category));
   const [{ parsePrice }] = useUtils();
   const [orientationState] = useDeviceOrientation();
-  const {
+  const [
     bottomSheetVisibility,
     showCartBottomSheet,
     hideCartBottomSheet
-  } = useCartBottomSheet();
-  
+  ] = useCartBottomSheet();
+
   const onChangeTabs = (idx: number) => setIndexCateg(idx);
-  
+
   const goToBack = () => navigation.goBack()
-  
+
   const [{ carts }] = useOrder();
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || [];
   const VISIBLE_CART_BOTTOM_SHEET_HEIGHT = orientationState?.dimensions?.height * (orientationState.orientation === PORTRAIT ? 0.5 : 1);
 
   let cart: any;
-  
+
   if (cartsList?.length > 0) {
     cart = cartsList?.find((item: any) => item.business_id == businessId);
   }

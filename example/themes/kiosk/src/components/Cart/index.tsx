@@ -23,7 +23,7 @@ import NavBar from '../NavBar';
 import { CouponControl } from '../CouponControl';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation} from "../../../../../src/hooks/DeviceOrientation";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useCartBottomSheet } from '../../../../../src/providers/CartBottomSheetProvider';
+import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
 
 const CartUI = (props: any) => {
   const {
@@ -47,14 +47,14 @@ const CartUI = (props: any) => {
   const [openProduct, setModalIsOpen] = useState(false)
   const [curProduct, setCurProduct] = useState<any>(null)
   const [orientationState] = useDeviceOrientation();
-  const { hideCartBottomSheet } = useCartBottomSheet();
+  const [, , hideCartBottomSheet] = useCartBottomSheet();
 
   const selectedOrderType = orderState?.options?.type;
 
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
 
-  const handleDeleteClick = (product: any) => {    
+  const handleDeleteClick = (product: any) => {
     removeProduct(product, cart)
   }
 

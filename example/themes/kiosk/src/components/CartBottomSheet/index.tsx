@@ -19,7 +19,7 @@ import { Cart as TypeCart } from '../../types';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
-import { useCartBottomSheet } from '../../../../../src/providers/CartBottomSheetProvider';
+import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
 import { useTheme } from 'styled-components/native';
 
 const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | null => {
@@ -45,7 +45,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
   const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
-  const { hideCartBottomSheet } = useCartBottomSheet();
+  const [, , hideCartBottomSheet] = useCartBottomSheet();
 
   const selectedOrderType = orderState?.options?.type;
 
