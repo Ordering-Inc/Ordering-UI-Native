@@ -16,14 +16,14 @@ import { OSBill, OSCoupon, OSTable } from '../OrderSummary/styles';
 
 import { OButton, OIcon, OModal, OText } from '../shared';
 import { ProductForm } from '../ProductForm';
-import { verifyDecimals } from '../../../../../utils';
+import { verifyDecimals } from '../../../../../src/utils';
 import { Cart as TypeCart } from '../../types';
 import CartItem from '../CartItem';
 import NavBar from '../NavBar';
 import { CouponControl } from '../CouponControl';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation} from "../../../../../src/hooks/DeviceOrientation";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useCartBottomSheet } from '../../../../../providers/CartBottomSheetProvider';
+import { useCartBottomSheet } from '../../../../../src/providers/CartBottomSheetProvider';
 
 const CartUI = (props: any) => {
   const {

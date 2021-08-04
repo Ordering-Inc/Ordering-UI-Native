@@ -15,7 +15,7 @@ import { CartContent } from '../../components/CartContent';
 
 import { OText } from '../../components/shared';
 import { PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
-import { useCartBottomSheet } from '../../../../../providers/CartBottomSheetProvider';
+import { useCartBottomSheet } from '../../../../../src/providers/CartBottomSheetProvider';
 import { useTheme } from 'styled-components/native';
 
 const BusinessMenu = (props:any): React.ReactElement => {

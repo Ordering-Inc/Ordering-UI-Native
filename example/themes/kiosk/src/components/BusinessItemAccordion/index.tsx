@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { useOrder, useLanguage, useUtils, useEvent } from 'ordering-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { convertHoursToMinutes } from '../../../../../utils';
+import { convertHoursToMinutes } from '../../../../../src/utils';
 
 import {
   BIContainer,

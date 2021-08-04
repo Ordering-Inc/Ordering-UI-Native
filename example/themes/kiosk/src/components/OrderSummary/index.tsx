@@ -21,7 +21,7 @@ import { ProductItemAccordion } from '../ProductItemAccordion';
 import { CouponControl } from '../CouponControl';
 import { OModal, OText } from '../shared';
 import { ProductForm } from '../ProductForm';
-import { verifyDecimals } from '../../../../../utils';
+import { verifyDecimals } from '../../../../../src/utils';
 import { useTheme } from 'styled-components/native';
 
 

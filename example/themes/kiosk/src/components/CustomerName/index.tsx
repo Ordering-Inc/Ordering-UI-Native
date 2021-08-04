@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLanguage, ToastType, useToast } from 'ordering-components/native';
-import { _setStoreData } from '../../../../../providers/StoreUtil';
+import { _setStoreData } from '../../../../../src/providers/StoreUtil';
 
 import { OButton, OInput, OText } from '../shared';
 import { useForm, Controller } from 'react-hook-form';

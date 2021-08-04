@@ -19,7 +19,7 @@ import { Cart as TypeCart } from '../../types';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
-import { useCartBottomSheet } from '../../../../../providers/CartBottomSheetProvider';
+import { useCartBottomSheet } from '../../../../../src/providers/CartBottomSheetProvider';
 import { useTheme } from 'styled-components/native';
 
 const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | null => {

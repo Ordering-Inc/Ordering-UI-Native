@@ -16,7 +16,7 @@ import { Category } from '../../types';
 import { CartContent } from '../../components/CartContent';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
-import { useCartBottomSheet } from '../../../../../providers/CartBottomSheetProvider';
+import { useCartBottomSheet } from '../../../../../src/providers/CartBottomSheetProvider';
 import { useTheme } from 'styled-components/native';
 
 const CategoriesMenu = (props: any): React.ReactElement => {

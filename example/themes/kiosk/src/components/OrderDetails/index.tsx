@@ -19,7 +19,7 @@ import NavBar from '../../components/NavBar';
 import { OButton, OImage, OInput, OText } from '../../components/shared';
 import GridContainer from '../../layouts/GridContainer';
 import OptionSwitch, { Opt } from '../../components/shared/OOptionToggle';
-import { verifyDecimals } from '../../../../../utils'
+import { verifyDecimals } from '../../../../../src/utils'
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation'
 import { useTheme } from 'styled-components/native'
 
