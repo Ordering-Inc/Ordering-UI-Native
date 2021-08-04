@@ -84,7 +84,6 @@ import { ThemeProvider, useTheme } from './context/Theme';
 import { DeviceOrientationMethods } from './hooks/DeviceOrientation';
 
 // themes
-import ThemeKiosk from './themes/kiosk'
 import ThemeBusiness from './themes/business'
 // import ThemeUberEats from './themes/uberEats'
 
@@ -169,7 +168,6 @@ export {
   // hooks
   DeviceOrientationMethods,
   // themes
-  ThemeKiosk,
   ThemeBusiness,
   // ThemeUberEats
 }
