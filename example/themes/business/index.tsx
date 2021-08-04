@@ -40,7 +40,7 @@ import {
 import { Container } from './src/layouts/Container'
 import { SafeAreaContainer } from './src/layouts/SafeAreaContainer'
 
-export default {
+export {
     //Components
     AcceptOrRejectOrder,
     BusinessController,

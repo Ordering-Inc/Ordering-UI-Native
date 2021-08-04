@@ -49,7 +49,7 @@ import {
 // layouts
 import { Container } from './src/layouts/Container'
 
-export default {
+export {
   ActiveOrders,
   AddressDetails,
   AddressForm,

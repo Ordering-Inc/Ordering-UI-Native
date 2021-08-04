@@ -56,7 +56,7 @@ import { Container } from './src/layouts/Container'
 import { SafeAreaContainer } from './src/layouts/SafeAreaContainer'
 import GridContainer from './src/layouts/GridContainer'
 
-export default {
+export {
   BusinessItemAccordion,
   BusinessMenu,
   BusinessProductsListing,
