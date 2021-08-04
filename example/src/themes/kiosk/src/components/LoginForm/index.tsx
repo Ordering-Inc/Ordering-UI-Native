@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { useTheme } from 'styled-components/native';
 
@@ -12,8 +12,7 @@ import {
 
 import {
   WelcomeTextContainer,
-  LogoWrapper,
-  KeyboardView
+  LogoWrapper
 } from './styles';
 
 import { OText, OButton, OInput, OIcon } from '../shared';
@@ -22,12 +21,14 @@ import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../hooks/
 
 const LoginFormUI = (props: LoginParams) => {
   const {
+    loginButtonText,
+    forgotButtonText,
     formState,
     handleButtonLoginClick,
   } = props;
-  
+
   const theme = useTheme()
-  const {showToast} = useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const {control, handleSubmit, formState: {errors}} = useForm();
   const [orientationState] = useDeviceOrientation();
@@ -69,7 +70,9 @@ const LoginFormUI = (props: LoginParams) => {
     if (!formState.loading && formState.result?.error) {
       formState.result?.result && showToast(
         ToastType.Error,
-        formState.result?.result[0]
+        typeof formState.result?.result === 'string'
+          ? formState.result?.result
+          : formState.result?.result[0]
       )
     }
   }, [formState]);
@@ -93,7 +96,7 @@ const LoginFormUI = (props: LoginParams) => {
     </LogoWrapper>
   );
 
-  const controllers = (
+  const InputControllers = (
     <>
       <Controller
         control={control}
@@ -150,14 +153,16 @@ const LoginFormUI = (props: LoginParams) => {
 
       <OButton
         onClick={handleSubmit(onSubmit)}
-        text={t('LOGIN', 'Login')}
+        text={loginButtonText}
         imgRightSrc={null}
         isLoading={formState.loading}
+        style={{ borderRadius: 0 }}
+        textStyle={{ fontSize: 24 }}
       />
 
       <Pressable>
-        <OText size={14} mBottom={18} style={styles.forgotStyle}>
-          {t('FORGOT_PASSWORD', 'I forgot my password')}
+        <OText size={24} mBottom={18} style={styles.forgotStyle}>
+          {forgotButtonText}
         </OText>
       </Pressable>
     </>
@@ -187,96 +192,78 @@ const LoginFormUI = (props: LoginParams) => {
   );
 
   const note = (
-    <OText size={16} mBottom={18}>
+    <OText size={24} mBottom={18}>
       {t('IF_NOT_HAVE_ACCOUNT', 'If you don\'t have and account, please contact Ordering')}&nbsp;
-      <OText size={16} mBottom={18} color={theme.colors.skyBlue}>
+      <OText size={24} mBottom={18} color={theme.colors.skyBlue}>
         {t('SUPPORT_DEPARTMENT', 'support department')}
       </OText>
     </OText>
   )
 
   return (
-    <KeyboardView
-      enabled
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView
-        style={{ flex: 1 }}
+    <View>
+      <View
+        style={{
+          flexDirection: orientationState?.orientation === PORTRAIT ? 'column' : 'row',
+          height: orientationState?.dimensions?.height - 40,
+          alignItems: 'center',
+        }}
       >
+        {orientationState?.orientation === PORTRAIT && (
+          <View style={{ flexGrow: 1.5, justifyContent: 'center' }}>
+            {logo}
+          </View>
+        )}
 
         <View
           style={{
-            flexDirection: orientationState?.orientation === PORTRAIT ? 'column' : 'row',
-            height: orientationState?.dimensions?.height - 40,
-            alignItems: 'center',
+            paddingHorizontal: orientationState?.orientation === LANDSCAPE ? 30 : 0,
+            minWidth: orientationState?.orientation === PORTRAIT
+              ? orientationState?.dimensions?.width * 0.6
+              : orientationState?.dimensions?.width * 0.4,
+            flexGrow: orientationState?.orientation === LANDSCAPE
+              ? 0 : 0,
           }}
         >
-
-          {orientationState?.orientation === PORTRAIT && (
-            <View style={{ flexGrow: 1.5, justifyContent: 'center' }}>
-              {logo}
-            </View>
-          )}
-
-          <View
-            style={{
-              paddingHorizontal: orientationState?.orientation === LANDSCAPE ? 30 : 0,
-              minWidth: orientationState?.orientation === PORTRAIT
-                ? orientationState?.dimensions?.width * 0.6
-                : orientationState?.dimensions?.width * 0.4,
-              flexGrow: orientationState?.orientation === LANDSCAPE
-                ? 0 : 0,
-            }}
-          >
-
-            { welcome }
-
-            {orientationState?.orientation === LANDSCAPE && (
-              <View style={{
-                justifyContent: 'flex-end',
-                maxWidth: orientationState?.dimensions?.width * 0.4,
-              }}>
-                {note}
-              </View>
-            )}
-            
-          </View>
-
-          <View
-            style={{
-              paddingHorizontal: orientationState?.orientation === LANDSCAPE ? 30 : 0,
-              minWidth: orientationState?.orientation === PORTRAIT
-                ? orientationState?.dimensions?.width * 0.6
-                : orientationState?.dimensions?.width * 0.4,
-              flexGrow: orientationState?.orientation === LANDSCAPE
-                ? 10 : 1,
-            }}
-          >
-
-            {orientationState?.orientation === LANDSCAPE && (
-              <View style={{ marginBottom: orientationState?.dimensions?.height * 0.05 }}>
-                {logo}
-              </View>
-            )}
-
-            {controllers}
-            
-          </View>
-          
-          {orientationState?.orientation === PORTRAIT && (
+          { welcome }
+          {orientationState?.orientation === LANDSCAPE && (
             <View style={{
-              flexGrow: 1,
               justifyContent: 'flex-end',
-              maxWidth: orientationState?.dimensions?.width * 0.6,
+              maxWidth: orientationState?.dimensions?.width * 0.4,
             }}>
               {note}
             </View>
           )}
-        
         </View>
 
-      </ScrollView>
-    </KeyboardView>
+        <View
+          style={{
+            paddingHorizontal: orientationState?.orientation === LANDSCAPE ? 30 : 0,
+            minWidth: orientationState?.orientation === PORTRAIT
+              ? orientationState?.dimensions?.width * 0.6
+              : orientationState?.dimensions?.width * 0.4,
+            flexGrow: orientationState?.orientation === LANDSCAPE
+              ? 10 : 1,
+          }}
+        >
+          {orientationState?.orientation === LANDSCAPE && (
+            <View style={{ marginBottom: orientationState?.dimensions?.height * 0.05 }}>
+              {logo}
+            </View>
+          )}
+          {InputControllers}
+        </View>
+        {orientationState?.orientation === PORTRAIT && (
+          <View style={{
+            flexGrow: 1,
+            justifyContent: 'flex-end',
+            maxWidth: orientationState?.dimensions?.width * 0.6,
+          }}>
+            {note}
+          </View>
+        )}
+      </View>
+    </View>
   );
 };
 

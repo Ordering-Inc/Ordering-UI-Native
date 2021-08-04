@@ -7,9 +7,3 @@ export const LogoWrapper = styled.View`
 export const WelcomeTextContainer = styled.View`
   margin-bottom: 30px;
 `;
-
-export const KeyboardView = styled.KeyboardAvoidingView`
-  flex-grow: 1;
-  padding-bottom: 15px;
-  background-color: white;
-`;
