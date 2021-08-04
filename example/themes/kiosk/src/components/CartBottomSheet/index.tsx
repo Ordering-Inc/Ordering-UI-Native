@@ -45,7 +45,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
   const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
-  const [, , hideCartBottomSheet] = useCartBottomSheet();
+  const [, { hideCartBottomSheet }] = useCartBottomSheet();
 
   const selectedOrderType = orderState?.options?.type;
 

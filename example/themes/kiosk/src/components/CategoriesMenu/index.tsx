@@ -38,11 +38,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
   const [curIndexCateg, setIndexCateg] = useState(categories.indexOf(category));
   const [{ parsePrice }] = useUtils();
   const [orientationState] = useDeviceOrientation();
-  const [
-    bottomSheetVisibility,
-    showCartBottomSheet,
-    hideCartBottomSheet
-  ] = useCartBottomSheet();
+  const [bottomSheetVisibility, { showCartBottomSheet, hideCartBottomSheet }] = useCartBottomSheet();
 
   const onChangeTabs = (idx: number) => setIndexCateg(idx);
 

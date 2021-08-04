@@ -23,11 +23,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
   const [, t] = useLanguage()
   const [{ parsePrice }] = useUtils()
   const [orientationState] = useDeviceOrientation();
-  const [
-    bottomSheetVisibility,
-    showCartBottomSheet,
-    hideCartBottomSheet
-  ] = useCartBottomSheet();
+  const [bottomSheetVisibility, { showCartBottomSheet, hideCartBottomSheet }] = useCartBottomSheet();
 
   const { navigation, businessProductsListingProps } = props;
 

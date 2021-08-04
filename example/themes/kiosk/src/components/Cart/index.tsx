@@ -47,7 +47,7 @@ const CartUI = (props: any) => {
   const [openProduct, setModalIsOpen] = useState(false)
   const [curProduct, setCurProduct] = useState<any>(null)
   const [orientationState] = useDeviceOrientation();
-  const [, , hideCartBottomSheet] = useCartBottomSheet();
+  const [, { hideCartBottomSheet }] = useCartBottomSheet();
 
   const selectedOrderType = orderState?.options?.type;
 
