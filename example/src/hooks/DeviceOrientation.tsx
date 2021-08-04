@@ -32,3 +32,9 @@ export const useDeviceOrientation = (): [{
 
   return [{ orientation, dimensions }];
 }
+
+export const DeviceOrientationMethods = {
+  PORTRAIT,
+  LANDSCAPE,
+  useDeviceOrientation
+}

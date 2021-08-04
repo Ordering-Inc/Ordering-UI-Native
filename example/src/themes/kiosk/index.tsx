@@ -40,7 +40,15 @@ import {
   OIconButton,
   OInput,
   OModal,
-  OText
+  OText,
+  OCard,
+  OCheckbox,
+  OIconText,
+  OImage,
+  OKeyButton,
+  OSegment,
+  OTextarea,
+  OToggle
 } from './src/components/shared';
 
 // layouts
@@ -90,6 +98,14 @@ export default {
   OInput,
   OModal,
   OText,
+  OCard,
+  OCheckbox,
+  OIconText,
+  OImage,
+  OKeyButton,
+  OSegment,
+  OTextarea,
+  OToggle,
   // layouts
   Container,
   SafeAreaContainer,
