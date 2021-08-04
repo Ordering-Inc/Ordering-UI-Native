@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -21,7 +21,8 @@
     "react-native"
   ],
   "files": [
-    "themes"
+    "themes",
+    "src"
   ],
   "scripts": {
     "android": "react-native run-android",
