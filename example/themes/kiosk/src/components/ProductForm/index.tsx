@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
-import { View,
+import {
+  View,
   TouchableOpacity,
   StyleSheet,
   Animated,
   ScrollView,
+  Platform
 } from 'react-native'
 import {
   ProductForm as ProductOptions,
@@ -67,7 +69,7 @@ export const ProductOptionsUI = (props: any) => {
 
   const { product, loading, error } = productObject;
 
-  const HEADER_EXPANDED_HEIGHT =  orientationState?.dimensions?.height * 0.4;
+  const HEADER_EXPANDED_HEIGHT =  Platform.OS === 'ios' ? orientationState?.dimensions?.height * 0.65 : orientationState?.dimensions?.height * 0.4;
   const HEADER_COLLAPSED_HEIGHT = orientationState?.dimensions?.height * 0.2;
 
   const isError = (id: number) => {

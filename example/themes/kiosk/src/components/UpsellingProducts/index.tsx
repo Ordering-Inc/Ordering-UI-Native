@@ -204,7 +204,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                                     color={theme.colors.primary}
                                     weight="500"
                                   >
-                                    {`$${product.price}`}
+                                    {parsePrice(product.price)}
                                   </OText>
 
                                   <OText
@@ -212,7 +212,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                                     size={12}
                                     style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
                                   >
-                                    {product?.offer_price ? `  $${product?.offer_price}  ` : ''}
+                                    {product?.offer_price ? parsePrice(product?.offer_price) : ''}
                                   </OText>
                                 </OText>
                               )}

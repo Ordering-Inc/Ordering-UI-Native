@@ -83,7 +83,7 @@ const CustomerName = (props: Props): React.ReactElement => {
               size={orientationState?.dimensions?.width * 0.05}
               weight={'700'}
             >
-              {`${t('ORDER_BE_FOR', 'order be for?')}?`}
+              {`${t('ORDER_BE_FOR', 'order be for?')}`}
             </OText>
           </OText>
         </View>
