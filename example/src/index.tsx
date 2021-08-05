@@ -85,7 +85,6 @@ import { DeviceOrientationMethods } from './hooks/DeviceOrientation';
 
 // themes
 import ThemeBusiness from './themes/business'
-// import ThemeUberEats from './themes/uberEats'
 
 export {
   ActiveOrders,
@@ -169,5 +168,4 @@ export {
   DeviceOrientationMethods,
   // themes
   ThemeBusiness,
-  // ThemeUberEats
 }
