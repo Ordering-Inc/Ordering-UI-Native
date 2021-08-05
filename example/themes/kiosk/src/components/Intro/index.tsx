@@ -41,12 +41,6 @@ const Intro = (props: any): React.ReactElement => {
     setShowLogoutPopup(false);
   };
 
-  const onLogoutDone = () => {
-    navigation.reset({
-      routes: [{ name: 'Login' }]
-    });
-  };
-
   return (
     <FlatList
       refreshing={refreshing}
@@ -144,7 +138,6 @@ const Intro = (props: any): React.ReactElement => {
             <LogoutPopup
               open={showLogoutPopup}
               onClose={onHideLogout}
-              onLogoutDone={onLogoutDone}
             />
           </Container>
         );
