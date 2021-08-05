@@ -202,7 +202,6 @@ const CheckoutUI = (props: any) => {
   }
 
   const handlePaymentMethodClick = (paymethod : any) => {
-    console.log(paymethod)
       setShowGateway({closedByUser: false, open: true})
       setPaypalMethod(paymethod)
   }
