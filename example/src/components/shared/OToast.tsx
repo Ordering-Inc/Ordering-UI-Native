@@ -1,13 +1,15 @@
 import * as React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
-import { ToastType, useToast } from "ordering-components/native";
+import { ToastType, useToast, useLanguage } from "ordering-components/native";
 import { useTheme } from 'styled-components/native';
+import { getTraduction } from '../../utils'
 
 const fadeDuration = 300;
 const bottomPosition = 20;
 
 export const Toast = () => {
   const [toastConfig, { hideToast }] = useToast();
+  const [, t] = useLanguage()
   const opacity = React.useRef(new Animated.Value(0)).current;
   const theme = useTheme();
 
@@ -49,13 +51,13 @@ export const Toast = () => {
   let backgroundColor;
   switch (type) {
     case ToastType.Info:
-      backgroundColor = '#6ba4ff';
+      backgroundColor = theme.colors.toastInfo || '#6BA4FF';
       break;
     case ToastType.Error:
-      backgroundColor = theme.colors.primary;
+      backgroundColor = theme.colors.toastError || '#D83520' ;
       break;
     case ToastType.Success:
-      backgroundColor = '#73bd24';
+      backgroundColor = theme.colors.toastSuccess || '#90C68E';
       break;
   }
 
@@ -67,7 +69,7 @@ export const Toast = () => {
       ]}
     >
       <View style={[styles.toast, { backgroundColor }]}>
-        <Text style={styles.message}>{message}</Text>
+        <Text style={styles.message}>{getTraduction(message, t)}</Text>
       </View>
     </Animated.View>
   );
