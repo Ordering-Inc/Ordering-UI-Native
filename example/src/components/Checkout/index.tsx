@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { View, StyleSheet, Platform , I18nManager } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
@@ -16,7 +16,7 @@ import {
   useToast
 } from 'ordering-components/native';
 
-import { OText, OButton, OIcon } from '../shared';
+import { OText, OButton, OIcon, OModal } from '../shared';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -47,6 +47,8 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import { useTheme } from 'styled-components/native';
+import { ActivityIndicator } from 'react-native-paper';
+import WebView from 'react-native-webview';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -104,16 +106,22 @@ const CheckoutUI = (props: any) => {
 
   const [, { showToast }]= useToast();
   const [, t] = useLanguage();
-  const [{ user }] = useSession();
+  const [{ user, token }] = useSession();
   const [{ configs }] = useConfig();
   const [{ parsePrice, parseDate }] = useUtils();
-  const [{ options, carts, loading }] = useOrder();
+  const [{ options, carts, loading }, {confirmCart}] = useOrder();
   const [validationFields] = useValidationFields();
+  const [ordering] = useApi()
+  const webviewRef = useRef<any>(null)
 
   const [errorCash, setErrorCash] = useState(false);
   const [userErrors, setUserErrors] = useState<any>([]);
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
+  const [prog, setProg] = useState(true);
+  const [showGateway, setShowGateway] = useState<any>({closedByUsed: false, open: false});
+  const [progClr, setProgClr] = useState('#424242');
+  const [paypalMethod, setPaypalMethod] = useState<any>(null)
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -168,6 +176,37 @@ const CheckoutUI = (props: any) => {
     setPhoneUpdate(val)
   }
 
+  const onMessage = (e : any) => {
+    let data = e.nativeEvent.data;
+    if(data === 'api error'){
+      setShowGateway({closedByUser: false, open: false})
+    }
+    let payment = JSON.parse(data);
+    if(payment){
+      if(payment.error){
+        showToast(ToastType.Error, payment.result)
+        setShowGateway({closedByUser: false, open: false})
+      } else {
+        showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfullyS'))
+        onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment.result.order.uuid, goToBusinessList: true })
+        setShowGateway({closedByUser: false, open: false})
+      }
+    }
+    setShowGateway && setShowGateway({closedByUser: false, open: false})
+  }
+
+  const onFailPaypal = async () => {
+    if(showGateway.closedByUser === true){
+      const {result} = await confirmCart(cart.uuid)
+    }
+  }
+
+  const handlePaymentMethodClick = (paymethod : any) => {
+    console.log(paymethod)
+      setShowGateway({closedByUser: false, open: true})
+      setPaypalMethod(paymethod)
+  }
+
   useEffect(() => {
     if (validationFields && validationFields?.fields?.checkout) {
       checkValidationFields()
@@ -180,6 +219,10 @@ const CheckoutUI = (props: any) => {
       showToast(ToastType.Error, errorText)
     }
   }, [errors])
+
+  useEffect(() => {
+    onFailPaypal()
+  }, [showGateway.closedByUser])
 
   return (
     <>
@@ -415,6 +458,7 @@ const CheckoutUI = (props: any) => {
                   setErrorCash={setErrorCash}
                   onNavigationRedirect={onNavigationRedirect}
                   paySelected={paymethodSelected}
+                  handlePaymentMethodClickCustom={handlePaymentMethodClick}
                 />
               </ChPaymethods>
             </ChSection>
@@ -502,6 +546,64 @@ const CheckoutUI = (props: any) => {
           </>
         </>
       )}
+      <OModal
+        open={paypalMethod && showGateway.open}
+        onCancel={() => setShowGateway({open: false, closedByUser: true})}
+        onAccept={() => setShowGateway({open: false, closedByUser: true})}
+        onClose={() => setShowGateway({open: false, closedByUser: true})}
+        entireModal
+      >
+        <OText
+          style={{
+            textAlign: 'center',
+            fontSize: 16,
+            fontWeight: 'bold',
+            color: '#00457C',
+            marginBottom: 5
+          }}>
+          {t('PAYPAL_GATEWAY', 'PayPal GateWay')}
+        </OText>
+        <View style={{padding: 13, opacity: prog ? 1 : 0}}>
+          <ActivityIndicator size={24} color={progClr} />
+        </View>
+        <WebView
+          source={{ uri: 'https://test-90135.web.app' }}
+          onMessage={onMessage}
+          ref={webviewRef}
+          javaScriptEnabled={true}
+          javaScriptEnabledAndroid={true}
+          cacheEnabled={false}
+          cacheMode='LOAD_NO_CACHE'
+          style={{ flex: 1 }}
+          onLoadStart={() => {
+            setProg(true);
+            setProgClr('#424242');
+          }}
+          onLoadProgress={() => {
+            setProg(true);
+            setProgClr('#00457C');
+          }}
+          onLoadEnd={(e) => {
+            const message = {
+              action: 'init',
+              data: {
+                urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
+                urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
+                payData: {
+                  paymethod_id: paypalMethod?.id,
+                  amount: cart?.total,
+                  delivery_zone_id: cart?.delivery_zone_id,
+                  user_id: user?.id
+                },
+                userToken: token,
+                clientId: paypalMethod?.credentials?.client_id
+              }
+            }
+            setProg(false);
+            webviewRef.current.postMessage(JSON.stringify(message))
+          }}
+        />
+      </OModal>
     </>
   )
 }
