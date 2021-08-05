@@ -40,7 +40,7 @@ const PaymentOptionsUI = (props: any) => {
   } = props
 
   const theme = useTheme();
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
   const [userErrors, setUserErrors] = useState<any>([]);

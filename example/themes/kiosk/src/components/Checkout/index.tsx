@@ -69,7 +69,7 @@ export const Checkout = (props: any) => {
     onNavigationRedirect,
   } = props
 
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const [{ token }] = useSession();
   const [ordering] = useApi();
   const [,{ confirmCart }] = useOrder();

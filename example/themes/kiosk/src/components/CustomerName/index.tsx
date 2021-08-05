@@ -20,7 +20,7 @@ const CustomerName = (props: Props): React.ReactElement => {
   const theme = useTheme()
   const [, t] = useLanguage();
   const { control, handleSubmit, errors } = useForm();
-  const {showToast} = useToast();
+  const [, { showToast }] = useToast();
   const [orientationState] = useDeviceOrientation();
 
   const onSubmit = (values: any) => {
