@@ -441,7 +441,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                         blurOnSubmit: false,
                         returnKeyType: 'next'
                       }}
-                      onFail={(error: any) => setAlertState({ open: true, content: getTraduction(error) })}
+                      onFail={(error: any) => setAlertState({ open: true, content: getTraduction(error, t) })}
                       styles={{
                         listView: {
                           position: 'relative',

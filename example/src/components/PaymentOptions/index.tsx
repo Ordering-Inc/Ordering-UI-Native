@@ -97,14 +97,20 @@ const PaymentOptionsUI = (props: any) => {
 
   const onMessage = (e : any) => {
     let data = e.nativeEvent.data;
-    let payment = JSON.parse(data);
-    if(payment.error){
-      showToast(ToastType.Error, payment.result)
-    } else {
-      showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfullyS'))
-      onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment.result.order.uuid, goToBusinessList: true })
+    if(data === 'api error'){
+      setShowGateway({closedByUser: false, open: false})
     }
-    setShowGateway({closedByUser: false, open: false})
+    let payment = JSON.parse(data);
+    if(payment){
+      if(payment.error){
+        showToast(ToastType.Error, payment.result)
+        setShowGateway({closedByUser: false, open: false})
+      } else {
+        showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfullyS'))
+        onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment.result.order.uuid, goToBusinessList: true })
+        setShowGateway({closedByUser: false, open: false})
+      }
+    }
   }
 
   const handlePaymentMethodClick = (paymethod: any) => {
