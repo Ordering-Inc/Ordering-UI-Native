@@ -4,7 +4,7 @@ type ICartBottom = any;
 
 type ICartBottomContext = [ICartBottom, ICartBottom];
 
-const CartBottomSheetContext = createContext<ICartBottomContext>([[], () => null]);
+const CartBottomSheetContext = createContext<ICartBottomContext>([false, {}]);
 
 export const CartBottomSheetProvider = ({ children }: any) => {
   const [bottomSheetVisibility, setBottomSheetVisibility] = useState<ICartBottom>(false);
