@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { Platform } from 'react-native';
 
 export const OSContainer = styled.View`
   display: flex;
@@ -10,8 +11,8 @@ export const OSContainer = styled.View`
 
 export const OSContent = styled.View`
   width: 70%;
-  max-width: 500px;
-  min-height: 350px;
+  max-width: ${(props: any) => props.isportrait ? '500px': '600px'};
+  min-height: ${(props: any) => props.isportrait ? '350px': Platform.OS === 'ios' ? '400px' : '460px'};
   border-radius: 6px;
   padding: 10px;
   background-color: ${(props: any) => props.theme.colors.white};

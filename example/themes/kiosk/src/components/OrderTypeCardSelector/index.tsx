@@ -38,7 +38,7 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
 
   const cardStyle = {
     width: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.width - 40 : orientationState?.dimensions?.width * 0.47,
-    height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.34 : orientationState?.dimensions?.height * 0.55,
+    height: orientationState?.orientation === PORTRAIT ? orientationState?.dimensions?.height * 0.34 : orientationState?.dimensions?.height * 0.35,
   }
 
   return (

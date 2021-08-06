@@ -8,7 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import NavBar from '../NavBar';
 import { OSBody, OSContainer, OSContent } from './styles';
 import { OButton, OInput, OText } from '../shared';
-import { useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
+import { useDeviceOrientation, PORTRAIT } from '../../../../../src/hooks/DeviceOrientation';
 import { useTheme } from 'styled-components/native';
 
 const LogoutPopupUI = (props: Props) => {
@@ -73,7 +73,7 @@ const LogoutPopupUI = (props: Props) => {
       }}
     >
       <OSContainer>
-        <OSContent>
+        <OSContent isportrait={orientationState?.orientation === PORTRAIT}>
           <NavBar
             title={t('SIGN_OUT', 'Sign out')}
             titleStyle={{ paddingLeft: 10 }}

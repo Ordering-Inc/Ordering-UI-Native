@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Animated,
   ScrollView,
-  Platform
+  Platform,
+  ImageBackground
 } from 'react-native'
 import {
   ProductForm as ProductOptions,
@@ -21,11 +22,7 @@ import { useTheme } from 'styled-components/native'
 import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
 import {
-  ProductHeader,
-  WrapHeader,
-  TopHeader,
   WrapContent,
-  ProductTitle,
   ProductDescription,
   ProductEditions,
   SectionTitle,
@@ -187,6 +184,7 @@ export const ProductOptionsUI = (props: any) => {
       borderRadius: 6,
       borderWidth: 2,
       borderColor: theme.colors.primary,
+      marginHorizontal: 10
     },
     quantityControlButtonDisabled: {
       opacity: 0.5,
@@ -293,14 +291,6 @@ export const ProductOptionsUI = (props: any) => {
           zIndex: -100,
           transform: [{translateY: heroTranslateY }],
         }}>
-          <OImage
-            source={{uri: product?.images}}
-            width={orientationState?.dimensions?.width}
-            height={HEADER_EXPANDED_HEIGHT}
-            resizeMode="cover"
-            style={{ position: 'absolute', zIndex: -100 }}
-          />
-
           <View
             style={{
               width: orientationState?.dimensions?.width,
@@ -309,7 +299,10 @@ export const ProductOptionsUI = (props: any) => {
               zIndex: 1,
               backgroundColor: 'rgba(24, 28, 50, 0.4)',
             }}
-          />
+          >
+            <ImageBackground source={{ uri: product?.images }} resizeMode='cover' style={{ flex:1, justifyContent: 'center' }} />
+
+          </View>
 
           <Animated.View
             style={{
@@ -488,7 +481,7 @@ export const ProductOptionsUI = (props: any) => {
               </TouchableOpacity>
             </View>
           )}
-          <View style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : '70%' }}>
+          <View style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : '80%' }}>
             {productCart && !isSoldOut && maxProductQuantity > 0 && auth && orderState.options?.address_id && (
               <OButton
                 onClick={() => handleSaveProduct()}
@@ -497,7 +490,8 @@ export const ProductOptionsUI = (props: any) => {
                 textStyle={{ color: saveErrors ? theme.colors.primary : theme.colors.white }}
                 style={{
                   backgroundColor: saveErrors ? theme.colors.white : theme.colors.primary,
-                  opacity: saveErrors ? 0.3 : 1
+                  opacity: saveErrors ? 0.3 : 1,
+                  height: 60
                 }}
               />
             )}
