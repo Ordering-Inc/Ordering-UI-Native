@@ -6,7 +6,7 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
-import { colors, images } from '../themes/original/theme.json'
+import { theme } from '../themes/original'
 import { OIcon, OText } from '../components/shared'
 
 import BusinessList from '../pages/BusinessesListing'
@@ -17,7 +17,7 @@ import Profile from '../pages/Profile'
 const CartsLenght = styled.View`
   width: 10px;
   height: 10px;
-  background-color: ${colors.red};
+  background-color: ${theme.colors.red};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,10 +38,10 @@ const BottomNavigator = () => {
   return (
     <Tab.Navigator
       initialRouteName='BusinessList'
-      activeColor={colors.primary}
-      barStyle={{ backgroundColor: colors.white }}
+      activeColor={theme.colors.primary}
+      barStyle={{ backgroundColor: theme.colors.white }}
       labeled={false}
-      inactiveColor={colors.disabled}
+      inactiveColor={theme.colors.disabled}
     >
       <Tab.Screen
         name="BusinessList"
@@ -50,8 +50,8 @@ const BottomNavigator = () => {
           tabBarIcon:
             ({ color }) => (
               <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: 10 }}>
-                <OIcon src={images.tabs.explorer} width={16} color={color} />
-					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('EXPLORE', 'Explore')}</OText>
+                <OIcon src={theme.images.tabs.explorer} width={16} color={color} />
+					 <OText size={10} color={theme.colors.textSecondary} style={{lineHeight: 15}}>{t('EXPLORE', 'Explore')}</OText>
               </View>
             )
         }}
@@ -64,8 +64,8 @@ const BottomNavigator = () => {
             tabBarIcon:
               ({ color }) => (
                 <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: 10 }}>
-                  <OIcon src={images.tabs.orders} width={16} color={color} />
-					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('ORDERS', 'Orders')}</OText>
+                  <OIcon src={theme.images.tabs.orders} width={16} color={color} />
+					 <OText size={10} color={theme.colors.textSecondary} style={{lineHeight: 15}}>{t('ORDERS', 'Orders')}</OText>
                 </View>
               ),
           }}
@@ -84,12 +84,12 @@ const BottomNavigator = () => {
                   bottom: 10
                 }}
               >
-                <OIcon src={images.tabs.my_carts} width={16} color={color} />
-					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('MY_CARTS', 'My carts')}</OText>
+                <OIcon src={theme.images.tabs.my_carts} width={16} color={color} />
+					 <OText size={10} color={theme.colors.textSecondary} style={{lineHeight: 15}}>{t('MY_CARTS', 'My carts')}</OText>
                 {cartsList.length > 0 && (
                   <CartsLenght style={{ borderRadius: 100 / 2 }}>
                     <OText size={7}
-                      color={colors.white}
+                      color={theme.colors.white}
                     >
                       {cartsList.length}
                     </OText>
@@ -106,8 +106,8 @@ const BottomNavigator = () => {
           tabBarIcon:
             ({ color }) => (
               <View style={{ width: 50, height: 50, justifyContent: 'center', alignItems: 'center', position: 'relative', bottom: 10  }}>
-                <OIcon src={images.tabs.profile} width={16} color={color} />
-					 <OText size={10} color={colors.textSecondary} style={{lineHeight: 15}}>{t('PROFILE', 'Profile')}</OText>
+                <OIcon src={theme.images.tabs.profile} width={16} color={color} />
+					 <OText size={10} color={theme.colors.textSecondary} style={{lineHeight: 15}}>{t('PROFILE', 'Profile')}</OText>
               </View>
             )
         }}

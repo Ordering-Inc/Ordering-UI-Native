@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
-import { UserProfile as ProfileController } from '../themes/original/components';
+import { UserProfile as ProfileController } from '../themes/original';
 import { Container } from '../layouts/Container'
 
 const KeyboardView = styled.KeyboardAvoidingView`

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, ImageBackground, View, ImageSourcePropType } from 'react-native';
-import { HomeView } from '../themes/original/components';
-import { images } from '../themes/original/theme.json';
+import { HomeView } from '../themes/original';
+import { theme } from '../themes/original';
 
 export const Home = (props: any) => {
 
@@ -13,7 +13,7 @@ export const Home = (props: any) => {
 		},
 	}
 
-	const homeImage: ImageSourcePropType = images.general
+	const homeImage: ImageSourcePropType = theme.images.general
     .homeHero as ImageSourcePropType;
 
 	return (

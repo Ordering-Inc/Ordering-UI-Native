@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components/native'
 import { Platform } from 'react-native';
-import { AddressForm as AddressFormController } from '../themes/original/components'
+import { AddressForm as AddressFormController } from '../themes/original'
 import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 import { _retrieveStoreData } from '../providers/StoreUtil';
 

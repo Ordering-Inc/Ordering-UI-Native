@@ -3,7 +3,7 @@ import { Alert, Modal, StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpac
 import Icon from 'react-native-vector-icons/Feather';
 import styled from 'styled-components';
 import { OIcon } from '.';
-import { colors, images } from '../../themes/original/theme.json';
+import { colors, images } from '../../theme.json';
 
 interface Props {
   open?: boolean;
@@ -58,7 +58,7 @@ const OModal = (props: Props): React.ReactElement => {
             <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
             	<TouchableOpacity style={styles.wrapperIcon} onPress={onClose}>
                 <OIcon
-                  src={images.general.close}
+                  src={images.general.trash}
                   width={16}
                   style={isNotDecoration && (styleCloseButton || styles.cancelBtn)}
                 />
@@ -73,7 +73,7 @@ const OModal = (props: Props): React.ReactElement => {
               <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
 					  <TouchableOpacity style={styles.wrapperIcon} onPress={onClose}>
 						<OIcon
-							src={images.general.close}
+							src={images.general.trash}
 							width={16}
 							style={styleCloseButton || styles.cancelBtn}
 						/>

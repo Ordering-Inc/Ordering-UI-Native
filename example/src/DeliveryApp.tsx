@@ -13,9 +13,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { OrderingProvider } from 'ordering-components/native';
 import RNBootSplash from "react-native-bootsplash";
 
-import { ToastProvider } from './providers/ToastProvider';
+import { ToastProvider } from '../src/providers/ToastProvider';
 import RootNavigator from './navigators/RootNavigator';
-import { Toast } from './components/shared/OToast';
+import { Toast } from '../src/themes/original';
 import Alert from './providers/AlertProvider';
 import { ThemeProvider } from './context/Theme';
 

@@ -66,7 +66,6 @@ import {
   OInput,
   OModal,
   OText,
-  OToast
 } from './components/shared';
 
 // layouts
@@ -149,7 +148,6 @@ export {
   OInput,
   OModal,
   OText,
-  OToast,
   // layouts
   Container,
   SafeAreaContainer,
