@@ -1,16 +1,17 @@
 import * as React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ToastType, useToast } from "../../providers/ToastProvider";
-import { colors } from "../../theme.json";
+import { ToastType, useToast, useLanguage } from "ordering-components/native";
+import { useTheme } from 'styled-components/native';
+import { getTraduction } from '../../utils'
 
 const fadeDuration = 300;
 const bottomPosition = 20;
 
-export const Toast: React.FC = () => {
-    // const insets = useSafeAreaInsets();
-    const { toastConfig, hideToast } = useToast();
-    const opacity = React.useRef(new Animated.Value(0)).current;
+export const Toast = () => {
+  const [toastConfig, { hideToast }] = useToast();
+  const [, t] = useLanguage()
+  const opacity = React.useRef(new Animated.Value(0)).current;
+  const theme = useTheme();
 
     const fadeIn = React.useCallback(() => {
         Animated.timing(opacity, {
@@ -47,31 +48,31 @@ export const Toast: React.FC = () => {
 
     const { type, message } = toastConfig;
 
-    let backgroundColor;
-    switch (type) {
-        case ToastType.Info:
-            backgroundColor = '#6ba4ff';
-            break;
-        case ToastType.Error:
-            backgroundColor = colors.primary;
-            break;
-        case ToastType.Success:
-            backgroundColor = '#73bd24';
-            break;
-    }
+  let backgroundColor;
+  switch (type) {
+    case ToastType.Info:
+      backgroundColor = theme.colors.toastInfo || '#6BA4FF';
+      break;
+    case ToastType.Error:
+      backgroundColor = theme.colors.toastError || '#D83520' ;
+      break;
+    case ToastType.Success:
+      backgroundColor = theme.colors.toastSuccess || '#90C68E';
+      break;
+  }
 
-    return (
-        <Animated.View
-            style={[
-                styles.container,
-                { bottom: bottomPosition, opacity },
-            ]}
-        >
-            <View style={[styles.toast, { backgroundColor }]}>
-                <Text style={styles.message}>{message}</Text>
-            </View>
-        </Animated.View>
-    );
+  return (
+    <Animated.View
+      style={[
+        styles.container,
+        { bottom: bottomPosition, opacity },
+      ]}
+    >
+      <View style={[styles.toast, { backgroundColor }]}>
+        <Text style={styles.message}>{getTraduction(message, t)}</Text>
+      </View>
+    </Animated.View>
+  );
 };
 
 const styles = StyleSheet.create({

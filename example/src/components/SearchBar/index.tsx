@@ -71,6 +71,7 @@ export const SearchBar = (props: any) => {
         vertorIcon='search'
         vectorIconColor={theme.colors.disabled}
         returnKeyType='done'
+        autoCorrect={false}
       />
       {isCancelButtonShow && (
         <OButton

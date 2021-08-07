@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native'
-import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder } from 'ordering-components/native'
+import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -8,7 +8,6 @@ import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
 import { useTheme } from 'styled-components/native';
 
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { _retrieveStoreData } from '../../providers/StoreUtil';
 import { OInput, OButton, OText, OModal } from '../shared'
 import { AddressFormParams } from '../../types'
@@ -51,7 +50,11 @@ const AddressFormUI = (props: AddressFormParams) => {
     isRequiredField,
     isFromProductsList,
     afterSignup,
-    isFromCheckout
+    isFromCheckout,
+    businessId,
+    productId,
+    categoryId,
+    store
   } = props
 
   const theme = useTheme();
@@ -90,11 +93,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
-  const { showToast } = useToast()
+  const [, {showToast}] = useToast()
   const [configState] = useConfig()
   const [orderState] = useOrder()
   const { handleSubmit, errors, control, setValue } = useForm()
-
   const [toggleMap, setToggleMap] = useState(false)
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<string>, key?: string | null }>({ open: false, content: [], key: null })
   const [addressTag, setAddressTag] = useState(addressState?.address?.tag)
@@ -107,7 +109,6 @@ const AddressFormUI = (props: AddressFormParams) => {
   )
   const [saveMapLocation, setSaveMapLocation] = useState(false)
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
-  const [isSignUpEffect, setIsSignUpEffect] = useState(false)
 
   const googleInput: any = useRef(null)
   const internalNumberRef: any = useRef(null)
@@ -121,7 +122,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 
   const isGuestUser = props.isGuestUser || props.isGuestFromStore;
 
-  const continueAsGuest = () => navigation.navigate('BusinessList')
+  const continueAsGuest = () => navigation.navigate('BusinessList', {store, businessId, productId, categoryId})
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
   const getAddressFormatted = (address: any) => {
@@ -229,7 +230,7 @@ const AddressFormUI = (props: AddressFormParams) => {
       }
       if (!isGuestUser && !auth && !afterSignup) {
         !isFromProductsList
-          ? navigation.navigate('Business')
+          ? navigation.navigate('Business', {store})
           : navigation?.canGoBack() && navigation.goBack()
       }
       return
@@ -294,7 +295,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 
   useEffect(() => {
     if (orderState.loading && !addressesList && orderState.options.address && auth && !afterSignup && !isFromCheckout) {
-      !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business')
+      !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business', {store})
     }
   }, [orderState.options.address])
 
@@ -440,7 +441,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                         blurOnSubmit: false,
                         returnKeyType: 'next'
                       }}
-                      onFail={(error: any) => setAlertState({ open: true, content: getTraduction(error) })}
+                      onFail={(error: any) => setAlertState({ open: true, content: getTraduction(error, t) })}
                       styles={{
                         listView: {
                           position: 'relative',

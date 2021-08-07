@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { View, StyleSheet, ScrollView, Platform, PanResponder, I18nManager } from 'react-native'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -8,7 +8,9 @@ import {
   useSession,
   useOrder,
   useConfig,
-  useUtils
+  useUtils,
+  ToastType,
+  useToast
 } from 'ordering-components/native'
 
 import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
@@ -21,7 +23,6 @@ import { NotFoundSource } from '../NotFoundSource'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { OrderTypeSelector } from '../OrderTypeSelector'
-import { ToastType, useToast } from '../../providers/ToastProvider'
 import { useTheme } from 'styled-components/native'
 
 const PIXELS_TO_SCROLL = 1200
@@ -43,7 +44,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const styles = StyleSheet.create({
     container: {
       padding: 20,
-      marginBottom: 20
+      marginBottom: 20,
+      left: Platform.OS === 'ios' && I18nManager.isRTL ? 20 : 0
     },
     welcome: {
       flex: 1,
@@ -74,7 +76,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const [orderState] = useOrder()
   const [{ configs }] = useConfig()
   const [{ parseDate }] = useUtils()
-  const {showToast} = useToast()
+  const [, {showToast}] = useToast()
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
@@ -85,7 +87,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
     if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
       getBusinesses()
-      showToast(ToastType.Info, 'loading more business')
+      showToast(ToastType.Info, t('LOADING_MORE_BUSINESS', 'Loading more business'))
     }
   }
 

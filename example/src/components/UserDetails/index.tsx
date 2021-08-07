@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { UDContainer, UDHeader, UDInfo } from './styles';
+import { UDContainer, UDHeader, UDInfo, } from './styles';
 
 import {
   UserFormDetails as UserFormController,
@@ -25,7 +25,8 @@ const UserDetailsUI = (props: any) => {
     validationFields,
     isUserDetailsEdit,
     phoneUpdate,
-    togglePhoneUpdate
+    togglePhoneUpdate,
+    isCheckout
   } = props
 
   const theme = useTheme();
@@ -99,7 +100,7 @@ const UserDetailsUI = (props: any) => {
                 </OText>
                 {userData?.name} {userData?.middle_name} {userData?.lastname} {userData?.second_lastname}
               </OText>
-              <OText size={16}>
+              <OText size={16} numberOfLines={1}>
                 <OText size={18} weight='bold'>
                   {t('EMAIL', 'Email')}:{' '}
                 </OText>
@@ -114,13 +115,13 @@ const UserDetailsUI = (props: any) => {
                     {(userData?.country_phone_code) && `+${(userData?.country_phone_code)} `}{(userData?.cellphone)}
                   </OText>
                   {!!phoneUpdate && (
-                    <OText color={theme.colors.error} style={{ textAlign: 'center' }}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
+                    <OText color={theme.colors.error} style={{ textAlign: 'center', width: '100%'}}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
                   )}
                 </>
               )}
             </UDInfo>
           ) : (
-            <UserFormDetailsUI {...props} phoneUpdate={phoneUpdate} togglePhoneUpdate={togglePhoneUpdate} />
+            <UserFormDetailsUI {...props} phoneUpdate={phoneUpdate} togglePhoneUpdate={togglePhoneUpdate} isCheckout={isCheckout} />
           )}
         </UDContainer>
       )}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {
@@ -6,7 +6,9 @@ import {
   useLanguage,
   useOrder,
   useSession,
-  useUtils
+  useUtils,
+  useToast,
+  ToastType
 } from 'ordering-components/native'
 import { OButton, OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -27,6 +29,8 @@ import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
 import { useTheme } from 'styled-components/native'
 
+const PIXELS_TO_SCROLL = 1000
+
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -42,9 +46,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     header,
     logo,
     productModal,
+    businessId,
+    categoryId,
+    productId,
+    getNextProducts,
     handleChangeCategory,
     setProductLogin,
-    updateProductModal
+    updateProductModal,
   } = props
 
   const theme = useTheme()
@@ -52,13 +60,14 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [{ auth }] = useSession()
   const [orderState] = useOrder()
   const [{ parsePrice }] = useUtils()
+  const [ ,{showToast}] = useToast()
   const { business, loading, error } = businessState
   const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
   const [isOpenSearchBar, setIsOpenSearchBar] = useState(false)
   const [curProduct, setCurProduct] = useState(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
-
+  const [openModalProduct,setOpenModalProduct] = useState(false)
   const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
   const onRedirect = (route: string, params?: any) => {
@@ -76,6 +85,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const handleCloseProductModal = () => {
     setCurProduct(null)
+    setOpenModalProduct(false)
     updateProductModal && updateProductModal(null)
   }
 
@@ -94,11 +104,28 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setOpenUpselling(false)
   }
 
+  useEffect(() => {
+    if(businessId && categoryId && productId){
+      setOpenModalProduct(true)
+    }
+  }, [])
+
+  const handleScroll = ({ nativeEvent }: any) => {
+    const y = nativeEvent.contentOffset.y
+    const height = nativeEvent.contentSize.height
+    const hasMore = !(categoryState.pagination.totalPages === categoryState.pagination.currentPage)
+    if (y + PIXELS_TO_SCROLL > height && !loading && hasMore && getNextProducts) {
+      getNextProducts()
+      showToast(ToastType.Info, t('LOADING_MORE_PRODUCTS', 'Loading more products'))
+    }
+  }
+
   return (
     <>
       <BusinessProductsListingContainer
         style={styles.mainContainer}
         isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
+        onScroll={(e: any) => handleScroll(e)}
       >
         <WrapHeader>
           {!loading && business?.id && (
@@ -232,7 +259,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         />
       )}
       <OModal
-        open={!!curProduct || (!!productModal.product && !orderState.loading)}
+        open={openModalProduct || !!curProduct || (!!productModal.product && !orderState.loading)}
         onClose={handleCloseProductModal}
         entireModal
         customClose
@@ -240,11 +267,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         <ProductForm
           product={curProduct || productModal.product}
           businessSlug={business?.slug}
-          businessId={business?.id || productModal?.product?.category?.business_id}
+          businessId={businessId || business?.id || productModal?.product?.category?.business_id}
           onClose={handleCloseProductModal}
           navigation={navigation}
           onSave={handlerProductAction}
           setProductLogin={setProductLogin}
+          categoryId={categoryId}
+          productId={productId}
         />
       </OModal>
       {openUpselling && (

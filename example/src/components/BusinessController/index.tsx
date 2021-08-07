@@ -90,6 +90,9 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       borderTopRightRadius: 25,
       borderTopLeftRadius: 25,
     },
+    textClosed: {
+      bottom: 20
+    },
     bullet: {
       flexDirection: 'row',
       alignItems: 'center'
@@ -127,12 +130,12 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
         )}
         {!isBusinessOpen || isBusinessClose && (
           <View style={styles.closed}>
-            <OText size={32} color={theme.colors.white}>{t('CLOSED', 'CLOSED')}</OText>
+            <OText size={32} color={theme.colors.white} style={styles.textClosed}>{t('CLOSED', 'CLOSED')}</OText>
           </View>
         )}
         {!!businessWillCloseSoonMinutes && orderState.options?.moment === null && isBusinessOpen && (
           <View style={styles.closed}>
-            <OText size={32} color={theme.colors.white}>{businessWillCloseSoonMinutes} {t('MINUTES_TO_CLOSE', 'minutes to close')}</OText>
+            <OText size={32} color={theme.colors.white} style={styles.textClosed}>{businessWillCloseSoonMinutes} {t('MINUTES_TO_CLOSE', 'minutes to close')}</OText>
           </View>
         )}
         <BusinessLogo>
