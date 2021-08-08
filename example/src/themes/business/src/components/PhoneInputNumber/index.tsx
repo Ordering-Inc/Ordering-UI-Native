@@ -2,11 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import PhoneInput from 'react-native-phone-number-input';
 import { StyleSheet } from 'react-native';
 import { useLanguage, useConfig } from 'ordering-components/native';
-import { useTheme } from 'styled-components/native';
+
 import { Wrapper } from './styles';
+
 import { PhoneInputParams } from '../../types';
 import { OText } from '../shared';
 import { transformCountryCode } from '../../utils';
+import { I18nManager } from 'react-native';
+import { useTheme } from 'styled-components/native';
 
 export const PhoneInputNumber = (props: PhoneInputParams) => {
   const {
@@ -15,11 +18,25 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
     defaultValue,
     defaultCode,
     forwardRef,
+    isDisabled,
     textInputProps,
-    onSubmitEditing,
   } = props;
 
   const theme = useTheme();
+
+  const style = StyleSheet.create({
+    input: {
+      backgroundColor: theme.colors.white,
+      borderRadius: 25,
+      borderWidth: 1,
+      borderColor: theme.colors.disabled,
+      paddingVertical: 0,
+      flexGrow: 1,
+      flex: 1,
+      height: 50,
+    },
+  });
+
   const [, t] = useLanguage();
   const [{ configs }] = useConfig();
   const phoneInput = useRef<PhoneInput>(null);
@@ -30,11 +47,8 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
   };
 
   useEffect(() => {
-    if (
-      (defaultValue && userphoneNumber) ||
-      defaultValue === undefined ||
-      defaultValue === ''
-    ) {
+    if ((defaultValue && userphoneNumber) || !defaultValue) {
+      if (userphoneNumber === '') return;
       if (userphoneNumber) {
         const checkValid = phoneInput.current?.isValidNumber(userphoneNumber);
         const callingCode = phoneInput.current?.getCallingCode();
@@ -79,19 +93,6 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
     }
   }, [userphoneNumber]);
 
-  const style = StyleSheet.create({
-    input: {
-      backgroundColor: theme.colors.white,
-      borderRadius: 25,
-      borderWidth: 1,
-      borderColor: theme.colors.disabled,
-      paddingVertical: 0,
-      flexGrow: 1,
-      flex: 1,
-      height: 50,
-    },
-  });
-
   return (
     <Wrapper>
       <PhoneInput
@@ -104,12 +105,12 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         }
         onChangeFormattedText={(text: string) => handleChangeNumber(text)}
         withDarkTheme
+        textInputStyle={{ textAlign: I18nManager.isRTL ? 'right' : 'left' }}
         countryPickerProps={{ withAlphaFilter: true }}
         textContainerStyle={style.input}
         placeholder={t('PHONE_NUMBER', 'Phone Number')}
+        disabled={isDisabled}
         textInputProps={{
-          blurOnSubmit: true,
-          onSubmitEditing,
           autoCompleteType: 'tel',
           ref: forwardRef,
           ...textInputProps,

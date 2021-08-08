@@ -1,33 +1,87 @@
 import React, { useEffect, useState } from 'react';
 import {
-  ToastType,
-  useToast,
   UserFormDetails as UserProfileController,
   useSession,
   useLanguage,
+  ToastType,
+  useToast
 } from 'ordering-components/native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { ProfileParams } from '../../types';
 import { LogoutButton } from '../LogoutButton';
 import { LanguageSelector } from '../LanguageSelector';
 import { UserFormDetailsUI } from '../UserFormDetails';
 import { useTheme } from 'styled-components/native';
-import { OIcon, OIconButton } from '../../components/shared';
-import { CenterView, Actions } from './styles';
+import {
+  OIcon,
+  OIconButton,
+  OText,
+  OButton,
+  OInput,
+} from '../../components/shared';
+import {
+  CenterView,
+  Actions,
+  UserData,
+  Names,
+  EditButton,
+  WrapperPhone,
+  UDForm,
+} from './styles';
+import { PhoneInputNumber } from '../PhoneInputNumber';
+import { sortInputFields } from '../../utils';
 import NavBar from '../NavBar';
+import { UDWrapper } from '../UserFormDetails/styles';
 
 const ProfileUI = (props: ProfileParams) => {
-  const { navigation, formState, validationFields, handleButtonUpdateClick } =
-    props;
+  const {
+    navigation,
+    formState,
+    isEdit,
+    validationFields,
+    handleButtonUpdateClick,
+    toggleIsEdit,
+    cleanFormState,
+  } = props;
 
   const [{ user }] = useSession();
-  const [state, t] = useLanguage();
-  const [, { showToast }] = useToast();
-  const { handleSubmit, errors } = useForm();
+  const [, t] = useLanguage();
+  const [,{ showToast }] = useToast();
+  const { handleSubmit, errors, setValue, control } = useForm();
+
   const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    dropdown: {
+      borderColor: theme.colors.whiteGray,
+      height: 50,
+      borderRadius: 25,
+      marginTop: 16,
+    },
+    inputStyle: {
+      marginBottom: 25,
+      borderWidth: 1,
+      borderColor: theme.colors.tabBar,
+      borderTopWidth: 0,
+      borderRightWidth: 0,
+      borderLeftWidth: 0,
+    },
+    inputbox: {
+      marginVertical: 8,
+      width: '90%',
+    },
+    editButton: {
+      borderRadius: 25,
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.white,
+      borderWidth: 1,
+      color: theme.colors.primary,
+      marginVertical: 8,
+    },
+  });
 
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -37,6 +91,8 @@ const ProfileUI = (props: ProfileParams) => {
     },
   });
   const [phoneUpdate, setPhoneUpdate] = useState(false);
+  const showInputPhoneNumber =
+    validationFields?.fields?.checkout?.cellphone?.enabled ?? false;
 
   const onSubmit = (values: any) => {
     if (phoneInputData.error) {
@@ -81,7 +137,7 @@ const ProfileUI = (props: ProfileParams) => {
         maxWidth: 200,
         includeBase64: true,
       },
-      response => {
+      (response: any) => {
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.errorMessage) {
@@ -97,6 +153,18 @@ const ProfileUI = (props: ProfileParams) => {
         }
       },
     );
+  };
+
+  const handleCancelEdit = () => {
+    cleanFormState({ changes: {} });
+    toggleIsEdit();
+    setPhoneInputData({
+      error: '',
+      phone: {
+        country_phone_code: null,
+        cellphone: null,
+      },
+    });
   };
 
   useEffect(() => {
@@ -148,16 +216,14 @@ const ProfileUI = (props: ProfileParams) => {
           fontSize: 26,
         }}
       />
-
       <CenterView>
         <OIcon
           url={user?.photo}
-          src={!user?.photo && theme.images.general.profilephoto}
-          width={120}
-          height={120}
+          src={!user?.photo && theme.images.general.user}
+          width={100}
+          height={100}
           style={{ borderRadius: 2 }}
         />
-
         <OIconButton
           icon={theme.images.general.camera}
           borderColor={theme.colors.clear}
@@ -166,17 +232,76 @@ const ProfileUI = (props: ProfileParams) => {
           onClick={() => handleImagePicker()}
         />
       </CenterView>
+      <Spinner visible={formState?.loading} />
 
-      <Spinner visible={formState?.loading || state.loading} />
-
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <UserFormDetailsUI
-          {...props}
-          isEdit={true}
-          hideUpdateButton
-          submitEvent={handleSubmit(onSubmit)}
-        />
-      </View>
+      {!isEdit ? (
+        <UserData>
+          {!validationFields?.loading &&
+            sortInputFields({ values: validationFields?.fields?.checkout })
+              .length > 0 && (
+              <UDWrapper>
+                {sortInputFields({
+                  values: validationFields.fields?.checkout,
+                }).map((field: any) => (
+                  <React.Fragment key={field.id}>
+                    <OText
+                      color={theme.colors.textGray}
+                      weight="bold"
+                      style={{ paddingHorizontal: 16 }}>
+                      {t(field?.code.toUpperCase(), field?.name)}
+                    </OText>
+                    <OInput
+                      name={field.code}
+                      placeholder={t(field.code.toUpperCase(), field?.name)}
+                      style={styles.inputStyle}
+                      icon={
+                        field.code === 'email'
+                          ? theme.images.general.email
+                          : theme.images.general.user
+                      }
+                      autoCapitalize={
+                        field.code === 'email' ? 'none' : 'sentences'
+                      }
+                      isDisabled={!isEdit}
+                      value={
+                        formState?.changes[field.code] ??
+                        (user && user[field.code]) ??
+                        ''
+                      }
+                      type={
+                        field.code === 'email' ? 'email-address' : 'default'
+                      }
+                      returnKeyType="done"
+                    />
+                  </React.Fragment>
+                ))}
+              </UDWrapper>
+            )}
+        </UserData>
+      ) : (
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <UserFormDetailsUI
+            {...props}
+            hideUpdateButton
+            handleCancelEdit={handleCancelEdit}
+            toggleIsEdit={toggleIsEdit}
+          />
+        </View>
+      )}
+      {!validationFields.loading && !isEdit && (
+        <EditButton>
+          <OButton
+            text={t('EDIT', 'Edit')}
+            bgColor={theme.colors.white}
+            borderColor={theme.colors.primary}
+            isDisabled={formState.loading}
+            imgRightSrc={null}
+            textStyle={{ fontSize: 20 }}
+            style={{ ...styles.editButton }}
+            onClick={toggleIsEdit}
+          />
+        </EditButton>
+      )}
 
       <Actions>
         <LanguageSelector />

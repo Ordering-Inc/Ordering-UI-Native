@@ -5,12 +5,23 @@ export const CenterView = styled.View`
 `;
 
 export const UserData = styled.View`
+  display: flex;
   align-items: center;
-  text-align: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
 `;
 
 export const Names = styled.View`
   flex-direction: row;
+`;
+
+export const UDForm = styled.View`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
 `;
 
 export const EditButton = styled.View`
@@ -33,4 +44,12 @@ export const Actions = styled.View`
 
 export const WrapperPhone = styled.View`
   padding: 8px 0px;
+`;
+
+export const UDWrapper = styled.View`
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
 `;
