@@ -1,8 +1,8 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import { LoginForm } from '../themes/doordash/components';
-import { colors } from '../theme.json';
+import { LoginForm } from '../themes/doordash';
+import { theme } from '../themes/doordash';
 import { Container } from '../layouts/Container';
 
 import { useLanguage } from 'ordering-components/native';
@@ -19,7 +19,7 @@ export const Login = ({ navigation, route }: any) => {
     navigation,
     useLoginByCellphone: true,
     loginButtonText: t('LOGIN', 'Login'),
-    loginButtonBackground: colors.primary,
+    loginButtonBackground: theme.colors.primary,
     forgotButtonText: t('FORGOT_YOUR_PASSWORD', 'Forgot your password?'),
     registerButtonText: t('SIGNUP', 'Signup'),
     onNavigationRedirect: (page: string) => {

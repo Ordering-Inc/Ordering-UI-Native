@@ -1,8 +1,8 @@
 import React from 'react'
 import { useApi, useEvent } from 'ordering-components/native'
-import { BusinessProductsListing as BusinessProductsListController } from '../themes/doordash/components';
+import { BusinessProductsListing as BusinessProductsListController } from '../themes/doordash';
 import styled from 'styled-components/native'
-import { colors } from '../theme.json'
+import { theme } from '../themes/doordash'
 
 const BusinessProductsList = (props: any) => {
   const [ordering] = useApi()
@@ -63,7 +63,7 @@ const BusinessProductsList = (props: any) => {
 
 const BusinessProductsListView = styled.SafeAreaView`
   flex: 1;
-  background-color: ${colors.backgroundPage};
+  background-color: ${theme.colors.backgroundPage};
 `
 
 export default BusinessProductsList

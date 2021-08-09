@@ -1,5 +1,5 @@
 import React from 'react';
-import { SignupForm } from '../themes/doordash/components';
+import { SignupForm } from '../themes/doordash';
 import { Container } from '../layouts/Container'
 import styled from 'styled-components/native';
 import { useLanguage, useSession } from 'ordering-components/native';

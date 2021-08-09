@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useLanguage } from 'ordering-components/native'
-import { OrdersOption } from '../themes/doordash/components'
+import { OrdersOption } from '../themes/doordash'
 import { OText } from '../components/shared'
 
 import { Container } from '../layouts/Container'

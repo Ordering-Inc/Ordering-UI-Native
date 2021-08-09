@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { HomePage } from '../themes/doordash/components';
-import { colors } from '../themes/doordash/theme.json';
+import { HomePage } from '../themes/doordash';
+import { theme } from '../themes/doordash';
 
 export const Home = (props: any) => {
   const homeProps = {
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
-    backgroundColor: colors.backgroundPage,
+    backgroundColor: theme.colors.backgroundPage,
   }
 })
 

@@ -1,7 +1,7 @@
 import React from 'react'
-import { BusinessesListing as BusinessListingController } from '../themes/doordash/components'
+import { BusinessesListing as BusinessListingController } from '../themes/doordash'
 import styled from 'styled-components/native'
-import { colors } from '../theme.json'
+import { theme } from '../themes/doordash'
 
 const BusinessesListing = (props: any) => {
   const BusinessesListingProps = {
@@ -16,7 +16,7 @@ const BusinessesListing = (props: any) => {
 
   const BusinessListView = styled.SafeAreaView`
     flex: 1;
-    background-color: ${colors.backgroundPage};
+    background-color: ${theme.colors.backgroundPage};
   `
 
 
