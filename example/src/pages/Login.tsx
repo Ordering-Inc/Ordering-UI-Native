@@ -1,11 +1,9 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import { LoginForm } from '../themes/instacart';
-import { Container } from '../layouts/Container';
+import { LoginForm, Container, _setStoreData } from '../themes/instacart';
 
 import { useLanguage } from 'ordering-components/native';
-import { _setStoreData } from '../providers/StoreUtil';
 import { useTheme } from 'styled-components/native';
 
 const KeyboardView = styled.KeyboardAvoidingView`

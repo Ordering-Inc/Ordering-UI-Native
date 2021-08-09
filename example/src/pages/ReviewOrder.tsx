@@ -1,8 +1,7 @@
 import React from 'react'
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import {ReviewOrder as ReviewOrderController} from '../components/ReviewOrder'
-import { Container } from '../layouts/Container';
+import {ReviewOrder as ReviewOrderController, Container} from '../themes/instacart'
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;

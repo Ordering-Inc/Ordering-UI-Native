@@ -1,11 +1,8 @@
 import * as React from 'react';
-import { useFocusEffect } from '@react-navigation/native'
 import styled from 'styled-components/native';
-import { useOrder } from 'ordering-components/native';
 import { Platform } from 'react-native';
-import { Container } from '../layouts/Container'
-import { useEffect } from 'react';
-import { CartSingle } from '../themes/instacart/components/CartSingle';
+import { Container } from '../themes/instacart'
+import { CartSingle } from '../themes/instacart';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;

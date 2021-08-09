@@ -1,8 +1,7 @@
 import React, {useState} from 'react'
 import { useLanguage } from 'ordering-components/native'
-import { OrdersOption } from '../components/OrdersOption'
+import { OrdersOption, Container } from '../themes/instacart'
 import { OText } from '../components/shared'
-import { Container } from '../layouts/Container'
 
 const MyOrders = ({ navigation }: any) => {
 

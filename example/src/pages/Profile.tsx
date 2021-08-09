@@ -1,8 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
-import { UserProfileForm as ProfileController } from '../components/UserProfileForm';
-import { Container } from '../layouts/Container'
+import { UserProfileForm as ProfileController, Container } from '../themes/instacart';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;

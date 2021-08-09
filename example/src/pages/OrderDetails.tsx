@@ -1,6 +1,5 @@
 import React from 'react'
-import { OrderDetails as OrderDetailsController } from '../themes/instacart'
-import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
+import { OrderDetails as OrderDetailsController, SafeAreaContainer } from '../themes/instacart'
 
 const OrderDetails = ({ navigation, route } : any) => {
   const orderDetailsProps = {

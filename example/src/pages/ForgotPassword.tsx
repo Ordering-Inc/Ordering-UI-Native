@@ -2,7 +2,7 @@ import React from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
 import { ForgotPasswordForm } from '../themes/instacart';
-import { Container } from '../layouts/Container';
+import { Container } from '../themes/instacart';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;

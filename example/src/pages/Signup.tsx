@@ -1,10 +1,8 @@
 import React from 'react';
-import { SignupForm } from '../themes/instacart';
-import { Container } from '../layouts/Container'
+import { SignupForm, _setStoreData, _removeStoreData, Container } from '../themes/instacart';
 import styled from 'styled-components/native';
 import { useLanguage, useSession } from 'ordering-components/native';
 import { Platform } from 'react-native';
-import { _setStoreData, _removeStoreData } from '../providers/StoreUtil';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;

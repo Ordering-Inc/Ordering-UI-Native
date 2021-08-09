@@ -9,7 +9,7 @@ import MyOrders from '../pages/MyOrders'
 import CartList from '../pages/CartList'
 import Profile from '../pages/Profile'
 import { useTheme } from 'styled-components/native'
-import { OIcon, OText } from '../themes/instacart/components/shared'
+import { OIcon, OText } from '../themes/instacart/'
 import SearchBusinessPage from '../pages/Search'
 
 const CartsLenght = styled.View`
