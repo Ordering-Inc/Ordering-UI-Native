@@ -190,7 +190,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const actionsContent = (
     <View style={{maxHeight: 300}}>
-      <OSInputWrapper>
+      {/* <OSInputWrapper>
         <OSTable
           style={{
             alignItems: 'center',
@@ -264,7 +264,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             style={styles.buttonApplyStyle}
           />
         </OSTable>
-      </OSInputWrapper>
+      </OSInputWrapper> */}
 
       <OButton
         text={`${t('YOU_ARE_DONE', 'You are done')}!`}
