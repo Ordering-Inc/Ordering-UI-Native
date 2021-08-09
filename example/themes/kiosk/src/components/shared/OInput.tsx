@@ -51,6 +51,8 @@ interface Props {
   autoCorrect?: boolean;
   keyboardType?: string;
   returnKeyType?: string;
+  onSubmitEditing?: any;
+  blurOnSubmit?: boolean;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -87,6 +89,8 @@ const OInput = (props: Props): React.ReactElement => {
         autoCompleteType={props.autoCompleteType}
         autoCorrect={props.autoCorrect}
         returnKeyType={props.returnKeyType}
+        onSubmitEditing={props.onSubmitEditing}
+        blurOnSubmit={props.blurOnSubmit}
       />
       {props.iconRight && (
         <OIcon
