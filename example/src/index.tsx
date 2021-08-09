@@ -80,8 +80,11 @@ import { StoreMethods } from './providers/StoreUtil';
 // contexts
 import { ThemeProvider, useTheme } from './context/Theme';
 
+// hooks
+import { DeviceOrientationMethods } from './hooks/DeviceOrientation';
+
 // themes
-import ThemeKiosk from './themes/kiosk'
+import ThemeBusiness from './themes/business'
 
 export {
   ActiveOrders,
@@ -161,6 +164,8 @@ export {
   // contexts
   ThemeProvider,
   useTheme,
+  // hooks
+  DeviceOrientationMethods,
   // themes
-  ThemeKiosk
+  ThemeBusiness,
 }

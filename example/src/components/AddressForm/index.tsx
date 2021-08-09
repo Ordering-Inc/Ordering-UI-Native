@@ -50,7 +50,11 @@ const AddressFormUI = (props: AddressFormParams) => {
     isRequiredField,
     isFromProductsList,
     afterSignup,
-    isFromCheckout
+    isFromCheckout,
+    businessId,
+    productId,
+    categoryId,
+    store
   } = props
 
   const theme = useTheme();
@@ -105,7 +109,6 @@ const AddressFormUI = (props: AddressFormParams) => {
   )
   const [saveMapLocation, setSaveMapLocation] = useState(false)
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
-  const [isSignUpEffect, setIsSignUpEffect] = useState(false)
 
   const googleInput: any = useRef(null)
   const internalNumberRef: any = useRef(null)
@@ -119,7 +122,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 
   const isGuestUser = props.isGuestUser || props.isGuestFromStore;
 
-  const continueAsGuest = () => navigation.navigate('BusinessList')
+  const continueAsGuest = () => navigation.navigate('BusinessList', {store, businessId, productId, categoryId})
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
   const getAddressFormatted = (address: any) => {
@@ -227,7 +230,7 @@ const AddressFormUI = (props: AddressFormParams) => {
       }
       if (!isGuestUser && !auth && !afterSignup) {
         !isFromProductsList
-          ? navigation.navigate('Business')
+          ? navigation.navigate('Business', {store})
           : navigation?.canGoBack() && navigation.goBack()
       }
       return
@@ -292,7 +295,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 
   useEffect(() => {
     if (orderState.loading && !addressesList && orderState.options.address && auth && !afterSignup && !isFromCheckout) {
-      !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business')
+      !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business', {store})
     }
   }, [orderState.options.address])
 
@@ -438,7 +441,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                         blurOnSubmit: false,
                         returnKeyType: 'next'
                       }}
-                      onFail={(error: any) => setAlertState({ open: true, content: getTraduction(error) })}
+                      onFail={(error: any) => setAlertState({ open: true, content: getTraduction(error, t) })}
                       styles={{
                         listView: {
                           position: 'relative',

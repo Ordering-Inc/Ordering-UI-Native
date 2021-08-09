@@ -1,10 +1,11 @@
 import React from 'react';
-import { Platform, View } from 'react-native';
+import { Platform , I18nManager } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
 const ContainerStyled = styled.ScrollView`
   flex: 1;
   background-color: ${(props: any) => props.theme.colors.backgroundPage};
+  left: ${Platform.OS === 'ios' && I18nManager.isRTL ? '20px' : '0px'} ;
 `;
 
 const SafeAreaStyled = styled.SafeAreaView`

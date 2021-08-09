@@ -4,6 +4,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Messages } from '../Messages'
+import { ShareComponent } from '../ShareComponent'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -43,6 +44,7 @@ import { USER_TYPE } from '../../config/constants'
 import { GoogleMap } from '../GoogleMap'
 import { verifyDecimals } from '../../utils'
 import { useTheme } from 'styled-components/native'
+import { NotFoundSource } from '../NotFoundSource'
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -64,7 +66,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       flexDirection: 'row'
     },
     statusBar: {
-      transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
+      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
       height: 10,
     },
     logo: {
@@ -92,9 +94,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ user }] = useSession()
   const [{ configs }] = useConfig()
   const [, { refreshOrderOptions }] = useOrder()
-  const [openModalForBusiness,setOpenModalForBusiness] = useState(false)
-  const [openModalForDriver,setOpenModalForDriver] = useState(false)
+  const [openModalForBusiness, setOpenModalForBusiness] = useState(false)
+  const [openModalForDriver, setOpenModalForDriver] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
+  const [isReviewed, setIsReviewed] = useState(false)
   const { order, businessData } = props.order
 
 
@@ -162,10 +165,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       navigation?.canGoBack() && navigation.goBack();
       return
     }
-    if(goToBusinessList){
+    if (goToBusinessList) {
       refreshOrderOptions()
     }
     navigation.navigate('BottomTab');
+  }
+
+  const handleClickOrderReview = (order: any) => {
+    navigation.navigate('ReviewOrder', { order: { id: order?.id, business_id: order?.business_id, logo: order.business?.logo }, setIsReviewed })
   }
 
   useEffect(() => {
@@ -195,8 +202,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   return (
     <OrderDetailsContainer keyboardShouldPersistTaps='handled'>
-      <Spinner visible={!order || Object.keys(order).length === 0} />
-      {order && Object.keys(order).length > 0 && (
+      <Spinner visible={props.order?.error?.length === 0 && (!order || Object.keys(order).length === 0)} />
+      {props.order?.error?.length > 0 && (
+        <NotFoundSource
+          btnTitle={t('GO_TO_BUSINESSLIST', 'Go to business list')}
+          content={props.order.error[0]}
+          onClickButton={() => navigation.navigate('BusinessList')}
+        />
+      )}
+      {order && Object.keys(order).length > 0 && !props.order?.error?.length && (
         <>
           <Header>
             <OButton
@@ -226,7 +240,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </Header>
           <OrderContent>
             <OrderBusiness>
-              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                 <Logo>
                   <OIcon
                     url={order?.business?.logo}
@@ -249,6 +263,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </View>
               </View>
               <Icons>
+                {order.uuid && order.hash_key && (
+                  <ShareComponent orderId={order.uuid} hashkey={order.hash_key} />
+                )}
                 <MaterialCommunityIcon
                   name='store'
                   size={28}
@@ -301,7 +318,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderStatus>
             </View>
             <OrderCustomer>
-              <OText size={18}>{t('CUSTOMER', 'Customer')}</OText>
+              <OText size={18} style={{textAlign: 'left'}}>{t('CUSTOMER', 'Customer')}</OText>
               <Customer>
                 <CustomerPhoto>
                   <OIcon
@@ -312,8 +329,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   />
                 </CustomerPhoto>
                 <InfoBlock>
-                  <OText size={18}>{order?.customer?.name} {order?.customer?.lastname}</OText>
-                  <OText>{order?.customer?.address}</OText>
+                  <OText size={18} style={{textAlign: 'left'}} >{order?.customer?.name} {order?.customer?.lastname}</OText>
+                  <OText style={{textAlign: 'left'}}>{order?.customer?.address}</OText>
                 </InfoBlock>
               </Customer>
               {order?.driver && (
@@ -359,7 +376,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderDriver>
             )}
             <OrderProducts>
-              <OText size={18}>{t('YOUR_ORDER', 'Your Order')}</OText>
+              <OText size={18} style={{textAlign: 'left'}}>{t('YOUR_ORDER', 'Your Order')}</OText>
               {order?.products?.length && order?.products.map((product: any, i: number) => (
                 <ProductItemAccordion
                   key={product?.id || i}
@@ -431,6 +448,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText style={styles.textBold} color={theme.colors.primary}>{parsePrice(order?.summary?.total || order?.total)}</OText>
                 </Table>
               </Total>
+              {
+                (
+                  parseInt(order?.status) === 1 ||
+                  parseInt(order?.status) === 2 ||
+                  parseInt(order?.status) === 5 ||
+                  parseInt(order?.status) === 6 ||
+                  parseInt(order?.status) === 10 ||
+                  parseInt(order?.status) === 11 ||
+                  parseInt(order?.status) === 12
+                ) && !order.review && !isReviewed && (
+                  <OButton
+                    onClick={() => handleClickOrderReview(order)}
+                    text={t('REVIEW_YOUR_ORDER', 'Review your order')}
+                    textStyle={{ color: theme.colors.white }}
+                    imgRightSrc=''
+                  />
+                )}
             </OrderBill>
           </OrderContent>
         </>

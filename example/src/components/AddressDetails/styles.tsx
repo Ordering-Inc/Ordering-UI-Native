@@ -9,6 +9,8 @@ export const ADContainer = styled.View`
 export const ADHeader = styled.View`
   display: flex;
   justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
 `
 
 export const ADAddress = styled.View`

@@ -54,26 +54,30 @@ export interface AddressListParams {
 }
 
 export interface AddressFormParams {
-	navigation?: any,
-	updateChanges?: any,
-	address?: any,
-	formState?: any,
-	isEditing?: boolean,
-	handleChangeInput?: any,
-	addressState?: any,
-	addressesList?: any,
-	saveAddress?: any,
-	userCustomerSetup?: boolean,
-	isRequiredField?: (field: string) => {},
-	isGuestUser?: boolean,
-	useValidationFileds?: boolean,
-	isSelectedAfterAdd?: boolean,
-	onSaveAddress?: any,
-	isFromProductsList?: boolean,
-	hasAddressDefault?: any,
-	isFromCheckout?: boolean
-	afterSignup?: boolean
-	isGuestFromStore?: boolean
+  navigation?: any,
+  updateChanges?: any,
+  address?: any,
+  formState?: any,
+  isEditing?: boolean,
+  handleChangeInput?: any,
+  addressState?: any,
+  addressesList?: any,
+  saveAddress?: any,
+  userCustomerSetup?: boolean,
+  isRequiredField?: (field: string) => {},
+  isGuestUser?: boolean,
+  useValidationFileds?: boolean,
+  isSelectedAfterAdd?: boolean,
+  onSaveAddress?: any,
+  isFromProductsList?: boolean,
+  hasAddressDefault?: any,
+  isFromCheckout?: boolean
+  afterSignup?: boolean
+  isGuestFromStore?: boolean
+  businessId?: number
+  productId?: number
+  categoryId?: number
+  store?: string
 }
 export interface SignupParams {
 	navigation?: any;
@@ -147,22 +151,26 @@ export interface BusinessControllerParams {
 	isBusinessClose?: number
 }
 export interface BusinessProductsListingParams {
-	navigation?: any;
-	errors: any;
-	businessState: { business: any, loading: boolean, error: null };
-	categoryState: any;
-	searchValue?: string;
-	featuredProducts: boolean;
-	handleChangeSearch?: any;
-	categorySelected: any;
-	handleSearchRedirect: any;
-	errorQuantityProducts?: boolean;
-	header?: any;
-	logo?: any;
-	productModal?: any;
-	handleChangeCategory: (value: any) => {};
-	setProductLogin?: () => {};
-	updateProductModal?: (value: any) => {}
+  navigation?: any;
+  errors: any;
+  businessState: { business: any, loading: boolean, error: null };
+  categoryState: any;
+  searchValue?: string;
+  featuredProducts: boolean;
+  handleChangeSearch?: any;
+  categorySelected: any;
+  handleSearchRedirect: any;
+  errorQuantityProducts?: boolean;
+  header?: any;
+  logo?: any;
+  productModal?: any;
+  businessId?: number;
+  categoryId?: number;
+  productId?: number;
+  getNextProducts?: () => {};
+  handleChangeCategory: (value: any) => {};
+  setProductLogin?: () => {};
+  updateProductModal?: (value: any) => {}
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -248,15 +256,17 @@ export interface OrdersOptionParams {
 	ordersLength: { activeOrdersLength: number, previousOrdersLength: number }
 }
 export interface ActiveOrdersParams {
-	orders?: any,
-	pagination?: any,
-	getOrderStatus?: any,
-	reorderLoading?: boolean,
-	customArray?: Array<any>
-	setScreen?: any,
-	screen?: any,
-	loadMoreOrders?: () => {},
-	onNavigationRedirect?: (route: string, params?: any) => {}
+  orders?: any,
+  pagination?: any,
+  getOrderStatus?: any,
+  reorderLoading?: boolean,
+  customArray?: Array<any>
+  setScreen?: any,
+  screen?: any,
+  isPreorders?: boolean,
+  preordersLength: number,
+  loadMoreOrders?: () => {},
+  onNavigationRedirect?: (route: string, params?: any) => {}
 }
 export interface PreviousOrdersParams {
 	orders?: any,
@@ -296,13 +306,14 @@ export interface ProductItemAccordionParams {
 	isExpanded?: boolean,
 }
 export interface ReviewOrderParams {
-	order?: { orderId: number, businessId: number, logo: string },
-	stars?: any,
-	handleChangeInput?: any,
-	handleChangeRating?: any,
-	handleSendReview?: any,
-	formState?: any,
-	navigation?: any
+  order?: { orderId: number, businessId: number, logo: string },
+  stars?: any,
+  handleChangeInput?: any,
+  handleChangeRating?: any,
+  handleSendReview?: any,
+  formState?: any,
+  navigation?: any,
+  setIsReviewed?: (isReviewed: boolean) => {}
 }
 export interface MessagesParams {
 	type?: string,
@@ -398,4 +409,9 @@ export interface GoogleMapsParams {
 	locations?: Array<any>,
 	setSaveLocation?: (val: boolean) => void,
 	handleToggleMap?: () => void
+}
+
+export interface ShareComponentParams {
+  orderId?: number;
+  hashkey?: string;
 }

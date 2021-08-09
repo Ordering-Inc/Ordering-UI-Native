@@ -10,7 +10,8 @@ const KeyboardView = styled.KeyboardAvoidingView`
 const ReviewOrder = ({navigation, route} : any) => {
   const reviewOrderProps = {
     navigation,
-    order: route?.params?.order
+    order: route?.params?.order,
+    setIsReviewed: route?.params?.setIsReviewed
   }
 
   return (
