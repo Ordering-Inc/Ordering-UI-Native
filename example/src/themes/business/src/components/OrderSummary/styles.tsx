@@ -72,4 +72,5 @@ export const ContentInfo = styled.View`
 
 export const Action = styled.View`
   margin-horizontal: 30px;
+  padding-top: 10px;
 `;
