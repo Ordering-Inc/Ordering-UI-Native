@@ -98,10 +98,12 @@ export interface PhoneInputParams {
   defaultValue?: any;
   defaultCode?: number | null;
   forwardRef?: any;
+  isDisabled?: boolean;
   textInputProps?: TextInputProps;
   flagProps?: any;
   onSubmitEditing: () => void;
 }
+
 
 export interface LanguageSelectorParams {
   languagesState?: any;
