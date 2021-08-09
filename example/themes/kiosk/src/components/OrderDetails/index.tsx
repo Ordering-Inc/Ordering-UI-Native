@@ -190,7 +190,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const actionsContent = (
     <View style={{maxHeight: 300}}>
-      {/* <OSInputWrapper>
+      {/* Uncomment this code when email/sms endpoint exist
+      <OSInputWrapper>
         <OSTable
           style={{
             alignItems: 'center',
