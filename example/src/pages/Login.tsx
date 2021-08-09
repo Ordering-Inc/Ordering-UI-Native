@@ -1,8 +1,8 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import { LoginForm } from '../../themes/original';
-import { Container } from '../../themes/original';
+import { LoginForm } from '../components/LoginForm';
+import { Container } from '../layouts/Container';
 
 import { useLanguage } from 'ordering-components/native';
 import { _setStoreData } from '../providers/StoreUtil';
@@ -37,7 +37,7 @@ export const Login = ({ navigation, route }: any) => {
       enabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <Container style={{paddingLeft: 40, paddingRight: 40}}>
+      <Container>
         <LoginForm {...loginProps} />
       </Container>
     </KeyboardView>

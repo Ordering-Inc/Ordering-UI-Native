@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { useLanguage } from 'ordering-components/native'
-import { OrdersOption } from '../../themes/original'
+import { OrdersOption } from '../components/OrdersOption'
 import { OText } from '../components/shared'
 import { Container } from '../layouts/Container'
 
@@ -18,7 +18,7 @@ const MyOrders = ({ navigation }: any) => {
 
 
   return (
-    <Container style={{paddingLeft: 40, paddingRight: 40}}>
+    <Container>
       <OText size={24} mBottom={20}>
         {t('MY_ORDERS', 'My Orders')}
       </OText>
