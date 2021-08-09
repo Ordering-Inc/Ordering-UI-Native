@@ -5,9 +5,7 @@ import { Checkout } from '../themes/doordash';
 import { initStripe, useConfirmPayment  } from '@stripe/stripe-react-native';
 import styled from 'styled-components/native';
 
-import { ToastType, useToast } from '../providers/ToastProvider';
-
-import { useOrder, useLanguage } from 'ordering-components/native';
+import { useOrder, useLanguage, ToastType, useToast } from 'ordering-components/native';
 
 const stripePaymentOptions = ['stripe', 'stripe_direct', 'stripe_connect'];
 
@@ -16,7 +14,7 @@ const KeyboardView = styled.KeyboardAvoidingView`
 `;
 
 export const CheckoutPage = (props: any) => {
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const [orderState, { confirmCart, changeMoment }] = useOrder();
   const { confirmPayment, loading: confirmPaymentLoading } = useConfirmPayment();

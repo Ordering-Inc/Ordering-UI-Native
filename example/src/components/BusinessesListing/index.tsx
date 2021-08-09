@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { View, StyleSheet, ScrollView, Platform, PanResponder, I18nManager } from 'react-native'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -8,13 +8,14 @@ import {
   useSession,
   useOrder,
   useConfig,
-  useUtils
+  useUtils,
+  ToastType,
+  useToast
 } from 'ordering-components/native'
 
 import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
 
 import NavBar from '../NavBar'
-import { colors } from '../../theme.json'
 import { SearchBar } from '../SearchBar'
 import { OText } from '../shared'
 import { BusinessesListingParams } from '../../types'
@@ -22,7 +23,7 @@ import { NotFoundSource } from '../NotFoundSource'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { OrderTypeSelector } from '../OrderTypeSelector'
-import { ToastType, useToast } from '../../providers/ToastProvider'
+import { useTheme } from 'styled-components/native'
 
 const PIXELS_TO_SCROLL = 1200
 
@@ -37,23 +38,45 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     paginationProps,
     handleChangeSearch
   } = props
+
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      padding: 20,
+      marginBottom: 20,
+      left: Platform.OS === 'ios' && I18nManager.isRTL ? 20 : 0
+    },
+    welcome: {
+      flex: 1,
+      flexDirection: 'row'
+    },
+    inputStyle: {
+      backgroundColor: theme.colors.inputDisabled,
+      flex: 1
+    },
+    wrapperOrderOptions: {
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 10,
+      zIndex: 100
+    },
+    borderStyle: {
+      borderColor: theme.colors.backgroundGray,
+      borderWidth: 1,
+      borderRadius: 10,
+    }
+  })
+
   const [, t] = useLanguage()
   const [{ user, auth }] = useSession()
   const [orderState] = useOrder()
   const [{ configs }] = useConfig()
   const [{ parseDate }] = useUtils()
-  const {showToast} = useToast()
-
-  // const timerId = useRef<any>(false)
-  // const panResponder = useRef(
-  //   PanResponder.create({
-  //     onMoveShouldSetPanResponder: (e, gestureState) => {
-  //       const {dx, dy} = gestureState;
-  //       resetInactivityTimeout()
-  //       return (Math.abs(dx) > 20) || (Math.abs(dy) > 20);
-  //     },
-  //   })
-  // ).current
+  const [, {showToast}] = useToast()
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
@@ -64,23 +87,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
     if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
       getBusinesses()
-      showToast(ToastType.Info, 'loading more business')
+      showToast(ToastType.Info, t('LOADING_MORE_BUSINESS', 'Loading more business'))
     }
   }
 
-  // const resetInactivityTimeout = () => {
-  //   clearTimeout(timerId.current)
-  //   timerId.current = setInterval(() => {
-  //     getBusinesses(true)
-  //   }, 600000)
-  // }
-
-  // useEffect(() => {
-  //   resetInactivityTimeout()
-  // }, [])
-
   return (
-    <ScrollView style={styles.container} onScroll={(e) => handleScroll(e)}>
+    <ScrollView style={styles.container} onScroll={(e: any) => handleScroll(e)}>
       {!auth && (
         <NavBar
           onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
@@ -99,7 +111,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
               <OText
                 style={{ fontWeight: 'bold' }}
                 size={28}
-                color={colors.primary}
+                color={theme.colors.primary}
                 numberOfLines={1}
                 ellipsizeMode='tail'
               >
@@ -140,7 +152,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         >
           <MaterialComIcon
             name='home-outline'
-            color={colors.primary}
+            color={theme.colors.primary}
             size={20}
             style={{ marginRight: 10 }}
           />
@@ -195,35 +207,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
     </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    marginBottom: 20
-  },
-  welcome: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  inputStyle: {
-    backgroundColor: colors.inputDisabled,
-    flex: 1
-  },
-  wrapperOrderOptions: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-    zIndex: 100
-  },
-  borderStyle: {
-    borderColor: colors.backgroundGray,
-    borderWidth: 1,
-    borderRadius: 10,
-  }
-})
 
 export const BusinessesListing = (props: BusinessesListingParams) => {
 

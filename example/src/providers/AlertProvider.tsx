@@ -2,7 +2,7 @@ import * as React from 'react'
 import AwesomeAlert from 'react-native-awesome-alerts'
 import { getTraduction } from '../utils'
 import { useLanguage } from 'ordering-components/native'
-import { colors } from '../theme.json'
+import { useTheme } from 'styled-components/native'
 interface Props {
   open: boolean,
   title: string,
@@ -19,25 +19,21 @@ const Alert = (props: Props) => {
     onClose,
     onAccept,
   } = props
-  const [, t] = useLanguage()
-  const parseContent = (list: Array<string>) => {
-    let allMessages: string = ''
-    list?.map((message: string) => {
-      allMessages = `* ${getTraduction(message)}\n` + allMessages
-    })
-    return allMessages
-  }
+
+  const theme = useTheme();
+  const [, t] = useLanguage();
+
   return (
     <AwesomeAlert
       show={open}
       showProgress={false}
       title={title}
-      message={getTraduction(content?.[0])}
+      message={getTraduction(content?.[0], t)}
       closeOnTouchOutside={true}
       closeOnHardwareBackPress={false}
       showConfirmButton={true}
       confirmText={t('ACCEPT', 'Accept')}
-      confirmButtonColor={colors.primary}
+      confirmButtonColor={theme.colors.primary}
       onCancelPressed={() => onClose()}
       onConfirmPressed={() => onAccept()}
     />

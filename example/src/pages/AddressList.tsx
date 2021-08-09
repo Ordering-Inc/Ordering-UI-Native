@@ -3,26 +3,20 @@ import { AddressList as AddressListController } from '../themes/doordash'
 import { useSession } from 'ordering-components/native'
 
 const AddressList = ({ route, navigation }: any) => {
-
   const [{ user }] = useSession()
-  const isGoBack = route?.params?.isGoBack
-  const isFromBusinesses = route?.params?.isFromBusinesses
-  const isFromProductsList = route?.params?.isFromProductsList
-  const isFromCheckout = route?.params?.isFromCheckout
-  const afterSignup = route?.params?.afterSignup
-  const AddressListProps = {
+  const addressListProps = {
     navigation,
     route,
     userId: user?.id,
-    isGoBack,
-    isFromBusinesses,
-    isFromProductsList,
-    isFromCheckout,
-    afterSignup
+    isGoBack: route?.params?.isGoBack,
+    isFromBusinesses: route?.params?.isFromBusinesses,
+    isFromProductsList: route?.params?.isFromProductsList,
+    isFromCheckout: route?.params?.isFromCheckout,
+    afterSignup: route?.params?.afterSignup
   }
 
   return (
-    <AddressListController {...AddressListProps} />
+    <AddressListController {...addressListProps} />
   )
 }
 

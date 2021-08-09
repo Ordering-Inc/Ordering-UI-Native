@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react'
-import { OrderList, useLanguage, useOrder } from 'ordering-components/native'
+import React, { useState, useEffect } from 'react'
+import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { useFocusEffect } from '@react-navigation/native'
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
@@ -7,16 +7,15 @@ import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
 
 import { OptionTitle } from './styles'
-import { colors, images } from '../../theme.json'
 import { OrdersOptionParams } from '../../types'
-import { ToastType, useToast } from '../../providers/ToastProvider'
 
 import {
   Placeholder,
   PlaceholderLine,
   Fade
 } from "rn-placeholder";
-import { View } from 'react-native'
+import { View, TouchableOpacity } from 'react-native'
+import { useTheme } from 'styled-components/native'
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
@@ -34,20 +33,24 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     setOrdersLength
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [, { reorder }] = useOrder()
-  const { showToast } = useToast()
+  const [, { showToast }] = useToast()
   const { loading, error, orders: values } = orderList
 
   const imageFails = activeOrders
-    ? images.general.emptyActiveOrders
-    : images.general.emptyPastOrders
+    ? theme.images.general.emptyActiveOrders
+    : theme.images.general.emptyPastOrders
 
   const orders = customArray || values || []
 
   const [reorderLoading, setReorderLoading] = useState(false)
   const [isLoadingFirstRender, setIsLoadingFirstRender] = useState(false)
-  const [screen,setScreen] = useState({name: '', uuid: null})
+  const [screen, setScreen] = useState({ name: '', uuid: null })
+  const [filterForOrders, setFilterForOrders] = useState('active-orders')
+  const [ordersFiltered, setOrdersFiltered] = useState(orders.filter((order : any) => orderStatus.includes(order.status)))
+
   const handleReorder = async (orderId: number) => {
     setReorderLoading(true)
     try {
@@ -114,16 +117,30 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     })
   }, [orders.length])
 
+  useEffect(() => {
+    setOrdersFiltered(filterForOrders === 'preorders' ? orders.filter((order : any) => order.status === 13) : orders.filter((order : any) => orderStatus.includes(order.status) && order.status !== 13))
+  }, [filterForOrders, orders])
 
   return (
     <>
       <OptionTitle>
-        {(!activeOrders || (activeOrders && ordersLength.activeOrdersLength > 0) || (ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength === 0 )) && !isLoadingFirstRender && (
-        <OText size={16} color={colors.textSecondary} mBottom={10} >
-          {titleContent || (activeOrders
-            ? t('ACTIVE_ORDERS', 'Active Orders')
-            : t('PREVIOUS_ORDERS', 'Previous Orders'))}
-        </OText>
+        {(!activeOrders || (activeOrders && ordersLength.activeOrdersLength > 0) || (ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength === 0)) && !isLoadingFirstRender && (
+          <>
+            <TouchableOpacity onPress={() => setFilterForOrders('active-orders')}>
+              <OText size={16} color={filterForOrders === 'active-orders' ? theme.colors.black : theme.colors.textSecondary} mBottom={10} mRight={10} >
+                {titleContent || (activeOrders
+                  ? t('ACTIVE_ORDERS', 'Active Orders')
+                  : t('PREVIOUS_ORDERS', 'Previous Orders'))}
+              </OText>
+            </TouchableOpacity>
+            {activeOrders && orders.filter((order : any) => order.status === 13)?.length > 0 && (
+            <TouchableOpacity onPress={() => setFilterForOrders('preorders')}>
+              <OText size={16} color={filterForOrders === 'preorders' ? theme.colors.black : theme.colors.textSecondary} mBottom={10} >
+                {t('PREORDERS', 'Preorders')}
+              </OText>
+            </TouchableOpacity>
+            )}
+          </>
         )}
       </OptionTitle>
       {!loading && orders.length === 0 && !isLoadingFirstRender && activeOrders && ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength !== 0 && (
@@ -174,7 +191,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {!loading && !error && orders.length > 0 && !isLoadingFirstRender && (
         activeOrders ? (
           <ActiveOrders
-            orders={orders.filter((order: any) => orderStatus.includes(order.status))}
+            orders={ordersFiltered}
             pagination={pagination}
             loadMoreOrders={loadMoreOrders}
             reorderLoading={reorderLoading}
@@ -183,11 +200,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             onNavigationRedirect={onNavigationRedirect}
             setScreen={setScreen}
             screen={screen}
+            isPreorders={filterForOrders === 'preorders'}
+            preordersLength={orders.filter((order : any) => order.status === 13)?.length}
           />
         ) : (
           <PreviousOrders
             reorderLoading={reorderLoading}
-            orders={orders.filter((order: any) => orderStatus.includes(order.status))}
+            orders={ordersFiltered}
             pagination={pagination}
             loadMoreOrders={loadMoreOrders}
             getOrderStatus={getOrderStatus}

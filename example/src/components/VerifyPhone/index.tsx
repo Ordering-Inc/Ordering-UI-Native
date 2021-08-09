@@ -5,7 +5,6 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { getTraduction } from '../../utils'
 
 import { OText } from '../shared';
-import { colors } from '../../theme.json'
 
 import {
   Container,
@@ -15,6 +14,7 @@ import {
   InputsSection,
   ErrorSection
 } from './styles'
+import { useTheme } from 'styled-components/native';
 
 const TIME_COUNTDOWN = 60 * 10 // 10 minutes
 
@@ -28,6 +28,22 @@ export const VerifyPhone = (props: any) => {
     handleCheckPhoneCode,
     handleVerifyCodeClick
   } = props
+
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    inputStyle: {
+      width: 80,
+      height: 80,
+      marginBottom: 25,
+      borderWidth: 1,
+      borderColor: theme.colors.disabled,
+      borderRadius: 20,
+      textAlign: 'center',
+      fontSize: 40
+    }
+  });
+
   const [, t] = useLanguage()
 
   const [timer, setTimer] = useState(`${TIME_COUNTDOWN / 60}:00`)
@@ -109,15 +125,15 @@ export const VerifyPhone = (props: any) => {
         {t('VERIFY_PHONE', 'Verify Phone')}
       </OText>
       {lastNumbers && (
-        <OText size={20} color={colors.disabled}>
+        <OText size={20} color={theme.colors.disabled}>
           {`${t('MESSAGE_ENTER_VERIFY_CODE', 'Please, enter the verification code we sent to your mobile ending with')} **${lastNumbers}`}
         </OText>
       )}
       <WrappCountdown>
-        <CountDownContainer color={timer === '00:00' ? colors.error: colors.success}>
+        <CountDownContainer color={timer === '00:00' ? theme.colors.error: theme.colors.success}>
           <OText
             size={30}
-            color={timer === '00:00' ? colors.error: colors.success}
+            color={timer === '00:00' ? theme.colors.error: theme.colors.success}
           >
             {timer}
           </OText>
@@ -148,9 +164,9 @@ export const VerifyPhone = (props: any) => {
             <OText
               key={i}
               size={20}
-              color={colors.error}
+              color={theme.colors.error}
             >
-              {`* ${t(getTraduction(e))}`}
+              {`* ${getTraduction(e, t)}`}
             </OText>
           ))}
         </ErrorSection>
@@ -160,7 +176,7 @@ export const VerifyPhone = (props: any) => {
           {t('ARE_YOU_NOT_SEEING_THE_CODE', 'Are you not seeing the code?')}
         </OText>
         <Pressable onPress={() => handleSendCodeAgain()}>
-          <OText size={17} color={colors.primary}>
+          <OText size={17} color={theme.colors.primary}>
             {t('SEND_AGAIN', 'Send Again')}
           </OText>
         </Pressable>
@@ -169,16 +185,3 @@ export const VerifyPhone = (props: any) => {
     </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  inputStyle: {
-    width: 80,
-    height: 80,
-    marginBottom: 25,
-    borderWidth: 1,
-    borderColor: colors.disabled,
-    borderRadius: 20,
-    textAlign: 'center',
-    fontSize: 40
-  }
-});

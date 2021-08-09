@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform , I18nManager } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 import {
@@ -11,11 +11,12 @@ import {
   useLanguage,
   useUtils,
   useValidationFields,
-  useConfig
+  useConfig,
+  ToastType,
+  useToast
 } from 'ordering-components/native';
 
-import { OText, OButton, OIcon } from '../shared';
-import { colors, images } from '../../theme.json';
+import { OText, OButton, OIcon, OModal } from '../shared';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -36,16 +37,18 @@ import {
   ChPaymethods,
   ChDriverTips,
   ChCart,
-  ChPlaceOrderBtn,
   ChErrors,
   ChBusinessDetails,
-  ChUserDetails
+  ChUserDetails,
+  TextDetails
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
-import { ToastType, useToast } from '../../providers/ToastProvider';
 import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
+import { useTheme } from 'styled-components/native';
+import { ActivityIndicator } from 'react-native-paper';
+import WebView from 'react-native-webview';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -81,18 +84,44 @@ const CheckoutUI = (props: any) => {
     cartTotal
   } = props
 
-  const { showToast } = useToast();
+  const theme = useTheme();
+
+  const style = StyleSheet.create({
+    btnBackArrow: {
+      borderWidth: 0,
+      backgroundColor: theme.colors.white,
+      borderColor: theme.colors.white,
+      shadowColor: theme.colors.white,
+      display: 'flex',
+      justifyContent: 'flex-start',
+      paddingLeft: 0,
+    },
+    paddSection: {
+      padding: 20
+    },
+    paddSectionH: {
+      paddingHorizontal: 20
+    }
+  })
+
+  const [, { showToast }]= useToast();
   const [, t] = useLanguage();
-  const [{ user }] = useSession();
+  const [{ user, token }] = useSession();
   const [{ configs }] = useConfig();
   const [{ parsePrice, parseDate }] = useUtils();
-  const [{ options, carts, loading }] = useOrder();
+  const [{ options, carts, loading }, {confirmCart}] = useOrder();
   const [validationFields] = useValidationFields();
+  const [ordering] = useApi()
+  const webviewRef = useRef<any>(null)
 
   const [errorCash, setErrorCash] = useState(false);
   const [userErrors, setUserErrors] = useState<any>([]);
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
+  const [prog, setProg] = useState(true);
+  const [showGateway, setShowGateway] = useState<any>({closedByUsed: false, open: false});
+  const [progClr, setProgClr] = useState('#424242');
+  const [paypalMethod, setPaypalMethod] = useState<any>(null)
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -147,6 +176,36 @@ const CheckoutUI = (props: any) => {
     setPhoneUpdate(val)
   }
 
+  const onMessage = (e : any) => {
+    let data = e.nativeEvent.data;
+    if(data === 'api error'){
+      setShowGateway({closedByUser: false, open: false})
+    }
+    let payment = JSON.parse(data);
+    if(payment){
+      if(payment.error){
+        showToast(ToastType.Error, payment.result)
+        setShowGateway({closedByUser: false, open: false})
+      } else {
+        showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfullyS'))
+        onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment.result.order.uuid, goToBusinessList: true })
+        setShowGateway({closedByUser: false, open: false})
+      }
+    }
+    setShowGateway && setShowGateway({closedByUser: false, open: false})
+  }
+
+  const onFailPaypal = async () => {
+    if(showGateway.closedByUser === true){
+      const {result} = await confirmCart(cart.uuid)
+    }
+  }
+
+  const handlePaymentMethodClick = (paymethod : any) => {
+      setShowGateway({closedByUser: false, open: true})
+      setPaypalMethod(paymethod)
+  }
+
   useEffect(() => {
     if (validationFields && validationFields?.fields?.checkout) {
       checkValidationFields()
@@ -160,16 +219,17 @@ const CheckoutUI = (props: any) => {
     }
   }, [errors])
 
-  // useEffect(() => {
-  //   handlePaymethodChange(null)
-  // }, [cart?.total])
+  useEffect(() => {
+    onFailPaypal()
+  }, [showGateway.closedByUser])
+
   return (
     <>
       <Container>
         <ChContainer>
           <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
             <OButton
-              imgLeftSrc={images.general.arrow_left}
+              imgLeftSrc={theme.images.general.arrow_left}
               imgRightSrc={null}
               style={style.btnBackArrow}
               onClick={() => navigation?.canGoBack() && navigation.goBack()}
@@ -186,7 +246,7 @@ const CheckoutUI = (props: any) => {
                 {!cartState.loading && cart?.status === 2 && (
                   <OText
                     style={{ textAlign: 'center' }}
-                    color={colors.error}
+                    color={theme.colors.error}
                     size={17}
                   >
                     {t('CART_STATUS_PENDING_MESSAGE_APP', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the app')}
@@ -237,8 +297,8 @@ const CheckoutUI = (props: any) => {
           <ChSection style={style.paddSectionH}>
             <ChMoment>
               <CHMomentWrapper
-                onPress={() => navigation.navigate('MomentOption')}
                 disabled={loading}
+                onPress={() => navigation.navigate('MomentOption')}
               >
                 <MaterialCommunityIcon
                   name='clock-outline'
@@ -299,33 +359,33 @@ const CheckoutUI = (props: any) => {
                 businessDetails?.business &&
                 Object.values(businessDetails?.business).length > 0 &&
                 (
-                  <View>
+                  <View style={{alignItems: 'flex-start'}}>
                     <OText size={20}>
                       {t('BUSINESS_DETAILS', 'Business Details')}
                     </OText>
                     <View>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails>
                           {t('NAME', 'Name')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.name}
                       </OText>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails size={18} weight='bold'>
                           {t('EMAIL', 'Email')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.email}
                       </OText>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails size={18} weight='bold'>
                           {t('CELLPHONE', 'Cellphone')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.cellphone}
                       </OText>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails size={18} weight='bold'>
                           {t('ADDRESS', 'Address')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.address}
                       </OText>
                     </View>
@@ -374,13 +434,13 @@ const CheckoutUI = (props: any) => {
           {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
             <ChSection style={style.paddSectionH}>
               <ChPaymethods>
-                <OText size={20}>
+                <OText size={20} style= {{alignItems: 'flex-start', textAlign: 'left'}}>
                   {t('PAYMENT_METHOD', 'Payment Method')}
                 </OText>
                 {!cartState.loading && cart?.status === 4 && (
                   <OText
-                    style={{ textAlign: 'center', marginTop: 20 }}
-                    color={colors.error}
+                    style={{ textAlign: 'center', marginTop: 20}}
+                    color={theme.colors.error}
                     size={17}
                   >
                     {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
@@ -397,6 +457,7 @@ const CheckoutUI = (props: any) => {
                   setErrorCash={setErrorCash}
                   onNavigationRedirect={onNavigationRedirect}
                   paySelected={paymethodSelected}
+                  handlePaymentMethodClickCustom={handlePaymentMethodClick}
                 />
               </ChPaymethods>
             </ChSection>
@@ -412,7 +473,7 @@ const CheckoutUI = (props: any) => {
                   />
                 ) : (
                   <>
-                    <OText size={20}>
+                    <OText size={20} style= {{alignItems: 'flex-start', textAlign: 'left'}}>
                       {t('ORDER_SUMMARY', 'Order Summary')}
                     </OText>
                     <OrderSummary
@@ -432,7 +493,7 @@ const CheckoutUI = (props: any) => {
                 {!cart?.valid_address && cart?.status !== 2 && (
                   <OText
                     style={{ textAlign: 'center' }}
-                    color={colors.error}
+                    color={theme.colors.error}
                     size={14}
                   >
                     {t('INVALID_CART_ADDRESS', 'Selected address is invalid, please select a closer address.')}
@@ -442,7 +503,7 @@ const CheckoutUI = (props: any) => {
                 {!paymethodSelected && cart?.status !== 2 && cart?.valid && (
                   <OText
                     style={{ textAlign: 'center' }}
-                    color={colors.error}
+                    color={theme.colors.error}
                     size={14}
                   >
                     {t('WARNING_NOT_PAYMENT_SELECTED', 'Please, select a payment method to place order.')}
@@ -452,7 +513,7 @@ const CheckoutUI = (props: any) => {
                 {!cart?.valid_products && cart?.status !== 2 && (
                   <OText
                     style={{ textAlign: 'center' }}
-                    color={colors.error}
+                    color={theme.colors.error}
                     size={14}
                   >
                     {t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
@@ -484,27 +545,67 @@ const CheckoutUI = (props: any) => {
           </>
         </>
       )}
+      <OModal
+        open={paypalMethod && showGateway.open}
+        onCancel={() => setShowGateway({open: false, closedByUser: true})}
+        onAccept={() => setShowGateway({open: false, closedByUser: true})}
+        onClose={() => setShowGateway({open: false, closedByUser: true})}
+        entireModal
+      >
+        <OText
+          style={{
+            textAlign: 'center',
+            fontSize: 16,
+            fontWeight: 'bold',
+            color: '#00457C',
+            marginBottom: 5
+          }}>
+          {t('PAYPAL_GATEWAY', 'PayPal GateWay')}
+        </OText>
+        <View style={{padding: 13, opacity: prog ? 1 : 0}}>
+          <ActivityIndicator size={24} color={progClr} />
+        </View>
+        <WebView
+          source={{ uri: 'https://test-90135.web.app' }}
+          onMessage={onMessage}
+          ref={webviewRef}
+          javaScriptEnabled={true}
+          javaScriptEnabledAndroid={true}
+          cacheEnabled={false}
+          cacheMode='LOAD_NO_CACHE'
+          style={{ flex: 1 }}
+          onLoadStart={() => {
+            setProg(true);
+            setProgClr('#424242');
+          }}
+          onLoadProgress={() => {
+            setProg(true);
+            setProgClr('#00457C');
+          }}
+          onLoadEnd={(e) => {
+            const message = {
+              action: 'init',
+              data: {
+                urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
+                urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
+                payData: {
+                  paymethod_id: paypalMethod?.id,
+                  amount: cart?.total,
+                  delivery_zone_id: cart?.delivery_zone_id,
+                  user_id: user?.id
+                },
+                userToken: token,
+                clientId: paypalMethod?.credentials?.client_id
+              }
+            }
+            setProg(false);
+            webviewRef.current.postMessage(JSON.stringify(message))
+          }}
+        />
+      </OModal>
     </>
   )
 }
-
-const style = StyleSheet.create({
-  btnBackArrow: {
-    borderWidth: 0,
-    backgroundColor: colors.white,
-    borderColor: colors.white,
-    shadowColor: colors.white,
-    display: 'flex',
-    justifyContent: 'flex-start',
-    paddingLeft: 0,
-  },
-  paddSection: {
-    padding: 20
-  },
-  paddSectionH: {
-    paddingHorizontal: 20
-  }
-})
 
 export const Checkout = (props: any) => {
   const {
@@ -513,9 +614,10 @@ export const Checkout = (props: any) => {
     cartUuid,
     stripePaymentOptions,
     onNavigationRedirect,
+    navigation
   } = props
 
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const [{ token }] = useSession();
   const [ordering] = useApi();
@@ -659,7 +761,15 @@ export const Checkout = (props: any) => {
 
   return (
     <>
-      <CheckoutController {...checkoutProps} />
+    {cartState?.error?.length > 0 ? (
+        <NotFoundSource
+          content={t(cartState.error)}
+          btnTitle={t('GO_TO_BUSINESSLIST', 'Go to business list')}
+          onClickButton={() => navigation.navigate('BusinessList')}
+        />
+      ) : (
+        <CheckoutController {...checkoutProps} />
+      )}
     </>
   )
 }

@@ -17,10 +17,10 @@ import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
 import { OButton, OModal, OText } from '../shared';
-import { colors } from '../../theme.json';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
+import { useTheme } from 'styled-components/native';
 
 const CartUI = (props: any) => {
   const {
@@ -32,9 +32,9 @@ const CartUI = (props: any) => {
     removeProduct,
     handleCartOpen,
     setIsCartsLoading,
-    // isFromCart
   } = props
 
+  const theme = useTheme()
   const [, t] = useLanguage()
   const [orderState] = useOrder()
   const [{ configs }] = useConfig();
@@ -136,6 +136,21 @@ const CartUI = (props: any) => {
                 <OText>- {parsePrice(cart?.discount || 0)}</OText>
               </OSTable>
             )}
+            {cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
+              <OSTable>
+                {cart?.discount_type === 1 ? (
+                  <>
+                    <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                    <OText>{parsePrice(cart?.subtotal_with_discount + cart?.tax || 0)}</OText>
+                  </>
+                ) : (
+                  <>
+                    <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                    <OText>{parsePrice(cart?.subtotal_with_discount || 0)}</OText>
+                  </>
+                )}
+              </OSTable>
+            )}
             {cart.business.tax_type !== 1 && (
               <OSTable>
                 <OText>
@@ -189,7 +204,7 @@ const CartUI = (props: any) => {
                 <OText style={{ fontWeight: 'bold' }}>
                   {t('TOTAL', 'Total')}
                 </OText>
-                <OText style={{ fontWeight: 'bold' }} color={colors.primary}>
+                <OText style={{ fontWeight: 'bold' }} color={theme.colors.primary}>
                   {cart?.total >= 1 && parsePrice(cart?.total)}
                 </OText>
               </OSTable>
@@ -206,9 +221,9 @@ const CartUI = (props: any) => {
               ) : (
                 `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
               )}
-              bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? colors.secundary : colors.primary}
+              bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
               isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
-              borderColor={colors.primary}
+              borderColor={theme.colors.primary}
               imgRightSrc={null}
               textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
               onClick={() => setOpenUpselling(true)}

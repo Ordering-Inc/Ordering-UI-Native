@@ -27,11 +27,11 @@ import {
   ProductComment,
   ProductActions
 } from './styles'
-import { colors, images } from '../../theme.json'
 import { OButton, OInput, OText } from '../shared'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
 import { Placeholder,PlaceholderLine,Fade } from 'rn-placeholder'
+import { useTheme } from 'styled-components/native'
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width
@@ -53,9 +53,10 @@ export const ProductOptionsUI = (props: any) => {
     handleChangeCommentState,
     productObject,
     onClose,
-    isFromCheckout,
     businessSlug
   } = props
+
+  const theme = useTheme();
 
   const [{ parsePrice }] = useUtils()
   const [, t] = useLanguage()
@@ -64,7 +65,7 @@ export const ProductOptionsUI = (props: any) => {
   const { product, loading, error } = productObject
 
   const isError = (id: number) => {
-    let bgColor = colors.white
+    let bgColor = theme.colors.white
     if (errors[`id:${id}`]) {
       bgColor = 'rgba(255, 0, 0, 0.05)'
     }
@@ -108,7 +109,7 @@ export const ProductOptionsUI = (props: any) => {
                       <Icon
                         name="x"
                         size={35}
-                        style={{ color: colors.white, backgroundColor: 'rgba(0,0,0,0.3)' }}
+                        style={{ color: theme.colors.white, backgroundColor: 'rgba(0,0,0,0.3)' }}
                         onPress={onClose}
                       />
                     </View>
@@ -131,7 +132,7 @@ export const ProductOptionsUI = (props: any) => {
                 ) : (
                   <>
                     <OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1 }}>{product?.name || productCart.name}</OText>
-                    <OText size={20} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+                    <OText size={20} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
                   </>
                 )}
               </ProductTitle>
@@ -169,7 +170,7 @@ export const ProductOptionsUI = (props: any) => {
                       <SectionTitle>
                         <OText size={16}>{t('INGREDIENTS', 'Ingredients')}</OText>
                       </SectionTitle>
-                      <WrapperIngredients style={{ backgroundColor: isSoldOut || maxProductQuantity <= 0 ? 'hsl(0, 0%, 72%)' : colors.white }}>
+                      <WrapperIngredients style={{ backgroundColor: isSoldOut || maxProductQuantity <= 0 ? 'hsl(0, 0%, 72%)' : theme.colors.white }}>
                         {product?.ingredients.map((ingredient: any) => (
                           <ProductIngredient
                             key={ingredient.id}
@@ -254,7 +255,7 @@ export const ProductOptionsUI = (props: any) => {
                 <MaterialCommunityIcon
                   name='minus-circle-outline'
                   size={32}
-                  color={productCart.quantity === 1 || isSoldOut ? colors.backgroundGray : colors.backgroundDark}
+                  color={productCart.quantity === 1 || isSoldOut ? theme.colors.backgroundGray : theme.colors.backgroundDark}
                 />
               </TouchableOpacity>
               <OText size={20}>{productCart.quantity}</OText>
@@ -265,7 +266,7 @@ export const ProductOptionsUI = (props: any) => {
                 <MaterialCommunityIcon
                   name='plus-circle-outline'
                   size={32}
-                  color={maxProductQuantity <= 0 || productCart.quantity >= maxProductQuantity || isSoldOut ? colors.backgroundGray : colors.backgroundDark}
+                  color={maxProductQuantity <= 0 || productCart.quantity >= maxProductQuantity || isSoldOut ? theme.colors.backgroundGray : theme.colors.backgroundDark}
                 />
               </TouchableOpacity>
             </View>
@@ -276,9 +277,9 @@ export const ProductOptionsUI = (props: any) => {
                 onClick={() => handleSaveProduct()}
                 imgRightSrc=''
                 text={`${orderState.loading ? t('LOADING', 'Loading') : editMode ? t('UPDATE', 'Update') : t('ADD_TO_CART', 'Add to Cart')} ${productCart.total ? parsePrice(productCart?.total) : ''}`}
-                textStyle={{ color: saveErrors ? colors.primary : colors.white }}
+                textStyle={{ color: saveErrors ? theme.colors.primary : theme.colors.white }}
                 style={{
-                  backgroundColor: saveErrors ? colors.white : colors.primary,
+                  backgroundColor: saveErrors ? theme.colors.white : theme.colors.primary,
                   opacity: saveErrors ? 0.3 : 1
                 }}
               />
@@ -302,8 +303,8 @@ export const ProductOptionsUI = (props: any) => {
                 onClick={() => handleRedirectLogin(productCart)}
                 text={isSoldOut || maxProductQuantity <= 0 ? t('SOLD_OUT', 'Sold out') : t('LOGIN_SIGNUP', 'Login / Sign Up')}
                 imgRightSrc=''
-                textStyle={{ color: colors.primary }}
-                style={{ borderColor: colors.primary, backgroundColor: colors.white }}
+                textStyle={{ color: theme.colors.primary }}
+                style={{ borderColor: theme.colors.primary, backgroundColor: theme.colors.white }}
               />
             )}
           </View>

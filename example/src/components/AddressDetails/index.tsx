@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useTheme } from 'styled-components/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AddressDetails as AddressDetailsController, useOrder } from 'ordering-components/native';
 
@@ -10,7 +11,6 @@ import {
   ADMap
 } from './styles';
 
-import { colors } from '../../theme.json'
 import { OText, OIcon } from '../shared';
 
 const AddressDetailsUI = (props: any) => {
@@ -22,6 +22,7 @@ const AddressDetailsUI = (props: any) => {
     apiKey
   } = props;
 
+  const theme = useTheme();
   const [orderState] = useOrder();
 
   return (
@@ -32,7 +33,7 @@ const AddressDetailsUI = (props: any) => {
             size={20}
             numberOfLines={1}
             ellipsizeMode='tail'
-            style={{ width: '85%' }}
+            style={{ maxWidth: '85%' , alignItems: 'flex-start', textAlign: 'left'}}
           >
             {addressToShow || orderState?.options?.address?.address}
           </OText>
@@ -41,7 +42,7 @@ const AddressDetailsUI = (props: any) => {
               <MaterialIcon
                 name='pencil-outline'
                 size={28}
-                color={colors.editColor}
+                color={theme.colors.editColor}
                 style={{ marginBottom: 5, marginLeft: 5 }}
                 onPress={() => navigation.navigate('AddressList', { isFromCheckout: true })}
               />

@@ -38,7 +38,7 @@ interface Props {
   mLeft?: number;
   numberOfLines?: number;
   ellipsizeMode?: string;
-  lineHeight?: number;
+  key?: any;
 }
 
 const OText = (props: Props): React.ReactElement => {

@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
-import { colors } from '../../theme.json'
 import { OInput, OButton } from '../shared'
 import { useLanguage } from 'ordering-components/native'
 import Icon from 'react-native-vector-icons/Feather'
+import { useTheme } from 'styled-components/native'
 
 export const SearchBar = (props: any) => {
   const {
@@ -17,6 +17,31 @@ export const SearchBar = (props: any) => {
     noBorderShow,
     borderStyle
   } = props
+
+  const theme = useTheme()
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: 1,
+    },
+    borderStyle: {
+      borderColor: theme.colors.primary,
+      borderWidth: 1,
+      borderRadius: 10,
+    },
+    inputStyle: {
+      flex: 1,
+    },
+    buttonStyle: {
+      maxHeight: 40,
+      paddingRight: 5,
+      paddingLeft: 5,
+    }
+  })
 
   const [,t] = useLanguage()
 
@@ -44,15 +69,16 @@ export const SearchBar = (props: any) => {
         style={styles.inputStyle}
         placeholder={placeholder}
         vertorIcon='search'
-        vectorIconColor={colors.disabled}
+        vectorIconColor={theme.colors.disabled}
         returnKeyType='done'
+        autoCorrect={false}
       />
       {isCancelButtonShow && (
         <OButton
           imgRightSrc=''
           text={t('CANCEL', 'Cancel')}
           bgColor='transparent'
-          borderColor={colors.lightGray}
+          borderColor={theme.colors.lightGray}
           style={styles.buttonStyle}
           onClick={onCancel || handleClear}
         />
@@ -71,26 +97,3 @@ export const SearchBar = (props: any) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 1,
-  },
-  borderStyle: {
-    borderColor: colors.primary,
-    borderWidth: 1,
-    borderRadius: 10,
-  },
-  inputStyle: {
-    flex: 1,
-  },
-  buttonStyle: {
-    maxHeight: 40,
-    paddingRight: 5,
-    paddingLeft: 5,
-  }
-})

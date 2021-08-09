@@ -1,7 +1,5 @@
 import React from 'react';
-import { useLanguage } from 'ordering-components/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { colors } from '../theme.json';
 import {CODES} from 'ordering-components/native'
 
 export const flatArray = (arr: any) => [].concat(...arr)
@@ -10,8 +8,8 @@ export const flatArray = (arr: any) => [].concat(...arr)
  * Function to return the traduction depending of a key 't'
  * @param {string} key for traduction
  */
-export const getTraduction = (key: string) => {
-  const [, t] = useLanguage()
+export const getTraduction = (key: string, t: any) => {
+
   const keyList: any = {
     // Add the key and traduction that you need below
     ERROR_ORDER_WITHOUT_CART: 'The order was placed without a cart',

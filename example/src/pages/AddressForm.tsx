@@ -5,7 +5,6 @@ import { AddressForm as AddressFormController } from '../themes/doordash'
 import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 import { _retrieveStoreData } from '../providers/StoreUtil';
 
-
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
   flex-shrink: 1;
@@ -13,8 +12,8 @@ const KeyboardView = styled.KeyboardAvoidingView`
 
 const AddressForm = ({ navigation, route }: any) => {
   const AddressFormProps = {
-    navigation: navigation,
-    route: route,
+    navigation,
+    route,
     address: route?.params?.address,
     addressId: route?.params?.address?.id,
     isEditing: route?.params?.isEditing,
@@ -26,7 +25,11 @@ const AddressForm = ({ navigation, route }: any) => {
     isFromProductsList: route?.params?.isFromProductsList,
     isFromCheckout: route?.params?.isFromCheckout,
     hasAddressDefault: route?.params?.hasAddressDefault,
-    afterSignup: route?.params?.afterSignup
+    afterSignup: route?.params?.afterSignup,
+    businessId: route.params?.businessId,
+    categoryId: route.params?.categoryId,
+    productId: route.params?.productId,
+    store: route.params?.store
   }
 
   const [isGuestFromStore, setIsGuestFromStore] = useState(false)

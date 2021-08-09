@@ -7,8 +7,8 @@ import {
 import {StyleSheet, Platform} from 'react-native'
 import { OrderTypeWrapper } from './styles'
 import { OrderTypeSelectParams } from '../../types'
-import { colors } from '../../theme.json'
 import RNPickerSelect from 'react-native-picker-select'
+import { useTheme } from 'styled-components/native'
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const {
@@ -18,6 +18,41 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     configTypes,
     orderTypes
   } = props
+
+  const theme = useTheme();
+
+  const pickerStyle = StyleSheet.create({
+    inputAndroid: {
+      color: theme.colors.secundaryContrast,
+      borderWidth: 1,
+      borderColor: 'transparent',
+      borderRadius: 10,
+      paddingHorizontal: 20,
+      backgroundColor: theme.colors.inputDisabled,
+      fontSize: 15
+    },
+    inputIOS: {
+      color: theme.colors.secundaryContrast,
+      paddingEnd: 20,
+      height: 50,
+      borderWidth: 1,
+      borderColor: 'transparent',
+      borderRadius: 10,
+      paddingHorizontal: 20,
+      backgroundColor: theme.colors.inputDisabled,
+      fontSize: 15
+    },
+    icon: {
+      top: Platform.OS === 'ios' ? 10 : 15,
+      right: Platform.OS === 'ios' ? 0 : 7,
+      position: 'absolute',
+      fontSize: 20
+    },
+    placeholder: {
+      color: theme.colors.secundaryContrast
+    }
+  })
+
   const [orderState] = useOrder()
   const [open,setOpen] = useState(false)
 
@@ -41,7 +76,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     typeSelected !== undefined && (
       <OrderTypeWrapper>
         <RNPickerSelect
-          onValueChange={(orderType) => handleChangeOrderTypeCallback(orderType)}
+          onValueChange={(orderType: any) => handleChangeOrderTypeCallback(orderType)}
           items={items}
           placeholder={{}}
           style={pickerStyle}
@@ -55,38 +90,6 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     )
   )
 }
-
-const pickerStyle = StyleSheet.create({
-  inputAndroid: {
-    color: colors.secundaryContrast,
-    borderWidth: 1,
-    borderColor: 'transparent',
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    backgroundColor: colors.inputDisabled,
-    fontSize: 15
-  },
-  inputIOS: {
-    color: colors.secundaryContrast,
-    paddingEnd: 20,
-    height: 50,
-    borderWidth: 1,
-    borderColor: 'transparent',
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    backgroundColor: colors.inputDisabled,
-    fontSize: 15
-  },
-  icon: {
-    top: Platform.OS === 'ios' ? 10 : 15,
-    right: Platform.OS === 'ios' ? 0 : 7,
-    position: 'absolute',
-    fontSize: 20
-  },
-  placeholder: {
-    color: colors.secundaryContrast
-  }
-})
 
 export const OrderTypeSelector = (props: any) => {
   const [, t] = useLanguage()

@@ -60,19 +60,13 @@ import {
   OAlert,
   OBottomPopup,
   OButton,
-  OChatBubble,
-  OCheckbox,
   ODropDown,
   OIcon,
   OIconButton,
-  OIconText,
   OInput,
-  OKeyButton,
   OModal,
   OText,
-  OTextarea,
-  OToast,
-  OToggle
+  OToast
 } from './components/shared';
 
 // layouts
@@ -82,7 +76,15 @@ import { SafeAreaContainer } from './layouts/SafeAreaContainer';
 // providers
 import Alert from './providers/AlertProvider';
 import { StoreMethods } from './providers/StoreUtil';
-import { ToastType, useToast, ToastContext, ToastProvider } from './providers/ToastProvider';
+
+// contexts
+import { ThemeProvider, useTheme } from './context/Theme';
+
+// hooks
+import { DeviceOrientationMethods } from './hooks/DeviceOrientation';
+
+// themes
+import ThemeBusiness from './themes/business'
 
 export {
   ActiveOrders,
@@ -146,27 +148,24 @@ export {
   OAlert,
   OBottomPopup,
   OButton,
-  OChatBubble,
-  OCheckbox,
   ODropDown,
   OIcon,
   OIconButton,
-  OIconText,
   OInput,
-  OKeyButton,
   OModal,
   OText,
-  OTextarea,
   OToast,
-  OToggle,
   // layouts
   Container,
   SafeAreaContainer,
   // providers
   Alert,
   StoreMethods,
-  ToastType,
-  useToast,
-  ToastContext,
-  ToastProvider,
+  // contexts
+  ThemeProvider,
+  useTheme,
+  // hooks
+  DeviceOrientationMethods,
+  // themes
+  ThemeBusiness,
 }

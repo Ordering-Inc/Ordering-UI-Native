@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const WelcomeTitle = styled.View`
   flex: 1;
@@ -22,7 +21,7 @@ export const Search = styled.View`
 
 export const AddressInput = styled.TouchableOpacity`
   flex-direction: row;
-  background-color: ${colors.inputDisabled};
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
   border-radius: 10px;
   align-items: center;
   margin-horizontal: 10px;
@@ -43,7 +42,7 @@ export const OrderControlContainer = styled.View`
 `
 
 export const WrapMomentOption = styled.TouchableOpacity`
-  background-color: ${colors.inputDisabled};
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
   border-radius: 10px;
   margin-vertical: 5px;
   padding: 15px 20px;

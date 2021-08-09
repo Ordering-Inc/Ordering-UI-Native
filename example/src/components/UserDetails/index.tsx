@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import React, { useEffect } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { UDContainer, UDHeader, UDForm, UDInfo } from './styles';
+import { UDContainer, UDHeader, UDInfo, } from './styles';
 
 import {
   UserFormDetails as UserFormController,
@@ -11,10 +10,10 @@ import {
 } from 'ordering-components/native';
 
 import { OText } from '../shared';
-import { colors } from '../../theme.json';
 
 import { UserFormDetailsUI } from '../UserFormDetails';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
+import { useTheme } from 'styled-components/native';
 
 const UserDetailsUI = (props: any) => {
   const {
@@ -26,9 +25,11 @@ const UserDetailsUI = (props: any) => {
     validationFields,
     isUserDetailsEdit,
     phoneUpdate,
-    togglePhoneUpdate
+    togglePhoneUpdate,
+    isCheckout
   } = props
 
+  const theme = useTheme();
   const [, t] = useLanguage()
   const [{ user }] = useSession()
   const userData = props.userData || (!formState.result.error && formState.result?.result) || user
@@ -75,14 +76,14 @@ const UserDetailsUI = (props: any) => {
                 <MaterialIcon
                   name='pencil-outline'
                   size={28}
-                  color={colors.editColor}
+                  color={theme.colors.editColor}
                   style={{ marginBottom: 10, marginLeft: 5 }}
                   onPress={() => toggleIsEdit()}
                 />
               ) : (
                 <MaterialIcon
                   name='cancel'
-                  color={colors.cancelColor}
+                  color={theme.colors.cancelColor}
                   size={24}
                   style={{ marginBottom: 5, marginLeft: 5 }}
                   onPress={() => toggleEditState()}
@@ -99,7 +100,7 @@ const UserDetailsUI = (props: any) => {
                 </OText>
                 {userData?.name} {userData?.middle_name} {userData?.lastname} {userData?.second_lastname}
               </OText>
-              <OText size={16}>
+              <OText size={16} numberOfLines={1}>
                 <OText size={18} weight='bold'>
                   {t('EMAIL', 'Email')}:{' '}
                 </OText>
@@ -114,13 +115,13 @@ const UserDetailsUI = (props: any) => {
                     {(userData?.country_phone_code) && `+${(userData?.country_phone_code)} `}{(userData?.cellphone)}
                   </OText>
                   {!!phoneUpdate && (
-                    <OText color={colors.error} style={{ textAlign: 'center' }}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
+                    <OText color={theme.colors.error} style={{ textAlign: 'center', width: '100%'}}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
                   )}
                 </>
               )}
             </UDInfo>
           ) : (
-            <UserFormDetailsUI {...props} phoneUpdate={phoneUpdate} togglePhoneUpdate={togglePhoneUpdate} />
+            <UserFormDetailsUI {...props} phoneUpdate={phoneUpdate} togglePhoneUpdate={togglePhoneUpdate} isCheckout={isCheckout} />
           )}
         </UDContainer>
       )}
