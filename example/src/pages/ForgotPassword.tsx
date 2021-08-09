@@ -1,8 +1,8 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import { ForgotPasswordForm } from '../themes/original';
-import { Container } from '../themes/original';
+import { ForgotPasswordForm } from '../../themes/original';
+import { Container } from '../../themes/original';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;

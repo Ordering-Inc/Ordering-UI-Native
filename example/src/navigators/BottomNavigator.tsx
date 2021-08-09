@@ -6,7 +6,7 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
-import { theme } from '../themes/original'
+import { theme } from '../../themes/original'
 import { OIcon, OText } from '../components/shared'
 
 import BusinessList from '../pages/BusinessesListing'

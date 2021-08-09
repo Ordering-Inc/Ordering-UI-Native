@@ -1,8 +1,8 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import { LoginForm } from '../themes/original';
-import { Container } from '../themes/original';
+import { LoginForm } from '../../themes/original';
+import { Container } from '../../themes/original';
 
 import { useLanguage } from 'ordering-components/native';
 import { _setStoreData } from '../providers/StoreUtil';

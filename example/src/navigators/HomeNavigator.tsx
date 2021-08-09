@@ -13,7 +13,7 @@ import BusinessProductsList from '../pages/BusinessProductsList';
 import ReviewOrder from '../pages/ReviewOrder'
 import MomentOption from '../pages/MomentOption'
 import Splash from '../pages/Splash';
-import { UserProfileForm } from '../themes/original';
+import { UserProfileForm } from '../../themes/original';
 
 const Stack = createStackNavigator();
 

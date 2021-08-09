@@ -10,7 +10,7 @@ import {
 } from 'ordering-components/native';
 
 import NavBar from '../NavBar';
-import { FormInput, FormSide } from '../../components/LoginForm/styles'
+import { FormInput, FormSide } from '../LoginForm/styles'
 import {Container} from './styles'
 
 import { OButton, OInput, OText } from '../shared';

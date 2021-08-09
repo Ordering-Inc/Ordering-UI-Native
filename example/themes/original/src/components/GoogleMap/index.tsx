@@ -4,7 +4,7 @@ import MapView, { PROVIDER_DEFAULT, PROVIDER_GOOGLE, Marker, Region, } from 'rea
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig } from 'ordering-components/native'
 import { GoogleMapsParams } from '../../types';
-import Alert from '../../../../../providers/AlertProvider'
+import Alert from '../../../../../src/providers/AlertProvider'
 import { OIcon } from '../shared';
 
 export const GoogleMap = (props: GoogleMapsParams) => {
