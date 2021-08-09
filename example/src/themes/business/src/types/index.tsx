@@ -89,6 +89,7 @@ export interface SignupParams {
   setCheckPhoneCodeState?: any;
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
+  notificationState?: any;
 }
 
 export interface PhoneInputParams {
@@ -98,6 +99,7 @@ export interface PhoneInputParams {
   defaultCode?: number | null;
   forwardRef?: any;
   textInputProps?: TextInputProps;
+  flagProps?: any;
   onSubmitEditing: () => void;
 }
 
