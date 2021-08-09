@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { useSession, useLanguage,ToastType, useToast } from 'ordering-components/native';
 import { useForm, Controller } from 'react-hook-form';
 import {
-  ToastType,
-  useToast,
-  useSession,
-  useLanguage,
-} from 'ordering-components/native';
-import { useTheme } from 'styled-components/native';
-import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
-import { PhoneInputNumber } from '../PhoneInputNumber';
+  UDForm,
+  UDLoader,
+  UDWrapper,
+  WrapperPhone,
+  EditButton,
+} from './styles';
 import { OText, OButton, OInput } from '../shared';
+import { useTheme } from 'styled-components/native';
+
+import { PhoneInputNumber } from '../PhoneInputNumber';
 import { sortInputFields } from '../../utils';
 
 export const UserFormDetailsUI = (props: any) => {
@@ -24,17 +26,22 @@ export const UserFormDetailsUI = (props: any) => {
     validationFields,
     handleChangeInput,
     handleButtonUpdateClick,
-    submitEvent,
     phoneUpdate,
     hideUpdateButton,
+    handleCancelEdit,
+    toggleIsEdit,
+    isCheckout,
   } = props;
 
   const theme = useTheme();
   const [, t] = useLanguage();
-  const [, { showToast }] = useToast();
+  const [,{ showToast }] = useToast();
   const { handleSubmit, control, errors, setValue } = useForm();
 
   const [{ user }] = useSession();
+  const [userPassword, setUserPassword] = useState<any>('');
+  const [userConfirmPassword, setUserConfirmPassword] = useState<any>('');
+
   const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null);
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -187,6 +194,18 @@ export const UserFormDetailsUI = (props: any) => {
       borderRightWidth: 0,
       borderLeftWidth: 0,
     },
+    editButton: {
+      // flex:0,
+      borderRadius: 25,
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.white,
+      borderWidth: 1,
+      color: theme.colors.primary,
+      // width: 100,
+      // height: 50,
+      marginVertical: 8,
+      // flex: 1,
+    },
   });
 
   return (
@@ -209,7 +228,6 @@ export const UserFormDetailsUI = (props: any) => {
                         style={{ paddingHorizontal: 16 }}>
                         {t(field?.code.toUpperCase(), field?.name)}
                       </OText>
-
                       <Controller
                         key={field.id}
                         control={control}
@@ -268,19 +286,73 @@ export const UserFormDetailsUI = (props: any) => {
                             autoCompleteType={
                               field.code === 'email' ? 'email' : 'off'
                             }
-                            onSubmitEditing={submitEvent}
-                            onEndEditing={submitEvent}
                           />
                         )}
                         name={field.code}
                         rules={getInputRules(field)}
                         defaultValue={user && user[field.code]}
-                        blurOnSubmit={true}
                       />
                     </React.Fragment>
                   ),
               )}
-
+                        <OText
+                        color={theme.colors.textGray}
+                        weight="bold"
+                        style={{ paddingHorizontal: 16 }}>
+                        {t('PASSWORD', 'Password')}
+                      </OText>
+                    <OInput  name={'password'}
+                        style={styles.inputStyle}
+                        icon={
+                          'password'
+                          || theme.images.general.lock
+                        }
+                        isDisabled={!isEdit}
+                        value={
+                          formState?.changes['password'] ??
+                          ''
+                        }
+                        onChange={(val: any) => {
+                          setValue(
+                                '',
+                                val.target.value
+                              );
+                          handleChangeInput(val)
+                        }
+                      }
+                      type={
+                        'password'
+                      }
+                        />
+                        <OText
+                        color={theme.colors.textGray}
+                        weight="bold"
+                        style={{ paddingHorizontal: 16 }}>
+                        {t('CONFIRM_PASSWORD', 'Confirm Password')}
+                      </OText>
+                    <OInput  name={'confirm_password'}
+                        style={styles.inputStyle}
+                        icon={
+                          'confirm_password'
+                          || theme.images.general.lock
+                        }
+                        isDisabled={!isEdit}
+                        value={
+                          formState?.changes['confirm_password'] ??
+                          ''
+                        }
+                        onChange={(val: any) => {
+                          setValue(
+                                '',
+                                val.target.value
+                              );
+                          handleChangeInput(val)
+                        }
+                      }
+                      type={
+                        'password'
+                      }
+                        />
               {!!showInputPhoneNumber && (
                 <WrapperPhone>
                   <PhoneInputNumber
@@ -288,9 +360,7 @@ export const UserFormDetailsUI = (props: any) => {
                     handleData={(val: any) => handleChangePhoneNumber(val)}
                     defaultValue={phoneUpdate ? '' : user?.cellphone}
                     defaultCode={user?.country_phone_code || null}
-                    onSubmitEditing={submitEvent}
                   />
-
                   {phoneUpdate && (
                     <OText
                       color={theme.colors.error}
@@ -303,20 +373,53 @@ export const UserFormDetailsUI = (props: any) => {
               )}
             </UDWrapper>
           )}
-
         {validationFields?.loading && (
           <UDLoader>
             <OText size={20}>{t('LOADING', 'Loading')}</OText>
           </UDLoader>
         )}
+        {/* <OInput /> */}
       </UDForm>
-
-      {!hideUpdateButton && (
-        <>
-          {((formState &&
-            Object.keys(formState?.changes).length > 0 &&
-            isEdit) ||
-            formState?.loading) && (
+      <>
+        {!validationFields.loading && !isCheckout && (
+          <EditButton>
+            <View style={{ flex: 1 }}>
+              <OButton
+                text={t('CANCEL', 'Cancel')}
+                bgColor={theme.colors.white}
+                borderColor={theme.colors.primary}
+                isDisabled={formState.loading}
+                imgRightSrc={null}
+                style={{ ...styles.editButton }}
+                onClick={handleCancelEdit}
+              />
+            </View>
+            {((formState &&
+              Object.keys(formState?.changes).length > 0 &&
+              isEdit) ||
+              formState?.loading) && (
+              <View style={{ flex: 1, marginLeft: 5 }}>
+                <OButton
+                  text={
+                    formState.loading
+                      ? t('UPDATING', 'Updating...')
+                      : t('UPDATE', 'Update')
+                  }
+                  bgColor={theme.colors.primary}
+                  textStyle={{ color: formState.loading ? 'black' : 'white' }}
+                  borderColor={theme.colors.primary}
+                  isDisabled={formState.loading}
+                  imgRightSrc={null}
+                  style={{ ...styles.editButton }}
+                  onClick={handleSubmit(onSubmit)}
+                />
+              </View>
+            )}
+          </EditButton>
+        )}
+        {((formState && Object.keys(formState?.changes).length > 0 && isEdit) ||
+          formState?.loading) &&
+          isCheckout && (
             <OButton
               text={
                 formState.loading
@@ -331,8 +434,7 @@ export const UserFormDetailsUI = (props: any) => {
               onClick={handleSubmit(onSubmit)}
             />
           )}
-        </>
-      )}
+      </>
     </>
   );
 };
