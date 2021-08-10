@@ -33,6 +33,15 @@ import {
 	OToggle,
 	OButtonGroup
 } from "./src/components/shared";
+import { Container } from './src/layouts/Container';
+import { SafeAreaContainer } from './src/layouts/SafeAreaContainer';
+import { getTraduction } from './src/utils';
+import {
+	_retrieveStoreData,
+	_setStoreData,
+	_removeStoreData,
+	_clearStoreData
+} from './src/providers/StoreUtil';
 
 import theme from './src/theme.json';
 
@@ -173,5 +182,18 @@ export {
 	OTextarea,
 	OToast,
 	OToggle,
-	OButtonGroup
+	OButtonGroup,
+
+	// layout
+	Container,
+	SafeAreaContainer,
+
+	// utils
+	getTraduction,
+
+	_retrieveStoreData,
+	_setStoreData,
+	_removeStoreData,
+	_clearStoreData
+
 }

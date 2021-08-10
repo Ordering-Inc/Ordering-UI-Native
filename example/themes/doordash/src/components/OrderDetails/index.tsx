@@ -41,7 +41,7 @@ import { OButton, OIcon, OModal, OText } from '../shared'
 import { colors, images, labels } from '../../theme.json'
 import { ProductItemAccordion } from '../ProductItemAccordion'
 import { OrderDetailsParams } from '../../types'
-import { USER_TYPE } from '../../../../../config/constants'
+import { USER_TYPE } from '../../config/constants'
 import { GoogleMap } from '../GoogleMap'
 import { verifyDecimals } from '../../utils'
 import moment from 'moment'
@@ -253,9 +253,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 								<OText style={{ ...labels.normal, marginBottom: 2 } as TextStyle}>{order?.customer?.email}</OText>
 							</Customer>
 						</OrderCustomer>
-						
+
 						<OrderCustomer>
-							<View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+							<View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 								<View>
 									<OText style={{ ...labels.middle, marginBottom: 2 } as TextStyle}>{t('SHARE_THIS_DELIVERY', 'Share this delivery')}</OText>
 									<OText style={{ ...labels.normal, marginBottom: 2 } as TextStyle}>{t('LET_SOMEONE_FOLLOW_ALONG', 'Let someone follow along')}</OText>
