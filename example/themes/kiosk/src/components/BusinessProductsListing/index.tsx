@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import {
   BusinessAndProductList,
   useLanguage,
@@ -12,12 +12,15 @@ import GridContainer from '../../layouts/GridContainer'
 import PromoCard from '../PromoCard';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { LANDSCAPE, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
+import { useTheme } from 'styled-components/native';
+import { OIcon } from '../shared';
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {navigation, businessState} = props;
 
   const business: Business = businessState.business;
 
+  const theme = useTheme();
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
 
@@ -36,7 +39,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const _renderTitle = (title: string): React.ReactElement => (
     <View style={{paddingHorizontal: 20, paddingVertical: 40}}>
-      <OText size={orientationState?.dimensions?.width * 0.048} weight="bold">
+      <OText size={orientationState?.dimensions?.width * 0.035} weight="bold">
         {title}
       </OText>
     </View>
@@ -70,7 +73,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         ref={(c: any) => {
           _carousel = c;
         }}
-        data={_promos}
+        data={_promos || []}
         renderItem={_renderItem}
         sliderWidth={orientationState?.dimensions?.width}
         itemWidth={orientationState?.dimensions?.width * 0.4}
@@ -83,7 +86,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         snapToAlignment="start"
         activeSlideAlignment="start"
         inactiveSlideOpacity={1}
-        initialScrollIndex={_carousel?.currentIndex}
+        initialScrollIndex={0}
         onScrollToIndexFailed={(_: any) => {}}
       />
     </>
@@ -93,7 +96,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     <>
       {_renderTitle(t('CATEGORIES', 'Categories'))}
       <GridContainer>
-        {_categories.map((category: any) => (
+        {_categories && _categories.map((category: any) => (
           <OCard
             key={category.id}
             title={category?.name || ''}
@@ -124,14 +127,38 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   }
 
   return (
-    <>
+    <View>
       <Spinner visible={businessState?.loading} />
+      {!businessState?.loading && (_promos?.length > 0 || _categories?.length > 0) && (
+        <>
+          {_promos?.length > 0 && _renderPromos()}
+          {_categories?.length > 0 && _renderCategories()}
+        </>
+      )}
 
-      {_promos?.length > 0 && _renderPromos()}
-      {_categories?.length > 0 && _renderCategories()}
-    </>
+      {!businessState?.loading && _promos && _promos?.length === 0 && _categories && _categories?.length === 0 && (
+        <OIcon src={theme.images.general.notFound} style={styles.logo} />
+      )}
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  logo: {
+    width: 500,
+    height: 400,
+    alignSelf: 'center',
+  },
+  wrapper: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    backgroundColor: 'yellow'
+  },
+});
 
 export const BusinessProductsListing = (props: any) => {
   const businessProductslistingProps = {

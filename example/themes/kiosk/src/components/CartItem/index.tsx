@@ -41,8 +41,8 @@ const CartItem = (props: CartItemProps) => {
           <OText
             style={{
               maxWidth: orientationState?.orientation === LANDSCAPE
-                ? orientationState.dimensions.width * 0.5
-                : orientationState.dimensions.width * 0.65
+                ? orientationState.dimensions.width * 0.2
+                : orientationState.dimensions.width * 0.5
             }}
             numberOfLines={2}
             size={18}
@@ -72,7 +72,7 @@ const CartItem = (props: CartItemProps) => {
           weight="700"
           color={theme.colors.primary}
         >
-          {parsePrice(product?.price)}
+          {parsePrice(product?.total || product?.price)}
         </OText>
 
         <QuantityControl
