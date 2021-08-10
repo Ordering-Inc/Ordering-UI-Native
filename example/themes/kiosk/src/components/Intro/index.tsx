@@ -86,7 +86,8 @@ const Intro = (props: any): React.ReactElement => {
               source={theme.images.general.homeHeroLandscape}
               width={orientationState?.dimensions?.width * 0.40}
               height={orientationState?.dimensions?.height}
-              resizeMode={'cover'}
+              style={{bottom: 100, right: 100}}
+              resizeMode='cover'
             />
 
             <View
