@@ -29,7 +29,7 @@ const _SMS = 'sms';
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const { navigation, isFromCheckout } = props;
 
-  const [theme] = useTheme();
+  const theme = useTheme();
   const [, t] = useLanguage()
   const [{ parsePrice, parseNumber }] = useUtils()
   const [orientationState] = useDeviceOrientation()
