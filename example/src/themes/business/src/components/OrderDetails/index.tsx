@@ -683,27 +683,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </AssignDriver>
               )}
 
-              {order?.status === 7 && order?.delivery_type === 2 && (
-                <Pickup>
-                  <OButton
-                    style={styles.btnPickUp}
-                    textStyle={{ color: theme.colors.primary }}
-                    text={t('READY_FOR_PICKUP', 'Ready for pickup')}
-                    onClick={() =>
-                      handleChangeOrderStatus && handleChangeOrderStatus(4)
-                    }
-                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
-                  />
-                </Pickup>
-              )}
-            {order?.status === 4 && order?.delivery_type === 2 && (
+            {order?.status === 7 && order?.delivery_type === 2 && (
               <Pickup>
                 <OButton
                   style={styles.btnPickUp}
                   textStyle={{ color: theme.colors.primary }}
-                  text={t('READY_FOR_COMPLETED', 'Ready for Completed')}
+                  text={t('READY_FOR_PICKUP', 'Ready for pickup')}
                   onClick={() =>
-                    handleChangeOrderStatus && handleChangeOrderStatus(15)
+                    handleChangeOrderStatus && handleChangeOrderStatus(4)
                   }
                   imgLeftStyle={{ tintColor: theme.colors.backArrow }}
                 />

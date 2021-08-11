@@ -4,7 +4,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
-  useUtils,
+  useUtils
 } from 'ordering-components/native'
 
 import {
@@ -27,13 +27,9 @@ const _EMAIL = 'email';
 const _SMS = 'sms';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
+  const { navigation, isFromCheckout } = props;
 
-  const {
-    navigation,
-    isFromCheckout,
-  } = props
-  
-  const theme = useTheme();
+  const [theme] = useTheme();
   const [, t] = useLanguage()
   const [{ parsePrice, parseNumber }] = useUtils()
   const [orientationState] = useDeviceOrientation()
@@ -84,17 +80,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }, [])
 
   const optionsToSendReceipt: Opt[] = [
-		{
-			key: _EMAIL,
-			label: t('EMAIL', 'Email'),
-			value: _EMAIL,
-			isDefault: true,
-		},
-		{
-			key: _SMS,
-			label: t('SMS', 'SMS'),
-			value: _SMS,
-		},
+    {
+      key: _EMAIL,
+      label: t('EMAIL', 'Email'),
+      value: _EMAIL,
+      isDefault: true,
+    },
+    {
+      key: _SMS,
+      label: t('SMS', 'SMS'),
+      value: _SMS,
+    },
   ];
 
   const [optionToSendReceipt, setOptionToSendReceipt] = useState(optionsToSendReceipt?.find(o => o?.isDefault));
@@ -110,7 +106,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       console.error('Error: Invalid optVal');
     }
   }
-  
+
   useEffect(() => {
     const backAction = () => {
       Alert.alert(`${t('HOLD_ON', 'Hold on')}!`, `${t('ARE_YOU_SURE_YOU_WANT_TO_GO_BACK', 'Are you sure you want to go back')}?`, [
@@ -119,11 +115,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           onPress: () => null,
           style: "cancel"
         },
-        { text: t('YES', 'yes'), onPress: () => {
-          navigation.reset({
-            routes: [{ name: 'Intro' }]
-          });
-        }}
+        {
+          text: t('YES', 'yes'), onPress: () => {
+            navigation.reset({
+              routes: [{ name: 'Intro' }]
+            });
+          }
+        }
       ]);
       return true;
     };
@@ -154,15 +152,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             options={optionsToSendReceipt}
             onChange={setOptionToSendReceipt}
           />
-          
         </OSTable>
 
         <OSTable>
-          
+
           {optionToSendReceipt?.value == _EMAIL && (
             <OInput
               placeholder="yourname@mailhost.com"
-              onChange={(e: any) => {}}
+              onChange={(e: any) => { }}
               style={styles.inputsStyle}
             />
           )}
@@ -170,7 +167,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           {optionToSendReceipt?.value == _SMS && (
             <OInput
               placeholder={`${t('PHONE_NUMBER', 'Phone number')}`}
-              onChange={(e: any) => {}}
+              onChange={(e: any) => { }}
               style={styles.inputsStyle}
             />
           )}
@@ -184,7 +181,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             disabledTextStyle={styles.disabledTextButtonApplyStyle}
             style={styles.buttonApplyStyle}
           />
-          
+
         </OSTable>
       </OSInputWrapper>
 
@@ -239,7 +236,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               {order?.products.map((product: Product, i: number) => (
                 <OImage
                   key={product?.id || i}
-                  source={{uri: product?.images || ''}}
+                  source={{ uri: product?.images || '' }}
                   resizeMode="cover"
                   height={80}
                   width={80}
@@ -267,7 +264,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           {t('PROMO_CODE', 'Promo code')}
           {'\n'}
           <OText weight="400">
-            { order?.offer_type  === 1 ? `${verifyDecimals(order?.offer_rate, parseNumber)}%` : parsePrice(order?.summary?.discount || order?.discount) } {t('OFF', 'off')}
+            {order?.offer_type === 1 ? `${verifyDecimals(order?.offer_rate, parseNumber)}%` : parsePrice(order?.summary?.discount || order?.discount)} {t('OFF', 'off')}
           </OText>
         </OText>
 
@@ -300,7 +297,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   return (
     <>
       <Spinner visible={!order || Object.keys(order).length === 0} />
-      
+
       {order && Object.keys(order).length > 0 && (
         <>
           <Container>
@@ -341,18 +338,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
                 {orientationState?.orientation === LANDSCAPE && actionsContent}
               </View>
-            
+
               <View
                 style={{
                   flex: 1.4,
                   marginVertical: orientationState?.orientation === PORTRAIT ? 40 : 0,
                 }}
               >
-                { orderDetailsContent }
+                {orderDetailsContent}
               </View>
             </View>
           </Container>
-          
+
           {orientationState?.orientation === PORTRAIT && (
             <OSActions>
               {actionsContent}
