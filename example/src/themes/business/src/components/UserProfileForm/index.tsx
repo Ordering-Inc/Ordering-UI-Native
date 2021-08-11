@@ -4,7 +4,7 @@ import {
   useSession,
   useLanguage,
   ToastType,
-  useToast
+  useToast,
 } from 'ordering-components/native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -49,7 +49,7 @@ const ProfileUI = (props: ProfileParams) => {
 
   const [{ user }] = useSession();
   const [, t] = useLanguage();
-  const [,{ showToast }] = useToast();
+  const [, { showToast }] = useToast();
   const { handleSubmit, errors, setValue, control } = useForm();
 
   const theme = useTheme();
@@ -314,6 +314,7 @@ const ProfileUI = (props: ProfileParams) => {
 export const UserProfileForm = (props: any) => {
   const profileProps = {
     ...props,
+    refreshSessionUser: true,
     UIComponent: ProfileUI,
   };
   return <UserProfileController {...profileProps} />;

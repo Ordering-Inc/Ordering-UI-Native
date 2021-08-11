@@ -7,7 +7,7 @@ import { Card, Logo, Information, MyOrderOptions } from './styles';
 import { PreviousOrdersParams } from '../../types';
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {
-  const { orders, onNavigationRedirect } = props;
+  const { orders, onNavigationRedirect, getOrderStatus } = props;
 
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
@@ -51,7 +51,6 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
-      fontSize: 18,
       lineHeight: 18,
       color: theme.colors.orderTypeColor,
     },
@@ -87,7 +86,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
               </OText>
 
               <MyOrderOptions>
-                <OText style={styles.orderType} mRight={5} numberOfLines={1}>
+                <OText style={styles.orderType} mRight={5} size={15}>
                   {order.delivery_type === 1
                     ? t('DELIVERY', 'Delivery')
                     : order.delivery_type === 2
@@ -97,6 +96,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
                     : order.delivery_type === 4
                     ? t('CURBSIDE', 'Curbside')
                     : t('DRIVER_THRU', 'Driver thru')}
+                  {` · ${getOrderStatus(order.status)}`}
                 </OText>
               </MyOrderOptions>
             </Information>

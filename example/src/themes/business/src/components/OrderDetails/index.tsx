@@ -34,6 +34,7 @@ import {
 
 import { OButton, OModal, OText, OIconButton } from '../shared';
 import { ProductItemAccordion } from '../ProductItemAccordion';
+import { GoogleMap } from '../GoogleMap';
 import { OrderDetailsParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
 import { verifyDecimals } from '../../utils';
@@ -66,6 +67,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   });
   const { order, businessData, driversGroupsData, loading } = props.order;
   const itemsDrivers: any = [];
+  const [openModalForMapView, setOpenModalForMapView] = useState(false);
 
   if (user?.level === 2) {
     if (driversGroupsData?.length > 0) {
@@ -310,12 +312,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleViewActionOrder = (action: string) => {
+    if (openModalForMapView) {
+      setOpenModalForMapView(false);
+    }
     navigation.navigate &&
       navigation.navigate('AcceptOrRejectOrder', { order, action });
-  };
-
-  const handleViewMapView = () => {
-    navigation.navigate && navigation.navigate('MapView', { order, locations });
   };
 
   const handleViewSummaryOrder = (action: string) => {
@@ -328,6 +329,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const handleCloseModal = () => {
     setOpenModalForBusiness(false);
+  };
+
+  const handleOpenMapView = () => {
+    setOpenModalForMapView(!openModalForMapView);
   };
 
   const colors: any = {
@@ -376,6 +381,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',
     },
   ];
+
+  const showFloatButtonsAcceptOrReject: any = {
+    0: true,
+    7: true,
+  };
 
   useEffect(() => {
     if (driverLocation) {
@@ -457,6 +467,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setDriverId(order?.driver?.id);
   }, [order?.driver?.id]);
 
+  const locationsToSend = locations.filter(
+    (location: any) => location?.lat && location?.lng,
+  );
+
   return (
     <>
       <OrderDetailsContainer
@@ -489,7 +503,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   }}
                   borderColor={theme.colors.clear}
                   style={{ maxWidth: 40, left: 5 }}
-                  onClick={() => handleViewMapView()}
+                  onClick={() => handleOpenMapView()}
                 />
                 <OIconButton
                   icon={theme.images.general.messages}
@@ -683,25 +697,28 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </AssignDriver>
               )}
 
-              {order?.status === 7 && order?.delivery_type === 2 && (
-                <Pickup>
-                  <OButton
-                    style={styles.btnPickUp}
-                    textStyle={{ color: theme.colors.primary }}
-                    text={t('READY_FOR_PICKUP', 'Ready for pickup')}
-                    onClick={() =>
-                      handleChangeOrderStatus && handleChangeOrderStatus(4)
-                    }
-                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
-                  />
-                </Pickup>
-              )}
+            {order?.status === 7 && order?.delivery_type === 2 && (
+              <Pickup>
+                <OButton
+                  style={styles.btnPickUp}
+                  textStyle={{ color: theme.colors.primary }}
+                  text={t('READY_FOR_PICKUP', 'Ready for pickup')}
+                  onClick={() =>
+                    handleChangeOrderStatus && handleChangeOrderStatus(4)
+                  }
+                  imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+                />
+              </Pickup>
+            )}
             {order?.status === 4 && order?.delivery_type === 2 && (
               <Pickup>
                 <OButton
                   style={styles.btnPickUp}
                   textStyle={{ color: theme.colors.primary }}
-                  text={t('READY_FOR_COMPLETED', 'Ready for Completed')}
+                  text={t(
+                    'PICKUP_COMPLETED_BY_CUSTOMER',
+                    'Pickup completed by customer',
+                  )}
                   onClick={() =>
                     handleChangeOrderStatus && handleChangeOrderStatus(15)
                   }
@@ -714,8 +731,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
         <OModal
           open={openModalForBusiness}
-          title={`Order No. ${order?.id}`}
           order={order}
+          title={`${t('INVOICE_ORDER_NO', 'Order No.')} ${order?.id}`}
           entireModal
           onClose={() => handleCloseModal()}>
           <Chat
@@ -724,6 +741,22 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             messages={messages}
             order={order}
             setMessages={setMessages}
+          />
+        </OModal>
+
+        <OModal
+          open={openModalForMapView}
+          onClose={() => handleOpenMapView()}
+          entireModal
+          customClose>
+          <GoogleMap
+            location={order?.customer?.location}
+            locations={locationsToSend}
+            navigation={navigation}
+            handleViewActionOrder={handleViewActionOrder}
+            handleOpenMapView={handleOpenMapView}
+            readOnly
+            showAcceptOrReject={showFloatButtonsAcceptOrReject[order?.status]}
           />
         </OModal>
       </OrderDetailsContainer>
@@ -764,7 +797,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 export const OrderDetails = (props: OrderDetailsParams) => {
   const orderDetailsProps = {
     ...props,
-    userCustomerId: true,
+    driverAndBusinessId: true,
     UIComponent: OrderDetailsUI,
   };
   return <OrderDetailsConTableoller {...orderDetailsProps} />;

@@ -101,7 +101,6 @@ export interface PhoneInputParams {
   textInputProps?: TextInputProps;
 }
 
-
 export interface LanguageSelectorParams {
   languagesState?: any;
   currentLanguage?: string;
@@ -421,7 +420,10 @@ export interface GoogleMapsParams {
   readOnly?: boolean;
   markerTitle?: string;
   saveLocation?: boolean;
+  handleOpenMapView?: () => void;
+  showAcceptOrReject?: boolean;
   isSetInputs?: boolean;
+  handleViewActionOrder?: (action: string) => void;
   locations?: Array<any>;
   setSaveLocation?: (val: boolean) => void;
   handleToggleMap?: () => void;
