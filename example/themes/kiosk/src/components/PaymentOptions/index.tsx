@@ -21,16 +21,11 @@ import GridContainer from '../../layouts/GridContainer';
 
 const PaymentOptionsUI = (props: any) => {
   const {
-    cart,
     errorCash,
     isLoading,
-    isDisabled,
-    paymethodData,
     paymethodsList,
     setPaymethodData,
-    onNavigationRedirect,
     handlePaymethodClick,
-    handlePaymethodDataChange,
     isOpenMethod,
     navigation,
     handlerClickPlaceOrder,
@@ -71,20 +66,13 @@ const PaymentOptionsUI = (props: any) => {
     }
   }, [isOpenMethod.paymethod, placing, isLoading, paySelected])
 
-  const CASH_ID: number = 1;
-  const CARD_ON_DELIVERY_ID: number = 2;
+  const includePaymethods = ['cash', 'card_delivery'];
 
-  const includeIds = [CASH_ID, CARD_ON_DELIVERY_ID]; // cash & card on delivery
-  
   const supportedMethods = paymethodsList.paymethods
-    .sort((a: any, b: any) => a.id - b.id).filter((p: any) => includeIds.includes(p.id));
-  
-  const cashIndex: number = supportedMethods?.findIndex((item: any) => item?.id === CASH_ID);
-  const cardOnDeliveryIndex = supportedMethods?.findIndex((item: any) => item?.id === CARD_ON_DELIVERY_ID);
-  
-  const onSelectPaymethod = (paymethod: any, isPopupMethod: boolean) => {
-    handlePaymethodClick(paymethod, isPopupMethod);
-  }
+    .filter((p: any) => includePaymethods.includes(p.gateway));
+
+  const cashIndex: number = supportedMethods?.findIndex((item: any) => item?.gateway === 'cash');
+  const cardOnDeliveryIndex = supportedMethods?.findIndex((item: any) => item?.gateway === 'card_delivery');
 
   const handlePlaceOrder = () => {
     if (!userErrors.length) {
@@ -112,7 +100,7 @@ const PaymentOptionsUI = (props: any) => {
       bgImage: theme.images.general.cash,
       icon: theme.images.general.shoppingCart,
       callToActionText: t('TAKE_MY_RECEIPT', 'Take my receipt'),
-      onClick: () => onSelectPaymethod(supportedMethods[cashIndex], false),
+      onClick: () => handlePaymethodClick(supportedMethods[cashIndex]),
       ...supportedMethods[cashIndex],
     } : null,
 
@@ -123,7 +111,7 @@ const PaymentOptionsUI = (props: any) => {
       bgImage: theme.images.general.carddelivery,
       icon: theme.images.general.pushPin,
       callToActionText: t('LET\'S GO', 'Let\'s go'),
-      onClick: () => onSelectPaymethod(supportedMethods[cardOnDeliveryIndex], false),
+      onClick: () => handlePaymethodClick(supportedMethods[cardOnDeliveryIndex]),
       ...supportedMethods[cardOnDeliveryIndex],
     } : null,
   };
