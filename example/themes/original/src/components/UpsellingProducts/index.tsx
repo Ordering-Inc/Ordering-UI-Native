@@ -5,10 +5,10 @@ import { Platform, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'reac
 import {
 	UpsellingPage as UpsellingPageController,
 	useUtils,
-	useLanguage
+	useLanguage,
 } from 'ordering-components/native'
+import { useTheme } from 'styled-components/native';
 import { OText, OIcon, OModal, OBottomPopup, OButton } from '../shared'
-import { colors, images } from '../../theme.json'
 import { UpsellingProductsParams } from '../../types'
 import {
 	Container,
@@ -38,6 +38,35 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		canOpenUpselling,
 		setCanOpenUpselling
 	} = props
+
+	const theme = useTheme();
+
+
+	const styles = StyleSheet.create({
+		imageStyle: {
+			width: 73,
+			height: 73,
+			resizeMode: 'cover',
+			borderRadius: 7.6,
+		},
+		closeUpsellingButton: {
+			borderRadius: 7.6,
+			borderColor: theme.colors.primary,
+			backgroundColor: theme.colors.primary,
+			borderWidth: 1,
+			height: 44,
+			marginBottom: 10,
+			shadowOpacity: 0
+		},
+		cancelBtn: {
+			paddingHorizontal: 18,
+			borderWidth: 1,
+			borderRadius: 7.6,
+			borderColor: theme.colors.textSecondary,
+			height: 38
+		}
+	})
+
 	const [actualProduct, setActualProduct] = useState<any>(null)
 	const [modalIsOpen, setModalIsOpen] = useState(false)
 	const [{ parsePrice }] = useUtils()
@@ -72,7 +101,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 				<UpsellingContainer
 					horizontal
 					showsHorizontalScrollIndicator={false}
-					contentContainerStyle={{paddingHorizontal: Platform.OS === 'ios' ? 40 : 0}}
+					contentContainerStyle={{ paddingHorizontal: Platform.OS === 'ios' ? 40 : 0 }}
 				>
 					{
 						!upsellingProducts.loading && (
@@ -83,10 +112,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 											<View style={{ flexBasis: '57%' }}>
 												<Details>
 													<OText size={12} lineHeight={18} numberOfLines={1} ellipsizeMode='tail'>{product.name}</OText>
-													<OText size={12} lineHeight={18} color={colors.textNormal}>{parsePrice(product.price)}</OText>
+													<OText size={12} lineHeight={18} color={theme.colors.textNormal}>{parsePrice(product.price)}</OText>
 												</Details>
 												<AddButton onPress={() => handleFormProduct(product)}>
-													<OText size={10} color={colors.primary}>{t('ADD', 'Add')}</OText>
+													<OText size={10} color={theme.colors.primary}>{t('ADD', 'Add')}</OText>
 												</AddButton>
 											</View>
 											<View style={{}}>
@@ -121,12 +150,12 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 									open={openUpselling}
 									onClose={() => handleUpsellingPage()}
 								>
-									<TopBar style={{paddingTop: Platform.OS == 'ios' ? 10 : 30}}>
+									<TopBar style={{ paddingTop: Platform.OS == 'ios' ? 10 : 30 }}>
 										<TopActions onPress={() => handleCloseUpsellingPage()}>
-											<OIcon src={images.general.arrow_left} width={15} />
+											<OIcon src={theme.images.general.arrow_left} width={15} />
 										</TopActions>
 										<TopActions style={styles.cancelBtn} onPress={() => handleCloseUpsellingPage()}>
-											<OText size={12} color={colors.textSecondary}>{t('CANCEL', 'Cancel')}</OText>
+											<OText size={12} color={theme.colors.textSecondary}>{t('CANCEL', 'Cancel')}</OText>
 										</TopActions>
 									</TopBar>
 									<ScrollView style={{ marginBottom: bottom + (Platform.OS == 'ios' ? 46 : 70) }} showsVerticalScrollIndicator={false}>
@@ -137,7 +166,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 												isCartPending={cart?.status === 2}
 											/>
 										</View>
-										<View style={{ height: 8, backgroundColor: colors.backgroundGray100, marginHorizontal: -40, marginBottom: 23 }} />
+										<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40, marginBottom: 23 }} />
 										<View style={{ paddingHorizontal: 40, overflow: 'visible' }}>
 											<OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
 											<UpsellingLayout />
@@ -146,7 +175,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 													imgRightSrc=''
 													text={t('CHECKOUT', 'Checkout')}
 													style={styles.closeUpsellingButton}
-													textStyle={{ color: colors.white, fontSize: 14 }}
+													textStyle={{ color: theme.colors.white, fontSize: 14 }}
 													onClick={() => handleUpsellingPage()}
 												/>
 											</CloseUpselling>
@@ -177,31 +206,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		</>
 	)
 }
-
-const styles = StyleSheet.create({
-	imageStyle: {
-		width: 73,
-		height: 73,
-		resizeMode: 'cover',
-		borderRadius: 7.6,
-	},
-	closeUpsellingButton: {
-		borderRadius: 7.6,
-		borderColor: colors.primary,
-		backgroundColor: colors.primary,
-		borderWidth: 1,
-		height: 44,
-		marginBottom: 10,
-		shadowOpacity: 0
-	},
-	cancelBtn: {
-		paddingHorizontal: 18,
-		borderWidth: 1,
-		borderRadius: 7.6,
-		borderColor: colors.textSecondary,
-		height: 38
-	}
-})
 
 export const UpsellingProducts = (props: UpsellingProductsParams) => {
 	const upsellingProductsProps = {

@@ -1,5 +1,4 @@
-import styled, {css} from 'styled-components/native';
-import { colors } from '../../theme.json';
+import styled, { css } from 'styled-components/native';
 
 export const Card = styled.TouchableOpacity`
   margin-vertical: 4px;
@@ -41,11 +40,11 @@ export const BusinessLogo = styled.View`
     width: 48px;
     height: 48px;
 	 border-radius: 7.6px;
-	 border: 1px solid ${colors.border};
+	 border: 1px solid ${(props: any) => props.theme.colors.border};
 	 align-items: center;
 	 justify-content: center;
 `
 
 export const Reviews = styled.View`
   flex-direction: row;
-` 
+`

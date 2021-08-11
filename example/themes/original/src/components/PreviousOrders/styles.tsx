@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const Card = styled.View`
   padding-vertical: 5px;

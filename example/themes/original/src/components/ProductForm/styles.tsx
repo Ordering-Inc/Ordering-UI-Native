@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const WrapHeader = styled.View`
   position: relative;
@@ -72,7 +71,7 @@ export const ProductActions = styled.View`
   align-items: center;
   justify-content: space-between;
   border-top-width: 1px;
-  border-top-color: ${colors.border};
+  border-top-color: ${(props: any) => props.theme.colors.border};
 `
 export const ExtraOptionWrap = styled.ScrollView`
 	margin-horizontal: -40px;

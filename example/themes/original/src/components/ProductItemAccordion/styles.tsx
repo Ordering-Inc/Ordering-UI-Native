@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme.json';
 
 export const AccordionSection = styled.View`
   background: #FFF;
@@ -18,13 +17,13 @@ export const Accordion = styled.TouchableOpacity`
 
 export const ProductInfo = styled.View`
 	margin-horizontal: 7px;
-	background-color: ${colors.backgroundGray100};
+	background-color: ${(props: any) => props.theme.colors.backgroundGray100};
 	padding: 4px 12px 4px 0px;
 	border-radius: 7.6px;
 `
 
 export const ProductQuantity = styled.View`
-	background-color: ${colors.clear};
+	background-color: ${(props: any) => props.theme.colors.clear};
 	margin-horizontal: 7px;
 	min-width: 16px;
 	align-items: center;

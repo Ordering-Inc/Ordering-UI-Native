@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const UDForm = styled.View`
   display: flex;
@@ -32,5 +31,5 @@ export const WrapperPhone = styled.View`
   margin-bottom: 25px;
   width: 100%;
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.border};
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
 `

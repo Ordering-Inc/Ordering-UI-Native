@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const BCContainer = styled.View`
   display: flex;
@@ -33,7 +32,7 @@ export const Category = styled.View`
 export const IconContainer = styled.View`
   border-width: 1px;
   display: flex;
-  border-color: ${colors.backgroundGray};
+  border-color: ${(props: any) => props.theme.colors.backgroundGray};
   align-items: center;
   justify-content: center;
   border-radius: 10px;

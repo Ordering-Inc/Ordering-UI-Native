@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const OSContainer = styled.View`
   width: 100%;
@@ -13,7 +12,7 @@ export const OSProductList = styled.View``
 export const OSBill = styled.View`
   padding: 14px 0px 20px;
   border-top-width: 1px;
-  border-top-color: ${colors.border};
+  border-top-color: ${(props: any) => props.theme.colors.border};
   margin-top: 20px;
 `
 

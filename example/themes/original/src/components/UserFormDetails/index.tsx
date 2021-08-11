@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSession, useLanguage, ToastType, useToast } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 import { useForm, Controller } from 'react-hook-form';
 
 import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
 
 import { OText, OButton, OInput } from '../shared';
-import { colors, images } from '../../theme.json';
 
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { sortInputFields } from '../../utils';
@@ -25,6 +25,41 @@ export const UserFormDetailsUI = (props: any) => {
 		phoneUpdate,
 		hideUpdateButton,
 	} = props;
+
+	const theme = useTheme();
+
+
+	const styles = StyleSheet.create({
+		btnOutline: {
+			backgroundColor: '#FFF',
+			color: theme.colors.primary,
+		},
+		inputStyle: {
+			borderRadius: 0,
+			marginBottom: 25,
+			borderBottomWidth: 1,
+			borderBottomColor: theme.colors.border,
+			color: theme.colors.textNormal,
+			fontSize: 12,
+			padding: 0,
+		},
+		phoneSelect: {
+			borderWidth: 0,
+			marginStart: -5,
+			marginEnd: 0,
+			marginTop: -3,
+			height: 32,
+			width: 44
+		},
+		phoneInputStyle: {
+			height: 30,
+			borderWidth: 0,
+			fontSize: 12,
+			paddingStart: 0,
+			paddingBottom: 0,
+			marginBottom: -0,
+		}
+	});
 
 	const [, t] = useLanguage();
 	const { showToast } = useToast();
@@ -188,7 +223,7 @@ export const UserFormDetailsUI = (props: any) => {
 												control={control}
 												render={() => (
 													<>
-														<OText size={14} lineHeight={21} color={colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
+														<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
 															{field?.code}
 														</OText>
 														<OInput
@@ -257,7 +292,7 @@ export const UserFormDetailsUI = (props: any) => {
 
 							{!!showInputPhoneNumber && (
 								<WrapperPhone>
-									<OText size={14} lineHeight={21} weight={'500'} color={colors.textNormal}>{t('PHONE', 'Phone')}</OText>
+									<OText size={14} lineHeight={21} weight={'500'} color={theme.colors.textNormal}>{t('PHONE', 'Phone')}</OText>
 									<PhoneInputNumber
 										data={phoneInputData}
 										handleData={(val: any) => handleChangePhoneNumber(val)}
@@ -265,13 +300,13 @@ export const UserFormDetailsUI = (props: any) => {
 										defaultCode={user?.country_phone_code || null}
 										boxStyle={styles.phoneSelect}
 										inputStyle={styles.phoneInputStyle}
-										textStyle={{ color: colors.textNormal, fontSize: 12, padding: 0 }}
+										textStyle={{ color: theme.colors.textNormal, fontSize: 12, padding: 0 }}
 										noDropIcon
 									/>
 									{phoneUpdate && (
 										<OText
 											size={10}
-											color={colors.error}
+											color={theme.colors.error}
 											style={{ marginHorizontal: 10, textAlign: 'center' }}>
 											{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}:{' '}
 											{user?.cellphone}
@@ -299,9 +334,9 @@ export const UserFormDetailsUI = (props: any) => {
 										? t('UPDATING', 'Updating...')
 										: t('UPDATE', 'Update')
 								}
-								bgColor={colors.white}
-								textStyle={{ color: colors.primary, fontSize: 14 }}
-								borderColor={colors.primary}
+								bgColor={theme.colors.white}
+								textStyle={{ color: theme.colors.primary, fontSize: 14 }}
+								borderColor={theme.colors.primary}
 								isDisabled={formState.loading}
 								imgRightSrc={null}
 								style={{ borderRadius: 7.6, shadowOpacity: 0, width: '100%', borderWidth: 1, marginTop: 20 }}
@@ -314,34 +349,3 @@ export const UserFormDetailsUI = (props: any) => {
 	);
 };
 
-const styles = StyleSheet.create({
-	btnOutline: {
-		backgroundColor: '#FFF',
-		color: colors.primary,
-	},
-	inputStyle: {
-		borderRadius: 0,
-		marginBottom: 25,
-		borderBottomWidth: 1,
-		borderBottomColor: colors.border,
-		color: colors.textNormal,
-		fontSize: 12,
-		padding: 0,
-	},
-	phoneSelect: {
-		borderWidth: 0,
-		marginStart: -5,
-		marginEnd: 0,
-		marginTop: -3,
-		height: 32,
-		width: 44
-	},
-	phoneInputStyle: {
-		height: 30,
-		borderWidth: 0,
-		fontSize: 12,
-		paddingStart: 0,
-		paddingBottom: 0,
-		marginBottom: -0,
-	}
-});

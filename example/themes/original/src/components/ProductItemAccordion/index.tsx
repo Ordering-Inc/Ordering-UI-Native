@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { View, Animated, StyleSheet, Platform, TouchableOpacity } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
+import { useTheme } from 'styled-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
-import AntIcon from 'react-native-vector-icons/AntDesign'
 
 import {
 	Accordion,
@@ -21,7 +21,6 @@ import {
 import { OIcon, OText, OAlert } from '../shared'
 
 import { ProductItemAccordionParams } from '../../types'
-import { colors, images } from '../../theme.json'
 
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
@@ -35,6 +34,38 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 		onEditProduct,
 		isFromCheckout,
 	} = props
+
+	const theme = useTheme();
+
+
+	const pickerStyle = StyleSheet.create({
+		inputAndroid: {
+			width: 27,
+			textAlign: 'center',
+			overflow: 'visible',
+			fontSize: 12,
+			height: 20,
+			padding: 0,
+			color: theme.colors.textNormal
+		},
+		inputIOS: {
+			width: 27,
+			textAlign: 'center',
+			overflow: 'visible',
+			fontSize: 12,
+		},
+		icon: {
+			position: 'absolute',
+			zIndex: 1,
+			top: -4,
+			end: -4,
+		},
+		placeholder: {
+			color: theme.colors.secundaryContrast
+		},
+	})
+
+
 	const [, t] = useLanguage()
 	const [orderState] = useOrder()
 	const [{ parsePrice, optimizeImage }] = useUtils()
@@ -130,7 +161,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 									style={pickerStyle}
 									useNativeAndroidPickerStyle={false}
 									placeholder={{}}
-									Icon={() => <View style={pickerStyle.icon}><OIcon src={images.general.arrow_down} color={colors.textNormal} width={8} /></View>}
+									Icon={() => <View style={pickerStyle.icon}><OIcon src={theme.images.general.arrow_down} color={theme.colors.textNormal} width={8} /></View>}
 									disabled={orderState.loading}
 								/>
 							</ProductInfo>
@@ -156,9 +187,9 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 								{onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
 									<TouchableOpacity onPress={() => onEditProduct(product)} style={{ marginEnd: 7 }}>
 										<OIcon
-											src={images.general.pencil}
+											src={theme.images.general.pencil}
 											width={16}
-											color={colors.textSecondary}
+											color={theme.colors.textSecondary}
 										/>
 									</TouchableOpacity>
 								)}
@@ -169,9 +200,9 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										onAccept={() => onDeleteProduct(product)}
 									>
 										<OIcon
-											src={images.general.trash}
+											src={theme.images.general.trash}
 											width={17}
-											color={colors.textSecondary}
+											color={theme.colors.textSecondary}
 										/>
 									</OAlert>
 								)}
@@ -182,7 +213,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 				{((isCartProduct && !isCartPending && product?.valid_menu && !product?.valid_quantity) ||
 					(!product?.valid_menu && isCartProduct && !isCartPending)) && (
-						<OText size={20} color={colors.red} style={{ textAlign: 'center', marginTop: 10 }}>
+						<OText size={20} color={theme.colors.red} style={{ textAlign: 'center', marginTop: 10 }}>
 							{t('NOT_AVAILABLE', 'Not available')}
 						</OText>
 					)}
@@ -193,9 +224,9 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 					<AccordionContent>
 						{productInfo().ingredients.length > 0 && productInfo().ingredients.some((ingredient: any) => !ingredient.selected) && (
 							<ProductOptionsList>
-								<OText size={10} color={colors.textSecondary}>{t('INGREDIENTS', 'Ingredients')}</OText>
+								<OText size={10} color={theme.colors.textSecondary}>{t('INGREDIENTS', 'Ingredients')}</OText>
 								{productInfo().ingredients.map((ingredient: any) => !ingredient.selected && (
-									<OText size={10} color={colors.textThird} key={ingredient.id} style={{ marginLeft: 10 }}>{t('NO', 'No')} {ingredient.name}</OText>
+									<OText size={10} color={theme.colors.textThird} key={ingredient.id} style={{ marginLeft: 10 }}>{t('NO', 'No')} {ingredient.name}</OText>
 								))}
 							</ProductOptionsList>
 						)}
@@ -203,10 +234,10 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 							<ProductOptionsList>
 								{productInfo().options.map((option: any, i: number) => (
 									<ProductOption key={option.id + i}>
-										<OText size={10} color={colors.textSecondary}>{option.name}</OText>
+										<OText size={10} color={theme.colors.textSecondary}>{option.name}</OText>
 										{option.suboptions.map((suboption: any) => (
 											<ProductSubOption key={suboption.id}>
-												<OText size={10} color={colors.textThird}>
+												<OText size={10} color={theme.colors.textThird}>
 													{getFormattedSubOptionName({
 														quantity: suboption.quantity,
 														name: suboption.name,
@@ -222,8 +253,8 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 						)}
 						{product.comment && (
 							<ProductComment>
-								<OText size={10} color={colors.textSecondary}>{t('SPECIAL_COMMENT', 'Special Comment')}</OText>
-								<OText size={10} color={colors.textThird}>{product.comment}</OText>
+								<OText size={10} color={theme.colors.textSecondary}>{t('SPECIAL_COMMENT', 'Special Comment')}</OText>
+								<OText size={10} color={theme.colors.textThird}>{product.comment}</OText>
 							</ProductComment>
 						)}
 					</AccordionContent>
@@ -232,33 +263,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 		</AccordionSection>
 	)
 }
-
-const pickerStyle = StyleSheet.create({
-	inputAndroid: {
-		width: 27,
-		textAlign: 'center',
-		overflow: 'visible',
-		fontSize: 12,
-		height: 20,
-		padding: 0,
-		color: colors.textNormal
-	},
-	inputIOS: {
-		width: 27,
-		textAlign: 'center',
-		overflow: 'visible',
-		fontSize: 12,
-	},
-	icon: {
-		position: 'absolute',
-		zIndex: 1,
-		top: -4,
-		end: -4,
-	},
-	placeholder: {
-		color: colors.secundaryContrast
-	},
-})
 
 const styles = StyleSheet.create({
 	productImage: {

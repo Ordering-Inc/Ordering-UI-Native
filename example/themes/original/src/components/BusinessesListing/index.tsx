@@ -15,6 +15,7 @@ import {
 	useConfig,
 	useUtils,
 } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 
 import {
 	Search,
@@ -26,8 +27,6 @@ import {
 	FeaturedWrapper,
 } from './styles';
 
-import NavBar from '../NavBar';
-import { colors, images } from '../../theme.json';
 import { SearchBar } from '../SearchBar';
 import { OIcon, OText } from '../shared';
 import { BusinessesListingParams } from '../../types';
@@ -51,6 +50,40 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		paginationProps,
 		handleChangeSearch,
 	} = props;
+
+	const theme = useTheme();
+
+
+	const styles = StyleSheet.create({
+		container: {
+			marginBottom: 0,
+		},
+		welcome: {
+			flex: 1,
+			flexDirection: 'row',
+		},
+		inputStyle: {
+			backgroundColor: theme.colors.inputDisabled,
+			flex: 1,
+		},
+		wrapperOrderOptions: {
+			width: '100%',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			marginBottom: 10,
+			zIndex: 100,
+		},
+		borderStyle: {
+			borderColor: theme.colors.backgroundGray,
+			borderWidth: 1,
+			borderRadius: 10,
+		},
+		searchInput: {
+			fontSize: 12,
+		}
+	});
+
+
 	const [, t] = useLanguage();
 	const [{ user, auth }] = useSession();
 	const [orderState] = useOrder();
@@ -113,11 +146,11 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	return (
 		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}>
 			<HeaderWrapper
-				source={images.backgrounds.business_list_header}
+				source={theme.images.backgrounds.business_list_header}
 				style={{ paddingTop: top + 20 }}>
 				{!auth && (
 					<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
-						<OIcon src={images.general.arrow_left} width={20} style={{ tintColor: colors.white }} />
+						<OIcon src={theme.images.general.arrow_left} width={20} style={{ tintColor: theme.colors.white }} />
 					</TouchableOpacity>
 				)}
 
@@ -132,8 +165,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 								})
 						}>
 						<OIcon
-							src={images.general.pin}
-							color={colors.disabled}
+							src={theme.images.general.pin}
+							color={theme.colors.disabled}
 							width={16}
 							style={{ marginRight: 10 }}
 						/>
@@ -151,7 +184,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 								size={12}
 								numberOfLines={1}
 								ellipsizeMode="tail"
-								color={colors.textSecondary}>
+								color={theme.colors.textSecondary}>
 								{orderState.options?.moment
 									? parseDate(orderState.options?.moment, {
 										outputFormat:
@@ -162,7 +195,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 									: t('ASAP_ABBREVIATION', 'ASAP')}
 							</OText>
 							<OIcon
-								src={images.general.arrow_down}
+								src={theme.images.general.arrow_down}
 								width={10}
 								style={{ marginStart: 8 }}
 							/>
@@ -177,7 +210,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							onCancel={() => handleChangeSearch('')}
 							placeholder={t('SEARCH', 'Search')}
 							height={26}
-							inputStyle={{...styles.searchInput, ...Platform.OS === 'ios' ? {} : {paddingBottom: 4}}}
+							inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
 						/>
 					</View>
 				</OrderControlContainer>
@@ -210,7 +243,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</ScrollView>
 				</FeaturedWrapper>
 			)}
-			<View style={{ height: 8, backgroundColor: colors.backgroundGray100 }} />
+			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 			<ListWrapper>
 				<BusinessTypeFilter
 					images={props.images}
@@ -292,35 +325,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		</ScrollView>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		marginBottom: 0,
-	},
-	welcome: {
-		flex: 1,
-		flexDirection: 'row',
-	},
-	inputStyle: {
-		backgroundColor: colors.inputDisabled,
-		flex: 1,
-	},
-	wrapperOrderOptions: {
-		width: '100%',
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		marginBottom: 10,
-		zIndex: 100,
-	},
-	borderStyle: {
-		borderColor: colors.backgroundGray,
-		borderWidth: 1,
-		borderRadius: 10,
-	},
-	searchInput: {
-		fontSize: 12,
-	}
-});
 
 export const BusinessesListing = (props: BusinessesListingParams) => {
 	const BusinessesListingProps = {

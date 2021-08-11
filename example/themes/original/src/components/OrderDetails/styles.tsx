@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const OrderDetailsContainer = styled.ScrollView`
   
@@ -26,7 +25,7 @@ export const OrderBusiness = styled.View`
   position: relative; 
   padding-vertical: 10px;
   padding-horizontal: 40px;
-  background-color: ${colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
   align-items: flex-start;
 `
 export const Icons = styled.View`
@@ -66,7 +65,7 @@ export const SectionTitle = styled.View`
 
 export const OrderCustomer = styled.View`
   padding: 20px 40px 10px;
-  background-color: ${colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
 `
 
 export const OrderDriver = styled(OrderCustomer)``
@@ -86,7 +85,7 @@ export const InfoBlock = styled.View`
 
 export const HeaderInfo = styled.View`
   flex: 1;
-  background-color: ${colors.backgroundGray100};
+  background-color: ${(props: any) => props.theme.colors.backgroundGray100};
   padding: 20px 40px;
 `
 
@@ -104,12 +103,12 @@ export const OrderBill = styled.View`
   padding-horizontal: 40px;
   padding-vertical: 10px;
   flex: 1;
-  background-color: ${colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
 `
 
 export const Total = styled.View`
   border-top-width: 1px;
-  border-top-color: ${colors.border};
+  border-top-color: ${(props: any) => props.theme.colors.border};
   padding-vertical: 10px
 `
 

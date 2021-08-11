@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const BusinessInformationContainer = styled.View`
   width: 100%;
@@ -35,6 +34,6 @@ export const WrapBusinessMap = styled.View`
 `
 export const DivideView = styled.View`
 	height: 8px;
-	background-color: ${colors.backgroundGray100};
+	background-color: ${(props: any) => props.theme.colors.backgroundGray100};
 	margin-horizontal: -40px;
 `;

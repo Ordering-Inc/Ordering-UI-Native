@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OModal } from '../shared';
 import { BusinessBasicInformationParams } from '../../types';
-import { colors, images } from '../../theme.json';
 import { convertHoursToMinutes } from '../../utils';
 import { BusinessInformation } from '../BusinessInformation';
 import { BusinessReviews } from '../BusinessReviews';
@@ -25,6 +25,7 @@ export const BusinessBasicInformation = (
 	const { navigation, businessState, isBusinessInfoShow, logo, header } = props;
 	const { business, loading } = businessState;
 
+	const theme = useTheme();
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
 	const [{ parsePrice, parseDistance, optimizeImage }] = useUtils();
@@ -49,7 +50,7 @@ export const BusinessBasicInformation = (
 				style={
 					isBusinessInfoShow
 						? styles.businesInfoheaderStyle
-						: { ...styles.headerStyle, backgroundColor: colors.backgroundGray }
+						: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
 				}
 				source={{
 					uri:
@@ -58,7 +59,7 @@ export const BusinessBasicInformation = (
 				}}>
 				{!isBusinessInfoShow && (
 					<WrapBusinessInfo onPress={() => setOpenBusinessInformation(true)}>
-						<OIcon src={images.general.info} width={24} />
+						<OIcon src={theme.images.general.info} width={24} />
 					</WrapBusinessInfo>
 				)}
 			</BusinessHeader>
@@ -99,7 +100,7 @@ export const BusinessBasicInformation = (
 					</Placeholder>
 				) : (
 					<View style={{ width: '75%' }}>
-						<OText color={colors.textNormal}>{getBusinessType()}</OText>
+						<OText color={theme.colors.textNormal}>{getBusinessType()}</OText>
 					</View>
 				)}
 				<View>
@@ -115,31 +116,31 @@ export const BusinessBasicInformation = (
 							</Placeholder>
 						)}
 						<View style={styles.bullet}>
-							<OText color={colors.textSecondary} size={12} style={styles.metadata}>
+							<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
 								{`${t('DELIVERY_FEE', 'Delivery fee')} ${business && parsePrice(business?.delivery_price || 0)} \u2022 `}
 							</OText>
 							{orderState?.options?.type === 1 ? (
-								<OText color={colors.textSecondary} size={12} style={styles.metadata}>
+								<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
 									{convertHoursToMinutes(business?.delivery_time) + `  \u2022 `}
 								</OText>
 							) : (
-								<OText color={colors.textSecondary} size={12} style={styles.metadata}>
+								<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
 									{convertHoursToMinutes(business?.pickup_time) + `  \u2022 `}
 								</OText>
 							)}
-							<OText color={colors.textSecondary} size={12} style={styles.metadata}>
+							<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
 								{parseDistance(business?.distance || 0) + `  \u2022 `}
 							</OText>
 						</View>
 
 						<View style={styles.reviewStyle}>
 							<OIcon
-								src={images.general.star}
+								src={theme.images.general.star}
 								width={14}
-								color={colors.textSecondary}
+								color={theme.colors.textSecondary}
 								style={{ marginTop: -2, marginEnd: 2 }}
 							/>
-							<OText size={12} color={colors.textSecondary}>
+							<OText size={12} color={theme.colors.textSecondary}>
 								{business?.reviews?.total}
 							</OText>
 						</View>
@@ -149,13 +150,13 @@ export const BusinessBasicInformation = (
 					{!isBusinessInfoShow && (
 						<>
 							<TouchableOpacity onPress={() => navigation.navigate('MomentOption')}>
-								<OText color={colors.primary} style={{ textDecorationLine: 'underline' }}>
+								<OText color={theme.colors.primary} style={{ textDecorationLine: 'underline' }}>
 									{t('PRE_ORDER', 'Preorder')}
 								</OText>
 							</TouchableOpacity>
-							<OText size={12} color={colors.textSecondary}>{' \u2022 '}</OText>
+							<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
 							<TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
-								<OText color={colors.primary} style={{ textDecorationLine: 'underline' }}>
+								<OText color={theme.colors.primary} style={{ textDecorationLine: 'underline' }}>
 									{t('REVIEWS', 'Reviews')}
 								</OText>
 							</TouchableOpacity>

@@ -6,6 +6,7 @@ import {
 	useOrder,
 	useUtils,
 } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 import { ProductIngredient } from '../ProductIngredient';
 import { ProductOption } from '../ProductOption';
 
@@ -26,7 +27,6 @@ import {
 	ProductActions,
 	ExtraOptionWrap,
 } from './styles';
-import { colors, images } from '../../theme.json';
 import { OButton, OIcon, OInput, OText } from '../shared';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ProductOptionSubOption } from '../ProductOptionSubOption';
@@ -59,6 +59,60 @@ export const ProductOptionsUI = (props: any) => {
 		isFromCheckout,
 	} = props;
 
+	const theme = useTheme();
+
+
+	const styles = StyleSheet.create({
+		mainContainer: {
+
+		},
+		headerItem: {
+			overflow: 'hidden',
+			backgroundColor: theme.colors.clear,
+			width: 35,
+			marginVertical: 18,
+		},
+		optionContainer: {
+			marginBottom: 20,
+		},
+		comment: {
+			borderWidth: 1,
+			borderRadius: 7.6,
+			borderColor: theme.colors.border,
+			height: 100,
+			alignItems: 'flex-start',
+		},
+		quantityControl: {
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+			marginRight: 10,
+		},
+		btnBackArrow: {
+			borderWidth: 0,
+			backgroundColor: 'rgba(0,0,0,0.3)',
+			borderRadius: 24,
+			marginRight: 15,
+		},
+		productHeaderSkeleton: {
+			flexDirection: 'row',
+			width: '100%',
+			position: 'relative',
+			maxHeight: 260,
+			height: 260,
+			resizeMode: 'cover',
+			minHeight: 200,
+			zIndex: 0,
+		},
+		extraItem: {
+			paddingHorizontal: 7,
+			paddingBottom: 10,
+			borderBottomWidth: 1,
+			borderBottomColor: theme.colors.border,
+			justifyContent: 'center',
+		},
+	});
+
 	const [{ parsePrice }] = useUtils();
 	const [, t] = useLanguage();
 	const [orderState] = useOrder();
@@ -66,11 +120,11 @@ export const ProductOptionsUI = (props: any) => {
 	const { product, loading, error } = productObject;
 
 	const { top, bottom } = useSafeAreaInsets();
-	const { height } =  useWindowDimensions();
+	const { height } = useWindowDimensions();
 	const [selOpt, setSelectedOpt] = useState(0);
 
 	const isError = (id: number) => {
-		let bgColor = colors.white;
+		let bgColor = theme.colors.white;
 		if (errors[`id:${id}`]) {
 			bgColor = 'rgba(255, 0, 0, 0.05)';
 		}
@@ -123,11 +177,11 @@ export const ProductOptionsUI = (props: any) => {
 						styles.extraItem,
 						{
 							borderBottomColor:
-								selOpt == 0 ? colors.textNormal : colors.border,
+								selOpt == 0 ? theme.colors.textNormal : theme.colors.border,
 						},
 					]}>
 					<OText
-						color={selOpt == 0 ? colors.textNormal : colors.textSecondary}
+						color={selOpt == 0 ? theme.colors.textNormal : theme.colors.textSecondary}
 						size={selOpt == 0 ? 14 : 12}
 						weight={selOpt == 0 ? '600' : 'normal'}>
 						{t('ALL', 'All')}
@@ -141,11 +195,11 @@ export const ProductOptionsUI = (props: any) => {
 							styles.extraItem,
 							{
 								borderBottomColor:
-									selOpt == -1 ? colors.textNormal : colors.border,
+									selOpt == -1 ? theme.colors.textNormal : theme.colors.border,
 							},
 						]}>
 						<OText
-							color={selOpt == -1 ? colors.textNormal : colors.textSecondary}
+							color={selOpt == -1 ? theme.colors.textNormal : theme.colors.textSecondary}
 							size={selOpt == -1 ? 14 : 12}
 							weight={selOpt == -1 ? '600' : 'normal'}>
 							{t('INGREDIENTS', 'Ingredients')}
@@ -162,12 +216,12 @@ export const ProductOptionsUI = (props: any) => {
 									styles.extraItem,
 									{
 										borderBottomColor:
-											selOpt == id ? colors.textNormal : colors.border,
+											selOpt == id ? theme.colors.textNormal : theme.colors.border,
 									},
 								]}>
 								<OText
 									color={
-										selOpt == id ? colors.textNormal : colors.textSecondary
+										selOpt == id ? theme.colors.textNormal : theme.colors.textSecondary
 									}
 									size={selOpt == id ? 14 : 12}
 									weight={selOpt == id ? '600' : 'normal'}>
@@ -182,8 +236,8 @@ export const ProductOptionsUI = (props: any) => {
 	);
 
 	return (
-		<View style={{height: height}}>
-			<View style={{height: height - top - bottom - (Platform.OS === 'android' ? 94 : 69)}}>
+		<View style={{ height: height }}>
+			<View style={{ height: height - top - bottom - (Platform.OS === 'android' ? 94 : 69) }}>
 				<ScrollView>
 					{!error && (
 						<>
@@ -204,7 +258,7 @@ export const ProductOptionsUI = (props: any) => {
 											<TouchableOpacity
 												style={styles.headerItem}
 												onPress={onClose}>
-												<OIcon src={images.general.close} width={16} />
+												<OIcon src={theme.images.general.close} width={16} />
 											</TouchableOpacity>
 										</TopHeader>
 										<ProductHeader
@@ -235,14 +289,14 @@ export const ProductOptionsUI = (props: any) => {
 												style={{ flex: 1, marginBottom: 5 }}>
 												{product?.name || productCart.name}
 											</OText>
-											<OText size={16} lineHeight={24} color={colors.textNormal}>
+											<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
 												{productCart.price ? parsePrice(productCart.price) : ''}
 											</OText>
 										</>
 									)}
 								</ProductTitle>
 								<ProductDescription>
-									<OText color={colors.textSecondary} size={12} lineHeight={18}>
+									<OText color={theme.colors.textSecondary} size={12} lineHeight={18}>
 										{product?.description || productCart?.description}
 									</OText>
 									{((product?.sku &&
@@ -315,7 +369,7 @@ export const ProductOptionsUI = (props: any) => {
 																backgroundColor:
 																	isSoldOut || maxProductQuantity <= 0
 																		? 'hsl(0, 0%, 72%)'
-																		: colors.white,
+																		: theme.colors.white,
 															}}>
 															{product?.ingredients.map((ingredient: any) => (
 																<ProductIngredient
@@ -399,7 +453,7 @@ export const ProductOptionsUI = (props: any) => {
 																backgroundColor:
 																	isSoldOut || maxProductQuantity <= 0
 																		? 'hsl(0, 0%, 72%)'
-																		: colors.white,
+																		: theme.colors.white,
 															}}>
 															{product?.ingredients.map((ingredient: any) => (
 																<ProductIngredient
@@ -524,12 +578,12 @@ export const ProductOptionsUI = (props: any) => {
 								onPress={decrement}
 								disabled={productCart.quantity === 1 || isSoldOut}>
 								<OIcon
-									src={images.general.minus}
+									src={theme.images.general.minus}
 									width={16}
 									color={
 										productCart.quantity === 1 || isSoldOut
-											? colors.backgroundGray
-											: colors.backgroundDark
+											? theme.colors.backgroundGray
+											: theme.colors.backgroundDark
 									}
 								/>
 							</TouchableOpacity>
@@ -547,14 +601,14 @@ export const ProductOptionsUI = (props: any) => {
 									isSoldOut
 								}>
 								<OIcon
-									src={images.general.plus}
+									src={theme.images.general.plus}
 									width={16}
 									color={
 										maxProductQuantity <= 0 ||
 											productCart.quantity >= maxProductQuantity ||
 											isSoldOut
-											? colors.backgroundGray
-											: colors.backgroundDark
+											? theme.colors.backgroundGray
+											: theme.colors.backgroundDark
 									}
 								/>
 							</TouchableOpacity>
@@ -573,17 +627,17 @@ export const ProductOptionsUI = (props: any) => {
 									onClick={() => handleSaveProduct()}
 									imgRightSrc=""
 									text={`${orderState.loading
-											? t('LOADING', 'Loading')
-											: editMode
-												? t('UPDATE', 'Update')
-												: t('ADD', 'Add')
+										? t('LOADING', 'Loading')
+										: editMode
+											? t('UPDATE', 'Update')
+											: t('ADD', 'Add')
 										}`}
 									textStyle={{
-										color: saveErrors ? colors.primary : colors.white,
+										color: saveErrors ? theme.colors.primary : theme.colors.white,
 									}}
 									style={{
-										backgroundColor: saveErrors ? colors.white : colors.primary,
-										borderColor: saveErrors ? colors.white : colors.primary,
+										backgroundColor: saveErrors ? theme.colors.white : theme.colors.primary,
+										borderColor: saveErrors ? theme.colors.white : theme.colors.primary,
 										opacity: saveErrors ? 0.3 : 1,
 										borderRadius: 7.6,
 										height: 44,
@@ -613,10 +667,10 @@ export const ProductOptionsUI = (props: any) => {
 										: t('LOGIN_SIGNUP', 'Login / Sign Up')
 								}
 								imgRightSrc=""
-								textStyle={{ color: colors.primary }}
+								textStyle={{ color: theme.colors.primary }}
 								style={{
-									borderColor: colors.primary,
-									backgroundColor: colors.white,
+									borderColor: theme.colors.primary,
+									backgroundColor: theme.colors.white,
 								}}
 							/>
 						)}
@@ -627,56 +681,6 @@ export const ProductOptionsUI = (props: any) => {
 	);
 };
 
-const styles = StyleSheet.create({
-	mainContainer: {
-		
-	},
-	headerItem: {
-		overflow: 'hidden',
-		backgroundColor: colors.clear,
-		width: 35,
-		marginVertical: 18,
-	},
-	optionContainer: {
-		marginBottom: 20,
-	},
-	comment: {
-		borderWidth: 1,
-		borderRadius: 7.6,
-		borderColor: colors.border,
-		height: 100,
-		alignItems: 'flex-start',
-	},
-	quantityControl: {
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		marginRight: 10,
-	},
-	btnBackArrow: {
-		borderWidth: 0,
-		backgroundColor: 'rgba(0,0,0,0.3)',
-		borderRadius: 24,
-		marginRight: 15,
-	},
-	productHeaderSkeleton: {
-		flexDirection: 'row',
-		width: '100%',
-		position: 'relative',
-		maxHeight: 260,
-		height: 260,
-		resizeMode: 'cover',
-		minHeight: 200,
-		zIndex: 0,
-	},
-	extraItem: {
-		paddingHorizontal: 7,
-		paddingBottom: 10,
-		borderBottomWidth: 1,
-		borderBottomColor: colors.border,
-		justifyContent: 'center',
-	},
-});
 
 export const ProductForm = (props: any) => {
 	const productOptionsProps = {
