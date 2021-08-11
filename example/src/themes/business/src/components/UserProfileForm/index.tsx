@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import {
-  UserFormDetails as UserProfileController,
-  useSession,
-  useLanguage,
-  ToastType,
-  useToast,
-} from 'ordering-components/native';
+import { View, StyleSheet } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { View, StyleSheet } from 'react-native';
-import { ProfileParams } from '../../types';
+import { useTheme } from 'styled-components/native';
+import {
+  UserFormDetails as UserProfileController,
+  useSession,
+  ToastType,
+  useToast,
+  useLanguage,
+} from 'ordering-components/native';
+import { CenterView, Actions, UserData, EditButton } from './styles';
+import NavBar from '../NavBar';
 import { LogoutButton } from '../LogoutButton';
 import { LanguageSelector } from '../LanguageSelector';
 import { UserFormDetailsUI } from '../UserFormDetails';
-import { useTheme } from 'styled-components/native';
+import { UDWrapper } from '../UserFormDetails/styles';
 import {
   OIcon,
   OIconButton,
@@ -22,19 +24,8 @@ import {
   OButton,
   OInput,
 } from '../../components/shared';
-import {
-  CenterView,
-  Actions,
-  UserData,
-  Names,
-  EditButton,
-  WrapperPhone,
-  UDForm,
-} from './styles';
-import { PhoneInputNumber } from '../PhoneInputNumber';
 import { sortInputFields } from '../../utils';
-import NavBar from '../NavBar';
-import { UDWrapper } from '../UserFormDetails/styles';
+import { ProfileParams } from '../../types';
 
 const ProfileUI = (props: ProfileParams) => {
   const {
@@ -50,17 +41,10 @@ const ProfileUI = (props: ProfileParams) => {
   const [{ user }] = useSession();
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
-  const { handleSubmit, errors, setValue, control } = useForm();
-
+  const { errors } = useForm();
   const theme = useTheme();
 
   const styles = StyleSheet.create({
-    dropdown: {
-      borderColor: theme.colors.whiteGray,
-      height: 50,
-      borderRadius: 25,
-      marginTop: 16,
-    },
     inputStyle: {
       marginBottom: 25,
       borderWidth: 1,
@@ -69,17 +53,20 @@ const ProfileUI = (props: ProfileParams) => {
       borderRightWidth: 0,
       borderLeftWidth: 0,
     },
-    inputbox: {
-      marginVertical: 8,
-      width: '90%',
-    },
     editButton: {
-      borderRadius: 25,
+      height: 44,
+      borderRadius: 7.6,
+      borderWidth: 1,
       borderColor: theme.colors.primary,
       backgroundColor: theme.colors.white,
-      borderWidth: 1,
-      color: theme.colors.primary,
-      marginVertical: 8,
+      marginBottom: 25,
+    },
+    btnText: {
+      color: theme.colors.textGray,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 18,
     },
   });
 
@@ -91,43 +78,6 @@ const ProfileUI = (props: ProfileParams) => {
     },
   });
   const [phoneUpdate, setPhoneUpdate] = useState(false);
-  const showInputPhoneNumber =
-    validationFields?.fields?.checkout?.cellphone?.enabled ?? false;
-
-  const onSubmit = (values: any) => {
-    if (phoneInputData.error) {
-      showToast(ToastType.Error, phoneInputData.error);
-      return;
-    }
-    if (
-      formState.changes.cellphone === '' &&
-      validationFields?.fields?.checkout?.cellphone?.enabled &&
-      validationFields?.fields?.checkout?.cellphone?.required
-    ) {
-      showToast(
-        ToastType.Error,
-        t(
-          'VALIDATION_ERROR_MOBILE_PHONE_REQUIRED',
-          'The field Phone Number is required.',
-        ),
-      );
-      return;
-    }
-    if (formState.changes.password && formState.changes.password.length < 8) {
-      showToast(
-        ToastType.Error,
-        t(
-          'VALIDATION_ERROR_PASSWORD_MIN_STRING',
-          'The Password must be at least 8 characters.',
-        )
-          .replace('_attribute_', t('PASSWORD', 'Password'))
-          .replace('_min_', 8),
-      );
-      return;
-    }
-
-    handleButtonUpdateClick(values);
-  };
 
   const handleImagePicker = () => {
     launchImageLibrary(
@@ -216,6 +166,7 @@ const ProfileUI = (props: ProfileParams) => {
           fontSize: 26,
         }}
       />
+
       <CenterView>
         <OIcon
           url={user?.photo}
@@ -224,6 +175,7 @@ const ProfileUI = (props: ProfileParams) => {
           height={100}
           style={{ borderRadius: 2 }}
         />
+
         <OIconButton
           icon={theme.images.general.camera}
           borderColor={theme.colors.clear}
@@ -232,6 +184,7 @@ const ProfileUI = (props: ProfileParams) => {
           onClick={() => handleImagePicker()}
         />
       </CenterView>
+
       <Spinner visible={formState?.loading} />
 
       {!isEdit ? (
@@ -250,6 +203,7 @@ const ProfileUI = (props: ProfileParams) => {
                       style={{ paddingHorizontal: 16 }}>
                       {t(field?.code.toUpperCase(), field?.name)}
                     </OText>
+
                     <OInput
                       name={field.code}
                       placeholder={t(field.code.toUpperCase(), field?.name)}
@@ -275,6 +229,20 @@ const ProfileUI = (props: ProfileParams) => {
                     />
                   </React.Fragment>
                 ))}
+
+                <OText
+                  color={theme.colors.textGray}
+                  weight="bold"
+                  style={{ paddingHorizontal: 16 }}>
+                  {t('PASSWORD', 'Password')}
+                </OText>
+
+                <OInput
+                  isSecured={true}
+                  placeholder={'·············'}
+                  style={styles.inputStyle}
+                  isDisabled={true}
+                />
               </UDWrapper>
             )}
         </UserData>
@@ -288,6 +256,7 @@ const ProfileUI = (props: ProfileParams) => {
           />
         </View>
       )}
+
       {!validationFields.loading && !isEdit && (
         <EditButton>
           <OButton
@@ -296,8 +265,8 @@ const ProfileUI = (props: ProfileParams) => {
             borderColor={theme.colors.primary}
             isDisabled={formState.loading}
             imgRightSrc={null}
-            textStyle={{ fontSize: 20 }}
-            style={{ ...styles.editButton }}
+            textStyle={styles.btnText}
+            style={styles.editButton}
             onClick={toggleIsEdit}
           />
         </EditButton>

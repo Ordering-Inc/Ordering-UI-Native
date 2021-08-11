@@ -3,11 +3,9 @@ import {
   Pressable,
   StyleSheet,
   Keyboard,
-  Text,
   View,
-  Image,
-  Platform,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,37 +14,66 @@ import {
   useToast,
   LoginForm as LoginFormController,
   useLanguage,
+  useConfig,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { Container, FormSide, FormInput } from './styles';
-import { OText, OButton, OInput } from '../shared';
+import {
+  LoginWith,
+  ButtonsWrapper,
+  FormInput,
+  TabsContainer,
+  OrSeparator,
+  LineSeparator,
+} from './styles';
+import { OText, OButton, OInput, OIconButton, OModal } from '../shared';
+import { PhoneInputNumber } from '../PhoneInputNumber';
+import { VerifyPhone } from '../VerifyPhone';
 import { LoginParams } from '../../types';
 
 const LoginFormUI = (props: LoginParams) => {
   const {
+    navigation,
     formState,
-    loginButtonText,
-    forgotButtonText,
     handleButtonLoginClick,
     onNavigationRedirect,
-    emailInputIcon,
-    passwordInputIcon,
+    loginTab,
+    useLoginByCellphone,
+    useLoginByEmail,
+    handleSendVerifyCode,
+    verifyPhoneState,
+    checkPhoneCodeState,
+    handleCheckPhoneCode,
+    setCheckPhoneCodeState,
   } = props;
 
   const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const theme = useTheme();
-  const { control, handleSubmit, getValues, errors } = useForm();
+  const [{ configs }] = useConfig();
+  const { control, handleSubmit, errors } = useForm();
+
+  const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
+  const inputRef = useRef<any>(null);
 
   const [passwordSee, setPasswordSee] = useState(false);
+  const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [phoneInputData, setPhoneInputData] = useState({
+    error: '',
+    phone: {
+      country_phone_code: null,
+      cellphone: null,
+    },
+  });
+  const [windowWidth, setWindowWidth] = useState(
+    parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
+  );
   const [orientation, setOrientation] = useState(
     Dimensions.get('window').width < Dimensions.get('window').height
       ? 'Portrait'
       : 'Landscape',
   );
-
-  const inputRef = useRef<any>({});
 
   const getTraduction = (key: string) => {
     const keyList: any = {
@@ -82,20 +109,65 @@ const LoginFormUI = (props: LoginParams) => {
     return keyList[key] ? t(key, keyList[key]) : t(key);
   };
 
+  const handleChangeTab = (val: string) => {
+    props.handleChangeTab(val);
+
+    if (loginTab === 'email') {
+      scrollRefTab.current?.scrollToEnd({ animated: true });
+    }
+
+    if (loginTab === 'cellphone') {
+      scrollRefTab.current?.scrollTo({ animated: true });
+    }
+  };
+
   const handleChangeInputEmail = (value: string, onChange: any) => {
     onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
   };
 
   const handleLogin = () => {
     setLoading(true);
+
     handleSubmit(onSubmit)();
   };
 
   const onSubmit = (values: any) => {
     Keyboard.dismiss();
+
+    if (phoneInputData.error) {
+      showToast(ToastType.Error, phoneInputData.error);
+      return;
+    }
+
     handleButtonLoginClick({
       ...values,
+      ...phoneInputData.phone,
     });
+  };
+
+  const handleVerifyCodeClick = () => {
+    if (phoneInputData.error) {
+      showToast(ToastType.Error, phoneInputData.error);
+      return;
+    }
+
+    if (
+      !phoneInputData.error &&
+      !phoneInputData.phone.country_phone_code &&
+      !phoneInputData.phone.cellphone
+    ) {
+      showToast(
+        ToastType.Error,
+        t(
+          'VALIDATION_ERROR_MOBILE_PHONE_REQUIRED',
+          'The field Mobile phone is required.',
+        ),
+      );
+      return;
+    }
+
+    handleSendVerifyCode && handleSendVerifyCode(phoneInputData.phone);
+    setIsLoadingVerifyModal(true);
   };
 
   useEffect(() => {
@@ -105,19 +177,63 @@ const LoginFormUI = (props: LoginParams) => {
           ToastType.Error,
           typeof formState.result?.result === 'string'
             ? getTraduction(formState.result?.result)
-            : getTraduction(formState.result?.result[0]),
+            : loginTab === 'email'
+            ? getTraduction(formState.result?.result[0])
+            : getTraduction(formState.result?.result[1]),
         );
     }
   }, [formState]);
 
   useEffect(() => {
-    if (Object.keys(errors).length) {
-      showToast(
-        ToastType.Error,
-        errors?.email
-          ? getTraduction(errors.email?.message)
-          : getTraduction(errors?.password?.message),
-      );
+    if (verifyPhoneState && !verifyPhoneState?.loading) {
+      if (verifyPhoneState.result?.error) {
+        const message =
+          typeof verifyPhoneState?.result?.result === 'string'
+            ? verifyPhoneState?.result?.result
+            : verifyPhoneState?.result?.result[0];
+        verifyPhoneState.result?.result && showToast(ToastType.Error, message);
+        setIsLoadingVerifyModal(false);
+        return;
+      }
+
+      const okResult = verifyPhoneState.result?.result === 'OK';
+      if (okResult) {
+        !isModalVisible && setIsModalVisible(true);
+        setIsLoadingVerifyModal(false);
+      }
+    }
+  }, [verifyPhoneState]);
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      // Convert all errors in one string to show in toast provider
+      const list = Object.values(errors);
+      let stringError = '';
+
+      if (phoneInputData.error) {
+        list.unshift({ message: phoneInputData.error });
+      }
+
+      if (
+        loginTab === 'cellphone' &&
+        !phoneInputData.error &&
+        !phoneInputData.phone.country_phone_code &&
+        !phoneInputData.phone.cellphone
+      ) {
+        list.unshift({
+          message: t(
+            'VALIDATION_ERROR_MOBILE_PHONE_REQUIRED',
+            'The field Mobile phone is required.',
+          ),
+        });
+      }
+
+      list.map((item: any, i: number) => {
+        stringError +=
+          i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
+      });
+
+      showToast(ToastType.Error, stringError);
     }
   }, [errors]);
 
@@ -128,6 +244,10 @@ const LoginFormUI = (props: LoginParams) => {
   }, [loading]);
 
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+    setWindowWidth(
+      parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
+    );
+
     if (width < height) {
       setOrientation('Portrait');
     } else {
@@ -135,63 +255,71 @@ const LoginFormUI = (props: LoginParams) => {
     }
   });
 
-  const loginStyle = StyleSheet.create({
+  const styles = StyleSheet.create({
     container: {
-      justifyContent: 'flex-end',
-    },
-    logo: {
+      justifyContent: 'center',
       alignItems: 'center',
-      marginTop: Platform.OS === 'ios' ? 20 : 20,
-      marginBottom: orientation === 'Portrait' ? '40%' : '10%',
+      paddingBottom: 40,
     },
-    welcomeView: {
-      flex: 1,
-      width: '90%',
-      marginBottom: 20,
+    header: {
+      marginBottom: 30,
+      justifyContent: 'space-between',
+      width: '100%',
     },
-    emailInput: {
-      color: theme.colors.inputTextColor,
+    arrowLeft: {
+      maxWidth: 40,
+      height: 25,
+      justifyContent: 'flex-end',
       marginBottom: 25,
+    },
+    title: {
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'bold',
+      fontSize: 26,
+      color: theme.colors.textGray,
+    },
+    btnTab: {
+      flex: 1,
+      minWidth: 88,
+      alignItems: 'center',
+    },
+    btnTabText: {
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 16,
+      marginBottom: 10,
+      paddingLeft: 8,
+      paddingRight: 8,
+    },
+    input: {
+      color: theme.colors.arrowColor,
+      marginBottom: 20,
       borderWidth: 1,
       borderRadius: 7.6,
-      borderColor: theme.colors.inputTextColor,
+      borderColor: theme.colors.inputSignup,
       backgroundColor: theme.colors.transparent,
     },
-    passwordInput: {
-      color: theme.colors.inputTextColor,
-      marginBottom: 13,
-      borderWidth: 1,
-      borderRadius: 7.6,
-      borderColor: theme.colors.inputTextColor,
-      backgroundColor: theme.colors.transparent,
-    },
-    button: {
+    btn: {
       borderRadius: 7.6,
       height: 44,
     },
-    textButton: {
+    btnText: {
       color: theme.colors.inputTextColor,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
       fontSize: 18,
     },
-    textTitle: {
-      color: theme.colors.inputTextColor,
-      fontFamily: 'Poppins',
-      fontStyle: 'normal',
-      fontWeight: '500',
-      fontSize: 45,
-    },
-    textSubtitle: {
-      color: theme.colors.inputTextColor,
-      fontFamily: 'Poppins',
-      fontStyle: 'normal',
-      fontWeight: 'normal',
-      fontSize: 16,
+    btnFlag: {
+      borderWidth: 1,
+      borderRadius: 7.6,
+      marginRight: 9,
+      borderColor: theme.colors.inputSignup,
     },
     textForgot: {
-      color: theme.colors.inputTextColor,
+      color: theme.colors.arrowColor,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
@@ -200,62 +328,141 @@ const LoginFormUI = (props: LoginParams) => {
   });
 
   return (
-    <Container contentContainerStyle={loginStyle.container}>
-      <View style={loginStyle.logo}>
-        <Image source={theme.images.logos.logotypeInvert} />
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <OIconButton
+          icon={theme.images.general.arrow_left}
+          borderColor={theme.colors.clear}
+          iconStyle={{ width: 20, height: 20 }}
+          style={styles.arrowLeft}
+          onClick={() => navigation?.canGoBack() && navigation.goBack()}
+        />
+
+        <OText style={styles.title}>{t('LOGIN', 'Login')}</OText>
       </View>
 
-      <FormSide>
-        <View style={loginStyle.welcomeView}>
-          <Text style={loginStyle.textTitle}>{t('TITLE_HOME', 'Welcome')}</Text>
-          <Text style={loginStyle.textSubtitle}>
-            {t(
-              'BUSINESS_WELCOME_SUBTITLE',
-              "Let's start to admin your business now",
-            )}
-          </Text>
-        </View>
+      {(useLoginByEmail || useLoginByCellphone) && (
+        <LoginWith>
+          <ScrollView
+            ref={scrollRefTab}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            horizontal>
+            <TabsContainer width={windowWidth - 42}>
+              {useLoginByEmail && (
+                <Pressable
+                  style={styles.btnTab}
+                  onPress={() => handleChangeTab('email')}>
+                  <OText
+                    style={styles.btnTabText}
+                    color={
+                      loginTab === 'email'
+                        ? theme.colors.textGray
+                        : theme.colors.unselectText
+                    }>
+                    {t('LOGIN_BY_EMAIL', 'Login by Email')}
+                  </OText>
 
+                  <View
+                    style={{
+                      width: '100%',
+                      borderBottomColor:
+                        loginTab === 'email'
+                          ? theme.colors.textGray
+                          : theme.colors.tabBar,
+                      borderBottomWidth: 2,
+                    }}></View>
+                </Pressable>
+              )}
+
+              {useLoginByCellphone && (
+                <Pressable
+                  style={styles.btnTab}
+                  onPress={() => handleChangeTab('cellphone')}>
+                  <OText
+                    style={styles.btnTabText}
+                    color={
+                      loginTab === 'cellphone'
+                        ? theme.colors.textGray
+                        : theme.colors.unselectText
+                    }>
+                    {t('LOGIN_BY_PHONE', 'Login by Phone')}
+                  </OText>
+
+                  <View
+                    style={{
+                      width: '100%',
+                      borderBottomColor:
+                        loginTab === 'cellphone'
+                          ? theme.colors.textGray
+                          : theme.colors.tabBar,
+                      borderBottomWidth: 2,
+                    }}></View>
+                </Pressable>
+              )}
+            </TabsContainer>
+          </ScrollView>
+        </LoginWith>
+      )}
+
+      {(useLoginByCellphone || useLoginByEmail) && (
         <FormInput>
-          <Controller
-            control={control}
-            render={({ onChange, value }: any) => (
-              <OInput
-                placeholder={t('EMAIL', 'Email')}
-                placeholderTextColor={theme.colors.inputTextColor}
-                style={loginStyle.emailInput}
-                icon={emailInputIcon}
-                iconColor={theme.colors.inputTextColor}
-                onChange={(e: any) => {
-                  handleChangeInputEmail(e, onChange);
-                }}
-                value={value}
-                autoCapitalize="none"
-                autoCorrect={false}
-                type="email-address"
-                autoCompleteType="email"
-                returnKeyType="next"
-                onSubmitEditing={() => inputRef.current?.focus()}
-                blurOnSubmit={false}
-                selectionColor={theme.colors.inputTextColor}
-              />
-            )}
-            name="email"
-            rules={{
-              required: t(
-                'VALIDATION_ERROR_EMAIL_REQUIRED',
-                'The field Email is required',
-              ).replace('_attribute_', t('EMAIL', 'Email')),
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: t(
-                  'INVALID_ERROR_EMAIL',
-                  'Invalid email address',
+          {useLoginByEmail && loginTab === 'email' && (
+            <Controller
+              control={control}
+              render={({ onChange, value }: any) => (
+                <OInput
+                  placeholder={t('EMAIL', 'Email')}
+                  placeholderTextColor={theme.colors.arrowColor}
+                  style={styles.input}
+                  icon={theme.images.logos.emailInputIcon}
+                  iconColor={theme.colors.arrowColor}
+                  onChange={(e: any) => {
+                    handleChangeInputEmail(e, onChange);
+                  }}
+                  selectionColor={theme.colors.primary}
+                  value={value}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  type="email-address"
+                  autoCompleteType="email"
+                  returnKeyType="next"
+                  onSubmitEditing={() => inputRef.current?.focus()}
+                  blurOnSubmit={false}
+                />
+              )}
+              name="email"
+              rules={{
+                required: t(
+                  'VALIDATION_ERROR_EMAIL_REQUIRED',
+                  'The field Email is required',
                 ).replace('_attribute_', t('EMAIL', 'Email')),
-              },
-            }}
-            defaultValue=""
-          />
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: t(
+                    'INVALID_ERROR_EMAIL',
+                    'Invalid email address',
+                  ).replace('_attribute_', t('EMAIL', 'Email')),
+                },
+              }}
+              defaultValue=""
+            />
+          )}
+
+          {useLoginByCellphone && loginTab === 'cellphone' && (
+            <View style={{ marginBottom: 20 }}>
+              <PhoneInputNumber
+                data={phoneInputData}
+                handleData={(val: any) => setPhoneInputData(val)}
+                flagProps={styles.btnFlag}
+                onSubmitEditing={() => null}
+                textInputProps={{
+                  returnKeyType: 'next',
+                  onSubmitEditing: () => inputRef.current.focus(),
+                }}
+              />
+            </View>
+          )}
 
           <Controller
             control={control}
@@ -263,33 +470,33 @@ const LoginFormUI = (props: LoginParams) => {
               <OInput
                 isSecured={!passwordSee ? true : false}
                 placeholder={t('PASSWORD', 'Password')}
-                placeholderTextColor={theme.colors.inputTextColor}
-                style={loginStyle.passwordInput}
-                icon={passwordInputIcon}
-                iconColor={theme.colors.inputTextColor}
+                placeholderTextColor={theme.colors.arrowColor}
+                style={styles.input}
+                icon={theme.images.logos.passwordInputIcon}
+                iconColor={theme.colors.arrowColor}
                 iconCustomRight={
                   !passwordSee ? (
                     <MaterialCommunityIcons
                       name="eye-outline"
                       size={24}
-                      color={theme.colors.inputTextColor}
+                      color={theme.colors.arrowColor}
                       onPress={() => setPasswordSee(!passwordSee)}
                     />
                   ) : (
                     <MaterialCommunityIcons
                       name="eye-off-outline"
                       size={24}
-                      color={theme.colors.inputTextColor}
+                      color={theme.colors.arrowColor}
                       onPress={() => setPasswordSee(!passwordSee)}
                     />
                   )
                 }
+                selectionColor={theme.colors.primary}
                 value={value}
                 forwardRef={inputRef}
                 onChange={(val: any) => onChange(val)}
                 returnKeyType="done"
                 blurOnSubmit
-                selectionColor={theme.colors.inputTextColor}
               />
             )}
             name="password"
@@ -311,27 +518,69 @@ const LoginFormUI = (props: LoginParams) => {
             defaultValue=""
           />
 
-          {onNavigationRedirect && forgotButtonText && (
+          {onNavigationRedirect && (
             <Pressable
-              style={{ width: '100%', marginBottom: 40 }}
+              style={{ width: '50%', marginBottom: 35 }}
               onPress={() => onNavigationRedirect('Forgot')}>
-              <OText style={loginStyle.textForgot}>{forgotButtonText}</OText>
+              <OText style={styles.textForgot}>
+                {t('FORGOT_YOUR_PASSWORD', 'Forgot your password?')}
+              </OText>
             </Pressable>
           )}
 
           <OButton
             onClick={handleLogin}
-            text={loginButtonText}
+            text={t('LOGIN', 'Login')}
             bgColor={theme.colors.primary}
             borderColor={theme.colors.primary}
-            textStyle={loginStyle.textButton}
+            textStyle={styles.btnText}
             imgRightSrc={null}
             isLoading={formState?.loading || loading}
-            style={loginStyle.button}
+            style={styles.btn}
           />
         </FormInput>
-      </FormSide>
-    </Container>
+      )}
+
+      {useLoginByCellphone &&
+        loginTab === 'cellphone' &&
+        configs &&
+        Object.keys(configs).length > 0 &&
+        (configs?.twilio_service_enabled?.value === 'true' ||
+          configs?.twilio_service_enabled?.value === '1') && (
+          <>
+            <OrSeparator>
+              <LineSeparator />
+              <OText size={18} mRight={20} mLeft={20}>
+                {t('OR', 'Or')}
+              </OText>
+              <LineSeparator />
+            </OrSeparator>
+
+            <ButtonsWrapper mBottom={20}>
+              <OButton
+                onClick={handleVerifyCodeClick}
+                text={t('GET_VERIFY_CODE', 'Get Verify Code')}
+                borderColor={theme.colors.primary}
+                style={styles.btn}
+                imgRightSrc={null}
+                isLoading={isLoadingVerifyModal}
+                indicatorColor={theme.colors.primary}
+              />
+            </ButtonsWrapper>
+          </>
+        )}
+
+      <OModal open={isModalVisible} onClose={() => setIsModalVisible(false)}>
+        <VerifyPhone
+          phone={phoneInputData.phone}
+          verifyPhoneState={verifyPhoneState}
+          checkPhoneCodeState={checkPhoneCodeState}
+          handleCheckPhoneCode={handleCheckPhoneCode}
+          setCheckPhoneCodeState={setCheckPhoneCodeState}
+          handleVerifyCodeClick={handleVerifyCodeClick}
+        />
+      </OModal>
+    </View>
   );
 };
 

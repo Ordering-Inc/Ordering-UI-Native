@@ -12,6 +12,7 @@ const OptionCard = (props: Props) => {
   return (
     <TouchableOpacity
       onPress={props.onClick}
+      activeOpacity={1}
     >
       <Container
         source={props.bgImage}

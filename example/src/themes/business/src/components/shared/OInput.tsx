@@ -5,9 +5,9 @@ import {
   ViewStyle,
   TextInputProps,
 } from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 const Wrapper = styled.View`
   background-color: ${(props: any) => props.theme.colors.backgroundLight};
@@ -20,6 +20,7 @@ const Wrapper = styled.View`
   flex: 1;
   justify-content: center;
 `;
+
 const Input = styled.TextInput`
   flex-grow: 1;
   flex: 1;
@@ -55,6 +56,12 @@ interface Props extends TextInputProps {
   forwardRef?: any;
   selectionColor?: string;
   maxLength?: number;
+  autoCapitalize?: any;
+  autoCompleteType?: any;
+  autoCorrect?: any;
+  returnKeyType?: any;
+  onSubmitEditing?: any;
+  blurOnSubmit?: any;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -106,11 +113,10 @@ const OInput = (props: Props): React.ReactElement => {
         onSubmitEditing={props.onSubmitEditing}
         blurOnSubmit={props.blurOnSubmit}
         ref={props.forwardRef}
-        onEndEditing={props.onSubmitEditing}
         selectionColor={props.selectionColor}
-        color={props.selectionColor}
         maxLength={props.maxLength || 1000}
       />
+
       {props.iconRight && (
         <OIcon
           src={props.iconRight}
@@ -120,6 +126,7 @@ const OInput = (props: Props): React.ReactElement => {
           style={{ ...props.iconRightStyle }}
         />
       )}
+
       {props.iconCustomRight}
     </Wrapper>
   );

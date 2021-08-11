@@ -35,6 +35,7 @@ const OCard = (props: Props): React.ReactElement => {
 		 style={{...props.style}}
 		 onPress={props?.onPress}
 		 disabled={!props?.onPress}
+     activeOpacity={1}
 		>
 			{props?.badgeText && (
 				<CardBadge>

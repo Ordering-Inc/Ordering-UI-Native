@@ -720,7 +720,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     'Pickup completed by customer',
                   )}
                   onClick={() =>
-                    handleChangeOrderStatus && handleChangeOrderStatus(15)
+                    handleChangeOrderStatus && handleChangeOrderStatus(4)
                   }
                   imgLeftStyle={{ tintColor: theme.colors.backArrow }}
                 />

@@ -1,35 +1,22 @@
 import styled, { css } from 'styled-components/native';
 
-export const Container = styled.ScrollView`
-  padding-bottom: 40px;
-`;
-
-export const FormSide = styled.View`
+export const LoginWith = styled.View`
   display: flex;
   width: 100%;
-  flex-direction: column;
-  align-items: center;
-  margin: auto;
+  margin-bottom: 30px;
 `;
 
-export const OTabs = styled.View`
+export const TabsContainer = styled.View`
+  min-width: ${({ width }: { width: number }) => `${width}px`};
+  width: auto;
   display: flex;
   flex-direction: row;
-`;
-
-export const OTab = styled.View`
-  padding: 0px 15px;
-`;
-
-export const LoginWith = styled.View`
-  font-size: 14px;
 `;
 
 export const FormInput = styled.View`
   display: flex;
   flex-direction: column;
-  width: 90%;
-  padding: 25px 0px 15px;
+  width: 100%;
 `;
 
 export const ButtonsWrapper = styled.View`
@@ -45,11 +32,6 @@ export const ButtonsWrapper = styled.View`
     `}
 `;
 
-export const SocialButtons = styled.View`
-  width: 100%;
-  margin: 0px auto 20px;
-`;
-
 export const OrSeparator = styled.View`
   width: 90%;
   display: flex;
@@ -63,8 +45,4 @@ export const LineSeparator = styled.View`
   width: 40%;
   height: 1px;
   background-color: ${(props: any) => props.theme.colors.disabled};
-`;
-
-export const SkeletonWrapper = styled.View`
-  width: 90%;
 `;
