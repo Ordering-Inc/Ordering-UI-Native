@@ -1,95 +1,97 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { StripeRedirectForm as StripeRedirectFormController, useSession, useLanguage, ToastType, useToast } from 'ordering-components/native';
+import { useTheme } from 'styled-components/native';
 // import stripe from 'tipsi-stripe';
 
 import {
-  FormRedirect,
-  FormGroup,
-  ErrorMessage
+	FormRedirect,
+	FormGroup,
+	ErrorMessage
 } from './styles';
 
 import { OButton, ODropDown, OInput, OText } from '../shared';
-import { colors } from '../../theme.json';
 
 const StripeRedirectFormUI = (props: any) => {
-  const {
-    paymethods,
-    publicKey,
-    handleSubmitPaymentMethod
-  } = props;
+	const {
+		paymethods,
+		publicKey,
+		handleSubmitPaymentMethod
+	} = props;
 
-  // stripe.setOptions({
-  //   publishableKey: publicKey,
-  //   // androidPayMode: 'test', // Android only
-  // })
+	const theme = useTheme();
 
-  const { showToast } = useToast();
-  const { control, handleSubmit, errors } = useForm();
+	// stripe.setOptions({
+	//   publishableKey: publicKey,
+	//   // androidPayMode: 'test', // Android only
+	// })
 
-  const [{ user }] = useSession();
-  const [, t] = useLanguage();
+	const { showToast } = useToast();
+	const { control, handleSubmit, errors } = useForm();
 
-  const [paymentValue, setPaymentValue] = useState('-1');
+	const [{ user }] = useSession();
+	const [, t] = useLanguage();
 
-  const onSubmit = (values: any) => {
-    console.log('onSubmit', values);
-    // handleSubmitPaymentMethod && handleSubmitPaymentMethod();
-  }
+	const [paymentValue, setPaymentValue] = useState('-1');
 
-  const handleChangeBankOption = (option: any) => {
-    console.log('option', option);
-    // setPaymentValue(option.value)
-  }
+	const onSubmit = (values: any) => {
+		console.log('onSubmit', values);
+		// handleSubmitPaymentMethod && handleSubmitPaymentMethod();
+	}
 
-  useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      const list = Object.values(errors)
-      let stringError = ''
-      list.map((item: any, i: number) => {
-        stringError += (i + 1) === list.length ? `- ${item.message}` : `- ${item.message}\n`
-      })
-      showToast(ToastType.Error, stringError)
-    }
-  }, [errors])
+	const handleChangeBankOption = (option: any) => {
+		console.log('option', option);
+		// setPaymentValue(option.value)
+	}
 
-  const handleCreateSource = async () => {
-    // try {
-    //   // this.setState({ loading: true, source: null })
-    //   const source = await stripe.createSourceWithParams({
-    //     type: 'alipay',
-    //     amount: 50,
-    //     currency: 'USD',
-    //     returnURL: 'https://www.google.com/',
-    //   })
-    //   // this.setState({ loading: false, source })
-    //   console.log('source', source);
-    // } catch (error) {
-    //   // this.setState({ loading: false })
-    //   console.log(error);
-    // }
-  }
+	useEffect(() => {
+		if (Object.keys(errors).length > 0) {
+			const list = Object.values(errors)
+			let stringError = ''
+			list.map((item: any, i: number) => {
+				stringError += (i + 1) === list.length ? `- ${item.message}` : `- ${item.message}\n`
+			})
+			showToast(ToastType.Error, stringError)
+		}
+	}, [errors])
 
-  return (
-    <FormRedirect>
-      <FormGroup>
-        <OText size={24}>{t('SELECT_A_PAYMENT_METHOD', 'Select a payment method')}</OText>
-        <ODropDown
-          options={paymethods}
-          defaultValue={paymentValue}
-          onSelect={(option: any) => handleChangeBankOption(option)}
-        />
-        {/* {errors.type && errors.type.type === 'required' && (
+	const handleCreateSource = async () => {
+		// try {
+		//   // this.setState({ loading: true, source: null })
+		//   const source = await stripe.createSourceWithParams({
+		//     type: 'alipay',
+		//     amount: 50,
+		//     currency: 'USD',
+		//     returnURL: 'https://www.google.com/',
+		//   })
+		//   // this.setState({ loading: false, source })
+		//   console.log('source', source);
+		// } catch (error) {
+		//   // this.setState({ loading: false })
+		//   console.log(error);
+		// }
+	}
+
+	return (
+		<FormRedirect>
+			<FormGroup>
+				<OText size={24}>{t('SELECT_A_PAYMENT_METHOD', 'Select a payment method')}</OText>
+				<ODropDown
+					options={paymethods}
+					defaultValue={paymentValue}
+					onSelect={(option: any) => handleChangeBankOption(option)}
+				/>
+				{/* {errors.type && errors.type.type === 'required' && (
           <ErrorMessage>{t('FIELD_REQUIRED', 'This field is required')}</ErrorMessage>
         )} */}
-        {/* {errors && (
+				{/* {errors && (
           <OText>
             {JSON.stringify(errors)}
           </OText>
         )} */}
-      </FormGroup>
+			</FormGroup>
 
-      {/* <FormGroup>
+			{/* <FormGroup>
         <Controller
           control={control}
           render={({ onChange, value }) => (
@@ -133,25 +135,25 @@ const StripeRedirectFormUI = (props: any) => {
         />
       </FormGroup> */}
 
-      <OButton
-        // text={formState.isSubmitting ? t('LOADING', 'Loading...') : t('OK', 'OK')}
-        text={t('OK', 'OK')}
-        bgColor={colors.primary}
-        borderColor={colors.primary}
-        textStyle={{color: 'white'}}
-        imgRightSrc={null}
-        // isDisabled={formState.isSubmitting}
-        // onClick={() => handleSubmit(onSubmit)}
-        onClick={() => handleCreateSource()}
-      />
-    </FormRedirect>
-  )
+			<OButton
+				// text={formState.isSubmitting ? t('LOADING', 'Loading...') : t('OK', 'OK')}
+				text={t('OK', 'OK')}
+				bgColor={theme.colors.primary}
+				borderColor={theme.colors.primary}
+				textStyle={{ color: 'white' }}
+				imgRightSrc={null}
+				// isDisabled={formState.isSubmitting}
+				// onClick={() => handleSubmit(onSubmit)}
+				onClick={() => handleCreateSource()}
+			/>
+		</FormRedirect>
+	)
 }
 
 export const StripeRedirectForm = (props: any) => {
-  const stripeRedirectFormProps = {
-    ...props,
-    UIComponent: StripeRedirectFormUI
-  }
-  return <StripeRedirectFormController {...stripeRedirectFormProps} />
+	const stripeRedirectFormProps = {
+		...props,
+		UIComponent: StripeRedirectFormUI
+	}
+	return <StripeRedirectFormController {...stripeRedirectFormProps} />
 }

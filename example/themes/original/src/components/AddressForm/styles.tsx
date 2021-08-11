@@ -1,10 +1,9 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json';
 
 export const AddressFormContainer = styled.View`
     flex: 1;
     padding: 0px 40px 20px;
-    background-color: ${colors.backgroundPage};
+    background-color: ${(props: any) => props.theme.colors.backgroundPage};
     justify-content: space-between;
 `
 

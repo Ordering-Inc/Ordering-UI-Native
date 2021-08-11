@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const WelcomeTitle = styled.View`
   flex: 1;
@@ -20,7 +19,7 @@ export const Search = styled.View`
 
 export const AddressInput = styled.TouchableOpacity`
   flex-direction: row;
-  background-color: ${colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
   border-radius: 22px;
   padding-horizontal: 20px;
   align-items: center;
@@ -40,7 +39,7 @@ export const OrderControlContainer = styled.View`
 `
 
 export const WrapMomentOption = styled.TouchableOpacity`
-  background-color: ${colors.backgroundGray100};
+  background-color: ${(props: any) => props.theme.colors.backgroundGray100};
   border-radius: 7.6px;
   font-size: 12px;
   max-width: 240px;
@@ -60,12 +59,12 @@ export const HeaderWrapper = styled.ImageBackground`
 `;
 
 export const ListWrapper = styled.View`
-	background-color: ${colors.backgroundLight};
+	background-color: ${(props: any) => props.theme.colors.backgroundLight};
 	padding-horizontal: 40px;
 `;
 
 export const FeaturedWrapper = styled.View`
-	background-color: ${colors.backgroundLight};
+	background-color: ${(props: any) => props.theme.colors.backgroundLight};
 	height: 220px;
 	paddingVertical: 30px;
 `;

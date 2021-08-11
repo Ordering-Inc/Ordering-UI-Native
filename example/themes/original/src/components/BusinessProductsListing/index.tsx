@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-
+import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
 	useLanguage,
 	useOrder,
 	useSession,
-	useUtils
+	useUtils,
 } from 'ordering-components/native'
 import { OButton, OIcon, OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -23,7 +22,6 @@ import {
 	WrapContent,
 	BusinessProductsListingContainer
 } from './styles'
-import { colors, images } from '../../theme.json'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
@@ -44,10 +42,37 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		logo
 	} = props
 
+	const theme = useTheme();
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
 	const [orderState] = useOrder()
 	const [{ parsePrice }] = useUtils()
+
+	const styles = StyleSheet.create({
+		mainContainer: {
+			flex: 1,
+		},
+		BackIcon: {
+			paddingRight: 20,
+		},
+		headerItem: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			marginVertical: 2,
+			marginHorizontal: 20,
+		},
+		btnBackArrow: {
+			borderWidth: 0,
+			backgroundColor: theme.colors.clear,
+			shadowColor: theme.colors.clear,
+		},
+		searchIcon: {
+			borderWidth: 0,
+			padding: 15,
+			justifyContent: 'center',
+			shadowColor: theme.colors.clear,
+		}
+	})
 
 	const { business, loading, error } = businessState
 	const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
@@ -110,18 +135,18 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							<>
 								<View style={{ ...styles.headerItem, flex: 1 }}>
 									<OButton
-										imgLeftSrc={images.general.arrow_left}
+										imgLeftSrc={theme.images.general.arrow_left}
 										imgRightSrc={null}
 										style={styles.btnBackArrow}
 										onClick={() => navigation?.canGoBack() && navigation.goBack()}
-										imgLeftStyle={{ tintColor: colors.textNormal }}
+										imgLeftStyle={{ tintColor: theme.colors.textNormal }}
 									/>
 									{/* <AddressInput
                       onPress={() => auth
                         ? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
                         : onRedirect('AddressForm', { address: orderState.options?.address })}
                     >
-                      <OText color={colors.white} numberOfLines={1}>
+                      <OText color={theme.colors.white} numberOfLines={1}>
                         {orderState?.options?.address?.address}
                       </OText>
                     </AddressInput> */}
@@ -132,7 +157,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 											onPress={() => setIsOpenSearchBar(true)}
 											style={styles.searchIcon}
 										>
-											<OIcon src={images.general.search} color={colors.textNormal} width={16} />
+											<OIcon src={theme.images.general.search} color={theme.colors.textNormal} width={16} />
 										</TouchableOpacity>
 									</View>
 								)}
@@ -160,7 +185,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						logo={logo}
 					/>
 				</WrapHeader>
-				<View style={{ height: 8, backgroundColor: colors.backgroundGray100 }} />
+				<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 				{!loading && business?.id && (
 					<>
 						{!(business?.categories?.length === 0) && (
@@ -263,32 +288,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		</>
 	)
 }
-
-const styles = StyleSheet.create({
-	mainContainer: {
-		flex: 1,
-	},
-	BackIcon: {
-		paddingRight: 20,
-	},
-	headerItem: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginVertical: 2,
-		marginHorizontal: 20,
-	},
-	btnBackArrow: {
-		borderWidth: 0,
-		backgroundColor: colors.clear,
-		shadowColor: colors.clear,
-	},
-	searchIcon: {
-		borderWidth: 0,
-		padding: 15,
-		justifyContent: 'center',
-		shadowColor: colors.clear,
-	}
-})
 
 export const BusinessProductsListing = (props: BusinessProductsListingParams) => {
 	const businessProductslistingProps = {

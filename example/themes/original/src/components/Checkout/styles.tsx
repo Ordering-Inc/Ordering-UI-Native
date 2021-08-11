@@ -1,6 +1,5 @@
 import { Platform } from 'react-native';
 import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const ChContainer = styled.View`
   margin-bottom: 60px;
@@ -18,7 +17,7 @@ export const ChHeader = styled.View`
 `
 
 export const ChTotal = styled.View`
-  background-color: ${colors.inputDisabled};
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
   padding: 10px 20px;
   display: flex;
   justify-content: space-between;
@@ -41,7 +40,7 @@ export const ChMoment = styled(ChAddress)`
 `
 
 export const CHMomentWrapper = styled.TouchableOpacity`
-	background-color: ${colors.backgroundGray100};
+	background-color: ${(props: any) => props.theme.colors.backgroundGray100};
 	border-radius: 7.6px;
 	font-size: 12px;
 	max-width: 240px;

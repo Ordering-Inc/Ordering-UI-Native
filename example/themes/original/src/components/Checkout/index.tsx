@@ -12,11 +12,10 @@ import {
 	useValidationFields,
 	useConfig,
 	useToast,
-	ToastType
+	ToastType,
 } from 'ordering-components/native';
-
+import { useTheme } from 'styled-components/native';
 import { OText, OIcon } from '../shared';
-import { colors, images } from '../../theme.json';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -76,6 +75,24 @@ const CheckoutUI = (props: any) => {
 		businessName,
 		cartTotal
 	} = props
+
+	const theme = useTheme();
+
+	const styles = StyleSheet.create({
+		btnBackArrow: {
+			borderWidth: 0,
+			backgroundColor: theme.colors.white,
+			borderColor: theme.colors.white,
+			shadowColor: theme.colors.white,
+			display: 'flex',
+			justifyContent: 'flex-start',
+			paddingLeft: 0,
+		},
+		pagePadding: {
+			paddingLeft: 40,
+			paddingRight: 40
+		}
+	})
 
 	const { showToast } = useToast();
 	const [, t] = useLanguage();
@@ -178,7 +195,7 @@ const CheckoutUI = (props: any) => {
 								onPress={() => navigation.navigate('MomentOption')}
 								disabled={loading}
 							>
-								<OText size={12} numberOfLines={1} ellipsizeMode='tail' color={colors.textSecondary}>
+								<OText size={12} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.textSecondary}>
 									{options?.moment
 										? parseDate(options?.moment, {
 											outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
@@ -186,13 +203,13 @@ const CheckoutUI = (props: any) => {
 										: t('ASAP_ABBREVIATION', 'ASAP')}
 								</OText>
 								<OIcon
-									src={images.general.arrow_down}
+									src={theme.images.general.arrow_down}
 									width={10}
 									style={{ marginStart: 8 }}
 								/>
 							</CHMomentWrapper>
 						</ChHeader>
-						<View style={{ height: 8, backgroundColor: colors.backgroundGray100, marginTop: 18, marginHorizontal: -40 }} />
+						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 18, marginHorizontal: -40 }} />
 					</ChSection>
 
 					<ChSection>
@@ -244,7 +261,7 @@ const CheckoutUI = (props: any) => {
 								</View>
 							)}
 						</ChBusinessDetails>
-						<View style={{ height: 8, backgroundColor: colors.backgroundGray100, marginHorizontal: -40 }} />
+						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
 					</ChSection>
 
 					<ChSection>
@@ -270,7 +287,7 @@ const CheckoutUI = (props: any) => {
 								/>
 							)}
 						</ChUserDetails>
-						<View style={{ height: 8, backgroundColor: colors.backgroundGray100, marginHorizontal: -40 }} />
+						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
 					</ChSection>
 
 
@@ -281,7 +298,7 @@ const CheckoutUI = (props: any) => {
 								{!cartState.loading && cart?.status === 2 && (
 									<OText
 										style={{ textAlign: 'center' }}
-										color={colors.error}
+										color={theme.colors.error}
 										size={17}
 									>
 										{t('CART_STATUS_PENDING_MESSAGE_APP', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the app')}
@@ -333,7 +350,7 @@ const CheckoutUI = (props: any) => {
 								/>
 							)}
 						</ChAddress>
-						<View style={{ height: 8, backgroundColor: colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
+						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
 					</ChSection>
 
 					{!cartState.loading &&
@@ -346,7 +363,7 @@ const CheckoutUI = (props: any) => {
 						(
 							<ChSection>
 								<ChDriverTips>
-									<OText size={16} lineHeight={24} color={colors.textNormal}>
+									<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
 										{t('DRIVER_TIPS', 'Driver Tips')}
 									</OText>
 									<DriverTips
@@ -366,13 +383,13 @@ const CheckoutUI = (props: any) => {
 					{!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
 						<ChSection>
 							<ChPaymethods>
-								<OText size={16} lineHeight={24} color={colors.textNormal}>
+								<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
 									{t('PAYMENT_METHOD', 'Payment Method')}
 								</OText>
 								{!cartState.loading && cart?.status === 4 && (
 									<OText
 										style={{ textAlign: 'center', marginTop: 20 }}
-										color={colors.error}
+										color={theme.colors.error}
 										size={17}
 									>
 										{t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
@@ -404,7 +421,7 @@ const CheckoutUI = (props: any) => {
               />
             ) : (
               <>
-                <OText size={16} lineHeight={24} color={colors.textNormal}>
+                <OText size={16} lineHeight={24} color={theme.colors.textNormal}>
                   {t('ORDER_SUMMARY', 'Order Summary')}
                 </OText>
                 <OrderSummary
@@ -423,7 +440,7 @@ const CheckoutUI = (props: any) => {
 							<ChErrors>
 								{!cart?.valid_address && cart?.status !== 2 && (
 									<OText
-										color={colors.error}
+										color={theme.colors.error}
 										size={12}
 									>
 										{t('INVALID_CART_ADDRESS', 'Selected address is invalid, please select a closer address.')}
@@ -432,7 +449,7 @@ const CheckoutUI = (props: any) => {
 
 								{!paymethodSelected && cart?.status !== 2 && cart?.valid && (
 									<OText
-										color={colors.error}
+										color={theme.colors.error}
 										size={12}
 									>
 										{t('WARNING_NOT_PAYMENT_SELECTED', 'Please, select a payment method to place order.')}
@@ -441,7 +458,7 @@ const CheckoutUI = (props: any) => {
 
 								{!cart?.valid_products && cart?.status !== 2 && (
 									<OText
-										color={colors.error}
+										color={theme.colors.error}
 										size={12}
 									>
 										{t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
@@ -478,22 +495,6 @@ const CheckoutUI = (props: any) => {
 		</>
 	)
 }
-
-const styles = StyleSheet.create({
-	btnBackArrow: {
-		borderWidth: 0,
-		backgroundColor: colors.white,
-		borderColor: colors.white,
-		shadowColor: colors.white,
-		display: 'flex',
-		justifyContent: 'flex-start',
-		paddingLeft: 0,
-	},
-	pagePadding: {
-		paddingLeft: 40,
-		paddingRight: 40
-	}
-})
 
 export const Checkout = (props: any) => {
 	const {

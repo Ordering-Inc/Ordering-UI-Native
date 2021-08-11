@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const Container = styled.View`
   margin: 20px 0;
@@ -11,7 +10,7 @@ export const UpsellingContainer = styled.ScrollView`
 `
 export const Item = styled.View`
   border-width: 1px;
-  border-color: ${colors.border};
+  border-color: ${(props: any) => props.theme.colors.border};
   border-radius: 7.6px;
   flex-direction: row;
   align-items: flex-start;
@@ -28,7 +27,7 @@ export const Details = styled.View`
 `
 export const AddButton = styled.TouchableOpacity`
 	padding: 4px 8px;
-	background-color: ${colors.primaryContrast};
+	background-color: ${(props: any) => props.theme.colors.primaryContrast};
 	border-radius: 30px;
 	width: 40%;
 	align-items: center;

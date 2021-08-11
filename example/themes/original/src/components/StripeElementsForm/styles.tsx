@@ -1,8 +1,7 @@
 import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const ErrorMessage = styled.View`
-  color: ${colors.cancelColor};
+  color: ${(props: any) => props.theme.colors.cancelColor};
   font-size: 24px;
   padding-left: 10px;
   font-weight: bold;

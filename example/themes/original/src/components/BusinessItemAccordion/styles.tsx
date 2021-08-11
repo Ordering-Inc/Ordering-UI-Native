@@ -1,6 +1,4 @@
-import React from 'react';
 import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const BIContainer = styled.View`
   display: flex;
@@ -22,7 +20,7 @@ export const BIHeader = styled.TouchableOpacity`
   justify-content: space-between;
   position: relative;
   padding: 10px 0;
-  background-color: ${colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
 `
 
 export const BIInfo = styled.View`

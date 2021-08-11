@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const BusinessReviewsContainer = styled.View`
   margin-top: 12px;
@@ -11,7 +10,7 @@ export const ScoreView = styled.View`
   justify-content: center;
   align-items: center;
   border-width: 1px;
-  border-color: ${colors.lightGray};
+  border-color: ${(props: any) => props.theme.colors.lightGray};
   border-radius: 10px;
   padding: 10px;
   width: 170px;
@@ -25,7 +24,7 @@ export const BusinessReviewContent = styled.ScrollView`
 export const WrapCustomerReview = styled.View`
   padding: 20px 0;
   border-bottom-width: 1px;
-  border-color: ${colors.lightGray};
+  border-color: ${(props: any) => props.theme.colors.lightGray};
 `;
 export const WrapCustomerReviewTotal = styled.View`
   display: flex;
@@ -46,7 +45,7 @@ export const ReviewSearchView = styled.View`
 	padding-top: 10px;
 	padding-bottom: 0px;
 	border-bottom-width: 1px;
-	border-bottom-color: ${colors.border};
+	border-bottom-color: ${(props: any) => props.theme.colors.border};
 	margin-bottom: 12px;
 `;
 export const ReviewProgressView = styled.View`

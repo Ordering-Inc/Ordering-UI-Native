@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme.json'
 
 export const Container = styled.View`
   padding-bottom: 40px;
@@ -32,7 +31,7 @@ export const LoginWith = styled.View`
   width: 100%;
   align-items: flex-start;
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.border}
+  border-bottom-color: ${(props: any) => props.theme.colors.border}
 `;
 
 export const FormInput = styled.View`
@@ -70,7 +69,7 @@ export const OrSeparator = styled.View`
 export const LineSeparator = styled.View`
   width: 40%;
   height: 1px;
-  background-color: ${colors.disabled};
+  background-color: ${(props: any) => props.theme.colors.disabled};
 `
 
 export const SkeletonWrapper = styled.View`
