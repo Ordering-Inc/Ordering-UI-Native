@@ -101,9 +101,8 @@ export interface PhoneInputParams {
   isDisabled?: boolean;
   textInputProps?: TextInputProps;
   flagProps?: any;
-  onSubmitEditing: () => void;
+  onSubmitEditing?: () => void;
 }
-
 
 export interface LanguageSelectorParams {
   languagesState?: any;

@@ -2,14 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import PhoneInput from 'react-native-phone-number-input';
 import { useLanguage, useConfig } from 'ordering-components/native';
-
+import { useTheme } from 'styled-components/native';
 import { Wrapper } from './styles';
 import { OText, OIcon } from '../shared';
-
 import { PhoneInputParams } from '../../types';
 import { transformCountryCode } from '../../utils';
-import { I18nManager } from 'react-native';
-import { useTheme } from 'styled-components/native';
 
 export const PhoneInputNumber = (props: PhoneInputParams) => {
   const {
@@ -18,14 +15,12 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
     defaultValue,
     defaultCode,
     forwardRef,
-    isDisabled,
     textInputProps,
     flagProps,
     onSubmitEditing,
   } = props;
 
   const theme = useTheme();
-
   const [, t] = useLanguage();
   const [{ configs }] = useConfig();
   const phoneInput = useRef<PhoneInput>(null);
@@ -36,8 +31,11 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
   };
 
   useEffect(() => {
-    if ((defaultValue && userphoneNumber) || !defaultValue) {
-      if (userphoneNumber === '') return;
+    if (
+      (defaultValue && userphoneNumber) ||
+      defaultValue === undefined ||
+      defaultValue === ''
+    ) {
       if (userphoneNumber) {
         const checkValid = phoneInput.current?.isValidNumber(userphoneNumber);
         const callingCode = phoneInput.current?.getCallingCode();
@@ -112,8 +110,6 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         textContainerStyle={style.input}
         codeTextStyle={{ display: 'none' }}
         placeholder={t('PHONE_NUMBER', 'Phone number')}
-        textInputStyle={{ textAlign: I18nManager.isRTL ? 'right' : 'left' }}
-        disabled={isDisabled}
         textInputProps={{
           selectionColor: theme.colors.primary,
           placeholderTextColor: theme.colors.arrowColor,
