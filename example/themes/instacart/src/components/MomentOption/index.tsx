@@ -8,6 +8,7 @@ import {
 	MomentOption as MomentOptionController
 } from 'ordering-components/native'
 import { StyleSheet, View } from 'react-native'
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Spinner from 'react-native-loading-spinner-overlay';
 import { MomentOptionParams } from '../../types'
 import NavBar from '../NavBar'
@@ -131,7 +132,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		if (hoursList.length === parsedHours.length) return;
 		if (hoursList?.length == 0) {
 			setParsedHours([]);
-			return;
+			 return;
 		}
 		let tmpAry: Array<any> = [];
 		hoursList.map((hour: any, i: number) => {
@@ -204,9 +205,9 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 
 				{optionSelected.isSchedule && (
 					<WrapDelveryTime>
-						<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+						<View style={{flexDirection: 'row', alignItems: 'center'}}>
 							<OIcon src={theme.images.general.clock_history} width={16} color={theme.colors.primary} />
-							<OText size={14} lineHeight={21} color={theme.colors.textPrimary} style={{ marginStart: 10 }}>
+							<OText size={14} lineHeight={21} color={theme.colors.textPrimary} style={{marginStart: 10}}>
 								{t('CHOOSE_DELIVERY_TIME', 'Choose delivery time')}
 							</OText>
 						</View>
@@ -225,7 +226,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 												isActive={dateSelected === date && optionSelected.isSchedule}
 											>
 												<OText
-													style={{ textTransform: i === 0 ? 'capitalize' : 'uppercase' }}
+													style={{textTransform: i === 0 ? 'capitalize' : 'uppercase'}}
 													color={(dateSelected === date && optionSelected.isSchedule) ? theme.colors.white : theme.colors.primary}
 												>{i === 0 ? t('TODAY', 'Today') : dayName}</OText>
 												<OText

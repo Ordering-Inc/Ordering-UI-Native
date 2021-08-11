@@ -22,6 +22,10 @@ import {
 	BusinessLogo,
 	Reviews,
 } from './styles';
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
+import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const {

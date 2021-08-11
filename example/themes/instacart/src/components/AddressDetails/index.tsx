@@ -1,5 +1,4 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { AddressDetails as AddressDetailsController, useOrder } from 'ordering-components/native';
 

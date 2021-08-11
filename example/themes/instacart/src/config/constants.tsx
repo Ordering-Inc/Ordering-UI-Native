@@ -1,54 +1,5 @@
 export const USER_TYPE = {
-  BUSINESS : 'business',
-  CUSTOMER : 'customer',
-  DRIVER : 'driver'
-}
-
-export const ORDER_STATUS_IMAGES = {
-  orderStatus0: require('../assets/images/status-0.png'),
-  orderStatus1: require('../assets/images/status-1.png'),
-  orderStatus2: require('../assets/images/status-2.png'),
-  orderStatus3: require('../assets/images/status-3.png'),
-  orderStatus4: require('../assets/images/status-4.png'),
-  orderStatus5: require('../assets/images/status-5.png'),
-  orderStatus6: require('../assets/images/status-6.png'),
-  orderStatus7: require('../assets/images/status-7.png'),
-  orderStatus8: require('../assets/images/status-8.png'),
-  orderStatus9: require('../assets/images/status-9.png'),
-  orderStatus10: require('../assets/images/status-10.png'),
-  orderStatus11: require('../assets/images/status-11.png'),
-  orderStatus12: require('../assets/images/status-12.png'),
-  orderStatus13: require('../assets/images/status-13.png'),
-}
-
-export const PAYMENT_IMAGES = {
-  cash: require('../assets/icons/cash.png'),
-  carddelivery: require('../assets/icons/card-delivery.png'),
-  paypal: require('../assets/icons/paypal.png'),
-  stripe: require('../assets/icons/stripe.png'),
-  stripecc: require('../assets/icons/cc-stripe.png'),
-  stripes: require('../assets/icons/stripe-s.png'),
-  stripesb: require('../assets/icons/stripe-sb.png'),
-  creditCard: require('../assets/icons/credit-card.png')
-}
-
-export const DUMMIES_IMAGES = {
-  product: require('../assets/images/dummies/product.png'),
-  store: require('../assets/images/dummies/store.png')
-}
-
-export const CATEGORIES_IMAGES = {
-  all: require('../assets/images/categories/category-all.png'),
-}
-
-export const GENERAL_IMAGES = {
-  emptyActiveOrders: require('../assets/images/empty-active-orders.png'),
-  emptyPastOrders: require('../assets/images/empty-past-orders.png'),
-  notFound: require('../assets/images/not-found.png'),
-  homeHero: require('../assets/images/home-hero.png'),
-}
-
-export const LOGO_IMAGES = {
-  logotype: require('../assets/images/logotype.png'),
-  logotypeInvert: require('../assets/images/logotype-invert.png'),
+	BUSINESS: 'business',
+	CUSTOMER: 'customer',
+	DRIVER: 'driver'
 }

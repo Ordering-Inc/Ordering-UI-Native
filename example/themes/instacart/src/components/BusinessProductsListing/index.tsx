@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {
 	BusinessAndProductList,
 	useLanguage,
@@ -102,13 +103,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 			<BusinessProductsListingContainer
 				style={styles.mainContainer}
 				isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
-				contentContainerStyle={{ paddingBottom: 40 }}
+				contentContainerStyle={{paddingBottom: 40}}
 				showsVerticalScrollIndicator={false}
 			>
 				<WrapHeader>
 					{!loading && business?.id && (
 						<>
-							<TopHeader style={{ marginTop: top }}>
+							<TopHeader style={{marginTop: top}}>
 								<View style={{ ...styles.headerItem, flex: 1 }}>
 									<OButton
 										imgLeftSrc={theme.images.general.arrow_left}

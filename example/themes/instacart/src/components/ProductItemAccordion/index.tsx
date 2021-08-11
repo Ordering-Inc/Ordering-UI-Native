@@ -3,6 +3,7 @@ import { View, Animated, StyleSheet, Platform, I18nManager, TouchableOpacity } f
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import {
 	Accordion,
@@ -152,7 +153,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 				)}
 				<ContentInfo>
 					<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-						<OText style={{ ...theme.labels.small, flexWrap: 'wrap', flex: 1, paddingEnd: 6 }} color={theme.colors.textPrimary}>{product.name}</OText>
+						<OText style={{...theme.labels.small, flexWrap: 'wrap', flex: 1, paddingEnd: 6}} color={theme.colors.textPrimary}>{product.name}</OText>
 						<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 							<ProductInfo>
 								{isCartProduct && !isCartPending && getProductMax ? (
@@ -224,14 +225,14 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 					</AccordionContent>
 					<View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', paddingTop: 7 }}>
 						{onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
-
-							<TouchableOpacity onPress={() => onEditProduct(product)} style={{ flexDirection: 'row', alignItems: 'center' }}>
+							
+							<TouchableOpacity onPress={() => onEditProduct(product)} style={{flexDirection: 'row', alignItems: 'center'}}>
 								<OIcon
 									src={theme.images.general.edit}
 									width={16}
 									color={theme.colors.primary}
 								/>
-								<OText style={{ ...theme.labels.small, marginStart: 4, marginEnd: 12 }} color={theme.colors.textSecondary}>{t('EDIT', 'Edit')}</OText>
+								<OText style={{...theme.labels.small, marginStart: 4, marginEnd: 12}} color={theme.colors.textSecondary}>{t('EDIT', 'Edit')}</OText>
 							</TouchableOpacity>
 						)}
 						{onDeleteProduct && isCartProduct && !isCartPending && (
@@ -240,13 +241,13 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 								message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
 								onAccept={() => onDeleteProduct(product)}
 							>
-								<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+								<View style={{flexDirection: 'row', alignItems: 'center'}}>
 									<OIcon
 										src={theme.images.general.trash}
 										width={16}
 										color={theme.colors.primary}
 									/>
-									<OText style={{ ...theme.labels.small, marginStart: 4 }} color={theme.colors.textSecondary}>{t('REMOVE', 'Remove')}</OText>
+									<OText style={{...theme.labels.small, marginStart: 4}} color={theme.colors.textSecondary}>{t('REMOVE', 'Remove')}</OText>
 								</View>
 							</OAlert>
 						)}
