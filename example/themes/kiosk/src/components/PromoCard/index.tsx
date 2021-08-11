@@ -44,6 +44,7 @@ const PromoCard = (props: Props): React.ReactElement => {
 
   return (
     <CardContainer
+      activeOpacity={1}
       style={{...props.style}}
       onPress={props?.onPress}
       disabled={!props?.onPress}>

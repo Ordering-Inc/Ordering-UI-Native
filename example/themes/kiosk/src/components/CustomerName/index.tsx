@@ -92,7 +92,7 @@ const CustomerName = (props: Props): React.ReactElement => {
           control={control}
           render={({ onChange, value }: any) => (
             <OInput
-              placeholder={t('WHITE_YOUR_NAME', 'White your name')}
+              placeholder={t('WRITE_YOUR_NAME', 'Write your name')}
               style={{
                 ...styles.inputStyle,
                 width: orientationState?.orientation === PORTRAIT
