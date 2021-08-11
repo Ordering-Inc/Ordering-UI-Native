@@ -283,6 +283,7 @@ const ProfileUI = (props: ProfileParams) => {
 export const UserProfileForm = (props: any) => {
   const profileProps = {
     ...props,
+    refreshSessionUser: true,
     UIComponent: ProfileUI,
   };
   return <UserProfileController {...profileProps} />;

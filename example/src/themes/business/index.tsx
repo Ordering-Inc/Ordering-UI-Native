@@ -12,6 +12,7 @@ import { LogoutButton } from './src/components/LogoutButton';
 import { MessagesOption } from './src/components/MessagesOption';
 import NavBar from './src/components/NavBar';
 import { NotFoundSource } from './src/components/NotFoundSource';
+import { OrderMessage } from './src/components/OrderMessage';
 import { OrderDetails } from './src/components/OrderDetails';
 import { OrdersOption } from './src/components/OrdersOption';
 import { OrderSummary } from './src/components/OrderSummary';
@@ -56,6 +57,7 @@ export default {
   LogoutButton,
   MessagesOption,
   NavBar,
+  OrderMessage,
   NotFoundSource,
   OrderDetails,
   OrdersOption,

@@ -270,18 +270,18 @@ export interface PreviousOrdersParams {
   onNavigationRedirect?: (route: string, params?: any) => {}
 }
 export interface OrderDetailsParams {
-  navigation?: any,
-  messagesReadList?: any,
-  urlToShare?: string,
-  messages?: any,
-  order?: any,
-  handleOrderRedirect?: () => {},
-  setMessages?: () => {},
-  readMessages?: () => {},
-  isFromCheckout?: boolean,
-  driverLocation?: any,
-  isFromRoot?: any,
-  goToBusinessList?: boolean
+  navigation?: any;
+  messagesReadList?: any;
+  urlToShare?: string;
+  messages?: any;
+  handleAssignDriver?: (id: any) => {};
+  handleChangeOrderStatus?: (status: any) => {};
+  order?: any;
+  handleOrderRedirect?: () => {};
+  setMessages?: () => {};
+  readMessages?: () => {};
+  isFromCheckout?: boolean;
+  driverLocation?: any;
 }
 export interface ProductItemAccordionParams {
   key?: any;
