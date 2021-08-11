@@ -1,9 +1,5 @@
 import styled, { css } from 'styled-components/native';
 
-export const Container = styled.ScrollView`
-  padding-bottom: 40px;
-`;
-
 export const LoginWith = styled.View`
   display: flex;
   width: 100%;

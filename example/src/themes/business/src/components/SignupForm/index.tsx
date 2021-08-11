@@ -135,7 +135,6 @@ const SignupFormUI = (props: SignupParams) => {
   };
 
   const handleSignup = () => {
-    // setLoading(true);
     handleSubmit(onSubmit)();
   };
 

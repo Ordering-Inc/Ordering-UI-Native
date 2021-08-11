@@ -12,18 +12,6 @@ export const UserData = styled.View`
   margin-top: 20px;
 `;
 
-export const Names = styled.View`
-  flex-direction: row;
-`;
-
-export const UDForm = styled.View`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 20px;
-`;
-
 export const EditButton = styled.View`
   align-items: center;
   justify-content: center;
@@ -40,16 +28,4 @@ export const Actions = styled.View`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-`;
-
-export const WrapperPhone = styled.View`
-  padding: 8px 0px;
-`;
-
-export const UDWrapper = styled.View`
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 20px;
 `;

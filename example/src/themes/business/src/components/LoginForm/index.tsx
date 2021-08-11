@@ -18,7 +18,6 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
-  Container,
   LoginWith,
   ButtonsWrapper,
   FormInput,
@@ -260,6 +259,7 @@ const LoginFormUI = (props: LoginParams) => {
     container: {
       justifyContent: 'center',
       alignItems: 'center',
+      paddingBottom: 40,
     },
     header: {
       marginBottom: 30,
@@ -328,7 +328,7 @@ const LoginFormUI = (props: LoginParams) => {
   });
 
   return (
-    <Container contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <OIconButton
           icon={theme.images.general.arrow_left}
@@ -580,7 +580,7 @@ const LoginFormUI = (props: LoginParams) => {
           handleVerifyCodeClick={handleVerifyCodeClick}
         />
       </OModal>
-    </Container>
+    </View>
   );
 };
 
