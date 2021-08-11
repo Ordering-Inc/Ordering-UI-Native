@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react'
 import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
@@ -622,14 +621,14 @@ const AddressFormUI = (props: AddressFormParams) => {
 								onClick={handleSubmit(onSubmit)}
 								textStyle={{ color: theme.colors.white, ...theme.labels.button }}
 								isDisabled={formState.loading}
-								style={{borderRadius: 3, height: 42}}
+								style={{ borderRadius: 3, height: 42 }}
 							/>
 						) : (
 							<OButton
 								text={t('CANCEL', 'Cancel')}
 								style={{ backgroundColor: theme.colors.white, borderRadius: 3, height: 42, borderWidth: 1 }}
 								onClick={() => navigation?.canGoBack() && navigation.goBack()}
-								textStyle={{...theme.labels.button, color: theme.colors.primary}}
+								textStyle={{ ...theme.labels.button, color: theme.colors.primary }}
 							/>
 						)}
 					</View>
