@@ -6,32 +6,18 @@ import { OIcon, OText, OModal } from '../shared';
 import { Card, Logo, Information } from './styles';
 import { useTheme } from 'styled-components/native';
 import { PreviousMessagesParams } from '../../types';
-import { USER_TYPE } from '../../config/constants';
-import { Chat } from '../Chat';
 
 export const PreviousMessages = (props: PreviousMessagesParams) => {
-  const { orders, messages, setMessages, loadMessages } = props;
+  const { orders, messages, onNavigationRedirect } = props;
 
   const [, t] = useLanguage();
   const theme = useTheme();
   const [{ parseDate, optimizeImage }] = useUtils();
 
-  const [order, setOrder] = useState({});
-  const [messageModal, setMessageModal] = useState(undefined);
-  const [openModal, setOpenModal] = useState(false);
-
-  const handleCloseModal = () => {
-    setMessages && setMessages({ ...messages, messages: [] });
-    setOpenModal(false);
-  };
-
   const handlePressOrder = (order: any) => {
     const uuid = order?.id;
-
-    loadMessages && loadMessages(uuid);
-    setOrder(order);
-    setMessageModal(uuid);
-    setOpenModal(true);
+    onNavigationRedirect &&
+      onNavigationRedirect('OrderMessage', { orderId: uuid });
   };
 
   const getOrderStatus = (s: string) => {
@@ -228,7 +214,6 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
-      fontSize: 18,
       lineHeight: 18,
       color: theme.colors.orderTypeColor,
     },
@@ -266,30 +251,17 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
                     : parseDate(order?.delivery_datetime, { utc: false })}
                 </OText>
 
-                <OText style={styles.orderType} mRight={5} numberOfLines={1}>
+                <OText
+                  style={styles.orderType}
+                  mRight={5}
+                  numberOfLines={1}
+                  size={15}>
                   {getOrderStatus(order?.status)?.value}
                 </OText>
               </Information>
             </Card>
           </TouchableOpacity>
         ))}
-
-        {openModal && (
-          <OModal
-            open={openModal && !!messages?.messages && !messages?.loading}
-            title={`Order No. ${messageModal}`}
-            order={messageModal}
-            entireModal
-            onClose={() => handleCloseModal()}>
-            <Chat
-              type={USER_TYPE.BUSINESS}
-              order={order}
-              orderId={messageModal}
-              messages={messages}
-              setMessages={setMessages}
-            />
-          </OModal>
-        )}
       </ScrollView>
     </>
   );

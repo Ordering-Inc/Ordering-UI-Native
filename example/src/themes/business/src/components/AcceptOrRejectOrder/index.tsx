@@ -22,9 +22,14 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const [, t] = useLanguage();
   const theme = useTheme();
   const phoneNumber = route?.order?.customer?.cellphone;
-  const codeNumberPhone = phoneNumber.slice(0, 3);
-  const numberPhone = phoneNumber.slice(3, phoneNumber?.length);
-  const numberToShow = `(${codeNumberPhone}) ${numberPhone}`;
+  let codeNumberPhone;
+  let numberPhone;
+  let numberToShow;
+  if (phoneNumber) {
+    codeNumberPhone = phoneNumber.slice(0, 3);
+    numberPhone = phoneNumber.slice(3, phoneNumber?.length);
+    numberToShow = `(${codeNumberPhone}) ${numberPhone}`;
+  }
 
   useEffect(() => {
     if (orderState?.order !== null) {
@@ -179,25 +184,48 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                     )}
                   </OText>
 
-                  <OButton
-                    bgColor="transparent"
-                    borderColor={theme.colors.primary}
-                    textStyle={{ color: theme.colors.primary, fontSize: 20 }}
-                    style={{
-                      borderRadius: 10,
-                      marginVertical: 20,
-                    }}
-                    imgLeftStyle={{
-                      resizeMode: 'contain',
-                      left: 20,
-                      position: 'absolute',
-                    }}
-                    imgLeftSrc={theme.images.general.cellphone}
-                    text={numberToShow}
-                    onClick={() =>
-                      Linking.openURL(`tel:${route.order.customer.cellphone}`)
-                    }
-                  />
+                  {numberToShow ? (
+                    <OButton
+                      bgColor="transparent"
+                      borderColor={theme.colors.primary}
+                      textStyle={{ color: theme.colors.primary, fontSize: 20 }}
+                      style={{
+                        borderRadius: 10,
+                        marginVertical: 20,
+                      }}
+                      imgLeftStyle={{
+                        resizeMode: 'contain',
+                        left: 20,
+                        position: 'absolute',
+                      }}
+                      imgLeftSrc={theme.images.general.cellphone}
+                      text={numberToShow}
+                      onClick={() =>
+                        Linking.openURL(`tel:${route.order.customer.cellphone}`)
+                      }
+                    />
+                  ) : (
+                    <OButton
+                      bgColor="transparent"
+                      borderColor={theme.colors.primary}
+                      textStyle={{ color: theme.colors.primary, fontSize: 15 }}
+                      style={{
+                        borderRadius: 10,
+                        marginVertical: 20,
+                      }}
+                      imgLeftStyle={{
+                        resizeMode: 'contain',
+                        left: 20,
+                        position: 'absolute',
+                      }}
+                      isDisabled={true}
+                      imgLeftSrc={theme.images.general.cellphone}
+                      text={t('NOT_NUMBER', "There's not phonenumber.")}
+                      onClick={() =>
+                        Linking.openURL(`tel:${route.order.customer.cellphone}`)
+                      }
+                    />
+                  )}
 
                   <OText
                     size={15}

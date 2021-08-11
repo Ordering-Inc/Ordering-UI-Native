@@ -291,10 +291,10 @@ export const GoogleMap = (props: GoogleMapsParams) => {
             handleViewActionOrder && handleViewActionOrder('accept')
           }
           firstButtonClick={() =>
-            handleViewActionOrder && handleViewActionOrder('reject')
+            handleViewActionOrder && handleViewActionOrder('accept')
           }
           secondBtnText={t('ACCEPT', 'Accept')}
-          secondButton={true}
+          secondButton={false}
           firstColorCustom={theme.colors.red}
           secondColorCustom={theme.colors.green}
         />
