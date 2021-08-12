@@ -7,7 +7,6 @@ import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { _setStoreData, _removeStoreData } from '../../providers/StoreUtil';
-import { colors, labels } from '../../theme.json';
 import { ScrollView } from 'react-native-gesture-handler';
 import { LoginForm } from '../LoginForm';
 import { SignupForm } from '../SignupForm';
