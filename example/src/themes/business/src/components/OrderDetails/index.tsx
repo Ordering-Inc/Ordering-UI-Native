@@ -545,8 +545,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       : parseDate(order?.delivery_datetime, { utc: false })}
                   </OText>
                   <OText size={20} weight="bold">
-                    {t(`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id}`)}
-                    {` ${order?.id} ${t('IS', 'is')} \n`}
+                    {t(
+                      `${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id}  ${t(
+                        'IS',
+                        'is',
+                      )} \n`,
+                    )}
                     <OText
                       size={20}
                       color={colors[order?.status] || theme.colors.primary}>

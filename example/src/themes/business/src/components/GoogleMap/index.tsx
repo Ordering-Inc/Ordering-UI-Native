@@ -285,7 +285,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       </View>
       {showAcceptOrReject && (
         <FloatingButton
-          btnText={t('REJECT', 'Reject')}
+          btnText={t('ACCEPT', 'Accept')}
           isSecondaryBtn={false}
           secondButtonClick={() =>
             handleViewActionOrder && handleViewActionOrder('accept')
@@ -293,7 +293,6 @@ export const GoogleMap = (props: GoogleMapsParams) => {
           firstButtonClick={() =>
             handleViewActionOrder && handleViewActionOrder('accept')
           }
-          secondBtnText={t('ACCEPT', 'Accept')}
           secondButton={false}
           firstColorCustom={theme.colors.red}
           secondColorCustom={theme.colors.green}
