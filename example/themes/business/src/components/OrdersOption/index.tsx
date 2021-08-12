@@ -197,10 +197,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   };
 
   const handleLoadMore = () => {
-    if (ordersToShow.length !== 0) {
-      loadMoreOrders && loadMoreOrders(tagsToggle);
-    } else {
+    if (ordersToShow.length <= 3) {
       handleReload();
+    } else {
+      loadMoreOrders && loadMoreOrders(tagsToggle);
     }
   };
 
@@ -379,7 +379,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </ScrollView>
       </View>
 
-      {!loading && orders.length === 0 && (
+      {((!loading && !orders.length && !ordersToShow.length) ||
+        !tagsToggle.length) && (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           image={theme.images.general.notFound}
@@ -427,7 +428,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </>
       )}
 
-      {pagination.totalPages &&
+      {!!tagsToggle.length &&
+        pagination.totalPages &&
+        !loading &&
+        !!orders.length &&
         pagination.currentPage < pagination.totalPages && (
           <OButton
             onClick={handleLoadMore}

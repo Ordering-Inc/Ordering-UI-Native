@@ -228,7 +228,8 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
           <TouchableOpacity
             key={order?.id}
             onPress={() => handlePressOrder(order)}
-            style={styles.cardButton}>
+            style={styles.cardButton}
+            activeOpacity={1}>
             <Card key={order?.id}>
               {!!order?.business?.logo && (
                 <Logo>

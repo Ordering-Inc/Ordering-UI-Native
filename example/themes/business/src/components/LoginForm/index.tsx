@@ -50,7 +50,7 @@ const LoginFormUI = (props: LoginParams) => {
   const [, t] = useLanguage();
   const theme = useTheme();
   const [{ configs }] = useConfig();
-  const { control, handleSubmit, errors } = useForm();
+  const { control, handleSubmit, errors, clearErrors } = useForm();
 
   const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
   const inputRef = useRef<any>(null);
@@ -110,6 +110,8 @@ const LoginFormUI = (props: LoginParams) => {
   };
 
   const handleChangeTab = (val: string) => {
+    setPhoneInputData({ ...phoneInputData, error: '' });
+    clearErrors([val]);
     props.handleChangeTab(val);
 
     if (loginTab === 'email') {
@@ -520,7 +522,7 @@ const LoginFormUI = (props: LoginParams) => {
 
           {onNavigationRedirect && (
             <Pressable
-              style={{ width: '50%', marginBottom: 35 }}
+              style={{ marginRight: 'auto', marginBottom: 35 }}
               onPress={() => onNavigationRedirect('Forgot')}>
               <OText style={styles.textForgot}>
                 {t('FORGOT_YOUR_PASSWORD', 'Forgot your password?')}
