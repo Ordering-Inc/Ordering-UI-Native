@@ -62,7 +62,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
         <TouchableOpacity
           key={order.id}
           onPress={() => handlePressOrder(order.id)}
-          style={styles.cardButton}>
+          style={styles.cardButton}
+          activeOpacity={1}>
           <Card key={order.id}>
             {!!order.business?.logo && (
               <Logo>

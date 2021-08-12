@@ -428,6 +428,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       )}
 
       {pagination.totalPages &&
+        !loading &&
         pagination.currentPage < pagination.totalPages && (
           <OButton
             onClick={handleLoadMore}

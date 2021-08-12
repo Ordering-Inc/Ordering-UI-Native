@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Platform } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { LogoWrapper, Container } from './styles';
@@ -8,6 +8,7 @@ import { _setStoreData } from '../../providers/StoreUtil';
 
 export const Home = (props: any) => {
   const { onNavigationRedirect } = props;
+  const safeHeight = Platform.OS === 'ios' ? 80 : 40;
 
   const theme = useTheme();
   const [, t] = useLanguage();
@@ -34,7 +35,7 @@ export const Home = (props: any) => {
   });
 
   return (
-    <Container height={windowHeight - 40} orientation={orientation}>
+    <Container height={windowHeight - safeHeight} orientation={orientation}>
       <LogoWrapper>
         <OIcon src={theme.images.logos.logotypeInvert} style={styles.logo} />
       </LogoWrapper>

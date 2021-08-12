@@ -247,6 +247,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       )}
 
       {pagination?.totalPages &&
+        !loading &&
         pagination?.currentPage < pagination?.totalPages && (
           <OButton
             onClick={loadMoreOrders}
