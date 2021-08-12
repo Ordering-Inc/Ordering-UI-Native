@@ -1,5 +1,5 @@
-import React from 'react';
-import { Platform } from 'react-native';
+import React, { useState } from 'react';
+import { Platform, Dimensions } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
 const ContainerStyled = styled.ScrollView`
@@ -7,7 +7,9 @@ const ContainerStyled = styled.ScrollView`
   ${(props: any) =>
     !props.nopadding &&
     css`
-      padding: ${Platform.OS === 'ios' ? '0px 20px 20px' : '20px'};
+      padding: ${Platform.OS === 'ios' && props.orientation === 'Portrait'
+        ? '0px 20px 20px'
+        : '20px'};
     `}
   background-color:  ${(props: any) => props.theme.colors.backgroundPage};
 `;
@@ -18,11 +20,26 @@ const SafeAreaStyled = styled.SafeAreaView`
 `;
 
 export const Container = (props: any) => {
+  const [orientation, setOrientation] = useState(
+    Dimensions.get('window').width < Dimensions.get('window').height
+      ? 'Portrait'
+      : 'Landscape',
+  );
+
+  Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+    if (width < height) {
+      setOrientation('Portrait');
+    } else {
+      setOrientation('Landscape');
+    }
+  });
+
   return (
     <SafeAreaStyled style={props.style}>
       <ContainerStyled
         contentContainerStyle={props.style}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        orientation={orientation}>
         {props.children}
       </ContainerStyled>
     </SafeAreaStyled>
