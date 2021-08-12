@@ -391,6 +391,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         <PreviousOrders
           orders={ordersToShow}
           onNavigationRedirect={onNavigationRedirect}
+          getOrderStatus={getOrderStatus}
         />
       )}
 

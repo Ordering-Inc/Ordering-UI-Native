@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import PhoneInput from 'react-native-phone-number-input';
-import { StyleSheet } from 'react-native';
 import { useLanguage, useConfig } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Wrapper } from './styles';
+import { OText, OIcon } from '../shared';
 import { PhoneInputParams } from '../../types';
-import { OText } from '../shared';
 import { transformCountryCode } from '../../utils';
 
 export const PhoneInputNumber = (props: PhoneInputParams) => {
@@ -16,6 +16,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
     defaultCode,
     forwardRef,
     textInputProps,
+    flagProps,
     onSubmitEditing,
   } = props;
 
@@ -82,11 +83,12 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
   const style = StyleSheet.create({
     input: {
       backgroundColor: theme.colors.white,
-      borderRadius: 25,
+      borderRadius: 7.6,
       borderWidth: 1,
-      borderColor: theme.colors.disabled,
+      borderColor: theme.colors.inputSignup,
       paddingVertical: 0,
-      flexGrow: 1,
+      paddingLeft: 35,
+      flexGrow: 2,
       flex: 1,
       height: 50,
     },
@@ -95,6 +97,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
   return (
     <Wrapper>
       <PhoneInput
+        containerStyle={{ width: '100%' }}
         ref={phoneInput}
         defaultValue={userphoneNumber || defaultValue}
         defaultCode={
@@ -103,17 +106,28 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
             : configs?.default_country_code?.value
         }
         onChangeFormattedText={(text: string) => handleChangeNumber(text)}
-        withDarkTheme
         countryPickerProps={{ withAlphaFilter: true }}
         textContainerStyle={style.input}
-        placeholder={t('PHONE_NUMBER', 'Phone Number')}
+        codeTextStyle={{ display: 'none' }}
+        placeholder={t('PHONE_NUMBER', 'Phone number')}
         textInputProps={{
+          selectionColor: theme.colors.primary,
+          placeholderTextColor: theme.colors.arrowColor,
           blurOnSubmit: true,
           onSubmitEditing,
           autoCompleteType: 'tel',
           ref: forwardRef,
           ...textInputProps,
         }}
+        renderDropdownImage={
+          <OIcon
+            src={theme.images.general.chevronDown}
+            width={16}
+            height={16}
+            color={theme.colors.arrowColor}
+          />
+        }
+        flagButtonStyle={flagProps}
       />
       {!!data?.error && (
         <OText
@@ -123,6 +137,18 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
           {data.error}
         </OText>
       )}
+      <View
+        style={{
+          position: 'absolute',
+          top: 15,
+          left: 99,
+        }}>
+        <OIcon
+          src={theme?.images?.general?.inputPhone}
+          width={20}
+          height={20}
+        />
+      </View>
     </Wrapper>
   );
 };

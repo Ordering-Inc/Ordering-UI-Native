@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTheme } from 'styled-components/native';
 import {
-  ToastType,
-  useToast,
   useSession,
   useLanguage,
+  ToastType,
+  useToast,
 } from 'ordering-components/native';
-import { useTheme } from 'styled-components/native';
-import { UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
+import {
+  UDForm,
+  UDLoader,
+  UDWrapper,
+  WrapperPhone,
+  EditButton,
+} from './styles';
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { OText, OButton, OInput } from '../shared';
 import { sortInputFields } from '../../utils';
@@ -24,17 +31,20 @@ export const UserFormDetailsUI = (props: any) => {
     validationFields,
     handleChangeInput,
     handleButtonUpdateClick,
-    submitEvent,
     phoneUpdate,
     hideUpdateButton,
+    handleCancelEdit,
+    toggleIsEdit,
+    isCheckout,
   } = props;
 
   const theme = useTheme();
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
-  const { handleSubmit, control, errors, setValue } = useForm();
+  const { handleSubmit, control, errors, setValue, watch } = useForm();
 
   const [{ user }] = useSession();
+  const [passwordSee, setPasswordSee] = useState(false);
   const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null);
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -43,6 +53,9 @@ export const UserFormDetailsUI = (props: any) => {
       cellphone: null,
     },
   });
+
+  const watchPassword = watch('password');
+  const watchVerifyPassword = watch('verifyPassword');
 
   const showInputPhoneNumber =
     validationFields?.fields?.checkout?.cellphone?.enabled ?? false;
@@ -65,6 +78,7 @@ export const UserFormDetailsUI = (props: any) => {
         ),
       };
     }
+
     return rules;
   };
 
@@ -93,12 +107,15 @@ export const UserFormDetailsUI = (props: any) => {
     setUserPhoneNumber(user?.cellphone || '');
   };
 
-  const onSubmit = () => {
+  const onSubmit = (values: any) => {
     if (phoneInputData.error) {
       showToast(ToastType.Error, phoneInputData.error);
       return;
     }
-    if (Object.keys(formState.changes).length > 0) {
+    if (
+      Object.keys(formState.changes).length > 0 ||
+      (watchPassword.length > 0 && watchVerifyPassword.length > 0)
+    ) {
       if (
         formState.changes?.cellphone === null &&
         validationFields?.fields?.checkout?.cellphone?.enabled &&
@@ -120,6 +137,13 @@ export const UserFormDetailsUI = (props: any) => {
           cellphone: '',
         };
       }
+
+      if (values.password && values.verifyPassword) {
+        changes = {
+          password: values.password,
+        };
+      }
+
       handleButtonUpdateClick(changes);
     }
   };
@@ -186,6 +210,27 @@ export const UserFormDetailsUI = (props: any) => {
       borderTopWidth: 0,
       borderRightWidth: 0,
       borderLeftWidth: 0,
+    },
+    editButton: {
+      height: 44,
+      borderRadius: 7.6,
+      borderWidth: 1,
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.white,
+      marginBottom: 25,
+    },
+    btnText: {
+      color: theme.colors.textGray,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 18,
+    },
+    btnFlag: {
+      borderWidth: 1,
+      borderRadius: 7.6,
+      marginRight: 9,
+      borderColor: theme.colors.inputSignup,
     },
   });
 
@@ -268,17 +313,113 @@ export const UserFormDetailsUI = (props: any) => {
                             autoCompleteType={
                               field.code === 'email' ? 'email' : 'off'
                             }
-                            onSubmitEditing={submitEvent}
-                            onEndEditing={submitEvent}
                           />
                         )}
+                        selectionColor={theme.colors.primary}
                         name={field.code}
                         rules={getInputRules(field)}
                         defaultValue={user && user[field.code]}
-                        blurOnSubmit={true}
                       />
                     </React.Fragment>
                   ),
+              )}
+
+              <OText
+                color={theme.colors.textGray}
+                weight="bold"
+                style={{ paddingHorizontal: 16 }}>
+                {t('PASSWORD', 'Password')}
+              </OText>
+              <Controller
+                control={control}
+                render={({ onChange, value }: any) => (
+                  <OInput
+                    isSecured={!passwordSee ? true : false}
+                    placeholder={t('PASSWORD', 'Password')}
+                    style={styles.inputStyle}
+                    iconCustomRight={
+                      passwordSee ? (
+                        <MaterialCommunityIcons
+                          name="eye-outline"
+                          color={theme.colors.arrowColor}
+                          size={24}
+                          onPress={() => setPasswordSee(!passwordSee)}
+                        />
+                      ) : (
+                        <MaterialCommunityIcons
+                          name="eye-off-outline"
+                          color={theme.colors.arrowColor}
+                          size={24}
+                          onPress={() => setPasswordSee(!passwordSee)}
+                        />
+                      )
+                    }
+                    selectionColor={theme.colors.primary}
+                    value={value}
+                    onChange={(val: any) => onChange(val)}
+                    returnKeyType="done"
+                    blurOnSubmit
+                  />
+                )}
+                name="password"
+                defaultValue=""
+              />
+
+              <OText
+                color={theme.colors.textGray}
+                weight="bold"
+                style={{ paddingHorizontal: 16 }}>
+                {t('VERIFY_PASSWORD', 'Verify Password')}
+              </OText>
+              <Controller
+                control={control}
+                render={({ onChange, value }: any) => (
+                  <OInput
+                    isSecured={!passwordSee ? true : false}
+                    placeholder={t('VERIFY_PASSWORD', 'Verify Password')}
+                    style={styles.inputStyle}
+                    iconCustomRight={
+                      passwordSee ? (
+                        <MaterialCommunityIcons
+                          name="eye-outline"
+                          color={theme.colors.arrowColor}
+                          size={24}
+                          onPress={() => setPasswordSee(!passwordSee)}
+                        />
+                      ) : (
+                        <MaterialCommunityIcons
+                          name="eye-off-outline"
+                          color={theme.colors.arrowColor}
+                          size={24}
+                          onPress={() => setPasswordSee(!passwordSee)}
+                        />
+                      )
+                    }
+                    selectionColor={theme.colors.primary}
+                    value={value}
+                    onChange={(val: any) => onChange(val)}
+                    returnKeyType="done"
+                    blurOnSubmit
+                  />
+                )}
+                rules={{
+                  validate: (value: any) => {
+                    return (
+                      watchPassword === value || 'The passwords do not match'
+                    );
+                  },
+                }}
+                name="verifyPassword"
+                defaultValue=""
+              />
+
+              {errors.verifyPassword && (
+                <OText
+                  size={16}
+                  color={theme.colors.error}
+                  style={{ paddingHorizontal: 16, marginBottom: 10 }}>
+                  {errors?.verifyPassword.message}
+                </OText>
               )}
 
               {!!showInputPhoneNumber && (
@@ -288,7 +429,7 @@ export const UserFormDetailsUI = (props: any) => {
                     handleData={(val: any) => handleChangePhoneNumber(val)}
                     defaultValue={phoneUpdate ? '' : user?.cellphone}
                     defaultCode={user?.country_phone_code || null}
-                    onSubmitEditing={submitEvent}
+                    flagProps={styles.btnFlag}
                   />
 
                   {phoneUpdate && (
@@ -311,27 +452,49 @@ export const UserFormDetailsUI = (props: any) => {
         )}
       </UDForm>
 
-      {!hideUpdateButton && (
-        <>
+      {!validationFields.loading && !isCheckout && (
+        <EditButton>
+          <View style={{ flex: 1 }}>
+            <OButton
+              text={t('CANCEL', 'Cancel')}
+              bgColor={theme.colors.white}
+              borderColor={theme.colors.primary}
+              style={styles.editButton}
+              textStyle={styles.btnText}
+              isDisabled={formState.loading}
+              imgRightSrc={null}
+              onClick={handleCancelEdit}
+            />
+          </View>
+
           {((formState &&
             Object.keys(formState?.changes).length > 0 &&
             isEdit) ||
+            (watchPassword?.length > 0 && watchVerifyPassword?.length > 0) ||
             formState?.loading) && (
-            <OButton
-              text={
-                formState.loading
-                  ? t('UPDATING', 'Updating...')
-                  : t('UPDATE', 'Update')
-              }
-              bgColor={theme.colors.primary}
-              textStyle={{ color: 'white' }}
-              borderColor={theme.colors.primary}
-              isDisabled={formState.loading}
-              imgRightSrc={null}
-              onClick={handleSubmit(onSubmit)}
-            />
+            <View style={{ flex: 1, marginLeft: 5 }}>
+              <OButton
+                text={
+                  formState.loading
+                    ? t('UPDATING', 'Updating...')
+                    : t('UPDATE', 'Update')
+                }
+                bgColor={theme.colors.primary}
+                textStyle={{
+                  ...styles.btnText,
+                  color: formState.loading
+                    ? theme.colors.textGray
+                    : theme.colors.white,
+                }}
+                borderColor={theme.colors.primary}
+                isDisabled={formState.loading}
+                imgRightSrc={null}
+                style={styles.editButton}
+                onClick={handleSubmit(onSubmit)}
+              />
+            </View>
           )}
-        </>
+        </EditButton>
       )}
     </>
   );

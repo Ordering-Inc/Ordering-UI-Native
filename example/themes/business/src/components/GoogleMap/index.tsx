@@ -11,6 +11,7 @@ import { useLanguage, useConfig } from 'ordering-components/native';
 import { GoogleMapsParams } from '../../types';
 import Alert from '../../providers/AlertProvider';
 import { OIconButton, OIcon } from '../shared';
+import { FloatingButton } from '../FloatingButton';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useTheme } from 'styled-components/native';
 
@@ -20,8 +21,11 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     handleChangeAddressMap,
     maxLimitLocation,
     readOnly,
+    handleViewActionOrder,
     markerTitle,
+    showAcceptOrReject,
     saveLocation,
+    handleOpenMapView,
     setSaveLocation,
     handleToggleMap,
     locations,
@@ -69,7 +73,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     });
 
   const handleArrowBack: any = () => {
-    navigation?.canGoBack() && navigation.goBack();
+    handleOpenMapView && handleOpenMapView();
   };
 
   const geocodePosition = (pos: { latitude: number; longitude: number }) => {
@@ -279,6 +283,21 @@ export const GoogleMap = (props: GoogleMapsParams) => {
           title={t('ERROR', 'Error')}
         />
       </View>
+      {showAcceptOrReject && (
+        <FloatingButton
+          btnText={t('ACCEPT', 'Accept')}
+          isSecondaryBtn={false}
+          secondButtonClick={() =>
+            handleViewActionOrder && handleViewActionOrder('accept')
+          }
+          firstButtonClick={() =>
+            handleViewActionOrder && handleViewActionOrder('accept')
+          }
+          secondButton={false}
+          firstColorCustom={theme.colors.red}
+          secondColorCustom={theme.colors.green}
+        />
+      )}
       <View style={styles.buttonBack}>
         <OIconButton
           icon={theme.images.general.close}

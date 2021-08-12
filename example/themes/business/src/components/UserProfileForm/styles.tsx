@@ -5,12 +5,11 @@ export const CenterView = styled.View`
 `;
 
 export const UserData = styled.View`
+  display: flex;
   align-items: center;
-  text-align: center;
-`;
-
-export const Names = styled.View`
-  flex-direction: row;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
 `;
 
 export const EditButton = styled.View`
@@ -29,8 +28,4 @@ export const Actions = styled.View`
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-`;
-
-export const WrapperPhone = styled.View`
-  padding: 8px 0px;
 `;

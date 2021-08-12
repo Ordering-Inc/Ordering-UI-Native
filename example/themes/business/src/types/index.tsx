@@ -89,6 +89,7 @@ export interface SignupParams {
   setCheckPhoneCodeState?: any;
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
+  notificationState?: any;
 }
 
 export interface PhoneInputParams {
@@ -97,8 +98,10 @@ export interface PhoneInputParams {
   defaultValue?: any;
   defaultCode?: number | null;
   forwardRef?: any;
+  isDisabled?: boolean;
   textInputProps?: TextInputProps;
-  onSubmitEditing: () => void;
+  flagProps?: any;
+  onSubmitEditing?: () => void;
 }
 
 export interface LanguageSelectorParams {
@@ -420,7 +423,10 @@ export interface GoogleMapsParams {
   readOnly?: boolean;
   markerTitle?: string;
   saveLocation?: boolean;
+  handleOpenMapView?: () => void;
+  showAcceptOrReject?: boolean;
   isSetInputs?: boolean;
+  handleViewActionOrder?: (action: string) => void;
   locations?: Array<any>;
   setSaveLocation?: (val: boolean) => void;
   handleToggleMap?: () => void;
