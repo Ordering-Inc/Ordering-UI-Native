@@ -83,9 +83,6 @@ import { ThemeProvider, useTheme } from './context/Theme';
 // hooks
 import { DeviceOrientationMethods } from './hooks/DeviceOrientation';
 
-// themes
-import ThemeBusiness from './themes/business'
-
 export {
   ActiveOrders,
   AddressDetails,
@@ -166,6 +163,4 @@ export {
   useTheme,
   // hooks
   DeviceOrientationMethods,
-  // themes
-  ThemeBusiness,
 }
