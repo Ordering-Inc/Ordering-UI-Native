@@ -1,16 +1,16 @@
 import React from 'react';
+import { Platform, StyleSheet } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useTheme } from 'styled-components/native';
 import {
   LanguageSelector as LanguageSelectorController,
   useLanguage,
   useOrder,
 } from 'ordering-components/native';
-import { Platform, StyleSheet } from 'react-native';
-import { OText } from '../../components/shared';
-import RNPickerSelect from 'react-native-picker-select';
 import { Container } from './styles';
-import { useTheme } from 'styled-components/native';
+import { OText } from '../../components/shared';
 import { LanguageSelectorParams } from '../../types';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   const { languagesState, currentLanguage, handleChangeLanguage } = props;
