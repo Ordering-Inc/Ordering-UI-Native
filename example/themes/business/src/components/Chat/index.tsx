@@ -303,7 +303,7 @@ const ChatUI = (props: MessagesParams) => {
           </OText>
         </View>
         <OText size={9} color={theme.colors.textGray}>
-          {t('SENT_TO', 'Sent to:')}
+          {`${t('SENT_TO', 'Sent to')}:`}
         </OText>
         <AvatarsConsole />
       </View>
@@ -638,7 +638,7 @@ const ChatUI = (props: MessagesParams) => {
   const renderAvatar = (props: any) => (
     <>
       <OText size={9} color={theme.colors.textGray}>
-        {t('SENT_TO', 'Sent to:')}
+        {`${t('SENT_TO', 'Sent to')}:`}
       </OText>
       <View style={{ flexDirection: 'row' }}>
         <Avatar
