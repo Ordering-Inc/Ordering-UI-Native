@@ -71,7 +71,7 @@ export const Home = (props: any) => {
             onClick={() => onNavigationRedirect('Login')}
           />
 
-          <OButton
+          {/* <OButton
             text={t('SIGNUP', 'Signup')}
             textStyle={{ ...styles.btnText, color: theme.colors.primary }}
             bgColor={theme.colors.btnBGWhite}
@@ -79,7 +79,7 @@ export const Home = (props: any) => {
             style={styles.btn}
             imgRightSrc={false}
             onClick={() => onNavigationRedirect('Signup')}
-          />
+          /> */}
         </View>
       </View>
     </Container>
