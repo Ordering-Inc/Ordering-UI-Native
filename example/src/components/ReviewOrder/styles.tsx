@@ -19,7 +19,7 @@ export const FormReviews = styled.View`
 export const Category = styled.View`
   padding: 10px;
   border-width: 1px;
-  border-color: ${({ colors }: any) => colors.secundaryContrast};
+  border-color: ${(props: any) => props.theme.colors.secundaryContrast};
   flex-direction: row;
   justify-content: space-between;
   margin-vertical: 5px;
