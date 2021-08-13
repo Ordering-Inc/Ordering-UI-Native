@@ -287,6 +287,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         <FloatingButton
           btnText={t('ACCEPT', 'Accept')}
           isSecondaryBtn={false}
+          color={theme.colors.green}
           secondButtonClick={() =>
             handleViewActionOrder && handleViewActionOrder('accept')
           }
