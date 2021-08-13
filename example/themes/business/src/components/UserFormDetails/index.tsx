@@ -18,7 +18,7 @@ import {
 } from './styles';
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { OText, OButton, OInput } from '../shared';
-import { sortInputFields } from '../../utils';
+import { sortInputFields, getTraduction } from '../../utils';
 
 export const UserFormDetailsUI = (props: any) => {
   const {
@@ -55,7 +55,7 @@ export const UserFormDetailsUI = (props: any) => {
   });
 
   const watchPassword = watch('password');
-  const watchVerifyPassword = watch('verifyPassword');
+  const watchConfirmPassword = watch('confirmPassword');
 
   const showInputPhoneNumber =
     validationFields?.fields?.checkout?.cellphone?.enabled ?? false;
@@ -114,7 +114,7 @@ export const UserFormDetailsUI = (props: any) => {
     }
     if (
       Object.keys(formState.changes).length > 0 ||
-      (watchPassword.length > 0 && watchVerifyPassword.length > 0)
+      (watchPassword.length > 0 && watchConfirmPassword.length > 0)
     ) {
       if (
         formState.changes?.cellphone === null &&
@@ -138,7 +138,7 @@ export const UserFormDetailsUI = (props: any) => {
         };
       }
 
-      if (values.password && values.verifyPassword) {
+      if (values.password && values.confirmPassword) {
         changes = {
           password: values.password,
         };
@@ -166,14 +166,17 @@ export const UserFormDetailsUI = (props: any) => {
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       const list = Object.values(errors);
+
       if (phoneInputData.error) {
         list.push({ message: phoneInputData.error });
       }
+
       let stringError = '';
       list.map((item: any, i: number) => {
         stringError +=
           i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
       });
+
       showToast(ToastType.Error, stringError);
     }
   }, [errors]);
@@ -215,9 +218,6 @@ export const UserFormDetailsUI = (props: any) => {
       height: 44,
       borderRadius: 7.6,
       borderWidth: 1,
-      borderColor: theme.colors.primary,
-      backgroundColor: theme.colors.white,
-      marginBottom: 25,
     },
     btnText: {
       color: theme.colors.textGray,
@@ -369,14 +369,17 @@ export const UserFormDetailsUI = (props: any) => {
                 color={theme.colors.textGray}
                 weight="bold"
                 style={{ paddingHorizontal: 16 }}>
-                {t('VERIFY_PASSWORD', 'Verify Password')}
+                {t('MOBILE_CONFIRM_PASSWORD', 'Confirm Password')}
               </OText>
               <Controller
                 control={control}
                 render={({ onChange, value }: any) => (
                   <OInput
                     isSecured={!passwordSee ? true : false}
-                    placeholder={t('VERIFY_PASSWORD', 'Verify Password')}
+                    placeholder={t(
+                      'MOBILE_CONFIRM_PASSWORD',
+                      'Confirm Password',
+                    )}
                     style={styles.inputStyle}
                     iconCustomRight={
                       passwordSee ? (
@@ -405,20 +408,24 @@ export const UserFormDetailsUI = (props: any) => {
                 rules={{
                   validate: (value: any) => {
                     return (
-                      watchPassword === value || 'The passwords do not match'
+                      watchPassword === value ||
+                      t(
+                        'VALIDATION_ERROR_PASSWORDS_MATCH',
+                        'The passwords do not match',
+                      )
                     );
                   },
                 }}
-                name="verifyPassword"
+                name="confirmPassword"
                 defaultValue=""
               />
 
-              {errors.verifyPassword && (
+              {errors.confirmPassword && (
                 <OText
                   size={16}
                   color={theme.colors.error}
                   style={{ paddingHorizontal: 16, marginBottom: 10 }}>
-                  {errors?.verifyPassword.message}
+                  {errors?.confirmPassword.message}
                 </OText>
               )}
 
@@ -470,13 +477,13 @@ export const UserFormDetailsUI = (props: any) => {
           {((formState &&
             Object.keys(formState?.changes).length > 0 &&
             isEdit) ||
-            (watchPassword?.length > 0 && watchVerifyPassword?.length > 0) ||
+            (watchPassword?.length > 0 && watchConfirmPassword?.length > 0) ||
             formState?.loading) && (
             <View style={{ flex: 1, marginLeft: 5 }}>
               <OButton
                 text={
                   formState.loading
-                    ? t('UPDATING', 'Updating...')
+                    ? t('UPDATING', 'Updating')
                     : t('UPDATE', 'Update')
                 }
                 bgColor={theme.colors.primary}
