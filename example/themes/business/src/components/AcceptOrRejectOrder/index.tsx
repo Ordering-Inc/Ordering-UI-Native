@@ -55,92 +55,60 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
 
   const handleChangeHour = (e: any) => {
     if (e.length === 1) {
-      const index = hour.indexOf(e);
-      if (index === 0 || index === -1) {
-        setHour(prevVal => `0${prevVal.charAt(0)}`);
-      }
-
-      if (index === 1) {
-        setHour(`${e}0`);
-      }
+      setHour('0' + e.charAt(0));
+      return;
     }
-    if (e.length > 2) {
-      const rightValue = e.slice(0, 2) === hour;
-      const midleValue = e.charAt(0) + e.charAt(e.length - 1) === hour;
-      const leftValue = e.slice(1) === hour;
-      if (rightValue) {
-        setHour(
-          prevVal =>
-            `${prevVal.charAt(prevVal.length - 1)}${e.charAt(e.length - 1)}`,
-        );
-      }
 
-      if (midleValue) {
-        setHour(
-          prevVal => `${e.charAt(1)}${prevVal.charAt(prevVal.length - 1)}`,
-        );
-      }
+    if (
+      e.includes(',') ||
+      e.includes('.') ||
+      e.includes('-') ||
+      e.includes(' ')
+    )
+      return;
 
-      if (leftValue) {
-        setHour(prevVal => `${e.charAt(0)}${prevVal.charAt(0)}`);
-      }
-    }
+    const rightValue = e.slice(0, 2) === hour;
+    const midleValue =
+      e.charAt(0) + e.charAt(e.length - 1) === hour && !rightValue;
+    const leftValue = e.slice(1) === hour && !midleValue;
+
+    if (rightValue || midleValue) setHour(e.charAt(1) + e.charAt(e.length - 1));
+
+    if (leftValue) setHour(e.charAt(0) + e.charAt(1));
   };
 
   const handleChangeMin = (e: any) => {
     if (e.length === 1) {
-      const index = min.indexOf(e);
-      if (index === 0 || index === -1) {
-        setMin(prevVal => `0${prevVal.charAt(0)}`);
-      }
+      setMin('0' + e.charAt(0));
+      return;
+    }
 
-      if (index === 1) {
-        setMin(`${e}0`);
+    if (
+      e.includes(',') ||
+      e.includes('.') ||
+      e.includes('-') ||
+      e.includes(' ')
+    )
+      return;
+
+    const rightValue = e.slice(0, 2) === min;
+    const midleValue =
+      e.charAt(0) + e.charAt(e.length - 1) === min && !rightValue;
+    const leftValue = e.slice(1) === min && !midleValue;
+
+    if (rightValue || midleValue) {
+      if (e.charAt(1) + e.charAt(e.length - 1) <= 60) {
+        setMin(e.charAt(1) + e.charAt(e.length - 1));
+      } else if (e.charAt(1) + e.charAt(e.length - 1) > 60) {
+        setMin('60');
       }
     }
 
-    if (e.length > 2) {
-      const rightValue = e.slice(0, 2) === min;
-      const midleValue = e.charAt(0) + e.charAt(e.length - 1) === min;
-      const leftValue = e.slice(1) === min;
-
-      if (rightValue) {
-        const isGreater =
-          min.charAt(min.length - 1) + e.charAt(e.length - 1) >= '60';
-        if (isGreater) {
-          setMin('60');
-        }
-        if (!isGreater) {
-          setMin(
-            prevVal =>
-              `${prevVal.charAt(prevVal.length - 1)}${e.charAt(e.length - 1)}`,
-          );
-        }
-      }
-
-      if (midleValue) {
-        const isGreater = e.charAt(1) + min.charAt(min.length - 1) >= '60';
-
-        if (isGreater) {
-          setMin('60');
-        }
-
-        if (!isGreater) {
-          setMin(
-            prevVal => `${e.charAt(1)}${prevVal.charAt(prevVal.length - 1)}`,
-          );
-        }
-      }
-
-      if (leftValue) {
-        const isGreater = e.charAt(0) + min.charAt(0) >= '60';
-        if (isGreater) {
-          setMin('60');
-        }
-
-        if (!isGreater) {
-          setMin(prevVal => `${e.charAt(0)}${prevVal.charAt(0)}`);
-        }
+    if (leftValue) {
+      if (e.charAt(0) + e.charAt(1) <= 60) {
+        setMin(e.charAt(0) + e.charAt(1));
+      } else if (e.charAt(0) + e.charAt(1) > 60) {
+        setMin('60');
       }
     }
   };
