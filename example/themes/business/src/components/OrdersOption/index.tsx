@@ -39,6 +39,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
   const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
   const [, t] = useLanguage();
+  const [loadingTag, setLoadingTag] = useState(false);
 
   const { loading, error, orders: values } = orderList;
   const [ordersToShow, setOrdersToShow] = useState([]);
@@ -163,27 +164,36 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     setOrdersToShow(ordersTab);
   };
 
+  useEffect(() => {
+    if (loadingTag) setLoadingTag(false);
+  }, [loading]);
+
   const handleChangeTag = (key: number) => {
     const isToRemove = tagsToggle.includes(key);
+    let updateTags: any;
+    let updateOrdersToShow;
+    setLoadingTag(true);
 
     if (isToRemove) {
-      const updateTags = tagsToggle.filter(tabs => tabs !== key);
+      updateTags = tagsToggle.filter(tabs => tabs !== key);
       setTagsToggle(updateTags);
-      const updateOrdersToShow = values.filter((order: any) =>
-        updateTags.some(tag => tag === order.status),
+      updateOrdersToShow = values.filter((order: any) =>
+        updateTags.some((tag: any) => tag === order.status),
       );
-      setOrdersToShow(updateOrdersToShow);
     }
 
     if (!isToRemove) {
-      const updateTags = tagsToggle;
+      updateTags = tagsToggle;
       updateTags.push(key);
       setTagsToggle(updateTags);
-      const updateOrdersToShow = values.filter((order: any) =>
-        updateTags.some(tag => tag === order.status),
+      updateOrdersToShow = values.filter((order: any) =>
+        updateTags.some((tag: any) => tag === order.status),
       );
-      setOrdersToShow(updateOrdersToShow);
     }
+
+    setUpdateOtherStatus(updateTags);
+    loadOrders && loadOrders(true, updateTags);
+    // setOrdersToShow(updateOrdersToShow);
   };
 
   const handleReload = () => {
@@ -388,7 +398,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         />
       )}
 
-      {!reload && !error && orders.length > 0 && (
+      {!reload && !error && orders.length > 0 && !loadingTag && (
         <PreviousOrders
           orders={ordersToShow}
           onNavigationRedirect={onNavigationRedirect}

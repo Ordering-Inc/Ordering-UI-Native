@@ -38,6 +38,7 @@ interface Props {
   mLeft?: number;
   numberOfLines?: number;
   ellipsizeMode?: string;
+  adjustsFontSizeToFit?: boolean;
 }
 
 const OText = (props: Props): React.ReactElement => {
