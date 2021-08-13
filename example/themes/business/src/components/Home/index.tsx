@@ -35,7 +35,10 @@ export const Home = (props: any) => {
   });
 
   return (
-    <Container height={windowHeight - safeHeight} orientation={orientation}>
+    <Container
+      height={windowHeight - safeHeight}
+      orientation={orientation}
+      style={{ marginTop: 30 }}>
       <LogoWrapper>
         <OIcon src={theme.images.logos.logotypeInvert} style={styles.logo} />
       </LogoWrapper>
