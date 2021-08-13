@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const UDForm = styled.View`
   display: flex;
@@ -35,5 +34,5 @@ export const InputWrap = styled.View`
 	align-items: center;
 	padding-vertical: 4px;
 	border-bottom-width: 1px;
-	border-bottom-color: ${colors.border};
+	border-bottom-color: ${(props: any) => props.theme.colors.border};
 `;

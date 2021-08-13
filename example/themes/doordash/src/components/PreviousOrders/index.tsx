@@ -3,7 +3,7 @@ import { useLanguage, useUtils } from 'ordering-components/native'
 import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import { OButton, OIcon, OText } from '../shared'
 import { Card, Logo, Information, MyOrderOptions, Status, WrappButton } from './styles'
-import { colors } from '../../theme.json'
+import { useTheme } from 'styled-components/native';
 import { PreviousOrdersParams } from '../../types'
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {
@@ -17,6 +17,38 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 		reorderLoading,
 		orderID
 	} = props
+	const theme = useTheme();
+
+	const styles = StyleSheet.create({
+		logo: {
+			borderRadius: 10,
+			width: 75,
+			height: 75
+		},
+		reorderbutton: {
+			width: 76,
+			height: 26,
+			minHeight: 26,
+			paddingLeft: 0,
+			paddingRight: 0,
+			borderRadius: 20,
+			shadowOpacity: 0
+		},
+		reorderLoading: {
+			width: 76,
+			height: 26,
+			minHeight: 26,
+			borderRadius: 20,
+			shadowOpacity: 0
+		},
+		buttonText: {
+			color: theme.colors.white,
+			fontSize: 11,
+			fontWeight: '600',
+			marginLeft: 2,
+			marginRight: 2
+		}
+	})
 
 	const [, t] = useLanguage()
 	const [reorderSelected, setReorderSelected] = useState<number | null>(null)
@@ -46,19 +78,19 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 						<OText size={14} numberOfLines={1} weight={'600'}>
 							{order.business?.name}
 						</OText>
-						<OText size={12} color={colors.textSecondary} numberOfLines={1}>
+						<OText size={12} color={theme.colors.textSecondary} numberOfLines={1}>
 							{order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
 						</OText>
 						<MyOrderOptions>
 							<TouchableOpacity onPress={() => handleClickViewOrder(order?.uuid)}>
-								<OText size={12} weight={'600'} color={colors.textPrimary} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
+								<OText size={12} weight={'600'} color={theme.colors.textPrimary} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
 							</TouchableOpacity>
 							{
 								allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && (
 									<>
-										<OText size={12} weight={'600'} color={colors.textSecondary}>{' \u2022 '}</OText>
+										<OText size={12} weight={'600'} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
 										<TouchableOpacity onPress={() => handleClickOrderReview(order)}>
-											<OText size={12} weight={'600'} color={colors.primary} numberOfLines={1}>{t('REVIEW', 'Review')}</OText>
+											<OText size={12} weight={'600'} color={theme.colors.primary} numberOfLines={1}>{t('REVIEW', 'Review')}</OText>
 										</TouchableOpacity>
 									</>
 								)}
@@ -66,11 +98,11 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 					</Information>
 					<Status>
 						<OText
-							color={colors.primary}
+							color={theme.colors.primary}
 							size={12}
 							mBottom={11}
 							lineHeight={14}
-							style={{textAlign: 'center'}}
+							style={{ textAlign: 'center' }}
 						>
 							{getOrderStatus(order.status)?.value}
 						</OText>
@@ -92,8 +124,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 						onClick={loadMoreOrders}
 						text={t('LOAD_MORE_ORDERS', 'Load more orders')}
 						imgRightSrc={null}
-						textStyle={{ color: colors.white, fontSize: 14, fontWeight: '600' }}
-						style={{height: 40}}
+						textStyle={{ color: theme.colors.white, fontSize: 14, fontWeight: '600' }}
+						style={{ height: 40 }}
 					/>
 				</WrappButton>
 			)}
@@ -101,34 +133,3 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 
 	)
 }
-
-const styles = StyleSheet.create({
-	logo: {
-		borderRadius: 10,
-		width: 75,
-		height: 75
-	},
-	reorderbutton: {
-		width: 76,
-		height: 26,
-		minHeight: 26,
-		paddingLeft: 0,
-		paddingRight: 0,
-		borderRadius: 20,
-		shadowOpacity: 0
-	},
-	reorderLoading: {
-		width: 76,
-		height: 26,
-		minHeight: 26,
-		borderRadius: 20,
-		shadowOpacity: 0
-	},
-	buttonText: {
-		color: colors.white,
-		fontSize: 11,
-		fontWeight: '600',
-		marginLeft: 2,
-		marginRight: 2
-	}
-})

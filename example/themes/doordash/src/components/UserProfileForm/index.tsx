@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { StyleSheet, View } from 'react-native';
-import { colors, images } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 import { ProfileParams } from '../../types';
 import { AddressList } from '../AddressList'
 import { LogoutButton } from '../LogoutButton'
@@ -43,6 +43,32 @@ const ProfileUI = (props: ProfileParams) => {
 		handleChangeInput,
 		handleButtonUpdateClick
 	} = props;
+
+	const theme = useTheme();
+
+	const styles = StyleSheet.create({
+		dropdown: {
+			borderColor: theme.colors.whiteGray,
+			height: 50,
+			borderRadius: 25,
+			marginTop: 16,
+		},
+		inputbox: {
+			marginVertical: 8,
+			width: '90%'
+		},
+		editButton: {
+			borderRadius: 25,
+			height: 37,
+			borderWidth: 0,
+			color: theme.colors.primary,
+			shadowOpacity: 0,
+			marginVertical: 8,
+			width: 100,
+			paddingLeft: 12,
+			paddingRight: 12
+		},
+	});
 
 	const [{ user }] = useSession();
 	const [, t] = useLanguage();
@@ -183,15 +209,15 @@ const ProfileUI = (props: ProfileParams) => {
 			<CenterView>
 				<OIcon
 					url={user?.photo}
-					src={!user?.photo && images.general.user}
+					src={!user?.photo && theme.images.general.user}
 					width={94}
 					height={94}
 					style={{ borderRadius: 7.6, resizeMode: 'cover' }}
 				/>
-				{isEdit && 
+				{isEdit &&
 					<OIconButton
-						icon={images.general.camera}
-						borderColor={colors.clear}
+						icon={theme.images.general.camera}
+						borderColor={theme.colors.clear}
 						iconStyle={{ width: 30, height: 30, tintColor: 'white' }}
 						style={{ maxWidth: 40, position: 'absolute', bottom: 0 }}
 						onClick={() => handleImagePicker()}
@@ -223,7 +249,7 @@ const ProfileUI = (props: ProfileParams) => {
 					)}
 					{!!phoneUpdate && (
 						<OText
-							color={colors.error}
+							color={theme.colors.error}
 						>
 							{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}
 						</OText>
@@ -242,11 +268,11 @@ const ProfileUI = (props: ProfileParams) => {
 					{!isEdit ? (
 						<OButton
 							text={t('EDIT', 'Edit')}
-							bgColor={colors.primaryContrast}
-							borderColor={colors.primaryContrast}
+							bgColor={theme.colors.primaryContrast}
+							borderColor={theme.colors.primaryContrast}
 							isDisabled={formState.loading}
 							imgRightSrc={null}
-							textStyle={{ fontSize: 14, fontWeight: '600', color: colors.primary }}
+							textStyle={{ fontSize: 14, fontWeight: '600', color: theme.colors.primary }}
 							style={{ ...styles.editButton }}
 							onClick={toggleIsEdit}
 						/>
@@ -254,9 +280,9 @@ const ProfileUI = (props: ProfileParams) => {
 						<>
 							<OButton
 								text={t('CANCEL', 'Cancel')}
-								textStyle={{ color: colors.white, fontSize: 14, fontWeight: '600' }}
-								bgColor={colors.primary}
-								borderColor={colors.primary}
+								textStyle={{ color: theme.colors.white, fontSize: 14, fontWeight: '600' }}
+								bgColor={theme.colors.primary}
+								borderColor={theme.colors.primary}
 								isDisabled={formState.loading}
 								imgRightSrc={null}
 								style={{ ...styles.editButton }}
@@ -267,9 +293,9 @@ const ProfileUI = (props: ProfileParams) => {
 								(
 									<OButton
 										text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
-										bgColor={colors.primaryContrast}
+										bgColor={theme.colors.primaryContrast}
 										textStyle={{ color: formState.loading ? 'black' : 'white', fontSize: 14, fontWeight: '600' }}
-										borderColor={colors.primaryContrast}
+										borderColor={theme.colors.primaryContrast}
 										isDisabled={formState.loading}
 										imgRightSrc={null}
 										style={{ ...styles.editButton }}
@@ -292,30 +318,6 @@ const ProfileUI = (props: ProfileParams) => {
 		</>
 	);
 };
-
-const styles = StyleSheet.create({
-	dropdown: {
-		borderColor: colors.whiteGray,
-		height: 50,
-		borderRadius: 25,
-		marginTop: 16,
-	},
-	inputbox: {
-		marginVertical: 8,
-		width: '90%'
-	},
-	editButton: {
-		borderRadius: 25,
-		height: 37,
-		borderWidth: 0,
-		color: colors.primary,
-		shadowOpacity: 0,
-		marginVertical: 8,
-		width: 100,
-		paddingLeft: 12,
-		paddingRight: 12
-	},
-});
 
 export const UserProfileForm = (props: any) => {
 	const profileProps = {

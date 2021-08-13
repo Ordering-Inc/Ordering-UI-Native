@@ -6,7 +6,7 @@ import { useLanguage, useSession, useApi } from 'ordering-components/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import { Container, FacebookButton } from './styles';
-import { colors } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 export const FacebookLogin = (props: any) => {
   const {
@@ -14,11 +14,13 @@ export const FacebookLogin = (props: any) => {
     handleLoading,
     handleSuccessFacebookLogin,
     notificationState,
-	 styles,
-	 textStyles,
-	 renderIcon,
-	 text
+    styles,
+    textStyles,
+    renderIcon,
+    text
   } = props
+
+  const theme = useTheme();
 
   const [, t] = useLanguage()
   const [ordering] = useApi()
@@ -90,16 +92,16 @@ export const FacebookLogin = (props: any) => {
     <Container>
       <FacebookButton
         onPress={onPressButton}
-		  style={styles}
+        style={styles}
       >
-			{renderIcon ? renderIcon : (
-				<Icon
-					name="facebook"
-					size={34}
-					color={colors.skyBlue}
-					style={style.fbBtn}
-				/>
-			)}
+        {renderIcon ? renderIcon : (
+          <Icon
+            name="facebook"
+            size={34}
+            color={theme.colors.skyBlue}
+            style={style.fbBtn}
+          />
+        )}
         <Text style={[style.textBtn, textStyles]}>
           {buttonText}
         </Text>

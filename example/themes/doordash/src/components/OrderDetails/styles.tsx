@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const OrderDetailsContainer = styled.ScrollView`
   
@@ -12,9 +11,9 @@ export const NavBack = styled.TouchableOpacity`
 export const Header = styled.View`
 	flex: 1;
   padding: 20px 0;
-  background-color: ${colors.backgroundPage};
+  background-color: ${(props: any) => props.theme.colors.backgroundPage};
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.border};
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
 `
 
 export const Logo = styled.View`
@@ -27,9 +26,9 @@ export const OrderContent = styled.View`
 export const OrderBusiness = styled.View`
   position: relative; 
   padding-vertical: 10px;
-  background-color: ${colors.backgroundPage};
+  background-color: ${(props: any) => props.theme.colors.backgroundPage};
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.border};
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
 `
 export const Icons = styled.View`
   margin-top: 10px;
@@ -68,9 +67,9 @@ export const SectionTitle = styled.View`
 
 export const OrderCustomer = styled.View`
   padding: 20px 0;
-  background-color: ${colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.border};
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
 `
 
 export const OrderDriver = styled(OrderCustomer)``
@@ -109,7 +108,7 @@ export const Table = styled.View`
 export const OrderBill = styled.View`
   padding-vertical: 10px;
   flex: 1;
-  background-color: ${colors.white}
+  background-color: ${(props: any) => props.theme.colors.white}
 `
 
 export const Total = styled.View`

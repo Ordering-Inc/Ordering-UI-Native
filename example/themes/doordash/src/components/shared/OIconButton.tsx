@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { ImageStyle, TextStyle, ViewStyle } from 'react-native'
-import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
+import styled, { useTheme } from 'styled-components/native'
 
 const Wrapper = styled.TouchableOpacity`
     height: 40px;
@@ -52,7 +51,10 @@ interface Props {
   RenderIcon?: React.FunctionComponent
 }
 const OIconButton = (props: Props) => {
-  const {RenderIcon} = props
+
+  const theme = useTheme();
+
+  const { RenderIcon } = props
   return (
     <>
       {!props.disabled ? (
@@ -91,8 +93,8 @@ const OIconButton = (props: Props) => {
       ) : (
         <DisabledWrapper
           style={{
-            borderColor: colors.backgroundDark,
-            backgroundColor: props.disabledColor ? props.disabledColor : colors.backgroundDark,
+            borderColor: theme.colors.backgroundDark,
+            backgroundColor: props.disabledColor ? props.disabledColor : theme.colors.backgroundDark,
             height: props.height || 40,
             borderRadius: props.height ? props.height * 0.5 : 20,
             ...props.style
@@ -100,7 +102,7 @@ const OIconButton = (props: Props) => {
         >
           {props.icon ? (
             <Icon
-              source={props.urlIcon ? {uri: props.icon} : props.icon}
+              source={props.urlIcon ? { uri: props.icon } : props.icon}
               resizeMode={props.cover ? 'cover' : 'contain'}
               style={{
                 tintColor: props.iconColor,

@@ -7,9 +7,8 @@ import {
   CCWrapper,
   CCButton
 } from './styles';
-
+import { useTheme } from 'styled-components/native';
 import { OInput, OButton, OAlert, OText } from '../shared';
-import { colors } from '../../theme.json';
 
 const CouponControlUI = (props: any) => {
   const {
@@ -23,6 +22,18 @@ const CouponControlUI = (props: any) => {
   } = props
 
   const [, t] = useLanguage()
+  const theme = useTheme();
+  const styles = StyleSheet.create({
+    inputsStyle: {
+      borderRadius: 7.6,
+      flex: 1,
+      marginRight: 14,
+      height: 40,
+      flexBasis: '70%',
+      borderWidth: 0,
+      backgroundColor: theme.colors.inputDisabled
+    },
+  });
 
   const handleOnAccept = () => {
     if (!confirm.error) {
@@ -67,7 +78,7 @@ const CouponControlUI = (props: any) => {
           <CCButton>
             <OText
               size={12}
-              color={colors.white}
+              color={theme.colors.white}
               style={{ textAlign: 'center' }}
             >
               {`${t('REMOVE_COUPON', 'Remove Coupon')} ${couponDefault}`}
@@ -83,30 +94,19 @@ const CouponControlUI = (props: any) => {
           />
           <OButton
             onClick={() => handleButtonApplyClick()}
-            bgColor={colors.primary}
-            borderColor={colors.primary}
-            textStyle={{color: colors.white, fontSize: 14, fontWeight: '600'}}
+            bgColor={theme.colors.primary}
+            borderColor={theme.colors.primary}
+            textStyle={{ color: theme.colors.white, fontSize: 14, fontWeight: '600' }}
             imgRightSrc={null}
             text={t('APPLY', 'Apply')}
             isDisabled={!couponInput}
-				style={{height: 40, shadowOpacity: 0, maxWidth: 105, paddingHorizontal: 10}}
+            style={{ height: 40, shadowOpacity: 0, maxWidth: 105, paddingHorizontal: 10 }}
           />
         </CCWrapper>
       )}
     </CContainer>
   )
 }
-const styles = StyleSheet.create({
-  inputsStyle: {
-    borderRadius: 7.6,
-    flex: 1,
-    marginRight: 14,
-	 height: 40,
-	 flexBasis: '70%',
-	 borderWidth: 0,
-	 backgroundColor: colors.inputDisabled
-  },
-});
 
 export const CouponControl = (props: any) => {
   const couponProp = {

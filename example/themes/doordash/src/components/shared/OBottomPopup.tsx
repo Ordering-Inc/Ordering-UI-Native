@@ -1,6 +1,7 @@
 import React from 'react'
 import { Modal, TouchableWithoutFeedback, Dimensions, StyleSheet, View, Text } from 'react-native'
-import { colors } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
+
 const deviceHeight = Dimensions.get('window').height
 
 interface Props {
@@ -16,6 +17,34 @@ const OBottomPopup = (props: Props) => {
     onClose,
     children
   } = props
+
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#000000AA',
+      justifyContent: 'flex-end',
+    },
+    touchableOutsideStyle: {
+      flex: 1,
+      width: '100%'
+    },
+    bottomContainer: {
+      backgroundColor: theme.colors.white,
+      width: '100%',
+      borderTopRightRadius: 20,
+      borderTopLeftRadius: 20,
+      paddingHorizontal: 20,
+      maxHeight: deviceHeight,
+    },
+    titleStyle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginVertical: 15
+    }
+  })
+
   return (
     <Modal
       animationType='fade'
@@ -42,30 +71,5 @@ const OBottomPopup = (props: Props) => {
     </Modal>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000000AA',
-    justifyContent: 'flex-end',
-  },
-  touchableOutsideStyle: {
-    flex: 1,
-    width: '100%'
-  },
-  bottomContainer: {
-    backgroundColor: colors.white,
-    width: '100%',
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    paddingHorizontal: 20,
-    maxHeight: deviceHeight,
-  },
-  titleStyle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 15
-  }
-})
 
 export default OBottomPopup

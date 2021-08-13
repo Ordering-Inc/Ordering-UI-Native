@@ -1,6 +1,5 @@
 import React from 'react';
 import { TextStyle, TouchableOpacity, View } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AddressDetails as AddressDetailsController, useOrder } from 'ordering-components/native';
 
 import {
@@ -10,8 +9,8 @@ import {
 	ADMap
 } from './styles';
 
-import { colors, labels, images } from '../../theme.json'
 import { OText, OIcon } from '../shared';
+import { useTheme } from 'styled-components/native'
 
 const AddressDetailsUI = (props: any) => {
 	const {
@@ -25,6 +24,8 @@ const AddressDetailsUI = (props: any) => {
 
 	const [orderState] = useOrder();
 
+	const theme = useTheme();
+
 	return (
 		<ADContainer>
 			<ADHeader>
@@ -37,19 +38,19 @@ const AddressDetailsUI = (props: any) => {
 						/>
 					</ADMap>
 				)}
-				{title ? <OText style={labels.middle as TextStyle}>{title}</OText> : null}
+				{title ? <OText style={theme.labels.middle as TextStyle}>{title}</OText> : null}
 				<ADAddress>
 					<OText
 						numberOfLines={1}
 						ellipsizeMode='tail'
-						style={{ width: '85%', ...labels.normal } as TextStyle}
+						style={{ width: '85%', ...theme.labels.normal } as TextStyle}
 					>
 						{addressToShow || orderState?.options?.address?.address}
 					</OText>
 					<View>
 						{orderState?.options?.type === 1 && !isCartPending &&
 							<TouchableOpacity onPress={() => navigation.navigate('AddressList', { isFromCheckout: true })}>
-								<OIcon src={images.general.pencil} width={16} color={colors.textSecondary} />
+								<OIcon src={theme.images.general.pencil} width={16} color={theme.colors.textSecondary} />
 							</TouchableOpacity>
 						}
 					</View>

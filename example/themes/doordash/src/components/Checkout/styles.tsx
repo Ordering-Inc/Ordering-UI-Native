@@ -1,6 +1,4 @@
-import { Platform } from 'react-native';
-import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme.json';
+import styled from 'styled-components/native';
 
 export const ChContainer = styled.View`
 	padding-horizontal: 0px;
@@ -9,7 +7,7 @@ export const ChContainer = styled.View`
 
 export const ChSection = styled.View`
 	border-bottom-width: 1px;
-  border-bottom-color: ${colors.border};
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
   padding-vertical: 16px;
 `
 
@@ -22,7 +20,7 @@ export const ChHeader = styled.View`
 `
 
 export const ChTotal = styled.View`
-  background-color: ${colors.inputDisabled};
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
   padding: 10px 20px;
   display: flex;
   justify-content: flex-start;
@@ -49,7 +47,7 @@ export const ChMoment = styled(ChAddress)`
 `
 
 export const CHMomentWrapper = styled.TouchableOpacity`
-  background-color: ${colors.inputDisabled};
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
   border-radius: 10px;
   width: 100%;
   padding: 10px;

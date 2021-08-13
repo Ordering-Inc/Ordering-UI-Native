@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder, useSession } from 'ordering-components/native'
 import { AddressListContainer, AddressItem } from './styles'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import Spinner from 'react-native-loading-spinner-overlay'
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { colors, images } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 import { OButton, OText, OAlert, OModal, OIcon } from '../shared'
 import { Container } from '../../layouts/Container'
 import { AddressFormParams, AddressListParams } from '../../types'
@@ -32,6 +30,9 @@ const AddressListUI = (props: AddressListParams) => {
 		afterSignup,
 		isFromCheckout
 	} = props
+
+	const theme = useTheme();
+
 
 	const [orderState] = useOrder()
 	const [, t] = useLanguage()
@@ -83,15 +84,15 @@ const AddressListUI = (props: AddressListParams) => {
 	const addressIcon = (tag: string) => {
 		switch (tag) {
 			case 'other':
-				return images.general.tag_other
+				return theme.images.general.tag_other
 			case 'office':
-				return images.general.tag_office
+				return theme.images.general.tag_office
 			case 'home':
-				return images.general.tag_home
+				return theme.images.general.tag_home
 			case 'favorite':
-				return images.general.tag_favorite
+				return theme.images.general.tag_favorite
 			default:
-				return images.general.tag_other
+				return theme.images.general.tag_other
 		}
 	}
 
@@ -152,7 +153,7 @@ const AddressListUI = (props: AddressListParams) => {
 								rightImg={null}
 								btnStyle={{ paddingLeft: 0 }}
 								paddingTop={0}
-								style={{marginHorizontal: -40}}
+								style={{ marginHorizontal: -40 }}
 							/>
 						)}
 					{addressList.loading && (
@@ -184,11 +185,11 @@ const AddressListUI = (props: AddressListParams) => {
 										<OIcon
 											src={addressIcon(address?.tag)}
 											width={16}
-											color={colors.primary}
+											color={theme.colors.primary}
 											style={styles.icon}
 										/>
 										<OText style={styles.address}>{address.address}</OText>
-										<TouchableOpacity style={{marginEnd: 7}} onPress={() => !afterSignup ? onNavigationRedirect(
+										<TouchableOpacity style={{ marginEnd: 7 }} onPress={() => !afterSignup ? onNavigationRedirect(
 											'AddressForm',
 											{
 												address: address,
@@ -213,9 +214,9 @@ const AddressListUI = (props: AddressListParams) => {
 											})}>
 
 											<OIcon
-												src={images.general.pencil}
+												src={theme.images.general.pencil}
 												width={16}
-												color={colors.textPrimary}
+												color={theme.colors.textPrimary}
 											/>
 										</TouchableOpacity>
 										<OAlert
@@ -225,9 +226,9 @@ const AddressListUI = (props: AddressListParams) => {
 											disabled={checkAddress(address)}
 										>
 											<OIcon
-												src={images.general.trash}
+												src={theme.images.general.trash}
 												width={16}
-												color={!checkAddress(address) ? colors.textPrimary : colors.disabled}
+												color={!checkAddress(address) ? theme.colors.textPrimary : theme.colors.disabled}
 											/>
 										</OAlert>
 									</AddressItem>
@@ -258,10 +259,10 @@ const AddressListUI = (props: AddressListParams) => {
 								text={t('ADD_NEW_ADDRESS', 'Add new Address')}
 								imgRightSrc=''
 								imgLeftSrc={''}
-								bgColor={colors.white}
+								bgColor={theme.colors.white}
 								style={styles.button}
-								textStyle={{fontSize: 14, fontWeight: '600', color: colors.primary}}
-								borderColor={colors.primary}
+								textStyle={{ fontSize: 14, fontWeight: '600', color: theme.colors.primary }}
+								borderColor={theme.colors.primary}
 								onClick={() => !afterSignup ? onNavigationRedirect(
 									'AddressForm',
 									{
@@ -290,7 +291,7 @@ const AddressListUI = (props: AddressListParams) => {
 							text={t('CONTINUE', 'Continue')}
 							style={styles.button}
 							onClick={() => onNavigatorRedirect()}
-							textStyle={{ color: colors.white }}
+							textStyle={{ color: theme.colors.white }}
 						/>
 					)}
 				</AddressListContainer>

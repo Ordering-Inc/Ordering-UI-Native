@@ -5,7 +5,7 @@ import {
 	WrapHeader,
 } from './styles'
 import { OText } from '../shared'
-import { colors, labels } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 import { TextStyle, View } from 'react-native'
 
 const ProductOptionUI = (props: any) => {
@@ -14,7 +14,7 @@ const ProductOptionUI = (props: any) => {
 		option,
 		error
 	} = props
-
+	const theme = useTheme();
 	const [, t] = useLanguage()
 
 	let maxMin = `(${t('MIN', 'Min')}: ${option.min} / ${t('MAX', 'Max')}: ${option.max})`
@@ -30,13 +30,13 @@ const ProductOptionUI = (props: any) => {
 	}
 
 	return (
-		<Container style={{ color: error ? 'orange' : colors.white }}>
+		<Container style={{ color: error ? 'orange' : theme.colors.white }}>
 			<WrapHeader>
 				<View>
-					<OText style={labels.middle as TextStyle}>{option.name}</OText>
-					<OText style={labels.small as TextStyle} color={colors.textSecondary}>{maxMin}</OText>
+					<OText style={theme.labels.middle as TextStyle}>{option.name}</OText>
+					<OText style={theme.labels.small as TextStyle} color={theme.colors.textSecondary}>{maxMin}</OText>
 				</View>
-				<OText size={10} weight={'600'} color={colors.error}>{required}</OText>
+				<OText size={10} weight={'600'} color={theme.colors.error}>{required}</OText>
 			</WrapHeader>
 			{children}
 		</Container>

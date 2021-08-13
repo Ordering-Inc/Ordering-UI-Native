@@ -24,7 +24,7 @@ import {
 	SortButton,
 	CategoryWrap,
 } from './styles'
-import { colors, images, labels } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
@@ -53,6 +53,47 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		setProductLogin,
 		updateProductModal
 	} = props
+	const theme = useTheme()
+
+	const styles = StyleSheet.create({
+		mainContainer: {
+			flex: 1,
+			marginTop: 60
+		},
+		BackIcon: {
+			paddingRight: 20,
+		},
+		headerItem: {
+			flexDirection: 'row',
+			alignItems: 'center',
+		},
+		btnBackArrow: {
+			borderWidth: 0,
+			backgroundColor: theme.colors.clear,
+			paddingStart: 0,
+			paddingEnd: 7,
+		},
+		searchIcon: {
+			width: 25,
+			height: 25,
+			borderWidth: 0,
+			backgroundColor: theme.colors.white,
+			borderRadius: 24,
+			justifyContent: 'center',
+			alignItems: 'center',
+			shadowColor: theme.colors.black,
+			shadowOpacity: 0.1,
+			shadowOffset: { width: 0, height: 2 },
+			shadowRadius: 2,
+			marginEnd: -6
+		},
+		categorySticky: {
+			position: 'absolute',
+			start: 1,
+			end: 0,
+			top: 0
+		}
+	})
 
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
@@ -125,21 +166,21 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	return (
 		<>
-			<Animated.View style={{ flex: 1, backgroundColor: colors.white, position: 'absolute', width: '100%', top: top, zIndex: 100 }}>
+			<Animated.View style={{ flex: 1, backgroundColor: theme.colors.white, position: 'absolute', width: '100%', top: top, zIndex: 100 }}>
 				{!loading && business?.id && (
 					<TopHeader>
 						{!isOpenSearchBar && (
 							<>
 								<OButton
-									imgLeftSrc={images.general.arrow_left}
+									imgLeftSrc={theme.images.general.arrow_left}
 									imgRightSrc={null}
 									style={styles.btnBackArrow}
 									onClick={() => (navigation?.canGoBack() && navigation.goBack()) || (auth && navigation.navigate('BottomTab'))}
-									imgLeftStyle={{ tintColor: colors.textPrimary }}
+									imgLeftStyle={{ tintColor: theme.colors.textPrimary }}
 								/>
 								{isStickyCategory && (
 									<Animated.View style={{ flexBasis: '74%', paddingHorizontal: 10, alignItems: 'center' }}>
-										<OText style={labels.middle as TextStyle} numberOfLines={1} ellipsizeMode={'tail'}>{business?.name}</OText>
+										<OText style={theme.labels.middle as TextStyle} numberOfLines={1} ellipsizeMode={'tail'}>{business?.name}</OText>
 									</Animated.View>
 								)}
 								{!errorQuantityProducts && (
@@ -148,7 +189,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 											onPress={() => { }}
 											style={styles.searchIcon}
 										>
-											<OIcon src={images.general.share} width={16} />
+											<OIcon src={theme.images.general.share} width={16} />
 										</TouchableOpacity>
 									</View>
 								)}
@@ -181,15 +222,15 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								noBorderShow
 								placeholder={t('SEARCH', 'Search')}
 								lazyLoad={businessState?.business?.lazy_load_products_recommended}
-								inputWrapStyle={{ height: 40, backgroundColor: colors.clear, borderWidth: 0, paddingStart: 11, marginEnd: 0 }}
+								inputWrapStyle={{ height: 40, backgroundColor: theme.colors.clear, borderWidth: 0, paddingStart: 11, marginEnd: 0 }}
 							/>
 						</WrapSearchBar>
 						<SortWrap>
 							<SortButton onPress={() => { }} style={{ marginEnd: 7 }}>
-								<OText size={12} weight={'600'} color={colors.textPrimary}>{t('RANK', 'Rank')}</OText>
+								<OText size={12} weight={'600'} color={theme.colors.textPrimary}>{t('RANK', 'Rank')}</OText>
 							</SortButton>
 							<SortButton onPress={() => { }}>
-								<OText size={12} weight={'600'} color={colors.textPrimary}>{t('A_TO_Z', 'A to Z')}</OText>
+								<OText size={12} weight={'600'} color={theme.colors.textPrimary}>{t('A_TO_Z', 'A to Z')}</OText>
 							</SortButton>
 						</SortWrap>
 					</View>
@@ -291,8 +332,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				entireModal
 				customClose
 			>
-				<ScrollView stickyHeaderIndices={[0]} contentContainerStyle={{paddingBottom: 100}}>
-					<NavBar title={t('CART', 'Cart')} onActionLeft={handleCloseCartModal} leftImg={images.general.close} noBorder />
+				<ScrollView stickyHeaderIndices={[0]} contentContainerStyle={{ paddingBottom: 100 }}>
+					<NavBar title={t('CART', 'Cart')} onActionLeft={handleCloseCartModal} leftImg={theme.images.general.close} noBorder />
 					<OrderSummary
 						cart={currentCart}
 						isCartPending={currentCart?.status === 2}
@@ -307,46 +348,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		</>
 	)
 }
-
-const styles = StyleSheet.create({
-	mainContainer: {
-		flex: 1,
-		marginTop: 60
-	},
-	BackIcon: {
-		paddingRight: 20,
-	},
-	headerItem: {
-		flexDirection: 'row',
-		alignItems: 'center',
-	},
-	btnBackArrow: {
-		borderWidth: 0,
-		backgroundColor: colors.clear,
-		paddingStart: 0,
-		paddingEnd: 7,
-	},
-	searchIcon: {
-		width: 25,
-		height: 25,
-		borderWidth: 0,
-		backgroundColor: colors.white,
-		borderRadius: 24,
-		justifyContent: 'center',
-		alignItems: 'center',
-		shadowColor: colors.black,
-		shadowOpacity: 0.1,
-		shadowOffset: { width: 0, height: 2 },
-		shadowRadius: 2,
-		marginEnd: -6
-	},
-	categorySticky: {
-		position: 'absolute',
-		start: 1,
-		end: 0,
-		top: 0
-	}
-})
 
 export const BusinessProductsListing = (props: BusinessProductsListingParams) => {
 	const businessProductslistingProps = {

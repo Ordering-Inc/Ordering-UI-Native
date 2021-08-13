@@ -15,8 +15,7 @@ import {
 } from 'ordering-components/native';
 
 import { OText, OButton, OIcon } from '../shared';
-import { colors, images, labels } from '../../theme.json';
-
+import { useTheme } from 'styled-components/native';
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
 import { DriverTips } from '../DriverTips';
@@ -81,6 +80,8 @@ const CheckoutUI = (props: any) => {
 		businessName,
 		cartTotal
 	} = props
+
+	const theme = useTheme();
 
 	const { showToast } = useToast();
 	const [, t] = useLanguage();
@@ -166,13 +167,13 @@ const CheckoutUI = (props: any) => {
 	//   handlePaymethodChange(null)
 	// }, [cart?.total])
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
-			<NavBar title={t('CHECKOUT', 'Checkout')} leftImg={images.general.close} noBorder onActionLeft={() => navigation?.canGoBack() && navigation.goBack()} />
+		<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }}>
+			<NavBar title={t('CHECKOUT', 'Checkout')} leftImg={theme.images.general.close} noBorder onActionLeft={() => navigation?.canGoBack() && navigation.goBack()} />
 			<Container>
 				<ChContainer>
 					{/* <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
             <OButton
-              imgLeftSrc={images.general.arrow_left}
+              imgLeftSrc={theme.images.general.arrow_left}
               imgRightSrc={null}
               style={style.btnBackArrow}
               onClick={() => navigation?.canGoBack() && navigation.goBack()}
@@ -189,7 +190,7 @@ const CheckoutUI = (props: any) => {
 								{!cartState.loading && cart?.status === 2 && (
 									<OText
 										style={{ textAlign: 'center' }}
-										color={colors.error}
+										color={theme.colors.error}
 										size={17}
 									>
 										{t('CART_STATUS_PENDING_MESSAGE_APP', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the app')}
@@ -226,7 +227,7 @@ const CheckoutUI = (props: any) => {
 								</Placeholder>
 							) : (
 								<View style={{ flex: 1 }}>
-									<OText style={labels.middle as TextStyle}>{t('DELIVERY_DETAILS', 'Delivery details').toUpperCase()}</OText>
+									<OText style={theme.labels.middle as TextStyle}>{t('DELIVERY_DETAILS', 'Delivery details').toUpperCase()}</OText>
 									<AddressDetails
 										navigation={navigation}
 										location={businessDetails?.business?.location}
@@ -307,20 +308,20 @@ const CheckoutUI = (props: any) => {
 								Object.values(businessDetails?.business).length > 0 &&
 								(
 									<View>
-										<OText style={{ ...labels.middle, marginBottom: 3 } as TextStyle}>
+										<OText style={{ ...theme.labels.middle, marginBottom: 3 } as TextStyle}>
 											{t('BUSINESS_DETAILS', 'Business Details').toUpperCase()}
 										</OText>
 										<View>
-											<OText style={labels.normal as TextStyle}>
+											<OText style={theme.labels.normal as TextStyle}>
 												{businessDetails?.business?.name}
 											</OText>
-											<OText style={labels.normal as TextStyle}>
+											<OText style={theme.labels.normal as TextStyle}>
 												{businessDetails?.business?.email}
 											</OText>
-											<OText style={labels.normal as TextStyle}>
+											<OText style={theme.labels.normal as TextStyle}>
 												{businessDetails?.business?.cellphone}
 											</OText>
-											<OText style={labels.normal as TextStyle}>
+											<OText style={theme.labels.normal as TextStyle}>
 												{businessDetails?.business?.address}
 											</OText>
 										</View>
@@ -328,7 +329,7 @@ const CheckoutUI = (props: any) => {
 								)}
 							{businessDetails?.error && businessDetails?.error?.length > 0 && (
 								<View>
-									<OText style={{ ...labels.middle, marginBottom: 3 } as TextStyle}>
+									<OText style={{ ...theme.labels.middle, marginBottom: 3 } as TextStyle}>
 										{t('BUSINESS_DETAILS', 'Business Details').toUpperCase()}
 									</OText>
 									<NotFoundSource
@@ -342,13 +343,13 @@ const CheckoutUI = (props: any) => {
 					{!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
 						<ChSection>
 							<ChPaymethods>
-								<OText style={{ ...labels.middle, marginBottom: 3 } as TextStyle}>
+								<OText style={{ ...theme.labels.middle, marginBottom: 3 } as TextStyle}>
 									{t('PAYMENT_METHOD', 'Payment Method').toUpperCase()}
 								</OText>
 								{!cartState.loading && cart?.status === 4 && (
 									<OText
 										style={{ textAlign: 'center', marginTop: 20 }}
-										color={colors.error}
+										color={theme.colors.error}
 										size={17}
 									>
 										{t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
@@ -380,20 +381,20 @@ const CheckoutUI = (props: any) => {
 									/>
 								) : (
 									<>
-										<OText style={{ ...labels.middle, marginBottom: 3 } as TextStyle}>
+										<OText style={{ ...theme.labels.middle, marginBottom: 3 } as TextStyle}>
 											{t('SUMMARY', 'Summary').toUpperCase()}
 										</OText>
 										<View style={{ marginBottom: 15, flex: 1, alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between' }}>
-											<OText color={colors.primary} style={labels.middle as TextStyle} numberOfLines={1} ellipsizeMode='tail' >
+											<OText color={theme.colors.primary} style={theme.labels.middle as TextStyle} numberOfLines={1} ellipsizeMode='tail' >
 												{businessName || businessDetails?.business?.name}
 											</OText>
-											<View style={{flexDirection: 'row', alignItems: 'center'}}>
+											<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 												<TouchableOpacity onPress={() => navigation.navigate('Business', { store: businessDetails?.business?.slug })}>
-													<OText color={colors.green} style={{...labels.normal, textDecorationLine: 'underline'} as TextStyle}>{t('GO_TO_STORE', 'Go to store')}</OText>
+													<OText color={theme.colors.green} style={{ ...theme.labels.normal, textDecorationLine: 'underline' } as TextStyle}>{t('GO_TO_STORE', 'Go to store')}</OText>
 												</TouchableOpacity>
 												<OText>{' \u2022 '}</OText>
 												<TouchableOpacity>
-													<OText style={{...labels.normal, textDecorationLine: 'underline'} as TextStyle}>{t('CLEAR_CART', 'Clear cart')}</OText>
+													<OText style={{ ...theme.labels.normal, textDecorationLine: 'underline' } as TextStyle}>{t('CLEAR_CART', 'Clear cart')}</OText>
 												</TouchableOpacity>
 											</View>
 										</View>
@@ -420,7 +421,7 @@ const CheckoutUI = (props: any) => {
 						(
 							<ChSection>
 								<ChDriverTips>
-									<OText style={{ ...labels.middle, marginBottom: 7 } as TextStyle}>
+									<OText style={{ ...theme.labels.middle, marginBottom: 7 } as TextStyle}>
 										{t('DRIVER_TIPS', 'Driver Tips').toUpperCase()}
 									</OText>
 									<DriverTips
@@ -438,12 +439,12 @@ const CheckoutUI = (props: any) => {
 						)}
 
 					{!cartState.loading && cart && (
-						<ChSection style={{ paddingTop: 10, paddingBottom: 20, paddingHorizontal: 20, borderBottomColor: colors.clear }}>
+						<ChSection style={{ paddingTop: 10, paddingBottom: 20, paddingHorizontal: 20, borderBottomColor: theme.colors.clear }}>
 							<ChErrors>
 								{!cart?.valid_address && cart?.status !== 2 && (
 									<OText
 										style={{ textAlign: 'center' }}
-										color={colors.error}
+										color={theme.colors.error}
 										size={12}
 									>
 										{t('INVALID_CART_ADDRESS', 'Selected address is invalid, please select a closer address.')}
@@ -453,7 +454,7 @@ const CheckoutUI = (props: any) => {
 								{!paymethodSelected && cart?.status !== 2 && cart?.valid && (
 									<OText
 										style={{ textAlign: 'center' }}
-										color={colors.error}
+										color={theme.colors.error}
 										size={12}
 									>
 										{t('WARNING_NOT_PAYMENT_SELECTED', 'Please, select a payment method to place order.')}
@@ -463,7 +464,7 @@ const CheckoutUI = (props: any) => {
 								{!cart?.valid_products && cart?.status !== 2 && (
 									<OText
 										style={{ textAlign: 'center' }}
-										color={colors.error}
+										color={theme.colors.error}
 										size={12}
 									>
 										{t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
@@ -499,24 +500,6 @@ const CheckoutUI = (props: any) => {
 	)
 }
 
-const style = StyleSheet.create({
-	btnBackArrow: {
-		borderWidth: 0,
-		backgroundColor: colors.white,
-		borderColor: colors.white,
-		shadowColor: colors.white,
-		display: 'flex',
-		justifyContent: 'flex-start',
-		paddingLeft: 0,
-	},
-	paddSection: {
-		padding: 20
-	},
-	paddSectionH: {
-		paddingHorizontal: 20
-	}
-})
-
 export const Checkout = (props: any) => {
 	const {
 		errors,
@@ -525,7 +508,7 @@ export const Checkout = (props: any) => {
 		stripePaymentOptions,
 		onNavigationRedirect,
 	} = props
-
+	const theme = useTheme();
 	const { showToast } = useToast();
 	const [, t] = useLanguage();
 	const [{ token }] = useSession();

@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme.json';
 
 export const AddressListContainer = styled.View`
     flex: 1;
@@ -15,7 +14,7 @@ export const AddressItem = styled.TouchableOpacity`
         background-color: #F7F7F7;
     `};
 	 border-bottom-width: 1px;
-	 border-bottom-color: ${colors.border};
+	 border-bottom-color: ${(props: any) => props.theme.colors.border};
 `
 
 export const ContainerButtons = styled.View`

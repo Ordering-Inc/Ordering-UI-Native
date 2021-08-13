@@ -8,7 +8,7 @@ import {
 	useLanguage
 } from 'ordering-components/native'
 import { OText, OIcon, OModal, OBottomPopup, OButton } from '../shared'
-import { colors, labels } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 import { UpsellingProductsParams } from '../../types'
 import {
 	Container,
@@ -30,6 +30,31 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		setCanOpenUpselling,
 		scrollContainerStyle
 	} = props
+	const theme = useTheme();
+
+	const styles = StyleSheet.create({
+		imageStyle: {
+			width: 60,
+			height: 60,
+			resizeMode: 'cover',
+			borderTopRightRadius: I18nManager.isRTL ? 0 : 7.6,
+			borderBottomRightRadius: I18nManager.isRTL ? 0 : 7.6,
+			borderTopLeftRadius: !I18nManager.isRTL ? 0 : 7.6,
+			borderBottomLeftRadius: !I18nManager.isRTL ? 0 : 7.6,
+		},
+		closeUpsellingButton: {
+			borderRadius: 25,
+			borderColor: theme.colors.primary,
+			backgroundColor: theme.colors.white,
+			borderWidth: 1,
+			height: 42,
+			marginBottom: 10
+		},
+		upsellingModal: {
+			height: '50%',
+			top: 250
+		}
+	})
 	const [actualProduct, setActualProduct] = useState<any>(null)
 	const [modalIsOpen, setModalIsOpen] = useState(false)
 	const [{ parsePrice }] = useUtils()
@@ -73,11 +98,11 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 										<Item key={product.id}>
 											<Details>
 												<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-													<OText size={12} weight={'600'} numberOfLines={1} ellipsizeMode='tail' style={{flexBasis: '76%'}}>{product.name}</OText>
-													<OText color={colors.textThird} style={labels.small as TextStyle}>{parsePrice(product.price)}</OText>
+													<OText size={12} weight={'600'} numberOfLines={1} ellipsizeMode='tail' style={{ flexBasis: '76%' }}>{product.name}</OText>
+													<OText color={theme.colors.textThird} style={theme.labels.small as TextStyle}>{parsePrice(product.price)}</OText>
 												</View>
 												<AddButton onPress={() => handleFormProduct(product)}>
-													<OText color={colors.white} size={10} weight={'600'}>{t('ADD', 'Add')}</OText>
+													<OText color={theme.colors.white} size={10} weight={'600'}>{t('ADD', 'Add')}</OText>
 												</AddButton>
 											</Details>
 											<OIcon url={product.images} style={styles.imageStyle} />
@@ -143,30 +168,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		</>
 	)
 }
-
-const styles = StyleSheet.create({
-	imageStyle: {
-		width: 60,
-		height: 60,
-		resizeMode: 'cover',
-		borderTopRightRadius: I18nManager.isRTL ? 0 : 7.6,
-		borderBottomRightRadius: I18nManager.isRTL ? 0 : 7.6,
-		borderTopLeftRadius: !I18nManager.isRTL ? 0 : 7.6,
-		borderBottomLeftRadius: !I18nManager.isRTL ? 0 : 7.6,
-	},
-	closeUpsellingButton: {
-		borderRadius: 25,
-		borderColor: colors.primary,
-		backgroundColor: colors.white,
-		borderWidth: 1,
-		height: 42,
-		marginBottom: 10
-	},
-	upsellingModal: {
-		height: '50%',
-		top: 250
-	}
-})
 
 export const UpsellingProducts = (props: UpsellingProductsParams) => {
 	const upsellingProductsProps = {

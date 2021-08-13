@@ -5,7 +5,6 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { View, StyleSheet } from 'react-native'
 import { OText } from '../shared'
-import { colors } from '../../theme.json'
 import {
   BusinessReviewsContainer,
   ScoreView,
@@ -16,21 +15,7 @@ import {
 import { ScrollView } from 'react-native-gesture-handler'
 import { GrayBackground } from '../BusinessInformation/styles'
 import { BusinessReviewsParams } from '../../types'
-
-const Score = ({ star, text }: any) => (
-  <ScoreView>
-    <View style={styles.reviewScoreStyle}>
-      <IconAntDesign
-        name="star"
-        color={colors.primary}
-        size={16}
-        style={styles.starIcon}
-      />
-      <OText>{star}</OText>
-    </View>
-    <OText>{text}</OText>
-  </ScoreView>
-)
+import { useTheme } from 'styled-components/native'
 
 const BusinessReviewsUI = (props: BusinessReviewsParams) => {
   const {
@@ -39,6 +24,23 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
   } = props
   const [, t] = useLanguage()
   const [orderState] = useOrder()
+  const theme = useTheme();
+
+  const Score = ({ star, text }: any) => (
+    <ScoreView>
+      <View style={styles.reviewScoreStyle}>
+        <IconAntDesign
+          name="star"
+          color={theme.colors.primary}
+          size={16}
+          style={styles.starIcon}
+        />
+        <OText>{star}</OText>
+      </View>
+      <OText>{text}</OText>
+    </ScoreView>
+  )
+
   return (
     <BusinessReviewsContainer>
       <BusinessBasicInformation
@@ -48,7 +50,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
       <BusinessReviewContent>
         {reviewsList.error ? (
           <OText size={16}>{t('ERROR_UNKNOWN', 'An error has ocurred')}</OText>
-          ) : (
+        ) : (
           <>
             <ScrollView
               horizontal
@@ -63,13 +65,13 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
             <GrayBackground>
               <OText weight='bold' size={16}>{t('CUSTOMERS_REVIEWS', 'Customers Reviews')}</OText>
             </GrayBackground>
-            {reviewsList?.reviews.map((review: any) =>(
+            {reviewsList?.reviews.map((review: any) => (
               <WrapCustomerReview key={review.id}>
                 <WrapCustomerReviewTotal>
                   <View style={styles.reviewScoreStyle}>
                     <IconAntDesign
                       name="star"
-                      color={colors.primary}
+                      color={theme.colors.primary}
                       size={16}
                       style={styles.starIcon}
                     />

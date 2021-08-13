@@ -1,14 +1,10 @@
 
 import * as React from 'react'
 import { ImageStyle } from 'react-native'
-import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
+import styled, { useTheme } from 'styled-components/native'
 
 const Wrapper = styled.View``
 
-const SImage = styled.Image`
-  tint-color: ${colors.primary};
-`
 interface Props {
   src?: any,
   url?: string,
@@ -24,6 +20,13 @@ interface Props {
 }
 
 const OIcon = (props: Props): React.ReactElement => {
+
+  const theme = useTheme();
+
+  const SImage = styled.Image`
+    tint-color: ${theme.colors.primary};
+  `
+
   return (
     <Wrapper style={{ borderRadius: props.style?.borderRadius, overflow: 'hidden', marginHorizontal: props.style?.marginHorizontal }}>
       <SImage

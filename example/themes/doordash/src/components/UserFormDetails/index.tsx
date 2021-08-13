@@ -6,7 +6,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { InputWrap, UDForm, UDLoader, UDWrapper, WrapperPhone } from './styles';
 
 import { OText, OButton, OInput } from '../shared';
-import { colors, images } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import { sortInputFields } from '../../utils';
@@ -25,6 +25,19 @@ export const UserFormDetailsUI = (props: any) => {
 		phoneUpdate,
 		hideUpdateButton
 	} = props
+	const theme = useTheme();
+
+	const styles = StyleSheet.create({
+		btnOutline: {
+			backgroundColor: '#FFF',
+			color: theme.colors.primary
+		},
+		inputStyle: {
+			borderRadius: 0,
+			fontSize: 12,
+			height: 40
+		}
+	});
 
 	const [, t] = useLanguage();
 	const { showToast } = useToast();
@@ -172,7 +185,7 @@ export const UserFormDetailsUI = (props: any) => {
 							(
 								showField && showField(field.code) && (
 									<InputWrap key={field.id}>
-										<OText style={{flexBasis: '30%', fontSize: 14, fontWeight: '600'}}>{field?.name}</OText>
+										<OText style={{ flexBasis: '30%', fontSize: 14, fontWeight: '600' }}>{field?.name}</OText>
 										<React.Fragment>
 											<Controller
 												control={control}
@@ -181,7 +194,7 @@ export const UserFormDetailsUI = (props: any) => {
 														name={field.code}
 														placeholder={t(field.code.toUpperCase(), field?.name)}
 														style={styles.inputStyle}
-														inputStyle={{fontSize: 12, lineHeight: 18}}
+														inputStyle={{ fontSize: 12, lineHeight: 18 }}
 														//   icon={field.code === 'email' ? images.general.email : images.general.user}
 														autoCapitalize={field.code === 'email' ? 'none' : 'sentences'}
 														isDisabled={!isEdit}
@@ -213,12 +226,12 @@ export const UserFormDetailsUI = (props: any) => {
 										defaultValue={phoneUpdate ? '' : user?.cellphone}
 										defaultCode={user?.country_phone_code || null}
 										textInputProps={{
-											style: {borderWidth: 0, fontSize: 12}
+											style: { borderWidth: 0, fontSize: 12 }
 										}}
-										textWrapStyle={{borderColor: colors.clear, borderWidth: 0, height: 40, paddingStart: 0}}
+										textWrapStyle={{ borderColor: theme.colors.clear, borderWidth: 0, height: 40, paddingStart: 0 }}
 									/>
 									{phoneUpdate && (
-										<OText color={colors.error} style={{ marginHorizontal: 10, textAlign: 'center' }}>{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}</OText>
+										<OText color={theme.colors.error} style={{ marginHorizontal: 10, textAlign: 'center' }}>{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}</OText>
 									)}
 								</WrapperPhone>
 							)}
@@ -238,9 +251,9 @@ export const UserFormDetailsUI = (props: any) => {
 					{((formState && Object.keys(formState?.changes).length > 0 && isEdit) || formState?.loading) && (
 						<OButton
 							text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
-							bgColor={colors.primary}
+							bgColor={theme.colors.primary}
 							textStyle={{ color: 'white' }}
-							borderColor={colors.primary}
+							borderColor={theme.colors.primary}
 							isDisabled={formState.loading}
 							imgRightSrc={null}
 							onClick={handleSubmit(onSubmit)}
@@ -251,15 +264,3 @@ export const UserFormDetailsUI = (props: any) => {
 		</>
 	)
 }
-
-const styles = StyleSheet.create({
-	btnOutline: {
-		backgroundColor: '#FFF',
-		color: colors.primary
-	},
-	inputStyle: {
-		borderRadius: 0,
-		fontSize: 12,
-		height: 40
-	}
-});

@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
-import IconAntDesign from 'react-native-vector-icons/AntDesign'
-import IconEvilIcons from 'react-native-vector-icons/EvilIcons'
-import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StyleSheet, View, TouchableOpacity, Text, TextStyle } from 'react-native'
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native'
 import { OIcon, OText, OModal } from '../shared'
 import { BusinessBasicInformationParams } from '../../types'
-import { colors, images, labels } from '../../theme.json'
 import { convertHoursToMinutes } from '../../utils'
 import { BusinessInformation } from '../BusinessInformation'
 import { BusinessReviews } from '../BusinessReviews'
+import { useTheme } from 'styled-components/native'
 import {
 	BusinessContainer,
 	BusinessHeader,
@@ -32,6 +29,60 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 	} = props
 	const { business, loading } = businessState
 
+	const theme = useTheme();
+
+	const styles = StyleSheet.create({
+		businesInfoheaderStyle: {
+			height: 150
+		},
+		headerStyle: {
+			height: 260
+		},
+		businessLogo: {
+			width: 75,
+			height: 75,
+			borderRadius: 20,
+			marginLeft: 20,
+			marginBottom: 40,
+			justifyContent: 'flex-start',
+			alignItems: 'flex-start',
+		},
+		businessInfo: {
+			paddingHorizontal: 40,
+		},
+		bullet: {
+			flexDirection: 'row',
+			alignItems: 'center'
+		},
+		metadata: {
+			marginRight: 20,
+			marginLeft: 5,
+		},
+		starIcon: {
+			marginHorizontal: 5,
+		},
+		reviewStyle: {
+			flexDirection: 'row',
+			alignItems: 'center'
+		},
+		modalTitleSectionStyle: {
+			position: 'absolute',
+			width: '100%',
+			top: 0,
+			zIndex: 100
+		},
+		deliveryInfo: {
+			flexDirection: 'row',
+			minHeight: 55, borderRadius: 7.6, borderWidth: 1, borderColor: theme.colors.border,
+			marginVertical: 11,
+			justifyContent: 'space-around',
+			alignItems: 'center',
+		},
+		dInfoItem: {
+			alignItems: 'center'
+		}
+	})
+
 	const [orderState] = useOrder()
 	const [, t] = useLanguage()
 	const [{ parsePrice, parseDistance, optimizeImage }] = useUtils()
@@ -50,7 +101,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 		<BusinessContainer>
 			{!noImage && (
 				<BusinessHeader
-					style={isBusinessInfoShow ? styles.businesInfoheaderStyle : { ...styles.headerStyle, backgroundColor: colors.backgroundGray }}
+					style={isBusinessInfoShow ? styles.businesInfoheaderStyle : { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }}
 					source={{ uri: header || optimizeImage(businessState?.business?.header, 'h_400,c_limit') }}
 				>
 					<BusinessLogo>
@@ -94,7 +145,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 							>
 								<IconAntDesign
 									name='infocirlceo'
-									color={colors.primary}
+									color={theme.colors.primary}
 									size={25}
 								/>
 							</WrapBusinessInfo>
@@ -106,7 +157,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 						</Placeholder>
 					) : (
 						<View>
-							<OText color={colors.textSecondary}>{getBusinessType()}</OText>
+							<OText color={theme.colors.textSecondary}>{getBusinessType()}</OText>
 						</View>
 					)}
 					<BusinessInfoItem style={{ flexDirection: 'row' }}>
@@ -120,32 +171,32 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 							</Placeholder>
 						)}
 						<View style={styles.reviewStyle}>
-							<OText style={labels.small as TextStyle} color={colors.textSecondary}>{business?.reviews?.total}</OText>
-							<OIcon src={images.general.star} width={14} />
+							<OText style={theme.labels.small as TextStyle} color={theme.colors.textSecondary}>{business?.reviews?.total}</OText>
+							<OIcon src={theme.images.general.star} width={14} />
 							<TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
-								<OText style={[labels.small, { textDecorationLine: 'underline' }] as TextStyle} color={colors.primary}>
+								<OText style={{ ...theme.labels.small, textDecorationLine: 'underline' } as TextStyle} color={theme.colors.primary}>
 									{business?.reviews?.reviews?.length + ' ' + t('REVIEWS', 'reviews')}
 								</OText>
 							</TouchableOpacity>
 
-							<OText color={colors.textSecondary} style={labels.small as TextStyle}>{' \u2022 ' + parseDistance(business?.distance || 0)}</OText>
+							<OText color={theme.colors.textSecondary} style={theme.labels.small as TextStyle}>{' \u2022 ' + parseDistance(business?.distance || 0)}</OText>
 
 						</View>
 					</BusinessInfoItem>
 					<View style={styles.deliveryInfo}>
 						<View style={styles.dInfoItem}>
-							<OText style={labels.middle as TextStyle}>{business && parsePrice(business?.delivery_price || 0)}</OText>
-							<OText style={labels.normal as TextStyle} color={colors.textSecondary}>{t('DELIVERY_FEE', 'Delivery fee').toLowerCase()}</OText>
+							<OText style={theme.labels.middle as TextStyle}>{business && parsePrice(business?.delivery_price || 0)}</OText>
+							<OText style={theme.labels.normal as TextStyle} color={theme.colors.textSecondary}>{t('DELIVERY_FEE', 'Delivery fee').toLowerCase()}</OText>
 						</View>
-						<View style={{ width: 1, backgroundColor: colors.border, height: 26 }} />
+						<View style={{ width: 1, backgroundColor: theme.colors.border, height: 26 }} />
 						<View style={styles.dInfoItem}>
-							<OText style={labels.middle as TextStyle}>
+							<OText style={theme.labels.middle as TextStyle}>
 								{orderState?.options?.type === 1 ?
 									convertHoursToMinutes(business?.delivery_time) :
 									convertHoursToMinutes(business?.pickup_time)
 								}
 							</OText>
-							<OText style={labels.normal as TextStyle} color={colors.textSecondary}>{t('DELIVERY_TIME', 'Delivery time').toLowerCase()}</OText>
+							<OText style={theme.labels.normal as TextStyle} color={theme.colors.textSecondary}>{t('DELIVERY_TIME', 'Delivery time').toLowerCase()}</OText>
 						</View>
 					</View>
 				</View>
@@ -154,7 +205,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 				titleSectionStyle={styles.modalTitleSectionStyle}
 				open={openBusinessInformation}
 				onClose={() => setOpenBusinessInformation(false)}
-				styleCloseButton={{ color: colors.white, backgroundColor: 'rgba(0,0,0,0.3)' }}
+				styleCloseButton={{ color: theme.colors.white, backgroundColor: 'rgba(0,0,0,0.3)' }}
 				isNotDecoration
 			>
 				<BusinessInformation
@@ -166,7 +217,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 				titleSectionStyle={styles.modalTitleSectionStyle}
 				open={openBusinessReviews}
 				onClose={() => setOpenBusinessReviews(false)}
-				styleCloseButton={{ color: colors.white, backgroundColor: 'rgba(0,0,0,0.3)' }}
+				styleCloseButton={{ color: theme.colors.white, backgroundColor: 'rgba(0,0,0,0.3)' }}
 				isNotDecoration
 			>
 				<BusinessReviews
@@ -178,55 +229,3 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 		</BusinessContainer>
 	)
 }
-
-const styles = StyleSheet.create({
-	businesInfoheaderStyle: {
-		height: 150
-	},
-	headerStyle: {
-		height: 260
-	},
-	businessLogo: {
-		width: 75,
-		height: 75,
-		borderRadius: 20,
-		marginLeft: 20,
-		marginBottom: 40,
-		justifyContent: 'flex-start',
-		alignItems: 'flex-start',
-	},
-	businessInfo: {
-		paddingHorizontal: 40,
-	},
-	bullet: {
-		flexDirection: 'row',
-		alignItems: 'center'
-	},
-	metadata: {
-		marginRight: 20,
-		marginLeft: 5,
-	},
-	starIcon: {
-		marginHorizontal: 5,
-	},
-	reviewStyle: {
-		flexDirection: 'row',
-		alignItems: 'center'
-	},
-	modalTitleSectionStyle: {
-		position: 'absolute',
-		width: '100%',
-		top: 0,
-		zIndex: 100
-	},
-	deliveryInfo: {
-		flexDirection: 'row',
-		minHeight: 55, borderRadius: 7.6, borderWidth: 1, borderColor: colors.border,
-		marginVertical: 11,
-		justifyContent: 'space-around',
-		alignItems: 'center',
-	},
-	dInfoItem: {
-		alignItems: 'center'
-	}
-})

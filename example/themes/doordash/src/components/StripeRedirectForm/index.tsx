@@ -10,7 +10,7 @@ import {
 } from './styles';
 
 import { OButton, ODropDown, OInput, OText } from '../shared';
-import { colors } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 const StripeRedirectFormUI = (props: any) => {
   const {
@@ -23,7 +23,7 @@ const StripeRedirectFormUI = (props: any) => {
   //   publishableKey: publicKey,
   //   // androidPayMode: 'test', // Android only
   // })
-
+  const theme = useTheme();
   const { showToast } = useToast();
   const { control, handleSubmit, errors } = useForm();
 
@@ -136,9 +136,9 @@ const StripeRedirectFormUI = (props: any) => {
       <OButton
         // text={formState.isSubmitting ? t('LOADING', 'Loading...') : t('OK', 'OK')}
         text={t('OK', 'OK')}
-        bgColor={colors.primary}
-        borderColor={colors.primary}
-        textStyle={{color: 'white'}}
+        bgColor={theme.colors.primary}
+        borderColor={theme.colors.primary}
+        textStyle={{ color: 'white' }}
         imgRightSrc={null}
         // isDisabled={formState.isSubmitting}
         // onClick={() => handleSubmit(onSubmit)}

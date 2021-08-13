@@ -8,12 +8,11 @@ import {
 	MomentOption as MomentOptionController
 } from 'ordering-components/native'
 import { StyleSheet, TextStyle, TouchableOpacity, View } from 'react-native'
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Spinner from 'react-native-loading-spinner-overlay';
 import { MomentOptionParams } from '../../types'
 import NavBar from '../NavBar'
 import { OIcon, OText } from '../shared'
-import { colors, images, labels } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 import { Container } from '../../layouts/Container'
 import {
 	HeaderTitle,
@@ -40,6 +39,40 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		handleChangeTime
 	} = props
 
+	const theme = useTheme();
+
+	const styles = StyleSheet.create({
+		icon: {
+			marginRight: 10
+		},
+		dayNameStyle: {
+			textTransform: 'capitalize'
+		},
+		selectStyle: {
+			zIndex: 10
+		},
+		timeText: { fontSize: 14, lineHeight: 24, marginStart: 24 },
+		todayDate: {
+			width: 26,
+			height: 26,
+			backgroundColor: theme.colors.primary,
+			alignItems: 'center',
+			justifyContent: 'center',
+			borderRadius: 15
+		},
+		timePicker: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'space-between',
+			height: 44,
+			maxHeight: 44,
+			borderWidth: 1,
+			borderColor: theme.colors.border,
+			borderRadius: 7.6,
+			marginTop: 50,
+			paddingHorizontal: 16
+		}
+	})
 	const [, t] = useLanguage()
 	const [{ configs }] = useConfig()
 	const [{ parseTime }] = useUtils()
@@ -87,7 +120,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 	}, [momentState.isLoading])
 
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+		<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }}>
 			<NavBar
 				onActionLeft={() => goToBack()}
 				btnStyle={{ paddingLeft: 0 }}
@@ -101,22 +134,22 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 					disabled={orderState.loading}
 				>
 					{optionSelected.isAsap ? (
-						<OIcon src={images.general.radio_act} color={colors.primary} width={16} />
+						<OIcon src={theme.images.general.radio_act} color={theme.colors.primary} width={16} />
 					) : (
-						<OIcon src={images.general.radio_nor} color={colors.disabled} width={16} />
+						<OIcon src={theme.images.general.radio_nor} color={theme.colors.disabled} width={16} />
 					)}
-					<OText style={styles.timeText} color={optionSelected.isAsap ? colors.textPrimary : colors.textSecondary}>{`${t('ASAP_ABBREVIATION', 'ASAP')} (${moment().format('dddd, MMMM D, yyyy h:m A')})`}</OText>
+					<OText style={styles.timeText} color={optionSelected.isAsap ? theme.colors.textPrimary : theme.colors.textSecondary}>{`${t('ASAP_ABBREVIATION', 'ASAP')} (${moment().format('dddd, MMMM D, yyyy h:m A')})`}</OText>
 				</WrapSelectOption>
 				<WrapSelectOption
 					onPress={() => setOptionSelected({ isAsap: false, isSchedule: true })}
 					disabled={orderState.loading}
 				>
 					{optionSelected.isSchedule ? (
-						<OIcon src={images.general.radio_act} color={colors.primary} width={16} />
+						<OIcon src={theme.images.general.radio_act} color={theme.colors.primary} width={16} />
 					) : (
-						<OIcon src={images.general.radio_nor} color={colors.disabled} width={16} />
+						<OIcon src={theme.images.general.radio_nor} color={theme.colors.disabled} width={16} />
 					)}
-					<OText style={styles.timeText} color={optionSelected.isSchedule ? colors.textPrimary : colors.textSecondary}>{t('SCHEDULE_FOR_LATER', 'Schedule for later')}</OText>
+					<OText style={styles.timeText} color={optionSelected.isSchedule ? theme.colors.textPrimary : theme.colors.textSecondary}>{t('SCHEDULE_FOR_LATER', 'Schedule for later')}</OText>
 				</WrapSelectOption>
 
 				{optionSelected.isSchedule && (
@@ -136,13 +169,13 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 												onPress={() => handleChangeDate(date)}
 											>
 												<OText
-													style={[labels.small, styles.dayNameStyle] as TextStyle}
-													color={colors.textPrimary}
+													style={{ ...theme.labels.small, ...styles.dayNameStyle } as TextStyle}
+													color={theme.colors.textPrimary}
 												>{dayName}</OText>
 												<View style={(dateSelected === date && optionSelected.isSchedule) ? styles.todayDate : {}}>
 													<OText
 														size={16}
-														color={(dateSelected === date && optionSelected.isSchedule) ? colors.white : colors.textPrimary}
+														color={(dateSelected === date && optionSelected.isSchedule) ? theme.colors.white : theme.colors.textPrimary}
 													>{dayNumber}</OText>
 												</View>
 											</Day>
@@ -156,10 +189,10 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 							<>
 								<TouchableOpacity activeOpacity={0.7} style={styles.timePicker} onPress={() => { setShowTimes(!showTimes) }}>
 									<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-										<OIcon src={images.general.clock} width={16} />
-										<OText color={colors.textPrimary} style={[labels.middle, { marginStart: 12, fontWeight: '400' }] as TextStyle}>{timeSelected != null ? parseTime(moment(timeSelected, 'HH:mm'), { outputFormat: 'hh:mma' }) : '00:00'}</OText>
+										<OIcon src={theme.images.general.clock} width={16} />
+										<OText color={theme.colors.textPrimary} style={{ ...theme.labels.middle, marginStart: 12, fontWeight: '400' } as TextStyle}>{timeSelected != null ? parseTime(moment(timeSelected, 'HH:mm'), { outputFormat: 'hh:mma' }) : '00:00'}</OText>
 									</View>
-									<OIcon src={images.general.chevron_right} style={{ transform: [{ rotate: showTimes ? '270deg' : '90deg' }] }} width={16} />
+									<OIcon src={theme.images.general.chevron_right} style={{ transform: [{ rotate: showTimes ? '270deg' : '90deg' }] }} width={16} />
 								</TouchableOpacity>
 								{showTimes && (
 									<WrapHours nestedScrollEnabled={true}>
@@ -171,7 +204,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 														onPress={() => handleChangeMoment(hour.startTime)}
 														disabled={orderState.loading}
 													>
-														<OText color={timeSelected === hour.startTime ? colors.primary : colors.textSecondary}>
+														<OText color={timeSelected === hour.startTime ? theme.colors.primary : theme.colors.textSecondary}>
 															{configs?.format_time?.value === '12' ? (
 																hour.startTime.includes('12')
 																	? `${hour.startTime}PM`
@@ -195,39 +228,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		</SafeAreaView>
 	)
 }
-
-const styles = StyleSheet.create({
-	icon: {
-		marginRight: 10
-	},
-	dayNameStyle: {
-		textTransform: 'capitalize'
-	},
-	selectStyle: {
-		zIndex: 10
-	},
-	timeText: { fontSize: 14, lineHeight: 24, marginStart: 24 },
-	todayDate: {
-		width: 26,
-		height: 26,
-		backgroundColor: colors.primary,
-		alignItems: 'center',
-		justifyContent: 'center',
-		borderRadius: 15
-	},
-	timePicker: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		height: 44,
-		maxHeight: 44,
-		borderWidth: 1,
-		borderColor: colors.border,
-		borderRadius: 7.6,
-		marginTop: 50,
-		paddingHorizontal: 16
-	}
-})
 
 export const MomentOption = (props: any) => {
 	const momentOptionProps = {

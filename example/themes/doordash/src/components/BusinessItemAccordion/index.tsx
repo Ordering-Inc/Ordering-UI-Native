@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { useOrder, useLanguage, useUtils, useEvent } from 'ordering-components/native';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { useTheme } from 'styled-components/native';
 import { convertHoursToMinutes } from '../../utils';
 
 import {
@@ -15,7 +14,6 @@ import {
 	BIActions
 } from './styles';
 import { OAlert, OIcon, OText } from '../shared';
-import { colors, images } from '../../theme.json';
 
 export const BusinessItemAccordion = (props: any) => {
 	const {
@@ -23,7 +21,7 @@ export const BusinessItemAccordion = (props: any) => {
 		moment,
 		handleClearProducts
 	} = props
-
+	const theme = useTheme();
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
 	const [{ parsePrice }] = useUtils();
@@ -62,7 +60,7 @@ export const BusinessItemAccordion = (props: any) => {
 						<OText size={12} lineHeight={18}>{cart?.business?.name}</OText>
 						{orderState?.options?.type === 1 ? (
 							<View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-								<OText size={10} lineHeight={15} color={colors.textSecondary}>{convertHoursToMinutes(cart?.business?.delivery_time)}</OText>
+								<OText size={10} lineHeight={15} color={theme.colors.textSecondary}>{convertHoursToMinutes(cart?.business?.delivery_time)}</OText>
 							</View>
 						) : (
 							<View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -90,11 +88,11 @@ export const BusinessItemAccordion = (props: any) => {
 
 				<BIActions>
 					{props.onNavigationRedirect && !isClosed && (
-						<TouchableOpacity onPress={() => props.onNavigationRedirect('Business', { store: cart?.business?.slug })} style={{paddingLeft: 4, paddingRight: 4}}>
+						<TouchableOpacity onPress={() => props.onNavigationRedirect('Business', { store: cart?.business?.slug })} style={{ paddingLeft: 4, paddingRight: 4 }}>
 							<OIcon
-								src={images.general.home}
+								src={theme.images.general.home}
 								width={16}
-								color={colors.textPrimary}
+								color={theme.colors.textPrimary}
 							/>
 						</TouchableOpacity>
 					)}
@@ -107,10 +105,10 @@ export const BusinessItemAccordion = (props: any) => {
 									onAccept={() => handleClearProducts()}
 								>
 									<OIcon
-										src={images.general.trash}
+										src={theme.images.general.trash}
 										width={16}
-										color={colors.textPrimary}
-										style={{marginLeft: 4, marginRight: 4}}
+										color={theme.colors.textPrimary}
+										style={{ marginLeft: 4, marginRight: 4 }}
 									/>
 								</OAlert>
 							)}

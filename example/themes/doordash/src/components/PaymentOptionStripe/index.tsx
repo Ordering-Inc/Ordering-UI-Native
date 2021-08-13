@@ -23,7 +23,7 @@ import {
   OSWrapper,
   OSActions
 } from './styles';
-import { colors } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 const PaymentOptionStripeUI = (props: any) => {
   const {
@@ -35,7 +35,7 @@ const PaymentOptionStripeUI = (props: any) => {
     handleCardClick,
     handleNewCard
   } = props;
-
+  const theme = useTheme();
   const [{ token }] = useSession();
   const [, t] = useLanguage();
 
@@ -59,13 +59,13 @@ const PaymentOptionStripeUI = (props: any) => {
               <MaterialCommunityIcons
                 name='radiobox-marked'
                 size={24}
-                color={colors.primary}
+                color={theme.colors.primary}
               />
             ) : (
               <MaterialCommunityIcons
                 name='radiobox-blank'
                 size={24}
-                color={colors.primary}
+                color={theme.colors.primary}
               />
             )}
           </View>
@@ -87,7 +87,7 @@ const PaymentOptionStripeUI = (props: any) => {
             <MaterialCommunityIcons
               name='trash-can-outline'
               size={28}
-              color={colors.primary}
+              color={theme.colors.primary}
             />
           </OAlert>
         </OSItemActions>
@@ -126,10 +126,10 @@ const PaymentOptionStripeUI = (props: any) => {
         <OSWrapper style={styles.bottom}>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
-            bgColor={colors.backgroundGray}
-            borderColor={colors.backgroundGray}
+            bgColor={theme.colors.backgroundGray}
+            borderColor={theme.colors.backgroundGray}
             style={styles.btnAddStyle}
-            textStyle={{color: 'white'}}
+            textStyle={{ color: 'white' }}
             imgRightSrc={null}
             onClick={() => setAddCardOpen(true)}
           />
@@ -137,9 +137,9 @@ const PaymentOptionStripeUI = (props: any) => {
             <View style={{ width: '48%' }}>
               <OButton
                 text={t('CANCEL', 'Cancel')}
-                bgColor={colors.backgroundGray}
-                borderColor={colors.backgroundGray}
-                textStyle={{color: 'white'}}
+                bgColor={theme.colors.backgroundGray}
+                borderColor={theme.colors.backgroundGray}
+                textStyle={{ color: 'white' }}
                 style={styles.btnAction}
                 imgRightSrc={null}
                 onClick={() => onCancel()}
@@ -148,9 +148,9 @@ const PaymentOptionStripeUI = (props: any) => {
             <View style={{ width: '48%' }}>
               <OButton
                 text={t('ACCEPT', 'Accept')}
-                bgColor={colors.primary}
-                borderColor={colors.primary}
-                textStyle={{color: 'white'}}
+                bgColor={theme.colors.primary}
+                borderColor={theme.colors.primary}
+                textStyle={{ color: 'white' }}
                 style={styles.btnAction}
                 imgRightSrc={null}
                 isDisabled={!cardSelected || cardsList?.cards?.length === 0}

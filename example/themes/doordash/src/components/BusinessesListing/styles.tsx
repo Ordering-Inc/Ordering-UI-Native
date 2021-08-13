@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const WelcomeTitle = styled.View`
   flex: 1;
@@ -39,7 +38,7 @@ export const OrderControlContainer = styled.View`
 `
 
 export const WrapMomentOption = styled.TouchableOpacity`
-  background-color: ${colors.inputDisabled};
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
   border-radius: 10px;
   margin-vertical: 5px;
   padding: 15px 20px;

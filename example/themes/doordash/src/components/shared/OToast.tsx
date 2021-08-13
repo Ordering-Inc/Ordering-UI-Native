@@ -1,14 +1,14 @@
 import * as React from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ToastType, useToast } from 'ordering-components/native';
-import { colors } from "../../theme.json";
+import { useTheme } from 'styled-components/native';
 
 const fadeDuration = 300;
 const bottomPosition = 20;
 
 export const Toast: React.FC = () => {
     // const insets = useSafeAreaInsets();
+    const theme = useTheme();
     const { toastConfig, hideToast } = useToast();
     const opacity = React.useRef(new Animated.Value(0)).current;
 
@@ -53,7 +53,7 @@ export const Toast: React.FC = () => {
             backgroundColor = '#6ba4ff';
             break;
         case ToastType.Error:
-            backgroundColor = colors.primary;
+            backgroundColor = theme.colors.primary;
             break;
         case ToastType.Success:
             backgroundColor = '#73bd24';

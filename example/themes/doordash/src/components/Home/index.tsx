@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLanguage, useOrder, useSession } from 'ordering-components/native';
 import { StyleSheet, View, Dimensions, TextStyle } from 'react-native';
-import { colors, images, labels } from '../../theme.json'
+import { useTheme } from 'styled-components/native';
 import { OButton, OButtonGroup, OIcon, OModal, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
@@ -20,6 +20,59 @@ export const Home = (props: any) => {
 		onNavigationRedirect
 	} = props;
 
+	const theme = useTheme();
+
+	const styles = StyleSheet.create({
+		authHeader: {
+			flexDirection: 'row',
+			height: 57,
+			borderBottomWidth: 1,
+			borderBottomColor: theme.colors.border,
+			alignItems: 'center',
+			paddingHorizontal: 40
+		},
+		languageSelector: {
+			marginRight: 10
+		},
+		textLink: {
+			flexDirection: 'row',
+			textAlign: 'center',
+			justifyContent: 'center',
+			alignItems: 'center'
+		},
+		container: {
+			flex: 1,
+			alignItems: 'center',
+			justifyContent: 'space-between',
+		},
+		logo: {
+			height: 70,
+			width: w * 0.54,
+			marginTop: 10
+		},
+		slogan: {
+			height: w - 80,
+			width: w - 80
+		},
+		buttons: {
+			marginVertical: 8.5,
+			marginHorizontal: 30,
+			height: 40,
+			shadowOpacity: 0
+		},
+		sloganText: {
+			textAlign: 'center'
+		},
+		wrapperContent: {
+			marginTop: 20,
+		},
+		wrapperBtn: {
+			width: '100%',
+			position: 'absolute',
+			bottom: 0,
+			marginBottom: 20
+		}
+	});
 	const [, t] = useLanguage();
 	const [orderState] = useOrder();
 	const [, { login }] = useSession()
@@ -31,7 +84,7 @@ export const Home = (props: any) => {
 		navigation,
 		useLoginByCellphone: false,
 		loginButtonText: t('SIGN_IN', 'Sign in'),
-		loginButtonBackground: colors.primary,
+		loginButtonBackground: theme.colors.primary,
 		forgotButtonText: t('FORGOT_YOUR_PASSWORD', 'Forgot your password?'),
 		onNavigationRedirect: (page: string) => {
 			if (!page) return
@@ -79,30 +132,30 @@ export const Home = (props: any) => {
 						<LanguageSelector />
 					</View> */}
 				<LogoWrapper>
-					<OIcon src={images.logos.logotype} style={styles.logo} />
+					<OIcon src={theme.images.logos.logotype} style={styles.logo} />
 				</LogoWrapper>
 				<Slogan>
-					<OIcon src={images.general.homeHero} style={styles.slogan} />
+					<OIcon src={theme.images.general.homeHero} style={styles.slogan} />
 				</Slogan>
-				<OText style={{ paddingHorizontal: 40, textAlign: 'center', marginTop: 17, ...labels.title } as TextStyle}>{t('WELCOME_MESSAGE', 'Restaurants and more, delivered to your door')}</OText>
+				<OText style={{ paddingHorizontal: 40, textAlign: 'center', marginTop: 17, ...theme.labels.title } as TextStyle}>{t('WELCOME_MESSAGE', 'Restaurants and more, delivered to your door')}</OText>
 			</View>
 			<View style={styles.wrapperBtn}>
 				<OButton
 					text={t('SIGNUP', 'Sign Up')}
-					bgColor={colors.primary}
-					borderColor={colors.primary}
+					bgColor={theme.colors.primary}
+					borderColor={theme.colors.primary}
 					style={styles.buttons}
 					imgRightSrc={null}
-					textStyle={[{ color: 'white' }, labels.middle] as TextStyle}
+					textStyle={[{ color: 'white' }, theme.labels.middle] as TextStyle}
 					onClick={() => { setActive(1), setAuthState(true) }}
 				/>
 				<OButton
 					text={t('SIGNIN', 'Sign In')}
-					bgColor={colors.backgroundGray300}
-					borderColor={colors.backgroundGray300}
+					bgColor={theme.colors.backgroundGray300}
+					borderColor={theme.colors.backgroundGray300}
 					style={styles.buttons}
 					imgRightSrc={null}
-					textStyle={[{ color: colors.textPrimary }, labels.middle] as TextStyle}
+					textStyle={[{ color: theme.colors.textPrimary }, theme.labels.middle] as TextStyle}
 					onClick={() => { setActive(0), setAuthState(true) }}
 				/>
 				<TouchableOpacity
@@ -112,7 +165,7 @@ export const Home = (props: any) => {
 						: handleGuessFlow('AddressForm', { isGuestUser: true })
 					}
 				>
-					<OText weight='bold' style={labels.middle as TextStyle} color={colors.primary}>
+					<OText weight='bold' style={theme.labels.middle as TextStyle} color={theme.colors.primary}>
 						{t('CONTINUE_AS_GUEST', 'Continue as guest')}
 					</OText>
 				</TouchableOpacity>
@@ -121,14 +174,14 @@ export const Home = (props: any) => {
 			<OModal entireModal customClose transition={'pageSheet'} open={isAuth} onClose={() => setAuthState(false)}>
 				<View style={styles.authHeader}>
 					<TouchableOpacity onPress={() => setAuthState(false)} style={{}}>
-						<OIcon src={images.general.close} width={16} />
+						<OIcon src={theme.images.general.close} width={16} />
 					</TouchableOpacity>
 					<View style={{ flexDirection: 'row', justifyContent: 'center', flexGrow: 1 }}>
 						<OButtonGroup
-							activeColor={{ bg: colors.textPrimary, text: colors.white }}
-							normalColor={{ bg: colors.backgroundGray300, text: colors.textPrimary }}
+							activeColor={{ bg: theme.colors.textPrimary, text: theme.colors.white }}
+							normalColor={{ bg: theme.colors.backgroundGray300, text: theme.colors.textPrimary }}
 							buttonStyle={{ paddingHorizontal: 20 }}
-							textStyle={labels.middle as TextStyle}
+							textStyle={theme.labels.middle as TextStyle}
 							items={[t('SIGN_IN', 'Sign in'), t('SIGN_UP', 'Sign up')]}
 							onChange={changAuthToggle}
 							activeItem={activeIndex}
@@ -144,54 +197,3 @@ export const Home = (props: any) => {
 	);
 };
 
-const styles = StyleSheet.create({
-	authHeader: {
-		flexDirection: 'row',
-		height: 57,
-		borderBottomWidth: 1,
-		borderBottomColor: colors.border,
-		alignItems: 'center',
-		paddingHorizontal: 40
-	},
-	languageSelector: {
-		marginRight: 10
-	},
-	textLink: {
-		flexDirection: 'row',
-		textAlign: 'center',
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	container: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'space-between',
-	},
-	logo: {
-		height: 70,
-		width: w * 0.54,
-		marginTop: 10
-	},
-	slogan: {
-		height: w - 80,
-		width: w - 80
-	},
-	buttons: {
-		marginVertical: 8.5,
-		marginHorizontal: 30,
-		height: 40,
-		shadowOpacity: 0
-	},
-	sloganText: {
-		textAlign: 'center'
-	},
-	wrapperContent: {
-		marginTop: 20,
-	},
-	wrapperBtn: {
-		width: '100%',
-		position: 'absolute',
-		bottom: 0,
-		marginBottom: 20
-	}
-});

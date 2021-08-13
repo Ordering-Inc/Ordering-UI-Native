@@ -9,7 +9,7 @@ import {
 	useLanguage,
 	useConfig,
 	useSession,
-	ToastType, 
+	ToastType,
 	useToast
 } from 'ordering-components/native';
 
@@ -35,8 +35,7 @@ import NavBar from '../NavBar'
 
 import { OText, OButton, OInput, OModal, OIcon } from '../shared';
 import { LoginParams } from '../../types';
-import { colors, images, labels } from '../../theme.json'
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import { useTheme } from 'styled-components/native';
 import { useWindowDimensions } from 'react-native';
 
 const LoginFormUI = (props: LoginParams) => {
@@ -60,6 +59,41 @@ const LoginFormUI = (props: LoginParams) => {
 		hasNav
 	} = props
 
+	const theme = useTheme();
+
+	const loginStyle = StyleSheet.create({
+		btnOutline: {
+			backgroundColor: '#FFF',
+			color: theme.colors.primary
+		},
+		inputStyle: {
+			marginBottom: 25,
+			borderWidth: 0,
+			height: 40,
+		},
+		inputHead: {
+			flexBasis: '25%',
+			marginTop: 9
+		},
+		socialButton: {
+			height: 40,
+			paddingTop: 0,
+			paddingBottom: 0,
+			alignItems: 'center',
+			justifyContent: 'flex-start',
+			flexDirection: 'row',
+			marginBottom: 20
+		},
+		socialText: {
+			fontSize: 14,
+			lineHeight: 20,
+			fontWeight: '600',
+			color: theme.colors.white,
+			textTransform: 'capitalize',
+			textAlign: 'center',
+			flexGrow: 1,
+		}
+	});
 	const { showToast } = useToast();
 	const [, t] = useLanguage()
 	const [{ configs }] = useConfig()
@@ -202,7 +236,7 @@ const LoginFormUI = (props: LoginParams) => {
 							{useLoginByEmail && (
 								<Pressable onPress={() => handleChangeTab('email')}>
 									<OTab>
-										<OText size={18} color={loginTab === 'email' ? colors.primary : colors.disabled}>
+										<OText size={18} color={loginTab === 'email' ? theme.colors.primary : theme.colors.disabled}>
 											{t('LOGIN_BY_EMAIL', 'Login by Email')}
 										</OText>
 									</OTab>
@@ -211,7 +245,7 @@ const LoginFormUI = (props: LoginParams) => {
 							{useLoginByCellphone && (
 								<Pressable onPress={() => handleChangeTab('cellphone')}>
 									<OTab>
-										<OText size={18} color={loginTab === 'cellphone' ? colors.primary : colors.disabled}>
+										<OText size={18} color={loginTab === 'cellphone' ? theme.colors.primary : theme.colors.disabled}>
 											{t('LOGIN_BY_PHONE', 'Login by Phone')}
 										</OText>
 									</OTab>
@@ -228,7 +262,7 @@ const LoginFormUI = (props: LoginParams) => {
 					(
 						<>
 							<ButtonsWrapper>
-								{/* <OText size={18} mBottom={10} color={colors.disabled}>
+								{/* <OText size={18} mBottom={10} color={theme.colors.disabled}>
 								{t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
 							</OText> */}
 
@@ -238,9 +272,9 @@ const LoginFormUI = (props: LoginParams) => {
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
 										handleSuccessFacebookLogin={handleSuccessFacebook}
-										styles={[loginStyle.socialButton, {backgroundColor: colors.facebook}]}
+										styles={[loginStyle.socialButton, { backgroundColor: theme.colors.facebook }]}
 										textStyles={loginStyle.socialText}
-										renderIcon={<OIcon src={images.general.facebook} width={16} />}
+										renderIcon={<OIcon src={theme.images.general.facebook} width={16} />}
 										text={t('CONTINUE_WITH_FACEBOOK', 'Continue with Facebook')}
 									/>
 									<FacebookLogin
@@ -248,9 +282,9 @@ const LoginFormUI = (props: LoginParams) => {
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
 										handleSuccessFacebookLogin={handleSuccessFacebook}
-										styles={[loginStyle.socialButton, {backgroundColor: colors.google}]}
+										styles={[loginStyle.socialButton, { backgroundColor: theme.colors.google }]}
 										textStyles={loginStyle.socialText}
-										renderIcon={<OIcon src={images.general.google} width={16} />}
+										renderIcon={<OIcon src={theme.images.general.google} width={16} />}
 										text={t('CONTINUE_WITH_GOOGLE', 'Continue with Google')}
 									/>
 									<FacebookLogin
@@ -258,15 +292,15 @@ const LoginFormUI = (props: LoginParams) => {
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
 										handleSuccessFacebookLogin={handleSuccessFacebook}
-										styles={[loginStyle.socialButton, {backgroundColor: colors.apple}]}
+										styles={[loginStyle.socialButton, { backgroundColor: theme.colors.apple }]}
 										textStyles={loginStyle.socialText}
-										renderIcon={<OIcon src={images.general.apple} width={16} />}
+										renderIcon={<OIcon src={theme.images.general.apple} width={16} />}
 										text={t('CONTINUE_WITH_APPLE', 'Continue with Apple')}
 									/>
 								</SocialButtons>
-								<OText style={{...labels.normal, textAlign: 'center', marginBottom: 8 } as TextStyle} color={colors.textSecondary}>{t('OR_CONTINUE_WITH_EMAIL', 'or continue with email')}</OText>
+								<OText style={{ ...theme.labels.normal, textAlign: 'center', marginBottom: 8 } as TextStyle} color={theme.colors.textSecondary}>{t('OR_CONTINUE_WITH_EMAIL', 'or continue with email')}</OText>
 							</ButtonsWrapper>
-							<View style={{ height: 1, backgroundColor: colors.border, width: width }} />
+							<View style={{ height: 1, backgroundColor: theme.colors.border, width: width }} />
 						</>
 					)
 				)}
@@ -275,7 +309,7 @@ const LoginFormUI = (props: LoginParams) => {
 					<FormInput>
 						{useLoginByEmail && loginTab === 'email' && (
 							<InputWrapper>
-								<OText style={{...loginStyle.inputHead, ...labels.middle} as TextStyle}>{t('EMAIL', 'Email')}</OText>
+								<OText style={{ ...loginStyle.inputHead, ...theme.labels.middle } as TextStyle}>{t('EMAIL', 'Email')}</OText>
 								<Controller
 									control={control}
 									render={({ onChange, value }: any) => (
@@ -293,7 +327,7 @@ const LoginFormUI = (props: LoginParams) => {
 											returnKeyType='next'
 											onSubmitEditing={() => inputRef.current?.focus()}
 											blurOnSubmit={false}
-											inputStyle={{ color: colors.textPrimary, fontSize: 12 }}
+											inputStyle={{ color: theme.colors.textPrimary, fontSize: 12 }}
 										/>
 									)}
 									name="email"
@@ -320,9 +354,9 @@ const LoginFormUI = (props: LoginParams) => {
 								/>
 							</View>
 						)}
-						<View style={{ height: 1, backgroundColor: colors.border, width: width, marginStart: -40 }} />
+						<View style={{ height: 1, backgroundColor: theme.colors.border, width: width, marginStart: -40 }} />
 						<InputWrapper>
-							<OText style={{...loginStyle.inputHead, ...labels.middle} as TextStyle}>{t('PASSWORD', 'Password')}</OText>
+							<OText style={{ ...loginStyle.inputHead, ...theme.labels.middle } as TextStyle}>{t('PASSWORD', 'Password')}</OText>
 							<Controller
 								control={control}
 								render={({ onChange, value }: any) => (
@@ -341,7 +375,7 @@ const LoginFormUI = (props: LoginParams) => {
 										returnKeyType='done'
 										onSubmitEditing={handleSubmit(onSubmit)}
 										blurOnSubmit
-										inputStyle={{ color: colors.textPrimary, fontSize: 12 }}
+										inputStyle={{ color: theme.colors.textPrimary, fontSize: 12 }}
 									/>
 								)}
 								name="password"
@@ -349,23 +383,23 @@ const LoginFormUI = (props: LoginParams) => {
 								defaultValue=""
 							/>
 						</InputWrapper>
-						<View style={{ height: 1, backgroundColor: colors.border, width: width, marginStart: -40 }} />
+						<View style={{ height: 1, backgroundColor: theme.colors.border, width: width, marginStart: -40 }} />
 						<OButton
 							onClick={handleSubmit(onSubmit)}
 							text={loginButtonText}
-							bgColor={colors.primary}
-							borderColor={colors.primary}
-							textStyle={{ color: 'white', ...labels.middle } as TextStyle}
+							bgColor={theme.colors.primary}
+							borderColor={theme.colors.primary}
+							textStyle={{ color: 'white', ...theme.labels.middle } as TextStyle}
 							imgRightSrc={null}
 							isLoading={formState.loading}
-							style={{marginTop: 48, height: 40, shadowOpacity: 0}}
+							style={{ marginTop: 48, height: 40, shadowOpacity: 0 }}
 						/>
 					</FormInput>
 				)}
 
 				{onNavigationRedirect && forgotButtonText && (
-					<Pressable onPress={() => onNavigationRedirect('Forgot')} style={{width: '100%'}}>
-						<OText color={colors.textThird} style={{...labels.normal, alignSelf: 'flex-start'} as TextStyle} mBottom={18}>
+					<Pressable onPress={() => onNavigationRedirect('Forgot')} style={{ width: '100%' }}>
+						<OText color={theme.colors.textThird} style={{ ...theme.labels.normal, alignSelf: 'flex-start' } as TextStyle} mBottom={18}>
 							{forgotButtonText}
 						</OText>
 					</Pressable>
@@ -390,11 +424,11 @@ const LoginFormUI = (props: LoginParams) => {
 								<OButton
 									onClick={handleVerifyCodeClick}
 									text={t('GET_VERIFY_CODE', 'Get Verify Code')}
-									borderColor={colors.primary}
+									borderColor={theme.colors.primary}
 									style={loginStyle.btnOutline}
 									imgRightSrc={null}
 									isLoading={isLoadingVerifyModal}
-									indicatorColor={colors.primary}
+									indicatorColor={theme.colors.primary}
 								/>
 							</ButtonsWrapper>
 						</>
@@ -407,7 +441,7 @@ const LoginFormUI = (props: LoginParams) => {
 							onClick={() => onNavigationRedirect('Signup')}
 							text={registerButtonText}
 							style={loginStyle.btnOutline}
-							borderColor={colors.primary}
+							borderColor={theme.colors.primary}
 							imgRightSrc={null}
 						/>
 					</ButtonsWrapper>
@@ -430,40 +464,6 @@ const LoginFormUI = (props: LoginParams) => {
 		</Container>
 	);
 };
-
-const loginStyle = StyleSheet.create({
-	btnOutline: {
-		backgroundColor: '#FFF',
-		color: colors.primary
-	},
-	inputStyle: {
-		marginBottom: 25,
-		borderWidth: 0,
-		height: 40,
-	},
-	inputHead: {
-		flexBasis: '25%',
-		marginTop: 9
-	},
-	socialButton: {
-		height: 40,
-		paddingTop: 0,
-		paddingBottom: 0,
-		alignItems: 'center',
-		justifyContent: 'flex-start',
-		flexDirection: 'row',
-		marginBottom: 20
-	},
-	socialText: {
-		fontSize: 14,
-		lineHeight: 20,
-		fontWeight: '600',
-		color: colors.white,
-		textTransform: 'capitalize',
-		textAlign: 'center',
-		flexGrow: 1,
-	}
-});
 
 export const LoginForm = (props: any) => {
 	const loginProps = {

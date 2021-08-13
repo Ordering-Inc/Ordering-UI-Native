@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const WrapHeader = styled.View`
   position: relative;
@@ -50,7 +49,7 @@ export const ProductEditions = styled.View`
 
 export const SectionTitle = styled.View`
   padding-vertical: 15px;
-  background-color: ${colors.white};
+  background-color: ${(props: any) => props.theme.colors.white};
 `
 
 export const WrapperIngredients = styled.View`
@@ -72,6 +71,6 @@ export const ProductActions = styled.View`
   padding-horizontal: 40px;
   width: 100%;
   flex-direction: row;
-  background-color: ${colors.clear};
+  background-color: ${(props: any) => props.theme.colors.clear};
   z-index: 1000;
 `
