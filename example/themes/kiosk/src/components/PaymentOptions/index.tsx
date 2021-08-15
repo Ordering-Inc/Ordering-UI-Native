@@ -18,14 +18,15 @@ import OptionCard from '../OptionCard';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
 import GridContainer from '../../layouts/GridContainer';
+import { OModal, PaymentOptionStripe } from '../../../../../src';
 
 const PaymentOptionsUI = (props: any) => {
   const {
     cart,
-    handlePaymethodDataChange,
+    onNavigationRedirect,
     isDisabled,
     paymethodData,
-    onNavigationRedirect,
+    handlePaymethodDataChange,
     errorCash,
     isLoading,
     paymethodsList,
@@ -44,7 +45,7 @@ const PaymentOptionsUI = (props: any) => {
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
   const [userErrors, setUserErrors] = useState<any>([]);
-
+  const [isOpenModal, setIsOpenModal] = useState(false)
   const paymethodSelected =
     paySelected || props.paymethodSelected || isOpenMethod.paymethod;
 
@@ -174,7 +175,7 @@ const PaymentOptionsUI = (props: any) => {
             callToActionText: t('INSERT_INFO', 'Test info'),
             onClick: () => {
               onSelectPaymethod(supportedMethods[stripeIndex], false);
-              navigation.navigate('PaymentOptionStripe');
+              setIsOpenModal(true)
             },
             ...supportedMethods[stripeIndex],
           }
@@ -245,6 +246,18 @@ const PaymentOptionsUI = (props: any) => {
           </GridContainer>
         )}
         <View style={{height: orientationState?.dimensions?.height * 0.05}} />
+        <OModal
+          open={isOpenModal}
+          onClose={() => setIsOpenModal(false)}
+          onCancel={() => setIsOpenModal(false)}
+          entireModal
+          customClose
+        >
+          <PaymentOptionStripe
+            {...props}
+            onClose={() => setIsOpenModal(false)}
+          />
+        </OModal>
       </Container>
     </>
   );
@@ -257,3 +270,4 @@ export const PaymentOptions = (props: any) => {
   };
   return <PaymentOptionsController {...paymentOptions} />;
 };
+

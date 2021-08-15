@@ -8,13 +8,13 @@ import { useTheme } from 'styled-components/native'
 
 // import { OrderTypeSelectParams } from '../../types'
 import { ActivityIndicatorContainer } from './styles'
-import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
-import { OText, } from '../shared'
+import { useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
+import { OText } from '../shared'
 import {Container} from '../../layouts/Container'
 import NavBar from '../NavBar'
 const OrderTypeSelectorCardUI = (props: any) => {
   const {
-    navigation,
+    onClose
   } = props
 
   const theme = useTheme();
@@ -32,7 +32,7 @@ const OrderTypeSelectorCardUI = (props: any) => {
       <Container>
         <NavBar
           title={t('CARD_PAYMENT', 'Card payment')}
-          onActionLeft={() => navigation.goBack()}
+          onActionLeft={onClose}
         />
         <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
           <OText
@@ -47,11 +47,11 @@ const OrderTypeSelectorCardUI = (props: any) => {
             </OText>
           </OText>
         </View>
-        <TouchableOpacity style={styles.button} onPress={navigation.goBack}>
+        <TouchableOpacity style={styles.button} onPress={onClose}>
           <OText size={18} color={theme.colors.primary} weight={700}>{t('WILL_PAY_WITH_CASH', 'I\'m sorry. I will pay with cash')}</OText>
         </TouchableOpacity>
         <ActivityIndicatorContainer>
-            <ActivityIndicator size='small' color={theme.colors.primary} />
+            <ActivityIndicator size='large' color={theme.colors.primary} />
         </ActivityIndicatorContainer>
       </Container>
   )
@@ -67,3 +67,4 @@ export const PaymentOptionStripe = (props: any) => {
 
   return <OrderTypeControl {...orderTypeProps} />
 }
+
