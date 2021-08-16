@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Platform, I18nManager, View } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { useClipboard } from '@react-native-clipboard/clipboard';
-import { FloatingButton } from '../FloatingButton';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import RNPickerSelect from 'react-native-picker-select';
-import { Chat } from '../Chat';
+import { useTheme } from 'styled-components/native';
 import {
   ToastType,
   useToast,
@@ -28,18 +26,17 @@ import {
   Table,
   OrderBill,
   Total,
-  Map,
   Pickup,
   AssignDriver,
 } from './styles';
-
-import { OButton, OModal, OText, OIconButton } from '../shared';
+import { Chat } from '../Chat';
+import { FloatingButton } from '../FloatingButton';
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { GoogleMap } from '../GoogleMap';
+import { OButton, OModal, OText, OIconButton } from '../shared';
 import { OrderDetailsParams } from '../../types';
-import { USER_TYPE } from '../../config/constants';
 import { verifyDecimals } from '../../utils';
-import { useTheme } from 'styled-components/native';
+import { USER_TYPE } from '../../config/constants';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -320,8 +317,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       navigation.navigate('AcceptOrRejectOrder', { order, action });
   };
 
-  const handleViewSummaryOrder = (action: string) => {
-    navigation.navigate &&
+  const handleViewSummaryOrder = () => {
+    navigation?.navigate &&
       navigation.navigate('OrderSummary', {
         order,
         orderStatus: getOrderStatus(order?.status)?.value,
@@ -521,9 +518,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       tintColor: theme.colors.backArrow,
                     }}
                     borderColor={theme.colors.clear}
-                    style={{ maxWidth: 40, left: 5 }}
+                    style={{ maxWidth: 40, marginRight: 20 }}
                     onClick={() => handleOpenMapView()}
                   />
+
                   <OIconButton
                     icon={theme.images.general.messages}
                     iconStyle={{
@@ -537,6 +535,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   />
                 </Actions>
               </Header>
+
               <OrderContent>
                 <OrderHeader>
                   <OText size={13}>
@@ -544,58 +543,70 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       ? parseDate(order?.delivery_datetime_utc)
                       : parseDate(order?.delivery_datetime, { utc: false })}
                   </OText>
+
                   <OText size={20} weight="bold">
-                    {t(
-                      `${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id}  ${t(
-                        'IS',
-                        'is',
-                      )} \n`,
-                    )}
-                    <OText
-                      size={20}
-                      color={colors[order?.status] || theme.colors.primary}>
-                      {getOrderStatus(order?.status)?.value}
-                    </OText>
+                    {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} ${t(
+                      'IS',
+                      'is',
+                    )}`}
+                  </OText>
+
+                  <OText
+                    size={20}
+                    color={colors[order?.status] || theme.colors.primary}>
+                    {getOrderStatus(order?.status)?.value}
                   </OText>
                 </OrderHeader>
+
                 <OrderBusiness>
                   <OText style={{ marginBottom: 5 }} size={16} weight="bold">
                     {t('BUSINESS_DETAILS', 'Business details')}
                   </OText>
+
                   <OText numberOfLines={1} ellipsizeMode="tail">
                     {order?.business?.name}
                   </OText>
+
                   <OText numberOfLines={1} ellipsizeMode="tail">
                     {order?.business?.email}
                   </OText>
+
                   <OText numberOfLines={1} ellipsizeMode="tail">
                     {order?.business?.cellphone}
                   </OText>
+
                   <OText numberOfLines={1} ellipsizeMode="tail">
                     {order?.business?.address}
                   </OText>
                 </OrderBusiness>
+
                 <OrderCustomer>
                   <OText style={{ marginBottom: 5 }} size={16} weight="bold">
                     {t('CUSTOMER_DETAILS', 'Customer details')}
                   </OText>
+
                   <OText numberOfLines={1} ellipsizeMode="tail">
                     {order?.customer?.name}
                   </OText>
+
                   <OText numberOfLines={1} ellipsizeMode="tail">
                     {order?.customer?.email}
                   </OText>
+
                   <OText numberOfLines={1} ellipsizeMode="tail">
                     {order?.customer?.cellphone}
                   </OText>
+
                   <OText numberOfLines={1} ellipsizeMode="tail">
                     {order?.customer?.address}
                   </OText>
                 </OrderCustomer>
+
                 <OrderProducts>
                   <OText style={{ marginBottom: 5 }} size={16} weight="bold">
                     {t('ORDER_DETAILS', 'Order Details')}
                   </OText>
+
                   {order?.products?.length &&
                     order?.products.map((product: any, i: number) => (
                       <ProductItemAccordion
@@ -609,32 +620,40 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <OrderBill>
                   <Table>
                     <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
+
                     <OText>{parsePrice(order?.subtotal)}</OText>
                   </Table>
+
                   {order?.tax_type !== 1 && (
                     <Table>
                       <OText>
                         {t('TAX', 'Tax')}
                         {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
                       </OText>
+
                       <OText>
                         {parsePrice(order?.summary?.tax || order?.totalTax)}
                       </OText>
                     </Table>
                   )}
+
                   {(order?.summary?.discount > 0 || order?.discount > 0) && (
                     <Table>
                       {order?.offer_type === 1 ? (
                         <OText>
-                          {t('DISCOUNT', 'Discount')}
-                          <OText>{`(${verifyDecimals(
-                            order?.offer_rate,
-                            parsePrice,
-                          )}%)`}</OText>
+                          <OText>{t('DISCOUNT', 'Discount')}</OText>
+
+                          <OText>
+                            {`(${verifyDecimals(
+                              order?.offer_rate,
+                              parsePrice,
+                            )}%)`}
+                          </OText>
                         </OText>
                       ) : (
                         <OText>{t('DISCOUNT', 'Discount')}</OText>
                       )}
+
                       <OText>
                         -{' '}
                         {parsePrice(
@@ -648,6 +667,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     order?.deliveryFee > 0) && (
                     <Table>
                       <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
+
                       <OText>
                         {parsePrice(
                           order?.summary?.delivery_price || order?.deliveryFee,
@@ -655,6 +675,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       </OText>
                     </Table>
                   )}
+
                   <Table>
                     <OText>
                       {t('DRIVER_TIP', 'Driver tip')}
@@ -664,28 +685,33 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
                         `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`}
                     </OText>
+
                     <OText>
                       {parsePrice(
                         order?.summary?.driver_tip || order?.totalDriverTip,
                       )}
                     </OText>
                   </Table>
+
                   <Table>
                     <OText>
                       {t('SERVICE_FEE', 'Service Fee')}
                       {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
                     </OText>
+
                     <OText>
                       {parsePrice(
                         order?.summary?.service_fee || order?.serviceFee || 0,
                       )}
                     </OText>
                   </Table>
+
                   <Total>
                     <Table>
                       <OText style={styles.textBold}>
                         {t('TOTAL', 'Total')}
                       </OText>
+
                       <OText
                         style={styles.textBold}
                         color={theme.colors.primary}>
@@ -739,6 +765,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   />
                 </Pickup>
               )}
+
               {order?.status === 4 && order?.delivery_type === 2 && (
                 <Pickup>
                   <OButton
@@ -755,6 +782,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   />
                 </Pickup>
               )}
+
               <OModal
                 open={openModalForBusiness}
                 order={order}
@@ -807,6 +835,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 secondColorCustom={theme.colors.green}
               />
             )}
+
           {order &&
             Object.keys(order).length > 0 &&
             getOrderStatus(order?.status)?.value !==
@@ -815,9 +844,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 btnText={t('COPY', 'Copy')}
                 isSecondaryBtn={false}
                 colorTxt1={theme.colors.primary}
-                secondButtonClick={() => handleViewSummaryOrder('view')}
+                secondButtonClick={handleViewSummaryOrder}
                 firstButtonClick={() => handleCopyClipboard()}
-                secondBtnText={t('PRINT', 'print')}
+                secondBtnText={t('PRINT', 'Print')}
                 secondButton={true}
                 firstColorCustom="transparent"
                 secondColorCustom={theme.colors.primary}

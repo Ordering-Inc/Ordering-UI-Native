@@ -29,6 +29,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     onEditProduct,
     comment,
   } = props;
+
   const [, t] = useLanguage();
   const theme = useTheme();
   const [{ parsePrice }] = useUtils();
@@ -48,12 +49,14 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
         option.suboptions = Object.values(option.suboptions ?? {});
         return option;
       });
+
       return {
         ...productInfo,
         ingredients,
         options,
       };
     }
+
     return product;
   };
 
@@ -69,6 +72,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     price: number;
   }) => {
     const pos = position ? `(${position})` : '';
+
     return `${quantity} x ${name} ${pos} +${price}`;
   };
 
@@ -103,6 +107,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
               <OText color={theme.colors.quantityProduct} space>
                 {product?.quantity}
               </OText>
+
               <View style={{ width: 200 }}>
                 <OText
                   numberOfLines={2}
@@ -114,6 +119,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 </OText>
               </View>
             </View>
+
             <View
               style={{
                 display: 'flex',
@@ -125,12 +131,14 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 <OText size={12} color={theme.colors.textGray}>
                   {parsePrice(product.total || product.price)}
                 </OText>
+
                 {(productInfo().ingredients.length > 0 ||
                   productInfo().options.length > 0 ||
                   product.comment) && (
                   <MaterialCommunityIcon name="chevron-down" size={12} />
                 )}
               </View>
+
               <View
                 style={{
                   display: 'flex',
@@ -148,6 +156,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                       onPress={() => onEditProduct(product)}
                     />
                   )}
+
                 {onDeleteProduct && isCartProduct && !isCartPending && (
                   <OAlert
                     title={t('DELETE_PRODUCT', 'Delete Product')}
@@ -193,6 +202,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                   <OText size={12} color={theme.colors.unselectText}>
                     {t('INGREDIENTS', 'Ingredients')}:
                   </OText>
+
                   {productInfo().ingredients.map(
                     (ingredient: any) =>
                       !ingredient.selected && (
@@ -207,13 +217,15 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                   )}
                 </ProductOptionsList>
               )}
+
             {productInfo().options.length > 0 && (
               <ProductOptionsList>
                 {productInfo().options.map((option: any, i: number) => (
                   <ProductOption key={option.id + i}>
                     <OText size={12} color={theme.colors.unselectText}>
-                      {option.name}:
+                      {t(option?.name.toUpperCase(), option?.name)}:
                     </OText>
+
                     {option.suboptions.map((suboption: any) => (
                       <ProductSubOption key={suboption.id}>
                         <OText size={12} color={theme.colors.unselectText}>
@@ -236,6 +248,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 ))}
               </ProductOptionsList>
             )}
+
             {comment && (
               <ProductComment>
                 <OText size={12} space color={theme.colors.unselectText}>

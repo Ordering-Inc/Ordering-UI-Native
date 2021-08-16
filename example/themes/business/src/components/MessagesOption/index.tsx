@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Pressable, StyleSheet, Dimensions } from 'react-native';
 import { OrderList, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -20,6 +20,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
     loadMoreOrders,
     loadMessages,
     onNavigationRedirect,
+    setSortBy,
   } = props;
 
   const theme = useTheme();
@@ -30,20 +31,30 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
   const orders = customArray || values || [];
 
   const tabs = [
-    { key: 0, text: t('ORDERS', 'Orders'), tags: [1] }, // before [0, 1]
+    { key: 0, text: t('ORDERS', 'Orders'), tags: [0, 1] },
     // { key: 1, text: t('CONTACTS', 'Contacts'), tags: [2, 3, 4] },
   ];
 
   const tags = [
-    { key: 0, text: t('NEWEST', 'Newest') },
-    { key: 1, text: t('ORDER_NUMBER', 'Order number') },
+    {
+      key: 0,
+      text: t('NEWEST', 'Newest'),
+      sortBy: { param: 'last_direct_message_at', direction: 'asc' },
+    },
+    {
+      key: 1,
+      text: t('ORDER_NUMBER', 'Order number'),
+      sortBy: { param: 'id', direction: 'desc' },
+    },
     { key: 2, text: t('DRIVERS', 'Drivers') },
     { key: 3, text: t('BUSINESS', 'Business') },
     { key: 4, text: t('CUSTOMERS', 'Customers') },
   ];
 
   const [tabsFilter, setTabsFilter] = useState(tabs[0].tags);
-  const [tagsFilter, setTagsFilter] = useState(tags.map(value => value.key));
+  const [activeTag, setActiveTag] = useState(tags[0].key);
+  const [reload, setReload] = useState(false);
+
   const [orientation, setOrientation] = useState(
     Dimensions.get('window').width < Dimensions.get('window').height
       ? 'Portrait'
@@ -56,15 +67,33 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
 
   const handleChangeTab = (tags: number[]) => {
     setTabsFilter(tags);
+
+    const key = tags[0];
+    setActiveTag(key);
+
+    if (tabs[0].tags.includes(key)) {
+      setSortBy({ param: 'last_direct_message_at', direction: 'asc' });
+      setReload(true);
+    }
   };
 
   const handleChangeTag = (key: number) => {
-    if (tagsFilter.includes(key)) {
-      setTagsFilter(tagsFilter.filter((value: number) => value !== key));
-    } else {
-      setTagsFilter(tagsFilter.concat(key));
+    if (activeTag !== key) {
+      const tag = tags.find(tag => tag.key === key);
+      setActiveTag(key);
+
+      if (tabs[0].tags.includes(key)) {
+        setSortBy(tag?.sortBy);
+        setReload(true);
+      }
     }
   };
+
+  useEffect(() => {
+    if (reload && !loading) {
+      setReload(!reload);
+    }
+  }, [loading]);
 
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
     if (width < height) {
@@ -133,26 +162,35 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
 
       <FiltersTab>
         <TabsContainer>
-          {tabs.map((value: any) => (
+          {tabs.map((tab: any) => (
             <Pressable
-              key={value.key}
+              key={tab.key}
               style={styles.pressable}
-              onPress={() => handleChangeTab(value.tags)}>
+              onPress={() => handleChangeTab(tab.tags)}>
               <OText
                 style={styles.tab}
                 color={
-                  JSON.stringify(tabsFilter) === JSON.stringify(value.tags)
+                  JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
                     ? theme.colors.textGray
                     : theme.colors.unselectText
                 }>
-                {value.text + ` (${value.key === 0 ? orders?.length : 0})`}
+                {tab.text +
+                  ` (${
+                    tab.key === 0
+                      ? orders?.reduce(
+                          (total: number, order: any) =>
+                            total + order.unread_count,
+                          0,
+                        )
+                      : 0
+                  })`}
               </OText>
 
               <View
                 style={{
                   width: '100%',
                   borderBottomColor:
-                    JSON.stringify(tabsFilter) === JSON.stringify(value.tags)
+                    JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
                       ? theme.colors.textGray
                       : theme.colors.tabBar,
                   borderBottomWidth: 2,
@@ -173,16 +211,12 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
               key={key}
               onPress={() => handleChangeTag(key)}
               isSelected={
-                tagsFilter.includes(key)
-                  ? theme.colors.primary
-                  : theme.colors.tabBar
+                activeTag === key ? theme.colors.primary : theme.colors.tabBar
               }>
               <OText
                 style={styles.tag}
                 color={
-                  tagsFilter.includes(key)
-                    ? theme.colors.white
-                    : theme.colors.black
+                  activeTag === key ? theme.colors.white : theme.colors.black
                 }>
                 {getTagFilter(key)}
               </OText>
@@ -199,14 +233,9 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
         />
       )}
 
-      {!error && orders.length > 0 && (
+      {!reload && !error && orders.length > 0 && (
         <PreviousMessages
-          orders={orders.sort((orderA: any, orderB: any) => {
-            if (tagsFilter.includes(1)) {
-              return orderB.id - orderA.id;
-            }
-            return orderA.id - orderB.id;
-          })}
+          orders={values}
           messages={messages}
           setMessages={setMessages}
           loadMessages={loadMessages}
@@ -214,7 +243,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
         />
       )}
 
-      {loading && (
+      {(loading || reload) && (
         <>
           <View>
             {[...Array(5)].map((item, i) => (
@@ -248,6 +277,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
 
       {pagination?.totalPages &&
         !loading &&
+        !reload &&
         pagination?.currentPage < pagination?.totalPages && (
           <OButton
             onClick={loadMoreOrders}
@@ -268,7 +298,10 @@ export const MessagesOption = (props: MessagesOptionParams) => {
     ...props,
     asDashboard: true,
     orderStatus: props.activeOrders
-      ? []
+      ? [
+          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          20, 21,
+        ]
       : [
           0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
           20, 21,
@@ -279,7 +312,8 @@ export const MessagesOption = (props: MessagesOptionParams) => {
       pageSize: 6,
       controlType: 'infinity',
     },
-
+    orderBy: 'last_direct_message_at',
+    orderDirection: 'asc',
     UIComponent: MessagesOptionUI,
   };
 

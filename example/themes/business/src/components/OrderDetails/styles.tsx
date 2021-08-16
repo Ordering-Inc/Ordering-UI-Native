@@ -21,6 +21,7 @@ export const Header = styled.View`
 
 export const Actions = styled.View`
   flex-direction: row;
+  justify-content: flex-end;
 `;
 
 export const Logo = styled.View`
