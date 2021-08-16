@@ -17,6 +17,7 @@ import { OrderDetails } from './src/components/OrderDetails';
 import { UserProfileForm } from './src/components/UserProfileForm';
 import { ReviewOrder } from './src/components/ReviewOrder';
 import { UserProfile } from './src/components/UserProfile';
+import { NotFoundSource } from './src/components/NotFoundSource';
 
 import { Toast } from './src/components/shared/OToast';
 import {
@@ -64,6 +65,7 @@ export {
 	UserProfileForm,
 	ReviewOrder,
 	UserProfile,
+	NotFoundSource,
 
 	// OComponents
 	Toast,
