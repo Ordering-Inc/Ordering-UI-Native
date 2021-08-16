@@ -1,6 +1,6 @@
 import React,{ useState, useEffect } from 'react'
 import Spinner from 'react-native-loading-spinner-overlay';
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Platform } from 'react-native'
 import {
   UpsellingPage as UpsellingPageController,
   useUtils,
@@ -302,7 +302,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 const styles = StyleSheet.create({
   imageStyle: {
     width: '100%',
-    height: 180,
+    height: Platform.OS === 'ios' ? 250 : 180,
     resizeMode: 'cover',
     borderRadius: 10,
   },
