@@ -27,7 +27,7 @@ import {
 	ProductComment,
 	ProductActions
 } from './styles'
-import { colors, images, labels } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 import { OButton, OIcon, OInput, OText } from '../shared'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
@@ -57,7 +57,55 @@ export const ProductOptionsUI = (props: any) => {
 		isFromCheckout,
 		businessSlug
 	} = props
+	const theme = useTheme();
 
+	const styles = StyleSheet.create({
+		mainContainer: {
+			flex: 1,
+			height: windowHeight
+		},
+		headerItem: {
+			overflow: 'hidden',
+			borderRadius: 50,
+			backgroundColor: '#CCCCCC80',
+			width: 35,
+			margin: 15
+		},
+		optionContainer: {
+			marginBottom: 20
+		},
+		comment: {
+			borderRadius: 7.6,
+			height: 92,
+			alignItems: 'flex-start',
+			backgroundColor: theme.colors.backgroundGray
+		},
+		quantityControl: {
+			flexDirection: 'row',
+			width: '30%',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+		},
+		btnBackArrow: {
+			borderWidth: 0,
+			color: '#FFF',
+			backgroundColor: 'rgba(0,0,0,0.3)',
+			borderRadius: 24,
+			marginRight: 15,
+		},
+		productHeaderSkeleton: {
+			flexDirection: 'row',
+			width: '100%',
+			position: 'relative',
+			maxHeight: 260,
+			height: 260,
+			resizeMode: 'cover',
+			minHeight: 200,
+			zIndex: 0
+		},
+		closeButton: { width: 32, height: 32, borderRadius: 17, backgroundColor: theme.colors.white, alignItems: 'center', justifyContent: 'center' },
+		quantityWrap: { width: 40, height: 24, alignItems: 'center', justifyContent: 'center', borderRadius: 7.6, backgroundColor: theme.colors.inputDisabled }
+	})
 	const [{ parsePrice }] = useUtils()
 	const [, t] = useLanguage()
 	const [orderState] = useOrder()
@@ -67,7 +115,7 @@ export const ProductOptionsUI = (props: any) => {
 	const { bottom } = useSafeAreaInsets();
 
 	const isError = (id: number) => {
-		let bgColor = colors.white
+		let bgColor = theme.colors.white
 		if (errors[`id:${id}`]) {
 			bgColor = 'rgba(255, 0, 0, 0.05)'
 		}
@@ -108,7 +156,7 @@ export const ProductOptionsUI = (props: any) => {
 								<>
 									<TopHeader>
 										<TouchableOpacity onPress={onClose} style={styles.closeButton}>
-											<OIcon src={images.general.close} width={11} />
+											<OIcon src={theme.images.general.close} width={11} />
 										</TouchableOpacity>
 									</TopHeader>
 									<ProductHeader
@@ -128,13 +176,13 @@ export const ProductOptionsUI = (props: any) => {
 									</Placeholder>
 								) : (
 									<>
-										<OText style={{ flex: I18nManager.isRTL ? 0 : 1, ...labels.large } as TextStyle}>{product?.name || productCart.name}</OText>
-										{/* <OText size={20} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText> */}
+										<OText style={{ flex: I18nManager.isRTL ? 0 : 1, ...theme.labels.large } as TextStyle}>{product?.name || productCart.name}</OText>
+										{/* <OText size={20} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText> */}
 									</>
 								)}
 							</ProductTitle>
 							<ProductDescription>
-								<OText style={labels.small as TextStyle} color={colors.textSecondary}>{product?.description || productCart?.description}</OText>
+								<OText style={theme.labels.small as TextStyle} color={theme.colors.textSecondary}>{product?.description || productCart?.description}</OText>
 								{(
 									(product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
 									(productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1')
@@ -165,9 +213,9 @@ export const ProductOptionsUI = (props: any) => {
 									{product?.ingredients?.length > 0 && (
 										<View style={styles.optionContainer}>
 											<SectionTitle>
-												<OText style={labels.middle as TextStyle}>{t('INGREDIENTS', 'Ingredients')}</OText>
+												<OText style={theme.labels.middle as TextStyle}>{t('INGREDIENTS', 'Ingredients')}</OText>
 											</SectionTitle>
-											<WrapperIngredients style={{ backgroundColor: isSoldOut || maxProductQuantity <= 0 ? 'hsl(0, 0%, 72%)' : colors.white }}>
+											<WrapperIngredients style={{ backgroundColor: isSoldOut || maxProductQuantity <= 0 ? 'hsl(0, 0%, 72%)' : theme.colors.white }}>
 												{product?.ingredients.map((ingredient: any) => (
 													<ProductIngredient
 														key={ingredient.id}
@@ -219,7 +267,7 @@ export const ProductOptionsUI = (props: any) => {
 									}))}
 									<ProductComment>
 										<SectionTitle>
-											<OText style={labels.middle as TextStyle}>{t('SPECIAL_COMMENT', 'Special comment')}</OText>
+											<OText style={theme.labels.middle as TextStyle}>{t('SPECIAL_COMMENT', 'Special comment')}</OText>
 										</SectionTitle>
 										<OInput
 											multiline
@@ -234,16 +282,16 @@ export const ProductOptionsUI = (props: any) => {
 									{productCart && !isSoldOut && maxProductQuantity > 0 && (
 										<View style={{ paddingVertical: 4 }}>
 											<SectionTitle>
-												<OText style={labels.middle as TextStyle}>{t('PREFERENCES', 'Preferences')}</OText>
+												<OText style={theme.labels.middle as TextStyle}>{t('PREFERENCES', 'Preferences')}</OText>
 											</SectionTitle>
-											<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-												<OText style={labels.normal as TextStyle}>{t('QUANTITY', 'Quantity')}</OText>
+											<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+												<OText style={theme.labels.normal as TextStyle}>{t('QUANTITY', 'Quantity')}</OText>
 												<View style={styles.quantityControl}>
 													<TouchableOpacity
 														onPress={decrement}
 														disabled={productCart.quantity === 1 || isSoldOut}
 													>
-														<OIcon src={images.general.minus} width={16} color={productCart.quantity === 1 || isSoldOut ? colors.textSecondary : colors.backgroundDark} />
+														<OIcon src={theme.images.general.minus} width={16} color={productCart.quantity === 1 || isSoldOut ? theme.colors.textSecondary : theme.colors.backgroundDark} />
 													</TouchableOpacity>
 													<View style={styles.quantityWrap}>
 														<OText size={12} weight={'600'}>{productCart.quantity}</OText>
@@ -252,7 +300,7 @@ export const ProductOptionsUI = (props: any) => {
 														onPress={increment}
 														disabled={maxProductQuantity <= 0 || productCart.quantity >= maxProductQuantity || isSoldOut}
 													>
-														<OIcon src={images.general.plus} width={16} color={maxProductQuantity <= 0 || productCart.quantity >= maxProductQuantity || isSoldOut ? colors.textSecondary : colors.backgroundDark} />
+														<OIcon src={theme.images.general.plus} width={16} color={maxProductQuantity <= 0 || productCart.quantity >= maxProductQuantity || isSoldOut ? theme.colors.textSecondary : theme.colors.backgroundDark} />
 													</TouchableOpacity>
 												</View>
 											</View>
@@ -279,11 +327,11 @@ export const ProductOptionsUI = (props: any) => {
 								imgRightSrc=''
 								text={`${orderState.loading ? t('LOADING', 'Loading') : editMode ? t('UPDATE', 'Update') : t('ADD_TO_CART', 'Add to Cart')}`}
 								textSub={`${orderState.loading ? '' : productCart.total ? parsePrice(productCart?.total) : ''}`}
-								textStyle={{ color: saveErrors ? colors.textSecondary : colors.white, fontSize: 14, fontWeight: '600' }}
+								textStyle={{ color: saveErrors ? theme.colors.textSecondary : theme.colors.white, fontSize: 14, fontWeight: '600' }}
 								style={{
-									backgroundColor: saveErrors ? colors.backgroundGray300 : colors.primary,
+									backgroundColor: saveErrors ? theme.colors.backgroundGray300 : theme.colors.primary,
 									borderWidth: 1, shadowOpacity: 0, height: 40,
-									borderColor: saveErrors ? colors.backgroundGray300 : colors.primary,
+									borderColor: saveErrors ? theme.colors.backgroundGray300 : theme.colors.primary,
 								}}
 							/>
 						)}
@@ -306,8 +354,8 @@ export const ProductOptionsUI = (props: any) => {
 								onClick={() => handleRedirectLogin(productCart)}
 								text={isSoldOut || maxProductQuantity <= 0 ? t('SOLD_OUT', 'Sold out') : t('LOGIN_SIGNUP', 'Login / Sign Up')}
 								imgRightSrc=''
-								textStyle={{ color: colors.primary }}
-								style={{ borderColor: colors.primary, backgroundColor: colors.white }}
+								textStyle={{ color: theme.colors.primary }}
+								style={{ borderColor: theme.colors.primary, backgroundColor: theme.colors.white }}
 							/>
 						)}
 					</View>
@@ -316,54 +364,6 @@ export const ProductOptionsUI = (props: any) => {
 		</>
 	)
 }
-
-const styles = StyleSheet.create({
-	mainContainer: {
-		flex: 1,
-		height: windowHeight
-	},
-	headerItem: {
-		overflow: 'hidden',
-		borderRadius: 50,
-		backgroundColor: '#CCCCCC80',
-		width: 35,
-		margin: 15
-	},
-	optionContainer: {
-		marginBottom: 20
-	},
-	comment: {
-		borderRadius: 7.6,
-		height: 92,
-		alignItems: 'flex-start',
-		backgroundColor: colors.backgroundGray
-	},
-	quantityControl: {
-		flexDirection: 'row',
-		width: '30%',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-	},
-	btnBackArrow: {
-		borderWidth: 0,
-		color: '#FFF',
-		backgroundColor: 'rgba(0,0,0,0.3)',
-		borderRadius: 24,
-		marginRight: 15,
-	},
-	productHeaderSkeleton: {
-		flexDirection: 'row',
-		width: '100%',
-		position: 'relative',
-		maxHeight: 260,
-		height: 260,
-		resizeMode: 'cover',
-		minHeight: 200,
-		zIndex: 0
-	},
-	closeButton: { width: 32, height: 32, borderRadius: 17, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
-	quantityWrap: {width: 40, height: 24, alignItems: 'center', justifyContent: 'center', borderRadius: 7.6, backgroundColor: colors.inputDisabled}
-})
 
 export const ProductForm = (props: any) => {
 	const productOptionsProps = {

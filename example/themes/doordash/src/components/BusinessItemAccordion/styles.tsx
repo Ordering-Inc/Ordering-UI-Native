@@ -1,6 +1,5 @@
 import React from 'react';
 import styled, { css } from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const BIContainer = styled.View`
   display: flex;
@@ -20,7 +19,7 @@ export const BIHeader = styled.TouchableOpacity`
   justify-content: space-between;
   position: relative;
   padding: 10px;
-  border: 1px solid ${colors.border};
+  border: 1px solid ${(props: any) => props.theme.colors.border};
   border-radius: 3px;
   overflow: hidden;
 

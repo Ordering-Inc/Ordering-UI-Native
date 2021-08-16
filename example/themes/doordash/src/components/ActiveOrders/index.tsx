@@ -1,13 +1,12 @@
 import React from 'react'
 import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
-import { OButton, OIcon, OText } from '../shared'
-import { ActiveOrdersContainer, Card, Map, Information, Logo, OrderInformation, BusinessInformation, Price } from './styles'
-import { View, StyleSheet } from 'react-native'
-import { colors } from '../../theme.json'
-import { getGoogleMapImage } from '../../utils'
+import { OButton, OText } from '../shared'
+import { ActiveOrdersContainer, Card, Information, OrderInformation, BusinessInformation, Price } from './styles'
+import { StyleSheet } from 'react-native'
 
 import { ActiveOrdersParams } from '../../types'
 import { useWindowDimensions } from 'react-native'
+import { useTheme } from 'styled-components/native'
 
 export const ActiveOrders = (props: ActiveOrdersParams) => {
 	const {
@@ -18,6 +17,8 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 		getOrderStatus,
 		padding
 	} = props
+
+	const theme = useTheme();
 
 	const { width } = useWindowDimensions();
 	const [{ configs }] = useConfig()
@@ -33,7 +34,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 			<Card
 				isMiniCard={configs?.google_maps_api_key?.value}
 				onPress={() => handleClickCard(order?.uuid)}
-				style={{width: width - (padding || 0) * 2}}
+				style={{ width: width - (padding || 0) * 2 }}
 			>
 				<Information>
 					<OrderInformation>
@@ -47,17 +48,17 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 							>
 								{order.business?.name}
 							</OText>
-							<OText size={12} color={colors.textSecondary} lineHeight={18}>{order?.delivery_datetime_utc
+							<OText size={12} color={theme.colors.textSecondary} lineHeight={18}>{order?.delivery_datetime_utc
 								? parseDate(order?.delivery_datetime_utc)
 								: parseDate(order?.delivery_datetime, { utc: false })}</OText>
-							<OText size={12} space color={colors.textSecondary} lineHeight={18}>{`${t('ORDER_NUMBER', 'Order No.')} ${order.id}`}</OText>
+							<OText size={12} space color={theme.colors.textSecondary} lineHeight={18}>{`${t('ORDER_NUMBER', 'Order No.')} ${order.id}`}</OText>
 						</BusinessInformation>
 						<Price>
 							<OText size={14} weight={'600'}>{parsePrice(order?.summary?.total || order?.total)}</OText>
 						</Price>
 					</OrderInformation>
 					{order?.status !== 0 && (
-						<OText color={colors.primary} size={12} numberOfLines={2}>{getOrderStatus(order.status)?.value}</OText>
+						<OText color={theme.colors.primary} size={12} numberOfLines={2}>{getOrderStatus(order.status)?.value}</OText>
 					)}
 				</Information>
 			</Card>
@@ -67,10 +68,10 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 					onPress={loadMoreOrders}
 				>
 					<OButton
-						bgColor={colors.white}
-						textStyle={{ color: colors.primary, fontSize: 20 }}
+						bgColor={theme.colors.white}
+						textStyle={{ color: theme.colors.primary, fontSize: 20 }}
 						text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-						borderColor={colors.white}
+						borderColor={theme.colors.white}
 						style={{ paddingLeft: 30, paddingRight: 30 }}
 						onClick={loadMoreOrders}
 					/>

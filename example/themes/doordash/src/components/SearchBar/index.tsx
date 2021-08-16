@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, TouchableOpacity, TextStyle } from 'react-native'
-import { colors, images } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 import { OInput, OButton } from '../shared'
 import { useLanguage } from 'ordering-components/native'
 import Icon from 'react-native-vector-icons/Feather'
@@ -16,10 +16,35 @@ export const SearchBar = (props: any) => {
     isCancelXButtonShow,
     noBorderShow,
     borderStyle,
-	 inputWrapStyle
+    inputWrapStyle
   } = props
 
-  const [,t] = useLanguage()
+  const theme = useTheme()
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: 1,
+    },
+    borderStyle: {
+      borderColor: theme.colors.primary,
+      borderWidth: 1,
+      borderRadius: 10,
+    },
+    inputStyle: {
+      flex: 1,
+    },
+    buttonStyle: {
+      maxHeight: 30,
+      paddingRight: 5,
+      paddingLeft: 5,
+    }
+  })
+
+  const [, t] = useLanguage()
 
   const handleClear = () => {
     onSearch('')
@@ -42,10 +67,10 @@ export const SearchBar = (props: any) => {
       <OInput
         value={searchValue}
         onChange={onChangeSearch}
-        style={{...styles.inputStyle, ...inputWrapStyle}}
+        style={{ ...styles.inputStyle, ...inputWrapStyle }}
         placeholder={placeholder}
-        icon={images.general.search}
-		  iconStyle={{width: 16}}
+        icon={theme.images.general.search}
+        iconStyle={{ width: 16 }}
         returnKeyType='done'
       />
       {isCancelButtonShow && (
@@ -53,7 +78,7 @@ export const SearchBar = (props: any) => {
           imgRightSrc=''
           text={t('CANCEL', 'Cancel')}
           bgColor='transparent'
-          borderColor={colors.lightGray}
+          borderColor={theme.colors.lightGray}
           style={styles.buttonStyle}
           onClick={onCancel || handleClear}
         />
@@ -65,7 +90,7 @@ export const SearchBar = (props: any) => {
           <Icon
             name='x-circle'
             size={16}
-				color={colors.disabled}
+            color={theme.colors.disabled}
             style={{ marginRight: 5 }}
           />
         </TouchableOpacity>
@@ -73,26 +98,3 @@ export const SearchBar = (props: any) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 1,
-  },
-  borderStyle: {
-    borderColor: colors.primary,
-    borderWidth: 1,
-    borderRadius: 10,
-  },
-  inputStyle: {
-    flex: 1,
-  },
-  buttonStyle: {
-    maxHeight: 30,
-    paddingRight: 5,
-    paddingLeft: 5,
-  }
-})

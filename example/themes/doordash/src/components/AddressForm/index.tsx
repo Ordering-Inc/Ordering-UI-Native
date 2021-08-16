@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react'
 import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback, TextStyle } from 'react-native'
 import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
@@ -11,7 +10,7 @@ import { _retrieveStoreData } from '../../providers/StoreUtil';
 import { OInput, OButton, OText, OModal, OIcon } from '../shared'
 import { AddressFormParams } from '../../types'
 import { getTraduction } from '../../utils'
-import { colors, images, labels } from '../../theme.json'
+import { useTheme } from 'styled-components/native';
 import { GoogleMap } from '../GoogleMap'
 import NavBar from '../NavBar'
 
@@ -50,6 +49,45 @@ const AddressFormUI = (props: AddressFormParams) => {
 		isFromCheckout
 	} = props
 
+	const theme = useTheme();
+
+	const styles = StyleSheet.create({
+		iconContainer: {
+			justifyContent: 'center',
+			alignItems: 'center',
+			borderRadius: 10,
+			paddingHorizontal: 18,
+			paddingVertical: 5,
+		},
+		icons: {
+			borderRadius: 20,
+			color: theme.colors.white
+		},
+		inputsStyle: {
+			borderWidth: 0,
+			borderRadius: 7.6,
+			height: 40,
+			minHeight: 40,
+		},
+		textAreaStyles: {
+			borderColor: theme.colors.clear,
+			backgroundColor: theme.colors.backgroundGray,
+			borderRadius: 7.6,
+			marginBottom: 20,
+			borderWidth: 0,
+			height: 92,
+			maxHeight: 92,
+			minHeight: 92,
+			textAlignVertical: 'top',
+			alignItems: 'flex-start'
+		},
+		searchIcon: {
+			position: 'absolute',
+			top: 13,
+			zIndex: 1000
+		}
+	})
+
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
 	const { showToast } = useToast()
@@ -87,10 +125,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
 	const tagsName = [
-		{ icon: images.general.tag_home, value: 'home' },
-		{ icon: images.general.tag_office, value: 'office' },
-		{ icon: images.general.tag_favorite, value: 'favorite' },
-		{ icon: images.general.tag_other, value: 'other' }
+		{ icon: theme.images.general.tag_home, value: 'home' },
+		{ icon: theme.images.general.tag_office, value: 'office' },
+		{ icon: theme.images.general.tag_favorite, value: 'favorite' },
+		{ icon: theme.images.general.tag_other, value: 'other' }
 	]
 
 	const getAddressFormatted = (address: any) => {
@@ -432,7 +470,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 									)}
 								/>
 								<View style={styles.searchIcon}>
-									<OIcon src={images.general.search} width={16} />
+									<OIcon src={theme.images.general.search} width={16} />
 								</View>
 							</AutocompleteInput>
 
@@ -455,9 +493,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 							{!isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) && (
 								<OText>{address?.address || formState.changes?.address || addressState.address.address || ''}</OText>
 							)}
-							
-							<InputWrapper style={{marginTop: 0}}>
-								<OText style={[labels.middle, { flexBasis: '35%' }] as TextStyle}>{t('APT_SUITE', 'Apt./Suite')}</OText>
+
+							<InputWrapper style={{ marginTop: 0 }}>
+								<OText style={{ ...theme.labels.middle, flexBasis: '35%' } as TextStyle}>{t('APT_SUITE', 'Apt./Suite')}</OText>
 								<Controller
 									control={control}
 									name='internal_number'
@@ -477,13 +515,13 @@ const AddressFormUI = (props: AddressFormParams) => {
 											returnKeyType='next'
 											onSubmitEditing={() => zipCodeRef.current.focus()}
 											blurOnSubmit={false}
-											inputStyle={{fontSize: 12}}
+											inputStyle={{ fontSize: 12 }}
 										/>
 									)}
 								/>
 							</InputWrapper>
 							<InputWrapper>
-								<OText style={[labels.middle, { flexBasis: '35%' }] as TextStyle}>{t('ZIPCODE', 'Zipcode')}</OText>
+								<OText style={{ ...theme.labels.middle, flexBasis: '35%' } as TextStyle}>{t('ZIPCODE', 'Zipcode')}</OText>
 								<Controller
 									control={control}
 									name='zipcode'
@@ -503,13 +541,13 @@ const AddressFormUI = (props: AddressFormParams) => {
 											returnKeyType='next'
 											onSubmitEditing={() => addressNotesRef.current.focus()}
 											blurOnSubmit={false}
-											inputStyle={{fontSize: 12}}
+											inputStyle={{ fontSize: 12 }}
 										/>
 									)}
 								/>
 							</InputWrapper>
 							<View style={{ marginTop: 17, marginBottom: 20 }}>
-								<OText style={[labels.middle, { marginBottom: 8 }] as TextStyle}>{t('ADDRESS_NOTES', 'Address notes')}</OText>
+								<OText style={{ ...theme.labels.middle, marginBottom: 8 } as TextStyle}>{t('ADDRESS_NOTES', 'Address notes')}</OText>
 								<Controller
 									control={control}
 									name='address_notes'
@@ -529,12 +567,12 @@ const AddressFormUI = (props: AddressFormParams) => {
 											returnKeyType='done'
 											forwardRef={addressNotesRef}
 											blurOnSubmit
-											inputStyle={{fontSize: 12}}
+											inputStyle={{ fontSize: 12 }}
 										/>
 									)}
 								/>
 							</View>
-						
+
 						</FormInput>
 						<View>
 							{!isKeyboardShow && (
@@ -551,8 +589,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 													alignItems: 'center'
 												}}
 											>
-												<OIcon src={tag.icon} width={24} color={addressTag === tag.value ? colors.primary : colors.textSecondary} />
-												<OText color={addressTag === tag.value ? colors.primary : colors.textSecondary} style={[labels.small, {textTransform: 'capitalize', marginTop: 3}] as TextStyle}>{tag.value}</OText>
+												<OIcon src={tag.icon} width={24} color={addressTag === tag.value ? theme.colors.primary : theme.colors.textSecondary} />
+												<OText color={addressTag === tag.value ? theme.colors.primary : theme.colors.textSecondary} style={{ ...theme.labels.small, textTransform: 'capitalize', marginTop: 3 }}>{tag.value}</OText>
 											</View>
 										</TouchableOpacity>
 									))}
@@ -581,7 +619,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 							)}
 						<OButton
 							text={t('SAVE', 'Save')}
-							textStyle={{ color: colors.white }}
+							textStyle={{ color: theme.colors.white }}
 							imgRightSrc={null}
 							style={{ marginHorizontal: 30, marginBottom: 10 }}
 							onClick={() => setSaveMapLocation(true)}
@@ -601,18 +639,18 @@ const AddressFormUI = (props: AddressFormParams) => {
 								}
 								imgRightSrc=''
 								onClick={handleSubmit(onSubmit)}
-								textStyle={[labels.middle, { color: colors.white }] as TextStyle}
+								textStyle={{ ...theme.labels.middle, color: theme.colors.white } as TextStyle}
 								isDisabled={formState.loading}
-								style={{height: 40, shadowOpacity: 0}}
+								style={{ height: 40, shadowOpacity: 0 }}
 							/>
 						) : (
 							<OButton
 								text={t('CANCEL', 'Cancel')}
-								borderColor={colors.backgroundGray300}
-								bgColor={colors.backgroundGray300}
+								borderColor={theme.colors.backgroundGray300}
+								bgColor={theme.colors.backgroundGray300}
 								style={{ height: 40, shadowOpacity: 0, borderWidth: 1 }}
 								imgRightSrc={null}
-								textStyle={labels.middle as TextStyle}
+								textStyle={theme.labels.middle as TextStyle}
 								onClick={() => navigation?.canGoBack() && navigation.goBack()}
 							/>
 						)}
@@ -622,43 +660,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 		</>
 	)
 }
-
-const styles = StyleSheet.create({
-	iconContainer: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		borderRadius: 10,
-		paddingHorizontal: 18,
-		paddingVertical: 5,
-	},
-	icons: {
-		borderRadius: 20,
-		color: colors.white
-	},
-	inputsStyle: {
-		borderWidth: 0,
-		borderRadius: 7.6,
-		height: 40,
-		minHeight: 40,
-	},
-	textAreaStyles: {
-		borderColor: colors.clear,
-		backgroundColor: colors.backgroundGray,
-		borderRadius: 7.6,
-		marginBottom: 20,
-		borderWidth: 0,
-		height: 92,
-		maxHeight: 92,
-		minHeight: 92,
-		textAlignVertical: 'top',
-		alignItems: 'flex-start'
-	},
-	searchIcon: {
-		position: 'absolute',
-		top: 13,
-		zIndex: 1000
-	}
-})
 
 export const AddressForm = (props: AddressFormParams) => {
 	const addressFormProps = {

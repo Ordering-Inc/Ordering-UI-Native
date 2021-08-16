@@ -12,7 +12,7 @@ import {
 } from './styles'
 import { OButton, OIcon, OInput, OText } from '../shared'
 import { TouchableOpacity, StyleSheet, View, TextStyle } from 'react-native';
-import { colors, labels, images } from '../../theme.json'
+import { useTheme } from 'styled-components/native';
 
 import NavBar from '../NavBar'
 import Spinner from 'react-native-loading-spinner-overlay'
@@ -30,6 +30,17 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
 		formState,
 		navigation
 	} = props
+	const theme = useTheme();
+
+	const styles = StyleSheet.create({
+		inputTextArea: {
+			borderColor: theme.colors.clear,
+			borderRadius: 7.6,
+			marginVertical: 20,
+			height: 100,
+			alignItems: 'flex-start'
+		}
+	})
 
 	const [, t] = useLanguage()
 	const { showToast } = useToast()
@@ -113,13 +124,13 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
 			case 0:
 				return (
 					<TouchableOpacity key={index} onPress={() => handleChangeRating({ target: { name: category, value: index + 1 } })}>
-						<OIcon src={images.general.star} color={colors.backgroundGray} width={30} />
+						<OIcon src={theme.images.general.star} color={theme.colors.backgroundGray} width={30} />
 					</TouchableOpacity>
 				)
 			case 1:
 				return (
 					<TouchableOpacity key={index} onPress={() => handleChangeRating({ target: { name: category, value: index + 1 } })}>
-						<OIcon src={images.general.star} color={colors.primary} width={30} />
+						<OIcon src={theme.images.general.star} color={theme.colors.primary} width={30} />
 					</TouchableOpacity>
 				)
 		}
@@ -129,7 +140,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
 		<>
 			<NavBar
 				title={t('RATE_YOUR_DELIVERY', 'Rate your Delivery')}
-				subTitle={<OText size={10} style={{textAlign: 'center'}}>{moment().format('MMM D, yyyy')}</OText>}
+				subTitle={<OText size={10} style={{ textAlign: 'center' }}>{moment().format('MMM D, yyyy')}</OText>}
 				titleAlign={'center'}
 				onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
 				rightImg={null}
@@ -165,13 +176,13 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
 									}}
 									style={styles.inputTextArea}
 									multiline
-									bgColor={colors.inputDisabled}
+									bgColor={theme.colors.inputDisabled}
 								/>
 							)}
 						/>
 					</FormReviews>
 					<OButton
-						textStyle={{ color: colors.white, ...labels.middle } as TextStyle}
+						textStyle={{ color: theme.colors.white, ...theme.labels.middle } as TextStyle}
 						style={{ marginTop: 20, height: 40, shadowOpacity: 0 }}
 						text={t('SUBMIT', 'Submit')}
 						imgRightSrc=''
@@ -183,16 +194,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
 		</>
 	)
 }
-
-const styles = StyleSheet.create({
-	inputTextArea: {
-		borderColor: colors.clear,
-		borderRadius: 7.6,
-		marginVertical: 20,
-		height: 100,
-		alignItems: 'flex-start'
-	}
-})
 
 export const ReviewOrder = (props: ReviewOrderParams) => {
 	const reviewOrderProps = {

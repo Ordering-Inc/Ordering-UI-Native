@@ -5,7 +5,7 @@ import RNRestart from 'react-native-restart'
 
 import RNPickerSelect from 'react-native-picker-select'
 import { Container } from './styles'
-import { colors } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 import { LanguageSelectorParams } from '../../types'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { useEffect } from 'react'
@@ -21,6 +21,38 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     handleChangeLanguage,
   } = props
 
+  const theme = useTheme();
+
+  const pickerStyle = StyleSheet.create({
+    inputAndroid: {
+      color: theme.colors.secundaryContrast,
+      borderWidth: 1,
+      borderColor: 'transparent',
+      borderRadius: 15,
+      paddingHorizontal: 10,
+      backgroundColor: theme.colors.inputDisabled,
+      width: 80,
+    },
+    inputIOS: {
+      color: theme.colors.secundaryContrast,
+      paddingEnd: 20,
+      height: 40,
+      borderWidth: 1,
+      borderColor: 'transparent',
+      borderRadius: 15,
+      paddingHorizontal: 10,
+      backgroundColor: theme.colors.inputDisabled
+    },
+    icon: {
+      top: Platform.OS === 'ios' ? 10 : 15,
+      right: Platform.OS === 'ios' ? 0 : (I18nManager.isRTL ? 50 : 7),
+      position: 'absolute',
+      fontSize: 20
+    },
+    placeholder: {
+      color: theme.colors.secundaryContrast
+    }
+  })
   const _languages = languagesState?.languages?.map((language: any) => {
     return {
       value: language?.code,
@@ -32,20 +64,20 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     (a.label > b.label) ? 1 : ((b.label > a.label) ? -1 : 0)
   )
 
-  const changeDirection = async (language) => {
-    if(language !== 'ar'){
-      if (I18nManager.isRTL){
+  const changeDirection = async (language: string) => {
+    if (language !== 'ar') {
+      if (I18nManager.isRTL) {
         await I18nManager.forceRTL(false)
         RNRestart.Restart();
       }
     } else {
-      if(!I18nManager.isRTL){
+      if (!I18nManager.isRTL) {
         await I18nManager.forceRTL(true)
         RNRestart.Restart();
       }
     }
   }
-  const handlerChangeLanguage = (language) => {
+  const handlerChangeLanguage = (language: string) => {
     changeDirection(language)
     handleChangeLanguage(language)
   }
@@ -67,37 +99,6 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     </Container>
   )
 }
-
-const pickerStyle = StyleSheet.create({
-  inputAndroid: {
-    color: colors.secundaryContrast,
-    borderWidth: 1,
-    borderColor: 'transparent',
-    borderRadius: 15,
-    paddingHorizontal: 10,
-    backgroundColor: colors.inputDisabled,
-    width: 80,
-  },
-  inputIOS: {
-    color: colors.secundaryContrast,
-    paddingEnd: 20,
-    height: 40,
-    borderWidth: 1,
-    borderColor: 'transparent',
-    borderRadius: 15,
-    paddingHorizontal: 10,
-    backgroundColor: colors.inputDisabled
-  },
-  icon: {
-    top: Platform.OS === 'ios' ? 10 : 15,
-    right: Platform.OS === 'ios' ? 0 : (I18nManager.isRTL ? 50 : 7),
-    position: 'absolute',
-    fontSize: 20
-  },
-  placeholder: {
-    color: colors.secundaryContrast
-  }
-})
 
 export const LanguageSelector = (props: LanguageSelectorParams) => {
   const LanguageProps = {

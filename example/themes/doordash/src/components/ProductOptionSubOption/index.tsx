@@ -15,7 +15,7 @@ import {
 	PositionControl,
 	Circle
 } from './styles'
-import { colors, labels, images } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 import { OIcon, OText } from '../shared'
 
 export const ProductOptionSubOptionUI = (props: any) => {
@@ -30,7 +30,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 		changePosition,
 		disabled
 	} = props
-
+	const theme = useTheme();
 	const [, t] = useLanguage()
 	const [{ parsePrice }] = useUtils()
 	const [showMessage, setShowMessage] = useState(false)
@@ -55,22 +55,22 @@ export const ProductOptionSubOptionUI = (props: any) => {
 		<Container disabled={disabled}>
 			<IconControl onPress={() => handleSuboptionClick()}>
 				{((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
-					<OIcon src={state?.selected ? images.general.check_act : images.general.check_nor} width={16} color={colors.textPrimary} />
+					<OIcon src={state?.selected ? theme.images.general.check_act : theme.images.general.check_nor} width={16} color={theme.colors.textPrimary} />
 				) : (
-					<OIcon src={state?.selected ? images.general.radio_act : images.general.radio_nor} width={16} color={colors.textPrimary} />
+					<OIcon src={state?.selected ? theme.images.general.radio_act : theme.images.general.radio_nor} width={16} color={theme.colors.textPrimary} />
 				)}
-				<OText mLeft={10} style={[{ flex: I18nManager.isRTL ? 0 : 1 }, labels.normal] as TextStyle}>
+				<OText mLeft={10} style={[{ flex: I18nManager.isRTL ? 0 : 1 }, theme.labels.normal] as TextStyle}>
 					{suboption?.name}
 				</OText>
 			</IconControl>
-			{showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} color={colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
+			{showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} color={theme.colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
 			{option?.allow_suboption_quantity && (
 				<QuantityControl>
 					<Checkbox disabled={state.quantity === 0} onPress={decrement}>
 						<MaterialCommunityIcon
 							name='minus-circle-outline'
 							size={24}
-							color={state.quantity === 0 ? colors.backgroundDark : colors.primary}
+							color={state.quantity === 0 ? theme.colors.backgroundDark : theme.colors.primary}
 						/>
 					</Checkbox>
 					<OText mLeft={5} mRight={5}>
@@ -80,7 +80,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 						<MaterialCommunityIcon
 							name='plus-circle-outline'
 							size={24}
-							color={disableIncrement ? colors.backgroundDark : colors.primary}
+							color={disableIncrement ? theme.colors.backgroundDark : theme.colors.primary}
 						/>
 					</Checkbox>
 				</QuantityControl>
@@ -90,7 +90,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 					<Circle onPress={() => changePosition('left')}>
 						<MaterialCommunityIcon
 							name='circle-half-full'
-							color={state.selected && state.position === 'left' ? colors.primary : '#cbcbcb'}
+							color={state.selected && state.position === 'left' ? theme.colors.primary : '#cbcbcb'}
 							size={24}
 							style={styles.inverse}
 						/>
@@ -98,21 +98,21 @@ export const ProductOptionSubOptionUI = (props: any) => {
 					<Circle onPress={() => changePosition('whole')}>
 						<MaterialCommunityIcon
 							name='checkbox-blank-circle'
-							color={state.selected && state.position === 'whole' ? colors.primary : '#cbcbcb'}
+							color={state.selected && state.position === 'whole' ? theme.colors.primary : '#cbcbcb'}
 							size={24}
 						/>
 					</Circle>
 					<Circle onPress={() => changePosition('right')}>
 						<MaterialCommunityIcon
 							name='circle-half-full'
-							color={state.selected && state.position === 'right' ? colors.primary : '#cbcbcb'}
+							color={state.selected && state.position === 'right' ? theme.colors.primary : '#cbcbcb'}
 							size={24}
 						/>
 					</Circle>
 				</PositionControl>
 			)
 			}
-			<OText style={labels.normal as TextStyle} color={colors.textSecondary}>
+			<OText style={theme.labels.normal as TextStyle} color={theme.colors.textSecondary}>
 				+{parsePrice(price)}
 			</OText>
 		</Container>

@@ -1,6 +1,5 @@
 import * as React from 'react'
-import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
+import styled, { useTheme } from 'styled-components/native'
 
 const Wrapper = styled.View`
 
@@ -40,6 +39,9 @@ interface Props {
 }
 
 const OCheckbox = (props: Props) => {
+
+    const theme = useTheme();
+
     const [is_checked, onChanged] = React.useState(props.checked)
 
     const checkToggle = (state: boolean) => {
@@ -49,21 +51,22 @@ const OCheckbox = (props: Props) => {
 
     return (
         <>
-        <Wrapper>
-            <Inner onPress={() => checkToggle(is_checked || false)}>
-                <Box style={{
-                    backgroundColor: is_checked ? colors.primary : 'white',
-                    borderColor: is_checked ? colors.primary : props.checkColor, 
-                    width: props.size ? props.size + 5 : 20, 
-                    height: props.size ? props.size + 5 : 20}}
-                >
-                    {is_checked ? (
-                        <Check style={{borderColor: 'white'}}></Check>
-                    ) : null}
-                </Box>
-                <Title style={{color: props.textColor, fontSize: props.size}}>{props.label ? props.label : ''}</Title>
-            </Inner>
-        </Wrapper>
+            <Wrapper>
+                <Inner onPress={() => checkToggle(is_checked || false)}>
+                    <Box style={{
+                        backgroundColor: is_checked ? theme.colors.primary : 'white',
+                        borderColor: is_checked ? theme.colors.primary : props.checkColor,
+                        width: props.size ? props.size + 5 : 20,
+                        height: props.size ? props.size + 5 : 20
+                    }}
+                    >
+                        {is_checked ? (
+                            <Check style={{ borderColor: 'white' }}></Check>
+                        ) : null}
+                    </Box>
+                    <Title style={{ color: props.textColor, fontSize: props.size }}>{props.label ? props.label : ''}</Title>
+                </Inner>
+            </Wrapper>
         </>
     )
 }

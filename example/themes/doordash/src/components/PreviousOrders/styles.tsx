@@ -1,8 +1,7 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const Card = styled.View`
-  border: 1px solid ${colors.border};
+  border: 1px solid ${(props: any) => props.theme.colors.border};
   flex: 1;
   padding: 10px;
   margin-bottom: 24px;

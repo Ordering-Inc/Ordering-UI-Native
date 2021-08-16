@@ -18,7 +18,7 @@ import {
 	OSItemContent,
 	OSItemActions,
 } from '../PaymentOptionStripe/styles';
-import { colors, images, labels } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 const StripeCardsListUI = (props: any) => {
 	const {
@@ -28,7 +28,7 @@ const StripeCardsListUI = (props: any) => {
 		cardsList,
 		handleCardClick,
 	} = props;
-
+	const theme = useTheme();
 	const [{ token }] = useSession();
 	const [, t] = useLanguage();
 
@@ -79,9 +79,9 @@ const StripeCardsListUI = (props: any) => {
 							<OSItemContent onPress={() => handleCardSelected(card)}>
 								<View style={styles.viewStyle}>
 									{card.id === cardSelected?.id ? (
-										<OIcon src={images.general.radio_act} width={16} color={colors.textPrimary} />
+										<OIcon src={theme.images.general.radio_act} width={16} color={theme.colors.textPrimary} />
 									) : (
-										<OIcon src={images.general.radio_act} width={16} color={colors.textSecondary} />
+										<OIcon src={theme.images.general.radio_act} width={16} color={theme.colors.textSecondary} />
 									)}
 								</View>
 								<View style={styles.viewStyle}>
@@ -99,7 +99,7 @@ const StripeCardsListUI = (props: any) => {
 									message={t('QUESTION_DELETE_CARD', 'Are you sure that you want to delete the card?')}
 									onAccept={() => deleteCard(card)}
 								>
-									<OIcon src={images.general.trash} width={16} color={colors.textPrimary} />
+									<OIcon src={theme.images.general.trash} width={16} color={theme.colors.textPrimary} />
 								</OAlert>
 							</OSItemActions>
 						</OSItem>

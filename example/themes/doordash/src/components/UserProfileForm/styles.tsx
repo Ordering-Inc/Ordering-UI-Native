@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'; 
 
 export const CenterView = styled.View`
   align-items: center;
@@ -14,7 +13,7 @@ export const Names = styled.View`
   align-items: baseline;
   padding: 17px 40px;
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.border};
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
 `
 
 export const EditButton = styled.View`

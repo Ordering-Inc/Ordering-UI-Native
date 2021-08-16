@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { View, StyleSheet, ScrollView, Platform, PanResponder, I18nManager, TouchableOpacity } from 'react-native'
-import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {
 	BusinessList as BusinessesListingController,
 	useLanguage,
@@ -14,8 +13,7 @@ import {
 
 import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption, HeaderCont, FeaturedBussiCont } from './styles'
 
-import NavBar from '../NavBar'
-import { colors, images, labels } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 import { SearchBar } from '../SearchBar'
 import { OIcon, OText } from '../shared'
 import { BusinessesListingParams } from '../../types'
@@ -44,6 +42,39 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [{ configs }] = useConfig()
 	const [{ parseDate }] = useUtils()
 	const { showToast } = useToast()
+
+	const theme = useTheme();
+
+	const styles = StyleSheet.create({
+		container: {
+			paddingHorizontal: 40,
+			marginBottom: 0
+		},
+		welcome: {
+			flex: 1,
+			flexDirection: 'row'
+		},
+		inputStyle: {
+			backgroundColor: theme.colors.white,
+			lineHeight: 21,
+			height: 22,
+			marginEnd: 7
+		},
+		wrapperOrderOptions: {
+			width: '100%',
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+			marginBottom: 10,
+			zIndex: 100
+		},
+		borderStyle: {
+			borderColor: theme.colors.backgroundGray,
+			borderWidth: 1,
+			borderRadius: 40,
+		}
+	})
 
 	// const timerId = useRef<any>(false)
 	// const panResponder = useRef(
@@ -108,7 +139,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			<HeaderCont>
 				{!auth && (
 					<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()}>
-						<OIcon src={images.general.arrow_left} width={16} />
+						<OIcon src={theme.images.general.arrow_left} width={16} />
 					</TouchableOpacity>
 				)}
 				<AddressInput
@@ -116,16 +147,16 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						? navigation.navigate('AddressList', { isFromBusinesses: true })
 						: navigation.navigate('AddressForm', { address: orderState.options?.address, isFromBusinesses: true })}
 				>
-					<OText color={colors.red} size={12} weight={'600'}>{t('DELIVER_TO', 'Deliver to')}</OText>
+					<OText color={theme.colors.red} size={12} weight={'600'}>{t('DELIVER_TO', 'Deliver to')}</OText>
 					<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 						<OText size={14} style={styles.inputStyle} numberOfLines={1} weight={'600'}>
 							{orderState?.options?.address?.address}
 						</OText>
-						<OIcon color={colors.red} src={images.general.chevron_right} style={{ transform: [{ rotate: '90deg' }] }} width={16} />
+						<OIcon color={theme.colors.red} src={theme.images.general.chevron_right} style={{ transform: [{ rotate: '90deg' }] }} width={16} />
 					</View>
 				</AddressInput>
 			</HeaderCont>
-			<View style={{ height: 1, backgroundColor: colors.border, marginHorizontal: -40 }} />
+			<View style={{ height: 1, backgroundColor: theme.colors.border, marginHorizontal: -40 }} />
 			{/* {auth && (
 				<WelcomeTitle>
 					<View style={styles.welcome}>
@@ -136,7 +167,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							<OText
 								style={{ fontWeight: 'bold' }}
 								size={28}
-								color={colors.primary}
+								color={theme.colors.primary}
 								numberOfLines={1}
 								ellipsizeMode='tail'
 							>
@@ -185,7 +216,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					items={sorts}
 					onHandleFilter={handleFilterBy}
 				/>
-				<FeaturedBussiCont horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingHorizontal: 40}}>
+				<FeaturedBussiCont horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 40 }}>
 					{
 						businessesList.businesses?.map((business: any) => business?.featured && (
 							<BusinessController
@@ -240,37 +271,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		</ScrollView>
 	)
 }
-
-const styles = StyleSheet.create({
-	container: {
-		paddingHorizontal: 40,
-		marginBottom: 0
-	},
-	welcome: {
-		flex: 1,
-		flexDirection: 'row'
-	},
-	inputStyle: {
-		backgroundColor: colors.white,
-		lineHeight: 21,
-		height: 22,
-		marginEnd: 7
-	},
-	wrapperOrderOptions: {
-		width: '100%',
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		marginBottom: 10,
-		zIndex: 100
-	},
-	borderStyle: {
-		borderColor: colors.backgroundGray,
-		borderWidth: 1,
-		borderRadius: 40,
-	}
-})
 
 export const BusinessesListing = (props: BusinessesListingParams) => {
 

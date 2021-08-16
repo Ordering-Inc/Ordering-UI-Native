@@ -10,39 +10,7 @@ import {
 } from 'react-native';
 
 import * as React from 'react';
-import styled from 'styled-components/native';
-import { colors } from '../../theme.json';
-
-const StyledButton = styled.View<Props>`
-  background-color: ${colors.primary};
-  border-radius: 26px;
-  border-width: 2px;
-  height: 52px;
-  border-color: ${colors.primary};
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 1px 1px 2px #00000020;
-  padding-left: 20px;
-  padding-right: 20px;
-  position: relative;
-`
-const StyledButtonDisabled = styled(StyledButton)`
-  background-color: ${colors.disabled};
-  border-color: ${colors.disabled};
-`
-
-const StyledText = styled.Text`
-  font-size: 16px;
-  color: ${colors.btnFont};
-  margin-left: 10px;
-  margin-right: 10px;
-  font-family: 'Poppins-Regular';
-`
-
-const StyledTextDisabled = styled(StyledText)`
-  color: ${colors.primary};
-`
+import styled, { useTheme } from 'styled-components/native';
 
 const StyledImage = styled.Image`
   width: 20px;
@@ -82,6 +50,41 @@ interface Props {
 }
 
 const OButton = (props: Props): React.ReactElement => {
+
+	const theme = useTheme();
+
+	const StyledButton = styled.View<Props>`
+		background-color: ${theme.colors.primary};
+		border-radius: 26px;
+		border-width: 2px;
+		height: 52px;
+		border-color: ${theme.colors.primary};
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 1px 1px 2px #00000020;
+		padding-left: 20px;
+		padding-right: 20px;
+		position: relative;
+	`
+	const StyledButtonDisabled = styled(StyledButton)`
+		background-color: ${theme.colors.disabled};
+		border-color: ${theme.colors.disabled};
+	`
+
+	const StyledText = styled.Text`
+		font-size: 16px;
+		color: ${theme.colors.btnFont};
+		margin-left: 10px;
+		margin-right: 10px;
+		font-family: 'Poppins-Regular';
+	`
+
+	const StyledTextDisabled = styled(StyledText)`
+		color: ${theme.colors.primary};
+	`
+
+
 	if (props.isDisabled) {
 		return (
 			<View style={props.parentStyle}>

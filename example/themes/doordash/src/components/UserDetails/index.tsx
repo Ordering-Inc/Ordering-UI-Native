@@ -11,7 +11,7 @@ import {
 } from 'ordering-components/native';
 
 import { OIcon, OText } from '../shared';
-import { colors, images, labels } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 import { UserFormDetailsUI } from '../UserFormDetails';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
@@ -29,6 +29,7 @@ const UserDetailsUI = (props: any) => {
 		togglePhoneUpdate
 	} = props
 
+	const theme = useTheme();
 	const [, t] = useLanguage()
 	const [{ user }] = useSession()
 	const userData = props.userData || (!formState.result.error && formState.result?.result) || user
@@ -67,17 +68,17 @@ const UserDetailsUI = (props: any) => {
 			{!(validationFields.loading || formState.loading) && (
 				<UDContainer>
 					<UDHeader>
-						<OText style={labels.middle as TextStyle}>
+						<OText style={theme.labels.middle as TextStyle}>
 							{t('CUSTOMER_DETAILS', 'Customer Details').toUpperCase()}
 						</OText>
 						{cartStatus !== 2 && (
 							!isEdit ? (
 								<TouchableOpacity onPress={() => toggleIsEdit()}>
-									<OIcon src={images.general.pencil} width={16} color={colors.textSecondary} />
+									<OIcon src={theme.images.general.pencil} width={16} color={theme.colors.textSecondary} />
 								</TouchableOpacity>
 							) : (
 								<TouchableOpacity onPress={() => toggleEditState()}>
-									<OIcon src={images.general.close} width={16} color={colors.red} />
+									<OIcon src={theme.images.general.close} width={16} color={theme.colors.red} />
 								</TouchableOpacity>
 							)
 						)}
@@ -85,22 +86,22 @@ const UserDetailsUI = (props: any) => {
 
 					{!isEdit ? (
 						<UDInfo>
-							<OText style={labels.normal as TextStyle}>
+							<OText style={theme.labels.normal as TextStyle}>
 								{userData?.name} {userData?.middle_name} {userData?.lastname} {userData?.second_lastname}
 							</OText>
-							<OText style={labels.normal as TextStyle}>
+							<OText style={theme.labels.normal as TextStyle}>
 								{userData?.address}
 							</OText>
-							<OText style={labels.normal as TextStyle}>
+							<OText style={theme.labels.normal as TextStyle}>
 								{userData?.email}
 							</OText>
 							{!!(userData?.cellphone || user?.cellphone) && (
 								<>
-									<OText style={labels.normal as TextStyle}>
+									<OText style={theme.labels.normal as TextStyle}>
 										{(userData?.country_phone_code) && `+${(userData?.country_phone_code)} `}{(userData?.cellphone)}
 									</OText>
 									{!!phoneUpdate && (
-										<OText color={colors.error} style={{ textAlign: 'center' }}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
+										<OText color={theme.colors.error} style={{ textAlign: 'center' }}>{t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}</OText>
 									)}
 								</>
 							)}

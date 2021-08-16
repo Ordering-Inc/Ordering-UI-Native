@@ -1,5 +1,4 @@
 import styled from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const ActiveOrdersContainer = styled.ScrollView`
   margin-bottom: 20px;
@@ -9,7 +8,7 @@ export const ActiveOrdersContainer = styled.ScrollView`
 
 export const Card = styled.TouchableOpacity`
   flex: 1;
-  border: 1px solid ${colors.primary};
+  border: 1px solid ${(props: any) => props.theme.colors.primary};
   border-radius: 2px;
   margin-right: 10px;
   height: 97px;

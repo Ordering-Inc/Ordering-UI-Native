@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme.json';
 
 export const Container = styled.View`
   flex-direction: row;
@@ -7,7 +6,7 @@ export const Container = styled.View`
   justify-content: space-between;
   padding-vertical: 10px;
   border-bottom-width: 1px;
-  border-bottom-color: ${colors.border}
+  border-bottom-color: ${(props: any) => props.theme.colors.border}
 `
 
 export const IconControl = styled.TouchableOpacity`

@@ -5,7 +5,7 @@ import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 
 
 import { BusinessCategoriesTitle, BusinessCategories, Category, BCContainer } from './styles'
 import { OIcon, OText } from '../shared'
-import { colors, images } from '../../theme.json'
+import { useTheme } from 'styled-components/native'
 import { BusinessTypeFilterParams } from '../../types'
 import { useWindowDimensions } from 'react-native'
 
@@ -16,6 +16,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 		handleChangeBusinessType,
 	} = props;
 
+	const theme = useTheme();
 	const [, t] = useLanguage();
 	const { width } = useWindowDimensions();
 
@@ -33,7 +34,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 						/>
 					) : (
 						<OIcon
-							src={images.categories.all}
+							src={theme.images.categories.all}
 							style={styles.logo}
 						/>
 					)}
@@ -41,7 +42,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 						style={{ textAlign: 'center' }}
 						size={12}
 						weight={'400'}
-						color={currentTypeSelected === item.id ? colors.textPrimary : colors.textSecondary}
+						color={currentTypeSelected === item.id ? theme.colors.textPrimary : theme.colors.textSecondary}
 					>
 						{t(`BUSINESS_TYPE_${item.name.replace(/\s/g, '_').toUpperCase()}`, item.name)}
 					</OText>
@@ -51,7 +52,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 	}
 
 	return (
-		<BCContainer style={{marginStart: -40, width: width}}>
+		<BCContainer style={{ marginStart: -40, width: width }}>
 			{typesState?.loading && (
 				<View>
 					<Placeholder
@@ -80,7 +81,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 					{/* <BusinessCategoriesTitle>
 						<OText
 							size={16}
-							color={colors.textSecondary}
+							color={theme.colors.textSecondary}
 						>
 							{t('BUSINESS_CATEGORIES', 'Business Categories')}
 						</OText>
@@ -92,7 +93,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 							data={typesState?.types}
 							renderItem={renderTypes}
 							keyExtractor={type => type.name}
-							contentContainerStyle={{paddingHorizontal: 40}}
+							contentContainerStyle={{ paddingHorizontal: 40 }}
 						/>
 					</BusinessCategories>
 				</>

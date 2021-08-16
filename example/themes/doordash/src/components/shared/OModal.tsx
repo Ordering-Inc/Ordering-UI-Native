@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Alert, Modal, StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpacity, View, TextStyle } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
-import styled from 'styled-components';
-import { colors } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 
 interface Props {
   open?: boolean;
@@ -42,7 +41,7 @@ const OModal = (props: Props): React.ReactElement => {
     isNotDecoration,
     style,
     styleCloseButton,
-	 transition
+    transition
   } = props
 
   return (
@@ -50,7 +49,7 @@ const OModal = (props: Props): React.ReactElement => {
       animationType="slide"
       transparent={isTransparent}
       visible={open}
-		presentationStyle={transition || 'fullScreen'}
+      presentationStyle={transition || 'fullScreen'}
       onRequestClose={() => { onClose() }}
       style={{ height: '100%', flex: 1, position: 'absolute', ...style, zIndex: 9999 }}
     >

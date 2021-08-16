@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { colors } from '../../theme.json';
 
 export const BussFilterWrap = styled.View`
 	margin-horizontal: -40px;
@@ -16,6 +15,6 @@ export const FilterItem = styled.TouchableOpacity`
 	align-items: center;
 	justify-content: center;
 	border-radius: 20px;
-	background-color: ${colors.backgroundGray300};
+	background-color: ${(props: any) => props.theme.colors.backgroundGray300};
 	margin-end: 16px;
 `;

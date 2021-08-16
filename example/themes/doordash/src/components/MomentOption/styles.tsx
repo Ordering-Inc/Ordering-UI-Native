@@ -1,9 +1,8 @@
 import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const Container = styled.ScrollView`
   flex: 1;
-  background-color: ${colors.backgroundPage};
+  background-color: ${(props: any) => props.theme.colors.backgroundPage};
   padding: 0 20px;
   padding-bottom: 20px;
 `
@@ -33,7 +32,7 @@ export const Day = styled.TouchableOpacity`
 `
 export const WrapHours = styled.ScrollView`
   border-width: 1px;
-  border-color: ${colors.clear};
+  border-color: ${(props: any) => props.theme.colors.clear};
   border-radius: 7.6px;
   margin: 0px 0;
   height: 140px;
@@ -53,7 +52,7 @@ export const Hour = styled.TouchableOpacity`
   padding: 5px;
   border-width: 1px;
   border-radius: 7.6px;
-  border-color: ${colors.border};
+  border-color: ${(props: any) => props.theme.colors.border};
   width: 90px;
   margin-vertical: 7px;
 `

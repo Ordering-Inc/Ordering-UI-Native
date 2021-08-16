@@ -31,7 +31,7 @@ import { VerifyPhone } from '../VerifyPhone';
 
 import { OText, OButton, OInput, OModal, OIcon } from '../shared';
 import { SignupParams } from '../../types';
-import { colors, images, labels } from '../../theme.json'
+import { useTheme } from 'styled-components/native';
 import { sortInputFields } from '../../utils';
 import { useWindowDimensions } from 'react-native';
 
@@ -61,6 +61,47 @@ const SignupFormUI = (props: SignupParams) => {
 		hasNav
 	} = props
 
+	const theme = useTheme();
+
+	const registerStyles = StyleSheet.create({
+		btnOutline: {
+			backgroundColor: '#FFF',
+			color: theme.colors.primary
+		},
+		inputStyle: {
+			marginBottom: 25,
+			borderWidth: 0,
+			height: 40,
+		},
+		inputHead: {
+			flexBasis: '32%',
+			marginTop: 9
+		},
+		socialButton: {
+			height: 40,
+			paddingTop: 0,
+			paddingBottom: 0,
+			alignItems: 'center',
+			justifyContent: 'flex-start',
+			flexDirection: 'row',
+			marginBottom: 20
+		},
+		socialText: {
+			fontSize: 14,
+			lineHeight: 20,
+			fontWeight: '600',
+			color: theme.colors.white,
+			textTransform: 'capitalize',
+			textAlign: 'center',
+			flexGrow: 1,
+		},
+		wrappText: {
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			marginBottom: 30
+		}
+	});
 	const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
 
 	const { showToast } = useToast();
@@ -300,9 +341,9 @@ const SignupFormUI = (props: SignupParams) => {
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
 										handleSuccessFacebookLogin={handleSuccessFacebook}
-										styles={{ ...registerStyles.socialButton, backgroundColor: colors.facebook }}
+										styles={{ ...registerStyles.socialButton, backgroundColor: theme.colors.facebook }}
 										textStyles={registerStyles.socialText}
-										renderIcon={<OIcon src={images.general.facebook} width={16} />}
+										renderIcon={<OIcon src={theme.images.general.facebook} width={16} />}
 										text={t('CONTINUE_WITH_FACEBOOK', 'Continue with Facebook')}
 									/>
 									<FacebookLogin
@@ -310,9 +351,9 @@ const SignupFormUI = (props: SignupParams) => {
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
 										handleSuccessFacebookLogin={handleSuccessFacebook}
-										styles={{...registerStyles.socialButton, backgroundColor: colors.google }}
+										styles={{ ...registerStyles.socialButton, backgroundColor: theme.colors.google }}
 										textStyles={registerStyles.socialText}
-										renderIcon={<OIcon src={images.general.google} width={16} />}
+										renderIcon={<OIcon src={theme.images.general.google} width={16} />}
 										text={t('CONTINUE_WITH_GOOGLE', 'Continue with Google')}
 									/>
 									<FacebookLogin
@@ -320,13 +361,13 @@ const SignupFormUI = (props: SignupParams) => {
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
 										handleSuccessFacebookLogin={handleSuccessFacebook}
-										styles={{ ...registerStyles.socialButton, backgroundColor: colors.apple }}
+										styles={{ ...registerStyles.socialButton, backgroundColor: theme.colors.apple }}
 										textStyles={registerStyles.socialText}
-										renderIcon={<OIcon src={images.general.apple} width={16} />}
+										renderIcon={<OIcon src={theme.images.general.apple} width={16} />}
 										text={t('CONTINUE_WITH_APPLE', 'Continue with Apple')}
 									/>
 								</SocialButtons>
-								<OText style={{ ...labels.normal, textAlign: 'center', marginBottom: 8 } as TextStyle} color={colors.textSecondary}>{t('OR_CONTINUE_WITH_EMAIL', 'or continue with email')}</OText>
+								<OText style={{ ...theme.labels.normal, textAlign: 'center', marginBottom: 8 } as TextStyle} color={theme.colors.textSecondary}>{t('OR_CONTINUE_WITH_EMAIL', 'or continue with email')}</OText>
 							</ButtonsSection>
 						)
 					)
@@ -340,7 +381,7 @@ const SignupFormUI = (props: SignupParams) => {
 								{useSignupByEmail && (
 									<Pressable onPress={() => handleChangeTab('email')}>
 										<OTab>
-											<OText size={18} color={signupTab === 'email' ? colors.primary : colors.disabled}>
+											<OText size={18} color={signupTab === 'email' ? theme.colors.primary : theme.colors.disabled}>
 												{t('SIGNUP_BY_EMAIL', 'Signup by Email')}
 											</OText>
 										</OTab>
@@ -349,7 +390,7 @@ const SignupFormUI = (props: SignupParams) => {
 								{useSignupByCellphone && (
 									<Pressable onPress={() => handleChangeTab('cellphone')}>
 										<OTab>
-											<OText size={18} color={signupTab === 'cellphone' ? colors.primary : colors.disabled}>
+											<OText size={18} color={signupTab === 'cellphone' ? theme.colors.primary : theme.colors.disabled}>
 												{t('SIGNUP_BY_PHONE', 'Signup by Phone')}
 											</OText>
 										</OTab>
@@ -358,7 +399,7 @@ const SignupFormUI = (props: SignupParams) => {
 							</OTabs>
 						</SignupWith>
 					)}
-				<View style={{ height: 1, backgroundColor: colors.border, width: width }} />
+				<View style={{ height: 1, backgroundColor: theme.colors.border, width: width }} />
 				<FormInput>
 					{!(useChekoutFileds && validationFields?.loading && validationFields?.fields?.checkout) ? (
 						<>
@@ -368,7 +409,7 @@ const SignupFormUI = (props: SignupParams) => {
 									showField && showField(field.code) && (
 										<View key={field.id}>
 											<InputWrapper>
-												<OText style={{...registerStyles.inputHead, ...labels.middle} as TextStyle}>{t(field.name)}</OText>
+												<OText style={{ ...registerStyles.inputHead, ...theme.labels.middle } as TextStyle}>{t(field.name)}</OText>
 												<Controller
 													control={control}
 													render={({ onChange, value }: any) => (
@@ -385,7 +426,7 @@ const SignupFormUI = (props: SignupParams) => {
 															blurOnSubmit={false}
 															forwardRef={(ref: any) => handleRefs(ref, field.code)}
 															onSubmitEditing={() => field.code === 'email' ? phoneRef.current.focus() : handleFocusRef(getNextFieldCode(i))}
-															inputStyle={{ color: colors.textPrimary, fontSize: 12 }}
+															inputStyle={{ color: theme.colors.textPrimary, fontSize: 12 }}
 														/>
 													)}
 													name={field.code}
@@ -393,7 +434,7 @@ const SignupFormUI = (props: SignupParams) => {
 													defaultValue=""
 												/>
 											</InputWrapper>
-											<View style={{ height: 1, backgroundColor: colors.border, marginHorizontal: -40 }} />
+											<View style={{ height: 1, backgroundColor: theme.colors.border, marginHorizontal: -40 }} />
 										</View>
 									)
 								))
@@ -401,65 +442,65 @@ const SignupFormUI = (props: SignupParams) => {
 
 							{!!showInputPhoneNumber && (
 								<>
-								<InputWrapper>
-									<OText style={{...registerStyles.inputHead, ...labels.middle} as TextStyle}>{t('PHONE', 'Phone')}</OText>
-									<PhoneInputNumber
-										data={phoneInputData}
-										handleData={(val: any) => setPhoneInputData(val)}
-										forwardRef={phoneRef}
-										textInputProps={{
-											returnKeyType: 'next',
-											onSubmitEditing: () => passwordRef.current.focus(),
-											style: {borderWidth: 0, fontSize: 12}
-										}}
-										textWrapStyle={{borderColor: colors.clear, borderWidth: 0, height: 40, paddingStart: 0}}
-									/>
-								</InputWrapper>
-								<View style={{ height: 1, backgroundColor: colors.border, marginHorizontal: -40 }} />
+									<InputWrapper>
+										<OText style={{ ...registerStyles.inputHead, ...theme.labels.middle } as TextStyle}>{t('PHONE', 'Phone')}</OText>
+										<PhoneInputNumber
+											data={phoneInputData}
+											handleData={(val: any) => setPhoneInputData(val)}
+											forwardRef={phoneRef}
+											textInputProps={{
+												returnKeyType: 'next',
+												onSubmitEditing: () => passwordRef.current.focus(),
+												style: { borderWidth: 0, fontSize: 12 }
+											}}
+											textWrapStyle={{ borderColor: theme.colors.clear, borderWidth: 0, height: 40, paddingStart: 0 }}
+										/>
+									</InputWrapper>
+									<View style={{ height: 1, backgroundColor: theme.colors.border, marginHorizontal: -40 }} />
 								</>
 							)}
 
 							{signupTab !== 'cellphone' && (
 								<>
-								<InputWrapper>
-									<OText style={{...registerStyles.inputHead, ...labels.middle} as TextStyle}>{t('PASSWORD', 'Password')}</OText>
-									<Controller
-										control={control}
-										render={({ onChange, value }: any) => (
-											<OInput
-												isSecured={!passwordSee ? true : false}
-												placeholder={t('PASSWORD_PLACEHOLDER', 'at least 8 characters')}
-												style={registerStyles.inputStyle}
-												// iconCustomRight={
-												// 	!passwordSee ?
-												// 		<MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
-												// 		<MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
-												// }
-												value={value}
-												onChange={(val: any) => onChange(val)}
-												returnKeyType='done'
-												onSubmitEditing={handleSubmit(onSubmit)}
-												blurOnSubmit
-												forwardRef={passwordRef}
-												inputStyle={{ color: colors.textPrimary, fontSize: 12 }}
-											/>
-										)}
-										name="password"
-										rules={{
-											required: isRequiredField('password')
-												? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required')
-													.replace('_attribute_', t('PASSWORD', 'password'))
-												: null,
-											minLength: {
-												value: 8,
-												message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.')
-													.replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
-											}
-										}}
-										defaultValue=""
-									/>
-								</InputWrapper>
-								<View style={{ height: 1, backgroundColor: colors.border, marginHorizontal: -40 }} />
+									<InputWrapper>
+										<OText style={{ ...registerStyles.inputHead, ...theme.labels.middle } as TextStyle}>{t('PASSWORD', 'Password')}</OText>
+										<Controller
+											control={control}
+											render={({ onChange, value }: any) => (
+												<OInput
+													isSecured={!passwordSee ? true : false}
+													placeholder={t('PASSWORD_PLACEHOLDER', 'at least 8 characters')}
+													style={registerStyles.inputStyle}
+													// iconCustomRight={
+													// 	!passwordSee ?
+													// 		<MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
+													// 		<MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
+													// }
+													value={value}
+													onChange={(val: any) => onChange(val)}
+													returnKeyType='done'
+													onSubmitEditing={handleSubmit(onSubmit)}
+													blurOnSubmit
+													forwardRef={passwordRef}
+													inputStyle={{ color: theme.colors.textPrimary, fontSize: 12 }}
+												/>
+											)}
+											name="password"
+											rules={{
+												required: isRequiredField('password')
+													? t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required')
+														.replace('_attribute_', t('PASSWORD', 'password'))
+													: null,
+												minLength: {
+													value: 8,
+													message: t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.')
+														.replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8)
+												}
+											}}
+											defaultValue=""
+										/>
+									</InputWrapper>
+									<View style={{ height: 1, backgroundColor: theme.colors.border, marginHorizontal: -40 }} />
 								</>
 							)}
 						</>
@@ -471,23 +512,23 @@ const SignupFormUI = (props: SignupParams) => {
 						<OButton
 							onClick={handleSubmit(onSubmit)}
 							text={t('GET_VERIFY_CODE', 'Get Verify Code')}
-							borderColor={colors.primary}
+							borderColor={theme.colors.primary}
 							imgRightSrc={null}
-							textStyle={{ color: 'white', ...labels.middle } as TextStyle}
+							textStyle={{ color: 'white', ...theme.labels.middle } as TextStyle}
 							isLoading={isLoadingVerifyModal}
-							indicatorColor={colors.white}
-							style={{height: 40, marginTop: 50, shadowOpacity: 0}}
+							indicatorColor={theme.colors.white}
+							style={{ height: 40, marginTop: 50, shadowOpacity: 0 }}
 						/>
 					) : (
 						<OButton
 							onClick={handleSubmit(onSubmit)}
 							text={signupButtonText}
-							bgColor={colors.primary}
-							borderColor={colors.primary}
-							textStyle={{ color: 'white', ...labels.middle } as TextStyle}
+							bgColor={theme.colors.primary}
+							borderColor={theme.colors.primary}
+							textStyle={{ color: 'white', ...theme.labels.middle } as TextStyle}
 							imgRightSrc={null}
 							isDisabled={formState.loading || validationFields.loading}
-							style={{height: 40, marginTop: 50, shadowOpacity: 0}}
+							style={{ height: 40, marginTop: 50, shadowOpacity: 0 }}
 						/>
 
 					)}
@@ -500,7 +541,7 @@ const SignupFormUI = (props: SignupParams) => {
 								{t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
 							</OText>
 							<Pressable onPress={() => onNavigationRedirect('Login')}>
-								<OText size={18} color={colors.primary}>
+								<OText size={18} color={theme.colors.primary}>
 									{loginButtonText}
 								</OText>
 							</Pressable>
@@ -527,46 +568,6 @@ const SignupFormUI = (props: SignupParams) => {
 		</View >
 	);
 };
-
-const registerStyles = StyleSheet.create({
-	btnOutline: {
-		backgroundColor: '#FFF',
-		color: colors.primary
-	},
-	inputStyle: {
-		marginBottom: 25,
-		borderWidth: 0,
-		height: 40,
-	},
-	inputHead: {
-		flexBasis: '32%',
-		marginTop: 9
-	},
-	socialButton: {
-		height: 40,
-		paddingTop: 0,
-		paddingBottom: 0,
-		alignItems: 'center',
-		justifyContent: 'flex-start',
-		flexDirection: 'row',
-		marginBottom: 20
-	},
-	socialText: {
-		fontSize: 14,
-		lineHeight: 20,
-		fontWeight: '600',
-		color: colors.white,
-		textTransform: 'capitalize',
-		textAlign: 'center',
-		flexGrow: 1,
-	},
-	wrappText: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		marginBottom: 30
-	}
-});
 
 export const SignupForm = (props: any) => {
 	const signupProps = {

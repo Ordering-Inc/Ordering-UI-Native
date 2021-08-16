@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native'
-import { colors } from '../../theme.json'
 
 export const WrapHeader = styled.View`
 	min-height: 220px;
@@ -24,7 +23,7 @@ export const AddressInput = styled.TouchableOpacity`
 	`
 export const WrapSearchBar = styled.View`
    position: relative; 
-	background-color: ${colors.inputDisabled};
+	background-color: ${(props: any) => props.theme.colors.inputDisabled};
   	flex: 1;
 	border-radius: 25px;
 	height: 40px;
@@ -43,7 +42,7 @@ export const SortWrap = styled.View`
 	min-width: 100px;
 `;
 export const SortButton = styled.TouchableOpacity`
-	background-color: ${colors.backgroundGray300};
+	background-color: ${(props: any) => props.theme.colors.backgroundGray300};
 	height: 34px;
 	padding-horizontal: 16px;
 	border-radius: 30px;
@@ -51,7 +50,7 @@ export const SortButton = styled.TouchableOpacity`
 	justify-content: center;
 `;
 export const CategoryWrap = styled.View`
-	background-color: ${colors.white};
+	background-color: ${(props: any) => props.theme.colors.white};
 	min-height: 43px;
 	max-height: 43px;
 `;

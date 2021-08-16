@@ -7,8 +7,7 @@ import {
 	useConfig,
 	useOrder
 } from 'ordering-components/native';
-
-import { colors, labels } from '../../theme.json';
+import { useTheme } from 'styled-components/native';
 import { OButton, OButtonGroup, OInput, OText } from '../shared';
 
 import {
@@ -30,6 +29,21 @@ const DriverTipsUI = (props: any) => {
 		handlerChangeOption
 	} = props;
 
+	const theme = useTheme();
+
+	const style = StyleSheet.create({
+		circle: {
+			borderRadius: 20
+		},
+		inputStyle: {
+			flex: 1,
+			borderWidth: 0,
+			marginRight: 10,
+			height: 40,
+			backgroundColor: theme.colors.inputDisabled,
+			borderRadius: 7.6
+		}
+	})
 	const [{ parsePrice }] = useUtils();
 	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
@@ -74,7 +88,7 @@ const DriverTipsUI = (props: any) => {
 									isActive={option === optionSelected}
 								>
 									{loading && valueOption === option ? (
-										<ActivityIndicator size='small' color={colors.primary} />
+										<ActivityIndicator size='small' color={theme.colors.primary} />
 									) : (
 										<OText size={18} color={option === optionSelected ? '#FFF' : '#000'}>
 											{`${isFixedPrice ? parsePrice(option) : `${option}%`}`}
@@ -84,18 +98,18 @@ const DriverTipsUI = (props: any) => {
 							</TouchableOpacity>
 						))} */}
 						<OButtonGroup
-							activeColor={{ bg: colors.textPrimary, text: colors.white }}
-							normalColor={{ bg: colors.backgroundGray300, text: colors.textPrimary }}
+							activeColor={{ bg: theme.colors.textPrimary, text: theme.colors.white }}
+							normalColor={{ bg: theme.colors.backgroundGray300, text: theme.colors.textPrimary }}
 							buttonStyle={{ paddingHorizontal: 14 }}
-							textStyle={labels.middle as TextStyle}
-							parentStyle={{flex: 1}}
+							textStyle={theme.labels.middle as TextStyle}
+							parentStyle={{ flex: 1 }}
 							textSymbol={'%'}
 							items={driverTipsOptions}
 							onChange={onChangeTips} />
 					</DTWrapperTips>
 					{!driverTipsOptions.includes(driverTip) && driverTip > 0 && (
 						<OText
-							color={colors.error}
+							color={theme.colors.error}
 							size={12}
 							style={{ marginTop: 10, textAlign: 'center' }}
 						>
@@ -118,10 +132,10 @@ const DriverTipsUI = (props: any) => {
 						/>
 						<OButton
 							text={t('APPLY_TIP', 'Apply Tip')}
-							bgColor={colors.primary}
-							borderColor={colors.primary}
+							bgColor={theme.colors.primary}
+							borderColor={theme.colors.primary}
 							textStyle={{ color: 'white', fontSize: 14, fontWeight: '600' }}
-							style={{height: 40, shadowOpacity: 0}}
+							style={{ height: 40, shadowOpacity: 0 }}
 							imgRightSrc={null}
 							isDisabled={!(value > 0 && value !== driverTip) || !value}
 							onClick={() => {
@@ -132,7 +146,7 @@ const DriverTipsUI = (props: any) => {
 					</DTWrapperInput>
 					{parseFloat(driverTip || 0) > 0 && (
 						<OText
-							color={colors.error}
+							color={theme.colors.error}
 							size={12}
 							style={{ marginTop: 10, textAlign: 'center' }}
 						>
@@ -144,20 +158,6 @@ const DriverTipsUI = (props: any) => {
 		</DTContainer>
 	)
 }
-
-const style = StyleSheet.create({
-	circle: {
-		borderRadius: 20
-	},
-	inputStyle: {
-		flex: 1,
-		borderWidth: 0,
-		marginRight: 10,
-		height: 40,
-		backgroundColor: colors.inputDisabled,
-		borderRadius: 7.6
-	}
-})
 
 export const DriverTips = (props: any) => {
 	const driverTipsProps = {
