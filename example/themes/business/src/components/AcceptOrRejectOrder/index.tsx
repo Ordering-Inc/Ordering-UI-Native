@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Content, Timer, TimeField, Header, Action, Comments } from './styles';
 import { Linking } from 'react-native';
-import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { FloatingButton } from '../FloatingButton';
+import { useTheme } from 'styled-components/native';
 import {
   ToastType,
   useToast,
   useLanguage,
   OrderChange as OrderChangeConTableoller,
 } from 'ordering-components/native';
+import { Content, Timer, TimeField, Header, Action, Comments } from './styles';
+import { FloatingButton } from '../FloatingButton';
+import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
-import { useTheme } from 'styled-components/native';
 
 export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const { navigation, route, orderState, updateStateOrder } = props;
-  const [hour, setHour] = useState('00');
-  const [min, setMin] = useState('00');
+
   const [, { showToast }] = useToast();
-  const [comments, setComments] = useState('');
   const [, t] = useLanguage();
   const theme = useTheme();
+
+  const [hour, setHour] = useState('00');
+  const [min, setMin] = useState('00');
+  const [comments, setComments] = useState('');
+
   const phoneNumber = route?.order?.customer?.cellphone;
-  let codeNumberPhone;
-  let numberPhone;
-  let numberToShow;
+  let codeNumberPhone, numberPhone, numberToShow;
+
   if (phoneNumber) {
     codeNumberPhone = phoneNumber.slice(0, 3);
     numberPhone = phoneNumber.slice(3, phoneNumber?.length);
@@ -201,15 +203,22 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                     style={{ marginBottom: 10 }}>
                     {t(
                       'MARK_THE_ORDER_AS_REJECTED',
-                      'Mark the order as rejected.',
+                      'Mark the order as rejected',
                     )}
                   </OText>
 
-                  <OText size={15} color={theme.colors.textGray}>
-                    {t(
-                      'NOTE_YOUR_CUSTOMER_WILL_RECEIVE_A_NOTIFICATION_ABOUT_THIS_ACTIONS',
-                      'Note: Your customer will receive a notification about this actions',
-                    )}
+                  <OText>
+                    <OText style={{ fontWeight: 'bold' }}>
+                      {t('NOTE', 'Note')}
+                      {': '}
+                    </OText>
+
+                    <OText size={15} color={theme.colors.textGray}>
+                      {t(
+                        'YOUR_CUSTOMER_WILL_RECEIVE_A_NOTIFICATION_ABOUT_THIS_ACTIONS',
+                        'Your customer will receive a notification about this actions',
+                      )}
+                    </OText>
                   </OText>
                 </>
               )}

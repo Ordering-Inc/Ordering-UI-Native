@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { useLanguage, useOrder, useUtils } from 'ordering-components/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -139,6 +139,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
                     ? orientationState?.dimensions?.width * 0.16
                     : orientationState?.dimensions?.width * 0.21,
                 }}
+                titleStyle={{marginTop: Platform.OS === 'ios' ? 10 : 0}}
                 onPress={() => {
                   navigation.navigate('ProductDetails', {
                     businessId,

@@ -39,7 +39,7 @@ const ProfileUI = (props: ProfileParams) => {
   } = props;
 
   const [{ user }] = useSession();
-  const [, t] = useLanguage();
+  const [state, t] = useLanguage();
   const [, { showToast }] = useToast();
   const { errors } = useForm();
   const theme = useTheme();
@@ -185,7 +185,7 @@ const ProfileUI = (props: ProfileParams) => {
         />
       </CenterView>
 
-      <Spinner visible={formState?.loading} />
+      <Spinner visible={formState?.loading || state?.loading} />
 
       {!isEdit ? (
         <UserData>

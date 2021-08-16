@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { useLanguage, useUtils } from 'ordering-components/native';
-import { OIcon, OText, OModal } from '../shared';
-import { Card, Logo, Information } from './styles';
 import { useTheme } from 'styled-components/native';
+import { useLanguage, useUtils } from 'ordering-components/native';
+import { Card, Logo, Information, Header, Badge } from './styles';
+import { OIcon, OText } from '../shared';
 import { PreviousMessagesParams } from '../../types';
 
 export const PreviousMessages = (props: PreviousMessagesParams) => {
@@ -199,22 +199,26 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
       fontStyle: 'normal',
       fontWeight: '600',
       fontSize: 18,
-      lineHeight: 18,
       color: theme.colors.textGray,
+    },
+    badge: {
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 14,
+      color: theme.colors.primary,
     },
     date: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
       fontSize: 15,
-      lineHeight: 18,
       color: theme.colors.unselectText,
     },
     orderType: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
-      lineHeight: 18,
       color: theme.colors.orderTypeColor,
     },
   });
@@ -241,9 +245,19 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
               )}
 
               <Information>
-                <OText numberOfLines={1} style={styles.title}>
-                  {order?.business?.name}
-                </OText>
+                <Header>
+                  <OText numberOfLines={1} style={styles.title}>
+                    {order?.business?.name}
+                  </OText>
+
+                  {order?.unread_count > 0 && (
+                    <Badge>
+                      <OText size={14} style={styles.badge}>
+                        {order?.unread_count}
+                      </OText>
+                    </Badge>
+                  )}
+                </Header>
 
                 <OText
                   style={styles.date}

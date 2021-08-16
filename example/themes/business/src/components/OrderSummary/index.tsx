@@ -271,16 +271,19 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
         <OrderContent>
           <OrderHeader>
             <OText size={15} color={theme.colors.textGray} weight="bold">
-              {t('ORDER_NO', 'Order No.')} {order.id}
+              {t('INVOICE_ORDER_NO', 'Order No.')} {order.id}
             </OText>
+
             <OText size={15} color={theme.colors.textGray}>
               {`${orderStatus}`}
             </OText>
+
             <OText>
               {`${t('DELIVERY_TYPE', 'Delivery Type')}: ${
                 deliveryStatus[order?.delivery_type]
               }`}
             </OText>
+
             <OText>
               {`${t('DELIVERY_DATE', 'Delivery Date')}: ${
                 order?.delivery_datetime_utc
@@ -288,8 +291,13 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                   : parseDate(order?.delivery_datetime, { utc: false })
               }`}
             </OText>
-            <OText>{`${t('PAYMENT_METHOD')}: ${order?.paymethod?.name}`}</OText>
+
+            <OText>{`${t('PAYMENT_METHOD')}: ${t(
+              order?.paymethod?.name.toUpperCase(),
+              order?.paymethod?.name,
+            )}`}</OText>
           </OrderHeader>
+
           <OrderCustomer>
             <OText
               style={{ marginBottom: 5 }}
@@ -298,6 +306,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               color={theme.colors.textGray}>
               {t('CUSTOMER_DETAILS', 'Customer details')}
             </OText>
+
             <OText
               size={14}
               numberOfLines={1}
@@ -307,6 +316,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 order?.customer?.lastname
               }`}
             </OText>
+
             <OText
               size={14}
               numberOfLines={1}
@@ -314,6 +324,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               color={theme.colors.textGray}>
               {`${t('EMAIL', 'Email')}: ${order?.customer?.email}`}
             </OText>
+
             <OText
               size={14}
               numberOfLines={1}
@@ -323,20 +334,21 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 order?.customer?.cellphone
               }`}
             </OText>
+
             <OText
               size={14}
               numberOfLines={1}
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
-              {`${t('FULL_ADDRESS', 'Full Addres')}: ${
-                order?.customer?.address
-              }`}
+              {`${t('ADDRESS', 'Address')}: ${order?.customer?.address}`}
             </OText>
+
             {order?.customer?.address_notes && (
               <OText>
                 {`${t('NOTES', 'Notes')}: ${order?.customer?.address_notes}`}
               </OText>
             )}
+
             {order?.customer.zipcode && (
               <OText
                 size={14}
@@ -347,6 +359,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               </OText>
             )}
           </OrderCustomer>
+
           <OrderBusiness>
             <OText
               style={{ marginBottom: 5 }}
@@ -355,6 +368,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               color={theme.colors.textGray}>
               {t('BUSINESS_DETAILS', 'Business details')}
             </OText>
+
             <OText
               size={14}
               numberOfLines={1}
@@ -362,6 +376,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               color={theme.colors.textGray}>
               {order?.business?.name}
             </OText>
+
             <OText
               size={14}
               numberOfLines={1}
@@ -371,14 +386,16 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 order?.business?.cellphone
               }`}
             </OText>
+
             <OText
               size={14}
               numberOfLines={1}
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
-              {`${t('ADDRES', 'Addres')}: ${order?.business?.address}`}
+              {`${t('ADDRESS', 'Address')}: ${order?.business?.address}`}
             </OText>
           </OrderBusiness>
+
           <OrderProducts>
             <OText
               style={{ marginBottom: 5 }}
@@ -387,6 +404,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               color={theme.colors.textGray}>
               {t('ORDER_DETAILS', 'Order Details')}
             </OText>
+
             {order?.products.length &&
               order?.products.map((product: any, i: number) => (
                 <View
@@ -394,9 +412,10 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                   style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <ContentInfo>
                     <View style={{ flexDirection: 'row' }}>
-                      <OText color="#1E5CAF" space>
+                      <OText color={theme.colors.quantityProduct} space>
                         {product?.quantity}
                       </OText>
+
                       <OText
                         size={12}
                         color={theme.colors.textGray}
@@ -404,6 +423,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                         {product?.name}
                       </OText>
                     </View>
+
                     <View
                       style={{
                         display: 'flex',
@@ -411,19 +431,19 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                         flex: 1,
                         alignItems: 'flex-end',
                       }}>
-                      <View style={{ flexDirection: 'row' }}>
-                        <OText size={12} color={theme.colors.textGray}>
-                          {parsePrice(product.total || product.price)}
-                        </OText>
-                      </View>
+                      <OText size={12} color={theme.colors.textGray}>
+                        {parsePrice(product.total || product.price)}
+                      </OText>
                     </View>
                   </ContentInfo>
                 </View>
               ))}
           </OrderProducts>
+
           <OrderBill>
             <Table>
               <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
+
               <OText>{parsePrice(order?.subtotal)}</OText>
             </Table>
 
@@ -431,7 +451,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               <Table>
                 {order?.offer_type === 1 ? (
                   <OText>
-                    {t('DISCOUNT', 'Discount')}
+                    <OText>{t('DISCOUNT', 'Discount')}</OText>
+
                     <OText>
                       {`(${verifyDecimals(order?.offer_rate, parsePrice)}%)`}
                     </OText>
@@ -439,25 +460,30 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 ) : (
                   <OText>{t('DISCOUNT', 'Discount')}</OText>
                 )}
+
                 <OText>
                   - {parsePrice(order?.summary?.discount || order?.discount)}
                 </OText>
               </Table>
             )}
+
             {order?.tax_type !== 1 && (
               <Table>
                 <OText>
                   {t('TAX', 'Tax')}
                   {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
                 </OText>
+
                 <OText>
                   {parsePrice(order?.summary?.tax || order?.totalTax)}
                 </OText>
               </Table>
             )}
+
             {(order?.summary?.delivery_price > 0 || order?.deliveryFee > 0) && (
               <Table>
                 <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
+
                 <OText>
                   {parsePrice(
                     order?.summary?.delivery_price || order?.deliveryFee,
@@ -465,6 +491,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 </OText>
               </Table>
             )}
+
             <Table>
               <OText>
                 {t('DRIVER_TIP', 'Driver tip')}
@@ -473,26 +500,31 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                   !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
                   `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`}
               </OText>
+
               <OText>
                 {parsePrice(
                   order?.summary?.driver_tip || order?.totalDriverTip,
                 )}
               </OText>
             </Table>
+
             <Table>
               <OText>
                 {t('SERVICE_FEE', 'Service Fee')}
                 {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
               </OText>
+
               <OText>
                 {parsePrice(
                   order?.summary?.service_fee || order?.serviceFee || 0,
                 )}
               </OText>
             </Table>
+
             <Total>
               <Table>
                 <OText style={styles.textBold}>{t('TOTAL', 'Total')}</OText>
+
                 <OText style={styles.textBold} color={theme.colors.primary}>
                   {parsePrice(order?.summary?.total || order?.total)}
                 </OText>
@@ -501,6 +533,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
           </OrderBill>
         </OrderContent>
       </Content>
+
       <Action>
         <FloatingButton
           firstButtonClick={() =>
@@ -513,6 +546,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
           }
           color={theme.colors.green}
         />
+
         {Platform.OS === 'ios' && state.selectedPrinter && (
           <FloatingButton
             firstButtonClick={() => silentPrint()}

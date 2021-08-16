@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextStyle, ViewStyle } from 'react-native';
+import { TextStyle, ViewStyle, Platform } from 'react-native';
 import { useTheme } from 'styled-components/native';
 
 import styled from 'styled-components/native';
@@ -44,7 +44,7 @@ const OCard = (props: Props): React.ReactElement => {
 			)}
 			<OImage
 				source={props.image}
-				height={150}
+				height={Platform.OS === 'ios' ? 250 : 150}
 				resizeMode="cover"
 				borderRadius={16}
 			/>

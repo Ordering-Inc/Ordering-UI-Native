@@ -132,12 +132,13 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
           </Placeholder>
         </View>
       )}
+
       {order && Object.keys(order).length > 0 && !loading && (
         <>
           <OrderMessageContainer keyboardShouldPersistTaps="handled">
             {/* <Spinner
-          visible={!order || Object.keys(order).length === 0 || loading}
-        /> */}
+              visible={!order || Object.keys(order).length === 0 || loading}
+            /> */}
 
             <OModal
               open={openModalForBusiness}

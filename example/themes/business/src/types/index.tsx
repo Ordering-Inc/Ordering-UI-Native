@@ -238,6 +238,7 @@ export interface MessagesOptionParams {
   readMessages?: () => {};
   messagesReadList?: () => {};
   onNavigationRedirect?: any;
+  setSortBy?: any;
 }
 export interface OrdersOptionParams {
   orderList?: any;
