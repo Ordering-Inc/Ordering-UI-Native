@@ -35,7 +35,10 @@ export const Home = (props: any) => {
   });
 
   return (
-    <Container height={windowHeight - safeHeight} orientation={orientation}>
+    <Container
+      height={windowHeight - safeHeight}
+      orientation={orientation}
+      style={{ marginTop: 30 }}>
       <LogoWrapper>
         <OIcon src={theme.images.logos.logotypeInvert} style={styles.logo} />
       </LogoWrapper>
@@ -68,7 +71,7 @@ export const Home = (props: any) => {
             onClick={() => onNavigationRedirect('Login')}
           />
 
-          <OButton
+          {/* <OButton
             text={t('SIGNUP', 'Signup')}
             textStyle={{ ...styles.btnText, color: theme.colors.primary }}
             bgColor={theme.colors.btnBGWhite}
@@ -76,7 +79,7 @@ export const Home = (props: any) => {
             style={styles.btn}
             imgRightSrc={false}
             onClick={() => onNavigationRedirect('Signup')}
-          />
+          /> */}
         </View>
       </View>
     </Container>

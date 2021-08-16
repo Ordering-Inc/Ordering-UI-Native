@@ -51,7 +51,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
-      lineHeight: 18,
+      lineHeight: 20,
       color: theme.colors.orderTypeColor,
     },
   });
@@ -79,7 +79,11 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
                 {order.business?.name}
               </OText>
 
-              <OText style={styles.date} numberOfLines={1}>
+              <OText
+                style={styles.date}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                size={20}>
                 {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
                 {order?.delivery_datetime_utc
                   ? parseDate(order?.delivery_datetime_utc)
@@ -87,7 +91,12 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
               </OText>
 
               <MyOrderOptions>
-                <OText style={styles.orderType} mRight={5} size={15}>
+                <OText
+                  style={styles.orderType}
+                  mRight={5}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  size={20}>
                   {order.delivery_type === 1
                     ? t('DELIVERY', 'Delivery')
                     : order.delivery_type === 2

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Platform, Dimensions } from 'react-native';
+import { Platform, Dimensions, StatusBar } from 'react-native';
 import styled, { css } from 'styled-components/native';
 
 const ContainerStyled = styled.ScrollView`
@@ -36,6 +36,10 @@ export const Container = (props: any) => {
 
   return (
     <SafeAreaStyled style={props.style}>
+      <StatusBar
+        backgroundColor={props.style.backgroundColor}
+        barStyle="dark-content"
+      />
       <ContainerStyled
         contentContainerStyle={props.style}
         keyboardShouldPersistTaps="handled"

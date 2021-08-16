@@ -259,7 +259,11 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
                   )}
                 </Header>
 
-                <OText style={styles.date} numberOfLines={1}>
+                <OText
+                  style={styles.date}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  size={20}>
                   {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
                   {order?.delivery_datetime_utc
                     ? parseDate(order?.delivery_datetime_utc)
@@ -270,7 +274,8 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
                   style={styles.orderType}
                   mRight={5}
                   numberOfLines={1}
-                  size={15}>
+                  size={18}
+                  adjustsFontSizeToFit>
                   {getOrderStatus(order?.status)?.value}
                 </OText>
               </Information>
