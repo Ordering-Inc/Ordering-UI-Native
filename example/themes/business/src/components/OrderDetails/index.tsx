@@ -74,12 +74,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           (business: any) => business?.id === businessData?.id,
         );
         if (isThereInBussines) {
-          drivers.drivers.forEach((driversgroup: any) =>
-            itemsDrivers.push({
-              label: driversgroup?.name,
-              value: driversgroup?.id,
-            }),
-          );
+          drivers.drivers.forEach((driversgroup: any) => {
+            if (driversgroup.available) {
+              itemsDrivers.push({
+                label: driversgroup?.name,
+                value: driversgroup?.id,
+              });
+            }
+          });
         }
       });
     }
@@ -373,7 +375,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     },
     {
       ...order?.customer?.location,
-      title: t('YOUR_LOCATION', 'Your Location'),
+      title: t('CUSTOMER', 'Your Customer'),
       icon:
         order?.customer?.photo ||
         'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',
@@ -518,7 +520,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       tintColor: theme.colors.backArrow,
                     }}
                     borderColor={theme.colors.clear}
-                    style={{ maxWidth: 40, marginRight: 20 }}
+                    style={{ maxWidth: 40 }}
                     onClick={() => handleOpenMapView()}
                   />
 
@@ -738,7 +740,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       style={pickerStyle}
                       useNativeAndroidPickerStyle={false}
                       placeholder={{
-                        label: `${t('NOT_DRIVER', 'Not driver')}`,
+                        label:
+                          itemsDrivers?.length > 0
+                            ? `${t('NOT_DRIVER', 'Not driver')}`
+                            : `${t(
+                                'THERE_IS_NOT_DRIVERS_AVAILABLE',
+                                'There is not drivers available to assign',
+                              )}`,
                         value: null,
                       }}
                       Icon={() => (

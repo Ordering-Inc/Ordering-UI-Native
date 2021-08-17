@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
   buttonBack: {
     position: 'absolute',
     borderRadius: 7.6,
-    top: 15,
+    top: 30,
     left: 15,
     borderWidth: 0,
     paddingLeft: 0,
