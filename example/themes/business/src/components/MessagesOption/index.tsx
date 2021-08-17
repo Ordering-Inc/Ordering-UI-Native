@@ -298,10 +298,7 @@ export const MessagesOption = (props: MessagesOptionParams) => {
     ...props,
     asDashboard: true,
     orderStatus: props.activeOrders
-      ? [
-          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-          20, 21,
-        ]
+      ? []
       : [
           0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
           20, 21,
@@ -312,6 +309,7 @@ export const MessagesOption = (props: MessagesOptionParams) => {
       pageSize: 6,
       controlType: 'infinity',
     },
+    isDynamicSort: true,
     orderBy: 'last_direct_message_at',
     orderDirection: 'asc',
     UIComponent: MessagesOptionUI,
