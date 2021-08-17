@@ -6,7 +6,7 @@ export const AddressListContainer = styled.View`
 `
 
 export const AddressItem = styled.TouchableOpacity`
-    padding: 20px;
+    padding: 20px 0;
     flex-direction: row;
     justify-content: center;
     align-items: center;

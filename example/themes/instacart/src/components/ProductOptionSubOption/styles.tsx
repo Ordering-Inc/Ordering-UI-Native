@@ -29,4 +29,5 @@ export const Checkbox = styled.TouchableOpacity`
 `
 
 export const Circle = styled.TouchableOpacity`
+  margin: 0 2px;
 `

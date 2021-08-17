@@ -40,7 +40,7 @@ const OModal = (props: Props): React.ReactElement => {
   return (
     <Modal
       animationType="slide"
-		presentationStyle="pageSheet"
+      presentationStyle="pageSheet"
       transparent={isTransparent}
       visible={open}
       onRequestClose={() => { onClose() }}
@@ -63,16 +63,16 @@ const OModal = (props: Props): React.ReactElement => {
             {children}
           </View>
         ) :
-          <View>
+          <View style={{ flex: 1 }}>
             {!customClose && (
               <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-                <TouchableOpacity onPress={() => onClose()} style={{ padding: 12, paddingStart: 0, zIndex: 10000}}>
-						<OIcon
-							src={theme.images.general.close}
-							width={16}
-							style={styleCloseButton || styles.cancelBtn}
-						/>
-					 </TouchableOpacity>
+                <TouchableOpacity onPress={() => onClose()} style={{ padding: 12, paddingStart: 0, zIndex: 10000 }}>
+                  <OIcon
+                    src={theme.images.general.close}
+                    width={16}
+                    style={styleCloseButton || styles.cancelBtn}
+                  />
+                </TouchableOpacity>
                 <Text style={styles.modalText}>{title}</Text>
               </View>
             )}
@@ -96,12 +96,12 @@ const styles = StyleSheet.create({
   },
   titleSection: {
     width: '100%',
-	 minHeight: 57,
+    minHeight: 57,
     display: 'flex',
-	 flexDirection: 'row',
+    flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-	 paddingHorizontal: 40
+    paddingHorizontal: 40
   },
   cancelBtn: {
   },
@@ -109,9 +109,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
     zIndex: 10,
-	 fontWeight: '600',
-	 paddingStart: 12,
-	 flex: 1
+    fontWeight: '600',
+    paddingStart: 12,
+    flex: 1
   },
   wrapperIcon: {
     overflow: 'hidden',

@@ -9,7 +9,7 @@ export const ActiveOrdersContainer = styled.ScrollView`
 export const Card = styled.TouchableOpacity`
   flex: 1;
   border: 1px solid ${(props: any) => props.theme.colors.primary};
-  border-radius: 20px;
+  border-radius: 3px;
   margin-right: 10px;
   min-width: 320px;
   width: 320px;

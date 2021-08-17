@@ -18,7 +18,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
   } = props
 
   const theme = useTheme()
-  const [{configs}] = useConfig()
+  const [{ configs }] = useConfig()
   const [, t] = useLanguage()
   const [{ parseDate, parsePrice, optimizeImage }] = useUtils()
 
@@ -38,7 +38,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
               url={getGoogleMapImage(order?.business?.location, configs?.google_maps_api_key?.value)}
               height={100}
               width={320}
-              style={{resizeMode: 'cover', borderTopRightRadius: 24, borderTopLeftRadius: 24}}
+              style={{ resizeMode: 'cover', borderTopRightRadius: 3, borderTopLeftRadius: 3 }}
             />
           </Map>
         )}
@@ -103,6 +103,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
       showsHorizontalScrollIndicator={false}
       horizontal
       isMiniCards={configs?.google_maps_api_key?.value}
+      contentContainerStyle={{ paddingHorizontal: 40 }}
     >
       {orders.length > 0 && (
         orders.map((order: any, index: any) => (
