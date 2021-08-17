@@ -309,7 +309,7 @@ export const MessagesOption = (props: MessagesOptionParams) => {
       pageSize: 6,
       controlType: 'infinity',
     },
-    businessAndDriverApp: true,
+    isDynamicSort: true,
     orderBy: 'last_direct_message_at',
     orderDirection: 'asc',
     UIComponent: MessagesOptionUI,
