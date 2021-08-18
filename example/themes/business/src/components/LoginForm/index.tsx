@@ -173,9 +173,7 @@ const LoginFormUI = (props: LoginParams) => {
   };
 
   useEffect(() => {
-    console.log('errocito');
     if (!formState?.loading && formState?.result?.error) {
-      console.log(formState?.result?.result);
       formState?.result?.result &&
         showToast(
           ToastType.Error,
