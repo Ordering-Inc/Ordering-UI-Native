@@ -67,8 +67,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const { order, businessData, driversGroupsData, loading } = props.order;
   const itemsDrivers: any = [];
   const [openModalForMapView, setOpenModalForMapView] = useState(false);
-  const [showDrivers, setShowDrivers] = useState(false)
- 
+  const [showDrivers, setShowDrivers] = useState(false);
+
   if (user?.level === 2) {
     if (driversGroupsData?.length > 0) {
       driversGroupsData.forEach((drivers: any) => {
@@ -77,7 +77,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         );
         if (isThereInBussines) {
           drivers.drivers.forEach((driversgroup: any) => {
-            if(driversgroup.available) {
+            if (driversgroup.available) {
               itemsDrivers.push({
                 label: driversgroup?.name,
                 value: driversgroup?.id,
@@ -463,7 +463,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   };
 
-
   const locationsToSend = locations.filter(
     (location: any) => location?.lat && location?.lng,
   );
@@ -731,53 +730,58 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     </OText>
 
                     {Platform.OS !== 'ios' && (
-            <Picker
-              style={pickerStyle.inputAndroid}
-              selectedValue={{ label: order?.driver?.name, value: order?.driver?.id}}
-              onValueChange={(itemValue: any, itemIndex: any) =>
-                handleAssignDriver(itemValue)
-              }>
-              {itemsDrivers.map((lang: any) => (
-                <Picker.Item
-                  key={lang.inputLabel}
-                  label={lang.label}
-                  value={lang.value}
-                />
-              ))}
-            </Picker>
-          )}
+                      <Picker
+                        style={pickerStyle.inputAndroid}
+                        selectedValue={{
+                          label: order?.driver?.name,
+                          value: order?.driver?.id,
+                        }}
+                        onValueChange={(itemValue: any, itemIndex: any) =>
+                          handleAssignDriver && handleAssignDriver(itemValue)
+                        }>
+                        {itemsDrivers.map((lang: any) => (
+                          <Picker.Item
+                            key={lang.inputLabel}
+                            label={lang.label}
+                            value={lang.value}
+                          />
+                        ))}
+                      </Picker>
+                    )}
 
-          {Platform.OS === 'ios' &&
-            !showDrivers ? (
-              <OIconButton
-                style={{
-                  borderRadius: 7.6,
-                  width: 296,
-                  height: 44,
-                  justifyContent: 'flex-start',
-                }}
-                borderColor={theme.colors.transparent}
-                bgColor={theme.colors.inputChat}
-                title={order?.driver?.name}
-                onClick={() => setShowDrivers(true)}
-              />
-            ) : (
-              <Picker
-                style={pickerStyle.inputIOS}
-                selectedValue={{ label: order?.driver?.name, value: order?.driver?.id}}
-                onValueChange={(itemValue: any, itemIndex: any) => {
-                  handleAssignDriver && handleAssignDriver(itemValue);
-                  setShowDrivers(false);
-                }}>
-                {itemsDrivers.map((lang: any) => (
-                  <Picker.Item
-                    key={lang.inputLabel}
-                    label={lang.label}
-                    value={lang.value}
-                  />
-                ))}
-              </Picker>
-            )}
+                    {Platform.OS === 'ios' && !showDrivers ? (
+                      <OIconButton
+                        style={{
+                          borderRadius: 7.6,
+                          width: 296,
+                          height: 44,
+                          justifyContent: 'flex-start',
+                        }}
+                        borderColor={theme.colors.transparent}
+                        bgColor={theme.colors.inputChat}
+                        title={order?.driver?.name}
+                        onClick={() => setShowDrivers(true)}
+                      />
+                    ) : (
+                      <Picker
+                        style={pickerStyle.inputIOS}
+                        selectedValue={{
+                          label: order?.driver?.name,
+                          value: order?.driver?.id,
+                        }}
+                        onValueChange={(itemValue: any, itemIndex: any) => {
+                          handleAssignDriver && handleAssignDriver(itemValue);
+                          setShowDrivers(false);
+                        }}>
+                        {itemsDrivers.map((lang: any) => (
+                          <Picker.Item
+                            key={lang.inputLabel}
+                            label={lang.label}
+                            value={lang.value}
+                          />
+                        ))}
+                      </Picker>
+                    )}
                   </AssignDriver>
                 )}
 

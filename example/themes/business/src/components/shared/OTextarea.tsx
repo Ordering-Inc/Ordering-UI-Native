@@ -26,11 +26,13 @@ const OTextarea = (props: Props) => {
         onChangeText={(txt: any) => props.onChange(txt)}
         textAlignVertical={'top'}
         placeholder={props.placeholder}
-        placeholderTextColor={theme.colors.lightGray}
+        placeholderTextColor={theme.colors.arrowColor}
         numberOfLines={props.lines}
         underlineColorAndroid={'transparent'}
         value={props.value}
         multiline={true}
+        selectionColor={theme.colors.primary}
+        color={theme.colors.textGray}
       />
     </Wrapper>
   );

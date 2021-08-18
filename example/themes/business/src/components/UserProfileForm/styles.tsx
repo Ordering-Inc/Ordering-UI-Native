@@ -22,7 +22,7 @@ export const EditButton = styled.View`
 export const Actions = styled.View`
   flex: 1;
   border-top-width: 5px;
-  border-top-color: #f8f9fa;
+  border-top-color: ${(props: any) => props.theme.colors.inputChat};
   padding-vertical: 10px;
   padding-horizontal: 20px;
   display: flex;
