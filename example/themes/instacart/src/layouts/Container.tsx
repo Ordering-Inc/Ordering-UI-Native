@@ -14,13 +14,13 @@ const SafeAreaStyled = styled.SafeAreaView`
 
 export const Container = (props: any) => {
 	return (
-		<SafeAreaStyled>
+		<SafeAreaStyled style={{ ...props?.style } || {}}>
 			{props.noScroll ? (
 				<View style={{ flex: 1 }}>
 					{props.children}
 				</View>
 			) : (
-				<ContainerStyled keyboardShouldPersistTaps='handled' style={{padding: props.nopadding ? 0 : 20, paddingTop: 0}}>
+				<ContainerStyled keyboardShouldPersistTaps='handled' style={{ padding: props.nopadding ? 0 : 20, paddingTop: 0 }}>
 					{props.children}
 				</ContainerStyled>
 			)}

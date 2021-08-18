@@ -26,6 +26,7 @@ export const Actions = styled.View`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+  padding-horizontal: 20px;
 `
 
 export const WrapperPhone = styled.View`

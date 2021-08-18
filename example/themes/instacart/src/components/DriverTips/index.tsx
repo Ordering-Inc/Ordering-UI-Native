@@ -40,8 +40,10 @@ const DriverTipsUI = (props: any) => {
 		inputStyle: {
 			flex: 1,
 			borderWidth: 1,
-			borderColor: theme.colors.disabled,
-			marginRight: 10
+			borderRadius: 3,
+			borderColor: theme.colors.border,
+			marginRight: 10,
+			height: 42
 		}
 	})
 
@@ -116,7 +118,8 @@ const DriverTipsUI = (props: any) => {
 							text={t('APPLY_TIP', 'Apply Tip')}
 							bgColor={theme.colors.primary}
 							borderColor={theme.colors.primary}
-							textStyle={{ color: 'white', fontSize: 20 }}
+							textStyle={{ color: 'white', fontSize: 14, fontWeight: 'normal' }}
+							style={{ borderWidth: 1, borderRadius: 3, height: 42 }}
 							imgRightSrc={null}
 							isDisabled={!(value > 0 && value !== driverTip) || !value}
 							onClick={() => {

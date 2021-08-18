@@ -39,11 +39,14 @@ export const UserFormDetailsUI = (props: any) => {
     inputStyle: {
       marginBottom: 25,
       borderWidth: 1,
-      borderColor: theme.colors.disabled
+      borderColor: theme.colors.disabled,
+      borderRadius: 3,
+      height: 42
     },
     editButton: {
       // flex:0,
-      borderRadius: 25,
+      height: 42,
+      borderRadius: 3,
       borderColor: theme.colors.primary,
       backgroundColor: theme.colors.white,
       borderWidth: 1,
