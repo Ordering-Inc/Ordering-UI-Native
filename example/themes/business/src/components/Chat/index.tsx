@@ -268,17 +268,76 @@ const ChatUI = (props: MessagesParams) => {
           style={{ marginHorizontal: 2 }}
         />
         <OIcon
-          url={order?.customer?.logo || theme?.images?.dummies?.customerPhoto}
+          url={order?.customer?.photo || theme?.images?.dummies?.customerPhoto}
           width={16}
           height={16}
           style={{ marginHorizontal: 2 }}
         />
         <OIcon
-          url={order?.driver?.logo || theme?.images?.dummies?.driverPhoto}
+          url={order?.driver?.photo || theme?.images?.dummies?.driverPhoto}
           width={16}
           height={16}
           style={{ marginHorizontal: 2 }}
         />
+      </View>
+    );
+  };
+
+  const AvatarMessageFromAdmin = () => {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        <OIcon
+          url={order?.business?.logo || theme?.images?.dummies?.businessLogo}
+          width={16}
+          height={16}
+          style={{ marginHorizontal: 2 }}
+        />
+        <OIcon
+          url={order?.driver?.photo || theme?.images?.dummies?.driverPhoto}
+          width={16}
+          height={16}
+          style={{ marginHorizontal: 2 }}
+        />
+      </View>
+    );
+  };
+
+  const AvatarMessageFromDriver = () => {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        <OIcon
+          url={order?.business?.logo || theme?.images?.dummies?.businessLogo}
+          width={16}
+          height={16}
+          style={{ marginHorizontal: 2 }}
+        />
+        <OIcon
+          url={user?.photo || theme?.images?.dummies?.driverPhoto}
+          width={16}
+          height={16}
+          style={{ marginHorizontal: 2 }}
+        />
+      </View>
+    );
+  };
+
+  const AvatarMessageFromCustomer = () => {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        <OIcon
+          url={order?.business?.logo || theme?.images?.dummies?.businessLogo}
+          width={16}
+          height={16}
+          style={{ marginHorizontal: 2 }}
+        />
+        {order?.driver && (
+          <OIcon
+            url={order?.driver?.photo || theme?.images?.dummies?.driverPhoto}
+            width={16}
+            height={16}
+            style={{ marginHorizontal: 2 }}
+          />
+        )}
       </View>
     );
   };
@@ -308,6 +367,7 @@ const ChatUI = (props: MessagesParams) => {
         <AvatarsConsole />
       </View>
     );
+
     const firstMessage = {
       _id: 0,
       text: console,
@@ -331,6 +391,7 @@ const ChatUI = (props: MessagesParams) => {
           user: {
             _id: message.author.id,
             name: message.author.name,
+            level: message.author.level,
             avatar:
               message.author.id !== user?.id && type === USER_TYPE.DRIVER
                 ? order?.driver?.photo
@@ -466,7 +527,9 @@ const ChatUI = (props: MessagesParams) => {
           <OIcon url={order?.business?.logo} style={styles.accesoryIcon} />
         </View>
         <TitleHeader>
-          <OText size={18}>{order?.business?.name}</OText>
+          <OText adjustsFontSizeToFit numberOfLines={1} size={18}>
+            {order?.business?.name}
+          </OText>
           <OText>{t('BUSINESS', 'Business')}</OText>
         </TitleHeader>
       </View>
@@ -480,7 +543,9 @@ const ChatUI = (props: MessagesParams) => {
           <OIcon url={order?.customer?.logo} style={styles.accesoryIcon} />
         </View>
         <TitleHeader>
-          <OText size={18}>{order?.customer?.name}</OText>
+          <OText adjustsFontSizeToFit numberOfLines={1} size={18}>
+            {order?.customer?.name}
+          </OText>
           <OText>{t('CUSTOMER', 'Customer')}</OText>
         </TitleHeader>
       </View>
@@ -495,7 +560,7 @@ const ChatUI = (props: MessagesParams) => {
         flexDirection: 'column-reverse',
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'space-between' }}
-      accessoryStyle={{ position: 'relative', marginBottom: 21 }}
+      accessoryStyle={{ position: 'relative', marginBottom: 10 }}
       renderAccessory={order ? renderAccessory : undefined}
     />
   );
@@ -641,20 +706,16 @@ const ChatUI = (props: MessagesParams) => {
         {`${t('SENT_TO', 'Sent to')}:`}
       </OText>
       <View style={{ flexDirection: 'row' }}>
-        <Avatar
-          {...props}
-          imageStyle={{
-            left: { width: 23, height: 23 },
-            right: { width: 23, height: 23 },
-          }}
-        />
-        <Avatar
-          {...props}
-          imageStyle={{
-            left: { width: 23, height: 23 },
-            right: { width: 23, height: 23 },
-          }}
-        />
+        {(props?.currentMessage?.user?.level === 2 ||
+          props?.currentMessage?.user?.level === 0) && (
+          <AvatarMessageFromAdmin />
+        )}
+
+        {props?.currentMessage?.user.level === 4 && <AvatarMessageFromDriver />}
+
+        {props?.currentMessage?.user.level === 3 && (
+          <AvatarMessageFromCustomer />
+        )}
       </View>
     </>
   );
@@ -683,6 +744,7 @@ const ChatUI = (props: MessagesParams) => {
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
           messagesContainerStyle={{ paddingBottom: 80 }}
           showUserAvatar={true}
+          minInputToolbarHeight={100}
           isLoadingEarlier={messages?.loading}
           renderLoading={() => (
             <ActivityIndicator size="small" color={theme.colors.black} />

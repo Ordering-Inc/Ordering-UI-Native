@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Linking } from 'react-native';
+import { Linking, Keyboard, Platform, View, KeyboardAvoidingView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useTheme } from 'styled-components/native';
 import {
@@ -23,6 +23,26 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const [hour, setHour] = useState('00');
   const [min, setMin] = useState('00');
   const [comments, setComments] = useState('');
+  const [isKeyboardShow, setIsKeyboardShow] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardShow(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardShow(false);
+      },
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const phoneNumber = route?.order?.customer?.cellphone;
   let codeNumberPhone, numberPhone, numberToShow;
@@ -120,8 +140,11 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
       <Spinner visible={orderState?.loading} />
 
       {!orderState?.loading && (
-        <>
-          <Content>
+        <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1}}
+      >
+          <Content >
             <Header>
               <OIconButton
                 icon={theme.images.general.arrow_left}
@@ -258,7 +281,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
             )}
           </Content>
 
-          <Action>
+          <Action style={{   marginBottom: (Platform.OS === "ios" && isKeyboardShow)  ? 30 : 0}}>
             <FloatingButton
               firstButtonClick={() =>
                 updateStateOrder &&
@@ -285,7 +308,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
               }
             />
           </Action>
-        </>
+        </ KeyboardAvoidingView>
       )}
     </>
   );

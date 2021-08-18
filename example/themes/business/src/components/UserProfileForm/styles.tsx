@@ -20,6 +20,7 @@ export const EditButton = styled.View`
 `;
 
 export const Actions = styled.View`
+  flex: 1;
   border-top-width: 5px;
   border-top-color: #f8f9fa;
   padding-vertical: 10px;

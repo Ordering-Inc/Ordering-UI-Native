@@ -36,7 +36,6 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       paddingTop: 0,
       marginTop: 0,
       fontSize: 18,
-      lineHeight: 18,
       color: theme.colors.textGray,
     },
     date: {
@@ -51,7 +50,6 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
-      lineHeight: 20,
       color: theme.colors.orderTypeColor,
     },
   });
