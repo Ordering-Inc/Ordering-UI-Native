@@ -1,7 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Platform, StyleSheet } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from 'styled-components/native';
 import {
   LanguageSelector as LanguageSelectorController,
@@ -9,8 +7,9 @@ import {
   useOrder,
 } from 'ordering-components/native';
 import { Container } from './styles';
-import { OText } from '../../components/shared';
+import { OIconButton, OText } from '../../components/shared';
 import { LanguageSelectorParams } from '../../types';
+import { Picker } from '@react-native-picker/picker';
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   const { languagesState, currentLanguage, handleChangeLanguage } = props;
@@ -18,6 +17,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   const [orderState] = useOrder();
   const [, t] = useLanguage();
   const theme = useTheme();
+  const [showLenguagesIos, setShowLenguageIos] = useState(false);
 
   const _languages = languagesState?.languages?.map((language: any) => {
     return {
@@ -34,34 +34,17 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
   const pickerStyle = StyleSheet.create({
     inputAndroid: {
-      color: theme.colors.secundaryContrast,
       borderWidth: 1,
-      borderColor: theme.colors.clear,
       borderRadius: 15,
       paddingHorizontal: 10,
-      backgroundColor: theme.colors.inputDisabled,
       width: 296,
       height: 44,
     },
     inputIOS: {
-      color: theme.colors.secundaryContrast,
-      paddingEnd: 20,
       width: 296,
-      height: 44,
-      borderWidth: 1,
-      borderColor: theme.colors.clear,
+      height: 180,
       borderRadius: 15,
       paddingHorizontal: 10,
-      backgroundColor: theme.colors.inputDisabled,
-    },
-    icon: {
-      top: Platform.OS === 'ios' ? 10 : 15,
-      right: Platform.OS === 'ios' ? 0 : 7,
-      position: 'absolute',
-      fontSize: 20,
-    },
-    placeholder: {
-      color: theme.colors.secundaryContrast,
     },
   });
 
@@ -72,22 +55,54 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
           <OText color={theme.colors.textGray} mBottom={18} weight="bold">
             {t('LANGUAGE', 'Language')}
           </OText>
+          {Platform.OS !== 'ios' && (
+            <Picker
+              style={pickerStyle.inputAndroid}
+              selectedValue={currentLanguage}
+              onValueChange={(itemValue: any, itemIndex: any) =>
+                handleChangeLanguage(itemValue)
+              }>
+              {_languages.map((lang: any) => (
+                <Picker.Item
+                  key={lang.inputLabel}
+                  label={lang.label}
+                  value={lang.value}
+                />
+              ))}
+            </Picker>
+          )}
 
-          <RNPickerSelect
-            onValueChange={handleChangeLanguage}
-            items={_languages || []}
-            value={currentLanguage}
-            style={pickerStyle}
-            useNativeAndroidPickerStyle={false}
-            placeholder={{}}
-            Icon={() => (
-              <MaterialIcons
-                name="keyboard-arrow-down"
-                style={pickerStyle.icon}
+          {Platform.OS === 'ios' &&
+            (!showLenguagesIos ? (
+              <OIconButton
+                style={{
+                  borderRadius: 7.6,
+                  width: 296,
+                  height: 44,
+                  justifyContent: 'flex-start',
+                }}
+                borderColor={theme.colors.transparent}
+                bgColor={theme.colors.inputChat}
+                title={currentLanguage}
+                onClick={() => setShowLenguageIos(true)}
               />
-            )}
-            disabled={orderState.loading}
-          />
+            ) : (
+              <Picker
+                style={pickerStyle.inputIOS}
+                selectedValue={currentLanguage}
+                onValueChange={(itemValue: any, itemIndex: any) => {
+                  handleChangeLanguage(itemValue);
+                  setShowLenguageIos(false);
+                }}>
+                {_languages.map((lang: any) => (
+                  <Picker.Item
+                    key={lang.inputLabel}
+                    label={lang.label}
+                    value={lang.value}
+                  />
+                ))}
+              </Picker>
+            ))}
         </>
       )}
     </Container>

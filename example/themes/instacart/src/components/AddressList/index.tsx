@@ -49,7 +49,10 @@ const AddressListUI = (props: AddressListParams) => {
 			tintColor: theme.colors.primary
 		},
 		button: {
-			marginVertical: 30
+			marginVertical: 30,
+			borderRadius: 3,
+			borderWidth: 1,
+			height: 42
 		}
 	})
 
@@ -150,11 +153,11 @@ const AddressListUI = (props: AddressListParams) => {
 	}, [orderState.options.address])
 
 	return (
-		<Container nopadding={nopadding}>
+		<Container>
 			{(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile)) && (
 				<AddressListContainer>
 					{isFromProfile && (
-						<OText size={24} mBottom={20}>{t('SAVED_PLACES', 'My saved places')}</OText>
+						<OText size={16} mBottom={20} weight={'600'}>{t('SAVED_PLACES', 'My saved places')}</OText>
 					)}
 					{
 						route &&
@@ -267,7 +270,7 @@ const AddressListUI = (props: AddressListParams) => {
 							{!(
 								route && (route?.params?.isFromBusinesses || route?.params?.isFromCheckout)
 							) && !isFromProfile && (
-									<OText size={24}>
+									<OText size={16} weight={'600'}>
 										{t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}
 									</OText>
 								)}

@@ -5,7 +5,7 @@ export const Card = styled.View`
   flex: 1;
   padding: 10px;
   margin-bottom: 10px;
-  border-radius: 20px;
+  border-radius: 3px;
   flex-direction: row;
 `
 

@@ -55,10 +55,12 @@ const ProfileUI = (props: ProfileParams) => {
     },
     inputbox: {
       marginVertical: 8,
-      width: '90%'
+      width: '100%'
     },
     editButton: {
-      borderRadius: 25,
+      borderRadius: 3,
+      maxHeight: 42,
+      height: 42,
       borderColor: theme.colors.primary,
       backgroundColor: theme.colors.white,
       borderWidth: 1,
@@ -209,13 +211,13 @@ const ProfileUI = (props: ProfileParams) => {
           src={!user?.photo && theme.images.general.user}
           width={100}
           height={100}
-          style={{ borderRadius: 12 }}
+          style={{ borderRadius: 3 }}
         />
         <OIconButton
           icon={theme.images.general.camera}
           borderColor={theme.colors.clear}
-          iconStyle={{ width: 30, height: 30 }}
-          style={{ maxWidth: 40 }}
+          iconStyle={{ width: 30, height: 30, tintColor: theme.colors.border }}
+          style={{ maxWidth: 40, position: 'absolute', bottom: 12 }}
           onClick={() => handleImagePicker()}
         />
       </CenterView>
@@ -243,7 +245,7 @@ const ProfileUI = (props: ProfileParams) => {
           )}
         </UserData>
       ) : (
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
           <UserFormDetailsUI
             {...props}
             hideUpdateButton
@@ -260,7 +262,7 @@ const ProfileUI = (props: ProfileParams) => {
             borderColor={theme.colors.primary}
             isDisabled={formState.loading}
             imgRightSrc={null}
-            textStyle={{ fontSize: 20 }}
+            textStyle={{ fontSize: 14, fontWeight: '600' }}
             style={{ ...styles.editButton }}
             onClick={toggleIsEdit}
           />

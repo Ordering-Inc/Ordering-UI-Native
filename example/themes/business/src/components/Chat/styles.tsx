@@ -10,8 +10,11 @@ export const Header = styled.View`
   flex-direction: row;
   align-items: center;
   border-radius: 7.6px;
+  flex: 1;
+
 `;
 
 export const TitleHeader = styled.View`
   margin-left: 11px;
+  max-width: 110px;
 `;

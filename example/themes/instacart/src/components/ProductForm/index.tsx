@@ -88,7 +88,7 @@ export const ProductOptionsUI = (props: any) => {
 
 	const handleRedirectLogin = (product: any) => {
 		onClose()
-		navigation.navigate('Login', { product: { businessId: product?.businessId, id: product?.id, categoryId: product?.categoryId, slug: businessSlug } })
+		navigation.navigate('Home', { showAuth: true, product: { businessId: product?.businessId, id: product?.id, categoryId: product?.categoryId, slug: businessSlug } })
 	}
 
 	const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0
@@ -283,10 +283,7 @@ export const ProductOptionsUI = (props: any) => {
 								style={{
 									backgroundColor: saveErrors ? theme.colors.white : theme.colors.primary,
 									opacity: saveErrors ? 0.3 : 1,
-									borderRadius: 3,
-									height: 42,
-									paddingStart: 4,
-									paddingEnd: 4
+									...styles.actionButton
 								}}
 							/>
 							// ${productCart.total ? parsePrice(productCart?.total) : ''}
@@ -308,10 +305,10 @@ export const ProductOptionsUI = (props: any) => {
 							<OButton
 								isDisabled={isSoldOut || maxProductQuantity <= 0}
 								onClick={() => handleRedirectLogin(productCart)}
-								text={isSoldOut || maxProductQuantity <= 0 ? t('SOLD_OUT', 'Sold out') : t('LOGIN_SIGNUP', 'Login / Sign Up')}
+								text={isSoldOut || maxProductQuantity <= 0 ? t('SOLD_OUT', 'Sold out') : t('LOGIN_SIGNUP', 'Login/SignUp')}
 								imgRightSrc=''
-								textStyle={{ color: theme.colors.primary }}
-								style={{ borderColor: theme.colors.primary, backgroundColor: theme.colors.white }}
+								textStyle={{ color: theme.colors.primary, fontSize: 12, fontWeight: '500' }}
+								style={{ ...styles.actionButton, borderColor: theme.colors.primary, backgroundColor: theme.colors.white }}
 							/>
 						)}
 					</View>
@@ -372,6 +369,13 @@ const styles = StyleSheet.create({
 		resizeMode: 'cover',
 		minHeight: 200,
 		zIndex: 0
+	},
+	actionButton: {
+		borderRadius: 3,
+		height: 42,
+		paddingStart: 4,
+		paddingEnd: 4,
+		borderWidth: 1
 	}
 })
 

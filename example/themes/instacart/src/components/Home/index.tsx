@@ -24,7 +24,7 @@ export const Home = (props: any) => {
 	const [{ optimizeImage }] = useUtils()
 
 	const [allBusinesses, setAllBusinesses] = useState([]);
-	const [openLogin, setOpenLogin] = useState(false);
+	const [openLogin, setOpenLogin] = useState(route?.params?.showAuth || false);
 	const [openSignUp, setOpenSignUp] = useState(false);
 
 	const handleGuessFlow = (page: string, params: any) => {
@@ -95,6 +95,12 @@ export const Home = (props: any) => {
 	useEffect(() => {
 		getBusinesses();
 	}, []);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setOpenLogin(route?.params?.showAuth || false);
+		}, 500)
+	}, [route?.params?.showAuth])
 
 	const panY = useRef(new Animated.Value(windowHeight)).current;
 	let resetPositionAnim = Animated.timing(panY, {

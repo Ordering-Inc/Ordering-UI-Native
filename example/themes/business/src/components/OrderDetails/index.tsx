@@ -37,6 +37,7 @@ import { OButton, OModal, OText, OIconButton } from '../shared';
 import { OrderDetailsParams } from '../../types';
 import { verifyDecimals } from '../../utils';
 import { USER_TYPE } from '../../config/constants';
+import { Picker } from '@react-native-picker/picker';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -66,7 +67,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const { order, businessData, driversGroupsData, loading } = props.order;
   const itemsDrivers: any = [];
   const [openModalForMapView, setOpenModalForMapView] = useState(false);
-
+  const [showDrivers, setShowDrivers] = useState(false)
+ 
   if (user?.level === 2) {
     if (driversGroupsData?.length > 0) {
       driversGroupsData.forEach((drivers: any) => {
@@ -74,12 +76,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           (business: any) => business?.id === businessData?.id,
         );
         if (isThereInBussines) {
-          drivers.drivers.forEach((driversgroup: any) =>
-            itemsDrivers.push({
-              label: driversgroup?.name,
-              value: driversgroup?.id,
-            }),
-          );
+          drivers.drivers.forEach((driversgroup: any) => {
+            if(driversgroup.available) {
+              itemsDrivers.push({
+                label: driversgroup?.name,
+                value: driversgroup?.id,
+              });
+            }
+          });
         }
       });
     }
@@ -373,7 +377,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     },
     {
       ...order?.customer?.location,
-      title: t('YOUR_LOCATION', 'Your Location'),
+      title: t('CUSTOMER', 'CUSTOMER'),
       icon:
         order?.customer?.photo ||
         'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',
@@ -428,17 +432,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       borderWidth: 1,
       borderColor: theme.colors.transparent,
       borderRadius: 15,
+      height: 60,
       backgroundColor: theme.colors.inputDisabled,
     },
     inputIOS: {
       color: theme.colors.secundaryContrast,
       paddingEnd: 20,
-      height: 40,
       borderWidth: 1,
       borderColor: theme.colors.transparent,
       borderRadius: 15,
       paddingHorizontal: 10,
-      backgroundColor: theme.colors.inputDisabled,
     },
     icon: {
       top: Platform.OS === 'ios' ? 10 : 15,
@@ -460,9 +463,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   };
 
-  useEffect(() => {
-    setDriverId(order?.driver?.id);
-  }, [order?.driver?.id]);
 
   const locationsToSend = locations.filter(
     (location: any) => location?.lat && location?.lng,
@@ -730,25 +730,54 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       {t('ASSIGN_DRIVER', 'Assign driver')}
                     </OText>
 
-                    <RNPickerSelect
-                      key={order}
-                      items={itemsDrivers}
-                      onValueChange={(value: any) => onChangeDriver(value)}
-                      value={driverId}
-                      style={pickerStyle}
-                      useNativeAndroidPickerStyle={false}
-                      placeholder={{
-                        label: `${t('NOT_DRIVER', 'Not driver')}`,
-                        value: null,
-                      }}
-                      Icon={() => (
-                        <MaterialIcons
-                          name="keyboard-arrow-down"
-                          style={pickerStyle.icon}
-                        />
-                      )}
-                      disabled={loading}
-                    />
+                    {Platform.OS !== 'ios' && (
+            <Picker
+              style={pickerStyle.inputAndroid}
+              selectedValue={{ label: order?.driver?.name, value: order?.driver?.id}}
+              onValueChange={(itemValue: any, itemIndex: any) =>
+                handleAssignDriver(itemValue)
+              }>
+              {itemsDrivers.map((lang: any) => (
+                <Picker.Item
+                  key={lang.inputLabel}
+                  label={lang.label}
+                  value={lang.value}
+                />
+              ))}
+            </Picker>
+          )}
+
+          {Platform.OS === 'ios' &&
+            !showDrivers ? (
+              <OIconButton
+                style={{
+                  borderRadius: 7.6,
+                  width: 296,
+                  height: 44,
+                  justifyContent: 'flex-start',
+                }}
+                borderColor={theme.colors.transparent}
+                bgColor={theme.colors.inputChat}
+                title={order?.driver?.name}
+                onClick={() => setShowDrivers(true)}
+              />
+            ) : (
+              <Picker
+                style={pickerStyle.inputIOS}
+                selectedValue={{ label: order?.driver?.name, value: order?.driver?.id}}
+                onValueChange={(itemValue: any, itemIndex: any) => {
+                  handleAssignDriver && handleAssignDriver(itemValue);
+                  setShowDrivers(false);
+                }}>
+                {itemsDrivers.map((lang: any) => (
+                  <Picker.Item
+                    key={lang.inputLabel}
+                    label={lang.label}
+                    value={lang.value}
+                  />
+                ))}
+              </Picker>
+            )}
                   </AssignDriver>
                 )}
 
