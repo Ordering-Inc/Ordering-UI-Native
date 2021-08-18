@@ -173,15 +173,27 @@ const LoginFormUI = (props: LoginParams) => {
   };
 
   useEffect(() => {
+    console.log('errocito');
     if (!formState?.loading && formState?.result?.error) {
+      console.log(formState?.result?.result);
       formState?.result?.result &&
         showToast(
           ToastType.Error,
-          typeof formState.result?.result === 'string'
+          loginTab === 'email' && typeof formState.result?.result === 'string'
             ? getTraduction(formState.result?.result)
-            : loginTab === 'email'
+            : loginTab === 'email' &&
+              typeof formState.result?.result !== 'string'
             ? getTraduction(formState.result?.result[0])
-            : getTraduction(formState.result?.result[1]),
+            : loginTab === 'cellphone' &&
+              typeof formState.result?.result === 'string'
+            ? getTraduction(formState.result?.result).replace(
+                t('USER', 'user').toLowerCase(),
+                t('PHONE_NUMER', 'Phone number'),
+              )
+            : getTraduction(formState.result?.result[0]).replace(
+                t('USER', 'user').toLowerCase(),
+                t('PHONE_NUMER', 'Phone number'),
+              ),
         );
     }
   }, [formState]);
@@ -423,6 +435,7 @@ const LoginFormUI = (props: LoginParams) => {
                     handleChangeInputEmail(e, onChange);
                   }}
                   selectionColor={theme.colors.primary}
+                  color={theme.colors.textGray}
                   value={value}
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -494,6 +507,7 @@ const LoginFormUI = (props: LoginParams) => {
                   )
                 }
                 selectionColor={theme.colors.primary}
+                color={theme.colors.textGray}
                 value={value}
                 forwardRef={inputRef}
                 onChange={(val: any) => onChange(val)}

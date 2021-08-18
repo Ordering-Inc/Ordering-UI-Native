@@ -62,6 +62,7 @@ interface Props extends TextInputProps {
   returnKeyType?: any;
   onSubmitEditing?: any;
   blurOnSubmit?: any;
+  color?: any;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -114,6 +115,7 @@ const OInput = (props: Props): React.ReactElement => {
         blurOnSubmit={props.blurOnSubmit}
         ref={props.forwardRef}
         selectionColor={props.selectionColor}
+        color={props.color}
         maxLength={props.maxLength || 1000}
       />
 
