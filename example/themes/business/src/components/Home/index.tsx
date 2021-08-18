@@ -52,7 +52,7 @@ export const Home = (props: any) => {
           <OText style={styles.textSubtitle} color={theme.colors.inputChat}>
             {t(
               'BUSINESS_WELCOME_SUBTITLE',
-              "Let's start to admin your business now",
+              "Let's start to administrate your business now",
             )}
           </OText>
         </View>
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   textSubtitle: {
     fontWeight: 'normal',
     fontStyle: 'normal',
-    fontSize: 15,
+    fontSize: 14,
   },
   wrapperBtn: {
     marginBottom: 20,

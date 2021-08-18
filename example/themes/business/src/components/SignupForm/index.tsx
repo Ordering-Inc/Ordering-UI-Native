@@ -385,6 +385,7 @@ const SignupFormUI = (props: SignupParams) => {
                           field.code === 'email' ? 'email' : 'off'
                         }
                         selectionColor={theme.colors.primary}
+                        color={theme.colors.textGray}
                         returnKeyType="next"
                         blurOnSubmit={false}
                         forwardRef={(ref: any) => handleRefs(ref, field.code)}
@@ -444,6 +445,7 @@ const SignupFormUI = (props: SignupParams) => {
                     )
                   }
                   selectionColor={theme.colors.primary}
+                  color={theme.colors.textGray}
                   value={value}
                   onChange={(val: any) => onChange(val)}
                   returnKeyType="done"

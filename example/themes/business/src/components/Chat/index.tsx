@@ -34,6 +34,7 @@ import {
   View,
   Platform,
   Keyboard,
+  Dimensions,
 } from 'react-native';
 import { Header, TitleHeader, Wrapper } from './styles';
 import { MessagesParams } from '../../types';
@@ -61,6 +62,12 @@ const ChatUI = (props: MessagesParams) => {
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([]);
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
+  const windowWidth =
+    Dimensions.get('window').width < Dimensions.get('window').height
+      ? parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0))
+      : parseInt(
+          parseFloat(String(Dimensions.get('window').height)).toFixed(0),
+        );
 
   const styles = StyleSheet.create({
     containerActions: {
@@ -141,7 +148,7 @@ const ChatUI = (props: MessagesParams) => {
 
   const handleDocumentPicker = async () => {
     try {
-      const res = await DocumentPicker.pick({
+      const res: any = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
       });
       const { uri, type, name, size } = res;
@@ -241,21 +248,36 @@ const ChatUI = (props: MessagesParams) => {
   };
 
   const messageConsole = (message: any) => {
-    return message.change?.attribute !== 'driver_id'
-      ? `${t('ORDER', 'Order')} ${message.change.attribute} ${t(
-          'CHANGED_FROM',
-          'Changed from',
-        )} ${
-          message.change.old !== null &&
-          t(getStatus(parseInt(message.change.old, 10)))
-        } ${t('TO', 'to')} ${t(getStatus(parseInt(message.change.new, 10)))}`
-      : message.change.new
-      ? `${message.driver?.name} ${
-          message.driver?.lastname !== null ? message.driver.lastname : ''
-        } ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${
-          message.comment ? message.comment.length : ''
-        }`
-      : `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`;
+    return (
+      <View
+        style={{
+          ...styles.firstMessage,
+          marginLeft: 10,
+          marginRight: 10,
+          width: windowWidth - 40,
+        }}>
+        <OText style={{ ...styles.firstMessageText, textAlign: 'center' }}>
+          {message.change?.attribute !== 'driver_id'
+            ? `${t('ORDER', 'Order')} ${t(
+                message.change.attribute.toUpperCase(),
+                message.change.attribute,
+              )} ${t('CHANGED_FROM', 'Changed from')} ${
+                message.change.old !== null
+                  ? t(getStatus(parseInt(message.change.old, 10)))
+                  : '0'
+              } ${t('TO', 'to')} ${t(
+                getStatus(parseInt(message.change.new, 10)),
+              )}`
+            : message.change.new
+            ? `${message.driver?.name} ${
+                message.driver?.lastname !== null ? message.driver.lastname : ''
+              } ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${
+                message.comment ? message.comment.length : ''
+              }`
+            : `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`}
+        </OText>
+      </View>
+    );
   };
 
   const AvatarsConsole = () => {
@@ -522,17 +544,26 @@ const ChatUI = (props: MessagesParams) => {
 
   const renderAccessory = (props: any) => (
     <Header>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
         <View style={styles.shadow}>
           <OIcon url={order?.business?.logo} style={styles.accesoryIcon} />
         </View>
+
         <TitleHeader>
-          <OText adjustsFontSizeToFit numberOfLines={1} size={18}>
+          <OText adjustsFontSizeToFit size={16}>
             {order?.business?.name}
           </OText>
-          <OText>{t('BUSINESS', 'Business')}</OText>
+
+          <OText adjustsFontSizeToFit size={14}>
+            {t('BUSINESS', 'Business')}
+          </OText>
         </TitleHeader>
       </View>
+
       <View
         style={{
           flexDirection: 'row',
@@ -542,11 +573,15 @@ const ChatUI = (props: MessagesParams) => {
         <View style={styles.shadow}>
           <OIcon url={order?.customer?.logo} style={styles.accesoryIcon} />
         </View>
+
         <TitleHeader>
-          <OText adjustsFontSizeToFit numberOfLines={1} size={18}>
+          <OText adjustsFontSizeToFit size={16}>
             {order?.customer?.name}
           </OText>
-          <OText>{t('CUSTOMER', 'Customer')}</OText>
+
+          <OText adjustsFontSizeToFit size={14}>
+            {t('CUSTOMER', 'Customer')}
+          </OText>
         </TitleHeader>
       </View>
     </Header>

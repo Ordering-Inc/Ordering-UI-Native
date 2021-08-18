@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Platform, Dimensions } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import { useTheme } from 'styled-components/native';
 import {
   ToastType,
   useToast,
@@ -6,15 +10,11 @@ import {
   useOrder,
   BusinessList,
 } from 'ordering-components/native';
-import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
-import { View, StyleSheet, Platform, Dimensions } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useTheme } from 'styled-components/native';
-import { OText } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { SearchBar } from '../SearchBar';
-import { BusinessesListingParams } from '../../types';
 import { BusinessController } from '../BusinessController';
+import { OText } from '../shared';
+import { BusinessesListingParams } from '../../types';
 
 const StoresListUI = (props: BusinessesListingParams) => {
   const {
@@ -55,7 +55,10 @@ const StoresListUI = (props: BusinessesListingParams) => {
     if (y + windowsHeight > height && !businessesList?.loading && hasMore) {
       setLoadBusinesses(true);
       getBusinesses();
-      showToast(ToastType.Info, 'loading more business');
+      showToast(
+        ToastType.Info,
+        t('LOADING_MORE_BUSINESSES', 'Loading more businesses'),
+      );
     }
   };
 
@@ -137,7 +140,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
       {!error &&
         businesses?.map((business: any) => (
           <BusinessController
-            key={business.id}
+            key={business?.id}
             business={business}
             handleCustomClick={handleBusinessClick}
             orderType={orderState?.options?.type}

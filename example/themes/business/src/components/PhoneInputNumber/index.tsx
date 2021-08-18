@@ -117,6 +117,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
           onSubmitEditing,
           autoCompleteType: 'tel',
           ref: forwardRef,
+          color: theme.colors.textGray,
           ...textInputProps,
         }}
         renderDropdownImage={

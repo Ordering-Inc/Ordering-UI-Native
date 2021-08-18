@@ -1,38 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
+import ToggleSwitch from 'toggle-switch-react-native';
+import { useTheme } from 'styled-components/native';
 import {
   BusinessController as BusinessSingleCard,
   useUtils,
-  // useOrder,
-  // useLanguage,
+  useLanguage,
+  ToastType,
+  useToast,
 } from 'ordering-components/native';
-import { OIcon, OText } from '../shared';
-import { StyleSheet, View } from 'react-native';
-import { BusinessControllerParams } from '../../types';
 import { Card, Information, Logo } from './styles';
-import ToggleSwitch from 'toggle-switch-react-native';
-import { useTheme } from 'styled-components/native';
-import Spinner from 'react-native-loading-spinner-overlay';
+import { OIcon, OText } from '../shared';
+import { BusinessControllerParams } from '../../types';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-  const {
-    business,
-    businessState,
-    // handleClick,
-    // isBusinessOpen,
-    // businessWillCloseSoonMinutes,
-    updateBusiness,
-  } = props;
+  const { businessState, updateBusiness } = props;
+
+  const { loading, business, error } = businessState;
 
   const theme = useTheme();
   const [{ optimizeImage }] = useUtils();
-  // const [, t] = useLanguage();
+  const [, t] = useLanguage();
+  const [, { showToast }] = useToast();
+
+  const [updatingBusiness, setUpdatingBusiness] = useState(false);
 
   const handleSwitch = () => {
+    setUpdatingBusiness(true);
+
     updateBusiness &&
       updateBusiness(business?.id, { enabled: !business?.enabled });
   };
 
-  const { loading } = businessState;
+  useEffect(() => {
+    if (updatingBusiness && !error) {
+      showToast(
+        ToastType.Info,
+        business?.enabled
+          ? t('ENABLED_BUSINESS', 'Enabled business')
+          : t('DISABLED_BUSINESS', 'Disabled business'),
+      );
+    }
+
+    if (error) {
+      showToast(
+        ToastType.Error,
+        t('ERROR_UPDATING_BUSINESS', 'Error updating business'),
+      );
+    }
+
+    setUpdatingBusiness(false);
+  }, [business]);
 
   const styles = StyleSheet.create({
     logo: {
@@ -93,7 +112,9 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
             </OText>
 
             <OText style={styles.address} numberOfLines={1}>
-              {business?.zipcode ? business.zipcode : "doesn't have zipcode"}
+              {business?.zipcode
+                ? business.zipcode
+                : t('BUSINESS_NOT_HAVE_ZIPCODE', "Doesn't have zipcode")}
             </OText>
           </Information>
         </Card>

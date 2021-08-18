@@ -207,6 +207,7 @@ const ProfileUI = (props: ProfileParams) => {
                     <OInput
                       name={field.code}
                       placeholder={t(field.code.toUpperCase(), field?.name)}
+                      placeholderTextColor={theme.colors.arrowColor}
                       style={styles.inputStyle}
                       icon={
                         field.code === 'email'
@@ -226,6 +227,8 @@ const ProfileUI = (props: ProfileParams) => {
                         field.code === 'email' ? 'email-address' : 'default'
                       }
                       returnKeyType="done"
+                      selectionColor={theme.colors.primary}
+                      color={theme.colors.textGray}
                     />
                   </React.Fragment>
                 ))}
@@ -240,8 +243,11 @@ const ProfileUI = (props: ProfileParams) => {
                 <OInput
                   isSecured={true}
                   placeholder={'·············'}
+                  placeholderTextColor={theme.colors.textGray}
                   style={styles.inputStyle}
                   isDisabled={true}
+                  selectionColor={theme.colors.primary}
+                  color={theme.colors.textGray}
                 />
               </UDWrapper>
             )}

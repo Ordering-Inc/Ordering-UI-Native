@@ -74,6 +74,9 @@ export const SearchBar = (props: any) => {
         onChange={onChangeSearch}
         style={styles.inputStyle}
         placeholder={placeholder}
+        placeholderTextColor={theme.colors.arrowColor}
+        selectionColor={theme.colors.primary}
+        color={theme.colors.textGray}
         returnKeyType="done"
         blurOnSubmit
       />
@@ -91,7 +94,7 @@ export const SearchBar = (props: any) => {
 
       {isCancelXButtonShow && (
         <TouchableOpacity onPress={onCancel || handleClear}>
-          <Icon name="x-circle" size={22} />
+          <Icon name="x-circle" size={22} color={theme.colors.unselectText} />
         </TouchableOpacity>
       )}
 

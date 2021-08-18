@@ -18,7 +18,7 @@ import {
 } from './styles';
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { OText, OButton, OInput } from '../shared';
-import { sortInputFields, getTraduction } from '../../utils';
+import { sortInputFields } from '../../utils';
 
 export const UserFormDetailsUI = (props: any) => {
   const {
@@ -224,7 +224,7 @@ export const UserFormDetailsUI = (props: any) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
-      fontSize: 18,
+      fontSize: 16,
     },
     btnFlag: {
       borderWidth: 1,
@@ -265,6 +265,7 @@ export const UserFormDetailsUI = (props: any) => {
                               field.code.toUpperCase(),
                               field?.name,
                             )}
+                            placeholderTextColor={theme.colors.arrowColor}
                             style={styles.inputStyle}
                             icon={
                               field.code === 'email'
@@ -313,9 +314,10 @@ export const UserFormDetailsUI = (props: any) => {
                             autoCompleteType={
                               field.code === 'email' ? 'email' : 'off'
                             }
+                            selectionColor={theme.colors.primary}
+                            color={theme.colors.textGray}
                           />
                         )}
-                        selectionColor={theme.colors.primary}
                         name={field.code}
                         rules={getInputRules(field)}
                         defaultValue={user && user[field.code]}
@@ -336,6 +338,7 @@ export const UserFormDetailsUI = (props: any) => {
                   <OInput
                     isSecured={!passwordSee ? true : false}
                     placeholder={t('PASSWORD', 'Password')}
+                    placeholderTextColor={theme.colors.arrowColor}
                     style={styles.inputStyle}
                     iconCustomRight={
                       passwordSee ? (
@@ -355,6 +358,7 @@ export const UserFormDetailsUI = (props: any) => {
                       )
                     }
                     selectionColor={theme.colors.primary}
+                    color={theme.colors.textGray}
                     value={value}
                     onChange={(val: any) => onChange(val)}
                     returnKeyType="done"
@@ -381,6 +385,7 @@ export const UserFormDetailsUI = (props: any) => {
                       'Confirm Password',
                     )}
                     style={styles.inputStyle}
+                    placeholderTextColor={theme.colors.arrowColor}
                     iconCustomRight={
                       passwordSee ? (
                         <MaterialCommunityIcons
@@ -399,6 +404,7 @@ export const UserFormDetailsUI = (props: any) => {
                       )
                     }
                     selectionColor={theme.colors.primary}
+                    color={theme.colors.textGray}
                     value={value}
                     onChange={(val: any) => onChange(val)}
                     returnKeyType="done"
