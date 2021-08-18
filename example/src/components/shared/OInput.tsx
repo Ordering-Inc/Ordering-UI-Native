@@ -20,7 +20,7 @@ const Input = styled.TextInput`
   flex-grow: 1;
   flex: 1;
   min-height: 30px;
-  font-size: 15px;
+  font-size: ${(props: any) => props.textSize && `${props.textSize}px` || `15px`};
   font-family: 'Poppins-Regular';
   text-align: ${I18nManager.isRTL ? 'right' : 'left'};
 `;
@@ -54,6 +54,8 @@ interface Props extends TextInputProps {
   returnKeyType?: any;
   onSubmitEditing?: any;
   blurOnSubmit?: any;
+  textSize?: any;
+  textInputStyle?: any;
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -70,7 +72,7 @@ const OInput = (props: Props): React.ReactElement => {
           color={props.iconColor}
           width={20}
           height={20}
-          style={{marginRight: 10}}
+          style={{ ...props.iconStyle, marginRight: 10}}
         />
       ) : null}
       {props.vertorIcon && (
@@ -82,6 +84,7 @@ const OInput = (props: Props): React.ReactElement => {
         onChangeText={(txt: any) => props.name ? props.onChange({target: {name: props.name, value: txt}}) : props.onChange(txt)}
         defaultValue={props.value}
         placeholder={props.placeholder ? props.placeholder : ''}
+        placeholderTextColor={props.placeholderTextColor}
         keyboardType={props.type || 'default'}
         multiline={props.multiline}
         scrollEnabled={props.multiline}
@@ -93,6 +96,8 @@ const OInput = (props: Props): React.ReactElement => {
         onSubmitEditing={props.onSubmitEditing}
         blurOnSubmit={props.blurOnSubmit}
         ref={props.forwardRef}
+        textSize={props.textSize}
+        style={props.textInputStyle}
       />
       {props.iconRight && (
         <OIcon

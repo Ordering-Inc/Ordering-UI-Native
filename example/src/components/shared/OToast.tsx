@@ -7,7 +7,7 @@ import { getTraduction } from '../../utils'
 const fadeDuration = 300;
 const bottomPosition = 20;
 
-export const Toast = () => {
+export const Toast = (props: any) => {
   const [toastConfig, { hideToast }] = useToast();
   const [, t] = useLanguage()
   const opacity = React.useRef(new Animated.Value(0)).current;
@@ -69,7 +69,7 @@ export const Toast = () => {
       ]}
     >
       <View style={[styles.toast, { backgroundColor }]}>
-        <Text style={styles.message}>{getTraduction(message, t)}</Text>
+        <Text style={{ ...styles.message, ...props.messageStyle }}>{getTraduction(message, t)}</Text>
       </View>
     </Animated.View>
   );
