@@ -140,7 +140,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
       {!error &&
         businesses?.map((business: any) => (
           <BusinessController
-            key={business.id}
+            key={business?.id}
             business={business}
             handleCustomClick={handleBusinessClick}
             orderType={orderState?.options?.type}
