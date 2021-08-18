@@ -24,7 +24,7 @@ import AppContainer from './AppContainer';
 Sentry.init({
   environment: Platform.OS === 'ios' ? 'ios' : 'android',
   dsn: 'https://90197fffe6a1431b8c3eb79e1e36f0ee@o460529.ingest.sentry.io/5722123',
-  release: "ordering-ui-native@" + process.env.npm_package_version
+  release: process.env.npm_package_version ? 'ordering-ui-native@' + process.env.npm_package_version : 'ordering-ui-native@' + '0.0.2'
 });
 
 LogBox.ignoreLogs([
