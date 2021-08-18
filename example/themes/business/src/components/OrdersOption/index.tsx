@@ -26,40 +26,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     onNavigationRedirect,
   } = props;
 
-  const [orientation, setOrientation] = useState(
-    Dimensions.get('window').width < Dimensions.get('window').height
-      ? 'Portrait'
-      : 'Landscape',
-  );
-  const [windowsWidth, setWindowsWidth] = useState(
-    parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
-  );
-
   const theme = useTheme();
-  const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
-  const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
   const [, t] = useLanguage();
-  const [loadingTag, setLoadingTag] = useState(false);
 
   const { loading, error, orders: values } = orderList;
-  const [ordersToShow, setOrdersToShow] = useState([]);
-
   const orders = customArray || values || [];
-
-  const tabs = [
-    { key: 0, text: t('PENDING', 'Pending'), tags: [0, 13] },
-    {
-      key: 1,
-      text: t('IN_PROGRESS', 'In Progress'),
-      tags: [3, 4, 7, 8, 9, 14, 18, 19, 20, 21],
-    },
-    { key: 2, text: t('COMPLETED', 'Completed'), tags: [1, 11, 15] },
-    {
-      key: 3,
-      text: t('CANCELLED', 'Cancelled'),
-      tags: [2, 5, 6, 10, 12, 16, 17],
-    },
-  ];
 
   const orderStatus = [
     { key: 0, text: t('PENDING', 'Pending') },
@@ -134,15 +105,43 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     },
   ];
 
+  const tabs = [
+    { key: 0, text: t('PENDING', 'Pending'), tags: [0, 13] },
+    {
+      key: 1,
+      text: t('IN_PROGRESS', 'In Progress'),
+      tags: [3, 4, 7, 8, 9, 14, 18, 19, 20, 21],
+    },
+    { key: 2, text: t('COMPLETED', 'Completed'), tags: [1, 11, 15] },
+    {
+      key: 3,
+      text: t('CANCELLED', 'Cancelled'),
+      tags: [2, 5, 6, 10, 12, 16, 17],
+    },
+  ];
+
+  const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
+  const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
+
+  const [ordersToShow, setOrdersToShow] = useState([]);
   const [tabsFilter, setTabsFilter] = useState(tabs[0].tags);
-  const [tagsToggle, setTagsToggle] = useState(tabs[0].tags);
+  const [tagsFilter, setTagsFilter] = useState(tabs[0].tags);
+  const [loadingTag, setLoadingTag] = useState(false);
   const [reload, setReload] = useState(false);
+  const [orientation, setOrientation] = useState(
+    Dimensions.get('window').width < Dimensions.get('window').height
+      ? 'Portrait'
+      : 'Landscape',
+  );
+  const [windowsWidth, setWindowsWidth] = useState(
+    parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
+  );
 
   const handleChangeTab = (tags: number[]) => {
     setTabsFilter(tags);
     setUpdateOtherStatus(tags);
     loadOrders && loadOrders(true, tags);
-    setTagsToggle(tags);
+    setTagsFilter(tags);
 
     const ordersTab = values.filter((order: any) =>
       tags.some(tag => tag === order.status),
@@ -164,36 +163,23 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     setOrdersToShow(ordersTab);
   };
 
-  useEffect(() => {
-    if (loadingTag) setLoadingTag(false);
-  }, [loading]);
-
   const handleChangeTag = (key: number) => {
-    const isToRemove = tagsToggle.includes(key);
-    let updateTags: any;
-    let updateOrdersToShow;
-    setLoadingTag(true);
+    const updateTags: number[] = [];
 
-    if (isToRemove) {
-      updateTags = tagsToggle.filter(tabs => tabs !== key);
-      setTagsToggle(updateTags);
-      updateOrdersToShow = values.filter((order: any) =>
-        updateTags.some((tag: any) => tag === order.status),
-      );
+    if (tagsFilter.includes(key)) {
+      updateTags.push(...tagsFilter.filter(tag => tag !== key));
+    } else {
+      updateTags.push(...tagsFilter.concat(key));
     }
 
-    if (!isToRemove) {
-      updateTags = tagsToggle;
-      updateTags.push(key);
-      setTagsToggle(updateTags);
-      updateOrdersToShow = values.filter((order: any) =>
-        updateTags.some((tag: any) => tag === order.status),
-      );
-    }
-
+    setOrdersToShow([]);
+    setTagsFilter(updateTags);
     setUpdateOtherStatus(updateTags);
-    loadOrders && loadOrders(true, updateTags);
-    // setOrdersToShow(updateOrdersToShow);
+
+    if (updateTags.length) {
+      setLoadingTag(true);
+      loadOrders && loadOrders(true, updateTags);
+    }
   };
 
   const handleReload = () => {
@@ -201,7 +187,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     loadOrders &&
       loadOrders(
         true,
-        tagsToggle,
+        tagsFilter,
         pagination.pageSize * pagination.currentPage <= 50,
       );
   };
@@ -210,7 +196,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     if (ordersToShow.length <= 3) {
       handleReload();
     } else {
-      loadMoreOrders && loadMoreOrders(tagsToggle);
+      loadMoreOrders && loadMoreOrders(tagsFilter);
     }
   };
 
@@ -220,17 +206,20 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   useEffect(() => {
     const ordersTab = values?.filter((order: any) =>
-      tagsToggle.some(tag => tag === order.status),
+      tagsFilter.some(tag => tag === order.status),
     );
 
     setOrdersToShow(ordersTab);
   }, [values]);
 
   useEffect(() => {
-    if (reload && !loading) {
-      setReload(!reload);
-    }
+    if (reload && !loading) setReload(!reload);
+    if (loadingTag) setLoadingTag(false);
   }, [loading]);
+
+  // useEffect(() => {
+  //   if (loadingTag) setLoadingTag(false);
+  // }, [loading]);
 
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
     setWindowsWidth(
@@ -371,14 +360,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               key={key}
               onPress={() => handleChangeTag(key)}
               isSelected={
-                tagsToggle.includes(key)
+                tagsFilter.includes(key)
                   ? theme.colors.primary
                   : theme.colors.tabBar
               }>
               <OText
                 style={styles.tag}
                 color={
-                  tagsToggle.includes(key)
+                  tagsFilter.includes(key)
                     ? theme.colors.white
                     : theme.colors.black
                 }>
@@ -389,8 +378,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </ScrollView>
       </View>
 
-      {((!loading && !orders.length && !ordersToShow.length) ||
-        !tagsToggle.length) && (
+      {((!loading && !ordersToShow.length) || !tagsFilter.length) && (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           image={theme.images.general.notFound}
@@ -438,7 +426,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </>
       )}
 
-      {!!tagsToggle.length &&
+      {!!tagsFilter.length &&
         pagination.totalPages &&
         !loading &&
         !!orders.length &&

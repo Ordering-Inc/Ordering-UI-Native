@@ -33,10 +33,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
-      paddingTop: 0,
-      marginTop: 0,
       fontSize: 18,
-      lineHeight: 18,
       color: theme.colors.textGray,
     },
     date: {
@@ -44,14 +41,12 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       fontStyle: 'normal',
       fontWeight: 'normal',
       fontSize: 15,
-      lineHeight: 18,
       color: theme.colors.unselectText,
     },
     orderType: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
-      lineHeight: 20,
       color: theme.colors.orderTypeColor,
     },
   });
@@ -96,7 +91,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
                   mRight={5}
                   numberOfLines={1}
                   adjustsFontSizeToFit
-                  size={20}>
+                  size={18}>
                   {order.delivery_type === 1
                     ? t('DELIVERY', 'Delivery')
                     : order.delivery_type === 2
