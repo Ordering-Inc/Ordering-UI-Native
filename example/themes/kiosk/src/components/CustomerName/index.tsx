@@ -24,7 +24,7 @@ const CustomerName = (props: Props): React.ReactElement => {
   const [orientationState] = useDeviceOrientation();
 
   const onSubmit = (values: any) => {
-    _setStoreData('customer_name', values.name);
+    _setStoreData('customer_name', {customerName: values.name});
     onProceedToPay()
   };
 
