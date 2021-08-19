@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Linking, Keyboard, Platform, View, KeyboardAvoidingView } from 'react-native';
+import {
+  Linking,
+  Keyboard,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useTheme } from 'styled-components/native';
 import {
@@ -141,10 +146,9 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
 
       {!orderState?.loading && (
         <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1}}
-      >
-          <Content >
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1 }}>
+          <Content>
             <Header>
               <OIconButton
                 icon={theme.images.general.arrow_left}
@@ -254,6 +258,8 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                   placeholder={'00'}
                   value={hour}
                   onChangeText={handleChangeHour}
+                  selectionColor={theme.colors.primary}
+                  color={theme.colors.textGray}
                 />
 
                 <OText size={55}>:</OText>
@@ -263,6 +269,8 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                   placeholder={'00'}
                   value={min}
                   onChangeText={handleChangeMin}
+                  selectionColor={theme.colors.primary}
+                  color={theme.colors.textGray}
                 />
               </Timer>
             )}
@@ -281,7 +289,10 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
             )}
           </Content>
 
-          <Action style={{   marginBottom: (Platform.OS === "ios" && isKeyboardShow)  ? 30 : 0}}>
+          <Action
+            style={{
+              marginBottom: Platform.OS === 'ios' && isKeyboardShow ? 30 : 0,
+            }}>
             <FloatingButton
               firstButtonClick={() =>
                 updateStateOrder &&
@@ -308,7 +319,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
               }
             />
           </Action>
-        </ KeyboardAvoidingView>
+        </KeyboardAvoidingView>
       )}
     </>
   );

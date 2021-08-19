@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useClipboard } from '@react-native-clipboard/clipboard';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
@@ -444,8 +440,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     },
   });
 
-
-
   const locationsToSend = locations.filter(
     (location: any) => location?.lat && location?.lng,
   );
@@ -734,10 +728,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         </>
                       )}
                       flatListProps={{
-                        /* @ts-ignore */
-                        keyExtractor: item => item.value,
+                        keyExtractor: (item: any) => item.value,
                         data: itemsDrivers || [],
-                        renderItem: ({ item }) => (
+                        renderItem: ({ item }: any) => (
                           <TouchableOpacity
                             style={!item.available && styles.driverOff}
                             disabled={!item.available}
@@ -750,10 +743,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                               <View style={{ width: 40 }} />
                               <OText
                                 color={!item.available && theme.colors.grey}>
-                                {
-                                  /* @ts-ignore */
-                                  item.label
-                                }
+                                {item.label}
                                 {!item.available &&
                                   ` (${t('NOT_AVAILABLE', 'Not available')})`}
                               </OText>
