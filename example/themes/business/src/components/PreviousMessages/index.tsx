@@ -228,7 +228,7 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
       <Spinner visible={messages?.loading} />
 
       <ScrollView style={{ height: '80%' }}>
-        {orders?.map((order: any) => (
+        {orders?.length > 0 && orders?.map((order: any) => (
           <TouchableOpacity
             key={order?.id}
             onPress={() => handlePressOrder(order)}
