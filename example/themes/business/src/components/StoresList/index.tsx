@@ -34,6 +34,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
   const [orderState] = useOrder();
   const theme = useTheme();
   const [, { showToast }] = useToast();
+  const [isUpdateStore, setIsUpdateStore] = useState(false)
 
   const [loadBusinesses, setLoadBusinesses] = useState(loading);
   const [orientation, setOrientation] = useState(
@@ -145,10 +146,12 @@ const StoresListUI = (props: BusinessesListingParams) => {
             handleCustomClick={handleBusinessClick}
             orderType={orderState?.options?.type}
             isBusinessOpen={business?.open}
+            setIsUpdateStore={setIsUpdateStore}
+            isUpdateStore={isUpdateStore}
           />
         ))}
 
-      {loadBusinesses && (
+      {loadBusinesses || isUpdateStore && (
         <View>
           {[...Array(6)].map((item, i) => (
             <Placeholder key={i} Animation={Fade}>

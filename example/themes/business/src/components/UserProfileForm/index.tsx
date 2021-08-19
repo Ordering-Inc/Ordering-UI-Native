@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
-import Spinner from 'react-native-loading-spinner-overlay';
+import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
 import {
   UserFormDetails as UserProfileController,
@@ -166,122 +166,188 @@ const ProfileUI = (props: ProfileParams) => {
           fontSize: 26,
         }}
       />
+      {(formState?.loading || state?.loading) && (
+        <View
+          style={{
+            padding: 40,
+            backgroundColor: theme.colors.backgroundLight,
+          }}>
+          <Placeholder Animation={Fade}>
+            <PlaceholderLine
+              width={20}
+              style={{
+                alignSelf: 'center',
+                borderRadius: 20,
+                width: 120,
+                height: 120,
+              }}
+            />
+            <PlaceholderLine
+              width={20}
+              style={{
+                alignSelf: 'center',
+                borderRadius: 20,
+                width: 20,
+                height: 20,
+              }}
+            />
+          </Placeholder>
 
-      <CenterView>
-        <OIcon
-          url={user?.photo}
-          src={!user?.photo && theme.images.general.user}
-          width={100}
-          height={100}
-          style={{ borderRadius: 2 }}
-        />
+          {[...Array(8)].map((item, i) => (
+            <Placeholder key={i} Animation={Fade}>
+              <View style={{ flexDirection: 'row' }}>
+                <Placeholder>
+                  <PlaceholderLine width={50} style={{ marginTop: 30 }} />
+                  <PlaceholderLine width={90} />
+                </Placeholder>
+              </View>
+            </Placeholder>
+          ))}
 
-        <OIconButton
-          icon={theme.images.general.camera}
-          borderColor={theme.colors.clear}
-          iconStyle={{ width: 16, height: 16 }}
-          style={{ maxWidth: 40 }}
-          onClick={() => handleImagePicker()}
-        />
-      </CenterView>
+          <Placeholder Animation={Fade}>
+            <PlaceholderLine
+              width={30}
+              style={{
+                marginTop: 20,
+                alignSelf: 'center',
+                height: 44,
+                borderRadius: 7.6,
+              }}
+            />
+            <PlaceholderLine
+              width={100}
+              style={{
+                marginTop: 20,
+                height: 33,
+                borderRadius: 7.6,
+              }}
+            />
+            <PlaceholderLine
+              width={40}
+              style={{
+                marginTop: 5,
+                height: 15,
+                borderRadius: 7.6,
+              }}
+            />
+          </Placeholder>
+        </View>
+      )}
 
-      <Spinner visible={formState?.loading || state?.loading} />
+      {!formState?.loading && !state?.loading && (
+        <>
+          <CenterView>
+            <OIcon
+              url={user?.photo}
+              src={!user?.photo && theme.images.general.user}
+              width={100}
+              height={100}
+              style={{ borderRadius: 2 }}
+            />
 
-      {!isEdit ? (
-        <UserData>
-          {!validationFields?.loading &&
-            sortInputFields({ values: validationFields?.fields?.checkout })
-              .length > 0 && (
-              <UDWrapper>
-                {sortInputFields({
-                  values: validationFields.fields?.checkout,
-                }).map((field: any) => (
-                  <React.Fragment key={field.id}>
+            <OIconButton
+              icon={theme.images.general.camera}
+              borderColor={theme.colors.clear}
+              iconStyle={{ width: 16, height: 16 }}
+              style={{ maxWidth: 40 }}
+              onClick={() => handleImagePicker()}
+            />
+          </CenterView>
+          {!isEdit ? (
+            <UserData>
+              {!validationFields?.loading &&
+                sortInputFields({ values: validationFields?.fields?.checkout })
+                  .length > 0 && (
+                  <UDWrapper>
+                    {sortInputFields({
+                      values: validationFields.fields?.checkout,
+                    }).map((field: any) => (
+                      <React.Fragment key={field.id}>
+                        <OText
+                          color={theme.colors.textGray}
+                          weight="bold"
+                          style={{ paddingHorizontal: 16 }}>
+                          {t(field?.code.toUpperCase(), field?.name)}
+                        </OText>
+
+                        <OInput
+                          name={field.code}
+                          placeholder={t(field.code.toUpperCase(), field?.name)}
+                          placeholderTextColor={theme.colors.arrowColor}
+                          style={styles.inputStyle}
+                          icon={
+                            field.code === 'email'
+                              ? theme.images.general.email
+                              : theme.images.general.user
+                          }
+                          autoCapitalize={
+                            field.code === 'email' ? 'none' : 'sentences'
+                          }
+                          isDisabled={!isEdit}
+                          value={
+                            formState?.changes[field.code] ??
+                            (user && user[field.code]) ??
+                            ''
+                          }
+                          type={
+                            field.code === 'email' ? 'email-address' : 'default'
+                          }
+                          returnKeyType="done"
+                          selectionColor={theme.colors.primary}
+                          color={theme.colors.textGray}
+                        />
+                      </React.Fragment>
+                    ))}
+
                     <OText
                       color={theme.colors.textGray}
                       weight="bold"
                       style={{ paddingHorizontal: 16 }}>
-                      {t(field?.code.toUpperCase(), field?.name)}
+                      {t('PASSWORD', 'Password')}
                     </OText>
 
                     <OInput
-                      name={field.code}
-                      placeholder={t(field.code.toUpperCase(), field?.name)}
-                      placeholderTextColor={theme.colors.arrowColor}
+                      isSecured={true}
+                      placeholder={'·············'}
+                      placeholderTextColor={theme.colors.textGray}
                       style={styles.inputStyle}
-                      icon={
-                        field.code === 'email'
-                          ? theme.images.general.email
-                          : theme.images.general.user
-                      }
-                      autoCapitalize={
-                        field.code === 'email' ? 'none' : 'sentences'
-                      }
-                      isDisabled={!isEdit}
-                      value={
-                        formState?.changes[field.code] ??
-                        (user && user[field.code]) ??
-                        ''
-                      }
-                      type={
-                        field.code === 'email' ? 'email-address' : 'default'
-                      }
-                      returnKeyType="done"
+                      isDisabled={true}
                       selectionColor={theme.colors.primary}
                       color={theme.colors.textGray}
                     />
-                  </React.Fragment>
-                ))}
-
-                <OText
-                  color={theme.colors.textGray}
-                  weight="bold"
-                  style={{ paddingHorizontal: 16 }}>
-                  {t('PASSWORD', 'Password')}
-                </OText>
-
-                <OInput
-                  isSecured={true}
-                  placeholder={'·············'}
-                  placeholderTextColor={theme.colors.textGray}
-                  style={styles.inputStyle}
-                  isDisabled={true}
-                  selectionColor={theme.colors.primary}
-                  color={theme.colors.textGray}
-                />
-              </UDWrapper>
-            )}
-        </UserData>
-      ) : (
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <UserFormDetailsUI
-            {...props}
-            hideUpdateButton
-            handleCancelEdit={handleCancelEdit}
-            toggleIsEdit={toggleIsEdit}
-          />
-        </View>
+                  </UDWrapper>
+                )}
+            </UserData>
+          ) : (
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <UserFormDetailsUI
+                {...props}
+                hideUpdateButton
+                handleCancelEdit={handleCancelEdit}
+                toggleIsEdit={toggleIsEdit}
+              />
+            </View>
+          )}
+          {!validationFields.loading && !isEdit && (
+            <EditButton>
+              <OButton
+                text={t('EDIT', 'Edit')}
+                bgColor={theme.colors.white}
+                borderColor={theme.colors.primary}
+                isDisabled={formState.loading}
+                imgRightSrc={null}
+                textStyle={styles.btnText}
+                style={styles.editButton}
+                onClick={toggleIsEdit}
+              />
+            </EditButton>
+          )}
+          <Actions>
+            <LanguageSelector />
+            <LogoutButton />
+          </Actions>
+        </>
       )}
-
-      {!validationFields.loading && !isEdit && (
-        <EditButton>
-          <OButton
-            text={t('EDIT', 'Edit')}
-            bgColor={theme.colors.white}
-            borderColor={theme.colors.primary}
-            isDisabled={formState.loading}
-            imgRightSrc={null}
-            textStyle={styles.btnText}
-            style={styles.editButton}
-            onClick={toggleIsEdit}
-          />
-        </EditButton>
-      )}
-
-      <Actions>
-        <LanguageSelector />
-        <LogoutButton />
-      </Actions>
     </>
   );
 };
