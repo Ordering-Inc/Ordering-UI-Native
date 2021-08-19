@@ -136,8 +136,10 @@ export interface BusinessTypeFilterParams {
 }
 export interface BusinessControllerParams {
   key?: number;
+  setIsUpdateStore?: any;
   business?: any;
   businessState?: any;
+  isUpdateStore?: any;
   handleCustomClick?: any;
   orderType?: any;
   handleClick?: any;
