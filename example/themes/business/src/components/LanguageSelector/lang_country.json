@@ -18,6 +18,18 @@
 		"countryCode": "ES"
 	},
 	{
+		"inputLabel":"MX",
+		"label":"Spanish",
+		"value":"es-419-1",
+		"countryCode": "MX"
+	},
+	{
+		"inputLabel":"MX",
+		"label":"Spanish",
+		"value":"es-419-2",
+		"countryCode": "GT"
+	},
+	{
 		"inputLabel":"DA",
 		"label":"Danish",
 		"value":"da",
