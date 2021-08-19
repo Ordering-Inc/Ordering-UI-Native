@@ -23,6 +23,7 @@ import OptionSwitch, { Opt } from '../../components/shared/OOptionToggle';
 import { verifyDecimals } from '../../../../../src/utils'
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation'
 import { useTheme } from 'styled-components/native'
+import { _retrieveStoreData } from '../../../../../src/providers/StoreUtil';
 
 const _EMAIL = 'email';
 const _SMS = 'sms';
@@ -32,10 +33,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const theme = useTheme();
   const [, t] = useLanguage()
-  const [{user}] = useSession()
   const [{ parsePrice, parseNumber }] = useUtils()
   const [orientationState] = useDeviceOrientation()
 
+  const [customerName, setCustomerName] = useState(null)
   const { order } = props.order;
 
   const styles = StyleSheet.create({
@@ -135,6 +136,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
     return () => backHandler.remove();
   }, []);
+
+  useEffect(() => {
+    const getCustomerName = async () => {
+      const {customerName : name} = await _retrieveStoreData('customer_name')
+      setCustomerName(name)
+    }
+    getCustomerName()
+  }, [])
 
   const actionsContent = (
     <View
@@ -326,7 +335,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       size={orientationState?.dimensions?.width * 0.048}
                       weight="700"
                     >
-                      {`${t('HUNGRY', 'hungry')}, ${user.name}`}
+                      {`${t('HUNGRY', 'hungry')}, ${customerName}`}
                     </OText>
                   </OText>
 
