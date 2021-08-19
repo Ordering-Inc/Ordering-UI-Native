@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Modal, StyleSheet, Text, SafeAreaView, View } from 'react-native';
+import { Modal, StyleSheet, SafeAreaView, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import OIcon from './OIcon';
+import OText from './OText';
 import OIconButton from './OIconButton';
 import { useTheme } from 'styled-components/native';
 
@@ -60,7 +61,6 @@ const OModal = (props: Props): React.ReactElement => {
     },
     titleSection: {
       flexDirection: 'row',
-      width: '100%',
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: 15,
@@ -97,7 +97,6 @@ const OModal = (props: Props): React.ReactElement => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'bold',
-      fontSize: 20,
       color: theme.colors.textGray,
       textAlign: 'center',
       zIndex: 10,
@@ -175,7 +174,9 @@ const OModal = (props: Props): React.ReactElement => {
                   onPress={onClose}
                 />
               </View>
-              <Text style={styles.modalText}>{title}</Text>
+              <OText size={20} style={styles.modalText} adjustsFontSizeToFit>
+                {title}
+              </OText>
             </View>
             {children}
           </View>
@@ -192,7 +193,7 @@ const OModal = (props: Props): React.ReactElement => {
                     onClick={onClose}
                   />
 
-                  <Text style={styles.modalText}>{title}</Text>
+                  <OText style={styles.modalText}>{title}</OText>
                 </View>
                 <View style={styles.titleGroups}>
                   <View style={styles.shadow}>

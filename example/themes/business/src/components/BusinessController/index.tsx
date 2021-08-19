@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import ToggleSwitch from 'toggle-switch-react-native';
 import { useTheme } from 'styled-components/native';
 import {
@@ -15,7 +14,8 @@ import { OIcon, OText } from '../shared';
 import { BusinessControllerParams } from '../../types';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-  const { businessState, updateBusiness } = props;
+  const { businessState, updateBusiness, isUpdateStore, setIsUpdateStore } =
+    props;
 
   const { loading, business, error } = businessState;
 
@@ -28,6 +28,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
   const handleSwitch = () => {
     setUpdatingBusiness(true);
+    setIsUpdateStore(true);
 
     updateBusiness &&
       updateBusiness(business?.id, { enabled: !business?.enabled });
@@ -50,6 +51,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       );
     }
 
+    setIsUpdateStore(false);
     setUpdatingBusiness(false);
   }, [business]);
 
@@ -77,9 +79,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
   return (
     <>
-      <Spinner visible={loading} />
-
-      {business && (
+      {business && !loading && !isUpdateStore && (
         <Card key={business?.id}>
           {!!business?.logo && (
             <Logo>

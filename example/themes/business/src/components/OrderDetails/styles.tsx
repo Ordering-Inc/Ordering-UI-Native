@@ -19,6 +19,12 @@ export const Header = styled.View`
   background-color: ${(props: any) => props.theme.colors.backgroundLight};
 `;
 
+export const DriverItem = styled.View`
+  padding: 8px;
+  align-items: center;
+  flex-direction: row;
+`
+
 export const Actions = styled.View`
   flex-direction: row;
   justify-content: flex-end;
@@ -139,4 +145,5 @@ export const AssignDriver = styled.View`
   background-color: ${(props: any) => props.theme.colors.white};
   padding-horizontal: 40px;
   padding-vertical: 10px;
+  margin-bottom: 10px;
 `;
