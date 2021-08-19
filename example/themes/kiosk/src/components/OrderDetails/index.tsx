@@ -4,7 +4,8 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
-  useUtils
+  useUtils,
+  useSession
 } from 'ordering-components/native'
 
 import {
@@ -31,6 +32,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const theme = useTheme();
   const [, t] = useLanguage()
+  const [{user}] = useSession()
   const [{ parsePrice, parseNumber }] = useUtils()
   const [orientationState] = useDeviceOrientation()
 
@@ -324,7 +326,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       size={orientationState?.dimensions?.width * 0.048}
                       weight="700"
                     >
-                      {`${t('HUNGRY', 'hungry')}, Cuco!`}
+                      {`${t('HUNGRY', 'hungry')}, ${user.name}`}
                     </OText>
                   </OText>
 
