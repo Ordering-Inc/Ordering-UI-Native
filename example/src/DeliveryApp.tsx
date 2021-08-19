@@ -24,7 +24,14 @@ import AppContainer from './AppContainer';
 Sentry.init({
   environment: Platform.OS === 'ios' ? 'ios' : 'android',
   dsn: 'https://90197fffe6a1431b8c3eb79e1e36f0ee@o460529.ingest.sentry.io/5722123',
-  release: process.env.npm_package_version ? 'ordering-ui-native@' + process.env.npm_package_version : 'ordering-ui-native@' + '0.0.2'
+  release: process.env.npm_package_version ? 'ordering-ui-native@' + process.env.npm_package_version : 'ordering-ui-native@' + '0.0.2',
+  ignoreErrors: [
+    'is not defined',
+    'is not a function',
+    'can\'t find variable',
+    'objects are not valid',
+    'element type is invalid'
+  ],
 });
 
 LogBox.ignoreLogs([
