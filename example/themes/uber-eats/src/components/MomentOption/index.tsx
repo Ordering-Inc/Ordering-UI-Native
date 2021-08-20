@@ -9,8 +9,8 @@ import {
 } from 'ordering-components/native'
 import { StyleSheet, View } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay';
-import { MomentOptionParams } from '../../../../../types'
-import { OText, OButton } from '../../../../../components/shared'
+import { MomentOptionParams } from '../../types'
+import { OText, OButton } from '../shared'
 import { useTheme } from 'styled-components/native'
 import {
   Container,

@@ -4,13 +4,13 @@ import IconEvilIcons from 'react-native-vector-icons/EvilIcons'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native'
-import { OIcon, OText, OModal } from '../../../../../components/shared'
-import { BusinessBasicInformationParams } from '../../../../../types'
+import { OIcon, OText, OModal } from '../shared'
+import { BusinessBasicInformationParams } from '../../types'
 
 import { useTheme } from 'styled-components/native'
-import { convertHoursToMinutes } from '../../../../../utils'
-import { BusinessInformation } from '../../../../../components/BusinessInformation'
-import { BusinessReviews } from '../../../../../components/BusinessReviews'
+import { convertHoursToMinutes } from '../../utils'
+import { BusinessInformation } from '../BusinessInformation'
+import { BusinessReviews } from '../BusinessReviews'
 import {
   BusinessContainer,
   BusinessHeader,

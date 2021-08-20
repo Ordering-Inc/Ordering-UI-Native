@@ -4,10 +4,10 @@ import { useSession, useLanguage, ToastType, useToast } from 'ordering-component
 import { useForm, Controller } from 'react-hook-form';
 
 import { UDForm, UDLoader, UDWrapper, WrapperPhone, EditButton } from './styles';
-import { OText, OButton, OInput } from '../../../../../components/shared';
+import { OText, OButton, OInput } from '../shared';
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
-import { sortInputFields } from '../../../../../utils';
+import { sortInputFields } from '../../utils';
 import { useTheme } from 'styled-components/native';
 
 export const UserFormDetailsUI = (props: any) => {

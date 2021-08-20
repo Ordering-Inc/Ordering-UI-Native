@@ -15,7 +15,7 @@ import {
 } from 'ordering-components/native';
 
 import { FacebookLogin } from '../FacebookLogin';
-import { VerifyPhone } from '../../../../../components/VerifyPhone';
+import { VerifyPhone } from '../VerifyPhone';
 
 import {
   Container,
@@ -30,11 +30,11 @@ import {
   LineSeparator  
 } from './styles';
 
-import { _removeStoreData } from '../../../../../providers/StoreUtil';
-import NavBar from '../../../../../components/NavBar'
+import { _removeStoreData } from '../../providers/StoreUtil';
+import NavBar from '../NavBar'
 
-import { OText, OButton, OInput, OModal } from '../../../../../components/shared';
-import { LoginParams } from '../../../../../types';
+import { OText, OButton, OInput, OModal } from '../shared';
+import { LoginParams } from '../../types';
 import { useTheme } from 'styled-components/native';
 
 const LoginFormUI = (props: LoginParams) => {

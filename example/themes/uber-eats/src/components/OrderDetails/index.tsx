@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager, Animated, Pressable } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { Messages } from '../../../../../components/Messages'
+import { Messages } from '../Messages'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -37,12 +37,12 @@ import {
   WrapperStatusBarItem,
   StatusItem
 } from './styles'
-import { OButton, OIcon, OModal, OText } from '../../../../../components/shared'
+import { OButton, OIcon, OModal, OText } from '../shared'
 import { ProductItemAccordion } from '../ProductItemAccordion'
-import { OrderDetailsParams } from '../../../../../types'
-import { USER_TYPE } from '../../../../../config/constants'
-import { GoogleMap } from '../../../../../components/GoogleMap'
-import { verifyDecimals } from '../../../../../utils'
+import { OrderDetailsParams } from '../../types'
+import { USER_TYPE } from '../../config/constants'
+import { GoogleMap } from '../GoogleMap'
+import { verifyDecimals } from '../../utils'
 import { useTheme } from 'styled-components/native'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 

@@ -18,9 +18,9 @@ import {
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { CouponControl } from '../CouponControl';
-import { OModal, OText } from '../../../../../components/shared';
+import { OModal, OText } from '../shared';
 import { ProductForm } from '../ProductForm';
-import { verifyDecimals } from '../../../../../utils';
+import { verifyDecimals } from '../../utils';
 import { useTheme } from 'styled-components/native';
 
 const OrderSummaryUI = (props: any) => {

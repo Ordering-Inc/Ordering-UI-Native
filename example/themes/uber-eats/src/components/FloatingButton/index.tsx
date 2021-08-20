@@ -1,11 +1,11 @@
 import React from 'react'
 import { FloatingButton as FloatingButtonController } from 'ordering-components/native'
-import { FloatingButtonParams } from '../../../../../types'
+import { FloatingButtonParams } from '../../types'
 import {
   Container,
   Button
 } from './styles'
-import { OText } from '../../../../../components/shared'
+import { OText } from '../shared'
 import { StyleSheet, Platform } from 'react-native'
 import { useTheme } from 'styled-components/native'
 

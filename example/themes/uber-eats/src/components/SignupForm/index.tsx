@@ -25,13 +25,13 @@ import {
 
 import { LoginWith as SignupWith, OTab, OTabs } from '../LoginForm/styles'
 
-import { _removeStoreData } from '../../../../../providers/StoreUtil';
-import NavBar from '../../../../../components/NavBar'
-import { VerifyPhone } from '../../../../../components/VerifyPhone';
+import { _removeStoreData } from '../../providers/StoreUtil';
+import NavBar from '../NavBar'
+import { VerifyPhone } from '../VerifyPhone';
 
-import { OText, OButton, OInput, OModal } from '../../../../../components/shared';
-import { SignupParams } from '../../../../../types';
-import { sortInputFields } from '../../../../../utils';
+import { OText, OButton, OInput, OModal } from '../shared';
+import { SignupParams } from '../../types';
+import { sortInputFields } from '../../utils';
 import { useTheme } from 'styled-components/native';
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']

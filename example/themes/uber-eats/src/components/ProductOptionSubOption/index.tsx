@@ -15,7 +15,7 @@ import {
   PositionControl,
   Circle
 } from './styles'
-import { OText, OIcon } from '../../../../../components/shared'
+import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
 
 export const ProductOptionSubOptionUI = (props: any) => {

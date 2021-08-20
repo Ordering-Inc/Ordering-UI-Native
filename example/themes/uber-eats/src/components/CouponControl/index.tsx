@@ -8,7 +8,7 @@ import {
   CCButton
 } from './styles';
 
-import { OInput, OButton, OAlert, OText } from '../../../../../components/shared';
+import { OInput, OButton, OAlert, OText } from '../shared';
 import { useTheme } from 'styled-components/native';
 
 const CouponControlUI = (props: any) => {

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useLanguage, useUtils } from 'ordering-components/native'
 import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
-import { OButton, OIcon, OText } from '../../../../../components/shared'
+import { OButton, OIcon, OText } from '../shared'
 import { Card, Logo, Information, MyOrderOptions, Status, WrappButton } from './styles'
-import { PreviousOrdersParams } from '../../../../../types'
+import { PreviousOrdersParams } from '../../types'
 import { useTheme } from 'styled-components/native'
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {

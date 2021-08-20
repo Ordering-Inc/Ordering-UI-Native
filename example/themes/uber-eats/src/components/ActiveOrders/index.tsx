@@ -1,12 +1,12 @@
 import React from 'react'
 import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
-import { OButton, OIcon, OText } from '../../../../../components/shared'
+import { OButton, OIcon, OText } from '../shared'
 import { ActiveOrdersContainer, Card, Map, Information, Logo, OrderInformation, BusinessInformation, Price } from './styles'
 import { View, StyleSheet } from 'react-native'
-import { getGoogleMapImage } from '../../../../../utils'
+import { getGoogleMapImage } from '../../utils'
 
-import { ActiveOrdersParams } from '../../../../../types'
+import { ActiveOrdersParams } from '../../types'
 
 export const ActiveOrders = (props: ActiveOrdersParams) => {
   const {

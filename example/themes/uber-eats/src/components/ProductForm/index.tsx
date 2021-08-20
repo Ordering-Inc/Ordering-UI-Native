@@ -29,9 +29,9 @@ import {
   WrapperArrowIcon
 
 } from './styles'
-import { OButton, OInput, OText } from '../../../../../components/shared'
+import { OButton, OInput, OText } from '../shared'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
-import { NotFoundSource } from '../../../../../components/NotFoundSource'
+import { NotFoundSource } from '../NotFoundSource'
 import { Placeholder,PlaceholderLine,Fade } from 'rn-placeholder'
 import { useTheme } from 'styled-components/native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'

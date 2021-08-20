@@ -6,10 +6,10 @@ import {
   useLanguage,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { OIcon, OText } from '../../../../../components/shared';
+import { OIcon, OText } from '../shared';
 import { StyleSheet, View } from 'react-native';
-import { BusinessControllerParams } from '../../../../../types';
-import { convertHoursToMinutes } from '../../../../../utils';
+import { BusinessControllerParams } from '../../types';
+import { convertHoursToMinutes } from '../../utils';
 import {
   Card,
   BusinessHero,

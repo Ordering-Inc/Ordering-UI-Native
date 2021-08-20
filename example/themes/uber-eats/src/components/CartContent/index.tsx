@@ -4,7 +4,7 @@ import { useLanguage } from 'ordering-components/native';
 import { CCContainer, CCNotCarts, CCList } from './styles';
 
 import { Cart } from '../Cart';
-import { OText } from '../../../../../components/shared';
+import { OText } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 export const CartContent = (props: any) => {

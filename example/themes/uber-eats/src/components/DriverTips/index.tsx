@@ -10,7 +10,7 @@ import {
   useOrder
 } from 'ordering-components/native';
 
-import { OButton, OInput, OText } from '../../../../../components/shared';
+import { OButton, OInput, OText } from '../shared';
 
 import {
   DTContainer,

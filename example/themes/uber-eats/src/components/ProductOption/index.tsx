@@ -7,7 +7,7 @@ import {
   TitleContainer,
   WrapTitle
 } from './styles'
-import { OText, OIcon } from '../../../../../components/shared'
+import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
 import { StyleSheet, Animated } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
