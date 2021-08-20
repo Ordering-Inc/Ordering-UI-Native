@@ -10,9 +10,9 @@ import {
   useSession,
   useToast,
   ToastType,
-  PhoneInputNumber
 } from 'ordering-components/native'
 
+import {PhoneInputNumber} from '../PhoneInputNumber'
 import {
   OSOrderDetailsWrapper,
   OSTable,
@@ -140,7 +140,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       }
     }
     else if (optionToSendReceipt?.value === _SMS) {
-      console.log('send sms');
+      body = {
+        channel: 2,
+        cellphone: phoneInputData?.phone?.cellphone,
+        country_phone_code: phoneInputData?.phone?.country_phone_code,
+        name: customerName
+      }
     }
     try{
       const response = await fetch(`${ordering.root}/orders/${order.id}/receipt`, {
@@ -246,8 +251,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             onChange={setOptionToSendReceipt}
           />
         </OSTable>
-        <OText size={14} style={{alignSelf: 'flex-end'}}>
-          {`${countReceipts}/5 ${t('RECIPTS_REMAINING', 'Recipts remaining')}`}
+        <OText size='14' style={{alignSelf: 'flex-end'}}>
+          {countReceipts}/5 {t('RECIPTS_REMAINING', 'Recipts remaining')}
         </OText>
         <OSTable>
           {optionToSendReceipt?.value === _EMAIL && (
@@ -285,16 +290,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           />
           )}
 
-          {/* {optionToSendReceipt?.value === _SMS && (
+          {optionToSendReceipt?.value === _SMS && (
             <PhoneInputNumber
               data={phoneInputData}
               handleData={(val: any) => setPhoneInputData(val)}
               textInputProps={{
-              returnKeyType: 'done',
-              onSubmitEditing: handleSubmit(onSubmit),
-            }}
+                returnKeyType: 'done',
+                onSubmitEditing: handleSubmit(onSubmit),
+              }}
           />
-          )} */}
+          )}
 
           <OButton
             onClick={handleSubmit(onSubmit)}

@@ -5,9 +5,9 @@ import { useLanguage, useConfig } from 'ordering-components/native';
 
 import { Wrapper } from './styles'
 
-import { PhoneInputParams } from '../../types';
+import { PhoneInputParams } from '../../../../../src/types';
 import { OText } from '../shared';
-import {transformCountryCode} from '../../utils'
+import {transformCountryCode} from '../../../../../src/utils'
 import {I18nManager} from 'react-native'
 import { useTheme } from 'styled-components/native';
 
@@ -25,14 +25,14 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 
   const style = StyleSheet.create({
     input: {
-      backgroundColor: theme.colors.white,
-      borderRadius: 25,
+      backgroundColor: theme.colors.backgroundLight,
+      borderRadius: 6,
       borderWidth: 1,
       borderColor: theme.colors.disabled,
       paddingVertical: 0,
       flexGrow: 1,
-      flex: 1,
       height: 50,
+      flex: 1,
     }
   })
 
@@ -96,6 +96,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         textContainerStyle={style.input}
         placeholder={t('PHONE_NUMBER', 'Phone Number')}
         textInputProps={{autoCompleteType: 'tel', ref: forwardRef, ...textInputProps}}
+        countryPickerButtonStyle={{margin: 0, padding: 0, maxWidth: 60}}
       />
       {!!data?.error && (
         <OText
