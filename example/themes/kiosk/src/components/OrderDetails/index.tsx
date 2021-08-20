@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, BackHandler, Alert } from 'react-native'
+import { View, StyleSheet, BackHandler, Alert, Keyboard  } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
+import {useForm, Controller} from 'react-hook-form'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
   useUtils,
-  useSession
+  useApi,
+  useSession,
+  useToast,
+  ToastType,
+  PhoneInputNumber
 } from 'ordering-components/native'
 
 import {
@@ -33,12 +38,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const theme = useTheme();
   const [, t] = useLanguage()
+  const [ordering] = useApi()
+  const [, {showToast}] = useToast()
   const [{ parsePrice, parseNumber }] = useUtils()
   const [orientationState] = useDeviceOrientation()
-
+  const [{ token }] = useSession()
+  const { control, handleSubmit, errors } = useForm();
   const [customerName, setCustomerName] = useState(null)
+  const [countReceipts, setCountReceipts] = useState(5)
+  const [isLoading, setIsLoading] = useState(false)
+  const [phoneInputData, setPhoneInputData] = useState({
+    error: '',
+    phone: {
+      country_phone_code: null,
+      cellphone: null,
+    },
+  });
   const { order } = props.order;
-
   const styles = StyleSheet.create({
     inputsStyle: {
       borderColor: theme.colors.disabled,
@@ -67,6 +83,24 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   });
 
+  const optionsToSendReceipt: Opt[] = [
+    {
+      key: _EMAIL,
+      label: t('EMAIL', 'Email'),
+      value: _EMAIL,
+      isDefault: true,
+    },
+    {
+      key: _SMS,
+      label: t('SMS', 'SMS'),
+      value: _SMS,
+    },
+  ];
+
+  const [optionToSendReceipt, setOptionToSendReceipt] = useState(
+    optionsToSendReceipt?.find(o => o?.isDefault),
+  );
+
   const handleArrowBack: any = () => {
     if (!isFromCheckout) {
       navigation?.canGoBack() && navigation.goBack();
@@ -82,32 +116,50 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }, [])
 
-  const optionsToSendReceipt: Opt[] = [
-    {
-      key: _EMAIL,
-      label: t('EMAIL', 'Email'),
-      value: _EMAIL,
-      isDefault: true,
-    },
-    {
-      key: _SMS,
-      label: t('SMS', 'SMS'),
-      value: _SMS,
-    },
-  ];
+  const handleChangeInputEmail = (value: string, onChange: any) => {
+    onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
+  };
 
-  const [optionToSendReceipt, setOptionToSendReceipt] = useState(optionsToSendReceipt?.find(o => o?.isDefault));
-
-  const handleSendReceipt = (optVal: 'sms' | 'email') => {
-    if (optVal === _EMAIL) {
-      console.log('send email');
+  const onSubmit = async (values : any) => {
+    Keyboard.dismiss();
+    if(countReceipts <= 0){
+      showToast(ToastType.Error, t('MAXIMUM_RECEIPTS_SEND_EXCEEDED', 'The maximum receipts sent has been exceeded'))
+      return
     }
-    else if (optVal === _SMS) {
+    if (phoneInputData.error) {
+      showToast(ToastType.Error, phoneInputData.error);
+      return;
+    }
+    setIsLoading(true)
+    let body
+    if (optionToSendReceipt?.value === _EMAIL) {
+      body = {
+        channel: 1,
+        email: values.email,
+        name: customerName
+      }
+    }
+    else if (optionToSendReceipt?.value === _SMS) {
       console.log('send sms');
     }
-    else {
-      console.error('Error: Invalid optVal');
+    try{
+      const response = await fetch(`${ordering.root}/orders/${order.id}/receipt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`},
+        body: JSON.stringify(body),
+      })
+      const {error, result} = await response.json()
+      if(error){
+        showToast(ToastType.Error, result)
+      } else {
+        showToast(ToastType.Success, t('RECEIPT_SEND_SUCCESSFULLY', 'Receipt send successfully'))
+        setCountReceipts(countReceipts - 1)
+      }
+
+    }catch (error) {
+      showToast(ToastType.Error, error.message)
     }
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -145,10 +197,40 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     getCustomerName()
   }, [])
 
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      // Convert all errors in one string to show in toast provider
+      const list = Object.values(errors);
+      let stringError = '';
+      if (phoneInputData.error) {
+        list.unshift({message: phoneInputData.error});
+      }
+      if (
+        optionToSendReceipt?.value === _SMS &&
+        !phoneInputData.error &&
+        !phoneInputData.phone.country_phone_code &&
+        !phoneInputData.phone.cellphone
+      ) {
+        list.unshift({
+          message: t(
+            'VALIDATION_ERROR_MOBILE_PHONE_REQUIRED',
+            'The field Mobile phone is required.',
+          ),
+        });
+      }
+      list.map((item: any, i: number) => {
+        stringError +=
+          i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
+      });
+      showToast(ToastType.Error, stringError);
+    }
+  }, [errors]);
+
   const actionsContent = (
     <View
       style={{ maxHeight: 300 }}
     >
+      <Spinner visible={isLoading} />
       <OSInputWrapper>
         <OSTable
           style={{
@@ -164,27 +246,58 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             onChange={setOptionToSendReceipt}
           />
         </OSTable>
-
+        <OText size={14} style={{alignSelf: 'flex-end'}}>
+          {`${countReceipts}/5 ${t('RECIPTS_REMAINING', 'Recipts remaining')}`}
+        </OText>
         <OSTable>
-
-          {optionToSendReceipt?.value == _EMAIL && (
-            <OInput
-              placeholder="yourname@mailhost.com"
-              onChange={(e: any) => { }}
-              style={styles.inputsStyle}
-            />
+          {optionToSendReceipt?.value === _EMAIL && (
+            <Controller
+            control={control}
+            render={({onChange, value} : any) => (
+              <OInput
+                placeholder="yourname@mailhost.com"
+                onChange={(e: any) => handleChangeInputEmail(e, onChange)}
+                style={styles.inputsStyle}
+                value={value}
+                autoCapitalize="none"
+                autoCorrect={false}
+                returnKeyType="done"
+                onSubmitEditing={handleSubmit(onSubmit)}
+                blurOnSubmit
+                type="email-address"
+              />
+            )}
+            name="email"
+            rules={{
+              required: t(
+                'VALIDATION_ERROR_EMAIL_REQUIRED',
+                'The field Email is required',
+              ).replace('_attribute_', t('EMAIL', 'Email')),
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: t(
+                  'INVALID_ERROR_EMAIL',
+                  'Invalid email address',
+                ).replace('_attribute_', t('EMAIL', 'Email')),
+              },
+            }}
+            defaultValue=""
+          />
           )}
 
-          {optionToSendReceipt?.value == _SMS && (
-            <OInput
-              placeholder={`${t('PHONE_NUMBER', 'Phone number')}`}
-              onChange={(e: any) => { }}
-              style={styles.inputsStyle}
-            />
-          )}
+          {/* {optionToSendReceipt?.value === _SMS && (
+            <PhoneInputNumber
+              data={phoneInputData}
+              handleData={(val: any) => setPhoneInputData(val)}
+              textInputProps={{
+              returnKeyType: 'done',
+              onSubmitEditing: handleSubmit(onSubmit),
+            }}
+          />
+          )} */}
 
           <OButton
-            onClick={() => handleSendReceipt(optionToSendReceipt?.value)}
+            onClick={handleSubmit(onSubmit)}
             text={t('SEND', 'Send')}
             bgColor={theme.colors.primaryLight}
             borderColor={theme.colors.primaryLight}
