@@ -101,7 +101,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   };
 
   const handleFixTime = () => {
-    if (min > '60') {
+    if (min >= '60') {
       setMin('59');
     }
 
@@ -319,7 +319,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                 <OText weight="bold" style={{ textAlign: 'center' }} size={55}>
                   {hour}
                 </OText>
-                <OText size={55}>:</OText>
+                {hour.length > 0 &&  <OText size={55}>:</OText>}
                 <OText weight="bold" style={{ textAlign: 'center' }} size={55}>
                   {min}
                 </OText>
