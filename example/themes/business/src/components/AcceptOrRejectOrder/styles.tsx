@@ -6,7 +6,7 @@ export const Content = styled.ScrollView`
   flex: 1;
 `;
 
-export const Timer = styled.View`
+export const Timer = styled.TouchableOpacity`
   padding: 40px;
   justify-content: center;
   flex-direction: row;
@@ -19,11 +19,13 @@ export const Timer = styled.View`
 `;
 
 export const TimeField = styled.TextInput`
-  flex: 1;
   font-size: 55px;
   font-family: 'Poppins-Regular';
   font-weight: bold;
   text-align: center;
+  width: 0;
+  height: 0;
+  opacity: 0
 `;
 
 export const Header = styled.View`

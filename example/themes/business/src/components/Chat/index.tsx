@@ -25,6 +25,7 @@ import {
 } from 'react-native-gifted-chat';
 import { USER_TYPE } from '../../config/constants';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useTheme } from 'styled-components/native';
 import { OIcon, OIconButton, OText } from '../shared';
 import {
@@ -62,6 +63,8 @@ const ChatUI = (props: MessagesParams) => {
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
   const theme = useTheme();
+
+  const { bottom } = useSafeAreaInsets();
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([]);
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
@@ -855,8 +858,9 @@ const ChatUI = (props: MessagesParams) => {
           renderBubble={renderBubble}
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
-          messagesContainerStyle={{ paddingBottom: 20 }}
+          messagesContainerStyle={{ paddingBottom: 12 }}
           showUserAvatar={true}
+          bottomOffset={bottom}
           minInputToolbarHeight={100}
           isLoadingEarlier={messages?.loading}
           renderLoading={() => (
