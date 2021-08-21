@@ -5,13 +5,7 @@ export const Wrapper = styled.View`
   background-color: ${(props: any) => props.theme.colors.white};
 `;
 
-export const Header = styled.View`
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
-  border-radius: 7.6px;
-  flex: 1;
-`;
+export const Header = styled.ScrollView``;
 
 export const TitleHeader = styled.View`
   margin-left: 11px;

@@ -339,6 +339,8 @@ export interface MessagesParams {
   image?: string;
   messagesToShow?: any;
   sendMessage?: any;
+  canRead?: any;
+  setCanRead?: any;
   handleSend?: () => {};
   setImage?: (image: string | null) => {};
   setMessage?: (comment: string) => {};
