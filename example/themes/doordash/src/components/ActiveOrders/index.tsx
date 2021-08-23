@@ -64,7 +64,6 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 			</Card>
 			{pagination?.totalPages && pagination?.currentPage < pagination?.totalPages && index === (10 * pagination?.currentPage) - 1 && (
 				<Card
-					style={{ ...styles.loadOrders, height: configs?.google_maps_api_key?.value ? 200 : 100 }}
 					style={{ ...styles.loadOrders, height: 97 }}
 					onPress={loadMoreOrders}
 				>
