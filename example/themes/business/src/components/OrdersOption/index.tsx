@@ -12,6 +12,7 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OIconButton, OButton } from '../shared';
 import { PreviousOrders } from '../PreviousOrders';
 import { NotFoundSource } from '../NotFoundSource';
+import { useFocusEffect } from '@react-navigation/native';
 import { FiltersTab, TabsContainer, Tag } from './styles';
 import { OrdersOptionParams } from '../../types';
 
@@ -20,6 +21,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     orderList,
     pagination,
     customArray,
+    navigation,
     loadMoreOrders,
     setUpdateOtherStatus,
     loadOrders,
@@ -127,6 +129,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [tabsFilter, setTabsFilter] = useState(tabs[0].tags);
   const [tagsFilter, setTagsFilter] = useState(tabs[0].tags);
   const [loadingTag, setLoadingTag] = useState(false);
+  const [isLoadingFirstRender, setIsLoadingFirstRender] = useState(false);
   const [reload, setReload] = useState(false);
   const [orientation, setOrientation] = useState(
     Dimensions.get('window').width < Dimensions.get('window').height
@@ -136,6 +139,17 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [windowsWidth, setWindowsWidth] = useState(
     parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
   );
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+        // loadOrders && loadOrders(true, tagsFilter)
+        setIsLoadingFirstRender(false)
+      return () => {
+        setIsLoadingFirstRender(true)
+      }
+    }, [navigation])
+  )
 
   const handleChangeTab = (tags: number[]) => {
     setTabsFilter(tags);
@@ -386,7 +400,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         />
       )}
 
-      {!reload && !error && orders.length > 0 && !loadingTag && (
+      {!reload && !error && orders.length > 0 && !loadingTag && !isLoadingFirstRender && (
         <PreviousOrders
           orders={ordersToShow}
           onNavigationRedirect={onNavigationRedirect}
@@ -394,7 +408,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         />
       )}
 
-      {loading && (
+      {(loading || isLoadingFirstRender) && (
         <>
           <View>
             {[...Array(5)].map((item, i) => (
@@ -430,6 +444,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         pagination.totalPages &&
         !loading &&
         !!orders.length &&
+        !isLoadingFirstRender &&
         pagination.currentPage < pagination.totalPages && (
           <OButton
             onClick={handleLoadMore}

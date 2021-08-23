@@ -253,6 +253,7 @@ export interface OrdersOptionParams {
   messages?: any;
   setMessages?: () => {};
   loadMessages?: () => {};
+  navigation?: any;
   setUpdateOtherStatus?: any;
   onNavigationRedirect?: any;
   orderStatus?: any;

@@ -112,6 +112,7 @@ const ChatUI = (props: MessagesParams) => {
       justifyContent: 'center',
       borderRadius: 7.6,
       elevation: 1,
+      shadowColor: theme.colors.shadow,
     },
     firstMessage: {
       justifyContent: 'center',
@@ -689,7 +690,7 @@ const ChatUI = (props: MessagesParams) => {
         backgroundColor: theme.colors.composerView,
         borderRadius: 7.6,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center',  
         paddingRight: 10,
       }}>
       <Composer
@@ -848,7 +849,8 @@ const ChatUI = (props: MessagesParams) => {
           }}
           onSend={onSubmit}
           onInputTextChanged={onChangeMessage}
-          alignTop
+          alignTop={false}
+          listViewProps={{contentContainerStyle: {flexGrow: 1, justifyContent: 'flex-end' }}}
           scrollToBottom
           renderAvatar={renderAvatar}
           renderInputToolbar={renderInputToolbar}
