@@ -18,6 +18,7 @@ import { Content, Timer, TimeField, Header, Action, Comments } from './styles';
 import { FloatingButton } from '../FloatingButton';
 import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const { navigation, route, orderState, updateStateOrder } = props;
@@ -31,6 +32,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const [time, setTime] = useState('');
   const [comments, setComments] = useState('');
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -129,6 +131,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
     let minsToSend = min;
 
     if (min > '60') minsToSend = '59';
+    setShowAlert(false)
 
     updateStateOrder &&
       updateStateOrder({
@@ -139,8 +142,13 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
           route?.action === 'accept' ? 'acceptByBusiness' : 'rejectByBusiness',
         orderId: route?.order?.id,
       });
+
   };
 
+  const cancelRequest = () => {
+    setShowAlert(false)
+  }
+ 
   return (
     <>
       {orderState?.loading && (
@@ -359,7 +367,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
               marginBottom: Platform.OS === 'ios' && isKeyboardShow ? 30 : 0,
             }}>
             <FloatingButton
-              firstButtonClick={handleAcceptOrReject}
+              firstButtonClick={() => setShowAlert(true)}
               btnText={
                 route.action === 'accept'
                   ? t('ACCEPT', 'Accept')
@@ -372,6 +380,22 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
               }
             />
           </Action>
+          <AwesomeAlert
+      show={showAlert}
+      showProgress={false}
+      title={t("BUSINESS_APP", "Business app")}
+      message={t(`ARE_YOU_SURE_THAT_YOU_WANT_TO_${route.action === "accept" ? "ACCEPT" : "REJECT"}_THIS_ORDER`, `Are you sure that you want to ${route.action === "accept" ? "accept" : "reject"} this order?`)}
+      closeOnTouchOutside
+      closeOnHardwareBackPress={false}
+      showConfirmButton
+      showCancelButton
+      cancelText={t("CANCEL", "Cancel")}
+      confirmText={t('ACCEPT', 'Accept')}
+      confirmButtonColor={theme.colors.primary}
+      cancelButtonColor={theme.colors.inputhat}
+      onCancelPressed={() => cancelRequest()}
+      onConfirmPressed={() => handleAcceptOrReject()}
+    />
         </KeyboardAvoidingView>
       )}
     </>
