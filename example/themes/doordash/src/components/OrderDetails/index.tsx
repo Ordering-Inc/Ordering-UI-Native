@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager, TextStyle } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Messages } from '../Messages'
 import {
 	useLanguage,

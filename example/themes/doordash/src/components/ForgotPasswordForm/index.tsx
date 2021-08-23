@@ -33,7 +33,7 @@ const ForgotPasswordUI = (props: any) => {
   });
 
   const [, t] = useLanguage();
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const { control, handleSubmit, errors } = useForm();
 
   const [emailSent, setEmailSent] = useState(null);

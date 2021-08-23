@@ -40,7 +40,7 @@ export const UserFormDetailsUI = (props: any) => {
 	});
 
 	const [, t] = useLanguage();
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const { handleSubmit, control, errors, setValue } = useForm();
 
 	const [{ user }] = useSession()

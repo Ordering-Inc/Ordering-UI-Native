@@ -9,7 +9,7 @@ import { useTheme } from 'styled-components/native';
 const LogoutButtonUI = (props: any) => {
   const { handleLogoutClick, formState } = props
 
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const theme = useTheme();
 
   const handleClick = async () => {

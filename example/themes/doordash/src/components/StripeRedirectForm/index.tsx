@@ -24,7 +24,7 @@ const StripeRedirectFormUI = (props: any) => {
   //   // androidPayMode: 'test', // Android only
   // })
   const theme = useTheme();
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const { control, handleSubmit, errors } = useForm();
 
   const [{ user }] = useSession();
