@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import CountryPicker, { Flag } from 'react-native-country-picker-modal';
 import { useTheme } from 'styled-components/native';
 import {
@@ -8,7 +8,7 @@ import {
 } from 'ordering-components/native';
 import { Container, LanguageItem } from './styles';
 import langCountries from './lang_country.json';
-import { OText } from '../shared';
+import { OText, OIcon } from '../shared';
 import { LanguageSelectorParams } from '../../types';
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
@@ -41,6 +41,15 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     (item: any) => item.value == currentLanguage,
   );
 
+  const styles = StyleSheet.create({
+    text: {
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 16,
+    },
+  });
+
   return (
     <Container style={{ backgroundColor: theme.colors.inputChat }}>
       {languagesState?.languages && (
@@ -52,14 +61,25 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
           countryCodes={countryCodes}
           renderFlagButton={() => (
             <TouchableOpacity onPress={() => setCountryModalVisible(true)}>
-              <LanguageItem>
-                <Flag
-                  withEmoji
-                  flagSize={24}
-                  countryCode={currentLanguageData?.countryCode}
-                />
+              <LanguageItem justifyContent="space-between">
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Flag
+                    withEmoji
+                    flagSize={24}
+                    countryCode={currentLanguageData?.countryCode}
+                  />
 
-                <OText>{currentLanguageData?.label}</OText>
+                  <OText style={styles.text}>
+                    {currentLanguageData?.label}
+                  </OText>
+                </View>
+
+                <OIcon
+                  src={theme?.images?.general?.chevronDown}
+                  color={theme.colors.backArrow}
+                  width={20}
+                  height={20}
+                />
               </LanguageItem>
             </TouchableOpacity>
           )}
@@ -71,7 +91,8 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
                 onPress={() => {
                   handleChangeLanguage(item.value);
                   setCountryModalVisible(false);
-                }}>
+                }}
+                activeOpacity={1}>
                 <LanguageItem>
                   <View style={{ width: 40 }} />
 
@@ -81,7 +102,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
                     countryCode={item.countryCode}
                   />
 
-                  <OText>{t(item.code, item.label)}</OText>
+                  <OText style={styles.text}>{t(item.code, item.label)}</OText>
                 </LanguageItem>
               </TouchableOpacity>
             ),

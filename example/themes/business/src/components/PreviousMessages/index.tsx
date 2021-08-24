@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { useTheme } from 'styled-components/native';
 import { useLanguage, useUtils } from 'ordering-components/native';
 import { Card, Logo, Information, Header, Badge } from './styles';
@@ -224,69 +223,62 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
   });
 
   return (
-    <>
-      <Spinner visible={messages?.loading} />
+    <ScrollView style={{ height: '80%' }}>
+      {orders?.length > 0 &&
+        orders?.map((order: any) => (
+          <TouchableOpacity
+            key={order?.id}
+            onPress={() => handlePressOrder(order)}
+            style={styles.cardButton}
+            activeOpacity={1}>
+            <Card key={order?.id}>
+              {!!order?.business?.logo && (
+                <Logo>
+                  <OIcon
+                    url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
+                    style={styles.icon}
+                  />
+                </Logo>
+              )}
 
-      <ScrollView style={{ height: '80%' }}>
-        {orders?.length > 0 &&
-          orders?.map((order: any) => (
-            <TouchableOpacity
-              key={order?.id}
-              onPress={() => handlePressOrder(order)}
-              style={styles.cardButton}
-              activeOpacity={1}>
-              <Card key={order?.id}>
-                {!!order?.business?.logo && (
-                  <Logo>
-                    <OIcon
-                      url={optimizeImage(
-                        order?.business?.logo,
-                        'h_300,c_limit',
-                      )}
-                      style={styles.icon}
-                    />
-                  </Logo>
-                )}
-
-                <Information>
-                  <Header>
-                    <OText numberOfLines={1} style={styles.title}>
-                      {order?.business?.name}
-                    </OText>
-
-                    {order?.unread_count > 0 && (
-                      <Badge>
-                        <OText size={14} style={styles.badge}>
-                          {order?.unread_count}
-                        </OText>
-                      </Badge>
-                    )}
-                  </Header>
-
-                  <OText
-                    style={styles.date}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                    size={20}>
-                    {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
-                    {order?.delivery_datetime_utc
-                      ? parseDate(order?.delivery_datetime_utc)
-                      : parseDate(order?.delivery_datetime, { utc: false })}
+              <Information>
+                <Header>
+                  <OText numberOfLines={1} style={styles.title}>
+                    {order?.business?.name}
                   </OText>
 
-                  <OText
-                    style={styles.orderType}
-                    mRight={5}
-                    numberOfLines={1}
-                    size={18}
-                    adjustsFontSizeToFit>
-                    {getOrderStatus(order?.status)?.value}
-                  </OText>
-                </Information>
-              </Card>
-            </TouchableOpacity>
-          ))}
-      </ScrollView>
-    </>
+                  {order?.unread_count > 0 && (
+                    <Badge>
+                      <OText size={14} style={styles.badge}>
+                        {order?.unread_count}
+                      </OText>
+                    </Badge>
+                  )}
+                </Header>
+
+                <OText
+                  style={styles.date}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  size={20}>
+                  {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
+                  {order?.delivery_datetime_utc
+                    ? parseDate(order?.delivery_datetime_utc)
+                    : parseDate(order?.delivery_datetime, { utc: false })}
+                </OText>
+
+                <OText
+                  style={styles.orderType}
+                  mRight={5}
+                  numberOfLines={1}
+                  size={18}
+                  adjustsFontSizeToFit>
+                  {getOrderStatus(order?.status)?.value}
+                </OText>
+              </Information>
+            </Card>
+          </TouchableOpacity>
+        ))}
+    </ScrollView>
   );
 };

@@ -252,7 +252,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     tab: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontWeight: 'normal',
       fontSize: 14,
       marginBottom: 10,
       paddingLeft: 8,
@@ -329,6 +328,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                     JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
                       ? theme.colors.textGray
                       : theme.colors.unselectText
+                  }
+                  weight={
+                    JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
+                      ? 'bold'
+                      : 'normal'
                   }>
                   {tab.text}
                 </OText>

@@ -6,6 +6,7 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OButton } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { PreviousMessages } from '../PreviousMessages';
+import { Contacts } from '../Contacts';
 import { FiltersTab, TabsContainer, TagsContainer, Tag } from './styles';
 import { MessagesOptionParams } from '../../types';
 
@@ -32,7 +33,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
 
   const tabs = [
     { key: 0, text: t('ORDERS', 'Orders'), tags: [0, 1] },
-    // { key: 1, text: t('CONTACTS', 'Contacts'), tags: [2, 3, 4] },
+    { key: 1, text: t('CONTACTS', 'Contacts'), tags: [2, 3, 4] },
   ];
 
   const tags = [
@@ -46,14 +47,20 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       text: t('ORDER_NUMBER', 'Order number'),
       sortBy: { param: 'id', direction: 'desc' },
     },
-    { key: 2, text: t('DRIVERS', 'Drivers') },
-    { key: 3, text: t('BUSINESS', 'Business') },
-    { key: 4, text: t('CUSTOMERS', 'Customers') },
+    { key: 2, text: t('BUSINESSES', 'Businesses') },
+    { key: 3, text: t('CUSTOMERS', 'Customers') },
+    { key: 4, text: t('DRIVERS', 'Drivers') },
   ];
 
   const [tabsFilter, setTabsFilter] = useState(tabs[0].tags);
   const [activeTag, setActiveTag] = useState(tags[0].key);
   const [reload, setReload] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(
+    values?.reduce(
+      (total: number, order: any) => total + order.unread_count,
+      0,
+    ),
+  );
 
   const [orientation, setOrientation] = useState(
     Dimensions.get('window').width < Dimensions.get('window').height
@@ -66,9 +73,9 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
   };
 
   const handleChangeTab = (tags: number[]) => {
-    setTabsFilter(tags);
-
     const key = tags[0];
+
+    setTabsFilter(tags);
     setActiveTag(key);
 
     if (tabs[0].tags.includes(key)) {
@@ -94,6 +101,15 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       setReload(!reload);
     }
   }, [loading]);
+
+  useEffect(() => {
+    setUnreadMessages(
+      values?.reduce(
+        (total: number, order: any) => total + order.unread_count,
+        0,
+      ),
+    );
+  }, [values?.length]);
 
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
     if (width < height) {
@@ -122,7 +138,6 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
     tab: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontWeight: '600',
       fontSize: 14,
       marginBottom: 10,
     },
@@ -173,17 +188,14 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
                   JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
                     ? theme.colors.textGray
                     : theme.colors.unselectText
+                }
+                weight={
+                  JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
+                    ? 'bold'
+                    : 'normal'
                 }>
-                {tab.text +
-                  ` (${
-                    tab.key === 0
-                      ? orders?.reduce(
-                          (total: number, order: any) =>
-                            total + order.unread_count,
-                          0,
-                        )
-                      : 0
-                  })`}
+                {tab.text}
+                {` ${tab.key === 0 ? `(${unreadMessages || 0})` : ''}`}
               </OText>
 
               <View
@@ -193,7 +205,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
                     JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
                       ? theme.colors.textGray
                       : theme.colors.tabBar,
-                  borderBottomWidth: 2,
+                  borderBottomWidth: 1.75,
                 }}></View>
             </Pressable>
           ))}
@@ -233,15 +245,32 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
         />
       )}
 
-      {!reload && !error && orders.length > 0 && (
-        <PreviousMessages
-          orders={values}
-          messages={messages}
-          setMessages={setMessages}
-          loadMessages={loadMessages}
-          onNavigationRedirect={onNavigationRedirect}
-        />
-      )}
+      {!reload &&
+        !error &&
+        orders.length > 0 &&
+        JSON.stringify(tabsFilter) === JSON.stringify(tabs[0].tags) && (
+          <PreviousMessages
+            orders={values}
+            messages={messages}
+            setMessages={setMessages}
+            loadMessages={loadMessages}
+            onNavigationRedirect={onNavigationRedirect}
+          />
+        )}
+
+      {!reload &&
+        !error &&
+        orders.length > 0 &&
+        JSON.stringify(tabsFilter) === JSON.stringify(tabs[1].tags) && (
+          <Contacts
+            orders={values}
+            activeTag={activeTag}
+            messages={messages}
+            setMessages={setMessages}
+            loadMessages={loadMessages}
+            onNavigationRedirect={onNavigationRedirect}
+          />
+        )}
 
       {(loading || reload) && (
         <>
@@ -278,6 +307,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       {pagination?.totalPages &&
         !loading &&
         !reload &&
+        JSON.stringify(tabsFilter) === JSON.stringify(tabs[0].tags) &&
         pagination?.currentPage < pagination?.totalPages && (
           <OButton
             onClick={loadMoreOrders}
