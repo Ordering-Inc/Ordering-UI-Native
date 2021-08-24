@@ -6,7 +6,7 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OButton } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { PreviousMessages } from '../PreviousMessages';
-import { Contacts } from '../Contacts';
+// import { Contacts } from '../Contacts';
 import { FiltersTab, TabsContainer, TagsContainer, Tag } from './styles';
 import { MessagesOptionParams } from '../../types';
 
@@ -33,7 +33,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
 
   const tabs = [
     { key: 0, text: t('ORDERS', 'Orders'), tags: [0, 1] },
-    { key: 1, text: t('CONTACTS', 'Contacts'), tags: [2, 3, 4] },
+    // { key: 1, text: t('CONTACTS', 'Contacts'), tags: [2, 3, 4] },
   ];
 
   const tags = [
@@ -258,7 +258,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
           />
         )}
 
-      {!reload &&
+      {/* {!reload &&
         !error &&
         orders.length > 0 &&
         JSON.stringify(tabsFilter) === JSON.stringify(tabs[1].tags) && (
@@ -270,7 +270,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
             loadMessages={loadMessages}
             onNavigationRedirect={onNavigationRedirect}
           />
-        )}
+        )} */}
 
       {(loading || reload) && (
         <>
