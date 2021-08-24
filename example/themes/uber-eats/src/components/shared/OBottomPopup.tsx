@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, TouchableWithoutFeedback, Dimensions, StyleSheet, View, ScrollView, Text } from 'react-native'
-import { OText } from '../../../../../components/shared'
+import { OText } from '../shared'
 import Icon from 'react-native-vector-icons/Feather'
 import { useTheme } from 'styled-components/native'
 

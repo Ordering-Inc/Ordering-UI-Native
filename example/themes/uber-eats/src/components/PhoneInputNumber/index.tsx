@@ -5,9 +5,9 @@ import { useLanguage, useConfig } from 'ordering-components/native';
 
 import { Wrapper } from './styles'
 
-import { PhoneInputParams } from '../../../../../types';
-import { OText } from '../../../../../components/shared';
-import { transformCountryCode } from '../../../../../utils'
+import { PhoneInputParams } from '../../types';
+import { OText } from '../shared';
+import { transformCountryCode } from '../../utils'
 import { I18nManager } from 'react-native'
 import { useTheme } from 'styled-components/native'
 

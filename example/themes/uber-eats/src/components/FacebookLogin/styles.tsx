@@ -1,11 +1,10 @@
 import styled from 'styled-components/native'
-import { colors } from '../../../../../theme.json'
 
 export const Container = styled.View``
 
 export const FacebookButton = styled.TouchableOpacity`
-  background-color: ${colors.white};
-  border-color: ${colors.primary};
+  background-color: ${(props: any) => props.theme.colors.white};
+  border-color: ${(props: any) => props.theme.colors.primary};
   border-width: 1px;
   font-size: 16px;
   padding: 15px 30px;

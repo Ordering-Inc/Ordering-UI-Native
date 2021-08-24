@@ -15,12 +15,12 @@ import {
 
 import { BusinessListContainer, Divider, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
 
-import NavBar from '../../../../../components/NavBar'
+import NavBar from '../NavBar'
 import { SearchBar } from '../SearchBar'
-import { OText } from '../../../../../components/shared'
+import { OText } from '../shared'
 import { OBottomPopup } from '../shared'
-import { BusinessesListingParams } from '../../../../../types'
-import { NotFoundSource } from '../../../../../components/NotFoundSource'
+import { BusinessesListingParams } from '../../types'
+import { NotFoundSource } from '../NotFoundSource'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { OrderTypeSelector } from '../OrderTypeSelector'

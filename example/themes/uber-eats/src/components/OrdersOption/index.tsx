@@ -1,13 +1,13 @@
 import React, { useState,useEffect } from 'react'
 import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { useFocusEffect } from '@react-navigation/native'
-import { OText } from '../../../../../components/shared'
-import { NotFoundSource } from '../../../../../components/NotFoundSource'
+import { OText } from '../shared'
+import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
 
 import { OptionTitle } from './styles'
-import { OrdersOptionParams } from '../../../../../types'
+import { OrdersOptionParams } from '../../types'
 
 import {
   Placeholder,

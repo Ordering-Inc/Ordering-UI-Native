@@ -8,7 +8,7 @@ import {
   useSession
 } from 'ordering-components/native';
 
-import { OText } from '../../../../../components/shared';
+import { OText } from '../shared';
 import { UserFormDetailsUI } from '../UserFormDetails';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';

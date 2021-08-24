@@ -5,10 +5,10 @@ import { StyleSheet, View } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useTheme } from 'styled-components/native';
 
-import { OButton, OText, OAlert } from '../../../../../components/shared'
-import { AddressListParams } from '../../../../../types'
-import { NotFoundSource } from '../../../../../components/NotFoundSource'
-import NavBar from '../../../../../components/NavBar'
+import { OButton, OText, OAlert } from '../shared'
+import { AddressListParams } from '../../types'
+import { NotFoundSource } from '../NotFoundSource'
+import NavBar from '../NavBar'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 
 const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
