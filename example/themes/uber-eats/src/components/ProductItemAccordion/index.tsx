@@ -19,9 +19,9 @@ import {
   ProductSubOption,
   ProductComment
 } from './styles'
-import { OIcon, OText, OAlert } from '../../../../../components/shared'
+import { OIcon, OText, OAlert } from '../shared'
 
-import { ProductItemAccordionParams } from '../../../../../types'
+import { ProductItemAccordionParams } from '../../types'
 import { useTheme } from 'styled-components/native'
 
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {

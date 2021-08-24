@@ -8,11 +8,7 @@ import {
 } from 'ordering-components/native'
 import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
-
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager, TextStyle } from 'react-native'
-import Icon from 'react-native-vector-icons/Feather';
-
 import {
 	ProductHeader,
 	WrapHeader,
@@ -135,7 +131,7 @@ export const ProductOptionsUI = (props: any) => {
 
 	const handleRedirectLogin = (product: any) => {
 		onClose()
-		navigation.navigate('Login', { product: { businessId: product?.businessId, id: product?.id, categoryId: product?.categoryId, slug: businessSlug } })
+		navigation.navigate('Home', { showAuth: true, product: { businessId: product?.businessId, id: product?.id, categoryId: product?.categoryId, slug: businessSlug } })
 	}
 
 	const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0
@@ -176,7 +172,7 @@ export const ProductOptionsUI = (props: any) => {
 									</Placeholder>
 								) : (
 									<>
-										<OText style={{ flex: I18nManager.isRTL ? 0 : 1, ...theme.labels.large } as TextStyle}>{product?.name || productCart.name}</OText>
+										<OText style={{ flex: I18nManager.isRTL ? 0 : 1, ...theme.labels.large }}>{product?.name || productCart.name}</OText>
 										{/* <OText size={20} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText> */}
 									</>
 								)}
@@ -354,8 +350,8 @@ export const ProductOptionsUI = (props: any) => {
 								onClick={() => handleRedirectLogin(productCart)}
 								text={isSoldOut || maxProductQuantity <= 0 ? t('SOLD_OUT', 'Sold out') : t('LOGIN_SIGNUP', 'Login / Sign Up')}
 								imgRightSrc=''
-								textStyle={{ color: theme.colors.primary }}
-								style={{ borderColor: theme.colors.primary, backgroundColor: theme.colors.white }}
+								textStyle={{ color: theme.colors.primary, ...theme.labels.middle }}
+								style={{ height: 40, borderWidth: 1, borderColor: theme.colors.primary, backgroundColor: theme.colors.white }}
 							/>
 						)}
 					</View>

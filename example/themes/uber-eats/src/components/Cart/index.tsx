@@ -10,16 +10,16 @@ import {
 
 import { CContainer, CartContent, CheckoutAction } from './styles';
 
-import { OSBill, OSTable, OSCoupon, OSTotal } from '../../../../../components/OrderSummary/styles';
+import { OSBill, OSTable, OSCoupon, OSTotal } from '../OrderSummary/styles';
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
-import { OButton, OModal, OText } from '../../../../../components/shared';
+import { OButton, OModal, OText } from '../shared';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
-import { verifyDecimals } from '../../../../../utils';
+import { verifyDecimals } from '../../utils';
 import { useTheme } from 'styled-components/native';
 
 const CartUI = (props: any) => {

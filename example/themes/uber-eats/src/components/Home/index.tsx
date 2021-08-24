@@ -2,11 +2,11 @@ import React from 'react';
 import { useLanguage, useOrder } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { StyleSheet, View, Dimensions, ImageBackground } from 'react-native';
-import { OButton, OIcon, OText } from '../../../../../components/shared';
+import { OButton, OIcon, OText } from '../shared';
 import { LogoWrapper } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { _setStoreData } from '../../../../../providers/StoreUtil';
+import { _setStoreData } from '../../providers/StoreUtil';
 
 const windowHeight = Dimensions.get('window').height
 

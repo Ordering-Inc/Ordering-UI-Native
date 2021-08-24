@@ -58,7 +58,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const styles = StyleSheet.create({
 		mainContainer: {
 			flex: 1,
-			marginTop: 60
+			marginTop: 64
 		},
 		BackIcon: {
 			paddingRight: 20,
@@ -101,7 +101,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [{ parsePrice }] = useUtils()
 	const { business, loading, error } = businessState
 	const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
-	const [isOpenSearchBar, setIsOpenSearchBar] = useState(false)
 	const [curProduct, setCurProduct] = useState(null)
 	const [openUpselling, setOpenUpselling] = useState(false)
 	const [openCart, setOpenCart] = useState(false)
@@ -121,7 +120,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const handleCancel = () => {
-		setIsOpenSearchBar(false)
+		console.log('Search canceled! ----- ')
 		handleChangeSearch('')
 	}
 
@@ -169,31 +168,27 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 			<Animated.View style={{ flex: 1, backgroundColor: theme.colors.white, position: 'absolute', width: '100%', top: top, zIndex: 100 }}>
 				{!loading && business?.id && (
 					<TopHeader>
-						{!isOpenSearchBar && (
-							<>
-								<OButton
-									imgLeftSrc={theme.images.general.arrow_left}
-									imgRightSrc={null}
-									style={styles.btnBackArrow}
-									onClick={() => (navigation?.canGoBack() && navigation.goBack()) || (auth && navigation.navigate('BottomTab'))}
-									imgLeftStyle={{ tintColor: theme.colors.textPrimary }}
-								/>
-								{isStickyCategory && (
-									<Animated.View style={{ flexBasis: '74%', paddingHorizontal: 10, alignItems: 'center' }}>
-										<OText style={theme.labels.middle as TextStyle} numberOfLines={1} ellipsizeMode={'tail'}>{business?.name}</OText>
-									</Animated.View>
-								)}
-								{!errorQuantityProducts && (
-									<View style={{ ...styles.headerItem }}>
-										<TouchableOpacity
-											onPress={() => { }}
-											style={styles.searchIcon}
-										>
-											<OIcon src={theme.images.general.share} width={16} />
-										</TouchableOpacity>
-									</View>
-								)}
-							</>
+						<OButton
+							imgLeftSrc={theme.images.general.arrow_left}
+							imgRightSrc={null}
+							style={styles.btnBackArrow}
+							onClick={() => (navigation?.canGoBack() && navigation.goBack()) || (auth && navigation.navigate('BottomTab'))}
+							imgLeftStyle={{ tintColor: theme.colors.textPrimary }}
+						/>
+						{isStickyCategory && (
+							<Animated.View style={{ flexBasis: '74%', paddingHorizontal: 10, alignItems: 'center' }}>
+								<OText style={theme.labels.middle as TextStyle} numberOfLines={1} ellipsizeMode={'tail'}>{business?.name}</OText>
+							</Animated.View>
+						)}
+						{!errorQuantityProducts && (
+							<View style={{ ...styles.headerItem }}>
+								<TouchableOpacity
+									onPress={() => { }}
+									style={styles.searchIcon}
+								>
+									<OIcon src={theme.images.general.share} width={16} />
+								</TouchableOpacity>
+							</View>
 						)}
 					</TopHeader>
 				)}

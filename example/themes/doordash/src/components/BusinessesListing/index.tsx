@@ -41,7 +41,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [orderState] = useOrder()
 	const [{ configs }] = useConfig()
 	const [{ parseDate }] = useUtils()
-	const { showToast } = useToast()
+	const [, { showToast }] = useToast()
 
 	const theme = useTheme();
 

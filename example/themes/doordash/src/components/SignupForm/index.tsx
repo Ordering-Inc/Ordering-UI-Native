@@ -104,7 +104,7 @@ const SignupFormUI = (props: SignupParams) => {
 	});
 	const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
 
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
 	const [, { login }] = useSession();
 	const [{ configs }] = useConfig();

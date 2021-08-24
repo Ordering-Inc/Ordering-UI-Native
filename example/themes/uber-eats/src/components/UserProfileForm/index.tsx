@@ -11,9 +11,9 @@ import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { StyleSheet, View } from 'react-native';
-import { ProfileParams } from '../../../../../types';
+import { ProfileParams } from '../../types';
 import { AddressList } from '../AddressList'
-import { LogoutButton } from '../../../../../components/LogoutButton'
+import { LogoutButton } from '../LogoutButton'
 import { LanguageSelector } from '../LanguageSelector'
 import { UserFormDetailsUI } from '../UserFormDetails'
 
@@ -22,7 +22,7 @@ import {
   OIconButton,
   OText,
   OButton,
-} from '../../../../../components/shared';
+} from '../shared';
 import {
   CenterView,
   UserData,

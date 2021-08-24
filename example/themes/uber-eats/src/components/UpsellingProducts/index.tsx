@@ -6,8 +6,8 @@ import {
   useUtils,
   useLanguage
 } from 'ordering-components/native'
-import { OText, OIcon, OModal, OButton } from '../../../../../components/shared'
-import { UpsellingProductsParams } from '../../../../../types'
+import { OText, OIcon, OModal, OButton } from '../shared'
+import { UpsellingProductsParams } from '../../types'
 import {
   Container,  
   Item,

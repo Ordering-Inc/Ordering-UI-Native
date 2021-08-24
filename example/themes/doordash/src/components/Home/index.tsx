@@ -10,6 +10,7 @@ import { _setStoreData, _removeStoreData } from '../../providers/StoreUtil';
 import { Container } from '../../layouts/Container';
 import { LoginForm } from '../LoginForm';
 import { SignupForm } from '../SignupForm';
+import { useEffect } from 'react';
 
 const w = Dimensions.get('window').width
 
@@ -17,7 +18,7 @@ export const Home = (props: any) => {
 	const {
 		navigation,
 		route,
-		onNavigationRedirect
+		onNavigationRedirect,
 	} = props;
 
 	const theme = useTheme();
@@ -125,6 +126,12 @@ export const Home = (props: any) => {
 		setActive(idx);
 	}
 
+	useEffect(() => {
+		setTimeout(() => {
+			setAuthState(route?.params?.showAuth || false);
+		}, 500)
+	}, [route?.params]);
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.wrapperContent}>
@@ -156,7 +163,9 @@ export const Home = (props: any) => {
 					style={styles.buttons}
 					imgRightSrc={null}
 					textStyle={[{ color: theme.colors.textPrimary }, theme.labels.middle] as TextStyle}
-					onClick={() => { setActive(0), setAuthState(true) }}
+					onClick={() => {
+						setActive(0), setAuthState(true)
+					}}
 				/>
 				<TouchableOpacity
 					style={{ ...styles.textLink, marginTop: 15 }}

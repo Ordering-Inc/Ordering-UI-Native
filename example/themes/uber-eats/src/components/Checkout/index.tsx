@@ -16,7 +16,7 @@ import {
   useToast
 } from 'ordering-components/native';
 
-import { OText, OButton } from '../../../../../components/shared';
+import { OText, OButton } from '../shared';
 import { MomentOption } from '../MomentOption'
 import { OBottomPopup } from '../shared'
 
@@ -24,10 +24,10 @@ import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
 import { DriverTips } from '../DriverTips';
 import { OrderSummary } from '../OrderSummary';
-import { NotFoundSource } from '../../../../../components/NotFoundSource';
+import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
 import { OrderTypeSelector } from '../OrderTypeSelector'
-import { SafeAreaContainer } from '../../../../../layouts/SafeAreaContainer'
+import { SafeAreaContainer } from '../../layouts/SafeAreaContainer'
 
 import {
   ChContainer,

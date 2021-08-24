@@ -43,11 +43,18 @@ import { UserProfileForm } from './src/components/UserProfileForm'
 
 // shared components
 import {
+  OText,
+  OButton,
+  OInput,
+  OIcon,
+  OIconButton,
+  OAlert,
   OBottomPopup
 } from './src/components/shared'
 
 // layouts
 import { Container } from './src/layouts/Container'
+import { SafeAreaContainer } from './src/layouts/SafeAreaContainer'
 
 export {
   ActiveOrders,
@@ -94,8 +101,15 @@ export {
   UserProfileForm,
 
   // shared components
+  OText,
+  OButton,
+  OInput,
+  OIcon,
+  OIconButton,
+  OAlert,
   OBottomPopup,
 
   // layouts
-  Container
+  Container,
+  SafeAreaContainer
 }

@@ -1,9 +1,9 @@
 import React from 'react'
 import { ProductsList, useLanguage } from 'ordering-components/native'
 import { SingleProductCard } from '../SingleProductCard'
-import { NotFoundSource } from '../../../../../components/NotFoundSource'
-import { BusinessProductsListParams } from '../../../../../types'
-import { OText } from '../../../../../components/shared'
+import { NotFoundSource } from '../NotFoundSource'
+import { BusinessProductsListParams } from '../../types'
+import { OText } from '../shared'
 import {
   ProductsContainer,
   ErrorMessage,

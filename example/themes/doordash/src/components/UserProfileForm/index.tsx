@@ -68,11 +68,18 @@ const ProfileUI = (props: ProfileParams) => {
 			paddingLeft: 12,
 			paddingRight: 12
 		},
+		updateButton: {
+			width: 100,
+			borderWidth: 1,
+			height: 37,
+			paddingLeft: 4,
+			paddingRight: 4
+		}
 	});
 
 	const [{ user }] = useSession();
 	const [, t] = useLanguage();
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const { handleSubmit, errors, setValue, control } = useForm();
 
 	const [phoneInputData, setPhoneInputData] = useState({
@@ -280,12 +287,12 @@ const ProfileUI = (props: ProfileParams) => {
 						<>
 							<OButton
 								text={t('CANCEL', 'Cancel')}
-								textStyle={{ color: theme.colors.white, fontSize: 14, fontWeight: '600' }}
-								bgColor={theme.colors.primary}
+								textStyle={{ color: theme.colors.primary, fontSize: 14, fontWeight: '600' }}
+								bgColor={theme.colors.primaryContrast}
 								borderColor={theme.colors.primary}
 								isDisabled={formState.loading}
 								imgRightSrc={null}
-								style={{ ...styles.editButton }}
+								style={{ ...styles.updateButton }}
 								onClick={handleCancelEdit}
 							/>
 							{((formState &&
@@ -293,12 +300,12 @@ const ProfileUI = (props: ProfileParams) => {
 								(
 									<OButton
 										text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
-										bgColor={theme.colors.primaryContrast}
+										bgColor={theme.colors.primary}
 										textStyle={{ color: formState.loading ? 'black' : 'white', fontSize: 14, fontWeight: '600' }}
-										borderColor={theme.colors.primaryContrast}
+										borderColor={theme.colors.primary}
 										isDisabled={formState.loading}
 										imgRightSrc={null}
-										style={{ ...styles.editButton }}
+										style={{ ...styles.editButton, marginStart: 5 }}
 										onClick={handleSubmit(onSubmit)}
 									/>
 								)}

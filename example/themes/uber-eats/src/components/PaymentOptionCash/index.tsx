@@ -4,7 +4,7 @@ import { useUtils, useLanguage } from 'ordering-components/native';
 import { useForm, Controller } from 'react-hook-form';
 
 import { PCContainer, PCForm, PCWrapper } from './styles';
-import { OInput, OText } from '../../../../../components/shared';
+import { OInput, OText } from '../shared';
 import { useTheme } from 'styled-components/native';
 
 export const PaymentOptionCash = (props: any) => {

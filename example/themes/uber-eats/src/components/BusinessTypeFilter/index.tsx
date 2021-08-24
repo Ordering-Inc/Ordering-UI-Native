@@ -4,8 +4,8 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 'ordering-components/native'
 
 import { BusinessCategories, Category, BCContainer } from './styles'
-import { OIcon, OText } from '../../../../../components/shared'
-import { BusinessTypeFilterParams } from '../../../../../types'
+import { OIcon, OText } from '../shared'
+import { BusinessTypeFilterParams } from '../../types'
 import { useTheme } from 'styled-components/native'
 
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
-import { OInput, OButton } from '../../../../../components/shared'
+import { OInput, OButton } from '../shared'
 import { useLanguage } from 'ordering-components/native'
 import Icon from 'react-native-vector-icons/Feather'
 import { useTheme } from 'styled-components/native'

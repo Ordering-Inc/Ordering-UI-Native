@@ -1,13 +1,13 @@
 import React from 'react'
 import { useLanguage, useConfig, useOrder, useUtils } from 'ordering-components/native'
-import { SingleProductCardParams } from '../../../../../types'
+import { SingleProductCardParams } from '../../types'
 import {
   CardContainer,
   CardInfo,
   SoldOut
 } from './styles'
 import { StyleSheet } from 'react-native'
-import { OText, OIcon } from '../../../../../components/shared'
+import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
 
 export const SingleProductCard = (props: SingleProductCardParams) => {

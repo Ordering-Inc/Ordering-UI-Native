@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Linking,
   Keyboard,
   Platform,
+  View,
   KeyboardAvoidingView,
 } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
+import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
 import {
   ToastType,
@@ -17,6 +18,7 @@ import { Content, Timer, TimeField, Header, Action, Comments } from './styles';
 import { FloatingButton } from '../FloatingButton';
 import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const { navigation, route, orderState, updateStateOrder } = props;
@@ -24,11 +26,13 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const theme = useTheme();
-
+  const timerRef = useRef<any>();
   const [hour, setHour] = useState('00');
   const [min, setMin] = useState('00');
+  const [time, setTime] = useState('');
   const [comments, setComments] = useState('');
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -80,12 +84,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
     navigation?.canGoBack() && navigation.goBack();
   };
 
-  const handleChangeHour = (e: any) => {
-    if (e.length === 1) {
-      setHour('0' + e.charAt(0));
-      return;
-    }
-
+  const handleTime = (e: any) => {
     if (
       e.includes(',') ||
       e.includes('.') ||
@@ -94,55 +93,127 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
     )
       return;
 
-    const rightValue = e.slice(0, 2) === hour;
-    const midleValue =
-      e.charAt(0) + e.charAt(e.length - 1) === hour && !rightValue;
-    const leftValue = e.slice(1) === hour && !midleValue;
+    setTime(e.slice(-4));
+    const mins = e.slice(-2);
+    const hours = e.slice(-4, -2);
 
-    if (rightValue || midleValue) setHour(e.charAt(1) + e.charAt(e.length - 1));
-
-    if (leftValue) setHour(e.charAt(0) + e.charAt(1));
+    setMin(mins);
+    setHour(hours);
+    setTime(`${hours}${mins}`);
   };
 
-  const handleChangeMin = (e: any) => {
-    if (e.length === 1) {
-      setMin('0' + e.charAt(0));
-      return;
+  const handleFixTime = () => {
+    if (min >= '60') {
+      setMin('59');
     }
 
-    if (
-      e.includes(',') ||
-      e.includes('.') ||
-      e.includes('-') ||
-      e.includes(' ')
-    )
-      return;
+    if(min.length <2) setMin(`0${min}`)
+    if(hour.length <2) setHour(`0${hour}`)
 
-    const rightValue = e.slice(0, 2) === min;
-    const midleValue =
-      e.charAt(0) + e.charAt(e.length - 1) === min && !rightValue;
-    const leftValue = e.slice(1) === min && !midleValue;
+    if(!hour) setHour('00')
+  };
 
-    if (rightValue || midleValue) {
-      if (e.charAt(1) + e.charAt(e.length - 1) <= 60) {
-        setMin(e.charAt(1) + e.charAt(e.length - 1));
-      } else if (e.charAt(1) + e.charAt(e.length - 1) > 60) {
-        setMin('60');
-      }
+  const openTimerIOnput = () => {
+    const isFocus = timerRef.current.isFocused();
+    if (isFocus) {
+      timerRef.current.blur();
     }
 
-    if (leftValue) {
-      if (e.charAt(0) + e.charAt(1) <= 60) {
-        setMin(e.charAt(0) + e.charAt(1));
-      } else if (e.charAt(0) + e.charAt(1) > 60) {
-        setMin('60');
-      }
+    if (!isFocus) {
+      if (time.length > 1) timerRef.current.clear();
+      timerRef.current.focus();
     }
   };
 
+  const handleAcceptOrReject = () => {
+    handleFixTime();
+
+    let minsToSend = min;
+
+    if (min > '60') minsToSend = '59';
+    setShowAlert(false)
+
+    updateStateOrder &&
+      updateStateOrder({
+        hour,
+        min: minsToSend,
+        comments,
+        action:
+          route?.action === 'accept' ? 'acceptByBusiness' : 'rejectByBusiness',
+        orderId: route?.order?.id,
+      });
+
+  };
+
+  const cancelRequest = () => {
+    setShowAlert(false)
+  }
+ 
   return (
     <>
-      <Spinner visible={orderState?.loading} />
+      {orderState?.loading && (
+        <View
+          style={{
+            padding: 40,
+            flex: 1,
+            backgroundColor: theme.colors.backgroundLight,
+            justifyContent: 'space-between',
+          }}>
+          {route.action === 'accept' ? (
+            <>
+              <Placeholder Animation={Fade}>
+                <PlaceholderLine width={70} />
+              </Placeholder>
+
+              <Placeholder Animation={Fade}>
+                <PlaceholderLine
+                  style={{
+                    width: 245,
+                    height: 245,
+                    borderRadius: 123,
+                    alignSelf: 'center',
+                  }}
+                />
+              </Placeholder>
+
+              <Placeholder Animation={Fade}>
+                <PlaceholderLine
+                  width={90}
+                  style={{ borderRadius: 7.8, alignSelf: 'center', height: 40 }}
+                />
+              </Placeholder>
+            </>
+          ) : (
+            <>
+              <Placeholder Animation={Fade}>
+             <PlaceholderLine width={90} />
+                <PlaceholderLine width={60} />
+              </Placeholder>
+
+              <Placeholder Animation={Fade}>
+              <PlaceholderLine
+                  width={100}
+                  style={{ borderRadius: 7.8, height: 40 }}
+                />
+                <PlaceholderLine width={40} />
+                <PlaceholderLine width={50} />
+                <PlaceholderLine width={50} />
+                <PlaceholderLine
+                  width={100}
+                  style={{ borderRadius: 7.8, height: 140 }}
+                />
+              </Placeholder>
+
+              <Placeholder Animation={Fade}>
+                <PlaceholderLine
+                  width={90}
+                  style={{ borderRadius: 7.8, alignSelf: 'center', height: 40 }}
+                />
+              </Placeholder>
+            </>
+          )}
+        </View>
+      )}
 
       {!orderState?.loading && (
         <KeyboardAvoidingView
@@ -252,28 +323,30 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
             </Header>
 
             {route.action === 'accept' && (
-              <Timer>
-                <TimeField
-                  keyboardType="numeric"
-                  placeholder={'00'}
-                  value={hour}
-                  onChangeText={handleChangeHour}
-                  selectionColor={theme.colors.primary}
-                  color={theme.colors.textGray}
-                />
-
-                <OText size={55}>:</OText>
-
-                <TimeField
-                  keyboardType="numeric"
-                  placeholder={'00'}
-                  value={min}
-                  onChangeText={handleChangeMin}
-                  selectionColor={theme.colors.primary}
-                  color={theme.colors.textGray}
-                />
+              <Timer onPress={() => openTimerIOnput()}>
+                <OText weight="bold" style={{ textAlign: 'center' }} size={55}>
+                  {hour}
+                </OText>
+                {hour.length > 0 &&  <OText size={55}>:</OText>}
+                <OText weight="bold" style={{ textAlign: 'center' }} size={55}>
+                  {min}
+                </OText>
               </Timer>
             )}
+
+            <TimeField
+              ref={timerRef}
+              keyboardType="numeric"
+              value={time}
+              placeholder={'00:00'}
+              onChangeText={handleTime}
+              onPressOut={() => handleFixTime()}
+              editable={true}
+              selectionColor={theme.colors.primary}
+              placeholderTextColor={theme.colors.textGray}
+              color={theme.colors.textGray}
+              onEndEditing={handleFixTime}
+            />
 
             {route.action === 'reject' && (
               <Comments>
@@ -294,19 +367,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
               marginBottom: Platform.OS === 'ios' && isKeyboardShow ? 30 : 0,
             }}>
             <FloatingButton
-              firstButtonClick={() =>
-                updateStateOrder &&
-                updateStateOrder({
-                  hour,
-                  min,
-                  comments,
-                  action:
-                    route?.action === 'accept'
-                      ? 'acceptByBusiness'
-                      : 'rejectByBusiness',
-                  orderId: route?.order?.id,
-                })
-              }
+              firstButtonClick={() => setShowAlert(true)}
               btnText={
                 route.action === 'accept'
                   ? t('ACCEPT', 'Accept')
@@ -319,6 +380,22 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
               }
             />
           </Action>
+          <AwesomeAlert
+      show={showAlert}
+      showProgress={false}
+      title={t("BUSINESS_APP", "Business app")}
+      message={t(`ARE_YOU_SURE_THAT_YOU_WANT_TO_${route.action === "accept" ? "ACCEPT" : "REJECT"}_THIS_ORDER`, `Are you sure that you want to ${route.action === "accept" ? "accept" : "reject"} this order?`)}
+      closeOnTouchOutside
+      closeOnHardwareBackPress={false}
+      showConfirmButton
+      showCancelButton
+      cancelText={t("CANCEL", "Cancel")}
+      confirmText={t('ACCEPT', 'Accept')}
+      confirmButtonColor={theme.colors.primary}
+      cancelButtonColor={theme.colors.inputhat}
+      onCancelPressed={() => cancelRequest()}
+      onConfirmPressed={() => handleAcceptOrReject()}
+    />
         </KeyboardAvoidingView>
       )}
     </>

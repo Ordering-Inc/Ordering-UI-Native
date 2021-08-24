@@ -19,14 +19,14 @@ import {
 } from 'ordering-components/native';
 
 import { PaymentOptionCash } from '../PaymentOptionCash';
-import { StripeElementsForm } from '../../../../../components/StripeElementsForm';
-import { StripeCardsList } from '../../../../../components/StripeCardsList';
+import { StripeElementsForm } from '../StripeElementsForm';
+import { StripeCardsList } from '../StripeCardsList';
 // import { PaymentOptionStripe } from '../PaymentOptionStripe';
 // import { StripeRedirectForm } from '../StripeRedirectForm';
 // import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
 // import { NotFoundSource } from '../NotFoundSource'
 
-import { OText, OIcon, OModal, OButton } from '../../../../../components/shared';
+import { OText, OIcon, OModal, OButton } from '../shared';
 
 import {
   PMContainer,
@@ -35,7 +35,7 @@ import {
   PMCardSelected,
   PMCardItemContent
 } from './styles'
-import { getIconCard } from '../../../../../utils';
+import { getIconCard } from '../../utils';
 import { WebView } from 'react-native-webview';
 import { useTheme } from 'styled-components/native';
 

@@ -6,7 +6,7 @@ import RNRestart from 'react-native-restart'
 import RNPickerSelect from 'react-native-picker-select'
 import { Container } from './styles'
 import { useTheme } from 'styled-components/native'
-import { LanguageSelectorParams } from '../../../../../types'
+import { LanguageSelectorParams } from '../../types'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { I18nManager } from 'react-native'
 

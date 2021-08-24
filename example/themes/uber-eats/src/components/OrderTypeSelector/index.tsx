@@ -7,7 +7,7 @@ import {
 import {StyleSheet, Platform, I18nManager} from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { OrderTypeWrapper } from './styles'
-import { OrderTypeSelectParams } from '../../../../../types'
+import { OrderTypeSelectParams } from '../../types'
 import RNPickerSelect from 'react-native-picker-select'
 import { useTheme } from 'styled-components/native'
 

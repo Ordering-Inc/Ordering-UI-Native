@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { useOrder, useLanguage, useUtils } from 'ordering-components/native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { convertHoursToMinutes } from '../../../../../utils';
+import { convertHoursToMinutes } from '../../utils';
 
 import {
   BIContainer,
@@ -14,7 +14,7 @@ import {
   BITotal,
   BIActions
 } from './styles';
-import { OAlert, OIcon, OText } from '../../../../../components/shared';
+import { OAlert, OIcon, OText } from '../shared';
 
 export const BusinessItemAccordion = (props: any) => {
   const {

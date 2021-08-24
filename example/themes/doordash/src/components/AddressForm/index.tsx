@@ -90,7 +90,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
-	const { showToast } = useToast()
+	const [, { showToast }] = useToast()
 	const [configState] = useConfig()
 	const [orderState] = useOrder()
 	const { handleSubmit, errors, control, setValue } = useForm()
@@ -495,7 +495,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 							)}
 
 							<InputWrapper style={{ marginTop: 0 }}>
-								<OText style={{ ...theme.labels.middle, flexBasis: '35%' } as TextStyle}>{t('APT_SUITE', 'Apt./Suite')}</OText>
+								<OText style={{ ...theme.labels.middle, flexBasis: '35%' }}>{t('APT_SUITE', 'Apt./Suite')}</OText>
 								<Controller
 									control={control}
 									name='internal_number'
@@ -521,7 +521,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 							</InputWrapper>
 							<InputWrapper>
-								<OText style={{ ...theme.labels.middle, flexBasis: '35%' } as TextStyle}>{t('ZIPCODE', 'Zipcode')}</OText>
+								<OText style={{ ...theme.labels.middle, flexBasis: '35%' }}>{t('ZIPCODE', 'Zipcode')}</OText>
 								<Controller
 									control={control}
 									name='zipcode'

@@ -31,6 +31,14 @@ import {
   Actions
 } from './styles';
 
+const imgOptions = {
+  mediaType: 'photo',
+  maxHeight: 300,
+  maxWidth: 300,
+  includeBase64: true,
+  selectionLimit: 0
+}
+
 const ProfileUI = (props: ProfileParams) => {
   const {
     navigation,
@@ -106,11 +114,10 @@ const ProfileUI = (props: ProfileParams) => {
   }
 
   const handleImagePicker = () => {
-    launchImageLibrary({ mediaType: 'photo', maxHeight: 200, maxWidth: 200, includeBase64: true, selectionLimit: 5 }, (response: any) => {
+    launchImageLibrary(imgOptions, (response: any) => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        // showToast(ToastType.Error, response.errorMessage);
       } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
         showToast(ToastType.Error, response.errorMessage);
       } else {
         if (response.uri) {

@@ -8,12 +8,12 @@ import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
 import { useTheme } from 'styled-components/native';
 
-import { _retrieveStoreData } from '../../../../../providers/StoreUtil';
-import { OInput, OButton, OText, OModal } from '../../../../../components/shared'
-import { AddressFormParams } from '../../../../../types'
-import { getTraduction } from '../../../../../utils'
-import { GoogleMap } from '../../../../../components/GoogleMap'
-import NavBar from '../../../../../components/NavBar'
+import { _retrieveStoreData } from '../../providers/StoreUtil';
+import { OInput, OButton, OText, OModal } from '../shared'
+import { AddressFormParams } from '../../types'
+import { getTraduction } from '../../utils'
+import { GoogleMap } from '../GoogleMap'
+import NavBar from '../NavBar'
 
 import {
   AddressFormContainer,
@@ -468,7 +468,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                         blurOnSubmit: false,
                         returnKeyType: 'next'
                       }}
-                      onFail={(error) => setAlertState({ open: true, content: getTraduction(error) })}
+                      onFail={(error) => setAlertState({ open: true, content: getTraduction(error, t) })}
                       styles={{
                         listView: {
                           position: 'relative',

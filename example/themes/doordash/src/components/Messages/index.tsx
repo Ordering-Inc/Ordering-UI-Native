@@ -31,7 +31,7 @@ const MessagesUI = (props: MessagesParams) => {
   const [{ user }] = useSession()
   const [{ parseDate }] = useUtils()
   const [, t] = useLanguage()
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)

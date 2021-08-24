@@ -4,7 +4,7 @@ import { ProductIngredient as ProductIngredientController } from 'ordering-compo
 import { Container } from './styles'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { View } from 'react-native'
-import { OText } from '../../../../../components/shared'
+import { OText } from '../shared'
 import { useTheme } from 'styled-components/native'
 
 const ProductIngredientUI = (props: any) => {
