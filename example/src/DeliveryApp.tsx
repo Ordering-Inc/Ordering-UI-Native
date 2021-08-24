@@ -42,7 +42,8 @@ LogBox.ignoreLogs([
   'Can\'t perform a React state update',
   'Remote debugger',
   'Task orphaned for request',
-  'JSON value \'<null>\''
+  'JSON value \'<null>\'',
+  'Animated.event now requires a second argument for options'
 ])
 
 theme.images = {
