@@ -135,7 +135,7 @@ OButton.defaultProps = {
 	isDisabled: false,
 	indicatorColor: 'white',
 	activeOpacity: 0.5,
-	imgRightSrc: require('../../assets/icons/arrow_right.png')
+	imgRightSrc: null
 };
 
 export default OButton;

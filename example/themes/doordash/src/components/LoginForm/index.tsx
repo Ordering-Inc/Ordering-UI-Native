@@ -94,7 +94,7 @@ const LoginFormUI = (props: LoginParams) => {
 			flexGrow: 1,
 		}
 	});
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const [, t] = useLanguage()
 	const [{ configs }] = useConfig()
 	const [, { login }] = useSession()

@@ -34,7 +34,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 			<Card
 				isMiniCard={configs?.google_maps_api_key?.value}
 				onPress={() => handleClickCard(order?.uuid)}
-				style={{ width: width - (padding || 0) * 2 }}
+				style={{ width: width * 0.7 - (padding || 0) * 2 }}
 			>
 				<Information>
 					<OrderInformation>
@@ -64,12 +64,12 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 			</Card>
 			{pagination?.totalPages && pagination?.currentPage < pagination?.totalPages && index === (10 * pagination?.currentPage) - 1 && (
 				<Card
-					style={{ ...styles.loadOrders, height: configs?.google_maps_api_key?.value ? 200 : 100 }}
+					style={{ ...styles.loadOrders, height: 97 }}
 					onPress={loadMoreOrders}
 				>
 					<OButton
 						bgColor={theme.colors.white}
-						textStyle={{ color: theme.colors.primary, fontSize: 20 }}
+						textStyle={{ color: theme.colors.primary, fontSize: 14 }}
 						text={t('LOAD_MORE_ORDERS', 'Load more orders')}
 						borderColor={theme.colors.white}
 						style={{ paddingLeft: 30, paddingRight: 30 }}
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
 	loadOrders: {
 		justifyContent: 'center',
 		alignItems: 'center',
-		minWidth: 230
+		minWidth: 169,
+		borderWidth: 0,
 	}
 })

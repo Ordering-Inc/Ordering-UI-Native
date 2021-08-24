@@ -89,3 +89,9 @@ export const ChErrors = styled.View`
   align-items: center;
   margin-bottom: 20px;
 `
+export const TextDetails = styled.Text`
+  align-items: flex-start;
+  text-align: left;
+  font-size: 18px;
+  font-weight: bold;
+`

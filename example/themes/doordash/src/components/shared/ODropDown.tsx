@@ -112,7 +112,7 @@ const ODropDown = (props: Props) => {
         <DropIcon
           textcolor={props.textcolor}
           secondary={secondary}
-          source={require('../../assets/icons/drop_down.png')}
+          source={theme.images.general.drop_down}
         />
       </Selected>
       {isOpen && options && (

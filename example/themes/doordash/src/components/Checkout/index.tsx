@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TextStyle, TouchableOpacity } from 'react-native';
+import { View, TextStyle, TouchableOpacity } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 import {
@@ -14,7 +14,7 @@ import {
 	ToastType, useToast
 } from 'ordering-components/native';
 
-import { OText, OButton, OIcon } from '../shared';
+import { OText } from '../shared';
 import { useTheme } from 'styled-components/native';
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -22,20 +22,14 @@ import { DriverTips } from '../DriverTips';
 import { OrderSummary } from '../OrderSummary';
 import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
-import { OrderTypeSelector } from '../OrderTypeSelector'
 
 import {
 	ChContainer,
 	ChSection,
-	ChHeader,
-	ChTotal,
 	ChAddress,
-	ChMoment,
-	CHMomentWrapper,
 	ChPaymethods,
 	ChDriverTips,
 	ChCart,
-	ChPlaceOrderBtn,
 	ChErrors,
 	ChBusinessDetails,
 	ChUserDetails
@@ -83,14 +77,13 @@ const CheckoutUI = (props: any) => {
 
 	const theme = useTheme();
 
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
 	const [{ user }] = useSession();
 	const [{ configs }] = useConfig();
 	const [{ parsePrice, parseDate }] = useUtils();
 	const [{ options, carts, loading }] = useOrder();
 	const [validationFields] = useValidationFields();
-	const [ordering] = useApi()
 
 	const [errorCash, setErrorCash] = useState(false);
 	const [userErrors, setUserErrors] = useState<any>([]);
@@ -163,26 +156,18 @@ const CheckoutUI = (props: any) => {
 		}
 	}, [errors])
 
+	useEffect(() => {
+		console.log('----- Entered View ------');
+	}, []);
+
 	// useEffect(() => {
-	//   handlePaymethodChange(null)
+	// 	handlePaymethodChange(null)
 	// }, [cart?.total])
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }}>
 			<NavBar title={t('CHECKOUT', 'Checkout')} leftImg={theme.images.general.close} noBorder onActionLeft={() => navigation?.canGoBack() && navigation.goBack()} />
 			<Container>
 				<ChContainer>
-					{/* <ChSection style={{ paddingBottom: 20, zIndex: 100 }}>
-            <OButton
-              imgLeftSrc={theme.images.general.arrow_left}
-              imgRightSrc={null}
-              style={style.btnBackArrow}
-              onClick={() => navigation?.canGoBack() && navigation.goBack()}
-            />
-            <ChHeader>
-              <OText size={24}>{t('CHECKOUT', 'Checkout')}</OText>
-              <OrderTypeSelector configTypes={configTypes} />
-            </ChHeader>
-          </ChSection> */}
 
 					{!cartState.loading && (cart?.status === 2 || cart?.status === 4) && (
 						<ChSection style={{ paddingBottom: 20 }}>
@@ -200,24 +185,6 @@ const CheckoutUI = (props: any) => {
 						</ChSection>
 					)}
 
-					{/* <ChSection>
-            <ChTotal>
-              <OIcon
-                url={businessLogo || businessDetails?.business?.logo}
-                width={80}
-                height={80}
-                borderRadius={80}
-              />
-              <View style={{ marginHorizontal: 15, flex: 1, alignItems: 'flex-start' }}>
-                <OText size={22} numberOfLines={2} ellipsizeMode='tail' >
-                  {businessName || businessDetails?.business?.name}
-                </OText>
-                <OText size={22}>
-                  {cart?.total >= 1 && parsePrice(cart?.total) || cartTotal >= 1 && parsePrice(cartTotal)}
-                </OText>
-              </View>
-            </ChTotal>
-          </ChSection> */}
 					<ChSection>
 						<ChAddress>
 							{(businessDetails?.loading || cartState.loading) ? (
@@ -242,27 +209,6 @@ const CheckoutUI = (props: any) => {
 							)}
 						</ChAddress>
 					</ChSection>
-					{/* <ChSection style={style.paddSectionH}>
-            <ChMoment>
-              <CHMomentWrapper
-                onPress={() => navigation.navigate('MomentOption')}
-                disabled={loading}
-              >
-                <MaterialCommunityIcon
-                  name='clock-outline'
-                  size={24}
-                  style={{ marginRight: 5 }}
-                />
-                <OText size={18} numberOfLines={1} ellipsizeMode='tail'>
-                  {options?.moment
-                    ? parseDate(options?.moment, {
-                      outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
-                    })
-                    : t('ASAP_ABBREVIATION', 'ASAP')}
-                </OText>
-              </CHMomentWrapper>
-            </ChMoment>
-          </ChSection> */}
 
 					<ChSection>
 						<ChUserDetails>
@@ -508,8 +454,8 @@ export const Checkout = (props: any) => {
 		stripePaymentOptions,
 		onNavigationRedirect,
 	} = props
-	const theme = useTheme();
-	const { showToast } = useToast();
+
+	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
 	const [{ token }] = useSession();
 	const [ordering] = useApi();
@@ -517,7 +463,6 @@ export const Checkout = (props: any) => {
 	const { confirmPayment, loading: confirmPaymentLoading } = useConfirmPayment();
 
 	const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null });
-	const [orderState] = useOrder()
 
 	const getOrder = async (cartId: any) => {
 		try {

@@ -86,7 +86,7 @@ const PaymentOptionsUI = (props: any) => {
   const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
   const [prog, setProg] = useState(true);
   const [progClr, setProgClr] = useState('#424242');
-  const { showToast } = useToast();
+  const [, { showToast }] = useToast();
   const webviewRef = useRef<any>(null)
   const [ordering] = useApi()
   const [orderState, { confirmCart }] = useOrder()
@@ -134,18 +134,21 @@ const PaymentOptionsUI = (props: any) => {
     if (paymethodsList.paymethods.length === 1) {
       handlePaymethodClick && handlePaymethodClick(paymethodsList.paymethods[0])
     }
+    console.log('get paymethods ----- ')
   }, [paymethodsList.paymethods])
 
   useEffect(() => {
     if (paymethodSelected?.gateway !== 'cash' && errorCash) {
       props.setErrorCash(false)
     }
+    console.log('method selected ----- ')
   }, [paymethodSelected])
 
   useEffect(() => {
     if (props.paySelected && props.paySelected?.data) {
       setPaymethodData && setPaymethodData(props.paySelected?.data)
     }
+    console.log('pay selected ----- ')
   }, [props.paySelected])
 
   const renderPaymethods = ({ item }: any) => {
@@ -453,7 +456,7 @@ const PaymentOptionsUI = (props: any) => {
             setProg(true);
             setProgClr('#00457C');
           }}
-          onLoadEnd={(e) => {
+          onLoadEnd={() => {
             const message = {
               action: 'init',
               data: {
