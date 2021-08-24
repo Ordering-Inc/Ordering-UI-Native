@@ -4,7 +4,7 @@ import { Chat } from '../Chat';
 import { View } from 'react-native';
 import {
   useLanguage,
-  OrderDetails as OrderDetailsConTableoller,
+  OrderDetails as OrderDetailsController,
 } from 'ordering-components/native';
 import { OrderMessageContainer } from './styles';
 
@@ -169,5 +169,5 @@ export const OrderMessage = (props: OrderDetailsParams) => {
     driverAndBusinessId: true,
     UIComponent: OrderMessageUI,
   };
-  return <OrderDetailsConTableoller {...orderDetailsProps} />;
+  return <OrderDetailsController {...orderDetailsProps} />;
 };

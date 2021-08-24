@@ -35,6 +35,7 @@ import {
   Platform,
   Keyboard,
   Dimensions,
+  Pressable,
 } from 'react-native';
 import { Header, TitleHeader, Wrapper } from './styles';
 import { MessagesParams } from '../../types';
@@ -49,6 +50,8 @@ const ChatUI = (props: MessagesParams) => {
     messagesToShow,
     sendMessage,
     setMessage,
+    canRead,
+    setCanRead,
     handleSend,
     setImage,
     readMessages,
@@ -94,7 +97,7 @@ const ChatUI = (props: MessagesParams) => {
       fontWeight: 'normal',
       fontSize: 12,
     },
-    accesoryIcon: {
+    accessoryIcon: {
       height: 32,
       width: 32,
       borderRadius: 7.6,
@@ -106,7 +109,6 @@ const ChatUI = (props: MessagesParams) => {
       justifyContent: 'center',
       borderRadius: 7.6,
       elevation: 1,
-      shadowColor: theme.colors.shadow,
     },
     firstMessage: {
       justifyContent: 'center',
@@ -187,6 +189,25 @@ const ChatUI = (props: MessagesParams) => {
         }
       },
     );
+  };
+
+  const handleFilter = (value: any, level: number) => {
+    if (user?.level === 0) {
+      setCanRead({ ...canRead, ...value });
+      return;
+    }
+
+    if (level === 3 && canRead?.driver) {
+      setCanRead({ ...canRead, customer: !canRead?.customer });
+    } else if (level === 4 && canRead?.customer) {
+      setCanRead({ ...canRead, driver: !canRead?.driver });
+    } else {
+      setCanRead({
+        ...canRead,
+        customer: canRead?.driver,
+        driver: canRead?.customer,
+      });
+    }
   };
 
   const getStatus = (status: number) => {
@@ -402,6 +423,7 @@ const ChatUI = (props: MessagesParams) => {
         message.type !== 0 &&
         (messagesToShow?.messages?.length ||
           message?.can_see?.includes('2') ||
+          message?.can_see?.includes('0') ||
           (message?.can_see?.includes('4') && type === USER_TYPE.DRIVER))
       ) {
         newMessage = {
@@ -424,7 +446,9 @@ const ChatUI = (props: MessagesParams) => {
       if (message.type === 0) {
         newMessage = firstMessage;
       }
-      newMessages = [...newMessages, newMessage];
+      if (newMessage) {
+        newMessages = [...newMessages, newMessage];
+      }
     });
     setFormattedMessages([...newMessages.reverse()]);
   }, [messages?.messages?.length]);
@@ -543,39 +567,61 @@ const ChatUI = (props: MessagesParams) => {
   };
 
   const renderAccessory = (props: any) => (
-    <Header>
-      <View
+    <Header
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+      horizontal>
+      {user?.level !== 2 && (
+        <Pressable
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginRight: 25,
+            opacity: canRead?.business ? 1 : 0.25,
+          }}
+          onPress={() => handleFilter({ business: !canRead?.business }, 2)}>
+          <View
+            style={{
+              ...styles.shadow,
+              shadowColor: canRead?.business
+                ? theme.colors.shadow
+                : theme.colors.brightness,
+            }}>
+            <OIcon url={order?.business?.logo} style={styles.accessoryIcon} />
+          </View>
+
+          <TitleHeader>
+            <OText adjustsFontSizeToFit size={16} weight="bold">
+              {order?.business?.name}
+            </OText>
+
+            <OText adjustsFontSizeToFit size={14}>
+              {t('BUSINESS', 'Business')}
+            </OText>
+          </TitleHeader>
+        </Pressable>
+      )}
+
+      <Pressable
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-        }}>
-        <View style={styles.shadow}>
-          <OIcon url={order?.business?.logo} style={styles.accesoryIcon} />
+          marginRight: 25,
+          opacity: canRead?.customer ? 1 : 0.25,
+        }}
+        onPress={() => handleFilter({ customer: !canRead?.customer }, 3)}>
+        <View
+          style={{
+            ...styles.shadow,
+            shadowColor: canRead?.customer
+              ? theme.colors.shadow
+              : theme.colors.brightness,
+          }}>
+          <OIcon url={order?.customer?.logo} style={styles.accessoryIcon} />
         </View>
 
         <TitleHeader>
-          <OText adjustsFontSizeToFit size={16}>
-            {order?.business?.name}
-          </OText>
-
-          <OText adjustsFontSizeToFit size={14}>
-            {t('BUSINESS', 'Business')}
-          </OText>
-        </TitleHeader>
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginLeft: 18,
-        }}>
-        <View style={styles.shadow}>
-          <OIcon url={order?.customer?.logo} style={styles.accesoryIcon} />
-        </View>
-
-        <TitleHeader>
-          <OText adjustsFontSizeToFit size={16}>
+          <OText adjustsFontSizeToFit size={16} weight="bold">
             {order?.customer?.name}
           </OText>
 
@@ -583,7 +629,38 @@ const ChatUI = (props: MessagesParams) => {
             {t('CUSTOMER', 'Customer')}
           </OText>
         </TitleHeader>
-      </View>
+      </Pressable>
+
+      {order?.driver && (
+        <Pressable
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginRight: 25,
+            opacity: canRead?.driver ? 1 : 0.25,
+          }}
+          onPress={() => handleFilter({ driver: !canRead?.driver }, 4)}>
+          <View
+            style={{
+              ...styles.shadow,
+              shadowColor: canRead?.driver
+                ? theme.colors.shadow
+                : theme.colors.brightness,
+            }}>
+            <OIcon url={order?.driver?.logo} style={styles.accessoryIcon} />
+          </View>
+
+          <TitleHeader>
+            <OText adjustsFontSizeToFit size={16} weight="bold">
+              {order?.driver?.name}
+            </OText>
+
+            <OText adjustsFontSizeToFit size={14}>
+              {t('DRIVER', 'Driver')}
+            </OText>
+          </TitleHeader>
+        </Pressable>
+      )}
     </Header>
   );
 
@@ -635,6 +712,7 @@ const ChatUI = (props: MessagesParams) => {
           autoCorrect: false,
           autoCompleteType: 'off',
           enablesReturnKeyAutomatically: false,
+          selectionColor: theme.colors.primary,
         }}
         placeholder={t('WRITE_MESSAGE', 'Write message')}
         placeholderTextColor={theme.colors.composerPlaceHolder}
@@ -777,7 +855,7 @@ const ChatUI = (props: MessagesParams) => {
           renderBubble={renderBubble}
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
-          messagesContainerStyle={{ paddingBottom: 80 }}
+          messagesContainerStyle={{ paddingBottom: 20 }}
           showUserAvatar={true}
           minInputToolbarHeight={100}
           isLoadingEarlier={messages?.loading}
