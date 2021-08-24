@@ -38,6 +38,14 @@ const ORDER_STATUS: any = {
   21: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
 }
 
+const imgOptions = {
+  mediaType: 'photo',
+  maxHeight: 300,
+  maxWidth: 300,
+  includeBase64: true,
+  selectionLimit: 0
+}
+
 const MessagesUI = (props: MessagesParams) => {
   const {
     type,
@@ -70,11 +78,10 @@ const MessagesUI = (props: MessagesParams) => {
   }
 
   const handleImagePicker = () => {
-    launchImageLibrary({ mediaType: 'photo', maxHeight: 300, maxWidth: 300, includeBase64: true }, (response : any) => {
+    launchImageLibrary(imgOptions, (response : any) => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        // showToast(ToastType.Error, response.errorMessage);
       } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
         showToast(ToastType.Error, response.errorMessage);
       } else {
         if (response.uri) {
