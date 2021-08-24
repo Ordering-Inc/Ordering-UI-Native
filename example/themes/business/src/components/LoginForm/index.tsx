@@ -299,7 +299,6 @@ const LoginFormUI = (props: LoginParams) => {
     btnTabText: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontWeight: 'normal',
       fontSize: 16,
       marginBottom: 10,
       paddingLeft: 8,
@@ -371,8 +370,9 @@ const LoginFormUI = (props: LoginParams) => {
                       loginTab === 'email'
                         ? theme.colors.textGray
                         : theme.colors.unselectText
-                    }>
-                    {t('LOGIN_BY_EMAIL', 'Login by Email')}
+                    }
+                    weight={loginTab === 'email' ? 'bold' : 'normal'}>
+                    {t('BY_EMAIL', 'by Email')}
                   </OText>
 
                   <View
@@ -397,8 +397,9 @@ const LoginFormUI = (props: LoginParams) => {
                       loginTab === 'cellphone'
                         ? theme.colors.textGray
                         : theme.colors.unselectText
-                    }>
-                    {t('LOGIN_BY_PHONE', 'Login by Phone')}
+                    }
+                    weight={loginTab === 'cellphone' ? 'bold' : 'normal'}>
+                    {t('BY_PHONE', 'by Phone')}
                   </OText>
 
                   <View

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import {
   ToastType,
@@ -92,7 +92,7 @@ const ForgotPasswordUI = (props: any) => {
         titleAlign={'center'}
         onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
         showCall={false}
-        paddingTop={0}
+        paddingTop={50}
         titleColor={theme.colors.textGray}
         icon={theme.images.general.arrow_left}
         style={styles.title}

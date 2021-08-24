@@ -282,6 +282,21 @@ export interface PreviousOrdersParams {
   onNavigationRedirect?: (route: string, params?: any) => {};
 }
 
+export interface ContactParams {
+  orders?: any;
+  contacts?: any;
+  messages?: any;
+  activeTag?: any;
+  pagination?: any;
+  getBusinesses?: (value?: any) => {};
+  getCustomers?: (value?: any) => {};
+  getDrivers?: (value?: any) => {};
+  loadMore?: (value?: any) => {};
+  setMessages?: (state?: any) => {};
+  loadMessages?: (id: any) => {};
+  onNavigationRedirect?: (route: string, params?: any) => {};
+}
+
 export interface PreviousMessagesParams {
   orders?: any;
   pagination?: any;

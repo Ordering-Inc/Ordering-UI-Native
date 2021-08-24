@@ -151,32 +151,30 @@ const StoresListUI = (props: BusinessesListingParams) => {
           />
         ))}
 
-      {loadBusinesses ||
-        (isUpdateStore && (
-          <View>
-            {[...Array(6)].map((item, i) => (
-              <Placeholder key={i} Animation={Fade}>
-                <View
-                  style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
-                  <PlaceholderLine
-                    width={orientation === 'Portrait' ? 22 : 11}
-                    height={74}
-                    style={{
-                      marginRight: 20,
-                      marginBottom: 20,
-                      borderRadius: 7.6,
-                    }}
-                  />
-                  <Placeholder>
-                    <PlaceholderLine width={30} style={{ marginTop: 5 }} />
-                    <PlaceholderLine width={50} />
-                    <PlaceholderLine width={20} />
-                  </Placeholder>
-                </View>
-              </Placeholder>
-            ))}
-          </View>
-        ))}
+      {(loadBusinesses || isUpdateStore) && (
+        <View>
+          {[...Array(6)].map((item, i) => (
+            <Placeholder key={i} Animation={Fade}>
+              <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
+                <PlaceholderLine
+                  width={orientation === 'Portrait' ? 22 : 11}
+                  height={74}
+                  style={{
+                    marginRight: 20,
+                    marginBottom: 20,
+                    borderRadius: 7.6,
+                  }}
+                />
+                <Placeholder>
+                  <PlaceholderLine width={30} style={{ marginTop: 5 }} />
+                  <PlaceholderLine width={50} />
+                  <PlaceholderLine width={20} />
+                </Placeholder>
+              </View>
+            </Placeholder>
+          ))}
+        </View>
+      )}
     </ScrollView>
   );
 };

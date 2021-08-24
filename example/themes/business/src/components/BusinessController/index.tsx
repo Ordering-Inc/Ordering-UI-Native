@@ -81,14 +81,12 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
     <>
       {business && !loading && !isUpdateStore && (
         <Card key={business?.id}>
-          {!!business?.logo && (
-            <Logo>
-              <OIcon
-                url={optimizeImage(business?.logo, 'h_300,c_limit')}
-                style={styles.logo}
-              />
-            </Logo>
-          )}
+          <Logo>
+            <OIcon
+              url={optimizeImage(business?.logo, 'h_300,c_limit')}
+              style={styles.logo}
+            />
+          </Logo>
 
           <Information>
             <View style={styles.header}>
@@ -108,7 +106,9 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
             </View>
 
             <OText style={styles.address} numberOfLines={1}>
-              {business?.address}
+              {business?.address
+                ? business.address
+                : t('BUSINESS_NOT_HAVE_ADDRESS', "Doesn't have address")}
             </OText>
 
             <OText style={styles.address} numberOfLines={1}>
@@ -126,6 +126,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 export const BusinessController = (props: BusinessControllerParams) => {
   const BusinessControllerProps = {
     ...props,
+    isDisabledInterval: true,
     UIComponent: BusinessControllerUI,
   };
 
