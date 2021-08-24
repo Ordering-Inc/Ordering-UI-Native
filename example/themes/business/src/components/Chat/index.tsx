@@ -25,7 +25,7 @@ import {
 } from 'react-native-gifted-chat';
 import { USER_TYPE } from '../../config/constants';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OIconButton, OText } from '../shared';
 import {
@@ -100,7 +100,7 @@ const ChatUI = (props: MessagesParams) => {
       fontWeight: 'normal',
       fontSize: 12,
     },
-    accessoryIcon: {
+    accesoryIcon: {
       height: 32,
       width: 32,
       borderRadius: 7.6,
@@ -330,65 +330,6 @@ const ChatUI = (props: MessagesParams) => {
     );
   };
 
-  const AvatarMessageFromAdmin = () => {
-    return (
-      <View style={{ flexDirection: 'row' }}>
-        <OIcon
-          url={order?.business?.logo || theme?.images?.dummies?.businessLogo}
-          width={16}
-          height={16}
-          style={{ marginHorizontal: 2 }}
-        />
-        <OIcon
-          url={order?.driver?.photo || theme?.images?.dummies?.driverPhoto}
-          width={16}
-          height={16}
-          style={{ marginHorizontal: 2 }}
-        />
-      </View>
-    );
-  };
-
-  const AvatarMessageFromDriver = () => {
-    return (
-      <View style={{ flexDirection: 'row' }}>
-        <OIcon
-          url={order?.business?.logo || theme?.images?.dummies?.businessLogo}
-          width={16}
-          height={16}
-          style={{ marginHorizontal: 2 }}
-        />
-        <OIcon
-          url={user?.photo || theme?.images?.dummies?.driverPhoto}
-          width={16}
-          height={16}
-          style={{ marginHorizontal: 2 }}
-        />
-      </View>
-    );
-  };
-
-  const AvatarMessageFromCustomer = () => {
-    return (
-      <View style={{ flexDirection: 'row' }}>
-        <OIcon
-          url={order?.business?.logo || theme?.images?.dummies?.businessLogo}
-          width={16}
-          height={16}
-          style={{ marginHorizontal: 2 }}
-        />
-        {order?.driver && (
-          <OIcon
-            url={order?.driver?.photo || theme?.images?.dummies?.driverPhoto}
-            width={16}
-            height={16}
-            style={{ marginHorizontal: 2 }}
-          />
-        )}
-      </View>
-    );
-  };
-
   useEffect(() => {
     let newMessages: Array<any> = [];
     const console = (
@@ -439,6 +380,7 @@ const ChatUI = (props: MessagesParams) => {
           user: {
             _id: message.author.id,
             name: message.author.name,
+            can_see: message?.can_see,
             level: message.author.level,
             avatar:
               message.author.id !== user?.id && type === USER_TYPE.DRIVER
@@ -591,7 +533,7 @@ const ChatUI = (props: MessagesParams) => {
                 ? theme.colors.shadow
                 : theme.colors.brightness,
             }}>
-            <OIcon url={order?.business?.logo} style={styles.accessoryIcon} />
+            <OIcon url={order?.business?.logo || theme?.images?.dummies?.businessPhoto} style={styles.accesoryIcon} />
           </View>
 
           <TitleHeader>
@@ -621,7 +563,7 @@ const ChatUI = (props: MessagesParams) => {
               ? theme.colors.shadow
               : theme.colors.brightness,
           }}>
-          <OIcon url={order?.customer?.logo} style={styles.accessoryIcon} />
+          <OIcon url={order?.customer?.photo || theme?.images?.dummies?.customerPhoto} style={styles.accesoryIcon} />
         </View>
 
         <TitleHeader>
@@ -651,7 +593,7 @@ const ChatUI = (props: MessagesParams) => {
                 ? theme.colors.shadow
                 : theme.colors.brightness,
             }}>
-            <OIcon url={order?.driver?.logo} style={styles.accessoryIcon} />
+            <OIcon url={order?.driver?.photo || theme?.images?.dummies?.driverPhoto} style={styles.accesoryIcon} />
           </View>
 
           <TitleHeader>
@@ -690,7 +632,7 @@ const ChatUI = (props: MessagesParams) => {
         backgroundColor: theme.colors.composerView,
         borderRadius: 7.6,
         alignItems: 'center',
-        justifyContent: 'center',  
+        justifyContent: 'center',
         paddingRight: 10,
       }}>
       <Composer
@@ -823,15 +765,31 @@ const ChatUI = (props: MessagesParams) => {
         {`${t('SENT_TO', 'Sent to')}:`}
       </OText>
       <View style={{ flexDirection: 'row' }}>
-        {(props?.currentMessage?.user?.level === 2 ||
-          props?.currentMessage?.user?.level === 0) && (
-          <AvatarMessageFromAdmin />
+        {props?.currentMessage?.user?.can_see?.includes('2') && (
+          <OIcon
+            url={order?.business?.logo || theme?.images?.dummies?.businessPhoto}
+            width={16}
+            height={16}
+            style={{ marginHorizontal: 2 }}
+          />
         )}
-
-        {props?.currentMessage?.user.level === 4 && <AvatarMessageFromDriver />}
-
-        {props?.currentMessage?.user.level === 3 && (
-          <AvatarMessageFromCustomer />
+        {props?.currentMessage?.user?.can_see?.includes('3') && (
+          <OIcon
+            url={
+              order?.customer?.photo || theme?.images?.dummies?.customerPhoto
+            }
+            width={16}
+            height={16}
+            style={{ marginHorizontal: 2 }}
+          />
+        )}
+        {props?.currentMessage?.user?.can_see?.includes('4') && (
+          <OIcon
+            url={order?.driver?.photo || theme?.images?.dummies?.driverPhoto}
+            width={16}
+            height={16}
+            style={{ marginHorizontal: 2 }}
+          />
         )}
       </View>
     </>
@@ -850,9 +808,12 @@ const ChatUI = (props: MessagesParams) => {
           onSend={onSubmit}
           onInputTextChanged={onChangeMessage}
           alignTop={false}
-          listViewProps={{contentContainerStyle: {flexGrow: 1, justifyContent: 'flex-end' }}}
+          listViewProps={{
+            contentContainerStyle: { flexGrow: 1, justifyContent: 'flex-end' },
+          }}
           scrollToBottom
           renderAvatar={renderAvatar}
+          showAvatarForEveryMessage={true}
           renderInputToolbar={renderInputToolbar}
           renderComposer={renderComposer}
           renderSend={renderSend}

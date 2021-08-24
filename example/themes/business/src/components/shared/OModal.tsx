@@ -198,19 +198,28 @@ const OModal = (props: Props): React.ReactElement => {
                 <View style={styles.titleGroups}>
                   <View style={styles.shadow}>
                     <OIcon
-                      url={order?.business?.logo}
+                      url={
+                        order?.business?.logo ||
+                        theme?.images?.dummies?.businessPhoto
+                      }
                       style={styles.titleIcons}
                     />
                   </View>
                   <View style={styles.shadow}>
                     <OIcon
-                      url={order?.customer?.photo}
+                      url={
+                        order?.customer?.photo ||
+                        theme?.images?.dummies?.customerPhoto
+                      }
                       style={styles.titleIcons}
                     />
                   </View>
                   <View style={styles.shadow}>
                     <OIcon
-                      url={order?.driver?.photo}
+                      url={
+                        order?.driver?.photo ||
+                        theme?.images?.dummies?.driverPhoto
+                      }
                       style={styles.titleIcons}
                     />
                   </View>
