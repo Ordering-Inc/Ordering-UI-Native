@@ -357,12 +357,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleArrowBack: any = () => {
-    if (!isFromCheckout) {
-      navigation?.canGoBack() && navigation.goBack();
-      return;
-    }
-
-    navigation.navigate('BottomTab');
+    navigation?.canGoBack() && navigation.goBack();
   };
 
   useEffect(() => {
