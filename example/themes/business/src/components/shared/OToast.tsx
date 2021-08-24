@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
-// import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ToastType, useToast } from 'ordering-components/native';
+import { ToastType, useToast, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
+import { getTraduction } from '../../utils';
 
 const fadeDuration = 300;
-const bottomPosition = 70;
+const bottomPosition = 20;
 
-export const OToast: React.FC = () => {
-  const theme = useTheme();
-  // const insets = useSafeAreaInsets();
+export const Toast = (props: any) => {
   const [toastConfig, { hideToast }] = useToast();
+  const [, t] = useLanguage();
   const opacity = React.useRef(new Animated.Value(0)).current;
+  const theme = useTheme();
 
   const fadeIn = React.useCallback(() => {
     Animated.timing(opacity, {
@@ -51,13 +51,13 @@ export const OToast: React.FC = () => {
   let backgroundColor;
   switch (type) {
     case ToastType.Info:
-      backgroundColor = theme.colors.toastInfo;
+      backgroundColor = theme.colors.toastInfo || '#6BA4FF';
       break;
     case ToastType.Error:
-      backgroundColor = theme.colors.red;
+      backgroundColor = theme.colors.toastError || '#D83520';
       break;
     case ToastType.Success:
-      backgroundColor = theme.colors.toastSuccess;
+      backgroundColor = theme.colors.toastSuccess || '#90C68E';
       break;
   }
 
@@ -65,7 +65,9 @@ export const OToast: React.FC = () => {
     <Animated.View
       style={[styles.container, { bottom: bottomPosition, opacity }]}>
       <View style={[styles.toast, { backgroundColor }]}>
-        <Text style={styles.message}>{message}</Text>
+        <Text style={{ ...styles.message, ...props.messageStyle }}>
+          {getTraduction(message, t)}
+        </Text>
       </View>
     </Animated.View>
   );

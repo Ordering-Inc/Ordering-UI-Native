@@ -23,7 +23,7 @@ export const DriverItem = styled.View`
   padding: 8px;
   align-items: center;
   flex-direction: row;
-`
+`;
 
 export const Actions = styled.View`
   flex-direction: row;

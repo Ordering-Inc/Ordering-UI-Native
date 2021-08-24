@@ -1,5 +1,4 @@
 import React from 'react';
-import { useLanguage } from 'ordering-components/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { CODES } from 'ordering-components/native';
 
@@ -9,8 +8,7 @@ export const flatArray = (arr: any) => [].concat(...arr);
  * Function to return the traduction depending of a key 't'
  * @param {string} key for traduction
  */
-export const getTraduction = (key: string) => {
-  const [, t] = useLanguage();
+export const getTraduction = (key: string, t: any) => {
   const keyList: any = {
     // Add the key and traduction that you need below
     ERROR_ORDER_WITHOUT_CART: 'The order was placed without a cart',
@@ -37,6 +35,7 @@ export const getTraduction = (key: string) => {
       'An error occurred while trying to pay by PayPal',
     ERROR_ADD_PRODUCT_VERY_FAR_FOR_DELIVERY:
       'Error adding product, very far for delivery',
+    ERROR_PRODUCT_NOT_FOUND: 'Error with the product',
   };
 
   return keyList[key] ? t(key, keyList[key]) : t(key);
@@ -57,19 +56,41 @@ export const getIconCard = (brand: string, size: number) => {
   const value = brand?.toLowerCase();
   switch (value) {
     case 'visa':
-      return <FontAwesome name="cc-visa" size={size} color={'#000'} />;
+      return (
+        FontAwesome && <FontAwesome name="cc-visa" size={size} color={'#000'} />
+      );
     case 'mastercard':
-      return <FontAwesome name="cc-mastercard" size={size} color={'#000'} />;
+      return (
+        FontAwesome && (
+          <FontAwesome name="cc-mastercard" size={size} color={'#000'} />
+        )
+      );
     case 'amex':
-      return <FontAwesome name="cc-amex" size={size} color={'#000'} />;
+      return (
+        FontAwesome && <FontAwesome name="cc-amex" size={size} color={'#000'} />
+      );
     case 'discover':
-      return <FontAwesome name="cc-discover" size={size} color={'#000'} />;
+      return (
+        FontAwesome && (
+          <FontAwesome name="cc-discover" size={size} color={'#000'} />
+        )
+      );
     case 'jcb':
-      return <FontAwesome name="cc-jcb" size={size} color={'#000'} />;
+      return (
+        FontAwesome && <FontAwesome name="cc-jcb" size={size} color={'#000'} />
+      );
     case 'diners-club':
-      return <FontAwesome name="cc-diners-club" size={size} color={'#000'} />;
+      return (
+        FontAwesome && (
+          <FontAwesome name="cc-diners-club" size={size} color={'#000'} />
+        )
+      );
     default:
-      return <FontAwesome name="credit-card-alt" size={size} color={'#000'} />;
+      return (
+        FontAwesome && (
+          <FontAwesome name="credit-card-alt" size={size} color={'#000'} />
+        )
+      );
   }
 };
 /**
@@ -97,18 +118,21 @@ export const fieldsToSort = [
 export const sortInputFields = ({ fields, values }: any) => {
   let fieldsBase = fields;
   const fieldsSorted: any = [];
-  const fieldsArray = Array.isArray(values) ? values : Object.values(values);
+  const fieldsArray = Array.isArray(values)
+    ? values
+    : values && Object.values(values);
 
   if (!fieldsBase) {
     fieldsBase = fieldsToSort;
   }
 
   fieldsBase.forEach((f: any) => {
-    fieldsArray.forEach((field: any) => {
-      if (f === field.code) {
-        fieldsSorted.push(field);
-      }
-    });
+    fieldsArray &&
+      fieldsArray.forEach((field: any) => {
+        if (f === field.code) {
+          fieldsSorted.push(field);
+        }
+      });
   });
   return fieldsSorted;
 };
