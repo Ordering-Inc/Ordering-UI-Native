@@ -140,16 +140,15 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
   );
 
-
   useFocusEffect(
     React.useCallback(() => {
-        // loadOrders && loadOrders(true, tagsFilter)
-        setIsLoadingFirstRender(false)
+      // loadOrders && loadOrders(true, tagsFilter)
+      setIsLoadingFirstRender(false);
       return () => {
-        setIsLoadingFirstRender(true)
-      }
-    }, [navigation])
-  )
+        setIsLoadingFirstRender(true);
+      };
+    }, [navigation]),
+  );
 
   const handleChangeTab = (tags: number[]) => {
     setTabsFilter(tags);
@@ -404,13 +403,17 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         />
       )}
 
-      {!reload && !error && orders.length > 0 && !loadingTag && !isLoadingFirstRender && (
-        <PreviousOrders
-          orders={ordersToShow}
-          onNavigationRedirect={onNavigationRedirect}
-          getOrderStatus={getOrderStatus}
-        />
-      )}
+      {!reload &&
+        !error &&
+        orders.length > 0 &&
+        !loadingTag &&
+        !isLoadingFirstRender && (
+          <PreviousOrders
+            orders={ordersToShow}
+            onNavigationRedirect={onNavigationRedirect}
+            getOrderStatus={getOrderStatus}
+          />
+        )}
 
       {(loading || isLoadingFirstRender) && (
         <>

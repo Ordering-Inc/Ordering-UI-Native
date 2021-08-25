@@ -108,7 +108,6 @@ const OModal = (props: Props): React.ReactElement => {
       width: 35,
       margin: 15,
     },
-
     modalView: {
       margin: 20,
       backgroundColor: 'white',
@@ -174,10 +173,12 @@ const OModal = (props: Props): React.ReactElement => {
                   onPress={onClose}
                 />
               </View>
+
               <OText size={20} style={styles.modalText} adjustsFontSizeToFit>
                 {title}
               </OText>
             </View>
+
             {children}
           </View>
         ) : (
@@ -193,18 +194,29 @@ const OModal = (props: Props): React.ReactElement => {
                     onClick={onClose}
                   />
 
-                  <OText style={styles.modalText}>{title}</OText>
+                  <OText
+                    size={16}
+                    style={styles.modalText}
+                    adjustsFontSizeToFit>
+                    {title}
+                  </OText>
                 </View>
+
                 <View style={styles.titleGroups}>
                   <View style={styles.shadow}>
-                    <OIcon
-                      url={
-                        order?.business?.logo ||
-                        theme?.images?.dummies?.businessPhoto
-                      }
-                      style={styles.titleIcons}
-                    />
+                    {order?.business?.logo ? (
+                      <OIcon
+                        url={order?.business?.logo}
+                        style={styles.titleIcons}
+                      />
+                    ) : (
+                      <OIcon
+                        src={theme.images.dummies.businessLogo}
+                        style={styles.titleIcons}
+                      />
+                    )}
                   </View>
+
                   <View style={styles.shadow}>
                     <OIcon
                       url={
@@ -214,15 +226,18 @@ const OModal = (props: Props): React.ReactElement => {
                       style={styles.titleIcons}
                     />
                   </View>
-                  <View style={styles.shadow}>
-                    <OIcon
-                      url={
-                        order?.driver?.photo ||
-                        theme?.images?.dummies?.driverPhoto
-                      }
-                      style={styles.titleIcons}
-                    />
-                  </View>
+
+                  {order?.driver && (
+                    <View style={styles.shadow}>
+                      <OIcon
+                        url={
+                          order?.driver?.photo ||
+                          theme?.images?.dummies?.driverPhoto
+                        }
+                        style={styles.titleIcons}
+                      />
+                    </View>
+                  )}
                 </View>
               </View>
             )}

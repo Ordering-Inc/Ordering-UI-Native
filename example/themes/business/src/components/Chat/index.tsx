@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
-  ToastType,
-  useToast,
-  Messages as MessagesController,
-  useSession,
-  useUtils,
-  useLanguage,
-} from 'ordering-components/native';
-import { launchImageLibrary } from 'react-native-image-picker';
-import DocumentPicker from 'react-native-document-picker';
+  TouchableOpacity,
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  Platform,
+  Keyboard,
+  Dimensions,
+  Pressable,
+} from 'react-native';
 import {
   GiftedChat,
   Actions,
@@ -23,23 +23,23 @@ import {
   InputToolbarProps,
   ComposerProps,
 } from 'react-native-gifted-chat';
-import { USER_TYPE } from '../../config/constants';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import DocumentPicker from 'react-native-document-picker';
 import { useTheme } from 'styled-components/native';
-import { OIcon, OIconButton, OText } from '../shared';
 import {
-  TouchableOpacity,
-  ActivityIndicator,
-  StyleSheet,
-  View,
-  Platform,
-  Keyboard,
-  Dimensions,
-  Pressable,
-} from 'react-native';
+  ToastType,
+  useToast,
+  Messages as MessagesController,
+  useSession,
+  useUtils,
+  useLanguage,
+} from 'ordering-components/native';
 import { Header, TitleHeader, Wrapper } from './styles';
+import { OIcon, OIconButton, OText } from '../shared';
 import { MessagesParams } from '../../types';
+import { USER_TYPE } from '../../config/constants';
 
 const ChatUI = (props: MessagesParams) => {
   const {
@@ -100,7 +100,7 @@ const ChatUI = (props: MessagesParams) => {
       fontWeight: 'normal',
       fontSize: 12,
     },
-    accesoryIcon: {
+    accessoryIcon: {
       height: 32,
       width: 32,
       borderRadius: 7.6,
@@ -195,22 +195,25 @@ const ChatUI = (props: MessagesParams) => {
     );
   };
 
-  const handleFilter = (value: any, level: number) => {
-    if (user?.level === 0) {
-      setCanRead({ ...canRead, ...value });
+  const handleFilter = (value: any, reader: string) => {
+    const isAdmin = user?.level === 0;
+    const readersCount = [
+      ...new Map<string, boolean>(Object.entries(canRead)).values(),
+    ].filter((read: boolean) => read).length;
+    const minReaders = isAdmin ? 2 : order?.driver ? 3 : 4;
+
+    if (minReaders === 4) {
       return;
     }
 
-    if (level === 3 && canRead?.driver) {
-      setCanRead({ ...canRead, customer: !canRead?.customer });
-    } else if (level === 4 && canRead?.customer) {
-      setCanRead({ ...canRead, driver: !canRead?.driver });
+    if (readersCount > minReaders || value[reader]) {
+      setCanRead({ ...canRead, ...value });
+    } else if (reader !== 'business' && isAdmin) {
+      setCanRead({ ...canRead, ...value, business: true });
+    } else if (reader !== 'customer') {
+      setCanRead({ ...canRead, ...value, customer: true });
     } else {
-      setCanRead({
-        ...canRead,
-        customer: canRead?.driver,
-        driver: canRead?.customer,
-      });
+      setCanRead({ ...canRead, ...value, driver: true });
     }
   };
 
@@ -308,24 +311,37 @@ const ChatUI = (props: MessagesParams) => {
   const AvatarsConsole = () => {
     return (
       <View style={{ flexDirection: 'row' }}>
-        <OIcon
-          url={order?.business?.logo || theme?.images?.dummies?.businessLogo}
-          width={16}
-          height={16}
-          style={{ marginHorizontal: 2 }}
-        />
+        {order?.business?.logo ? (
+          <OIcon
+            url={order?.business?.logo}
+            width={16}
+            height={16}
+            style={{ marginHorizontal: 2 }}
+          />
+        ) : (
+          <OIcon
+            src={theme.images.dummies.businessLogo}
+            width={16}
+            height={16}
+            style={{ marginHorizontal: 2 }}
+          />
+        )}
+
         <OIcon
           url={order?.customer?.photo || theme?.images?.dummies?.customerPhoto}
           width={16}
           height={16}
           style={{ marginHorizontal: 2 }}
         />
-        <OIcon
-          url={order?.driver?.photo || theme?.images?.dummies?.driverPhoto}
-          width={16}
-          height={16}
-          style={{ marginHorizontal: 2 }}
-        />
+
+        {order?.driver && (
+          <OIcon
+            url={order?.driver?.photo || theme?.images?.dummies?.driverPhoto}
+            width={16}
+            height={16}
+            style={{ marginHorizontal: 2 }}
+          />
+        )}
       </View>
     );
   };
@@ -349,9 +365,11 @@ const ChatUI = (props: MessagesParams) => {
               : t('OTHER', 'Other')}
           </OText>
         </View>
+
         <OText size={9} color={theme.colors.textGray}>
           {`${t('SENT_TO', 'Sent to')}:`}
         </OText>
+
         <AvatarsConsole />
       </View>
     );
@@ -417,6 +435,14 @@ const ChatUI = (props: MessagesParams) => {
       keyboardDidHideListener.remove();
     };
   }, []);
+
+  useEffect(() => {
+    if (!order?.driver) {
+      setCanRead({ ...canRead, driver: false });
+    } else {
+      setCanRead({ ...canRead, driver: true });
+    }
+  }, [order?.driver]);
 
   const RenderActions = (props: any) => {
     return (
@@ -513,101 +539,125 @@ const ChatUI = (props: MessagesParams) => {
   };
 
   const renderAccessory = (props: any) => (
-    <Header
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-      horizontal>
-      {user?.level !== 2 && (
+    <View>
+      <Header
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal
+        contentContainerStyle={{ justifyContent: 'space-between' }}>
+        {user?.level !== 2 && (
+          <Pressable
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginRight: 25,
+              opacity: canRead?.business ? 1 : 0.25,
+            }}
+            onPress={() =>
+              handleFilter({ business: !canRead?.business }, 'business')
+            }>
+            <View
+              style={{
+                ...styles.shadow,
+                shadowColor: canRead?.business
+                  ? theme.colors.shadow
+                  : theme.colors.brightness,
+              }}>
+              <OIcon
+                url={
+                  order?.business?.logo || theme?.images?.dummies?.businessPhoto
+                }
+                style={styles.accessoryIcon}
+              />
+            </View>
+
+            <TitleHeader>
+              <OText adjustsFontSizeToFit size={16} weight="bold">
+                {order?.business?.name}
+              </OText>
+
+              <OText adjustsFontSizeToFit size={14}>
+                {t('BUSINESS', 'Business')}
+              </OText>
+            </TitleHeader>
+          </Pressable>
+        )}
+
         <Pressable
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             marginRight: 25,
-            opacity: canRead?.business ? 1 : 0.25,
+            opacity: canRead?.customer ? 1 : 0.25,
           }}
-          onPress={() => handleFilter({ business: !canRead?.business }, 2)}>
+          onPress={() =>
+            handleFilter({ customer: !canRead?.customer }, 'customer')
+          }>
           <View
             style={{
               ...styles.shadow,
-              shadowColor: canRead?.business
+              shadowColor: canRead?.customer
                 ? theme.colors.shadow
                 : theme.colors.brightness,
             }}>
-            <OIcon url={order?.business?.logo || theme?.images?.dummies?.businessPhoto} style={styles.accesoryIcon} />
+            <OIcon
+              url={
+                order?.customer?.photo || theme?.images?.dummies?.customerPhoto
+              }
+              style={styles.accessoryIcon}
+            />
           </View>
 
           <TitleHeader>
             <OText adjustsFontSizeToFit size={16} weight="bold">
-              {order?.business?.name}
+              {order?.customer?.name}
             </OText>
 
             <OText adjustsFontSizeToFit size={14}>
-              {t('BUSINESS', 'Business')}
+              {t('CUSTOMER', 'Customer')}
             </OText>
           </TitleHeader>
         </Pressable>
-      )}
 
-      <Pressable
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginRight: 25,
-          opacity: canRead?.customer ? 1 : 0.25,
-        }}
-        onPress={() => handleFilter({ customer: !canRead?.customer }, 3)}>
-        <View
-          style={{
-            ...styles.shadow,
-            shadowColor: canRead?.customer
-              ? theme.colors.shadow
-              : theme.colors.brightness,
-          }}>
-          <OIcon url={order?.customer?.photo || theme?.images?.dummies?.customerPhoto} style={styles.accesoryIcon} />
-        </View>
-
-        <TitleHeader>
-          <OText adjustsFontSizeToFit size={16} weight="bold">
-            {order?.customer?.name}
-          </OText>
-
-          <OText adjustsFontSizeToFit size={14}>
-            {t('CUSTOMER', 'Customer')}
-          </OText>
-        </TitleHeader>
-      </Pressable>
-
-      {order?.driver && (
-        <Pressable
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginRight: 25,
-            opacity: canRead?.driver ? 1 : 0.25,
-          }}
-          onPress={() => handleFilter({ driver: !canRead?.driver }, 4)}>
-          <View
+        {order?.driver && (
+          <Pressable
             style={{
-              ...styles.shadow,
-              shadowColor: canRead?.driver
-                ? theme.colors.shadow
-                : theme.colors.brightness,
-            }}>
-            <OIcon url={order?.driver?.photo || theme?.images?.dummies?.driverPhoto} style={styles.accesoryIcon} />
-          </View>
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginRight: 25,
+              opacity: canRead?.driver ? 1 : 0.25,
+            }}
+            onPress={() =>
+              handleFilter({ driver: !canRead?.driver }, 'driver')
+            }>
+            <View
+              style={{
+                ...styles.shadow,
+                shadowColor: canRead?.driver
+                  ? theme.colors.shadow
+                  : theme.colors.brightness,
+              }}>
+              <OIcon
+                url={
+                  order?.driver?.photo || theme?.images?.dummies?.driverPhoto
+                }
+                style={styles.accessoryIcon}
+              />
+            </View>
 
-          <TitleHeader>
-            <OText adjustsFontSizeToFit size={16} weight="bold">
-              {order?.driver?.name}
-            </OText>
+            <TitleHeader>
+              <OText adjustsFontSizeToFit size={16} weight="bold">
+                {order?.driver?.name}
+              </OText>
 
-            <OText adjustsFontSizeToFit size={14}>
-              {t('DRIVER', 'Driver')}
-            </OText>
-          </TitleHeader>
-        </Pressable>
-      )}
-    </Header>
+              <OText adjustsFontSizeToFit size={14}>
+                {t('DRIVER', 'Driver')}
+              </OText>
+            </TitleHeader>
+          </Pressable>
+        )}
+      </Header>
+    </View>
   );
 
   const renderInputToolbar = (props: InputToolbarProps) => (
@@ -764,15 +814,28 @@ const ChatUI = (props: MessagesParams) => {
       <OText size={9} color={theme.colors.textGray}>
         {`${t('SENT_TO', 'Sent to')}:`}
       </OText>
+
       <View style={{ flexDirection: 'row' }}>
         {props?.currentMessage?.user?.can_see?.includes('2') && (
-          <OIcon
-            url={order?.business?.logo || theme?.images?.dummies?.businessPhoto}
-            width={16}
-            height={16}
-            style={{ marginHorizontal: 2 }}
-          />
+          <>
+            {order?.business?.logo ? (
+              <OIcon
+                url={order?.business?.logo}
+                width={16}
+                height={16}
+                style={{ marginHorizontal: 2 }}
+              />
+            ) : (
+              <OIcon
+                src={theme.images.dummies.businessLogo}
+                width={16}
+                height={16}
+                style={{ marginHorizontal: 2 }}
+              />
+            )}
+          </>
         )}
+
         {props?.currentMessage?.user?.can_see?.includes('3') && (
           <OIcon
             url={
@@ -783,6 +846,7 @@ const ChatUI = (props: MessagesParams) => {
             style={{ marginHorizontal: 2 }}
           />
         )}
+
         {props?.currentMessage?.user?.can_see?.includes('4') && (
           <OIcon
             url={order?.driver?.photo || theme?.images?.dummies?.driverPhoto}

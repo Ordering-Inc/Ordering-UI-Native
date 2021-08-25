@@ -107,10 +107,10 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
       setMin('59');
     }
 
-    if(min.length <2) setMin(`0${min}`)
-    if(hour.length <2) setHour(`0${hour}`)
+    if (min.length < 2) setMin(`0${min}`);
+    if (hour.length < 2) setHour(`0${hour}`);
 
-    if(!hour) setHour('00')
+    if (!hour) setHour('00');
   };
 
   const openTimerIOnput = () => {
@@ -131,7 +131,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
     let minsToSend = min;
 
     if (min > '60') minsToSend = '59';
-    setShowAlert(false)
+    setShowAlert(false);
 
     updateStateOrder &&
       updateStateOrder({
@@ -142,13 +142,12 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
           route?.action === 'accept' ? 'acceptByBusiness' : 'rejectByBusiness',
         orderId: route?.order?.id,
       });
-
   };
 
   const cancelRequest = () => {
-    setShowAlert(false)
-  }
- 
+    setShowAlert(false);
+  };
+
   return (
     <>
       {orderState?.loading && (
@@ -186,12 +185,12 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
           ) : (
             <>
               <Placeholder Animation={Fade}>
-             <PlaceholderLine width={90} />
+                <PlaceholderLine width={90} />
                 <PlaceholderLine width={60} />
               </Placeholder>
 
               <Placeholder Animation={Fade}>
-              <PlaceholderLine
+                <PlaceholderLine
                   width={100}
                   style={{ borderRadius: 7.8, height: 40 }}
                 />
@@ -327,7 +326,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                 <OText weight="bold" style={{ textAlign: 'center' }} size={55}>
                   {hour}
                 </OText>
-                {hour.length > 0 &&  <OText size={55}>:</OText>}
+                {hour.length > 0 && <OText size={55}>:</OText>}
                 <OText weight="bold" style={{ textAlign: 'center' }} size={55}>
                   {min}
                 </OText>
@@ -381,21 +380,28 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
             />
           </Action>
           <AwesomeAlert
-      show={showAlert}
-      showProgress={false}
-      title={t("BUSINESS_APP", "Business app")}
-      message={t(`ARE_YOU_SURE_THAT_YOU_WANT_TO_${route.action === "accept" ? "ACCEPT" : "REJECT"}_THIS_ORDER`, `Are you sure that you want to ${route.action === "accept" ? "accept" : "reject"} this order?`)}
-      closeOnTouchOutside
-      closeOnHardwareBackPress={false}
-      showConfirmButton
-      showCancelButton
-      cancelText={t("CANCEL", "Cancel")}
-      confirmText={t('ACCEPT', 'Accept')}
-      confirmButtonColor={theme.colors.primary}
-      cancelButtonColor={theme.colors.inputhat}
-      onCancelPressed={() => cancelRequest()}
-      onConfirmPressed={() => handleAcceptOrReject()}
-    />
+            show={showAlert}
+            showProgress={false}
+            title={t('BUSINESS_APP', 'Business app')}
+            message={t(
+              `ARE_YOU_SURE_THAT_YOU_WANT_TO_${
+                route.action === 'accept' ? 'ACCEPT' : 'REJECT'
+              }_THIS_ORDER`,
+              `Are you sure that you want to ${
+                route.action === 'accept' ? 'accept' : 'reject'
+              } this order?`,
+            )}
+            closeOnTouchOutside
+            closeOnHardwareBackPress={false}
+            showConfirmButton
+            showCancelButton
+            cancelText={t('CANCEL', 'Cancel')}
+            confirmText={t('ACCEPT', 'Accept')}
+            confirmButtonColor={theme.colors.primary}
+            cancelButtonColor={theme.colors.inputhat}
+            onCancelPressed={() => cancelRequest()}
+            onConfirmPressed={() => handleAcceptOrReject()}
+          />
         </KeyboardAvoidingView>
       )}
     </>
