@@ -18,7 +18,7 @@ const Alert = (props: Props) => {
   const parseContent = (list: Array<string>) => {
     let allMessages: string = '';
     list?.map((message: string) => {
-      allMessages = `* ${getTraduction(message)}\n` + allMessages;
+      allMessages = `* ${getTraduction(message, t)}\n` + allMessages;
     });
     return allMessages;
   };
@@ -27,7 +27,7 @@ const Alert = (props: Props) => {
       show={open}
       showProgress={false}
       title={title}
-      message={getTraduction(content?.[0])}
+      message={getTraduction(content?.[0], t)}
       closeOnTouchOutside={true}
       closeOnHardwareBackPress={false}
       showConfirmButton={true}
