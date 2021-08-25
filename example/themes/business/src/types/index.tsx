@@ -246,6 +246,8 @@ export interface OrdersOptionParams {
   orderList?: any;
   activeOrders?: boolean;
   pagination?: any;
+  set_OrderStatus?: any,
+  _orderStatus: any,
   titleContent?: string;
   customArray?: Array<any>;
   loadMoreOrders?: (status: any) => {};
