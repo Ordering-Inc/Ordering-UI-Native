@@ -64,6 +64,7 @@ theme.images = {
   general: {
     homeHero: require('./assets/images/home-hero.png'),
     notFound: require('./assets/images/not-found.png'),
+    loadingSplash: require('./assets/images/loading-splash.png'),
     //   notFound404,
     //   notFoundLighting,
     //   searchIcon,

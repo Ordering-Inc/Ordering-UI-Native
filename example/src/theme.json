@@ -60,6 +60,7 @@
     "general": {
       "homeHero": "",
       "notFound": "",
+      "loadingSplash": "",
       "emptyActiveOrders": "",
       "emptyPastOrders": "",
       "menu": "",

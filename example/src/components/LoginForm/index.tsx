@@ -289,6 +289,7 @@ const LoginFormUI = (props: LoginParams) => {
                       <MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
                   }
                   value={value}
+                  autoCompleteType='password'
                   forwardRef={inputRef}
                   onChange={(val: any) => onChange(val)}
                   returnKeyType='done'
