@@ -25,7 +25,7 @@ export const TimeField = styled.TextInput`
   text-align: center;
   width: 0;
   height: 0;
-  opacity: 0
+  opacity: 0;
 `;
 
 export const Header = styled.View`

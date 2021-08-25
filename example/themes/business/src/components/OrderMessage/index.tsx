@@ -134,30 +134,24 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
       )}
 
       {order && Object.keys(order).length > 0 && !loading && (
-        <>
-          <OrderMessageContainer keyboardShouldPersistTaps="handled">
-            {/* <Spinner
-              visible={!order || Object.keys(order).length === 0 || loading}
-            /> */}
-
-            <OModal
-              open={openModalForBusiness}
+        <OrderMessageContainer keyboardShouldPersistTaps="handled">
+          <OModal
+            open={openModalForBusiness}
+            order={order}
+            title={`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id}`}
+            entireModal
+            onClose={() => handleCloseModal()}>
+            <Chat
+              type={
+                openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER
+              }
+              orderId={order?.id}
+              messages={messages}
               order={order}
-              title={`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id}`}
-              entireModal
-              onClose={() => handleCloseModal()}>
-              <Chat
-                type={
-                  openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER
-                }
-                orderId={order?.id}
-                messages={messages}
-                order={order}
-                setMessages={setMessages}
-              />
-            </OModal>
-          </OrderMessageContainer>
-        </>
+              setMessages={setMessages}
+            />
+          </OModal>
+        </OrderMessageContainer>
       )}
     </>
   );
