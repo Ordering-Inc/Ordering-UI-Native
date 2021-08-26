@@ -39,21 +39,19 @@ interface Props extends TextInputProps {
 	inputStyle?: TextStyle;
 }
 
+const Wrapper = styled.View`
+	background-color: ${(props: any) => props.theme.colors.backgroundLight};
+	border-radius: 25px;
+	border-width: 1px;
+	padding-horizontal: 16px;
+	height: 50px;
+	flex-direction: row;
+	align-items: center;
+	flex: 1;
+	justify-content: center;
+`;
+
 const OInput = (props: Props): React.ReactElement => {
-	const theme = useTheme();
-
-	const Wrapper = styled.View`
-		background-color: ${theme.colors.backgroundLight};
-		border-radius: 25px;
-		border-width: 1px;
-		padding-horizontal: 16px;
-		height: 50px;
-		flex-direction: row;
-		align-items: center;
-		flex: 1;
-		justify-content: center;
-	`;
-
 	return (
 		<Wrapper
 			style={{

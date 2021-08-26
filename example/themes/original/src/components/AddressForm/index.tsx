@@ -34,6 +34,7 @@ import {
 	GoogleMapContainer,
 	FormInput,
 } from './styles';
+import { GPSButton } from '../GPSButton';
 
 const inputNames = [
 	{ name: 'address', code: 'Address' },
@@ -98,16 +99,15 @@ const AddressFormUI = (props: AddressFormParams) => {
 		},
 		pinIcon: {
 			position: 'absolute',
-			end: 7,
+			end: 0,
 			top: 12,
 			zIndex: 1002,
 		},
 	});
 
-
 	const [, t] = useLanguage();
 	const [{ auth }] = useSession();
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const [configState] = useConfig();
 	const [orderState] = useOrder();
 	const { handleSubmit, errors, control, setValue } = useForm();
@@ -587,7 +587,17 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 								{hasEditing ? (
 									<View style={styles.pinIcon}>
-										<OIcon src={theme.images.general.pin} width={16} />
+										<GPSButton 
+											apiKey={googleMapsApiKey}
+											handleGPS={(data: any, detail: any) => {
+												handleChangeAddress(data, detail);
+												setValue(data.address);
+												if (googleInput?.current) {
+													googleInput?.current?.setAddressText( data.address );
+												}
+											}}
+											IconButton={<OIcon src={theme.images.general.pin} width={16} />}
+										/>
 									</View>
 								) : null}
 							</AutocompleteInput>
