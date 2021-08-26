@@ -1,53 +1,48 @@
 import * as React from 'react'
-import styled from 'styled-components/native'
-import { Alert } from 'react-native'
+import AwesomeAlert from 'react-native-awesome-alerts'
+import { getTraduction } from '../../utils'
 import { useLanguage } from 'ordering-components/native'
-
-const Wrapper = styled.TouchableOpacity``
-
+import { useTheme } from 'styled-components/native'
 interface Props {
-  children?: any,
-  title?: string,
-  message?: string,
+  open: boolean,
+  title: string,
+  content: Array<string>,
+  onClose: () => void,
+  onAccept: () => void,
   onCancel?: any,
-  onAccept?: any,
-  onClick?: () => void,
-  disabled?: boolean
 }
 
 const OAlert = (props: Props) => {
+  const {
+    open,
+    title,
+    content,
+    onClose,
+    onAccept,
+    onCancel
+  } = props
 
-  const [, t] = useLanguage()
-
-  const createTwoButtonAlert = () => {
-    Alert.alert(
-      props.title || '',
-      props.message,
-      [
-        {
-          text: t('CANCEL', 'cancel'),
-          onPress: () => props.onCancel && props.onCancel(),
-          style: 'cancel'
-        },
-        {
-          text: t('ACCEPT', 'Accept'),
-          onPress: () => props.onAccept && props.onAccept()
-        }
-      ],
-      { cancelable: false }
-    )
-  }
-
-  const handleClick = () => {
-    props.onClick && props.onClick()
-    createTwoButtonAlert()
-  }
+  const theme = useTheme();
+  const [, t] = useLanguage();
 
   return (
-    <Wrapper onPress={handleClick} disabled={props.disabled}>
-      {props.children}
-    </Wrapper>
+    <AwesomeAlert
+      show={open}
+      showProgress={false}
+      title={title}
+      message={getTraduction(content?.[0], t)}
+      closeOnTouchOutside={true}
+      closeOnHardwareBackPress={false}
+      showConfirmButton={true}
+      showCancelButton={!!onCancel}
+      confirmText={t('ACCEPT', 'Accept')}
+      cancelText={t('CANCEL', 'Cancel')}
+      confirmButtonColor={theme.colors.primary}
+      onCancelPressed={() => onClose()}
+      onConfirmPressed={() => onAccept()}
+    />
   )
 }
 
 export default OAlert;
+

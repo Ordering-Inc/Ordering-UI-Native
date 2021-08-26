@@ -129,7 +129,7 @@ export interface BusinessesListingParams {
 export interface BusinessTypeFilterParams {
   businessTypes?: Array<any>;
   handleChangeBusinessType: any;
-  currentTypeSelected?: string | null;
+  currentTypeSelected?: any;
   defaultBusinessType?: string | null;
   images?: any
   typesState?: any

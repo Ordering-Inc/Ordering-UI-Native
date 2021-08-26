@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { CouponControl as CouponController, useLanguage } from 'ordering-components/native';
 
 import {
@@ -23,6 +23,7 @@ const CouponControlUI = (props: any) => {
   } = props
 
   const theme = useTheme();
+  const [alert, setAlert] = useState<any>({ show: false })
 
   const styles = StyleSheet.create({
     inputsStyle: {
@@ -42,49 +43,54 @@ const CouponControlUI = (props: any) => {
     onChangeInputCoupon('')
   }
 
-  const cleanSetConfirm = () => {
-    setConfirm({ ...confirm, open: false, error: false })
-  }
-
   useEffect(() => {
     if (confirm.content) {
-      Alert.alert(
-        t('COUPON_ERROR', 'Coupon Error'),
-        confirm.content[0],
-        [
-          {
-            text: t('CANCEL', 'cancel'),
-            onPress: () => cleanSetConfirm(),
-            style: 'cancel'
-          },
-          {
-            text: t('ACCEPT', 'Accept'),
-            onPress: () => cleanSetConfirm()
-          }
-        ],
-        { cancelable: false }
-      )
+      setAlert({
+        show: true,
+        title: t('COUPON_ERROR', 'Coupon Error'),
+        onAccept: () => {
+          handleOnAccept && handleOnAccept()
+          setConfirm({ ...confirm, open: false, error: false })
+          setAlert({ show: false })
+        },
+        onClose: () => {
+          setConfirm({ ...confirm, open: false, error: false })
+          setAlert({ show: false })
+        },
+        content: confirm.content
+      })
     }
   }, [confirm])
 
   return (
     <CContainer>
       {couponDefault ? (
-        <OAlert
-          title={t('REMOVE_COUPON', 'Remove Coupon')}
-          message={t('QUESTION_DELETE_COUPON', 'Are you sure that you want to delete the coupon?')}
-          onAccept={() => handleOnAccept()}
+        <CCButton
+          activeOpacity={1}
+          onPress={() => setAlert({
+            show: true,
+            title: t('REMOVE_COUPON', 'Remove Coupon'),
+            onAccept: () => {
+              handleOnAccept && handleOnAccept()
+              setAlert({ show: false })
+            },
+            onCancel: () => {
+              setAlert({ show: false })
+            },
+            onClose: () => {
+              setAlert({ show: false })
+            },
+            content: [t('QUESTION_DELETE_COUPON', 'Are you sure that you want to delete the coupon?')]
+          })}
         >
-          <CCButton>
-            <OText
-              size={16}
-              color={theme.colors.white}
-              style={{ textAlign: 'center' }}
-            >
-              {`${t('REMOVE_COUPON', 'Remove Coupon')} ${couponDefault}`}
-            </OText>
-          </CCButton>
-        </OAlert>
+          <OText
+            size={16}
+            color={theme.colors.white}
+            style={{ textAlign: 'center' }}
+          >
+            {`${t('REMOVE_COUPON', 'Remove Coupon')} ${couponDefault}`}
+          </OText>
+        </CCButton>
       ) : (
         <CCWrapper>
           <OInput
@@ -103,6 +109,14 @@ const CouponControlUI = (props: any) => {
           />
         </CCWrapper>
       )}
+      <OAlert
+        open={alert.show}
+        title={alert.title}
+        onAccept={alert.onAccept}
+        onClose={alert.onClose}
+        onCancel={alert.onCancel}
+        content={alert.content}
+      />
     </CContainer>
   )
 }

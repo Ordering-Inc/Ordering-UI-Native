@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder, useSession } from 'ordering-components/native'
 import { AddressListContainer, AddressItem } from './styles'
 import { StyleSheet, View } from 'react-native'
@@ -58,6 +58,7 @@ const AddressListUI = (props: AddressListParams) => {
   const [orderState] = useOrder()
   const [, t] = useLanguage()
   const [{ auth }] = useSession()
+  const [alert, setAlert] = useState<any>({ show: false })
 
   const onNavigatorRedirect = () => {
     if (route && (isFromBusinesses || isGoBack)) {
@@ -237,18 +238,20 @@ const AddressListUI = (props: AddressListParams) => {
                           hasAddressDefault: !!orderState.options?.address?.location
                         })}
                     />
-                    <OAlert
-                      title={t('DELETE_ADDRESS', 'Delete Address')}
-                      message={t('QUESTION_DELETE_ADDRESS', 'Are you sure to you wants delete the selected address')}
-                      onAccept={() => handleDelete(address)}
-                      disabled={checkAddress(address)}
-                    >
-                      <MaterialIcon
-                        name='trash-can-outline'
-                        size={28}
-                        color={!checkAddress(address) ? theme.colors.primary : theme.colors.disabled}
-                      />
-                    </OAlert>
+                    <MaterialIcon
+                      name='trash-can-outline'
+                      size={28}
+                      color={!checkAddress(address) ? theme.colors.primary : theme.colors.disabled}
+                      onPress={() => setAlert({
+                        show: true,
+                        title: t('DELETE_ADDRESS', 'Delete Address'),
+                        onAccept: () => {
+                          handleDelete && handleDelete(address)
+                          setAlert({ show: false })
+                        },
+                        content: [t('QUESTION_DELETE_ADDRESS', 'Are you sure to you wants delete the selected address')]
+                      })}
+                    />
                   </AddressItem>
                 ))}
               </>
@@ -313,6 +316,14 @@ const AddressListUI = (props: AddressListParams) => {
           )}
         </AddressListContainer>
       )}
+      <OAlert
+        open={alert.show}
+        title={alert.title}
+        onAccept={alert.onAccept}
+        onClose={() => setAlert({ show: false })}
+        onCancel={() => setAlert({ show: false })}
+        content={alert.content}
+      />
     </Container>
   )
 }

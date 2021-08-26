@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import {
   PaymentOptionStripe,
   useSession,
   useLanguage
 } from 'ordering-components/native';
-import { PlaceholderLine } from 'rn-placeholder';
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { getIconCard } from '../../utils';
@@ -32,6 +32,7 @@ const StripeCardsListUI = (props: any) => {
   const theme = useTheme();
   const [{ token }] = useSession();
   const [, t] = useLanguage();
+  const [alert, setAlert] = useState<any>({ show: false })
 
   const handleCardSelected = (card: any) => {
     handleCardClick(card);
@@ -56,14 +57,15 @@ const StripeCardsListUI = (props: any) => {
 
       {token && cardsList.loading && (
         <View style={{ width: '100%' }}>
-          {[...Array(2)].map((_, i) => (
-            <PlaceholderLine
-              key={i}
-              height={50}
-              noMargin
-              style={{ marginBottom: 20 }}
-            />
-          ))}
+          <Placeholder Animation={Fade}>
+            {[...Array(2)].map((_, i) => (
+              <PlaceholderLine
+                key={i}
+                height={50}
+                style={{ marginBottom: 5 }}
+              />
+            ))}
+          </Placeholder>
         </View>
       )}
 
@@ -103,22 +105,33 @@ const StripeCardsListUI = (props: any) => {
                 </View>
               </OSItemContent>
               <OSItemActions>
-                <OAlert
-                  title={t('CARD', 'Card')}
-                  message={t('QUESTION_DELETE_CARD', 'Are you sure that you want to delete the card?')}
-                  onAccept={() => deleteCard(card)}
-                >
-                  <MaterialCommunityIcons
-                    name='trash-can-outline'
-                    size={28}
-                    color={theme.colors.primary}
-                  />
-                </OAlert>
+                <MaterialCommunityIcons
+                  name='trash-can-outline'
+                  size={28}
+                  color={theme.colors.primary}
+                  onPress={() => setAlert({
+                    show: true,
+                    title: t('CARD', 'Card'),
+                    onAccept: () => {
+                      deleteCard && deleteCard(card)
+                      setAlert({ show: false })
+                    },
+                    content: [t('QUESTION_DELETE_CARD', 'Are you sure that you want to delete the card?')]
+                  })}
+                />
               </OSItemActions>
             </OSItem>
           ))}
         </ScrollView>
       )}
+      <OAlert
+        open={alert.show}
+        title={alert.title}
+        onAccept={alert.onAccept}
+        onClose={() => setAlert({ show: false })}
+        onCancel={() => setAlert({ show: false })}
+        content={alert.content}
+      />
     </>
   )
 }
@@ -129,7 +142,8 @@ const styles = StyleSheet.create({
   },
   cardsList: {
     width: '100%',
-    maxHeight: 130
+    minHeight: 90,
+    maxHeight: 100
   },
 })
 
