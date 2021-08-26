@@ -6,16 +6,13 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import {
-  OrderList,
-  useLanguage,
-} from 'ordering-components/native';
+import { OrderList, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OIconButton, OButton } from '../shared';
 import { PreviousOrders } from '../PreviousOrders';
 import { NotFoundSource } from '../NotFoundSource';
-import { useFocusEffect,  } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { FiltersTab, TabsContainer, Tag } from './styles';
 import { OrdersOptionParams } from '../../types';
 
@@ -148,10 +145,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   useFocusEffect(
     React.useCallback(() => {
       loadOrders && loadOrders(true, rememberOrderStatus);
-      setIsLoadingFirstRender(false)
+      setIsLoadingFirstRender(false);
       return () => {
-        setIsLoadingFirstRender(true)
-      }
+        setIsLoadingFirstRender(true);
+      };
     }, [navigation, rememberOrderStatus]),
   );
 
