@@ -9,15 +9,13 @@ import {
 import {
   OrderList,
   useLanguage,
-  useSession,
-  useWebsocket,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OIconButton, OButton } from '../shared';
 import { PreviousOrders } from '../PreviousOrders';
 import { NotFoundSource } from '../NotFoundSource';
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { useFocusEffect,  } from '@react-navigation/native';
 import { FiltersTab, TabsContainer, Tag } from './styles';
 import { OrdersOptionParams } from '../../types';
 
@@ -28,8 +26,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     customArray,
     navigation,
     loadMoreOrders,
-    set_OrderStatus,
-    _orderStatus,
+    rememberOrderStatus,
+    setRememberOrderStatus,
     setUpdateOtherStatus,
     loadOrders,
     onNavigationRedirect,
@@ -37,9 +35,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const theme = useTheme();
   const [, t] = useLanguage();
-  const socket = useWebsocket();
-  const [session] = useSession();
-  const isFocus = useIsFocused();
 
   const { loading, error, orders: values } = orderList;
   const orders = customArray || values || [];
@@ -150,19 +145,19 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
   );
 
-  if (isFocus) {
-    socket.join(`orders_${session?.user?.id}`);
-  }
-
   useFocusEffect(
     React.useCallback(() => {
-      loadOrders && loadOrders(true, _orderStatus);
-    }, [navigation, _orderStatus]),
+      loadOrders && loadOrders(true, rememberOrderStatus);
+      setIsLoadingFirstRender(false)
+      return () => {
+        setIsLoadingFirstRender(true)
+      }
+    }, [navigation, rememberOrderStatus]),
   );
 
   const handleChangeTab = (tags: number[]) => {
     setTabsFilter(tags);
-    set_OrderStatus(tags);
+    setRememberOrderStatus(tags);
     setUpdateOtherStatus(tags);
     loadOrders && loadOrders(true, tags);
     setTagsFilter(tags);
@@ -197,7 +192,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     }
 
     setOrdersToShow([]);
-    set_OrderStatus(updateTags);
+    setRememberOrderStatus(updateTags);
     setTagsFilter(updateTags);
     setUpdateOtherStatus(updateTags);
 
@@ -480,13 +475,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 };
 
 export const OrdersOption = (props: OrdersOptionParams) => {
-  const [_orderStatus, set_OrderStatus] = useState([0, 13]);
+  const [rememberOrderStatus, setRememberOrderStatus] = useState([0, 13]);
   const MyOrdersProps = {
     ...props,
     asDashboard: true,
-    orderStatus: props.activeOrders ? _orderStatus : _orderStatus,
-    _orderStatus: _orderStatus,
-    set_OrderStatus: set_OrderStatus,
+    orderStatus: props.activeOrders ? rememberOrderStatus : rememberOrderStatus,
+    rememberOrderStatus: rememberOrderStatus,
+    setRememberOrderStatus: setRememberOrderStatus,
     useDefualtSessionManager: true,
     paginationSettings: {
       initialPage: 1,
