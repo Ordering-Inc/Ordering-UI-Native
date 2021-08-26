@@ -124,6 +124,8 @@ const ForgotPasswordUI = (props: any) => {
               autoCapitalize="none"
               autoCorrect={false}
               type="email-address"
+              selectionColor={theme.colors.primary}
+              color={theme.colors.textGray}
               autoCompleteType="email"
               returnKeyType="done"
               blurOnSubmit
