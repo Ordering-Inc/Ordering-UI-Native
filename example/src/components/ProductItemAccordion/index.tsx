@@ -59,7 +59,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     },
     icon: {
       top: Platform.OS === 'ios' ? 10 : 15,
-      right: Platform.OS === 'ios' ? 0 : (I18nManager.isRTL ? 30 : 0),
+      right: Platform.OS === 'ios' ? 5 : (I18nManager.isRTL ? 30 : 0),
       position: 'absolute',
       fontSize: 20
     },
