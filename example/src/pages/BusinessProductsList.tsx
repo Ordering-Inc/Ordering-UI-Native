@@ -49,7 +49,8 @@ const BusinessProductsList = (props: any) => {
       'groceries',
       'slug',
       'products',
-      'zones'
+      'zones',
+      'timezone'
     ],
     handleSearchRedirect: () => {
       props.navigation.navigate('BusinessList')
