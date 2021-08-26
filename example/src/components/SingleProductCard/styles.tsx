@@ -19,6 +19,6 @@ export const SoldOut = styled.View`
   background: ${(props: any) => props.theme.colors.lightGray} 0% 0% no-repeat padding-box;
   border-radius: 23px;
   padding: 5px 10px;
-  top: 5px;
-  right: 6px;
+  bottom: 5px;
+  right: 5px;
 `

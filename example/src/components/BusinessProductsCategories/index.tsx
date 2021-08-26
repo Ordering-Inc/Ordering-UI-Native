@@ -45,9 +45,9 @@ const BusinessProductsCategoriesUI = (props: any) => {
       {
         !loading && categories && categories.length && categories.map((category: any) => (
           <Tab
-          key={category.name}
-          onPress={() => handlerClickCategory(category)}
-          style={(category.id === 'featured') && !featured && styles.featuredStyle}
+            key={category.name}
+            onPress={() => handlerClickCategory(category)}
+            style={(category.id === 'featured') && !featured && styles.featuredStyle}
           >
             <OText
               color={categorySelected?.id === category.id ? theme.colors.primary : ''}

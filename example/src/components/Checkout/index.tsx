@@ -279,8 +279,8 @@ const CheckoutUI = (props: any) => {
             <ChAddress>
               {(businessDetails?.loading || cartState.loading) ? (
                 <Placeholder Animation={Fade}>
-                  <PlaceholderLine height={20} style={{ marginBottom: 50 }} />
-                  <PlaceholderLine height={100} />
+                  <PlaceholderLine height={40} style={{ marginBottom: 20 }} />
+                  <PlaceholderLine height={100} style={{ marginBottom: 20 }} />
                 </Placeholder>
               ) : (
                 <AddressDetails
@@ -297,23 +297,29 @@ const CheckoutUI = (props: any) => {
           </ChSection>
           <ChSection style={style.paddSectionH}>
             <ChMoment>
-              <CHMomentWrapper
-                disabled={loading}
-                onPress={() => navigation.navigate('MomentOption')}
-              >
-                <MaterialCommunityIcon
-                  name='clock-outline'
-                  size={24}
-                  style={{ marginRight: 5 }}
-                />
-                <OText size={18} numberOfLines={1} ellipsizeMode='tail'>
-                  {options?.moment
-                    ? parseDate(options?.moment, {
-                      outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
-                    })
-                    : t('ASAP_ABBREVIATION', 'ASAP')}
-                </OText>
-              </CHMomentWrapper>
+              {cartState.loading ? (
+                <Placeholder Animation={Fade}>
+                  <PlaceholderLine height={50} style={{ marginBottom: 0 }} />
+                </Placeholder>
+              ) : (
+                <CHMomentWrapper
+                  disabled={loading}
+                  onPress={() => navigation.navigate('MomentOption')}
+                >
+                  <MaterialCommunityIcon
+                    name='clock-outline'
+                    size={24}
+                    style={{ marginRight: 5 }}
+                  />
+                  <OText size={18} numberOfLines={1} ellipsizeMode='tail'>
+                    {options?.moment
+                      ? parseDate(options?.moment, {
+                        outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
+                      })
+                      : t('ASAP_ABBREVIATION', 'ASAP')}
+                  </OText>
+                </CHMomentWrapper>
+              )}
             </ChMoment>
           </ChSection>
 
@@ -321,10 +327,10 @@ const CheckoutUI = (props: any) => {
             <ChUserDetails>
               {cartState.loading ? (
                 <Placeholder Animation={Fade}>
-                  <PlaceholderLine height={20} width={70} />
-                  <PlaceholderLine height={15} width={60} />
-                  <PlaceholderLine height={15} width={60} />
-                  <PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+                  <PlaceholderLine height={25} width={70} />
+                  <PlaceholderLine height={20} width={60} />
+                  <PlaceholderLine height={20} width={60} />
+                  <PlaceholderLine height={20} width={80} style={{ marginBottom: 20 }} />
                 </Placeholder>
               ) : (
                 <UserDetails
@@ -349,10 +355,10 @@ const CheckoutUI = (props: any) => {
                 !businessDetails?.error &&
                 (
                   <Placeholder Animation={Fade}>
-                    <PlaceholderLine height={20} width={70} />
-                    <PlaceholderLine height={15} width={60} />
-                    <PlaceholderLine height={15} width={60} />
-                    <PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+                    <PlaceholderLine height={25} width={70} />
+                    <PlaceholderLine height={20} width={60} />
+                    <PlaceholderLine height={20} width={60} />
+                    <PlaceholderLine height={20} width={80} style={{ marginBottom: 20 }} />
                   </Placeholder>
                 )}
               {

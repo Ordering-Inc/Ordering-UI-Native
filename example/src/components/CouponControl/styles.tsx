@@ -14,7 +14,7 @@ export const CCWrapper = styled.View`
   justify-content: center;
 `
 
-export const CCButton = styled.View`
+export const CCButton = styled.TouchableOpacity`
   width: 100%;
   background-color: ${(props: any) => props.theme.colors.backgroundGray};
   padding: 10px;

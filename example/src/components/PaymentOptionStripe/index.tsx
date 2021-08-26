@@ -38,6 +38,7 @@ const PaymentOptionStripeUI = (props: any) => {
   const theme = useTheme();
   const [{ token }] = useSession();
   const [, t] = useLanguage();
+  const [alert, setAlert] = useState<any>({ show: false })
 
   const [addCartOpen, setAddCardOpen] = useState(false)
 
@@ -79,17 +80,20 @@ const PaymentOptionStripeUI = (props: any) => {
           </View>
         </OSItemContent>
         <OSItemActions>
-          <OAlert
-            title={t('CARD', 'Card')}
-            message={t('QUESTION_DELETE_CARD', 'Are you sure that you want to delete the card?')}
-            onAccept={() => handleDeleteCard(item)}
-          >
-            <MaterialCommunityIcons
-              name='trash-can-outline'
-              size={28}
-              color={theme.colors.primary}
-            />
-          </OAlert>
+          <MaterialCommunityIcons
+            name='trash-can-outline'
+            size={28}
+            color={theme.colors.primary}
+            onPress={() => setAlert({
+              show: true,
+              title: t('CARD', 'Card'),
+              onAccept: () => {
+                handleDeleteCard && handleDeleteCard(item)
+                setAlert({ show: false })
+              },
+              content: [t('QUESTION_DELETE_CARD', 'Are you sure that you want to delete the card?')]
+            })}
+          />
         </OSItemActions>
       </OSItem>
     )
@@ -196,6 +200,14 @@ const PaymentOptionStripeUI = (props: any) => {
           ))}
         </>
       )}
+      <OAlert
+        open={alert.show}
+        title={alert.title}
+        onAccept={alert.onAccept}
+        onClose={() => setAlert({ show: false })}
+        onCancel={() => setAlert({ show: false })}
+        content={alert.content}
+      />
     </OSContainer>
   )
 }
