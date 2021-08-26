@@ -23,6 +23,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     customArray,
     navigation,
     loadMoreOrders,
+    rememberOrderStatus,
+    setRememberOrderStatus,
     setUpdateOtherStatus,
     loadOrders,
     onNavigationRedirect,
@@ -142,16 +144,17 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // loadOrders && loadOrders(true, tagsFilter)
+      loadOrders && loadOrders(true, rememberOrderStatus);
       setIsLoadingFirstRender(false);
       return () => {
         setIsLoadingFirstRender(true);
       };
-    }, [navigation]),
+    }, [navigation, rememberOrderStatus]),
   );
 
   const handleChangeTab = (tags: number[]) => {
     setTabsFilter(tags);
+    setRememberOrderStatus(tags);
     setUpdateOtherStatus(tags);
     loadOrders && loadOrders(true, tags);
     setTagsFilter(tags);
@@ -186,6 +189,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     }
 
     setOrdersToShow([]);
+    setRememberOrderStatus(updateTags);
     setTagsFilter(updateTags);
     setUpdateOtherStatus(updateTags);
 
@@ -468,10 +472,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 };
 
 export const OrdersOption = (props: OrdersOptionParams) => {
+  const [rememberOrderStatus, setRememberOrderStatus] = useState([0, 13]);
   const MyOrdersProps = {
     ...props,
     asDashboard: true,
-    orderStatus: props.activeOrders ? [0, 13] : [0, 13],
+    orderStatus: props.activeOrders ? rememberOrderStatus : rememberOrderStatus,
+    rememberOrderStatus: rememberOrderStatus,
+    setRememberOrderStatus: setRememberOrderStatus,
     useDefualtSessionManager: true,
     paginationSettings: {
       initialPage: 1,

@@ -145,6 +145,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   };
 
   const cancelRequest = () => {
+    handleFixTime();
     setShowAlert(false);
   };
 
@@ -391,7 +392,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                 route.action === 'accept' ? 'accept' : 'reject'
               } this order?`,
             )}
-            closeOnTouchOutside
+            closeOnTouchOutside={false}
             closeOnHardwareBackPress={false}
             showConfirmButton
             showCancelButton

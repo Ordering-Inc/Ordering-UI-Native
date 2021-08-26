@@ -246,6 +246,8 @@ export interface OrdersOptionParams {
   orderList?: any;
   activeOrders?: boolean;
   pagination?: any;
+  setRememberOrderStatus?: any,
+  rememberOrderStatus: any,
   titleContent?: string;
   customArray?: Array<any>;
   loadMoreOrders?: (status: any) => {};
