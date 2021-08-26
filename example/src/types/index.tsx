@@ -282,6 +282,8 @@ export interface OrderDetailsParams {
   readMessages?: () => {};
   isFromCheckout?: boolean;
   driverLocation?: any;
+  isFromRoot?: any;
+  goToBusinessList?: any;
 }
 export interface ProductItemAccordionParams {
   key?: any;
