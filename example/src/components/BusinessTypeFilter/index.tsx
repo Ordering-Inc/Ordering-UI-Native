@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, FlatList, View, ScrollView, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, ScrollView, TouchableOpacity, Dimensions } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 'ordering-components/native'
 
@@ -7,6 +7,9 @@ import { BusinessCategoriesTitle, BusinessCategories, Category, BCContainer } fr
 import { OIcon, OText } from '../shared'
 import { BusinessTypeFilterParams } from '../../types'
 import { useTheme } from 'styled-components/native'
+
+import Carousel from 'react-native-snap-carousel';
+const windowWidth = Dimensions.get('window').width;
 
 export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
   const {
@@ -40,6 +43,8 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
             style={{ textAlign: 'center' }}
             size={20}
             color={currentTypeSelected === item.id ? theme.colors.primary : theme.colors.textSecondary}
+            numberOfLines={1}
+            ellipsizeMode='tail'
           >
             {t(`BUSINESS_TYPE_${item.name.replace(/\s/g, '_').toUpperCase()}`, item.name)}
           </OText>
@@ -47,6 +52,12 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
       </TouchableOpacity>
     )
   }
+
+  let _carousel: Carousel<any> | null;
+
+  const typeSelectedIndex = typesState?.types?.length > 0
+    ? typesState?.types.findIndex((type: any) => type.id === (currentTypeSelected ?? 0))
+    : 0
 
   return (
     <BCContainer>
@@ -84,12 +95,25 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
             </OText>
           </BusinessCategoriesTitle>
           <BusinessCategories>
-            <FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={typesState?.types}
+            <Carousel
+              keyExtractor={(item: any) => item.name}
+              ref={(c: any) => { _carousel = c }}
+              data={typesState?.types || []}
               renderItem={renderTypes}
-              keyExtractor={(type: any) => type.name}
+              sliderWidth={windowWidth}
+              itemWidth={100}
+              alwaysBounceHorizontal
+              layout={'default'}
+              slideStyle={{
+                width: 100,
+                marginRight: 15,
+              }}
+              activeSlideOffset={15}
+              inactiveSlideScale={1}
+              snapToAlignment="start"
+              activeSlideAlignment="start"
+              inactiveSlideOpacity={1}
+              firstItem={typeSelectedIndex ?? 0}
             />
           </BusinessCategories>
         </>
