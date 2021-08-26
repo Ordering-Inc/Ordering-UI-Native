@@ -234,10 +234,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     if (loadingTag) setLoadingTag(false);
   }, [loading]);
 
-  // useEffect(() => {
-  //   if (loadingTag) setLoadingTag(false);
-  // }, [loading]);
-
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
     setWindowsWidth(
       parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),

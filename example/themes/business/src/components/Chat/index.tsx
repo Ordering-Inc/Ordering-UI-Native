@@ -208,7 +208,7 @@ const ChatUI = (props: MessagesParams) => {
 
     if (readersCount > minReaders || value[reader]) {
       setCanRead({ ...canRead, ...value });
-    } else if (reader !== 'business' && isAdmin) {
+    } else if (reader !== 'business' && (isAdmin || user?.level === 4)) {
       setCanRead({ ...canRead, ...value, business: true });
     } else if (reader !== 'customer') {
       setCanRead({ ...canRead, ...value, customer: true });
@@ -619,7 +619,7 @@ const ChatUI = (props: MessagesParams) => {
           </TitleHeader>
         </Pressable>
 
-        {order?.driver && (
+        {order?.driver && user?.level !== 4 && (
           <Pressable
             style={{
               flexDirection: 'row',

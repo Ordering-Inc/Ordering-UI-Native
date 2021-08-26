@@ -206,6 +206,22 @@ export const UserFormDetailsUI = (props: any) => {
       backgroundColor: theme.colors.primaryContrast,
       color: theme.colors.primary,
     },
+    label: {
+      color: theme.colors.textGray,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'bold',
+      paddingHorizontal: 16,
+    },
+    errorText: {
+      color: theme.colors.error,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 16,
+      paddingHorizontal: 16,
+      marginBottom: 20,
+    },
     inputStyle: {
       marginBottom: 25,
       borderWidth: 1,
@@ -227,6 +243,7 @@ export const UserFormDetailsUI = (props: any) => {
       fontSize: 16,
     },
     btnFlag: {
+      width: 79,
       borderWidth: 1,
       borderRadius: 7.6,
       marginRight: 9,
@@ -248,10 +265,7 @@ export const UserFormDetailsUI = (props: any) => {
                   showField &&
                   showField(field.code) && (
                     <React.Fragment key={field.id}>
-                      <OText
-                        color={theme.colors.textGray}
-                        weight="bold"
-                        style={{ paddingHorizontal: 16 }}>
+                      <OText style={styles.label}>
                         {t(field?.code.toUpperCase(), field?.name)}
                       </OText>
 
@@ -326,12 +340,8 @@ export const UserFormDetailsUI = (props: any) => {
                   ),
               )}
 
-              <OText
-                color={theme.colors.textGray}
-                weight="bold"
-                style={{ paddingHorizontal: 16 }}>
-                {t('PASSWORD', 'Password')}
-              </OText>
+              <OText style={styles.label}>{t('PASSWORD', 'Password')}</OText>
+
               <Controller
                 control={control}
                 render={({ onChange, value }: any) => (
@@ -369,12 +379,10 @@ export const UserFormDetailsUI = (props: any) => {
                 defaultValue=""
               />
 
-              <OText
-                color={theme.colors.textGray}
-                weight="bold"
-                style={{ paddingHorizontal: 16 }}>
+              <OText style={styles.label}>
                 {t('MOBILE_CONFIRM_PASSWORD', 'Confirm Password')}
               </OText>
+
               <Controller
                 control={control}
                 render={({ onChange, value }: any) => (
@@ -427,10 +435,7 @@ export const UserFormDetailsUI = (props: any) => {
               />
 
               {errors.confirmPassword && (
-                <OText
-                  size={16}
-                  color={theme.colors.error}
-                  style={{ paddingHorizontal: 16, marginBottom: 10 }}>
+                <OText style={styles.errorText}>
                   {errors?.confirmPassword.message}
                 </OText>
               )}
@@ -446,9 +451,7 @@ export const UserFormDetailsUI = (props: any) => {
                   />
 
                   {phoneUpdate && (
-                    <OText
-                      color={theme.colors.error}
-                      style={{ marginHorizontal: 10, textAlign: 'center' }}>
+                    <OText style={styles.errorText}>
                       {t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}:{' '}
                       {user?.cellphone}
                     </OText>
@@ -457,12 +460,6 @@ export const UserFormDetailsUI = (props: any) => {
               )}
             </UDWrapper>
           )}
-
-        {validationFields?.loading && (
-          <UDLoader>
-            <OText size={20}>{t('LOADING', 'Loading')}</OText>
-          </UDLoader>
-        )}
       </UDForm>
 
       {!validationFields.loading && !isCheckout && (

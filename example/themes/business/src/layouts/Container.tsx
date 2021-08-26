@@ -37,7 +37,7 @@ export const Container = (props: any) => {
   return (
     <SafeAreaStyled style={props.style}>
       <StatusBar
-        backgroundColor={props?.style?.backgroundColor || "transparent"}
+        backgroundColor={props?.style?.backgroundColor || 'transparent'}
         barStyle="dark-content"
       />
       <ContainerStyled

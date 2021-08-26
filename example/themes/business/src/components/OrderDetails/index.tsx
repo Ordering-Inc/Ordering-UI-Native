@@ -702,6 +702,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     </OText>
 
                     <CountryPicker
+                      // @ts-ignore
                       countryCode={currentDriver}
                       visible={isDriverModalVisible}
                       onClose={() => setIsDriverModalVisible(false)}

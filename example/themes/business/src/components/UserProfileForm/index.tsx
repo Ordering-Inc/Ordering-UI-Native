@@ -11,11 +11,18 @@ import {
   useToast,
   useLanguage,
 } from 'ordering-components/native';
-import { CenterView, Actions, UserData, EditButton } from './styles';
+import {
+  CenterView,
+  Actions,
+  UserData,
+  EditButton,
+  EnabledStatusDriver,
+} from './styles';
 import NavBar from '../NavBar';
 import { LogoutButton } from '../LogoutButton';
 import { LanguageSelector } from '../LanguageSelector';
 import { UserFormDetailsUI } from '../UserFormDetails';
+import ToggleSwitch from 'toggle-switch-react-native';
 import { UDWrapper } from '../UserFormDetails/styles';
 import {
   OIcon,
@@ -36,6 +43,8 @@ const ProfileUI = (props: ProfileParams) => {
     handleButtonUpdateClick,
     toggleIsEdit,
     cleanFormState,
+    handleToggleAvalaibleStatusDriver,
+    userState,
   } = props;
 
   const [{ user }] = useSession();
@@ -43,32 +52,6 @@ const ProfileUI = (props: ProfileParams) => {
   const [, { showToast }] = useToast();
   const { errors } = useForm();
   const theme = useTheme();
-
-  const styles = StyleSheet.create({
-    inputStyle: {
-      marginBottom: 25,
-      borderWidth: 1,
-      borderColor: theme.colors.tabBar,
-      borderTopWidth: 0,
-      borderRightWidth: 0,
-      borderLeftWidth: 0,
-    },
-    editButton: {
-      height: 44,
-      borderRadius: 7.6,
-      borderWidth: 1,
-      borderColor: theme.colors.primary,
-      backgroundColor: theme.colors.white,
-      marginBottom: 25,
-    },
-    btnText: {
-      color: theme.colors.textGray,
-      fontFamily: 'Poppins',
-      fontStyle: 'normal',
-      fontWeight: 'normal',
-      fontSize: 18,
-    },
-  });
 
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -151,6 +134,39 @@ const ProfileUI = (props: ProfileParams) => {
     }
   }, [user?.country_phone_code]);
 
+  const styles = StyleSheet.create({
+    label: {
+      color: theme.colors.textGray,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'bold',
+      paddingHorizontal: 16,
+    },
+    inputStyle: {
+      marginBottom: 25,
+      borderWidth: 1,
+      borderColor: theme.colors.tabBar,
+      borderTopWidth: 0,
+      borderRightWidth: 0,
+      borderLeftWidth: 0,
+    },
+    editButton: {
+      height: 44,
+      borderRadius: 7.6,
+      borderWidth: 1,
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.white,
+      marginBottom: 25,
+    },
+    btnText: {
+      color: theme.colors.textGray,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 18,
+    },
+  });
+
   return (
     <>
       <NavBar
@@ -166,6 +182,7 @@ const ProfileUI = (props: ProfileParams) => {
           fontSize: 26,
         }}
       />
+
       {(formState?.loading || state?.loading) && (
         <View
           style={{
@@ -182,6 +199,7 @@ const ProfileUI = (props: ProfileParams) => {
                 height: 120,
               }}
             />
+
             <PlaceholderLine
               width={20}
               style={{
@@ -198,6 +216,7 @@ const ProfileUI = (props: ProfileParams) => {
               <View style={{ flexDirection: 'row' }}>
                 <Placeholder>
                   <PlaceholderLine width={50} style={{ marginTop: 30 }} />
+
                   <PlaceholderLine width={90} />
                 </Placeholder>
               </View>
@@ -214,6 +233,7 @@ const ProfileUI = (props: ProfileParams) => {
                 borderRadius: 7.6,
               }}
             />
+
             <PlaceholderLine
               width={100}
               style={{
@@ -222,6 +242,7 @@ const ProfileUI = (props: ProfileParams) => {
                 borderRadius: 7.6,
               }}
             />
+
             <PlaceholderLine
               width={40}
               style={{
@@ -253,6 +274,35 @@ const ProfileUI = (props: ProfileParams) => {
               onClick={() => handleImagePicker()}
             />
           </CenterView>
+
+          {user?.level === 4 && (
+            <UDWrapper>
+              <EnabledStatusDriver>
+                <OText style={{ ...styles.label, paddingHorizontal: 0 }}>
+                  {t(
+                    'AVAILABLE_TO_RECEIVE_ORDERS',
+                    'Available to receive orders',
+                  )}
+                </OText>
+
+                <ToggleSwitch
+                  isOn={userState?.result?.result?.available}
+                  onColor={theme.colors.primary}
+                  offColor={theme.colors.offColor}
+                  size="small"
+                  onToggle={() =>
+                    handleToggleAvalaibleStatusDriver &&
+                    handleToggleAvalaibleStatusDriver(
+                      !userState?.result?.result?.available,
+                    )
+                  }
+                  disabled={userState?.loading}
+                  animationSpeed={200}
+                />
+              </EnabledStatusDriver>
+            </UDWrapper>
+          )}
+
           {!isEdit ? (
             <UserData>
               {!validationFields?.loading &&
@@ -263,10 +313,7 @@ const ProfileUI = (props: ProfileParams) => {
                       values: validationFields.fields?.checkout,
                     }).map((field: any) => (
                       <React.Fragment key={field.id}>
-                        <OText
-                          color={theme.colors.textGray}
-                          weight="bold"
-                          style={{ paddingHorizontal: 16 }}>
+                        <OText style={styles.label}>
                           {t(field?.code.toUpperCase(), field?.name)}
                         </OText>
 
@@ -299,10 +346,7 @@ const ProfileUI = (props: ProfileParams) => {
                       </React.Fragment>
                     ))}
 
-                    <OText
-                      color={theme.colors.textGray}
-                      weight="bold"
-                      style={{ paddingHorizontal: 16 }}>
+                    <OText style={styles.label}>
                       {t('PASSWORD', 'Password')}
                     </OText>
 
@@ -328,6 +372,7 @@ const ProfileUI = (props: ProfileParams) => {
               />
             </View>
           )}
+
           {!validationFields.loading && !isEdit && (
             <EditButton>
               <OButton
@@ -342,8 +387,10 @@ const ProfileUI = (props: ProfileParams) => {
               />
             </EditButton>
           )}
+
           <Actions>
             <LanguageSelector />
+
             <LogoutButton />
           </Actions>
         </>
@@ -358,5 +405,6 @@ export const UserProfileForm = (props: any) => {
     refreshSessionUser: true,
     UIComponent: ProfileUI,
   };
+
   return <UserProfileController {...profileProps} />;
 };

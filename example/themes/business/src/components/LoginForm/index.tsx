@@ -44,6 +44,7 @@ const LoginFormUI = (props: LoginParams) => {
     checkPhoneCodeState,
     handleCheckPhoneCode,
     setCheckPhoneCodeState,
+    allowedLevels,
   } = props;
 
   const [, { showToast }] = useToast();
@@ -324,6 +325,7 @@ const LoginFormUI = (props: LoginParams) => {
       fontSize: 18,
     },
     btnFlag: {
+      width: 79,
       borderWidth: 1,
       borderRadius: 7.6,
       marginRight: 9,
@@ -521,13 +523,13 @@ const LoginFormUI = (props: LoginParams) => {
                 'The field Password is required',
               ).replace('_attribute_', t('PASSWORD', 'Password')),
               pattern: {
-                value: /.{8,}/,
+                value: allowedLevels?.includes(4) ? /.{6,}/ : /.{8,}/,
                 message: t(
                   'VALIDATION_ERROR_PASSWORD_MIN_STRING',
                   'The Password must be at least 8 characters.',
                 )
                   .replace('_attribute_', t('PASSWORD', 'Password'))
-                  .replace('_min_', 8),
+                  .replace('8', allowedLevels?.includes(4) ? 6 : 8),
               },
             }}
             defaultValue=""
@@ -602,8 +604,8 @@ const LoginFormUI = (props: LoginParams) => {
 export const LoginForm = (props: any) => {
   const loginProps = {
     ...props,
-    allowedLevels: [0, 2],
     UIComponent: LoginFormUI,
   };
+
   return <LoginFormController {...loginProps} />;
 };
