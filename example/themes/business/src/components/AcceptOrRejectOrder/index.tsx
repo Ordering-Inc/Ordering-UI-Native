@@ -5,6 +5,7 @@ import {
   Platform,
   View,
   KeyboardAvoidingView,
+  StatusBar,
 } from 'react-native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
@@ -21,7 +22,16 @@ import { AcceptOrRejectOrderParams } from '../../types';
 import AwesomeAlert from 'react-native-awesome-alerts';
 
 export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
-  const { navigation, route, orderState, updateStateOrder } = props;
+  const {
+    navigation,
+    route,
+    orderState,
+    updateStateOrder,
+    notShowCustomerPhone,
+    actions,
+    titleAccept,
+    titleReject,
+  } = props;
 
   const [, { showToast }] = useToast();
   const [, t] = useLanguage();
@@ -33,6 +43,9 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const [comments, setComments] = useState('');
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [isColorAwesomeAlert, setIsColorAwesomeAlert] = useState(false);
+  const phoneNumber = route?.order?.customer?.cellphone;
+  let codeNumberPhone, numberPhone, numberToShow;
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -53,13 +66,12 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
     };
   }, []);
 
-  const phoneNumber = route?.order?.customer?.cellphone;
-  let codeNumberPhone, numberPhone, numberToShow;
-
-  if (phoneNumber) {
-    codeNumberPhone = phoneNumber.slice(0, 3);
-    numberPhone = phoneNumber.slice(3, phoneNumber?.length);
-    numberToShow = `(${codeNumberPhone}) ${numberPhone}`;
+  if (!notShowCustomerPhone) {
+    if (phoneNumber) {
+      codeNumberPhone = phoneNumber.slice(0, 3);
+      numberPhone = phoneNumber.slice(3, phoneNumber?.length);
+      numberToShow = `(${codeNumberPhone}) ${numberPhone}`;
+    }
   }
 
   useEffect(() => {
@@ -131,6 +143,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
     let minsToSend = min;
 
     if (min > '60') minsToSend = '59';
+    setIsColorAwesomeAlert(false);
     setShowAlert(false);
 
     updateStateOrder &&
@@ -138,19 +151,25 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
         hour,
         min: minsToSend,
         comments,
-        action:
-          route?.action === 'accept' ? 'acceptByBusiness' : 'rejectByBusiness',
+        action: route?.action === 'accept' ? actions?.accept : actions?.reject,
         orderId: route?.order?.id,
       });
   };
 
   const cancelRequest = () => {
     handleFixTime();
+    setIsColorAwesomeAlert(false);
     setShowAlert(false);
   };
 
   return (
     <>
+      <StatusBar
+        backgroundColor={
+          isColorAwesomeAlert ? '#999898' : theme.colors.primaryContrast
+        }
+        barStyle="dark-content"
+      />
       {orderState?.loading && (
         <View
           style={{
@@ -236,63 +255,77 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
 
               <OText size={20} color={theme.colors.textGray} weight="bold">
                 {route.action === 'accept'
-                  ? `${t('PREPARATION_TIME', 'Preparation time')}:`
-                  : t('REJECT_ORDER', 'Reject Order')}
+                  ? `${t(titleAccept.key, titleAccept.text)}:`
+                  : t(titleReject.key, titleReject.text)}
               </OText>
 
               {route.action === 'reject' && (
                 <>
-                  <OText
-                    size={15}
-                    color={theme.colors.textGray}
-                    style={{ marginTop: 10 }}>
-                    {t(
-                      'CALL_YOUR_CUSTOMER_TO_RESOLVE_THE_ISSUE_AS_POLITELY_AS_POSSIBLE',
-                      'Call your customer to resolve the issue as politely as possible',
-                    )}
-                  </OText>
+                  {!notShowCustomerPhone && (
+                    <>
+                      <OText
+                        size={15}
+                        color={theme.colors.textGray}
+                        style={{ marginTop: 10 }}>
+                        {t(
+                          'CALL_YOUR_CUSTOMER_TO_RESOLVE_THE_ISSUE_AS_POLITELY_AS_POSSIBLE',
+                          'Call your customer to resolve the issue as politely as possible',
+                        )}
+                      </OText>
 
-                  {numberToShow ? (
-                    <OButton
-                      bgColor="transparent"
-                      borderColor={theme.colors.primary}
-                      textStyle={{ color: theme.colors.primary, fontSize: 20 }}
-                      style={{
-                        borderRadius: 10,
-                        marginVertical: 20,
-                      }}
-                      imgLeftStyle={{
-                        resizeMode: 'contain',
-                        left: 20,
-                        position: 'absolute',
-                      }}
-                      imgLeftSrc={theme.images.general.cellphone}
-                      text={numberToShow}
-                      onClick={() =>
-                        Linking.openURL(`tel:${route.order.customer.cellphone}`)
-                      }
-                    />
-                  ) : (
-                    <OButton
-                      bgColor="transparent"
-                      borderColor={theme.colors.primary}
-                      textStyle={{ color: theme.colors.primary, fontSize: 15 }}
-                      style={{
-                        borderRadius: 10,
-                        marginVertical: 20,
-                      }}
-                      imgLeftStyle={{
-                        resizeMode: 'contain',
-                        left: 20,
-                        position: 'absolute',
-                      }}
-                      isDisabled={true}
-                      imgLeftSrc={theme.images.general.cellphone}
-                      text={t('NOT_NUMBER', "There's not phonenumber.")}
-                      onClick={() =>
-                        Linking.openURL(`tel:${route.order.customer.cellphone}`)
-                      }
-                    />
+                      {numberToShow ? (
+                        <OButton
+                          bgColor="transparent"
+                          borderColor={theme.colors.primary}
+                          textStyle={{
+                            color: theme.colors.primary,
+                            fontSize: 20,
+                          }}
+                          style={{
+                            borderRadius: 10,
+                            marginVertical: 20,
+                          }}
+                          imgLeftStyle={{
+                            resizeMode: 'contain',
+                            left: 20,
+                            position: 'absolute',
+                          }}
+                          imgLeftSrc={theme.images.general.cellphone}
+                          text={numberToShow}
+                          onClick={() =>
+                            Linking.openURL(
+                              `tel:${route.order.customer.cellphone}`,
+                            )
+                          }
+                        />
+                      ) : (
+                        <OButton
+                          bgColor="transparent"
+                          borderColor={theme.colors.primary}
+                          textStyle={{
+                            color: theme.colors.primary,
+                            fontSize: 15,
+                          }}
+                          style={{
+                            borderRadius: 10,
+                            marginVertical: 20,
+                          }}
+                          imgLeftStyle={{
+                            resizeMode: 'contain',
+                            left: 20,
+                            position: 'absolute',
+                          }}
+                          isDisabled={true}
+                          imgLeftSrc={theme.images.general.cellphone}
+                          text={t('NOT_NUMBER', "There's not phonenumber.")}
+                          onClick={() =>
+                            Linking.openURL(
+                              `tel:${route.order.customer.cellphone}`,
+                            )
+                          }
+                        />
+                      )}
+                    </>
                   )}
 
                   <OText
@@ -364,10 +397,13 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
 
           <Action
             style={{
-              marginBottom: Platform.OS === 'ios' && isKeyboardShow ? 30 : 0,
+              marginBottom: isKeyboardShow ? (Platform.OS === 'ios' ? 30 : 50) : 0,
             }}>
             <FloatingButton
-              firstButtonClick={() => setShowAlert(true)}
+              firstButtonClick={() => {
+                setIsColorAwesomeAlert(true);
+                setShowAlert(true);
+              }}
               btnText={
                 route.action === 'accept'
                   ? t('ACCEPT', 'Accept')
