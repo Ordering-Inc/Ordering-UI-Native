@@ -19,6 +19,14 @@ export const EditButton = styled.View`
   flex: 1;
 `;
 
+export const EnabledStatusDriver = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+`;
+
 export const Actions = styled.View`
   flex: 1;
   border-top-width: 5px;

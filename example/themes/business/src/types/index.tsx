@@ -1,4 +1,5 @@
 import { TextInputProps, ViewStyle } from 'react-native';
+import { PermissionStatus } from 'react-native-permissions';
 export interface LoginParams {
   navigation?: any;
   formState?: any;
@@ -18,16 +19,20 @@ export interface LoginParams {
   handleCheckPhoneCode?: any;
   emailInputIcon?: any;
   passwordInputIcon?: any;
+  allowedLevels?: any;
 }
 export interface ProfileParams {
   navigation?: any;
   isEdit?: boolean;
   formState?: any;
+  userState?: any;
   toggleIsEdit?: any;
   cleanFormState?: any;
   setFormState?: any;
   handleChangeInput?: any;
   handleButtonUpdateClick?: any;
+  handleToggleAvalaibleStatusDriver?: any;
+  onNavigationRedirect?: any;
   handlechangeImage?: any;
   validationFields?: any;
   showField?: any;
@@ -246,8 +251,8 @@ export interface OrdersOptionParams {
   orderList?: any;
   activeOrders?: boolean;
   pagination?: any;
-  setRememberOrderStatus?: any,
-  rememberOrderStatus: any,
+  setRememberOrderStatus?: any;
+  rememberOrderStatus?: any;
   titleContent?: string;
   customArray?: Array<any>;
   loadMoreOrders?: (status: any) => {};
@@ -314,6 +319,7 @@ export interface PreviousMessagesParams {
   onNavigationRedirect?: (route: string, params?: any) => {};
 }
 export interface OrderDetailsParams {
+  handleUpdateLocationDriver?: () => {};
   navigation?: any;
   messagesReadList?: any;
   urlToShare?: string;
@@ -321,11 +327,13 @@ export interface OrderDetailsParams {
   handleAssignDriver?: (id: any) => {};
   handleChangeOrderStatus?: (status: any) => {};
   order?: any;
+  isFromRoot?: any;
   handleOrderRedirect?: () => {};
   setMessages?: () => {};
   readMessages?: () => {};
   isFromCheckout?: boolean;
   driverLocation?: any;
+  goToBusinessList?: boolean;
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean;
@@ -347,6 +355,10 @@ export interface ReviewOrderParams {
   handleSendReview?: any;
   formState?: any;
   navigation?: any;
+}
+
+export interface PermissionsState {
+  locationStatus: PermissionStatus;
 }
 export interface MessagesParams {
   type?: string;
@@ -438,19 +450,28 @@ export interface UpsellingProductsParams {
   setCanOpenUpselling?: (value: any) => void;
 }
 
+export interface Location {
+  latitude: number;
+  longitude: number;
+}
+
 export interface GoogleMapsParams {
-  location: { lat: number; lng: number };
+  location: { lat: number; lng: number; icon: string; title: string };
   handleChangeAddressMap?: (address: any, details: any) => void;
   setErrors?: (error: string) => void;
   maxLimitLocation?: number;
   readOnly?: boolean;
+  isToFollow?: boolean;
   markerTitle?: string;
+  showAcceptOrReject?: boolean;
+  order?: any;
   saveLocation?: boolean;
   handleOpenMapView?: () => void;
-  showAcceptOrReject?: boolean;
+  isBusinessMarker?: boolean;
   isSetInputs?: boolean;
   handleViewActionOrder?: (action: string) => void;
   locations?: Array<any>;
+  orderStatus?: number;
   setSaveLocation?: (val: boolean) => void;
   handleToggleMap?: () => void;
   navigation: any;

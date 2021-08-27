@@ -180,7 +180,7 @@ export const VerifyPhone = (props: any) => {
               ).result?.result,
             )?.map((e: any, i: number) => (
               <OText key={i} size={20} color={theme.colors.error}>
-                {`* ${t(getTraduction(e))}`}
+                {`* ${t(getTraduction(e, t))}`}
               </OText>
             ))}
           </ErrorSection>

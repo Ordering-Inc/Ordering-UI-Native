@@ -116,6 +116,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
           blurOnSubmit: true,
           onSubmitEditing,
           autoCompleteType: 'tel',
+          // @ts-ignore
           ref: forwardRef,
           color: theme.colors.textGray,
           ...textInputProps,
@@ -130,6 +131,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
         }
         flagButtonStyle={flagProps}
       />
+
       {!!data?.error && (
         <OText
           size={16}
@@ -138,6 +140,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
           {data.error}
         </OText>
       )}
+
       <View
         style={{
           position: 'absolute',

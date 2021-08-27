@@ -6,6 +6,7 @@ import OIconButton from './OIconButton';
 import OTextarea from './OTextarea';
 import OModal from './OModal';
 import OAlert from './OAlert';
+import OFab from './OFab';
 
 export {
   OText,
@@ -16,4 +17,5 @@ export {
   OTextarea,
   OAlert,
   OModal,
+  OFab,
 };

@@ -1,10 +1,9 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 import { LogoutAction } from 'ordering-components/native';
 import { useLanguage } from 'ordering-components/native';
-import styled from 'styled-components/native';
-import { OIcon, OText } from '../shared';
 import { useTheme } from 'styled-components/native';
+import { OIcon, OText } from '../shared';
 import { _retrieveStoreData, _clearStoreData } from '../../providers/StoreUtil';
 
 const LogoutButtonUI = (props: any) => {
@@ -20,19 +19,35 @@ const LogoutButtonUI = (props: any) => {
     }
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      flexDirection: 'row',
+      marginBottom: 40,
+    },
+    text: {
+      color: theme.colors.textGray,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'bold',
+      fontSize: 16,
+      marginRight: 10,
+    },
+  });
+
   return (
-    <TouchableOpacity onPress={() => handleClick()}>
-      <Container>
-        <OText color={theme.colors.textGray} space weight="bold" mRight={10}>
-          {t('LOGOUT', 'logout')}
-        </OText>
-        <OIcon
-          src={theme.images.general.menulogout}
-          width={16}
-          height={16}
-          color={theme.colors.disabledContrast}
-        />
-      </Container>
+    <TouchableOpacity style={styles.container} onPress={() => handleClick()}>
+      <OText space style={styles.text}>
+        {t('LOGOUT', 'logout')}
+      </OText>
+
+      <OIcon
+        src={theme.images.general.menulogout}
+        width={18}
+        height={18}
+        color={theme.colors.disabledContrast}
+      />
     </TouchableOpacity>
   );
 };
@@ -43,11 +58,6 @@ export const LogoutButton = (props: any) => {
     isNative: true,
     UIComponent: LogoutButtonUI,
   };
+
   return <LogoutAction {...logoutProps} />;
 };
-
-export const Container = styled.View`
-  justify-content: flex-start;
-  flex-direction: row;
-  margin-bottom: 40px;
-`;
