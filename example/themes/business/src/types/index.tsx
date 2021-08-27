@@ -480,10 +480,22 @@ export interface GoogleMapsParams {
 export interface TagsParams {
   status: number[];
 }
+interface actions {
+  accept?: string;
+  reject?: string;
+}
 
+interface textTranslate {
+  key: string;
+  text: string;
+}
 export interface AcceptOrRejectOrderParams {
   navigation: any;
   route: any;
   orderState?: any;
   updateStateOrder?: (body: any) => {};
+  notShowCustomerPhone?: boolean | undefined;
+  actions: actions;
+  titleAccept: textTranslate;
+  titleReject: textTranslate;
 }
