@@ -18,7 +18,7 @@ export const InnerContent = styled.View`
 `
 export const WrapScheduleBlock = styled.ScrollView`
   margin: 20px 0;
-  max-height: 90px;
+  max-height: 500px;
 `
 export const ScheduleBlock = styled.View`
   display: flex;
