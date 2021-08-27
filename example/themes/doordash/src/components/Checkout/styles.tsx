@@ -69,7 +69,6 @@ export const ChBusinessDetails = styled(ChUserDetails)`
 export const ChPaymethods = styled.View`
   display: flex;
   flex-direction: column;
-  padding: 0 0 20px;
 `
 
 export const ChDriverTips = styled(ChPaymethods)``

@@ -8,3 +8,8 @@ export const DIRECTION = {
   RIGHT: 'right',
   LEFT: 'left'
 }
+
+export const SHARE_URL = {
+  business: '',
+  product: ''
+}

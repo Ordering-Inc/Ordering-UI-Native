@@ -14,6 +14,7 @@ export const TopHeader = styled.View`
 	padding-horizontal: 40px;
 	min-height: 60px;
 	margin-bottom: 10px;
+	overflow: visible;
 `;
 export const AddressInput = styled.TouchableOpacity`
 	flex: 1;

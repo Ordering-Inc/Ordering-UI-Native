@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextStyle, TouchableOpacity } from 'react-native';
+import { View, TextStyle, TouchableOpacity, Animated } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 import {
@@ -14,7 +14,7 @@ import {
 	ToastType, useToast
 } from 'ordering-components/native';
 
-import { OText } from '../shared';
+import { OButton, OIcon, OModal, OText } from '../shared';
 import { useTheme } from 'styled-components/native';
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -89,6 +89,7 @@ const CheckoutUI = (props: any) => {
 	const [userErrors, setUserErrors] = useState<any>([]);
 	const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
 	const [phoneUpdate, setPhoneUpdate] = useState(false);
+	const [isOpenPaymethods, setOpenPaymethods] = useState(false);
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -289,9 +290,27 @@ const CheckoutUI = (props: any) => {
 					{!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
 						<ChSection>
 							<ChPaymethods>
-								<OText style={{ ...theme.labels.middle, marginBottom: 3 } as TextStyle}>
-									{t('PAYMENT_METHOD', 'Payment Method').toUpperCase()}
-								</OText>
+								<View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+									<OText style={{ ...theme.labels.middle } as TextStyle}>
+										{t('PAYMENT_METHOD', 'Payment Method').toUpperCase()}
+									</OText>
+									<TouchableOpacity onPress={() => setOpenPaymethods(true)} style={{flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}} >
+										<Animated.View>
+											{paymethodSelected ? (
+												<>
+													{paymethodSelected?.data?.last4 ? (
+														<OText size={12} color={theme.colors.textSecondary}>{`${paymethodSelected?.paymethod?.name}  \u2022\u2022\u2022 ${paymethodSelected.data.last4}`}</OText>
+													) : (
+														<OText size={12} color={theme.colors.textSecondary}>{`${paymethodSelected?.paymethod?.name}`}</OText>
+													)}
+												</>
+											) : (
+												<OText color={theme.colors.textSecondary}>{t('SELECT_PAYMETHOD', 'Select Paymethods')}</OText>
+											)}
+										</Animated.View>
+										<OIcon src={theme.images.general.chevron_right} color={theme.colors.primary} width={12} style={{marginStart: 12}} />
+									</TouchableOpacity>
+								</View>
 								{!cartState.loading && cart?.status === 4 && (
 									<OText
 										style={{ textAlign: 'center', marginTop: 20 }}
@@ -301,18 +320,6 @@ const CheckoutUI = (props: any) => {
 										{t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
 									</OText>
 								)}
-								<PaymentOptions
-									cart={cart}
-									isDisabled={cart?.status === 2}
-									businessId={businessDetails?.business?.id}
-									isLoading={businessDetails.loading}
-									paymethods={businessDetails?.business?.paymethods}
-									onPaymentChange={handlePaymethodChange}
-									errorCash={errorCash}
-									setErrorCash={setErrorCash}
-									onNavigationRedirect={onNavigationRedirect}
-									paySelected={paymethodSelected}
-								/>
 							</ChPaymethods>
 						</ChSection>
 					)}
@@ -442,6 +449,43 @@ const CheckoutUI = (props: any) => {
 					</>
 				</>
 			)}
+
+			<OModal
+				entireModal
+				customClose
+				open={isOpenPaymethods}
+				onClose={() => setOpenPaymethods(false)}
+			>
+				<View style={{ paddingHorizontal: 40, paddingVertical: 12 }}>
+					<NavBar
+						title={t('SELECT_A_PAYMENT_METHOD', 'Select a payment method')}
+						onActionLeft={() => setOpenPaymethods(false)}
+						style={{paddingStart: 0, paddingEnd: 0}}
+					/>
+					<PaymentOptions
+						cart={cart}
+						isDisabled={cart?.status === 2}
+						businessId={businessDetails?.business?.id}
+						isLoading={businessDetails.loading}
+						paymethods={businessDetails?.business?.paymethods}
+						onPaymentChange={handlePaymethodChange}
+						errorCash={errorCash}
+						setErrorCash={setErrorCash}
+						onNavigationRedirect={onNavigationRedirect}
+						paySelected={paymethodSelected}
+						renderFooter={
+							<OButton
+								text={t('CONFIRM', 'Confirm')}
+								bgColor={theme.colors.white}
+								borderColor={theme.colors.primary}
+								style={{ height: 42, borderWidth: 1, borderRadius: 3, marginTop: 100 }}
+								textStyle={{color: theme.colors.primary, fontSize: 14, fontWeight: '600'}}
+								onClick={() => setOpenPaymethods(false)}
+							/>
+						}
+					/>
+				</View>
+			</OModal>
 		</SafeAreaView>
 	)
 }
