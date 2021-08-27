@@ -139,17 +139,6 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 								</OText>
 							</View>
 						)}
-						{/* {!isBusinessInfoShow && (
-							<WrapBusinessInfo
-								onPress={() => setOpenBusinessInformation(true)}
-							>
-								<IconAntDesign
-									name='infocirlceo'
-									color={theme.colors.primary}
-									size={25}
-								/>
-							</WrapBusinessInfo>
-						)} */}
 					</BusinessInfoItem>
 					{loading ? (
 						<Placeholder Animation={Fade}>
@@ -172,9 +161,9 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 						)}
 						<View style={styles.reviewStyle}>
 							<OText style={theme.labels.small as TextStyle} color={theme.colors.textSecondary}>{business?.reviews?.total}</OText>
-							<OIcon src={theme.images.general.star} width={14} />
+							<OIcon src={theme.images.general.star} width={10} style={{marginHorizontal: 2}} />
 							<TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
-								<OText style={{ ...theme.labels.small, textDecorationLine: 'underline' } as TextStyle} color={theme.colors.primary}>
+								<OText style={{ fontSize: 10, textDecorationLine: 'underline' } as TextStyle} color={theme.colors.primary}>
 									{business?.reviews?.reviews?.length + ' ' + t('REVIEWS', 'reviews')}
 								</OText>
 							</TouchableOpacity>

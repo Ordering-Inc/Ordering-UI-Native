@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	BusinessController as BusinessSingleCard,
 	useUtils,
@@ -98,7 +98,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		});
 		return _types.join(', ');
 	};
-
+	
 	return (
 		<Card activeOpacity={1} onPress={() => handleClick(business)} style={{ width: isHorizontal ? 188 : '100%', marginEnd: isHorizontal ? 27 : 0, overflow: 'hidden' }}>
 			<BusinessHero

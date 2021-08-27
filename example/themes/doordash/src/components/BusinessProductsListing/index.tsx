@@ -33,6 +33,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Cart } from '../Cart'
 import { OrderSummary } from '../OrderSummary'
 import NavBar from '../NavBar'
+import SocialShareFav from '../SocialShare'
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const {
@@ -182,12 +183,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						)}
 						{!errorQuantityProducts && (
 							<View style={{ ...styles.headerItem }}>
-								<TouchableOpacity
-									onPress={() => { }}
+								<View
 									style={styles.searchIcon}
 								>
-									<OIcon src={theme.images.general.share} width={16} />
-								</TouchableOpacity>
+									<SocialShareFav 
+										icon={theme.images.general.share}
+									/>
+								</View>
 							</View>
 						)}
 					</TopHeader>
