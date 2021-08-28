@@ -9,8 +9,7 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Container, FormInput } from './styles';
-import { OButton, OInput, OText } from '../shared';
-import NavBar from '../NavBar';
+import { OButton, OInput, OText, OIconButton } from '../shared';
 
 const ForgotPasswordUI = (props: any) => {
   const { navigation, formState, handleButtonForgotPasswordClick } = props;
@@ -63,8 +62,22 @@ const ForgotPasswordUI = (props: any) => {
   }, [errors]);
 
   const styles = StyleSheet.create({
-    title: {
-      backgroundColor: theme.colors.transparent,
+    header: {
+      marginTop: 0,
+      marginBottom: 30,
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '100%',
+    },
+    text: {
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      color: theme.colors.textGray,
+    },
+    arrowLeft: {
+      maxWidth: 40,
+      height: 25,
+      justifyContent: 'flex-end',
     },
     inputStyle: {
       marginBottom: 25,
@@ -87,22 +100,24 @@ const ForgotPasswordUI = (props: any) => {
 
   return (
     <Container>
-      <NavBar
-        title={t('FORGOT_YOUR_PASSWORD', 'Forgot your password?')}
-        titleAlign={'center'}
-        onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-        showCall={false}
-        paddingTop={50}
-        titleColor={theme.colors.textGray}
-        icon={theme.images.general.arrow_left}
-        style={styles.title}
-      />
+      <View style={styles.header}>
+        <OIconButton
+          icon={theme.images.general.arrow_left}
+          borderColor={theme.colors.clear}
+          iconStyle={{ width: 20, height: 20 }}
+          style={styles.arrowLeft}
+          onClick={() => navigation?.canGoBack() && navigation.goBack()}
+        />
+
+        <OText size={26} weight="bold" style={styles.text}>
+          {t('FORGOT_YOUR_PASSWORD', 'Forgot your password?')}
+        </OText>
+      </View>
 
       <OText
-        color={theme.colors.gray}
         size={16}
-        weight={'400'}
-        style={{ marginBottom: 30 }}>
+        weight="normal"
+        style={{ ...styles.text, marginBottom: 30 }}>
         {t(
           'FORGOT_PASSWORD_TEXT_MESSAGE',
           "Enter your email address and we'll sent a link to reset your password.",
@@ -115,6 +130,7 @@ const ForgotPasswordUI = (props: any) => {
           render={({ onChange, value }: any) => (
             <OInput
               placeholder={t('EMAIL', 'Email')}
+              placeholderTextColor={theme.colors.arrowColor}
               style={styles.inputStyle}
               icon={theme.images.logos.emailInputIcon}
               onChange={(e: any) => {

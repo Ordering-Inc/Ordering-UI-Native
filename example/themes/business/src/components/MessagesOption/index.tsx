@@ -109,7 +109,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
         0,
       ),
     );
-  }, [values?.length]);
+  }, [values]);
 
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
     if (width < height) {
