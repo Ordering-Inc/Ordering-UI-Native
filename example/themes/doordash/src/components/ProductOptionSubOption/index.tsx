@@ -59,7 +59,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 				) : (
 					<OIcon src={state?.selected ? theme.images.general.radio_act : theme.images.general.radio_nor} width={16} color={theme.colors.textPrimary} />
 				)}
-				<OText mLeft={10} style={[{ flex: I18nManager.isRTL ? 0 : 1 }, theme.labels.normal] as TextStyle}>
+				<OText mLeft={10} style={{ flex: I18nManager.isRTL ? 0 : 1, ...theme.labels.normal }}>
 					{suboption?.name}
 				</OText>
 			</IconControl>
@@ -113,7 +113,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 			)
 			}
 			<OText style={theme.labels.normal as TextStyle} color={theme.colors.textSecondary}>
-				+{parsePrice(price)}
+				{`+${parsePrice(price)}`}
 			</OText>
 		</Container>
 	)

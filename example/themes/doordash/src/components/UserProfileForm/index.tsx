@@ -13,7 +13,6 @@ import { useTheme } from 'styled-components/native';
 import { ProfileParams } from '../../types';
 import { AddressList } from '../AddressList'
 import { LogoutButton } from '../LogoutButton'
-import { LanguageSelector } from '../LanguageSelector'
 import { UserFormDetailsUI } from '../UserFormDetails'
 
 import {

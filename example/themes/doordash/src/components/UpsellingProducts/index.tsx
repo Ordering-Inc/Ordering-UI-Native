@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Spinner from 'react-native-loading-spinner-overlay';
-import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { I18nManager, StyleSheet, TextStyle, View } from 'react-native'
 import {
 	UpsellingPage as UpsellingPageController,

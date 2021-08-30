@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useLanguage, useUtils } from 'ordering-components/native'
 import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
-import { OButton, OIcon, OText } from '../shared'
-import { Card, Logo, Information, MyOrderOptions, Status, WrappButton } from './styles'
+import { OButton, OText } from '../shared'
+import { Card, Information, MyOrderOptions, Status, WrappButton } from './styles'
 import { useTheme } from 'styled-components/native';
 import { PreviousOrdersParams } from '../../types'
 

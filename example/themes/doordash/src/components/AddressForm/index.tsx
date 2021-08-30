@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
 
 import { _retrieveStoreData } from '../../providers/StoreUtil';
-import { OInput, OButton, OText, OModal, OIcon } from '../shared'
+import { OInput, OButton, OText, OIcon } from '../shared'
 import { AddressFormParams } from '../../types'
 import { getTraduction } from '../../utils'
 import { useTheme } from 'styled-components/native';
@@ -22,7 +22,6 @@ import {
 	FormInput,
 	InputWrapper
 } from './styles'
-import { ScrollView } from 'react-native-gesture-handler';
 
 const inputNames = [
 	{ name: 'address', code: 'Address' },

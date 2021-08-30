@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { StripeRedirectForm as StripeRedirectFormController, useSession, useLanguage, ToastType, useToast } from 'ordering-components/native';
 // import stripe from 'tipsi-stripe';
 

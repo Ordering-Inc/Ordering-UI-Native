@@ -121,7 +121,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const handleCancel = () => {
-		console.log('Search canceled! ----- ')
 		handleChangeSearch('')
 	}
 
@@ -139,7 +138,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const handleUpsellingPage = () => {
-		console.log(`---- PASSED BUTTON PRESS ----`);
 		onRedirect('CheckoutNavigator', {
 			screen: 'CheckoutPage',
 			cartUuid: currentCart?.uuid,

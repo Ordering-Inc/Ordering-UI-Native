@@ -153,7 +153,7 @@ export const Home = (props: any) => {
 					borderColor={theme.colors.primary}
 					style={styles.buttons}
 					imgRightSrc={null}
-					textStyle={[{ color: 'white' }, theme.labels.middle] as TextStyle}
+					textStyle={{ color: 'white', ...theme.labels.middle } as TextStyle}
 					onClick={() => { setActive(1), setAuthState(true) }}
 				/>
 				<OButton
@@ -162,7 +162,7 @@ export const Home = (props: any) => {
 					borderColor={theme.colors.backgroundGray300}
 					style={styles.buttons}
 					imgRightSrc={null}
-					textStyle={[{ color: theme.colors.textPrimary }, theme.labels.middle] as TextStyle}
+					textStyle={{ color: theme.colors.textPrimary, ...theme.labels.middle } as TextStyle}
 					onClick={() => {
 						setActive(0), setAuthState(true)
 					}}

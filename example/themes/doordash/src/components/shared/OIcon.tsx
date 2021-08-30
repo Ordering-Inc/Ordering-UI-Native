@@ -19,14 +19,12 @@ interface Props {
   borderRadius?: number,
 }
 
+const SImage = styled.Image`
+  tint-color: ${(props: any) => props.theme.colors.primary};
+`
+
 const OIcon = (props: Props): React.ReactElement => {
-
   const theme = useTheme();
-
-  const SImage = styled.Image`
-    tint-color: ${theme.colors.primary};
-  `
-
   return (
     <Wrapper style={{ borderRadius: props.style?.borderRadius, overflow: 'hidden', marginHorizontal: props.style?.marginHorizontal }}>
       <SImage

@@ -8,7 +8,6 @@ import { Container } from './styles'
 import { useTheme } from 'styled-components/native'
 import { LanguageSelectorParams } from '../../types'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { useEffect } from 'react'
 import { I18nManager } from 'react-native'
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {

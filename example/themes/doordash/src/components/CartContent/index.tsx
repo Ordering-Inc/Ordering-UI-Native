@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useLanguage, useOrder } from 'ordering-components/native';
+import React, { useState } from 'react';
+import { useLanguage } from 'ordering-components/native';
 
 import { CCContainer, CCNotCarts, CCList } from './styles';
 
 import { Cart } from '../Cart';
-import { OIcon, OText } from '../shared';
+import { OText } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 export const CartContent = (props: any) => {
