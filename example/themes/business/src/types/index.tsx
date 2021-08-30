@@ -1,5 +1,4 @@
 import { TextInputProps, ViewStyle } from 'react-native';
-import { PermissionStatus } from 'react-native-permissions';
 export interface LoginParams {
   navigation?: any;
   formState?: any;
@@ -356,10 +355,6 @@ export interface ReviewOrderParams {
   handleSendReview?: any;
   formState?: any;
   navigation?: any;
-}
-
-export interface PermissionsState {
-  locationStatus: PermissionStatus;
 }
 export interface MessagesParams {
   type?: string;
