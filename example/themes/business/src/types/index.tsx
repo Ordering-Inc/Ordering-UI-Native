@@ -95,6 +95,7 @@ export interface SignupParams {
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
   notificationState?: any;
+  signupLevel?: any;
 }
 
 export interface PhoneInputParams {

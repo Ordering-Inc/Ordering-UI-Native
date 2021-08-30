@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     width: 250,
   },
   wrapperContent: {
-    width: '90%',
+    width: '100%',
   },
   wrapperText: {
     marginBottom: 20,
