@@ -27,6 +27,7 @@ export const ScheduleBlock = styled.View`
   padding: 0 20px;
   border-left-width: 1px;
   border-color: ${(props: any) => props.theme.colors.lightGray};
+  max-width: 100px;
 `
 export const WrapBusinessMap = styled.View`
   max-height: 200px;

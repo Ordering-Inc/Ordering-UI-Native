@@ -73,7 +73,8 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
               {businessSchedule.map((schedule: any, i: number) => (
                 <ScheduleBlock key={i}>
                   <OText size={20}>{daysOfWeek[i]}</OText>
-                  {schedule.lapses.map( (time: any, k: number) => (
+                  {schedule.enabled ? (
+                    schedule.lapses.map( (time: any, k: number) => (
                     <React.Fragment key={k}>
                       <OText>{scheduleFormatted(time.open)}</OText>
                       <OText mBottom={10} style={{
@@ -83,7 +84,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
                       }}
                       >{scheduleFormatted(time.close)}</OText>
                     </React.Fragment>
-                  ))}
+                  ))) : ( <OText>{t('CLOSED', 'Closed')}</OText>)}
                 </ScheduleBlock>
               ))}
             </WrapScheduleBlock>
