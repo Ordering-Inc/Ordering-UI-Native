@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { View, StyleSheet, ScrollView, Platform, PanResponder, I18nManager, TouchableOpacity } from 'react-native'
 import {
@@ -11,7 +11,7 @@ import {
 	ToastType, useToast
 } from 'ordering-components/native'
 
-import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption, HeaderCont, FeaturedBussiCont } from './styles'
+import { Search, AddressInput, HeaderCont, FeaturedBussiCont } from './styles'
 
 import { useTheme } from 'styled-components/native'
 import { SearchBar } from '../SearchBar'
@@ -20,7 +20,6 @@ import { BusinessesListingParams } from '../../types'
 import { NotFoundSource } from '../NotFoundSource'
 import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
-import { OrderTypeSelector } from '../OrderTypeSelector'
 import BusinessesSortBy from '../BusinessesSortBy'
 
 const PIXELS_TO_SCROLL = 1200

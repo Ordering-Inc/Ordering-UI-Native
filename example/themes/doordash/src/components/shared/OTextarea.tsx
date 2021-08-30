@@ -7,17 +7,17 @@ interface Props {
     placeholder?: string
 }
 
+const Wrapper = styled.View`
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid ${(props: any) => props.theme.colors.lightGray};
+`
+const Inner = styled.TextInput`
+    height: 150px;
+`
+
 const OTextarea = (props: Props) => {
     const theme = useTheme();
-
-    const Wrapper = styled.View`
-        padding: 10px;
-        border-radius: 10px;
-        border: 1px solid ${theme.colors.lightGray};
-    `
-    const Inner = styled.TextInput`
-        height: 150px;
-    `
     return (
         <Wrapper>
             <Inner

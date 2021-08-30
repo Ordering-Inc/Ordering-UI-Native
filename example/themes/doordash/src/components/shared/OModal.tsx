@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Alert, Modal, StyleSheet, Text, SafeAreaView, ScrollView, TouchableOpacity, View, TextStyle } from "react-native";
+import { Modal, StyleSheet, Text, SafeAreaView, View } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
-import { useTheme } from 'styled-components/native';
 
 interface Props {
   open?: boolean;

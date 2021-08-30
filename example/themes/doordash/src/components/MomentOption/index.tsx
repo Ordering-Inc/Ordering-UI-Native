@@ -15,7 +15,6 @@ import { OIcon, OText } from '../shared'
 import { useTheme } from 'styled-components/native'
 import { Container } from '../../layouts/Container'
 import {
-	HeaderTitle,
 	WrapSelectOption,
 	Days,
 	Day,

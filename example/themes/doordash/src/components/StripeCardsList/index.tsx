@@ -6,7 +6,6 @@ import {
 	useLanguage
 } from 'ordering-components/native';
 import { PlaceholderLine } from 'rn-placeholder';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { getIconCard } from '../../utils';
 import { OAlert, OIcon, OText } from '../shared';
@@ -89,7 +88,7 @@ const StripeCardsListUI = (props: any) => {
 								</View>
 								<View style={styles.viewStyle}>
 									<OText size={12}>
-										XXXX-XXXX-XXXX-{card.last4}
+										{`\u2022\u2022\u2022\u2022-\u2022\u2022\u2022\u2022-\u2022\u2022\u2022\u2022-${card.last4}`}
 									</OText>
 								</View>
 							</OSItemContent>

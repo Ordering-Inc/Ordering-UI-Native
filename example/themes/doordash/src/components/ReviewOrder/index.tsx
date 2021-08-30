@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { OrderReview as ReviewOrderController, useLanguage, ToastType, useToast } from 'ordering-components/native'
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useForm, Controller } from 'react-hook-form'
 
 import {
 	ReviewOrderContainer,
-	BusinessLogo,
 	FormReviews,
 	Category,
 	Stars

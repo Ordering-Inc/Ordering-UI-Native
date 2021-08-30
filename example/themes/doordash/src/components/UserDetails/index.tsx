@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { TextStyle, TouchableOpacity, View } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { UDContainer, UDHeader, UDForm, UDInfo } from './styles';
+import { UDContainer, UDHeader, UDInfo } from './styles';
 
 import {
 	UserFormDetails as UserFormController,

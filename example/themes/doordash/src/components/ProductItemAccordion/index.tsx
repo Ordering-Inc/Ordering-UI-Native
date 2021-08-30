@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { View, Animated, StyleSheet, Platform, I18nManager, TextStyle, TouchableOpacity } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import RNPickerSelect from 'react-native-picker-select'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import {
 	Accordion,

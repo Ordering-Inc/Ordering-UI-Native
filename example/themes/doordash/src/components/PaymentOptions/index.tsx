@@ -20,10 +20,6 @@ import {
 import { PaymentOptionCash } from '../PaymentOptionCash';
 import { StripeElementsForm } from '../StripeElementsForm';
 import { StripeCardsList } from '../StripeCardsList';
-// import { PaymentOptionStripe } from '../PaymentOptionStripe';
-// import { StripeRedirectForm } from '../StripeRedirectForm';
-// import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
-// import { NotFoundSource } from '../NotFoundSource'
 
 import { OText, OIcon, OModal, OButton } from '../shared';
 
@@ -38,12 +34,6 @@ import { getIconCard } from '../../utils';
 import { WebView } from 'react-native-webview';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
-// const stripeRedirectOptions = [
-//   { name: 'Bancontact', value: 'bancontact' },
-//   { name: 'Alipay', value: 'alipay' },
-//   { name: 'Giropay', value: 'giropay' },
-//   { name: 'iDEAL', value: 'ideal' }
-// ]
 
 const PaymentOptionsUI = (props: any) => {
   const {
@@ -92,14 +82,7 @@ const PaymentOptionsUI = (props: any) => {
   const [orderState, { confirmCart }] = useOrder()
   const [{ token, user }] = useSession()
   const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
-  // const [{ token }] = useSession()
-
-  // const [card, setCard] = useState(null);
-
-  // const stripeRedirectValues = [
-  //   { name: t('SELECT_A_PAYMENT_METHOD', 'Select a payment method'), value: '-1' },
-  // ]
-
+  
   const onMessage = (e: any) => {
     let data = e.nativeEvent.data;
     let payment = JSON.parse(data);
@@ -134,21 +117,18 @@ const PaymentOptionsUI = (props: any) => {
     if (paymethodsList.paymethods.length === 1) {
       handlePaymethodClick && handlePaymethodClick(paymethodsList.paymethods[0])
     }
-    console.log('get paymethods ----- ')
   }, [paymethodsList.paymethods])
 
   useEffect(() => {
     if (paymethodSelected?.gateway !== 'cash' && errorCash) {
       props.setErrorCash(false)
     }
-    console.log('method selected ----- ')
   }, [paymethodSelected])
 
   useEffect(() => {
     if (props.paySelected && props.paySelected?.data) {
       setPaymethodData && setPaymethodData(props.paySelected?.data)
     }
-    console.log('pay selected ----- ')
   }, [props.paySelected])
 
   const renderPaymethods = ({ item }: any) => {

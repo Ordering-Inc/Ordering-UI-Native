@@ -8,7 +8,7 @@ import {
 } from './styles'
 import { ImageBackground, StyleSheet, TextStyle, View } from 'react-native'
 import { useTheme } from 'styled-components/native'
-import { OText, OIcon } from '../shared'
+import { OText } from '../shared'
 
 export const SingleProductCard = (props: SingleProductCardParams) => {
 	const {

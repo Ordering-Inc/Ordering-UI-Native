@@ -5,7 +5,6 @@ import { useTheme } from 'styled-components/native'
 import { TextStyle } from 'react-native'
 import { ViewStyle } from 'react-native'
 
-
 const btnBackArrow = {
   borderWidth: 0,
   backgroundColor: '#FFF',
@@ -14,6 +13,25 @@ const btnBackArrow = {
   paddingStart: 0,
   height: 40,
 }
+
+const Wrapper = styled.View`
+    background-color: ${(props: any) => props.theme.colors.white};
+    padding: 4px 40px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  `
+  const TitleWrapper = styled.View`
+    flex-direction: column;
+    padding-horizontal: 10px;
+  `
+  const TitleTopWrapper = styled.View`
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  `
 
 interface Props {
   navigation?: any,
@@ -37,28 +55,7 @@ interface Props {
 }
 
 const NavBar = (props: Props) => {
-
   const theme = useTheme();
-
-  const Wrapper = styled.View`
-    background-color: ${theme.colors.white};
-    padding: 4px 40px;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  `
-  const TitleWrapper = styled.View`
-    flex-direction: column;
-    padding-horizontal: 10px;
-  `
-  const TitleTopWrapper = styled.View`
-    flex-grow: 1;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-  `
-
   const goSupport = () => {
     props.navigation.navigate('Supports', {});
   }
