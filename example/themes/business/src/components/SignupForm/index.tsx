@@ -33,6 +33,7 @@ const SignupFormUI = (props: SignupParams) => {
     setCheckPhoneCodeState,
     handleSendVerifyCode,
     handleCheckPhoneCode,
+    signupLevel,
     // notificationState,
   } = props;
 
@@ -167,7 +168,7 @@ const SignupFormUI = (props: SignupParams) => {
         handleButtonSignupClick({
           ...values,
           ...phoneInputData.phone,
-          level: 1,
+          level: signupLevel,
         });
 
       if (
