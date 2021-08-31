@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { useClipboard } from '@react-native-clipboard/clipboard';
+import Clipboard from '@react-native-clipboard/clipboard';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
 import {
@@ -52,7 +52,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   } = props;
 
   const theme = useTheme();
-  const [data, setString] = useClipboard();
   const [, t] = useLanguage();
   const [{ parsePrice, parseNumber, parseDate }] = useUtils();
   const [{ user, token }] = useSession();
@@ -77,7 +76,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         );
         if (isThereInBussines) {
           groupsDriver.drivers.forEach((driver: any) => {
-            if (driver.id !== order?.driver?.id) {
+            if (driver.id !== order?.driver?.id && !itemsDrivers.some((drivers: any) => drivers?.value === driver?.id)) {
               itemsDrivers.push({
                 available: driver?.available,
                 key: driver?.id,
@@ -144,14 +143,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       order?.summary?.total || order?.total,
     )}`;
 
-    setString(
+    Clipboard.setString(
       `${name} \n${customerPhone} \n${email} \n${payment} \n${businessPhone} \n${address} \n${addressNotes} ${orderDetails} \n${subtotal} \n${tax} \n${deliveryFee} \n${total}`,
     );
 
     showToast(
       ToastType.Info,
       t('COPY_TO_CLIPBOARD', 'Copy to clipboard.'),
-      500,
+      1000,
     );
   };
 
@@ -844,7 +843,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 isSecondaryBtn={false}
                 colorTxt1={theme.colors.primary}
                 secondButtonClick={handleViewSummaryOrder}
-                firstButtonClick={() => handleCopyClipboard()}
+                firstButtonClick={handleCopyClipboard}
                 secondBtnText={t('PRINT', 'Print')}
                 secondButton={true}
                 firstColorCustom="transparent"

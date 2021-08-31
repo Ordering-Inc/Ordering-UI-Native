@@ -309,7 +309,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
             <OText
               size={14}
-              numberOfLines={1}
+              numberOfLines={2}
+              adjustsFontSizeToFit
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
               {`${t('FULL_NAME', 'Full Name')}: ${order?.customer?.name} ${
@@ -319,7 +320,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
             <OText
               size={14}
-              numberOfLines={1}
+              numberOfLines={2}
+              adjustsFontSizeToFit
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
               {`${t('EMAIL', 'Email')}: ${order?.customer?.email}`}
@@ -327,7 +329,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
             <OText
               size={14}
-              numberOfLines={1}
+              numberOfLines={2}
+              adjustsFontSizeToFit
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
               {`${t('MOBILE_PHONE', 'Mobile Phone')}: ${
@@ -337,7 +340,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
             <OText
               size={14}
-              numberOfLines={1}
+              numberOfLines={2}
+              adjustsFontSizeToFit
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
               {`${t('ADDRESS', 'Address')}: ${order?.customer?.address}`}
@@ -371,7 +375,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
             <OText
               size={14}
-              numberOfLines={1}
+              numberOfLines={2}
+              adjustsFontSizeToFit
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
               {order?.business?.name}
@@ -379,7 +384,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
             <OText
               size={14}
-              numberOfLines={1}
+              numberOfLines={2}
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
               {`${t('BUSINESS_PHONE', 'Business Phone')}: ${
@@ -389,7 +394,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
             <OText
               size={14}
-              numberOfLines={1}
+              adjustsFontSizeToFit
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
               {`${t('ADDRESS', 'Address')}: ${order?.business?.address}`}
@@ -411,7 +416,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                   key={i}
                   style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <ContentInfo>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row', width: '85%' }}>
                       <OText color={theme.colors.quantityProduct} space>
                         {product?.quantity}
                       </OText>
@@ -430,8 +435,13 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                         flexDirection: 'column',
                         flex: 1,
                         alignItems: 'flex-end',
+                        width: '15%',
                       }}>
-                      <OText size={12} color={theme.colors.textGray}>
+                      <OText
+                        adjustsFontSizeToFit
+                        size={12}
+                        color={theme.colors.textGray}
+                        numberOfLines={1}>
                         {parsePrice(product.total || product.price)}
                       </OText>
                     </View>
