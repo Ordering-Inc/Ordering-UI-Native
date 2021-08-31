@@ -10,7 +10,6 @@ import { LanguageSelector } from './src/components/LanguageSelector';
 import { LoginForm } from './src/components/LoginForm';
 import { LogoutButton } from './src/components/LogoutButton';
 import { MessagesOption } from './src/components/MessagesOption';
-import NavBar from './src/components/NavBar';
 import { NotFoundSource } from './src/components/NotFoundSource';
 import { OrderMessage } from './src/components/OrderMessage';
 import { OrderDetails } from './src/components/OrderDetails';
@@ -56,7 +55,6 @@ export {
   LoginForm,
   LogoutButton,
   MessagesOption,
-  NavBar,
   OrderMessage,
   NotFoundSource,
   OrderDetails,

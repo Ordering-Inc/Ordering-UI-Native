@@ -18,7 +18,6 @@ import {
   EditButton,
   EnabledStatusDriver,
 } from './styles';
-import NavBar from '../NavBar';
 import { LogoutButton } from '../LogoutButton';
 import { LanguageSelector } from '../LanguageSelector';
 import { UserFormDetailsUI } from '../UserFormDetails';
@@ -135,6 +134,18 @@ const ProfileUI = (props: ProfileParams) => {
   }, [user?.country_phone_code]);
 
   const styles = StyleSheet.create({
+    header: {
+      marginBottom: 25,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    title: {
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'bold',
+      fontSize: 26,
+      color: theme.colors.textGray,
+    },
     label: {
       color: theme.colors.textGray,
       fontFamily: 'Poppins',
@@ -169,19 +180,9 @@ const ProfileUI = (props: ProfileParams) => {
 
   return (
     <>
-      <NavBar
-        title={t('PROFILE', 'Profile')}
-        titleAlign={'center'}
-        onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-        showCall={false}
-        btnStyle={{ paddingLeft: 0, display: 'none' }}
-        paddingTop={0}
-        titleStyle={{
-          color: theme.colors.textGray,
-          fontWeight: 'bold',
-          fontSize: 26,
-        }}
-      />
+      <View style={styles.header}>
+        <OText style={styles.title}>{t('PROFILE', 'Profile')}</OText>
+      </View>
 
       {(formState?.loading || state?.loading) && (
         <View
