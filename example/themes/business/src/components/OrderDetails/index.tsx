@@ -71,14 +71,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   if (user?.level === 2 && order?.status === 7) {
     if (driversGroupsData?.length > 0) {
       driversGroupsData.forEach((driver: any) => {
-            if (driver.id !== order?.driver?.id ) {
-              itemsDrivers.push({
-                available: driver?.available,
-                key: driver?.id,
-                value: driver?.id,
-                label: driver?.name,
-              });
-            }
+        if (driver.id !== order?.driver?.id) {
+          itemsDrivers.push({
+            available: driver?.available,
+            key: driver?.id,
+            value: driver?.id,
+            label: driver?.name,
+          });
+        }
       });
     }
 
@@ -468,7 +468,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   style={{
                     maxWidth: 40,
                     justifyContent: 'center',
-                    padding: 25
+                    padding: 25,
                   }}
                   onClick={() => handleArrowBack()}
                 />
@@ -689,67 +689,70 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               {order?.status === 7 &&
                 order?.delivery_type === 1 &&
                 user.level === 2 && (
-                  <AssignDriver >
+                  <AssignDriver>
                     <OText style={{ marginBottom: 5 }} size={16} weight="bold">
                       {t('ASSIGN_DRIVER', 'Assign driver')}
                     </OText>
 
-                    <View style={{ backgroundColor: theme.colors.inputChat, borderRadius: 7.5}}>
-                    <CountryPicker
-                      // @ts-ignore
-                      countryCode={undefined}
-                      visible={isDriverModalVisible}
-                      onClose={() => setIsDriverModalVisible(false)}
-                      withCountryNameButton
-                      renderFlagButton={() => (
-                        <>
-                          <TouchableOpacity
-                            onPress={() => setIsDriverModalVisible(true)}
-                            disabled={itemsDrivers.length === 0}>
-                            <DriverItem justifyContent="space-between">
-                              <OText>
-                                {itemsDrivers.length > 0
-                                  ? order?.driver?.name ||
-                                    t('SELECT_DRIVER', 'Select Driver')
-                                  : t('WITHOUT_DRIVERS', 'Without drivers')}
-                              </OText>
-                              <OIcon
-                  src={theme?.images?.general?.chevronDown}
-                  color={theme.colors.backArrow}
-                  width={20}
-                  height={20}
-                />
-                            </DriverItem>
-                          </TouchableOpacity>
-                        </>
-                      )}
-                      flatListProps={{
-                        keyExtractor: (item: any) => item.value,
-                        data: itemsDrivers || [],
-                        renderItem: ({ item }: any) => (
-                          <TouchableOpacity
-                            style={!item.available && styles.driverOff}
-                            disabled={!item.available}
-                            onPress={() => {
-                              handleAssignDriver &&
-                                handleAssignDriver(item.value);
-                              setIsDriverModalVisible(false);
-                            }}>
-                            <DriverItem>
-                              <View style={{ width: 40 }} />
-                              <OText
-                                color={!item.available && theme.colors.grey}>
-                                {item.label}
-                                {!item.available &&
-                                  ` (${t('NOT_AVAILABLE', 'Not available')})`}
-                              </OText>
-                            </DriverItem>
-                          </TouchableOpacity>
-                        ),
-                      }}
-                    />
+                    <View
+                      style={{
+                        backgroundColor: theme.colors.inputChat,
+                        borderRadius: 7.5,
+                      }}>
+                      <CountryPicker
+                        // @ts-ignore
+                        countryCode={undefined}
+                        visible={isDriverModalVisible}
+                        onClose={() => setIsDriverModalVisible(false)}
+                        withCountryNameButton
+                        renderFlagButton={() => (
+                          <>
+                            <TouchableOpacity
+                              onPress={() => setIsDriverModalVisible(true)}
+                              disabled={itemsDrivers.length === 0}>
+                              <DriverItem justifyContent="space-between">
+                                <OText>
+                                  {itemsDrivers.length > 0
+                                    ? order?.driver?.name ||
+                                      t('SELECT_DRIVER', 'Select Driver')
+                                    : t('WITHOUT_DRIVERS', 'Without drivers')}
+                                </OText>
+                                <OIcon
+                                  src={theme?.images?.general?.chevronDown}
+                                  color={theme.colors.backArrow}
+                                  width={20}
+                                  height={20}
+                                />
+                              </DriverItem>
+                            </TouchableOpacity>
+                          </>
+                        )}
+                        flatListProps={{
+                          keyExtractor: (item: any) => item.value,
+                          data: itemsDrivers || [],
+                          renderItem: ({ item }: any) => (
+                            <TouchableOpacity
+                              style={!item.available && styles.driverOff}
+                              disabled={!item.available}
+                              onPress={() => {
+                                handleAssignDriver &&
+                                  handleAssignDriver(item.value);
+                                setIsDriverModalVisible(false);
+                              }}>
+                              <DriverItem>
+                                <View style={{ width: 40 }} />
+                                <OText
+                                  color={!item.available && theme.colors.grey}>
+                                  {item.label}
+                                  {!item.available &&
+                                    ` (${t('NOT_AVAILABLE', 'Not available')})`}
+                                </OText>
+                              </DriverItem>
+                            </TouchableOpacity>
+                          ),
+                        }}
+                      />
                     </View>
-
                   </AssignDriver>
                 )}
 
