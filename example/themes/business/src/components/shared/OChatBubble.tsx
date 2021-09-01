@@ -3,6 +3,7 @@ import styled from 'styled-components/native';
 import { OIcon } from '.';
 import { DIRECTION } from '../../config/constants';
 import { useTheme } from 'styled-components/native';
+import { useUtils } from 'ordering-components/native';
 import OText from './OText';
 
 const Wrapper = styled.View`
@@ -31,6 +32,8 @@ interface Props {
 
 const OChatBubble = (props: Props) => {
   const theme = useTheme();
+  const [{ optimizeImage }] = useUtils();
+
   return (
     <Wrapper
       style={
@@ -60,7 +63,12 @@ const OChatBubble = (props: Props) => {
       }>
       {props?.image && (
         <ImageContainer onPress={props.onClick}>
-          <OIcon cover url={props.image} width={250} height={250} />
+          <OIcon
+            cover
+            url={optimizeImage(props.image, 'h_300,c_limit')}
+            width={250}
+            height={250}
+          />
         </ImageContainer>
       )}
       <OText

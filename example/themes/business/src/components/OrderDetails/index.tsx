@@ -7,7 +7,7 @@ import {
   ToastType,
   useToast,
   useLanguage,
-  OrderDetails as OrderDetailsConTableoller,
+  OrderDetails as OrderDetailsController,
   useUtils,
   useConfig,
   useSession,
@@ -76,7 +76,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         );
         if (isThereInBussines) {
           groupsDriver.drivers.forEach((driver: any) => {
-            if (driver.id !== order?.driver?.id && !itemsDrivers.some((drivers: any) => drivers?.value === driver?.id)) {
+            if (
+              driver.id !== order?.driver?.id &&
+              !itemsDrivers.some(
+                (drivers: any) => drivers?.value === driver?.id,
+              )
+            ) {
               itemsDrivers.push({
                 available: driver?.available,
                 key: driver?.id,
@@ -862,5 +867,5 @@ export const OrderDetails = (props: OrderDetailsParams) => {
     driverAndBusinessId: true,
     UIComponent: OrderDetailsUI,
   };
-  return <OrderDetailsConTableoller {...orderDetailsProps} />;
+  return <OrderDetailsController {...orderDetailsProps} />;
 };
