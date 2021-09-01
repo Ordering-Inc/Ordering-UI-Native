@@ -353,13 +353,13 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               </OText>
             )}
 
-            {order?.customer.zipcode && (
+            {Boolean(order?.customer?.zipcode) && (
               <OText
                 size={14}
                 numberOfLines={1}
                 ellipsizeMode="tail"
                 color={theme.colors.textGray}>
-                {`${t('ZIPCODE', 'Zipcode')}: ${order?.customer.zipcode}`}
+                {`${t('ZIPCODE', 'Zipcode')}: ${order?.customer?.zipcode}`}
               </OText>
             )}
           </OrderCustomer>
