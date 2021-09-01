@@ -4,11 +4,14 @@ import {
   useLanguage,
   useOrder
 } from 'ordering-components/native'
-import {StyleSheet, Platform} from 'react-native'
-import { OrderTypeWrapper } from './styles'
+import { StyleSheet, Platform, TouchableOpacity, View } from 'react-native'
+import { OrderTypeWrapper, SelectItem } from './styles'
 import { OrderTypeSelectParams } from '../../types'
-import RNPickerSelect from 'react-native-picker-select'
+// import RNPickerSelect from 'react-native-picker-select'
+// import { Picker } from '@react-native-picker/picker'
+import Picker from 'react-native-country-picker-modal';
 import { useTheme } from 'styled-components/native'
+import { OText } from '../shared'
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const {
@@ -20,6 +23,15 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   } = props
 
   const theme = useTheme();
+  const [orderState] = useOrder();
+  const [isOpen, setIsOpen] = useState(false);
+  let currentDriver;
+
+  const styles = StyleSheet.create({
+    itemSelected: {
+      backgroundColor: theme.colors.notAvailable,
+    }
+  })
 
   const pickerStyle = StyleSheet.create({
     inputAndroid: {
@@ -53,29 +65,29 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
     }
   })
 
-  const [orderState] = useOrder()
-  const [open,setOpen] = useState(false)
-
   const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value))
 
   const items = _orderTypes.map((type) => {
     return {
+      key: type.value,
       value: type.value,
-      label: type.content,
-      inputLabel: type.content
+      label: type.content
     }
   })
+
+  const typeSelectedObj: any = items.find(item => item.value === (defaultValue || typeSelected)) || {}
 
   const handleChangeOrderTypeCallback = (orderType : number) => {
     if(!orderState.loading){
       handleChangeOrderType(orderType)
+      setIsOpen(false)
     }
   }
 
   return (
     typeSelected !== undefined && (
       <OrderTypeWrapper>
-        <RNPickerSelect
+        {/* <RNPickerSelect
           onValueChange={(orderType: any) => handleChangeOrderTypeCallback(orderType)}
           items={items}
           placeholder={{}}
@@ -85,6 +97,54 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
           onClose={() => setOpen(false)}
           useNativeAndroidPickerStyle={false}
           disabled={orderState.loading && !open}
+        /> */}
+        <Picker
+          countryCodes={currentDriver}
+          visible={isOpen && !orderState.loading}
+          onClose={() => setIsOpen(false)}
+          withCountryNameButton
+          closeButtonStyle={{
+            width: '100%',
+            alignItems: 'flex-end',
+            padding: 10
+          }}
+          renderFlagButton={() => (
+            <>
+              <TouchableOpacity
+                onPress={() => setIsOpen(true)}
+                disabled={items.length === 0}>
+                <SelectItem>
+                  <OText
+                    color={theme.colors.secundaryContrast}
+                    size={14}
+                  >
+                    {typeSelectedObj.label}
+                  </OText>
+                </SelectItem>
+              </TouchableOpacity>
+            </>
+          )}
+          flatListProps={{
+            keyExtractor: (item: any) => item.value,
+            data: items || [],
+            renderItem: ({ item }: any) => (
+              <TouchableOpacity
+                style={typeSelectedObj.value === item.value && styles.itemSelected}
+                disabled={typeSelectedObj.value === item.value}
+                onPress={() => handleChangeOrderTypeCallback(item.value)}
+              >
+                <SelectItem>
+                  <View style={{ width: 40 }} />
+                  <OText
+                    size={14}
+                    color={typeSelectedObj.value === item.value && theme.colors.grey}
+                  >
+                    {item.label}
+                  </OText>
+                </SelectItem>
+              </TouchableOpacity>
+            ),
+          }}
         />
       </OrderTypeWrapper>
     )
