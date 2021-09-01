@@ -34,13 +34,15 @@ import {
 	ChDriverTips,
 	ChErrors,
 	ChBusinessDetails,
-	ChUserDetails
+	ChUserDetails,
+	ChCart
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
+import { OrderSummary } from '../OrderSummary';
 
 const mapConfigs = {
 	mapZoom: 16,
@@ -185,7 +187,7 @@ const CheckoutUI = (props: any) => {
 
 	return (
 		<>
-			<Container>
+			<Container noPadding>
 				<NavBar isVertical onActionLeft={() => navigation?.canGoBack() && navigation.goBack()} title={t('CHECKOUT', 'Checkout')} style={styles.pagePadding} />
 				<ChContainer style={styles.pagePadding}>
 					<ChSection style={{ paddingTop: 0 }}>
@@ -411,7 +413,7 @@ const CheckoutUI = (props: any) => {
 						</ChSection>
 					)}
 
-					{/* {!cartState.loading && cart && (
+					{!cartState.loading && cart && (
         <ChSection>
           <ChCart>
             {cartsWithProducts && cart?.products?.length === 0 ? (
@@ -427,13 +429,12 @@ const CheckoutUI = (props: any) => {
                 <OrderSummary
                   cart={cart}
                   isCartPending={cart?.status === 2}
-                  isFromCheckout
                 />
               </>
             )}
           </ChCart>
         </ChSection>
-      )} */}
+      )}
 
 					{!cartState.loading && cart && (
 						<ChSection style={{ paddingTop: 0, paddingBottom: 20, paddingHorizontal: 20 }}>

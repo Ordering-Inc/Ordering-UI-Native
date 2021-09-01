@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps, TextStyle } from 'react-native';
-import styled, { useTheme } from 'styled-components/native';
+import styled from 'styled-components/native';
 import OIcon from './OIcon';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 

@@ -135,8 +135,10 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleSaveProduct = () => {
+		console.log('----- click handle ------')
 		const isErrors = Object.values(errors).length > 0;
 		if (!isErrors) {
+			console.log('----- save handle ------')
 			handleSave && handleSave();
 			return;
 		}
@@ -163,7 +165,7 @@ export const ProductOptionsUI = (props: any) => {
 		maxProductQuantity === 0 ||
 		Object.keys(errors).length > 0;
 
-	const ExtraOptions = ({ options }: any) => (
+	const ExtraOptions = ({ eID, options }: any) => (
 		<ExtraOptionWrap
 			horizontal
 			showsHorizontalScrollIndicator={false}
@@ -207,7 +209,7 @@ export const ProductOptionsUI = (props: any) => {
 					</TouchableOpacity>
 				)}
 				{options.map(({ id, name, respect_to }: any) => (
-					<>
+					<React.Fragment key={`cont_key_${id}`}>
 						{respect_to == null && (
 							<TouchableOpacity
 								key={`eopt_key_${id}`}
@@ -229,7 +231,7 @@ export const ProductOptionsUI = (props: any) => {
 								</OText>
 							</TouchableOpacity>
 						)}
-					</>
+					</React.Fragment>
 				))}
 			</>
 		</ExtraOptionWrap>
@@ -263,6 +265,7 @@ export const ProductOptionsUI = (props: any) => {
 										</TopHeader>
 										<ProductHeader
 											source={{ uri: product?.images || productCart?.images }}
+											resizeMode={'contain'}
 										/>
 									</>
 								)}
@@ -351,9 +354,9 @@ export const ProductOptionsUI = (props: any) => {
 									</>
 								) : (
 									<ProductEditions>
-										{product?.extras.map((extra: any) => (
-											<ExtraOptions options={extra.options} />
-										))}
+										{product?.extras.map((extra: any) => 
+											<ExtraOptions key={extra.id} options={extra.options} />
+										)}
 
 										{selOpt == 0 ? (
 											<>
@@ -389,7 +392,7 @@ export const ProductOptionsUI = (props: any) => {
 														const currentState =
 															productCart.options[`id:${option.id}`] || {};
 														return (
-															<React.Fragment key={option.id}>
+															<React.Fragment key={`popt_${option.id}`}>
 																{showOption(option) && (
 																	<View style={styles.optionContainer}>
 																		<ProductOption

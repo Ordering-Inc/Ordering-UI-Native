@@ -20,7 +20,7 @@ export const ProductHeader = styled.ImageBackground`
   position: relative;
   max-height: 258px;
   height: 258px;
-  resize-mode: cover;
+  resize-mode: contain;
   min-height: 200px;
   z-index: 0;
 `

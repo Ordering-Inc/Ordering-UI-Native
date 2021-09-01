@@ -135,7 +135,7 @@ const AddressListUI = (props: AddressListParams) => {
 	}, [])
 
 	return (
-		<Container>
+		<Container noPadding>
 			{(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile || isProfile)) && (
 				<AddressListContainer>
 					{isProfile && (
