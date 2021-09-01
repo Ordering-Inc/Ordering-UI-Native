@@ -20,9 +20,12 @@ export const Header = styled.View`
 `;
 
 export const DriverItem = styled.View`
-  padding: 8px;
+  padding: 15px;
+  justify-content: space-between;
   align-items: center;
   flex-direction: row;
+  justify-content: ${(props: any) =>
+    props?.justifyContent ? props?.justifyContent : 'flex-start'};
 `;
 
 export const Actions = styled.View`

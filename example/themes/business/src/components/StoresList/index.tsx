@@ -151,7 +151,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
           />
         ))}
 
-      {(loadBusinesses || isUpdateStore) && (
+      {loadBusinesses && (
         <View>
           {[...Array(6)].map((item, i) => (
             <Placeholder key={i} Animation={Fade}>

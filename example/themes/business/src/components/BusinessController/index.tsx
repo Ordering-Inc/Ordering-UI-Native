@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import ToggleSwitch from 'toggle-switch-react-native';
 import { useTheme } from 'styled-components/native';
 import {
@@ -79,7 +79,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
   return (
     <>
-      {business && !loading && !isUpdateStore && (
+      {business && (
         <Card key={business?.id}>
           <Logo>
             <OIcon
@@ -94,27 +94,27 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
                 {business?.name}
               </OText>
 
-              <ToggleSwitch
-                isOn={business?.enabled}
-                onColor={theme.colors.primary}
-                offColor={theme.colors.offColor}
-                size="small"
-                onToggle={handleSwitch}
-                disabled={loading}
-                animationSpeed={200}
-              />
+              {loading && isUpdateStore ? (
+                <ActivityIndicator size="small" color={theme.colors.primary} />
+              ) : (
+                <ToggleSwitch
+                  isOn={business?.enabled}
+                  onColor={theme.colors.primary}
+                  offColor={theme.colors.offColor}
+                  size="small"
+                  onToggle={handleSwitch}
+                  disabled={loading}
+                  animationSpeed={200}
+                />
+              )}
             </View>
 
             <OText style={styles.address} numberOfLines={1}>
-              {business?.address
-                ? business.address
-                : t('BUSINESS_NOT_HAVE_ADDRESS', "Doesn't have address")}
+              {business?.address}
             </OText>
 
             <OText style={styles.address} numberOfLines={1}>
-              {business?.zipcode
-                ? business.zipcode
-                : t('BUSINESS_NOT_HAVE_ZIPCODE', "Doesn't have zipcode")}
+              {business?.zipcode}
             </OText>
           </Information>
         </Card>

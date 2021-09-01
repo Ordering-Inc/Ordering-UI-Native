@@ -32,7 +32,7 @@ import { Chat } from '../Chat';
 import { FloatingButton } from '../FloatingButton';
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { GoogleMap } from '../GoogleMap';
-import { OButton, OModal, OText, OIconButton } from '../shared';
+import { OButton, OModal, OText, OIconButton, OIcon } from '../shared';
 import { OrderDetailsParams } from '../../types';
 import { verifyDecimals } from '../../utils';
 import { USER_TYPE } from '../../config/constants';
@@ -70,25 +70,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   if (user?.level === 2 && order?.status === 7) {
     if (driversGroupsData?.length > 0) {
-      driversGroupsData.forEach((groupsDriver: any) => {
-        const isThereInBussines = groupsDriver.business.some(
-          (business: any) => business?.id === businessData?.id,
-        );
-        if (isThereInBussines) {
-          groupsDriver.drivers.forEach((driver: any) => {
-            if (
-              driver.id !== order?.driver?.id &&
-              !itemsDrivers.some(
-                (drivers: any) => drivers?.value === driver?.id,
-              )
-            ) {
-              itemsDrivers.push({
-                available: driver?.available,
-                key: driver?.id,
-                value: driver?.id,
-                label: driver?.name,
-              });
-            }
+      driversGroupsData.forEach((driver: any) => {
+        if (driver.id !== order?.driver?.id) {
+          itemsDrivers.push({
+            available: driver?.available,
+            key: driver?.id,
+            value: driver?.id,
+            label: driver?.name,
           });
         }
       });
@@ -479,7 +467,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   borderColor={theme.colors.clear}
                   style={{
                     maxWidth: 40,
-                    justifyContent: 'flex-end',
+                    justifyContent: 'center',
+                    padding: 25,
                   }}
                   onClick={() => handleArrowBack()}
                 />
@@ -705,57 +694,69 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       {t('ASSIGN_DRIVER', 'Assign driver')}
                     </OText>
 
-                    <CountryPicker
-                      // @ts-ignore
-                      countryCode={currentDriver}
-                      visible={isDriverModalVisible}
-                      onClose={() => setIsDriverModalVisible(false)}
-                      withCountryNameButton
-                      renderFlagButton={() => (
-                        <>
-                          <TouchableOpacity
-                            onPress={() => setIsDriverModalVisible(true)}
-                            disabled={itemsDrivers.length === 0}>
-                            <DriverItem>
-                              <OText>
-                                {itemsDrivers.length > 0
-                                  ? order?.driver?.name ||
-                                    t('NOT_DRIVER', 'Not Driver')
-                                  : t('WITHOUT_DRIVERS', 'Without drivers')}
-                              </OText>
-                            </DriverItem>
-                          </TouchableOpacity>
-                        </>
-                      )}
-                      flatListProps={{
-                        keyExtractor: (item: any) => item.value,
-                        data: itemsDrivers || [],
-                        renderItem: ({ item }: any) => (
-                          <TouchableOpacity
-                            style={!item.available && styles.driverOff}
-                            disabled={!item.available}
-                            onPress={() => {
-                              handleAssignDriver &&
-                                handleAssignDriver(item.value);
-                              setIsDriverModalVisible(false);
-                            }}>
-                            <DriverItem>
-                              <View style={{ width: 40 }} />
-                              <OText
-                                color={!item.available && theme.colors.grey}>
-                                {item.label}
-                                {!item.available &&
-                                  ` (${t('NOT_AVAILABLE', 'Not available')})`}
-                              </OText>
-                            </DriverItem>
-                          </TouchableOpacity>
-                        ),
-                      }}
-                    />
+                    <View
+                      style={{
+                        backgroundColor: theme.colors.inputChat,
+                        borderRadius: 7.5,
+                      }}>
+                      <CountryPicker
+                        // @ts-ignore
+                        countryCode={undefined}
+                        visible={isDriverModalVisible}
+                        onClose={() => setIsDriverModalVisible(false)}
+                        withCountryNameButton
+                        renderFlagButton={() => (
+                          <>
+                            <TouchableOpacity
+                              onPress={() => setIsDriverModalVisible(true)}
+                              disabled={itemsDrivers.length === 0}>
+                              <DriverItem justifyContent="space-between">
+                                <OText>
+                                  {itemsDrivers.length > 0
+                                    ? order?.driver?.name ||
+                                      t('SELECT_DRIVER', 'Select Driver')
+                                    : t('WITHOUT_DRIVERS', 'Without drivers')}
+                                </OText>
+                                <OIcon
+                                  src={theme?.images?.general?.chevronDown}
+                                  color={theme.colors.backArrow}
+                                  width={20}
+                                  height={20}
+                                />
+                              </DriverItem>
+                            </TouchableOpacity>
+                          </>
+                        )}
+                        flatListProps={{
+                          keyExtractor: (item: any) => item.value,
+                          data: itemsDrivers || [],
+                          renderItem: ({ item }: any) => (
+                            <TouchableOpacity
+                              style={!item.available && styles.driverOff}
+                              disabled={!item.available}
+                              onPress={() => {
+                                handleAssignDriver &&
+                                  handleAssignDriver(item.value);
+                                setIsDriverModalVisible(false);
+                              }}>
+                              <DriverItem>
+                                <View style={{ width: 40 }} />
+                                <OText
+                                  color={!item.available && theme.colors.grey}>
+                                  {item.label}
+                                  {!item.available &&
+                                    ` (${t('NOT_AVAILABLE', 'Not available')})`}
+                                </OText>
+                              </DriverItem>
+                            </TouchableOpacity>
+                          ),
+                        }}
+                      />
+                    </View>
                   </AssignDriver>
                 )}
 
-              {order?.status === 7 && order?.delivery_type === 2 && (
+              {order?.status === 7 && (
                 <Pickup>
                   <OButton
                     style={styles.btnPickUp}
@@ -765,6 +766,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       handleChangeOrderStatus && handleChangeOrderStatus(4)
                     }
                     imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+                    imgRightSrc={false}
                   />
                 </Pickup>
               )}
@@ -782,6 +784,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       handleChangeOrderStatus && handleChangeOrderStatus(15)
                     }
                     imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+                    imgRightSrc={false}
                   />
                 </Pickup>
               )}
