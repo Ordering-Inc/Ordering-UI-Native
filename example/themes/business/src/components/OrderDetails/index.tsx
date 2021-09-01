@@ -7,7 +7,7 @@ import {
   ToastType,
   useToast,
   useLanguage,
-  OrderDetails as OrderDetailsConTableoller,
+  OrderDetails as OrderDetailsController,
   useUtils,
   useConfig,
   useSession,
@@ -867,5 +867,5 @@ export const OrderDetails = (props: OrderDetailsParams) => {
     driverAndBusinessId: true,
     UIComponent: OrderDetailsUI,
   };
-  return <OrderDetailsConTableoller {...orderDetailsProps} />;
+  return <OrderDetailsController {...orderDetailsProps} />;
 };

@@ -5,6 +5,7 @@ import OIcon from './OIcon';
 import OText from './OText';
 import OIconButton from './OIconButton';
 import { useTheme } from 'styled-components/native';
+import { useUtils } from 'ordering-components/native';
 
 interface Props {
   open?: boolean;
@@ -48,6 +49,7 @@ const OModal = (props: Props): React.ReactElement => {
   } = props;
 
   const theme = useTheme();
+  const [{ optimizeImage }] = useUtils();
 
   const styles = StyleSheet.create({
     container: {
@@ -206,7 +208,10 @@ const OModal = (props: Props): React.ReactElement => {
                   <View style={styles.shadow}>
                     {order?.business?.logo ? (
                       <OIcon
-                        url={order?.business?.logo}
+                        url={optimizeImage(
+                          order?.business?.logo,
+                          'h_300,c_limit',
+                        )}
                         style={styles.titleIcons}
                       />
                     ) : (
@@ -219,10 +224,11 @@ const OModal = (props: Props): React.ReactElement => {
 
                   <View style={styles.shadow}>
                     <OIcon
-                      url={
+                      url={optimizeImage(
                         order?.customer?.photo ||
-                        theme?.images?.dummies?.customerPhoto
-                      }
+                          theme?.images?.dummies?.customerPhoto,
+                        'h_300,c_limit',
+                      )}
                       style={styles.titleIcons}
                     />
                   </View>
@@ -231,8 +237,10 @@ const OModal = (props: Props): React.ReactElement => {
                     <View style={styles.shadow}>
                       <OIcon
                         url={
-                          order?.driver?.photo ||
-                          theme?.images?.dummies?.driverPhoto
+                          optimizeImage(
+                            order?.driver?.photo,
+                            'h_300,c_limit',
+                          ) || theme?.images?.dummies?.driverPhoto
                         }
                         style={styles.titleIcons}
                       />

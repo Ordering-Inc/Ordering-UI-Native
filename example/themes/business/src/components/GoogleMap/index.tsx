@@ -7,7 +7,7 @@ import MapView, {
   Region,
 } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
-import { useLanguage, useConfig } from 'ordering-components/native';
+import { useLanguage, useConfig, useUtils } from 'ordering-components/native';
 import { GoogleMapsParams } from '../../types';
 import Alert from '../../providers/AlertProvider';
 import { OIconButton, OIcon } from '../shared';
@@ -36,6 +36,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const theme = useTheme();
   const [, t] = useLanguage();
   const [configState] = useConfig();
+  const [{ optimizeImage }] = useUtils();
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / height;
   const [markerPosition, setMarkerPosition] = useState({
@@ -258,7 +259,10 @@ export const GoogleMap = (props: GoogleMapsParams) => {
                         <View style={styles.view}>
                           <OIcon
                             style={styles.image}
-                            url={locations[i].icon}
+                            url={optimizeImage(
+                              locations[i].icon,
+                              'h_300,c_limit',
+                            )}
                             width={25}
                             height={25}
                           />

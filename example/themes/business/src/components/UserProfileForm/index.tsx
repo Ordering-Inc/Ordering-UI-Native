@@ -10,6 +10,7 @@ import {
   ToastType,
   useToast,
   useLanguage,
+  useUtils,
 } from 'ordering-components/native';
 import {
   CenterView,
@@ -49,6 +50,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [{ user }] = useSession();
   const [state, t] = useLanguage();
   const [, { showToast }] = useToast();
+  const [{ optimizeImage }] = useUtils();
   const { errors } = useForm();
   const theme = useTheme();
 
@@ -260,7 +262,7 @@ const ProfileUI = (props: ProfileParams) => {
         <>
           <CenterView>
             <OIcon
-              url={user?.photo}
+              url={optimizeImage(user?.photo, 'h_300,c_limit')}
               src={!user?.photo && theme.images.general.user}
               width={100}
               height={100}
