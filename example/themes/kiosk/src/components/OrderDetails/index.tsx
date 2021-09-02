@@ -246,12 +246,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
           <OText>{t('SEND_RECEIPT', 'Send receipt')}</OText>
 
-          <OptionSwitch
+          {/* <OptionSwitch
             options={optionsToSendReceipt}
             onChange={setOptionToSendReceipt}
-          />
+          /> */}
         </OSTable>
-        <OText size='14' style={{alignSelf: 'flex-end'}}>
+        <OText size={14} style={{alignSelf: 'flex-end'}}>
           {countReceipts}/5 {t('RECIPTS_REMAINING', 'Recipts remaining')}
         </OText>
         <OSTable>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ImageSourcePropType, ImageStyle, ViewStyle} from 'react-native';
+import {ImageSourcePropType, ImageStyle, ViewStyle, TextInputProps} from 'react-native';
 import styled from 'styled-components/native';
 import OIcon from './OIcon';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
@@ -53,6 +53,7 @@ interface Props {
   returnKeyType?: string;
   onSubmitEditing?: any;
   blurOnSubmit?: boolean;
+  inputStyle?: TextInputProps
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -76,6 +77,7 @@ const OInput = (props: Props): React.ReactElement => {
         <MaterialIcon name={props?.vertorIcon} size={20} color={props?.vectorIconColor} style={{marginHorizontal: 10}} />
       )}
       <Input
+        style={props.inputStyle}
         name={props.name}
         secureTextEntry={props.isSecured}
         onChangeText={(txt: any) => props.name ? props.onChange({target: {name: props.name, value: txt}}) : props.onChange(txt)}
