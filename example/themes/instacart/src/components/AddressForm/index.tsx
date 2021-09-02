@@ -404,7 +404,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 				titleAlign={'center'}
 				onActionLeft={goToBack}
 				showCall={false}
-				style={{ paddingHorizontal: 40 }}
+				style={{ paddingHorizontal: 14 }}
 			/>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 				<AddressFormContainer

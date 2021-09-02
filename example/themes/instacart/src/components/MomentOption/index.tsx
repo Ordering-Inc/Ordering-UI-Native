@@ -27,6 +27,8 @@ import {
 } from './styles'
 import { useTheme } from 'styled-components/native'
 import RNPickerSelect from 'react-native-picker-select'
+import { Platform } from 'react-native'
+import { useMemo } from 'react'
 
 const MomentOptionUI = (props: MomentOptionParams) => {
 	const {
@@ -50,9 +52,11 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			borderColor: 'transparent',
 			borderRadius: 3,
 			paddingHorizontal: 20,
+			paddingEnd: 30,
 			backgroundColor: theme.colors.clear,
 			fontSize: 14,
-			lineHeight: 18
+			lineHeight: 18,
+			flexGrow: 1
 		},
 		inputIOS: {
 			color: theme.colors.textSecondary,
@@ -71,7 +75,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			justifyContent: 'center'
 		},
 		icon: {
-			top: 2.5,
+			top: 6,
 			right: 10,
 			position: 'absolute',
 		},
@@ -206,8 +210,8 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				{optionSelected.isSchedule && (
 					<WrapDelveryTime>
 						<View style={{flexDirection: 'row', alignItems: 'center'}}>
-							<OIcon src={theme.images.general.clock_history} width={16} color={theme.colors.primary} />
-							<OText size={14} lineHeight={21} color={theme.colors.textPrimary} style={{marginStart: 10}}>
+							<OIcon src={theme.images.general.clock_history} width={16} color={theme.colors.primary} style={{marginEnd: 10}} />
+							<OText size={14} lineHeight={21} color={theme.colors.textPrimary}>
 								{t('CHOOSE_DELIVERY_TIME', 'Choose delivery time')}
 							</OText>
 						</View>
@@ -255,8 +259,9 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 										onClose={() => setOpenTimePicker(false)}
 										useNativeAndroidPickerStyle={false}
 										disabled={momentState.isLoading === 1 && !isTimePicker}
-										Icon={() => <View style={pickerStyle.icon}><OIcon src={theme.images.general.drop_down} color={theme.colors.textSecondary} width={16} /></View>}
+										Icon={() => null}
 									/>
+									<View style={pickerStyle.icon}><OIcon src={theme.images.general.drop_down} color={theme.colors.textSecondary} width={16} /></View>
 								</TimePickerWrapper>
 								{/* <WrapHours
 									nestedScrollEnabled={true}

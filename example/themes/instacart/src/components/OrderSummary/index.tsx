@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native'
 import {
 	Cart,
@@ -33,7 +33,9 @@ const OrderSummaryUI = (props: any) => {
 		removeProduct,
 		isCartPending,
 		isFromCheckout,
-		isDriverTips
+		isDriverTips,
+		handleProductDelete,
+		handleProductEdit
 	} = props;
 
 	const theme = useTheme();
@@ -50,15 +52,6 @@ const OrderSummaryUI = (props: any) => {
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
 		: configs?.driver_tip_options?.value || []
-
-	const handleDeleteClick = (product: any) => {
-		removeProduct(product, cart)
-	}
-
-	const handleEditProduct = (product: any) => {
-		setCurProduct(product)
-		setModalIsOpen(true)
-	}
 
 	const handlerProductAction = (product: any) => {
 		if (Object.keys(product).length) {
@@ -80,8 +73,8 @@ const OrderSummaryUI = (props: any) => {
 								changeQuantity={changeQuantity}
 								getProductMax={getProductMax}
 								offsetDisabled={offsetDisabled}
-								onDeleteProduct={handleDeleteClick}
-								onEditProduct={handleEditProduct}
+								onDeleteProduct={handleProductDelete}
+								onEditProduct={handleProductEdit}
 								isFromCheckout={isFromCheckout}
 								isExpanded
 							/>

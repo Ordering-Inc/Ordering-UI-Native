@@ -22,8 +22,9 @@ import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
 import { useTheme } from 'styled-components/native';
 import { OrderSummary } from '../OrderSummary';
-import { TouchableOpacity, View } from 'react-native';
+import { I18nManager, TouchableOpacity, View } from 'react-native';
 import { FloatingButton } from '../FloatingButton';
+import { useEffect } from 'react';
 
 const CartSingleUI = (props: any) => {
 	const {
@@ -52,7 +53,9 @@ const CartSingleUI = (props: any) => {
 	const [openUpselling, setOpenUpselling] = useState(false)
 	const [canOpenUpselling, setCanOpenUpselling] = useState(false)
 
-	const isCartPending = cart?.status === 2
+	const curCart: any = Object.values(orderState.carts).find((c: any) => c?.uuid === cart?.uuid) ?? {};
+
+	const isCartPending = curCart?.status === 2
 	const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
 
 	const momentFormatted = !orderState?.option?.moment
@@ -60,7 +63,7 @@ const CartSingleUI = (props: any) => {
 		: parseDate(orderState?.option?.moment, { outputFormat: 'YYYY-MM-DD HH:mm' })
 
 	const handleDeleteClick = (product: any) => {
-		removeProduct(product, cart)
+		removeProduct(product, curCart)
 	}
 
 	const handleEditProduct = (product: any) => {
@@ -77,7 +80,7 @@ const CartSingleUI = (props: any) => {
 	const handleClearProducts = async () => {
 		try {
 			setIsCartsLoading && setIsCartsLoading(true)
-			const result = await clearCart(cart?.uuid)
+			const result = await clearCart(curCart?.uuid)
 			setIsCartsLoading && setIsCartsLoading(false)
 		} catch (error) {
 			setIsCartsLoading && setIsCartsLoading(false)
@@ -89,10 +92,10 @@ const CartSingleUI = (props: any) => {
 		setCanOpenUpselling(false)
 		props.onNavigationRedirect('CheckoutNavigator', {
 			screen: 'CheckoutPage',
-			cartUuid: cart?.uuid,
-			businessLogo: cart?.business?.logo,
-			businessName: cart?.business?.name,
-			cartTotal: cart?.total
+			cartUuid: curCart?.uuid,
+			businessLogo: curCart?.business?.logo,
+			businessName: curCart?.business?.name,
+			cartTotal: curCart?.total
 		})
 	}
 
@@ -107,33 +110,35 @@ const CartSingleUI = (props: any) => {
 			<ProductsScroll showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 40, paddingBottom: 20 }}>
 				<BusinessInfoView>
 					<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-						<OIcon style={{ width: 42, height: 42, borderRadius: 25, borderWidth: 1, borderColor: theme.colors.border, }} url={optimizeImage(cart?.business?.logo, 'h_200,c_limit')} />
-						<OText size={14} style={{ marginStart: 14 }}>
-							{cart?.business?.name}
+						<OIcon style={{ width: 42, height: 42, borderRadius: 25, borderWidth: 1, borderColor: theme.colors.border }} cover url={optimizeImage(curCart?.business?.logo, 'h_200,c_limit')} />
+						<OText size={14} style={I18nManager.isRTL ? { marginRight: 14 } : { marginLeft: 14 }}>
+							{curCart?.business?.name}
 						</OText>
 					</View>
-					<OText size={14} lineHeight={21} weight={'600'}>{parsePrice(cart?.business?.minimum)}</OText>
+					<OText size={14} lineHeight={21} weight={'600'}>{parsePrice(curCart?.business?.minimum)}</OText>
 				</BusinessInfoView>
 				<OrderSummary
-					cart={cart}
-					isCartPending={cart?.status === 2}
+					cart={curCart}
+					isCartPending={curCart?.status === 2}
 					isFromCheckout
+					handleProductDelete={handleDeleteClick}
+					handleProductEdit={handleEditProduct}
 				/>
 			</ProductsScroll>
-			{cart?.valid_products && (
+			{curCart?.valid_products && (
 				<FloatingButton
-					btnText={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
+					btnText={(curCart?.subtotal >= curCart?.minimum || !curCart?.minimum) && curCart?.valid_address ? (
 						!openUpselling !== canOpenUpselling ? t('GO_TO_CHECKOUT', 'Go to checkout') : t('LOADING', 'Loading')
-					) : !cart?.valid_address ? (
+					) : !curCart?.valid_address ? (
 						`${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
 					) : (
-						`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+						`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(curCart?.minimum)}`
 					)}
-					isSecondaryBtn={(cart?.subtotal < cart?.minimum || !cart?.valid_address)}
+					isSecondaryBtn={(curCart?.subtotal < curCart?.minimum || !curCart?.valid_address)}
 					btnLeftValueShow={true}
-					btnRightValueShow={cart?.total > 0}
-					btnRightValue={parsePrice(cart?.total)}
-					disabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
+					btnRightValueShow={curCart?.total > 0}
+					btnRightValue={parsePrice(curCart?.total)}
+					disabled={(openUpselling && !canOpenUpselling) || curCart?.subtotal < curCart?.minimum || !curCart?.valid_address}
 					handleClick={() => setOpenUpselling(true)}
 					inSafeArea
 				/>
@@ -147,8 +152,8 @@ const CartSingleUI = (props: any) => {
 				<ProductForm
 					isCartProduct
 					productCart={curProduct}
-					businessSlug={cart?.business?.slug}
-					businessId={cart?.business_id}
+					businessSlug={curCart?.business?.slug}
+					businessId={curCart?.business_id}
 					categoryId={curProduct?.category_id}
 					productId={curProduct?.id}
 					onSave={handlerProductAction}
@@ -161,9 +166,9 @@ const CartSingleUI = (props: any) => {
 				<UpsellingProducts
 					handleUpsellingPage={handleUpsellingPage}
 					openUpselling={openUpselling}
-					businessId={cart?.business_id}
-					business={cart?.business}
-					cartProducts={cart?.products}
+					businessId={curCart?.business_id}
+					business={curCart?.business}
+					cartProducts={curCart?.products}
 					canOpenUpselling={canOpenUpselling}
 					setCanOpenUpselling={setCanOpenUpselling}
 				/>

@@ -119,6 +119,8 @@ export const ProductOptionsUI = (props: any) => {
 									</TopHeader>
 									<ProductHeader
 										source={{ uri: product?.images || productCart?.images }}
+										resizeMode={'contain'}
+										style={{height: windowWidth, maxHeight: windowWidth}}
 									/>
 								</>
 							)}

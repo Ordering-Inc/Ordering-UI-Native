@@ -28,15 +28,18 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
       borderWidth: 1,
       borderColor: 'transparent',
       borderRadius: 3,
-      paddingHorizontal: 20,
       backgroundColor: theme.colors.inputDisabled,
       fontSize: 12,
-		lineHeight: 18
+		  lineHeight: 18,
+      height: 28,
+      padding: 0,
+      paddingStart: 12,
+      paddingEnd: 26
     },
     inputIOS: {
       color: theme.colors.secundaryContrast,
       paddingEnd: 25,
-		paddingStart: 10,
+		  paddingStart: 10,
       height: 28,
       borderWidth: 1,
       borderColor: 'transparent',
@@ -86,7 +89,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
           onClose={() => setOpen(false)}
           useNativeAndroidPickerStyle={false}
           disabled={orderState.loading && !open}
-			 Icon={() => <View style={pickerStyle.icon}><OIcon src={theme.images.general.drop_down} color={theme.colors.textPrimary} width={10} /></View>}
+			    Icon={() => <View style={pickerStyle.icon}><OIcon src={theme.images.general.drop_down} color={theme.colors.textPrimary} width={10} /></View>}
         />
       </OrderTypeWrapper>
     )

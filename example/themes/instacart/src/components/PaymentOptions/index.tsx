@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
+import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform, ActivityIndicator, I18nManager } from 'react-native';
 import {
 	Placeholder,
 	PlaceholderLine,
@@ -165,7 +165,7 @@ const PaymentOptionsUI = (props: any) => {
 					/>
 					<OText
 						size={12}
-						style={{ marginStart: 14, flex: 1 }}
+						style={I18nManager.isRTL ? { marginRight: 14, flex: 1 } : { marginLeft: 14, flex: 1 }}
 						color={theme.colors.textPrimary}
 					>
 						{t(item.gateway.toUpperCase(), item.name)}

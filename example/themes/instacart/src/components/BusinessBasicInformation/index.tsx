@@ -85,6 +85,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 							<OIcon
 								url={logo || optimizeImage(businessState?.business?.logo, 'h_300,c_limit')}
 								style={styles.businessLogo}
+								cover
 							/>
 						)
 					)}
@@ -248,8 +249,9 @@ const styles = StyleSheet.create({
 	businessLogo: {
 		width: 103,
 		height: 103,
-		borderRadius: 60,
+		borderRadius: 100,
 		marginBottom: 19,
+		overflow: 'hidden',
 	},
 	businessInfo: {
 		paddingHorizontal: 40,

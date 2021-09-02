@@ -236,6 +236,7 @@ const MessagesUI = (props: MessagesParams) => {
 					borderColor: theme.colors.primary,
 				}}
 				iconStyle={{ marginTop: 3, marginRight: 2 }}
+				iconColor={theme.colors.primary}
 				icon={!sendMessage?.loading ? theme.images.general.send : undefined}
 				RenderIcon={sendMessage?.loading ? () => <ActivityIndicator size='small' color={theme.colors.primary} /> : undefined}
 				disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}

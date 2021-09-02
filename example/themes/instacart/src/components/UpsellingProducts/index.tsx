@@ -102,7 +102,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 							<>
 								{
 									!upsellingProducts.error ? upsellingProducts.products.map((product: any, idx: number) => (
-										<>
+										<React.Fragment key={`up-key-${idx}`}>
 											{idx % 2 == 1 && (
 												<View key={upsellingProducts.products[idx].id} style={{ flexDirection: 'row' }}>
 													<Item
@@ -162,7 +162,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 													</Item>
 												</View>
 											)}
-										</>
+										</React.Fragment>
 									)) : (
 										<OText size={12}>
 											{upsellingProducts.message}

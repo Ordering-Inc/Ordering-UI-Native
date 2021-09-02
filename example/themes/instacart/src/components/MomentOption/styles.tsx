@@ -62,7 +62,7 @@ export const TimePickerWrapper = styled.View`
 	height: 42px;
 	flex-direction: row;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-start;
 	border-radius: 3px;
 	padding-start: 16px;
 	padding-end: 7px;

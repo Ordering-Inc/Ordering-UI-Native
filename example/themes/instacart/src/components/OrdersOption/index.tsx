@@ -143,7 +143,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {loading && (
         <>
           {activeOrders ? (
-            <Placeholder style={{ marginTop: 30 }} Animation={Fade}>
+            <Placeholder style={{ marginTop: 30, paddingLeft: 40 }} Animation={Fade}>
               <View style={{ width: '100%', flexDirection: 'row' }}>
                 <PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 35 }} />
                 <Placeholder>

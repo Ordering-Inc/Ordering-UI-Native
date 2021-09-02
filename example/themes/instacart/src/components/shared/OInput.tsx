@@ -22,7 +22,7 @@ const Input = styled.TextInput`
   flex: 1;
   min-height: 30px;
   font-size: 15px;
-  font-family: 'Poppins-Regular';
+  font-family: 'Poppins Regular';
   text-align: ${I18nManager.isRTL ? 'right' : 'left'};
 `;
 interface Props extends TextInputProps {
