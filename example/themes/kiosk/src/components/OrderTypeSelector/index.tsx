@@ -1,16 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   OrderTypeControl,
   useLanguage,
   useOrder
 } from 'ordering-components/native'
-import {StyleSheet, Platform, View} from 'react-native'
-import { OrderTypeWrapper } from './styles'
+import {View} from 'react-native'
 import { OrderTypeSelectParams } from '../../types'
 import ModalDropdown from 'react-native-modal-dropdown'
 import { OText } from '../shared'
 import { useTheme } from 'styled-components/native'
-
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const {
     handleChangeOrderType,
@@ -22,10 +21,9 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 
   const theme = useTheme()
   const [orderState] = useOrder()
-  
-  
+
   const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value))
-  
+
   const items = _orderTypes.map((type) => {
     return {
       value: type.value,
@@ -33,7 +31,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
       inputLabel: type.content
     }
   })
-  
+
   const _selectedValue: number | undefined = defaultValue || typeSelected;
   const _selectedOrderType = items?.find((item) => item.value === _selectedValue);
 
@@ -42,20 +40,25 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
       handleChangeOrderType(orderType)
     }
   }
-  
+
   return (
     typeSelected !== undefined && (
       <ModalDropdown
         defaultValue={_selectedOrderType?.label}
         options={items}
-        onSelect={(_, orderType) => {
+        onSelect={(_ : any, orderType : any) => {
           handleChangeOrderTypeCallback(orderType?.value);
         }}
         /* @ts-ignore */
         renderButtonText={(value) => value?.label}
-        renderRow={(item) => (
+        renderRow={(item : any) => (
           <View style={{ padding: 5, backgroundColor: theme.colors.white }}>
             <OText>{item.label}</OText>
+          </View>
+        )}
+        renderRightComponent={() => (
+          <View>
+            <MaterialIcon name='keyboard-arrow-down' size={24}/>
           </View>
         )}
         dropdownStyle={{

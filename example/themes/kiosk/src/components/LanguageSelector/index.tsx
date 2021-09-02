@@ -7,13 +7,16 @@ import { Container, LanguageItem } from './styles'
 import langCountries from './lang_country.json';
 import { LanguageSelectorParams } from '../../types'
 import { OText } from '../shared'
-
+import MatarialIcon from "react-native-vector-icons/MaterialIcons"
+import { useTheme } from 'styled-components/native'
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   const {
     languagesState,
     currentLanguage,
     handleChangeLanguage,
   } = props
+
+	const theme = useTheme()
 
   const _languages = languagesState?.languages?.map((language: any) => {
     return {
@@ -27,7 +30,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   _languages && _languages?.sort((a: any, b: any) =>
     (a.content > b.content) ? 1 : ((b.content > a.content) ? -1 : 0)
 	)
-	
+
 	const [isCountryModalVisible, setCountryModalVisible] = useState(false);
 
 	const countryCodes = _languages?.map((item:any) => item.countryCode);
@@ -46,14 +49,15 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 					renderFlagButton={() => (
 						<TouchableOpacity
 							onPress={() => setCountryModalVisible(true)}
-						>	
+						>
 							<LanguageItem>
-								<Flag
-									withEmoji
-									flagSize={24}
-									countryCode={currentLanguageData?.countryCode}
-								/>
-								<OText>{currentLanguageData?.label}</OText>
+									<Flag
+										withEmoji
+										flagSize={24}
+										countryCode={currentLanguageData?.countryCode}
+									/>
+								<OText color={theme.colors.primary}>{currentLanguageData?.label}</OText>
+								<MatarialIcon name='keyboard-arrow-down' size={24}/>
 							</LanguageItem>
 						</TouchableOpacity>
 					)}

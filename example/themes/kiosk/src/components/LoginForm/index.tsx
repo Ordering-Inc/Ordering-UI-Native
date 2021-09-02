@@ -108,6 +108,7 @@ const LoginFormUI = (props: LoginParams) => {
             autoCapitalize="none"
             autoCorrect={false}
             type="email-address"
+            inputStyle={{textAlign: 'center'}}
             onChange={(e: any) => {
               handleChangeInputEmail(e, onChange);
             }}
@@ -139,6 +140,7 @@ const LoginFormUI = (props: LoginParams) => {
             style={styles.inputStyle}
             value={value}
             onChange={(val: any) => onChange(val)}
+            inputStyle={{textAlign: 'center'}}
           />
         )}
         name="password"

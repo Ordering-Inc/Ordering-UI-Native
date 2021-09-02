@@ -141,13 +141,7 @@ const CartUI = (props: any) => {
           />
         </OrderTypeWrapper>
 
-        <ScrollView
-          style={{
-            height: orientationState?.orientation === PORTRAIT
-            ? orientationState?.dimensions?.height * 0.59
-            : orientationState?.dimensions?.height * 0.55
-          }}
-        >
+        <ScrollView style={{flex: 1}}>
           {cart?.products?.length > 0 && cart?.products.map((product: any) => (
             <CartItem
               key={product.code}
@@ -165,7 +159,7 @@ const CartUI = (props: any) => {
 
         <Actions
           style={{
-            height: orientationState?.dimensions?.height * 0.17
+            flex: 1
           }}
         >
           {cart?.valid_products && (
