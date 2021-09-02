@@ -135,10 +135,8 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleSaveProduct = () => {
-		console.log('----- click handle ------')
 		const isErrors = Object.values(errors).length > 0;
 		if (!isErrors) {
-			console.log('----- save handle ------')
 			handleSave && handleSave();
 			return;
 		}
