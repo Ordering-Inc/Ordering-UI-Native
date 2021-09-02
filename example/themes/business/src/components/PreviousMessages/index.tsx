@@ -7,7 +7,7 @@ import { OIcon, OText } from '../shared';
 import { PreviousMessagesParams } from '../../types';
 
 export const PreviousMessages = (props: PreviousMessagesParams) => {
-  const { orders, messages, onNavigationRedirect } = props;
+  const { orders, onNavigationRedirect, messageRead } = props;
 
   const [, t] = useLanguage();
   const theme = useTheme();
@@ -15,6 +15,9 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
 
   const handlePressOrder = (order: any) => {
     const uuid = order?.id;
+    // if (order.unread_count > 0) {
+    //   messageRead && messageRead(uuid);
+    // }
     onNavigationRedirect &&
       onNavigationRedirect('OrderMessage', { orderId: uuid });
   };

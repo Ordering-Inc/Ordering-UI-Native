@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Pressable, StyleSheet, Dimensions } from 'react-native';
-import { OrderList, useLanguage } from 'ordering-components/native';
+import { Contacts, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OButton } from '../shared';
@@ -12,24 +12,19 @@ import { MessagesOptionParams } from '../../types';
 
 const MessagesOptionUI = (props: MessagesOptionParams) => {
   const {
-    activeOrders,
-    orderList,
+    orders,
+    loadMore,
     pagination,
-    customArray,
     messages,
-    setMessages,
-    loadMoreOrders,
-    loadMessages,
     onNavigationRedirect,
     setSortBy,
+    messageRead,
   } = props;
 
   const theme = useTheme();
   const [, t] = useLanguage();
 
-  const { loading, error, orders: values } = orderList;
-
-  const orders = customArray || values || [];
+  const { loading, error, data: values } = orders;
 
   const tabs = [
     { key: 0, text: t('ORDERS', 'Orders'), tags: [0, 1] },
@@ -237,7 +232,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
         </TagsContainer>
       </View>
 
-      {!loading && orders.length === 0 && (
+      {!loading && values.length === 0 && (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           image={theme.images.general.notFound}
@@ -247,13 +242,12 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
 
       {!reload &&
         !error &&
-        orders.length > 0 &&
+        values.length > 0 &&
         JSON.stringify(tabsFilter) === JSON.stringify(tabs[0].tags) && (
           <PreviousMessages
             orders={values}
             messages={messages}
-            setMessages={setMessages}
-            loadMessages={loadMessages}
+            messageRead={messageRead}
             onNavigationRedirect={onNavigationRedirect}
           />
         )}
@@ -310,7 +304,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
         JSON.stringify(tabsFilter) === JSON.stringify(tabs[0].tags) &&
         pagination?.currentPage < pagination?.totalPages && (
           <OButton
-            onClick={loadMoreOrders}
+            onClick={() => loadMore && loadMore()}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
             imgRightSrc={null}
             textStyle={styles.loadButtonText}
@@ -326,24 +320,13 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
 export const MessagesOption = (props: MessagesOptionParams) => {
   const MyOrdersProps = {
     ...props,
-    asDashboard: true,
-    orderStatus: props.activeOrders
-      ? []
-      : [
-          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-          20, 21,
-        ],
-    useDefualtSessionManager: true,
-    paginationSettings: {
-      initialPage: 1,
-      pageSize: 6,
-      controlType: 'infinity',
+    firstFetch: 'orders',
+    sortParams: {
+      param: 'last_direct_message_at',
+      direction: 'asc',
     },
-    isDynamicSort: true,
-    orderBy: 'last_direct_message_at',
-    orderDirection: 'asc',
     UIComponent: MessagesOptionUI,
   };
 
-  return <OrderList {...MyOrdersProps} />;
+  return <Contacts {...MyOrdersProps} />;
 };

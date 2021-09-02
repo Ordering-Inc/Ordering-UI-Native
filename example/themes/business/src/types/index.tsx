@@ -232,6 +232,9 @@ export interface NotFoundSourceParams {
   children?: any;
 }
 export interface MessagesOptionParams {
+  orders?: any;
+  loadMore?: (key?: any) => {};
+  messageRead?: (key: any) => {};
   orderList?: any;
   activeOrders?: boolean;
   pagination?: any;
@@ -243,7 +246,7 @@ export interface MessagesOptionParams {
   loadMessages?: () => {};
   handlerSubmit?: () => {};
   readMessages?: () => {};
-  messagesReadList?: () => {};
+  messagesReadList?: any;
   onNavigationRedirect?: any;
   setSortBy?: any;
 }
@@ -305,6 +308,7 @@ export interface ContactParams {
 }
 
 export interface PreviousMessagesParams {
+  messageRead?: (key: any) => {};
   orders?: any;
   pagination?: any;
   getOrderStatus?: any;
