@@ -9,31 +9,27 @@ import {
 } from 'react-native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
-import {
-  ToastType,
-  useToast,
-  useLanguage,
-  OrderChange as OrderChangeConTableoller,
-} from 'ordering-components/native';
+import { useLanguage } from 'ordering-components/native';
 import { Content, Timer, TimeField, Header, Action, Comments } from './styles';
 import { FloatingButton } from '../FloatingButton';
 import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
 import AwesomeAlert from 'react-native-awesome-alerts';
 
-export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
+export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const {
-    navigation,
-    route,
-    orderState,
-    updateStateOrder,
-    notShowCustomerPhone,
+    customerCellphone,
+    loading,
+    action,
+    handleUpdateOrder,
     actions,
+    closeModal,
+    orderId,
+    notShowCustomerPhone,
     titleAccept,
     titleReject,
   } = props;
 
-  const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const theme = useTheme();
   const timerRef = useRef<any>();
@@ -44,7 +40,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [isColorAwesomeAlert, setIsColorAwesomeAlert] = useState(false);
-  const phoneNumber = route?.order?.customer?.cellphone;
+  const phoneNumber = customerCellphone;
   let codeNumberPhone, numberPhone, numberToShow;
 
   useEffect(() => {
@@ -74,26 +70,8 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
     }
   }
 
-  useEffect(() => {
-    if (orderState?.order !== null) {
-      if (!orderState?.error) {
-        showToast(
-          ToastType.Success,
-          route.action === 'accept'
-            ? t('ORDER_ACCEPTED', 'Order Accepted')
-            : t('ORDER_REJECTED', 'Order Rejected'),
-        );
-        handleArrowBack();
-      }
-
-      if (orderState?.error) {
-        showToast(ToastType.Error, orderState.order[0]);
-      }
-    }
-  }, [orderState?.order]);
-
   const handleArrowBack: any = () => {
-    navigation?.canGoBack() && navigation.goBack();
+    closeModal(false);
   };
 
   const handleTime = (e: any) => {
@@ -146,14 +124,33 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
     setIsColorAwesomeAlert(false);
     setShowAlert(false);
 
-    updateStateOrder &&
-      updateStateOrder({
-        hour,
-        min: minsToSend,
-        comments,
-        action: route?.action === 'accept' ? actions?.accept : actions?.reject,
-        orderId: route?.order?.id,
-      });
+    const time = hour * 60 + parseInt(min);
+    let bodyToSend;
+    const orderStatus: any = {
+      acceptByBusiness: {
+        prepared_in: time,
+        status: 7,
+      },
+      rejectByBusiness: {
+        comment: comments,
+        status: 5,
+      },
+      acceptByDriver: {
+        delivered_in: time,
+        status: 8,
+      },
+      rejectByDriver: {
+        comment: comments,
+        status: 6,
+      },
+    };
+
+    if (action === 'accept') bodyToSend = orderStatus[actions.accept];
+    if (action === 'reject') bodyToSend = orderStatus[actions.reject];
+
+    bodyToSend.id = orderId;
+
+    handleUpdateOrder(bodyToSend.status, bodyToSend);
   };
 
   const cancelRequest = () => {
@@ -170,7 +167,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
         }
         barStyle="dark-content"
       />
-      {orderState?.loading && (
+      {loading && (
         <View
           style={{
             padding: 40,
@@ -178,7 +175,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
             backgroundColor: theme.colors.backgroundLight,
             justifyContent: 'space-between',
           }}>
-          {route.action === 'accept' ? (
+          {action === 'accept' ? (
             <>
               <Placeholder Animation={Fade}>
                 <PlaceholderLine width={70} />
@@ -234,7 +231,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
         </View>
       )}
 
-      {!orderState?.loading && (
+      {!loading && (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1 }}>
@@ -254,12 +251,12 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
               />
 
               <OText size={20} color={theme.colors.textGray} weight="bold">
-                {route.action === 'accept'
+                {action === 'accept'
                   ? `${t(titleAccept.key, titleAccept.text)}:`
                   : t(titleReject.key, titleReject.text)}
               </OText>
 
-              {route.action === 'reject' && (
+              {action === 'reject' && (
                 <>
                   {!notShowCustomerPhone && (
                     <>
@@ -293,9 +290,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                           imgLeftSrc={theme.images.general.cellphone}
                           text={numberToShow}
                           onClick={() =>
-                            Linking.openURL(
-                              `tel:${route.order.customer.cellphone}`,
-                            )
+                            Linking.openURL(`tel:${customerCellphone}`)
                           }
                         />
                       ) : (
@@ -319,9 +314,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
                           imgLeftSrc={theme.images.general.cellphone}
                           text={t('NOT_NUMBER', "There's not phonenumber.")}
                           onClick={() =>
-                            Linking.openURL(
-                              `tel:${route.order.customer.cellphone}`,
-                            )
+                            Linking.openURL(`tel:${customerCellphone}`)
                           }
                         />
                       )}
@@ -355,7 +348,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
               )}
             </Header>
 
-            {route.action === 'accept' && (
+            {action === 'accept' && (
               <Timer onPress={() => openTimerIOnput()}>
                 <OText weight="bold" style={{ textAlign: 'center' }} size={55}>
                   {hour}
@@ -381,7 +374,7 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
               onEndEditing={handleFixTime}
             />
 
-            {route.action === 'reject' && (
+            {action === 'reject' && (
               <Comments>
                 <OTextarea
                   placeholder={t(
@@ -395,24 +388,19 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
             )}
           </Content>
 
-          <Action
-            style={{
-              marginBottom: isKeyboardShow ? (Platform.OS === 'ios' ? 30 : 50) : 0,
-            }}>
+          <Action>
             <FloatingButton
               firstButtonClick={() => {
                 setIsColorAwesomeAlert(true);
                 setShowAlert(true);
               }}
               btnText={
-                route.action === 'accept'
+                action === 'accept'
                   ? t('ACCEPT', 'Accept')
                   : t('REJECT', 'Reject')
               }
               color={
-                route.action === 'accept'
-                  ? theme.colors.green
-                  : theme.colors.red
+                action === 'accept' ? theme.colors.green : theme.colors.red
               }
             />
           </Action>
@@ -422,10 +410,10 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
             title={t('BUSINESS_APP', 'Business app')}
             message={t(
               `ARE_YOU_SURE_THAT_YOU_WANT_TO_${
-                route.action === 'accept' ? 'ACCEPT' : 'REJECT'
+                action === 'accept' ? 'ACCEPT' : 'REJECT'
               }_THIS_ORDER`,
               `Are you sure that you want to ${
-                route.action === 'accept' ? 'accept' : 'reject'
+                action === 'accept' ? 'accept' : 'reject'
               } this order?`,
             )}
             closeOnTouchOutside={false}
@@ -443,13 +431,4 @@ export const AcceptOrRejectOrderUI = (props: AcceptOrRejectOrderParams) => {
       )}
     </>
   );
-};
-
-export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
-  const acceptOrRejectOrderProps = {
-    ...props,
-    UIComponent: AcceptOrRejectOrderUI,
-  };
-
-  return <OrderChangeConTableoller {...acceptOrRejectOrderProps} />;
 };

@@ -28,6 +28,7 @@ import {
   AssignDriver,
   DriverItem,
 } from './styles';
+import { AcceptOrRejectOrder } from '../AcceptOrRejectOrder';
 import { Chat } from '../Chat';
 import { FloatingButton } from '../FloatingButton';
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -49,6 +50,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     handleChangeOrderStatus,
     isFromCheckout,
     driverLocation,
+    actions,
+    titleAccept,
+    titleReject
   } = props;
 
   const theme = useTheme();
@@ -57,16 +61,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ user, token }] = useSession();
   const [{ configs }] = useConfig();
   const [, { showToast }] = useToast();
-  const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
   const [unreadAlert, setUnreadAlert] = useState({
     business: false,
     driver: false,
   });
   const { order, businessData, driversGroupsData, loading } = props.order;
   const itemsDrivers: any = [];
+  const [actionOrder, setActionOrder] = useState('');
+  const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
+  const [openModalForAccept, setOpenModalForAccept] = useState(false);
   const [openModalForMapView, setOpenModalForMapView] = useState(false);
   const [isDriverModalVisible, setIsDriverModalVisible] = useState(false);
-  let currentDriver;
 
   if (user?.level === 2 && order?.status === 7) {
     if (driversGroupsData?.length > 0) {
@@ -320,8 +325,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     if (openModalForMapView) {
       setOpenModalForMapView(false);
     }
-    navigation.navigate &&
-      navigation.navigate('AcceptOrRejectOrder', { order, action });
+
+    setActionOrder(action);
+    setOpenModalForAccept(true);
   };
 
   const handleViewSummaryOrder = () => {
@@ -391,6 +397,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       locations[0] = driverLocation;
     }
   }, [driverLocation]);
+
+  useEffect(() => {
+    if (openModalForAccept && !loading) {
+      setOpenModalForAccept(false);
+      setActionOrder('')
+    }
+  }, [loading]);
 
   const styles = StyleSheet.create({
     driverOff: {
@@ -803,6 +816,25 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   messages={messages}
                   order={order}
                   setMessages={setMessages}
+                />
+              </OModal>
+
+              <OModal
+                open={openModalForAccept}
+                onClose={() => setOpenModalForAccept(false)}
+                entireModal
+                customClose>
+                <AcceptOrRejectOrder
+                  handleUpdateOrder={handleChangeOrderStatus}
+                  closeModal={setOpenModalForAccept}
+                  customerCellphone={order?.customer?.cellphone}
+                  loading={loading}
+                  action={actionOrder}
+                  orderId={order?.id}
+                  notShowCustomerPhone={false}
+                  actions={actions}
+                  titleAccept={titleAccept}
+                  titleReject={titleReject}
                 />
               </OModal>
 
