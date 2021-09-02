@@ -401,6 +401,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   useEffect(() => {
     if (openModalForAccept && !loading) {
       setOpenModalForAccept(false);
+      setActionOrder('')
     }
   }, [loading]);
 
