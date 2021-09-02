@@ -9,13 +9,14 @@ export const SelectItem = styled.View`
   padding: 8px;
   align-items: center;
   flex-direction: row;
-  background-color: red;
-
-  /* color: theme.colors.secundaryContrast,
-  borderWidth: 1,
-  borderColor: 'transparent',
-  borderRadius: 10,
-  paddingHorizontal: 20,
-  backgroundColor: theme.colors.inputDisabled,
-  fontSize: 15 */
 `;
+
+export const SelectItemBtn = styled(SelectItem)`
+  border-width: 1px;
+  border-color: transparent;
+  border-radius: 10px;
+  max-width: 140px;
+  margin-vertical: 5px;
+  padding: 15px 20px;
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
+`
