@@ -35,6 +35,7 @@ import { SignupParams } from '../../types';
 import { sortInputFields } from '../../utils';
 import { useTheme } from 'styled-components/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']
 
@@ -403,11 +404,11 @@ const SignupFormUI = (props: SignupParams) => {
 												placeholder={t('PASSWORD', 'Password')}
 												style={style.inputStyle}
 												icon={theme.images.general.lock}
-												// iconCustomRight={
-												// 	!passwordSee ?
-												// 		<MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
-												// 		<MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
-												// }
+												iconCustomRight={
+													!passwordSee ?
+														<MaterialCommunityIcons name='eye-outline' size={20} color={theme.colors.textSecondary} style={{marginEnd: 10}} onPress={() => setPasswordSee(!passwordSee)} /> :
+														<MaterialCommunityIcons name='eye-off-outline' size={20} color={theme.colors.textSecondary} style={{marginEnd: 10}} onPress={() => setPasswordSee(!passwordSee)} />
+												}
 												value={value}
 												onChange={(val: any) => onChange(val)}
 												returnKeyType='done'

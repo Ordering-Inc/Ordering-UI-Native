@@ -20,9 +20,7 @@ export const ProductHeader = styled.ImageBackground`
   flex-direction: row;
   width: 100%;
   position: relative;
-  max-height: 294px;
   height: 294px;
-  resize-mode: cover;
   min-height: 290px;
 `
 

@@ -50,4 +50,11 @@ OImage.defaultProps = {
 	height: 26
 }
 
-export default OImage;
+const areEqual=(prevProps: { src?: any; color?: string; }, nextProps: { src?: any; color?: string; })=>{
+  // return false prevProps.text & nextProps.text are not equal.
+  return prevProps.color === nextProps.color || prevProps.src === nextProps.src
+  // else all are equal, no re-render
+  return true
+}
+
+export default React.memo(OImage, areEqual);

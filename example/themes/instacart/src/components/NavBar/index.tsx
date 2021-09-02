@@ -28,7 +28,8 @@ const btnBackArrow = {
   backgroundColor: '#FFF',
   borderColor: '#FFF',
   shadowColor: '#FFF',
-  paddingStart: 0,
+  paddingLeft: 0,
+  paddingRight: 0,
   height: 40
 }
 interface Props {
@@ -62,7 +63,7 @@ const NavBar = (props: Props) => {
     <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
       <OButton
         imgLeftSrc={props.leftImg || theme.images.general.arrow_left}
-		  imgLeftStyle={{tintColor: theme.colors.primary}}
+		    imgLeftStyle={{tintColor: theme.colors.primary}}
         imgRightSrc={null}
         style={{ ...btnBackArrow, ...props.btnStyle }}
         onClick={props.onActionLeft}
@@ -75,7 +76,7 @@ const NavBar = (props: Props) => {
                 style={{
                   borderRadius: 20,
                 }}
-					 color={theme.colors.primary}
+					      color={theme.colors.primary}
                 width={60}
                 height={60}
               />
@@ -85,7 +86,7 @@ const NavBar = (props: Props) => {
         <TitleWrapper>
           <OText
             size={20}
-				lineHeight={30}
+				    lineHeight={30}
             weight={'600'}
             style={
               {
@@ -93,7 +94,7 @@ const NavBar = (props: Props) => {
                 color: props.titleColor || 'black',
                 paddingHorizontal: props.titleAlign == 'left' ? 12 : 0,
                 ...props.titleStyle,
-					 alignSelf: 'center',
+					      alignSelf: 'center',
               }
             }
           >

@@ -37,6 +37,7 @@ import { OText, OButton, OInput, OModal } from '../shared';
 import { LoginParams } from '../../types';
 import { useTheme } from 'styled-components/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const LoginFormUI = (props: LoginParams) => {
 	const {
@@ -308,11 +309,11 @@ const LoginFormUI = (props: LoginParams) => {
 											isSecured={!passwordSee ? true : false}
 											placeholder={t('PASSWORD', 'Password')}
 											style={loginStyle.inputStyle}
-											// iconCustomRight={
-											// 	!passwordSee ?
-											// 		<MaterialCommunityIcons name='eye-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} /> :
-											// 		<MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
-											// }
+											iconCustomRight={
+												!passwordSee ?
+													<MaterialCommunityIcons name='eye-outline' size={20} style={{marginEnd: 10}} color={theme.colors.textSecondary} onPress={() => setPasswordSee(!passwordSee)} /> :
+													<MaterialCommunityIcons name='eye-off-outline' size={20} style={{marginEnd: 10}} color={theme.colors.textSecondary} onPress={() => setPasswordSee(!passwordSee)} />
+											}
 											value={value}
 											forwardRef={inputRef}
 											onChange={(val: any) => onChange(val)}

@@ -48,6 +48,7 @@ import { useTheme } from 'styled-components/native'
 import { FloatingButton } from '../FloatingButton'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import moment from 'moment'
+import SocialShareFav from '../SocialShare'
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
 	const {
@@ -266,15 +267,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
 						<DivideView />
 
-						<OrderCustomer>
+						<OrderCustomer style={{overflow: 'visible', zIndex: 9999}}>
 							<View style={{ flexDirection: 'row', paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: theme.colors.border }}>
 								<OIcon
 									src={theme.images.general.clock}
 									width={16}
 									height={16}
 									color={theme.colors.textSecondary}
+									style={{marginEnd: 15}}
 								/>
-								<OText size={14} weight={'400'} style={{ marginStart: 15 }}>
+								<OText size={14} weight={'400'}>
 									{
 										order?.delivery_datetime_utc
 											? moment(order?.delivery_datetime_utc).format('dddd, MMMM D, yyyy h:m A')
@@ -337,14 +339,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 									)}
 								</OrderDriver>
 							)}
-							<ShareDelivery>
+							<ShareDelivery style={{overflow: 'visible'}}>
 								<View style={{ flex: 1 }}>
 									<OText size={14}>{t('SHARE_THIS_DELIVERY', 'Share this delivery')}</OText>
 									<OText style={{ ...theme.labels.normal, marginTop: 4 }} color={theme.colors.textSecondary}>{t('LET_SOMEONE_FOLLOW_ALONG', 'Let someone follow along')}</OText>
 								</View>
-								<TouchableOpacity onPress={() => { }}>
-									<OIcon width={16} src={theme.images.general.share} color={theme.colors.primary} />
-								</TouchableOpacity>
+								<View style={{alignItems: 'center', overflow: 'visible'}}>
+									<SocialShareFav icon={theme.images.general.share} />
+								</View>
 							</ShareDelivery>
 						</OrderCustomer>
 
@@ -354,8 +356,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
 							<OrderProducts>
 								<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-									<OIcon src={theme.images.general.shop_bag} width={16} color={theme.colors.textSecondary} />
-									<OText size={14} style={{ marginStart: 15 }}>{`${order?.products?.length || 0} ${t('ITEMS', 'Items')}`}</OText>
+									<OIcon src={theme.images.general.shop_bag} style={{ marginEnd: 15 }} width={16} color={theme.colors.textSecondary} />
+									<OText size={14}>{`${order?.products?.length || 0} ${t('ITEMS', 'Items')}`}</OText>
 								</View>
 								{order?.products?.length && order?.products.map((product: any, i: number) => (
 									<ProductItemAccordion

@@ -43,10 +43,11 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 			borderWidth: 1,
 			borderColor: theme.colors.border,
 			borderRadius: 3,
-			paddingHorizontal: 4,
 			backgroundColor: theme.colors.white,
 			height: 30,
-			fontSize: 10
+			fontSize: 10,
+			padding: 4,
+			textAlign: 'center'
 		},
 		inputIOS: {
 			color: theme.colors.textPrimary,

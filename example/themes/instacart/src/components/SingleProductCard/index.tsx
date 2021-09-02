@@ -69,7 +69,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 
   return (
     <CardContainer style={[styles.container, (isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle]}
-      onPress={() => {}}
+      onPress={() => onProductClick(product)}
 		activeOpacity={0.8}
     >
       <OIcon
