@@ -222,8 +222,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   };
 
   useEffect(() => {
-    const ordersTab = values?.filter((order: any) =>
+    let ordersTab = values?.filter((order: any) =>
       tagsFilter.some(tag => tag === order.status),
+    );
+
+    let hash: any = {};
+    ordersTab = ordersTab.filter((order: any) =>
+      hash[order.id] ? false : (hash[order.id] = true),
     );
 
     setOrdersToShow(ordersTab);
