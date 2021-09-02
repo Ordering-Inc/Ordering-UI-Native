@@ -1,14 +1,19 @@
-import React from 'react'
-import { LanguageSelector as LanguageSelectorController, useOrder } from 'ordering-components/native'
+import React, { useState, useEffect } from 'react'
+import { I18nManager, TouchableOpacity, ActivityIndicator, View } from 'react-native'
+import { useTheme } from 'styled-components/native'
+import {
+  LanguageSelector as LanguageSelectorController,
+  useOrder,
+  useLanguage
+} from 'ordering-components/native'
 import { Platform, StyleSheet } from 'react-native'
 import RNRestart from 'react-native-restart'
-
-import RNPickerSelect from 'react-native-picker-select'
-import { Container } from './styles'
-import { LanguageSelectorParams } from '../../types'
+import Picker from 'react-native-country-picker-modal';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { I18nManager } from 'react-native'
-import { useTheme } from 'styled-components/native'
+
+import { Container, SelectItemBtn, SelectItem } from './styles'
+import { LanguageSelectorParams } from '../../types'
+import { OText } from '../shared'
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   const {
@@ -18,50 +23,30 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   } = props
 
   const theme = useTheme()
+  const [orderState] = useOrder()
+  const [languageState] = useLanguage()
+  const [isOpen, setIsOpen] = useState(false);
+  const [optionSelected, setOptionSelected] = useState<any>(null)
+  let current;
 
-  const pickerStyle = StyleSheet.create({
-    inputAndroid: {
-      color: theme.colors.secundaryContrast,
-      borderWidth: 1,
-      borderColor: 'transparent',
-      borderRadius: 15,
-      paddingHorizontal: 10,
-      backgroundColor: theme.colors.inputDisabled,
-      width: 80,
-    },
-    inputIOS: {
-      color: theme.colors.secundaryContrast,
-      paddingEnd: 20,
-      height: 40,
-      borderWidth: 1,
-      borderColor: 'transparent',
-      borderRadius: 15,
-      paddingHorizontal: 10,
-      backgroundColor: theme.colors.inputDisabled
-    },
-    icon: {
-      top: Platform.OS === 'ios' ? 10 : 15,
-      right: Platform.OS === 'ios' ? 0 : (I18nManager.isRTL ? 50 : 7),
-      position: 'absolute',
-      fontSize: 20
-    },
-    placeholder: {
-      color: theme.colors.secundaryContrast
+  const styles = StyleSheet.create({
+    itemSelected: {
+      backgroundColor: theme.colors.disabled,
     }
   })
 
-  const [orderState] = useOrder()
-
   const _languages = languagesState?.languages?.map((language: any) => {
     return {
-      value: language?.code,
-      label: language?.name,
-      inputLabel: language?.code.toUpperCase()
+      key: language.code,
+      value: language.code,
+      label: language.name.toUpperCase()
     }
   })
   _languages && _languages.sort((a: any, b: any) =>
     (a.label > b.label) ? 1 : ((b.label > a.label) ? -1 : 0)
   )
+
+  const langSelectedObj: any = _languages.find((item: any) => item.value === currentLanguage) || {}
 
   const changeDirection = async (language: any) => {
     if(language !== 'ar'){
@@ -76,23 +61,84 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
       }
     }
   }
-  const handlerChangeLanguage = (language: any) => {
-    changeDirection(language)
-    handleChangeLanguage(language)
+
+  const handlerChangeLanguage = (langCode: any) => {
+    setOptionSelected(langCode)
+    changeDirection(langCode)
+    handleChangeLanguage(langCode)
   }
+
+  useEffect(() => {
+    if (optionSelected === languageState?.language?.code && !languageState.loading) {
+      setIsOpen(false)
+    }
+  }, [languageState])
 
   return (
     <Container>
       {languagesState?.languages && (
-        <RNPickerSelect
-          onValueChange={handlerChangeLanguage}
-          items={_languages || []}
-          value={currentLanguage}
-          style={pickerStyle}
-          useNativeAndroidPickerStyle={false}
-          placeholder={{}}
-          Icon={() => <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />}
-          disabled={orderState.loading}
+        // <RNPickerSelect
+        //   onValueChange={handlerChangeLanguage}
+        //   items={_languages || []}
+        //   value={currentLanguage}
+        //   style={pickerStyle}
+        //   useNativeAndroidPickerStyle={false}
+        //   placeholder={{}}
+        //   Icon={() => <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />}
+        //   disabled={orderState.loading}
+        // />
+        <Picker
+          countryCodes={current}
+          visible={isOpen}
+          onClose={() => setIsOpen(false)}
+          withCountryNameButton
+          closeButtonStyle={{
+            width: '100%',
+            alignItems: 'flex-end',
+            padding: 10
+          }}
+          renderFlagButton={() => (
+            <>
+              <TouchableOpacity
+                onPress={() => setIsOpen(true)}
+                disabled={_languages.length === 0 || languageState.loading}
+              >
+                <SelectItemBtn>
+                  <OText
+                    color={theme.colors.secundaryContrast}
+                    size={14}
+                  >
+                    {langSelectedObj.key.toUpperCase()}
+                  </OText>
+                </SelectItemBtn>
+              </TouchableOpacity>
+            </>
+          )}
+          flatListProps={{
+            keyExtractor: (item: any) => item.value,
+            data: _languages || [],
+            renderItem: ({ item }: any) => (
+              <TouchableOpacity
+                style={langSelectedObj.value === item.value && styles.itemSelected}
+                disabled={langSelectedObj.value === item.value || languageState.loading}
+                onPress={() => handlerChangeLanguage(item.value)}
+              >
+                <SelectItem>
+                  <View style={{ width: 40 }}>
+                    {optionSelected === item.value && languageState.loading && (
+                      <ActivityIndicator size="small" color={theme.colors.primary} />
+                    )}
+                  </View>
+                  <OText
+                    size={14}
+                    style={{ marginRight: 10 }}
+                  >
+                    {item.label}
+                  </OText>
+                </SelectItem>
+              </TouchableOpacity>
+            ),
+          }}
         />
       )}
     </Container>
