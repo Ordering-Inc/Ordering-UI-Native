@@ -1,11 +1,8 @@
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
-  display: flex;
-  flex-direction: column;
+  width: 100%;
   flex: 1;
-  justify-content: space-between;
-  align-items: center;
   height: ${(props: any) =>
     props?.orientation === 'Portrait' && props?.height
       ? `${props.height}px`
@@ -18,3 +15,14 @@ export const LogoWrapper = styled.View`
   align-items: center;
   justify-content: center;
 `;
+
+export const BackgroundImage = styled.ImageBackground`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+`

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Dimensions, Platform } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { LogoWrapper, Container } from './styles';
+import { LogoWrapper, Container, BackgroundImage } from './styles';
 import { OButton, OIcon, OText } from '../shared';
 import { _setStoreData } from '../../providers/StoreUtil';
 
@@ -38,50 +38,45 @@ export const Home = (props: any) => {
     <Container
       height={windowHeight - safeHeight}
       orientation={orientation}
-      style={{ marginTop: 30 }}>
-      <LogoWrapper>
-        <OIcon src={theme.images.logos.logotypeInvert} style={styles.logo} />
-      </LogoWrapper>
+    >
+      <BackgroundImage
+        source={theme.images.backgroundsImages.login}
+        resizeMode="cover"
+      >
+        <LogoWrapper>
+          <OIcon src={theme.images.logos.logotypeInvert} style={styles.logo} />
+        </LogoWrapper>
 
-      <View style={styles.wrapperContent}>
-        <View style={styles.wrapperText}>
-          <OText style={styles.textTitle} color={theme.colors.inputChat}>
-            {t('TITLE_HOME', 'Welcome')}
-          </OText>
+        <View style={styles.wrapperContent}>
+          <View style={styles.wrapperText}>
+            <OText style={styles.textTitle} color={theme.colors.inputChat}>
+              {t('TITLE_HOME', 'Welcome')}
+            </OText>
 
-          <OText style={styles.textSubtitle} color={theme.colors.inputChat}>
-            {t(
-              'BUSINESS_WELCOME_SUBTITLE',
-              "Let's start to administrate your business now",
-            )}
-          </OText>
+            <OText style={styles.textSubtitle} color={theme.colors.inputChat}>
+              {t(
+                'BUSINESS_WELCOME_SUBTITLE',
+                "Let's start to administrate your business now",
+              )}
+            </OText>
+          </View>
+
+          <View style={styles.wrapperBtn}>
+            <OButton
+              text={t('LOGIN', 'Login')}
+              textStyle={{
+                ...styles.btnText,
+                color: theme.colors.inputTextColor,
+              }}
+              bgColor={theme.colors.primary}
+              borderColor={theme.colors.primary}
+              style={styles.btn}
+              imgRightSrc={false}
+              onClick={() => onNavigationRedirect('Login')}
+            />
+          </View>
         </View>
-
-        <View style={styles.wrapperBtn}>
-          <OButton
-            text={t('LOGIN', 'Login')}
-            textStyle={{
-              ...styles.btnText,
-              color: theme.colors.inputTextColor,
-            }}
-            bgColor={theme.colors.primary}
-            borderColor={theme.colors.primary}
-            style={styles.btn}
-            imgRightSrc={false}
-            onClick={() => onNavigationRedirect('Login')}
-          />
-
-          {/* <OButton
-            text={t('SIGNUP', 'Signup')}
-            textStyle={{ ...styles.btnText, color: theme.colors.primary }}
-            bgColor={theme.colors.btnBGWhite}
-            borderColor={theme.colors.btnBGWhite}
-            style={styles.btn}
-            imgRightSrc={false}
-            onClick={() => onNavigationRedirect('Signup')}
-          /> */}
-        </View>
-      </View>
+      </BackgroundImage>
     </Container>
   );
 };
