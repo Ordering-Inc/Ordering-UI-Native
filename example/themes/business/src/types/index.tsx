@@ -320,6 +320,9 @@ export interface PreviousMessagesParams {
 }
 export interface OrderDetailsParams {
   handleUpdateLocationDriver?: () => {};
+  actions: actions;
+  titleAccept: textTranslate;
+  titleReject: textTranslate;
   navigation?: any;
   messagesReadList?: any;
   urlToShare?: string;
@@ -486,12 +489,15 @@ interface textTranslate {
   text: string;
 }
 export interface AcceptOrRejectOrderParams {
-  navigation: any;
-  route: any;
-  orderState?: any;
-  updateStateOrder?: (body: any) => {};
+  customerCellphone: string;
+  closeModal: any;
+  loading: boolean;
+  action: string;
+  orderId: number;
+  handleUpdateOrder: (status: number, isAccept: any) => {} ;
   notShowCustomerPhone?: boolean | undefined;
   actions: actions;
   titleAccept: textTranslate;
   titleReject: textTranslate;
 }
+
