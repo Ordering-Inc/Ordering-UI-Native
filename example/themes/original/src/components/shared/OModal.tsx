@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Modal, StyleSheet, Text, SafeAreaView, TouchableOpacity, View } from "react-native";
+import { Modal, StyleSheet, Text, SafeAreaView, View, TouchableOpacity } from "react-native";
 import { OIcon } from '.';
 import { useTheme } from 'styled-components/native';
 
@@ -49,7 +49,7 @@ const OModal = (props: Props): React.ReactElement => {
 			animationType="slide"
 			transparent={isTransparent}
 			visible={open}
-			onRequestClose={() => { onClose() }}
+			onRequestClose={() => onClose()}
 			style={{ height: '100%', flex: 1, position: 'absolute', ...style, zIndex: 9999 }}
 		>
 			<SafeAreaView style={styles.container}>
@@ -105,13 +105,14 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'flex-start',
 		paddingLeft: 40,
-		paddingRight: 40
+		paddingRight: 40,
+		marginBottom: 40
 	},
 	cancelBtn: {
 		//  position: 'absolute',
 		//  left: 0,
 		//  margin: 15,
-		zIndex: 10000
+		// zIndex: 10000
 	},
 	modalText: {
 		marginTop: 15,
@@ -129,7 +130,8 @@ const styles = StyleSheet.create({
 		marginStart: -4,
 		marginTop: 12,
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
+		zIndex: 99999
 	},
 
 	modalView: {

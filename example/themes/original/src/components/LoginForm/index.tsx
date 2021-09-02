@@ -33,7 +33,7 @@ import {
 
 import NavBar from '../NavBar';
 
-import { OText, OButton, OInput, OModal } from '../shared';
+import { OText, OButton, OInput, OModal, OIcon } from '../shared';
 import { LoginParams } from '../../types';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { GoogleLogin } from '../GoogleLogin';

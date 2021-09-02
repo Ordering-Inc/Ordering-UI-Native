@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled, { useTheme } from 'styled-components/native'
 import { OButton, OIcon, OText } from '../shared'
-import { Platform, TextStyle, ViewStyle, I18nManager } from 'react-native'
+import { Platform, TextStyle, ViewStyle, I18nManager, TouchableOpacity } from 'react-native'
 
 const TitleWrapper = styled.View`
   flex-direction: column;
@@ -124,4 +124,9 @@ NavBar.defaultProps = {
 	textAlign: 'center'
 };
 
-export default NavBar;
+const areEqual=(prevProps: { route?: any; }, nextProps: { route?: any; })=>{
+  return prevProps.route === nextProps.route
+  return true
+}
+
+export default React.memo(NavBar, areEqual);
