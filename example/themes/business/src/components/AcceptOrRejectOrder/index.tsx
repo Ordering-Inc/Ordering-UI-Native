@@ -388,7 +388,9 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             )}
           </Content>
 
-          <Action>
+          <Action style={{
+              marginBottom: isKeyboardShow ? (Platform.OS === 'ios' ? 0 : 10) : 0,
+            }}>
             <FloatingButton
               firstButtonClick={() => {
                 setIsColorAwesomeAlert(true);

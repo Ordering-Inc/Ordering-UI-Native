@@ -675,6 +675,8 @@ const ChatUI = (props: MessagesParams) => {
       {...props}
       containerStyle={{
         flexDirection: 'column-reverse',
+        paddingHorizontal: 12,
+        paddingVertical: Platform.OS === 'ios' ? 0 : 10
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'space-between' }}
       accessoryStyle={{ position: 'relative', marginBottom: 10 }}
