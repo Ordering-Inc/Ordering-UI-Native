@@ -14,8 +14,14 @@ import { USER_TYPE } from '../../config/constants';
 import { useTheme } from 'styled-components/native';
 
 export const OrderMessageUI = (props: OrderDetailsParams) => {
-  const { navigation, messages, setMessages, readMessages, messagesReadList } =
-    props;
+  const {
+    navigation,
+    messages,
+    setMessages,
+    readMessages,
+    messagesReadList,
+    setOrders,
+  } = props;
 
   const theme = useTheme();
   const [, t] = useLanguage();
@@ -29,7 +35,30 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
   const handleCloseModal = () => {
     setOpenModalForBusiness(false);
 
-    if (order.unread_count) {
+    if (order?.unread_count) {
+      if (order.unread_count > 0) {
+        setOrders &&
+          setOrders((prevOrders: any) => {
+            const { data } = prevOrders;
+
+            const updateOrder = data?.find((_order: any, index: number) => {
+              if (_order.id === order?.id) {
+                _order.unread_count = 0;
+                data.splice(index, 1, _order);
+                return true;
+              }
+
+              return false;
+            });
+
+            if (updateOrder) {
+              return { ...prevOrders, data };
+            }
+
+            return prevOrders;
+          });
+      }
+
       readMessages && readMessages();
     }
 

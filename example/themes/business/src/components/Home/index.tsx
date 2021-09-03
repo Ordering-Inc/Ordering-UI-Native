@@ -35,14 +35,10 @@ export const Home = (props: any) => {
   });
 
   return (
-    <Container
-      height={windowHeight - safeHeight}
-      orientation={orientation}
-    >
+    <Container height={windowHeight - safeHeight} orientation={orientation}>
       <BackgroundImage
         source={theme.images.backgroundsImages.login}
-        resizeMode="cover"
-      >
+        resizeMode="cover">
         <LogoWrapper>
           <OIcon src={theme.images.logos.logotypeInvert} style={styles.logo} />
         </LogoWrapper>

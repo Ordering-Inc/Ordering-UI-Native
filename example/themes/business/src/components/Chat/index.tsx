@@ -169,7 +169,7 @@ const ChatUI = (props: MessagesParams) => {
       const { uri, type, name, size } = res;
       const [, typeFile] = type.split('/');
       setFile({ ...file, uri, type: typeFile, name, size });
-    } catch (err) {
+    } catch (err: any) {
       if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker, exit any dialogs or menus and move on
       } else {
@@ -676,7 +676,7 @@ const ChatUI = (props: MessagesParams) => {
       containerStyle={{
         flexDirection: 'column-reverse',
         paddingHorizontal: 12,
-        paddingVertical: Platform.OS === 'ios' ? 0 : 10
+        paddingVertical: Platform.OS === 'ios' ? 0 : 10,
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'space-between' }}
       accessoryStyle={{ position: 'relative', marginBottom: 10 }}
