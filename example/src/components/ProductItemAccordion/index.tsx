@@ -44,13 +44,17 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   const pickerStyle = StyleSheet.create({
     icon: {
-      top: Platform.OS === 'ios' ? 10 : 15,
+      top: 15,
       right: Platform.OS === 'ios' ? 5 : (I18nManager.isRTL ? 30 : 0),
       position: 'absolute',
       fontSize: 20
     },
     itemSelected: {
       backgroundColor: theme.colors.disabled,
+    },
+    closeBtn: {
+      width: 40,
+      height: 40,
     }
   })
 
@@ -134,8 +138,9 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 closeButtonStyle={{
                   width: '100%',
                   alignItems: 'flex-end',
-                  padding: 10
+                  padding: 10,
                 }}
+                closeButtonImageStyle={Platform.OS === 'ios' && pickerStyle.closeBtn}
                 renderFlagButton={() => (
                   <>
                     <TouchableOpacity

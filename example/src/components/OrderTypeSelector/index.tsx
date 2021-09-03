@@ -4,7 +4,7 @@ import {
   useLanguage,
   useOrder
 } from 'ordering-components/native'
-import { StyleSheet, TouchableOpacity, View, ActivityIndicator } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, ActivityIndicator, Platform } from 'react-native'
 import Picker from 'react-native-country-picker-modal';
 import { useTheme } from 'styled-components/native'
 
@@ -30,6 +30,10 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const styles = StyleSheet.create({
     itemSelected: {
       backgroundColor: theme.colors.disabled,
+    },
+    closeBtn: {
+      width: 40,
+      height: 40,
     }
   })
 
@@ -72,6 +76,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
             alignItems: 'flex-end',
             padding: 10
           }}
+          closeButtonImageStyle={Platform.OS === 'ios' && styles.closeBtn}
           renderFlagButton={() => (
             <>
               <TouchableOpacity

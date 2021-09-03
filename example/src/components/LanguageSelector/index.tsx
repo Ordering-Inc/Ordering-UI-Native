@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { I18nManager, TouchableOpacity, ActivityIndicator, View } from 'react-native'
+import { I18nManager, TouchableOpacity, ActivityIndicator, View, Platform } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import {
   LanguageSelector as LanguageSelectorController,
@@ -29,6 +29,10 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   const styles = StyleSheet.create({
     itemSelected: {
       backgroundColor: theme.colors.disabled,
+    },
+    closeBtn: {
+      width: 40,
+      height: 40,
     }
   })
 
@@ -85,6 +89,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
             alignItems: 'flex-end',
             padding: 10
           }}
+          closeButtonImageStyle={Platform.OS === 'ios' && styles.closeBtn}
           renderFlagButton={() => (
             <>
               <TouchableOpacity
