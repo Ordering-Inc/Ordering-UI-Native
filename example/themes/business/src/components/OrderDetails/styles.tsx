@@ -8,6 +8,7 @@ export const Pickup = styled.View`
   background-color: ${(props: any) => props.theme.colors.white};
   padding-horizontal: 40px;
   padding-vertical: 10px;
+  margin-bottom: 20px;
 `;
 
 export const NavBack = styled.TouchableOpacity``;
