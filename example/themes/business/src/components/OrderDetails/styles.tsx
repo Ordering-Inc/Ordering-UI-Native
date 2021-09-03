@@ -15,7 +15,8 @@ export const NavBack = styled.TouchableOpacity``;
 export const Header = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  padding: 40px;
+  padding-horizontal: 40px;
+  padding-top: 10px;
   background-color: ${(props: any) => props.theme.colors.backgroundLight};
 `;
 

@@ -233,8 +233,8 @@ export interface NotFoundSourceParams {
 }
 export interface MessagesOptionParams {
   orders?: any;
+  setOrders?: (status: any) => {};
   loadMore?: (key?: any) => {};
-  messageRead?: (key: any) => {};
   orderList?: any;
   activeOrders?: boolean;
   pagination?: any;
@@ -308,8 +308,8 @@ export interface ContactParams {
 }
 
 export interface PreviousMessagesParams {
-  messageRead?: (key: any) => {};
   orders?: any;
+  setOrders?: (status: any) => {};
   pagination?: any;
   getOrderStatus?: any;
   orderID?: number;
@@ -498,10 +498,9 @@ export interface AcceptOrRejectOrderParams {
   loading: boolean;
   action: string;
   orderId: number;
-  handleUpdateOrder: (status: number, isAccept: any) => {} ;
+  handleUpdateOrder: (status: number, isAccept: any) => {};
   notShowCustomerPhone?: boolean | undefined;
   actions: actions;
   titleAccept: textTranslate;
   titleReject: textTranslate;
 }
-

@@ -13,12 +13,12 @@ import { MessagesOptionParams } from '../../types';
 const MessagesOptionUI = (props: MessagesOptionParams) => {
   const {
     orders,
+    setOrders,
     loadMore,
     pagination,
     messages,
     onNavigationRedirect,
     setSortBy,
-    messageRead,
   } = props;
 
   const theme = useTheme();
@@ -246,8 +246,8 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
         JSON.stringify(tabsFilter) === JSON.stringify(tabs[0].tags) && (
           <PreviousMessages
             orders={values}
+            setOrders={setOrders}
             messages={messages}
-            messageRead={messageRead}
             onNavigationRedirect={onNavigationRedirect}
           />
         )}

@@ -59,7 +59,7 @@ const ChatUI = (props: MessagesParams) => {
   } = props;
 
   const [{ user }] = useSession();
-  const [{ parseDate, optimizeImage }] = useUtils();
+  const [{ parseDate, optimizeImage, getTimeAgo }] = useUtils();
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
   const theme = useTheme();
@@ -127,6 +127,15 @@ const ChatUI = (props: MessagesParams) => {
       fontStyle: 'normal',
       fontWeight: 'normal',
       fontSize: 14,
+    },
+    timeText: {
+      color: theme.colors.white,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 10,
+      paddingLeft: 12,
+      paddingRight: 5,
     },
   });
   const [file, setFile] = useState({
@@ -665,7 +674,6 @@ const ChatUI = (props: MessagesParams) => {
     <InputToolbar
       {...props}
       containerStyle={{
-        padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
         flexDirection: 'column-reverse',
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'space-between' }}
@@ -855,6 +863,14 @@ const ChatUI = (props: MessagesParams) => {
             />
           )}
       </View>
+    </>
+  );
+
+  const renderTime = (props: any) => (
+    <>
+      <OText style={styles.timeText}>
+        {getTimeAgo(props.currentMessage.createdAt)}
+      </OText>
     </>
   );
 
