@@ -28,6 +28,11 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
 
   const handleCloseModal = () => {
     setOpenModalForBusiness(false);
+
+    if (order.unread_count) {
+      readMessages && readMessages();
+    }
+
     navigation?.canGoBack() && navigation.goBack();
     return;
   };

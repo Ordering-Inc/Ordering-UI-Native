@@ -332,7 +332,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setActionOrder(action);
     setOpenModalForAccept(true);
   };
-  
+
   const handleViewSummaryOrder = () => {
     navigation?.navigate &&
       navigation.navigate('OrderSummary', {
@@ -392,18 +392,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   ];
 
   useEffect(() => {
-    if(openModalForAccept) {
-      setOpenModalForAccept(false)
+    if (openModalForAccept) {
+      setOpenModalForAccept(false);
     }
 
-    if(openModalForBusiness) {
-      setOpenModalForBusiness(false)
+    if (openModalForBusiness) {
+      setOpenModalForBusiness(false);
     }
 
-    if(openModalForMapView) {
-      setOpenModalForMapView(false)
+    if (openModalForMapView) {
+      setOpenModalForMapView(false);
     }
-  }, [loading])
+  }, [loading]);
 
   const showFloatButtonsAcceptOrReject: any = {
     0: true,
@@ -448,6 +448,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       paddingLeft: 0,
       height: 14,
     },
+    icons: {
+      maxWidth: 40,
+      height: 25,
+    },
   });
 
   const locationsToSend = locations.filter(
@@ -488,11 +492,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   icon={theme.images.general.arrow_left}
                   iconStyle={{ width: 20, height: 20 }}
                   borderColor={theme.colors.clear}
-                  style={{
-                    maxWidth: 40,
-                    justifyContent: 'center',
-                    padding: 25,
-                  }}
+                  style={{ ...styles.icons, justifyContent: 'flex-end' }}
                   onClick={() => handleArrowBack()}
                 />
 
@@ -505,7 +505,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       tintColor: theme.colors.backArrow,
                     }}
                     borderColor={theme.colors.clear}
-                    style={{ maxWidth: 40 }}
+                    style={styles.icons}
                     onClick={() => handleOpenMapView()}
                   />
 
@@ -517,7 +517,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       tintColor: theme.colors.backArrow,
                     }}
                     borderColor={theme.colors.clear}
-                    style={{ maxWidth: 40 }}
+                    style={styles.icons}
                     onClick={() => handleOpenMessagesForBusiness()}
                   />
                 </Actions>
