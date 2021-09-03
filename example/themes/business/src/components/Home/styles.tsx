@@ -25,4 +25,4 @@ export const BackgroundImage = styled.ImageBackground`
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
-`
+`;

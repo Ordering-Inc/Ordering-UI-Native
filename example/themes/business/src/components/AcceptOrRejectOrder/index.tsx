@@ -47,7 +47,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
   const handleFocus = () => {
     viewRef.current.measure((x, y) => {
-    scrollViewRef.current.scrollTo({ x: 0, y });
+      scrollViewRef.current.scrollTo({ x: 0, y });
     });
   };
 
@@ -379,7 +379,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             {action === 'reject' && (
               <Comments ref={viewRef}>
                 <OTextarea
-                 onFocus={handleFocus}
+                  onFocus={handleFocus}
                   placeholder={t(
                     'PLEASE_TYPE_YOUR_COMMENTS_IN_HERE',
                     'Please type your comments in here',
@@ -387,13 +387,18 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
                   value={comments}
                   onChange={setComments}
                 />
-                <View style={{ height: 20}} />
+                <View style={{ height: 20 }} />
               </Comments>
             )}
           </Content>
 
-          <Action style={{
-              marginBottom: isKeyboardShow ? (Platform.OS === 'ios' ? 0 : 10) : 0,
+          <Action
+            style={{
+              marginBottom: isKeyboardShow
+                ? Platform.OS === 'ios'
+                  ? 0
+                  : 10
+                : 0,
             }}>
             <FloatingButton
               firstButtonClick={() => {

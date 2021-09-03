@@ -324,6 +324,7 @@ export interface PreviousMessagesParams {
 }
 export interface OrderDetailsParams {
   handleUpdateLocationDriver?: () => {};
+  setOrders?: (state: any) => {};
   actions: actions;
   titleAccept: textTranslate;
   titleReject: textTranslate;
