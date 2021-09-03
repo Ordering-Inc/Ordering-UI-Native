@@ -665,7 +665,6 @@ const ChatUI = (props: MessagesParams) => {
     <InputToolbar
       {...props}
       containerStyle={{
-        padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
         flexDirection: 'column-reverse',
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'space-between' }}

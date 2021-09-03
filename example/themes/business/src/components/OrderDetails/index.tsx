@@ -52,7 +52,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     driverLocation,
     actions,
     titleAccept,
-    titleReject
+    titleReject,
   } = props;
 
   const theme = useTheme();
@@ -73,17 +73,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openModalForMapView, setOpenModalForMapView] = useState(false);
   const [isDriverModalVisible, setIsDriverModalVisible] = useState(false);
 
-  if (user?.level === 2 && order?.status === 7) {
+  if (user?.level === 2 && (order?.status === 7 || order?.status === 4)) {
     if (driversGroupsData?.length > 0) {
       driversGroupsData.forEach((driver: any) => {
-        if (driver.id !== order?.driver?.id) {
-          itemsDrivers.push({
-            available: driver?.available,
-            key: driver?.id,
-            value: driver?.id,
-            label: driver?.name,
-          });
-        }
+        itemsDrivers.push({
+          available: driver?.available,
+          key: driver?.id,
+          value: driver?.id,
+          label: driver?.name,
+        });
       });
     }
 
@@ -93,6 +91,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         key: null,
         value: null,
         label: t('UNASSIGN_DRIVER', 'Unassign Driver'),
+      });
+    }
+
+    if (itemsDrivers.length > 0) {
+      itemsDrivers.sort((a: any, b: any) => {
+        if (a.available > b.available) return -1;
       });
     }
   }
@@ -325,11 +329,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     if (openModalForMapView) {
       setOpenModalForMapView(false);
     }
-
     setActionOrder(action);
     setOpenModalForAccept(true);
   };
-
+  
   const handleViewSummaryOrder = () => {
     navigation?.navigate &&
       navigation.navigate('OrderSummary', {
@@ -388,6 +391,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     },
   ];
 
+  useEffect(() => {
+    if(openModalForAccept) {
+      setOpenModalForAccept(false)
+    }
+
+    if(openModalForBusiness) {
+      setOpenModalForBusiness(false)
+    }
+
+    if(openModalForMapView) {
+      setOpenModalForMapView(false)
+    }
+  }, [loading])
+
   const showFloatButtonsAcceptOrReject: any = {
     0: true,
   };
@@ -397,13 +414,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       locations[0] = driverLocation;
     }
   }, [driverLocation]);
-
-  useEffect(() => {
-    if (openModalForAccept && !loading) {
-      setOpenModalForAccept(false);
-      setActionOrder('')
-    }
-  }, [loading]);
 
   const styles = StyleSheet.create({
     driverOff: {
@@ -470,7 +480,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       {order && Object.keys(order).length > 0 && !loading && (
         <>
           <OrderDetailsContainer
-            style={{ marginBottom: 60 }}
+            style={{ marginBottom: 50 }}
             keyboardShouldPersistTaps="handled">
             <>
               <Header>
@@ -699,9 +709,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </OrderBill>
               </OrderContent>
 
-              {order?.status === 7 &&
+              {(order?.status === 7 || order?.status === 4) &&
                 order?.delivery_type === 1 &&
-                user.level === 2 && (
+                (user.level === 2 || user.level === 0) && (
                   <AssignDriver>
                     <OText style={{ marginBottom: 5 }} size={16} weight="bold">
                       {t('ASSIGN_DRIVER', 'Assign driver')}
@@ -746,7 +756,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           renderItem: ({ item }: any) => (
                             <TouchableOpacity
                               style={!item.available && styles.driverOff}
-                              disabled={!item.available}
+                              disabled={
+                                !item.available ||
+                                order?.driver?.id === item.value
+                              }
                               onPress={() => {
                                 handleAssignDriver &&
                                   handleAssignDriver(item.value);
@@ -759,6 +772,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                                   {item.label}
                                   {!item.available &&
                                     ` (${t('NOT_AVAILABLE', 'Not available')})`}
+                                  {item.value === order?.driver?.id &&
+                                    ` (${t('SELECTED', 'Selected')})`}
                                 </OText>
                               </DriverItem>
                             </TouchableOpacity>
