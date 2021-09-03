@@ -84,21 +84,31 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         });
       });
 
-      if(!driversGroupsData?.some(( driver: any) => driver?.id === order?.driver?.id) && order?.driver?.id) {itemsDrivers.push({
-        available: order?.driver?.available,
-        key: order?.driver?.id,
-        value: order?.driver?.id,
-        label: order?.driver?.name,
-      })}
+      if (
+        !driversGroupsData?.some(
+          (driver: any) => driver?.id === order?.driver?.id,
+        ) &&
+        order?.driver?.id
+      ) {
+        itemsDrivers.push({
+          available: order?.driver?.available,
+          key: order?.driver?.id,
+          value: order?.driver?.id,
+          label: order?.driver?.name,
+        });
+      }
     }
-    
-    if(order?.driver && (!driversGroupsData.length || driversGroupsData.length === 0) ) {
+
+    if (
+      order?.driver &&
+      (!driversGroupsData.length || driversGroupsData.length === 0)
+    ) {
       itemsDrivers.push({
         available: order?.driver?.available,
         key: order?.driver?.id,
         value: order?.driver?.id,
         label: order?.driver?.name,
-      })
+      });
     }
 
     if (order?.driver) {
@@ -726,8 +736,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderContent>
 
               {(order?.status === 7 || order?.status === 4) &&
-                order?.delivery_type === 1 
-                 && (
+                order?.delivery_type === 1 && (
                   <AssignDriver>
                     <OText style={{ marginBottom: 5 }} size={16} weight="bold">
                       {t('ASSIGN_DRIVER', 'Assign driver')}
