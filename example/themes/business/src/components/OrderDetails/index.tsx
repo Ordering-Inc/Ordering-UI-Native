@@ -73,7 +73,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openModalForMapView, setOpenModalForMapView] = useState(false);
   const [isDriverModalVisible, setIsDriverModalVisible] = useState(false);
 
-  if (user?.level === 2 && (order?.status === 7 || order?.status === 4)) {
+  if (order?.status === 7 || order?.status === 4) {
     if (driversGroupsData?.length > 0) {
       driversGroupsData.forEach((driver: any) => {
         itemsDrivers.push({
@@ -83,9 +83,25 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           label: driver?.name,
         });
       });
+
+      if(!driversGroupsData?.some(( driver: any) => driver?.id === order?.driver?.id) && order?.driver?.id) {itemsDrivers.push({
+        available: order?.driver?.available,
+        key: order?.driver?.id,
+        value: order?.driver?.id,
+        label: order?.driver?.name,
+      })}
+    }
+    
+    if(order?.driver && (!driversGroupsData.length || driversGroupsData.length === 0) ) {
+      itemsDrivers.push({
+        available: order?.driver?.available,
+        key: order?.driver?.id,
+        value: order?.driver?.id,
+        label: order?.driver?.name,
+      })
     }
 
-    if (itemsDrivers.length > 0 && order?.driver) {
+    if (order?.driver) {
       itemsDrivers.push({
         available: true,
         key: null,
@@ -710,8 +726,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderContent>
 
               {(order?.status === 7 || order?.status === 4) &&
-                order?.delivery_type === 1 &&
-                (user.level === 2 || user.level === 0) && (
+                order?.delivery_type === 1 
+                 && (
                   <AssignDriver>
                     <OText style={{ marginBottom: 5 }} size={16} weight="bold">
                       {t('ASSIGN_DRIVER', 'Assign driver')}
