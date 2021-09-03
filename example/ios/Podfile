@@ -5,6 +5,9 @@ platform :ios, '11.0'
 
 target 'delivery' do
   # React Native Maps dependencies
+    permissions_path = '../node_modules/react-native-permissions/ios'
+    pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
+    
     rn_maps_path = '../node_modules/react-native-maps'
     pod 'react-native-google-maps', :path => rn_maps_path
     pod 'GoogleMaps'
