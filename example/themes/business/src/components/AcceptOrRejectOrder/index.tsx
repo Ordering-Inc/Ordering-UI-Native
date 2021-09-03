@@ -32,6 +32,8 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
   const [, t] = useLanguage();
   const theme = useTheme();
+  const scrollViewRef = useRef(null);
+  const viewRef = useRef(null);
   const timerRef = useRef<any>();
   const [hour, setHour] = useState('00');
   const [min, setMin] = useState('00');
@@ -42,6 +44,12 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const [isColorAwesomeAlert, setIsColorAwesomeAlert] = useState(false);
   const phoneNumber = customerCellphone;
   let codeNumberPhone, numberPhone, numberToShow;
+
+  const handleFocus = () => {
+    viewRef.current.measure((x, y) => {
+    scrollViewRef.current.scrollTo({ x: 0, y });
+    });
+  };
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -161,12 +169,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
   return (
     <>
-      <StatusBar
-        backgroundColor={
-          isColorAwesomeAlert ? '#999898' : theme.colors.primaryContrast
-        }
-        barStyle="dark-content"
-      />
       {loading && (
         <View
           style={{
@@ -235,7 +237,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1 }}>
-          <Content>
+          <Content ref={scrollViewRef}>
             <Header>
               <OIconButton
                 icon={theme.images.general.arrow_left}
@@ -375,8 +377,9 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             />
 
             {action === 'reject' && (
-              <Comments>
+              <Comments ref={viewRef}>
                 <OTextarea
+                 onFocus={handleFocus}
                   placeholder={t(
                     'PLEASE_TYPE_YOUR_COMMENTS_IN_HERE',
                     'Please type your comments in here',
@@ -384,6 +387,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
                   value={comments}
                   onChange={setComments}
                 />
+                <View style={{ height: 20}} />
               </Comments>
             )}
           </Content>
