@@ -247,7 +247,8 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
   const styles = StyleSheet.create({
     btnBackArrow: {
       borderWidth: 0,
-      padding: 40,
+      paddingHorizontal: 40,
+      paddingVertical: 20,
       alignItems: 'flex-start',
       justifyContent: 'flex-start',
       height: 14,
@@ -259,15 +260,14 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
   return (
     <>
+      <OIconButton
+        icon={theme.images.general.arrow_left}
+        iconStyle={{ width: 20, height: 20 }}
+        borderColor={theme.colors.clear}
+        style={styles.btnBackArrow}
+        onClick={() => handleArrowBack()}
+      />
       <Content>
-        <OIconButton
-          icon={theme.images.general.arrow_left}
-          iconStyle={{ width: 20, height: 20 }}
-          borderColor={theme.colors.clear}
-          style={styles.btnBackArrow}
-          onClick={() => handleArrowBack()}
-        />
-
         <OrderContent>
           <OrderHeader>
             <OText size={15} color={theme.colors.textGray} weight="bold">
