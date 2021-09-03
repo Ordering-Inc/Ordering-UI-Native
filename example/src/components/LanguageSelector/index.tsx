@@ -3,13 +3,11 @@ import { I18nManager, TouchableOpacity, ActivityIndicator, View } from 'react-na
 import { useTheme } from 'styled-components/native'
 import {
   LanguageSelector as LanguageSelectorController,
-  useOrder,
   useLanguage
 } from 'ordering-components/native'
-import { Platform, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import RNRestart from 'react-native-restart'
 import Picker from 'react-native-country-picker-modal';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import { Container, SelectItemBtn, SelectItem } from './styles'
 import { LanguageSelectorParams } from '../../types'
@@ -23,7 +21,6 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   } = props
 
   const theme = useTheme()
-  const [orderState] = useOrder()
   const [languageState] = useLanguage()
   const [isOpen, setIsOpen] = useState(false);
   const [optionSelected, setOptionSelected] = useState<any>(null)
@@ -77,21 +74,12 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   return (
     <Container>
       {languagesState?.languages && (
-        // <RNPickerSelect
-        //   onValueChange={handlerChangeLanguage}
-        //   items={_languages || []}
-        //   value={currentLanguage}
-        //   style={pickerStyle}
-        //   useNativeAndroidPickerStyle={false}
-        //   placeholder={{}}
-        //   Icon={() => <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />}
-        //   disabled={orderState.loading}
-        // />
         <Picker
           countryCodes={current}
           visible={isOpen}
           onClose={() => setIsOpen(false)}
           withCountryNameButton
+          // @ts-ignore
           closeButtonStyle={{
             width: '100%',
             alignItems: 'flex-end',

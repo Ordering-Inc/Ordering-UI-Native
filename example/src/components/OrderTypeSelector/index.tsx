@@ -66,6 +66,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
           visible={isOpen}
           onClose={() => setIsOpen(false)}
           withCountryNameButton
+          // @ts-ignore
           closeButtonStyle={{
             width: '100%',
             alignItems: 'flex-end',
