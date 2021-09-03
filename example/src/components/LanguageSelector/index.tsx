@@ -46,7 +46,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     (a.label > b.label) ? 1 : ((b.label > a.label) ? -1 : 0)
   )
 
-  const langSelectedObj: any = _languages.find((item: any) => item.value === currentLanguage) || {}
+  const langSelectedObj: any = _languages && _languages.find((item: any) => item.value === currentLanguage) || {}
 
   const changeDirection = async (language: any) => {
     if(language !== 'ar'){
