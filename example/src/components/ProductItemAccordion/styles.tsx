@@ -19,9 +19,9 @@ export const Accordion = styled.TouchableOpacity`
 `
 
 export const ProductInfo = styled.View`
-  width: 20%;
-  align-items: center;
-
+  width: 22%;
+  align-items: flex-start;
+  justify-content: flex-start;
 `
 
 export const ProductQuantity = styled.View``
@@ -31,7 +31,7 @@ export const ContentInfo = styled.View`
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-  width: 80%;
+  width: 78%;
   position: relative;
 `
 
@@ -61,4 +61,21 @@ export const ProductSubOption = styled.View`
 
 export const ProductComment = styled.View`
     align-items: flex-start;
+`
+
+export const SelectItem = styled.View`
+  padding: 8px;
+  align-items: center;
+  flex-direction: row;
+`;
+
+export const SelectItemBtn = styled(SelectItem)`
+  border-width: 1px;
+  border-color: transparent;
+  border-radius: 10px;
+  width: 70px;
+  max-width: 140px;
+  margin-vertical: 5px;
+  padding: 15px 20px;
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
 `

@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { View, Animated, StyleSheet, Platform, I18nManager } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Animated, StyleSheet, Platform, I18nManager, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import RNPickerSelect from 'react-native-picker-select'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import Picker from 'react-native-country-picker-modal';
 
 import {
   Accordion,
@@ -16,7 +16,9 @@ import {
   ProductOptionsList,
   ProductOption,
   ProductSubOption,
-  ProductComment
+  ProductComment,
+  SelectItemBtn,
+  SelectItem
 } from './styles'
 import { OIcon, OText, OAlert } from '../shared'
 
@@ -35,36 +37,24 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   } = props
 
   const theme = useTheme();
-  const [alert, setAlert] = useState<any>({ show: false })
+  const [alert, setAlert] = useState<any>({ show: false });
+  const [isOpen, setIsOpen] = useState(false);
+  const [optionSelected, setOptionSelected] = useState<any>(null);
+  let current;
 
   const pickerStyle = StyleSheet.create({
-    inputAndroid: {
-      color: theme.colors.secundaryContrast,
-      borderWidth: 1,
-      borderColor: 'transparent',
-      borderRadius: 15,
-      backgroundColor: theme.colors.inputDisabled,
-      width: 60,
-      paddingHorizontal: 10,
-    },
-    inputIOS: {
-      color: theme.colors.secundaryContrast,
-      paddingEnd: 20,
-      height: 40,
-      borderWidth: 1,
-      borderColor: 'transparent',
-      borderRadius: 15,
-      paddingHorizontal: 10,
-      backgroundColor: theme.colors.inputDisabled
-    },
     icon: {
-      top: Platform.OS === 'ios' ? 10 : 15,
+      top: 15,
       right: Platform.OS === 'ios' ? 5 : (I18nManager.isRTL ? 30 : 0),
       position: 'absolute',
       fontSize: 20
     },
-    placeholder: {
-      color: theme.colors.secundaryContrast,
+    itemSelected: {
+      backgroundColor: theme.colors.disabled,
+    },
+    closeBtn: {
+      width: 40,
+      height: 40,
     }
   })
 
@@ -93,6 +83,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   }
 
   const handleChangeQuantity = (value: string) => {
+    setOptionSelected(value)
     if(!orderState.loading){
       if (parseInt(value) === 0) {
         onDeleteProduct && onDeleteProduct(product)
@@ -119,6 +110,13 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     (!product?.valid_menu && isCartProduct && !isCartPending)
   )
 
+  useEffect(() => {
+    if (optionSelected === product.quantity.toString() && !orderState.loading) {
+      setIsOpen(false)
+      setOptionSelected(null)
+    }
+  }, [orderState])
+
   return (
     <AccordionSection>
       <Accordion
@@ -128,18 +126,67 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
           : setActiveState(!isActive)}
         activeOpacity={1}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <ProductInfo>
             {isCartProduct && !isCartPending && getProductMax && !isProductUnavailable ? (
-              <RNPickerSelect
-                items={productOptions}
-                onValueChange={handleChangeQuantity}
-                value={product.quantity.toString()}
-                style={pickerStyle}
-                useNativeAndroidPickerStyle={false}
-                placeholder={{}}
-                Icon={() => <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />}
-                disabled={orderState.loading}
+              <Picker
+                countryCodes={current}
+                visible={isOpen}
+                onClose={() => setIsOpen(false)}
+                withCountryNameButton
+                // @ts-ignore
+                closeButtonStyle={{
+                  width: '100%',
+                  alignItems: 'flex-end',
+                  padding: 10,
+                }}
+                closeButtonImageStyle={Platform.OS === 'ios' && pickerStyle.closeBtn}
+                renderFlagButton={() => (
+                  <>
+                    <TouchableOpacity
+                      onPress={() => setIsOpen(true)}
+                      disabled={productOptions.length === 0 || orderState.loading}
+                    >
+                      <SelectItemBtn>
+                        <OText
+                          color={theme.colors.secundaryContrast}
+                          size={14}
+                        >
+                          {product.quantity.toString()}
+                        </OText>
+                        <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />
+                      </SelectItemBtn>
+                    </TouchableOpacity>
+                  </>
+                )}
+                flatListProps={{
+                  keyExtractor: (item: any) => item.value,
+                  data: productOptions || [],
+                  renderItem: ({ item }: any) => (
+                    <TouchableOpacity
+                      style={product.quantity.toString() === item.value &&
+                        !optionSelected &&
+                        pickerStyle.itemSelected
+                      }
+                      disabled={product.quantity.toString() === item.value || orderState.loading}
+                      onPress={() => handleChangeQuantity(item.value)}
+                    >
+                      <SelectItem>
+                        <View style={{ width: 40 }}>
+                          {optionSelected === item.value && orderState.loading && (
+                            <ActivityIndicator size="small" color={theme.colors.primary} />
+                          )}
+                        </View>
+                        <OText
+                          size={14}
+                          style={{ marginRight: 10 }}
+                        >
+                          {item.label}
+                        </OText>
+                      </SelectItem>
+                    </TouchableOpacity>
+                  ),
+                }}
               />
             ) : (
               <ProductQuantity>
