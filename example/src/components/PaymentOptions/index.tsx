@@ -227,7 +227,7 @@ const PaymentOptionsUI = (props: any) => {
 
       {/* Stripe */}
       {isOpenMethod?.paymethod?.gateway === 'stripe' && !paymethodData.id && (
-        <View>
+        <View style={{ width: '100%' }}>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
             bgColor={theme.colors.primary}
