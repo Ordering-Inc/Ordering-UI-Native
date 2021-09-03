@@ -551,7 +551,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                     color={theme.colors.primary}
                     style={{ textAlign: 'center' }}
                   >
-                    {isLoadingLocation ? t('MOBILE_GETTING_CURRENT_LOCATION', 'Getting current location') : t('MOBILE_CURRENT_LOCATION', 'Get current location')}
+                    {isLoadingLocation ? t('MOBILE_GETTING_CURRENT_LOCATION', 'Getting current location') : t('USE_MY_CURRENT_LOCATION', 'Use my current location')}
                   </OText>
                 </TouchableOpacity>
               )}
