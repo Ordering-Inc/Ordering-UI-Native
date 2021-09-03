@@ -522,15 +522,6 @@ const LoginFormUI = (props: LoginParams) => {
                 'VALIDATION_ERROR_PASSWORD_REQUIRED',
                 'The field Password is required',
               ).replace('_attribute_', t('PASSWORD', 'Password')),
-              pattern: {
-                value: allowedLevels?.includes(4) ? /.{6,}/ : /.{8,}/,
-                message: t(
-                  'VALIDATION_ERROR_PASSWORD_MIN_STRING',
-                  'The Password must be at least 8 characters.',
-                )
-                  .replace('_attribute_', t('PASSWORD', 'Password'))
-                  .replace('8', allowedLevels?.includes(4) ? 6 : 8),
-              },
             }}
             defaultValue=""
           />
