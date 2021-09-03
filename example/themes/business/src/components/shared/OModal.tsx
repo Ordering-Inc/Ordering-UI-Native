@@ -94,6 +94,7 @@ const OModal = (props: Props): React.ReactElement => {
       zIndex: 10000,
       height: 30,
       width: 20,
+      justifyContent: 'flex-end',
     },
     modalText: {
       fontFamily: 'Poppins',

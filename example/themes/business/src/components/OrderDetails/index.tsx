@@ -52,7 +52,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     driverLocation,
     actions,
     titleAccept,
-    titleReject
+    titleReject,
   } = props;
 
   const theme = useTheme();
@@ -401,7 +401,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   useEffect(() => {
     if (openModalForAccept && !loading) {
       setOpenModalForAccept(false);
-      setActionOrder('')
+      setActionOrder('');
     }
   }, [loading]);
 
@@ -437,6 +437,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       justifyContent: 'flex-start',
       paddingLeft: 0,
       height: 14,
+    },
+    icons: {
+      maxWidth: 40,
+      height: 25,
     },
   });
 
@@ -478,11 +482,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   icon={theme.images.general.arrow_left}
                   iconStyle={{ width: 20, height: 20 }}
                   borderColor={theme.colors.clear}
-                  style={{
-                    maxWidth: 40,
-                    justifyContent: 'center',
-                    padding: 25,
-                  }}
+                  style={{ ...styles.icons, justifyContent: 'flex-end' }}
                   onClick={() => handleArrowBack()}
                 />
 
@@ -495,7 +495,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       tintColor: theme.colors.backArrow,
                     }}
                     borderColor={theme.colors.clear}
-                    style={{ maxWidth: 40 }}
+                    style={styles.icons}
                     onClick={() => handleOpenMapView()}
                   />
 
@@ -507,7 +507,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       tintColor: theme.colors.backArrow,
                     }}
                     borderColor={theme.colors.clear}
-                    style={{ maxWidth: 40 }}
+                    style={styles.icons}
                     onClick={() => handleOpenMessagesForBusiness()}
                   />
                 </Actions>
