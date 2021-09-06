@@ -172,7 +172,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   const getAddressFormatted = (address: any) => {
     const data: any = { address: null, error: null }
     const isObjet = typeof address === 'object';
-    let addressValue = ''
+    let addressValue: any = [];
     Geocoder.init(googleMapsApiKey);
     Geocoder.from(address)
       .then((json: any) => {
@@ -182,26 +182,26 @@ const AddressFormUI = (props: AddressFormParams) => {
             const addressType = component.types?.[0]
             if (typeof address === 'object') {
               if ( addressType === 'street_number') {
-                addressValue += component.short_name
+                addressValue.push(component.short_name) 
               }
               if ( addressType === 'route') {
-                addressValue += ', ' + component.short_name
+                addressValue.push(component.short_name)
               }
               if ( addressType === 'locality') {
-                addressValue += ', ' + component.short_name
+                addressValue.push(component.short_name)
               }
               if ( addressType === 'administrative_area_level_1') {
-                addressValue += ', ' + component.long_name
+                addressValue.push(component.long_name)
               }
               if ( addressType === 'country') {
-                addressValue += ', ' + component.long_name
+                addressValue.push(component.long_name)
               }
             }
             if ( addressType === 'postal_code') {
               postalCode = component.short_name
             }
           }
-          isObjet ? address = addressValue : address
+          isObjet ? address = addressValue.join(', ') : address
           data.address = {
             address,
             location: json.results[0].geometry.location,
