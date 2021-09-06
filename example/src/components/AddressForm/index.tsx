@@ -172,6 +172,13 @@ const AddressFormUI = (props: AddressFormParams) => {
   const getAddressFormatted = (address: any) => {
     const data: any = { address: null, error: null }
     const isObjet = typeof address === 'object';
+    const filterAddressInfo = [
+      { tag: 'street_number', isShort: true },
+      { tag: 'route', isShort: true },
+      { tag: 'locality', isShort: true },
+      { tag: 'administrative_area_level_1', isShort: false },
+      { tag: 'country', isShort: false },
+    ]
     let addressValue: any = [];
     Geocoder.init(googleMapsApiKey);
     Geocoder.from(address)
@@ -181,20 +188,10 @@ const AddressFormUI = (props: AddressFormParams) => {
           for (const component of json.results?.[0].address_components) {
             const addressType = component.types?.[0]
             if (typeof address === 'object') {
-              if ( addressType === 'street_number') {
-                addressValue.push(component.short_name) 
-              }
-              if ( addressType === 'route') {
-                addressValue.push(component.short_name)
-              }
-              if ( addressType === 'locality') {
-                addressValue.push(component.short_name)
-              }
-              if ( addressType === 'administrative_area_level_1') {
-                addressValue.push(component.long_name)
-              }
-              if ( addressType === 'country') {
-                addressValue.push(component.long_name)
+              for (const filterProps of filterAddressInfo)  {
+                if(filterProps.tag.includes(addressType)) {
+                  addressValue.push(filterProps.isShort ? component.short_name : component.long_name)
+                }
               }
             }
             if ( addressType === 'postal_code') {
