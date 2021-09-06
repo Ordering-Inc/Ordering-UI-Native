@@ -35,29 +35,27 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
   const handleCloseModal = () => {
     setOpenModalForBusiness(false);
 
-    if (order?.unread_count) {
-      if (order.unread_count > 0) {
-        setOrders &&
-          setOrders((prevOrders: any) => {
-            const { data } = prevOrders;
+    if (order?.unread_count !== undefined) {
+      setOrders &&
+        setOrders((prevOrders: any) => {
+          const { data } = prevOrders;
 
-            const updateOrder = data?.find((_order: any, index: number) => {
-              if (_order.id === order?.id) {
-                _order.unread_count = 0;
-                data.splice(index, 1, _order);
-                return true;
-              }
-
-              return false;
-            });
-
-            if (updateOrder) {
-              return { ...prevOrders, data };
+          const updateOrder = data?.find((_order: any, index: number) => {
+            if (_order.id === order?.id) {
+              _order.unread_count = 0;
+              data.splice(index, 1, _order);
+              return true;
             }
 
-            return prevOrders;
+            return false;
           });
-      }
+
+          if (updateOrder) {
+            return { ...prevOrders, data };
+          }
+
+          return prevOrders;
+        });
 
       readMessages && readMessages();
     }
