@@ -5,7 +5,6 @@ import {
   Platform,
   View,
   KeyboardAvoidingView,
-  StatusBar,
 } from 'react-native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
@@ -28,12 +27,13 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     notShowCustomerPhone,
     titleAccept,
     titleReject,
+    appTitle,
   } = props;
 
   const [, t] = useLanguage();
   const theme = useTheme();
-  const scrollViewRef = useRef(null);
-  const viewRef = useRef(null);
+  const scrollViewRef = useRef<any>(null);
+  const viewRef = useRef<any>(null);
   const timerRef = useRef<any>();
   const [hour, setHour] = useState('00');
   const [min, setMin] = useState('00');
@@ -46,8 +46,8 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   let codeNumberPhone, numberPhone, numberToShow;
 
   const handleFocus = () => {
-    viewRef.current.measure((x, y) => {
-      scrollViewRef.current.scrollTo({ x: 0, y });
+    viewRef?.current?.measure((x: any, y: any) => {
+      scrollViewRef?.current?.scrollTo({ x: 0, y });
     });
   };
 
@@ -132,7 +132,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     setIsColorAwesomeAlert(false);
     setShowAlert(false);
 
-    const time = hour * 60 + parseInt(min);
+    const time = parseInt(hour) * 60 + parseInt(min);
     let bodyToSend;
     const orderStatus: any = {
       acceptByBusiness: {
@@ -153,12 +153,16 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       },
     };
 
-    if (action === 'accept') bodyToSend = orderStatus[actions.accept];
-    if (action === 'reject') bodyToSend = orderStatus[actions.reject];
+    if (actions && action === 'accept') {
+      bodyToSend = orderStatus[actions.accept];
+    }
+    if (actions && action === 'reject') {
+      bodyToSend = orderStatus[actions.reject];
+    }
 
     bodyToSend.id = orderId;
 
-    handleUpdateOrder(bodyToSend.status, bodyToSend);
+    handleUpdateOrder && handleUpdateOrder(bodyToSend.status, bodyToSend);
   };
 
   const cancelRequest = () => {
@@ -254,8 +258,8 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
               <OText size={20} color={theme.colors.textGray} weight="bold">
                 {action === 'accept'
-                  ? `${t(titleAccept.key, titleAccept.text)}:`
-                  : t(titleReject.key, titleReject.text)}
+                  ? `${t(titleAccept?.key, titleAccept?.text)}:`
+                  : t(titleReject?.key, titleReject?.text)}
               </OText>
 
               {action === 'reject' && (
@@ -418,7 +422,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           <AwesomeAlert
             show={showAlert}
             showProgress={false}
-            title={t('BUSINESS_APP', 'Business app')}
+            title={t(appTitle?.key, appTitle?.text)}
             message={t(
               `ARE_YOU_SURE_THAT_YOU_WANT_TO_${
                 action === 'accept' ? 'ACCEPT' : 'REJECT'

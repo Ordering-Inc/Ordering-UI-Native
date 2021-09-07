@@ -325,9 +325,10 @@ export interface PreviousMessagesParams {
 export interface OrderDetailsParams {
   handleUpdateLocationDriver?: () => {};
   setOrders?: (state: any) => {};
-  actions: actions;
-  titleAccept: textTranslate;
-  titleReject: textTranslate;
+  actions?: actions;
+  titleAccept?: textTranslate;
+  titleReject?: textTranslate;
+  appTitle?: textTranslate;
   navigation?: any;
   messagesReadList?: any;
   urlToShare?: string;
@@ -484,24 +485,27 @@ export interface GoogleMapsParams {
 export interface TagsParams {
   status: number[];
 }
+
 interface actions {
-  accept?: string;
-  reject?: string;
+  accept: string;
+  reject: string;
 }
 
 interface textTranslate {
   key: string;
   text: string;
 }
+
 export interface AcceptOrRejectOrderParams {
-  customerCellphone: string;
-  closeModal: any;
-  loading: boolean;
-  action: string;
-  orderId: number;
-  handleUpdateOrder: (status: number, isAccept: any) => {};
+  customerCellphone?: string;
+  closeModal?: any;
+  loading?: boolean;
+  action?: string;
+  orderId?: number;
+  handleUpdateOrder?: (status: number, isAccept: any) => {};
   notShowCustomerPhone?: boolean | undefined;
-  actions: actions;
-  titleAccept: textTranslate;
-  titleReject: textTranslate;
+  actions?: actions;
+  titleAccept?: textTranslate;
+  titleReject?: textTranslate;
+  appTitle?: textTranslate;
 }
