@@ -28,6 +28,7 @@ import { _retrieveStoreData, _setStoreData } from '../providers/StoreUtil';
 
 const Stack = createStackNavigator();
 const RootNavigator = () => {
+  const [orderId, setOrderId] = useState(null)
   const [{ auth, loading: sessionLoading }] = useSession();
   const [orderStatus, { changeMoment }] = useOrder();
   const [{ configs, loading: configsLoading }] = useConfig();
@@ -60,11 +61,8 @@ const RootNavigator = () => {
     }
 
     OneSignal.setNotificationOpenedHandler(({ notification }: any) => {
-      if (notification?.additionalData?.order_uuid) {
-        RootNavigation.navigate('OrderDetails', {
-          orderId: notification?.additionalData?.order_uuid,
-          isFromRoot: true
-        });
+      if(notification?.additionalData?.order_uuid) {
+        setOrderId(notification?.additionalData?.order_uuid)
       }
     });
 
@@ -95,6 +93,17 @@ const RootNavigator = () => {
   }, [orderStatus, isPushLoading])
 
   useEffect(() => {
+    if (orderId && loaded && auth) {
+      RootNavigation.navigate('OrderDetails', {
+        orderId: orderId,
+        isFromRoot: true
+      });
+
+      setOrderId(null)
+    }
+  }, [loaded, orderId])
+
+  useEffect(() => {
     const setTutorialLocal = async () => {
       const data = await _retrieveStoreData('isTutorial');
       if(data === false){
@@ -103,7 +112,7 @@ const RootNavigator = () => {
     }
     setTutorialLocal();
   }, [isTutorial])
-  
+
   useEffect(() => {
     if (!sessionLoading && !isPushLoading.loading && !auth) {
       setLoaded(!auth)
@@ -153,18 +162,18 @@ const RootNavigator = () => {
           <>
             {!auth ? (
               <>
-              { isTutorial ? (
-                <Stack.Screen
-                  name="IntroductoryTutorial"
-                  component={IntroductoryTutorial}
-                  options={{ headerShown: false }}
-                  initialParams={{ setTutorial }}
-                />):(
-                <Stack.Screen
-                  name="Home"
-                  component={Home}
-                  options={{ headerShown: false }}
-                />)}
+                { isTutorial ? (
+                  <Stack.Screen
+                    name="IntroductoryTutorial"
+                    component={IntroductoryTutorial}
+                    options={{ headerShown: false }}
+                    initialParams={{ setTutorial }}
+                  />):(
+                  <Stack.Screen
+                    name="Home"
+                    component={Home}
+                    options={{ headerShown: false }}
+                  />)}
                 <Stack.Screen
                   name="Login"
                   component={Login}
