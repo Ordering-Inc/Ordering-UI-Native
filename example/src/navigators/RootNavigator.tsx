@@ -61,7 +61,9 @@ const RootNavigator = () => {
     }
 
     OneSignal.setNotificationOpenedHandler(({ notification }: any) => {
-      setOrderId(notification?.additionalData?.order_uuid)
+      if(notification?.additionalData?.order_uuid) {
+        setOrderId(notification?.additionalData?.order_uuid)
+      }
     });
 
     OneSignal.addSubscriptionObserver((event: any) => {
