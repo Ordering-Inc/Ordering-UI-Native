@@ -9,7 +9,7 @@ import Geocoder from 'react-native-geocoding';
 import { useTheme } from 'styled-components/native';
 
 import { _retrieveStoreData } from '../../providers/StoreUtil';
-import { OInput, OButton, OText, OModal } from '../shared'
+import { OInput, OButton, OText } from '../shared'
 import { AddressFormParams } from '../../types'
 import { getTraduction } from '../../utils'
 import { GoogleMap } from '../GoogleMap'
@@ -79,6 +79,8 @@ const AddressFormUI = (props: AddressFormParams) => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 20,
+      height: 70,
+      maxHeight: 70
     },
     textAreaStyles: {
       borderRadius: 0,

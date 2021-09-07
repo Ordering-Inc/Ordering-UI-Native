@@ -38,7 +38,7 @@ export const Home = (props: any) => {
       </View>
       <View style={styles.wrapperBtn}>
         <OButton
-          text={t('SIGN_IN', 'Sign in')}
+          text={t('LOGIN', 'Login')}
           bgColor={theme.colors.primary}
           borderColor={theme.colors.primary}
           style={styles.buttons}

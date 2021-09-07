@@ -269,7 +269,7 @@ const AddressListUI = (props: AddressListParams) => {
               {!(
                 route && (route?.params?.isFromBusinesses || route?.params?.isFromCheckout)
               ) && !isFromProfile && (
-                  <OText size={24}>
+                  <OText size={24} style={{ paddingHorizontal: 20 }}>
                     {t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}
                   </OText>
                 )}
