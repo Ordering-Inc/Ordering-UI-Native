@@ -53,6 +53,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     actions,
     titleAccept,
     titleReject,
+    appTitle,
   } = props;
 
   const theme = useTheme();
@@ -875,6 +876,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   actions={actions}
                   titleAccept={titleAccept}
                   titleReject={titleReject}
+                  appTitle={appTitle}
                 />
               </OModal>
 
