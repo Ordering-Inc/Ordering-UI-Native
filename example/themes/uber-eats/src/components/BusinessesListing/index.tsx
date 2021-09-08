@@ -95,7 +95,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
         />
       )}
       <OrderControlContainer>
-        <OText color={theme.colors.green} mBottom={5}>
+        <OText color={theme.colors.green} style={{ marginVertical: 10 }}>
           {t('DELIVER_TO', 'Deliver to')}
         </OText>
         <AddressInput

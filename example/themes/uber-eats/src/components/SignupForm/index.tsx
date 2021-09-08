@@ -336,12 +336,11 @@ const SignupFormUI = (props: SignupParams) => {
                 !notValidationFields.includes(field.code) &&
                 (
                   showField && showField(field.code) && (
-                    <>
+                    <React.Fragment key={field.id}>
                       <OText size={14} mBottom={6} style={{ textAlign: 'left' }}>
                         {t(field.name)}
                       </OText>
-                      <Controller
-                        key={field.id}
+                      <Controller                        
                         control={control}
                         render={({ onChange, value }: any) => (
                           <OInput
@@ -363,7 +362,7 @@ const SignupFormUI = (props: SignupParams) => {
                         rules={getInputRules(field)}
                         defaultValue=""
                       />
-                    </>
+                    </React.Fragment>
                   )
                 ))
               }
