@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useLanguage, useUtils } from 'ordering-components/native'
-import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native'
 import { OButton, OText } from '../shared'
 import { Card, Information, MyOrderOptions, Status, WrappButton } from './styles'
 import { useTheme } from 'styled-components/native';
@@ -70,7 +70,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 
 	return (
 		<ScrollView
-			style={{ marginBottom: 30 }}
+			style={{ marginBottom: 30, paddingBottom: Platform.OS == 'android' ? 40 : 0 }}
 		>
 			{orders.map((order: any) => (
 				<Card key={order.id}>

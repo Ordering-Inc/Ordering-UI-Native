@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { Modal, StyleSheet, Text, SafeAreaView, View } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, Dimensions, useWindowDimensions } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
+import Modal from 'react-native-modal';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   open?: boolean;
@@ -20,6 +22,7 @@ interface Props {
   isNotDecoration?: boolean;
   styleCloseButton?: any;
   transition?: any;
+  overScreen?: boolean;
 }
 
 const OModal = (props: Props): React.ReactElement => {
@@ -40,19 +43,26 @@ const OModal = (props: Props): React.ReactElement => {
     isNotDecoration,
     style,
     styleCloseButton,
-    transition
+    transition,
+    overScreen
   } = props
+
+  const { top, bottom } = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
 
   return (
     <Modal
-      animationType="slide"
-      transparent={isTransparent}
-      visible={open}
-      presentationStyle={transition || 'fullScreen'}
-      onRequestClose={() => { onClose() }}
-      style={{ height: '100%', flex: 1, position: 'absolute', ...style, zIndex: 9999 }}
+      // animationType="slide"
+      // transparent={isTransparent}
+      // visible={open}
+      // presentationStyle={transition || 'fullScreen'}
+      // onRequestClose={() => { onClose() }}
+      avoidKeyboard={false}
+      isVisible={open}
+      coverScreen={overScreen ? overScreen : false}
+      style={{ height: '100%', flex: 1, position: 'absolute', backgroundColor: '#F8F9FA', margin: 0, marginTop: top, marginBottom: bottom, paddingBottom: bottom, ...style, zIndex: 10000 }}
     >
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         {!entireModal ? (
           <View style={styles.centeredView}>
             <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
@@ -84,7 +94,7 @@ const OModal = (props: Props): React.ReactElement => {
             {children}
           </>
         }
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 };
@@ -92,6 +102,7 @@ const OModal = (props: Props): React.ReactElement => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: Dimensions.get('window').width
   },
   centeredView: {
     justifyContent: "center",

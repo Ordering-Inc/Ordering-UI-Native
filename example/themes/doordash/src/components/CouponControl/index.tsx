@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Alert, Text } from 'react-native';
+import { StyleSheet, Alert, Text, Platform } from 'react-native';
 import { CouponControl as CouponController, useLanguage } from 'ordering-components/native';
 
 import {
@@ -31,7 +31,9 @@ const CouponControlUI = (props: any) => {
       height: 40,
       flexBasis: '70%',
       borderWidth: 0,
-      backgroundColor: theme.colors.inputDisabled
+      backgroundColor: theme.colors.inputDisabled,
+      lineHeight: Platform.OS == 'android' ? 70 : 16,
+      textAlign: 'right'
     },
   });
 
@@ -91,6 +93,7 @@ const CouponControlUI = (props: any) => {
             placeholder={t('DISCOUNT_COUPON', 'Discount coupon')}
             onChange={(e: any) => onChangeInputCoupon(e)}
             style={styles.inputsStyle}
+            inputStyle={{padding: 0}}
           />
           <OButton
             onClick={() => handleButtonApplyClick()}

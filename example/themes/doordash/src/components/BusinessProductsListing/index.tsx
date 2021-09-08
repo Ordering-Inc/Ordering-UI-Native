@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, TextStyle, ScrollView } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, TextStyle, ScrollView, I18nManager } from 'react-native'
 import {
 	BusinessAndProductList,
 	useLanguage,
@@ -71,8 +71,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		btnBackArrow: {
 			borderWidth: 0,
 			backgroundColor: theme.colors.clear,
-			paddingStart: 0,
-			paddingEnd: 7,
+			paddingLeft: I18nManager.isRTL ? 7 : 0,
+			paddingRight: I18nManager.isRTL ? 0 : 7,
 		},
 		searchIcon: {
 			width: 25,
@@ -82,10 +82,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 			borderRadius: 24,
 			justifyContent: 'center',
 			alignItems: 'center',
-			shadowColor: theme.colors.black,
-			shadowOpacity: 0.1,
-			shadowOffset: { width: 0, height: 2 },
-			shadowRadius: 2,
+			shadowOpacity: 0,
 			marginEnd: -6
 		},
 		categorySticky: {
@@ -109,6 +106,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	const [isStickyCategory, setStickyCategory] = useState(false);
 	const { top } = useSafeAreaInsets();
+	const [sortBy, setSortBy] = useState('alphabet');
 
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
@@ -164,7 +162,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	return (
 		<>
-			<Animated.View style={{ flex: 1, backgroundColor: theme.colors.white, position: 'absolute', width: '100%', top: top, zIndex: 100 }}>
+			<Animated.View style={{ flex: 1, backgroundColor: theme.colors.white, position: 'absolute', width: '100%', top: top, zIndex: 1 }}>
 				{!loading && business?.id && (
 					<TopHeader>
 						<OButton
@@ -186,6 +184,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								>
 									<SocialShareFav 
 										icon={theme.images.general.share}
+										style={{width: 19, height: 19}}
 									/>
 								</View>
 							</View>
@@ -212,7 +211,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						<WrapSearchBar>
 							<SearchBar
 								onSearch={handleChangeSearch}
-								onCancel={() => handleCancel()}
+								// onCancel={() => handleCancel()}
 								isCancelXButtonShow
 								noBorderShow
 								placeholder={t('SEARCH', 'Search')}
@@ -221,10 +220,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							/>
 						</WrapSearchBar>
 						<SortWrap>
-							<SortButton onPress={() => { }} style={{ marginEnd: 7 }}>
+							<SortButton onPress={() => setSortBy('rank')} style={{ marginEnd: 7 }}>
 								<OText size={12} weight={'600'} color={theme.colors.textPrimary}>{t('RANK', 'Rank')}</OText>
 							</SortButton>
-							<SortButton onPress={() => { }}>
+							<SortButton onPress={() => setSortBy('alphabet')}>
 								<OText size={12} weight={'600'} color={theme.colors.textPrimary}>{t('A_TO_Z', 'A to Z')}</OText>
 							</SortButton>
 						</SortWrap>
@@ -262,6 +261,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								handleClearSearch={handleChangeSearch}
 								errorQuantityProducts={errorQuantityProducts}
 								handleCancelSearch={handleCancel}
+								sortBy={sortBy}
 							/>
 						</WrapContent>
 					)}
@@ -288,7 +288,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					)}
 				</View>
 			</BusinessProductsListingContainer>
-			{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
+			{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && !openCart && curProduct === null && (
 				<FloatingButton
 					btnText={
 						currentCart?.subtotal >= currentCart?.minimum
@@ -309,7 +309,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				onClose={handleCloseProductModal}
 				entireModal
 				customClose
-				transition={'pageSheet'}
 			>
 				<ProductForm
 					product={curProduct || productModal.product}
@@ -327,8 +326,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				entireModal
 				customClose
 			>
-				<ScrollView stickyHeaderIndices={[0]} contentContainerStyle={{ paddingBottom: 100 }}>
-					<NavBar title={t('CART', 'Cart')} onActionLeft={handleCloseCartModal} leftImg={theme.images.general.close} noBorder />
+				<ScrollView stickyHeaderIndices={[0]} style={{backgroundColor: 'white'}} contentContainerStyle={{ paddingBottom: 100 }}>
+					<NavBar title={t('CART', 'Cart')} onActionLeft={handleCloseCartModal} leftImg={theme.images.general.close} noBorder btnStyle={{paddingLeft: 0}} />
 					<OrderSummary
 						cart={currentCart}
 						isCartPending={currentCart?.status === 2}

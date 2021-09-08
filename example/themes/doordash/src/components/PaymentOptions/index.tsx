@@ -271,6 +271,7 @@ const PaymentOptionsUI = (props: any) => {
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
         open={addCardOpen.stripe}
         onClose={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
+        overScreen
       >
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
@@ -294,6 +295,7 @@ const PaymentOptionsUI = (props: any) => {
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
         open={isOpenMethod?.paymethod?.gateway === 'stripe_direct' && !paymethodData.id}
         onClose={() => handlePaymethodClick(null)}
+        overScreen
       >
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
@@ -338,6 +340,7 @@ const PaymentOptionsUI = (props: any) => {
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
         open={addCardOpen.stripeConnect}
         onClose={() => setAddCardOpen({ ...addCardOpen, stripeConnect: false })}
+        overScreen
       >
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
@@ -405,6 +408,7 @@ const PaymentOptionsUI = (props: any) => {
         onAccept={() => setShowGateway({ open: false, closedByUser: true })}
         onClose={() => setShowGateway({ open: false, closedByUser: true })}
         entireModal
+        overScreen
       >
         <OText
           style={{

@@ -80,7 +80,13 @@ const OInput = (props: Props): React.ReactElement => {
       <Input
         name={props.name}
         secureTextEntry={props.isSecured}
-        onChangeText={(txt: any) => props.name ? props.onChange({ target: { name: props.name, value: txt } }) : props.onChange(txt)}
+        onChangeText={(txt: any) => {
+          if (props.name) {
+            props.onChange({ target: { name: props.name, value: txt } });
+          } else {
+            props.onChange(txt)
+          }
+        }}
         defaultValue={props.value}
         placeholder={props.placeholder ? props.placeholder : ''}
         keyboardType={props.type || 'default'}
@@ -94,7 +100,7 @@ const OInput = (props: Props): React.ReactElement => {
         onSubmitEditing={props.onSubmitEditing}
         blurOnSubmit={props.blurOnSubmit}
         ref={props.forwardRef}
-        style={props.inputStyle}
+        style={{padding: 0, ...props.inputStyle}}
       />
       {props.iconRight && (
         <OIcon

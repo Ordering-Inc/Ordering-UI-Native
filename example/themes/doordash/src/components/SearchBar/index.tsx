@@ -1,5 +1,5 @@
-import React from 'react'
-import { StyleSheet, View, TouchableOpacity, TextStyle } from 'react-native'
+import React, { useRef } from 'react'
+import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import { OInput, OButton } from '../shared'
 import { useLanguage } from 'ordering-components/native'
@@ -45,8 +45,12 @@ export const SearchBar = (props: any) => {
   })
 
   const [, t] = useLanguage()
+  const inputRef = useRef<TextInput>();
 
   const handleClear = () => {
+    if (inputRef !== undefined && inputRef.current) {
+      inputRef?.current?.clear();
+    }
     onSearch('')
   }
 
@@ -72,6 +76,7 @@ export const SearchBar = (props: any) => {
         icon={theme.images.general.search}
         iconStyle={{ width: 16 }}
         returnKeyType='done'
+        forwardRef={inputRef}
       />
       {isCancelButtonShow && (
         <OButton

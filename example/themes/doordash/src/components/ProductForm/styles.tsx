@@ -1,5 +1,6 @@
+import { Dimensions } from 'react-native'
 import styled, { css } from 'styled-components/native'
-
+const w = Dimensions.get('window').width
 export const WrapHeader = styled.View`
   position: relative;
   z-index: 1;
@@ -20,10 +21,8 @@ export const ProductHeader = styled.ImageBackground`
   flex-direction: row;
   width: 100%;
   position: relative;
-  max-height: 216px;
-  height: 216px;
-  resize-mode: cover;
-  min-height: 216px;
+  max-height: ${w}px;
+  min-height: 300px;
   z-index: 0;
 `
 

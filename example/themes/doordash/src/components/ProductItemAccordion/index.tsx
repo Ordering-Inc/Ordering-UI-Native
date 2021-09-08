@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Animated, StyleSheet, Platform, I18nManager, TextStyle, TouchableOpacity } from 'react-native'
+import { View, Animated, StyleSheet, Platform, I18nManager, TextStyle, TouchableOpacity, Text } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import RNPickerSelect from 'react-native-picker-select'
 
@@ -38,12 +38,16 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const pickerStyle = StyleSheet.create({
 		inputAndroid: {
-			color: theme.colors.secundaryContrast,
+			color: theme.colors.white,
 			borderWidth: 1,
 			borderColor: 'transparent',
 			borderRadius: 15,
-			backgroundColor: theme.colors.inputDisabled,
-			width: 50,
+			backgroundColor: theme.colors.black,
+			width: 24,
+			height: 24,
+			padding: 0,
+			textAlign: 'center',
+			paddingEnd: 6
 		},
 		inputIOS: {
 			color: theme.colors.white,
@@ -57,7 +61,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 			paddingEnd: 6
 		},
 		icon: {
-			top: Platform.OS === 'ios' ? 4 : 0,
+			top: 4,
 			right: I18nManager.isRTL ? 16 : 5,
 			position: 'absolute',
 		},
@@ -144,16 +148,19 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 				<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 					<ProductInfo>
 						{isCartProduct && !isCartPending && getProductMax && !isMini && (
-							<RNPickerSelect
-								items={productOptions}
-								onValueChange={handleChangeQuantity}
-								value={product.quantity.toString()}
-								style={pickerStyle}
-								useNativeAndroidPickerStyle={false}
-								placeholder={{}}
-								Icon={() => <OText color={theme.colors.white} size={12} style={pickerStyle.icon}>{'x'}</OText>}
-								disabled={orderState.loading}
-							/>
+							<View style={{flex: 1}}>
+								<RNPickerSelect
+									items={productOptions}
+									onValueChange={handleChangeQuantity}
+									value={product.quantity.toString()}
+									style={pickerStyle}
+									useNativeAndroidPickerStyle={false}
+									placeholder={{}}
+									Icon={() => <OText color={theme.colors.white} size={12} style={pickerStyle.icon}>{'x'}</OText>}
+									disabled={orderState.loading}
+								/>
+								{Platform.OS === 'android' && <Text	style={styles.emptyText}>{' '}</Text>}
+							</View>
 						)}
 					</ProductInfo>
 					<ContentInfo>
@@ -260,5 +267,12 @@ const styles = StyleSheet.create({
 		width: 53,
 		height: 53
 	},
-	actions: { width: '100%', flexDirection: 'row', flex: 1, alignItems: 'center', justifyContent: 'space-between' }
+	actions: { width: '100%', flexDirection: 'row', flex: 1, alignItems: 'center', justifyContent: 'space-between' },
+	emptyText: {
+		width: '100%',
+		height: '100%',
+		position: 'absolute',
+		bottom: 0,
+		left: 0,
+	}
 })
