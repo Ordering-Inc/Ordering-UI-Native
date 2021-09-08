@@ -31,7 +31,7 @@ export const Actions = styled.View`
   margin-bottom: 20px;
   margin-top: 10px;
   padding-horizontal: 40px;
-  justify-content: flex-end;
+  justify-content: space-between;
 `
 
 export const WrapperPhone = styled.View`
