@@ -46,7 +46,7 @@ export const Home = (props: any) => {
         <View style={styles.wrapperContent}>
           <View style={styles.wrapperText}>
             <OText style={styles.textTitle} color={theme.colors.inputChat}>
-              {t('TITLE_HOME', 'Welcome')}
+              {t('TITLE_SIGN_UP', 'Welcome')}
             </OText>
 
             <OText style={styles.textSubtitle} color={theme.colors.inputChat}>

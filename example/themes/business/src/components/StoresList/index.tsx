@@ -87,7 +87,9 @@ const StoresListUI = (props: BusinessesListingParams) => {
 
   const styles = StyleSheet.create({
     container: {
-      padding: 20,
+      padding: Platform.OS === 'ios' && orientation === 'Portrait' ? 0 : 20,
+      paddingBottom: 20,
+      paddingHorizontal: 20,
       marginBottom: 0,
       flex: 1,
     },
