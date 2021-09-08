@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback, TextStyle } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback, TextStyle, Platform } from 'react-native'
 import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -13,6 +13,14 @@ import { getTraduction } from '../../utils'
 import { useTheme } from 'styled-components/native';
 import { GoogleMap } from '../GoogleMap'
 import NavBar from '../NavBar'
+import Geolocation from '@react-native-community/geolocation';
+
+import {
+	PERMISSIONS,
+	PermissionStatus,
+	request,
+	openSettings,
+  } from 'react-native-permissions';
 
 import {
 	AddressFormContainer,
@@ -104,6 +112,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 			? addressState?.address?.location
 			: formState.changes?.location ?? null
 	)
+	const [isLoadingLocation, setLoadingLocation] = useState(false)
 	const [saveMapLocation, setSaveMapLocation] = useState(false)
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false)
 	const [isSignUpEffect, setIsSignUpEffect] = useState(false)
@@ -130,8 +139,49 @@ const AddressFormUI = (props: AddressFormParams) => {
 		{ icon: theme.images.general.tag_other, value: 'other' }
 	]
 
+	const requestLocationPermission = async () => {
+		let permissionStatus: PermissionStatus;
+		setLoadingLocation(true)
+		if (Platform.OS === 'ios') {
+		  permissionStatus = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+		} else {
+		  permissionStatus = await request(
+			PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+		  );
+		}
+	
+		if (permissionStatus === 'denied') {
+		  openSettings();
+		}
+		getOneTimeLocation();
+	  };
+	
+	const getOneTimeLocation = () => {
+		Geolocation.getCurrentPosition( (position) => {
+		  getAddressFormatted({
+							latitude: position.coords.latitude,
+							longitude: position.coords.longitude
+		  })
+		},(error) => {
+			console.log(error.message);
+		},
+		{
+			enableHighAccuracy: false,
+			timeout: 30000,
+			maximumAge: 1000
+		});
+	};
 	const getAddressFormatted = (address: any) => {
 		const data: any = { address: null, error: null }
+		const isObjet = typeof address === 'object';
+		const filterAddressInfo = [
+			{ tag: 'street_number', isShort: true },
+			{ tag: 'route', isShort: true },
+			{ tag: 'locality', isShort: true },
+			{ tag: 'administrative_area_level_1', isShort: false },
+			{ tag: 'country', isShort: false },
+		]
+   		let addressValue: any = [];
 		Geocoder.init(googleMapsApiKey);
 		Geocoder.from(address)
 			.then(json => {
@@ -139,11 +189,18 @@ const AddressFormUI = (props: AddressFormParams) => {
 					let postalCode = null
 					for (const component of json.results?.[0].address_components) {
 						const addressType = component.types?.[0]
+						if (typeof address === 'object') {
+							for (const filterProps of filterAddressInfo)  {
+							  if(filterProps.tag.includes(addressType)) {
+								addressValue.push(filterProps.isShort ? component.short_name : component.long_name)
+							  }
+							}
+						}
 						if (addressType === 'postal_code') {
 							postalCode = component.short_name
-							break
 						}
 					}
+					isObjet ? address = addressValue.join(', ') : address
 					data.address = {
 						address,
 						location: json.results[0].geometry.location,
@@ -472,7 +529,16 @@ const AddressFormUI = (props: AddressFormParams) => {
 									<OIcon src={theme.images.general.search} width={16} />
 								</View>
 							</AutocompleteInput>
-
+							{!isKeyboardShow && (
+								<TouchableOpacity onPress={requestLocationPermission} style={{ marginBottom: 10 }}>
+								<OText
+									color={theme.colors.primary}
+									style={{ textAlign: 'center' }}
+								>
+									{isLoadingLocation ? t('MOBILE_GETTING_CURRENT_LOCATION', 'Getting current location') : t('USE_MY_CURRENT_LOCATION', 'Use my current location')}
+								</OText>
+								</TouchableOpacity>
+							)}
 							{(addressState?.address?.location || formState?.changes?.location) && (
 								<GoogleMapContainer>
 									<GoogleMap
