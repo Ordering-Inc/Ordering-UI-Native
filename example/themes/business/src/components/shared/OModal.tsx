@@ -78,6 +78,7 @@ const OModal = (props: Props): React.ReactElement => {
       height: 32,
       width: 32,
       borderRadius: 7.6,
+      resizeMode: 'stretch',
     },
     shadow: {
       height: 33,
@@ -88,6 +89,7 @@ const OModal = (props: Props): React.ReactElement => {
       marginLeft: 15,
       elevation: 1,
       shadowColor: theme.colors.shadow,
+      backgroundColor: theme.colors.clear,
     },
     cancelBtn: {
       marginRight: 5,

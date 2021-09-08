@@ -100,19 +100,57 @@ const ChatUI = (props: MessagesParams) => {
       fontWeight: 'normal',
       fontSize: 12,
     },
+    toolbarStyle: {
+      flexDirection: 'column-reverse',
+      paddingHorizontal: 10,
+      paddingTop: 10,
+      paddingBottom: Platform.OS === 'ios' ? 0 : 10,
+      backgroundColor: theme.colors.white,
+      borderTopWidth: 1,
+      borderTopColor: theme.colors.tabBar,
+      ...Platform.select({
+        ios: {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.2,
+        },
+        android: { elevation: 10 },
+      }),
+    },
     accessoryIcon: {
       height: 32,
       width: 32,
       borderRadius: 7.6,
+      resizeMode: 'stretch',
     },
     shadow: {
       height: 33,
       width: 33,
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: 7.6,
       elevation: 1,
+      borderRadius: 7.6,
+      shadowRadius: 7.6,
       shadowColor: theme.colors.shadow,
+      backgroundColor: theme.colors.clear,
+    },
+    avatar: {
+      height: 17,
+      width: 17,
+      alignItems: 'center',
+      justifyContent: 'center',
+      elevation: 2,
+      borderRadius: 50,
+      shadowRadius: 50,
+      shadowColor: theme.colors.shadow,
+      backgroundColor: theme.colors.white,
+      marginRight: 4,
+    },
+    avatarIcon: {
+      height: 16,
+      width: 16,
+      borderRadius: 50,
+      resizeMode: 'stretch',
     },
     firstMessage: {
       justifyContent: 'center',
@@ -227,6 +265,9 @@ const ChatUI = (props: MessagesParams) => {
   };
 
   const getStatus = (status: number) => {
+    const hour = Math.trunc(status / 60);
+    const min = Math.round((status / 60 - hour) * 60);
+
     switch (status) {
       case 0:
         return 'ORDER_STATUS_PENDING';
@@ -273,7 +314,9 @@ const ChatUI = (props: MessagesParams) => {
       case 21:
         return 'ORDER_CUSTOMER_ARRIVED_BUSINESS';
       default:
-        return status;
+        return `${hour < 10 ? '0' + hour : hour}:${
+          min < 10 ? '0' + min : min
+        } ${status > 60 ? 'hours' : 'minutes'}`;
     }
   };
 
@@ -291,7 +334,7 @@ const ChatUI = (props: MessagesParams) => {
           ...styles.firstMessage,
           marginLeft: 10,
           marginRight: 10,
-          width: windowWidth - 40,
+          width: windowWidth - 20,
         }}>
         <OText style={{ ...styles.firstMessageText, textAlign: 'center' }}>
           {message.change?.attribute !== 'driver_id'
@@ -320,34 +363,38 @@ const ChatUI = (props: MessagesParams) => {
   const AvatarsConsole = () => {
     return (
       <View style={{ flexDirection: 'row' }}>
-        <OIcon
-          url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
-          src={!order?.business?.logo && theme.images.dummies.businessLogo}
-          width={16}
-          height={16}
-          style={{ marginHorizontal: 2 }}
-        />
-
-        <OIcon
-          url={optimizeImage(
-            order?.customer?.photo || theme?.images?.dummies?.customerPhoto,
-            'h_300,c_limit',
-          )}
-          width={16}
-          height={16}
-          style={{ marginHorizontal: 2 }}
-        />
-
-        {order?.driver && (
+        <View style={styles.avatar}>
           <OIcon
-            url={
-              optimizeImage(order?.driver?.photo, 'h_300,c_limit') ||
-              theme?.images?.dummies?.driverPhoto
-            }
+            url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
+            src={!order?.business?.logo && theme.images.dummies.businessLogo}
             width={16}
             height={16}
-            style={{ marginHorizontal: 2 }}
+            style={styles.avatarIcon}
           />
+        </View>
+
+        <View style={styles.avatar}>
+          <OIcon
+            url={optimizeImage(
+              order?.customer?.photo || theme?.images?.dummies?.customerPhoto,
+              'h_300,c_limit',
+            )}
+            style={styles.avatarIcon}
+          />
+        </View>
+
+        {order?.driver && (
+          <View style={styles.avatar}>
+            <OIcon
+              url={
+                optimizeImage(order?.driver?.photo, 'h_300,c_limit') ||
+                theme?.images?.dummies?.driverPhoto
+              }
+              width={16}
+              height={16}
+              style={styles.avatarIcon}
+            />
+          </View>
         )}
       </View>
     );
@@ -356,7 +403,7 @@ const ChatUI = (props: MessagesParams) => {
   useEffect(() => {
     let newMessages: Array<any> = [];
     const console = (
-      <View style={{ flexDirection: 'column' }}>
+      <View style={{ flexDirection: 'column', width: windowWidth - 100 }}>
         <View style={styles.firstMessage}>
           <OText style={styles.firstMessageText}>
             {t('ORDER_PLACED_FOR', 'Order placed for')}{' '}
@@ -373,11 +420,13 @@ const ChatUI = (props: MessagesParams) => {
           </OText>
         </View>
 
-        <OText size={9} color={theme.colors.textGray}>
-          {`${t('SENT_TO', 'Sent to')}:`}
-        </OText>
+        <View style={{ marginHorizontal: 3 }}>
+          <OText size={9} color={theme.colors.textGray}>
+            {`${t('SENT_TO', 'Sent to')}:`}
+          </OText>
 
-        <AvatarsConsole />
+          <AvatarsConsole />
+        </View>
       </View>
     );
 
@@ -673,11 +722,7 @@ const ChatUI = (props: MessagesParams) => {
   const renderInputToolbar = (props: InputToolbarProps) => (
     <InputToolbar
       {...props}
-      containerStyle={{
-        flexDirection: 'column-reverse',
-        paddingHorizontal: 12,
-        paddingVertical: Platform.OS === 'ios' ? 0 : 10,
-      }}
+      containerStyle={styles.toolbarStyle}
       primaryStyle={{ alignItems: 'center', justifyContent: 'space-between' }}
       accessoryStyle={{ position: 'relative', marginBottom: 10 }}
       renderAccessory={order ? renderAccessory : undefined}
@@ -773,8 +818,8 @@ const ChatUI = (props: MessagesParams) => {
         right: { color: theme.colors.white },
       }}
       containerStyle={{
-        left: { marginVertical: 5, borderTopLeftRadius: 7.6 },
-        right: { marginVertical: 5, borderTopRightRadius: 7.6 },
+        left: { marginVertical: 5, borderTopLeftRadius: 7.6, marginLeft: 3 },
+        right: { marginVertical: 5, borderTopRightRadius: 7.6, marginRight: 3 },
       }}
       wrapperStyle={{
         left: {
@@ -821,7 +866,7 @@ const ChatUI = (props: MessagesParams) => {
   };
 
   const renderAvatar = (props: any) => (
-    <>
+    <View style={{ marginHorizontal: 3, alignItems: 'flex-start' }}>
       <OText size={9} color={theme.colors.textGray}>
         {`${t('SENT_TO', 'Sent to')}:`}
       </OText>
@@ -829,43 +874,43 @@ const ChatUI = (props: MessagesParams) => {
       <View style={{ flexDirection: 'row' }}>
         {props?.currentMessage?.user?.can_see?.includes('2') &&
           user?.level !== 2 && (
-            <OIcon
-              url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
-              src={
-                !order?.business?.logo && theme?.images?.dummies?.businessLogo
-              }
-              width={16}
-              height={16}
-              style={{ marginHorizontal: 2 }}
-            />
+            <View style={styles.avatar}>
+              <OIcon
+                url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
+                src={
+                  !order?.business?.logo && theme?.images?.dummies?.businessLogo
+                }
+                style={styles.avatarIcon}
+              />
+            </View>
           )}
 
         {props?.currentMessage?.user?.can_see?.includes('3') && (
-          <OIcon
-            url={optimizeImage(
-              order?.customer?.photo || theme?.images?.dummies?.customerPhoto,
-              'h_300,c_limit',
-            )}
-            width={16}
-            height={16}
-            style={{ marginHorizontal: 2 }}
-          />
+          <View style={styles.avatar}>
+            <OIcon
+              url={optimizeImage(
+                order?.customer?.photo || theme?.images?.dummies?.customerPhoto,
+                'h_300,c_limit',
+              )}
+              style={styles.avatarIcon}
+            />
+          </View>
         )}
 
         {props?.currentMessage?.user?.can_see?.includes('4') &&
           user?.level !== 4 && (
-            <OIcon
-              url={
-                optimizeImage(order?.driver?.photo, 'h_300,c_limit') ||
-                theme?.images?.dummies?.driverPhoto
-              }
-              width={16}
-              height={16}
-              style={{ marginHorizontal: 2 }}
-            />
+            <View style={{ ...styles.avatar, marginRight: 0 }}>
+              <OIcon
+                url={
+                  optimizeImage(order?.driver?.photo, 'h_300,c_limit') ||
+                  theme?.images?.dummies?.driverPhoto
+                }
+                style={styles.avatarIcon}
+              />
+            </View>
           )}
       </View>
-    </>
+    </View>
   );
 
   const renderTime = (props: any) => (
