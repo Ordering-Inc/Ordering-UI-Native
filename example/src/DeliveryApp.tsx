@@ -95,7 +95,8 @@ theme.images = {
     stripecc: require('./assets/icons/cc-stripe.png'),
     stripes: require('./assets/icons/stripe-s.png'),
     stripesb: require('./assets/icons/stripe-sb.png'),
-    creditCard: require('./assets/icons/credit-card.png')
+    creditCard: require('./assets/icons/credit-card.png'),
+    help: require('./assets/images/help.png')
   },
   order: {
     status0: require('./assets/images/status-0.png'),

@@ -12,6 +12,11 @@ import OrderDetails from '../pages/OrderDetails';
 import BusinessProductsList from '../pages/BusinessProductsList';
 import ReviewOrder from '../pages/ReviewOrder'
 import MomentOption from '../pages/MomentOption'
+import Account from '../pages/Account'
+import Help from '../pages/Help'
+import HelpOrder from '../pages/HelpOrder'
+import HelpGuide from '../pages/HelpGuide'
+import HelpAccountAndPayment from '../pages/HelpAccountAndPayment'
 import Splash from '../pages/Splash';
 
 const Stack = createStackNavigator();
@@ -92,6 +97,31 @@ const HomeNavigator = (e : any) => {
                     component={AddressForm}
                     options={{ headerShown: false }}
                     initialParams={{ afterSignup: false }}
+                  />
+                  <Stack.Screen
+                    name="Account"
+                    component={Account}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="Help"
+                    component={Help}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="HelpOrder"
+                    component={HelpOrder}
+                    options={{ headerShown: false }}
+                  />
+                   <Stack.Screen
+                    name="HelpGuide"
+                    component={HelpGuide}
+                    options={{ headerShown: false }}
+                  />
+                   <Stack.Screen
+                    name="HelpAccountAndPayment"
+                    component={HelpAccountAndPayment}
+                    options={{ headerShown: false }}
                   />
                 </>
               )}
