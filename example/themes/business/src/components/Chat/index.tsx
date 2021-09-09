@@ -505,55 +505,6 @@ const ChatUI = (props: MessagesParams) => {
     }
   }, [order?.driver]);
 
-  const RenderActions = (props: any) => {
-    return (
-      <Actions
-        {...props}
-        containerStyle={styles.containerActions}
-        optionTintColor="#222845"
-        icon={() => (
-          <>
-            {!file?.type && (
-              <>
-                <OIconButton
-                  borderColor={theme.colors.transparent}
-                  style={{ width: image ? 32 : 28, height: image ? 32 : 28 }}
-                  icon={image ? { uri: image } : theme.images.general.imageChat}
-                  iconStyle={{
-                    borderRadius: image ? 10 : 0,
-                    width: image ? 32 : 28,
-                    height: image ? 32 : 28,
-                  }}
-                  onClick={handleImagePicker}
-                  iconCover
-                />
-
-                {image && (
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      top: -5,
-                      right: -5,
-                      borderColor: theme.colors.backgroundDark,
-                      backgroundColor: theme.colors.white,
-                      borderRadius: 25,
-                    }}
-                    onPress={() => removeImage()}>
-                    <MaterialCommunityIcon
-                      name="close-circle-outline"
-                      color={theme.colors.backgroundDark}
-                      size={24}
-                    />
-                  </TouchableOpacity>
-                )}
-              </>
-            )}
-          </>
-        )}
-      />
-    );
-  };
-
   const RenderActionsAttach = (props: any) => {
     return (
       <Actions
@@ -776,7 +727,53 @@ const ChatUI = (props: MessagesParams) => {
       />
 
       {/* {!image && <RenderActionsAttach {...props} />} */}
-      {!file.type && <RenderActions {...props} />}
+      {!file.type && (
+        <Actions
+          {...props}
+          containerStyle={styles.containerActions}
+          optionTintColor="#222845"
+          icon={() => (
+            <>
+              {!file?.type && (
+                <>
+                  <OIconButton
+                    borderColor={theme.colors.transparent}
+                    icon={
+                      image ? { uri: image } : theme.images.general.imageChat
+                    }
+                    iconStyle={{
+                      borderRadius: image ? 10 : 0,
+                      width: image ? 32 : 28,
+                      height: image ? 32 : 28,
+                    }}
+                    onClick={handleImagePicker}
+                    iconCover
+                  />
+
+                  {image && (
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        top: -5,
+                        right: -5,
+                        borderColor: theme.colors.backgroundDark,
+                        backgroundColor: theme.colors.white,
+                        borderRadius: 25,
+                      }}
+                      onPress={() => removeImage()}>
+                      <MaterialCommunityIcon
+                        name="close-circle-outline"
+                        color={theme.colors.backgroundDark}
+                        size={24}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        />
+      )}
     </View>
   );
 
