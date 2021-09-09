@@ -145,7 +145,7 @@ export const ProductOptionsUI = (props: any) => {
 							{loading && !product ? (
 								<View style={styles.productHeaderSkeleton}>
 									<Placeholder Animation={Fade} >
-										<PlaceholderLine height={260} style={{ borderRadius: 0 }} width={windowWidth} />
+										<PlaceholderLine height={300} style={{ borderRadius: 0 }} width={windowWidth} />
 									</Placeholder>
 								</View>
 							) : (
@@ -157,6 +157,7 @@ export const ProductOptionsUI = (props: any) => {
 									</TopHeader>
 									<ProductHeader
 										source={{ uri: product?.images || productCart?.images }}
+										resizeMode={'contain'}
 									/>
 								</>
 							)}
@@ -317,7 +318,7 @@ export const ProductOptionsUI = (props: any) => {
 				<ProductActions style={{ paddingBottom: bottom + 20 }}>
 
 					<View style={{ width: '100%' }}>
-						{productCart && !isSoldOut && maxProductQuantity > 0 && auth && orderState.options?.address_id && (
+						{/* {productCart && !isSoldOut && maxProductQuantity > 0 && auth && orderState.options?.address_id && ( */}
 							<OButton
 								onClick={() => handleSaveProduct()}
 								imgRightSrc=''
@@ -330,7 +331,7 @@ export const ProductOptionsUI = (props: any) => {
 									borderColor: saveErrors ? theme.colors.backgroundGray300 : theme.colors.primary,
 								}}
 							/>
-						)}
+						{/* )} */}
 						{auth && !orderState.options?.address_id && (
 							orderState.loading ? (
 								<OButton

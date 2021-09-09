@@ -222,6 +222,7 @@ const OrderSummaryUI = (props: any) => {
 						entireModal
 						customClose
 						onClose={() => setModalIsOpen(false)}
+						overScreen
 					>
 						<ProductForm
 							isCartProduct

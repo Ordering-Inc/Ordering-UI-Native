@@ -150,27 +150,26 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 						</View>
 					)}
 					<BusinessInfoItem style={{ flexDirection: 'row' }}>
-						{loading && (
+						{loading ? (
 							<Placeholder Animation={Fade}>
 								<View style={{ flexDirection: 'row' }}>
-									<PlaceholderLine width={13} style={{ marginRight: 10 }} />
-									<PlaceholderLine width={13} style={{ marginRight: 10 }} />
-									<PlaceholderLine width={13} />
+									<PlaceholderLine width={12} style={{ marginRight: 10 }} />
+									<PlaceholderLine width={12} style={{ marginRight: 10 }} />
+									<PlaceholderLine width={12} />
 								</View>
 							</Placeholder>
+						) : (
+							<View style={styles.reviewStyle}>
+								<OText style={theme.labels.small as TextStyle} color={theme.colors.textSecondary}>{business?.reviews?.total}</OText>
+								<OIcon src={theme.images.general.star} width={10} style={{marginHorizontal: 2}} />
+								<TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
+									<OText style={{ fontSize: 10, textDecorationLine: 'underline' } as TextStyle} color={theme.colors.primary}>
+										{business?.reviews?.reviews?.length + ' ' + t('REVIEWS', 'reviews')}
+									</OText>
+								</TouchableOpacity>
+								<OText color={theme.colors.textSecondary} style={theme.labels.small as TextStyle}>{' \u2022 ' + parseDistance(business?.distance || 0)}</OText>
+							</View>
 						)}
-						<View style={styles.reviewStyle}>
-							<OText style={theme.labels.small as TextStyle} color={theme.colors.textSecondary}>{business?.reviews?.total}</OText>
-							<OIcon src={theme.images.general.star} width={10} style={{marginHorizontal: 2}} />
-							<TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
-								<OText style={{ fontSize: 10, textDecorationLine: 'underline' } as TextStyle} color={theme.colors.primary}>
-									{business?.reviews?.reviews?.length + ' ' + t('REVIEWS', 'reviews')}
-								</OText>
-							</TouchableOpacity>
-
-							<OText color={theme.colors.textSecondary} style={theme.labels.small as TextStyle}>{' \u2022 ' + parseDistance(business?.distance || 0)}</OText>
-
-						</View>
 					</BusinessInfoItem>
 					<View style={styles.deliveryInfo}>
 						<View style={styles.dInfoItem}>
@@ -196,6 +195,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 				onClose={() => setOpenBusinessInformation(false)}
 				styleCloseButton={{ color: theme.colors.white, backgroundColor: 'rgba(0,0,0,0.3)' }}
 				isNotDecoration
+				overScreen
 			>
 				<BusinessInformation
 					businessState={businessState}
@@ -208,6 +208,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 				onClose={() => setOpenBusinessReviews(false)}
 				styleCloseButton={{ color: theme.colors.white, backgroundColor: 'rgba(0,0,0,0.3)' }}
 				isNotDecoration
+				overScreen
 			>
 				<BusinessReviews
 					businessState={businessState}

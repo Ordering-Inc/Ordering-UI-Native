@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { ImageSourcePropType, Platform } from 'react-native';
+import { ImageSourcePropType, ImageStyle, Platform, StyleSheet } from 'react-native';
 import Share from 'react-native-share';
-import { OIcon, OIconButton, OText } from '../shared';
-import { FavItem, FavMenu, FavMenuItem } from './styles';
+import { OIcon } from '../shared';
+import { FavItem, FavMenu } from './styles';
 import { useTheme } from 'styled-components/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface SSFTypes {
 	icon?: ImageSourcePropType,
 	mode?: 'dropdown' | 'sheets',
 	data?: {url?: string, image?: string},
+	style?: ImageStyle
 }
 
 const SAppName = {
@@ -22,7 +24,7 @@ const SAppName = {
 };
 
 const SocialShareFav = (props: SSFTypes) => {
-	const { icon, mode, data } = props;
+	const { icon, style, mode, data } = props;
 
 	const theme = useTheme();
 
@@ -82,6 +84,7 @@ const SocialShareFav = (props: SSFTypes) => {
 			whatsAppNumber: "9199999999",  // country code + phone number
 			// filename: 'test' , // only for base64 file in Android
 		}
+		setShowMenu(false);
 		const shareResult = await Share.shareSingle(options);
 	}
 
@@ -92,27 +95,37 @@ const SocialShareFav = (props: SSFTypes) => {
 	return (
 		<>
 		<FavItem onPress={onOpenMenu}>
-			<OIcon src={icon} />
+			<OIcon src={icon} style={style} />
 		</FavItem>
 		{showMenu && 
 			<FavMenu>
 				{SApps.map(({name, social, icon, color}) => 
-					<>
+					<React.Fragment key={name}>
 					{name === SAppName.LINKEDIN ? Platform.OS === 'android' ? 
-					 	<FavMenuItem key={name} onPress={() => onShare(social)}>
+					 	<TouchableOpacity key={name} style={favStyles.itemBtn} onPress={() => onShare(social)}>
 							<OIcon src={icon} color={color} />
-						</FavMenuItem>
+						</TouchableOpacity>
 					 : null :
-					 	<FavMenuItem key={name} onPress={() => onShare(social)}>
+					 	<TouchableOpacity key={name} style={favStyles.itemBtn} onPress={() => onShare(social)}>
 							<OIcon src={icon} color={color} />
-						</FavMenuItem>
+						</TouchableOpacity>
 					 }
-					</>
+					</React.Fragment>
 				)}
 			</FavMenu>
 		}
 		</>
 	)
 }
+
+const favStyles = StyleSheet.create({
+	itemBtn: {
+		borderRadius: 7.6,
+		marginBottom: 4,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: 'white'
+	}
+});
 
 export default SocialShareFav;

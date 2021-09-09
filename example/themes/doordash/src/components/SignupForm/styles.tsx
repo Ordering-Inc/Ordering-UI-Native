@@ -26,8 +26,7 @@ export const SocialButtons = styled.View`
 `
 export const InputWrapper = styled.View`
 	flex-direction: row;
-	align-items: flex-start;
-	height: 40px;
-	max-height: 40px;
+  align-items: center;
+	min-height: 40px;
 	margin-vertical: 6px;
 `;

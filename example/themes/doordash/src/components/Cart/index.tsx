@@ -223,6 +223,7 @@ const CartUI = (props: any) => {
         entireModal
         customClose
         onClose={() => setModalIsOpen(false)}
+        overScreen
       >
         <ProductForm
           isCartProduct
@@ -234,7 +235,6 @@ const CartUI = (props: any) => {
           onSave={handlerProductAction}
           onClose={() => setModalIsOpen(false)}
         />
-
       </OModal>
 
       {openUpselling && (

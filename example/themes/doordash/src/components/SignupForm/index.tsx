@@ -69,13 +69,12 @@ const SignupFormUI = (props: SignupParams) => {
 			color: theme.colors.primary
 		},
 		inputStyle: {
-			marginBottom: 25,
+			marginBottom: 0,
 			borderWidth: 0,
 			height: 40,
 		},
 		inputHead: {
 			flexBasis: '32%',
-			marginTop: 9
 		},
 		socialButton: {
 			height: 40,
@@ -346,7 +345,7 @@ const SignupFormUI = (props: SignupParams) => {
 										renderIcon={<OIcon src={theme.images.general.facebook} width={16} />}
 										text={t('CONTINUE_WITH_FACEBOOK', 'Continue with Facebook')}
 									/>
-									<FacebookLogin
+									{/* <FacebookLogin
 										notificationState={notificationState}
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
@@ -365,7 +364,7 @@ const SignupFormUI = (props: SignupParams) => {
 										textStyles={registerStyles.socialText}
 										renderIcon={<OIcon src={theme.images.general.apple} width={16} />}
 										text={t('CONTINUE_WITH_APPLE', 'Continue with Apple')}
-									/>
+									/> */}
 								</SocialButtons>
 								<OText style={{ ...theme.labels.normal, textAlign: 'center', marginBottom: 8 } as TextStyle} color={theme.colors.textSecondary}>{t('OR_CONTINUE_WITH_EMAIL', 'or continue with email')}</OText>
 							</ButtonsSection>
@@ -517,7 +516,7 @@ const SignupFormUI = (props: SignupParams) => {
 							textStyle={{ color: 'white', ...theme.labels.middle } as TextStyle}
 							isLoading={isLoadingVerifyModal}
 							indicatorColor={theme.colors.white}
-							style={{ height: 40, marginTop: 50, shadowOpacity: 0 }}
+							style={{ height: 40, marginTop: 50, shadowOpacity: 0, marginBottom: 30 }}
 						/>
 					) : (
 						<OButton
@@ -528,7 +527,7 @@ const SignupFormUI = (props: SignupParams) => {
 							textStyle={{ color: 'white', ...theme.labels.middle } as TextStyle}
 							imgRightSrc={null}
 							isDisabled={formState.loading || validationFields.loading}
-							style={{ height: 40, marginTop: 50, shadowOpacity: 0 }}
+							style={{ height: 40, marginTop: 50, shadowOpacity: 0, marginBottom: 30 }}
 						/>
 
 					)}

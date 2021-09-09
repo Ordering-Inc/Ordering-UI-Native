@@ -34,7 +34,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 			<Card
 				isMiniCard={configs?.google_maps_api_key?.value}
 				onPress={() => handleClickCard(order?.uuid)}
-				style={{ width: width * 0.7 - (padding || 0) * 2 }}
+				style={{ width: width * 0.9 - (padding || 0) * 2 }}
 			>
 				<Information>
 					<OrderInformation>
@@ -86,7 +86,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 			showsHorizontalScrollIndicator={false}
 			horizontal
 			isMiniCards={configs?.google_maps_api_key?.value}
-			style={{ marginStart: -(padding || 0), marginEnd: -(padding || 0) }}
+			style={{ marginLeft: -(padding || 0), marginRight: -(padding || 0)}}
 			contentContainerStyle={{ paddingLeft: padding, paddingRight: padding }}
 		>
 			{orders.length > 0 && (

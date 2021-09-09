@@ -194,22 +194,23 @@ export interface BusinessProductsListParams {
   featured?: any;
   searchValue?: any;
   handleClearSearch?: (value: any) => {};
-  isBusinessLoading?: any,
-  errorQuantityProducts?: boolean,
-  handleCancelSearch?: () => void
+  isBusinessLoading?: any;
+  errorQuantityProducts?: boolean;
+  handleCancelSearch?: () => void;
+  sortBy?: string;
 }
 export interface SingleProductCardParams {
-  businessId: any,
+  businessId: any;
   product: any;
   isSoldOut: boolean;
   onProductClick: any;
 }
 export interface BusinessInformationParams {
-  navigation?: any,
+  navigation?: any;
   businessState?: any;
   businessSchedule?: Array<any>;
-  businessLocation?: any
-  business?: any
+  businessLocation?: any;
+  business?: any;
 }
 export interface BusinessReviewsParams {
   businessState: { business: any, loading: boolean, error: null };

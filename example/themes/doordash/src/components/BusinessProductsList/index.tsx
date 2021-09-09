@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { ProductsList, useLanguage } from 'ordering-components/native'
 import { SingleProductCard } from '../SingleProductCard'
 import { NotFoundSource } from '../NotFoundSource'
@@ -26,15 +26,25 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     handleSearchRedirect,
     handleClearSearch,
     errorQuantityProducts,
-    handleCancelSearch
+    handleCancelSearch,
+    sortBy
   } = props
 
   const [, t] = useLanguage()
+  const [sort, setSort] = useState(sortBy);
+  const [allProducts, setAllProducts] = useState(categoryState.products);
+
+  useEffect(() => {
+    if (categoryState?.products) {
+      setAllProducts([...categoryState.products.sort((a: any,b:any) => sort == 'alphabet' ? a.name > b.name : a?.rank > b?.rank)])
+      console.log(sortBy)
+    }
+  }, [categoryState, sortBy]);
 
   return (
     <ProductsContainer>
       {category.id && (
-        categoryState.products?.map((product: any) => (
+        allProducts?.map((product: any) => (
           <SingleProductCard
             key={product.id}
             isSoldOut={(product.inventoried && !product.quantity)}
@@ -47,20 +57,18 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
 
       {
         !category.id && (
-          featured && categoryState?.products?.find((product: any) => product.featured) && (
+          featured && allProducts?.find((product: any) => product.featured) && (
             <>
               <OText size={16} weight={'600'} mBottom={20}>{t('FEATURED', 'Featured')}</OText>
-              <>
-                {categoryState.products?.map((product: any) => product.featured && (
-                  <SingleProductCard
-                    key={product.id}
-                    isSoldOut={(product.inventoried && !product.quantity)}
-                    product={product}
-                    businessId={businessId}
-                    onProductClick={onProductClick}
-                  />
-                ))}
-              </>
+              {allProducts?.map((product: any) => product.featured && (
+                <SingleProductCard
+                  key={product.id}
+                  isSoldOut={(product.inventoried && !product.quantity)}
+                  product={product}
+                  businessId={businessId}
+                  onProductClick={onProductClick}
+                />
+              ))}
             </>
           )
         )
@@ -68,7 +76,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
 
       {
         !category.id && categories && categories.filter(category => category.id !== null).map((category, i, _categories) => {
-          const products = categoryState.products?.filter((product: any) => product.category_id === category.id) || []
+          const products = allProducts?.filter((product: any) => product.category_id === category.id) || []
           return (
             <View key={category.id} style={{alignItems: 'flex-start'}}>
               {
@@ -76,17 +84,17 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   <>
                     <OText size={16} weight={'600'} mBottom={20}>{category.name}</OText>
                     <>
-                      {
-                        products.map((product: any) => (
-                          <SingleProductCard
-                            key={product.id}
-                            isSoldOut={product.inventoried && !product.quantity}
-                            businessId={businessId}
-                            product={product}
-                            onProductClick={onProductClick}
-                          />
-                        ))
-                      }
+                    {
+                      products.map((product: any) => (
+                        <SingleProductCard
+                          key={product.id}
+                          isSoldOut={product.inventoried && !product.quantity}
+                          businessId={businessId}
+                          product={product}
+                          onProductClick={onProductClick}
+                        />
+                      ))
+                    }
                     </>
                   </>
                 )

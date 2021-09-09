@@ -102,9 +102,8 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 			/>
 			{!!data?.error && (
 				<OText
-					size={16}
+					size={10}
 					color={theme.colors.error}
-					style={{ textAlign: 'center', marginTop: 5 }}
 				>
 					{data.error}
 				</OText>

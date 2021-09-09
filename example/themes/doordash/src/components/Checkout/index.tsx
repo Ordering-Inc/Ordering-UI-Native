@@ -158,9 +158,8 @@ const CheckoutUI = (props: any) => {
 	}, [errors])
 
 	useEffect(() => {
-		console.log('----- Entered View ------');
-	}, []);
-
+		console.log(JSON.stringify(businessDetails.business))
+	}, [])
 	// useEffect(() => {
 	// 	handlePaymethodChange(null)
 	// }, [cart?.total])
@@ -342,7 +341,7 @@ const CheckoutUI = (props: any) => {
 												{businessName || businessDetails?.business?.name}
 											</OText>
 											<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-												<TouchableOpacity onPress={() => navigation.navigate('Business', { store: businessDetails?.business?.slug })}>
+												<TouchableOpacity onPress={() => navigation.navigate('Business', { store: businessDetails?.business?.original?.id })}>
 													<OText color={theme.colors.green} style={{ ...theme.labels.normal, textDecorationLine: 'underline' } as TextStyle}>{t('GO_TO_STORE', 'Go to store')}</OText>
 												</TouchableOpacity>
 												<OText>{' \u2022 '}</OText>
@@ -389,7 +388,7 @@ const CheckoutUI = (props: any) => {
 									/>
 								</ChDriverTips>
 							</ChSection>
-						)}
+						 )}
 
 					{!cartState.loading && cart && (
 						<ChSection style={{ paddingTop: 10, paddingBottom: 20, paddingHorizontal: 20, borderBottomColor: theme.colors.clear }}>
@@ -428,26 +427,22 @@ const CheckoutUI = (props: any) => {
 					)}
 				</ChContainer>
 			</Container>
-			{!cartState.loading && cart && cart?.status !== 2 && (
-				<>
-					<>
-						<FloatingButton
-							handleClick={() => handlePlaceOrder()}
-							isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
-							disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
-							btnText={cart?.subtotal >= cart?.minimum
-								? (
-									placing
-										? t('PLACING', 'Placing')
-										: loading
-											? t('LOADING', 'Loading')
-											: t('PLACE_ORDER', 'Place Order')
-								)
-								: (`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`)
-							}
-						/>
-					</>
-				</>
+			{!cartState.loading && cart && cart?.status !== 2 && !isOpenPaymethods && (
+				<FloatingButton
+					handleClick={() => handlePlaceOrder()}
+					isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
+					disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
+					btnText={cart?.subtotal >= cart?.minimum
+						? (
+							placing
+								? t('PLACING', 'Placing')
+								: loading
+									? t('LOADING', 'Loading')
+									: t('PLACE_ORDER', 'Place Order')
+						)
+						: (`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`)
+					}
+				/>
 			)}
 
 			<OModal
@@ -456,7 +451,7 @@ const CheckoutUI = (props: any) => {
 				open={isOpenPaymethods}
 				onClose={() => setOpenPaymethods(false)}
 			>
-				<View style={{ paddingHorizontal: 40, paddingVertical: 12 }}>
+				<View style={{ paddingHorizontal: 40, paddingVertical: 12, backgroundColor: theme.colors.white, flex: 1 }}>
 					<NavBar
 						title={t('SELECT_A_PAYMENT_METHOD', 'Select a payment method')}
 						onActionLeft={() => setOpenPaymethods(false)}
@@ -548,7 +543,7 @@ export const Checkout = (props: any) => {
 						loading: false,
 						cart: result
 					})
-				} catch (error) {
+				} catch (error: any) {
 					showToast(ToastType.Error, error?.toString() || error.message)
 				}
 			} else if (result.status === 2 && stripePaymentOptions.includes(result.paymethod_data?.gateway)) {
@@ -588,7 +583,7 @@ export const Checkout = (props: any) => {
 							})
 							return
 						}
-					} catch (error) {
+					} catch (error: any) {
 						showToast(ToastType.Error, error?.toString() || error.message)
 					}
 				} catch (error) {
@@ -610,7 +605,7 @@ export const Checkout = (props: any) => {
 					error: cart ? null : result
 				})
 			}
-		} catch (e) {
+		} catch (e: any) {
 			setCartState({
 				...cartState,
 				loading: false,

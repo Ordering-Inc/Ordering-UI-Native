@@ -32,8 +32,8 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 
 	const styles = StyleSheet.create({
 		imageStyle: {
-			width: 60,
-			height: 60,
+			width: 58,
+			height: 58,
 			resizeMode: 'cover',
 			borderTopRightRadius: I18nManager.isRTL ? 0 : 7.6,
 			borderBottomRightRadius: I18nManager.isRTL ? 0 : 7.6,
@@ -152,6 +152,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 				onClose={() => setModalIsOpen(false)}
 				entireModal
 				customClose
+				overScreen
 			>
 				{actualProduct && (
 					<ProductForm

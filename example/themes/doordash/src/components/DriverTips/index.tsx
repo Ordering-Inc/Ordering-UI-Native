@@ -41,7 +41,7 @@ const DriverTipsUI = (props: any) => {
 			marginRight: 10,
 			height: 40,
 			backgroundColor: theme.colors.inputDisabled,
-			borderRadius: 7.6
+			borderRadius: 7.6,
 		}
 	})
 	const [{ parsePrice }] = useUtils();
@@ -129,13 +129,15 @@ const DriverTipsUI = (props: any) => {
 							onChange={handleChangeDriverTip}
 							autoCapitalize='none'
 							autoCorrect={false}
+							inputStyle={{padding: 0}}
 						/>
 						<OButton
 							text={t('APPLY_TIP', 'Apply Tip')}
 							bgColor={theme.colors.primary}
 							borderColor={theme.colors.primary}
-							textStyle={{ color: 'white', fontSize: 14, fontWeight: '600' }}
-							style={{ height: 40, shadowOpacity: 0 }}
+							textStyle={{ color: 'white', fontSize: 12, fontWeight: '600', textAlign: 'center' }}
+							style={{ height: 40, shadowOpacity: 0, flexBasis: '25%' }}
+							parentStyle={{flexBasis: '45%'}}
 							imgRightSrc={null}
 							isDisabled={!(value > 0 && value !== driverTip) || !value}
 							onClick={() => {

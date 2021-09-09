@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage, useOrder, useSession } from 'ordering-components/native';
-import { StyleSheet, View, Dimensions, TextStyle } from 'react-native';
+import { StyleSheet, View, Dimensions, TextStyle, KeyboardAvoidingView, Platform } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { OButton, OButtonGroup, OIcon, OModal, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
@@ -133,11 +133,12 @@ export const Home = (props: any) => {
 	}, [route?.params]);
 
 	return (
+		<KeyboardAvoidingView
+      enabled
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
 		<View style={styles.container}>
 			<View style={styles.wrapperContent}>
-				{/* <View style={styles.languageSelector}>
-						<LanguageSelector />
-					</View> */}
 				<LogoWrapper>
 					<OIcon src={theme.images.logos.logotype} style={styles.logo} />
 				</LogoWrapper>
@@ -180,7 +181,7 @@ export const Home = (props: any) => {
 				</TouchableOpacity>
 			</View>
 
-			<OModal entireModal customClose transition={'pageSheet'} open={isAuth} onClose={() => setAuthState(false)}>
+			<OModal entireModal customClose transition={'pageSheet'} open={isAuth} onClose={() => setAuthState(false)} style={{borderRadius: 7.6}}>
 				<View style={styles.authHeader}>
 					<TouchableOpacity onPress={() => setAuthState(false)} style={{}}>
 						<OIcon src={theme.images.general.close} width={16} />
@@ -197,12 +198,13 @@ export const Home = (props: any) => {
 						/>
 					</View>
 				</View>
-				<Container nopadding style={{ paddingStart: 40, paddingEnd: 40 }}>
+				<Container style={{ height: 600, paddingTop: 10, paddingBottom: 0}}>
 					{activeIndex == 0 && <LoginForm {...loginProps} />}
 					{activeIndex == 1 && <SignupForm {...signupProps} />}
 				</Container>
 			</OModal>
 		</View>
+		</KeyboardAvoidingView>
 	);
 };
 

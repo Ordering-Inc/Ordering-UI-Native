@@ -53,7 +53,7 @@ export const FacebookLogin = (props: any) => {
         handleLoading && handleLoading(false)
         logoutWithFacebook()
       }
-    } catch (err) {
+    } catch (err: any) {
       handleLoading && handleLoading(false)
       handleErrors && handleErrors(err.message)
     }

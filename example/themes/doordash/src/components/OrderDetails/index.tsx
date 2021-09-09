@@ -37,6 +37,7 @@ import { USER_TYPE } from '../../config/constants'
 import { GoogleMap } from '../GoogleMap'
 import { verifyDecimals } from '../../utils'
 import moment from 'moment'
+import SocialShareFav from '../SocialShare'
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
@@ -279,14 +280,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 							</Customer>
 						</OrderCustomer>
 
-						<OrderCustomer>
+						<OrderCustomer style={{zIndex: 10}}>
 							<View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
 								<View>
 									<OText style={{ ...theme.labels.middle, marginBottom: 2 } as TextStyle}>{t('SHARE_THIS_DELIVERY', 'Share this delivery')}</OText>
 									<OText style={{ ...theme.labels.normal, marginBottom: 2 } as TextStyle}>{t('LET_SOMEONE_FOLLOW_ALONG', 'Let someone follow along')}</OText>
 								</View>
-								<TouchableOpacity onPress={() => handleShareDelivery()}>
-									<OIcon color={theme.colors.primary} src={theme.images.general.share_fill} width={16} />
+								<TouchableOpacity onPress={() => {}} style={{alignItems: 'center'}}>
+									<SocialShareFav icon={theme.images.general.share_fill} style={{width: 16, height: 16}} />
 								</TouchableOpacity>
 							</View>
 						</OrderCustomer>
@@ -396,7 +397,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 					</OrderContent>
 				</>
 			)}
-			<OModal open={openModalForBusiness || openModalForDriver} entireModal onClose={() => handleCloseModal()}>
+			<OModal open={openModalForBusiness || openModalForDriver} entireModal onClose={() => handleCloseModal()} overScreen>
 				<Messages
 					type={openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER}
 					orderId={order?.id}

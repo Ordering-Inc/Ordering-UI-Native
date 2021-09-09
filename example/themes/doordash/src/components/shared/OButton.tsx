@@ -49,16 +49,12 @@ interface Props {
 	loadingStyle?: ViewStyle;
 }
 
-const OButton = (props: Props): React.ReactElement => {
-
-	const theme = useTheme();
-
-	const StyledButton = styled.View<Props>`
-		background-color: ${theme.colors.primary};
+const StyledButton = styled.View<Props>`
+		background-color: ${(props: any) => props.theme.colors.primary};
 		border-radius: 26px;
 		border-width: 2px;
 		height: 52px;
-		border-color: ${theme.colors.primary};
+		border-color: ${(props: any) => props.theme.colors.primary};
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
@@ -68,22 +64,23 @@ const OButton = (props: Props): React.ReactElement => {
 		position: relative;
 	`
 	const StyledButtonDisabled = styled(StyledButton)`
-		background-color: ${theme.colors.disabled};
-		border-color: ${theme.colors.disabled};
+		background-color: ${(props: any) => props.theme.colors.disabled};
+		border-color: ${(props: any) => props.theme.colors.disabled};
 	`
 
 	const StyledText = styled.Text`
 		font-size: 16px;
-		color: ${theme.colors.btnFont};
+		color: ${(props: any) => props.theme.colors.btnFont};
 		margin-left: 10px;
 		margin-right: 10px;
 		font-family: 'Poppins-Regular';
 	`
 
 	const StyledTextDisabled = styled(StyledText)`
-		color: ${theme.colors.primary};
+		color: ${(props: any) => props.theme.colors.primary};
 	`
 
+const OButton = (props: Props): React.ReactElement => {
 
 	if (props.isDisabled) {
 		return (

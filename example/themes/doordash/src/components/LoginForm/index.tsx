@@ -37,6 +37,8 @@ import { OText, OButton, OInput, OModal, OIcon } from '../shared';
 import { LoginParams } from '../../types';
 import { useTheme } from 'styled-components/native';
 import { useWindowDimensions } from 'react-native';
+import { AppleLogin } from '../AppleLogin';
+import { GoogleLogin } from '../GoogleLogin';
 
 const LoginFormUI = (props: LoginParams) => {
 	const {
@@ -150,6 +152,14 @@ const LoginFormUI = (props: LoginParams) => {
 	}
 
 	const handleSuccessFacebook = (user: any) => {
+		_removeStoreData('isGuestUser')
+		login({
+			user,
+			token: user.session.access_token
+		})
+	}
+	
+	const handleSuccessApple = (user: any) => {
 		_removeStoreData('isGuestUser')
 		login({
 			user,
@@ -277,25 +287,21 @@ const LoginFormUI = (props: LoginParams) => {
 										renderIcon={<OIcon src={theme.images.general.facebook} width={16} />}
 										text={t('CONTINUE_WITH_FACEBOOK', 'Continue with Facebook')}
 									/>
-									<FacebookLogin
+									<GoogleLogin
 										notificationState={notificationState}
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
-										handleSuccessFacebookLogin={handleSuccessFacebook}
+										handleSuccessGoogleLogin={handleSuccessFacebook}
 										styles={[loginStyle.socialButton, { backgroundColor: theme.colors.google }]}
 										textStyles={loginStyle.socialText}
 										renderIcon={<OIcon src={theme.images.general.google} width={16} />}
 										text={t('CONTINUE_WITH_GOOGLE', 'Continue with Google')}
 									/>
-									<FacebookLogin
+									<AppleLogin
 										notificationState={notificationState}
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
-										handleSuccessFacebookLogin={handleSuccessFacebook}
-										styles={[loginStyle.socialButton, { backgroundColor: theme.colors.apple }]}
-										textStyles={loginStyle.socialText}
-										renderIcon={<OIcon src={theme.images.general.apple} width={16} />}
-										text={t('CONTINUE_WITH_APPLE', 'Continue with Apple')}
+										handleSuccessAppleLogin={handleSuccessApple}
 									/>
 								</SocialButtons>
 								<OText style={{ ...theme.labels.normal, textAlign: 'center', marginBottom: 8 } as TextStyle} color={theme.colors.textSecondary}>{t('OR_CONTINUE_WITH_EMAIL', 'or continue with email')}</OText>
@@ -450,6 +456,7 @@ const LoginFormUI = (props: LoginParams) => {
 			<OModal
 				open={isModalVisible}
 				onClose={() => setIsModalVisible(false)}
+				overScreen
 			>
 				<VerifyPhone
 					phone={phoneInputData.phone}
