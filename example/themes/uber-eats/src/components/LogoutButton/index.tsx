@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { LogoutAction, ToastType, useToast } from 'ordering-components/native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { LogoutAction, ToastType, useToast, useLanguage } from 'ordering-components/native';
 import { _retrieveStoreData, _clearStoreData } from '../../providers/StoreUtil';
 
-import { OIcon } from '../shared';
+import { OIcon, OText } from '../shared';
 import { useTheme } from 'styled-components/native';
 
 const LogoutButtonUI = (props: any) => {
@@ -11,6 +11,14 @@ const LogoutButtonUI = (props: any) => {
 
   const theme = useTheme();
   const [, { showToast }] = useToast();
+  const [, t] = useLanguage()
+
+  const styles = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    }
+  })
 
   const handleClick = async () => {
     const data = await _retrieveStoreData('notification_state');
@@ -33,14 +41,16 @@ const LogoutButtonUI = (props: any) => {
 
   return (
     <TouchableOpacity
+      style={styles.container}
       onPress={() => handleClick()}
     >
       <OIcon
         src={theme.images.general.menulogout}
-        width={28}
-        height={28}
+        width={24}
+        height={24}
         color={theme.colors.disabledContrast}
       />
+      <OText style={{ paddingHorizontal: 10 }}>{t('LOGOUT', 'Logout')}</OText>
     </TouchableOpacity>
   )
 }

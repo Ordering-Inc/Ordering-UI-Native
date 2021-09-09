@@ -1,5 +1,5 @@
 import React from 'react'
-import { AddressList as AddressListController } from '../components/AddressList'
+import { AddressList as AddressListController } from '../../themes/uber-eats/src/components/AddressList'
 import { useSession } from 'ordering-components/native'
 
 const AddressList = ({ route, navigation }: any) => {
@@ -12,6 +12,7 @@ const AddressList = ({ route, navigation }: any) => {
     isFromBusinesses: route?.params?.isFromBusinesses,
     isFromProductsList: route?.params?.isFromProductsList,
     isFromCheckout: route?.params?.isFromCheckout,
+    isFromProfile: route?.params?.isFromProfile,
     afterSignup: route?.params?.afterSignup
   }
 

@@ -86,7 +86,8 @@
       "stripecc": "",
       "stripes": "",
       "stripesb": "",
-      "creditCard": ""
+      "creditCard": "",
+      "help": ""
     },
     "order": {
       "status0": "",

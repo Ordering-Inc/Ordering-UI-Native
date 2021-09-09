@@ -401,3 +401,25 @@ export interface GoogleMapsParams {
 	setSaveLocation?: (val: boolean) => void,
 	handleToggleMap?: () => void
 }
+
+export interface HelpParams {
+	navigation: any;
+}
+
+export interface LastOrdersParams {
+	orderList?: any,
+	onRedirect?: any,
+}
+
+export interface HelpOrderParams {
+	navigation: any;
+}
+
+export interface HelpGuideParams {
+	navigation: any;
+}
+
+export interface HelpAccountAndPaymentParams {
+	navigation: any;
+}
+  

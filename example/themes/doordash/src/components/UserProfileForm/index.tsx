@@ -8,7 +8,8 @@ import {
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useTheme } from 'styled-components/native';
 import { ProfileParams } from '../../types';
 import { AddressList } from '../AddressList'
@@ -73,7 +74,12 @@ const ProfileUI = (props: ProfileParams) => {
 			height: 37,
 			paddingLeft: 4,
 			paddingRight: 4
-		}
+		},
+		helpStyle: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			marginVertical: 12
+		  }
 	});
 
 	const [{ user }] = useSession();
@@ -210,6 +216,13 @@ const ProfileUI = (props: ProfileParams) => {
 		<>
 			<Actions>
 				{/* <LanguageSelector /> */}
+				<TouchableOpacity
+					onPress={() => navigation.navigate('Help')}
+					style={styles.helpStyle}
+				>
+					<MaterialCommunityIcons name='lifebuoy' style={{ fontSize: 24, transform: [{ rotate: '45deg' }] }} />
+					<OText style={{ paddingHorizontal: 10 }} size={16}>{t('HELP', 'Help')}</OText>
+				</TouchableOpacity>
 				<LogoutButton />
 			</Actions>
 			<CenterView>
