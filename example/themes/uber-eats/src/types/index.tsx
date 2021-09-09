@@ -424,6 +424,7 @@ export interface HelpParams {
 
 export interface LastOrdersParams {
   orderList?: any,
+  onRedirect?: any,
 }
 
 export interface HelpOrderParams {

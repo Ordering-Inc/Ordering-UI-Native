@@ -20,7 +20,8 @@ import {
 
 const LastOrdersUI = (props: LastOrdersParams) => {
   const {
-    orderList
+    orderList,
+    onRedirect
   } = props
   const { loading, error, orders } = orderList
 
@@ -40,6 +41,10 @@ const LastOrdersUI = (props: LastOrdersParams) => {
     }
   })
 
+  const handleClickViewOrder = (uuid: string) => {
+    onRedirect && onRedirect('OrderDetails', { orderId: uuid })
+  }
+
   return (
     <>
       {loading ? (
@@ -53,7 +58,10 @@ const LastOrdersUI = (props: LastOrdersParams) => {
       ) : (
         <>
           {orders.map((order: any) => (
-            <OrderContainer key={order.id}>
+            <OrderContainer
+              key={order.id}
+              onPress={() => handleClickViewOrder(order?.uuid)}
+            >
               <OIcon
                 url={optimizeImage(order.business?.header, 'h_300,c_limit')}
                 style={styles.headerLogo}

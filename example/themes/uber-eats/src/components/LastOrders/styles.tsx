@@ -1,6 +1,6 @@
 import styled from 'styled-components/native'
 
-export const OrderContainer = styled.View`
+export const OrderContainer = styled.TouchableOpacity`
   position: relative;
   margin-vertical: 12px;
 `

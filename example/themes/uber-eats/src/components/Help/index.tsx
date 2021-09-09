@@ -48,7 +48,7 @@ export const Help = (props: HelpParams) => {
 
       <LastOrdersContainer>
         <OText size={18} weight={600}>{t('LAST_ORDERS', 'Last Orders')}</OText>
-        <LastOrders />
+        <LastOrders onRedirect={onRedirect} />
       </LastOrdersContainer>
     </>
   )
