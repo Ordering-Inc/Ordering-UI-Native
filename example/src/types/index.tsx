@@ -112,6 +112,7 @@ export interface LanguageSelectorParams {
   languagesState?: any;
   currentLanguage?: string;
   handleChangeLanguage?: any;
+  isFromProfile?: boolean,
 }
 export interface BusinessesListingParams {
   navigation?: any;
@@ -405,4 +406,35 @@ export interface GoogleMapsParams {
 export interface ShareComponentParams {
   orderId?: number;
   hashkey?: string;
+}
+
+export interface AccountParams {
+  navigation: any;
+  formState?: any;
+  isEdit?: boolean;
+  cleanFormState?: any;
+  toggleIsEdit?: any;
+  validationFields?: any;
+  handleButtonUpdateClick?: any;
+}
+
+export interface HelpParams {
+  navigation: any;
+}
+
+export interface LastOrdersParams {
+  orderList?: any,
+  onRedirect?: any,
+}
+
+export interface HelpOrderParams {
+  navigation: any;
+}
+
+export interface HelpGuideParams {
+  navigation: any;
+}
+
+export interface HelpAccountAndPaymentParams {
+  navigation: any;
 }

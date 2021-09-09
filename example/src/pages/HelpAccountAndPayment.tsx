@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container } from '../layouts/Container'
-import { HelpAccountAndPayment as HelpAccountAndPaymentController } from '../../themes/uber-eats/src/components/HelpAccountAndPayment'
+import { HelpAccountAndPayment as HelpAccountAndPaymentController } from '../components/HelpAccountAndPayment'
 
 
 interface Props {

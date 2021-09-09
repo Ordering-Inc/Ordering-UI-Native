@@ -19,5 +19,5 @@ export const SelectItemBtn = styled(SelectItem)`
   max-width: 140px;
   margin-vertical: 5px;
   padding: 15px 20px;
-  background-color: ${(props: any) => props.theme.colors.inputDisabled};
+  background-color: ${(props: any) => props.isFromProfile ? 'transparent' : props.theme.colors.inputDisabled};
 `

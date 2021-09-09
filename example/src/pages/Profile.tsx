@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
 import { Platform } from 'react-native';
-import { UserProfileForm as ProfileController } from '../../themes/uber-eats/src/components/UserProfileForm';
+import { UserProfileForm as ProfileController } from '../components/UserProfileForm';
 import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
 
 const KeyboardView = styled.KeyboardAvoidingView`

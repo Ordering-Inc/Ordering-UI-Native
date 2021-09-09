@@ -1,23 +1,16 @@
 import styled from 'styled-components/native'
 
-export const CenterView = styled.View`
-  align-items: center;
-`;
-
-export const UserData = styled.View`
-  align-items: center;
-  text-align: center;
+export const Container = styled.View`
+  flex: 1;
+  justify-content: space-between;
+  flex-direction: column;
+  padding-top: 20px;
+  padding-horizontal: 30px;
+  padding-bottom: 30px;
 `
 
 export const Names = styled.View`
   flex-direction: row;
-`
-
-export const EditButton = styled.View`
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  flex: 1;
 `
 
 export const Actions = styled.View`
@@ -25,9 +18,20 @@ export const Actions = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
 `
 
-export const WrapperPhone = styled.View`
-  padding: 8px 0px;
+export const UserInfoContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  border-bottom-width: 8px;
+  border-bottom-color: #F8F9FA;
+`
+
+export const LanguageContainer = styled.View`
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 10px;
 `

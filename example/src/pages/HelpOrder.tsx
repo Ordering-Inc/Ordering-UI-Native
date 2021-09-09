@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container } from '../layouts/Container'
-import { HelpOrder as HelpOrderController } from '../../themes/uber-eats/src/components/HelpOrder'
+import { HelpOrder as HelpOrderController } from '../components/HelpOrder'
 
 
 interface Props {

@@ -18,6 +18,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     languagesState,
     currentLanguage,
     handleChangeLanguage,
+    isFromProfile
   } = props
 
   const theme = useTheme()
@@ -96,7 +97,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
                 onPress={() => setIsOpen(true)}
                 disabled={_languages.length === 0 || languageState.loading}
               >
-                <SelectItemBtn>
+                <SelectItemBtn isFromProfile={isFromProfile}>
                   <OText
                     color={theme.colors.secundaryContrast}
                     size={14}

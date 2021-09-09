@@ -1,298 +1,106 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
-  UserFormDetails as UserProfileController,
   useSession,
   useLanguage,
-  ToastType,
-  useToast
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { useForm } from 'react-hook-form';
-import { launchImageLibrary } from 'react-native-image-picker';
-import Spinner from 'react-native-loading-spinner-overlay';
-import { StyleSheet, View } from 'react-native';
+import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import { ProfileParams } from '../../types';
-import { AddressList } from '../AddressList'
 import { LogoutButton } from '../LogoutButton'
 import { LanguageSelector } from '../LanguageSelector'
-import { UserFormDetailsUI } from '../UserFormDetails'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import {
   OIcon,
-  OIconButton,
-  OText,
-  OButton,
-} from '../../components/shared';
+  OText
+} from '../shared';
 import {
-  CenterView,
-  UserData,
+  Container,
   Names,
-  EditButton,
-  Actions
+  UserInfoContainer,
+  LanguageContainer
 } from './styles';
 
-const imgOptions = {
-  mediaType: 'photo',
-  maxHeight: 300,
-  maxWidth: 300,
-  includeBase64: true,
-  selectionLimit: 0
-}
-
-const ProfileUI = (props: ProfileParams) => {
+export const UserProfileForm = (props: ProfileParams) => {
   const {
-    navigation,
-    isEdit,
-    formState,
-    validationFields,
-    isRequiredField,
-    toggleIsEdit,
-    cleanFormState,
-    handleChangeInput,
-    handleButtonUpdateClick
+    navigation
   } = props;
 
   const theme = useTheme();
-
-  const styles = StyleSheet.create({
-    dropdown: {
-      borderColor: theme.colors.whiteGray,
-      height: 50,
-      borderRadius: 25,
-      marginTop: 16,
-    },
-    inputbox: {
-      marginVertical: 8,
-      width: '90%'
-    },
-    editButton: {
-      borderRadius: 25,
-      borderColor: theme.colors.primary,
-      backgroundColor: theme.colors.white,
-      borderWidth: 1,
-      color: theme.colors.primary,
-      marginVertical: 8,
-    },
-  });
-
   const [{ user }] = useSession();
   const [, t] = useLanguage();
-  const [, { showToast }] = useToast();
-  const { handleSubmit, errors } = useForm();
 
-  const [phoneInputData, setPhoneInputData] = useState({
-    error: '',
-    phone: {
-      country_phone_code: null,
-      cellphone: null
+  const styles = StyleSheet.create({
+    linkStyle: {
+      color: theme.colors.primary,
+      textDecorationLine: 'underline',
+    },
+    subItemStyle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginVertical: 12
+    },
+    iconStyle: {
+      fontSize: 24
     }
   });
-  const [phoneUpdate, setPhoneUpdate] = useState(false)
 
-  const onSubmit = (values: any) => {
-    if (phoneInputData.error) {
-      showToast(ToastType.Error, phoneInputData.error)
-      return
-    }
-    if (
-      formState.changes.cellphone === '' &&
-      validationFields?.fields?.checkout?.cellphone?.enabled &&
-      validationFields?.fields?.checkout?.cellphone?.required
-    ) {
-      showToast(
-        ToastType.Error,
-        t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone Number is required.')
-      );
-      return
-    }
-    if (formState.changes.password && formState.changes.password.length < 8) {
-      showToast(ToastType.Error, t('VALIDATION_ERROR_PASSWORD_MIN_STRING', 'The Password must be at least 8 characters.').replace('_attribute_', t('PASSWORD', 'Password')).replace('_min_', 8))
-      return
-    }
-
-    handleButtonUpdateClick(values);
+  const onRedirect = (route: string, params?: any) => {
+    navigation.navigate(route, params)
   }
-
-  const handleImagePicker = () => {
-    launchImageLibrary(imgOptions, (response: any) => {
-      if (response.didCancel) {
-        // showToast(ToastType.Error, response.errorMessage);
-      } else if (response.errorMessage) {
-        showToast(ToastType.Error, response.errorMessage);
-      } else {
-        if (response?.assets?.length > 0) {
-          const image = response?.assets[0]
-          const url = `data:${image.type};base64,${image.base64}`
-          handleButtonUpdateClick(null, true, url);
-        } else {
-          showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
-        }
-      }
-    });
-  };
-
-  const handleCancelEdit = () => {
-    cleanFormState({ changes: {} });
-    toggleIsEdit();
-    setPhoneInputData({
-      error: '',
-      phone: {
-        country_phone_code: null,
-        cellphone: null
-      }
-    })
-  };
-
-  const handleChangePhoneNumber = (number: any) => {
-    setPhoneInputData(number)
-    let phoneNumber = {
-      country_phone_code: {
-        name: 'country_phone_code',
-        value: number.phone.country_phone_code
-      },
-      cellphone: {
-        name: 'cellphone',
-        value: number.phone.cellphone
-      }
-    }
-    handleChangeInput(phoneNumber, true)
-  }
-
-  const getInputRules = (field: any) => {
-    const rules: any = {
-      required: isRequiredField(field.code)
-        ? t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `${field.name} is required`)
-          .replace('_attribute_', t(field.name, field.code))
-        : null
-    }
-    if (field.code && field.code === 'email') {
-      rules.pattern = {
-        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
-      }
-    }
-    return rules
-  }
-
-  useEffect(() => {
-    if (formState.result.result && !formState.loading) {
-      if (formState.result?.error) {
-        showToast(ToastType.Error, formState.result.result);
-      } else {
-        showToast(ToastType.Success, t('UPDATE_SUCCESSFULLY', 'Update successfully'));
-      }
-    }
-  }, [formState.result])
-
-  useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      // Convert all errors in one string to show in toast provider
-      const list = Object.values(errors);
-      let stringError = '';
-      list.map((item: any, i: number) => {
-        stringError +=
-          i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
-      });
-      showToast(ToastType.Error, stringError);
-    }
-  }, [errors]);
-
-  useEffect(() => {
-    if (user?.cellphone && !user?.country_phone_code) {
-      setPhoneUpdate(true)
-    } else {
-      setPhoneUpdate(false)
-    }
-  }, [user?.country_phone_code])
 
   return (
-    <>
-      <Actions>
-        <LanguageSelector />
-        <LogoutButton />
-      </Actions>
-      <CenterView>
-        <OIcon
-          url={user?.photo}
-          src={!user?.photo && theme.images.general.user}
-          width={100}
-          height={100}
-          style={{ borderRadius: 12 }}
-        />
-        <OIconButton
-          icon={theme.images.general.camera}
-          borderColor={theme.colors.clear}
-          iconStyle={{ width: 30, height: 30 }}
-          style={{ maxWidth: 40 }}
-          onClick={() => handleImagePicker()}
-        />
-      </CenterView>
-      <Spinner visible={formState?.loading} />
-      {!isEdit ? (
-        <UserData>
-          <Names>
-            <OText space>{user?.name}</OText>
-            <OText>{user?.lastname}</OText>
-          </Names>
-          {(!!user?.middle_name || !!user?.second_lastname) && (
+    <Container>
+      <View>
+        <OText size={24} weight={600} mBottom={20}>{t('MOBILE_PROFILE', 'Profile')}</OText>
+        <UserInfoContainer>
+          <OIcon
+            url={user?.photo}
+            src={!user?.photo && theme.images.general.user}
+            cover
+            width={60}
+            height={60}
+            borderRadius={8}
+          />
+          <View style={{ marginHorizontal: 10 }}>
             <Names>
-              <OText space>{user?.middle_name}</OText>
-              <OText>{user?.second_lastname}</OText>
+              <OText space size={20} weight={500}>{user?.name}</OText>
+              <OText size={20} weight={500}>{user?.lastname}</OText>
             </Names>
-          )}
-          <OText>{user?.email}</OText>
-          <Names>
-            {!!user?.country_phone_code && <OText space>+{user?.country_phone_code}</OText>}
-            {!!user?.cellphone && <OText>{user?.cellphone}</OText>}
-          </Names>
-          {!!phoneUpdate && (
-            <OText
-              color={theme.colors.error}
+            <TouchableOpacity
+              onPress={() => onRedirect('Account')}
             >
-              {t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number')}
-            </OText>
-          )}
-        </UserData>
-      ) : (
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <UserFormDetailsUI
-            {...props}
-            hideUpdateButton
-            handleCancelEdit={handleCancelEdit}
-            toggleIsEdit={toggleIsEdit}
-          />
-        </View>
-      )}
-      {!validationFields.loading && !isEdit && (
-        <EditButton>
-          <OButton
-            text={t('EDIT', 'Edit')}
-            bgColor={theme.colors.white}
-            borderColor={theme.colors.primary}
-            isDisabled={formState.loading}
-            imgRightSrc={null}
-            textStyle={{ fontSize: 20 }}
-            style={{ ...styles.editButton }}
-            onClick={toggleIsEdit}
-          />
-        </EditButton>
-      )}
-      {user?.id && (
-        <AddressList
-          nopadding
-          isFromProfile
-          userId={user.id}
-          navigation={navigation}
-        />
-      )}
-    </>
-  );
-};
+              <OText style={styles.linkStyle}>{t('ACCOUNT', 'Account')}</OText>
+            </TouchableOpacity>
+          </View>
+        </UserInfoContainer>
 
-export const UserProfileForm = (props: any) => {
-  const profileProps = {
-    ...props,
-    UIComponent: ProfileUI,
-  };
-  return <UserProfileController {...profileProps} />;
+        <TouchableOpacity
+          onPress={() => onRedirect('AddressList', { isFromProfile: true })}
+          style={styles.subItemStyle}
+        >
+          <MaterialIcons name='location-on' style={styles.iconStyle} />
+          <OText style={{ paddingHorizontal: 10 }} size={16}>{t('SAVED_PLACES', 'My saved places')}</OText>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => onRedirect('Help')}
+          style={styles.subItemStyle}
+        >
+          <MaterialCommunityIcons name='lifebuoy' style={{ ...styles.iconStyle, transform: [{ rotate: '45deg' }] }} />
+          <OText style={{ paddingHorizontal: 10 }} size={16}>{t('HELP', 'Help')}</OText>
+        </TouchableOpacity>
+      </View>
+
+      <View>
+        <LanguageContainer>
+          <Ionicons name='globe-outline' style={styles.iconStyle} />
+          <LanguageSelector isFromProfile />
+        </LanguageContainer>
+        <LogoutButton />
+      </View>
+    </Container>
+  );
 };

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container } from '../layouts/Container'
-import { Help as HelpController } from '../../themes/uber-eats/src/components/Help'
+import { Help as HelpController } from '../components/Help'
 
 
 interface Props {
