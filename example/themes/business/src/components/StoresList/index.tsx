@@ -100,7 +100,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
     },
     sectionTitle: {
       fontStyle: 'normal',
-      fontWeight: 'bold',
+      fontWeight: '600',
       fontSize: 26,
       color: theme.colors.textGray,
     },

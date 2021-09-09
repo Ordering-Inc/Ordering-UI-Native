@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   textTitle: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     fontStyle: 'normal',
     fontSize: 50,
   },

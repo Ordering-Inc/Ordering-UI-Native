@@ -2,11 +2,11 @@ import styled from 'styled-components/native';
 
 export const OrderDetailsContainer = styled.ScrollView`
   flex: 1;
+  padding-horizontal: 20px;
+  margin-bottom: 50px;
 `;
 
 export const Pickup = styled.View`
-  background-color: ${(props: any) => props.theme.colors.white};
-  padding-horizontal: 40px;
   padding-vertical: 10px;
   margin-bottom: 20px;
 `;
@@ -16,9 +16,7 @@ export const NavBack = styled.TouchableOpacity``;
 export const Header = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  padding-horizontal: 40px;
   padding-top: 10px;
-  background-color: ${(props: any) => props.theme.colors.backgroundLight};
 `;
 
 export const DriverItem = styled.View`
@@ -42,8 +40,6 @@ export const Logo = styled.View`
 export const OrderContent = styled.View``;
 
 export const OrderHeader = styled.View`
-  background-color: ${(props: any) => props.theme.colors.white};
-  padding-horizontal: 40px;
   padding-vertical: 10px;
   border-bottom-width: 20px;
   border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
@@ -53,8 +49,6 @@ export const OrderBusiness = styled.View`
   position: relative;
   bottom: 10px;
   padding-vertical: 10px;
-  padding-horizontal: 40px;
-  background-color: ${(props: any) => props.theme.colors.white};
   flex-direction: column;
   align-items: flex-start;
 `;
@@ -88,8 +82,6 @@ export const StatusImage = styled.View``;
 export const SectionTitle = styled.View``;
 
 export const OrderCustomer = styled.View`
-  background-color: ${(props: any) => props.theme.colors.white};
-  padding-horizontal: 40px;
   padding-vertical: 10px;
   border-bottom-width: 10px;
   border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
@@ -125,12 +117,8 @@ export const Table = styled.View`
 `;
 
 export const OrderBill = styled.View`
-  padding-horizontal: 40px;
   padding-vertical: 10px;
   flex: 1;
-  background-color: ${(props: any) => props.theme.colors.white};
-  border-bottom-width: 10px;
-  border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
 `;
 
 export const Total = styled.View`
@@ -147,8 +135,6 @@ export const Map = styled.View`
 `;
 
 export const AssignDriver = styled.View`
-  background-color: ${(props: any) => props.theme.colors.white};
-  padding-horizontal: 40px;
   padding-vertical: 10px;
   margin-bottom: 10px;
 `;

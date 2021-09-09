@@ -288,7 +288,7 @@ const LoginFormUI = (props: LoginParams) => {
     title: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontWeight: 'bold',
+      fontWeight: '600',
       fontSize: 26,
       color: theme.colors.textGray,
     },
@@ -373,7 +373,7 @@ const LoginFormUI = (props: LoginParams) => {
                         ? theme.colors.textGray
                         : theme.colors.unselectText
                     }
-                    weight={loginTab === 'email' ? 'bold' : 'normal'}>
+                    weight={loginTab === 'email' ? '600' : 'normal'}>
                     {t('BY_EMAIL', 'by Email')}
                   </OText>
 
@@ -400,7 +400,7 @@ const LoginFormUI = (props: LoginParams) => {
                         ? theme.colors.textGray
                         : theme.colors.unselectText
                     }
-                    weight={loginTab === 'cellphone' ? 'bold' : 'normal'}>
+                    weight={loginTab === 'cellphone' ? '600' : 'normal'}>
                     {t('BY_PHONE', 'by Phone')}
                   </OText>
 

@@ -302,7 +302,7 @@ const SignupFormUI = (props: SignupParams) => {
     title: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontWeight: 'bold',
+      fontWeight: '600',
       fontSize: 26,
       color: theme.colors.textGray,
     },

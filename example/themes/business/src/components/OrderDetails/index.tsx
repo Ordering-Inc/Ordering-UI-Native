@@ -458,7 +458,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       borderRadius: 10,
     },
     textBold: {
-      fontWeight: 'bold',
+      fontWeight: '600',
     },
     btnPickUp: {
       borderWidth: 0,
@@ -490,7 +490,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       {(!order || Object.keys(order).length === 0 || loading) && (
         <View
           style={{
-            padding: 40,
+            padding: 20,
             backgroundColor: theme.colors.backgroundLight,
           }}>
           {[...Array(6)].map((item, i) => (
@@ -510,9 +510,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
       {order && Object.keys(order).length > 0 && !loading && (
         <>
-          <OrderDetailsContainer
-            style={{ marginBottom: 50 }}
-            keyboardShouldPersistTaps="handled">
+          <OrderDetailsContainer keyboardShouldPersistTaps="handled">
             <>
               <Header>
                 <OIconButton
@@ -552,72 +550,74 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
               <OrderContent>
                 <OrderHeader>
-                  <OText size={13}>
+                  <OText size={13} style={{ marginBottom: 5 }}>
                     {order?.delivery_datetime_utc
                       ? parseDate(order?.delivery_datetime_utc)
                       : parseDate(order?.delivery_datetime, { utc: false })}
                   </OText>
 
-                  <OText size={20} weight="bold">
-                    {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} ${t(
-                      'IS',
-                      'is',
-                    )}`}
-                  </OText>
-
-                  <OText
-                    size={20}
-                    color={colors[order?.status] || theme.colors.primary}>
-                    {getOrderStatus(order?.status)?.value}
+                  <OText numberOfLines={2} size={20} weight="600">
+                    <>
+                      {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} ${t(
+                        'IS',
+                        'is',
+                      )} `}
+                      <OText
+                        size={20}
+                        weight="600"
+                        color={colors[order?.status] || theme.colors.primary}>
+                        {getOrderStatus(order?.status)?.value}
+                      </OText>
+                    </>
                   </OText>
                 </OrderHeader>
 
                 <OrderBusiness>
-                  <OText style={{ marginBottom: 5 }} size={16} weight="bold">
+                  <OText style={{ marginBottom: 5 }} size={16} weight="600">
                     {t('BUSINESS_DETAILS', 'Business details')}
                   </OText>
 
-                  <OText numberOfLines={1} ellipsizeMode="tail">
+                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                     {order?.business?.name}
                   </OText>
 
-                  <OText numberOfLines={1} ellipsizeMode="tail">
+                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                     {order?.business?.email}
                   </OText>
 
-                  <OText numberOfLines={1} ellipsizeMode="tail">
+                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                     {order?.business?.cellphone}
                   </OText>
 
-                  <OText numberOfLines={1} ellipsizeMode="tail">
+                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                     {order?.business?.address}
                   </OText>
                 </OrderBusiness>
 
                 <OrderCustomer>
-                  <OText style={{ marginBottom: 5 }} size={16} weight="bold">
+                  <OText style={{ marginBottom: 5 }} size={16} weight="600">
                     {t('CUSTOMER_DETAILS', 'Customer details')}
                   </OText>
 
-                  <OText numberOfLines={1} ellipsizeMode="tail">
+                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                     {order?.customer?.name}
                   </OText>
 
-                  <OText numberOfLines={1} ellipsizeMode="tail">
+                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                     {order?.customer?.email}
                   </OText>
 
-                  <OText numberOfLines={1} ellipsizeMode="tail">
+                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                     {order?.customer?.cellphone}
                   </OText>
 
-                  <OText numberOfLines={1} ellipsizeMode="tail">
+                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                     {order?.customer?.address}
                   </OText>
                 </OrderCustomer>
 
                 <OrderProducts>
-                  <OText style={{ marginBottom: 5 }} size={16} weight="bold">
+                  <OText style={{ marginBottom: 5 }} size={16} weight="600">
                     {t('ORDER_DETAILS', 'Order Details')}
                   </OText>
 
@@ -633,19 +633,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
                 <OrderBill>
                   <Table>
-                    <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
+                    <OText mBottom={4}>{t('SUBTOTAL', 'Subtotal')}</OText>
 
-                    <OText>{parsePrice(order?.subtotal)}</OText>
+                    <OText mBottom={4}>{parsePrice(order?.subtotal)}</OText>
                   </Table>
 
                   {order?.tax_type !== 1 && (
                     <Table>
-                      <OText>
+                      <OText mBottom={4}>
                         {t('TAX', 'Tax')}
                         {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
                       </OText>
 
-                      <OText>
+                      <OText mBottom={4}>
                         {parsePrice(order?.summary?.tax || order?.totalTax)}
                       </OText>
                     </Table>
@@ -654,7 +654,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {(order?.summary?.discount > 0 || order?.discount > 0) && (
                     <Table>
                       {order?.offer_type === 1 ? (
-                        <OText>
+                        <OText mBottom={4}>
                           <OText>{t('DISCOUNT', 'Discount')}</OText>
 
                           <OText>
@@ -665,10 +665,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           </OText>
                         </OText>
                       ) : (
-                        <OText>{t('DISCOUNT', 'Discount')}</OText>
+                        <OText mBottom={4}>{t('DISCOUNT', 'Discount')}</OText>
                       )}
 
-                      <OText>
+                      <OText mBottom={4}>
                         -{' '}
                         {parsePrice(
                           order?.summary?.discount || order?.discount,
@@ -680,9 +680,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {(order?.summary?.delivery_price > 0 ||
                     order?.deliveryFee > 0) && (
                     <Table>
-                      <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
+                      <OText mBottom={4}>
+                        {t('DELIVERY_FEE', 'Delivery Fee')}
+                      </OText>
 
-                      <OText>
+                      <OText mBottom={4}>
                         {parsePrice(
                           order?.summary?.delivery_price || order?.deliveryFee,
                         )}
@@ -691,7 +693,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   )}
 
                   <Table>
-                    <OText>
+                    <OText mBottom={4}>
                       {t('DRIVER_TIP', 'Driver tip')}
                       {(order?.summary?.driver_tip > 0 ||
                         order?.driver_tip > 0) &&
@@ -700,7 +702,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`}
                     </OText>
 
-                    <OText>
+                    <OText mBottom={4}>
                       {parsePrice(
                         order?.summary?.driver_tip || order?.totalDriverTip,
                       )}
@@ -708,12 +710,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </Table>
 
                   <Table>
-                    <OText>
+                    <OText mBottom={4}>
                       {t('SERVICE_FEE', 'Service Fee')}
                       {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
                     </OText>
 
-                    <OText>
+                    <OText mBottom={4}>
                       {parsePrice(
                         order?.summary?.service_fee || order?.serviceFee || 0,
                       )}
@@ -722,11 +724,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
                   <Total>
                     <Table>
-                      <OText style={styles.textBold}>
+                      <OText mBottom={4} style={styles.textBold}>
                         {t('TOTAL', 'Total')}
                       </OText>
 
                       <OText
+                        mBottom={4}
                         style={styles.textBold}
                         color={theme.colors.primary}>
                         {parsePrice(order?.summary?.total || order?.total)}
@@ -739,7 +742,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               {(order?.status === 7 || order?.status === 4) &&
                 order?.delivery_type === 1 && (
                   <AssignDriver>
-                    <OText style={{ marginBottom: 5 }} size={16} weight="bold">
+                    <OText style={{ marginBottom: 5 }} size={16} weight="600">
                       {t('ASSIGN_DRIVER', 'Assign driver')}
                     </OText>
 
@@ -792,7 +795,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                                 setIsDriverModalVisible(false);
                               }}>
                               <DriverItem>
-                                <View style={{ width: 40 }} />
                                 <OText
                                   color={!item.available && theme.colors.grey}>
                                   {item.label}
@@ -898,22 +900,25 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 />
               </OModal>
             </>
+            <View style={{ height: 30 }} />
           </OrderDetailsContainer>
 
           {order &&
             Object.keys(order).length > 0 &&
             getOrderStatus(order?.status)?.value ===
               t('PENDING', 'Pending') && (
-              <FloatingButton
-                btnText={t('REJECT', 'Reject')}
-                isSecondaryBtn={false}
-                secondButtonClick={() => handleViewActionOrder('accept')}
-                firstButtonClick={() => handleViewActionOrder('reject')}
-                secondBtnText={t('ACCEPT', 'Accept')}
-                secondButton={true}
-                firstColorCustom={theme.colors.red}
-                secondColorCustom={theme.colors.green}
-              />
+              <>
+                <FloatingButton
+                  btnText={t('REJECT', 'Reject')}
+                  isSecondaryBtn={false}
+                  secondButtonClick={() => handleViewActionOrder('accept')}
+                  firstButtonClick={() => handleViewActionOrder('reject')}
+                  secondBtnText={t('ACCEPT', 'Accept')}
+                  secondButton={true}
+                  firstColorCustom={theme.colors.red}
+                  secondColorCustom={theme.colors.green}
+                />
+              </>
             )}
 
           {order &&

@@ -476,7 +476,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
               : parseDate(order?.delivery_datetime, { utc: false })}
             {` - ${order?.paymethod?.name}`}
           </OText>
-          <OText weight="bold">
+          <OText weight="600">
             {t('INVOICE_ORDER_NO', 'Order No.')} {order?.id}
             {` ${t('IS', 'is')} `}
             <OText

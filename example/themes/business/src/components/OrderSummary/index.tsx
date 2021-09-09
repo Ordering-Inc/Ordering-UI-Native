@@ -246,45 +246,48 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
   const styles = StyleSheet.create({
     btnBackArrow: {
-      borderWidth: 0,
-      paddingHorizontal: 40,
-      paddingVertical: 20,
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
-      height: 14,
+      maxWidth: 40,
+      height: 25,
     },
     textBold: {
-      fontWeight: 'bold',
+      fontWeight: '600',
     },
   });
 
   return (
     <>
-      <OIconButton
-        icon={theme.images.general.arrow_left}
-        iconStyle={{ width: 20, height: 20 }}
-        borderColor={theme.colors.clear}
-        style={styles.btnBackArrow}
-        onClick={() => handleArrowBack()}
-      />
       <Content>
         <OrderContent>
           <OrderHeader>
-            <OText size={15} color={theme.colors.textGray} weight="bold">
+            <OIconButton
+              icon={theme.images.general.arrow_left}
+              iconStyle={{ width: 20, height: 20 }}
+              borderColor={theme.colors.clear}
+              style={{ maxWidth: 40, justifyContent: 'flex-end' }}
+              onClick={() => handleArrowBack()}
+            />
+            <OText
+              style={{ marginBottom: 5 }}
+              size={15}
+              color={theme.colors.textGray}
+              weight="600">
               {t('INVOICE_ORDER_NO', 'Order No.')} {order.id}
             </OText>
 
-            <OText size={15} color={theme.colors.textGray}>
+            <OText
+              style={{ marginBottom: 5 }}
+              size={15}
+              color={theme.colors.textGray}>
               {`${orderStatus}`}
             </OText>
 
-            <OText>
+            <OText style={{ marginBottom: 5 }}>
               {`${t('DELIVERY_TYPE', 'Delivery Type')}: ${
                 deliveryStatus[order?.delivery_type]
               }`}
             </OText>
 
-            <OText>
+            <OText style={{ marginBottom: 5 }}>
               {`${t('DELIVERY_DATE', 'Delivery Date')}: ${
                 order?.delivery_datetime_utc
                   ? parseDate(order?.delivery_datetime_utc)
@@ -292,7 +295,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               }`}
             </OText>
 
-            <OText>{`${t('PAYMENT_METHOD')}: ${t(
+            <OText style={{ marginBottom: 5 }}>{`${t('PAYMENT_METHOD')}: ${t(
               order?.paymethod?.name.toUpperCase(),
               order?.paymethod?.name,
             )}`}</OText>
@@ -302,12 +305,13 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             <OText
               style={{ marginBottom: 5 }}
               size={16}
-              weight="bold"
+              weight="600"
               color={theme.colors.textGray}>
               {t('CUSTOMER_DETAILS', 'Customer details')}
             </OText>
 
             <OText
+              style={{ marginBottom: 5 }}
               size={14}
               numberOfLines={2}
               adjustsFontSizeToFit
@@ -319,6 +323,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             </OText>
 
             <OText
+              style={{ marginBottom: 5 }}
               size={14}
               numberOfLines={2}
               adjustsFontSizeToFit
@@ -328,6 +333,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             </OText>
 
             <OText
+              style={{ marginBottom: 5 }}
               size={14}
               numberOfLines={2}
               adjustsFontSizeToFit
@@ -339,6 +345,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             </OText>
 
             <OText
+              style={{ marginBottom: 5 }}
               size={14}
               numberOfLines={2}
               adjustsFontSizeToFit
@@ -348,13 +355,14 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             </OText>
 
             {order?.customer?.address_notes && (
-              <OText>
+              <OText style={{ marginBottom: 5 }}>
                 {`${t('NOTES', 'Notes')}: ${order?.customer?.address_notes}`}
               </OText>
             )}
 
             {Boolean(order?.customer?.zipcode) && (
               <OText
+                style={{ marginBottom: 5 }}
                 size={14}
                 numberOfLines={1}
                 ellipsizeMode="tail"
@@ -368,12 +376,13 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             <OText
               style={{ marginBottom: 5 }}
               size={16}
-              weight="bold"
+              weight="600"
               color={theme.colors.textGray}>
               {t('BUSINESS_DETAILS', 'Business details')}
             </OText>
 
             <OText
+              style={{ marginBottom: 5 }}
               size={14}
               numberOfLines={2}
               adjustsFontSizeToFit
@@ -383,6 +392,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             </OText>
 
             <OText
+              style={{ marginBottom: 5 }}
               size={14}
               numberOfLines={2}
               ellipsizeMode="tail"
@@ -393,6 +403,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             </OText>
 
             <OText
+              style={{ marginBottom: 5 }}
               size={14}
               adjustsFontSizeToFit
               ellipsizeMode="tail"
@@ -405,7 +416,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             <OText
               style={{ marginBottom: 5 }}
               size={16}
-              weight="bold"
+              weight="600"
               color={theme.colors.textGray}>
               {t('ORDER_DETAILS', 'Order Details')}
             </OText>
@@ -417,14 +428,17 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                   style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <ContentInfo>
                     <View style={{ flexDirection: 'row', width: '85%' }}>
-                      <OText color={theme.colors.quantityProduct} space>
+                      <OText
+                        style={{ marginBottom: 5 }}
+                        color={theme.colors.quantityProduct}
+                        space>
                         {product?.quantity}
                       </OText>
 
                       <OText
                         size={12}
                         color={theme.colors.textGray}
-                        style={{ marginLeft: 5 }}>
+                        style={{ marginLeft: 5, marginBottom: 5 }}>
                         {product?.name}
                       </OText>
                     </View>
@@ -438,6 +452,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                         width: '15%',
                       }}>
                       <OText
+                        style={{ marginBottom: 5 }}
                         adjustsFontSizeToFit
                         size={12}
                         color={theme.colors.textGray}
@@ -452,15 +467,19 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
           <OrderBill>
             <Table>
-              <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
+              <OText style={{ marginBottom: 5 }}>
+                {t('SUBTOTAL', 'Subtotal')}
+              </OText>
 
-              <OText>{parsePrice(order?.subtotal)}</OText>
+              <OText style={{ marginBottom: 5 }}>
+                {parsePrice(order?.subtotal)}
+              </OText>
             </Table>
 
             {(order?.summary?.discount > 0 || order?.discount > 0) && (
               <Table>
                 {order?.offer_type === 1 ? (
-                  <OText>
+                  <OText style={{ marginBottom: 5 }}>
                     <OText>{t('DISCOUNT', 'Discount')}</OText>
 
                     <OText>
@@ -468,10 +487,12 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                     </OText>
                   </OText>
                 ) : (
-                  <OText>{t('DISCOUNT', 'Discount')}</OText>
+                  <OText style={{ marginBottom: 5 }}>
+                    {t('DISCOUNT', 'Discount')}
+                  </OText>
                 )}
 
-                <OText>
+                <OText style={{ marginBottom: 5 }}>
                   - {parsePrice(order?.summary?.discount || order?.discount)}
                 </OText>
               </Table>
@@ -479,12 +500,12 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
             {order?.tax_type !== 1 && (
               <Table>
-                <OText>
+                <OText style={{ marginBottom: 5 }}>
                   {t('TAX', 'Tax')}
                   {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
                 </OText>
 
-                <OText>
+                <OText style={{ marginBottom: 5 }}>
                   {parsePrice(order?.summary?.tax || order?.totalTax)}
                 </OText>
               </Table>
@@ -492,7 +513,9 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
             {(order?.summary?.delivery_price > 0 || order?.deliveryFee > 0) && (
               <Table>
-                <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
+                <OText style={{ marginBottom: 5 }}>
+                  {t('DELIVERY_FEE', 'Delivery Fee')}
+                </OText>
 
                 <OText>
                   {parsePrice(
@@ -503,7 +526,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             )}
 
             <Table>
-              <OText>
+              <OText style={{ marginBottom: 5 }}>
                 {t('DRIVER_TIP', 'Driver tip')}
                 {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) &&
                   parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
@@ -511,7 +534,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                   `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`}
               </OText>
 
-              <OText>
+              <OText style={{ marginBottom: 5 }}>
                 {parsePrice(
                   order?.summary?.driver_tip || order?.totalDriverTip,
                 )}
@@ -519,12 +542,12 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             </Table>
 
             <Table>
-              <OText>
+              <OText style={{ marginBottom: 5 }}>
                 {t('SERVICE_FEE', 'Service Fee')}
                 {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
               </OText>
 
-              <OText>
+              <OText style={{ marginBottom: 5 }}>
                 {parsePrice(
                   order?.summary?.service_fee || order?.serviceFee || 0,
                 )}
@@ -542,29 +565,28 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             </Total>
           </OrderBill>
         </OrderContent>
+        <View style={{ height: 40 }} />
       </Content>
 
-      <Action>
+      <FloatingButton
+        firstButtonClick={() =>
+          Platform.OS === 'ios' ? selectPrinter() : printPDF()
+        }
+        btnText={
+          Platform.OS === 'ios'
+            ? t('SELECT_PRINTER', 'Select Printer')
+            : t('PRINT', 'Print')
+        }
+        color={theme.colors.green}
+      />
+
+      {Platform.OS === 'ios' && state.selectedPrinter && (
         <FloatingButton
-          firstButtonClick={() =>
-            Platform.OS === 'ios' ? selectPrinter() : printPDF()
-          }
-          btnText={
-            Platform.OS === 'ios'
-              ? t('SELECT_PRINTER', 'Select Printer')
-              : t('PRINT', 'Print')
-          }
+          firstButtonClick={() => silentPrint()}
+          btnText={t('PRINT', 'Print')}
           color={theme.colors.green}
         />
-
-        {Platform.OS === 'ios' && state.selectedPrinter && (
-          <FloatingButton
-            firstButtonClick={() => silentPrint()}
-            btnText={t('PRINT', 'Print')}
-            color={theme.colors.green}
-          />
-        )}
-      </Action>
+      )}
     </>
   );
 };
