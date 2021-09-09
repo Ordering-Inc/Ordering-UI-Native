@@ -53,6 +53,12 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     });
   };
 
+  const handleFocusTimer = () => {
+    timerRef?.current?.measure((x: any, y: any) => {
+      scrollViewRef?.current?.scrollTo({ x: 0, y });
+    });
+  };
+
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -122,6 +128,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     if (!isFocus) {
       if (time.length > 1) timerRef.current.clear();
       timerRef.current.focus();
+      handleFocusTimer();
     }
   };
 

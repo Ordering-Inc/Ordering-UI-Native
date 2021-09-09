@@ -495,9 +495,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           }}>
           {[...Array(6)].map((item, i) => (
             <Placeholder key={i} Animation={Fade}>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row', marginBottom: 30 }}>
                 <Placeholder>
-                  <PlaceholderLine width={70} style={{ marginTop: 20 }} />
+                  <PlaceholderLine width={90} />
                   <PlaceholderLine width={50} />
                   <PlaceholderLine width={20} />
                   <PlaceholderLine width={10} />
