@@ -20,7 +20,6 @@ interface Props {
 	cover?: boolean,
 	children?: any,
 	borderRadius?: number,
-	onPress?: () => void;
 }
 
 const OImage = (props: Props): React.ReactElement => {

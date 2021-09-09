@@ -533,7 +533,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 								{((!isInputFocused && curInpVal.length > 0) || (curInpVal.length == 0)) && (
 									<View style={{ position: 'absolute', zIndex: 100, top: 10, end: 10 }}>
-										<OIcon src={theme.images.general.pin_line} width={16} color={theme.colors.primary} onPress={requestLocationPermission}/>
+										<TouchableOpacity onPress={requestLocationPermission}>
+										<OIcon src={theme.images.general.pin_line} width={16} color={theme.colors.primary} />
+										</TouchableOpacity>
 									</View>
 								)}
 							</AutocompleteInput>
