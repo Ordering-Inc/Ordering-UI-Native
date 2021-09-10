@@ -191,8 +191,20 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
     },
     icon: {
       borderRadius: 7.6,
-      width: 73,
-      height: 73,
+      width: 70,
+      height: 70,
+    },
+    logo: {
+      padding: 2,
+      borderRadius: 18,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 1.5,
+      },
+      shadowOpacity: 0.21,
+      shadowRadius: 3,
+      elevation: 7,
     },
     title: {
       fontFamily: 'Poppins',
@@ -234,7 +246,7 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
             activeOpacity={1}>
             <Card key={order?.id}>
               {!!order?.business?.logo && (
-                <Logo>
+                <Logo style={styles.logo}>
                   <OIcon
                     url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
                     style={styles.icon}

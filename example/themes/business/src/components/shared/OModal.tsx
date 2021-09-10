@@ -6,6 +6,7 @@ import OText from './OText';
 import OIconButton from './OIconButton';
 import { useTheme } from 'styled-components/native';
 import { useUtils } from 'ordering-components/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   open?: boolean;
@@ -50,6 +51,7 @@ const OModal = (props: Props): React.ReactElement => {
 
   const theme = useTheme();
   const [{ optimizeImage }] = useUtils();
+  const { top } = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     container: {
@@ -62,34 +64,41 @@ const OModal = (props: Props): React.ReactElement => {
       width: '100%',
     },
     titleSection: {
+      marginTop: top,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingHorizontal: 15,
-      height: 75,
+      paddingHorizontal: 20,
+      height: 45,
       borderBottomWidth: 2,
       borderBottomColor: '#e6e6e6',
     },
     titleGroups: {
-      alignItems: 'center',
       flexDirection: 'row',
     },
     titleIcons: {
-      height: 32,
-      width: 32,
+      height: 33,
+      width: 33,
       borderRadius: 7.6,
       resizeMode: 'stretch',
     },
     shadow: {
-      height: 33,
-      width: 33,
+      height: 34,
+      width: 34,
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: 7.6,
       marginLeft: 15,
-      elevation: 1,
-      shadowColor: theme.colors.shadow,
       backgroundColor: theme.colors.clear,
+      paddingHorizontal: 3,
+      borderRadius: 7.6,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 3,
     },
     cancelBtn: {
       marginRight: 5,
@@ -101,7 +110,7 @@ const OModal = (props: Props): React.ReactElement => {
     modalText: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontWeight: 'bold',
+      fontWeight: '600',
       color: theme.colors.textGray,
       textAlign: 'center',
       zIndex: 10,
@@ -141,27 +150,27 @@ const OModal = (props: Props): React.ReactElement => {
     },
     textStyle: {
       color: 'white',
-      fontWeight: 'bold',
+      fontWeight: '600',
       textAlign: 'center',
     },
   });
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={isTransparent}
-      visible={open}
-      onRequestClose={() => {
-        onClose();
-      }}
-      style={{
-        height: '100%',
-        flex: 1,
-        position: 'absolute',
-        ...style,
-        zIndex: 9999,
-      }}>
-      <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={isTransparent}
+        visible={open}
+        onRequestClose={() => {
+          onClose();
+        }}
+        style={{
+          height: '100%',
+          flex: 1,
+          position: 'absolute',
+          ...style,
+          zIndex: 9999,
+        }}>
         {!entireModal ? (
           <View style={styles.centeredView}>
             <View
@@ -255,8 +264,8 @@ const OModal = (props: Props): React.ReactElement => {
             {children}
           </>
         )}
-      </SafeAreaView>
-    </Modal>
+      </Modal>
+    </SafeAreaView>
   );
 };
 

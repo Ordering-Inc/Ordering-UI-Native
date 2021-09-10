@@ -21,7 +21,7 @@ export const Timer = styled.TouchableOpacity`
 export const TimeField = styled.TextInput`
   font-size: 55px;
   font-family: 'Poppins-Regular';
-  font-weight: bold;
+  font-weight: 600;
   text-align: center;
   width: 0;
   height: 0;
@@ -29,7 +29,7 @@ export const TimeField = styled.TextInput`
 `;
 
 export const Header = styled.View`
-  padding: 40px;
+  padding-horizontal: 20px;
 `;
 
 export const Action = styled.View`
@@ -37,6 +37,6 @@ export const Action = styled.View`
 `;
 
 export const Comments = styled.View`
-  padding-horizontal: 40px;
+  padding-horizontal: 20px;
   margin-bottom: 40px;
 `;

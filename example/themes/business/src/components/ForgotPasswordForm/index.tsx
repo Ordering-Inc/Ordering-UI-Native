@@ -109,7 +109,7 @@ const ForgotPasswordUI = (props: any) => {
           onClick={() => navigation?.canGoBack() && navigation.goBack()}
         />
 
-        <OText size={26} weight="bold" style={styles.text}>
+        <OText size={26} weight="600" style={styles.text}>
           {t('FORGOT_YOUR_PASSWORD', 'Forgot your password?')}
         </OText>
       </View>

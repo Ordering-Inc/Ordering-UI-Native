@@ -102,20 +102,11 @@ const ChatUI = (props: MessagesParams) => {
     },
     toolbarStyle: {
       flexDirection: 'column-reverse',
-      paddingHorizontal: 10,
-      paddingTop: 10,
-      paddingBottom: Platform.OS === 'ios' ? 0 : 10,
+      paddingHorizontal: 20,
+      paddingVertical: 15,
       backgroundColor: theme.colors.white,
       borderTopWidth: 1,
       borderTopColor: theme.colors.tabBar,
-      ...Platform.select({
-        ios: {
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-        },
-        android: { elevation: 10 },
-      }),
     },
     accessoryIcon: {
       height: 32,
@@ -128,10 +119,16 @@ const ChatUI = (props: MessagesParams) => {
       width: 33,
       alignItems: 'center',
       justifyContent: 'center',
-      elevation: 1,
+      paddingHorizontal: 3,
       borderRadius: 7.6,
-      shadowRadius: 7.6,
-      shadowColor: theme.colors.shadow,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 2,
       backgroundColor: theme.colors.clear,
     },
     avatar: {
@@ -139,10 +136,16 @@ const ChatUI = (props: MessagesParams) => {
       width: 17,
       alignItems: 'center',
       justifyContent: 'center',
+      paddingHorizontal: 3,
+      borderRadius: 7.6,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
       elevation: 2,
-      borderRadius: 50,
-      shadowRadius: 50,
-      shadowColor: theme.colors.shadow,
       backgroundColor: theme.colors.white,
       marginRight: 4,
     },
@@ -164,7 +167,7 @@ const ChatUI = (props: MessagesParams) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
-      fontSize: 14,
+      fontSize: 13,
     },
     timeText: {
       color: theme.colors.white,
@@ -334,9 +337,11 @@ const ChatUI = (props: MessagesParams) => {
           ...styles.firstMessage,
           marginLeft: 10,
           marginRight: 10,
-          width: windowWidth - 20,
+          width: 320,
         }}>
-        <OText style={{ ...styles.firstMessageText, textAlign: 'center' }}>
+        <OText
+          numberOfLines={3}
+          style={{ ...styles.firstMessageText, textAlign: 'center' }}>
           {message.change?.attribute !== 'driver_id'
             ? `${t('ORDER', 'Order')} ${t(
                 message.change.attribute.toUpperCase(),
@@ -407,7 +412,7 @@ const ChatUI = (props: MessagesParams) => {
         <View style={styles.firstMessage}>
           <OText style={styles.firstMessageText}>
             {t('ORDER_PLACED_FOR', 'Order placed for')}{' '}
-            <OText style={{ ...styles.firstMessageText, fontWeight: 'bold' }}>
+            <OText style={{ ...styles.firstMessageText, fontWeight: '600' }}>
               {parseDate(order?.created_at)}
             </OText>
           </OText>
@@ -420,7 +425,7 @@ const ChatUI = (props: MessagesParams) => {
           </OText>
         </View>
 
-        <View style={{ marginHorizontal: 3 }}>
+        <View>
           <OText size={9} color={theme.colors.textGray}>
             {`${t('SENT_TO', 'Sent to')}:`}
           </OText>
@@ -499,55 +504,6 @@ const ChatUI = (props: MessagesParams) => {
       setCanRead({ ...canRead, driver: true });
     }
   }, [order?.driver]);
-
-  const RenderActions = (props: any) => {
-    return (
-      <Actions
-        {...props}
-        containerStyle={styles.containerActions}
-        optionTintColor="#222845"
-        icon={() => (
-          <>
-            {!file?.type && (
-              <>
-                <OIconButton
-                  borderColor={theme.colors.transparent}
-                  style={{ width: image ? 32 : 28, height: image ? 32 : 28 }}
-                  icon={image ? { uri: image } : theme.images.general.imageChat}
-                  iconStyle={{
-                    borderRadius: image ? 10 : 0,
-                    width: image ? 32 : 28,
-                    height: image ? 32 : 28,
-                  }}
-                  onClick={handleImagePicker}
-                  iconCover
-                />
-
-                {image && (
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      top: -5,
-                      right: -5,
-                      borderColor: theme.colors.backgroundDark,
-                      backgroundColor: theme.colors.white,
-                      borderRadius: 25,
-                    }}
-                    onPress={() => removeImage()}>
-                    <MaterialCommunityIcon
-                      name="close-circle-outline"
-                      color={theme.colors.backgroundDark}
-                      size={24}
-                    />
-                  </TouchableOpacity>
-                )}
-              </>
-            )}
-          </>
-        )}
-      />
-    );
-  };
 
   const RenderActionsAttach = (props: any) => {
     return (
@@ -629,7 +585,7 @@ const ChatUI = (props: MessagesParams) => {
             </View>
 
             <TitleHeader>
-              <OText adjustsFontSizeToFit size={16} weight="bold">
+              <OText adjustsFontSizeToFit size={16} weight="600">
                 {order?.business?.name}
               </OText>
 
@@ -667,7 +623,7 @@ const ChatUI = (props: MessagesParams) => {
           </View>
 
           <TitleHeader>
-            <OText adjustsFontSizeToFit size={16} weight="bold">
+            <OText adjustsFontSizeToFit size={16} weight="600">
               {order?.customer?.name}
             </OText>
 
@@ -705,7 +661,7 @@ const ChatUI = (props: MessagesParams) => {
             </View>
 
             <TitleHeader>
-              <OText adjustsFontSizeToFit size={16} weight="bold">
+              <OText adjustsFontSizeToFit size={16} weight="600">
                 {order?.driver?.name}
               </OText>
 
@@ -771,7 +727,53 @@ const ChatUI = (props: MessagesParams) => {
       />
 
       {/* {!image && <RenderActionsAttach {...props} />} */}
-      {!file.type && <RenderActions {...props} />}
+      {!file.type && (
+        <Actions
+          {...props}
+          containerStyle={styles.containerActions}
+          optionTintColor="#222845"
+          icon={() => (
+            <>
+              {!file?.type && (
+                <>
+                  <OIconButton
+                    borderColor={theme.colors.transparent}
+                    icon={
+                      image ? { uri: image } : theme.images.general.imageChat
+                    }
+                    iconStyle={{
+                      borderRadius: image ? 10 : 0,
+                      width: image ? 32 : 28,
+                      height: image ? 32 : 28,
+                    }}
+                    onClick={handleImagePicker}
+                    iconCover
+                  />
+
+                  {image && (
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        top: -5,
+                        right: -5,
+                        borderColor: theme.colors.backgroundDark,
+                        backgroundColor: theme.colors.white,
+                        borderRadius: 25,
+                      }}
+                      onPress={() => removeImage()}>
+                      <MaterialCommunityIcon
+                        name="close-circle-outline"
+                        color={theme.colors.backgroundDark}
+                        size={24}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        />
+      )}
     </View>
   );
 
@@ -866,7 +868,7 @@ const ChatUI = (props: MessagesParams) => {
   };
 
   const renderAvatar = (props: any) => (
-    <View style={{ marginHorizontal: 3, alignItems: 'flex-start' }}>
+    <View style={{ marginBottom: 10, alignItems: 'flex-start' }}>
       <OText size={9} color={theme.colors.textGray}>
         {`${t('SENT_TO', 'Sent to')}:`}
       </OText>
@@ -935,7 +937,11 @@ const ChatUI = (props: MessagesParams) => {
           onInputTextChanged={onChangeMessage}
           alignTop={false}
           listViewProps={{
-            contentContainerStyle: { flexGrow: 1, justifyContent: 'flex-end' },
+            contentContainerStyle: {
+              flexGrow: 1,
+              justifyContent: 'flex-end',
+              paddingHorizontal: 9,
+            },
           }}
           scrollToBottom
           renderAvatar={renderAvatar}
@@ -950,7 +956,7 @@ const ChatUI = (props: MessagesParams) => {
           messagesContainerStyle={{ paddingBottom: 12 }}
           showUserAvatar={true}
           bottomOffset={bottom}
-          minInputToolbarHeight={100}
+          minInputToolbarHeight={115}
           isLoadingEarlier={messages?.loading}
           renderLoading={() => (
             <ActivityIndicator size="small" color={theme.colors.black} />

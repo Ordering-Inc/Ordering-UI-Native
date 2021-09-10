@@ -6,13 +6,8 @@ export const Card = styled.View`
 `;
 
 export const Logo = styled.View`
-  align-items: center;
-  justify-content: center;
-  shadow-color: ${(props: any) => props.theme.colors.shadow};
-  elevation: 1;
-  width: 75px;
   height: 75px;
-  border-radius: 7.6px;
+  width: 75px;
 `;
 
 export const Information = styled.View`

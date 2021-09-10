@@ -85,7 +85,7 @@ const ContactsUI = (props: ContactParams) => {
     name: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontWeight: 'bold',
+      fontWeight: '600',
       fontSize: 18,
       color: theme.colors.textGray,
     },

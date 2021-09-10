@@ -4,8 +4,7 @@ export const Content = styled.ScrollView`
   background-color: ${(props: any) => props.theme.colors.white};
   flex: 1;
   margin-bottom: 60px;
-  padding-horizontal: 40px
-  padding-vertical: 20px
+  padding-horizontal: 20px;
 `;
 
 export const OrderContent = styled.View``;
@@ -17,19 +16,16 @@ export const OrderHeader = styled.View`
 `;
 
 export const OrderBusiness = styled.View`
-  background-color: ${(props: any) => props.theme.colors.backgroundPage};
   border-bottom-width: 10px;
   border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
 `;
 
 export const OrderCustomer = styled.View`
-  background-color: ${(props: any) => props.theme.colors.backgroundPage};
   border-bottom-width: 10px;
   border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
 `;
 
 export const OrderProducts = styled.View`
-  background-color: ${(props: any) => props.theme.colors.backgroundPage};
   border-bottom-width: 10px;
   border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
 `;
@@ -43,9 +39,6 @@ export const Table = styled.View`
 
 export const OrderBill = styled.View`
   flex: 1;
-  background-color: ${(props: any) => props.theme.colors.backgroundPage};
-  border-bottom-width: 10px;
-  border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
 `;
 
 export const Total = styled.View`

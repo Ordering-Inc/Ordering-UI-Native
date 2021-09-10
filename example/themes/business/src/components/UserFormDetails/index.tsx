@@ -210,7 +210,7 @@ export const UserFormDetailsUI = (props: any) => {
       color: theme.colors.textGray,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontWeight: 'bold',
+      fontWeight: '600',
       paddingHorizontal: 16,
     },
     errorText: {

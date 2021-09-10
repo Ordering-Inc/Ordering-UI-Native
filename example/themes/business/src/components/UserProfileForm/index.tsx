@@ -144,7 +144,7 @@ const ProfileUI = (props: ProfileParams) => {
     title: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontWeight: 'bold',
+      fontWeight: '600',
       fontSize: 26,
       color: theme.colors.textGray,
     },
@@ -152,7 +152,7 @@ const ProfileUI = (props: ProfileParams) => {
       color: theme.colors.textGray,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontWeight: 'bold',
+      fontWeight: '600',
       paddingHorizontal: 16,
     },
     inputStyle: {
@@ -264,15 +264,15 @@ const ProfileUI = (props: ProfileParams) => {
             <OIcon
               url={optimizeImage(user?.photo, 'h_300,c_limit')}
               src={!user?.photo && theme.images.general.user}
-              width={100}
-              height={100}
-              style={{ borderRadius: 2 }}
+              width={150}
+              height={150}
+              style={{ borderRadius: 7.2 }}
             />
 
             <OIconButton
               icon={theme.images.general.camera}
               borderColor={theme.colors.clear}
-              iconStyle={{ width: 16, height: 16 }}
+              iconStyle={{ width: 21, height: 21 }}
               style={{ maxWidth: 40 }}
               onClick={() => handleImagePicker()}
             />

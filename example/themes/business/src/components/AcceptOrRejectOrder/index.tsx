@@ -14,6 +14,7 @@ import { FloatingButton } from '../FloatingButton';
 import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const {
@@ -44,9 +45,16 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const [isColorAwesomeAlert, setIsColorAwesomeAlert] = useState(false);
   const phoneNumber = customerCellphone;
   let codeNumberPhone, numberPhone, numberToShow;
+  const { top } = useSafeAreaInsets();
 
   const handleFocus = () => {
     viewRef?.current?.measure((x: any, y: any) => {
+      scrollViewRef?.current?.scrollTo({ x: 0, y });
+    });
+  };
+
+  const handleFocusTimer = () => {
+    timerRef?.current?.measure((x: any, y: any) => {
       scrollViewRef?.current?.scrollTo({ x: 0, y });
     });
   };
@@ -120,6 +128,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     if (!isFocus) {
       if (time.length > 1) timerRef.current.clear();
       timerRef.current.focus();
+      handleFocusTimer();
     }
   };
 
@@ -176,7 +185,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       {loading && (
         <View
           style={{
-            padding: 40,
+            paddingHorizontal: 20,
             flex: 1,
             backgroundColor: theme.colors.backgroundLight,
             justifyContent: 'space-between',
@@ -240,7 +249,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       {!loading && (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{ flex: 1 }}>
+          style={{ flex: 1, marginTop: top }}>
           <Content ref={scrollViewRef}>
             <Header>
               <OIconButton
@@ -256,7 +265,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
                 onClick={() => handleArrowBack()}
               />
 
-              <OText size={20} color={theme.colors.textGray} weight="bold">
+              <OText size={20} color={theme.colors.textGray} weight="600">
                 {action === 'accept'
                   ? `${t(titleAccept?.key, titleAccept?.text)}:`
                   : t(titleReject?.key, titleReject?.text)}
@@ -338,7 +347,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
                   </OText>
 
                   <OText>
-                    <OText style={{ fontWeight: 'bold' }}>
+                    <OText style={{ fontWeight: '600' }}>
                       {t('NOTE', 'Note')}
                       {': '}
                     </OText>
@@ -355,15 +364,17 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             </Header>
 
             {action === 'accept' && (
-              <Timer onPress={() => openTimerIOnput()}>
-                <OText weight="bold" style={{ textAlign: 'center' }} size={55}>
-                  {hour}
-                </OText>
-                {hour.length > 0 && <OText size={55}>:</OText>}
-                <OText weight="bold" style={{ textAlign: 'center' }} size={55}>
-                  {min}
-                </OText>
-              </Timer>
+              <View style={{ height: 400, justifyContent: 'center' }}>
+                <Timer onPress={() => openTimerIOnput()}>
+                  <OText weight="600" style={{ textAlign: 'center' }} size={55}>
+                    {hour}
+                  </OText>
+                  {hour.length > 0 && <OText size={55}>:</OText>}
+                  <OText weight="600" style={{ textAlign: 'center' }} size={55}>
+                    {min}
+                  </OText>
+                </Timer>
+              </View>
             )}
 
             <TimeField
@@ -431,6 +442,20 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
                 action === 'accept' ? 'accept' : 'reject'
               } this order?`,
             )}
+            confirmButtonStyle={{
+              width: 100,
+              height: 45,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            confirmButtonTextStyle={{ fontSize: 18 }}
+            cancelButtonStyle={{
+              width: 100,
+              height: 45,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            cancelButtonTextStyle={{ fontSize: 18 }}
             closeOnTouchOutside={false}
             closeOnHardwareBackPress={false}
             showConfirmButton

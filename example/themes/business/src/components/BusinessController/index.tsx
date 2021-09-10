@@ -56,10 +56,22 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
   }, [business]);
 
   const styles = StyleSheet.create({
-    logo: {
+    icon: {
       borderRadius: 7.6,
-      width: 73,
-      height: 73,
+      width: 70,
+      height: 70,
+    },
+    logo: {
+      padding: 2,
+      borderRadius: 18,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 1.5,
+      },
+      shadowOpacity: 0.21,
+      shadowRadius: 3,
+      elevation: 7,
     },
     header: {
       flexDirection: 'row',
@@ -67,7 +79,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       width: '100%',
     },
     title: {
-      fontWeight: 'bold',
+      fontWeight: '600',
       fontSize: 18,
       color: theme.colors.textGray,
     },
@@ -81,18 +93,35 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
     <>
       {business && (
         <Card key={business?.id}>
-          <Logo>
-            <OIcon
-              url={optimizeImage(business?.logo, 'h_300,c_limit')}
-              style={styles.logo}
-            />
-          </Logo>
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+            <Logo style={styles.logo}>
+              <OIcon
+                url={optimizeImage(business?.logo, 'h_300,c_limit')}
+                style={styles.icon}
+              />
+            </Logo>
 
-          <Information>
-            <View style={styles.header}>
-              <OText style={styles.title} numberOfLines={1}>
-                {business?.name}
-              </OText>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+              }}>
+              <Information>
+                <View style={styles.header}>
+                  <OText style={styles.title} numberOfLines={1}>
+                    {business?.name}
+                  </OText>
+                </View>
+
+                <OText style={styles.address} numberOfLines={1}>
+                  {business?.address}
+                </OText>
+
+                <OText style={styles.address} numberOfLines={1}>
+                  {business?.zipcode}
+                </OText>
+              </Information>
 
               {loading && isUpdateStore ? (
                 <ActivityIndicator size="small" color={theme.colors.primary} />
@@ -108,15 +137,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
                 />
               )}
             </View>
-
-            <OText style={styles.address} numberOfLines={1}>
-              {business?.address}
-            </OText>
-
-            <OText style={styles.address} numberOfLines={1}>
-              {business?.zipcode}
-            </OText>
-          </Information>
+          </View>
         </Card>
       )}
     </>
