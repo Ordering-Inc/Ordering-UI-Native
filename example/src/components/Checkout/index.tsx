@@ -177,21 +177,23 @@ const CheckoutUI = (props: any) => {
   }
 
   const onMessage = (e : any) => {
-    let payment = JSON.parse(e.nativeEvent.data);
-    if(payment === 'api error'){
-      setShowGateway({closedByUser: false, open: false})
-    }
-
-    if(payment){
-      if(payment.error){
-        showToast(ToastType.Error, payment.result)
-        setShowGateway({closedByUser: false, open: false})
-      } else if(payment?.result?.order?.uuid) {
-        showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfully'))
-        onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment?.result?.order?.uuid, goToBusinessList: true })
+    if(e?.nativeEvent?.data){
+        let payment = JSON.parse(e.nativeEvent.data);
+        if(payment === 'api error'){
         setShowGateway({closedByUser: false, open: false})
       }
-    }
+
+      if(payment){
+        if(payment.error){
+          showToast(ToastType.Error, payment.result)
+          setShowGateway({closedByUser: false, open: false})
+        } else if(payment?.result?.order?.uuid) {
+          showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfully'))
+          onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment?.result?.order?.uuid, goToBusinessList: true })
+          setShowGateway({closedByUser: false, open: false})
+        }
+      }
+  }
   }
 
   const onFailPaypal = async () => {
@@ -571,7 +573,7 @@ const CheckoutUI = (props: any) => {
           <ActivityIndicator size={24} color={progClr} />
         </View>
         <WebView
-          source={{ uri: 'https://test-90135.web.app' }}
+          source={{ uri: `${ordering.root}/html/paypal_react_native` }}
           onMessage={onMessage}
           ref={webviewRef}
           javaScriptEnabled={true}
