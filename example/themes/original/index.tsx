@@ -17,6 +17,10 @@ import { OrderDetails } from './src/components/OrderDetails';
 import { UserProfileForm } from './src/components/UserProfileForm';
 import { ReviewOrder } from './src/components/ReviewOrder';
 import { UserProfile } from './src/components/UserProfile';
+import { Help } from './src/components/Help';
+import { HelpAccountAndPayment } from './src/components/HelpAccountAndPayment';
+import { HelpGuide } from './src/components/HelpGuide';
+import { HelpOrder } from './src/components/HelpOrder';
 import { NotFoundSource } from './src/components/NotFoundSource';
 
 import { Toast } from './src/components/shared/OToast';
@@ -65,6 +69,10 @@ export {
 	UserProfileForm,
 	ReviewOrder,
 	UserProfile,
+	Help,
+	HelpAccountAndPayment,
+	HelpGuide,
+	HelpOrder,
 	NotFoundSource,
 
 	// OComponents

@@ -6,6 +6,10 @@ import { BusinessProductsList } from "./src/components/BusinessProductsList";
 import { CartContent } from "./src/components/CartContent";
 import { Checkout } from "./src/components/Checkout";
 import { ForgotPasswordForm } from "./src/components/ForgotPasswordForm";
+import { Help } from './src/components/Help';
+import { HelpAccountAndPayment } from './src/components/HelpAccountAndPayment';
+import { HelpGuide } from './src/components/HelpGuide';
+import { HelpOrder } from './src/components/HelpOrder';
 import { LoginForm } from "./src/components/LoginForm";
 import { MomentOption } from "./src/components/MomentOption";
 import { OrdersOption } from "./src/components/OrdersOption";
@@ -55,6 +59,10 @@ export {
 	CartContent,
 	Checkout,
 	ForgotPasswordForm,
+	Help,
+	HelpAccountAndPayment,
+	HelpGuide,
+	HelpOrder,
 	LoginForm,
 	MomentOption,
 	OrdersOption,
