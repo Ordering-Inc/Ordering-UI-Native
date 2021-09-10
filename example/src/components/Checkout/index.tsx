@@ -177,12 +177,10 @@ const CheckoutUI = (props: any) => {
   }
 
   const onMessage = (e : any) => {
-    let data = e.nativeEvent.data;
-    if(data === 'api error'){
+    let payment = JSON.parse(e.nativeEvent.data);
+    if(payment === 'api error'){
       setShowGateway({closedByUser: false, open: false})
     }
-
-    let payment = JSON.parse(data || {});
 
     if(payment){
       if(payment.error){
@@ -198,7 +196,7 @@ const CheckoutUI = (props: any) => {
 
   const onFailPaypal = async () => {
     if(showGateway.closedByUser === true){
-      const {result} = await confirmCart(cart.uuid)
+      await confirmCart(cart.uuid)
     }
   }
 
@@ -589,6 +587,10 @@ const CheckoutUI = (props: any) => {
             setProg(true);
             setProgClr('#00457C');
           }}
+          onLoad={() => {
+            setProg(true);
+            setProgClr('#00457C');
+          }}
           onLoadEnd={(e) => {
             const message = {
               action: 'init',
@@ -632,7 +634,8 @@ export const Checkout = (props: any) => {
   const { confirmPayment, loading: confirmPaymentLoading } = useConfirmPayment();
 
   const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null });
-  const [orderState] = useOrder()
+
+  const confirmMethods = ['stripe_redirect', 'paypal']
 
   const getOrder = async (cartId: any) => {
     try {
@@ -660,7 +663,7 @@ export const Checkout = (props: any) => {
       if (result.status === 1 && result.order?.uuid) {
         onNavigationRedirect('OrderDetails', { orderId: result.order.uuid })
         setCartState({ ...cartState, loading: false })
-      } else if (result.status === 2 && result.paymethod_data?.gateway === 'stripe_redirect') {
+      } else if (result.status === 2 && confirmMethods.includes(result.paymethod_data?.gateway)) {
         try {
           const confirmCartRes = await confirmCart(cartUuid)
           if (confirmCartRes.error) {
@@ -674,7 +677,7 @@ export const Checkout = (props: any) => {
             loading: false,
             cart: result
           })
-        } catch (error) {
+        } catch (error : any) {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
       } else if (result.status === 2 && stripePaymentOptions.includes(result.paymethod_data?.gateway)) {
@@ -714,7 +717,7 @@ export const Checkout = (props: any) => {
               })
               return
             }
-          } catch (error) {
+          } catch (error : any) {
             showToast(ToastType.Error, error?.toString() || error.message)
           }
         } catch (error) {
@@ -736,7 +739,7 @@ export const Checkout = (props: any) => {
           error: cart ? null : result
         })
       }
-    } catch (e) {
+    } catch (e : any) {
       setCartState({
         ...cartState,
         loading: false,
