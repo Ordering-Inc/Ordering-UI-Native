@@ -13,7 +13,6 @@ import { Content, Timer, TimeField, Header, Action, Comments } from './styles';
 import { FloatingButton } from '../FloatingButton';
 import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
-import AwesomeAlert from 'react-native-awesome-alerts';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
@@ -41,8 +40,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const [time, setTime] = useState('');
   const [comments, setComments] = useState('');
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [isColorAwesomeAlert, setIsColorAwesomeAlert] = useState(false);
   const phoneNumber = customerCellphone;
   let codeNumberPhone, numberPhone, numberToShow;
   const { top } = useSafeAreaInsets();
@@ -138,10 +135,9 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     let minsToSend = min;
 
     if (min > '60') minsToSend = '59';
-    setIsColorAwesomeAlert(false);
-    setShowAlert(false);
 
-    const time = parseInt(hour) * 60 + parseInt(min);
+    const time = parseInt(hour || '0') * 60 + (parseInt(minsToSend) || 0);
+
     let bodyToSend;
     const orderStatus: any = {
       acceptByBusiness: {
@@ -172,12 +168,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     bodyToSend.id = orderId;
 
     handleUpdateOrder && handleUpdateOrder(bodyToSend.status, bodyToSend);
-  };
-
-  const cancelRequest = () => {
-    handleFixTime();
-    setIsColorAwesomeAlert(false);
-    setShowAlert(false);
   };
 
   return (
@@ -417,8 +407,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             }}>
             <FloatingButton
               firstButtonClick={() => {
-                setIsColorAwesomeAlert(true);
-                setShowAlert(true);
+                handleAcceptOrReject();
               }}
               btnText={
                 action === 'accept'
@@ -430,43 +419,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
               }
             />
           </Action>
-          <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title={t(appTitle?.key, appTitle?.text)}
-            message={t(
-              `ARE_YOU_SURE_THAT_YOU_WANT_TO_${
-                action === 'accept' ? 'ACCEPT' : 'REJECT'
-              }_THIS_ORDER`,
-              `Are you sure that you want to ${
-                action === 'accept' ? 'accept' : 'reject'
-              } this order?`,
-            )}
-            confirmButtonStyle={{
-              width: 100,
-              height: 45,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            confirmButtonTextStyle={{ fontSize: 18 }}
-            cancelButtonStyle={{
-              width: 100,
-              height: 45,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            cancelButtonTextStyle={{ fontSize: 18 }}
-            closeOnTouchOutside={false}
-            closeOnHardwareBackPress={false}
-            showConfirmButton
-            showCancelButton
-            cancelText={t('CANCEL', 'Cancel')}
-            confirmText={t('ACCEPT', 'Accept')}
-            confirmButtonColor={theme.colors.primary}
-            cancelButtonColor={theme.colors.inputhat}
-            onCancelPressed={() => cancelRequest()}
-            onConfirmPressed={() => handleAcceptOrReject()}
-          />
         </KeyboardAvoidingView>
       )}
     </>
