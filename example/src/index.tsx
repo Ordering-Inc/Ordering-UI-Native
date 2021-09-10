@@ -1,3 +1,4 @@
+import { Account } from './components/Account';
 import { ActiveOrders } from './components/ActiveOrders';
 import { AddressDetails } from './components/AddressDetails';
 import { AddressForm } from './components/AddressForm';
@@ -21,8 +22,13 @@ import { FacebookLogin } from './components/FacebookLogin';
 import { FloatingButton } from './components/FloatingButton';
 import { ForgotPasswordForm } from './components/ForgotPasswordForm';
 import { GoogleMap } from './components/GoogleMap';
+import { Help } from './components/Help';
+import { HelpAccountAndPayment } from './components/HelpAccountAndPayment';
+import { HelpGuide } from './components/HelpGuide';
+import { HelpOrder } from './components/HelpOrder';
 import { Home } from './components/Home';
 import { LanguageSelector } from './components/LanguageSelector';
+import { LastOrders } from './components/LastOrders';
 import { LoginForm } from './components/LoginForm';
 import { LogoutButton } from './components/LogoutButton';
 import { Messages } from './components/Messages';
@@ -84,6 +90,7 @@ import { ThemeProvider, useTheme } from './context/Theme';
 import { DeviceOrientationMethods } from './hooks/DeviceOrientation';
 
 export {
+  Account,
   ActiveOrders,
   AddressDetails,
   AddressForm,
@@ -107,8 +114,13 @@ export {
   FloatingButton,
   ForgotPasswordForm,
   GoogleMap,
+  Help,
+  HelpAccountAndPayment,
+  HelpGuide,
+  HelpOrder,
   Home,
   LanguageSelector,
+  LastOrders,
   LoginForm,
   LogoutButton,
   Messages,

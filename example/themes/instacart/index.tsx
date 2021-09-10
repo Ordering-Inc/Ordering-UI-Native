@@ -1,9 +1,14 @@
 import { Home } from './src/components/Home';
 import { LoginForm } from './src/components/LoginForm';
 import { SignupForm } from './src/components/SignupForm';
+import { Account } from './src/components/Account';
 import { AddressForm } from './src/components/AddressForm';
 import { AddressList } from './src/components/AddressList';
 import { ForgotPasswordForm } from './src/components/ForgotPasswordForm';
+import { Help } from './src/components/Help';
+import { HelpAccountAndPayment } from './src/components/HelpAccountAndPayment';
+import { HelpGuide } from './src/components/HelpGuide';
+import { HelpOrder } from './src/components/HelpOrder';
 import { BusinessesListing } from './src/components/BusinessesListing';
 import { BusinessProductsListing } from './src/components/BusinessProductsListing';
 import { SearchList } from './src/components/SearchList';
@@ -35,9 +40,14 @@ export {
 	Home as HomePage,
 	LoginForm,
 	SignupForm,
+	Account,
 	AddressForm,
 	AddressList,
 	ForgotPasswordForm,
+	Help,
+	HelpAccountAndPayment,
+	HelpGuide,
+	HelpOrder,
 	BusinessesListing,
 	BusinessProductsListing,
 	SearchList,

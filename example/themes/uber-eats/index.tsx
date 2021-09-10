@@ -1,3 +1,4 @@
+import { Account } from './src/components/Account'
 import { ActiveOrders } from './src/components/ActiveOrders'
 import { AddressDetails } from './src/components/AddressDetails'
 import { AddressForm } from './src/components/AddressForm'
@@ -16,8 +17,13 @@ import { CouponControl } from './src/components/CouponControl'
 import { DriverTips } from './src/components/DriverTips'
 import { FacebookLogin } from './src/components/FacebookLogin'
 import { FloatingButton } from './src/components/FloatingButton'
+import { Help } from './src/components/Help'
+import { HelpAccountAndPayment } from './src/components/HelpAccountAndPayment'
+import { HelpGuide } from './src/components/HelpGuide'
+import { HelpOrder } from './src/components/HelpOrder'
 import { Home } from './src/components/Home'
 import { LanguageSelector } from './src/components/LanguageSelector'
+import { LastOrders } from './src/components/LastOrders'
 import { LoginForm } from './src/components/LoginForm'
 import { MomentOption } from './src/components/MomentOption'
 import { OrderDetails } from './src/components/OrderDetails'
@@ -57,6 +63,7 @@ import { Container } from './src/layouts/Container'
 import { SafeAreaContainer } from './src/layouts/SafeAreaContainer'
 
 export {
+  Account,
   ActiveOrders,
   AddressDetails,
   AddressForm,
@@ -75,8 +82,13 @@ export {
   DriverTips,
   FacebookLogin,
   FloatingButton,
+  Help,
+  HelpAccountAndPayment,
+  HelpGuide,
+  HelpOrder,
   Home,
   LanguageSelector,
+  LastOrders,
   LoginForm,
   MomentOption,
   OrderDetails,
