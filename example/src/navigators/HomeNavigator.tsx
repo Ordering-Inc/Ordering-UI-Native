@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
 import { useSession, useOrder } from 'ordering-components/native';
-
 import BottomNavigator from '../navigators/BottomNavigator';
 import RootNavigator from '../navigators/RootNavigator';
 import CheckoutNavigator from '../navigators/CheckoutNavigator';
@@ -31,7 +30,7 @@ const HomeNavigator = (e : any) => {
         <>
           {auth ? (
             <>
-              {!orderState?.options?.address?.location && !orderState.loading ? (
+              {Object.keys(orderState?.carts).length === 0 && !orderState?.options?.address?.location && !orderState.loading ? (
                 <>
                   <Stack.Screen
                     name="AddressListInitial"
