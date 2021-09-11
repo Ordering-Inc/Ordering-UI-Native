@@ -265,10 +265,7 @@ const LoginFormUI = (props: LoginParams) => {
 					</LoginWith>
 				)}
 				{/* Social login button group */}
-				{configs && Object.keys(configs).length > 0 && (
-					(configs?.facebook_login?.value === 'true' ||
-						configs?.facebook_login?.value === '1') &&
-					configs?.facebook_id?.value &&
+				{configs && Object.keys(configs).length > 0 && 
 					(
 						<>
 							<ButtonsWrapper>
@@ -309,7 +306,7 @@ const LoginFormUI = (props: LoginParams) => {
 							<View style={{ height: 1, backgroundColor: theme.colors.border, width: width }} />
 						</>
 					)
-				)}
+				}
 
 				{(useLoginByCellphone || useLoginByEmail) && (
 					<FormInput>

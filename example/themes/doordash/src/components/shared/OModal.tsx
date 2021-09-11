@@ -52,17 +52,12 @@ const OModal = (props: Props): React.ReactElement => {
 
   return (
     <Modal
-      // animationType="slide"
-      // transparent={isTransparent}
-      // visible={open}
-      // presentationStyle={transition || 'fullScreen'}
-      // onRequestClose={() => { onClose() }}
       avoidKeyboard={false}
       isVisible={open}
       coverScreen={overScreen ? overScreen : false}
       style={{ height: '100%', flex: 1, position: 'absolute', backgroundColor: '#F8F9FA', margin: 0, marginTop: top, marginBottom: bottom, paddingBottom: bottom, ...style, zIndex: 10000 }}
     >
-      <View style={styles.container}>
+      <View style={{...styles.container, paddingBottom: top}}>
         {!entireModal ? (
           <View style={styles.centeredView}>
             <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>

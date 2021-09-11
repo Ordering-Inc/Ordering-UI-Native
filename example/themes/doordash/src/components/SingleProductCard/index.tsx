@@ -80,7 +80,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 				<OText numberOfLines={1} ellipsizeMode='tail' style={{ ...styles.textStyle, ...theme.labels.middle } as TextStyle}>{product?.name}</OText>
 				<OText color={theme.colors.textSecondary} numberOfLines={2} ellipsizeMode='tail' style={{ ...styles.textStyle, ...theme.labels.normal } as TextStyle}>{product?.description}</OText>
 				<OText color={theme.colors.textThird} style={theme.labels.normal as TextStyle}>{parsePrice(product?.price)}</OText>
-				<OText color={theme.colors.textThird} style={theme.labels.normal as TextStyle}>{JSON.stringify(product?.rank)}</OText>
+				{/* <OText color={theme.colors.textThird} style={theme.labels.normal as TextStyle}>{JSON.stringify(product?.rank)}</OText> */}
 			</CardInfo>
 			<ImageBackground source={{ uri: optimizeImage(product?.images, 'h_200,c_limit') }} style={{ width: 115, height: 115, borderRadius: 7.6, borderTopLeftRadius: 0, borderBottomLeftRadius: 0, overflow: 'hidden' }} />
 
