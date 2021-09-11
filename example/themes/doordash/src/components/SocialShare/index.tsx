@@ -76,7 +76,7 @@ const SocialShareFav = (props: SSFTypes) => {
 	];
 
 	const [showMenu, setShowMenu] = useState(false);
-	const [result, setResult] = useState<{success: boolean, message: string}>({success: false, message: 'default'});
+	const [result, setResult] = useState<{success: boolean, message: string}>({success: true, message: ''});
 
 	const getErrorString = (error: any, defaultValue?: any) => {
     let e = defaultValue || 'Something went wrong. Please try again';
@@ -113,6 +113,7 @@ const SocialShareFav = (props: SSFTypes) => {
 	}
 
 	useEffect(() => {
+		if (result.message.length < 3) return;
 		if (result.success) {
 			showToast(ToastType.Success, result.message);
 		} else {
