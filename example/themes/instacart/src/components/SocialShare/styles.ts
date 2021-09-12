@@ -18,11 +18,3 @@ export const FavMenu = styled.View`
 	width: 50px;
 	height: 170px;
 `;
-
-export const FavMenuItem = styled.View`	
-	border-radius: 7.6px;
-	margin-bottom: 4px;
-	justify-content: center;
-	align-items: center;
-	background-color: white;
-`;

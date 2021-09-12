@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLanguage, useOrder, useApi, useSession, useUtils } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { StyleSheet, View, Dimensions, TextStyle, Animated, PanResponder } from 'react-native';
+import { StyleSheet, View, Dimensions, TextStyle, Animated, PanResponder, KeyboardAvoidingView, Platform } from 'react-native';
 import { OBottomPopup, OButton, OIcon, OText } from '../shared';
-import { LogoWrapper, Slogan } from './styles';
+import { BottomPopup, LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { _setStoreData, _removeStoreData } from '../../providers/StoreUtil';
 import { ScrollView } from 'react-native-gesture-handler';
 import { LoginForm } from '../LoginForm';
 import { SignupForm } from '../SignupForm';
+import Modal from 'react-native-modal';
 
 const windowHeight = Dimensions.get('window').height
 
@@ -212,20 +213,40 @@ export const Home = (props: any) => {
 			</View>
 
 
-			<OBottomPopup
-				title={t('LOG_IN', 'Log in')}
-				open={openLogin}
-				onClose={() => handleLoginPage()}
+			<Modal
+				isVisible={openLogin}
+				coverScreen={false}
+				onModalHide={handleLoginPage}
+				onSwipeComplete={handleLoginPage}
+				onBackdropPress={handleLoginPage}
+				style={styles.bottomModalStyle}
 			>
-				<LoginForm {...loginProps} />
-			</OBottomPopup>
-			<OBottomPopup
-				title={t('SIGN_UP', 'Sign up')}
-				open={openSignUp}
-				onClose={() => handleSignUpPage()}
+				<BottomPopup>
+					<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} style={{flex: 0, justifyContent: 'flex-end'}}>
+						<ScrollView style={{backgroundColor: 'white', overflow: 'visible'}} showsVerticalScrollIndicator={false}>
+							<OText size={20} lineHeight={30} weight={'600'} mBottom={20}>{t('LOGIN', 'Login')}</OText>
+							<LoginForm {...loginProps} />
+						</ScrollView>
+					</KeyboardAvoidingView>
+				</BottomPopup>
+			</Modal>
+			<Modal
+				isVisible={openSignUp}
+				coverScreen={false}
+				onModalHide={handleSignUpPage}
+				onSwipeComplete={handleSignUpPage}
+				onBackdropPress={handleSignUpPage}
+				style={styles.bottomModalStyle}
 			>
-				<SignupForm {...signupProps} />
-			</OBottomPopup>
+				<BottomPopup>
+					<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} style={{flex: 0, justifyContent: 'flex-end'}}>
+						<ScrollView style={{backgroundColor: 'transparent', overflow: 'visible'}} showsVerticalScrollIndicator={false}>
+							<OText size={20} lineHeight={30} weight={'600'} mBottom={20}>{t('SIGN_UP', 'Sign up')}</OText>
+							<SignupForm {...signupProps} />
+						</ScrollView>
+					</KeyboardAvoidingView>
+				</BottomPopup>
+			</Modal>
 		</>
 	);
 };
@@ -288,4 +309,8 @@ const styles = StyleSheet.create({
 		borderTopLeftRadius: 12,
 		paddingHorizontal: 40
 	},
+	bottomModalStyle: {
+		justifyContent: 'flex-end',
+		margin: 0
+	}
 });

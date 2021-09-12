@@ -408,26 +408,26 @@ export interface AccountParams {
 	toggleIsEdit?: any;
 	validationFields?: any;
 	handleButtonUpdateClick?: any;
-  }
+}
   
-  export interface HelpParams {
+export interface HelpParams {
 	navigation: any;
-  }
+}
   
-  export interface LastOrdersParams {
+export interface LastOrdersParams {
 	orderList?: any,
 	onRedirect?: any,
-  }
+}
   
-  export interface HelpOrderParams {
+export interface HelpOrderParams {
 	navigation: any;
-  }
+}
   
-  export interface HelpGuideParams {
+export interface HelpGuideParams {
 	navigation: any;
-  }
+}
   
-  export interface HelpAccountAndPaymentParams {
+export interface HelpAccountAndPaymentParams {
 	navigation: any;
-  }
+}
   

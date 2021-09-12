@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback, Platform } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -13,14 +13,6 @@ import { AddressFormParams } from '../../types'
 import { getTraduction } from '../../utils'
 import { GoogleMap } from '../GoogleMap'
 import NavBar from '../NavBar'
-import Geolocation from '@react-native-community/geolocation';
-
-import {
-	PERMISSIONS,
-	PermissionStatus,
-	request,
-	openSettings,
-  } from 'react-native-permissions';
 
 import {
 	AddressFormContainer,
@@ -132,49 +124,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const continueAsGuest = () => navigation.navigate('BusinessList')
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
-	const requestLocationPermission = async () => {
-		let permissionStatus: PermissionStatus;
-		if (Platform.OS === 'ios') {
-		  permissionStatus = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-		} else {
-		  permissionStatus = await request(
-			PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-		  );
-		}
-
-		if (permissionStatus === 'denied') {
-		  openSettings();
-		}
-		getOneTimeLocation();
-	  };
-
-	const getOneTimeLocation = () => {
-		Geolocation.getCurrentPosition( (position) => {
-		  getAddressFormatted({
-							latitude: position.coords.latitude,
-							longitude: position.coords.longitude
-		  })
-		},(error) => {
-			console.log(error.message);
-		},
-		{
-			enableHighAccuracy: false,
-			timeout: 30000,
-			maximumAge: 1000
-		});
-	};
-
 	const getAddressFormatted = (address: any) => {
 		const data: any = { address: null, error: null }
-		const isObjet = typeof address === 'object';
-		const filterAddressInfo = [
-			{ tag: 'street_number', isShort: true },
-			{ tag: 'route', isShort: true },
-			{ tag: 'locality', isShort: true },
-			{ tag: 'administrative_area_level_1', isShort: false },
-			{ tag: 'country', isShort: false },
-		]
-   		let addressValue: any = [];
 		Geocoder.init(googleMapsApiKey);
 		Geocoder.from(address)
 			.then((json: any) => {
@@ -182,18 +133,11 @@ const AddressFormUI = (props: AddressFormParams) => {
 					let postalCode = null
 					for (const component of json.results?.[0].address_components) {
 						const addressType = component.types?.[0]
-						if (typeof address === 'object') {
-							for (const filterProps of filterAddressInfo)  {
-							  if(filterProps.tag.includes(addressType)) {
-								addressValue.push(filterProps.isShort ? component.short_name : component.long_name)
-							  }
-							}
-						}
 						if (addressType === 'postal_code') {
 							postalCode = component.short_name
+							break
 						}
 					}
-					isObjet ? address = addressValue.join(', ') : address
 					data.address = {
 						address,
 						location: json.results[0].geometry.location,
@@ -533,9 +477,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 								{((!isInputFocused && curInpVal.length > 0) || (curInpVal.length == 0)) && (
 									<View style={{ position: 'absolute', zIndex: 100, top: 10, end: 10 }}>
-										<TouchableOpacity onPress={requestLocationPermission}>
 										<OIcon src={theme.images.general.pin_line} width={16} color={theme.colors.primary} />
-										</TouchableOpacity>
 									</View>
 								)}
 							</AutocompleteInput>
