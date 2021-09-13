@@ -52,7 +52,8 @@ OImage.defaultProps = {
 
 const areEqual=(prevProps: { src?: any; color?: string; }, nextProps: { src?: any; color?: string; })=>{
   // return false prevProps.text & nextProps.text are not equal.
-  return prevProps.color === nextProps.color || prevProps.src === nextProps.src
+	console.log('PreviewColor: '+prevProps.color, 'NextColor: '+nextProps.color);
+  return prevProps.color === nextProps.color && prevProps.src === nextProps.src
   // else all are equal, no re-render
   return true
 }

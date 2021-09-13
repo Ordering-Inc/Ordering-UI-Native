@@ -99,7 +99,7 @@ export const UserProfileForm = (props: ProfileParams) => {
           <Ionicons name='globe-outline' style={styles.iconStyle} />
           <LanguageSelector />
         </LanguageContainer>
-        <LogoutButton />
+        <LogoutButton iconStyle={{width: 20, height: 20}} showText />
       </View>
     </Container>
   );

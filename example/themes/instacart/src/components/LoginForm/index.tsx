@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Pressable, StyleSheet, View, Keyboard, Animated } from 'react-native';
+import { Pressable, StyleSheet, View, Keyboard, Animated, Platform } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber'
@@ -257,7 +257,7 @@ const LoginFormUI = (props: LoginParams) => {
 					{(useLoginByCellphone || useLoginByEmail) && (
 						<FormInput>
 							{useLoginByEmail && loginTab === 'email' && (
-								<View style={loginStyle.inputWrap}>
+								<View style={{...loginStyle.inputWrap, marginBottom: Platform.OS == 'android' ? 18 : 0}}>
 									<Controller
 										control={control}
 										render={({ onChange, value }: any) => (
@@ -408,7 +408,7 @@ const LoginFormUI = (props: LoginParams) => {
 						{t('MOBILE_FRONT_ALREADY_DONT_HAVE_AN_ACCOUNT', 'Don\'t have an account?')}
 					</OText>
 					<Pressable onPress={() => onHandleOpenSignup()}>
-						<OText style={{ ...theme.labels.normal, marginStart: 5, fontWeight: '600' }} color={theme.colors.primary}>
+						<OText style={{ ...theme.labels.normal, marginLeft: 5, fontWeight: '600' }} color={theme.colors.primary}>
 							{registerButtonText}
 						</OText>
 					</Pressable>

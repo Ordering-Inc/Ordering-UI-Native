@@ -20,7 +20,7 @@ export const Container = (props: any) => {
 					{props.children}
 				</View>
 			) : (
-				<ContainerStyled keyboardShouldPersistTaps='handled' style={{ padding: props.nopadding ? 0 : 20, paddingTop: 0 }}>
+				<ContainerStyled keyboardShouldPersistTaps='handled' {...props} style={{ padding: props.nopadding ? 0 : 40, paddingTop: 0 }}>
 					{props.children}
 				</ContainerStyled>
 			)}

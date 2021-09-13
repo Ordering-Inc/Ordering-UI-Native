@@ -16,3 +16,10 @@ export const Slogan = styled.View`
   align-items: center;
   margin-bottom: 10px;
 `;
+
+export const BottomPopup = styled.View`
+  padding: 40px 40px 0;
+  background-color: white;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+`;
