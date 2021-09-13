@@ -13,6 +13,7 @@ import { MessagesOption } from './src/components/MessagesOption';
 import { NotFoundSource } from './src/components/NotFoundSource';
 import { OrderMessage } from './src/components/OrderMessage';
 import { OrderDetails } from './src/components/OrderDetails';
+import { OrderDetailsDelivery } from './src/components/OrderDetailsDelivery';
 import { OrdersOption } from './src/components/OrdersOption';
 import { OrderSummary } from './src/components/OrderSummary';
 import { PhoneInputNumber } from './src/components/PhoneInputNumber';
@@ -25,6 +26,7 @@ import { StoresList } from './src/components/StoresList';
 import { UserFormDetailsUI } from './src/components/UserFormDetails';
 import { UserProfileForm } from './src/components/UserProfileForm';
 import { VerifyPhone } from './src/components/VerifyPhone';
+import { DriverMap } from './src/components/DriverMap';
 
 //OComponents
 import {
@@ -55,6 +57,7 @@ export {
   LoginForm,
   LogoutButton,
   MessagesOption,
+  OrderDetailsDelivery,
   OrderMessage,
   NotFoundSource,
   OrderDetails,

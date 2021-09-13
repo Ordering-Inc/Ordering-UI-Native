@@ -806,7 +806,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   );
 };
 
-export const OrderDetails = (props: OrderDetailsParams) => {
+export const OrderDetailsDelivery = (props: OrderDetailsParams) => {
   const orderDetailsProps = {
     ...props,
     driverAndBusinessId: true,
