@@ -13,9 +13,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   const [{ parseDate, optimizeImage }] = useUtils();
   const theme = useTheme();
 
-  const handlePressOrder = (uuid: string) => {
-    onNavigationRedirect &&
-      onNavigationRedirect('OrderDetails', { orderId: uuid });
+  const handlePressOrder = (order: any) => {
+    onNavigationRedirect && onNavigationRedirect('OrderDetails', { order });
   };
 
   const styles = StyleSheet.create({
@@ -69,7 +68,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
         orders?.map((order: any) => (
           <TouchableOpacity
             key={order.id}
-            onPress={() => handlePressOrder(order.id)}
+            onPress={() => handlePressOrder(order)}
             style={styles.cardButton}
             activeOpacity={1}>
             <Card key={order.id}>
