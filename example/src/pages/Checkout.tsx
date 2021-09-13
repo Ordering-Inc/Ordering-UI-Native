@@ -47,7 +47,7 @@ export const CheckoutPage = (props: any) => {
             ? { publishableKey: publicKey, stripeAccountId: stripeAccountId}
             : { publishableKey: publicKey };
           initStripe(stripeParams);
-        } catch (error) {
+        } catch (error: any) {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
 
@@ -71,11 +71,11 @@ export const CheckoutPage = (props: any) => {
               props.navigation.navigate('OrderDetails', { orderId: confirmCartRes.result.order.uuid, isFromCheckout: true })
               return
             }
-          } catch (error) {
+          } catch (error: any) {
             showToast(ToastType.Error, error?.toString() || error.message)
           }
           return
-        } catch (error) {
+        } catch (error: any) {
           const e = error?.message?.toLowerCase() === 'failed'
             ? t('FAILED_PAYMENT', 'The payment has failed')
             : error?.toString() || error.message
