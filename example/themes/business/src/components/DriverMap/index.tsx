@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet, View, Platform } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import MapView, {
-  PROVIDER_DEFAULT,
   PROVIDER_GOOGLE,
   Marker,
   Region,
@@ -15,23 +14,20 @@ import { OIconButton, OIcon, OFab, OText } from '../shared';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useTheme } from 'styled-components/native';
 import { useLocation } from '../../hooks/useLocation';
-import Spinner from 'react-native-loading-spinner-overlay';
 // import MapViewDirections from 'react-native-maps-directions';
 import { FloatingButton } from '../FloatingButton';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const DriverMap = (props: GoogleMapsParams) => {
   const {
     location,
-    handleChangeAddressMap,
     maxLimitLocation,
-    readOnly,
     markerTitle,
     handleOpenMapView,
     showAcceptOrReject,
     saveLocation,
     setSaveLocation,
     order,
-    handleToggleMap,
     isSetInputs,
     orderStatus,
     isBusinessMarker,
@@ -48,7 +44,9 @@ export const DriverMap = (props: GoogleMapsParams) => {
   const following = useRef<boolean>(true);
   const autoFit = useRef<boolean>(true);
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value;
+  const [travelTime, setTravelTime] = useState(0);
   const [distancesFromTwoPlacesKm, setDistancesFromTwoPlacesKm] = useState(0);
+  const [isMin, setIsMin] = useState(false);
   const [infoRealTime, setInfoRealTime] = useState({ formatted_address: '' });
   const [{ parseDate }] = useUtils();
   const mapErrors: any = {
@@ -68,7 +66,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
     getCurrentLocation,
     userLocation,
     stopFollowUserLocation,
-    routeLines,
   } = useLocation();
 
   const origin = {
@@ -76,6 +73,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
     longitude: initialPosition.longitude,
   };
   const destination = { latitude: location.lat, longitude: location.lng };
+
+  const { top } = useSafeAreaInsets();
 
   useEffect(() => {
     if (isToFollow) {
@@ -179,7 +178,13 @@ export const DriverMap = (props: GoogleMapsParams) => {
 
     const distance = R * c;
     const distanceInKm = distance / 1000;
+    const estimatedTimeTravel = distance / userLocation.speed;
+    const time =
+      estimatedTimeTravel > 60 ? estimatedTimeTravel / 60 : estimatedTimeTravel;
+    setIsMin(estimatedTimeTravel < 60);
+    const timeEstimated = userLocation.speed > 0 ? time : travelTime;
     setDistancesFromTwoPlacesKm(distanceInKm);
+    setTravelTime(timeEstimated);
     return distance;
   };
 
@@ -266,10 +271,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
     return () => clearInterval(interval);
   }, [initialPosition]);
 
-  if (!hasLocation) {
-    return <Spinner visible={!hasLocation} />;
-  }
-
   const fitCoordinatesZoom = () => {
     following.current = false;
     fitCoordinates();
@@ -292,39 +293,36 @@ export const DriverMap = (props: GoogleMapsParams) => {
       right: 0,
     },
     buttonBack: {
-      borderRadius: 7.6,
       borderWidth: 0,
+      maxWidth: 20,
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
     },
     facOrderStatus: {
       position: 'absolute',
-      height: 100,
-      top: Platform.OS === 'ios' ? 15 : 0,
-      left: 0,
+      height: 120,
+      top: 0,
       zIndex: 9999,
       width: '100%',
       flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
       backgroundColor: theme.colors.white,
+      paddingHorizontal: 20,
       borderWidth: 0,
-      paddingLeft: 0,
-      paddingVertical: 10,
+      paddingTop: top,
       borderBottomWidth: 10,
       borderBottomColor: theme.colors.inputChat,
     },
     facDistance: {
       position: 'absolute',
-      height: 100,
-      top: 95,
-      left: 0,
+      height: 60,
+      top: 120,
       zIndex: 9999,
       width: '100%',
       flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
       backgroundColor: theme.colors.white,
+      alignItems: 'center',
+      paddingHorizontal: 20,
       borderWidth: 0,
-      paddingLeft: 0,
     },
     arrowDistance: {
       borderRadius: 7.6,
@@ -335,35 +333,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
 
   const handleChangeRegion = (coordinates: Region) => {
     validateResult(coordinates);
-  };
-
-  const validateResult = (curPos: { latitude: number; longitude: number }) => {
-    const loc1 = { lat: userLocation.latitude, lng: userLocation.longitude };
-    const loc2 = curPos;
-    const distance = calculateDistance(loc1, loc2);
-
-    // if (!maxLimitLocation) {
-    //   geocodePosition(curPos);
-    //   setMarkerPosition(curPos);
-    //   setRegion({
-    //     ...region,
-    //     longitude: curPos.longitude,
-    //     latitude: curPos.latitude,
-    //   });
-    //   return;
-    // }
-
-    // if (distance <= maxLimitLocation) {
-    //   setMarkerPosition(curPos);
-    //   setRegion({
-    //     ...region,
-    //     longitude: curPos.longitude,
-    //     latitude: curPos.latitude,
-    //   });
-    // } else {
-    //   setMapErrors && setMapErrors('ERROR_MAX_LIMIT_LOCATION');
-    //   setMarkerPosition({ latitude: center.lat, longitude: center.lng });
-    // }
   };
 
   return (
@@ -463,26 +432,30 @@ export const DriverMap = (props: GoogleMapsParams) => {
       />
 
       <View style={styles.facOrderStatus}>
-        <OIconButton
-          icon={theme.images.general.close}
-          iconStyle={{ width: 32, height: 32 }}
-          style={styles.buttonBack}
-          onClick={() => handleArrowBack()}
-        />
-        <View style={{ width: '70%' }}>
+        <View style={{ width: '25%' }}>
+          <OIconButton
+            icon={theme.images.general.close}
+            iconStyle={{
+              width: 32,
+              height: 23,
+            }}
+            style={styles.buttonBack}
+            onClick={() => handleArrowBack()}
+          />
+        </View>
+        <View style={{ width: '75%' }}>
           <OText size={12} color={theme.colors.textGray}>
             {order?.delivery_datetime_utc
               ? parseDate(order?.delivery_datetime_utc)
               : parseDate(order?.delivery_datetime, { utc: false })}
             {` - ${order?.paymethod?.name}`}
           </OText>
-          <OText weight="600">
+          <OText weight="bold">
             {t('INVOICE_ORDER_NO', 'Order No.')} {order?.id}
             {` ${t('IS', 'is')} `}
             <OText
               size={16}
-              numberOfLines={1}
-              adjustsFontSizeToFit
+              numberOfLines={2}
               color={colors[order?.status] || theme.colors.statusOrderBlue}>
               {`${orderStatus}`}
             </OText>
@@ -491,11 +464,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
       </View>
 
       <View style={styles.facDistance}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        <View style={{ width: '25%' }}>
           <OIcon
             src={theme.images.general.arrow_distance}
             style={styles.arrowDistance}
@@ -505,13 +474,15 @@ export const DriverMap = (props: GoogleMapsParams) => {
           ).toFixed(0)} Ft`}</OText>
         </View>
 
-        <View style={{ width: '70%' }}>
+        <View style={{ width: '75%' }}>
           <OText
             color={theme.colors.unselectText}
             size={13}
             numberOfLines={2}
             adjustsFontSizeToFit>
-            {`30 min - ${distancesFromTwoPlacesKm.toFixed(2)} km`}
+            {`${travelTime.toFixed(2)} - ${
+              isMin ? t('MINNUTES', 'mins') : t('HOURS', 'hours')
+            } ${distancesFromTwoPlacesKm.toFixed(2)} km`}
           </OText>
           <OText size={13} numberOfLines={3} adjustsFontSizeToFit>
             {infoRealTime?.formatted_address}

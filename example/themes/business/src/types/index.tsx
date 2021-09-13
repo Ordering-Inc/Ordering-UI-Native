@@ -343,6 +343,9 @@ export interface OrderDetailsParams {
   isFromCheckout?: boolean;
   driverLocation?: any;
   goToBusinessList?: boolean;
+  permissions: any;
+  askLocationPermission: any;
+  redirectToSettings: any;
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean;
@@ -458,6 +461,7 @@ export interface UpsellingProductsParams {
 export interface Location {
   latitude: number;
   longitude: number;
+  speed: number;
 }
 
 export interface GoogleMapsParams {

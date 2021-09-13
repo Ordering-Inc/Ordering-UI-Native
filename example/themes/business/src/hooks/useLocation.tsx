@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import GeoLocation from '@react-native-community/geolocation';
+import GeoLocation from 'react-native-geolocation-service';
 import { Location } from '../types';
 
 export const useLocation = () => {
@@ -7,10 +7,12 @@ export const useLocation = () => {
   const [initialPosition, setInitialPosition] = useState<Location>({
     longitude: 0,
     latitude: 0,
+    speed: 0,
   });
   const [userLocation, setUserLocation] = useState<Location>({
     longitude: 0,
     latitude: 0,
+    speed: 0,
   });
   const [routeLines, setRoutesLines] = useState<Location[]>([]);
   const isMounted = useRef(true);
@@ -43,10 +45,11 @@ export const useLocation = () => {
           resolve({
             latitude: coords.latitude,
             longitude: coords.longitude,
+            speed: coords.speed,
           });
         },
         err => reject({ err }),
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       );
     });
   };
@@ -58,12 +61,13 @@ export const useLocation = () => {
         const location: Location = {
           latitude: coords.latitude,
           longitude: coords.longitude,
+          speed: coords.speed,
         };
         setUserLocation(location);
         setRoutesLines(routes => [...routes, location]);
       },
       err => console.log(err),
-      { enableHighAccuracy: true, distanceFilter: 20 },
+      { enableHighAccuracy: true, distanceFilter: 1 },
     );
   };
 
