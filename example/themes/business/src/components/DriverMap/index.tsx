@@ -294,9 +294,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
     },
     buttonBack: {
       borderWidth: 0,
-      maxWidth: 20,
-      justifyContent: 'flex-start',
-      alignItems: 'flex-start',
+      maxWidth: 100,
     },
     facOrderStatus: {
       position: 'absolute',
@@ -325,9 +323,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
       borderWidth: 0,
     },
     arrowDistance: {
-      borderRadius: 7.6,
       borderWidth: 0,
-      paddingHorizontal: 40,
     },
   });
 
@@ -432,12 +428,16 @@ export const DriverMap = (props: GoogleMapsParams) => {
       />
 
       <View style={styles.facOrderStatus}>
-        <View style={{ width: '25%' }}>
+        <View
+          style={{
+            width: '25%',
+            justifyContent: 'center',
+          }}>
           <OIconButton
             icon={theme.images.general.close}
             iconStyle={{
               width: 32,
-              height: 23,
+              height: 25,
             }}
             style={styles.buttonBack}
             onClick={() => handleArrowBack()}
@@ -464,14 +464,18 @@ export const DriverMap = (props: GoogleMapsParams) => {
       </View>
 
       <View style={styles.facDistance}>
-        <View style={{ width: '25%' }}>
+        <View
+          style={{
+            width: '25%',
+            alignItems: 'center',
+          }}>
           <OIcon
             src={theme.images.general.arrow_distance}
             style={styles.arrowDistance}
           />
           <OText size={13} numberOfLines={1} adjustsFontSizeToFit space>{`${(
             distancesFromTwoPlacesKm * 3280.84
-          ).toFixed(0)} Ft`}</OText>
+          ).toFixed(0)} ${t('FT', 'Ft')}`}</OText>
         </View>
 
         <View style={{ width: '75%' }}>
