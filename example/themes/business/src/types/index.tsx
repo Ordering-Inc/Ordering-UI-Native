@@ -329,6 +329,8 @@ export interface OrderDetailsParams {
   titleAccept?: textTranslate;
   titleReject?: textTranslate;
   appTitle?: textTranslate;
+  drivers?: any;
+  loadingDriver?: boolean;
   navigation?: any;
   messagesReadList?: any;
   urlToShare?: string;
@@ -343,9 +345,9 @@ export interface OrderDetailsParams {
   isFromCheckout?: boolean;
   driverLocation?: any;
   goToBusinessList?: boolean;
-  permissions: any;
-  askLocationPermission: any;
-  redirectToSettings: any;
+  permissions?: any;
+  askLocationPermission?: any;
+  redirectToSettings?: any;
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean;

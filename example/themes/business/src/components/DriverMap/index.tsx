@@ -178,7 +178,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
 
     const distance = R * c;
     const distanceInKm = distance / 1000;
-    const estimatedTimeTravel = distance / userLocation.speed;
+    const estimatedTimeTravel = distance / userLocation.speed / 60;
     const time =
       estimatedTimeTravel > 60 ? estimatedTimeTravel / 60 : estimatedTimeTravel;
     setIsMin(estimatedTimeTravel < 60);
@@ -295,32 +295,26 @@ export const DriverMap = (props: GoogleMapsParams) => {
     buttonBack: {
       borderWidth: 0,
       maxWidth: 100,
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
     },
-    facOrderStatus: {
+    facContainer: {
       position: 'absolute',
-      height: 120,
       top: 0,
       zIndex: 9999,
       width: '100%',
-      flexDirection: 'row',
       backgroundColor: theme.colors.white,
-      paddingHorizontal: 20,
-      borderWidth: 0,
-      paddingTop: top,
-      borderBottomWidth: 10,
+    },
+    facOrderStatus: {
+      flexDirection: 'row',
+      paddingTop: top + 5,
+      borderBottomWidth: 11,
       borderBottomColor: theme.colors.inputChat,
     },
     facDistance: {
-      position: 'absolute',
-      height: 60,
-      top: 120,
-      zIndex: 9999,
-      width: '100%',
       flexDirection: 'row',
-      backgroundColor: theme.colors.white,
+      minHeight: 70,
       alignItems: 'center',
-      paddingHorizontal: 20,
-      borderWidth: 0,
     },
     arrowDistance: {
       borderWidth: 0,
@@ -426,71 +420,72 @@ export const DriverMap = (props: GoogleMapsParams) => {
           right: 20,
         }}
       />
-
-      <View style={styles.facOrderStatus}>
-        <View
-          style={{
-            width: '25%',
-            justifyContent: 'center',
-          }}>
-          <OIconButton
-            icon={theme.images.general.close}
-            iconStyle={{
-              width: 32,
-              height: 25,
-            }}
-            style={styles.buttonBack}
-            onClick={() => handleArrowBack()}
-          />
-        </View>
-        <View style={{ width: '75%' }}>
-          <OText size={12} color={theme.colors.textGray}>
-            {order?.delivery_datetime_utc
-              ? parseDate(order?.delivery_datetime_utc)
-              : parseDate(order?.delivery_datetime, { utc: false })}
-            {` - ${order?.paymethod?.name}`}
-          </OText>
-          <OText weight="bold">
-            {t('INVOICE_ORDER_NO', 'Order No.')} {order?.id}
-            {` ${t('IS', 'is')} `}
-            <OText
-              size={16}
-              numberOfLines={2}
-              color={colors[order?.status] || theme.colors.statusOrderBlue}>
-              {`${orderStatus}`}
+      <View style={styles.facContainer}>
+        <View style={styles.facOrderStatus}>
+          <View
+            style={{
+              width: '25%',
+              justifyContent: 'flex-start',
+            }}>
+            <OIconButton
+              icon={theme.images.general.close}
+              iconStyle={{
+                width: 32,
+                height: 25,
+              }}
+              style={styles.buttonBack}
+              onClick={() => handleArrowBack()}
+            />
+          </View>
+          <View style={{ width: '75%' }}>
+            <OText size={12} color={theme.colors.textGray}>
+              {order?.delivery_datetime_utc
+                ? parseDate(order?.delivery_datetime_utc)
+                : parseDate(order?.delivery_datetime, { utc: false })}
+              {` - ${order?.paymethod?.name}`}
             </OText>
-          </OText>
-        </View>
-      </View>
-
-      <View style={styles.facDistance}>
-        <View
-          style={{
-            width: '25%',
-            alignItems: 'center',
-          }}>
-          <OIcon
-            src={theme.images.general.arrow_distance}
-            style={styles.arrowDistance}
-          />
-          <OText size={13} numberOfLines={1} adjustsFontSizeToFit space>{`${(
-            distancesFromTwoPlacesKm * 3280.84
-          ).toFixed(0)} ${t('FT', 'Ft')}`}</OText>
+            <OText weight="bold">
+              {t('INVOICE_ORDER_NO', 'Order No.')} {order?.id}
+              {` ${t('IS', 'is')} `}
+              <OText
+                size={16}
+                numberOfLines={2}
+                color={colors[order?.status] || theme.colors.statusOrderBlue}>
+                {`${orderStatus}`}
+              </OText>
+            </OText>
+          </View>
         </View>
 
-        <View style={{ width: '75%' }}>
-          <OText
-            color={theme.colors.unselectText}
-            size={13}
-            numberOfLines={2}
-            adjustsFontSizeToFit>
-            {`${travelTime.toFixed(2)} - ${
-              isMin ? t('MINNUTES', 'mins') : t('HOURS', 'hours')
-            } ${distancesFromTwoPlacesKm.toFixed(2)} km`}
-          </OText>
-          <OText size={13} numberOfLines={3} adjustsFontSizeToFit>
-            {infoRealTime?.formatted_address}
-          </OText>
+        <View style={styles.facDistance}>
+          <View
+            style={{
+              width: '25%',
+              alignItems: 'center',
+              paddingHorizontal: 20,
+            }}>
+            <OIcon
+              src={theme.images.general.arrow_distance}
+              style={styles.arrowDistance}
+            />
+            <OText size={12} numberOfLines={2}>{`${(
+              distancesFromTwoPlacesKm * 3280.84
+            ).toFixed(0)} ${t('FT', 'Ft')}`}</OText>
+          </View>
+          <View style={{ width: '75%' }}>
+            <OText
+              color={theme.colors.unselectText}
+              size={13}
+              numberOfLines={2}
+              adjustsFontSizeToFit>
+              {`${travelTime.toFixed(2)} - ${
+                isMin ? t('MINNUTES', 'mins') : t('HOURS', 'hours')
+              } ${distancesFromTwoPlacesKm.toFixed(2)} km`}
+            </OText>
+            <OText size={13} numberOfLines={3} adjustsFontSizeToFit>
+              {infoRealTime?.formatted_address}
+            </OText>
+          </View>
         </View>
       </View>
 

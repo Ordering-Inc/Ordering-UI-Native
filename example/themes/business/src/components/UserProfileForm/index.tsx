@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -136,24 +136,12 @@ const ProfileUI = (props: ProfileParams) => {
   }, [user?.country_phone_code]);
 
   const styles = StyleSheet.create({
-    header: {
-      marginBottom: 25,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    title: {
-      fontFamily: 'Poppins',
-      fontStyle: 'normal',
-      fontWeight: '600',
-      fontSize: 26,
-      color: theme.colors.textGray,
-    },
     label: {
       color: theme.colors.textGray,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
-      paddingHorizontal: 16,
+      paddingHorizontal: 20,
     },
     inputStyle: {
       marginBottom: 25,
@@ -182,10 +170,6 @@ const ProfileUI = (props: ProfileParams) => {
 
   return (
     <>
-      <View style={styles.header}>
-        <OText style={styles.title}>{t('PROFILE', 'Profile')}</OText>
-      </View>
-
       {(formState?.loading || state?.loading) && (
         <View
           style={{
@@ -259,7 +243,7 @@ const ProfileUI = (props: ProfileParams) => {
       )}
 
       {!formState?.loading && !state?.loading && (
-        <>
+        <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
           <CenterView>
             <OIcon
               url={optimizeImage(user?.photo, 'h_300,c_limit')}
@@ -396,7 +380,7 @@ const ProfileUI = (props: ProfileParams) => {
 
             <LogoutButton />
           </Actions>
-        </>
+        </ScrollView>
       )}
     </>
   );

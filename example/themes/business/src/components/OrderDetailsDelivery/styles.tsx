@@ -17,6 +17,7 @@ export const Header = styled.View`
   flex-direction: row;
   justify-content: space-between;
   padding-top: 10px;
+  padding-horizontal: 20px;
 `;
 
 export const DriverItem = styled.View`
@@ -41,8 +42,9 @@ export const OrderContent = styled.View``;
 
 export const OrderHeader = styled.View`
   padding-vertical: 10px;
-  border-bottom-width: 20px;
+  border-bottom-width: 10px;
   border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
+  padding-horizontal: 20px;
 `;
 
 export const OrderBusiness = styled.View`

@@ -87,16 +87,13 @@ const StoresListUI = (props: BusinessesListingParams) => {
 
   const styles = StyleSheet.create({
     container: {
-      padding: Platform.OS === 'ios' && orientation === 'Portrait' ? 0 : 20,
       paddingBottom: 20,
-      paddingHorizontal: 20,
       marginBottom: 0,
       flex: 1,
     },
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: 25,
     },
     sectionTitle: {
       fontStyle: 'normal',
@@ -115,7 +112,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
   });
 
   return (
-    <ScrollView style={styles.container} onScroll={(e: any) => handleScroll(e)}>
+    <>
       <View style={styles.header}>
         <OText style={styles.sectionTitle}>{t('STORES', 'Stores')}</OText>
 
@@ -131,53 +128,58 @@ const StoresListUI = (props: BusinessesListingParams) => {
           />
         </View>
       </View>
-
-      {!loading && businesses?.length === 0 && (
-        <NotFoundSource
-          content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
-          image={theme.images.general.notFound}
-          conditioned={false}
-        />
-      )}
-
-      {!error &&
-        businesses?.map((business: any) => (
-          <BusinessController
-            key={business?.id}
-            business={business}
-            handleCustomClick={handleBusinessClick}
-            orderType={orderState?.options?.type}
-            isBusinessOpen={business?.open}
-            setIsUpdateStore={setIsUpdateStore}
-            isUpdateStore={isUpdateStore}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        onScroll={(e: any) => handleScroll(e)}>
+        {!loading && businesses?.length === 0 && (
+          <NotFoundSource
+            content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
+            image={theme.images.general.notFound}
+            conditioned={false}
           />
-        ))}
+        )}
 
-      {loadBusinesses && (
-        <View>
-          {[...Array(6)].map((item, i) => (
-            <Placeholder key={i} Animation={Fade}>
-              <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
-                <PlaceholderLine
-                  width={orientation === 'Portrait' ? 22 : 11}
-                  height={74}
-                  style={{
-                    marginRight: 20,
-                    marginBottom: 20,
-                    borderRadius: 7.6,
-                  }}
-                />
-                <Placeholder>
-                  <PlaceholderLine width={30} style={{ marginTop: 5 }} />
-                  <PlaceholderLine width={50} />
-                  <PlaceholderLine width={20} />
-                </Placeholder>
-              </View>
-            </Placeholder>
+        {!error &&
+          businesses?.map((business: any) => (
+            <BusinessController
+              key={business?.id}
+              business={business}
+              handleCustomClick={handleBusinessClick}
+              orderType={orderState?.options?.type}
+              isBusinessOpen={business?.open}
+              setIsUpdateStore={setIsUpdateStore}
+              isUpdateStore={isUpdateStore}
+            />
           ))}
-        </View>
-      )}
-    </ScrollView>
+
+        {loadBusinesses && (
+          <View>
+            {[...Array(6)].map((item, i) => (
+              <Placeholder key={i} Animation={Fade}>
+                <View
+                  style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
+                  <PlaceholderLine
+                    width={orientation === 'Portrait' ? 22 : 11}
+                    height={74}
+                    style={{
+                      marginRight: 20,
+                      marginBottom: 20,
+                      borderRadius: 7.6,
+                    }}
+                  />
+                  <Placeholder>
+                    <PlaceholderLine width={30} style={{ marginTop: 5 }} />
+                    <PlaceholderLine width={50} />
+                    <PlaceholderLine width={20} />
+                  </Placeholder>
+                </View>
+              </Placeholder>
+            ))}
+          </View>
+        )}
+      </ScrollView>
+    </>
   );
 };
 

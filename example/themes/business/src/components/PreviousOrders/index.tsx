@@ -63,7 +63,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   });
 
   return (
-    <ScrollView style={{ height: '80%' }}>
+    <>
       {orders?.length > 0 &&
         orders?.map((order: any) => (
           <TouchableOpacity
@@ -120,6 +120,6 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
             </Card>
           </TouchableOpacity>
         ))}
-    </ScrollView>
+    </>
   );
 };

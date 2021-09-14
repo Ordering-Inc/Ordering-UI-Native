@@ -10,7 +10,7 @@ export const TabsContainer = styled.View`
 `;
 
 export const TagsContainer = styled.ScrollView`
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 `;
 
 export const Tag = styled.Pressable`

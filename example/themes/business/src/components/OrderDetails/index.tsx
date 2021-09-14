@@ -66,7 +66,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     business: false,
     driver: false,
   });
-  const { order, businessData, driversGroupsData, loading } = props.order;
+  const { order, businessData, loading } = props.order;
+  const { drivers, loadingDriver } = props.drivers;
   const itemsDrivers: any = [];
   const [actionOrder, setActionOrder] = useState('');
   const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
@@ -75,8 +76,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [isDriverModalVisible, setIsDriverModalVisible] = useState(false);
 
   if (order?.status === 7 || order?.status === 4) {
-    if (driversGroupsData?.length > 0) {
-      driversGroupsData.forEach((driver: any) => {
+    if (drivers?.length > 0 && drivers) {
+      drivers.forEach((driver: any) => {
         itemsDrivers.push({
           available: driver?.available,
           key: driver?.id,
@@ -86,9 +87,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       });
 
       if (
-        !driversGroupsData?.some(
-          (driver: any) => driver?.id === order?.driver?.id,
-        ) &&
+        !drivers?.some((driver: any) => driver?.id === order?.driver?.id) &&
         order?.driver?.id
       ) {
         itemsDrivers.push({
@@ -100,10 +99,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       }
     }
 
-    if (
-      order?.driver &&
-      (!driversGroupsData.length || driversGroupsData.length === 0)
-    ) {
+    if (order?.driver && (!drivers?.length || drivers?.length === 0)) {
       itemsDrivers.push({
         available: order?.driver?.available,
         key: order?.driver?.id,
@@ -487,7 +483,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   return (
     <>
-      {(!order || Object.keys(order).length === 0 || loading) && (
+      {(!order || Object.keys(order).length === 0) && (
         <View
           style={{
             padding: 20,
@@ -508,70 +504,68 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         </View>
       )}
 
-      {order && Object.keys(order).length > 0 && !loading && (
+      {order && Object.keys(order).length > 0 && (
         <>
+          <Header>
+            <OIconButton
+              icon={theme.images.general.arrow_left}
+              iconStyle={{ width: 20, height: 20 }}
+              borderColor={theme.colors.clear}
+              style={{ ...styles.icons, justifyContent: 'flex-end' }}
+              onClick={() => handleArrowBack()}
+            />
+
+            <Actions>
+              <OIconButton
+                icon={theme.images.general.map}
+                iconStyle={{
+                  width: 20,
+                  height: 20,
+                  tintColor: theme.colors.backArrow,
+                }}
+                borderColor={theme.colors.clear}
+                style={styles.icons}
+                onClick={() => handleOpenMapView()}
+              />
+
+              <OIconButton
+                icon={theme.images.general.messages}
+                iconStyle={{
+                  width: 20,
+                  height: 20,
+                  tintColor: theme.colors.backArrow,
+                }}
+                borderColor={theme.colors.clear}
+                style={styles.icons}
+                onClick={() => handleOpenMessagesForBusiness()}
+              />
+            </Actions>
+          </Header>
+          <OrderHeader>
+            <OText size={13} style={{ marginBottom: 5 }}>
+              {order?.delivery_datetime_utc
+                ? parseDate(order?.delivery_datetime_utc)
+                : parseDate(order?.delivery_datetime, { utc: false })}
+            </OText>
+
+            <OText numberOfLines={2} size={20} weight="600">
+              <>
+                {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} ${t(
+                  'IS',
+                  'is',
+                )} `}
+                <OText
+                  size={20}
+                  weight="600"
+                  color={colors[order?.status] || theme.colors.primary}>
+                  {getOrderStatus(order?.status)?.value}
+                </OText>
+              </>
+            </OText>
+          </OrderHeader>
           <OrderDetailsContainer keyboardShouldPersistTaps="handled">
             <>
-              <Header>
-                <OIconButton
-                  icon={theme.images.general.arrow_left}
-                  iconStyle={{ width: 20, height: 20 }}
-                  borderColor={theme.colors.clear}
-                  style={{ ...styles.icons, justifyContent: 'flex-end' }}
-                  onClick={() => handleArrowBack()}
-                />
-
-                <Actions>
-                  <OIconButton
-                    icon={theme.images.general.map}
-                    iconStyle={{
-                      width: 20,
-                      height: 20,
-                      tintColor: theme.colors.backArrow,
-                    }}
-                    borderColor={theme.colors.clear}
-                    style={styles.icons}
-                    onClick={() => handleOpenMapView()}
-                  />
-
-                  <OIconButton
-                    icon={theme.images.general.messages}
-                    iconStyle={{
-                      width: 20,
-                      height: 20,
-                      tintColor: theme.colors.backArrow,
-                    }}
-                    borderColor={theme.colors.clear}
-                    style={styles.icons}
-                    onClick={() => handleOpenMessagesForBusiness()}
-                  />
-                </Actions>
-              </Header>
-
               <OrderContent>
-                <OrderHeader>
-                  <OText size={13} style={{ marginBottom: 5 }}>
-                    {order?.delivery_datetime_utc
-                      ? parseDate(order?.delivery_datetime_utc)
-                      : parseDate(order?.delivery_datetime, { utc: false })}
-                  </OText>
-
-                  <OText numberOfLines={2} size={20} weight="600">
-                    <>
-                      {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} ${t(
-                        'IS',
-                        'is',
-                      )} `}
-                      <OText
-                        size={20}
-                        weight="600"
-                        color={colors[order?.status] || theme.colors.primary}>
-                        {getOrderStatus(order?.status)?.value}
-                      </OText>
-                    </>
-                  </OText>
-                </OrderHeader>
-
                 <OrderBusiness>
                   <OText style={{ marginBottom: 5 }} size={16} weight="600">
                     {t('BUSINESS_DETAILS', 'Business details')}
@@ -761,10 +755,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           <>
                             <TouchableOpacity
                               onPress={() => setIsDriverModalVisible(true)}
-                              disabled={itemsDrivers.length === 0}>
+                              disabled={
+                                itemsDrivers.length === 0 || loadingDriver
+                              }>
                               <DriverItem justifyContent="space-between">
                                 <OText>
-                                  {itemsDrivers.length > 0
+                                  {loadingDriver
+                                    ? t('LOADING', 'Loading')
+                                    : itemsDrivers.length > 0
                                     ? order?.driver?.name ||
                                       t('SELECT_DRIVER', 'Select Driver')
                                     : t('WITHOUT_DRIVERS', 'Without drivers')}
@@ -910,6 +908,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <>
                 <FloatingButton
                   btnText={t('REJECT', 'Reject')}
+                  disabled={loading}
                   isSecondaryBtn={false}
                   secondButtonClick={() => handleViewActionOrder('accept')}
                   firstButtonClick={() => handleViewActionOrder('reject')}
@@ -928,6 +927,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <FloatingButton
                 btnText={t('COPY', 'Copy')}
                 isSecondaryBtn={false}
+                disabled={loading}
                 colorTxt1={theme.colors.primary}
                 secondButtonClick={handleViewSummaryOrder}
                 firstButtonClick={handleCopyClipboard}
