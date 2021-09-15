@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native';
@@ -761,20 +766,29 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                               disabled={
                                 itemsDrivers.length === 0 || loadingDriver
                               }>
-                              <DriverItem justifyContent="space-between">
-                                <OText>
-                                  {itemsDrivers.length > 0
-                                    ? order?.driver?.name ||
-                                      t('SELECT_DRIVER', 'Select Driver')
-                                    : t('WITHOUT_DRIVERS', 'Without drivers')}
-                                </OText>
-                                <OIcon
-                                  src={theme?.images?.general?.chevronDown}
-                                  color={theme.colors.backArrow}
-                                  width={20}
-                                  height={20}
-                                />
-                              </DriverItem>
+                              {loadingDriver ? (
+                                <DriverItem justifyContent="center">
+                                  <ActivityIndicator
+                                    size="small"
+                                    color={theme.colors.gray}
+                                  />
+                                </DriverItem>
+                              ) : (
+                                <DriverItem justifyContent="space-between">
+                                  <OText>
+                                    {itemsDrivers.length > 0
+                                      ? order?.driver?.name ||
+                                        t('SELECT_DRIVER', 'Select Driver')
+                                      : t('WITHOUT_DRIVERS', 'Without drivers')}
+                                  </OText>
+                                  <OIcon
+                                    src={theme?.images?.general?.chevronDown}
+                                    color={theme.colors.backArrow}
+                                    width={20}
+                                    height={20}
+                                  />
+                                </DriverItem>
+                              )}
                             </TouchableOpacity>
                           </>
                         )}
