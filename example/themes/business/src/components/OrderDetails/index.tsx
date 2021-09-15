@@ -427,10 +427,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       setOpenModalForAccept(false);
     }
 
-    if (openModalForBusiness) {
-      setOpenModalForBusiness(false);
-    }
-
     if (openModalForMapView) {
       setOpenModalForMapView(false);
     }
@@ -770,7 +766,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                                 <DriverItem justifyContent="center">
                                   <ActivityIndicator
                                     size="small"
-                                    color={theme.colors.gray}
+                                    color={theme.colors.primary}
                                   />
                                 </DriverItem>
                               ) : (
