@@ -763,9 +763,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                               }>
                               <DriverItem justifyContent="space-between">
                                 <OText>
-                                  {loadingDriver
-                                    ? t('LOADING', 'Loading')
-                                    : itemsDrivers.length > 0
+                                  {itemsDrivers.length > 0
                                     ? order?.driver?.name ||
                                       t('SELECT_DRIVER', 'Select Driver')
                                     : t('WITHOUT_DRIVERS', 'Without drivers')}
