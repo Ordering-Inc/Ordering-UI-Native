@@ -2,6 +2,7 @@ import styled from 'styled-components/native'
 
 export const ReviewOrderContainer = styled.ScrollView`
   padding: 20px;
+  margin-bottom: 100px;
 `
 export const ReviewOrderTitle = styled.View``
 
@@ -23,4 +24,14 @@ export const Stars = styled.View`
 export const CommentsButtonGroup = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
+`
+
+export const ActionContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 10px;
+`
+
+export const SkipButton = styled.TouchableOpacity`
 `

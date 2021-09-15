@@ -10,6 +10,7 @@ import AddressForm from '../pages/AddressForm';
 import OrderDetails from '../pages/OrderDetails';
 import BusinessProductsList from '../pages/BusinessProductsList';
 import ReviewOrder from '../pages/ReviewOrder'
+import ReviewProduct from '../pages/ReviewProduct';
 import MomentOption from '../pages/MomentOption'
 import Account from '../pages/Account'
 import Help from '../pages/Help'
@@ -78,6 +79,11 @@ const HomeNavigator = (e : any) => {
                   <Stack.Screen
                     name="ReviewOrder"
                     component={ReviewOrder}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="ReviewProduct"
+                    component={ReviewProduct}
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen

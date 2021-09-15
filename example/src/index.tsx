@@ -77,6 +77,7 @@ import {
 
 // layouts
 import { Container } from './layouts/Container';
+import { FloatingBottomContainer } from './layouts/FloatingBottomContainer';
 import { SafeAreaContainer } from './layouts/SafeAreaContainer';
 
 // providers
@@ -166,6 +167,7 @@ export {
   OToast,
   // layouts
   Container,
+  FloatingBottomContainer,
   SafeAreaContainer,
   // providers
   Alert,

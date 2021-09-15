@@ -56,7 +56,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   }
 
   const handleClickOrderReview = (order: any) => {
-    onNavigationRedirect && onNavigationRedirect('ReviewOrder', { order: { id: order?.id, business_id: order?.business_id, logo: order.business?.logo } })
+    onNavigationRedirect && onNavigationRedirect('ReviewOrder', { order: { id: order?.id, business_id: order?.business_id, logo: order.business?.logo, driver: order?.driver, products: order?.products } })
   }
 
   const handleReorderClick = (id : number) => {

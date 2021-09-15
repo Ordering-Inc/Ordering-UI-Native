@@ -7,11 +7,14 @@ import {
   BusinessLogo,
   FormReviews,
   Stars,
-  CommentsButtonGroup
+  CommentsButtonGroup,
+  ActionContainer,
+  SkipButton
 } from './styles'
 import { OButton, OIcon, OInput, OText } from '../shared'
 import { TouchableOpacity, StyleSheet,View } from 'react-native';
 import NavBar from '../NavBar'
+import { FloatingBottomContainer } from '../../layouts/FloatingBottomContainer'
 import Spinner from 'react-native-loading-spinner-overlay'
 
 import { ReviewOrderParams } from '../../types'
@@ -25,7 +28,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     formState,
     navigation,
     setIsReviewed,
-    setStars
+    setStars,
+    onNavigationRedirect
   } = props
 
   const theme = useTheme()
@@ -41,9 +45,10 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       overflow: 'hidden'
     },
     inputTextArea: {
-      borderColor: theme.colors.secundaryContrast,
-      borderRadius: 10,
-      marginVertical: 10,
+      borderColor: theme.colors.lightGray,
+      borderRadius: 8,
+      marginTop: 10,
+      marginBottom: 40,
       height: 100,
       alignItems: 'flex-start'
     },
@@ -62,18 +67,11 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const [comments, setComments] = useState<Array<any>>([])
   const [extraComment, setExtraComment] = useState('')
 
-  const categories = {
-    quality: { name: 'quality', show: t('QUALITY', 'Quality of Product') },
-    punctuality: { name: 'punctiality', show: t('PUNCTUALITY', 'Punctuality') },
-    service: { name: 'service', show: t('SERVICE', 'Service') },
-    packaging: { name: 'packaging', show: t('PRODUCT_PACKAGING', 'Product Packaging') }
-  }
-
   const onSubmit = () => {
     if (Object.values(stars).some((value: any) => value === 0)) {
       setAlertState({
         open: true,
-        content: Object.values(categories).map((category: any, i: any) => stars[category.name] === 0 ? `- ${t('CATEGORY_ATLEAST_ONE', `${category.show} must be at least one point`).replace('CATEGORY', category.name.toUpperCase())} ${i !== 3 && '\n'}` : ' ')
+        content: stars.quality === 0 ? [`${t('REVIEW_QUALIFICATION_REQUIRED', 'Review qualification is required')}`] : []
       })
       return
     }
@@ -167,8 +165,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       showToast(ToastType.Error, formState.result)
     }
     if (!formState.loading && !formState.error && alertState.success) {
-      showToast(ToastType.Success, t('REVIEW_SUCCESS_CONTENT', 'Thank you, Review successfully submitted!'))
-      navigation?.canGoBack() && navigation.goBack()
+      showToast(ToastType.Success, t('ORDER_REVIEW_SUCCESS_CONTENT', 'Thank you, Order review successfully submitted!'))
+      onNavigationRedirect && onNavigationRedirect('ReviewProduct', { order: order })
     }
   }, [formState.result])
 
@@ -215,7 +213,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
           >
             <View
               style={{
-                backgroundColor: theme.colors.backgroundGray,
+                backgroundColor: theme.colors.lightGray,
                 width: '100%',
                 height: 8,
                 borderRightWidth: index === 4 ? 0 : 1,
@@ -227,7 +225,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
                 marginBottom: 9
               }}
             />
-            <OText numberOfLines={1} size={12} color={theme.colors.backgroundGray}>{getReviewText(index)}</OText>
+            <OText numberOfLines={1} size={12} color={theme.colors.lightGray}>{getReviewText(index)}</OText>
           </TouchableOpacity>
         )
       case 1:
@@ -251,88 +249,98 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
                 marginBottom: 9
               }}
             />
-            <OText numberOfLines={1} size={12} color={theme.colors.backgroundGray}>{getReviewText(index)}</OText>
+            <OText numberOfLines={1} size={12} color={theme.colors.lightGray}>{getReviewText(index)}</OText>
           </TouchableOpacity>
         )
     }
   }
 
   return (
-    <ReviewOrderContainer>
-      <NavBar
-        title={t('REVIEW_ORDER', 'Review your Order')}
-        titleAlign={'center'}
-        onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-        showCall={false}
-        btnStyle={{ paddingLeft: 0 }}
-        paddingTop={0}
-      />
-      <BusinessLogo>
-        <View style={styles.logoWrapper}>
-          <OIcon
-            url={order?.logo}
-            width={80}
-            height={80}
-          />
-        </View>
-      </BusinessLogo>
-      <View style={{flex: 1, justifyContent: 'flex-end'}}>
-        <FormReviews>
-          <OText mBottom={13}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText>
-          <Stars>
-            {getStarArr(stars?.quality).map((star, index) => getStar(star, index))}
-          </Stars>
-
-          <OText style={{ marginTop: 30 }}>{t('COMMENTS', 'Comments')}</OText>
-          <CommentsButtonGroup>
-            {commentsList.map(commentItem => (
-              <OButton
-                key={commentItem.key}
-                text={commentItem.content}
-                bgColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.backgroundGray}
-                borderColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.backgroundGray}
-                textStyle={{
-                  color: isSelectedComment(commentItem.key) ? theme.colors.white : theme.colors.black,
-                  fontSize: 13,
-                  paddingRight: isSelectedComment(commentItem.key) ? 15 : 0
-                }}
-                style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
-                imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
-                imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-                onClick={() => handleChangeComment(commentItem) }
-              />
-            ))}
-          </CommentsButtonGroup>
-
-          <OText style={{ marginTop: 30 }}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText>
-          <Controller
-            control={control}
-            defaultValue=''
-            name='comments'
-            render={({ onChange }: any) => (
-              <OInput
-                name='comments'
-                placeholder={t('COMMENTS', 'Comments')}
-                onChange={(val: any) => {
-                  onChange(val)
-                  setExtraComment(val.target.value)
-                }}
-                style={styles.inputTextArea}
-                multiline
-              />
-            )}
-          />
-        </FormReviews>
-        <OButton
-          textStyle={{ color: theme.colors.white }}
-          style={{ marginTop: 20, marginBottom: 50 }}
-          text={t('SAVE', 'Save')}
-          imgRightSrc=''
-          onClick={handleSubmit(onSubmit)}
+    <>
+      <ReviewOrderContainer>
+        <NavBar
+          title={t('REVIEW_ORDER', 'Review your Order')}
+          titleAlign={'center'}
+          onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+          showCall={false}
+          btnStyle={{ paddingLeft: 0 }}
+          paddingTop={0}
         />
-      </View>
-      <Spinner visible={formState.loading} />
-    </ReviewOrderContainer>
+        <BusinessLogo>
+          <View style={styles.logoWrapper}>
+            <OIcon
+              url={order?.logo}
+              width={80}
+              height={80}
+            />
+          </View>
+        </BusinessLogo>
+        <View style={{flex: 1, justifyContent: 'flex-end'}}>
+          <FormReviews>
+            <OText mBottom={13}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText>
+            <Stars>
+              {getStarArr(stars?.quality).map((star, index) => getStar(star, index))}
+            </Stars>
+
+            <OText style={{ marginTop: 30 }}>{t('COMMENTS', 'Comments')}</OText>
+            <CommentsButtonGroup>
+              {commentsList.map(commentItem => (
+                <OButton
+                  key={commentItem.key}
+                  text={commentItem.content}
+                  bgColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.lightGray}
+                  borderColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.lightGray}
+                  textStyle={{
+                    color: isSelectedComment(commentItem.key) ? theme.colors.white : theme.colors.black,
+                    fontSize: 13,
+                    paddingRight: isSelectedComment(commentItem.key) ? 15 : 0
+                  }}
+                  style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
+                  imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
+                  imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
+                  onClick={() => handleChangeComment(commentItem) }
+                />
+              ))}
+            </CommentsButtonGroup>
+
+            <OText style={{ marginTop: 30 }}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText>
+            <Controller
+              control={control}
+              defaultValue=''
+              name='comments'
+              render={({ onChange }: any) => (
+                <OInput
+                  name='comments'
+                  onChange={(val: any) => {
+                    onChange(val)
+                    setExtraComment(val.target.value)
+                  }}
+                  style={styles.inputTextArea}
+                  multiline
+                />
+              )}
+            />
+          </FormReviews>
+        </View>
+        <Spinner visible={formState.loading} />
+      </ReviewOrderContainer>
+      <FloatingBottomContainer>
+        <ActionContainer>
+          <SkipButton
+            onPress={() => onNavigationRedirect('ReviewProduct', { order: order })}
+          >
+            <OText weight={700} size={18}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
+          </SkipButton>
+          <OButton
+            textStyle={{ color: theme.colors.white, paddingRight: 10 }}
+            text={t('CONTINUE', 'Continue')}
+            style={{ borderRadius: 8 }}
+            imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
+            onClick={handleSubmit(onSubmit)}
+          />
+        </ActionContainer>
+      </FloatingBottomContainer>
+    </>
   )
 }
 

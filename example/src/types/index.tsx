@@ -307,7 +307,12 @@ export interface ReviewOrderParams {
   formState?: any,
   navigation?: any,
   setIsReviewed?: (isReviewed: boolean) => {},
-  setStars?: any;
+  setStars?: any,
+  onNavigationRedirect?: any
+}
+export interface ReviewProductParams {
+  navigation?: any,
+  onNavigationRedirect?: any
 }
 export interface MessagesParams {
   type?: string,
