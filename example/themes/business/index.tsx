@@ -53,6 +53,7 @@ export {
   FloatingButton,
   ForgotPasswordForm,
   GoogleMap,
+  DriverMap,
   Home,
   LanguageSelector,
   LoginForm,

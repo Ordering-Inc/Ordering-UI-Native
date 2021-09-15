@@ -141,7 +141,6 @@ const ProfileUI = (props: ProfileParams) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
-      paddingHorizontal: 20,
     },
     inputStyle: {
       marginBottom: 25,
@@ -150,6 +149,8 @@ const ProfileUI = (props: ProfileParams) => {
       borderTopWidth: 0,
       borderRightWidth: 0,
       borderLeftWidth: 0,
+      paddingHorizontal: 0,
+      borderRadius: 0,
     },
     editButton: {
       height: 44,

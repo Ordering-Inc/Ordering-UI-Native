@@ -14,7 +14,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   const theme = useTheme();
 
   const handlePressOrder = (order: any) => {
-    onNavigationRedirect && onNavigationRedirect('OrderDetails', { order });
+    onNavigationRedirect &&
+      onNavigationRedirect('OrderDetails', { order: order });
   };
 
   const styles = StyleSheet.create({

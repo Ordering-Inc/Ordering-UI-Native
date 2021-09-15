@@ -211,7 +211,6 @@ export const UserFormDetailsUI = (props: any) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
-      paddingHorizontal: 16,
     },
     errorText: {
       color: theme.colors.error,
@@ -229,6 +228,8 @@ export const UserFormDetailsUI = (props: any) => {
       borderTopWidth: 0,
       borderRightWidth: 0,
       borderLeftWidth: 0,
+      paddingHorizontal: 0,
+      borderRadius: 0,
     },
     editButton: {
       height: 44,
