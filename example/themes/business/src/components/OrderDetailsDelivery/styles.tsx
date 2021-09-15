@@ -38,7 +38,9 @@ export const Logo = styled.View`
   margin-right: 20px;
 `;
 
-export const OrderContent = styled.View``;
+export const OrderContent = styled.View`
+  flex: 1;
+`;
 
 export const OrderHeader = styled.View`
   padding-vertical: 10px;
