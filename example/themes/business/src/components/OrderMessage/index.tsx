@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { Chat } from '../Chat';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
   useLanguage,
   OrderDetails as OrderDetailsController,
 } from 'ordering-components/native';
-import { OrderMessageContainer } from './styles';
+import { useUtils } from 'ordering-components/native';
 
-import { OModal } from '../shared';
+import { OIcon, OIconButton, OText } from '../shared';
 import { OrderDetailsParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
 import { useTheme } from 'styled-components/native';
@@ -23,6 +23,7 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
     setOrders,
   } = props;
 
+  const [{ optimizeImage }] = useUtils();
   const theme = useTheme();
   const [, t] = useLanguage();
   const [openModalForBusiness, setOpenModalForBusiness] = useState(true);
@@ -32,9 +33,7 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
   });
   const { order, loading } = props.order;
 
-  const handleCloseModal = () => {
-    setOpenModalForBusiness(false);
-
+  const handleArrowBack = () => {
     if (order?.unread_count !== undefined) {
       setOrders &&
         setOrders((prevOrders: any) => {
@@ -71,6 +70,60 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
         : setUnreadAlert({ ...unreadAlert, driver: false });
     }
   }, [messagesReadList]);
+
+  const styles = StyleSheet.create({
+    titleSection: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 20,
+      height: 45,
+      borderBottomWidth: 2,
+      borderBottomColor: '#e6e6e6',
+    },
+    titleGroups: {
+      flexDirection: 'row',
+    },
+    titleIcons: {
+      height: 33,
+      width: 33,
+      borderRadius: 7.6,
+      resizeMode: 'stretch',
+    },
+    shadow: {
+      height: 34,
+      width: 34,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginLeft: 15,
+      backgroundColor: theme.colors.clear,
+      paddingHorizontal: 3,
+      borderRadius: 7.6,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 3,
+    },
+    cancelBtn: {
+      marginRight: 5,
+      zIndex: 10000,
+      height: 30,
+      width: 20,
+      justifyContent: 'flex-end',
+    },
+    modalText: {
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: '600',
+      color: theme.colors.textGray,
+      textAlign: 'center',
+      zIndex: 10,
+    },
+  });
 
   return (
     <>
@@ -166,24 +219,70 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
       )}
 
       {order && Object.keys(order).length > 0 && !loading && (
-        <OrderMessageContainer keyboardShouldPersistTaps="handled">
-          <OModal
-            open={openModalForBusiness}
+        <>
+          <View style={styles.titleSection}>
+            <View style={styles.titleGroups}>
+              <OIconButton
+                icon={theme.images.general.arrow_left}
+                iconStyle={{ width: 23, height: 23 }}
+                borderColor={theme.colors.clear}
+                style={styles.cancelBtn}
+                onClick={handleArrowBack}
+              />
+
+              <OText size={16} style={styles.modalText} adjustsFontSizeToFit>
+                {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order?.id}`}
+              </OText>
+            </View>
+
+            <View style={styles.titleGroups}>
+              <View style={styles.shadow}>
+                {order?.business?.logo ? (
+                  <OIcon
+                    url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
+                    style={styles.titleIcons}
+                  />
+                ) : (
+                  <OIcon
+                    src={theme.images.dummies.businessLogo}
+                    style={styles.titleIcons}
+                  />
+                )}
+              </View>
+
+              <View style={styles.shadow}>
+                <OIcon
+                  url={optimizeImage(
+                    order?.customer?.photo ||
+                      theme?.images?.dummies?.customerPhoto,
+                    'h_300,c_limit',
+                  )}
+                  style={styles.titleIcons}
+                />
+              </View>
+
+              {order?.driver && (
+                <View style={styles.shadow}>
+                  <OIcon
+                    url={
+                      optimizeImage(order?.driver?.photo, 'h_300,c_limit') ||
+                      theme?.images?.dummies?.driverPhoto
+                    }
+                    style={styles.titleIcons}
+                  />
+                </View>
+              )}
+            </View>
+          </View>
+
+          <Chat
+            type={openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER}
+            orderId={order?.id}
+            messages={messages}
             order={order}
-            title={`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id}`}
-            entireModal
-            onClose={() => handleCloseModal()}>
-            <Chat
-              type={
-                openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER
-              }
-              orderId={order?.id}
-              messages={messages}
-              order={order}
-              setMessages={setMessages}
-            />
-          </OModal>
-        </OrderMessageContainer>
+            setMessages={setMessages}
+          />
+        </>
       )}
     </>
   );

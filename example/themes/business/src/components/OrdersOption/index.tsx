@@ -276,7 +276,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       paddingRight: 8,
     },
     tagsContainer: {
-      marginBottom: 25,
+      marginBottom: 10,
     },
     tag: {
       fontFamily: 'Poppins',
@@ -292,7 +292,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     loadButton: {
       borderRadius: 7.6,
       height: 44,
-      marginBottom: 40,
+      marginRight: 10,
+      marginBottom: 10,
       marginTop: 5,
     },
     loadButtonText: {
@@ -408,66 +409,68 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         />
       )}
 
-      {!reload &&
-        !error &&
-        orders.length > 0 &&
-        !loadingTag &&
-        !isLoadingFirstRender && (
-          <PreviousOrders
-            orders={ordersToShow}
-            onNavigationRedirect={onNavigationRedirect}
-            getOrderStatus={getOrderStatus}
-          />
-        )}
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+        {!reload &&
+          !error &&
+          orders.length > 0 &&
+          !loadingTag &&
+          !isLoadingFirstRender && (
+            <PreviousOrders
+              orders={ordersToShow}
+              onNavigationRedirect={onNavigationRedirect}
+              getOrderStatus={getOrderStatus}
+            />
+          )}
 
-      {(loading || isLoadingFirstRender) && (
-        <>
-          <View>
-            {[...Array(5)].map((item, i) => (
-              <Placeholder key={i} Animation={Fade}>
-                <View
-                  style={{
-                    width: '100%',
-                    flexDirection: 'row',
-                    marginBottom: 10,
-                  }}>
-                  <PlaceholderLine
-                    width={orientation === 'Portrait' ? 22 : 11}
-                    height={74}
+        {(loading || isLoadingFirstRender) && (
+          <>
+            <View>
+              {[...Array(5)].map((item, i) => (
+                <Placeholder key={i} Animation={Fade}>
+                  <View
                     style={{
-                      marginRight: 20,
-                      marginBottom: 20,
-                      borderRadius: 7.6,
-                    }}
-                  />
-                  <Placeholder>
-                    <PlaceholderLine width={30} style={{ marginTop: 5 }} />
-                    <PlaceholderLine width={50} />
-                    <PlaceholderLine width={20} />
-                  </Placeholder>
-                </View>
-              </Placeholder>
-            ))}
-          </View>
-        </>
-      )}
-
-      {!!tagsFilter.length &&
-        pagination.totalPages &&
-        !loading &&
-        !!orders.length &&
-        !isLoadingFirstRender &&
-        pagination.currentPage < pagination.totalPages && (
-          <OButton
-            onClick={handleLoadMore}
-            text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-            imgRightSrc={null}
-            textStyle={styles.loadButtonText}
-            style={styles.loadButton}
-            bgColor={theme.colors.primary}
-            borderColor={theme.colors.primary}
-          />
+                      width: '100%',
+                      flexDirection: 'row',
+                      marginBottom: 10,
+                    }}>
+                    <PlaceholderLine
+                      width={orientation === 'Portrait' ? 22 : 11}
+                      height={74}
+                      style={{
+                        marginRight: 20,
+                        marginBottom: 20,
+                        borderRadius: 7.6,
+                      }}
+                    />
+                    <Placeholder>
+                      <PlaceholderLine width={30} style={{ marginTop: 5 }} />
+                      <PlaceholderLine width={50} />
+                      <PlaceholderLine width={20} />
+                    </Placeholder>
+                  </View>
+                </Placeholder>
+              ))}
+            </View>
+          </>
         )}
+
+        {!!tagsFilter.length &&
+          pagination.totalPages &&
+          !loading &&
+          !!orders.length &&
+          !isLoadingFirstRender &&
+          pagination.currentPage < pagination.totalPages && (
+            <OButton
+              onClick={handleLoadMore}
+              text={t('LOAD_MORE_ORDERS', 'Load more orders')}
+              imgRightSrc={null}
+              textStyle={styles.loadButtonText}
+              style={styles.loadButton}
+              bgColor={theme.colors.primary}
+              borderColor={theme.colors.primary}
+            />
+          )}
+      </ScrollView>
     </>
   );
 };

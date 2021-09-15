@@ -147,7 +147,7 @@ const ChatUI = (props: MessagesParams) => {
       shadowRadius: 3.84,
       elevation: 2,
       backgroundColor: theme.colors.white,
-      marginRight: 4,
+      marginLeft: 4,
     },
     avatarIcon: {
       height: 16,
@@ -267,59 +267,65 @@ const ChatUI = (props: MessagesParams) => {
     }
   };
 
-  const getStatus = (status: number) => {
+  const getStatus = (status: number, attribute: any) => {
     const hour = Math.trunc(status / 60);
     const min = Math.round((status / 60 - hour) * 60);
 
-    switch (status) {
-      case 0:
-        return 'ORDER_STATUS_PENDING';
-      case 1:
-        return 'ORDERS_COMPLETED';
-      case 2:
-        return 'ORDER_REJECTED';
-      case 3:
-        return 'ORDER_STATUS_IN_BUSINESS';
-      case 4:
-        return 'ORDER_READY';
-      case 5:
-        return 'ORDER_REJECTED_RESTAURANT';
-      case 6:
-        return 'ORDER_STATUS_CANCELLEDBYDRIVER';
-      case 7:
-        return 'ORDER_STATUS_ACCEPTEDBYRESTAURANT';
-      case 8:
-        return 'ORDER_CONFIRMED_ACCEPTED_BY_DRIVER';
-      case 9:
-        return 'ORDER_PICKUP_COMPLETED_BY_DRIVER';
-      case 10:
-        return 'ORDER_PICKUP_FAILED_BY_DRIVER';
-      case 11:
-        return 'ORDER_DELIVERY_COMPLETED_BY_DRIVER';
-      case 12:
-        return 'ORDER_DELIVERY_FAILED_BY_DRIVER';
-      case 13:
-        return 'PREORDER';
-      case 14:
-        return 'ORDER_NOT_READY';
-      case 15:
-        return 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER';
-      case 16:
-        return 'ORDER_STATUS_CANCELLED_BY_CUSTOMER';
-      case 17:
-        return 'ORDER_NOT_PICKEDUP_BY_CUSTOMER';
-      case 18:
-        return 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS';
-      case 19:
-        return 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER';
-      case 20:
-        return 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS';
-      case 21:
-        return 'ORDER_CUSTOMER_ARRIVED_BUSINESS';
-      default:
-        return `${hour < 10 ? '0' + hour : hour}:${
-          min < 10 ? '0' + min : min
-        } ${status > 60 ? 'hours' : 'minutes'}`;
+    if (attribute === 'status') {
+      switch (status) {
+        case 0:
+          return 'ORDER_STATUS_PENDING';
+        case 1:
+          return 'ORDERS_COMPLETED';
+        case 2:
+          return 'ORDER_REJECTED';
+        case 3:
+          return 'ORDER_STATUS_IN_BUSINESS';
+        case 4:
+          return 'ORDER_READY';
+        case 5:
+          return 'ORDER_REJECTED_RESTAURANT';
+        case 6:
+          return 'ORDER_STATUS_CANCELLEDBYDRIVER';
+        case 7:
+          return 'ORDER_STATUS_ACCEPTEDBYRESTAURANT';
+        case 8:
+          return 'ORDER_CONFIRMED_ACCEPTED_BY_DRIVER';
+        case 9:
+          return 'ORDER_PICKUP_COMPLETED_BY_DRIVER';
+        case 10:
+          return 'ORDER_PICKUP_FAILED_BY_DRIVER';
+        case 11:
+          return 'ORDER_DELIVERY_COMPLETED_BY_DRIVER';
+        case 12:
+          return 'ORDER_DELIVERY_FAILED_BY_DRIVER';
+        case 13:
+          return 'PREORDER';
+        case 14:
+          return 'ORDER_NOT_READY';
+        case 15:
+          return 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER';
+        case 16:
+          return 'ORDER_STATUS_CANCELLED_BY_CUSTOMER';
+        case 17:
+          return 'ORDER_NOT_PICKEDUP_BY_CUSTOMER';
+        case 18:
+          return 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS';
+        case 19:
+          return 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER';
+        case 20:
+          return 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS';
+        case 21:
+          return 'ORDER_CUSTOMER_ARRIVED_BUSINESS';
+        default:
+          return ``;
+      }
+    }
+
+    if (attribute === 'prepared_in' || attribute === 'delivered_in') {
+      return `${hour < 10 ? '0' + hour : hour}:${min < 10 ? '0' + min : min} ${
+        status > 60 ? 'hours' : 'minutes'
+      }`;
     }
   };
 
@@ -348,10 +354,18 @@ const ChatUI = (props: MessagesParams) => {
                 message.change.attribute,
               )} ${t('CHANGED_FROM', 'Changed from')} ${
                 message.change.old !== null
-                  ? t(getStatus(parseInt(message.change.old, 10)))
+                  ? t(
+                      getStatus(
+                        parseInt(message.change.old, 10),
+                        message.change?.attribute,
+                      ),
+                    )
                   : '0'
               } ${t('TO', 'to')} ${t(
-                getStatus(parseInt(message.change.new, 10)),
+                getStatus(
+                  parseInt(message.change.new, 10),
+                  message.change?.attribute,
+                ),
               )}`
             : message.change.new
             ? `${message.driver?.name} ${
@@ -868,7 +882,7 @@ const ChatUI = (props: MessagesParams) => {
   };
 
   const renderAvatar = (props: any) => (
-    <View style={{ marginBottom: 10, alignItems: 'flex-start' }}>
+    <View style={{ marginBottom: 10, alignItems: 'flex-end' }}>
       <OText size={9} color={theme.colors.textGray}>
         {`${t('SENT_TO', 'Sent to')}:`}
       </OText>

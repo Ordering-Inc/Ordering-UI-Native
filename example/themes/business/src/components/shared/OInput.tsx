@@ -11,9 +11,10 @@ import OIcon from './OIcon';
 
 const Wrapper = styled.View`
   background-color: ${(props: any) => props.theme.colors.backgroundLight};
-  border-radius: 25px;
+  border-radius: ${(props: any) => (props.border ? props.border : '25px')};
   border-width: 1px;
-  padding-horizontal: 16px;
+  padding-horizontal: ${(props: any) =>
+    props.paddingHorizontal ? props.paddingHorizontal : '16px'};
   height: 50px;
   flex-direction: row;
   align-items: center;

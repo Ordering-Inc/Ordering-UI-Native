@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -136,24 +136,11 @@ const ProfileUI = (props: ProfileParams) => {
   }, [user?.country_phone_code]);
 
   const styles = StyleSheet.create({
-    header: {
-      marginBottom: 25,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    title: {
-      fontFamily: 'Poppins',
-      fontStyle: 'normal',
-      fontWeight: '600',
-      fontSize: 26,
-      color: theme.colors.textGray,
-    },
     label: {
       color: theme.colors.textGray,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
-      paddingHorizontal: 16,
     },
     inputStyle: {
       marginBottom: 25,
@@ -162,6 +149,8 @@ const ProfileUI = (props: ProfileParams) => {
       borderTopWidth: 0,
       borderRightWidth: 0,
       borderLeftWidth: 0,
+      paddingHorizontal: 0,
+      borderRadius: 0,
     },
     editButton: {
       height: 44,
@@ -182,10 +171,6 @@ const ProfileUI = (props: ProfileParams) => {
 
   return (
     <>
-      <View style={styles.header}>
-        <OText style={styles.title}>{t('PROFILE', 'Profile')}</OText>
-      </View>
-
       {(formState?.loading || state?.loading) && (
         <View
           style={{
@@ -259,7 +244,7 @@ const ProfileUI = (props: ProfileParams) => {
       )}
 
       {!formState?.loading && !state?.loading && (
-        <>
+        <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
           <CenterView>
             <OIcon
               url={optimizeImage(user?.photo, 'h_300,c_limit')}
@@ -279,31 +264,29 @@ const ProfileUI = (props: ProfileParams) => {
           </CenterView>
 
           {user?.level === 4 && (
-            <UDWrapper>
-              <EnabledStatusDriver>
-                <OText style={{ ...styles.label, paddingHorizontal: 0 }}>
-                  {t(
-                    'AVAILABLE_TO_RECEIVE_ORDERS',
-                    'Available to receive orders',
-                  )}
-                </OText>
+            <EnabledStatusDriver>
+              <OText style={{ ...styles.label, paddingHorizontal: 0 }}>
+                {t(
+                  'AVAILABLE_TO_RECEIVE_ORDERS',
+                  'Available to receive orders',
+                )}
+              </OText>
 
-                <ToggleSwitch
-                  isOn={userState?.result?.result?.available}
-                  onColor={theme.colors.primary}
-                  offColor={theme.colors.offColor}
-                  size="small"
-                  onToggle={() =>
-                    handleToggleAvalaibleStatusDriver &&
-                    handleToggleAvalaibleStatusDriver(
-                      !userState?.result?.result?.available,
-                    )
-                  }
-                  disabled={userState?.loading}
-                  animationSpeed={200}
-                />
-              </EnabledStatusDriver>
-            </UDWrapper>
+              <ToggleSwitch
+                isOn={userState?.result?.result?.available}
+                onColor={theme.colors.primary}
+                offColor={theme.colors.offColor}
+                size="small"
+                onToggle={() =>
+                  handleToggleAvalaibleStatusDriver &&
+                  handleToggleAvalaibleStatusDriver(
+                    !userState?.result?.result?.available,
+                  )
+                }
+                disabled={userState?.loading}
+                animationSpeed={200}
+              />
+            </EnabledStatusDriver>
           )}
 
           {!isEdit ? (
@@ -396,7 +379,7 @@ const ProfileUI = (props: ProfileParams) => {
 
             <LogoutButton />
           </Actions>
-        </>
+        </ScrollView>
       )}
     </>
   );

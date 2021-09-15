@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet, View, Platform } from 'react-native';
-import MapView, {
-  PROVIDER_DEFAULT,
-  PROVIDER_GOOGLE,
-  Marker,
-  Region,
-} from 'react-native-maps';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig, useUtils } from 'ordering-components/native';
 import { GoogleMapsParams } from '../../types';
@@ -14,6 +9,7 @@ import { OIconButton, OIcon } from '../shared';
 import { FloatingButton } from '../FloatingButton';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useTheme } from 'styled-components/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const GoogleMap = (props: GoogleMapsParams) => {
   const {
@@ -24,6 +20,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     handleViewActionOrder,
     markerTitle,
     showAcceptOrReject,
+    driverLocation,
     saveLocation,
     handleOpenMapView,
     setSaveLocation,
@@ -33,6 +30,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     navigation,
   } = props;
 
+  const { top } = useSafeAreaInsets();
   const theme = useTheme();
   const [, t] = useLanguage();
   const [configState] = useConfig();
@@ -64,13 +62,16 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     ERROR_NOT_FOUND_ADDRESS: "Sorry, we couldn't find an address",
     ERROR_MAX_LIMIT_LOCATION_TO: 'Sorry, You can only set the position to',
   };
+
   const MARKERS =
     locations &&
-    locations.map((location: { lat: number; lng: number }) => {
-      return {
-        latitude: location.lat,
-        longitude: location.lng,
-      };
+    locations.map((location: { lat: number; lng: number; level: number }) => {
+      return location.level === 4 && driverLocation?.lat
+        ? {
+            latitude: driverLocation?.lat,
+            longitude: driverLocation?.lng,
+          }
+        : { latitude: location.lat, longitude: location.lng };
     });
 
   const handleArrowBack: any = () => {
@@ -223,6 +224,35 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     return () => clearInterval(interval);
   }, [locations]);
 
+  const styles = StyleSheet.create({
+    map: {
+      flex: 1,
+      ...StyleSheet.absoluteFillObject,
+    },
+    image: {
+      borderRadius: 50,
+    },
+    view: {
+      width: 25,
+      position: 'absolute',
+      top: 6,
+      left: 6,
+      bottom: 0,
+      right: 0,
+    },
+    buttonBack: {
+      borderRadius: 7.6,
+      borderWidth: 0,
+      paddingLeft: 0,
+    },
+    buttonContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 15,
+      marginTop: top,
+    },
+  });
+
   return (
     <>
       <View style={{ flex: 1, position: 'relative' }}>
@@ -303,7 +333,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
           secondColorCustom={theme.colors.green}
         />
       )}
-      <View style={styles.buttonBack}>
+      <View style={styles.buttonContainer}>
         <OIconButton
           icon={theme.images.general.close}
           iconStyle={{ width: 32, height: 32 }}
@@ -314,29 +344,3 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  map: {
-    flex: 1,
-    ...StyleSheet.absoluteFillObject,
-  },
-  image: {
-    borderRadius: 50,
-  },
-  view: {
-    width: 25,
-    position: 'absolute',
-    top: 6,
-    left: 6,
-    bottom: 0,
-    right: 0,
-  },
-  buttonBack: {
-    position: 'absolute',
-    borderRadius: 7.6,
-    top: 30,
-    left: 15,
-    borderWidth: 0,
-    paddingLeft: 0,
-  },
-});
