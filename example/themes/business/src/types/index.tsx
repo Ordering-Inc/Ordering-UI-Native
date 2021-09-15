@@ -476,6 +476,7 @@ export interface GoogleMapsParams {
   markerTitle?: string;
   showAcceptOrReject?: boolean;
   order?: any;
+  driverLocation?: any;
   saveLocation?: boolean;
   handleOpenMapView?: () => void;
   isBusinessMarker?: boolean;

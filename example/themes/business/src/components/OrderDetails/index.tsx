@@ -399,11 +399,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       icon:
         order?.driver?.photo ||
         'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png',
+      level: 4,
     },
     {
       ...order?.business?.location,
       title: order?.business?.name,
       icon: order?.business?.logo || theme.images.dummies.businessLogo,
+      level: 2,
     },
     {
       ...order?.customer?.location,
@@ -411,6 +413,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       icon:
         order?.customer?.photo ||
         'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',
+      level: 3,
     },
   ];
 
@@ -434,7 +437,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     if (driverLocation) {
-      locations[0] = driverLocation;
+      locations[0] = { ...locations[0], driverLocation };
     }
   }, [driverLocation]);
 
@@ -888,6 +891,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <GoogleMap
                   location={order?.customer?.location}
                   locations={locationsToSend}
+                  driverLocation={driverLocation}
                   navigation={navigation}
                   handleViewActionOrder={handleViewActionOrder}
                   handleOpenMapView={handleOpenMapView}

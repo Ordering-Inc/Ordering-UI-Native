@@ -20,6 +20,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     handleViewActionOrder,
     markerTitle,
     showAcceptOrReject,
+    driverLocation,
     saveLocation,
     handleOpenMapView,
     setSaveLocation,
@@ -61,13 +62,16 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     ERROR_NOT_FOUND_ADDRESS: "Sorry, we couldn't find an address",
     ERROR_MAX_LIMIT_LOCATION_TO: 'Sorry, You can only set the position to',
   };
+
   const MARKERS =
     locations &&
-    locations.map((location: { lat: number; lng: number }) => {
-      return {
-        latitude: location.lat,
-        longitude: location.lng,
-      };
+    locations.map((location: { lat: number; lng: number; level: number }) => {
+      return location.level === 4 && driverLocation?.lat
+        ? {
+            latitude: driverLocation?.lat,
+            longitude: driverLocation?.lng,
+          }
+        : { latitude: location.lat, longitude: location.lng };
     });
 
   const handleArrowBack: any = () => {
