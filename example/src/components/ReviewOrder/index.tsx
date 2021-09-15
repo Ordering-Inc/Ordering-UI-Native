@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { OrderReview as ReviewOrderController, useLanguage, useToast, ToastType } from 'ordering-components/native'
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useForm, Controller } from 'react-hook-form'
 
 import {
   ReviewOrderContainer,
   BusinessLogo,
   FormReviews,
-  Category,
-  Stars
+  Stars,
+  CommentsButtonGroup
 } from './styles'
 import { OButton, OIcon, OInput, OText } from '../shared'
 import { TouchableOpacity, StyleSheet,View } from 'react-native';
@@ -22,23 +21,36 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const {
     order,
     stars,
-    handleChangeInput,
-    handleChangeRating,
     handleSendReview,
     formState,
     navigation,
-    setIsReviewed
+    setIsReviewed,
+    setStars
   } = props
 
   const theme = useTheme()
 
   const styles = StyleSheet.create({
+    logoWrapper: {
+      shadowColor: theme.colors.black,
+      shadowRadius: 3,
+      shadowOffset: {width: 1, height: 4},
+      elevation: 3,
+      borderRadius: 8,
+      shadowOpacity: 0.1,
+      overflow: 'hidden'
+    },
     inputTextArea: {
       borderColor: theme.colors.secundaryContrast,
       borderRadius: 10,
-      marginVertical: 20,
+      marginVertical: 10,
       height: 100,
       alignItems: 'flex-start'
+    },
+    ratingItemContainer: {
+      flex: 1,
+      flexDirection: 'column',
+      alignItems: 'center'
     }
   })
 
@@ -47,6 +59,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const { handleSubmit, control, errors } = useForm()
 
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<any>, success?: boolean }>({ open: false, content: [], success: false })
+  const [comments, setComments] = useState<Array<any>>([])
+  const [extraComment, setExtraComment] = useState('')
 
   const categories = {
     quality: { name: 'quality', show: t('QUALITY', 'Quality of Product') },
@@ -87,6 +101,67 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     }
   }
 
+  const getReviewText = (index: number) => {
+    switch (index) {
+      case 0:
+        return t('TERRIBLE', 'Terrible');
+      case 1:
+        return t('BAD', 'Bad');
+      case 2:
+        return t('OKAY', 'Okay');
+      case 3:
+        return t('GOOD', 'Good');
+      case 4:
+        return t('GREAT', 'Great');
+      default:
+        return ''
+    }
+  }
+
+  const commentsList = [
+    { key: 0, content: t('IT_WASNT_TASTY', "It wasn't tasty") },
+    { key: 1, content: t('IT_DOESNT_PACK_WELL', "It doesn't pack well") },
+    { key: 2, content: t('IT_ISNT_WORTH_WHAT_IT_COSTS', "It isn't worth what it costs") },
+    { key: 3, content: t('TOO_SLOW', 'Too slow') },
+    { key: 4, content: t('SUSTAINABLE_PACKAGING_WASNT_USED', "Sustainable packaging wasn't used") },
+    { key: 5, content: t('THEY_DID_NOT_FOLLOW_THE_ORDER_NOTES', 'They did not follow the order notes') }
+  ]
+
+  const handleChangeStars = (index: number) => {
+    switch (index) {
+      case 1:
+        setStars({ ...stars, quality: 1, punctiality: 1, service: 1, packaging: 1 })
+        break
+      case 2:
+        setStars({ ...stars, quality: 2, punctiality: 2, service: 2, packaging: 2 })
+        break
+      case 3:
+        setStars({ ...stars, quality: 3, punctiality: 3, service: 3, packaging: 3 })
+        break
+      case 4:
+        setStars({ ...stars, quality: 4, punctiality: 4, service: 4, packaging: 4 })
+        break
+      case 5:
+        setStars({ ...stars, quality: 5, punctiality: 5, service: 5, packaging: 5 })
+        break
+    }
+  }
+
+  const handleChangeComment = (commentItem: any) => {
+    const found = comments.find((comment: any) => comment?.key === commentItem.key)
+    if (found) {
+      const _comments = comments.filter((comment: any) => comment?.key !== commentItem.key)
+      setComments(_comments)
+    } else {
+      setComments([...comments, commentItem])
+    }
+  }
+
+  const isSelectedComment = (commentKey: number) => {
+    const found = comments.find((comment: any) => comment?.key === commentKey)
+    return found
+  }
+
   useEffect(() => {
     if (formState.error && !formState?.loading) {
       showToast(ToastType.Error, formState.result)
@@ -119,19 +194,64 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     }
   }, [alertState.content])
 
+  useEffect(() => {
+    let _comments = ''
+    if (comments.length > 0) {
+      comments.map(comment => _comments += comment.content + '. ')
+    }
+    let _comment
+    _comment = _comments  + extraComment
+    setStars({ ...stars, comments: _comment })
+  }, [comments, extraComment])
 
-  const getStar = (star: number, index: number, category: string) => {
+  const getStar = (star: number, index: number) => {
     switch (star) {
       case 0:
         return (
-          <TouchableOpacity key={index} onPress={() => handleChangeRating({ target: { name: category, value: index + 1 } })}>
-            <MaterialCommunityIcon name='star-outline' size={24} color={theme.colors.backgroundDark} />
+          <TouchableOpacity
+            key={index}
+            onPress={() => handleChangeStars(index + 1)}
+            style={styles.ratingItemContainer}
+          >
+            <View
+              style={{
+                backgroundColor: theme.colors.backgroundGray,
+                width: '100%',
+                height: 8,
+                borderRightWidth: index === 4 ? 0 : 1,
+                borderRightColor: theme.colors.dusk,
+                borderTopLeftRadius: index === 0 ? 5 : 0,
+                borderBottomLeftRadius: index === 0 ? 5 : 0,
+                borderTopRightRadius: index === 4 ? 5 : 0,
+                borderBottomRightRadius: index === 4 ? 5 : 0,
+                marginBottom: 9
+              }}
+            />
+            <OText numberOfLines={1} size={12} color={theme.colors.backgroundGray}>{getReviewText(index)}</OText>
           </TouchableOpacity>
         )
       case 1:
         return (
-          <TouchableOpacity key={index} onPress={() => handleChangeRating({ target: { name: category, value: index + 1 } })}>
-            <MaterialCommunityIcon name='star' size={24} color={theme.colors.primary} />
+          <TouchableOpacity
+            key={index}
+            onPress={() => handleChangeStars(index + 1)}
+            style={styles.ratingItemContainer}
+          >
+            <View
+              style={{
+                backgroundColor: theme.colors.primary,
+                width: '100%',
+                height: 8,
+                borderRightWidth: index === 4 ? 0 : 1,
+                borderRightColor: theme.colors.primary,
+                borderTopLeftRadius: index === 0 ? 5 : 0,
+                borderBottomLeftRadius: index === 0 ? 5 : 0,
+                borderTopRightRadius: index === 4 ? 5 : 0,
+                borderBottomRightRadius: index === 4 ? 5 : 0,
+                marginBottom: 9
+              }}
+            />
+            <OText numberOfLines={1} size={12} color={theme.colors.backgroundGray}>{getReviewText(index)}</OText>
           </TouchableOpacity>
         )
     }
@@ -148,52 +268,69 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
         paddingTop={0}
       />
       <BusinessLogo>
-        <OIcon
-          url={order?.logo}
-          width={100}
-          height={100}
-        />
+        <View style={styles.logoWrapper}>
+          <OIcon
+            url={order?.logo}
+            width={80}
+            height={80}
+          />
+        </View>
       </BusinessLogo>
       <View style={{flex: 1, justifyContent: 'flex-end'}}>
+        <FormReviews>
+          <OText mBottom={13}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText>
+          <Stars>
+            {getStarArr(stars?.quality).map((star, index) => getStar(star, index))}
+          </Stars>
 
-      <FormReviews>
-        {Object.values(categories).map((category: any) => (
-          <Category
-            key={category.name}
-          >
-            <OText>{category.show}</OText>
-            <Stars>
-              {getStarArr(stars[category?.name]).map((star, index) => getStar(star, index, category.name))}
-            </Stars>
-          </Category>
-        ))}
-        <Controller
-          control={control}
-          defaultValue=''
-          name='comments'
-          render={({ onChange }: any) => (
-            <OInput
-              name='comments'
-              placeholder={t('COMMENTS', 'Comments')}
-              onChange={(val: string) => {
-                onChange(val)
-                handleChangeInput(val)
-              }}
-              style={styles.inputTextArea}
-              multiline
-              bgColor={theme.colors.inputDisabled}
-            />
-          )}
+          <OText style={{ marginTop: 30 }}>{t('COMMENTS', 'Comments')}</OText>
+          <CommentsButtonGroup>
+            {commentsList.map(commentItem => (
+              <OButton
+                key={commentItem.key}
+                text={commentItem.content}
+                bgColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.backgroundGray}
+                borderColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.backgroundGray}
+                textStyle={{
+                  color: isSelectedComment(commentItem.key) ? theme.colors.white : theme.colors.black,
+                  fontSize: 13,
+                  paddingRight: isSelectedComment(commentItem.key) ? 15 : 0
+                }}
+                style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
+                imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
+                imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
+                onClick={() => handleChangeComment(commentItem) }
+              />
+            ))}
+          </CommentsButtonGroup>
+
+          <OText style={{ marginTop: 30 }}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText>
+          <Controller
+            control={control}
+            defaultValue=''
+            name='comments'
+            render={({ onChange }: any) => (
+              <OInput
+                name='comments'
+                placeholder={t('COMMENTS', 'Comments')}
+                onChange={(val: any) => {
+                  onChange(val)
+                  setExtraComment(val.target.value)
+                }}
+                style={styles.inputTextArea}
+                multiline
+              />
+            )}
+          />
+        </FormReviews>
+        <OButton
+          textStyle={{ color: theme.colors.white }}
+          style={{ marginTop: 20, marginBottom: 50 }}
+          text={t('SAVE', 'Save')}
+          imgRightSrc=''
+          onClick={handleSubmit(onSubmit)}
         />
-      </FormReviews>
-      <OButton
-        textStyle={{ color: theme.colors.white }}
-        style={{ marginTop: 20 }}
-        text={t('SAVE', 'Save')}
-        imgRightSrc=''
-        onClick={handleSubmit(onSubmit)}
-        />
-        </View>
+      </View>
       <Spinner visible={formState.loading} />
     </ReviewOrderContainer>
   )

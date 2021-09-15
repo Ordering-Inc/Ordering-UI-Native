@@ -52,7 +52,6 @@ const EndImage = styled.Image`
   width: 15px;
   height: 15px;
   resize-mode: contain;
-  right: 20px;
   position: absolute;
   right: 20px;
 `;
