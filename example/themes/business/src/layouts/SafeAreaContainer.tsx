@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Dimensions, Platform, StatusBar, View } from 'react-native';
+import {
+  Dimensions,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
 import styled from 'styled-components/native';
 
 export const SafeAreaContainer = styled.SafeAreaView`
@@ -25,7 +31,13 @@ export const SafeAreaContainerLayout = (props: any) => {
   return (
     <>
       <SafeAreaContainer>
-        <View style={{ padding: 20, flex: 1 }}>
+        <View
+          style={{
+            paddingHorizontal: 20,
+            paddingTop: 20,
+            paddingBottom: 0,
+            flex: 1,
+          }}>
           <StatusBar
             barStyle={Platform.OS === 'ios' ? 'dark-content' : 'default'}
           />
