@@ -1,14 +1,14 @@
 import React from 'react'
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import {ReviewProduct as ReviewProductController} from '../components/ReviewProduct'
+import {ReviewProducts as ReviewProductsController} from '../components/ReviewProducts'
 import { SafeAreaContainer } from '../layouts/SafeAreaContainer';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;
 `;
 
-const ReviewProduct = ({navigation, route} : any) => {
+const ReviewProducts = ({navigation, route} : any) => {
   const reviewProductProps = {
     navigation,
     order: route?.params?.order,
@@ -21,10 +21,10 @@ const ReviewProduct = ({navigation, route} : any) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <SafeAreaContainer>
-        <ReviewProductController {...reviewProductProps} />
+        <ReviewProductsController {...reviewProductProps} />
       </SafeAreaContainer>
     </KeyboardView>
   )
 }
 
-export default ReviewProduct
+export default ReviewProducts

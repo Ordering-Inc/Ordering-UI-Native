@@ -166,7 +166,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     }
     if (!formState.loading && !formState.error && alertState.success) {
       showToast(ToastType.Success, t('ORDER_REVIEW_SUCCESS_CONTENT', 'Thank you, Order review successfully submitted!'))
-      onNavigationRedirect && onNavigationRedirect('ReviewProduct', { order: order })
+      onNavigationRedirect && onNavigationRedirect('ReviewProducts', { order: order })
     }
   }, [formState.result])
 
@@ -327,7 +327,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       <FloatingBottomContainer>
         <ActionContainer>
           <SkipButton
-            onPress={() => onNavigationRedirect('ReviewProduct', { order: order })}
+            onPress={() => onNavigationRedirect('ReviewProducts', { order: order })}
           >
             <OText weight={700} size={18}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
           </SkipButton>
