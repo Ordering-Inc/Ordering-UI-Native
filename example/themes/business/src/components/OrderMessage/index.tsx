@@ -73,7 +73,6 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
 
   const styles = StyleSheet.create({
     titleSection: {
-      marginTop: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
