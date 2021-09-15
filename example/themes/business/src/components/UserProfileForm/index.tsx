@@ -264,31 +264,29 @@ const ProfileUI = (props: ProfileParams) => {
           </CenterView>
 
           {user?.level === 4 && (
-            <UDWrapper>
-              <EnabledStatusDriver>
-                <OText style={{ ...styles.label, paddingHorizontal: 0 }}>
-                  {t(
-                    'AVAILABLE_TO_RECEIVE_ORDERS',
-                    'Available to receive orders',
-                  )}
-                </OText>
+            <EnabledStatusDriver>
+              <OText style={{ ...styles.label, paddingHorizontal: 0 }}>
+                {t(
+                  'AVAILABLE_TO_RECEIVE_ORDERS',
+                  'Available to receive orders',
+                )}
+              </OText>
 
-                <ToggleSwitch
-                  isOn={userState?.result?.result?.available}
-                  onColor={theme.colors.primary}
-                  offColor={theme.colors.offColor}
-                  size="small"
-                  onToggle={() =>
-                    handleToggleAvalaibleStatusDriver &&
-                    handleToggleAvalaibleStatusDriver(
-                      !userState?.result?.result?.available,
-                    )
-                  }
-                  disabled={userState?.loading}
-                  animationSpeed={200}
-                />
-              </EnabledStatusDriver>
-            </UDWrapper>
+              <ToggleSwitch
+                isOn={userState?.result?.result?.available}
+                onColor={theme.colors.primary}
+                offColor={theme.colors.offColor}
+                size="small"
+                onToggle={() =>
+                  handleToggleAvalaibleStatusDriver &&
+                  handleToggleAvalaibleStatusDriver(
+                    !userState?.result?.result?.available,
+                  )
+                }
+                disabled={userState?.loading}
+                animationSpeed={200}
+              />
+            </EnabledStatusDriver>
           )}
 
           {!isEdit ? (
