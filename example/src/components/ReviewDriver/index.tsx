@@ -113,11 +113,16 @@ export const ReviewDriver = (props: ReviewDriverParams) => {
         />
         <DriverPhotoContainer>
           <View
-            style={styles.photoWrapper}
+            style={{
+              ...styles.photoWrapper,
+              backgroundColor: theme.colors.white,
+              padding: !order?.driver?.photo ? 5 : 0
+            }}
           >
             <OIcon
               url={order?.driver?.photo}
-              cover
+              src={!order?.driver?.photo && theme.images.general.user}
+              cover={order?.driver?.photo ? true: false}
               width={80}
               height={80}
             />
