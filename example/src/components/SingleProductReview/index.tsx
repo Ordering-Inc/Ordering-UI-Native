@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useLanguage } from 'ordering-components/native'
 import { OText, OButton, OInput } from '../shared'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -11,7 +11,7 @@ import {
   ProductHeader,
   LikeHandsActionContainer,
   LikeHandsButton,
-  CommentsButtonGroup
+  CommentsButtonGroup,
 } from './styles'
 
 export const SingleProductReview = (props: SingleProductReviewParams) => {
@@ -34,13 +34,14 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
     additionalCommentButton: {
       flexDirection: 'row',
       justifyContent: 'center',
-      marginVertical: 10
-    }
+      marginVertical: 10,
+    },
   })
 
   const [comments, setComments] = useState<Array<any>>([])
   const [extraComment, setExtraComment] = useState('')
   const [isShowTextArea, setIsShowTextArea] = useState(false)
+  const [qualification, setQualification] = useState(5)
 
   const commentsList = [
     { key: 0, content: t('IT_WASNT_TASTY', "It wasn't tasty") },
@@ -65,17 +66,41 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
     }
   }
 
+  useEffect(() => {
+    // {
+    //   "product_id": 12,
+    //   "comment": "Comment here",
+    //   "qualification": 5
+    // }
+    let _comments = ''
+    if (comments.length > 0) {
+      comments.map(comment => _comments += comment.content + '. ')
+    }
+    let _comment
+    _comment = _comments  + extraComment
+    const changes = {
+      product_id: product.id,
+      comment: _comment,
+      qualification: qualification
+    }
+
+    console.log(changes)
+  }, [comments, extraComment, qualification])
+
   return (
     <>
       <ProductContainer>
         <ProductHeader>
           <OText numberOfLines={1} style={{ flex: 1 }}>{product?.name}</OText>
           <LikeHandsActionContainer>
-            <LikeHandsButton isLike>
-              <AntDesignIcons name='like2' size={20} color={theme.colors.primary} />
+            <LikeHandsButton
+              isLike
+              onPress={() => setQualification(5)}
+            >
+              <AntDesignIcons name='like2' size={20} color={qualification === 5 ? theme.colors.primary : theme.colors.lightGray} />
             </LikeHandsButton>
-            <LikeHandsButton>
-              <AntDesignIcons name='dislike2' size={20} />
+            <LikeHandsButton onPress={() => setQualification(1)}>
+              <AntDesignIcons name='dislike2' size={20} color={qualification === 1 ? theme.colors.primary : theme.colors.lightGray} />
             </LikeHandsButton>
           </LikeHandsActionContainer>
         </ProductHeader>

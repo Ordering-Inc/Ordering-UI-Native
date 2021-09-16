@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { OrderReview as ReviewOrderController, useLanguage, useToast, ToastType } from 'ordering-components/native'
 import { useForm, Controller } from 'react-hook-form'
+import LinearGradient from 'react-native-linear-gradient'
 
 import {
   ReviewOrderContainer,
   BusinessLogo,
   FormReviews,
-  Stars,
   CommentsButtonGroup,
   ActionContainer,
-  SkipButton
+  SkipButton,
+  RatingBarContainer,
+  RatingTextContainer
 } from './styles'
 import { OButton, OIcon, OInput, OText } from '../shared'
-import { TouchableOpacity, StyleSheet,View } from 'react-native';
+import { TouchableOpacity, StyleSheet, View, I18nManager } from 'react-native';
 import NavBar from '../NavBar'
 import { FloatingBottomContainer } from '../../layouts/FloatingBottomContainer'
 import Spinner from 'react-native-loading-spinner-overlay'
@@ -27,7 +29,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     handleSendReview,
     formState,
     navigation,
-    setIsReviewed,
     setStars,
     onNavigationRedirect
   } = props
@@ -52,10 +53,26 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       height: 100,
       alignItems: 'flex-start'
     },
+    statusBar: {
+      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+      height: 10,
+      borderRadius: 5,
+      marginTop: 5
+    },
     ratingItemContainer: {
-      flex: 1,
+      position: 'absolute',
+      top: -20
+    },
+    ratingItem: {
+      left: '-50%',
       flexDirection: 'column',
       alignItems: 'center'
+    },
+    ratingLineStyle: {
+      height: 10,
+      width: 1,
+      marginBottom: 10,
+      backgroundColor: theme.colors.dusk
     }
   })
 
@@ -63,6 +80,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const [, { showToast }] = useToast()
   const { handleSubmit, control, errors } = useForm()
 
+  const [isReviewed, setIsReviewed] = useState(false)
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<any>, success?: boolean }>({ open: false, content: [], success: false })
   const [comments, setComments] = useState<Array<any>>([])
   const [extraComment, setExtraComment] = useState('')
@@ -80,41 +98,13 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     setAlertState({ ...alertState, success: true })
   }
 
-  const getStarArr = (rating: number) => {
-    switch (rating) {
-      case 0:
-        return [0, 0, 0, 0, 0];
-      case 1:
-        return [1, 0, 0, 0, 0];
-      case 2:
-        return [1, 1, 0, 0, 0];
-      case 3:
-        return [1, 1, 1, 0, 0];
-      case 4:
-        return [1, 1, 1, 1, 0];
-      case 5:
-        return [1, 1, 1, 1, 1];
-      default:
-        return [0, 0, 0, 0, 0];
-    }
-  }
-
-  const getReviewText = (index: number) => {
-    switch (index) {
-      case 0:
-        return t('TERRIBLE', 'Terrible');
-      case 1:
-        return t('BAD', 'Bad');
-      case 2:
-        return t('OKAY', 'Okay');
-      case 3:
-        return t('GOOD', 'Good');
-      case 4:
-        return t('GREAT', 'Great');
-      default:
-        return ''
-    }
-  }
+  const qualificationList = [
+    { key: 1, text: t('TERRIBLE', 'Terrible'), percent: 0,  parentStyle: { left: '0%' }, isInnerStyle: false, pointerColor: false },
+    { key: 2, text: t('BAD', 'Bad'), percent: 0.25, parentStyle: { left: '25%' }, isInnerStyle: true, pointerColor: true },
+    { key: 3, text: t('OKAY', 'Okay'), percent: 0.5, parentStyle: { left: '50%' }, isInnerStyle: true, pointerColor: true },
+    { key: 4, text: t('GOOD', 'Good'), percent: 0.75, parentStyle: { left: '75%' }, isInnerStyle: true, pointerColor: true },
+    { key: 5, text: t('GREAT', 'Great'), percent: 1, parentStyle: { right: '0%' }, isInnerStyle: false,  pointerColor: false }
+  ]
 
   const commentsList = [
     { key: 0, content: t('IT_WASNT_TASTY', "It wasn't tasty") },
@@ -181,7 +171,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       });
       showToast(ToastType.Error, stringError);
     }
-  }, [errors]);
+  }, [errors])
 
   useEffect(() => {
     if (alertState.open) {
@@ -201,59 +191,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     _comment = _comments  + extraComment
     setStars({ ...stars, comments: _comment })
   }, [comments, extraComment])
-
-  const getStar = (star: number, index: number) => {
-    switch (star) {
-      case 0:
-        return (
-          <TouchableOpacity
-            key={index}
-            onPress={() => handleChangeStars(index + 1)}
-            style={styles.ratingItemContainer}
-          >
-            <View
-              style={{
-                backgroundColor: theme.colors.lightGray,
-                width: '100%',
-                height: 8,
-                borderRightWidth: index === 4 ? 0 : 1,
-                borderRightColor: theme.colors.dusk,
-                borderTopLeftRadius: index === 0 ? 5 : 0,
-                borderBottomLeftRadius: index === 0 ? 5 : 0,
-                borderTopRightRadius: index === 4 ? 5 : 0,
-                borderBottomRightRadius: index === 4 ? 5 : 0,
-                marginBottom: 9
-              }}
-            />
-            <OText numberOfLines={1} size={12} color={theme.colors.lightGray}>{getReviewText(index)}</OText>
-          </TouchableOpacity>
-        )
-      case 1:
-        return (
-          <TouchableOpacity
-            key={index}
-            onPress={() => handleChangeStars(index + 1)}
-            style={styles.ratingItemContainer}
-          >
-            <View
-              style={{
-                backgroundColor: theme.colors.primary,
-                width: '100%',
-                height: 8,
-                borderRightWidth: index === 4 ? 0 : 1,
-                borderRightColor: theme.colors.primary,
-                borderTopLeftRadius: index === 0 ? 5 : 0,
-                borderBottomLeftRadius: index === 0 ? 5 : 0,
-                borderTopRightRadius: index === 4 ? 5 : 0,
-                borderBottomRightRadius: index === 4 ? 5 : 0,
-                marginBottom: 9
-              }}
-            />
-            <OText numberOfLines={1} size={12} color={theme.colors.lightGray}>{getReviewText(index)}</OText>
-          </TouchableOpacity>
-        )
-    }
-  }
 
   return (
     <>
@@ -278,9 +215,36 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
         <View style={{flex: 1, justifyContent: 'flex-end'}}>
           <FormReviews>
             <OText mBottom={13}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText>
-            <Stars>
-              {getStarArr(stars?.quality).map((star, index) => getStar(star, index))}
-            </Stars>
+            <RatingBarContainer>
+              <LinearGradient
+                start={{ x: 0.0, y: 0.0 }}
+                end={{ x: qualificationList[stars.quality - 1]?.percent || 0, y: 0 }}
+                locations={[.9999, .9999]}
+                colors={[theme.colors.primary, theme.colors.lightGray]}
+                style={styles.statusBar}
+              />
+              <RatingTextContainer>
+                {qualificationList.map((qualification: any) => (
+                  <View
+                    key={qualification.key}
+                    style={{ ...qualification.parentStyle, ...styles.ratingItemContainer }}
+                  >
+                    <TouchableOpacity
+                      style={qualification.isInnerStyle && styles.ratingItem}
+                      onPress={() => handleChangeStars(qualification.key)}
+                    >
+                      <View
+                        style={{
+                          ...styles.ratingLineStyle,
+                          backgroundColor: (qualification.pointerColor && !(stars.quality >= qualification.key)) ? theme.colors.dusk : 'transparent'
+                        }}
+                      />
+                      <OText size={12} color={stars.quality === qualification.key ? theme.colors.black : theme.colors.lightGray}>{qualification.text}</OText>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </RatingTextContainer>
+            </RatingBarContainer>
 
             <OText style={{ marginTop: 30 }}>{t('COMMENTS', 'Comments')}</OText>
             <CommentsButtonGroup>
@@ -336,7 +300,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             text={t('CONTINUE', 'Continue')}
             style={{ borderRadius: 8 }}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-            onClick={handleSubmit(onSubmit)}
+            onClick={() => (!order?.review && !isReviewed) ? handleSubmit(onSubmit) : onNavigationRedirect('ReviewProducts', { order: order })}
           />
         </ActionContainer>
       </FloatingBottomContainer>
