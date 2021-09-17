@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { AppState } from 'react-native'
 import { createStackNavigator } from "@react-navigation/stack";
-import { useSession, useOrder } from 'ordering-components/native';
+import { useSession, useOrder, useWebsocket } from 'ordering-components/native';
 import BottomNavigator from '../navigators/BottomNavigator';
 import RootNavigator from '../navigators/RootNavigator';
 import CheckoutNavigator from '../navigators/CheckoutNavigator';
+import BackgroundTimer from 'react-native-background-timer';
 
 import AddressList from '../pages/AddressList';
 import AddressForm from '../pages/AddressForm';
@@ -22,7 +24,30 @@ const Stack = createStackNavigator();
 
 const HomeNavigator = (e : any) => {
   const [orderState] = useOrder();
-  const [{ auth }] = useSession();
+  const [{ auth, user }] = useSession();
+  const socket = useWebsocket();
+
+  const appState = React.useRef(AppState.currentState);
+  let interval: any
+
+  const _handleAppStateChange = (nextAppState: any) => {
+    if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+      BackgroundTimer.clearInterval(interval)
+    }else{
+      interval = BackgroundTimer.setInterval(()=>{
+        const ordersRoom = user?.level === 0 ? 'orders' : `orders_${user?.id}`
+        socket.join(ordersRoom)
+      }, 5000)
+      appState.current = nextAppState;
+    }
+  }
+
+  React.useEffect (() => {
+    AppState.addEventListener('change', _handleAppStateChange);
+    return () => {
+      AppState.removeEventListener('change', _handleAppStateChange);
+    };
+  },[])
 
   return (
     <Stack.Navigator>
