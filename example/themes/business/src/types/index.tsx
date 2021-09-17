@@ -28,6 +28,7 @@ export interface ProfileParams {
   toggleIsEdit?: any;
   cleanFormState?: any;
   setFormState?: any;
+  isAvailableLoading?: boolean;
   handleChangeInput?: any;
   handleButtonUpdateClick?: any;
   handleToggleAvalaibleStatusDriver?: any;

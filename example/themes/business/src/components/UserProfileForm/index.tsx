@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -45,6 +45,7 @@ const ProfileUI = (props: ProfileParams) => {
     cleanFormState,
     handleToggleAvalaibleStatusDriver,
     userState,
+    isAvailableLoading,
   } = props;
 
   const [{ user }] = useSession();
@@ -272,20 +273,24 @@ const ProfileUI = (props: ProfileParams) => {
                 )}
               </OText>
 
-              <ToggleSwitch
-                isOn={userState?.result?.result?.available}
-                onColor={theme.colors.primary}
-                offColor={theme.colors.offColor}
-                size="small"
-                onToggle={() =>
-                  handleToggleAvalaibleStatusDriver &&
-                  handleToggleAvalaibleStatusDriver(
-                    !userState?.result?.result?.available,
-                  )
-                }
-                disabled={userState?.loading}
-                animationSpeed={200}
-              />
+              {isAvailableLoading ? (
+                <ActivityIndicator size="small" color={theme.colors.primary} />
+              ) : (
+                <ToggleSwitch
+                  isOn={userState?.result?.result?.available}
+                  onColor={theme.colors.primary}
+                  offColor={theme.colors.offColor}
+                  size="small"
+                  onToggle={() =>
+                    handleToggleAvalaibleStatusDriver &&
+                    handleToggleAvalaibleStatusDriver(
+                      !userState?.result?.result?.available,
+                    )
+                  }
+                  disabled={userState?.loading}
+                  animationSpeed={200}
+                />
+              )}
             </EnabledStatusDriver>
           )}
 

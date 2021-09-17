@@ -334,6 +334,11 @@ export const MessagesOption = (props: MessagesOptionParams) => {
       param: 'last_direct_message_at',
       direction: 'asc',
     },
+    paginationSettings: {
+      page: 1,
+      pageSize: 45,
+      controlType: 'infinity',
+    },
     UIComponent: MessagesOptionUI,
   };
 
