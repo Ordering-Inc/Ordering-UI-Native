@@ -100,15 +100,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     return objectStatus && objectStatus
   }
 
-  useFocusEffect(
-    React.useCallback(() => {
-      loadOrders && loadOrders()
-      setIsLoadingFirstRender(false)
-      return () => {
-        setIsLoadingFirstRender(true)
-      }
-    }, [navigation])
-  )
+  useEffect(() => {
+    loadOrders && loadOrders()
+  }, [])
 
   useEffect(() => {
     setOrdersLength && setOrdersLength({
