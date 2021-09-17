@@ -27,7 +27,6 @@ target 'delivery' do
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable these next few lines.
   use_flipper!()
-  pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'
 
   post_install do |installer|
     react_native_post_install(installer)

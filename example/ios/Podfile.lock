@@ -302,6 +302,8 @@ PODS:
     - React-jsi (= 0.64.2)
     - React-perflogger (= 0.64.2)
   - React-jsinspector (0.64.2)
+  - react-native-background-timer (2.4.1):
+    - React-Core
   - react-native-document-picker (5.3.0):
     - React-Core
   - react-native-fbsdk (3.0.0):
@@ -407,7 +409,7 @@ PODS:
     - React-perflogger (= 0.64.2)
   - RNBootSplash (3.2.5):
     - React-Core
-  - RNCAsyncStorage (1.15.7):
+  - RNCAsyncStorage (1.15.8):
     - React-Core
   - RNCClipboard (1.8.4):
     - React-Core
@@ -415,10 +417,10 @@ PODS:
     - React
   - RNCPicker (1.8.1):
     - React-Core
-  - RNFastImage (8.3.7):
+  - RNFastImage (8.5.8):
     - React-Core
-    - SDWebImage (~> 5.8)
-    - SDWebImageWebPCoder (~> 0.6.1)
+    - SDWebImage (~> 5.11.1)
+    - SDWebImageWebPCoder (~> 0.8.4)
   - RNGestureHandler (1.10.3):
     - React-Core
   - RNPermissions (3.0.5):
@@ -435,16 +437,16 @@ PODS:
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
   - SDWebImage/Core (5.11.1)
-  - SDWebImageWebPCoder (0.6.1):
+  - SDWebImageWebPCoder (0.8.4):
     - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.7)
+    - SDWebImage/Core (~> 5.10)
   - Sentry (7.1.4):
     - Sentry/Core (= 7.1.4)
   - Sentry/Core (7.1.4)
   - Stripe (21.8.1):
     - Stripe/Stripe3DS2 (= 21.8.1)
     - StripeCore (= 21.8.1)
-  - stripe-react-native (0.2.1):
+  - stripe-react-native (0.2.2):
     - React
     - Stripe (~> 21.8.1)
   - Stripe/Stripe3DS2 (21.8.1):
@@ -499,6 +501,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
@@ -601,6 +604,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-background-timer:
+    :path: "../node_modules/react-native-background-timer"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
   react-native-fbsdk:
@@ -715,6 +720,7 @@ SPEC CHECKSUMS:
   React-jsi: 67747b9722f6dab2ffe15b011bcf6b3f2c3f1427
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
+  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-document-picker: 226068006be4c52f8ef7f32d855ee025a12e9e64
   react-native-fbsdk: 8e92c7a334fd8d9c2b5d8b8fcd7ae2c314161099
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
@@ -740,11 +746,11 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: a9904c6d0218fb9f8b19d6dd88607225927668f9
   ReactCommon: 149906e01aa51142707a10665185db879898e966
   RNBootSplash: 75faf048f66eebe1650e91afdb8c2205fefc1870
-  RNCAsyncStorage: 7102fe8985f889579a3ae148d957bbb3f308122b
+  RNCAsyncStorage: e8b8d6320a0dd90eb610fb0d0b1ef90596697c69
   RNCClipboard: ddd4d291537f1667209c9c405aaa4307297e252e
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: 914b557e20b3b8317b084aca9ff4b4edb95f61e4
-  RNFastImage: a7384db75df352500261e8e8f1ac2026def26102
+  RNFastImage: adef7f9c9a7aeca0141807ee5a8be8a3eb240dd8
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNPermissions: 7043bacbf928eae25808275cfe73799b8f618911
   RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926
@@ -752,14 +758,14 @@ SPEC CHECKSUMS:
   RNSentry: 68644ef607b780551cc555f084869764f2566652
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
-  SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
+  SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   Sentry: 1d3eb1a25f8c5333c88dd5603904a6d461cd9fcf
   Stripe: 57c6997c64042a3f5aedae9b76e331942f8b75d2
-  stripe-react-native: e06c16c83cfce2884926941c0422f4299aeef02b
+  stripe-react-native: ae53a97cc9ab084cc6228f2250da56b0e53da276
   StripeCore: a6e50d58119a0c7601773b56f274db2d394dcdac
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: bee86fbf9781458f0fc51fda8560bd6ef83584fa
+PODFILE CHECKSUM: c8181434f10044c21fd3f2c58704fce42717d811
 
 COCOAPODS: 1.10.1
