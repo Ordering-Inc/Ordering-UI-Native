@@ -12,7 +12,6 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OIconButton, OButton } from '../shared';
 import { PreviousOrders } from '../PreviousOrders';
 import { NotFoundSource } from '../NotFoundSource';
-import { useFocusEffect } from '@react-navigation/native';
 import { FiltersTab, TabsContainer, Tag } from './styles';
 import { OrdersOptionParams } from '../../types';
 
@@ -470,7 +469,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
     useDefualtSessionManager: true,
     paginationSettings: {
       initialPage: 1,
-      pageSize: 35,
+      pageSize: 45,
       controlType: 'infinity',
     },
 
