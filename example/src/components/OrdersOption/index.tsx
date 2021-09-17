@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-components/native'
-import { useFocusEffect } from '@react-navigation/native'
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
@@ -62,7 +61,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       }
       setReorderLoading(false)
 
-    } catch (err) {
+    } catch (err: any) {
       showToast(ToastType.Error, t('ERROR', err.message))
       setReorderLoading(false)
     }
@@ -99,16 +98,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
     return objectStatus && objectStatus
   }
-
-  useFocusEffect(
-    React.useCallback(() => {
-      loadOrders && loadOrders()
-      setIsLoadingFirstRender(false)
-      return () => {
-        setIsLoadingFirstRender(true)
-      }
-    }, [navigation])
-  )
 
   useEffect(() => {
     setOrdersLength && setOrdersLength({
