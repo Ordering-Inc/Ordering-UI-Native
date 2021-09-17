@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-components/native'
-import { useFocusEffect } from '@react-navigation/native'
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
@@ -99,10 +98,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
     return objectStatus && objectStatus
   }
-
-  useEffect(() => {
-    loadOrders && loadOrders()
-  }, [])
 
   useEffect(() => {
     setOrdersLength && setOrdersLength({
