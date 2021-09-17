@@ -754,7 +754,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <View style={{ height: 30 }} />
           </OrderDetailsContainer>
 
-          {showFloatButtonsPickUp[order?.status] && !loading && (
+          {showFloatButtonsPickUp[order?.status] && (
             <FloatingButton
               disabled={loading}
               btnText={t('FAILED', 'Failed')}
