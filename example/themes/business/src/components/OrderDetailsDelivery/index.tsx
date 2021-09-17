@@ -270,8 +270,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       // redirectToSettings();
       showToast(
         ToastType.Error,
-        ('GEOLOCATION_SERVICE_PERMISSION_BLOCKED',
-        'Geolocation service  permissions blocked.'),
+        t('GEOLOCATION_SERVICE_PERMISSION_BLOCKED',
+          'Geolocation service  permissions blocked.'),
       );
     } else {
       const response = await askLocationPermission();
@@ -618,18 +618,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
                   {(order?.summary?.delivery_price > 0 ||
                     order?.deliveryFee > 0) && (
-                    <Table>
-                      <OText mBottom={4}>
-                        {t('DELIVERY_FEE', 'Delivery Fee')}
-                      </OText>
+                      <Table>
+                        <OText mBottom={4}>
+                          {t('DELIVERY_FEE', 'Delivery Fee')}
+                        </OText>
 
-                      <OText mBottom={4}>
-                        {parsePrice(
-                          order?.summary?.delivery_price || order?.deliveryFee,
-                        )}
-                      </OText>
-                    </Table>
-                  )}
+                        <OText mBottom={4}>
+                          {parsePrice(
+                            order?.summary?.delivery_price || order?.deliveryFee,
+                          )}
+                        </OText>
+                      </Table>
+                    )}
 
                   <Table>
                     <OText mBottom={4}>
