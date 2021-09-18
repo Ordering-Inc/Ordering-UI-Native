@@ -73,6 +73,11 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       width: 1,
       marginBottom: 10,
       backgroundColor: theme.colors.dusk
+    },
+    reviewedStyle: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginVertical: 20
     }
   })
 
@@ -150,6 +155,14 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     return found
   }
 
+  const handleContinueClick  = () => {
+    if (!order?.review && !isReviewed) {
+      onSubmit()
+    } else {
+      onNavigationRedirect('ReviewProducts', { order: order })
+    }
+  }
+
   useEffect(() => {
     if (formState.error && !formState?.loading) {
       showToast(ToastType.Error, formState.result)
@@ -192,6 +205,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     setStars({ ...stars, comments: _comment })
   }, [comments, extraComment])
 
+  console.log(order)
+
   return (
     <>
       <ReviewOrderContainer>
@@ -212,80 +227,86 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             />
           </View>
         </BusinessLogo>
-        <View style={{flex: 1, justifyContent: 'flex-end'}}>
-          <FormReviews>
-            <OText mBottom={13}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText>
-            <RatingBarContainer>
-              <LinearGradient
-                start={{ x: 0.0, y: 0.0 }}
-                end={{ x: qualificationList[stars.quality - 1]?.percent || 0, y: 0 }}
-                locations={[.9999, .9999]}
-                colors={[theme.colors.primary, theme.colors.lightGray]}
-                style={styles.statusBar}
-              />
-              <RatingTextContainer>
-                {qualificationList.map((qualification: any) => (
-                  <View
-                    key={qualification.key}
-                    style={{ ...qualification.parentStyle, ...styles.ratingItemContainer }}
-                  >
-                    <TouchableOpacity
-                      style={qualification.isInnerStyle && styles.ratingItem}
-                      onPress={() => handleChangeStars(qualification.key)}
+        {order?.review ? (
+          <View style={styles.reviewedStyle}>
+            <OText color={theme.colors.primary}>{t('ORDER_REVIEWED', 'This order has been already reviewed')}</OText>
+          </View>
+        ) : (
+          <View style={{flex: 1, justifyContent: 'flex-end'}}>
+            <FormReviews>
+              <OText mBottom={13}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText>
+              <RatingBarContainer>
+                <LinearGradient
+                  start={{ x: 0.0, y: 0.0 }}
+                  end={{ x: qualificationList[stars.quality - 1]?.percent || 0, y: 0 }}
+                  locations={[.9999, .9999]}
+                  colors={[theme.colors.primary, theme.colors.lightGray]}
+                  style={styles.statusBar}
+                />
+                <RatingTextContainer>
+                  {qualificationList.map((qualification: any) => (
+                    <View
+                      key={qualification.key}
+                      style={{ ...qualification.parentStyle, ...styles.ratingItemContainer }}
                     >
-                      <View
-                        style={{
-                          ...styles.ratingLineStyle,
-                          backgroundColor: (qualification.pointerColor && !(stars.quality >= qualification.key)) ? theme.colors.dusk : 'transparent'
-                        }}
-                      />
-                      <OText size={12} color={stars.quality === qualification.key ? theme.colors.black : theme.colors.lightGray}>{qualification.text}</OText>
-                    </TouchableOpacity>
-                  </View>
+                      <TouchableOpacity
+                        style={qualification.isInnerStyle && styles.ratingItem}
+                        onPress={() => handleChangeStars(qualification.key)}
+                      >
+                        <View
+                          style={{
+                            ...styles.ratingLineStyle,
+                            backgroundColor: (qualification.pointerColor && !(stars.quality >= qualification.key)) ? theme.colors.dusk : 'transparent'
+                          }}
+                        />
+                        <OText size={12} color={stars.quality === qualification.key ? theme.colors.black : theme.colors.lightGray}>{qualification.text}</OText>
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </RatingTextContainer>
+              </RatingBarContainer>
+
+              <OText style={{ marginTop: 30 }}>{t('COMMENTS', 'Comments')}</OText>
+              <CommentsButtonGroup>
+                {commentsList.map(commentItem => (
+                  <OButton
+                    key={commentItem.key}
+                    text={commentItem.content}
+                    bgColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.lightGray}
+                    borderColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.lightGray}
+                    textStyle={{
+                      color: isSelectedComment(commentItem.key) ? theme.colors.white : theme.colors.black,
+                      fontSize: 13,
+                      paddingRight: isSelectedComment(commentItem.key) ? 15 : 0
+                    }}
+                    style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
+                    imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
+                    imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
+                    onClick={() => handleChangeComment(commentItem) }
+                  />
                 ))}
-              </RatingTextContainer>
-            </RatingBarContainer>
+              </CommentsButtonGroup>
 
-            <OText style={{ marginTop: 30 }}>{t('COMMENTS', 'Comments')}</OText>
-            <CommentsButtonGroup>
-              {commentsList.map(commentItem => (
-                <OButton
-                  key={commentItem.key}
-                  text={commentItem.content}
-                  bgColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.lightGray}
-                  borderColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.lightGray}
-                  textStyle={{
-                    color: isSelectedComment(commentItem.key) ? theme.colors.white : theme.colors.black,
-                    fontSize: 13,
-                    paddingRight: isSelectedComment(commentItem.key) ? 15 : 0
-                  }}
-                  style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
-                  imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
-                  imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-                  onClick={() => handleChangeComment(commentItem) }
-                />
-              ))}
-            </CommentsButtonGroup>
-
-            <OText style={{ marginTop: 30 }}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText>
-            <Controller
-              control={control}
-              defaultValue=''
-              name='comments'
-              render={({ onChange }: any) => (
-                <OInput
-                  name='comments'
-                  onChange={(val: any) => {
-                    onChange(val)
-                    setExtraComment(val.target.value)
-                  }}
-                  style={styles.inputTextArea}
-                  multiline
-                />
-              )}
-            />
-          </FormReviews>
-        </View>
+              <OText style={{ marginTop: 30 }}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText>
+              <Controller
+                control={control}
+                defaultValue=''
+                name='comments'
+                render={({ onChange }: any) => (
+                  <OInput
+                    name='comments'
+                    onChange={(val: any) => {
+                      onChange(val)
+                      setExtraComment(val.target.value)
+                    }}
+                    style={styles.inputTextArea}
+                    multiline
+                  />
+                )}
+              />
+            </FormReviews>
+          </View>
+        )}
         <Spinner visible={formState.loading} />
       </ReviewOrderContainer>
       <FloatingBottomContainer>
@@ -300,7 +321,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             text={t('CONTINUE', 'Continue')}
             style={{ borderRadius: 8 }}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-            onClick={(!order?.review && !isReviewed) ? handleSubmit(onSubmit) : onNavigationRedirect('ReviewProducts', { order: order })}
+            onClick={handleSubmit(handleContinueClick)}
           />
         </ActionContainer>
       </FloatingBottomContainer>

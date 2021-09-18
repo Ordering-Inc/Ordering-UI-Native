@@ -61,8 +61,6 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
     }
   }, [formState])
 
-  console.log(order)
-
   return (
     <>
       <ReviewProductsContainer>
