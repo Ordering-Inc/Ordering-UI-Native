@@ -300,7 +300,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             text={t('CONTINUE', 'Continue')}
             style={{ borderRadius: 8 }}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-            onClick={() => (!order?.review && !isReviewed) ? handleSubmit(onSubmit) : onNavigationRedirect('ReviewProducts', { order: order })}
+            onClick={(!order?.review && !isReviewed) ? handleSubmit(onSubmit) : onNavigationRedirect('ReviewProducts', { order: order })}
           />
         </ActionContainer>
       </FloatingBottomContainer>

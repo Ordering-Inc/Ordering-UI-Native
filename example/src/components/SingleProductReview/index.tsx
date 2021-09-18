@@ -16,7 +16,9 @@ import {
 
 export const SingleProductReview = (props: SingleProductReviewParams) => {
   const {
-    product
+    product,
+    formState,
+    handleChangeFormState,
   } = props
 
   const [, t] = useLanguage()
@@ -67,24 +69,32 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
   }
 
   useEffect(() => {
-    // {
-    //   "product_id": 12,
-    //   "comment": "Comment here",
-    //   "qualification": 5
-    // }
+    if (comments?.length === 0 && !extraComment && formState.changes?.length === 0 && qualification === 5) return
     let _comments = ''
     if (comments.length > 0) {
-      comments.map(comment => _comments += comment.content + '. ')
+      comments.map(comment => (_comments += comment.content + '. '))
     }
-    let _comment
-    _comment = _comments  + extraComment
-    const changes = {
-      product_id: product.id,
-      comment: _comment,
-      qualification: qualification
+    const _comment = _comments + extraComment
+    let found = false
+    const _changes = formState.changes.map((item: any) => {
+      if (item?.product_id === product?.product_id) {
+        found = true
+        return {
+          product_id: product?.product_id,
+          comment: _comment,
+          qualification: qualification
+        }
+      }
+      return item
+    })
+    if (!found) {
+      _changes.push({
+        product_id: product?.product_id,
+        comment: _comment,
+        qualification: qualification
+      })
     }
-
-    console.log(changes)
+    handleChangeFormState && handleChangeFormState(_changes)
   }, [comments, extraComment, qualification])
 
   return (

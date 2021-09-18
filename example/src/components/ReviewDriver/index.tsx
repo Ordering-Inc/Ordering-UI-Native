@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { useLanguage } from 'ordering-components/native'
-import { StyleSheet, View, I18nManager, TouchableOpacity } from 'react-native'
+import { useLanguage, useToast, ToastType, ReviewDriver as ReviewDriverController } from 'ordering-components/native'
+import { StyleSheet, View, I18nManager, TouchableOpacity, Button } from 'react-native'
 import { ReviewDriverParams } from '../../types'
 import { useTheme } from 'styled-components/native'
+import { useForm, Controller } from 'react-hook-form'
 import { OText, OIcon, OButton, OInput } from '../shared'
 import NavBar from '../NavBar'
 import LinearGradient from 'react-native-linear-gradient'
 import { FloatingBottomContainer } from '../../layouts/FloatingBottomContainer'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 import {
   ReviewDriverContainer,
@@ -18,13 +20,23 @@ import {
   ActionContainer,
 } from './styles'
 
-export const ReviewDriver = (props: ReviewDriverParams) => {
+const ReviewDriverUI = (props: ReviewDriverParams) => {
   const {
     order,
-    navigation
+    navigation,
+    formState,
+    dirverReviews,
+    setDriverReviews,
+    handleSendDriverReview,
+    onNavigationRedirect
   } = props
+
   const [, t] = useLanguage()
   const theme = useTheme()
+  const { handleSubmit, control, errors } = useForm()
+  const [, { showToast }] = useToast()
+
+  const [isDriverReviewed, setIsDriverReviewed] = useState(false)
 
   const styles = StyleSheet.create({
     photoWrapper: {
@@ -69,6 +81,7 @@ export const ReviewDriver = (props: ReviewDriverParams) => {
 
   const [comments, setComments] = useState<Array<any>>([])
   const [extraComment, setExtraComment] = useState('')
+  const [alertState, setAlertState] = useState<{ open: boolean, content: Array<any>, success?: boolean }>({ open: false, content: [], success: false })
 
   const qualificationList = [
     { key: 1, text: t('TERRIBLE', 'Terrible'), percent: 0,  parentStyle: { left: '0%' }, isInnerStyle: false, pointerColor: false },
@@ -85,6 +98,18 @@ export const ReviewDriver = (props: ReviewDriverParams) => {
     { key: 3, content: t('CORDIAL_SERVICE', 'Cordial service') }
   ]
 
+  const onSubmit = () => {
+    if (dirverReviews?.qualification === 0) {
+      setAlertState({
+        open: true,
+        content: dirverReviews?.qualification === 0 ? [`${t('REVIEW_QUALIFICATION_REQUIRED', 'Review qualification is required')}`] : []
+      })
+      return
+    }
+    handleSendDriverReview()
+    setAlertState({ ...alertState, success: true })
+  }
+
   const isSelectedComment = (commentKey: number) => {
     const found = comments.find((comment: any) => comment?.key === commentKey)
     return found
@@ -99,6 +124,63 @@ export const ReviewDriver = (props: ReviewDriverParams) => {
       setComments([...comments, commentItem])
     }
   }
+
+  const handleChangeQualification = (qualification: number) => {
+    if (qualification) setDriverReviews({ ...dirverReviews, qualification: qualification })
+  }
+
+  const handleSendReviewClick = () => {
+    if (!order?.user_review && !isDriverReviewed) {
+      onSubmit()
+    } else {
+      onNavigationRedirect && onNavigationRedirect('MyOrders')
+    }
+  }
+
+  useEffect(() => {
+    if (!formState.loading && formState.result?.error) {
+      setAlertState({
+        open: true,
+        success: false,
+        content: formState.result?.result || [t('ERROR', 'Error')]
+      })
+    }
+    if (!formState.loading && !formState.result?.error && alertState.success) {
+      setIsDriverReviewed && setIsDriverReviewed(true)
+      onNavigationRedirect('MyOrders')
+    }
+  }, [formState])
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      // Convert all errors in one string to show in toast provider
+      const list = Object.values(errors);
+      let stringError = '';
+      list.map((item: any, i: number) => {
+        stringError +=
+          i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
+      });
+      showToast(ToastType.Error, stringError);
+    }
+  }, [errors])
+
+  useEffect(() => {
+    if (alertState.open) {
+      alertState.content && showToast(
+        ToastType.Error,
+        alertState.content
+      )
+    }
+  }, [alertState.content])
+
+  useEffect(() => {
+    let _comments = ''
+    if (comments.length > 0) {
+      comments.map((comment: any) => (_comments += comment.content + '. '))
+    }
+    const _comment = _comments + extraComment
+    setDriverReviews({ ...dirverReviews, comment: _comment })
+  }, [comments, extraComment])
 
   return (
     <>
@@ -132,11 +214,11 @@ export const ReviewDriver = (props: ReviewDriverParams) => {
 
         <View style={{flex: 1, justifyContent: 'flex-end'}}>
           <FormReviews>
-            <OText mBottom={13}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText>
+            <OText mBottom={13}>{t('HOW_WAS_YOUR_DRIVER', 'How was your driver?')}</OText>
             <RatingBarContainer>
               <LinearGradient
                 start={{ x: 0.0, y: 0.0 }}
-                end={{ x: 0.5 || 0, y: 0 }}
+                end={{ x: qualificationList[dirverReviews?.qualification - 1]?.percent || 0, y: 0 }}
                 locations={[.9999, .9999]}
                 colors={[theme.colors.primary, theme.colors.lightGray]}
                 style={styles.statusBar}
@@ -149,15 +231,15 @@ export const ReviewDriver = (props: ReviewDriverParams) => {
                   >
                     <TouchableOpacity
                       style={qualification.isInnerStyle && styles.ratingItem}
-                      // onPress={() => handleChangeStars(qualification.key)}
+                      onPress={() => handleChangeQualification(qualification.key)}
                     >
                       <View
                         style={{
                           ...styles.ratingLineStyle,
-                          backgroundColor: qualification.pointerColor ? theme.colors.dusk : 'transparent'
+                          backgroundColor: (qualification.pointerColor && !(dirverReviews?.qualification >= qualification.key)) ? theme.colors.dusk : 'transparent'
                         }}
                       />
-                      <OText size={12} color={theme.colors.lightGray}>{qualification.text}</OText>
+                      <OText size={12} color={dirverReviews?.qualification === qualification.key ? theme.colors.black : theme.colors.lightGray}>{qualification.text}</OText>
                     </TouchableOpacity>
                   </View>
                 ))}
@@ -186,18 +268,27 @@ export const ReviewDriver = (props: ReviewDriverParams) => {
             </CommentsButtonGroup>
 
             <OText style={{ marginTop: 30 }}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText>
-            <OInput
+            <Controller
+              control={control}
+              defaultValue=''
               name='comments'
-              onChange={(val: any) => {
-                setExtraComment(val.target.value)
-              }}
-              style={styles.inputTextArea}
-              multiline
+              render={({ onChange }: any) => (
+                <OInput
+                  name='comments'
+                  onChange={(val: any) => {
+                    onChange(val)
+                    setExtraComment(val.target.value)
+                  }}
+                  style={styles.inputTextArea}
+                  multiline
+                />
+              )}
+              rules={{ required: (!order?.user_review && !isDriverReviewed) ? t('FIELD_COMMENT_REQUIRED', 'The field comments is required') : null }}
             />
           </FormReviews>
         </View>
       </ReviewDriverContainer>
-
+      <Spinner visible={formState.loading} />
       <FloatingBottomContainer>
         <ActionContainer>
           <OButton
@@ -205,10 +296,19 @@ export const ReviewDriver = (props: ReviewDriverParams) => {
             text={t('SEND_REVIEW', 'Send Review')}
             style={{ borderRadius: 8 }}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-            // onClick={() => (!order?.review && !isReviewed) ? handleSubmit(onSubmit) : onNavigationRedirect('ReviewProducts', { order: order })}
+            onClick={handleSubmit(handleSendReviewClick)}
           />
         </ActionContainer>
       </FloatingBottomContainer>
     </>
   )
+}
+
+export const ReviewDriver = (props: any) => {
+  const reviewDriverProps = {
+    ...props,
+    UIComponent: ReviewDriverUI,
+    isToast: true
+  }
+  return <ReviewDriverController {...reviewDriverProps} />
 }

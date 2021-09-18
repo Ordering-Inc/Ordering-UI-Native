@@ -299,7 +299,7 @@ export interface ProductItemAccordionParams {
   isFromCheckout?: any
 }
 export interface ReviewOrderParams {
-  order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any },
+  order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
   stars?: any,
   handleChangeInput?: any,
   handleChangeRating?: any,
@@ -313,15 +313,25 @@ export interface ReviewOrderParams {
 export interface ReviewProductParams {
   navigation?: any,
   onNavigationRedirect?: any,
-  order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any },
+  order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
+  formState?: any,
+  handleChangeFormState?: any,
+  handleSendProductReview?: any
 }
 export interface ReviewDriverParams {
   navigation?: any,
   onNavigationRedirect?: any,
-  order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any },
+  order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
+  formState?: any,
+  setIsDriverReviewed?: (isReviewed: boolean) => {},
+  dirverReviews?: any,
+  setDriverReviews?: any,
+  handleSendDriverReview?: any
 }
 export interface SingleProductReviewParams {
   product: any,
+  formState?: any,
+  handleChangeFormState?: any,
 }
 export interface MessagesParams {
   type?: string,

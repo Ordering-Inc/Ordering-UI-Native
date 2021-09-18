@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useLanguage } from 'ordering-components/native'
+import React, { useState, useEffect } from 'react'
+import { useLanguage, useToast, ToastType, ReviewProduct as ReviewProductController } from 'ordering-components/native'
 import { OText, OButton } from '../shared'
 import NavBar from '../NavBar'
 import { ReviewProductParams } from '../../types'
@@ -13,15 +13,55 @@ import {
   SkipButton
 } from './styles'
 
-export const ReviewProducts = (props: ReviewProductParams) => {
+const ReviewProductsUI = (props: ReviewProductParams) => {
   const {
     navigation,
     order,
-    onNavigationRedirect
+    onNavigationRedirect,
+    formState,
+    handleChangeFormState,
+    handleSendProductReview
   } = props
 
   const [, t] = useLanguage()
   const theme = useTheme()
+  const [, { showToast }] = useToast()
+
+  const [isProductReviewed, setIsProductReviewed] = useState(false)
+  const [alertState, setAlertState] = useState<{ open: boolean, content: Array<any>, success?: boolean }>({ open: false, content: [], success: false })
+
+  const handleContinueClick = () => {
+    setAlertState({ ...alertState, success: true })
+    handleSendProductReview()
+  }
+  useEffect(() => {
+    if (alertState.open) {
+      alertState.content && showToast(
+        ToastType.Error,
+        alertState.content
+      )
+    }
+  }, [alertState.content])
+
+  useEffect(() => {
+    if (!formState.loading && formState.result?.error) {
+      setAlertState({
+        open: true,
+        success: false,
+        content: formState.result?.result || [t('ERROR', 'Error')]
+      })
+    }
+    if (!formState.loading && !formState.result?.error && alertState.success) {
+      setIsProductReviewed && setIsProductReviewed(true)
+      if (order?.driver && !order?.user_review) {
+        onNavigationRedirect('ReviewDriver', { order: order })
+      } else {
+        onNavigationRedirect('MyOrders')
+      }
+    }
+  }, [formState])
+
+  console.log(order)
 
   return (
     <>
@@ -38,26 +78,42 @@ export const ReviewProducts = (props: ReviewProductParams) => {
           <SingleProductReview
             key={product.id}
             product={product}
+            formState={formState}
+            handleChangeFormState={handleChangeFormState}
           />
         ))}
       </ReviewProductsContainer>
 
       <FloatingBottomContainer>
-        <ActionContainer>
-          <SkipButton
-            onPress={() => onNavigationRedirect('ReviewDriver', { order: order })}
-          >
-            <OText weight={700} size={18}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
-          </SkipButton>
+        <ActionContainer
+          isContinueEnabled={order?.driver && !order?.user_review}
+        >
+          {order?.driver && !order?.user_review && (
+            <SkipButton
+              onPress={() => onNavigationRedirect('ReviewDriver', { order: order })}
+            >
+              <OText weight={700} size={18}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
+            </SkipButton>
+          )}
           <OButton
             textStyle={{ color: theme.colors.white, paddingRight: 10 }}
-            text={t('CONTINUE', 'Continue')}
+            text={order?.driver && !order?.user_review ? t('CONTINUE', 'Continue') : t('SEND_REVIEW', 'Send Review')}
             style={{ borderRadius: 8 }}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-            // onClick={handleSubmit(onSubmit)}
+            isDisabled={formState.loading || formState?.changes?.length === 0}
+            onClick={() => handleContinueClick()}
           />
         </ActionContainer>
       </FloatingBottomContainer>
     </>
   )
+}
+
+export const ReviewProducts = (props: any) => {
+  const reviewProductProps = {
+    ...props,
+    UIComponent: ReviewProductsUI,
+    isToast: true
+  }
+  return <ReviewProductController {...reviewProductProps} />
 }
