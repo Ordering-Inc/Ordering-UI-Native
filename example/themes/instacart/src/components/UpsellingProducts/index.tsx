@@ -105,9 +105,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 										<React.Fragment key={`up-key-${idx}`}>
 											{idx % 2 == 1 && (
 												<View key={upsellingProducts.products[idx].id} style={{ flexDirection: 'row' }}>
-													<Item
-														activeOpacity={1}
-													>
+													<Item activeOpacity={1}	onPress={() => handleFormProduct(upsellingProducts.products[idx - 1])}>
 														<OIcon
 															url={upsellingProducts.products[idx - 1].images}
 															style={styles.imageStyle}
@@ -121,9 +119,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 														</AddButton>
 													</Item>
 
-													<Item
-														activeOpacity={1}
-													>
+													<Item	activeOpacity={1} onPress={() => handleFormProduct(upsellingProducts.products[idx])}>
 														<OIcon
 															url={upsellingProducts.products[idx].images}
 															style={styles.imageStyle}
@@ -140,10 +136,8 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 											)}
 											{upsellingProducts.products.length % 2 == 1 && upsellingProducts.products.length - idx === 1 && (
 												<View key={idx} style={{ flexDirection: 'row' }}>
-													<Item
-														key={upsellingProducts.products[upsellingProducts.products.length - 1].id}
-														activeOpacity={1}
-													>
+													<Item	key={upsellingProducts.products[upsellingProducts.products.length - 1].id} activeOpacity={1}
+													 onPress={() => handleFormProduct(upsellingProducts.products[upsellingProducts.products.length - 1])}>
 														<OIcon
 															url={upsellingProducts.products[upsellingProducts.products.length - 1].images}
 															style={styles.imageStyle}
@@ -153,11 +147,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 															<OText color={theme.colors.primary} weight='bold'>{parsePrice(upsellingProducts.products[upsellingProducts.products.length - 1].price)}</OText>
 														</Details>
 														<AddButton onPress={() => handleFormProduct(upsellingProducts.products[upsellingProducts.products.length - 1])}>
-															<MaterialComIcon
-																name='plus-circle'
-																color={theme.colors.primary}
-																size={35}
-															/>
+															<OIcon src={theme.images.general.plus_circle} width={16} />
 														</AddButton>
 													</Item>
 												</View>
