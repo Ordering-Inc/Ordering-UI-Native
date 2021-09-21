@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	Cart as CartController,
 	useOrder,
@@ -24,7 +24,6 @@ import { useTheme } from 'styled-components/native';
 import { OrderSummary } from '../OrderSummary';
 import { I18nManager, TouchableOpacity, View } from 'react-native';
 import { FloatingButton } from '../FloatingButton';
-import { useEffect } from 'react';
 
 const CartSingleUI = (props: any) => {
 	const {
@@ -98,6 +97,12 @@ const CartSingleUI = (props: any) => {
 			cartTotal: curCart?.total
 		})
 	}
+
+	useEffect(() => {
+		if (curCart?.total == 0) {
+			navigation.goBack();
+		}
+	}, [curCart])
 
 	return (
 		<CContainer>
