@@ -33,6 +33,7 @@ import {
 } from '../../components/shared';
 import { sortInputFields } from '../../utils';
 import { ProfileParams } from '../../types';
+import { NotFoundSource } from '../NotFoundSource';
 
 const ProfileUI = (props: ProfileParams) => {
   const {
@@ -172,10 +173,21 @@ const ProfileUI = (props: ProfileParams) => {
 
   return (
     <>
-      {(formState?.loading || state?.loading) && (
+      {validationFields?.error && (
+        <NotFoundSource
+          content={
+            validationFields?.error[0] ||
+            validationFields?.error[0]?.message ||
+            t('NETWORK_ERROR', 'Network Error')
+          }
+          image={theme.images.general.notFound}
+          conditioned={false}
+        />
+      )}
+
+      {(formState?.loading || state?.loading) && !validationFields.error && (
         <View
           style={{
-            padding: 40,
             backgroundColor: theme.colors.backgroundLight,
           }}>
           <Placeholder Animation={Fade}>
@@ -204,9 +216,9 @@ const ProfileUI = (props: ProfileParams) => {
             <Placeholder key={i} Animation={Fade}>
               <View style={{ flexDirection: 'row' }}>
                 <Placeholder>
-                  <PlaceholderLine width={50} style={{ marginTop: 30 }} />
+                  <PlaceholderLine width={40} style={{ marginTop: 30 }} />
 
-                  <PlaceholderLine width={90} />
+                  <PlaceholderLine width={100} />
                 </Placeholder>
               </View>
             </Placeholder>
@@ -244,7 +256,7 @@ const ProfileUI = (props: ProfileParams) => {
         </View>
       )}
 
-      {!formState?.loading && !state?.loading && (
+      {!formState?.loading && !state?.loading && !validationFields.error && (
         <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
           <CenterView>
             <OIcon
@@ -294,7 +306,7 @@ const ProfileUI = (props: ProfileParams) => {
             </EnabledStatusDriver>
           )}
 
-          {!isEdit ? (
+          {!isEdit && !validationFields.error ? (
             <UserData>
               {!validationFields?.loading &&
                 sortInputFields({ values: validationFields?.fields?.checkout })
@@ -393,7 +405,6 @@ const ProfileUI = (props: ProfileParams) => {
 export const UserProfileForm = (props: any) => {
   const profileProps = {
     ...props,
-    refreshSessionUser: true,
     UIComponent: ProfileUI,
   };
 

@@ -82,6 +82,7 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
       borderBottomColor: '#e6e6e6',
     },
     titleGroups: {
+      alignItems: 'center',
       flexDirection: 'row',
     },
     titleIcons: {
