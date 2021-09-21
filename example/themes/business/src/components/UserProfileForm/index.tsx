@@ -173,9 +173,13 @@ const ProfileUI = (props: ProfileParams) => {
 
   return (
     <>
-      {validationFields.error && (
+      {validationFields?.error && (
         <NotFoundSource
-          content={t('NETWORK_ERROR', 'Network Error')}
+          content={
+            validationFields?.error[0] ||
+            validationFields?.error[0]?.message ||
+            t('NETWORK_ERROR', 'Network Error')
+          }
           image={theme.images.general.notFound}
           conditioned={false}
         />

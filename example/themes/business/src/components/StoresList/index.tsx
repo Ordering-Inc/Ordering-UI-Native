@@ -73,7 +73,10 @@ const StoresListUI = (props: BusinessesListingParams) => {
 
   useEffect(() => {
     if (error) {
-      showToast(ToastType.Error, error);
+      showToast(
+        ToastType.Error,
+        error || error[0] || t('NETWORK_ERROR', 'Network Error'),
+      );
     }
 
     if (loadBusinesses && !loading) {
