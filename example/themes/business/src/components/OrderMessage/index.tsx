@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { Chat } from '../Chat';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, BackHandler } from 'react-native';
 import {
   useLanguage,
   OrderDetails as OrderDetailsController,
@@ -33,35 +33,42 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
   });
   const { order, loading } = props.order;
 
-  const handleArrowBack = () => {
+  const handleArrowBack = (): boolean => {
     if (order?.unread_count !== undefined) {
-      setOrders &&
-        setOrders((prevOrders: any) => {
-          const { data } = prevOrders;
+      setOrders?.((prevOrders: any) => {
+        const { data } = prevOrders;
 
-          const updateOrder = data?.find((_order: any, index: number) => {
-            if (_order.id === order?.id) {
-              _order.unread_count = 0;
-              data.splice(index, 1, _order);
-              return true;
-            }
-
-            return false;
-          });
-
-          if (updateOrder) {
-            return { ...prevOrders, data };
+        const updateOrder = data?.find((_order: any, index: number) => {
+          if (_order.id === order?.id) {
+            _order.unread_count = 0;
+            data.splice(index, 1, _order);
+            return true;
           }
 
-          return prevOrders;
+          return false;
         });
 
-      readMessages && readMessages();
+        if (updateOrder) {
+          return { ...prevOrders, data };
+        }
+
+        return prevOrders;
+      });
+
+      readMessages?.();
     }
 
     navigation?.canGoBack() && navigation.goBack();
-    return;
+
+    return true;
   };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleArrowBack);
+
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', handleArrowBack);
+  }, [order?.unread_count, messages?.messages]);
 
   useEffect(() => {
     if (messagesReadList?.length) {
