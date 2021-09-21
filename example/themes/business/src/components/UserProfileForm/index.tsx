@@ -226,7 +226,7 @@ const ProfileUI = (props: ProfileParams) => {
 
           <Placeholder Animation={Fade}>
             <PlaceholderLine
-              width={100}
+              width={30}
               style={{
                 marginTop: 20,
                 alignSelf: 'center',
@@ -245,7 +245,7 @@ const ProfileUI = (props: ProfileParams) => {
             />
 
             <PlaceholderLine
-              width={100}
+              width={40}
               style={{
                 marginTop: 5,
                 height: 15,
