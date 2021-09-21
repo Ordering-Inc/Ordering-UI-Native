@@ -189,12 +189,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const handleReload = () => {
     setReload(true);
-    loadOrders &&
-      loadOrders(
-        true,
-        tagsFilter,
-        pagination.pageSize * pagination.currentPage <= 50,
-      );
+    orderList.error
+      ? loadOrders && loadOrders(false, true)
+      : loadOrders &&
+        loadOrders(
+          true,
+          tagsFilter,
+          pagination.pageSize * pagination.currentPage <= 50,
+        );
   };
 
   const handleLoadMore = () => {
@@ -389,13 +391,20 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </ScrollView>
       </View>
 
-      {((!loading && !ordersToShow.length) || !tagsFilter.length) && (
-        <NotFoundSource
-          content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
-          image={theme.images.general.notFound}
-          conditioned={false}
-        />
-      )}
+      {!loading &&
+        (!tagsFilter.length || orderList.error || !ordersToShow.length) && (
+          <NotFoundSource
+            content={
+              !orderList.error
+                ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
+                : orderList?.error[0]?.message ||
+                  orderList?.error[0] ||
+                  t('NETWORK_ERROR', 'Network Error')
+            }
+            image={theme.images.general.notFound}
+            conditioned={false}
+          />
+        )}
 
       <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         {!reload && !error && orders.length > 0 && !loadingTag && (
@@ -439,6 +448,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         )}
 
         {!!tagsFilter.length &&
+          !orderList.error &&
           pagination.totalPages &&
           !loading &&
           !!orders.length &&
@@ -459,20 +469,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 };
 
 export const OrdersOption = (props: OrdersOptionParams) => {
-  const [rememberOrderStatus, setRememberOrderStatus] = useState([0, 13]);
   const MyOrdersProps = {
     ...props,
-    asDashboard: true,
-    orderStatus: props.activeOrders ? rememberOrderStatus : rememberOrderStatus,
-    rememberOrderStatus: rememberOrderStatus,
-    setRememberOrderStatus: setRememberOrderStatus,
-    useDefualtSessionManager: true,
-    paginationSettings: {
-      initialPage: 1,
-      pageSize: 45,
-      controlType: 'infinity',
-    },
-
     UIComponent: OrdersOptionUI,
   };
 

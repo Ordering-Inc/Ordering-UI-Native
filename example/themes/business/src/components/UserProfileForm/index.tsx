@@ -33,6 +33,7 @@ import {
 } from '../../components/shared';
 import { sortInputFields } from '../../utils';
 import { ProfileParams } from '../../types';
+import { NotFoundSource } from '../NotFoundSource';
 
 const ProfileUI = (props: ProfileParams) => {
   const {
@@ -172,7 +173,15 @@ const ProfileUI = (props: ProfileParams) => {
 
   return (
     <>
-      {(formState?.loading || state?.loading) && (
+      {validationFields.error && (
+        <NotFoundSource
+          content={t('NETWORK_ERROR', 'Network Error')}
+          image={theme.images.general.notFound}
+          conditioned={false}
+        />
+      )}
+
+      {(formState?.loading || state?.loading) && !validationFields.error && (
         <View
           style={{
             padding: 40,
@@ -244,7 +253,7 @@ const ProfileUI = (props: ProfileParams) => {
         </View>
       )}
 
-      {!formState?.loading && !state?.loading && (
+      {!formState?.loading && !state?.loading && !validationFields.error && (
         <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
           <CenterView>
             <OIcon
@@ -294,7 +303,7 @@ const ProfileUI = (props: ProfileParams) => {
             </EnabledStatusDriver>
           )}
 
-          {!isEdit ? (
+          {!isEdit && !validationFields.error ? (
             <UserData>
               {!validationFields?.loading &&
                 sortInputFields({ values: validationFields?.fields?.checkout })
@@ -393,7 +402,6 @@ const ProfileUI = (props: ProfileParams) => {
 export const UserProfileForm = (props: any) => {
   const profileProps = {
     ...props,
-    refreshSessionUser: true,
     UIComponent: ProfileUI,
   };
 

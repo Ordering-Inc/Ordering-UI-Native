@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Platform, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import NetInfo from '@react-native-community/netinfo';
 import { useTheme } from 'styled-components/native';
 import {
   ToastType,
@@ -29,6 +30,13 @@ const StoresListUI = (props: BusinessesListingParams) => {
   } = props;
 
   const { loading, error, businesses } = businessesList;
+  const [loadingConnected, setLoadingConnected] = useState(true);
+  const [isConnected, setIsConnected] = useState<boolean | null>(false);
+
+  NetInfo.fetch().then(state => {
+    setIsConnected(state.isConnected);
+    setLoadingConnected(false);
+  });
 
   const [, t] = useLanguage();
   const [orderState] = useOrder();
@@ -116,25 +124,31 @@ const StoresListUI = (props: BusinessesListingParams) => {
       <View style={styles.header}>
         <OText style={styles.sectionTitle}>{t('STORES', 'Stores')}</OText>
 
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <SearchBar
-            borderStyle={styles.borderStyle}
-            onSearch={handleChangeSearch}
-            searchValue={searchValue}
-            lazyLoad
-            isCancelXButtonShow={!!searchValue}
-            onCancel={() => handleChangeSearch('')}
-            placeholder={t('FIND_BUSINESS', 'Find a business')}
-          />
-        </View>
+        {isConnected && (
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <SearchBar
+              borderStyle={styles.borderStyle}
+              onSearch={handleChangeSearch}
+              searchValue={searchValue}
+              lazyLoad
+              isCancelXButtonShow={!!searchValue}
+              onCancel={() => handleChangeSearch('')}
+              placeholder={t('FIND_BUSINESS', 'Find a business')}
+            />
+          </View>
+        )}
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.container}
         onScroll={(e: any) => handleScroll(e)}>
-        {!loading && businesses?.length === 0 && (
+        {businesses?.length === 0 && !isConnected && !loadingConnected && (
           <NotFoundSource
-            content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
+            content={
+              !isConnected
+                ? t('NETWORK_ERROR', 'Network Error')
+                : t('NO_RESULTS_FOUND', 'Sorry, no results found')
+            }
             image={theme.images.general.notFound}
             conditioned={false}
           />
@@ -153,7 +167,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
             />
           ))}
 
-        {loadBusinesses && (
+        {loadBusinesses && isConnected && (
           <View>
             {[...Array(6)].map((item, i) => (
               <Placeholder key={i} Animation={Fade}>
@@ -186,7 +200,6 @@ const StoresListUI = (props: BusinessesListingParams) => {
 export const StoresList = (props: BusinessesListingParams) => {
   const BusinessesListProps = {
     ...props,
-    isForceSearch: Platform.OS === 'ios',
     UIComponent: StoresListUI,
   };
 
