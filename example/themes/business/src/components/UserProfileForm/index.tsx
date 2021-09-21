@@ -104,6 +104,22 @@ const ProfileUI = (props: ProfileParams) => {
   };
 
   useEffect(() => {
+    if (userState.result.result && !isAvailableLoading) {
+      if (userState?.result?.error) {
+        showToast(
+          ToastType.Error,
+          t(userState.result.error, userState.result.error),
+        );
+      } else {
+        showToast(
+          ToastType.Success,
+          t('UPDATE_SUCCESSFULLY', 'Update successfully'),
+        );
+      }
+    }
+  }, [isAvailableLoading]);
+
+  useEffect(() => {
     if (formState.result.result && !formState.loading) {
       if (formState.result?.error) {
         showToast(ToastType.Error, formState.result.result);
