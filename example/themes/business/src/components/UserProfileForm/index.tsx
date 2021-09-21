@@ -188,7 +188,6 @@ const ProfileUI = (props: ProfileParams) => {
       {(formState?.loading || state?.loading) && !validationFields.error && (
         <View
           style={{
-            padding: 40,
             backgroundColor: theme.colors.backgroundLight,
           }}>
           <Placeholder Animation={Fade}>
@@ -217,9 +216,9 @@ const ProfileUI = (props: ProfileParams) => {
             <Placeholder key={i} Animation={Fade}>
               <View style={{ flexDirection: 'row' }}>
                 <Placeholder>
-                  <PlaceholderLine width={50} style={{ marginTop: 30 }} />
+                  <PlaceholderLine width={40} style={{ marginTop: 30 }} />
 
-                  <PlaceholderLine width={90} />
+                  <PlaceholderLine width={100} />
                 </Placeholder>
               </View>
             </Placeholder>
@@ -227,7 +226,7 @@ const ProfileUI = (props: ProfileParams) => {
 
           <Placeholder Animation={Fade}>
             <PlaceholderLine
-              width={30}
+              width={100}
               style={{
                 marginTop: 20,
                 alignSelf: 'center',
@@ -246,7 +245,7 @@ const ProfileUI = (props: ProfileParams) => {
             />
 
             <PlaceholderLine
-              width={40}
+              width={100}
               style={{
                 marginTop: 5,
                 height: 15,

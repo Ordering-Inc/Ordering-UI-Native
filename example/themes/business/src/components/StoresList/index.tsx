@@ -70,7 +70,6 @@ const StoresListUI = (props: BusinessesListingParams) => {
       );
     }
   };
-
   useEffect(() => {
     if (error) {
       showToast(
@@ -105,6 +104,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      marginBottom: 10,
     },
     sectionTitle: {
       fontStyle: 'normal',
