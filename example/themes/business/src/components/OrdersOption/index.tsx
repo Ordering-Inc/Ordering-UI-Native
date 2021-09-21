@@ -197,7 +197,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       updateTags.push(...tagsFilter.concat(key));
     }
     const arr = ordersToShow.filter(
-      (order : any) =>
+      (order: any) =>
         tabsFilter.includes(order.status) && tagsFilter.includes(order.status),
     );
     setRememberOrderStatus(updateTags);
@@ -274,7 +274,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       setOrientation('Landscape');
     }
   });
-
 
   const styles = StyleSheet.create({
     header: {
