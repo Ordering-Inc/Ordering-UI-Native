@@ -133,10 +133,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
   const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
 
-  const [ordersToShow, setOrdersToShow] = useState([]);
-  const [tabsFilter, setTabsFilter] = useState(tabs[0].tags);
-  const [tagsFilter, setTagsFilter] = useState(tabs[0].tags);
-  const [loadingTag, setLoadingTag] = useState(false);
+  const [ordersFilter, setOrdersFilter] = useState(tabs[0].tags);
+  const [tabsStatus, setTabStatus] = useState(tabs[0].tags);
+  const [tagsStatus, setTagsStatus] = useState(tabs[0].tags);
   const [isLoadedOrders, setIsLoadedOrders] = useState<any>({
     pending: { isFetched: true, hasMorePagination: false },
     inProgress: { isFetched: false, hasMorePagination: false },
@@ -155,9 +154,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   );
 
   const handleChangeTab = (tags: number[], tabTitle: string) => {
-    setTabsFilter(tags);
-    setRememberOrderStatus(tags);
-    setUpdateOtherStatus(tags);
     if (!isLoadedOrders[tabTitle].isFetched) {
       loadOrders && loadOrders(true, tags);
       setIsLoadedOrders({
@@ -165,11 +161,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         [tabTitle]: { isFetched: true, hasMorePagination: false },
       });
     }
-    setTagsFilter(tags);
-
-    const ordersTab = values.filter((order: any) =>
-      tags.some(tag => tag === order.status),
-    );
 
     if (JSON.stringify(tags) === JSON.stringify(tabs[3].tags)) {
       scrollRefTab.current?.scrollToEnd({ animated: true });
@@ -184,84 +175,46 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       animated: true,
     });
 
-    setOrdersToShow(ordersTab);
+    setTabStatus(tags);
+    setTagsStatus(tags);
+    setOrdersFilter(tags);
     setCurrentTab(tabTitle);
+    setRememberOrderStatus(tags);
   };
 
   const handleChangeTag = (key: number) => {
     const updateTags: number[] = [];
-
-    if (tagsFilter.includes(key)) {
-      updateTags.push(...tagsFilter.filter(tag => tag !== key));
+    if (ordersFilter.includes(key)) {
+      updateTags.push(...ordersFilter.filter(tag => tag !== key));
     } else {
-      updateTags.push(...tagsFilter.concat(key));
+      updateTags.push(...ordersFilter.concat(key));
     }
-    const arr = ordersToShow.filter(
-      (order: any) =>
-        tabsFilter.includes(order.status) && tagsFilter.includes(order.status),
-    );
+
+    setOrdersFilter(updateTags);
     setRememberOrderStatus(updateTags);
-    setTagsFilter(updateTags);
-    setUpdateOtherStatus(updateTags);
   };
 
   const handleReload = () => {
     setReload(true);
-    setOrdersToShow([]);
     loadOrders &&
       loadOrders(
         true,
-        tagsFilter,
+        ordersFilter,
         pagination.pageSize * pagination.currentPage <= 50,
       );
   };
 
   const handleLoadMore = () => {
-    if (ordersToShow.length <= 3) {
+    if (orders.length <= 3) {
       handleReload();
     } else {
-      loadMoreOrders && loadMoreOrders(tagsFilter);
+      loadMoreOrders && loadMoreOrders(ordersFilter);
     }
   };
 
   const getOrderStatus = (key: number) => {
     return orderStatus.find(status => status.key === key)?.text;
   };
-
-  useEffect(() => {
-    let ordersTab = values?.filter((order: any) =>
-      tagsFilter.some(tag => tag === order.status),
-    );
-    let hash: any = {};
-    ordersTab = ordersTab.filter((order: any) =>
-      hash[order.id] ? false : (hash[order.id] = true),
-    );
-
-    setOrdersToShow(ordersTab);
-  }, [values]);
-
-  useEffect(() => {
-    if (reload && !loading) setReload(!reload);
-    if (loadingTag) setLoadingTag(false);
-  }, [loading]);
-
-  useEffect(() => {
-    setOrdersToShow(
-      values.filter((order: any) => tagsFilter.includes(order.status)),
-    );
-  }, [tagsFilter]);
-
-  useEffect(() => {
-    if (!loading) {
-      setIsLoadedOrders({
-        ...isLoadedOrders,
-        [currentTab]: {
-          isFetched: true,
-          hasMorePagination: pagination.currentPage < pagination.totalPages,
-        },
-      });
-    }
-  }, [pagination.totalPages]);
 
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
     setWindowsWidth(
@@ -329,6 +282,18 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     },
   });
 
+  useEffect(() => {
+    if (!loading) {
+      setIsLoadedOrders({
+        ...isLoadedOrders,
+        [currentTab]: {
+          isFetched: true,
+          hasMorePagination: pagination.currentPage < pagination.totalPages,
+        },
+      });
+    }
+  }, [pagination.totalPages]);
+
   return (
     <>
       <View style={styles.header}>
@@ -350,12 +315,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 <OText
                   style={styles.tab}
                   color={
-                    JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
+                    JSON.stringify(tabsStatus) === JSON.stringify(tab.tags)
                       ? theme.colors.textGray
                       : theme.colors.unselectText
                   }
                   weight={
-                    JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
+                    JSON.stringify(tabsStatus) === JSON.stringify(tab.tags)
                       ? '600'
                       : 'normal'
                   }>
@@ -366,7 +331,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                   style={{
                     width: '100%',
                     borderBottomColor:
-                      JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
+                      JSON.stringify(tabsStatus) === JSON.stringify(tab.tags)
                         ? theme.colors.textGray
                         : theme.colors.tabBar,
                     borderBottomWidth: 2,
@@ -385,19 +350,19 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.tagsContainer}
           horizontal>
-          {tabsFilter.map((key: number) => (
+          {tagsStatus.map((key: number) => (
             <Tag
               key={key}
               onPress={() => handleChangeTag(key)}
               isSelected={
-                tagsFilter.includes(key)
+                ordersFilter.includes(key)
                   ? theme.colors.primary
                   : theme.colors.tabBar
               }>
               <OText
                 style={styles.tag}
                 color={
-                  tagsFilter.includes(key)
+                  ordersFilter.includes(key)
                     ? theme.colors.white
                     : theme.colors.black
                 }>
@@ -409,7 +374,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       </View>
 
       {!loading &&
-        (!tagsFilter.length || orderList.error || !ordersToShow.length) && (
+        (!ordersFilter.length ||
+          orderList.error ||
+          !orderList.orders.length) && (
           <NotFoundSource
             content={
               !orderList.error
@@ -424,12 +391,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         )}
 
       <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-        {!reload && !error && orders.length > 0 && !loadingTag && (
+        {!reload && !error && orders.length > 0 && (
           <PreviousOrders
-            orders={ordersToShow}
+            orders={orders}
             onNavigationRedirect={onNavigationRedirect}
             getOrderStatus={getOrderStatus}
-            tabsFilter={tabsFilter}
+            tabsFilter={ordersFilter}
           />
         )}
 
@@ -465,7 +432,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           </>
         )}
 
-        {!!tagsFilter.length &&
+        {!!ordersFilter.length &&
           !orderList.error &&
           pagination.totalPages &&
           !loading &&
