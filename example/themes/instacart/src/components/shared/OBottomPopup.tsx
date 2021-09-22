@@ -109,9 +109,9 @@ const styles = StyleSheet.create({
 		width: '100%'
 	},
 	titleStyle: {
-		fontSize: 20,
-		fontWeight: 'bold',
-		marginBottom: 18
+		fontSize: 18,
+		marginBottom: 16,
+		marginTop: 12
 	}
 })
 

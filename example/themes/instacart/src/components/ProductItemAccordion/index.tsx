@@ -47,7 +47,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 			height: 30,
 			fontSize: 10,
 			padding: 4,
-			textAlign: 'center'
+			textAlign: 'center',
 		},
 		inputIOS: {
 			color: theme.colors.textPrimary,
@@ -60,12 +60,17 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 			fontSize: 10,
 			textAlign: 'center'
 		},
-		icon: {
-			top: Platform.OS === 'ios' ? 10 : 15,
-			right: Platform.OS === 'ios' ? 0 : (I18nManager.isRTL ? 30 : 7),
-			position: 'absolute',
-			fontSize: 20
-		},
+		// viewContainer: {
+		// 	color: theme.colors.textPrimary,
+		// 	borderWidth: 1,
+		// 	borderColor: theme.colors.border,
+		// 	borderRadius: 3,
+		// 	backgroundColor: theme.colors.white,
+		// 	height: 30,
+		// 	fontSize: 10,
+		// 	padding: 4,
+		// 	textAlign: 'center'
+		// },
 		placeholder: {
 			color: theme.colors.secundaryContrast,
 		}
@@ -166,6 +171,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										useNativeAndroidPickerStyle={false}
 										placeholder={{}}
 										disabled={orderState.loading}
+										Icon={() => null}
 									/>
 								) : (
 									<ProductQuantity>
@@ -232,8 +238,9 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 									src={theme.images.general.edit}
 									width={16}
 									color={theme.colors.primary}
+									style={{marginEnd: 4}}
 								/>
-								<OText style={{...theme.labels.small, marginStart: 4, marginEnd: 12}} color={theme.colors.textSecondary}>{t('EDIT', 'Edit')}</OText>
+								<OText style={{...theme.labels.small, marginEnd: 12}} color={theme.colors.textSecondary}>{t('EDIT', 'Edit')}</OText>
 							</TouchableOpacity>
 						)}
 						{onDeleteProduct && isCartProduct && !isCartPending && (
@@ -247,8 +254,9 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 										src={theme.images.general.trash}
 										width={16}
 										color={theme.colors.primary}
+										style={{marginEnd: 4}}
 									/>
-									<OText style={{...theme.labels.small, marginStart: 4}} color={theme.colors.textSecondary}>{t('REMOVE', 'Remove')}</OText>
+									<OText style={{...theme.labels.small}} color={theme.colors.textSecondary}>{t('REMOVE', 'Remove')}</OText>
 								</View>
 							</OAlert>
 						)}

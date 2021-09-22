@@ -103,13 +103,23 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         (categoryState.loading || isBusinessLoading) && (
           <>
             {[...Array(categoryState?.pagination?.nextPageItems).keys()].map((item, i) => (
-              <Placeholder key={i} style={{ padding: 5 }} Animation={Fade}>
-                <View style={{ flexDirection: 'row' }}>
-                  <PlaceholderLine width={24} height={70} style={{ marginRight: 10, marginBottom: 10 }} />
-                  <Placeholder style={{ paddingVertical: 10 }}>
-                      <PlaceholderLine width={60} style={{marginBottom: 25}}/>
-                      <PlaceholderLine width={20} />
-                  </Placeholder>
+              <Placeholder key={i} style={{ padding: 5, marginBottom: 20 }} Animation={Fade}>
+                <PlaceholderLine width={70} height={20} style={{ marginBottom: 20 }} />
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <View style={{flexBasis: '47%'}}>
+                    <PlaceholderLine width={80} height={100} style={{ marginBottom: 10 }} />
+                    <Placeholder>
+                        <PlaceholderLine width={60} style={{marginBottom: 12}}/>
+                        <PlaceholderLine width={20} />
+                    </Placeholder>
+                  </View>
+                  <View style={{flexBasis: '47%'}}>
+                    <PlaceholderLine width={80} height={100} style={{ marginBottom: 10 }} />
+                    <Placeholder>
+                        <PlaceholderLine width={60} style={{marginBottom: 25}}/>
+                        <PlaceholderLine width={20} />
+                    </Placeholder>
+                  </View>
                 </View>
               </Placeholder>
             ))}

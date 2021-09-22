@@ -22,8 +22,6 @@ const StyledButton = styled.View<Props>`
   align-items: center;
   justify-content: center;
   box-shadow: 1px 1px 2px #00000020;
-  padding-left: 20px;
-  padding-right: 20px;
   position: relative;
   shadow-opacity: 0;
 `
@@ -33,7 +31,7 @@ const StyledButtonDisabled = styled(StyledButton)`
 `
 
 const StyledText = styled.Text`
-  font-size: 16px;
+  font-size: 12px;
   color: ${(props: any) => props.theme.colors.btnFont};
   margin-left: 10px;
   margin-right: 10px;

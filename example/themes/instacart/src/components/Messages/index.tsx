@@ -74,11 +74,21 @@ const MessagesUI = (props: MessagesParams) => {
 				console.log('ImagePicker Error: ', response.errorMessage);
 				showToast(ToastType.Error, response.errorMessage);
 			} else {
-				if (response.uri) {
-					const url = `data:${response.type};base64,${response.base64}`
-					setImage && setImage(url);
+				if (Platform.OS === 'android') {
+					if (response.uri) {
+						const url = `data:${response.type};base64,${response.base64}`
+						setImage && setImage(url);
+					} else {
+						showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+					}
 				} else {
-					showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+					if (response?.assets?.length > 0) {
+					  const image = response?.assets[0]
+					  const url = `data:${image.type};base64,${image.base64}`
+					  setImage && setImage(url);
+					} else {
+					  showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+					}
 				}
 			}
 		});
