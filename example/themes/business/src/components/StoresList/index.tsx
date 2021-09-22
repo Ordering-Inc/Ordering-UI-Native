@@ -144,8 +144,9 @@ const StoresListUI = (props: BusinessesListingParams) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.container}
-        onScroll={(e: any) => handleScroll(e)}>
-        {businesses?.length === 0 && !isConnected && !loadingConnected && (
+        onScroll={(e: any) => handleScroll(e)}
+      >
+        {!loadBusinesses && (businesses?.length === 0 || !isConnected) && (
           <NotFoundSource
             content={
               !isConnected
