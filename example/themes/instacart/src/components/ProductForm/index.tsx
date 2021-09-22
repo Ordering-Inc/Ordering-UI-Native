@@ -281,7 +281,7 @@ export const ProductOptionsUI = (props: any) => {
 								onClick={() => handleSaveProduct()}
 								imgRightSrc=''
 								text={`${orderState.loading ? t('LOADING', 'Loading') : editMode ? t('UPDATE', 'Update') : t('ADD_TO_CART', 'Add to Cart')}`}
-								textStyle={{ color: saveErrors ? theme.colors.primary : theme.colors.white }}
+								textStyle={{ color: saveErrors ? theme.colors.primary : theme.colors.white, fontSize: 12 }}
 								style={{
 									backgroundColor: saveErrors ? theme.colors.white : theme.colors.primary,
 									opacity: saveErrors ? 0.3 : 1,
@@ -309,7 +309,7 @@ export const ProductOptionsUI = (props: any) => {
 								onClick={() => handleRedirectLogin(productCart)}
 								text={isSoldOut || maxProductQuantity <= 0 ? t('SOLD_OUT', 'Sold out') : t('LOGIN_SIGNUP', 'Login/SignUp')}
 								imgRightSrc=''
-								textStyle={{ color: theme.colors.primary, fontSize: 12, fontWeight: '500' }}
+								textStyle={{ color: theme.colors.primary, fontSize: 10, fontWeight: '500' }}
 								style={{ ...styles.actionButton, borderColor: theme.colors.primary, backgroundColor: theme.colors.white }}
 							/>
 						)}

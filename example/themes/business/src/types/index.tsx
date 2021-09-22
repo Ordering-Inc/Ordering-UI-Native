@@ -28,6 +28,7 @@ export interface ProfileParams {
   toggleIsEdit?: any;
   cleanFormState?: any;
   setFormState?: any;
+  isAvailableLoading?: boolean;
   handleChangeInput?: any;
   handleButtonUpdateClick?: any;
   handleToggleAvalaibleStatusDriver?: any;
@@ -329,6 +330,8 @@ export interface OrderDetailsParams {
   titleAccept?: textTranslate;
   titleReject?: textTranslate;
   appTitle?: textTranslate;
+  drivers?: any;
+  loadingDriver?: boolean;
   navigation?: any;
   messagesReadList?: any;
   urlToShare?: string;
@@ -343,9 +346,9 @@ export interface OrderDetailsParams {
   isFromCheckout?: boolean;
   driverLocation?: any;
   goToBusinessList?: boolean;
-  permissions: any;
-  askLocationPermission: any;
-  redirectToSettings: any;
+  permissions?: any;
+  askLocationPermission?: any;
+  redirectToSettings?: any;
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean;
@@ -474,6 +477,7 @@ export interface GoogleMapsParams {
   markerTitle?: string;
   showAcceptOrReject?: boolean;
   order?: any;
+  driverLocation?: any;
   saveLocation?: boolean;
   handleOpenMapView?: () => void;
   isBusinessMarker?: boolean;

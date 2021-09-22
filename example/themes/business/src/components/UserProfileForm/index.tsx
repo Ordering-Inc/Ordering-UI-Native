@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -33,6 +33,7 @@ import {
 } from '../../components/shared';
 import { sortInputFields } from '../../utils';
 import { ProfileParams } from '../../types';
+import { NotFoundSource } from '../NotFoundSource';
 
 const ProfileUI = (props: ProfileParams) => {
   const {
@@ -45,6 +46,7 @@ const ProfileUI = (props: ProfileParams) => {
     cleanFormState,
     handleToggleAvalaibleStatusDriver,
     userState,
+    isAvailableLoading,
   } = props;
 
   const [{ user }] = useSession();
@@ -136,24 +138,11 @@ const ProfileUI = (props: ProfileParams) => {
   }, [user?.country_phone_code]);
 
   const styles = StyleSheet.create({
-    header: {
-      marginBottom: 25,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    title: {
-      fontFamily: 'Poppins',
-      fontStyle: 'normal',
-      fontWeight: '600',
-      fontSize: 26,
-      color: theme.colors.textGray,
-    },
     label: {
       color: theme.colors.textGray,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
-      paddingHorizontal: 16,
     },
     inputStyle: {
       marginBottom: 25,
@@ -162,6 +151,8 @@ const ProfileUI = (props: ProfileParams) => {
       borderTopWidth: 0,
       borderRightWidth: 0,
       borderLeftWidth: 0,
+      paddingHorizontal: 0,
+      borderRadius: 0,
     },
     editButton: {
       height: 44,
@@ -182,14 +173,21 @@ const ProfileUI = (props: ProfileParams) => {
 
   return (
     <>
-      <View style={styles.header}>
-        <OText style={styles.title}>{t('PROFILE', 'Profile')}</OText>
-      </View>
+      {validationFields?.error && (
+        <NotFoundSource
+          content={
+            validationFields?.error[0] ||
+            validationFields?.error[0]?.message ||
+            t('NETWORK_ERROR', 'Network Error')
+          }
+          image={theme.images.general.notFound}
+          conditioned={false}
+        />
+      )}
 
-      {(formState?.loading || state?.loading) && (
+      {(formState?.loading || state?.loading) && !validationFields.error && (
         <View
           style={{
-            padding: 40,
             backgroundColor: theme.colors.backgroundLight,
           }}>
           <Placeholder Animation={Fade}>
@@ -218,9 +216,9 @@ const ProfileUI = (props: ProfileParams) => {
             <Placeholder key={i} Animation={Fade}>
               <View style={{ flexDirection: 'row' }}>
                 <Placeholder>
-                  <PlaceholderLine width={50} style={{ marginTop: 30 }} />
+                  <PlaceholderLine width={40} style={{ marginTop: 30 }} />
 
-                  <PlaceholderLine width={90} />
+                  <PlaceholderLine width={100} />
                 </Placeholder>
               </View>
             </Placeholder>
@@ -258,8 +256,8 @@ const ProfileUI = (props: ProfileParams) => {
         </View>
       )}
 
-      {!formState?.loading && !state?.loading && (
-        <>
+      {!formState?.loading && !state?.loading && !validationFields.error && (
+        <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
           <CenterView>
             <OIcon
               url={optimizeImage(user?.photo, 'h_300,c_limit')}
@@ -279,15 +277,17 @@ const ProfileUI = (props: ProfileParams) => {
           </CenterView>
 
           {user?.level === 4 && (
-            <UDWrapper>
-              <EnabledStatusDriver>
-                <OText style={{ ...styles.label, paddingHorizontal: 0 }}>
-                  {t(
-                    'AVAILABLE_TO_RECEIVE_ORDERS',
-                    'Available to receive orders',
-                  )}
-                </OText>
+            <EnabledStatusDriver>
+              <OText style={{ ...styles.label, paddingHorizontal: 0 }}>
+                {t(
+                  'AVAILABLE_TO_RECEIVE_ORDERS',
+                  'Available to receive orders',
+                )}
+              </OText>
 
+              {isAvailableLoading ? (
+                <ActivityIndicator size="small" color={theme.colors.primary} />
+              ) : (
                 <ToggleSwitch
                   isOn={userState?.result?.result?.available}
                   onColor={theme.colors.primary}
@@ -302,11 +302,11 @@ const ProfileUI = (props: ProfileParams) => {
                   disabled={userState?.loading}
                   animationSpeed={200}
                 />
-              </EnabledStatusDriver>
-            </UDWrapper>
+              )}
+            </EnabledStatusDriver>
           )}
 
-          {!isEdit ? (
+          {!isEdit && !validationFields.error ? (
             <UserData>
               {!validationFields?.loading &&
                 sortInputFields({ values: validationFields?.fields?.checkout })
@@ -396,7 +396,7 @@ const ProfileUI = (props: ProfileParams) => {
 
             <LogoutButton />
           </Actions>
-        </>
+        </ScrollView>
       )}
     </>
   );
@@ -405,7 +405,6 @@ const ProfileUI = (props: ProfileParams) => {
 export const UserProfileForm = (props: any) => {
   const profileProps = {
     ...props,
-    refreshSessionUser: true,
     UIComponent: ProfileUI,
   };
 

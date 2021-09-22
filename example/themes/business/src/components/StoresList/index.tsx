@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Platform, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import NetInfo from '@react-native-community/netinfo';
 import { useTheme } from 'styled-components/native';
 import {
   ToastType,
@@ -29,6 +30,13 @@ const StoresListUI = (props: BusinessesListingParams) => {
   } = props;
 
   const { loading, error, businesses } = businessesList;
+  const [loadingConnected, setLoadingConnected] = useState(true);
+  const [isConnected, setIsConnected] = useState<boolean | null>(false);
+
+  NetInfo.fetch().then(state => {
+    setIsConnected(state.isConnected);
+    setLoadingConnected(false);
+  });
 
   const [, t] = useLanguage();
   const [orderState] = useOrder();
@@ -62,10 +70,12 @@ const StoresListUI = (props: BusinessesListingParams) => {
       );
     }
   };
-
   useEffect(() => {
     if (error) {
-      showToast(ToastType.Error, error);
+      showToast(
+        ToastType.Error,
+        error || error[0] || t('NETWORK_ERROR', 'Network Error'),
+      );
     }
 
     if (loadBusinesses && !loading) {
@@ -87,16 +97,14 @@ const StoresListUI = (props: BusinessesListingParams) => {
 
   const styles = StyleSheet.create({
     container: {
-      padding: Platform.OS === 'ios' && orientation === 'Portrait' ? 0 : 20,
       paddingBottom: 20,
-      paddingHorizontal: 20,
       marginBottom: 0,
       flex: 1,
     },
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: 25,
+      marginBottom: 10,
     },
     sectionTitle: {
       fontStyle: 'normal',
@@ -115,76 +123,86 @@ const StoresListUI = (props: BusinessesListingParams) => {
   });
 
   return (
-    <ScrollView style={styles.container} onScroll={(e: any) => handleScroll(e)}>
+    <>
       <View style={styles.header}>
         <OText style={styles.sectionTitle}>{t('STORES', 'Stores')}</OText>
 
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <SearchBar
-            borderStyle={styles.borderStyle}
-            onSearch={handleChangeSearch}
-            searchValue={searchValue}
-            lazyLoad
-            isCancelXButtonShow={!!searchValue}
-            onCancel={() => handleChangeSearch('')}
-            placeholder={t('FIND_BUSINESS', 'Find a business')}
-          />
-        </View>
+        {isConnected && (
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <SearchBar
+              borderStyle={styles.borderStyle}
+              onSearch={handleChangeSearch}
+              searchValue={searchValue}
+              lazyLoad
+              isCancelXButtonShow={!!searchValue}
+              onCancel={() => handleChangeSearch('')}
+              placeholder={t('FIND_BUSINESS', 'Find a business')}
+            />
+          </View>
+        )}
       </View>
-
-      {!loading && businesses?.length === 0 && (
-        <NotFoundSource
-          content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
-          image={theme.images.general.notFound}
-          conditioned={false}
-        />
-      )}
-
-      {!error &&
-        businesses?.map((business: any) => (
-          <BusinessController
-            key={business?.id}
-            business={business}
-            handleCustomClick={handleBusinessClick}
-            orderType={orderState?.options?.type}
-            isBusinessOpen={business?.open}
-            setIsUpdateStore={setIsUpdateStore}
-            isUpdateStore={isUpdateStore}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        onScroll={(e: any) => handleScroll(e)}>
+        {businesses?.length === 0 && !isConnected && !loadingConnected && (
+          <NotFoundSource
+            content={
+              !isConnected
+                ? t('NETWORK_ERROR', 'Network Error')
+                : t('NO_RESULTS_FOUND', 'Sorry, no results found')
+            }
+            image={theme.images.general.notFound}
+            conditioned={false}
           />
-        ))}
+        )}
 
-      {loadBusinesses && (
-        <View>
-          {[...Array(6)].map((item, i) => (
-            <Placeholder key={i} Animation={Fade}>
-              <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
-                <PlaceholderLine
-                  width={orientation === 'Portrait' ? 22 : 11}
-                  height={74}
-                  style={{
-                    marginRight: 20,
-                    marginBottom: 20,
-                    borderRadius: 7.6,
-                  }}
-                />
-                <Placeholder>
-                  <PlaceholderLine width={30} style={{ marginTop: 5 }} />
-                  <PlaceholderLine width={50} />
-                  <PlaceholderLine width={20} />
-                </Placeholder>
-              </View>
-            </Placeholder>
+        {!error &&
+          businesses?.map((business: any) => (
+            <BusinessController
+              key={business?.id}
+              business={business}
+              handleCustomClick={handleBusinessClick}
+              orderType={orderState?.options?.type}
+              isBusinessOpen={business?.open}
+              setIsUpdateStore={setIsUpdateStore}
+              isUpdateStore={isUpdateStore}
+            />
           ))}
-        </View>
-      )}
-    </ScrollView>
+
+        {loadBusinesses && isConnected && (
+          <View>
+            {[...Array(6)].map((item, i) => (
+              <Placeholder key={i} Animation={Fade}>
+                <View
+                  style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
+                  <PlaceholderLine
+                    width={orientation === 'Portrait' ? 22 : 11}
+                    height={74}
+                    style={{
+                      marginRight: 20,
+                      marginBottom: 20,
+                      borderRadius: 7.6,
+                    }}
+                  />
+                  <Placeholder>
+                    <PlaceholderLine width={30} style={{ marginTop: 5 }} />
+                    <PlaceholderLine width={50} />
+                    <PlaceholderLine width={20} />
+                  </Placeholder>
+                </View>
+              </Placeholder>
+            ))}
+          </View>
+        )}
+      </ScrollView>
+    </>
   );
 };
 
 export const StoresList = (props: BusinessesListingParams) => {
   const BusinessesListProps = {
     ...props,
-    isForceSearch: Platform.OS === 'ios',
     UIComponent: StoresListUI,
   };
 

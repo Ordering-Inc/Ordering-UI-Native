@@ -104,7 +104,7 @@ PODS:
   - libwebp/mux (1.2.0):
     - libwebp/demux
   - libwebp/webp (1.2.0)
-  - OneSignal (3.8.0)
+  - OneSignal (3.6.1)
   - OneSignalXCFramework (3.6.1)
   - OpenSSL-Universal (1.1.180)
   - Permission-LocationWhenInUse (3.0.5):
@@ -302,6 +302,8 @@ PODS:
     - React-jsi (= 0.64.2)
     - React-perflogger (= 0.64.2)
   - React-jsinspector (0.64.2)
+  - react-native-background-timer (2.4.1):
+    - React-Core
   - react-native-document-picker (5.3.0):
     - React-Core
   - react-native-fbsdk (3.0.0):
@@ -326,7 +328,7 @@ PODS:
     - React-Core
   - react-native-html-to-pdf (0.10.0):
     - React-Core
-  - react-native-image-picker (4.1.1):
+  - react-native-image-picker (4.0.6):
     - React-Core
   - react-native-maps (0.28.0):
     - React-Core
@@ -405,7 +407,7 @@ PODS:
     - React-cxxreact (= 0.64.2)
     - React-jsi (= 0.64.2)
     - React-perflogger (= 0.64.2)
-  - RNBootSplash (3.2.6):
+  - RNBootSplash (3.2.5):
     - React-Core
   - RNCAsyncStorage (1.15.8):
     - React-Core
@@ -499,6 +501,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
@@ -601,6 +604,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-background-timer:
+    :path: "../node_modules/react-native-background-timer"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
   react-native-fbsdk:
@@ -684,7 +689,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: 9614ac47849dbd28eefdd4aa9917597be9ac84a3
+  FBReactNativeSpec: f827184bab38211e9e6fad7e122321b7f939c62d
   FBSDKCoreKit: 4afd6ff53d8133a433dbcda44451c9498f8c6ce4
   FBSDKLoginKit: 7181765f2524d7ebf82d9629066c8e6caafc99d0
   FBSDKShareKit: 0c0d51b3af47075a85ed9bea0e28b2fc70e3594b
@@ -700,7 +705,7 @@ SPEC CHECKSUMS:
   GoogleMaps: 32ca02de09de357a10ac773f2c70f1986751392d
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
-  OneSignal: bb3c8da4467f2b48a89398da5ff107ba70cff06e
+  OneSignal: ce8d6dd77450aa653dc2f6a22f3372570030260a
   OneSignalXCFramework: 674dd48705d0e1842a7c950177ae7569dbfc261c
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   Permission-LocationWhenInUse: e1168a583654f1d2d34d3a18c4c6518ce409ad2a
@@ -715,12 +720,13 @@ SPEC CHECKSUMS:
   React-jsi: 67747b9722f6dab2ffe15b011bcf6b3f2c3f1427
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
+  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-document-picker: 226068006be4c52f8ef7f32d855ee025a12e9e64
   react-native-fbsdk: 8e92c7a334fd8d9c2b5d8b8fcd7ae2c314161099
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-google-maps: 46dea4aa4acb7300beff508f64d9f8c84e9fb106
   react-native-html-to-pdf: 1214f9c795a587fe60a950d11a891cd05be29625
-  react-native-image-picker: 92f51a85a62c2d829dcbd0dda5af99e6f988a113
+  react-native-image-picker: a6e56460d34905c849ada551db30897dc7f3d535
   react-native-maps: 2d405b4e8cee0282e4c02bac434d81450dfea877
   react-native-onesignal: f829833463ec574cad5e83d1a3e3eed607a3bc3c
   react-native-print: ae7982894bda8ef1492289e35b7a36b76a0d11ab
@@ -739,7 +745,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: 24600e3b1aaa77126989bc58b6747509a1ba14f3
   React-runtimeexecutor: a9904c6d0218fb9f8b19d6dd88607225927668f9
   ReactCommon: 149906e01aa51142707a10665185db879898e966
-  RNBootSplash: 51eef7e143faeab63f81ddbb7c1de38b8fba66ed
+  RNBootSplash: 75faf048f66eebe1650e91afdb8c2205fefc1870
   RNCAsyncStorage: e8b8d6320a0dd90eb610fb0d0b1ef90596697c69
   RNCClipboard: ddd4d291537f1667209c9c405aaa4307297e252e
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
@@ -760,6 +766,6 @@ SPEC CHECKSUMS:
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: bee86fbf9781458f0fc51fda8560bd6ef83584fa
+PODFILE CHECKSUM: c8181434f10044c21fd3f2c58704fce42717d811
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.10.1

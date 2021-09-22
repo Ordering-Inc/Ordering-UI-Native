@@ -43,6 +43,7 @@ import {
 //layouts
 import { Container } from './src/layouts/Container';
 import { SafeAreaContainer } from './src/layouts/SafeAreaContainer';
+import { SafeAreaContainerLayout } from './src/layouts/SafeAreaContainer';
 
 export {
   //Components
@@ -52,6 +53,7 @@ export {
   FloatingButton,
   ForgotPasswordForm,
   GoogleMap,
+  DriverMap,
   Home,
   LanguageSelector,
   LoginForm,
@@ -64,6 +66,7 @@ export {
   OrdersOption,
   OrderSummary,
   PhoneInputNumber,
+  SafeAreaContainerLayout,
   PreviousMessages,
   PreviousOrders,
   ProductItemAccordion,

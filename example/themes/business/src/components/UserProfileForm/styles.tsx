@@ -24,7 +24,6 @@ export const EnabledStatusDriver = styled.View`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 20px;
 `;
 
 export const Actions = styled.View`
@@ -32,7 +31,6 @@ export const Actions = styled.View`
   border-top-width: 5px;
   border-top-color: ${(props: any) => props.theme.colors.inputChat};
   padding-vertical: 10px;
-  padding-horizontal: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

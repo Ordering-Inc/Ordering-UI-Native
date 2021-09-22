@@ -74,6 +74,7 @@ const OModal = (props: Props): React.ReactElement => {
       borderBottomColor: '#e6e6e6',
     },
     titleGroups: {
+      alignItems: 'center',
       flexDirection: 'row',
     },
     titleIcons: {

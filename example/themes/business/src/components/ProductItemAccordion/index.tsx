@@ -129,7 +129,11 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
               }}>
               <View style={{ flexDirection: 'row' }}>
                 <OText size={12} color={theme.colors.textGray}>
-                  {parsePrice(product.total || product.price)}
+                  {parsePrice(
+                    typeof product.total === 'number'
+                      ? product.total
+                      : product.price,
+                  )}
                 </OText>
 
                 {(productInfo().ingredients.length > 0 ||

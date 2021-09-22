@@ -270,8 +270,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       // redirectToSettings();
       showToast(
         ToastType.Error,
-        ('GEOLOCATION_SERVICE_PERMISSION_BLOCKED',
-        'Geolocation service  permissions blocked.'),
+        t('GEOLOCATION_SERVICE_PERMISSION_BLOCKED',
+          'Geolocation service  permissions blocked.'),
       );
     } else {
       const response = await askLocationPermission();
@@ -425,7 +425,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   return (
     <>
-      {(!order || Object.keys(order).length === 0 || loading) && (
+      {(!order || Object.keys(order).length === 0) && (
         <View
           style={{
             padding: 20,
@@ -445,74 +445,72 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           ))}
         </View>
       )}
-      {order && Object.keys(order).length > 0 && !loading && (
+      {order && Object.keys(order).length > 0 && (
         <>
+          <Header>
+            <OIconButton
+              icon={theme.images.general.arrow_left}
+              iconStyle={{ width: 20, height: 20 }}
+              borderColor={theme.colors.clear}
+              style={{ ...styles.icons, justifyContent: 'flex-end' }}
+              onClick={() => handleArrowBack()}
+            />
+
+            <Actions>
+              <OIconButton
+                icon={theme.images.general.map}
+                iconStyle={{
+                  width: 20,
+                  height: 20,
+                  tintColor: theme.colors.backArrow,
+                }}
+                borderColor={theme.colors.clear}
+                style={styles.icons}
+                onClick={() => handleOpenMapView()}
+              />
+
+              <OIconButton
+                icon={theme.images.general.messages}
+                iconStyle={{
+                  width: 20,
+                  height: 20,
+                  tintColor: theme.colors.backArrow,
+                }}
+                borderColor={theme.colors.clear}
+                style={styles.icons}
+                onClick={() => handleOpenMessagesForBusiness()}
+              />
+            </Actions>
+          </Header>
+          <OrderHeader>
+            <OText size={13} style={{ marginBottom: 5 }}>
+              {order?.delivery_datetime_utc
+                ? parseDate(order?.delivery_datetime_utc)
+                : parseDate(order?.delivery_datetime, { utc: false })}
+            </OText>
+
+            <OText numberOfLines={2} size={20} weight="600">
+              <>
+                {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} ${t(
+                  'IS',
+                  'is',
+                )} `}
+                <OText
+                  size={20}
+                  weight="600"
+                  color={colors[order?.status] || theme.colors.primary}>
+                  {getOrderStatus(order?.status)?.value}
+                </OText>
+              </>
+            </OText>
+          </OrderHeader>
           <OrderDetailsContainer
             style={{
               marginBottom: marginContainer[order?.status] ? 60 : 0,
             }}
             keyboardShouldPersistTaps="handled">
             <>
-              <Header>
-                <OIconButton
-                  icon={theme.images.general.arrow_left}
-                  iconStyle={{ width: 20, height: 20 }}
-                  borderColor={theme.colors.clear}
-                  style={{ ...styles.icons, justifyContent: 'flex-end' }}
-                  onClick={() => handleArrowBack()}
-                />
-
-                <Actions>
-                  <OIconButton
-                    icon={theme.images.general.map}
-                    iconStyle={{
-                      width: 20,
-                      height: 20,
-                      tintColor: theme.colors.backArrow,
-                    }}
-                    borderColor={theme.colors.clear}
-                    style={styles.icons}
-                    onClick={() => handleOpenMapView()}
-                  />
-
-                  <OIconButton
-                    icon={theme.images.general.messages}
-                    iconStyle={{
-                      width: 20,
-                      height: 20,
-                      tintColor: theme.colors.backArrow,
-                    }}
-                    borderColor={theme.colors.clear}
-                    style={styles.icons}
-                    onClick={() => handleOpenMessagesForBusiness()}
-                  />
-                </Actions>
-              </Header>
-
               <OrderContent>
-                <OrderHeader>
-                  <OText size={13} style={{ marginBottom: 5 }}>
-                    {order?.delivery_datetime_utc
-                      ? parseDate(order?.delivery_datetime_utc)
-                      : parseDate(order?.delivery_datetime, { utc: false })}
-                  </OText>
-
-                  <OText numberOfLines={2} size={20} weight="600">
-                    <>
-                      {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} ${t(
-                        'IS',
-                        'is',
-                      )} `}
-                      <OText
-                        size={20}
-                        weight="600"
-                        color={colors[order?.status] || theme.colors.primary}>
-                        {getOrderStatus(order?.status)?.value}
-                      </OText>
-                    </>
-                  </OText>
-                </OrderHeader>
-
                 <OrderBusiness>
                   <OText style={{ marginBottom: 5 }} size={16} weight="600">
                     {t('BUSINESS_DETAILS', 'Business details')}
@@ -620,18 +618,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
                   {(order?.summary?.delivery_price > 0 ||
                     order?.deliveryFee > 0) && (
-                    <Table>
-                      <OText mBottom={4}>
-                        {t('DELIVERY_FEE', 'Delivery Fee')}
-                      </OText>
+                      <Table>
+                        <OText mBottom={4}>
+                          {t('DELIVERY_FEE', 'Delivery Fee')}
+                        </OText>
 
-                      <OText mBottom={4}>
-                        {parsePrice(
-                          order?.summary?.delivery_price || order?.deliveryFee,
-                        )}
-                      </OText>
-                    </Table>
-                  )}
+                        <OText mBottom={4}>
+                          {parsePrice(
+                            order?.summary?.delivery_price || order?.deliveryFee,
+                          )}
+                        </OText>
+                      </Table>
+                    )}
 
                   <Table>
                     <OText mBottom={4}>
@@ -756,8 +754,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <View style={{ height: 30 }} />
           </OrderDetailsContainer>
 
-          {showFloatButtonsPickUp[order?.status] && !loading && (
+          {showFloatButtonsPickUp[order?.status] && (
             <FloatingButton
+              disabled={loading}
               btnText={t('FAILED', 'Failed')}
               isSecondaryBtn={false}
               secondButtonClick={() =>
@@ -774,6 +773,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           )}
           {order?.status === 9 && (
             <FloatingButton
+              disabled={loading}
               btnText={t('FAILED', 'Failed')}
               isSecondaryBtn={false}
               secondButtonClick={() =>

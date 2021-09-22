@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.8.5",
+  "version": "0.9.0",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -60,6 +60,7 @@
     "react-native-app-intro-slider": "^4.0.4",
     "react-native-awesome-alerts": "^1.4.2",
     "react-native-awesome-loading": "^1.0.15",
+    "react-native-background-timer": "^2.4.1",
     "react-native-bootsplash": "^3.2.3",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-credit-card-input": "^0.4.1",

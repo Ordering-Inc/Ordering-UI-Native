@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Pressable, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Pressable,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+} from 'react-native';
 import { Contacts, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -152,7 +158,8 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
     loadButton: {
       borderRadius: 7.6,
       height: 44,
-      marginBottom: 40,
+      marginRight: 10,
+      marginBottom: 10,
       marginTop: 5,
     },
     loadButtonText: {
@@ -232,27 +239,34 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
         </TagsContainer>
       </View>
 
-      {!loading && values.length === 0 && (
+      {!loading && (values.length === 0 || error) && (
         <NotFoundSource
-          content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
+          content={
+            !error
+              ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
+              : error[0]?.message ||
+                error[0] ||
+                t('NETWORK_ERROR', 'Network Error')
+          }
           image={theme.images.general.notFound}
           conditioned={false}
         />
       )}
 
-      {!reload &&
-        !error &&
-        values.length > 0 &&
-        JSON.stringify(tabsFilter) === JSON.stringify(tabs[0].tags) && (
-          <PreviousMessages
-            orders={values}
-            setOrders={setOrders}
-            messages={messages}
-            onNavigationRedirect={onNavigationRedirect}
-          />
-        )}
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+        {!reload &&
+          !error &&
+          values.length > 0 &&
+          JSON.stringify(tabsFilter) === JSON.stringify(tabs[0].tags) && (
+            <PreviousMessages
+              orders={values}
+              setOrders={setOrders}
+              messages={messages}
+              onNavigationRedirect={onNavigationRedirect}
+            />
+          )}
 
-      {/* {!reload &&
+        {/* {!reload &&
         !error &&
         orders.length > 0 &&
         JSON.stringify(tabsFilter) === JSON.stringify(tabs[1].tags) && (
@@ -266,53 +280,54 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
           />
         )} */}
 
-      {(loading || reload) && (
-        <>
-          <View>
-            {[...Array(5)].map((item, i) => (
-              <Placeholder key={i} Animation={Fade}>
-                <View
-                  style={{
-                    width: '100%',
-                    flexDirection: 'row',
-                    marginBottom: 10,
-                  }}>
-                  <PlaceholderLine
-                    width={orientation === 'Portrait' ? 22 : 11}
-                    height={74}
+        {(loading || reload) && (
+          <>
+            <View>
+              {[...Array(5)].map((item, i) => (
+                <Placeholder key={i} Animation={Fade}>
+                  <View
                     style={{
-                      marginRight: 20,
-                      marginBottom: 20,
-                      borderRadius: 7.6,
-                    }}
-                  />
-                  <Placeholder>
-                    <PlaceholderLine width={30} style={{ marginTop: 5 }} />
-                    <PlaceholderLine width={50} />
-                    <PlaceholderLine width={20} />
-                  </Placeholder>
-                </View>
-              </Placeholder>
-            ))}
-          </View>
-        </>
-      )}
-
-      {pagination?.totalPages &&
-        !loading &&
-        !reload &&
-        JSON.stringify(tabsFilter) === JSON.stringify(tabs[0].tags) &&
-        pagination?.currentPage < pagination?.totalPages && (
-          <OButton
-            onClick={() => loadMore && loadMore()}
-            text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-            imgRightSrc={null}
-            textStyle={styles.loadButtonText}
-            style={styles.loadButton}
-            bgColor={theme.colors.primary}
-            borderColor={theme.colors.primary}
-          />
+                      width: '100%',
+                      flexDirection: 'row',
+                      marginBottom: 10,
+                    }}>
+                    <PlaceholderLine
+                      width={orientation === 'Portrait' ? 22 : 11}
+                      height={74}
+                      style={{
+                        marginRight: 20,
+                        marginBottom: 20,
+                        borderRadius: 7.6,
+                      }}
+                    />
+                    <Placeholder>
+                      <PlaceholderLine width={30} style={{ marginTop: 5 }} />
+                      <PlaceholderLine width={50} />
+                      <PlaceholderLine width={20} />
+                    </Placeholder>
+                  </View>
+                </Placeholder>
+              ))}
+            </View>
+          </>
         )}
+
+        {pagination?.totalPages &&
+          !loading &&
+          !reload &&
+          JSON.stringify(tabsFilter) === JSON.stringify(tabs[0].tags) &&
+          pagination?.currentPage < pagination?.totalPages && (
+            <OButton
+              onClick={() => loadMore && loadMore()}
+              text={t('LOAD_MORE_ORDERS', 'Load more orders')}
+              imgRightSrc={null}
+              textStyle={styles.loadButtonText}
+              style={styles.loadButton}
+              bgColor={theme.colors.primary}
+              borderColor={theme.colors.primary}
+            />
+          )}
+      </ScrollView>
     </>
   );
 };
@@ -320,11 +335,6 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
 export const MessagesOption = (props: MessagesOptionParams) => {
   const MyOrdersProps = {
     ...props,
-    firstFetch: 'orders',
-    sortParams: {
-      param: 'last_direct_message_at',
-      direction: 'asc',
-    },
     UIComponent: MessagesOptionUI,
   };
 
