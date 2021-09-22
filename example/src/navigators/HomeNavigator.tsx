@@ -12,6 +12,8 @@ import AddressForm from '../pages/AddressForm';
 import OrderDetails from '../pages/OrderDetails';
 import BusinessProductsList from '../pages/BusinessProductsList';
 import ReviewOrder from '../pages/ReviewOrder'
+import ReviewProducts from '../pages/ReviewProducts';
+import ReviewDriver from '../pages/ReviewDriver'
 import MomentOption from '../pages/MomentOption'
 import Account from '../pages/Account'
 import Help from '../pages/Help'
@@ -103,6 +105,16 @@ const HomeNavigator = (e : any) => {
                   <Stack.Screen
                     name="ReviewOrder"
                     component={ReviewOrder}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="ReviewProducts"
+                    component={ReviewProducts}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="ReviewDriver"
+                    component={ReviewDriver}
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen

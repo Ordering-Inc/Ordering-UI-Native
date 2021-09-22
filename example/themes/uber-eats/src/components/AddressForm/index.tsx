@@ -87,6 +87,8 @@ const AddressFormUI = (props: AddressFormParams) => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 20,
+      height: 70,
+      maxHeight: 70
     },
     textAreaStyles: {
       borderRadius: 0,
