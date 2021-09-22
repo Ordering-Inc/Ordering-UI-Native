@@ -104,12 +104,12 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
               <TouchableOpacity onPress={() => handleClickViewOrder(order?.uuid)}>
                 <OText size={16} color={theme.colors.primary} mRight={5} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
               </TouchableOpacity>
-              {/* {
-                allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && ( */}
+              {
+                allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && (
                   <TouchableOpacity onPress={() => handleClickOrderReview(order)}>
                     <OText size={16} color={theme.colors.primary} numberOfLines={1}>{t('REVIEW_ORDER', 'Review Order')}</OText>
                   </TouchableOpacity>
-                {/* )} */}
+                )}
             </MyOrderOptions>
           </Information>
           <Status>

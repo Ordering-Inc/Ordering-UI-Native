@@ -283,7 +283,6 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
                   multiline
                 />
               )}
-              rules={{ required: (!order?.user_review && !isDriverReviewed) ? t('FIELD_COMMENT_REQUIRED', 'The field comments is required') : null }}
             />
           </FormReviews>
         </View>

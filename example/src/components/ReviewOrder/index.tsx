@@ -205,8 +205,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     setStars({ ...stars, comments: _comment })
   }, [comments, extraComment])
 
-  console.log(order)
-
   return (
     <>
       <ReviewOrderContainer>

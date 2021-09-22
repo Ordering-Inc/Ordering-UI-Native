@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components/native'
+import styled from 'styled-components/native'
 
 export const ReviewProductsContainer = styled.ScrollView`
   padding: 20px;
@@ -6,11 +6,9 @@ export const ReviewProductsContainer = styled.ScrollView`
 `
 
 export const ActionContainer = styled.View`
-  ${(props: any) => props.isContinueEnabled && css`
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  `}
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   padding: 3px 10px;
 `
 

@@ -83,16 +83,12 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
       </ReviewProductsContainer>
 
       <FloatingBottomContainer>
-        <ActionContainer
-          isContinueEnabled={order?.driver && !order?.user_review}
-        >
-          {order?.driver && !order?.user_review && (
-            <SkipButton
-              onPress={() => onNavigationRedirect('ReviewDriver', { order: order })}
-            >
-              <OText weight={700} size={18}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
-            </SkipButton>
-          )}
+        <ActionContainer>
+          <SkipButton
+            onPress={() => (order?.driver && !order?.user_review) ? onNavigationRedirect('ReviewDriver', { order: order }) : onNavigationRedirect('MyOrders')}
+          >
+            <OText weight={700} size={18}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
+          </SkipButton>
           <OButton
             textStyle={{ color: theme.colors.white, paddingRight: 10 }}
             text={order?.driver && !order?.user_review ? t('CONTINUE', 'Continue') : t('SEND_REVIEW', 'Send Review')}
