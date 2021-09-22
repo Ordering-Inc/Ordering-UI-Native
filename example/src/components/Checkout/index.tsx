@@ -81,7 +81,8 @@ const CheckoutUI = (props: any) => {
     onNavigationRedirect,
     businessLogo,
     businessName,
-    cartTotal
+    cartTotal,
+    currency
   } = props
 
   const theme = useTheme();
@@ -605,6 +606,7 @@ const CheckoutUI = (props: any) => {
                   delivery_zone_id: cart?.delivery_zone_id,
                   user_id: user?.id
                 },
+                currency: configs?.stripe_currency?.value || currency,
                 userToken: token,
                 clientId: paypalMethod?.credentials?.client_id
               }
