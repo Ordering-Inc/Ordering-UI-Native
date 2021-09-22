@@ -239,9 +239,15 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
         </TagsContainer>
       </View>
 
-      {!loading && values.length === 0 && (
+      {!loading && (values.length === 0 || error) && (
         <NotFoundSource
-          content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
+          content={
+            !error
+              ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
+              : error[0]?.message ||
+                error[0] ||
+                t('NETWORK_ERROR', 'Network Error')
+          }
           image={theme.images.general.notFound}
           conditioned={false}
         />
@@ -329,16 +335,6 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
 export const MessagesOption = (props: MessagesOptionParams) => {
   const MyOrdersProps = {
     ...props,
-    firstFetch: 'orders',
-    sortParams: {
-      param: 'last_direct_message_at',
-      direction: 'asc',
-    },
-    paginationSettings: {
-      page: 1,
-      pageSize: 45,
-      controlType: 'infinity',
-    },
     UIComponent: MessagesOptionUI,
   };
 
