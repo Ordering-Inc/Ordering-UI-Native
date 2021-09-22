@@ -294,44 +294,53 @@ const CheckoutUI = (props: any) => {
 						</ChUserDetails>
 					</ChSection>
 					<DivideLine />
-					{!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
 						<ChSection>
 							<OIcon src={theme.images.general.card} color={theme.colors.primary} width={16} style={{ marginEnd: 7 }} />
-							<ChPaymethods>
-								<OText style={{ ...theme.labels.middle, fontWeight: '500', marginBottom: 4 }}>
-									{t('PAYMENT_METHOD', 'Payment Method')}
-								</OText>
-								{!cartState.loading && cart?.status === 4 && (
-									<OText
-										style={{ textAlign: 'center', marginTop: 20 }}
-										color={theme.colors.error}
-										size={12}
-									>
-										{t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
+							{cartState.loading && (
+								<Placeholder Animation={Fade}>
+									<PlaceholderLine height={20} width={70} />
+									<PlaceholderLine height={15} width={60} />
+									<PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+								</Placeholder>
+							)}
+							{!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
+								<>
+								<ChPaymethods>
+									<OText style={{ ...theme.labels.middle, fontWeight: '500', marginBottom: 4 }}>
+										{t('PAYMENT_METHOD', 'Payment Method')}
 									</OText>
-								)}
-								<PayActionCont onPress={() => setOpenPaymethods(true)} activeOpacity={0.7}>
-									<OIcon src={getPayIcon(paymethodSelected?.gateway)} color={theme.colors.textSecondary} width={16} style={{ marginEnd: 15 }} />
-									<Animated.View>
-										{paymethodSelected ? (
-											<>
-												{paymethodSelected?.data?.last4 ? (
-													<OText size={12} color={theme.colors.textSecondary}>{`${paymethodSelected?.paymethod?.name}  \u2022\u2022\u2022 ${paymethodSelected.data.last4}`}</OText>
-												) : (
-													<OText size={12} color={theme.colors.textSecondary}>{`${paymethodSelected?.paymethod?.name}`}</OText>
-												)}
-											</>
-										) : (
-											<OText size={12} color={theme.colors.textSecondary}>{t('SELECT_PAYMENT_METHOD', 'Please select a payment method')}</OText>
-										)}
-									</Animated.View>
-								</PayActionCont>
-							</ChPaymethods>
-							<TouchableOpacity onPress={() => setOpenPaymethods(true)} activeOpacity={0.7}>
-								<OIcon width={16} src={theme.images.general.arrow_left} style={{ transform: [{ rotate: '180deg' }] }} />
-							</TouchableOpacity>
-						</ChSection>
-					)}
+									{!cartState.loading && cart?.status === 4 && (
+										<OText
+											style={{ textAlign: 'center', marginTop: 20 }}
+											color={theme.colors.error}
+											size={12}
+										>
+											{t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
+										</OText>
+									)}
+									<PayActionCont onPress={() => setOpenPaymethods(true)} activeOpacity={0.7}>
+										<OIcon src={getPayIcon(paymethodSelected?.gateway)} color={theme.colors.textSecondary} width={16} style={{ marginEnd: 15 }} />
+										<Animated.View>
+											{paymethodSelected ? (
+												<>
+													{paymethodSelected?.data?.last4 ? (
+														<OText size={12} color={theme.colors.textSecondary}>{`${paymethodSelected?.paymethod?.name}  \u2022\u2022\u2022 ${paymethodSelected.data.last4}`}</OText>
+													) : (
+														<OText size={12} color={theme.colors.textSecondary}>{`${paymethodSelected?.paymethod?.name}`}</OText>
+													)}
+												</>
+											) : (
+												<OText size={12} color={theme.colors.textSecondary}>{t('SELECT_PAYMENT_METHOD', 'Please select a payment method')}</OText>
+											)}
+										</Animated.View>
+									</PayActionCont>
+								</ChPaymethods>
+								<TouchableOpacity onPress={() => setOpenPaymethods(true)} activeOpacity={0.7}>
+									<OIcon width={16} src={theme.images.general.arrow_left} style={{ transform: [{ rotate: '180deg' }] }} />
+								</TouchableOpacity>
+							</>
+						)}
+					</ChSection>
 					<DivideLine />
 					{!cartState.loading && cart && (
 						<ChSection style={{ flexDirection: 'column' }}>
@@ -523,7 +532,7 @@ export const Checkout = (props: any) => {
 						loading: false,
 						cart: result
 					})
-				} catch (error) {
+				} catch (error: any) {
 					showToast(ToastType.Error, error?.toString() || error.message)
 				}
 			} else if (result.status === 2 && stripePaymentOptions.includes(result.paymethod_data?.gateway)) {
@@ -563,7 +572,7 @@ export const Checkout = (props: any) => {
 							})
 							return
 						}
-					} catch (error) {
+					} catch (error: any) {
 						showToast(ToastType.Error, error?.toString() || error.message)
 					}
 				} catch (error) {
@@ -585,7 +594,7 @@ export const Checkout = (props: any) => {
 					error: cart ? null : result
 				})
 			}
-		} catch (e) {
+		} catch (e: any) {
 			setCartState({
 				...cartState,
 				loading: false,

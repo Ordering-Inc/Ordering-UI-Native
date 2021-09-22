@@ -51,10 +51,10 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
 				onPress={handleButtonClick}
 				disabled={disabled}
 			>
-				<OText color={theme.colors.white} size={10} mLeft={20}>
+				{/* <OText color={theme.colors.white} size={10} mLeft={20}>
 					{''}
-				</OText>
-				<OText style={styles.btnTextStyle} color={theme.colors.white} size={10} lineHeight={15} weight='500'>
+				</OText> */}
+				<OText style={styles.btnTextStyle} color={theme.colors.white} size={12} lineHeight={15} weight='500'>
 					{`${btnText}`}
 				</OText>
 				{btnRightValueShow && (

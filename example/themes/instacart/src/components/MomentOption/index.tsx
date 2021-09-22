@@ -56,7 +56,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			backgroundColor: theme.colors.clear,
 			fontSize: 14,
 			lineHeight: 18,
-			flexGrow: 1
+			flexGrow: 1,
 		},
 		inputIOS: {
 			color: theme.colors.textSecondary,
@@ -69,10 +69,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			backgroundColor: theme.colors.clear,
 			fontSize: 14,
 			minHeight: 28
-		},
-		viewContainer: {
-			flex: 1,
-			justifyContent: 'center'
 		},
 		icon: {
 			top: 6,
@@ -260,6 +256,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 										useNativeAndroidPickerStyle={false}
 										disabled={momentState.isLoading === 1 && !isTimePicker}
 										Icon={() => null}
+										touchableWrapperProps={{style: {flex: 1, zIndex: 1}}}
 									/>
 									<View style={pickerStyle.icon}><OIcon src={theme.images.general.drop_down} color={theme.colors.textSecondary} width={16} /></View>
 								</TimePickerWrapper>

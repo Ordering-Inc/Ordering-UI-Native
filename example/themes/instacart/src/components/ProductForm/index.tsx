@@ -280,8 +280,9 @@ export const ProductOptionsUI = (props: any) => {
 							<OButton
 								onClick={() => handleSaveProduct()}
 								imgRightSrc=''
+								imgLeftSrc={undefined}
 								text={`${orderState.loading ? t('LOADING', 'Loading') : editMode ? t('UPDATE', 'Update') : t('ADD_TO_CART', 'Add to Cart')}`}
-								textStyle={{ color: saveErrors ? theme.colors.primary : theme.colors.white, fontSize: 12 }}
+								textStyle={{ color: saveErrors ? theme.colors.primary : theme.colors.white, fontSize: 12, }}
 								style={{
 									backgroundColor: saveErrors ? theme.colors.white : theme.colors.primary,
 									opacity: saveErrors ? 0.3 : 1,

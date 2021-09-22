@@ -24,7 +24,6 @@ export const Help = (props: HelpParams) => {
     <>
       <NavBar
         title={t('HELP', 'Help')}
-        titleAlign={'center'}
         onActionLeft={goToBack}
         showCall={false}
         paddingTop={10}

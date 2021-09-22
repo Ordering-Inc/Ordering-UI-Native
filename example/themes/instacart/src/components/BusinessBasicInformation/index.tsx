@@ -115,9 +115,11 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 			>
 				<View>
 					{loading ? (
-						<Placeholder Animation={Fade}>
-							<PlaceholderLine width={40} />
-						</Placeholder>
+						<View style={{marginTop: 16}}>
+							<Placeholder Animation={Fade}>
+								<PlaceholderLine width={40} height={25} />
+							</Placeholder>
+						</View>
 					) : (
 						<BusinessInfoItem>
 							<OText weight={'600'} size={14} lineHeight={21}>{t('DELIVERY_TO', 'Delivery to')}</OText>
@@ -125,38 +127,41 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 					)}
 					<View style={{ height: 1, backgroundColor: theme.colors.border }} />
 					<BusinessInfoItem>
-						{loading && (
+						{loading ? (
 							<Placeholder Animation={Fade}>
-								<View style={{ flexDirection: 'row', paddingVertical: 17 }}>
-									<PlaceholderLine width={13} style={{ marginRight: 10 }} />
-									<PlaceholderLine width={13} style={{ marginRight: 10 }} />
+								<View style={{ flexDirection: 'row', paddingVertical: 10 }}>
+									<PlaceholderLine width={40} style={{ marginRight: 10 }} />
+									<PlaceholderLine width={40} />
 								</View>
 							</Placeholder>
-						)}
-						<View style={{ ...styles.infoItem, paddingEnd: 7, borderRightWidth: 1, borderRightColor: theme.colors.border }}>
-							<OText color={theme.colors.textSecondary} numberOfLines={1} style={{ flexBasis: '85%', marginEnd: 6 }}>
-								{orderState?.options?.address?.address}
-							</OText>
-							<TouchableOpacity
-								onPress={() => auth
-									? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
-									: onRedirect('AddressForm', { address: orderState.options?.address })}
-							>
-								<OIcon width={16} src={theme.images.general.pencil} />
-							</TouchableOpacity>
-						</View>
-						<View style={{ ...styles.infoItem, paddingStart: 12 }}>
-							<OText color={theme.colors.textSecondary} numberOfLines={1} style={{ flexBasis: '85%', paddingEnd: 6 }}>
-								{orderState.options?.moment
-									? moment(orderState.options?.moment).format('dddd, MMM.DD.yyyy hh:mm A')
-									: t('ASAP_ABBREVIATION', 'ASAP')}
-							</OText>
-							<TouchableOpacity
-								onPress={() => navigation.navigate('MomentOption')}
-							>
-								<OIcon src={theme.images.general.info} width={16} />
-							</TouchableOpacity>
-						</View>
+						) : 
+							<>
+							<View style={{ ...styles.infoItem, paddingEnd: 7, borderRightWidth: 1, borderRightColor: theme.colors.border }}>
+								<OText color={theme.colors.textSecondary} numberOfLines={1} style={{ flexBasis: '85%', marginEnd: 6 }}>
+									{orderState?.options?.address?.address}
+								</OText>
+								<TouchableOpacity
+									onPress={() => auth
+										? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
+										: onRedirect('AddressForm', { address: orderState.options?.address })}
+								>
+									<OIcon width={16} src={theme.images.general.pencil} />
+								</TouchableOpacity>
+							</View>
+							<View style={{ ...styles.infoItem, paddingStart: 12 }}>
+								<OText color={theme.colors.textSecondary} numberOfLines={1} style={{ flexBasis: '85%', paddingEnd: 6 }}>
+									{orderState.options?.moment
+										? moment(orderState.options?.moment).format('dddd, MMM.DD.yyyy hh:mm A')
+										: t('ASAP_ABBREVIATION', 'ASAP')}
+								</OText>
+								<TouchableOpacity
+									onPress={() => navigation.navigate('MomentOption')}
+								>
+									<OIcon src={theme.images.general.info} width={16} />
+								</TouchableOpacity>
+							</View>
+							</>
+						}
 						{/* <View style={styles.bullet}>
 							<IconEvilIcons
 								name='clock'

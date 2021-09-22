@@ -101,6 +101,7 @@ const PaymentOptionsUI = (props: any) => {
 	const onMessage = (e: any) => {
 		let data = e.nativeEvent.data;
 		let payment = JSON.parse(data);
+		console.log(data);
 		if (payment.error) {
 			showToast(ToastType.Error, payment.result)
 		} else {
@@ -116,7 +117,9 @@ const PaymentOptionsUI = (props: any) => {
 		if (paymethod?.gateway === 'paypal') {
 			setShowGateway({ closedByUser: false, open: true })
 		}
-		setOpenPopup(true);
+		if (!paymethod?.gateway.includes('paypal')) {
+			setOpenPopup(true);
+		}
 	}
 
 	const onFailPaypal = async () => {
@@ -181,7 +184,7 @@ const PaymentOptionsUI = (props: any) => {
 		)
 	}
 
-	const excludeIds: any = [32, 66]; //exclude connect & redirect
+	const excludeIds: any = [3, 32, 66]; //exclude paypal & connect & redirect
 
 	return (
 		<PMContainer>

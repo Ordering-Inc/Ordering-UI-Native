@@ -56,7 +56,7 @@ const StripeElementsFormUI = (props: any) => {
           last4: paymentMethod.Card.last4
         }
       })
-    } catch (error) {
+    } catch (error: any) {
       setErrors(error?.message || error?.toString());
     }
   }
@@ -85,7 +85,7 @@ const StripeElementsFormUI = (props: any) => {
             : error.message
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       setErrors(error?.message || error?.toString());
     }
   };
@@ -108,7 +108,7 @@ const StripeElementsFormUI = (props: any) => {
         <View style={{ flex: 1 }}>
           <StripeProvider publishableKey={publicKey}>
             <CardField
-              postalCodeEnabled={true}
+              postalCodeEnabled={false}
               cardStyle={{
                 backgroundColor: '#FFFFFF',
                 textColor: '#000000',
@@ -118,8 +118,8 @@ const StripeElementsFormUI = (props: any) => {
                 height: 42,
                 marginVertical: 20,
                 zIndex: 9999,
-					 borderWidth: 1,
-					 borderColor: '#F4F4F4',
+                borderWidth: 1,
+                borderColor: '#F4F4F4',
               }}
               onCardChange={(cardDetails: any) => setCard(cardDetails)}
             />

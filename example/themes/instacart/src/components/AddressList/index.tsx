@@ -156,25 +156,23 @@ const AddressListUI = (props: AddressListParams) => {
 		<Container>
 			{(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile)) && (
 				<AddressListContainer>
-					{isFromProfile && (
-						<OText size={16} mBottom={20} weight={'600'}>{t('SAVED_PLACES', 'My saved places')}</OText>
-					)}
 					{
 						route &&
 						(
 							route?.params?.isFromBusinesses ||
 							route?.params?.isFromCheckout ||
-							route?.params?.isFromProductsList
+							route?.params?.isFromProductsList ||
+							isFromProfile
 						) &&
-						!isFromProfile &&
 						(
 							<NavBar
-								title={t('ADDRESS_LIST', 'Address List')}
-								titleAlign={'center'}
+								title={isFromProfile ? t('SAVED_PLACES', 'My saved places') : t('ADDRESS_LIST', 'Address List')}
+								titleAlign={'left'}
 								onActionLeft={() => goToBack()}
 								showCall={false}
 								btnStyle={{ paddingLeft: 0 }}
 								paddingTop={0}
+								titleStyle={{width: '100%', paddingStart: 0}}
 							/>
 						)}
 					{addressList.loading && (

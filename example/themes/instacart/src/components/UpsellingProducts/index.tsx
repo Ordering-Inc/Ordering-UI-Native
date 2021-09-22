@@ -95,7 +95,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 			<Container>
 				<UpsellingContainer
 					showsVerticalScrollIndicator={true}
-					style={{ height: height - bottom - top - 180, marginBottom: 80 }}
+					style={{ height: height - bottom - top - 180 }}
 				>
 					{
 						!upsellingProducts.loading && (
@@ -178,10 +178,8 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 								<OBottomPopup
 									open={openUpselling}
 									onClose={() => handleUpsellingPage()}
+									title={t('WANT_SOMETHING_ELSE', 'Do you want something else?')}
 								>
-									<NavBar
-										title={t('WANT_SOMETHING_ELSE', 'Do you want something else?')}
-									/>
 									<UpsellingLayout />
 									<CloseUpselling style={{ paddingBottom: bottom + 12 }}>
 										<OButton
