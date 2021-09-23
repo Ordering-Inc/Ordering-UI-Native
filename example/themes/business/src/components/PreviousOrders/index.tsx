@@ -70,8 +70,9 @@ export const PreviousOrders = (props: any) => {
         orders
           ?.filter((order: any) =>
             hash[order?.id] ? false : (hash[order?.id] = true),
-          )?.sort((a: any, b: any) => {
-            return b.id - a.id
+          )
+          ?.sort((a: any, b: any) => {
+            return b.id - a.id;
           })
           ?.map((order: any) => (
             <React.Fragment key={order.id}>
@@ -119,12 +120,12 @@ export const PreviousOrders = (props: any) => {
                           {order.delivery_type === 1
                             ? t('DELIVERY', 'Delivery')
                             : order.delivery_type === 2
-                              ? t('PICKUP', 'Pickup')
-                              : order.delivery_type === 3
-                                ? t('EAT_IN', 'Eat in')
-                                : order.delivery_type === 4
-                                  ? t('CURBSIDE', 'Curbside')
-                                  : t('DRIVER_THRU', 'Driver thru')}
+                            ? t('PICKUP', 'Pickup')
+                            : order.delivery_type === 3
+                            ? t('EAT_IN', 'Eat in')
+                            : order.delivery_type === 4
+                            ? t('CURBSIDE', 'Curbside')
+                            : t('DRIVER_THRU', 'Driver thru')}
                           {` · ${getOrderStatus(order.status)}`}
                         </OText>
                       </MyOrderOptions>
