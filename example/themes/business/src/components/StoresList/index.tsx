@@ -30,12 +30,10 @@ const StoresListUI = (props: BusinessesListingParams) => {
   } = props;
 
   const { loading, error, businesses } = businessesList;
-  const [loadingConnected, setLoadingConnected] = useState(true);
   const [isConnected, setIsConnected] = useState<boolean | null>(false);
 
-  NetInfo.fetch().then(state => {
+  NetInfo.fetch().then((state: any) => {
     setIsConnected(state.isConnected);
-    setLoadingConnected(false);
   });
 
   const [, t] = useLanguage();
@@ -144,9 +142,8 @@ const StoresListUI = (props: BusinessesListingParams) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.container}
-        onScroll={(e: any) => handleScroll(e)}
-      >
-        {!loadBusinesses && (businesses?.length === 0 || !isConnected) && (
+        onScroll={(e: any) => handleScroll(e)}>
+        {!loadBusinesses && businesses?.length === 0 && (
           <NotFoundSource
             content={
               !isConnected
