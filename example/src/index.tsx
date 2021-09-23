@@ -49,7 +49,9 @@ import { ProductIngredient } from './components/ProductIngredient';
 import { ProductItemAccordion } from './components/ProductItemAccordion';
 import { ProductOption } from './components/ProductOption';
 import { ProductOptionSubOption } from './components/ProductOptionSubOption';
+import { ReviewDriver } from './components/ReviewDriver';
 import { ReviewOrder } from './components/ReviewOrder';
+import { ReviewProducts } from './components/ReviewProducts';
 import { SearchBar } from './components/SearchBar';
 import { SignupForm } from './components/SignupForm';
 import { SingleProductCard } from './components/SingleProductCard';
@@ -142,7 +144,9 @@ export {
   ProductItemAccordion,
   ProductOption,
   ProductOptionSubOption,
+  ReviewDriver,
   ReviewOrder,
+  ReviewProducts,
   SearchBar,
   SignupForm,
   SingleProductCard,
