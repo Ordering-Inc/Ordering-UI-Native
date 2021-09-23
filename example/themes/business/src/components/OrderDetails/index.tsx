@@ -129,6 +129,34 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }
 
+  const colors: any = {
+    //BLUE
+    0: theme.colors.statusOrderBlue,
+    3: theme.colors.statusOrderBlue,
+    4: theme.colors.statusOrderBlue,
+    7: theme.colors.statusOrderBlue,
+    8: theme.colors.statusOrderBlue,
+    9: theme.colors.statusOrderBlue,
+    13: theme.colors.statusOrderBlue,
+    14: theme.colors.statusOrderBlue,
+    18: theme.colors.statusOrderBlue,
+    19: theme.colors.statusOrderBlue,
+    20: theme.colors.statusOrderBlue,
+    21: theme.colors.statusOrderBlue,
+    //GREEN
+    1: theme.colors.statusOrderGreen,
+    11: theme.colors.statusOrderGreen,
+    15: theme.colors.statusOrderGreen,
+    //RED
+    2: theme.colors.statusOrderRed,
+    5: theme.colors.statusOrderRed,
+    6: theme.colors.statusOrderRed,
+    10: theme.colors.statusOrderRed,
+    12: theme.colors.statusOrderRed,
+    16: theme.colors.statusOrderRed,
+    17: theme.colors.statusOrderRed,
+  };
+
   const handleCopyClipboard = () => {
     const name = `${t('NAME', 'Name')}: ${order?.customer?.name || null}`;
     const customerPhone = `${t('PHONE', 'Phone')}: ${
@@ -375,14 +403,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const handleOpenMapView = () => {
     setOpenModalForMapView(!openModalForMapView);
-  };
-
-  const colors: any = {
-    0: theme.colors.statusOrderBlue,
-    1: theme.colors.statusOrderGreen,
-    5: theme.colors.statusOrderRed,
-    7: theme.colors.statusOrderBlue,
-    8: theme.colors.statusOrderBlue,
   };
 
   const handleArrowBack: any = () => {
