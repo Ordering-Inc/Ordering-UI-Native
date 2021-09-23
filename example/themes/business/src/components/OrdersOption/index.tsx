@@ -9,7 +9,7 @@ import {
 import { OrderList, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
-import { OText, OIconButton, OButton } from '../shared';
+import { OText, OButton } from '../shared';
 import { PreviousOrders } from '../PreviousOrders';
 import { NotFoundSource } from '../NotFoundSource';
 import { FiltersTab, TabsContainer, Tag } from './styles';
