@@ -24,6 +24,7 @@ import { StripeCardsList } from '../StripeCardsList';
 // import { StripeRedirectForm } from '../StripeRedirectForm';
 // import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
 // import { NotFoundSource } from '../NotFoundSource'
+import { StorePayments } from '../StorePayments'
 
 import { OText, OIcon, OModal, OButton } from '../shared';
 
@@ -58,6 +59,7 @@ const PaymentOptionsUI = (props: any) => {
     handlePaymethodClick,
     handlePaymethodDataChange,
     handlePaymentMethodClickCustom,
+    choosePaymentMethod,
     isOpenMethod
   } = props
 
@@ -65,7 +67,7 @@ const PaymentOptionsUI = (props: any) => {
   const [, t] = useLanguage();
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
-  let paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
+  const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
 
   const getPayIcon = (method: string) => {
     switch (method) {
@@ -83,6 +85,10 @@ const PaymentOptionsUI = (props: any) => {
         return theme.images.general.stripes
       case 'stripe_redirect':
         return theme.images.general.stripesb
+      case 'google_pay':
+        return theme.images.general.googlePay
+      case 'apple_pay':
+        return theme.images.general.applePay
       default:
         return theme.images.general.creditCard
     }
@@ -114,8 +120,8 @@ const PaymentOptionsUI = (props: any) => {
     }
   }, [props.paySelected])
 
-  const renderPaymethods = ({ item }: any) => {
-    return (
+  const RenderPaymethods = ({ item }: any) => {
+    return (!['google_pay', 'apple_pay'].includes(item.gateway) ?
       <TouchableOpacity
         onPress={() => handlePaymentMethodClick(item)}
       >
@@ -138,11 +144,19 @@ const PaymentOptionsUI = (props: any) => {
             {t(item.gateway.toUpperCase(), item.name)}
           </OText>
         </PMItem>
-      </TouchableOpacity>
+      </TouchableOpacity> :
+      <StorePayments
+        paymethodSelected={paymethodSelected}
+        item={item}
+        cart={cart}
+        choosePaymentMethod={choosePaymentMethod}
+        getPayIcon={getPayIcon}
+        isDisabled={isDisabled}
+      />
     )
   }
 
-  const excludeIds: any = [32, 66]; //exclude connect & redirect
+  const excludeIds: number[] = [32, 66, Platform.OS === 'ios' ? 132 : 133, 134]; // exclude connect, redirect, microsoft and google or apple
 
   return (
     <PMContainer>
@@ -152,10 +166,11 @@ const PaymentOptionsUI = (props: any) => {
           showsHorizontalScrollIndicator={false}
           // data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
           data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeIds.includes(p.id))}
-          renderItem={renderPaymethods}
+          renderItem={RenderPaymethods}
           keyExtractor={(paymethod: any) => paymethod.id.toString()}
         />
       )}
+
       {(paymethodsList.loading || isLoading) && (
         <Placeholder style={{ marginTop: 10 }} Animation={Fade}>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
