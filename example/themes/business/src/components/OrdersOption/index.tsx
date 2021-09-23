@@ -184,13 +184,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const handleChangeTag = (key: number) => {
     const updateTags: number[] = [];
-    if (ordersFilter.includes(key)) {
-      updateTags.push(...ordersFilter.filter(tag => tag !== key));
+    if (rememberOrderStatus.includes(key)) {
+      updateTags.push(...rememberOrderStatus.filter((tag: any) => tag !== key));
     } else {
-      updateTags.push(...ordersFilter.concat(key));
+      updateTags.push(...rememberOrderStatus.concat(key));
     }
-
-    setOrdersFilter(updateTags);
     setRememberOrderStatus(updateTags);
   };
 
@@ -355,14 +353,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               key={key}
               onPress={() => handleChangeTag(key)}
               isSelected={
-                ordersFilter.includes(key)
+                rememberOrderStatus.includes(key)
                   ? theme.colors.primary
                   : theme.colors.tabBar
               }>
               <OText
                 style={styles.tag}
                 color={
-                  ordersFilter.includes(key)
+                  rememberOrderStatus.includes(key)
                     ? theme.colors.white
                     : theme.colors.black
                 }>
@@ -376,7 +374,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {!loading &&
         (!ordersFilter.length ||
           orderList.error ||
-          !orderList.orders.length) && (
+          !orderList.orders.length ||
+          !rememberOrderStatus.length) && (
           <NotFoundSource
             content={
               !orderList.error
@@ -396,7 +395,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             orders={orders}
             onNavigationRedirect={onNavigationRedirect}
             getOrderStatus={getOrderStatus}
-            tabsFilter={ordersFilter}
+            tabsFilter={rememberOrderStatus}
           />
         )}
 
@@ -438,7 +437,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           !loading &&
           !!orders.length &&
           pagination.currentPage < pagination.totalPages &&
-          isLoadedOrders[currentTab].hasMorePagination && (
+          isLoadedOrders[currentTab].hasMorePagination &&
+          rememberOrderStatus.length > 0 && (
             <OButton
               onClick={handleLoadMore}
               text={t('LOAD_MORE_ORDERS', 'Load more orders')}
