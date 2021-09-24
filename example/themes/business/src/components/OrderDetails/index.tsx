@@ -43,6 +43,7 @@ import { OrderDetailsParams } from '../../types';
 import { verifyDecimals } from '../../utils';
 import { USER_TYPE } from '../../config/constants';
 import CountryPicker from 'react-native-country-picker-modal';
+import { NotFoundSource } from '../NotFoundSource';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -71,7 +72,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     business: false,
     driver: false,
   });
-  const { order, businessData, loading } = props.order;
+  const { order, businessData, loading, error } = props.order;
   const { drivers, loadingDriver } = props.drivers;
   const itemsDrivers: any = [];
   const [actionOrder, setActionOrder] = useState('');
@@ -507,7 +508,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   return (
     <>
-      {(!order || Object.keys(order).length === 0) && (
+      {(!order || Object.keys(order).length === 0) && !error && (
         <View
           style={{
             padding: 20,
@@ -527,8 +528,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           ))}
         </View>
       )}
-
-      {order && Object.keys(order).length > 0 && (
+      {error?.length > 0 && (
+        <NotFoundSource
+          btnTitle={t('GO_TO_MY_ORDERS', 'Go to my orders')}
+          content={props.order.error[0]}
+          onClickButton={() => navigation.navigate('Orders')}
+        />
+      )}
+      {order && Object.keys(order).length > 0 && !error && (
         <>
           <Header>
             <OIconButton

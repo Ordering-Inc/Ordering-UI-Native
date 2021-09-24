@@ -33,6 +33,9 @@ export const DriverMap = (props: GoogleMapsParams) => {
     isBusinessMarker,
     isToFollow,
     handleViewActionOrder,
+    updateDriverPosition,
+    driverUpdateLocation,
+    setDriverUpdateLocation,
   } = props;
 
   const theme = useTheme();
@@ -73,7 +76,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
     longitude: initialPosition.longitude,
   };
   const destination = { latitude: location.lat, longitude: location.lng };
-
   const { top } = useSafeAreaInsets();
 
   useEffect(() => {
@@ -189,6 +191,23 @@ export const DriverMap = (props: GoogleMapsParams) => {
   };
 
   useEffect(() => {
+    if (driverUpdateLocation.error) {
+      stopFollowUserLocation();
+      setAlertState({
+        open: true,
+        content: [
+          `${driverUpdateLocation.error[0] || driverUpdateLocation.error}. ${t(
+            'TRY_AGAIN',
+            'Try Again',
+          )}`,
+        ],
+      });
+    }
+  }, [driverUpdateLocation.error]);
+
+  useEffect(() => {
+    if (driverUpdateLocation.error) return;
+
     calculateDistance(
       { lat: userLocation.latitude, lng: userLocation.longitude },
       destination,
@@ -203,9 +222,19 @@ export const DriverMap = (props: GoogleMapsParams) => {
     mapRef.current?.animateCamera({
       center: { latitude, longitude },
     });
+
+    if (userLocation.latitude && userLocation.longitude)
+      updateDriverPosition({
+        location: { lat: userLocation.latitude, lng: userLocation.longitude },
+      });
   }, [userLocation]);
 
   const handleArrowBack: any = () => {
+    setDriverUpdateLocation({
+      ...driverUpdateLocation,
+      error: null,
+      newLocation: null,
+    });
     handleOpenMapView && handleOpenMapView();
   };
 
