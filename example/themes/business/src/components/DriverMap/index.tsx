@@ -307,7 +307,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
     },
     facOrderStatus: {
       flexDirection: 'row',
-      paddingTop: top + 5,
+      paddingTop: top + 13,
       borderBottomWidth: 11,
       borderBottomColor: theme.colors.inputChat,
     },
@@ -320,10 +320,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
       borderWidth: 0,
     },
   });
-
-  const handleChangeRegion = (coordinates: Region) => {
-    validateResult(coordinates);
-  };
 
   return (
     <>
