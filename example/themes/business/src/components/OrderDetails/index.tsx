@@ -985,7 +985,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 export const OrderDetails = (props: OrderDetailsParams) => {
   const orderDetailsProps = {
     ...props,
-    driverAndBusinessId: true,
     UIComponent: OrderDetailsUI,
   };
   return <OrderDetailsController {...orderDetailsProps} />;
