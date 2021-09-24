@@ -45,6 +45,7 @@ export const UserFormDetailsUI = (props: any) => {
 
   const [{ user }] = useSession();
   const [passwordSee, setPasswordSee] = useState(false);
+  const [confirmSee, setConfirmSee] = useState(false);
   const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null);
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
@@ -388,7 +389,7 @@ export const UserFormDetailsUI = (props: any) => {
                 control={control}
                 render={({ onChange, value }: any) => (
                   <OInput
-                    isSecured={!passwordSee ? true : false}
+                    isSecured={!confirmSee ? true : false}
                     placeholder={t(
                       'MOBILE_CONFIRM_PASSWORD',
                       'Confirm Password',
@@ -396,19 +397,19 @@ export const UserFormDetailsUI = (props: any) => {
                     style={styles.inputStyle}
                     placeholderTextColor={theme.colors.arrowColor}
                     iconCustomRight={
-                      passwordSee ? (
+                      confirmSee ? (
                         <MaterialCommunityIcons
                           name="eye-outline"
                           color={theme.colors.arrowColor}
                           size={24}
-                          onPress={() => setPasswordSee(!passwordSee)}
+                          onPress={() => setConfirmSee(!confirmSee)}
                         />
                       ) : (
                         <MaterialCommunityIcons
                           name="eye-off-outline"
                           color={theme.colors.arrowColor}
                           size={24}
-                          onPress={() => setPasswordSee(!passwordSee)}
+                          onPress={() => setConfirmSee(!confirmSee)}
                         />
                       )
                     }
