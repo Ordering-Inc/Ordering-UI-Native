@@ -104,20 +104,21 @@ const ProfileUI = (props: ProfileParams) => {
   };
 
   useEffect(() => {
-    if (userState.result.result && !isAvailableLoading) {
+    const isLoadingDriver = userState?.loadingDriver ?? true;
+
+    if (userState?.result?.result && !isLoadingDriver) {
       if (userState?.result?.error) {
-        showToast(
-          ToastType.Error,
-          t(userState.result.error, userState.result.error),
-        );
+        const messageError =
+          userState.result.error || userState.result.error[0];
+        showToast(ToastType.Error, t(messageError, messageError));
       } else {
         showToast(
           ToastType.Success,
-          t('UPDATE_SUCCESSFULLY', 'Update successfully'),
+          t('AVAILABLE_STATE_IS_UPDATED', 'Available state is updated'),
         );
       }
     }
-  }, [isAvailableLoading]);
+  }, [userState?.loadingDriver]);
 
   useEffect(() => {
     if (formState.result.result && !formState.loading) {
@@ -301,7 +302,7 @@ const ProfileUI = (props: ProfileParams) => {
                 )}
               </OText>
 
-              {isAvailableLoading ? (
+              {userState.loadingDriver ? (
                 <ActivityIndicator size="small" color={theme.colors.primary} />
               ) : (
                 <ToggleSwitch
