@@ -349,6 +349,9 @@ export interface OrderDetailsParams {
   permissions?: any;
   askLocationPermission?: any;
   redirectToSettings?: any;
+  updateDriverPosition?: any;
+  driverUpdateLocation?: any;
+  setDriverUpdateLocation?: any;
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean;
@@ -488,6 +491,9 @@ export interface GoogleMapsParams {
   setSaveLocation?: (val: boolean) => void;
   handleToggleMap?: () => void;
   navigation: any;
+  updateDriverPosition?: any;
+  driverUpdateLocation?: any;
+  setDriverUpdateLocation: any;
 }
 
 export interface TagsParams {

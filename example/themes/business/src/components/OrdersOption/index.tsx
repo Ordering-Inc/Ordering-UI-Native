@@ -134,6 +134,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
 
   const [ordersFilter, setOrdersFilter] = useState(tabs[0].tags);
+  const [ordersFiltered, setOrdersFiltered] = useState(
+    orders.filter((order: any) => ordersFilter.includes(order?.status)),
+  );
   const [tabsStatus, setTabStatus] = useState(tabs[0].tags);
   const [tagsStatus, setTagsStatus] = useState(tabs[0].tags);
   const [isLoadedOrders, setIsLoadedOrders] = useState<any>({
@@ -152,6 +155,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [windowsWidth, setWindowsWidth] = useState(
     parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
   );
+
+  useEffect(() => {
+    setOrdersFiltered(
+      orders.filter((order: any) =>
+        rememberOrderStatus.includes(order?.status),
+      ),
+    );
+  }, [ordersFilter, orders, rememberOrderStatus]);
 
   const handleChangeTab = (tags: number[], tabTitle: string) => {
     if (!isLoadedOrders[tabTitle].isFetched) {
@@ -373,6 +384,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
       {!loading &&
         (!ordersFilter.length ||
+          ordersFiltered?.length < 1 ||
           orderList.error ||
           !orderList.orders.length ||
           !rememberOrderStatus.length) && (
@@ -392,7 +404,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         {!reload && !error && orders.length > 0 && (
           <PreviousOrders
-            orders={orders}
+            orders={ordersFiltered}
             onNavigationRedirect={onNavigationRedirect}
             getOrderStatus={getOrderStatus}
             tabsFilter={rememberOrderStatus}
