@@ -458,6 +458,7 @@ const ChatUI = (props: MessagesParams) => {
     messages?.messages.map((message: any) => {
       let newMessage;
       if (
+        parseInt(message.order_id) === order?.id &&
         message.type !== 0 &&
         (messagesToShow?.messages?.length ||
           message?.can_see?.includes('2') ||
