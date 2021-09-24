@@ -64,6 +64,7 @@ import { UserDetails } from './components/UserDetails';
 import { UserFormDetailsUI } from './components/UserFormDetails';
 import { UserProfileForm } from './components/UserProfileForm';
 import { VerifyPhone } from './components/VerifyPhone';
+import { HelpParams } from './types';
 import {
   OAlert,
   OBottomPopup,
@@ -181,4 +182,6 @@ export {
   useTheme,
   // hooks
   DeviceOrientationMethods,
+  //types
+  HelpParams,
 }
