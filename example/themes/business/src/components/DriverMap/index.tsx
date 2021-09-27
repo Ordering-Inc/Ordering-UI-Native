@@ -321,6 +321,14 @@ export const DriverMap = (props: GoogleMapsParams) => {
       bottom: 0,
       right: 0,
     },
+    driverIcon: {
+      height: 25,
+      width: 25,
+      backgroundColor: theme.colors.white,
+      borderRadius: 100,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     buttonBack: {
       borderWidth: 0,
       maxWidth: 100,
@@ -407,12 +415,14 @@ export const DriverMap = (props: GoogleMapsParams) => {
                 </View>
               </Marker>
               <Marker coordinate={userLocation}>
-                <OIcon
-                  style={styles.image}
-                  src={theme.images.general.driverImage}
-                  width={40}
-                  height={40}
-                />
+                <View style={styles.driverIcon}>
+                  <OIcon
+                    style={styles.image}
+                    src={theme.images.general.driverImage}
+                    width={25}
+                    height={25}
+                  />
+                </View>
               </Marker>
             </>
           ) : (

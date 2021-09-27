@@ -16,6 +16,7 @@ import {
 } from 'ordering-components/native';
 
 //Components
+import Alert from '../../providers/AlertProvider';
 import { AcceptOrRejectOrder } from '../AcceptOrRejectOrder';
 import { Chat } from '../Chat';
 import { FloatingButton } from '../FloatingButton';
@@ -79,6 +80,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openModalForMapView, setOpenModalForMapView] = useState(false);
   const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
   const [openModalForAccept, setOpenModalForAccept] = useState(false);
+  const [alertState, setAlertState] = useState<{
+    open: boolean;
+    content: Array<string>;
+    key?: string | null;
+  }>({ open: false, content: [], key: null });
 
   const getOrderStatus = (s: string) => {
     const status = parseInt(s);
@@ -348,6 +354,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleArrowBack: any = () => {
+    navigation?.canGoBack() && navigation.goBack();
+  };
+
+  useEffect(() => {
+    if (order?.driver === null) {
+      setAlertState({
+        open: true,
+        content: t('YOU_ARE_NOT_ASSIGNED', 'You are not assigned'),
+        key: 'holaaa',
+      });
+    }
+  }, [order?.driver]);
+
+  const unnsaginedOrder = () => {
     navigation?.canGoBack() && navigation.goBack();
   };
 
@@ -833,6 +853,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               secondColorCustom={theme.colors.green}
             />
           )}
+          <Alert
+            open={alertState.open}
+            onAccept={unnsaginedOrder}
+            onClose={unnsaginedOrder}
+            content={alertState.content}
+            title={t('ERROR', 'Error')}
+          />
         </>
       )}
     </>
