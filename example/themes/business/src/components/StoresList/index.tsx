@@ -143,7 +143,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
         showsVerticalScrollIndicator={false}
         style={styles.container}
         onScroll={(e: any) => handleScroll(e)}>
-        {!loadBusinesses && businesses?.length === 0 && (
+        {!loading && !loadBusinesses && businesses?.length === 0 && (
           <NotFoundSource
             content={
               !isConnected
@@ -168,7 +168,7 @@ const StoresListUI = (props: BusinessesListingParams) => {
             />
           ))}
 
-        {loadBusinesses && isConnected && (
+        {(loading || loadBusinesses) && isConnected && (
           <View>
             {[...Array(6)].map((item, i) => (
               <Placeholder key={i} Animation={Fade}>
