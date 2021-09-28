@@ -27,7 +27,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     getProductMax,
     onDeleteProduct,
     onEditProduct,
-    comment,
   } = props;
 
   const [, t] = useLanguage();
@@ -71,9 +70,16 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     position: string;
     price: number;
   }) => {
-    const pos = position ? `(${position})` : '';
-
-    return `${quantity} x ${name} ${pos} +${price}`;
+    if (name !== 'No') {
+      const pos = position ? `(${position})` : '';
+      return price > 0
+        ? `${name} ${pos} ${parsePrice(quantity * price, {
+            currencyPosition: 'left',
+          })}`
+        : `${name} ${pos}`;
+    } else {
+      return 'No';
+    }
   };
 
   /*useEffect(() => {
@@ -203,7 +209,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 (ingredient: any) => !ingredient.selected,
               ) && (
                 <ProductOptionsList>
-                  <OText size={12} color={theme.colors.unselectText}>
+                  <OText size={12} weight="500">
                     {t('INGREDIENTS', 'Ingredients')}:
                   </OText>
 
@@ -212,7 +218,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                       !ingredient.selected && (
                         <OText
                           size={12}
-                          color={theme.colors.unselectText}
                           key={ingredient.id}
                           style={{ marginLeft: 10 }}>
                           {t('NO', 'No')} {ingredient.name}
@@ -226,13 +231,13 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
               <ProductOptionsList>
                 {productInfo().options.map((option: any, i: number) => (
                   <ProductOption key={option.id + i}>
-                    <OText size={12} color={theme.colors.unselectText}>
-                      {t(option?.name.toUpperCase(), option?.name)}:
+                    <OText size={12} weight="500">
+                      {t(option?.name.toUpperCase(), option?.name)}
                     </OText>
 
                     {option.suboptions.map((suboption: any) => (
                       <ProductSubOption key={suboption.id}>
-                        <OText size={12} color={theme.colors.unselectText}>
+                        <OText size={12} mLeft={10}>
                           {getFormattedSubOptionName({
                             quantity: suboption.quantity,
                             name: suboption.name,
@@ -253,13 +258,13 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
               </ProductOptionsList>
             )}
 
-            {comment && (
+            {product.comment && (
               <ProductComment>
-                <OText size={12} space color={theme.colors.unselectText}>
-                  {t('SPECIAL_COMMENT', 'Special Comment')}:
+                <OText size={12} weight={600} space>
+                  {t('COMMENT', 'Comment')}
                 </OText>
-                <OText size={12} color={theme.colors.unselectText}>
-                  {comment}
+                <OText size={12} mLeft={10}>
+                  {product.comment}
                 </OText>
               </ProductComment>
             )}

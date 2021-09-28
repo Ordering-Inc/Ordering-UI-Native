@@ -242,8 +242,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       },
       {
         key: 4,
-        value: t('PREPARATION_COMPLETED', 'Preparation Completed'),
-        slug: 'PREPARATION_COMPLETED',
+        value: t('READY_FOR_PICKUP', 'Ready for pickup'),
+        slug: 'READY_FOR_PICKUP',
         percentage: 0.7,
       },
       {
@@ -593,6 +593,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </OText>
               </>
             </OText>
+            <OText size={13}>
+              {`${order?.paymethod?.name} - ${
+                order.delivery_type === 1
+                  ? t('DELIVERY', 'Delivery')
+                  : order.delivery_type === 2
+                  ? t('PICKUP', 'Pickup')
+                  : order.delivery_type === 3
+                  ? t('EAT_IN', 'Eat in')
+                  : order.delivery_type === 4
+                  ? t('CURBSIDE', 'Curbside')
+                  : t('DRIVER_THRU', 'Driver thru')
+              }`}
+            </OText>
           </OrderHeader>
           <OrderDetailsContainer keyboardShouldPersistTaps="handled">
             <>
@@ -611,7 +624,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </OText>
 
                   <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.business?.cellphone}
+                    {order?.business?.phone} - {order?.business?.cellphone}
                   </OText>
 
                   <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
@@ -624,9 +637,39 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     {t('CUSTOMER_DETAILS', 'Customer details')}
                   </OText>
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.customer?.name}
-                  </OText>
+                  <View style={{ flexDirection: 'row' }}>
+                    <OText
+                      numberOfLines={1}
+                      mBottom={4}
+                      ellipsizeMode="tail"
+                      space>
+                      {order?.customer?.name}
+                    </OText>
+
+                    <OText
+                      numberOfLines={1}
+                      mBottom={4}
+                      ellipsizeMode="tail"
+                      space>
+                      {order?.customer?.middle_name}
+                    </OText>
+
+                    <OText
+                      numberOfLines={1}
+                      mBottom={4}
+                      ellipsizeMode="tail"
+                      space>
+                      {order?.customer?.lastname}
+                    </OText>
+
+                    <OText
+                      numberOfLines={1}
+                      mBottom={4}
+                      ellipsizeMode="tail"
+                      space>
+                      {order?.customer?.second_lastname}
+                    </OText>
+                  </View>
 
                   <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                     {order?.customer?.email}
@@ -651,7 +694,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       <ProductItemAccordion
                         key={product?.id || i}
                         product={product}
-                        comment={order.comment ? order.comment : ' '}
                       />
                     ))}
                 </OrderProducts>
