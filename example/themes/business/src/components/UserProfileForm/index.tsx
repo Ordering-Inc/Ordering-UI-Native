@@ -31,7 +31,7 @@ import {
   OButton,
   OInput,
 } from '../../components/shared';
-import { sortInputFields } from '../../utils';
+import { sortInputFields, getTraduction } from '../../utils';
 import { ProfileParams } from '../../types';
 import { NotFoundSource } from '../NotFoundSource';
 
@@ -110,7 +110,7 @@ const ProfileUI = (props: ProfileParams) => {
       if (userState?.result?.error) {
         const messageError =
           userState.result.error || userState.result.error[0];
-        showToast(ToastType.Error, t(messageError, messageError));
+        showToast(ToastType.Error, getTraduction(messageError, t));
       } else {
         showToast(
           ToastType.Success,

@@ -36,6 +36,8 @@ export const getTraduction = (key: string, t: any) => {
     ERROR_ADD_PRODUCT_VERY_FAR_FOR_DELIVERY:
       'Error adding product, very far for delivery',
     ERROR_PRODUCT_NOT_FOUND: 'Error with the product',
+    ERROR_USER_UPDATE_YOU_HAVE_ASSIGNED_ORDERS:
+      "You can't because you have assigned orders",
   };
 
   return keyList[key] ? t(key, keyList[key]) : t(key);
