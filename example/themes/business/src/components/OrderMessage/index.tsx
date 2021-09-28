@@ -43,7 +43,6 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     if (order?.driver === null && user.level === 4) {
-      console.log(user.level);
       setAlertState({
         open: true,
         content: [
