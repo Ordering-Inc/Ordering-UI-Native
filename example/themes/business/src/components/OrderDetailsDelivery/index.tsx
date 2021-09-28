@@ -773,7 +773,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 loading={loading}
                 action={actionOrder}
                 orderId={order?.id}
-                notShowCustomerPhone={false}
+                notShowCustomerPhone
                 actions={actions}
                 titleAccept={titleAccept}
                 titleReject={titleReject}
