@@ -361,15 +361,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     if (order?.driver === null) {
       setAlertState({
         open: true,
-        content: t('YOU_ARE_NOT_ASSIGNED', 'You are not assigned'),
-        key: 'holaaa',
+        content: [
+          t(
+            'YOU_HAVE_BEEN_REMOVED_FROM_THE_ORDER',
+            'You have been removed from the order',
+          ),
+        ],
+        key: null,
       });
     }
   }, [order?.driver]);
-
-  const unnsaginedOrder = () => {
-    navigation?.canGoBack() && navigation.goBack();
-  };
 
   useEffect(() => {
     if (messagesReadList?.length) {
@@ -855,8 +856,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           )}
           <Alert
             open={alertState.open}
-            onAccept={unnsaginedOrder}
-            onClose={unnsaginedOrder}
+            onAccept={handleArrowBack}
+            onClose={handleArrowBack}
             content={alertState.content}
             title={t('ERROR', 'Error')}
           />

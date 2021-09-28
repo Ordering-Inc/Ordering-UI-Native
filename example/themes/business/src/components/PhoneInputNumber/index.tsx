@@ -106,7 +106,12 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
             : configs?.default_country_code?.value
         }
         onChangeFormattedText={(text: string) => handleChangeNumber(text)}
-        countryPickerProps={{ withAlphaFilter: false, withFilter: false }}
+        countryPickerProps={{
+          withAlphaFilter: false,
+          withFilter: false,
+          closeButtonImageStyle: { width: 15, height: 15 },
+          closeButtonImage: theme.images.general.close,
+        }}
         textContainerStyle={style.input}
         codeTextStyle={{ display: 'none' }}
         placeholder={t('PHONE_NUMBER', 'Phone number')}

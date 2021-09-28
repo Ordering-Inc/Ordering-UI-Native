@@ -260,14 +260,31 @@ export const DriverMap = (props: GoogleMapsParams) => {
   };
 
   const colors: any = {
+    //BLUE
     0: theme.colors.statusOrderBlue,
     3: theme.colors.statusOrderBlue,
-    5: theme.colors.statusOrderRed,
-    7: theme.colors.StatusOrderBlue,
+    4: theme.colors.statusOrderBlue,
+    7: theme.colors.statusOrderBlue,
     8: theme.colors.statusOrderBlue,
     9: theme.colors.statusOrderBlue,
+    13: theme.colors.statusOrderBlue,
+    14: theme.colors.statusOrderBlue,
+    18: theme.colors.statusOrderBlue,
+    19: theme.colors.statusOrderBlue,
+    20: theme.colors.statusOrderBlue,
+    21: theme.colors.statusOrderBlue,
+    //GREEN
+    1: theme.colors.statusOrderGreen,
     11: theme.colors.statusOrderGreen,
+    15: theme.colors.statusOrderGreen,
+    //RED
+    2: theme.colors.statusOrderRed,
+    5: theme.colors.statusOrderRed,
+    6: theme.colors.statusOrderRed,
+    10: theme.colors.statusOrderRed,
     12: theme.colors.statusOrderRed,
+    16: theme.colors.statusOrderRed,
+    17: theme.colors.statusOrderRed,
   };
 
   const fitCoordinates = () => {
@@ -331,7 +348,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
     },
     buttonBack: {
       borderWidth: 0,
-      maxWidth: 100,
       alignItems: 'flex-start',
       justifyContent: 'flex-start',
     },
@@ -460,13 +476,13 @@ export const DriverMap = (props: GoogleMapsParams) => {
           <View
             style={{
               width: '25%',
-              justifyContent: 'flex-start',
+              justifyContent: 'center',
             }}>
             <OIconButton
               icon={theme.images.general.close}
               iconStyle={{
-                width: 32,
-                height: 25,
+                width: 15,
+                height: 15,
               }}
               style={styles.buttonBack}
               onClick={() => handleArrowBack()}

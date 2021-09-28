@@ -5,6 +5,7 @@ import { StyleSheet, View, BackHandler } from 'react-native';
 import {
   useLanguage,
   OrderDetails as OrderDetailsController,
+  useSession,
 } from 'ordering-components/native';
 import { useUtils } from 'ordering-components/native';
 
@@ -12,6 +13,7 @@ import { OIcon, OIconButton, OText } from '../shared';
 import { OrderDetailsParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
 import { useTheme } from 'styled-components/native';
+import Alert from '../../providers/AlertProvider';
 
 export const OrderMessageUI = (props: OrderDetailsParams) => {
   const {
@@ -31,7 +33,29 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
     business: false,
     driver: false,
   });
+  const [{ user }] = useSession();
   const { order, loading } = props.order;
+  const [alertState, setAlertState] = useState<{
+    open: boolean;
+    content: Array<string>;
+    key?: string | null;
+  }>({ open: false, content: [], key: null });
+
+  useEffect(() => {
+    if (order?.driver === null && user.level === 4) {
+      console.log(user.level);
+      setAlertState({
+        open: true,
+        content: [
+          t(
+            'YOU_HAVE_BEEN_REMOVED_FROM_THE_ORDER',
+            'You have been removed from the order',
+          ),
+        ],
+        key: null,
+      });
+    }
+  }, [order?.driver]);
 
   const handleArrowBack = (): boolean => {
     if (order?.unread_count !== undefined) {
@@ -69,6 +93,10 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
     return () =>
       BackHandler.removeEventListener('hardwareBackPress', handleArrowBack);
   }, [order?.unread_count, messages?.messages]);
+
+  const backIfDriverDoesntExist = () => {
+    navigation?.canGoBack() && navigation.goBack();
+  };
 
   useEffect(() => {
     if (messagesReadList?.length) {
@@ -289,6 +317,14 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
             messages={messages}
             order={order}
             setMessages={setMessages}
+          />
+
+          <Alert
+            open={alertState.open}
+            onAccept={backIfDriverDoesntExist}
+            onClose={backIfDriverDoesntExist}
+            content={alertState.content}
+            title={t('ERROR', 'Error')}
           />
         </>
       )}
