@@ -71,9 +71,6 @@ export const PreviousOrders = (props: any) => {
           ?.filter((order: any) =>
             hash[order?.id] ? false : (hash[order?.id] = true),
           )
-          ?.sort((a: any, b: any) => {
-            return b.id - a.id;
-          })
           ?.map((order: any) => (
             <React.Fragment key={order.id}>
               <TouchableOpacity

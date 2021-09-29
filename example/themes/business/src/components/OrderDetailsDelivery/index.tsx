@@ -16,6 +16,7 @@ import {
 } from 'ordering-components/native';
 
 //Components
+import Alert from '../../providers/AlertProvider';
 import { AcceptOrRejectOrder } from '../AcceptOrRejectOrder';
 import { Chat } from '../Chat';
 import { FloatingButton } from '../FloatingButton';
@@ -79,6 +80,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openModalForMapView, setOpenModalForMapView] = useState(false);
   const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
   const [openModalForAccept, setOpenModalForAccept] = useState(false);
+  const [alertState, setAlertState] = useState<{
+    open: boolean;
+    content: Array<string>;
+    key?: string | null;
+  }>({ open: false, content: [], key: null });
 
   const getOrderStatus = (s: string) => {
     const status = parseInt(s);
@@ -350,6 +356,21 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const handleArrowBack: any = () => {
     navigation?.canGoBack() && navigation.goBack();
   };
+
+  useEffect(() => {
+    if (order?.driver === null) {
+      setAlertState({
+        open: true,
+        content: [
+          t(
+            'YOU_HAVE_BEEN_REMOVED_FROM_THE_ORDER',
+            'You have been removed from the order',
+          ),
+        ],
+        key: null,
+      });
+    }
+  }, [order?.driver]);
 
   useEffect(() => {
     if (messagesReadList?.length) {
@@ -752,7 +773,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 loading={loading}
                 action={actionOrder}
                 orderId={order?.id}
-                notShowCustomerPhone={false}
+                notShowCustomerPhone
                 actions={actions}
                 titleAccept={titleAccept}
                 titleReject={titleReject}
@@ -833,6 +854,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               secondColorCustom={theme.colors.green}
             />
           )}
+          <Alert
+            open={alertState.open}
+            onAccept={handleArrowBack}
+            onClose={handleArrowBack}
+            content={alertState.content}
+            title={t('ERROR', 'Error')}
+          />
         </>
       )}
     </>
