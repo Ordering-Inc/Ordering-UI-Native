@@ -37,7 +37,6 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const [{ optimizeImage }] = useUtils();
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / height;
-  const [isMapReady, setIsMapReady] = useState(false)
   const [markerPosition, setMarkerPosition] = useState({
     latitude: locations ? locations[locations.length - 1].lat : location.lat,
     longitude: locations ? locations[locations.length - 1].lng : location.lng,
@@ -217,10 +216,13 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   }, [saveLocation]);
 
   useEffect(() => {
-      if (mapRef.current && locations && isMapReady) {
+    const interval = setInterval(() => {
+      if (mapRef.current && locations) {
         fitAllMarkers();
       }
-  }, [isMapReady]);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [locations]);
 
   const styles = StyleSheet.create({
     map: {
@@ -268,8 +270,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
           zoomControlEnabled
           cacheEnabled
           moveOnMarkerPress
-          ref={mapRef}
-          onMapReady = {() => setIsMapReady(true)}>
+          ref={mapRef}>
           {locations ? (
             <>
               {MARKERS &&

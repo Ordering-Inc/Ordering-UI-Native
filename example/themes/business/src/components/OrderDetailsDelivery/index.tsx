@@ -553,19 +553,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {getOrderStatus(order?.status)?.value}
                 </OText>
               </>
-            </OText>
-            <OText size={13}>
-              {`${order?.paymethod?.name} - ${
-                order.delivery_type === 1
-                  ? t('DELIVERY', 'Delivery')
-                  : order.delivery_type === 2
-                  ? t('PICKUP', 'Pickup')
-                  : order.delivery_type === 3
-                  ? t('EAT_IN', 'Eat in')
-                  : order.delivery_type === 4
-                  ? t('CURBSIDE', 'Curbside')
-                  : t('DRIVER_THRU', 'Driver thru')
-              }`}
+              <OText size={13}>
+                {`${order?.paymethod?.name} - ${
+                  order.delivery_type === 1
+                    ? t('DELIVERY', 'Delivery')
+                    : order.delivery_type === 2
+                    ? t('PICKUP', 'Pickup')
+                    : order.delivery_type === 3
+                    ? t('EAT_IN', 'Eat in')
+                    : order.delivery_type === 4
+                    ? t('CURBSIDE', 'Curbside')
+                    : t('DRIVER_THRU', 'Driver thru')
+                }`}
+              </OText>
             </OText>
           </OrderHeader>
           <OrderDetailsContainer

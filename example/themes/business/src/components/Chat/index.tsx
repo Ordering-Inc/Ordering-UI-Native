@@ -690,15 +690,6 @@ const ChatUI = (props: MessagesParams) => {
     </View>
   );
 
-  const userRoles: any = {
-    0: t('ADMINISTRATOR', 'Administrator'),
-    1: t('CITY_MANAGER', 'City manager'),
-    2: t('BUSINESS_OWNER', 'Business owner'),
-    3: t('CUSTOMER', 'Customer'),
-    4: t('DRIVER', 'Driver'),
-    5: t('DRIVER_MANAGER', 'Driver manager'),
-  };
-
   const renderInputToolbar = (props: InputToolbarProps) => (
     <InputToolbar
       {...props}
@@ -947,24 +938,6 @@ const ChatUI = (props: MessagesParams) => {
     </>
   );
 
-  const renderNameMessage = (props: any) => {
-    const isMine = user?.id === props?.currentMessage?.user?._id;
-    return (
-      <View
-        style={{
-          alignItems: isMine ? 'flex-end' : 'flex-start',
-          paddingHorizontal: 10,
-        }}>
-        <OText
-          weight="600"
-          color={isMine ? theme.colors.white : theme.colors.black}>
-          {props?.currentMessage?.user?.name} (
-          {userRoles[props?.currentMessage?.user?.level]})
-        </OText>
-      </View>
-    );
-  };
-
   return (
     <>
       <Wrapper>
@@ -985,7 +958,6 @@ const ChatUI = (props: MessagesParams) => {
               paddingHorizontal: 9,
             },
           }}
-          renderCustomView={renderNameMessage}
           scrollToBottom
           renderAvatar={renderAvatar}
           showAvatarForEveryMessage={true}
