@@ -584,34 +584,38 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     {order?.business?.name}
                   </OText>
 
-                  {Boolean(order?.business?.email) && (
+                  {!!order?.business?.email && (
                     <OLink
-                      url="mailto:"
+                      url={`mailto:${order?.business?.email}`}
                       shorcut={order?.business?.email}
                       color={theme.colors.primary}
                       PressStyle={{ marginBottom: 4 }}
                     />
                   )}
 
-                  {Boolean(order?.business?.cellphone) && (
-                    <OLink
-                      url={`tel:${order?.business?.cellphone}`}
-                      shorcut={order?.business?.cellphone}
-                      color={theme.colors.primary}
-                      PressStyle={{ marginBottom: 4 }}
-                    />
-                  )}
+                  <View style={{ flexDirection: 'row' }}>
+                    {!!order?.business?.cellphone && (
+                      <OLink
+                        url={`tel:${order?.business?.cellphone}`}
+                        shorcut={`${order?.business?.cellphone} ${
+                          order?.business?.phone ? '- ' : ''
+                        }`}
+                        color={theme.colors.primary}
+                        PressStyle={{ marginBottom: 4 }}
+                      />
+                    )}
 
-                  {Boolean(order?.business?.phone) && (
-                    <OLink
-                      url={`tel:${order?.business?.phone}`}
-                      shorcut={order?.business?.phone}
-                      color={theme.colors.primary}
-                      PressStyle={{ marginBottom: 4 }}
-                    />
-                  )}
+                    {!!order?.business?.phone && (
+                      <OLink
+                        url={`tel:${order?.business?.phone}`}
+                        shorcut={order?.business?.phone}
+                        color={theme.colors.primary}
+                        PressStyle={{ marginBottom: 4 }}
+                      />
+                    )}
+                  </View>
 
-                  {Boolean(order?.business?.address) && (
+                  {!!order?.business?.address && (
                     <OLink
                       url={Platform.select({
                         ios: `maps:0,0?q=${order?.business?.address}`,
