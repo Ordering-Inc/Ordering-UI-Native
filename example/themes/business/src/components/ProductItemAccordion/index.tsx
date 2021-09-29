@@ -59,23 +59,30 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     return product;
   };
 
+  const getProductPrice = (product: any) => {
+    let subOptionPrice = 0;
+    if (product.options.length > 0) {
+      for (const option of product.options) {
+        for (const suboption of option.suboptions) {
+          subOptionPrice += suboption.quantity * suboption.price;
+        }
+      }
+    }
+
+    const price = product.quantity * (product.price + subOptionPrice);
+    return parseFloat(price.toFixed(2));
+  };
+
   const getFormattedSubOptionName = ({
     quantity,
     name,
     position,
     price,
-  }: {
-    quantity: number;
-    name: string;
-    position: string;
-    price: number;
-  }) => {
+  }: any) => {
     if (name !== 'No') {
       const pos = position ? `(${position})` : '';
       return price > 0
-        ? `${name} ${pos} ${parsePrice(quantity * price, {
-            currencyPosition: 'left',
-          })}`
+        ? `${name} ${pos} ${parsePrice(quantity * price)}`
         : `${name} ${pos}`;
     } else {
       return 'No';
@@ -96,10 +103,14 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     });
 
   useEffect(() => {
-    if(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment !== ''){
-      setActiveState(true)
+    if (
+      productInfo().ingredients.length > 0 ||
+      productInfo().options.length > 0 ||
+      product.comment !== ''
+    ) {
+      setActiveState(true);
     }
-  }, [])
+  }, []);
 
   return (
     <AccordionSection>
@@ -141,11 +152,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
               }}>
               <View style={{ flexDirection: 'row' }}>
                 <OText size={12} color={theme.colors.textGray}>
-                  {parsePrice(
-                    typeof product.total === 'number'
-                      ? product.total
-                      : product.price,
-                  )}
+                  {parsePrice(getProductPrice(product))}
                 </OText>
 
                 {(productInfo().ingredients.length > 0 ||
@@ -254,7 +261,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                                     suboption.position,
                                   )
                                 : '',
-                            price: parsePrice(suboption.price),
+                            price: suboption.price,
                           })}
                         </OText>
                       </ProductSubOption>
