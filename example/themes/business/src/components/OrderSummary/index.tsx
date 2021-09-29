@@ -62,7 +62,9 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
         <h1>${t('CUSTOMER_DETAILS', 'Customer details')}</h1>
         <p style="font-size: 27px"> ${t('FULL_NAME', 'Full Name')}: ${
       order?.customer?.name
-    } ${order?.customer?.lastname}
+    } ${order?.customer?.middle_name} ${order?.customer?.lastname} ${
+      order?.customer?.second_lastname
+    }
         </br>  
         ${t('EMAIL', 'Email')}: ${order?.customer?.email} 
         </br> 
@@ -318,7 +320,9 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
               {`${t('FULL_NAME', 'Full Name')}: ${order?.customer?.name} ${
-                order?.customer?.lastname
+                order?.customer?.middle_name
+              } ${order?.customer?.lastname} ${
+                order?.customer?.second_lastname
               }`}
             </OText>
 
@@ -511,19 +515,17 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               </Table>
             )}
 
-            {(order?.summary?.delivery_price > 0 || order?.deliveryFee > 0) && (
-              <Table>
-                <OText style={{ marginBottom: 5 }}>
-                  {t('DELIVERY_FEE', 'Delivery Fee')}
-                </OText>
+            <Table>
+              <OText style={{ marginBottom: 5 }}>
+                {t('DELIVERY_FEE', 'Delivery Fee')}
+              </OText>
 
-                <OText>
-                  {parsePrice(
-                    order?.summary?.delivery_price || order?.deliveryFee,
-                  )}
-                </OText>
-              </Table>
-            )}
+              <OText>
+                {parsePrice(
+                  order?.summary?.delivery_price || order?.deliveryFee,
+                )}
+              </OText>
+            </Table>
 
             <Table>
               <OText style={{ marginBottom: 5 }}>

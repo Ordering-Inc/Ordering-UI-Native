@@ -128,6 +128,10 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
   };
 
+  useEffect(() => {
+    openTimerIOnput();
+  }, []);
+
   const handleAcceptOrReject = () => {
     handleFixTime();
 
