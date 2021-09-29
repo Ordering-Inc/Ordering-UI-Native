@@ -625,6 +625,24 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                     {order?.customer?.address}
                   </OText>
+
+                  {Boolean(order?.customer?.internal_number) && (
+                    <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                      {order?.customer?.internal_number}
+                    </OText>
+                  )}
+
+                  {Boolean(order?.customer?.address_notes) && (
+                    <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                      {order?.customer?.address_notes}
+                    </OText>
+                  )}
+
+                  {Boolean(order?.customer.zipcode) && (
+                    <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                      {order?.customer?.zipcode}
+                    </OText>
+                  )}
                 </OrderCustomer>
 
                 <OrderProducts>

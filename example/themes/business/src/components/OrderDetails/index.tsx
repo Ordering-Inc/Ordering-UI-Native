@@ -167,9 +167,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     const payment = `${t('PAYMENT', 'Payment')}: ${
       order?.paymethod?.name || null
     }`;
-    const businessPhone = `${t('BUSINESS_PHONE', 'Bussines Phone')}: ${
-      order?.bussines?.cellphone || null
-    }`;
+    const businessPhone = `${t('BUSINESS_PHONE', 'Bussines Phone')}:  ${
+      order?.business?.phone || ''
+    } - ${order?.business?.cellphone || ''} `;
     const address = `${t('ADDRESS', 'Address')}: ${order?.customer?.address}`;
     const addressNotes = order?.customer?.address_notes
       ? `${t('ADDRESS_NOTES', 'Address Notes')}: ${
@@ -682,6 +682,24 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                     {order?.customer?.address}
                   </OText>
+
+                  {Boolean(order?.customer?.internal_number) && (
+                    <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                      {order?.customer?.internal_number}
+                    </OText>
+                  )}
+
+                  {Boolean(order?.customer?.address_notes) && (
+                    <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                      {order?.customer?.address_notes}
+                    </OText>
+                  )}
+
+                  {Boolean(order?.customer.zipcode) && (
+                    <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                      {order?.customer?.zipcode}
+                    </OText>
+                  )}
                 </OrderCustomer>
 
                 <OrderProducts>
