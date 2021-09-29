@@ -230,7 +230,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
   }, [userLocation]);
 
   const handleArrowBack: any = () => {
-    setDriverUpdateLocation({
+    setDriverUpdateLocation?.({
       ...driverUpdateLocation,
       error: null,
       newLocation: null,
