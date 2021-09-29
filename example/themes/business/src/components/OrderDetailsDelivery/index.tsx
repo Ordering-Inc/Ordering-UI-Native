@@ -1,6 +1,6 @@
 //React & React Native
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Platform } from 'react-native';
 
 // Thirds
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -20,7 +20,7 @@ import { AcceptOrRejectOrder } from '../AcceptOrRejectOrder';
 import { Chat } from '../Chat';
 import { FloatingButton } from '../FloatingButton';
 import { DriverMap } from '../DriverMap';
-import { OButton, OText, OIconButton } from '../shared';
+import { OButton, OText, OIconButton, OLink } from '../shared';
 import { OModal } from '../shared';
 import { OrderDetailsParams } from '../../types';
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -550,17 +550,35 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     {order?.business?.name}
                   </OText>
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.business?.email}
-                  </OText>
+                  {Boolean(order?.business?.email) && (
+                    <OLink
+                      url="mailto:"
+                      shorcut={order?.business?.email}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.business?.cellphone}
-                  </OText>
+                  {Boolean(order?.business?.cellphone) && (
+                    <OLink
+                      url={`tel:${order?.business?.cellphone}`}
+                      shorcut={order?.business?.cellphone}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.business?.address}
-                  </OText>
+                  {Boolean(order?.business?.address) && (
+                    <OLink
+                      url={Platform.select({
+                        ios: `maps:0,0?q=${order?.business?.address}`,
+                        android: `geo:0,0?q=${order?.business?.address}`,
+                      })}
+                      shorcut={order?.business?.address}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
                 </OrderBusiness>
 
                 <OrderCustomer>
@@ -572,17 +590,44 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     {order?.customer?.name}
                   </OText>
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.customer?.email}
-                  </OText>
+                  {Boolean(order?.customer?.email) && (
+                    <OLink
+                      url={`mailto:${order?.customer?.email}`}
+                      shorcut={order?.customer?.email}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.customer?.cellphone}
-                  </OText>
+                  {Boolean(order?.customer?.cellphone) && (
+                    <OLink
+                      url={`tel:${order?.customer?.cellphone}`}
+                      shorcut={order?.customer?.cellphone}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.customer?.address}
-                  </OText>
+                  {Boolean(order?.customer?.phone) && (
+                    <OLink
+                      url={`tel:${order?.customer?.phone}`}
+                      shorcut={order?.customer?.phone}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
+
+                  {Boolean(order?.customer?.address) && (
+                    <OLink
+                      url={Platform.select({
+                        ios: `maps:0,0?q=${order?.customer?.address}`,
+                        android: `geo:0,0?q=${order?.customer?.address}`,
+                      })}
+                      shorcut={order?.customer?.address}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
                 </OrderCustomer>
 
                 <OrderProducts>

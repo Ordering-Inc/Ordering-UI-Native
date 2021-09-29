@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -38,7 +39,7 @@ import { Chat } from '../Chat';
 import { FloatingButton } from '../FloatingButton';
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { GoogleMap } from '../GoogleMap';
-import { OButton, OModal, OText, OIconButton, OIcon } from '../shared';
+import { OButton, OModal, OText, OIconButton, OIcon, OLink } from '../shared';
 import { OrderDetailsParams } from '../../types';
 import { verifyDecimals } from '../../utils';
 import { USER_TYPE } from '../../config/constants';
@@ -606,17 +607,35 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     {order?.business?.name}
                   </OText>
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.business?.email}
-                  </OText>
+                  {Boolean(order?.business?.email) && (
+                    <OLink
+                      url="mailto:"
+                      shorcut={order?.business?.email}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.business?.cellphone}
-                  </OText>
+                  {Boolean(order?.business?.cellphone) && (
+                    <OLink
+                      url={`tel:${order?.business?.cellphone}`}
+                      shorcut={order?.business?.cellphone}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.business?.address}
-                  </OText>
+                  {Boolean(order?.business?.address) && (
+                    <OLink
+                      url={Platform.select({
+                        ios: `maps:0,0?q=${order?.business?.address}`,
+                        android: `geo:0,0?q=${order?.business?.address}`,
+                      })}
+                      shorcut={order?.business?.address}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
                 </OrderBusiness>
 
                 <OrderCustomer>
@@ -628,17 +647,44 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     {order?.customer?.name}
                   </OText>
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.customer?.email}
-                  </OText>
+                  {Boolean(order?.customer?.email) && (
+                    <OLink
+                      url={`mailto:${order?.customer?.email}`}
+                      shorcut={order?.customer?.email}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.customer?.cellphone}
-                  </OText>
+                  {Boolean(order?.customer?.cellphone) && (
+                    <OLink
+                      url={`tel:${order?.customer?.cellphone}`}
+                      shorcut={order?.customer?.cellphone}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.customer?.address}
-                  </OText>
+                  {Boolean(order?.customer?.phone) && (
+                    <OLink
+                      url={`tel:${order?.customer?.phone}`}
+                      shorcut={order?.customer?.phone}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
+
+                  {Boolean(order?.customer?.address) && (
+                    <OLink
+                      url={Platform.select({
+                        ios: `maps:0,0?q=${order?.customer?.address}`,
+                        android: `geo:0,0?q=${order?.customer?.address}`,
+                      })}
+                      shorcut={order?.customer?.address}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
                 </OrderCustomer>
 
                 <OrderProducts>
@@ -895,24 +941,52 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     }
                     imgLeftStyle={{ tintColor: theme.colors.backArrow }}
                     imgRightSrc={false}
+                    isLoading={loading}
                   />
                 </Pickup>
               )}
 
-              {order?.status === 4 && order?.delivery_type === 2 && (
+              {order?.status === 4 &&
+                [2, 3, 4, 5].includes(order?.delivery_type) && (
+                  <Pickup>
+                    <OButton
+                      style={{
+                        ...styles.btnPickUp,
+                        backgroundColor: theme.colors.green,
+                      }}
+                      textStyle={{ color: theme.colors.white }}
+                      text={t(
+                        'PICKUP_COMPLETED_BY_CUSTOMER',
+                        'Pickup completed by customer',
+                      )}
+                      onClick={() =>
+                        handleChangeOrderStatus && handleChangeOrderStatus(15)
+                      }
+                      imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+                      imgRightSrc={false}
+                      isLoading={loading}
+                    />
+                  </Pickup>
+                )}
+
+              {order?.status === 4 && [3, 4, 5].includes(order?.delivery_type) && (
                 <Pickup>
                   <OButton
-                    style={styles.btnPickUp}
-                    textStyle={{ color: theme.colors.primary }}
+                    style={{
+                      ...styles.btnPickUp,
+                      backgroundColor: theme.colors.red,
+                    }}
+                    textStyle={{ color: theme.colors.white }}
                     text={t(
-                      'PICKUP_COMPLETED_BY_CUSTOMER',
-                      'Pickup completed by customer',
+                      'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
+                      'Order not picked up by customer',
                     )}
                     onClick={() =>
-                      handleChangeOrderStatus && handleChangeOrderStatus(15)
+                      handleChangeOrderStatus && handleChangeOrderStatus(17)
                     }
                     imgLeftStyle={{ tintColor: theme.colors.backArrow }}
                     imgRightSrc={false}
+                    isLoading={loading}
                   />
                 </Pickup>
               )}
