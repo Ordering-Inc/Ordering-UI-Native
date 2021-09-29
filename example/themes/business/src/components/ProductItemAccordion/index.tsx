@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Animated } from 'react-native';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useUtils, useLanguage } from 'ordering-components/native';
@@ -88,6 +88,12 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
         value: opt.toString(),
       };
     });
+
+  useEffect(() => {
+    if(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment !== ''){
+      setActiveState(true)
+    }
+  }, [])
 
   return (
     <AccordionSection>
