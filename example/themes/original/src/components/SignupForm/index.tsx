@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet, Linking } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -29,6 +29,7 @@ import NavBar from '../NavBar';
 import { VerifyPhone } from '../VerifyPhone';
 
 import { OText, OButton, OInput, OModal } from '../shared';
+import CheckBox from '@react-native-community/checkbox';
 import { SignupParams } from '../../types';
 import { sortInputFields } from '../../utils';
 import { GoogleLogin } from '../GoogleLogin';
@@ -95,7 +96,7 @@ const SignupFormUI = (props: SignupParams) => {
 	const showInputPhoneNumber =
 		validationFields?.fields?.checkout?.cellphone?.enabled ?? false;
 
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
 	const [, { login }] = useSession();
 	const [{ configs }] = useConfig();
@@ -271,6 +272,16 @@ const SignupFormUI = (props: SignupParams) => {
 	const handleChangeInputEmail = (value: string, onChange: any) => {
 		onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
 	};
+
+	const handleOpenTermsUrl = async (url: any) => {
+		const supported = await Linking.canOpenURL(url);
+	
+		if (supported) {
+			await Linking.openURL(url);
+		} else {
+			showToast(ToastType.Error, t('VALIDATION_ERROR_ACTIVE_URL', 'The _attribute_ is not a valid URL.').replace('_attribute_', t('URL', 'URL')))
+		}
+	}
 
 	useEffect(() => {
 		if (!formState.loading && formState.result?.error) {
@@ -511,6 +522,43 @@ const SignupFormUI = (props: SignupParams) => {
 						</>
 					) : (
 						<Spinner visible />
+					)}
+
+					{configs?.terms_and_conditions?.value === 'true' && (
+						<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+							<Controller
+								control={control}
+								render={({ onChange, value }: any) => (
+								<CheckBox
+									value={value}
+									onValueChange={newValue => {
+										onChange(newValue)
+									}}
+									tintColors={{
+										true: theme.colors.primary,
+										false: theme.colors.disabled
+									}}
+									tintColor={theme.colors.disabled}
+									onCheckColor={theme.colors.primary}
+								/>
+								)}
+								name='termsAccept'
+								rules={{
+									required: t('VALIDATION_ERROR_ACCEPTED', 'The _attribute_ must be accepted.').replace('_attribute_', t('TERMS_AND_CONDITIONS', 'Terms & Conditions'))
+								}}
+								defaultValue={false}
+							/>
+							<OText color={theme.colors.disabled} size={14}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
+							<OButton
+								imgRightSrc={null}
+								text={t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
+								bgColor='#FFF'
+								borderColor='#FFF'
+								style={{ paddingLeft: 0, paddingRight: 0, height: 30 }}
+								textStyle={{ color: theme.colors.primary, marginLeft: 5, marginRight: 5, fontSize: 14 }}
+								onClick={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}
+							/>
+						</View>
 					)}
 
 					{signupTab === 'cellphone' &&
