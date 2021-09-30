@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet, Keyboard, TextStyle, Linking, TouchableOpacity } from 'react-native';
+import { View, Pressable, StyleSheet, Keyboard, TextStyle, Linking, TouchableOpacity, Platform } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -100,7 +100,11 @@ const SignupFormUI = (props: SignupParams) => {
 			flexDirection: 'row',
 			justifyContent: 'space-between',
 			marginBottom: 30
-		}
+		},
+		checkBoxStyle: {
+      width: 25,
+      height: 25,
+    }
 	});
 	const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
 
@@ -522,18 +526,21 @@ const SignupFormUI = (props: SignupParams) => {
 							<Controller
 								control={control}
 								render={({ onChange, value }: any) => (
-								<CheckBox
-									value={value}
-									onValueChange={newValue => {
-										onChange(newValue)
-									}}
-									tintColors={{
-										true: theme.colors.primary,
-										false: theme.colors.disabled
-									}}
-									tintColor={theme.colors.disabled}
-									onCheckColor={theme.colors.primary}
-								/>
+                  <CheckBox
+                    value={value}
+                    onValueChange={newValue => {
+                      onChange(newValue)
+                    }}
+                    boxType={'square'}
+                    tintColors={{
+                      true: theme.colors.primary,
+                      false: theme.colors.disabled
+                    }}
+                    tintColor={theme.colors.disabled}
+                    onCheckColor={theme.colors.primary}
+                    onTintColor={theme.colors.primary}
+                    style={Platform.OS === 'ios' && registerStyles.checkBoxStyle}
+                  />
 								)}
 								name='termsAccept'
 								rules={{
@@ -541,11 +548,11 @@ const SignupFormUI = (props: SignupParams) => {
 								}}
 								defaultValue={false}
 							/>
-							<OText style={{ ...theme.labels.middle }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
+							<OText style={{ ...theme.labels.middle, paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
 							<TouchableOpacity
 								onPress={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}
 							>
-								<OText style={{ ...theme.labels.middle, paddingHorizontal: 5 }} color={theme.colors.primary}>{t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}</OText>
+								<OText style={{ ...theme.labels.middle }} color={theme.colors.primary}>{t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}</OText>
 							</TouchableOpacity>
 						</View>
 					)}

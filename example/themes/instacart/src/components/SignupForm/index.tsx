@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet, Keyboard, Linking } from 'react-native';
+import { View, Pressable, StyleSheet, Keyboard, Linking, Platform } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -91,7 +91,11 @@ const SignupFormUI = (props: SignupParams) => {
 			paddingBottom: 20 + bottom,
 			borderTopWidth: 1,
 			borderTopColor: theme.colors.secundary
-		}
+		},
+		checkBoxStyle: {
+      width: 25,
+      height: 25,
+    }
 	});
 
 	const showInputPhoneNumber = validationFields?.fields?.checkout?.cellphone?.enabled ?? false
@@ -454,18 +458,21 @@ const SignupFormUI = (props: SignupParams) => {
 							<Controller
 								control={control}
 								render={({ onChange, value }: any) => (
-								<CheckBox
-									value={value}
-									onValueChange={newValue => {
-										onChange(newValue)
-									}}
-									tintColors={{
-										true: theme.colors.primary,
-										false: theme.colors.disabled
-									}}
-									tintColor={theme.colors.disabled}
-									onCheckColor={theme.colors.primary}
-								/>
+                  <CheckBox
+                    value={value}
+                    onValueChange={newValue => {
+                      onChange(newValue)
+                    }}
+                    boxType={'square'}
+                    tintColors={{
+                      true: theme.colors.primary,
+                      false: theme.colors.disabled
+                    }}
+                    tintColor={theme.colors.disabled}
+                    onCheckColor={theme.colors.primary}
+                    onTintColor={theme.colors.primary}
+                    style={Platform.OS === 'ios' && style.checkBoxStyle}
+                  />
 								)}
 								name='termsAccept'
 								rules={{
@@ -473,14 +480,14 @@ const SignupFormUI = (props: SignupParams) => {
 								}}
 								defaultValue={false}
 							/>
-							<OText style={{ ...theme.labels.normal }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
+							<OText style={{ ...theme.labels.normal, paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
 							<OButton
 								imgRightSrc={null}
 								text={t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
 								bgColor='#FFF'
 								borderColor='#FFF'
-								style={{ paddingLeft: 0, paddingRight: 0, height: 30 }}
-								textStyle={{ color: theme.colors.primary, marginLeft: 5, marginRight: 5 }}
+								style={{ paddingLeft: 0, paddingRight: 0, height: 30, shadowColor: '#FFF' }}
+								textStyle={{ color: theme.colors.primary, marginLeft: 0, marginRight: 0 }}
 								onClick={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}
 							/>
 						</View>
