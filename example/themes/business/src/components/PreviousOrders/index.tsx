@@ -1,20 +1,37 @@
+// React & React Native
 import React from 'react';
-import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+
+// Ordering
 import { useTheme } from 'styled-components/native';
 import { useLanguage, useUtils } from 'ordering-components/native';
-import { OIcon, OText } from '../shared';
-import { Card, Logo, Information, MyOrderOptions } from './styles';
-import { PreviousOrdersParams } from '../../types';
 
-export const PreviousOrders = (props: any) => {
-  const { orders, onNavigationRedirect, getOrderStatus } = props;
+// Own
+import { Card, Logo, Information, MyOrderOptions } from './styles';
+import { NotFoundSource } from '../NotFoundSource';
+import { OIcon, OText, OButton } from '../shared';
+import { PreviousOrdersParams } from '../../types';
+import dayjs from 'dayjs';
+
+export const PreviousOrders = (props: PreviousOrdersParams) => {
+  const {
+    data: { orders, pagination, loading, error },
+    tab,
+    loadOrders,
+    isRefreshing,
+    tagsFilter,
+    getOrderStatus,
+    onNavigationRedirect,
+  } = props;
+
+  // Hooks
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
   const theme = useTheme();
 
+  // Handles
   const handlePressOrder = (order: any) => {
-    onNavigationRedirect &&
-      onNavigationRedirect('OrderDetails', { order: order });
+    onNavigationRedirect?.('OrderDetails', { order: order });
   };
 
   const styles = StyleSheet.create({
@@ -60,18 +77,49 @@ export const PreviousOrders = (props: any) => {
       fontWeight: 'normal',
       color: theme.colors.orderTypeColor,
     },
+    loadButton: {
+      borderRadius: 7.6,
+      height: 44,
+      marginRight: 10,
+      marginBottom: 10,
+      marginTop: 5,
+    },
+    loadButtonText: {
+      color: theme.colors.inputTextColor,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 18,
+    },
   });
-
-  let hash: any = {};
 
   return (
     <>
+      {!loading &&
+        (!orders?.filter((order: any) => tagsFilter?.includes(order.status))
+          ?.length ||
+          error ||
+          !tagsFilter?.length) && (
+          <NotFoundSource
+            content={
+              !error
+                ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
+                : error[0]?.message ||
+                  error[0] ||
+                  t('NETWORK_ERROR', 'Network Error')
+            }
+            image={theme.images.general.notFound}
+            conditioned={false}
+          />
+        )}
+
       {orders?.length > 0 &&
         orders
-          ?.filter((order: any) =>
-            hash[order?.id] ? false : (hash[order?.id] = true),
-          )
-          ?.map((order: any) => (
+          ?.filter((order: any) => tagsFilter?.includes(order.status))
+          ?.sort((a: any, b: any) => {
+            return dayjs(b.created_at).unix() - dayjs(a.created_at).unix();
+          })
+          .map((order: any) => (
             <React.Fragment key={order.id}>
               <TouchableOpacity
                 onPress={() => handlePressOrder(order)}
@@ -122,7 +170,7 @@ export const PreviousOrders = (props: any) => {
                           : order.delivery_type === 4
                           ? t('CURBSIDE', 'Curbside')
                           : t('DRIVER_THRU', 'Driver thru')}
-                        {` · ${getOrderStatus(order.status)}`}
+                        {` · ${getOrderStatus?.(order.status)}`}
                       </OText>
                     </MyOrderOptions>
                   </Information>
@@ -130,6 +178,24 @@ export const PreviousOrders = (props: any) => {
               </TouchableOpacity>
             </React.Fragment>
           ))}
+
+      {!error &&
+        pagination?.totalPages &&
+        !loading &&
+        !isRefreshing &&
+        pagination?.currentPage < pagination?.totalPages &&
+        !!tagsFilter?.length && (
+          <OButton
+            onClick={() => loadOrders?.(tab, true)}
+            text={t('LOAD_MORE_ORDERS', 'Load more orders')}
+            imgRightSrc={null}
+            textStyle={styles.loadButtonText}
+            style={styles.loadButton}
+            bgColor={theme.colors.primary}
+            borderColor={theme.colors.primary}
+            isDisabled={isRefreshing || loading}
+          />
+        )}
     </>
   );
 };
