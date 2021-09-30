@@ -129,7 +129,8 @@ const CheckoutUI = (props: any) => {
     : configs?.driver_tip_options?.value || []
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
-
+  const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
+  
   const cartsWithProducts = carts && Object.values(carts).filter((cart: any) => cart.products.length) || null
 
   const handlePlaceOrder = () => {
@@ -297,31 +298,33 @@ const CheckoutUI = (props: any) => {
             </ChAddress>
           </ChSection>
           <ChSection style={style.paddSectionH}>
-            <ChMoment>
-              {cartState.loading ? (
-                <Placeholder Animation={Fade}>
-                  <PlaceholderLine height={50} style={{ marginBottom: 0 }} />
-                </Placeholder>
-              ) : (
-                <CHMomentWrapper
-                  disabled={loading}
-                  onPress={() => navigation.navigate('MomentOption')}
-                >
-                  <MaterialCommunityIcon
-                    name='clock-outline'
-                    size={24}
-                    style={{ marginRight: 5 }}
-                  />
-                  <OText size={18} numberOfLines={1} ellipsizeMode='tail'>
-                    {options?.moment
-                      ? parseDate(options?.moment, {
-                        outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
-                      })
-                      : t('ASAP_ABBREVIATION', 'ASAP')}
-                  </OText>
-                </CHMomentWrapper>
-              )}
-            </ChMoment>
+          {(isPreOrderSetting || configs?.preorder_status_enabled?.value === undefined) && (
+              <ChMoment>
+                {cartState.loading ? (
+                  <Placeholder Animation={Fade}>
+                    <PlaceholderLine height={50} style={{ marginBottom: 0 }} />
+                  </Placeholder>
+                ) : (
+                  <CHMomentWrapper
+                    disabled={loading}
+                    onPress={() => navigation.navigate('MomentOption')}
+                  >
+                    <MaterialCommunityIcon
+                      name='clock-outline'
+                      size={24}
+                      style={{ marginRight: 5 }}
+                    />
+                    <OText size={18} numberOfLines={1} ellipsizeMode='tail'>
+                      {options?.moment
+                        ? parseDate(options?.moment, {
+                          outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
+                        })
+                        : t('ASAP_ABBREVIATION', 'ASAP')}
+                    </OText>
+                  </CHMomentWrapper>
+                )}
+              </ChMoment>
+          )}
           </ChSection>
 
           <ChSection style={style.paddSection}>
