@@ -264,7 +264,6 @@ export interface OrdersOptionParams {
     isRefresh?: boolean,
     activeStatus?: number[] | undefined,
   ) => void;
-  paginationSettings?: any;
   onNavigationRedirect?: (route: string, params?: any) => void;
 }
 export interface ActiveOrdersParams {

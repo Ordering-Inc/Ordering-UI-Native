@@ -198,12 +198,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       setReload(true);
     }
 
-    const currentStatus = activeStatus?.filter((status: number) =>
-      tagsStatus.includes(status),
-    );
-    console.log(currentStatus);
-
-    loadOrders?.(activeTab.title, false, true, currentStatus);
+    loadOrders?.(activeTab.title, false, true);
   };
 
   const getOrderStatus = (key: number) => {

@@ -183,8 +183,6 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
         pagination?.totalPages &&
         !loading &&
         !isRefreshing &&
-        !!orders?.filter((order: any) => tagsFilter?.includes(order.status))
-          ?.length &&
         pagination?.currentPage < pagination?.totalPages &&
         !!tagsFilter?.length && (
           <OButton
