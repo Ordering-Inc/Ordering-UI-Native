@@ -1,3 +1,4 @@
+// React & React Native
 import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
@@ -5,42 +6,50 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
-import { OrderList, useLanguage } from 'ordering-components/native';
+
+// Ordering
+import { useLanguage, CumulativeOrders } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
+
+// Third-party
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
-import { OText, OButton } from '../shared';
-import { PreviousOrders } from '../PreviousOrders';
-import { NotFoundSource } from '../NotFoundSource';
+
+// Own
 import { FiltersTab, TabsContainer, Tag } from './styles';
+import { PreviousOrders } from '../PreviousOrders';
+import { OText, OIconButton } from '../shared';
 import { OrdersOptionParams } from '../../types';
+
+// Interfaces
+interface Tab {
+  key: number;
+  text: any;
+  tags: number[];
+  title: string;
+}
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
-    orderList,
-    pagination,
-    customArray,
-    navigation,
-    loadMoreOrders,
-    rememberOrderStatus,
-    setRememberOrderStatus,
-    setUpdateOtherStatus,
+    pending,
+    inProgress,
+    completed,
+    cancelled,
     loadOrders,
     onNavigationRedirect,
   } = props;
 
+  // Hooks
   const theme = useTheme();
   const [, t] = useLanguage();
-
-  const { loading, error, orders: values } = orderList;
-  const orders = customArray || values || [];
 
   const orderStatus = [
     { key: 0, text: t('PENDING', 'Pending') },
     { key: 1, text: t('COMPLETED', 'Completed') },
     { key: 2, text: t('REJECTED', 'Rejected') },
     { key: 3, text: t('DRIVER_IN_BUSINESS', 'Driver in business') },
-    { key: 4, text: t('READY_FOR_PICKUP', 'Ready for pickup') },
+    { key: 4, text: t('PREPARATION_COMPLETED', 'Preparation Completed') },
     { key: 5, text: t('REJECTED_BY_BUSINESS', 'Rejected by business') },
     { key: 6, text: t('REJECTED_BY_DRIVER', 'Rejected by Driver') },
     { key: 7, text: t('ACCEPTED_BY_BUSINESS', 'Accepted by business') },
@@ -130,101 +139,74 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     },
   ];
 
-  const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
+  // Refs
+  const scrollRefTag = useRef() as React.MutableRefObject<ScrollView>;
   const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
 
-  const [ordersFilter, setOrdersFilter] = useState(tabs[0].tags);
-  const [ordersFiltered, setOrdersFiltered] = useState(
-    orders.filter((order: any) => ordersFilter.includes(order?.status)),
+  // States
+  const [activeTab, setActiveTab] = useState<Tab>(tabs[0]);
+  const [activeTags, setActiveTags] = useState<number[]>(
+    tabs.reduce((total: any, tab: any) => total.concat(tab.tags), []),
   );
-  const [tabsStatus, setTabStatus] = useState(tabs[0].tags);
-  const [tagsStatus, setTagsStatus] = useState(tabs[0].tags);
-  const [isLoadedOrders, setIsLoadedOrders] = useState<any>({
-    pending: { isFetched: true, hasMorePagination: false },
-    inProgress: { isFetched: false, hasMorePagination: false },
-    completed: { isFetched: false, hasMorePagination: false },
-    cancelled: { isFetched: false, hasMorePagination: false },
-  });
-  const [currentTab, setCurrentTab] = useState(tabs[0].title);
-  const [reload, setReload] = useState(false);
-  const [orientation, setOrientation] = useState(
+  const [tagsStatus, setTagsStatus] = useState<number[]>(tabs[0].tags);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [reload, setReload] = useState<boolean>(false);
+  const [orientation, setOrientation] = useState<string>(
     Dimensions.get('window').width < Dimensions.get('window').height
       ? 'Portrait'
       : 'Landscape',
   );
-  const [windowsWidth, setWindowsWidth] = useState(
+  const [windowsWidth, setWindowsWidth] = useState<number>(
     parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
   );
 
-  useEffect(() => {
-    setOrdersFiltered(
-      orders.filter((order: any) =>
-        rememberOrderStatus.includes(order?.status),
-      ),
-    );
-  }, [ordersFilter, orders, rememberOrderStatus]);
-
-  const handleChangeTab = (tags: number[], tabTitle: string) => {
-    if (!isLoadedOrders[tabTitle].isFetched) {
-      loadOrders && loadOrders(true, tags);
-      setIsLoadedOrders({
-        ...isLoadedOrders,
-        [tabTitle]: { isFetched: true, hasMorePagination: false },
-      });
+  // Handles
+  const handleChangeTab = async (tab: Tab) => {
+    if (tab.key === activeTab.key) {
+      return;
     }
 
-    if (JSON.stringify(tags) === JSON.stringify(tabs[3].tags)) {
+    if (tab.key === tabs[3].key) {
       scrollRefTab.current?.scrollToEnd({ animated: true });
     }
 
-    if (JSON.stringify(tags) === JSON.stringify(tabs[0].tags)) {
+    if (tab.key === tabs[0].key) {
       scrollRefTab.current?.scrollTo({ animated: true });
     }
 
-    scrollRef.current?.scrollTo({
+    scrollRefTag.current?.scrollTo({
       y: 0,
       animated: true,
     });
 
-    setTabStatus(tags);
-    setTagsStatus(tags);
-    setOrdersFilter(tags);
-    setCurrentTab(tabTitle);
-    setRememberOrderStatus(tags);
+    setActiveTab(tab);
+    setTagsStatus(tab.tags);
+    loadOrders?.(tab.title, false);
   };
 
   const handleChangeTag = (key: number) => {
-    const updateTags: number[] = [];
-    if (rememberOrderStatus.includes(key)) {
-      updateTags.push(...rememberOrderStatus.filter((tag: any) => tag !== key));
+    if (activeTags.includes(key)) {
+      setActiveTags(activeTags.filter((tag: number) => tag !== key));
     } else {
-      updateTags.push(...rememberOrderStatus.concat(key));
+      setActiveTags(activeTags.concat(key));
     }
-    setRememberOrderStatus(updateTags);
   };
 
-  const handleReload = () => {
-    setReload(true);
-    loadOrders &&
-      loadOrders(
-        true,
-        ordersFilter,
-        pagination.pageSize * pagination.currentPage <= 50,
-      );
-  };
-
-  const handleLoadMore = () => {
-    if (orders.length <= 3) {
-      handleReload();
+  const handleRefreshAndReload = (loadType: string) => {
+    if (loadType === 'refresh') {
+      setIsRefreshing(true);
     } else {
-      loadMoreOrders && loadMoreOrders(ordersFilter);
+      setReload(true);
     }
+
+    loadOrders?.(activeTab.title, false, true);
   };
 
   const getOrderStatus = (key: number) => {
     return orderStatus.find(status => status.key === key)?.text;
   };
 
+  // Events
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
     setWindowsWidth(
       parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
@@ -237,6 +219,25 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     }
   });
 
+  // Effects
+  useEffect(() => {
+    if (
+      !pending?.loading ||
+      !inProgress?.loading ||
+      !completed?.loading ||
+      !cancelled?.loading
+    ) {
+      setIsRefreshing(false);
+      setReload(false);
+    }
+  }, [
+    pending?.loading,
+    inProgress?.loading,
+    completed?.loading,
+    cancelled?.loading,
+  ]);
+
+  // Styles
   const styles = StyleSheet.create({
     header: {
       marginBottom: 25,
@@ -291,22 +292,28 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     },
   });
 
-  useEffect(() => {
-    if (!loading) {
-      setIsLoadedOrders({
-        ...isLoadedOrders,
-        [currentTab]: {
-          isFetched: true,
-          hasMorePagination: pagination.currentPage < pagination.totalPages,
-        },
-      });
-    }
-  }, [pagination.totalPages]);
-
   return (
     <>
       <View style={styles.header}>
         <OText style={styles.title}>{t('MY_ORDERS', 'My orders')}</OText>
+
+        <View style={styles.icons}>
+          <OIconButton
+            icon={theme.images.general.reload}
+            borderColor={theme.colors.clear}
+            iconStyle={{ width: 25, height: 25 }}
+            style={{ maxWidth: 40, height: 35 }}
+            onClick={() => handleRefreshAndReload('reload')}
+          />
+
+          {/* <OIconButton
+            icon={theme.images.general.search}
+            borderColor={theme.colors.clear}
+            iconStyle={{ width: 25, height: 25 }}
+            style={{ maxWidth: 40, height: 35 }}
+            onClick={() => {}}
+          /> */}
+        </View>
       </View>
 
       <FiltersTab>
@@ -320,19 +327,15 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               <Pressable
                 key={tab.key}
                 style={styles.pressable}
-                onPress={() => handleChangeTab(tab.tags, tab.title)}>
+                onPress={() => handleChangeTab(tab)}>
                 <OText
                   style={styles.tab}
                   color={
-                    JSON.stringify(tabsStatus) === JSON.stringify(tab.tags)
+                    tab.key === activeTab.key
                       ? theme.colors.textGray
                       : theme.colors.unselectText
                   }
-                  weight={
-                    JSON.stringify(tabsStatus) === JSON.stringify(tab.tags)
-                      ? '600'
-                      : 'normal'
-                  }>
+                  weight={tab.key === activeTab.key ? '600' : 'normal'}>
                   {tab.text}
                 </OText>
 
@@ -340,7 +343,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                   style={{
                     width: '100%',
                     borderBottomColor:
-                      JSON.stringify(tabsStatus) === JSON.stringify(tab.tags)
+                      tab.key === activeTab.key
                         ? theme.colors.textGray
                         : theme.colors.tabBar,
                     borderBottomWidth: 2,
@@ -354,7 +357,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
       <View>
         <ScrollView
-          ref={scrollRef}
+          ref={scrollRefTag}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.tagsContainer}
@@ -364,14 +367,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               key={key}
               onPress={() => handleChangeTag(key)}
               isSelected={
-                rememberOrderStatus.includes(key)
+                activeTags.includes(key)
                   ? theme.colors.primary
                   : theme.colors.tabBar
               }>
               <OText
                 style={styles.tag}
                 color={
-                  rememberOrderStatus.includes(key)
+                  activeTags.includes(key)
                     ? theme.colors.white
                     : theme.colors.black
                 }>
@@ -382,36 +385,88 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </ScrollView>
       </View>
 
-      {!loading &&
-        (!ordersFilter.length ||
-          ordersFiltered?.length < 1 ||
-          orderList.error ||
-          !orderList.orders.length ||
-          !rememberOrderStatus.length) && (
-          <NotFoundSource
-            content={
-              !orderList.error
-                ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
-                : orderList?.error[0]?.message ||
-                  orderList?.error[0] ||
-                  t('NETWORK_ERROR', 'Network Error')
-            }
-            image={theme.images.general.notFound}
-            conditioned={false}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={() => handleRefreshAndReload('refresh')}
           />
-        )}
+        }>
+        {activeTab.key === tabs[0].key &&
+          !(reload && pending?.loading) &&
+          !pending?.error &&
+          pending?.orders?.length > 0 && (
+            <PreviousOrders
+              data={pending}
+              tab={tabs[0].title}
+              loadOrders={loadOrders}
+              isRefreshing={isRefreshing}
+              tagsFilter={activeTags.filter((key: number) =>
+                tagsStatus.includes(key),
+              )}
+              onNavigationRedirect={onNavigationRedirect}
+              getOrderStatus={getOrderStatus}
+            />
+          )}
 
-      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-        {!reload && !error && orders.length > 0 && (
-          <PreviousOrders
-            orders={ordersFiltered}
-            onNavigationRedirect={onNavigationRedirect}
-            getOrderStatus={getOrderStatus}
-            tabsFilter={rememberOrderStatus}
-          />
-        )}
+        {activeTab.key === tabs[1].key &&
+          !(reload && inProgress?.loading) &&
+          !inProgress?.error &&
+          inProgress?.orders?.length > 0 && (
+            <PreviousOrders
+              data={inProgress}
+              tab={tabs[1].title}
+              loadOrders={loadOrders}
+              isRefreshing={isRefreshing}
+              tagsFilter={activeTags.filter((key: number) =>
+                tagsStatus.includes(key),
+              )}
+              onNavigationRedirect={onNavigationRedirect}
+              getOrderStatus={getOrderStatus}
+            />
+          )}
 
-        {loading && (
+        {activeTab.key === tabs[2].key &&
+          !(reload && completed?.loading) &&
+          !completed?.error &&
+          completed?.orders?.length > 0 && (
+            <PreviousOrders
+              data={completed}
+              tab={tabs[2].title}
+              loadOrders={loadOrders}
+              isRefreshing={isRefreshing}
+              tagsFilter={activeTags.filter((key: number) =>
+                tagsStatus.includes(key),
+              )}
+              onNavigationRedirect={onNavigationRedirect}
+              getOrderStatus={getOrderStatus}
+            />
+          )}
+
+        {activeTab.key === tabs[3].key &&
+          !(reload && cancelled?.loading) &&
+          !cancelled?.error &&
+          cancelled?.orders?.length > 0 && (
+            <PreviousOrders
+              data={cancelled}
+              tab={tabs[3].title}
+              loadOrders={loadOrders}
+              isRefreshing={isRefreshing}
+              tagsFilter={activeTags.filter((key: number) =>
+                tagsStatus.includes(key),
+              )}
+              onNavigationRedirect={onNavigationRedirect}
+              getOrderStatus={getOrderStatus}
+            />
+          )}
+
+        {(pending?.loading ||
+          inProgress?.loading ||
+          completed?.loading ||
+          cancelled?.loading ||
+          reload) && (
           <>
             <View>
               {[...Array(5)].map((item, i) => (
@@ -442,25 +497,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             </View>
           </>
         )}
-
-        {!!ordersFilter.length &&
-          !orderList.error &&
-          pagination.totalPages &&
-          !loading &&
-          !!orders.length &&
-          pagination.currentPage < pagination.totalPages &&
-          isLoadedOrders[currentTab].hasMorePagination &&
-          rememberOrderStatus.length > 0 && (
-            <OButton
-              onClick={handleLoadMore}
-              text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-              imgRightSrc={null}
-              textStyle={styles.loadButtonText}
-              style={styles.loadButton}
-              bgColor={theme.colors.primary}
-              borderColor={theme.colors.primary}
-            />
-          )}
       </ScrollView>
     </>
   );
@@ -472,5 +508,5 @@ export const OrdersOption = (props: OrdersOptionParams) => {
     UIComponent: OrdersOptionUI,
   };
 
-  return <OrderList {...MyOrdersProps} />;
+  return <CumulativeOrders {...MyOrdersProps} />;
 };
