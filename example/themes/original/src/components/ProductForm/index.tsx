@@ -61,7 +61,6 @@ export const ProductOptionsUI = (props: any) => {
 
 	const theme = useTheme();
 
-
 	const styles = StyleSheet.create({
 		mainContainer: {
 
@@ -135,8 +134,10 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleSaveProduct = () => {
+		console.log('----- click handle ------')
 		const isErrors = Object.values(errors).length > 0;
 		if (!isErrors) {
+			console.log('----- save handle ------')
 			handleSave && handleSave();
 			return;
 		}
@@ -635,6 +636,7 @@ export const ProductOptionsUI = (props: any) => {
 										}`}
 									textStyle={{
 										color: saveErrors ? theme.colors.primary : theme.colors.white,
+										fontSize: orderState.loading || editMode ? 10 : 14
 									}}
 									style={{
 										backgroundColor: saveErrors ? theme.colors.white : theme.colors.primary,
@@ -654,6 +656,7 @@ export const ProductOptionsUI = (props: any) => {
 									isDisabled
 									text={t('LOADING', 'Loading')}
 									imgRightSrc=""
+									textStyle={{fontSize: 10}}
 								/>
 							) : (
 								<OButton onClick={navigation.navigate('AddressList')} />
@@ -668,7 +671,7 @@ export const ProductOptionsUI = (props: any) => {
 										: t('LOGIN_SIGNUP', 'Login / Sign Up')
 								}
 								imgRightSrc=""
-								textStyle={{ color: theme.colors.primary }}
+								textStyle={{ color: theme.colors.primary, fontSize: 10 }}
 								style={{
 									borderColor: theme.colors.primary,
 									backgroundColor: theme.colors.white,

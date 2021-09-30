@@ -86,10 +86,6 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 					id: order?.id,
 					business_id: order?.business_id,
 					logo: order.business?.logo,
-					driver: order?.driver,
-					products: order?.products,
-					review: order?.review,
-					user_review: order?.user_review
 				},
 			});
 	};
