@@ -256,7 +256,14 @@ export interface OrdersOptionParams {
   inProgress?: any;
   completed?: any;
   cancelled?: any;
-  loadOrders?: (tab: string, isNextPage?: boolean, isRefresh?: boolean) => void;
+  activeStatus?: number[];
+  setActiveStatus?: (state: number[]) => void;
+  loadOrders?: (
+    tab: string,
+    isNextPage?: boolean,
+    isRefresh?: boolean,
+    activeStatus?: number[] | undefined,
+  ) => void;
   paginationSettings?: any;
   onNavigationRedirect?: (route: string, params?: any) => void;
 }

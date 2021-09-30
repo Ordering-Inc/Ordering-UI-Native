@@ -182,7 +182,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
         !!orders?.filter((order: any) => tagsFilter?.includes(order.status))
           ?.length &&
         pagination?.currentPage < pagination?.totalPages &&
-        !tagsFilter?.length && (
+        !!tagsFilter?.length && (
           <OButton
             onClick={() => loadOrders?.(tab, true)}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}

@@ -36,6 +36,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     inProgress,
     completed,
     cancelled,
+    activeStatus,
+    setActiveStatus,
     loadOrders,
     onNavigationRedirect,
   } = props;
@@ -49,7 +51,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     { key: 1, text: t('COMPLETED', 'Completed') },
     { key: 2, text: t('REJECTED', 'Rejected') },
     { key: 3, text: t('DRIVER_IN_BUSINESS', 'Driver in business') },
-    { key: 4, text: t('PREPARATION_COMPLETED', 'Preparation Completed') },
+    { key: 4, text: t('READY_FOR_PICKUP', 'Ready for pickup') },
     { key: 5, text: t('REJECTED_BY_BUSINESS', 'Rejected by business') },
     { key: 6, text: t('REJECTED_BY_DRIVER', 'Rejected by Driver') },
     { key: 7, text: t('ACCEPTED_BY_BUSINESS', 'Accepted by business') },
@@ -145,9 +147,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   // States
   const [activeTab, setActiveTab] = useState<Tab>(tabs[0]);
-  const [activeTags, setActiveTags] = useState<number[]>(
-    tabs.reduce((total: any, tab: any) => total.concat(tab.tags), []),
-  );
   const [tagsStatus, setTagsStatus] = useState<number[]>(tabs[0].tags);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [reload, setReload] = useState<boolean>(false);
@@ -185,10 +184,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   };
 
   const handleChangeTag = (key: number) => {
-    if (activeTags.includes(key)) {
-      setActiveTags(activeTags.filter((tag: number) => tag !== key));
+    if (activeStatus?.includes(key)) {
+      setActiveStatus?.(activeStatus?.filter((tag: number) => tag !== key));
     } else {
-      setActiveTags(activeTags.concat(key));
+      activeStatus && setActiveStatus?.(activeStatus.concat(key));
     }
   };
 
@@ -199,7 +198,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       setReload(true);
     }
 
-    loadOrders?.(activeTab.title, false, true);
+    const currentStatus = activeStatus?.filter((status: number) =>
+      tagsStatus.includes(status),
+    );
+    console.log(currentStatus);
+
+    loadOrders?.(activeTab.title, false, true, currentStatus);
   };
 
   const getOrderStatus = (key: number) => {
@@ -367,14 +371,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               key={key}
               onPress={() => handleChangeTag(key)}
               isSelected={
-                activeTags.includes(key)
+                activeStatus?.includes(key)
                   ? theme.colors.primary
                   : theme.colors.tabBar
               }>
               <OText
                 style={styles.tag}
                 color={
-                  activeTags.includes(key)
+                  activeStatus?.includes(key)
                     ? theme.colors.white
                     : theme.colors.black
                 }>
@@ -403,7 +407,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               tab={tabs[0].title}
               loadOrders={loadOrders}
               isRefreshing={isRefreshing}
-              tagsFilter={activeTags.filter((key: number) =>
+              tagsFilter={activeStatus?.filter((key: number) =>
                 tagsStatus.includes(key),
               )}
               onNavigationRedirect={onNavigationRedirect}
@@ -420,7 +424,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               tab={tabs[1].title}
               loadOrders={loadOrders}
               isRefreshing={isRefreshing}
-              tagsFilter={activeTags.filter((key: number) =>
+              tagsFilter={activeStatus?.filter((key: number) =>
                 tagsStatus.includes(key),
               )}
               onNavigationRedirect={onNavigationRedirect}
@@ -437,7 +441,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               tab={tabs[2].title}
               loadOrders={loadOrders}
               isRefreshing={isRefreshing}
-              tagsFilter={activeTags.filter((key: number) =>
+              tagsFilter={activeStatus?.filter((key: number) =>
                 tagsStatus.includes(key),
               )}
               onNavigationRedirect={onNavigationRedirect}
@@ -454,7 +458,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               tab={tabs[3].title}
               loadOrders={loadOrders}
               isRefreshing={isRefreshing}
-              tagsFilter={activeTags.filter((key: number) =>
+              tagsFilter={activeStatus?.filter((key: number) =>
                 tagsStatus.includes(key),
               )}
               onNavigationRedirect={onNavigationRedirect}
