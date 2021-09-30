@@ -8,7 +8,7 @@ export const OrderDetailsContainer = styled.ScrollView`
 
 export const Pickup = styled.View`
   padding-vertical: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 `;
 
 export const NavBack = styled.TouchableOpacity``;

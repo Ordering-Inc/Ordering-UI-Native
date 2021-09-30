@@ -40,7 +40,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     { key: 1, text: t('COMPLETED', 'Completed') },
     { key: 2, text: t('REJECTED', 'Rejected') },
     { key: 3, text: t('DRIVER_IN_BUSINESS', 'Driver in business') },
-    { key: 4, text: t('PREPARATION_COMPLETED', 'Preparation Completed') },
+    { key: 4, text: t('READY_FOR_PICKUP', 'Ready for pickup') },
     { key: 5, text: t('REJECTED_BY_BUSINESS', 'Rejected by business') },
     { key: 6, text: t('REJECTED_BY_DRIVER', 'Rejected by Driver') },
     { key: 7, text: t('ACCEPTED_BY_BUSINESS', 'Accepted by business') },

@@ -99,6 +99,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
   const [isReviewed, setIsReviewed] = useState(false)
   const { order, businessData } = props.order
+  const isTaxIncluded = order?.tax_type === 1
 
 
   const getOrderStatus = (s: string) => {
@@ -387,7 +388,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <OrderBill>
               <Table>
                 <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
-                <OText>{parsePrice(order?.summary?.subtotal || order?.subtotal)}</OText>
+                <OText>{parsePrice( isTaxIncluded ? (order?.summary?.subtotal + order?.summary?.tax) : order?.summary?.subtotal || order?.subtotal)}</OText>
               </Table>
               {(order?.summary?.discount > 0 || order?.discount > 0) && (
                 <Table>

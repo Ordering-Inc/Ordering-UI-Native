@@ -1,6 +1,6 @@
 //React & React Native
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Platform } from 'react-native';
 
 // Thirds
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -16,11 +16,12 @@ import {
 } from 'ordering-components/native';
 
 //Components
+import Alert from '../../providers/AlertProvider';
 import { AcceptOrRejectOrder } from '../AcceptOrRejectOrder';
 import { Chat } from '../Chat';
 import { FloatingButton } from '../FloatingButton';
 import { DriverMap } from '../DriverMap';
-import { OButton, OText, OIconButton } from '../shared';
+import { OButton, OText, OIconButton, OLink } from '../shared';
 import { OModal } from '../shared';
 import { OrderDetailsParams } from '../../types';
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -79,6 +80,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openModalForMapView, setOpenModalForMapView] = useState(false);
   const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
   const [openModalForAccept, setOpenModalForAccept] = useState(false);
+  const [alertState, setAlertState] = useState<{
+    open: boolean;
+    content: Array<string>;
+    key?: string | null;
+  }>({ open: false, content: [], key: null });
 
   const getOrderStatus = (s: string) => {
     const status = parseInt(s);
@@ -109,7 +115,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       },
       {
         key: 4,
-        value: t('PREPARATION_COMPLETED', 'Preparation Completed'),
+        value: t('READY_FOR_PICKUP', 'Ready for pickup'),
         slug: 'PREPARATION_COMPLETED',
         percentage: 0.7,
       },
@@ -352,6 +358,21 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   useEffect(() => {
+    if (order?.driver === null) {
+      setAlertState({
+        open: true,
+        content: [
+          t(
+            'YOU_HAVE_BEEN_REMOVED_FROM_THE_ORDER',
+            'You have been removed from the order',
+          ),
+        ],
+        key: null,
+      });
+    }
+  }, [order?.driver]);
+
+  useEffect(() => {
     if (messagesReadList?.length) {
       openModalForBusiness
         ? setUnreadAlert({ ...unreadAlert, business: false })
@@ -532,6 +553,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {getOrderStatus(order?.status)?.value}
                 </OText>
               </>
+              <OText size={13}>
+                {`${order?.paymethod?.name} - ${
+                  order.delivery_type === 1
+                    ? t('DELIVERY', 'Delivery')
+                    : order.delivery_type === 2
+                    ? t('PICKUP', 'Pickup')
+                    : order.delivery_type === 3
+                    ? t('EAT_IN', 'Eat in')
+                    : order.delivery_type === 4
+                    ? t('CURBSIDE', 'Curbside')
+                    : t('DRIVER_THRU', 'Driver thru')
+                }`}
+              </OText>
             </OText>
           </OrderHeader>
           <OrderDetailsContainer
@@ -550,17 +584,48 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     {order?.business?.name}
                   </OText>
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.business?.email}
-                  </OText>
+                  {!!order?.business?.email && (
+                    <OLink
+                      url={`mailto:${order?.business?.email}`}
+                      shorcut={order?.business?.email}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.business?.cellphone}
-                  </OText>
+                  <View style={{ flexDirection: 'row' }}>
+                    {!!order?.business?.cellphone && (
+                      <OLink
+                        url={`tel:${order?.business?.cellphone}`}
+                        shorcut={`${order?.business?.cellphone} ${
+                          order?.business?.phone ? '- ' : ''
+                        }`}
+                        color={theme.colors.primary}
+                        PressStyle={{ marginBottom: 4 }}
+                      />
+                    )}
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.business?.address}
-                  </OText>
+                    {!!order?.business?.phone && (
+                      <OLink
+                        url={`tel:${order?.business?.phone}`}
+                        shorcut={order?.business?.phone}
+                        color={theme.colors.primary}
+                        PressStyle={{ marginBottom: 4 }}
+                      />
+                    )}
+                  </View>
+
+                  {!!order?.business?.address && (
+                    <OLink
+                      url={Platform.select({
+                        ios: `maps:0,0?q=${order?.business?.address}`,
+                        android: `geo:0,0?q=${order?.business?.address}`,
+                      })}
+                      shorcut={order?.business?.address}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
                 </OrderBusiness>
 
                 <OrderCustomer>
@@ -568,21 +633,96 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     {t('CUSTOMER_DETAILS', 'Customer details')}
                   </OText>
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.customer?.name}
-                  </OText>
+                  <View style={{ flexDirection: 'row' }}>
+                    <OText
+                      numberOfLines={1}
+                      mBottom={4}
+                      ellipsizeMode="tail"
+                      space>
+                      {order?.customer?.name}
+                    </OText>
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.customer?.email}
-                  </OText>
+                    <OText
+                      numberOfLines={1}
+                      mBottom={4}
+                      ellipsizeMode="tail"
+                      space>
+                      {order?.customer?.middle_name}
+                    </OText>
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.customer?.cellphone}
-                  </OText>
+                    <OText
+                      numberOfLines={1}
+                      mBottom={4}
+                      ellipsizeMode="tail"
+                      space>
+                      {order?.customer?.lastname}
+                    </OText>
 
-                  <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
-                    {order?.customer?.address}
-                  </OText>
+                    <OText
+                      numberOfLines={1}
+                      mBottom={4}
+                      ellipsizeMode="tail"
+                      space>
+                      {order?.customer?.second_lastname}
+                    </OText>
+                  </View>
+
+                  {Boolean(order?.customer?.email) && (
+                    <OLink
+                      url={`mailto:${order?.customer?.email}`}
+                      shorcut={order?.customer?.email}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
+
+                  {Boolean(order?.customer?.cellphone) && (
+                    <OLink
+                      url={`tel:${order?.customer?.cellphone}`}
+                      shorcut={order?.customer?.cellphone}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
+
+                  {Boolean(order?.customer?.phone) && (
+                    <OLink
+                      url={`tel:${order?.customer?.phone}`}
+                      shorcut={order?.customer?.phone}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
+
+                  {Boolean(order?.customer?.address) && (
+                    <OLink
+                      url={Platform.select({
+                        ios: `maps:0,0?q=${order?.customer?.address}`,
+                        android: `geo:0,0?q=${order?.customer?.address}`,
+                      })}
+                      shorcut={order?.customer?.address}
+                      color={theme.colors.primary}
+                      PressStyle={{ marginBottom: 4 }}
+                    />
+                  )}
+
+                  {Boolean(order?.customer?.internal_number) && (
+                    <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                      {order?.customer?.internal_number}
+                    </OText>
+                  )}
+
+                  {Boolean(order?.customer?.address_notes) && (
+                    <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                      {order?.customer?.address_notes}
+                    </OText>
+                  )}
+
+                  {Boolean(order?.customer.zipcode) && (
+                    <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                      {order?.customer?.zipcode}
+                    </OText>
+                  )}
                 </OrderCustomer>
 
                 <OrderProducts>
@@ -595,7 +735,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       <ProductItemAccordion
                         key={product?.id || i}
                         product={product}
-                        comment={order.comment ? order.comment : ' '}
                       />
                     ))}
                 </OrderProducts>
@@ -604,7 +743,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <Table>
                     <OText mBottom={4}>{t('SUBTOTAL', 'Subtotal')}</OText>
 
-                    <OText mBottom={4}>{parsePrice(order?.subtotal)}</OText>
+                    <OText mBottom={4}>
+                      {order.tax_type === 1
+                        ? parsePrice(
+                            (order?.summary?.subtotal || order?.subtotal) +
+                              (order?.summary?.tax || order?.tax) || 0,
+                          )
+                        : parsePrice(
+                            order?.summary?.subtotal || order?.subtotal || 0,
+                          )}
+                    </OText>
                   </Table>
 
                   {order?.tax_type !== 1 && (
@@ -645,6 +793,33 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       </OText>
                     </Table>
                   )}
+
+                  {order?.summary?.subtotal_with_discount > 0 &&
+                    order?.summary?.discount > 0 &&
+                    order?.summary?.total >= 0 && (
+                      <Table>
+                        <OText mBottom={4}>
+                          {t(
+                            'SUBTOTAL_WITH_DISCOUNT',
+                            'Subtotal with discount',
+                          )}
+                        </OText>
+                        {order?.tax_type === 1 ? (
+                          <OText mBottom={4}>
+                            {parsePrice(
+                              order?.summary?.subtotal_with_discount +
+                                (order?.summary?.tax || order?.tax) || 0,
+                            )}
+                          </OText>
+                        ) : (
+                          <OText mBottom={4}>
+                            {parsePrice(
+                              order?.summary?.subtotal_with_discount || 0,
+                            )}
+                          </OText>
+                        )}
+                      </Table>
+                    )}
 
                   {(order?.summary?.delivery_price > 0 ||
                     order?.deliveryFee > 0) && (
@@ -752,7 +927,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 loading={loading}
                 action={actionOrder}
                 orderId={order?.id}
-                notShowCustomerPhone={false}
+                notShowCustomerPhone
                 actions={actions}
                 titleAccept={titleAccept}
                 titleReject={titleReject}
@@ -833,6 +1008,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               secondColorCustom={theme.colors.green}
             />
           )}
+          <Alert
+            open={alertState.open}
+            onAccept={handleArrowBack}
+            onClose={handleArrowBack}
+            content={alertState.content}
+            title={t('ERROR', 'Error')}
+          />
         </>
       )}
     </>

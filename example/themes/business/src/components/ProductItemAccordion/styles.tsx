@@ -45,7 +45,7 @@ export const ProductOptionsList = styled.View`
 `;
 
 export const ProductOption = styled.View`
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
 `;
 
@@ -55,7 +55,7 @@ export const ProductSubOption = styled.View`
 `;
 
 export const ProductComment = styled.View`
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   margin-left: 18px;
 `;

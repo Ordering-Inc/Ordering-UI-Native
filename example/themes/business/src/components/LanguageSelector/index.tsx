@@ -59,6 +59,9 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
           onClose={() => setCountryModalVisible(false)}
           withCountryNameButton
           countryCodes={countryCodes}
+          //@ts-ignore
+          closeButtonImageStyle={{ width: 15, height: 15 }}
+          closeButtonImage={theme.images.general.close}
           renderFlagButton={() => (
             <TouchableOpacity onPress={() => setCountryModalVisible(true)}>
               <LanguageItem justifyContent="space-between">
@@ -94,7 +97,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
                 }}
                 activeOpacity={1}>
                 <LanguageItem>
-                  <View style={{ width: 40 }} />
+                  <View />
 
                   <Flag
                     withEmoji

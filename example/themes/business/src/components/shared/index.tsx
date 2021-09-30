@@ -7,6 +7,7 @@ import OTextarea from './OTextarea';
 import OModal from './OModal';
 import OAlert from './OAlert';
 import OFab from './OFab';
+import OLink from './OLink';
 
 export {
   OText,
@@ -18,4 +19,5 @@ export {
   OAlert,
   OModal,
   OFab,
+  OLink,
 };

@@ -493,7 +493,7 @@ export interface GoogleMapsParams {
   navigation: any;
   updateDriverPosition?: any;
   driverUpdateLocation?: any;
-  setDriverUpdateLocation: any;
+  setDriverUpdateLocation?: (state: any) => void;
 }
 
 export interface TagsParams {
