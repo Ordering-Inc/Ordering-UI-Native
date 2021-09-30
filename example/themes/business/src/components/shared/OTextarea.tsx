@@ -17,6 +17,7 @@ interface Props {
   placeholder?: string;
   onChange?: any;
   onFocus?: any;
+  textTareaRef?: any;
 }
 
 const OTextarea = (props: Props) => {
@@ -24,6 +25,7 @@ const OTextarea = (props: Props) => {
   return (
     <Wrapper>
       <Inner
+        ref={props.textTareaRef}
         onFocus={() => props.onFocus()}
         onChangeText={(txt: any) => props.onChange(txt)}
         textAlignVertical={'top'}

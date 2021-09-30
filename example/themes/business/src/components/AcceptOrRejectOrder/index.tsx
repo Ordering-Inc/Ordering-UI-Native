@@ -34,6 +34,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const scrollViewRef = useRef<any>(null);
   const viewRef = useRef<any>(null);
   const timerRef = useRef<any>();
+  const textTareaRef = useRef<any>();
   const [hour, setHour] = useState('00');
   const [min, setMin] = useState('00');
   const [time, setTime] = useState('');
@@ -117,19 +118,37 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
   const openTimerIOnput = () => {
     const isFocus = timerRef.current.isFocused();
-    if (isFocus) {
+    if (isFocus && timerRef?.current) {
       timerRef.current.blur();
     }
 
-    if (!isFocus) {
+    if (!isFocus && timerRef?.current) {
       if (time.length > 1) timerRef.current.clear();
       timerRef.current.focus();
       handleFocusTimer();
     }
   };
 
+  const openTextTareaOInput = () => {
+    const isFocus = textTareaRef.current.isFocused();
+    if (isFocus && textTareaRef?.current) {
+      textTareaRef.current.blur();
+    }
+
+    if (!isFocus && textTareaRef?.current) {
+      textTareaRef.current.focus();
+      handleFocusTimer();
+    }
+  };
+
   useEffect(() => {
-    openTimerIOnput();
+    if (actions && action === 'accept') {
+      openTimerIOnput();
+    }
+
+    if (actions && action === 'reject') {
+      openTextTareaOInput();
+    }
   }, []);
 
   const handleAcceptOrReject = () => {
@@ -322,6 +341,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           {action === 'reject' && (
             <Comments ref={viewRef}>
               <OTextarea
+                textTareaRef={textTareaRef}
                 onFocus={handleFocus}
                 placeholder={t(
                   'PLEASE_TYPE_YOUR_COMMENTS_IN_HERE',
