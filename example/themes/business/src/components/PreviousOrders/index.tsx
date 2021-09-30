@@ -11,6 +11,7 @@ import { Card, Logo, Information, MyOrderOptions } from './styles';
 import { NotFoundSource } from '../NotFoundSource';
 import { OIcon, OText, OButton } from '../shared';
 import { PreviousOrdersParams } from '../../types';
+import dayjs from 'dayjs';
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {
   const {
@@ -115,7 +116,10 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       {orders?.length > 0 &&
         orders
           ?.filter((order: any) => tagsFilter?.includes(order.status))
-          ?.map((order: any) => (
+          ?.sort((a: any, b: any) => {
+            return dayjs(b.created_at).unix() - dayjs(a.created_at).unix();
+          })
+          .map((order: any) => (
             <React.Fragment key={order.id}>
               <TouchableOpacity
                 onPress={() => handlePressOrder(order)}
