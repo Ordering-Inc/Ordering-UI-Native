@@ -12,6 +12,7 @@ import {
   useUtils,
   useConfig,
   useToast,
+  useSession,
   ToastType,
 } from 'ordering-components/native';
 
@@ -70,6 +71,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const { order, loading, error } = props.order;
   const theme = useTheme();
   const [, t] = useLanguage();
+  const [session] = useSession();
   const [{ parsePrice, parseNumber, parseDate }] = useUtils();
   const [{ configs }] = useConfig();
   const [actionOrder, setActionOrder] = useState('');
@@ -358,7 +360,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   useEffect(() => {
-    if (order?.driver === null) {
+    if (order?.driver === null && session?.user?.level === 4) {
       setAlertState({
         open: true,
         content: [

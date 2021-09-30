@@ -481,7 +481,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
             <OIconButton
               icon={theme.images.general.close}
               iconStyle={{
-                width: 15,
+                width: 35,
                 height: 15,
               }}
               style={styles.buttonBack}
