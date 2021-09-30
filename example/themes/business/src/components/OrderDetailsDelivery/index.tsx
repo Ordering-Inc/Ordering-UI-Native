@@ -471,34 +471,40 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   return (
     <>
-      {(!order || Object.keys(order).length === 0) && !error && (
-        <View
-          style={{
-            padding: 20,
-            backgroundColor: theme.colors.backgroundLight,
-          }}>
-          {[...Array(6)].map((item, i) => (
-            <Placeholder key={i} Animation={Fade}>
-              <View style={{ flexDirection: 'row', marginBottom: 30 }}>
-                <Placeholder>
-                  <PlaceholderLine width={90} />
-                  <PlaceholderLine width={50} />
-                  <PlaceholderLine width={20} />
-                  <PlaceholderLine width={10} />
-                </Placeholder>
-              </View>
-            </Placeholder>
-          ))}
-        </View>
-      )}
-      {error?.length > 0 && (
+      {(!order || Object.keys(order).length === 0) &&
+        (error?.length < 1 || !error) && (
+          <View
+            style={{
+              padding: 20,
+              backgroundColor: theme.colors.backgroundLight,
+            }}>
+            {[...Array(6)].map((item, i) => (
+              <Placeholder key={i} Animation={Fade}>
+                <View style={{ flexDirection: 'row', marginBottom: 30 }}>
+                  <Placeholder>
+                    <PlaceholderLine width={90} />
+                    <PlaceholderLine width={50} />
+                    <PlaceholderLine width={20} />
+                    <PlaceholderLine width={10} />
+                  </Placeholder>
+                </View>
+              </Placeholder>
+            ))}
+          </View>
+        )}
+
+      {(!!error || error) && (
         <NotFoundSource
           btnTitle={t('GO_TO_MY_ORDERS', 'Go to my orders')}
-          content={props.order.error[0]}
+          content={
+            props.order.error[0] ||
+            props.order.error ||
+            t('NETWORK_ERROR', 'Network Error')
+          }
           onClickButton={() => navigation.navigate('Orders')}
         />
       )}
-      {order && Object.keys(order).length > 0 && !error && (
+      {order && Object.keys(order).length > 0 && (error?.length < 1 || !error) && (
         <>
           <Header>
             <OIconButton
