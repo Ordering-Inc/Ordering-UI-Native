@@ -296,6 +296,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     },
   });
 
+  const actualTabOrders: any = {
+    0: { ...pending },
+    1: { ...inProgress },
+    2: { ...completed },
+    3: { ...cancelled },
+  };
+
   return (
     <>
       <View style={styles.header}>
@@ -398,64 +405,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             onRefresh={() => handleRefreshAndReload('refresh')}
           />
         }>
-        {activeTab.key === tabs[0].key &&
-          !(reload && pending?.loading) &&
-          !pending?.error &&
-          pending?.orders?.length > 0 && (
+        {!(reload && actualTabOrders[activeTab.key]?.loading) &&
+          !actualTabOrders[activeTab.key]?.error &&
+          actualTabOrders[activeTab.key]?.orders?.length > 0 && (
             <PreviousOrders
-              data={pending}
-              tab={tabs[0].title}
-              loadOrders={loadOrders}
-              isRefreshing={isRefreshing}
-              tagsFilter={activeStatus?.filter((key: number) =>
-                tagsStatus.includes(key),
-              )}
-              onNavigationRedirect={onNavigationRedirect}
-              getOrderStatus={getOrderStatus}
-            />
-          )}
-
-        {activeTab.key === tabs[1].key &&
-          !(reload && inProgress?.loading) &&
-          !inProgress?.error &&
-          inProgress?.orders?.length > 0 && (
-            <PreviousOrders
-              data={inProgress}
-              tab={tabs[1].title}
-              loadOrders={loadOrders}
-              isRefreshing={isRefreshing}
-              tagsFilter={activeStatus?.filter((key: number) =>
-                tagsStatus.includes(key),
-              )}
-              onNavigationRedirect={onNavigationRedirect}
-              getOrderStatus={getOrderStatus}
-            />
-          )}
-
-        {activeTab.key === tabs[2].key &&
-          !(reload && completed?.loading) &&
-          !completed?.error &&
-          completed?.orders?.length > 0 && (
-            <PreviousOrders
-              data={completed}
-              tab={tabs[2].title}
-              loadOrders={loadOrders}
-              isRefreshing={isRefreshing}
-              tagsFilter={activeStatus?.filter((key: number) =>
-                tagsStatus.includes(key),
-              )}
-              onNavigationRedirect={onNavigationRedirect}
-              getOrderStatus={getOrderStatus}
-            />
-          )}
-
-        {activeTab.key === tabs[3].key &&
-          !(reload && cancelled?.loading) &&
-          !cancelled?.error &&
-          cancelled?.orders?.length > 0 && (
-            <PreviousOrders
-              data={cancelled}
-              tab={tabs[3].title}
+              data={actualTabOrders[activeTab.key]}
+              tab={tabs[activeTab.key].title}
               loadOrders={loadOrders}
               isRefreshing={isRefreshing}
               tagsFilter={activeStatus?.filter((key: number) =>
