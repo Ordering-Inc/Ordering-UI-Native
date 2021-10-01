@@ -196,7 +196,12 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     <>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1, marginTop: top }}>
+        style={{
+          flex: 1,
+          marginTop: top,
+          paddingHorizontal: 30,
+          paddingTop: 30,
+        }}>
         <Content ref={scrollViewRef}>
           <Header>
             <OIconButton
@@ -212,7 +217,14 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
               onClick={() => handleArrowBack()}
             />
 
-            <OText size={20} color={theme.colors.textGray} weight="600">
+            <OText
+              size={20}
+              color={theme.colors.textGray}
+              style={{
+                fontFamily: 'Poppins',
+                fontStyle: 'normal',
+              }}
+              weight="600">
               {action === 'accept'
                 ? `${t(titleAccept?.key, titleAccept?.text)}:`
                 : t(titleReject?.key, titleReject?.text)}
@@ -369,6 +381,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
                 : t('REJECT', 'Reject')
             }
             color={action === 'accept' ? theme.colors.green : theme.colors.red}
+            widthButton={'100%'}
           />
         </Action>
       </KeyboardAvoidingView>

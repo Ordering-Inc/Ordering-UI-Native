@@ -9,6 +9,8 @@ export const TabsContainer = styled.View`
   width: auto;
   display: flex;
   flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
 `;
 
 export const Tag = styled.Pressable`

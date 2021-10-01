@@ -3,7 +3,7 @@ import { FloatingButton as FloatingButtonController } from 'ordering-components/
 import { FloatingButtonParams } from '../../types';
 import { Container, Button } from './styles';
 import { OText } from '../shared';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 
 const FloatingButtonUI = (props: FloatingButtonParams) => {
@@ -23,6 +23,8 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
     color,
     isSecondaryBtn,
     secondButton,
+    widthButton,
+    isPadding,
   } = props;
 
   const theme = useTheme();
@@ -48,49 +50,31 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
   });
 
   return (
-    <Container isIos={Platform.OS === 'ios'}>
-      <Button
-        secondButton={secondButton}
-        style={[
-          {
-            borderWidth: colorTxt1 ? 1 : 0,
-            borderColor: colorTxt1 ? colorTxt1 : null,
-          },
-          secondButton
-            ? { backgroundColor: firstColorCustom || styles.primaryBtn }
-            : color
-            ? { backgroundColor: color }
-            : styles.primaryBtn,
-        ]}
-        onPress={firstButtonClick}
-        disabled={disabled}>
-        <OText color={theme.colors.white} size={16} mLeft={20}>
-          {btnLeftValueShow ? btnLeftValue : ''}
-        </OText>
-
-        <OText
-          style={styles.btnTextStyle}
-          color={colorTxt1 ? colorTxt1 : theme.colors.white}
-          size={16}>
-          {btnText}
-        </OText>
-
-        <OText color={theme.colors.white} size={16} mRight={20}>
-          {btnRightValueShow ? btnRightValue : ''}
-        </OText>
-      </Button>
-
-      {secondButton && (
+    <Container
+      isIos={Platform.OS === 'ios'}
+      style={{ padding: props.isPadding ? 30 : 0 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          width: '100%',
+          justifyContent: 'space-between',
+        }}>
         <Button
           secondButton={secondButton}
           style={[
+            {
+              borderWidth: colorTxt1 ? 1 : 0,
+              borderColor: colorTxt1 ? colorTxt1 : null,
+            },
             secondButton
-              ? { backgroundColor: secondColorCustom || styles.secodaryBtn }
+              ? { backgroundColor: firstColorCustom || styles.primaryBtn }
               : color
-              ? color
-              : styles.secodaryBtn,
+              ? { backgroundColor: color }
+              : styles.primaryBtn,
+            ,
+            { width: widthButton },
           ]}
-          onPress={secondButtonClick}
+          onPress={firstButtonClick}
           disabled={disabled}>
           <OText color={theme.colors.white} size={16} mLeft={20}>
             {btnLeftValueShow ? btnLeftValue : ''}
@@ -98,16 +82,47 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
 
           <OText
             style={styles.btnTextStyle}
-            color={theme.colors.white}
+            color={colorTxt1 ? colorTxt1 : theme.colors.white}
             size={16}>
-            {secondBtnText}
+            {btnText}
           </OText>
 
           <OText color={theme.colors.white} size={16} mRight={20}>
             {btnRightValueShow ? btnRightValue : ''}
           </OText>
         </Button>
-      )}
+
+        {secondButton && (
+          <Button
+            secondButton={secondButton}
+            style={[
+              secondButton
+                ? { backgroundColor: secondColorCustom || styles.secodaryBtn }
+                : color
+                ? color
+                : styles.secodaryBtn,
+              ,
+              { width: widthButton },
+            ]}
+            onPress={secondButtonClick}
+            disabled={disabled}>
+            <OText color={theme.colors.white} size={16} mLeft={20}>
+              {btnLeftValueShow ? btnLeftValue : ''}
+            </OText>
+
+            <OText
+              style={styles.btnTextStyle}
+              color={theme.colors.white}
+              size={16}>
+              {secondBtnText}
+            </OText>
+
+            <OText color={theme.colors.white} size={16} mRight={20}>
+              {btnRightValueShow ? btnRightValue : ''}
+            </OText>
+          </Button>
+        )}
+      </View>
     </Container>
   );
 };

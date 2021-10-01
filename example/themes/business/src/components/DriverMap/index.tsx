@@ -348,8 +348,9 @@ export const DriverMap = (props: GoogleMapsParams) => {
     },
     buttonBack: {
       borderWidth: 0,
+      maxWidth: 40,
       alignItems: 'flex-start',
-      justifyContent: 'flex-start',
+      justifyContent: 'flex-end',
     },
     facContainer: {
       position: 'absolute',
@@ -357,17 +358,21 @@ export const DriverMap = (props: GoogleMapsParams) => {
       zIndex: 9999,
       width: '100%',
       backgroundColor: theme.colors.white,
+      paddingHorizontal: 30,
+      paddingTop: 30,
     },
     facOrderStatus: {
       flexDirection: 'row',
-      paddingTop: top + 13,
+      paddingTop: top,
       borderBottomWidth: 11,
+      minHeight: 70,
       borderBottomColor: theme.colors.inputChat,
+      paddingVertical: 5,
     },
     facDistance: {
       flexDirection: 'row',
-      minHeight: 70,
       alignItems: 'center',
+      minHeight: 75,
     },
     arrowDistance: {
       borderWidth: 0,
@@ -475,20 +480,23 @@ export const DriverMap = (props: GoogleMapsParams) => {
         <View style={styles.facOrderStatus}>
           <View
             style={{
-              width: '25%',
-              justifyContent: 'center',
+              width: '15%',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              paddingBottom: 10,
+              marginRight: 10,
             }}>
             <OIconButton
               icon={theme.images.general.close}
               iconStyle={{
-                width: 35,
-                height: 15,
+                width: 13,
+                height: 13,
               }}
               style={styles.buttonBack}
               onClick={() => handleArrowBack()}
             />
           </View>
-          <View style={{ width: '75%' }}>
+          <View style={{ width: '85%', paddingRight: 10, paddingBottom: 10 }}>
             <OText size={12} color={theme.colors.textGray}>
               {order?.delivery_datetime_utc
                 ? parseDate(order?.delivery_datetime_utc)
@@ -511,19 +519,19 @@ export const DriverMap = (props: GoogleMapsParams) => {
         <View style={styles.facDistance}>
           <View
             style={{
-              width: '25%',
+              width: '15%',
               alignItems: 'center',
-              paddingHorizontal: 20,
+              marginRight: 10,
             }}>
             <OIcon
               src={theme.images.general.arrow_distance}
               style={styles.arrowDistance}
             />
-            <OText size={12} numberOfLines={2}>{`${(
+            <OText size={12} numberOfLines={3}>{`${(
               distancesFromTwoPlacesKm * 3280.84
             ).toFixed(0)} ${t('FT', 'Ft')}`}</OText>
           </View>
-          <View style={{ width: '75%' }}>
+          <View style={{ width: '75%', paddingRight: 20 }}>
             <OText
               color={theme.colors.unselectText}
               size={13}
@@ -554,8 +562,11 @@ export const DriverMap = (props: GoogleMapsParams) => {
           secondButton={true}
           firstColorCustom={theme.colors.red}
           secondColorCustom={theme.colors.green}
+          widthButton={150}
+          isPadding
         />
       )}
+
       <Alert
         open={alertState.open}
         onAccept={closeAlert}

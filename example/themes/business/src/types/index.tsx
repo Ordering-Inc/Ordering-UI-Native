@@ -412,6 +412,8 @@ export interface FloatingButtonParams {
   btnRightValue?: string;
   btnText: string;
   secondBtnText?: string;
+  isPadding?: boolean;
+  widthButton?: number | string;
   firstButtonClick?: any;
   secondButtonClick?: any;
   color?: string;

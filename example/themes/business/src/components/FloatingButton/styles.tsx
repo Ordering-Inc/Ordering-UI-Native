@@ -6,10 +6,9 @@ export const Container = styled.View`
   flex: 1;
   bottom: 0px;
   left: 0;
-  padding: 10px;
+  paddingvertical: 10px;
   width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
   background-color: #fff;
   z-index: 1000;
@@ -17,7 +16,7 @@ export const Container = styled.View`
   ${(props: any) =>
     props.isIos &&
     css`
-      padding-bottom: 20px;
+      padding-bottom: 5px;
     `}
 `;
 
@@ -28,7 +27,6 @@ export const Button = styled.TouchableOpacity`
   align-items: center;
   border-radius: 7px;
   height: 50px;
-  margin-horizontal: 10px;
 
   ${(props: any) =>
     css`

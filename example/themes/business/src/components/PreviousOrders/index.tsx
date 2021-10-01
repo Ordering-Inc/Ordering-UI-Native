@@ -42,29 +42,34 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
     },
     icon: {
       borderRadius: 7.6,
-      width: 70,
-      height: 70,
+      width: 75,
+      height: 75,
     },
     logo: {
-      padding: 2,
-      borderRadius: 18,
-      shadowColor: '#000',
+      width: 78,
+      height: 78,
+      borderRadius: 25,
+      shadowColor: 'rgba(0.0, 0.0, 0.0, 0.5)',
       shadowOffset: {
         width: 0,
         height: 1.5,
       },
       shadowOpacity: 0.21,
-      shadowRadius: 3,
-      elevation: 7,
+      shadowRadius: 6,
+      elevation: 13,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     title: {
+      marginBottom: 6,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
-      fontSize: 18,
+      fontSize: 16,
       color: theme.colors.textGray,
     },
     date: {
+      marginBottom: 6,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
@@ -72,6 +77,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       color: theme.colors.unselectText,
     },
     orderType: {
+      fontSize: 15,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
@@ -159,8 +165,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
                         style={styles.orderType}
                         mRight={5}
                         numberOfLines={1}
-                        adjustsFontSizeToFit
-                        size={18}>
+                        adjustsFontSizeToFit>
                         {order.delivery_type === 1
                           ? t('DELIVERY', 'Delivery')
                           : order.delivery_type === 2

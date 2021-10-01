@@ -256,7 +256,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     tab: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontSize: 14,
       marginBottom: 10,
       paddingLeft: 8,
       paddingRight: 8,
@@ -341,7 +340,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                       ? theme.colors.textGray
                       : theme.colors.unselectText
                   }
-                  weight={tab.key === activeTab.key ? '600' : 'normal'}>
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  weight={tab.key === activeTab.key ? '600' : 'normal'}
+                  size={tab.key === activeTab.key ? 15 : 13}>
                   {tab.text}
                 </OText>
 

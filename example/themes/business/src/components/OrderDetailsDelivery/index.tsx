@@ -475,7 +475,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         (error?.length < 1 || !error) && (
           <View
             style={{
-              padding: 20,
+              padding: 25,
               backgroundColor: theme.colors.backgroundLight,
             }}>
             {[...Array(6)].map((item, i) => (
@@ -505,7 +505,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         />
       )}
       {order && Object.keys(order).length > 0 && (error?.length < 1 || !error) && (
-        <>
+        <View style={{ flex: 1 }}>
           <Header>
             <OIconButton
               icon={theme.images.general.arrow_left}
@@ -580,7 +580,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             style={{
               marginBottom: marginContainer[order?.status] ? 60 : 0,
             }}
-            keyboardShouldPersistTaps="handled">
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}>
             <>
               <OrderContent>
                 <OrderBusiness>
@@ -985,6 +986,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               secondButton={true}
               firstColorCustom={theme.colors.red}
               secondColorCustom={theme.colors.green}
+              widthButton={150}
             />
           )}
           {order?.status === 9 && (
@@ -1002,6 +1004,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               secondButton={true}
               firstColorCustom={theme.colors.red}
               secondColorCustom={theme.colors.green}
+              widthButton={150}
             />
           )}
           {showFloatButtonsAcceptOrReject[order?.status] && (
@@ -1014,8 +1017,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               secondButton={true}
               firstColorCustom={theme.colors.red}
               secondColorCustom={theme.colors.green}
+              widthButton={150}
             />
           )}
+
           <Alert
             open={alertState.open}
             onAccept={handleArrowBack}
@@ -1023,7 +1028,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             content={alertState.content}
             title={t('ERROR', 'Error')}
           />
-        </>
+        </View>
       )}
     </>
   );
