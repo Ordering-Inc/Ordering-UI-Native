@@ -50,11 +50,9 @@ export const OrderHeader = styled.View`
 `;
 
 export const OrderBusiness = styled.View`
-  position: relative;
   bottom: 10px;
   padding-vertical: 10px;
   flex-direction: column;
-  align-items: flex-start;
 `;
 export const Icons = styled.View`
   margin-top: 10px;

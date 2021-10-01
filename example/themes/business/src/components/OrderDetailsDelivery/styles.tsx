@@ -8,7 +8,7 @@ export const OrderDetailsContainer = styled.ScrollView`
 
 export const Pickup = styled.View`
   padding-vertical: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 `;
 
 export const NavBack = styled.TouchableOpacity``;
@@ -50,11 +50,9 @@ export const OrderHeader = styled.View`
 `;
 
 export const OrderBusiness = styled.View`
-  position: relative;
   bottom: 10px;
   padding-vertical: 10px;
   flex-direction: column;
-  align-items: flex-start;
 `;
 export const Icons = styled.View`
   margin-top: 10px;
