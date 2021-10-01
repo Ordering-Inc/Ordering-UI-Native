@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import OneSignal from 'react-native-onesignal';
+import NetInfo from '@react-native-community/netinfo'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(utc)
@@ -23,6 +24,8 @@ import BusinessProductsList from '../pages/BusinessProductsList';
 import NotFound from '../pages/NotFound'
 import HomeNavigator from './HomeNavigator';
 import settings from '../config.json';
+import NetworkError from '../pages/NetworkError';
+
 import * as RootNavigation from '../navigators/NavigationRef';
 import { _retrieveStoreData, _setStoreData } from '../providers/StoreUtil';
 
@@ -39,6 +42,9 @@ const RootNavigator = () => {
   });
   const [ isTutorial, setTutorial] = useState(true)
   const [isPushLoading, setIsPushLoading] = useState({ loading: true })
+  const [connectionState, setConnectionState] = useState<{
+    connection_status: boolean;
+  } | null>(null);
 
   const validDate = (date : any) => {
     if (!date) return
@@ -55,7 +61,7 @@ const RootNavigator = () => {
     OneSignal.setAppId(configs?.onesignal_orderingapp_id?.value);
 
     if (Platform.OS === 'ios') {
-      OneSignal.promptForPushNotificationsWithUserResponse(response => {
+      OneSignal.promptForPushNotificationsWithUserResponse((response : any) => {
         console.log('Prompt response:', response);
       });
     }
@@ -146,6 +152,19 @@ const RootNavigator = () => {
     }
   }, [configsLoading]);
 
+  let netInfoSuscription : any = null
+  useEffect(() => {
+    netInfoSuscription = NetInfo.addEventListener(handleConnectivityChange);
+
+    return () => {
+      netInfoSuscription && netInfoSuscription()
+    }
+  }, []);
+
+  const handleConnectivityChange = (state : any) => {
+    setConnectionState({ connection_status: state.isConnected });
+  };
+
   return (
     <Stack.Navigator>
       {
@@ -158,7 +177,7 @@ const RootNavigator = () => {
         )
       }
       {
-        loaded && (
+        loaded && connectionState?.connection_status && (
           <>
             {!auth ? (
               <>
@@ -231,10 +250,19 @@ const RootNavigator = () => {
           </>
         )
       }
-      <Stack.Screen
-        name='NotFound'
-        component={NotFound}
-      />
+      {connectionState?.connection_status === false ? (
+        <Stack.Screen
+          name='NetworkError'
+          component={NetworkError}
+          options={{ headerShown: false }}
+        />
+      ) : (
+        <Stack.Screen
+          name='NotFound'
+          component={NotFound}
+          options={{ headerShown: false }}
+        />
+      )}
     </Stack.Navigator>
   );
 };
