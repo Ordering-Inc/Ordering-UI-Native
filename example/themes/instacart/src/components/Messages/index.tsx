@@ -74,7 +74,7 @@ const MessagesUI = (props: MessagesParams) => {
 				console.log('ImagePicker Error: ', response.errorMessage);
 				showToast(ToastType.Error, response.errorMessage);
 			} else {
-				if (Platform.OS === 'android') {
+				if (Platform.OS === 'ios') {
 					if (response.uri) {
 						const url = `data:${response.type};base64,${response.base64}`
 						setImage && setImage(url);

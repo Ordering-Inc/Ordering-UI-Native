@@ -301,7 +301,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 								<OrderDriver>
 									<Customer>
 										<OIcon
-											url={order?.driver.photo}
+											url={order?.driver?.photo || theme.images.dummies.driverPhoto}
 											width={34}
 											height={34}
 											color={theme.colors.textSecondary}
@@ -345,7 +345,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 									<OText style={{ ...theme.labels.normal, marginTop: 4 }} color={theme.colors.textSecondary}>{t('LET_SOMEONE_FOLLOW_ALONG', 'Let someone follow along')}</OText>
 								</View>
 								<View style={{alignItems: 'center', overflow: 'visible'}}>
-									<SocialShareFav icon={theme.images.general.share} />
+									<SocialShareFav icon={theme.images.general.share} style={{width: 16}} />
 								</View>
 							</ShareDelivery>
 						</OrderCustomer>
