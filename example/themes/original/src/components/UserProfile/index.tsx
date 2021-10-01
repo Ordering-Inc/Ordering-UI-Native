@@ -138,7 +138,7 @@ const ProfileListUI = (props: ProfileParams) => {
 				<View style={{ flexBasis: '70%' }}>
 					<OText size={20} lineHeight={30} weight={Platform.OS === 'ios' ? '500' : 'bold'} color={theme.colors.textNormal}>{`${user?.name} ${user?.lastname}`}</OText>
 					<TouchableOpacity onPress={() => navigation.navigate('ProfileForm', { ...detailProps })}>
-						<OText size={12} lineHeight={18} color={theme.colors.primary} style={{ textDecorationLine: 'underline' }}>{t('VIEW_ACCOUNT', 'View account')}</OText>
+						<OText size={12} lineHeight={18} color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>{t('VIEW_ACCOUNT', 'View account')}</OText>
 					</TouchableOpacity>
 				</View>
 			</CenterView>

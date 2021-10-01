@@ -2,9 +2,11 @@
 import * as React from 'react'
 import { ImageStyle } from 'react-native'
 import styled from 'styled-components/native'
-import { useTheme } from 'styled-components/native';
 
 const Wrapper = styled.View``
+const SImage = styled.Image`
+	tint-color: ${(props: any) => props.theme.colors.primary};
+`
 
 interface Props {
 	src?: any,
@@ -21,13 +23,6 @@ interface Props {
 }
 
 const OImage = (props: Props): React.ReactElement => {
-
-	const theme = useTheme();
-
-	const SImage = styled.Image`
-		tint-color: ${theme.colors.primary};
-	`
-
 	return (
 		<Wrapper style={{ borderRadius: props.style?.borderRadius, overflow: 'hidden', marginHorizontal: props.style?.marginHorizontal }}>
 			<SImage
@@ -51,7 +46,7 @@ const OImage = (props: Props): React.ReactElement => {
 
 const areEqual=(prevProps: { src?: any; color?: string; }, nextProps: { src?: any; color?: string; })=>{
   // return false prevProps.text & nextProps.text are not equal.
-  return prevProps.color === nextProps.color
+  return prevProps.color === nextProps.color && prevProps.src === nextProps.src
   // else all are equal, no re-render
   return true
 }

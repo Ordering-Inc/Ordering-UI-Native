@@ -208,7 +208,7 @@ const ProfileUI = (props: ProfileParams) => {
 	}, [user?.country_phone_code]);
 
 	return (
-		<Container>
+		<Container noPadding>
 			<NavBar
 				onActionLeft={() => navigation.goBack()}
 				btnStyle={{ paddingStart: 0 }}

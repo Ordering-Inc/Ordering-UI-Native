@@ -57,11 +57,21 @@ const MessagesUI = (props: MessagesParams) => {
 				console.log('ImagePicker Error: ', response.errorMessage);
 				showToast(ToastType.Error, response.errorMessage);
 			} else {
-				if (response.uri) {
-					const url = `data:${response.type};base64,${response.base64}`
-					setImage && setImage(url);
+				if (Platform.OS === 'ios') {
+					if (response.uri) {
+						const url = `data:${response.type};base64,${response.base64}`
+						setImage && setImage(url);
+					} else {
+						showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+					}
 				} else {
-					showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+					if (response?.assets?.length > 0) {
+						const image = response?.assets[0]
+						const url = `data:${image.type};base64,${image.base64}`
+						setImage && setImage(url);
+					} else {
+						showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+					}
 				}
 			}
 		});
@@ -315,7 +325,7 @@ const MessagesUI = (props: MessagesParams) => {
 		<View style={{ height: height - top - bottom, width: '100%' }}>
 			<Wrapper>
 				<Header>
-					<OIconButton icon={theme.images.general.arrow_left} style={{ paddingStart: 10, borderColor: theme.colors.clear }} onClick={() => onClose} />
+					<OIconButton icon={theme.images.general.arrow_left} style={{ paddingStart: 10, borderColor: theme.colors.clear }} onClick={onClose} />
 					<View style={{ marginRight: 10, shadowColor: theme.colors.black, shadowOpacity: 0.1, shadowOffset: { width: 0, height: 1 }, shadowRadius: 2 }}>
 						<OIcon
 							url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}

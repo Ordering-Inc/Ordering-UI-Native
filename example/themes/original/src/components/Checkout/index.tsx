@@ -556,8 +556,8 @@ export const Checkout = (props: any) => {
 						loading: false,
 						cart: result
 					})
-				} catch (error) {
-					showToast(ToastType.Error, error?.toString() || error.message)
+				} catch (err: any) {
+					showToast(ToastType.Error, err?.toString() || err.message)
 				}
 			} else if (result.status === 2 && stripePaymentOptions.includes(result.paymethod_data?.gateway)) {
 				const clientSecret = result.paymethod_data?.result?.client_secret
@@ -596,7 +596,7 @@ export const Checkout = (props: any) => {
 							})
 							return
 						}
-					} catch (error) {
+					} catch (error: any) {
 						showToast(ToastType.Error, error?.toString() || error.message)
 					}
 				} catch (error) {
@@ -618,7 +618,7 @@ export const Checkout = (props: any) => {
 					error: cart ? null : result
 				})
 			}
-		} catch (e) {
+		} catch (e: any) {
 			setCartState({
 				...cartState,
 				loading: false,
