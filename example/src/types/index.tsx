@@ -285,6 +285,7 @@ export interface OrderDetailsParams {
   driverLocation?: any;
   isFromRoot?: any;
   goToBusinessList?: any;
+  onNavigationRedirect?: any;
 }
 export interface ProductItemAccordionParams {
   key?: any;
