@@ -326,6 +326,7 @@ const LoginFormUI = (props: LoginParams) => {
           configs && Object.keys(configs).length > 0 &&
           (configs?.twilio_service_enabled?.value === 'true' ||
             configs?.twilio_service_enabled?.value === '1') &&
+          configs?.twilio_module?.value &&
           (
             <>
               <OrSeparator>
@@ -388,6 +389,7 @@ const LoginFormUI = (props: LoginParams) => {
       <OModal
         open={isModalVisible}
         onClose={() => setIsModalVisible(false)}
+        entireModal
       >
         <VerifyPhone
           phone={phoneInputData.phone}
