@@ -41,9 +41,10 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
       fontStyle: 'normal',
       fontWeight: 'normal',
       fontSize: 18,
+      paddingHorizontal: 10,
+      paddingVertical: 10,
       position: 'absolute',
       width: '100%',
-      paddingBottom: 5,
       left: 0,
       textAlign: 'center',
     },
@@ -52,7 +53,7 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
   return (
     <Container
       isIos={Platform.OS === 'ios'}
-      style={{ padding: props.isPadding ? 30 : 0 }}>
+      style={{ paddingHorizontal: props.isPadding ? 30 : 0 }}>
       <View
         style={{
           flexDirection: 'row',
@@ -83,7 +84,8 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
           <OText
             style={styles.btnTextStyle}
             color={colorTxt1 ? colorTxt1 : theme.colors.white}
-            size={16}>
+            numberOfLines={2}
+            adjustsFontSizeToFit>
             {btnText}
           </OText>
 
@@ -113,7 +115,8 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
             <OText
               style={styles.btnTextStyle}
               color={theme.colors.white}
-              size={16}>
+              numberOfLines={2}
+              adjustsFontSizeToFit>
               {secondBtnText}
             </OText>
 

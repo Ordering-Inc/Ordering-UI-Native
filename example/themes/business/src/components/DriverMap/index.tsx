@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
 import MapView, {
   PROVIDER_GOOGLE,
   Marker,
@@ -16,7 +16,6 @@ import { useTheme } from 'styled-components/native';
 import { useLocation } from '../../hooks/useLocation';
 // import MapViewDirections from 'react-native-maps-directions';
 import { FloatingButton } from '../FloatingButton';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const DriverMap = (props: GoogleMapsParams) => {
   const {
@@ -76,7 +75,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
     longitude: initialPosition.longitude,
   };
   const destination = { latitude: location.lat, longitude: location.lng };
-  const { top } = useSafeAreaInsets();
 
   useEffect(() => {
     if (isToFollow) {
@@ -363,7 +361,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
     },
     facOrderStatus: {
       flexDirection: 'row',
-      paddingTop: top,
       borderBottomWidth: 11,
       minHeight: 70,
       borderBottomColor: theme.colors.inputChat,
@@ -380,200 +377,205 @@ export const DriverMap = (props: GoogleMapsParams) => {
   });
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        <MapView
-          ref={mapRef}
-          provider={PROVIDER_GOOGLE}
-          initialRegion={{
-            latitude: initialPosition.latitude,
-            longitude: initialPosition.longitude,
-            latitudeDelta: 0.001,
-            longitudeDelta: 0.001 * ASPECT_RATIO,
-          }}
-          style={{ flex: 1 }}
-          // showsUserLocation
+        <View style={{ flex: 1 }}>
+          <MapView
+            ref={mapRef}
+            provider={PROVIDER_GOOGLE}
+            initialRegion={{
+              latitude: initialPosition.latitude,
+              longitude: initialPosition.longitude,
+              latitudeDelta: 0.001,
+              longitudeDelta: 0.001 * ASPECT_RATIO,
+            }}
+            style={{ flex: 1 }}
+            // showsUserLocation
 
-          zoomTapEnabled
-          // onRegionChangeComplete={
-          //   !readOnly
-          //     ? coordinates => handleChangeRegion(coordinates)
-          //     : () => {}
-          // }
-          zoomEnabled
-          zoomControlEnabled
-          cacheEnabled
-          moveOnMarkerPress
-          onTouchStart={() => (following.current = false)}>
-          {location ? (
-            <>
-              <Polyline
-                coordinates={[
-                  { latitude: location.lat, longitude: location.lng },
-                  {
-                    latitude: userLocation.latitude,
-                    longitude: userLocation.longitude,
-                  },
-                ]}
-                strokeColor="blue"
-                strokeWidth={3}
-              />
-              <Marker
-                coordinate={{ latitude: location.lat, longitude: location.lng }}
-                title={location.title}>
-                <Icon
-                  name="map-marker"
-                  size={50}
-                  color={theme.colors.primary}
+            zoomTapEnabled
+            // onRegionChangeComplete={
+            //   !readOnly
+            //     ? coordinates => handleChangeRegion(coordinates)
+            //     : () => {}
+            // }
+            zoomEnabled
+            zoomControlEnabled
+            cacheEnabled
+            moveOnMarkerPress
+            onTouchStart={() => (following.current = false)}>
+            {location ? (
+              <>
+                <Polyline
+                  coordinates={[
+                    { latitude: location.lat, longitude: location.lng },
+                    {
+                      latitude: userLocation.latitude,
+                      longitude: userLocation.longitude,
+                    },
+                  ]}
+                  strokeColor="blue"
+                  strokeWidth={3}
                 />
-                <View style={styles.view}>
-                  <OIcon
-                    style={styles.image}
-                    url={location.icon}
-                    width={25}
-                    height={25}
+                <Marker
+                  coordinate={{
+                    latitude: location.lat,
+                    longitude: location.lng,
+                  }}
+                  title={location.title}>
+                  <Icon
+                    name="map-marker"
+                    size={50}
+                    color={theme.colors.primary}
                   />
-                </View>
-              </Marker>
-              <Marker coordinate={userLocation}>
-                <View style={styles.driverIcon}>
-                  <OIcon
-                    style={styles.image}
-                    src={theme.images.general.driverImage}
-                    width={25}
-                    height={25}
-                  />
-                </View>
-              </Marker>
-            </>
-          ) : (
-            <Marker
-              coordinate={{
-                latitude: userLocation.latitude,
-                longitude: userLocation.longitude,
-              }}
-              title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
-            />
-          )}
-        </MapView>
-      </View>
-
-      <OFab
-        iconName="globe-sharp"
-        onPress={fitCoordinatesZoom}
-        style={{
-          position: 'absolute',
-          bottom: showAcceptOrReject ? 115 : 75,
-          right: 20,
-        }}
-      />
-      <OFab
-        iconName="car-sport-sharp"
-        onPress={centerPosition}
-        style={{
-          position: 'absolute',
-          bottom: showAcceptOrReject ? 80 : 35,
-          right: 20,
-        }}
-      />
-      <View style={styles.facContainer}>
-        <View style={styles.facOrderStatus}>
-          <View
-            style={{
-              width: '15%',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              paddingBottom: 10,
-              marginRight: 10,
-            }}>
-            <OIconButton
-              icon={theme.images.general.close}
-              iconStyle={{
-                width: 13,
-                height: 13,
-              }}
-              style={styles.buttonBack}
-              onClick={() => handleArrowBack()}
-            />
-          </View>
-          <View style={{ width: '85%', paddingRight: 10, paddingBottom: 10 }}>
-            <OText size={12} color={theme.colors.textGray}>
-              {order?.delivery_datetime_utc
-                ? parseDate(order?.delivery_datetime_utc)
-                : parseDate(order?.delivery_datetime, { utc: false })}
-              {` - ${order?.paymethod?.name}`}
-            </OText>
-            <OText weight="bold">
-              {t('INVOICE_ORDER_NO', 'Order No.')} {order?.id}
-              {` ${t('IS', 'is')} `}
-              <OText
-                size={16}
-                numberOfLines={2}
-                color={colors[order?.status] || theme.colors.statusOrderBlue}>
-                {`${orderStatus}`}
-              </OText>
-            </OText>
-          </View>
+                  <View style={styles.view}>
+                    <OIcon
+                      style={styles.image}
+                      url={location.icon}
+                      width={25}
+                      height={25}
+                    />
+                  </View>
+                </Marker>
+                <Marker coordinate={userLocation}>
+                  <View style={styles.driverIcon}>
+                    <OIcon
+                      style={styles.image}
+                      src={theme.images.general.driverImage}
+                      width={25}
+                      height={25}
+                    />
+                  </View>
+                </Marker>
+              </>
+            ) : (
+              <Marker
+                coordinate={{
+                  latitude: userLocation.latitude,
+                  longitude: userLocation.longitude,
+                }}
+                title={markerTitle || t('YOUR_LOCATION', 'Your Location')}
+              />
+            )}
+          </MapView>
         </View>
 
-        <View style={styles.facDistance}>
-          <View
-            style={{
-              width: '15%',
-              alignItems: 'center',
-              marginRight: 10,
-            }}>
-            <OIcon
-              src={theme.images.general.arrow_distance}
-              style={styles.arrowDistance}
-            />
-            <OText size={12} numberOfLines={3}>{`${(
-              distancesFromTwoPlacesKm * 3280.84
-            ).toFixed(0)} ${t('FT', 'Ft')}`}</OText>
-          </View>
-          <View style={{ width: '75%', paddingRight: 20 }}>
-            <OText
-              color={theme.colors.unselectText}
-              size={13}
-              numberOfLines={2}
-              adjustsFontSizeToFit>
-              {`${travelTime.toFixed(2)} - ${
-                isMin ? t('MINNUTES', 'mins') : t('HOURS', 'hours')
-              } ${distancesFromTwoPlacesKm.toFixed(2)} km`}
-            </OText>
-            <OText size={13} numberOfLines={3} adjustsFontSizeToFit>
-              {infoRealTime?.formatted_address}
-            </OText>
-          </View>
-        </View>
-      </View>
-
-      {showAcceptOrReject && (
-        <FloatingButton
-          btnText={t('REJECT', 'Reject')}
-          isSecondaryBtn={false}
-          secondButtonClick={() =>
-            handleViewActionOrder && handleViewActionOrder('accept')
-          }
-          firstButtonClick={() =>
-            handleViewActionOrder && handleViewActionOrder('reject')
-          }
-          secondBtnText={t('ACCEPT', 'Accept')}
-          secondButton={true}
-          firstColorCustom={theme.colors.red}
-          secondColorCustom={theme.colors.green}
-          widthButton={150}
-          isPadding
+        <OFab
+          iconName="globe-sharp"
+          onPress={fitCoordinatesZoom}
+          style={{
+            position: 'absolute',
+            bottom: showAcceptOrReject ? 115 : 75,
+            right: 20,
+          }}
         />
-      )}
+        <OFab
+          iconName="car-sport-sharp"
+          onPress={centerPosition}
+          style={{
+            position: 'absolute',
+            bottom: showAcceptOrReject ? 80 : 35,
+            right: 20,
+          }}
+        />
+        <View style={styles.facContainer}>
+          <View style={styles.facOrderStatus}>
+            <View
+              style={{
+                width: '15%',
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                paddingBottom: 10,
+                marginRight: 10,
+              }}>
+              <OIconButton
+                icon={theme.images.general.close}
+                iconStyle={{
+                  width: 13,
+                  height: 13,
+                }}
+                style={styles.buttonBack}
+                onClick={() => handleArrowBack()}
+              />
+            </View>
+            <View style={{ width: '85%', paddingRight: 10, paddingBottom: 10 }}>
+              <OText size={12} color={theme.colors.textGray}>
+                {order?.delivery_datetime_utc
+                  ? parseDate(order?.delivery_datetime_utc)
+                  : parseDate(order?.delivery_datetime, { utc: false })}
+                {` - ${order?.paymethod?.name}`}
+              </OText>
+              <OText weight="bold">
+                {t('INVOICE_ORDER_NO', 'Order No.')} {order?.id}
+                {` ${t('IS', 'is')} `}
+                <OText
+                  size={16}
+                  numberOfLines={2}
+                  color={colors[order?.status] || theme.colors.statusOrderBlue}>
+                  {`${orderStatus}`}
+                </OText>
+              </OText>
+            </View>
+          </View>
 
-      <Alert
-        open={alertState.open}
-        onAccept={closeAlert}
-        onClose={closeAlert}
-        content={alertState.content}
-        title={t('ERROR', 'Error')}
-      />
-    </>
+          <View style={styles.facDistance}>
+            <View
+              style={{
+                width: '15%',
+                alignItems: 'center',
+                marginRight: 10,
+              }}>
+              <OIcon
+                src={theme.images.general.arrow_distance}
+                style={styles.arrowDistance}
+              />
+              <OText size={12} numberOfLines={3}>{`${(
+                distancesFromTwoPlacesKm * 3280.84
+              ).toFixed(0)} ${t('FT', 'Ft')}`}</OText>
+            </View>
+            <View style={{ width: '75%', paddingRight: 20 }}>
+              <OText
+                color={theme.colors.unselectText}
+                size={13}
+                numberOfLines={2}
+                adjustsFontSizeToFit>
+                {`${travelTime.toFixed(2)} - ${
+                  isMin ? t('MINNUTES', 'mins') : t('HOURS', 'hours')
+                } ${distancesFromTwoPlacesKm.toFixed(2)} km`}
+              </OText>
+              <OText size={13} numberOfLines={3} adjustsFontSizeToFit>
+                {infoRealTime?.formatted_address}
+              </OText>
+            </View>
+          </View>
+        </View>
+
+        {showAcceptOrReject && (
+          <FloatingButton
+            btnText={t('REJECT', 'Reject')}
+            isSecondaryBtn={false}
+            secondButtonClick={() =>
+              handleViewActionOrder && handleViewActionOrder('accept')
+            }
+            firstButtonClick={() =>
+              handleViewActionOrder && handleViewActionOrder('reject')
+            }
+            secondBtnText={t('ACCEPT', 'Accept')}
+            secondButton={true}
+            firstColorCustom={theme.colors.red}
+            secondColorCustom={theme.colors.green}
+            widthButton={'45%'}
+            isPadding
+          />
+        )}
+
+        <Alert
+          open={alertState.open}
+          onAccept={closeAlert}
+          onClose={closeAlert}
+          content={alertState.content}
+          title={t('ERROR', 'Error')}
+        />
+      </View>
+    </SafeAreaView>
   );
 };

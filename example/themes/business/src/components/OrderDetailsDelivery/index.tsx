@@ -438,6 +438,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     icons: {
       maxWidth: 40,
       height: 25,
+      alignItems: 'flex-end',
+    },
+    linkWithIcons: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 5,
+      flex: 1,
     },
   });
 
@@ -473,19 +481,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     <>
       {(!order || Object.keys(order).length === 0) &&
         (error?.length < 1 || !error) && (
-          <View
-            style={{
-              padding: 25,
-              backgroundColor: theme.colors.backgroundLight,
-            }}>
+          <View style={{ flex: 1 }}>
             {[...Array(6)].map((item, i) => (
               <Placeholder key={i} Animation={Fade}>
-                <View style={{ flexDirection: 'row', marginBottom: 30 }}>
+                <View style={{ flexDirection: 'row', paddingVertical: 20 }}>
                   <Placeholder>
-                    <PlaceholderLine width={90} />
-                    <PlaceholderLine width={50} />
+                    <PlaceholderLine width={100} />
+                    <PlaceholderLine width={70} />
+                    <PlaceholderLine width={30} />
                     <PlaceholderLine width={20} />
-                    <PlaceholderLine width={10} />
                   </Placeholder>
                 </View>
               </Placeholder>
@@ -577,9 +581,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             </OText>
           </OrderHeader>
           <OrderDetailsContainer
-            style={{
-              marginBottom: marginContainer[order?.status] ? 60 : 0,
-            }}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}>
             <>
@@ -594,46 +595,50 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </OText>
 
                   {!!order?.business?.email && (
-                    <OLink
-                      url={`mailto:${order?.business?.email}`}
-                      shorcut={order?.business?.email}
-                      color={theme.colors.primary}
-                      PressStyle={{ marginBottom: 4 }}
-                    />
+                    <View style={styles.linkWithIcons}>
+                      <OLink
+                        PressStyle={styles.linkWithIcons}
+                        url={`mailto:${order?.business?.email}`}
+                        shorcut={order?.business?.email}
+                        type="email"
+                      />
+                    </View>
                   )}
 
-                  <View style={{ flexDirection: 'row' }}>
-                    {!!order?.business?.cellphone && (
+                  {!!order?.business?.cellphone && (
+                    <View style={styles.linkWithIcons}>
                       <OLink
+                        PressStyle={styles.linkWithIcons}
                         url={`tel:${order?.business?.cellphone}`}
-                        shorcut={`${order?.business?.cellphone} ${
-                          order?.business?.phone ? '- ' : ''
-                        }`}
-                        color={theme.colors.primary}
-                        PressStyle={{ marginBottom: 4 }}
+                        shorcut={`${order?.business?.cellphone}`}
+                        type="telephone"
                       />
-                    )}
+                    </View>
+                  )}
 
-                    {!!order?.business?.phone && (
+                  {!!order?.business?.phone && (
+                    <View style={styles.linkWithIcons}>
                       <OLink
+                        PressStyle={styles.linkWithIcons}
                         url={`tel:${order?.business?.phone}`}
                         shorcut={order?.business?.phone}
-                        color={theme.colors.primary}
-                        PressStyle={{ marginBottom: 4 }}
+                        type="telephone"
                       />
-                    )}
-                  </View>
+                    </View>
+                  )}
 
                   {!!order?.business?.address && (
-                    <OLink
-                      url={Platform.select({
-                        ios: `maps:0,0?q=${order?.business?.address}`,
-                        android: `geo:0,0?q=${order?.business?.address}`,
-                      })}
-                      shorcut={order?.business?.address}
-                      color={theme.colors.primary}
-                      PressStyle={{ marginBottom: 4 }}
-                    />
+                    <View style={styles.linkWithIcons}>
+                      <OLink
+                        PressStyle={styles.linkWithIcons}
+                        url={Platform.select({
+                          ios: `maps:0,0?q=${order?.business?.address}`,
+                          android: `geo:0,0?q=${order?.business?.address}`,
+                        })}
+                        shorcut={order?.business?.address}
+                        type="location"
+                      />
+                    </View>
                   )}
                 </OrderBusiness>
 
@@ -675,59 +680,66 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       {order?.customer?.second_lastname}
                     </OText>
                   </View>
-
-                  {Boolean(order?.customer?.email) && (
-                    <OLink
-                      url={`mailto:${order?.customer?.email}`}
-                      shorcut={order?.customer?.email}
-                      color={theme.colors.primary}
-                      PressStyle={{ marginBottom: 4 }}
-                    />
+                  {!!order?.customer?.email && (
+                    <View style={styles.linkWithIcons}>
+                      <OLink
+                        PressStyle={styles.linkWithIcons}
+                        url={`mailto:${order?.customer?.email}`}
+                        shorcut={order?.customer?.email}
+                        type="email"
+                      />
+                    </View>
                   )}
 
-                  {Boolean(order?.customer?.cellphone) && (
-                    <OLink
-                      url={`tel:${order?.customer?.cellphone}`}
-                      shorcut={order?.customer?.cellphone}
-                      color={theme.colors.primary}
-                      PressStyle={{ marginBottom: 4 }}
-                    />
+                  {!!order?.customer?.cellphone && (
+                    <View style={styles.linkWithIcons}>
+                      <OLink
+                        PressStyle={styles.linkWithIcons}
+                        url={`tel:${order?.customer?.cellphone}`}
+                        shorcut={order?.customer?.cellphone}
+                        type="telephone"
+                      />
+                    </View>
                   )}
 
-                  {Boolean(order?.customer?.phone) && (
-                    <OLink
-                      url={`tel:${order?.customer?.phone}`}
-                      shorcut={order?.customer?.phone}
-                      color={theme.colors.primary}
-                      PressStyle={{ marginBottom: 4 }}
-                    />
+                  {!!order?.customer?.phone && (
+                    <View style={styles.linkWithIcons}>
+                      <OLink
+                        PressStyle={styles.linkWithIcons}
+                        url={`tel:${order?.customer?.phone}`}
+                        shorcut={order?.customer?.phone}
+                        type="telephone"
+                      />
+                    </View>
                   )}
 
-                  {Boolean(order?.customer?.address) && (
-                    <OLink
-                      url={Platform.select({
-                        ios: `maps:0,0?q=${order?.customer?.address}`,
-                        android: `geo:0,0?q=${order?.customer?.address}`,
-                      })}
-                      shorcut={order?.customer?.address}
-                      color={theme.colors.primary}
-                      PressStyle={{ marginBottom: 4 }}
-                    />
+                  {!!order?.customer?.address && (
+                    <View style={styles.linkWithIcons}>
+                      <OLink
+                        PressStyle={styles.linkWithIcons}
+                        url={Platform.select({
+                          ios: `maps:0,0?q=${order?.customer?.address}`,
+                          android: `geo:0,0?q=${order?.customer?.address}`,
+                        })}
+                        shorcut={order?.customer?.address}
+                        type="location"
+                      />
+                    </View>
                   )}
 
-                  {Boolean(order?.customer?.internal_number) && (
+                  {!!order?.customer?.internal_number && (
                     <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                       {order?.customer?.internal_number}
                     </OText>
                   )}
 
-                  {Boolean(order?.customer?.address_notes) && (
+                  {!!order?.customer?.address_notes && (
                     <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                       {order?.customer?.address_notes}
                     </OText>
                   )}
 
-                  {Boolean(order?.customer.zipcode) && (
+                  {!!order?.customer.zipcode && (
                     <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
                       {order?.customer?.zipcode}
                     </OText>
@@ -968,7 +980,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               />
             </OModal>
 
-            <View style={{ height: 30 }} />
+            <View
+              style={{
+                height:
+                  order?.status === 8 && order?.delivery_type === 1 ? 50 : 35,
+              }}
+            />
           </OrderDetailsContainer>
 
           {showFloatButtonsPickUp[order?.status] && (
@@ -986,7 +1003,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               secondButton={true}
               firstColorCustom={theme.colors.red}
               secondColorCustom={theme.colors.green}
-              widthButton={150}
+              widthButton={'45%'}
             />
           )}
           {order?.status === 9 && (
@@ -1004,7 +1021,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               secondButton={true}
               firstColorCustom={theme.colors.red}
               secondColorCustom={theme.colors.green}
-              widthButton={150}
+              widthButton={'45%'}
             />
           )}
           {showFloatButtonsAcceptOrReject[order?.status] && (
@@ -1017,7 +1034,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               secondButton={true}
               firstColorCustom={theme.colors.red}
               secondColorCustom={theme.colors.green}
-              widthButton={150}
+              widthButton={'45%'}
             />
           )}
 

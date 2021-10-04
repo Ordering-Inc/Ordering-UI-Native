@@ -191,29 +191,34 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
     },
     icon: {
       borderRadius: 7.6,
-      width: 70,
-      height: 70,
+      width: 75,
+      height: 75,
     },
     logo: {
-      padding: 2,
-      borderRadius: 18,
-      shadowColor: '#000',
+      width: 78,
+      height: 78,
+      borderRadius: 25,
+      shadowColor: 'rgba(0.0, 0.0, 0.0, 0.5)',
       shadowOffset: {
         width: 0,
         height: 1.5,
       },
       shadowOpacity: 0.21,
-      shadowRadius: 3,
-      elevation: 7,
+      shadowRadius: 6,
+      elevation: 13,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     title: {
+      marginBottom: 6,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
-      fontSize: 18,
+      fontSize: 16,
       color: theme.colors.textGray,
     },
     badge: {
+      marginBottom: 6,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
@@ -221,6 +226,7 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
       color: theme.colors.primary,
     },
     date: {
+      marginBottom: 6,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
@@ -284,7 +290,6 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
                   style={styles.orderType}
                   mRight={5}
                   numberOfLines={1}
-                  size={18}
                   adjustsFontSizeToFit>
                   {getOrderStatus(order?.status)?.value}
                 </OText>

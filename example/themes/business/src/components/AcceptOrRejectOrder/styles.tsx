@@ -30,10 +30,9 @@ export const TimeField = styled.TextInput`
 
 export const Header = styled.View``;
 
-export const Action = styled.View`
-  margin-horizontal: 30px;
-`;
+export const Action = styled.View``;
 
 export const Comments = styled.View`
   margin-bottom: 40px;
+  margin-top: 20px;
 `;

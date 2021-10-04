@@ -8,6 +8,7 @@ import {
   Keyboard,
   Dimensions,
   Pressable,
+  SafeAreaView,
 } from 'react-native';
 import {
   GiftedChat,
@@ -59,7 +60,7 @@ const ChatUI = (props: MessagesParams) => {
   } = props;
 
   const [{ user }] = useSession();
-  const [{ parseDate, optimizeImage, getTimeAgo }] = useUtils();
+  const [{ parseDate, parseTime, optimizeImage, getTimeAgo }] = useUtils();
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
   const theme = useTheme();
@@ -102,8 +103,8 @@ const ChatUI = (props: MessagesParams) => {
     },
     toolbarStyle: {
       flexDirection: 'column-reverse',
-      paddingHorizontal: 20,
       paddingVertical: 15,
+      paddingHorizontal: 30,
       backgroundColor: theme.colors.white,
       borderTopWidth: 1,
       borderTopColor: theme.colors.tabBar,
@@ -159,7 +160,7 @@ const ChatUI = (props: MessagesParams) => {
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: theme.colors.inputChat,
-      padding: 10,
+      paddingVertical: 10,
       borderRadius: 7.6,
     },
     firstMessageText: {
@@ -341,8 +342,8 @@ const ChatUI = (props: MessagesParams) => {
       <View
         style={{
           ...styles.firstMessage,
-          marginLeft: 10,
-          marginRight: 10,
+          marginHorizontal: 0,
+          paddingHorizontal: 32,
           width: 320,
         }}>
         <OText
@@ -374,6 +375,9 @@ const ChatUI = (props: MessagesParams) => {
                 message.comment ? message.comment.length : ''
               }`
             : `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`}
+        </OText>
+        <OText size={10} color={'#aaa'} style={{ alignSelf: 'flex-start' }}>
+          {parseTime(message?.created_at, { outputFormat: 'hh:mma' })}
         </OText>
       </View>
     );
@@ -571,14 +575,14 @@ const ChatUI = (props: MessagesParams) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         horizontal
-        contentContainerStyle={{ justifyContent: 'space-between' }}>
+        contentContainerStyle={{ justifyContent: 'center', width: '100%' }}>
         {user?.level !== 2 && (
           <Pressable
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              marginRight: 25,
               opacity: canRead?.business ? 1 : 0.25,
+              marginRight: 25,
             }}
             onPress={() =>
               handleFilter({ business: !canRead?.business }, 'business')
@@ -604,7 +608,10 @@ const ChatUI = (props: MessagesParams) => {
                 {order?.business?.name}
               </OText>
 
-              <OText adjustsFontSizeToFit size={14}>
+              <OText
+                adjustsFontSizeToFit
+                color={theme.colors.unselectText}
+                size={14}>
                 {t('BUSINESS', 'Business')}
               </OText>
             </TitleHeader>
@@ -615,8 +622,8 @@ const ChatUI = (props: MessagesParams) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            marginRight: 25,
             opacity: canRead?.customer ? 1 : 0.25,
+            marginRight: 25,
           }}
           onPress={() =>
             handleFilter({ customer: !canRead?.customer }, 'customer')
@@ -642,7 +649,10 @@ const ChatUI = (props: MessagesParams) => {
               {order?.customer?.name}
             </OText>
 
-            <OText adjustsFontSizeToFit size={14}>
+            <OText
+              adjustsFontSizeToFit
+              color={theme.colors.unselectText}
+              size={14}>
               {t('CUSTOMER', 'Customer')}
             </OText>
           </TitleHeader>
@@ -653,8 +663,8 @@ const ChatUI = (props: MessagesParams) => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              marginRight: 25,
               opacity: canRead?.driver ? 1 : 0.25,
+              marginRight: 25,
             }}
             onPress={() =>
               handleFilter({ driver: !canRead?.driver }, 'driver')
@@ -680,7 +690,10 @@ const ChatUI = (props: MessagesParams) => {
                 {order?.driver?.name}
               </OText>
 
-              <OText adjustsFontSizeToFit size={14}>
+              <OText
+                adjustsFontSizeToFit
+                color={theme.colors.unselectText}
+                size={14}>
                 {t('DRIVER', 'Driver')}
               </OText>
             </TitleHeader>
@@ -725,14 +738,10 @@ const ChatUI = (props: MessagesParams) => {
         {...props}
         textInputStyle={{
           borderRadius: 7.6,
-          paddingHorizontal: 10,
           borderColor: theme.colors.transparent,
           borderWidth: 0,
+          textAlign: message ? 'left' : 'center',
           color: '#010300',
-          marginLeft: 1,
-          marginRight: 0,
-          marginBottom: 0,
-          paddingVertical: 0,
         }}
         textInputProps={{
           value: message,
@@ -891,54 +900,63 @@ const ChatUI = (props: MessagesParams) => {
     );
   };
 
-  const renderAvatar = (props: any) => (
-    <View style={{ marginBottom: 10, alignItems: 'flex-end' }}>
-      <OText size={9} color={theme.colors.textGray}>
-        {`${t('SENT_TO', 'Sent to')}:`}
-      </OText>
+  const renderAvatar = (props: any) => {
+    const isMine = user?.id === props?.currentMessage?.user?._id;
 
-      <View style={{ flexDirection: 'row' }}>
-        {props?.currentMessage?.user?.can_see?.includes('2') &&
-          user?.level !== 2 && (
+    return (
+      <View
+        style={{
+          marginBottom: 10,
+          alignItems: isMine ? 'flex-end' : 'flex-start',
+        }}>
+        <OText size={9} color={theme.colors.textGray}>
+          {`${t('SENT_TO', 'Sent to')}:`}
+        </OText>
+
+        <View style={{ flexDirection: 'row' }}>
+          {props?.currentMessage?.user?.can_see?.includes('2') &&
+            user?.level !== 2 && (
+              <View style={styles.avatar}>
+                <OIcon
+                  url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
+                  src={
+                    !order?.business?.logo &&
+                    theme?.images?.dummies?.businessLogo
+                  }
+                  style={styles.avatarIcon}
+                />
+              </View>
+            )}
+
+          {props?.currentMessage?.user?.can_see?.includes('3') && (
             <View style={styles.avatar}>
               <OIcon
-                url={optimizeImage(order?.business?.logo, 'h_300,c_limit')}
-                src={
-                  !order?.business?.logo && theme?.images?.dummies?.businessLogo
-                }
+                url={optimizeImage(
+                  order?.customer?.photo ||
+                    theme?.images?.dummies?.customerPhoto,
+                  'h_300,c_limit',
+                )}
                 style={styles.avatarIcon}
               />
             </View>
           )}
 
-        {props?.currentMessage?.user?.can_see?.includes('3') && (
-          <View style={styles.avatar}>
-            <OIcon
-              url={optimizeImage(
-                order?.customer?.photo || theme?.images?.dummies?.customerPhoto,
-                'h_300,c_limit',
-              )}
-              style={styles.avatarIcon}
-            />
-          </View>
-        )}
-
-        {props?.currentMessage?.user?.can_see?.includes('4') &&
-          user?.level !== 4 && (
-            <View style={{ ...styles.avatar, marginRight: 0 }}>
-              <OIcon
-                url={
-                  optimizeImage(order?.driver?.photo, 'h_300,c_limit') ||
-                  theme?.images?.dummies?.driverPhoto
-                }
-                style={styles.avatarIcon}
-              />
-            </View>
-          )}
+          {props?.currentMessage?.user?.can_see?.includes('4') &&
+            user?.level !== 4 && (
+              <View style={{ ...styles.avatar, marginRight: 0 }}>
+                <OIcon
+                  url={
+                    optimizeImage(order?.driver?.photo, 'h_300,c_limit') ||
+                    theme?.images?.dummies?.driverPhoto
+                  }
+                  style={styles.avatarIcon}
+                />
+              </View>
+            )}
+        </View>
       </View>
-    </View>
-  );
-
+    );
+  };
   const renderTime = (props: any) => (
     <>
       <OText style={styles.timeText}>
@@ -966,7 +984,7 @@ const ChatUI = (props: MessagesParams) => {
   };
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <Wrapper>
         <GiftedChat
           messages={formattedMessages}
@@ -982,7 +1000,8 @@ const ChatUI = (props: MessagesParams) => {
             contentContainerStyle: {
               flexGrow: 1,
               justifyContent: 'flex-end',
-              paddingHorizontal: 9,
+              paddingHorizontal: 22,
+              paddingBottom: 30,
             },
           }}
           renderCustomView={renderNameMessage}
@@ -1007,7 +1026,7 @@ const ChatUI = (props: MessagesParams) => {
           keyboardShouldPersistTaps="handled"
         />
       </Wrapper>
-    </>
+    </SafeAreaView>
   );
 };
 
