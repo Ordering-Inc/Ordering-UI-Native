@@ -140,7 +140,7 @@ const CartSingleUI = (props: any) => {
 						`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(curCart?.minimum)}`
 					)}
 					isSecondaryBtn={(curCart?.subtotal < curCart?.minimum || !curCart?.valid_address)}
-					btnLeftValueShow={true}
+					btnLeftValueShow={false}
 					btnRightValueShow={curCart?.total > 0}
 					btnRightValue={parsePrice(curCart?.total)}
 					disabled={(openUpselling && !canOpenUpselling) || curCart?.subtotal < curCart?.minimum || !curCart?.valid_address}

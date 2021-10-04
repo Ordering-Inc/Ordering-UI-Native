@@ -68,12 +68,16 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			borderRadius: 3,
 			backgroundColor: theme.colors.clear,
 			fontSize: 14,
-			minHeight: 28
+			minHeight: 28,
+			marginTop: 6
 		},
 		icon: {
 			top: 6,
 			right: 10,
 			position: 'absolute',
+		},
+		viewContainer: {
+			flex: 1
 		},
 		placeholder: {
 			color: theme.colors.secundaryContrast

@@ -701,7 +701,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       />
                     </View>
                   )}
-
                   {!!order?.customer?.phone && (
                     <View style={styles.linkWithIcons}>
                       <OLink

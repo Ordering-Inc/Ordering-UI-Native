@@ -70,7 +70,7 @@ export const BusinessItemAccordion = (props: any) => {
 							{props.onNavigationRedirect && !isClosed && (
 								<>
 									<TouchableOpacity onPress={() => props.onNavigationRedirect('Business', { store: cart?.business?.slug })}>
-										<OText color={theme.colors.primary} size={12} lineHeight={18} style={{ textDecorationLine: 'underline' }}>{t('GO_TO_STORE', 'Go to store')}</OText>
+										<OText color={theme.colors.textSecondary} size={12} lineHeight={18} style={{ textDecorationLine: 'underline' }}>{t('GO_TO_STORE', 'Go to store')}</OText>
 									</TouchableOpacity>
 									<OText color={theme.colors.textSecondary}>{' \u2022 '}</OText>
 								</>
@@ -81,7 +81,7 @@ export const BusinessItemAccordion = (props: any) => {
 									message={t('QUESTION_DELETE_CART', 'Are you sure to you wants delete the selected cart')}
 									onAccept={() => handleClearProducts()}
 								>
-									<OText size={12} lineHeight={18} color={theme.colors.red} style={{ textDecorationLine: 'underline' }}>{t('CLEAR_CART', 'Clear cart')}</OText>
+									<OText size={12} lineHeight={18} color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>{t('CLEAR_CART', 'Clear cart')}</OText>
 								</OAlert>
 							)}
 						</View>

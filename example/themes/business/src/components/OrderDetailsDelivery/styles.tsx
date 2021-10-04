@@ -6,7 +6,7 @@ export const OrderDetailsContainer = styled.ScrollView`
 
 export const Pickup = styled.View`
   padding-vertical: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 `;
 
 export const Header = styled.View`
@@ -34,7 +34,6 @@ export const OrderHeader = styled.View`
 `;
 
 export const OrderBusiness = styled.View`
-  position: relative;
   bottom: 10px;
   padding-vertical: 20px;
   flex-direction: column;

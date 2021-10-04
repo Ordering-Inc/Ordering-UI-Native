@@ -355,7 +355,7 @@ const CheckoutUI = (props: any) => {
 										<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
 											<OIcon src={theme.images.general.shop_bag} color={theme.colors.primary} width={16} style={{ marginEnd: 7 }} />
 											<OText style={{ ...theme.labels.middle, fontWeight: '600' }}>
-												{t('ORDER_SUMMARY', 'Order Summary')}
+												{`${cart?.products?.length} ${t('ITEMS', 'Items')}`}
 											</OText>
 										</View>
 										<OrderSummary

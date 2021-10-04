@@ -44,8 +44,10 @@ export const DTForm = styled.View`
 `
 
 export const DTLabel = styled.Text`
-  font-size: 16px;
+  font-size: 14px;
   align-self: flex-start;
+  color: ${(props: any) => props.theme.colors.textSecondary}
+  margin-top: 10px;
 
   ${(props: any) => props.theme?.rtl && css`
     margin-left: 20px;

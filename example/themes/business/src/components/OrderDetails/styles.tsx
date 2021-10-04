@@ -48,7 +48,6 @@ export const OrderHeader = styled.View`
 `;
 
 export const OrderBusiness = styled.View`
-  position: relative;
   bottom: 10px;
   padding-vertical: 20px;
   flex-direction: column;

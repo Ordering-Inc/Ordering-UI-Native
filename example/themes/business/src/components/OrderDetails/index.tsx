@@ -509,6 +509,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       marginBottom: 5,
       flex: 1,
     },
+    linkWithIcons: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 5,
+      flex: 1,
+    },
   });
 
   const locationsToSend = locations.filter(

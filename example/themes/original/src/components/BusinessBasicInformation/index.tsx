@@ -150,13 +150,13 @@ export const BusinessBasicInformation = (
 					{!isBusinessInfoShow && (
 						<>
 							<TouchableOpacity onPress={() => navigation.navigate('MomentOption')}>
-								<OText color={theme.colors.primary} style={{ textDecorationLine: 'underline' }}>
+								<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
 									{t('PRE_ORDER', 'Preorder')}
 								</OText>
 							</TouchableOpacity>
 							<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
 							<TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
-								<OText color={theme.colors.primary} style={{ textDecorationLine: 'underline' }}>
+								<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
 									{t('REVIEWS', 'Reviews')}
 								</OText>
 							</TouchableOpacity>

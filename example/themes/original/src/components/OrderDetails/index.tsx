@@ -640,6 +640,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 								bgColor={theme.colors.clear}
 								style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0 }}
 								parentStyle={{ marginTop: 29, width: '50%' }}
+								onClick={() => navigation.navigate('BottomTab', { screen: 'MyOrders' })}
 							/>
 						</HeaderInfo>
 						<OrderProducts>
@@ -739,6 +740,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 			)}
 			<OModal
 				open={openModalForBusiness || openModalForDriver}
+				entireModal
 				customClose
 				onClose={() => handleCloseModal()}>
 				<Messages

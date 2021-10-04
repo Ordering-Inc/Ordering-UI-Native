@@ -8,7 +8,11 @@ const OrderDetails = ({ navigation, route } : any) => {
     orderId: route.params?.orderId,
     isFromCheckout: route.params?.isFromCheckout,
     isFromRoot: route.params?.isFromRoot,
-    goToBusinessList: route?.params?.goToBusinessList
+    goToBusinessList: route?.params?.goToBusinessList,
+    onNavigationRedirect: (page: string, params: any) => {
+      if (!page) return
+      navigation.navigate(page, params);
+    }
   }
 
   return (
