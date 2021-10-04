@@ -19,7 +19,7 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 // Own
 import { FiltersTab, TabsContainer, Tag } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
-import { OText, OIconButton } from '../shared';
+import { OText, OIconButton, OIcon } from '../shared';
 import { OrdersOptionParams } from '../../types';
 
 // Interfaces
@@ -388,6 +388,15 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 }>
                 {getOrderStatus(key)}
               </OText>
+
+              {activeStatus?.includes(key) && (
+                <OIcon
+                  src={theme.images.general.close}
+                  width={10}
+                  height={10}
+                  style={{ marginHorizontal: 3, tintColor: 'white' }}
+                />
+              )}
             </Tag>
           ))}
         </ScrollView>

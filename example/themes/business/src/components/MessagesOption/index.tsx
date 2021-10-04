@@ -9,7 +9,7 @@ import {
 import { Contacts, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
-import { OText, OButton } from '../shared';
+import { OText, OButton, OIcon } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { PreviousMessages } from '../PreviousMessages';
 // import { Contacts } from '../Contacts';
@@ -234,6 +234,15 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
                 }>
                 {getTagFilter(key)}
               </OText>
+
+              {activeTag === key && (
+                <OIcon
+                  src={theme.images.general.close}
+                  width={10}
+                  height={10}
+                  style={{ marginHorizontal: 3, tintColor: 'white' }}
+                />
+              )}
             </Tag>
           ))}
         </TagsContainer>

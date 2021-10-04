@@ -39,6 +39,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
       flex: 1,
       minHeight: 64,
       marginBottom: 30,
+      marginLeft: 3,
     },
     icon: {
       borderRadius: 7.6,
@@ -55,10 +56,11 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
         height: 1.5,
       },
       shadowOpacity: 0.21,
-      shadowRadius: 6,
-      elevation: 13,
+      shadowRadius: 5,
+      elevation: 7,
       justifyContent: 'center',
       alignItems: 'center',
+      marginLeft: 3,
     },
     title: {
       marginBottom: 6,

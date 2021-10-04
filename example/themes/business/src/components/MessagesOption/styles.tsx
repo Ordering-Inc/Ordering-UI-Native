@@ -14,8 +14,9 @@ export const TagsContainer = styled.ScrollView`
 `;
 
 export const Tag = styled.Pressable`
+  flex-direction: row;
   background-color: ${({ isSelected }: { isSelected: string }) => isSelected};
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   min-height: 34px;
   padding: 4px 10px;
