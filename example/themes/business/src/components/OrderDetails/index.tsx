@@ -41,7 +41,7 @@ import { ProductItemAccordion } from '../ProductItemAccordion';
 import { GoogleMap } from '../GoogleMap';
 import { OButton, OModal, OText, OIconButton, OIcon, OLink } from '../shared';
 import { OrderDetailsParams } from '../../types';
-import { verifyDecimals } from '../../utils';
+import { verifyDecimals, getProductPrice } from '../../utils';
 import { USER_TYPE } from '../../config/constants';
 import CountryPicker from 'react-native-country-picker-modal';
 import { NotFoundSource } from '../NotFoundSource';
@@ -157,20 +157,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     12: theme.colors.statusOrderRed,
     16: theme.colors.statusOrderRed,
     17: theme.colors.statusOrderRed,
-  };
-
-  const getProductPrice = (product: any) => {
-    let subOptionPrice = 0;
-    if (product.options.length > 0) {
-      for (const option of product.options) {
-        for (const suboption of option.suboptions) {
-          subOptionPrice += suboption.quantity * suboption.price;
-        }
-      }
-    }
-
-    const price = product.quantity * (product.price + subOptionPrice);
-    return price.toFixed(2);
   };
 
   const handleCopyClipboard = () => {

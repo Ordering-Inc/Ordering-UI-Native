@@ -15,7 +15,7 @@ import {
   ContentInfo,
 } from './styles';
 import { useUtils, useLanguage, useConfig } from 'ordering-components/native';
-import { verifyDecimals } from '../../utils';
+import { verifyDecimals, getProductPrice } from '../../utils';
 import { FloatingButton } from '../FloatingButton';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import RNPrint from 'react-native-print';
@@ -31,20 +31,6 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
   const [state, setState] = useState({
     selectedPrinter: { url: undefined },
   });
-
-  const getProductPrice = (product: any) => {
-    let subOptionPrice = 0;
-    if (product.options.length > 0) {
-      for (const option of product.options) {
-        for (const suboption of option.suboptions) {
-          subOptionPrice += suboption.quantity * suboption.price;
-        }
-      }
-    }
-
-    const price = product.quantity * (product.price + subOptionPrice);
-    return parseFloat(price.toFixed(2));
-  };
 
   const theme = useTheme();
   const percentTip =

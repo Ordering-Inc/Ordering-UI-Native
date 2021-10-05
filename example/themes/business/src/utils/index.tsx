@@ -157,3 +157,17 @@ export const verifyDecimals = (value: number, parser: any) => {
     return parser(value);
   }
 };
+
+export const getProductPrice = (product: any) => {
+  let subOptionPrice = 0;
+  if (product.options.length > 0) {
+    for (const option of product.options) {
+      for (const suboption of option.suboptions) {
+        subOptionPrice += suboption.quantity * suboption.price;
+      }
+    }
+  }
+
+  const price = product.quantity * (product.price + subOptionPrice);
+  return price.toFixed(2);
+};
