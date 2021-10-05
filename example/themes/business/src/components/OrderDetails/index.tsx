@@ -170,7 +170,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
 
     const price = product.quantity * (product.price + subOptionPrice);
-    return parseFloat(price.toFixed(2));
+    return price.toFixed(2);
   };
 
   const handleCopyClipboard = () => {
@@ -241,7 +241,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       order?.products.length &&
       order?.products.map((product: any, i: number) => {
         return ` ${product?.quantity} X ${product?.name} ${parsePrice(
-          getProductPrice(product),
+          product.total ?? getProductPrice(product),
         )}\n`;
       });
 
@@ -888,9 +888,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <Table>
                     <OText mBottom={4}>{t('SUBTOTAL', 'Subtotal')}</OText>
                     <OText mBottom={4}>
-                      {parsePrice(order.tax_type === 1
-                        ? (order?.summary?.subtotal + order?.summary?.tax) ?? 0
-                        : order?.summary?.subtotal ?? 0
+                      {parsePrice(
+                        order.tax_type === 1
+                          ? order?.summary?.subtotal + order?.summary?.tax ?? 0
+                          : order?.summary?.subtotal ?? 0,
                       )}
                     </OText>
                   </Table>
@@ -899,7 +900,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     <Table>
                       <OText mBottom={4}>
                         {t('TAX', 'Tax')}
-                        {`(${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%)`}
+                        {`(${verifyDecimals(
+                          order?.summary?.tax_rate,
+                          parseNumber,
+                        )}%)`}
                       </OText>
 
                       <OText mBottom={4}>
@@ -915,7 +919,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           <OText>{t('DISCOUNT', 'Discount')}</OText>
 
                           <OText>
-                            {`(${verifyDecimals(order?.offer_rate, parsePrice)}%)`}
+                            {`(${verifyDecimals(
+                              order?.offer_rate,
+                              parsePrice,
+                            )}%)`}
                           </OText>
                         </OText>
                       ) : (
@@ -923,8 +930,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       )}
 
                       <OText mBottom={4}>
-                        -{' '}
-                        {parsePrice(order?.summary?.discount)}
+                        - {parsePrice(order?.summary?.discount)}
                       </OText>
                     </Table>
                   )}
@@ -934,15 +940,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     order?.summary?.total >= 0 && (
                       <Table>
                         <OText mBottom={4}>
-                          {t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}
+                          {t(
+                            'SUBTOTAL_WITH_DISCOUNT',
+                            'Subtotal with discount',
+                          )}
                         </OText>
                         {order?.tax_type === 1 ? (
                           <OText mBottom={4}>
-                            {parsePrice(order?.summary?.subtotal_with_discount + order?.summary?.tax ?? 0)}
+                            {parsePrice(
+                              order?.summary?.subtotal_with_discount +
+                                order?.summary?.tax ?? 0,
+                            )}
                           </OText>
                         ) : (
                           <OText mBottom={4}>
-                            {parsePrice(order?.summary?.subtotal_with_discount ?? 0)}
+                            {parsePrice(
+                              order?.summary?.subtotal_with_discount ?? 0,
+                            )}
                           </OText>
                         )}
                       </Table>
@@ -966,7 +980,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       {order?.summary?.driver_tip > 0 &&
                         parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
                         !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                        `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`}
+                        `(${verifyDecimals(
+                          order?.summary?.driver_tip,
+                          parseNumber,
+                        )}%)`}
                     </OText>
 
                     <OText mBottom={4}>
@@ -978,7 +995,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     <Table>
                       <OText mBottom={4}>
                         {t('SERVICE_FEE', 'Service Fee')}{' '}
-                        {`(${verifyDecimals(order?.summary?.service_fee, parseNumber)}%)`}
+                        {`(${verifyDecimals(
+                          order?.summary?.service_fee,
+                          parseNumber,
+                        )}%)`}
                       </OText>
 
                       <OText mBottom={4}>
