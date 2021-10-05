@@ -99,9 +99,6 @@ theme.images = {
     help: require('./assets/images/help.png'),
     close: require('./assets/icons/close.png')
   },
-  backgrounds: {
-		business_list_header: require('./assets/images/business_list_banner.jpg'),
-	},
   order: {
     status0: require('./assets/images/status-0.png'),
     status1: require('./assets/images/status-1.png'),
