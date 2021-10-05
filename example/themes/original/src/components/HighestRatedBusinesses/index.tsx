@@ -7,17 +7,16 @@ import {
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { View, ScrollView, Platform, Dimensions } from 'react-native';
 import { OText } from '../shared';
-import { BusinessesListingParams } from '../../types';
+import { HighestRatedBusinessesParams } from '../../types';
 import { BusinessController } from '../BusinessController'
 import {
   ListWrapper
 } from './styles'
 
-const HighestRatedBusinessesUI = (props: BusinessesListingParams) => {
+const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
   const {
     businessesList,
-    paginationProps,
-    handleBusinessClick
+    onBusinessClick
   } = props;
 
   const [, t] = useLanguage()
@@ -48,7 +47,7 @@ const HighestRatedBusinessesUI = (props: BusinessesListingParams) => {
               >
                 <BusinessController
                   business={business}
-                  handleCustomClick={handleBusinessClick}
+                  handleCustomClick={onBusinessClick}
                   orderType={orderState?.options?.type}
                 />
               </View>
@@ -113,11 +112,11 @@ const HighestRatedBusinessesUI = (props: BusinessesListingParams) => {
 }
 
 export const HighestRatedBusinesses = (props: any) => {
-	const highestRatedBusinessesUIProps = {
+	const highestRatedBusinessesProps = {
 		...props,
 		UIComponent: HighestRatedBusinessesUI,
     initialOrderByValue: 'rating'
 	};
 
-	return <BusinessesListingController {...highestRatedBusinessesUIProps} />;
+	return <BusinessesListingController {...highestRatedBusinessesProps} />;
 };
