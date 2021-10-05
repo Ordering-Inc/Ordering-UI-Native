@@ -32,6 +32,20 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
     selectedPrinter: { url: undefined },
   });
 
+  const getProductPrice = (product: any) => {
+    let subOptionPrice = 0;
+    if (product.options.length > 0) {
+      for (const option of product.options) {
+        for (const suboption of option.suboptions) {
+          subOptionPrice += suboption.quantity * suboption.price;
+        }
+      }
+    }
+
+    const price = product.quantity * (product.price + subOptionPrice);
+    return parseFloat(price.toFixed(2));
+  };
+
   const theme = useTheme();
   const percentTip =
     parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
@@ -131,7 +145,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 </div>
 
                 <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
-                ${parsePrice(product.total || product.price)}
+                ${parsePrice(getProductPrice(product))}
                 </div>
 
               </div>
@@ -551,7 +565,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                         size={12}
                         color={theme.colors.textGray}
                         numberOfLines={1}>
-                        {parsePrice(product.total || product.price)}
+                        {parsePrice(getProductPrice(product))}
                       </OText>
                     </View>
                   </ContentInfo>
