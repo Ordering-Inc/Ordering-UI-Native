@@ -13,6 +13,7 @@ const ReviewOrder = ({navigation, route} : any) => {
     navigation,
     order: route?.params?.order,
     setIsReviewed: route?.params?.setIsReviewed,
+    handleReviewState: route?.params?.handleReviewState,
     onNavigationRedirect: (route: string, params: any) => navigation.navigate(route, params)
   }
 

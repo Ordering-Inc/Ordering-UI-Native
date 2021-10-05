@@ -50,6 +50,12 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   const [reorderSelected,setReorderSelected] = useState<number | null>(null)
   const [{ parseDate, optimizeImage }] = useUtils()
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12]
+  const [isReviewedOrders, setIsReviewedOrders] = useState<Array<any>>([])
+
+  const handleReviewState = (orderId: any) => {
+    if (!orderId || isReviewedOrders.includes(orderId)) return
+    setIsReviewedOrders([ ...isReviewedOrders, orderId ])
+  }
 
   const handleClickViewOrder = (uuid: string) => {
     onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid })
@@ -67,7 +73,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
           products: order?.products,
           review: order?.review,
           user_review: order?.user_review
-        }
+        },
+        handleReviewState: handleReviewState
       }
     )
   }
@@ -105,7 +112,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
                 <OText size={16} color={theme.colors.primary} mRight={5} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
               </TouchableOpacity>
               {
-                allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && (
+                allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && !isReviewedOrders.includes(order?.id) && (
                   <TouchableOpacity onPress={() => handleClickOrderReview(order)}>
                     <OText size={16} color={theme.colors.primary} numberOfLines={1}>{t('REVIEW_ORDER', 'Review Order')}</OText>
                   </TouchableOpacity>
