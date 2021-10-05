@@ -15,7 +15,7 @@ import {
   ContentInfo,
 } from './styles';
 import { useUtils, useLanguage, useConfig } from 'ordering-components/native';
-import { verifyDecimals } from '../../utils';
+import { verifyDecimals, getProductPrice } from '../../utils';
 import { FloatingButton } from '../FloatingButton';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import RNPrint from 'react-native-print';
@@ -36,7 +36,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
   const percentTip =
     parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
     !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-    verifyDecimals(order?.driver_tip, parseNumber);
+    verifyDecimals(order?.summary?.driver_tip, parseNumber);
 
   const orderSummary = () => {
     return `
@@ -44,18 +44,18 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
         <h1>${t('ORDER_NO', 'Order No.')} ${order.id}</h1>
         <p style="font-size: 27px">
 
-          ${orderStatus} </br> 
+          ${orderStatus} </br>
 
           ${t('DELIVERY_TYPE', 'Delivery Type')}: ${
       deliveryStatus[order?.delivery_type]
-    } 
+    }
           </br>
           ${t('DELIVERY_DATE', 'Delivery Date')}: ${
       order?.delivery_datetime_utc
         ? parseDate(order?.delivery_datetime_utc)
         : parseDate(order?.delivery_datetime, { utc: false })
-    } 
-          </br> 
+    }
+          </br>
           ${t('PAYMENT_METHOD')}: ${order?.paymethod?.name}
         </p>
 
@@ -65,13 +65,27 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
     } ${order?.customer?.middle_name} ${order?.customer?.lastname} ${
       order?.customer?.second_lastname
     }
-        </br>  
-        ${t('EMAIL', 'Email')}: ${order?.customer?.email} 
-        </br> 
+        </br>
+        ${t('EMAIL', 'Email')}: ${order?.customer?.email}
+        </br>
         ${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone}
-         </br> 
+         </br>
+         ${
+           !!order?.customer?.phone
+             ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${
+                 order?.customer?.phone
+               } </br>`
+             : ''
+         }
          ${t('FULL_ADDRESS', 'Full Addres')}: ${order?.customer?.address} 
          </br> 
+         ${
+           !!order?.customer?.internal_number
+             ? `${t('INTERNAL_NUMBER', 'Internal Number')}: ${
+                 order?.customer?.internal_number
+               } </br>`
+             : ''
+         }
          ${t('ZIPCODE', 'Zipcode')}: ${order?.customer.zipcode}
          </p>  
 
@@ -79,9 +93,27 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
         <p style="font-size: 27px"> 
         ${order?.business?.name} 
         </br> 
-        ${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone} 
+        ${order?.business?.email}
         </br> 
+        ${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone}
+        </br> 
+        ${
+          !!order?.business?.phone
+            ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${
+                order?.business?.phone
+              } </br>`
+            : ''
+        } 
+
         ${t('ADDRES', 'Addres')}: ${order?.business?.address} 
+        </br>
+        ${
+          !!order?.business?.address_notes
+            ? `${t('SPECIAL_ADDRES', 'Special Addres')}: ${
+                order?.business?.address_notes
+              } `
+            : ''
+        }
         </p>
         <h1> ${t('ORDER_DETAILS', 'Order Details')}</h1>
 
@@ -93,26 +125,29 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               <div style="display: flex;">
 
                 <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
-                ${product?.quantity}  ${product?.name} 
+                ${product?.quantity}  ${product?.name}
                 </div>
 
                 <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
-                ${parsePrice(product.total || product.price)}
+                ${parsePrice(product.total ?? getProductPrice(product))}
                 </div>
 
               </div>
               `,
           )
         }
-    
         <div style="display: flex;">
 
-            <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">  
+            <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
             ${t('SUBTOTAL', 'Subtotal')}
             </div>
 
             <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
-              ${parsePrice(order?.subtotal)}
+              ${parsePrice(
+                order.tax_type === 1
+                  ? order?.summary?.subtotal + order?.summary?.tax ?? 0
+                  : order?.summary?.subtotal ?? 0,
+              )}
             </div>
 
         </div>
@@ -121,7 +156,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
         ${
           order?.summary?.discount > 0
             ? order?.offer_type === 1
-              ? `<div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%"> 
+              ? `<div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
                   ${t('DISCOUNT', 'Discount')} (${verifyDecimals(
                   order?.offer_rate,
                   parsePrice,
@@ -137,7 +172,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
         ${
           order?.summary?.discount > 0
             ? `<div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">- ${parsePrice(
-                order?.summary?.discount || order?.discount,
+                order?.summary?.discount,
               )}
               </div>`
             : ''
@@ -146,18 +181,18 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
         ${
           order?.tax_type !== 1
-            ? `<div style="font-size: 25px"> 
-                ${t('TAX', 'Tax')}  
-                ${verifyDecimals(order?.tax, parseNumber)}% 
-                ${parsePrice(order?.summary?.tax || order?.totalTax)}  
-                ${t('TAX', 'Tax')}  
-                ${verifyDecimals(order?.tax, parseNumber)}%
+            ? `<div style="font-size: 25px">
+                ${t('TAX', 'Tax')}
+                ${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%
+                ${parsePrice(order?.summary?.tax ?? 0)}
+                ${t('TAX', 'Tax')}
+                ${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%
               </div>`
             : ''
         }
-       
+
         ${
-          order?.summary?.delivery_price > 0 || order?.deliveryFee > 0
+          order?.summary?.delivery_price > 0
             ? `<div style="font-size: 25px;"> ${t(
                 'DELIVERY_FEE',
                 'Delivery Fee',
@@ -165,7 +200,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               </div>`
             : ''
         }
-       
+
         <div style="display: flex">
 
           <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start"> 
@@ -174,7 +209,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
           </div>
 
           <div style="font-size: 26px; width: 30%; display: flex; justify-content: flex-end">
-            ${parsePrice(order?.summary?.driver_tip || order?.totalDriverTip)}
+            ${parsePrice(order?.summary?.driver_tip ?? 0)}
           </div>
 
         </div>
@@ -183,11 +218,11 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
           <div style="font-size: 26px; width: 70%; display: flex; justify-content: flex-start"> 
             ${t('SERVICE_FEE', 'Service Fee')}
-           (${verifyDecimals(order?.service_fee, parseNumber)}%)
+           (${verifyDecimals(order?.summary?.service_fee, parseNumber)}%)
           </div>
 
           <div style="font-size: 26px; width: 30%; display: flex; justify-content: flex-end">
-            ${parsePrice(order?.summary?.service_fee || order?.serviceFee || 0)}
+            ${parsePrice(order?.summary?.service_fee ?? 0)}
           </div>
 
         </div>
@@ -199,7 +234,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
           </div>
 
           <div style="font-size: 26px; width: 30%; display: flex; justify-content: flex-end">
-            ${parsePrice(order?.summary?.total || order?.total)}
+            ${parsePrice(order?.summary?.total ?? 0)}
           </div>
 
         </div>
@@ -348,6 +383,20 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               }`}
             </OText>
 
+            {!!order?.customer?.phone && (
+              <OText
+                style={{ marginBottom: 5 }}
+                size={14}
+                numberOfLines={2}
+                adjustsFontSizeToFit
+                ellipsizeMode="tail"
+                color={theme.colors.textGray}>
+                {`${t('MOBILE_PHONE', 'Mobile Phone')}: ${
+                  order?.customer?.phone
+                }`}
+              </OText>
+            )}
+
             <OText
               style={{ marginBottom: 5 }}
               size={14}
@@ -358,20 +407,22 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               {`${t('ADDRESS', 'Address')}: ${order?.customer?.address}`}
             </OText>
 
+            {!!order?.customer?.internal_number && (
+              <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                {t('INTERNAL_NUMBER', 'Internal Number')}{' '}
+                {order?.customer?.internal_number}
+              </OText>
+            )}
+
             {order?.customer?.address_notes && (
               <OText style={{ marginBottom: 5 }}>
                 {`${t('NOTES', 'Notes')}: ${order?.customer?.address_notes}`}
               </OText>
             )}
 
-            {Boolean(order?.customer?.zipcode) && (
-              <OText
-                style={{ marginBottom: 5 }}
-                size={14}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                color={theme.colors.textGray}>
-                {`${t('ZIPCODE', 'Zipcode')}: ${order?.customer?.zipcode}`}
+            {!!order?.customer.zipcode && (
+              <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                {t('ZIPCODE', 'Zipcode')}: {order?.customer?.zipcode}
               </OText>
             )}
           </OrderCustomer>
@@ -399,21 +450,61 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               style={{ marginBottom: 5 }}
               size={14}
               numberOfLines={2}
-              ellipsizeMode="tail"
-              color={theme.colors.textGray}>
-              {`${t('BUSINESS_PHONE', 'Business Phone')}: ${
-                order?.business?.cellphone
-              }`}
-            </OText>
-
-            <OText
-              style={{ marginBottom: 5 }}
-              size={14}
               adjustsFontSizeToFit
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
-              {`${t('ADDRESS', 'Address')}: ${order?.business?.address}`}
+              {order?.business?.email}
             </OText>
+
+            {!!order?.business?.cellphone && (
+              <OText
+                style={{ marginBottom: 5 }}
+                size={14}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                color={theme.colors.textGray}>
+                {`${t('BUSINESS_PHONE', 'Business Phone')}: ${
+                  order?.business?.cellphone
+                }`}
+              </OText>
+            )}
+
+            {!!order?.business?.phone && (
+              <OText
+                style={{ marginBottom: 5 }}
+                size={14}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                color={theme.colors.textGray}>
+                {`${t('BUSINESS_PHONE', 'Business Phone')}: ${
+                  order?.business?.phone
+                }`}
+              </OText>
+            )}
+
+            {!!order?.business?.address && (
+              <OText
+                style={{ marginBottom: 5 }}
+                size={14}
+                adjustsFontSizeToFit
+                ellipsizeMode="tail"
+                color={theme.colors.textGray}>
+                {`${t('ADDRESS', 'Address')}: ${order?.business?.address}`}
+              </OText>
+            )}
+
+            {!!order?.business?.address_notes && (
+              <OText
+                style={{ marginBottom: 5 }}
+                size={14}
+                adjustsFontSizeToFit
+                ellipsizeMode="tail"
+                color={theme.colors.textGray}>
+                {`${t('SPECIAL_ADDRESS', 'Special Address')}: ${
+                  order?.business?.address_notes
+                }`}
+              </OText>
+            )}
           </OrderBusiness>
 
           <OrderProducts>
@@ -461,7 +552,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                         size={12}
                         color={theme.colors.textGray}
                         numberOfLines={1}>
-                        {parsePrice(product.total || product.price)}
+                        {parsePrice(product.total ?? getProductPrice(product))}
                       </OText>
                     </View>
                   </ContentInfo>
@@ -476,11 +567,31 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               </OText>
 
               <OText style={{ marginBottom: 5 }}>
-                {parsePrice(order?.subtotal)}
+                {parsePrice(
+                  order.tax_type === 1
+                    ? order?.summary?.subtotal + order?.summary?.tax ?? 0
+                    : order?.summary?.subtotal ?? 0,
+                )}
               </OText>
             </Table>
 
-            {(order?.summary?.discount > 0 || order?.discount > 0) && (
+            {order?.tax_type !== 1 && (
+              <Table>
+                <OText style={{ marginBottom: 5 }}>
+                  {t('TAX', 'Tax')}
+                  {`(${verifyDecimals(
+                    order?.summary?.tax_rate,
+                    parseNumber,
+                  )}%)`}
+                </OText>
+
+                <OText style={{ marginBottom: 5 }}>
+                  {parsePrice(order?.summary?.tax ?? 0)}
+                </OText>
+              </Table>
+            )}
+
+            {order?.summary?.discount > 0 && (
               <Table>
                 {order?.offer_type === 1 ? (
                   <OText style={{ marginBottom: 5 }}>
@@ -497,71 +608,59 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 )}
 
                 <OText style={{ marginBottom: 5 }}>
-                  - {parsePrice(order?.summary?.discount || order?.discount)}
+                  - {parsePrice(order?.summary?.discount)}
                 </OText>
               </Table>
             )}
 
-            {order?.tax_type !== 1 && (
+            {order?.summary?.delivery_price > 0 && (
               <Table>
                 <OText style={{ marginBottom: 5 }}>
-                  {t('TAX', 'Tax')}
-                  {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
+                  {t('DELIVERY_FEE', 'Delivery Fee')}
                 </OText>
 
-                <OText style={{ marginBottom: 5 }}>
-                  {parsePrice(order?.summary?.tax || order?.totalTax)}
-                </OText>
+                <OText>{parsePrice(order?.summary?.delivery_price)}</OText>
               </Table>
             )}
-
-            <Table>
-              <OText style={{ marginBottom: 5 }}>
-                {t('DELIVERY_FEE', 'Delivery Fee')}
-              </OText>
-
-              <OText>
-                {parsePrice(
-                  order?.summary?.delivery_price || order?.deliveryFee,
-                )}
-              </OText>
-            </Table>
 
             <Table>
               <OText style={{ marginBottom: 5 }}>
                 {t('DRIVER_TIP', 'Driver tip')}
-                {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) &&
+                {order?.summary?.driver_tip > 0 &&
                   parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
                   !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                  `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`}
+                  `(${verifyDecimals(
+                    order?.summary?.driver_tip,
+                    parseNumber,
+                  )}%)`}
               </OText>
 
               <OText style={{ marginBottom: 5 }}>
-                {parsePrice(
-                  order?.summary?.driver_tip || order?.totalDriverTip,
-                )}
+                {parsePrice(order?.summary?.driver_tip ?? 0)}
               </OText>
             </Table>
 
-            <Table>
-              <OText style={{ marginBottom: 5 }}>
-                {t('SERVICE_FEE', 'Service Fee')}
-                {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
-              </OText>
+            {order?.summary?.service_fee > 0 && (
+              <Table>
+                <OText style={{ marginBottom: 5 }}>
+                  {t('SERVICE_FEE', 'Service Fee')}
+                  {`(${verifyDecimals(
+                    order?.summary?.service_fee,
+                    parseNumber,
+                  )}%)`}
+                </OText>
 
-              <OText style={{ marginBottom: 5 }}>
-                {parsePrice(
-                  order?.summary?.service_fee || order?.serviceFee || 0,
-                )}
-              </OText>
-            </Table>
+                <OText style={{ marginBottom: 5 }}>
+                  {parsePrice(order?.summary?.service_fee)}
+                </OText>
+              </Table>
+            )}
 
             <Total>
               <Table>
                 <OText style={styles.textBold}>{t('TOTAL', 'Total')}</OText>
-
                 <OText style={styles.textBold} color={theme.colors.primary}>
-                  {parsePrice(order?.summary?.total || order?.total)}
+                  {parsePrice(order?.summary?.total ?? 0)}
                 </OText>
               </Table>
             </Total>
