@@ -143,7 +143,6 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                 </div>
 
                 <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
-                ${parsePrice(getProductPrice(product))}
                 ${parsePrice(product.total ?? getProductPrice(product))}
                 </div>
 
@@ -567,7 +566,7 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
                         size={12}
                         color={theme.colors.textGray}
                         numberOfLines={1}>
-                        ${parsePrice(product.total ?? getProductPrice(product))}
+                        {parsePrice(product.total ?? getProductPrice(product))}
                       </OText>
                     </View>
                   </ContentInfo>
