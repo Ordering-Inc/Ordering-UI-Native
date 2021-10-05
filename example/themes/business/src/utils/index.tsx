@@ -169,5 +169,5 @@ export const getProductPrice = (product: any) => {
   }
 
   const price = product.quantity * (product.price + subOptionPrice);
-  return price.toFixed(2);
+  return price;
 };
