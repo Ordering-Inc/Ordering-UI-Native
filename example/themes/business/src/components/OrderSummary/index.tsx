@@ -69,19 +69,53 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
         ${t('EMAIL', 'Email')}: ${order?.customer?.email} 
         </br> 
         ${t('MOBILE_PHONE', 'Mobile Phone')}: ${order?.customer?.cellphone}
-         </br> 
+         </br>
+         ${
+           !!order?.customer?.phone
+             ? `${t('MOBILE_PHONE', 'Mobile Phone')}: ${
+                 order?.customer?.phone
+               } </br>`
+             : ''
+         }
          ${t('FULL_ADDRESS', 'Full Addres')}: ${order?.customer?.address} 
          </br> 
-         ${t('ZIPCODE', 'Zipcode')}: ${order?.customer.zipcode}
+         ${
+           !!order?.customer?.internal_number
+             ? `${t('INTERNAL_NUMBER', 'Internal Number')}: ${
+                 order?.customer?.internal_number
+               } </br>`
+             : ''
+         }
+         ${t('ZIPCODE', 'Zipcode')}: ${order?.customer.zipcode || ''}
          </p>  
 
         <h1>${t('BUSINESS_DETAILS', 'Business details')}</h1>
         <p style="font-size: 27px"> 
         ${order?.business?.name} 
         </br> 
-        ${t('BUSINESS_PHONE', 'Business Phone')}: ${order?.business?.cellphone} 
+        ${order?.business?.email}
         </br> 
-        ${t('ADDRES', 'Addres')}: ${order?.business?.address} 
+        ${t('BUSINESS_PHONE', 'Business Phone')}: ${
+      order?.business?.cellphone || ''
+    }
+        </br> 
+        ${
+          !!order?.business?.phone
+            ? `${t('BUSINESS_PHONE', 'Business Phone')}: ${
+                order?.business?.phone
+              } </br>`
+            : ''
+        } 
+
+        ${t('ADDRES', 'Addres')}: ${order?.business?.address || ''} 
+        </br>
+        ${
+          !!order?.business?.address_notes
+            ? `${t('SPECIAL_ADDRES', 'Special Addres')}: ${
+                order?.business?.address_notes
+              } `
+            : ''
+        }
         </p>
         <h1> ${t('ORDER_DETAILS', 'Order Details')}</h1>
 
@@ -348,6 +382,20 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               }`}
             </OText>
 
+            {!!order?.customer?.phone && (
+              <OText
+                style={{ marginBottom: 5 }}
+                size={14}
+                numberOfLines={2}
+                adjustsFontSizeToFit
+                ellipsizeMode="tail"
+                color={theme.colors.textGray}>
+                {`${t('MOBILE_PHONE', 'Mobile Phone')}: ${
+                  order?.customer?.phone
+                }`}
+              </OText>
+            )}
+
             <OText
               style={{ marginBottom: 5 }}
               size={14}
@@ -358,20 +406,22 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               {`${t('ADDRESS', 'Address')}: ${order?.customer?.address}`}
             </OText>
 
+            {!!order?.customer?.internal_number && (
+              <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                {t('INTERNAL_NUMBER', 'Internal Number')}{' '}
+                {order?.customer?.internal_number}
+              </OText>
+            )}
+
             {order?.customer?.address_notes && (
               <OText style={{ marginBottom: 5 }}>
                 {`${t('NOTES', 'Notes')}: ${order?.customer?.address_notes}`}
               </OText>
             )}
 
-            {Boolean(order?.customer?.zipcode) && (
-              <OText
-                style={{ marginBottom: 5 }}
-                size={14}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                color={theme.colors.textGray}>
-                {`${t('ZIPCODE', 'Zipcode')}: ${order?.customer?.zipcode}`}
+            {!!order?.customer.zipcode && (
+              <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+                {t('ZIPCODE', 'Zipcode')}: {order?.customer?.zipcode}
               </OText>
             )}
           </OrderCustomer>
@@ -399,21 +449,61 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
               style={{ marginBottom: 5 }}
               size={14}
               numberOfLines={2}
-              ellipsizeMode="tail"
-              color={theme.colors.textGray}>
-              {`${t('BUSINESS_PHONE', 'Business Phone')}: ${
-                order?.business?.cellphone
-              }`}
-            </OText>
-
-            <OText
-              style={{ marginBottom: 5 }}
-              size={14}
               adjustsFontSizeToFit
               ellipsizeMode="tail"
               color={theme.colors.textGray}>
-              {`${t('ADDRESS', 'Address')}: ${order?.business?.address}`}
+              {order?.business?.email}
             </OText>
+
+            {!!order?.business?.cellphone && (
+              <OText
+                style={{ marginBottom: 5 }}
+                size={14}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                color={theme.colors.textGray}>
+                {`${t('BUSINESS_PHONE', 'Business Phone')}: ${
+                  order?.business?.cellphone
+                }`}
+              </OText>
+            )}
+
+            {!!order?.business?.phone && (
+              <OText
+                style={{ marginBottom: 5 }}
+                size={14}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                color={theme.colors.textGray}>
+                {`${t('BUSINESS_PHONE', 'Business Phone')}: ${
+                  order?.business?.phone
+                }`}
+              </OText>
+            )}
+
+            {!!order?.business?.address && (
+              <OText
+                style={{ marginBottom: 5 }}
+                size={14}
+                adjustsFontSizeToFit
+                ellipsizeMode="tail"
+                color={theme.colors.textGray}>
+                {`${t('ADDRESS', 'Address')}: ${order?.business?.address}`}
+              </OText>
+            )}
+
+            {!!order?.business?.address_notes && (
+              <OText
+                style={{ marginBottom: 5 }}
+                size={14}
+                adjustsFontSizeToFit
+                ellipsizeMode="tail"
+                color={theme.colors.textGray}>
+                {`${t('SPECIAL_ADDRESS', 'Special Address')}: ${
+                  order?.business?.address_notes
+                }`}
+              </OText>
+            )}
           </OrderBusiness>
 
           <OrderProducts>
