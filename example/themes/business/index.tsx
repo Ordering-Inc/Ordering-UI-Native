@@ -38,6 +38,7 @@ import {
   OTextarea,
   OAlert,
   OModal,
+  OLink
 } from './src/components/shared';
 
 //layouts
@@ -85,6 +86,7 @@ export {
   OTextarea,
   OAlert,
   OModal,
+  OLink,
   //layouts
   Container,
   SafeAreaContainer,
