@@ -1,0 +1,637 @@
+import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
+import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import { useTheme } from 'styled-components/native';
+import {
+  ToastType,
+  useToast,
+  useLanguage,
+  OrderDetails as OrderDetailsController,
+  useUtils,
+  useConfig,
+  useSession,
+} from 'ordering-components/native';
+import {
+  OrderDetailsContainer,
+  Pickup,
+  AssignDriver,
+  DriverItem,
+} from './styles';
+import { AcceptOrRejectOrder } from '../AcceptOrRejectOrder';
+import { Chat } from '../Chat';
+import { FloatingButton } from '../FloatingButton';
+import { GoogleMap } from '../GoogleMap';
+import { OButton, OModal, OText, OIcon } from '../shared';
+import { OrderDetailsParams } from '../../types';
+import { verifyDecimals, getProductPrice } from '../../utils';
+import { USER_TYPE } from '../../config/constants';
+import CountryPicker from 'react-native-country-picker-modal';
+import { NotFoundSource } from '../NotFoundSource';
+import {OrderHeaderComponent} from './OrderHeaderComponent'
+import { OrderContentComponent } from './OrderContentComponent'
+import { getOrderStatus } from '../../utils';
+
+export const OrderDetailsUI = (props: OrderDetailsParams) => {
+  const {
+    navigation,
+    messages,
+    setMessages,
+    readMessages,
+    messagesReadList,
+    handleAssignDriver,
+    handleChangeOrderStatus,
+    isFromCheckout,
+    driverLocation,
+    actions,
+    titleAccept,
+    titleReject,
+    appTitle,
+  } = props;
+
+  const theme = useTheme();
+  const [, t] = useLanguage();
+  const [{ parsePrice, parseNumber, parseDate }] = useUtils();
+  const [{ user, token }] = useSession();
+  const [{ configs }] = useConfig();
+  const [, { showToast }] = useToast();
+  const [unreadAlert, setUnreadAlert] = useState({
+    business: false,
+    driver: false,
+  });
+  const { order, businessData, loading, error } = props.order;
+  const { drivers, loadingDriver } = props.drivers;
+  const itemsDrivers: any = [];
+  const [actionOrder, setActionOrder] = useState('');
+  const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
+  const [openModalForAccept, setOpenModalForAccept] = useState(false);
+  const [openModalForMapView, setOpenModalForMapView] = useState(false);
+  const [isDriverModalVisible, setIsDriverModalVisible] = useState(false);
+
+  if (order?.status === 7 || order?.status === 4) {
+    if (drivers?.length > 0 && drivers) {
+      drivers.forEach((driver: any) => {
+        itemsDrivers.push({
+          available: driver?.available,
+          key: driver?.id,
+          value: driver?.id,
+          label: driver?.name,
+        });
+      });
+
+      if (
+        !drivers?.some((driver: any) => driver?.id === order?.driver?.id) &&
+        order?.driver?.id
+      ) {
+        itemsDrivers.push({
+          available: order?.driver?.available,
+          key: order?.driver?.id,
+          value: order?.driver?.id,
+          label: order?.driver?.name,
+        });
+      }
+    }
+
+    if (order?.driver && (!drivers?.length || drivers?.length === 0)) {
+      itemsDrivers.push({
+        available: order?.driver?.available,
+        key: order?.driver?.id,
+        value: order?.driver?.id,
+        label: order?.driver?.name,
+      });
+    }
+
+    if (order?.driver) {
+      itemsDrivers.push({
+        available: true,
+        key: null,
+        value: null,
+        label: t('UNASSIGN_DRIVER', 'Unassign Driver'),
+      });
+    }
+
+    if (itemsDrivers.length > 0) {
+      itemsDrivers.sort((a: any, b: any) => {
+        if (a.available > b.available) return -1;
+      });
+    }
+  }
+
+  const handleCopyClipboard = () => {
+    const businessName = !!order?.business?.name
+      ? `${order?.business?.name} \n`
+      : '';
+
+    const businessEmail = !!order?.business?.email
+      ? `${order?.business?.email} \n`
+      : '';
+
+    const businessCellphone = !!order?.business?.cellphone
+      ? `${order?.business?.cellphone} \n`
+      : '';
+
+    const businessPhone = !!order?.business?.phone
+      ? `${order?.business?.phone} \n`
+      : '';
+
+    const businessAddress = !!order?.business?.address
+      ? `${order?.business?.address} \n`
+      : '';
+
+    const businessSpecialAddress = !!order?.business?.address_notes
+      ? `${order?.business?.address_notes} \n \n`
+      : '';
+
+    const customerName = !!order?.customer?.name
+      ? `${order?.customer?.name} ${order?.customer?.middle_name || ''} ${
+          order?.customer?.lastname || ''
+        } ${order?.customer?.second_lastname || ''} \n`
+      : '';
+
+    const customerEmail = !!order?.customer.email
+      ? `${order?.customer.email} \n`
+      : '';
+
+    const customerCellPhone = !!order?.customer?.cellphone
+      ? `${order?.customer?.cellphone} \n`
+      : '';
+
+    const customerPhone = !!order?.customer?.phone
+      ? `${order?.customer?.phone} \n`
+      : '';
+
+    const customerAddress = !!order?.customer?.address
+      ? `${order?.customer?.address} \n`
+      : '';
+
+    const customerSpecialAddress = !!order?.customer?.address_notes
+      ? `${order?.customer?.address_notes} \n`
+      : '';
+
+    const payment = order?.paymethod?.name
+      ? `${order?.paymethod?.name} - ${
+          order.delivery_type === 1
+            ? t('DELIVERY', 'Delivery')
+            : order.delivery_type === 2
+            ? t('PICKUP', 'Pickup')
+            : order.delivery_type === 3
+            ? t('EAT_IN', 'Eat in')
+            : order.delivery_type === 4
+            ? t('CURBSIDE', 'Curbside')
+            : t('DRIVER_THRU', 'Driver thru')
+        }\n`
+      : '';
+    const productsInArray =
+      order?.products.length &&
+      order?.products.map((product: any, i: number) => {
+        return ` ${product?.quantity} X ${product?.name} ${parsePrice(
+          product.total ?? getProductPrice(product),
+        )}\n`;
+      });
+
+    const productsInString = productsInArray.join(' ');
+    const orderDetails = `${t(
+      'ORDER_DETAILS',
+      'Order Details',
+    )}:\n${productsInString}\n`;
+
+    const subtotal = `${t('SUBTOTAL', 'Subtotal')}: ${parsePrice(
+      order?.subtotal,
+    )}\n`;
+
+    const drivertip = `${t('DRIVER_TIP', 'Driver tip')} ${parsePrice(
+      order?.summary?.driver_tip || order?.totalDriverTip,
+    )}\n`;
+
+    const deliveryFee = `${t('DELIVERY_FEE', 'Delivery fee')} ${verifyDecimals(
+      order?.service_fee,
+      parseNumber,
+    )}% ${parsePrice(order?.summary?.service_fee || order?.serviceFee || 0)}\n`;
+
+    const total = `${t('TOTAL', 'Total')} ${parsePrice(
+      order?.summary?.total || order?.total,
+    )}\n`;
+
+    const orderStatus = `${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} ${t(
+      'IS',
+      'is',
+    )} ${getOrderStatus(order?.status, t)?.value}\n`;
+
+    Clipboard.setString(
+      `${orderStatus} ${payment} ${t(
+        'BUSINESS_DETAILS',
+        'Business Details',
+      )}\n ${businessName} ${businessEmail} ${businessCellphone} ${businessPhone} ${businessAddress} ${businessSpecialAddress}${t(
+        'CUSTOMER_DETAILS',
+        'Customer Details',
+      )}\n ${customerName} ${customerEmail} ${customerCellPhone} ${customerPhone} ${customerAddress} ${customerSpecialAddress}\n${orderDetails} ${subtotal} ${drivertip} ${deliveryFee} ${total}`,
+    );
+
+    showToast(
+      ToastType.Info,
+      t('COPY_TO_CLIPBOARD', 'Copy to clipboard.'),
+      1000,
+    );
+  };
+
+  const handleOpenMessagesForBusiness = () => {
+    setOpenModalForBusiness(true);
+    readMessages && readMessages();
+    setUnreadAlert({ ...unreadAlert, business: false });
+  };
+
+  const handleViewActionOrder = (action: string) => {
+    if (openModalForMapView) {
+      setOpenModalForMapView(false);
+    }
+    setActionOrder(action);
+    setOpenModalForAccept(true);
+  };
+
+  const handleViewSummaryOrder = () => {
+    navigation?.navigate &&
+      navigation.navigate('OrderSummary', {
+        order,
+        orderStatus: getOrderStatus(order?.status, t)?.value,
+      });
+  };
+
+  const handleCloseModal = () => {
+    setOpenModalForBusiness(false);
+  };
+
+  const handleOpenMapView = () => {
+    setOpenModalForMapView(!openModalForMapView);
+  };
+
+  const handleArrowBack: any = () => {
+    navigation?.canGoBack() && navigation.goBack();
+  };
+
+  useEffect(() => {
+    if (messagesReadList?.length) {
+      openModalForBusiness
+        ? setUnreadAlert({ ...unreadAlert, business: false })
+        : setUnreadAlert({ ...unreadAlert, driver: false });
+    }
+  }, [messagesReadList]);
+
+  const locations = [
+    {
+      ...order?.driver?.location,
+      title: t('DRIVER', 'Driver'),
+      icon:
+        order?.driver?.photo ||
+        'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png',
+      level: 4,
+    },
+    {
+      ...order?.business?.location,
+      title: order?.business?.name,
+      icon: order?.business?.logo || theme.images.dummies.businessLogo,
+      level: 2,
+    },
+    {
+      ...order?.customer?.location,
+      title: t('CUSTOMER', 'Customer'),
+      icon:
+        order?.customer?.photo ||
+        'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',
+      level: 3,
+    },
+  ];
+
+  useEffect(() => {
+    if (openModalForAccept) {
+      setOpenModalForAccept(false);
+    }
+
+    if (openModalForMapView) {
+      setOpenModalForMapView(false);
+    }
+  }, [loading]);
+
+  const showFloatButtonsAcceptOrReject: any = {
+    0: true,
+  };
+
+  useEffect(() => {
+    if (driverLocation) {
+      locations[0] = { ...locations[0], driverLocation };
+    }
+  }, [driverLocation]);
+
+  const styles = StyleSheet.create({
+    driverOff: {
+      backgroundColor: theme.colors.notAvailable,
+    },
+    btnPickUp: {
+      borderWidth: 0,
+      backgroundColor: theme.colors.btnBGWhite,
+      borderRadius: 8,
+    },
+  });
+
+  const locationsToSend = locations.filter(
+    (location: any) => location?.lat && location?.lng,
+  );
+
+  return (
+    <>
+      {(!order || Object.keys(order).length === 0) &&
+        (error?.length < 1 || !error) && (
+          <View
+            style={{
+              padding: 20,
+              backgroundColor: theme.colors.backgroundLight,
+            }}>
+            {[...Array(6)].map((item, i) => (
+              <Placeholder key={i} Animation={Fade}>
+                <View style={{ flexDirection: 'row', marginBottom: 30 }}>
+                  <Placeholder>
+                    <PlaceholderLine width={90} />
+                    <PlaceholderLine width={50} />
+                    <PlaceholderLine width={20} />
+                    <PlaceholderLine width={10} />
+                  </Placeholder>
+                </View>
+              </Placeholder>
+            ))}
+          </View>
+        )}
+
+      {(!!error || error) && (
+        <NotFoundSource
+          btnTitle={t('GO_TO_MY_ORDERS', 'Go to my orders')}
+          content={
+            props.order.error[0] ||
+            props.order.error ||
+            t('NETWORK_ERROR', 'Network Error')
+          }
+          onClickButton={() => navigation.navigate('Orders')}
+        />
+      )}
+
+      {order && Object.keys(order).length > 0 && (error?.length < 1 || !error) && (
+        <>
+          
+          <OrderHeaderComponent order={order} handleOpenMapView={handleOpenMapView} handleOpenMessagesForBusiness={handleOpenMessagesForBusiness} getOrderStatus={getOrderStatus} handleArrowBack={handleArrowBack} />
+          <OrderDetailsContainer
+            keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+            <>
+          <OrderContentComponent order={order}/>
+              {(order?.status === 7 || order?.status === 4) &&
+                order?.delivery_type === 1 && (
+                  <AssignDriver>
+                    <OText style={{ marginBottom: 5 }} size={16} weight="600">
+                      {t('ASSIGN_DRIVER', 'Assign driver')}
+                    </OText>
+
+                    <View
+                      style={{
+                        backgroundColor: theme.colors.inputChat,
+                        borderRadius: 7.5,
+                      }}>
+                      <CountryPicker
+                        // @ts-ignore
+                        countryCode={undefined}
+                        visible={isDriverModalVisible}
+                        onClose={() => setIsDriverModalVisible(false)}
+                        withCountryNameButton
+                        renderFlagButton={() => (
+                          <>
+                            <TouchableOpacity
+                              onPress={() => setIsDriverModalVisible(true)}
+                              disabled={
+                                itemsDrivers.length === 0 || loadingDriver
+                              }>
+                              {loadingDriver ? (
+                                <DriverItem justifyContent="center">
+                                  <ActivityIndicator
+                                    size="small"
+                                    color={theme.colors.primary}
+                                  />
+                                </DriverItem>
+                              ) : (
+                                <DriverItem justifyContent="space-between">
+                                  <OText>
+                                    {itemsDrivers.length > 0
+                                      ? order?.driver?.name ||
+                                        t('SELECT_DRIVER', 'Select Driver')
+                                      : t('WITHOUT_DRIVERS', 'Without drivers')}
+                                  </OText>
+                                  <OIcon
+                                    src={theme?.images?.general?.chevronDown}
+                                    color={theme.colors.backArrow}
+                                    width={20}
+                                    height={20}
+                                  />
+                                </DriverItem>
+                              )}
+                            </TouchableOpacity>
+                          </>
+                        )}
+                        flatListProps={{
+                          keyExtractor: (item: any) => item.value,
+                          data: itemsDrivers || [],
+                          renderItem: ({ item }: any) => (
+                            <TouchableOpacity
+                              style={!item.available && styles.driverOff}
+                              disabled={
+                                !item.available ||
+                                order?.driver?.id === item.value
+                              }
+                              onPress={() => {
+                                handleAssignDriver &&
+                                  handleAssignDriver(item.value);
+                                setIsDriverModalVisible(false);
+                              }}>
+                              <DriverItem>
+                                <OText
+                                  color={!item.available && theme.colors.grey}>
+                                  {item.label}
+                                  {!item.available &&
+                                    ` (${t('NOT_AVAILABLE', 'Not available')})`}
+                                  {item.value === order?.driver?.id &&
+                                    ` (${t('SELECTED', 'Selected')})`}
+                                </OText>
+                              </DriverItem>
+                            </TouchableOpacity>
+                          ),
+                        }}
+                      />
+                    </View>
+                  </AssignDriver>
+                )}
+
+              {order?.status === 7 && (
+                <Pickup>
+                  <OButton
+                    style={styles.btnPickUp}
+                    textStyle={{ color: theme.colors.primary }}
+                    text={t('READY_FOR_PICKUP', 'Ready for pickup')}
+                    onClick={() =>
+                      handleChangeOrderStatus && handleChangeOrderStatus(4)
+                    }
+                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+                    imgRightSrc={false}
+                    isLoading={loading}
+                  />
+                </Pickup>
+              )}
+
+              {order?.status === 4 && ![1].includes(order?.delivery_type) && (
+                <Pickup>
+                  <OButton
+                    style={{
+                      ...styles.btnPickUp,
+                      backgroundColor: theme.colors.green,
+                    }}
+                    textStyle={{ color: theme.colors.white }}
+                    text={t(
+                      'PICKUP_COMPLETED_BY_CUSTOMER',
+                      'Pickup completed by customer',
+                    )}
+                    onClick={() =>
+                      handleChangeOrderStatus && handleChangeOrderStatus(15)
+                    }
+                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+                    imgRightSrc={false}
+                    isLoading={loading}
+                  />
+                </Pickup>
+              )}
+
+              {order?.status === 4 && ![1].includes(order?.delivery_type) && (
+                <Pickup>
+                  <OButton
+                    style={{
+                      ...styles.btnPickUp,
+                      backgroundColor: theme.colors.red,
+                    }}
+                    textStyle={{ color: theme.colors.white }}
+                    text={t(
+                      'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
+                      'Order not picked up by customer',
+                    )}
+                    onClick={() =>
+                      handleChangeOrderStatus && handleChangeOrderStatus(17)
+                    }
+                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+                    imgRightSrc={false}
+                    isLoading={loading}
+                  />
+                </Pickup>
+              )}
+
+              <OModal
+                open={openModalForBusiness}
+                order={order}
+                title={`${t('INVOICE_ORDER_NO', 'Order No.')} ${order?.id}`}
+                entireModal
+                onClose={() => handleCloseModal()}>
+                <Chat
+                  type={
+                    openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER
+                  }
+                  orderId={order?.id}
+                  messages={messages}
+                  order={order}
+                  setMessages={setMessages}
+                />
+              </OModal>
+
+              <OModal
+                open={openModalForAccept}
+                onClose={() => setOpenModalForAccept(false)}
+                entireModal
+                customClose>
+                <AcceptOrRejectOrder
+                  handleUpdateOrder={handleChangeOrderStatus}
+                  closeModal={setOpenModalForAccept}
+                  customerCellphone={order?.customer?.cellphone}
+                  loading={loading}
+                  action={actionOrder}
+                  orderId={order?.id}
+                  notShowCustomerPhone={false}
+                  actions={actions}
+                  titleAccept={titleAccept}
+                  titleReject={titleReject}
+                  appTitle={appTitle}
+                />
+              </OModal>
+
+              <OModal
+                open={openModalForMapView}
+                onClose={() => handleOpenMapView()}
+                entireModal
+                customClose>
+                <GoogleMap
+                  location={order?.customer?.location}
+                  locations={locationsToSend}
+                  driverLocation={driverLocation}
+                  navigation={navigation}
+                  handleViewActionOrder={handleViewActionOrder}
+                  handleOpenMapView={handleOpenMapView}
+                  readOnly
+                  showAcceptOrReject={
+                    showFloatButtonsAcceptOrReject[order?.status]
+                  }
+                />
+              </OModal>
+            </>
+            <View style={{ height: 30 }} />
+          </OrderDetailsContainer>
+
+          {order &&
+            Object.keys(order).length > 0 &&
+            getOrderStatus(order?.status, t)?.value ===
+              t('PENDING', 'Pending') && (
+              <>
+                <FloatingButton
+                  btnText={t('REJECT', 'Reject')}
+                  isSecondaryBtn={false}
+                  secondButtonClick={() => handleViewActionOrder('accept')}
+                  firstButtonClick={() => handleViewActionOrder('reject')}
+                  secondBtnText={t('ACCEPT', 'Accept')}
+                  secondButton={true}
+                  firstColorCustom={theme.colors.red}
+                  secondColorCustom={theme.colors.green}
+                />
+              </>
+            )}
+
+          {order &&
+            Object.keys(order).length > 0 &&
+            getOrderStatus(order?.status, t)?.value !==
+              t('PENDING', 'Pending') && (
+              <FloatingButton
+                btnText={t('COPY', 'Copy')}
+                isSecondaryBtn={false}
+                colorTxt1={theme.colors.primary}
+                secondButtonClick={handleViewSummaryOrder}
+                firstButtonClick={handleCopyClipboard}
+                secondBtnText={t('PRINT', 'Print')}
+                secondButton={true}
+                firstColorCustom="transparent"
+                secondColorCustom={theme.colors.primary}
+              />
+            )}
+        </>
+      )}
+    </>
+  );
+};
+
+export const OrderDetails = (props: OrderDetailsParams) => {
+  const orderDetailsProps = {
+    ...props,
+    UIComponent: OrderDetailsUI,
+  };
+  return <OrderDetailsController {...orderDetailsProps} />;
+};

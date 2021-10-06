@@ -2,29 +2,16 @@ import styled from 'styled-components/native';
 
 export const OrderDetailsContainer = styled.ScrollView`
   flex: 1;
-  padding-horizontal: 20px;
-  margin-bottom: 50px;
 `;
 
 export const Pickup = styled.View`
   padding-vertical: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
 `;
 
 export const Header = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  padding-top: 10px;
-  padding-horizontal: 20px;
-`;
-
-export const DriverItem = styled.View`
-  padding: 15px;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
-  justify-content: ${(props: any) =>
-    props?.justifyContent ? props?.justifyContent : 'flex-start'};
 `;
 
 export const Actions = styled.View`
@@ -44,10 +31,10 @@ export const OrderHeader = styled.View`
   padding-vertical: 20px;
   border-bottom-width: 10px;
   border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
-  padding-horizontal: 20px;
 `;
 
 export const OrderBusiness = styled.View`
+  position: relative;
   bottom: 10px;
   padding-vertical: 20px;
   flex-direction: column;
@@ -57,12 +44,10 @@ export const OrderBusiness = styled.View`
 `;
 
 export const OrderCustomer = styled.View`
-  padding-vertical: 20px;
   border-bottom-width: 10px;
   border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
+  padding-vertical: 20px;
 `;
-
-export const OrderDriver = styled(OrderCustomer)``;
 
 export const OrderProducts = styled(OrderCustomer)``;
 
@@ -84,11 +69,13 @@ export const Total = styled.View`
   padding-vertical: 10px;
 `;
 
-export const Map = styled.View`
-  width: 100%;
-  height: 90%;
-  margin-top: 20px;
-  border-radius: 20px;
+export const DriverItem = styled.View`
+  padding: 15px;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  justify-content: ${(props: any) =>
+    props?.justifyContent ? props?.justifyContent : 'flex-start'};
 `;
 
 export const AssignDriver = styled.View`
