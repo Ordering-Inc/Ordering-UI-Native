@@ -300,7 +300,7 @@ export interface ProductItemAccordionParams {
   isFromCheckout?: any
 }
 export interface ReviewOrderParams {
-  order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
+  order?: { id: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
   stars?: any,
   handleChangeInput?: any,
   handleChangeRating?: any,
@@ -308,6 +308,7 @@ export interface ReviewOrderParams {
   formState?: any,
   navigation?: any,
   setIsReviewed?: (isReviewed: boolean) => {},
+  handleReviewState?: any,
   setStars?: any,
   onNavigationRedirect?: any
 }

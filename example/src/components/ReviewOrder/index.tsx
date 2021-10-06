@@ -30,7 +30,9 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     formState,
     navigation,
     setStars,
-    onNavigationRedirect
+    onNavigationRedirect,
+    handleReviewState,
+    setIsReviewed
   } = props
 
   const theme = useTheme()
@@ -85,7 +87,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const [, { showToast }] = useToast()
   const { handleSubmit, control, errors } = useForm()
 
-  const [isReviewed, setIsReviewed] = useState(false)
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<any>, success?: boolean }>({ open: false, content: [], success: false })
   const [comments, setComments] = useState<Array<any>>([])
   const [extraComment, setExtraComment] = useState('')
@@ -99,6 +100,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       return
     }
     handleSendReview()
+    handleReviewState && handleReviewState(order?.id)
     setIsReviewed && setIsReviewed(true)
     setAlertState({ ...alertState, success: true })
   }
@@ -156,7 +158,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   }
 
   const handleContinueClick  = () => {
-    if (!order?.review && !isReviewed) {
+    if (!order?.review) {
       onSubmit()
     } else {
       onNavigationRedirect('ReviewProducts', { order: order })

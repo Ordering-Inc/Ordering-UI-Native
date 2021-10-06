@@ -396,9 +396,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <OrderBill>
               <Table>
                 <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
-                <OText>{parsePrice( isTaxIncluded ? (order?.summary?.subtotal + order?.summary?.tax) : order?.summary?.subtotal || order?.subtotal)}</OText>
+                <OText>
+                  {parsePrice(isTaxIncluded
+                    ? (order?.summary?.subtotal + order?.summary?.tax) ?? 0
+                    : order?.summary?.subtotal ?? 0
+                  )}
+                </OText>
               </Table>
-              {(order?.summary?.discount > 0 || order?.discount > 0) && (
+              {order?.summary?.discount > 0 && (
                 <Table>
                   {order?.offer_type === 1 ? (
                     <OText>
@@ -408,53 +413,57 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   ) : (
                     <OText>{t('DISCOUNT', 'Discount')}</OText>
                   )}
-                  <OText>- {parsePrice(order?.summary?.discount || order?.discount)}</OText>
+                  <OText>- {parsePrice(order?.summary?.discount)}</OText>
                 </Table>
               )}
               {order?.summary?.subtotal_with_discount > 0 && order?.summary?.discount > 0 && order?.summary?.total >= 0 && (
                 <Table>
                   <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
-                  <OText>{parsePrice(order?.summary?.subtotal_with_discount || 0)}</OText>
+                  <OText>{parsePrice(order?.summary?.subtotal_with_discount ?? 0)}</OText>
                 </Table>
               )}
               {order?.tax_type !== 1 && (
                 <Table>
                   <OText>
                     {t('TAX', 'Tax')}
-                    {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
+                    {`(${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%)`}
                   </OText>
-                  <OText>{parsePrice(order?.summary?.tax || order?.totalTax)}</OText>
+                  <OText>{parsePrice(order?.summary?.tax)}</OText>
                 </Table>
               )}
-              {(order?.summary?.delivery_price > 0 || order?.deliveryFee > 0) && (
+              {order?.summary?.delivery_price > 0 && (
                 <Table>
                   <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                  <OText>{parsePrice(order?.summary?.delivery_price || order?.deliveryFee)}</OText>
+                  <OText>{parsePrice(order?.summary?.delivery_price)}</OText>
                 </Table>
               )}
               <Table>
                 <OText>
                   {t('DRIVER_TIP', 'Driver tip')}
-                  {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) &&
+                  {order?.summary?.driver_tip > 0 &&
                     parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
                     !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
                     (
-                      `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`
+                      `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`
                     )}
                 </OText>
-                <OText>{parsePrice(order?.summary?.driver_tip || order?.totalDriverTip)}</OText>
+                <OText>{parsePrice(order?.summary?.driver_tip ?? 0)}</OText>
               </Table>
-              <Table>
-                <OText>
-                  {t('SERVICE_FEE', 'Service Fee')}
-                  {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
-                </OText>
-                <OText>{parsePrice(order?.summary?.service_fee || order?.serviceFee || 0)}</OText>
-              </Table>
+              {order?.summary?.service_fee > 0 && (
+                <Table>
+                  <OText>
+                    {t('SERVICE_FEE', 'Service Fee')}
+                    {`(${verifyDecimals(order?.summary?.service_fee, parseNumber)}%)`}
+                  </OText>
+                  <OText>{parsePrice(order?.summary?.service_fee)}</OText>
+                </Table>
+              )}
               <Total>
                 <Table>
                   <OText style={styles.textBold}>{t('TOTAL', 'Total')}</OText>
-                  <OText style={styles.textBold} color={theme.colors.primary}>{parsePrice(order?.summary?.total || order?.total)}</OText>
+                  <OText style={styles.textBold} color={theme.colors.primary}>
+                    {parsePrice(order?.summary?.total ?? 0)}
+                  </OText>
                 </Table>
               </Total>
               {

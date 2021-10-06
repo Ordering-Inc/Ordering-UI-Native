@@ -41,7 +41,7 @@ import { ProductItemAccordion } from '../ProductItemAccordion';
 import { GoogleMap } from '../GoogleMap';
 import { OButton, OModal, OText, OIconButton, OIcon, OLink } from '../shared';
 import { OrderDetailsParams } from '../../types';
-import { verifyDecimals } from '../../utils';
+import { verifyDecimals, getProductPrice } from '../../utils';
 import { USER_TYPE } from '../../config/constants';
 import CountryPicker from 'react-native-country-picker-modal';
 import { NotFoundSource } from '../NotFoundSource';
@@ -160,51 +160,113 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleCopyClipboard = () => {
-    const name = `${t('NAME', 'Name')}: ${order?.customer?.name || null}`;
-    const customerPhone = `${t('PHONE', 'Phone')}: ${
-      order?.customer?.cellphone || null
-    }`;
-    const email = `${t('EMAIL', 'Email')}: ${order?.customer.email || null}`;
-    const payment = `${t('PAYMENT', 'Payment')}: ${
-      order?.paymethod?.name || null
-    }`;
-    const businessPhone = `${t('BUSINESS_PHONE', 'Bussines Phone')}:  ${
-      order?.business?.phone || ''
-    } - ${order?.business?.cellphone || ''} `;
-    const address = `${t('ADDRESS', 'Address')}: ${order?.customer?.address}`;
-    const addressNotes = order?.customer?.address_notes
-      ? `${t('ADDRESS_NOTES', 'Address Notes')}: ${
-          order?.customer?.address_notes
+    const businessName = !!order?.business?.name
+      ? `${order?.business?.name} \n`
+      : '';
+
+    const businessEmail = !!order?.business?.email
+      ? `${order?.business?.email} \n`
+      : '';
+
+    const businessCellphone = !!order?.business?.cellphone
+      ? `${order?.business?.cellphone} \n`
+      : '';
+
+    const businessPhone = !!order?.business?.phone
+      ? `${order?.business?.phone} \n`
+      : '';
+
+    const businessAddress = !!order?.business?.address
+      ? `${order?.business?.address} \n`
+      : '';
+
+    const businessSpecialAddress = !!order?.business?.address_notes
+      ? `${order?.business?.address_notes} \n \n`
+      : '';
+
+    const customerName = !!order?.customer?.name
+      ? `${order?.customer?.name} ${order?.customer?.middle_name || ''} ${
+          order?.customer?.lastname || ''
+        } ${order?.customer?.second_lastname || ''} \n`
+      : '';
+
+    const customerEmail = !!order?.customer.email
+      ? `${order?.customer.email} \n`
+      : '';
+
+    const customerCellPhone = !!order?.customer?.cellphone
+      ? `${order?.customer?.cellphone} \n`
+      : '';
+
+    const customerPhone = !!order?.customer?.phone
+      ? `${order?.customer?.phone} \n`
+      : '';
+
+    const customerAddress = !!order?.customer?.address
+      ? `${order?.customer?.address} \n`
+      : '';
+
+    const customerSpecialAddress = !!order?.customer?.address_notes
+      ? `${order?.customer?.address_notes} \n`
+      : '';
+
+    const payment = order?.paymethod?.name
+      ? `${order?.paymethod?.name} - ${
+          order.delivery_type === 1
+            ? t('DELIVERY', 'Delivery')
+            : order.delivery_type === 2
+            ? t('PICKUP', 'Pickup')
+            : order.delivery_type === 3
+            ? t('EAT_IN', 'Eat in')
+            : order.delivery_type === 4
+            ? t('CURBSIDE', 'Curbside')
+            : t('DRIVER_THRU', 'Driver thru')
         }\n`
       : '';
     const productsInArray =
       order?.products.length &&
       order?.products.map((product: any, i: number) => {
-        return `  ${product?.quantity} X ${product?.name} ${parsePrice(
-          product.total || product.price,
+        return ` ${product?.quantity} X ${product?.name} ${parsePrice(
+          product.total ?? getProductPrice(product),
         )}\n`;
       });
+
     const productsInString = productsInArray.join(' ');
     const orderDetails = `${t(
       'ORDER_DETAILS',
       'Order Details',
-    )}:\n${productsInString}`;
+    )}:\n${productsInString}\n`;
+
     const subtotal = `${t('SUBTOTAL', 'Subtotal')}: ${parsePrice(
       order?.subtotal,
-    )}`;
-    const tax = `${t('TAX', 'tax')} (${verifyDecimals(
-      order?.tax,
+    )}\n`;
+
+    const drivertip = `${t('DRIVER_TIP', 'Driver tip')} ${parsePrice(
+      order?.summary?.driver_tip || order?.totalDriverTip,
+    )}\n`;
+
+    const deliveryFee = `${t('DELIVERY_FEE', 'Delivery fee')} ${verifyDecimals(
+      order?.service_fee,
       parseNumber,
-    )}%): ${parsePrice(order?.summary?.tax || order?.totalTax)}`;
-    const deliveryFee = `${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(
-      order?.summary?.delivery_price || order?.deliveryFee,
-    )}`;
+    )}% ${parsePrice(order?.summary?.service_fee || order?.serviceFee || 0)}\n`;
+
     const total = `${t('TOTAL', 'Total')} ${parsePrice(
       order?.summary?.total || order?.total,
-    )}`;
+    )}\n`;
+
+    const orderStatus = `${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} ${t(
+      'IS',
+      'is',
+    )} ${getOrderStatus(order?.status)?.value}\n`;
 
     Clipboard.setString(
-      `${name} \n${customerPhone} \n${email} \n${payment} \n${businessPhone} \n${address} \n${addressNotes} ${orderDetails} \n${subtotal} \n${tax} \n${deliveryFee} \n${total}`,
+      `${orderStatus} ${payment} ${t(
+        'BUSINESS_DETAILS',
+        'Business Details',
+      )}\n ${businessName} ${businessEmail} ${businessCellphone} ${businessPhone} ${businessAddress} ${businessSpecialAddress}${t(
+        'CUSTOMER_DETAILS',
+        'Customer Details',
+      )}\n ${customerName} ${customerEmail} ${customerCellPhone} ${customerPhone} ${customerAddress} ${customerSpecialAddress}\n${orderDetails} ${subtotal} ${drivertip} ${deliveryFee} ${total}`,
     );
 
     showToast(
@@ -500,14 +562,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     icons: {
       maxWidth: 40,
       height: 25,
-      alignItems: 'flex-end',
-    },
-    linkWithIcons: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginBottom: 5,
-      flex: 1,
     },
     linkWithIcons: {
       flexDirection: 'row',
@@ -526,15 +580,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     <>
       {(!order || Object.keys(order).length === 0) &&
         (error?.length < 1 || !error) && (
-          <View style={{ flex: 1 }}>
+          <View
+            style={{
+              padding: 20,
+              backgroundColor: theme.colors.backgroundLight,
+            }}>
             {[...Array(6)].map((item, i) => (
               <Placeholder key={i} Animation={Fade}>
-                <View style={{ flexDirection: 'row', paddingVertical: 20 }}>
+                <View style={{ flexDirection: 'row', marginBottom: 30 }}>
                   <Placeholder>
-                    <PlaceholderLine width={100} />
-                    <PlaceholderLine width={70} />
-                    <PlaceholderLine width={30} />
+                    <PlaceholderLine width={90} />
+                    <PlaceholderLine width={50} />
                     <PlaceholderLine width={20} />
+                    <PlaceholderLine width={10} />
                   </Placeholder>
                 </View>
               </Placeholder>
@@ -626,9 +684,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               }`}
             </OText>
           </OrderHeader>
-          <OrderDetailsContainer
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}>
+          <OrderDetailsContainer keyboardShouldPersistTaps="handled">
             <>
               <OrderContent>
                 <OrderBusiness>
@@ -646,7 +702,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         PressStyle={styles.linkWithIcons}
                         url={`mailto:${order?.business?.email}`}
                         shorcut={order?.business?.email}
-                        type="email"
                       />
                     </View>
                   )}
@@ -657,7 +712,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         PressStyle={styles.linkWithIcons}
                         url={`tel:${order?.business?.cellphone}`}
                         shorcut={`${order?.business?.cellphone}`}
-                        type="telephone"
                       />
                     </View>
                   )}
@@ -668,7 +722,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         PressStyle={styles.linkWithIcons}
                         url={`tel:${order?.business?.phone}`}
                         shorcut={order?.business?.phone}
-                        type="telephone"
                       />
                     </View>
                   )}
@@ -682,7 +735,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           android: `geo:0,0?q=${order?.business?.address}`,
                         })}
                         shorcut={order?.business?.address}
-                        type="location"
+                      />
+                    </View>
+                  )}
+
+                  {!!order?.business?.address_notes && (
+                    <View style={styles.linkWithIcons}>
+                      <OLink
+                        PressStyle={styles.linkWithIcons}
+                        url={Platform.select({
+                          ios: `maps:0,0?q=${order?.business?.address_notes}`,
+                          android: `geo:0,0?q=${order?.business?.address_notes}`,
+                        })}
+                        shorcut={order?.business?.address_notes}
                       />
                     </View>
                   )}
@@ -694,36 +759,38 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </OText>
 
                   <View style={{ flexDirection: 'row' }}>
-                    <OText
-                      numberOfLines={1}
-                      mBottom={4}
-                      ellipsizeMode="tail"
-                      space>
-                      {order?.customer?.name}
-                    </OText>
+                    <OText numberOfLines={2} mBottom={4}>
+                      <OText
+                        numberOfLines={1}
+                        mBottom={4}
+                        ellipsizeMode="tail"
+                        space>
+                        {order?.customer?.name}
+                      </OText>
 
-                    <OText
-                      numberOfLines={1}
-                      mBottom={4}
-                      ellipsizeMode="tail"
-                      space>
-                      {order?.customer?.middle_name}
-                    </OText>
+                      <OText
+                        numberOfLines={1}
+                        mBottom={4}
+                        ellipsizeMode="tail"
+                        space>
+                        {order?.customer?.middle_name}
+                      </OText>
 
-                    <OText
-                      numberOfLines={1}
-                      mBottom={4}
-                      ellipsizeMode="tail"
-                      space>
-                      {order?.customer?.lastname}
-                    </OText>
+                      <OText
+                        numberOfLines={1}
+                        mBottom={4}
+                        ellipsizeMode="tail"
+                        space>
+                        {order?.customer?.lastname}
+                      </OText>
 
-                    <OText
-                      numberOfLines={1}
-                      mBottom={4}
-                      ellipsizeMode="tail"
-                      space>
-                      {order?.customer?.second_lastname}
+                      <OText
+                        numberOfLines={1}
+                        mBottom={4}
+                        ellipsizeMode="tail"
+                        space>
+                        {order?.customer?.second_lastname}
+                      </OText>
                     </OText>
                   </View>
 
@@ -733,7 +800,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         PressStyle={styles.linkWithIcons}
                         url={`mailto:${order?.customer?.email}`}
                         shorcut={order?.customer?.email}
-                        type="email"
                       />
                     </View>
                   )}
@@ -744,7 +810,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         PressStyle={styles.linkWithIcons}
                         url={`tel:${order?.customer?.cellphone}`}
                         shorcut={order?.customer?.cellphone}
-                        type="telephone"
                       />
                     </View>
                   )}
@@ -755,7 +820,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         PressStyle={styles.linkWithIcons}
                         url={`tel:${order?.customer?.phone}`}
                         shorcut={order?.customer?.phone}
-                        type="telephone"
                       />
                     </View>
                   )}
@@ -769,7 +833,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           android: `geo:0,0?q=${order?.customer?.address}`,
                         })}
                         shorcut={order?.customer?.address}
-                        type="location"
                       />
                     </View>
                   )}
@@ -810,16 +873,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <OrderBill>
                   <Table>
                     <OText mBottom={4}>{t('SUBTOTAL', 'Subtotal')}</OText>
-
                     <OText mBottom={4}>
-                      {order.tax_type === 1
-                        ? parsePrice(
-                            (order?.summary?.subtotal || order?.subtotal) +
-                              (order?.summary?.tax || order?.tax) || 0,
-                          )
-                        : parsePrice(
-                            order?.summary?.subtotal || order?.subtotal || 0,
-                          )}
+                      {parsePrice(
+                        order.tax_type === 1
+                          ? order?.summary?.subtotal + order?.summary?.tax ?? 0
+                          : order?.summary?.subtotal ?? 0,
+                      )}
                     </OText>
                   </Table>
 
@@ -827,16 +886,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     <Table>
                       <OText mBottom={4}>
                         {t('TAX', 'Tax')}
-                        {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
+                        {`(${verifyDecimals(
+                          order?.summary?.tax_rate,
+                          parseNumber,
+                        )}%)`}
                       </OText>
 
                       <OText mBottom={4}>
-                        {parsePrice(order?.summary?.tax || order?.totalTax)}
+                        {parsePrice(order?.summary?.tax ?? 0)}
                       </OText>
                     </Table>
                   )}
 
-                  {(order?.summary?.discount > 0 || order?.discount > 0) && (
+                  {order?.summary?.discount > 0 && (
                     <Table>
                       {order?.offer_type === 1 ? (
                         <OText mBottom={4}>
@@ -854,10 +916,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       )}
 
                       <OText mBottom={4}>
-                        -{' '}
-                        {parsePrice(
-                          order?.summary?.discount || order?.discount,
-                        )}
+                        - {parsePrice(order?.summary?.discount)}
                       </OText>
                     </Table>
                   )}
@@ -876,30 +935,27 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           <OText mBottom={4}>
                             {parsePrice(
                               order?.summary?.subtotal_with_discount +
-                                (order?.summary?.tax || order?.tax) || 0,
+                                order?.summary?.tax ?? 0,
                             )}
                           </OText>
                         ) : (
                           <OText mBottom={4}>
                             {parsePrice(
-                              order?.summary?.subtotal_with_discount || 0,
+                              order?.summary?.subtotal_with_discount ?? 0,
                             )}
                           </OText>
                         )}
                       </Table>
                     )}
 
-                  {(order?.summary?.delivery_price > 0 ||
-                    order?.deliveryFee > 0) && (
+                  {order?.summary?.delivery_price > 0 && (
                     <Table>
                       <OText mBottom={4}>
                         {t('DELIVERY_FEE', 'Delivery Fee')}
                       </OText>
 
                       <OText mBottom={4}>
-                        {parsePrice(
-                          order?.summary?.delivery_price || order?.deliveryFee,
-                        )}
+                        {parsePrice(order?.summary?.delivery_price)}
                       </OText>
                     </Table>
                   )}
@@ -907,32 +963,35 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <Table>
                     <OText mBottom={4}>
                       {t('DRIVER_TIP', 'Driver tip')}{' '}
-                      {(order?.summary?.driver_tip > 0 ||
-                        order?.driver_tip > 0) &&
+                      {order?.summary?.driver_tip > 0 &&
                         parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
                         !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                        `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`}
+                        `(${verifyDecimals(
+                          order?.summary?.driver_tip,
+                          parseNumber,
+                        )}%)`}
                     </OText>
 
                     <OText mBottom={4}>
-                      {parsePrice(
-                        order?.summary?.driver_tip || order?.totalDriverTip,
-                      )}
+                      {parsePrice(order?.summary?.driver_tip ?? 0)}
                     </OText>
                   </Table>
 
-                  <Table>
-                    <OText mBottom={4}>
-                      {t('SERVICE_FEE', 'Service Fee')}{' '}
-                      {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
-                    </OText>
+                  {order?.summary?.service_fee > 0 && (
+                    <Table>
+                      <OText mBottom={4}>
+                        {t('SERVICE_FEE', 'Service Fee')}{' '}
+                        {`(${verifyDecimals(
+                          order?.summary?.service_fee,
+                          parseNumber,
+                        )}%)`}
+                      </OText>
 
-                    <OText mBottom={4}>
-                      {parsePrice(
-                        order?.summary?.service_fee || order?.serviceFee || 0,
-                      )}
-                    </OText>
-                  </Table>
+                      <OText mBottom={4}>
+                        {parsePrice(order?.summary?.service_fee)}
+                      </OText>
+                    </Table>
+                  )}
 
                   <Total>
                     <Table>
@@ -944,7 +1003,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         mBottom={4}
                         style={styles.textBold}
                         color={theme.colors.primary}>
-                        {parsePrice(order?.summary?.total || order?.total)}
+                        {parsePrice(order?.summary?.total ?? 0)}
                       </OText>
                     </Table>
                   </Total>
@@ -1051,30 +1110,29 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </Pickup>
               )}
 
-              {order?.status === 4 &&
-                [2, 3, 4, 5].includes(order?.delivery_type) && (
-                  <Pickup>
-                    <OButton
-                      style={{
-                        ...styles.btnPickUp,
-                        backgroundColor: theme.colors.green,
-                      }}
-                      textStyle={{ color: theme.colors.white }}
-                      text={t(
-                        'PICKUP_COMPLETED_BY_CUSTOMER',
-                        'Pickup completed by customer',
-                      )}
-                      onClick={() =>
-                        handleChangeOrderStatus && handleChangeOrderStatus(15)
-                      }
-                      imgLeftStyle={{ tintColor: theme.colors.backArrow }}
-                      imgRightSrc={false}
-                      isLoading={loading}
-                    />
-                  </Pickup>
-                )}
+              {order?.status === 4 && ![1].includes(order?.delivery_type) && (
+                <Pickup>
+                  <OButton
+                    style={{
+                      ...styles.btnPickUp,
+                      backgroundColor: theme.colors.green,
+                    }}
+                    textStyle={{ color: theme.colors.white }}
+                    text={t(
+                      'PICKUP_COMPLETED_BY_CUSTOMER',
+                      'Pickup completed by customer',
+                    )}
+                    onClick={() =>
+                      handleChangeOrderStatus && handleChangeOrderStatus(15)
+                    }
+                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+                    imgRightSrc={false}
+                    isLoading={loading}
+                  />
+                </Pickup>
+              )}
 
-              {order?.status === 4 && [3, 4, 5].includes(order?.delivery_type) && (
+              {order?.status === 4 && ![1].includes(order?.delivery_type) && (
                 <Pickup>
                   <OButton
                     style={{
@@ -1152,34 +1210,25 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 />
               </OModal>
             </>
-            <View
-              style={{
-                height:
-                  (order?.status === 4 &&
-                    [2, 3, 4, 5].includes(order?.delivery_type)) ||
-                  order?.status === 7
-                    ? 50
-                    : 35,
-              }}
-            />
+            <View style={{ height: 30 }} />
           </OrderDetailsContainer>
 
           {order &&
             Object.keys(order).length > 0 &&
             getOrderStatus(order?.status)?.value ===
               t('PENDING', 'Pending') && (
-              <FloatingButton
-                btnText={t('REJECT', 'Reject')}
-                disabled={loading}
-                isSecondaryBtn={false}
-                secondButtonClick={() => handleViewActionOrder('accept')}
-                firstButtonClick={() => handleViewActionOrder('reject')}
-                secondBtnText={t('ACCEPT', 'Accept')}
-                secondButton={true}
-                firstColorCustom={theme.colors.red}
-                secondColorCustom={theme.colors.green}
-                widthButton={'45%'}
-              />
+              <>
+                <FloatingButton
+                  btnText={t('REJECT', 'Reject')}
+                  isSecondaryBtn={false}
+                  secondButtonClick={() => handleViewActionOrder('accept')}
+                  firstButtonClick={() => handleViewActionOrder('reject')}
+                  secondBtnText={t('ACCEPT', 'Accept')}
+                  secondButton={true}
+                  firstColorCustom={theme.colors.red}
+                  secondColorCustom={theme.colors.green}
+                />
+              </>
             )}
 
           {order &&
@@ -1189,7 +1238,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <FloatingButton
                 btnText={t('COPY', 'Copy')}
                 isSecondaryBtn={false}
-                disabled={loading}
                 colorTxt1={theme.colors.primary}
                 secondButtonClick={handleViewSummaryOrder}
                 firstButtonClick={handleCopyClipboard}
@@ -1197,7 +1245,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 secondButton={true}
                 firstColorCustom="transparent"
                 secondColorCustom={theme.colors.primary}
-                widthButton={'45%'}
               />
             )}
         </>
