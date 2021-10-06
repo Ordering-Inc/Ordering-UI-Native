@@ -229,7 +229,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       setReload(true);
     }
 
-    loadOrders?.(activeTab.title, false, true);
+    loadOrders?.(activeTab.title, true, false, filterByTags.current, true);
   };
 
   const getOrderStatus = (key: number) => {
