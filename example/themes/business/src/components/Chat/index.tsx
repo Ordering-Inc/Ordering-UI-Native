@@ -76,6 +76,21 @@ const ChatUI = (props: MessagesParams) => {
           parseFloat(String(Dimensions.get('window').height)).toFixed(0),
         );
 
+  const [orientation, setOrientation] = useState<string>(
+    Dimensions.get('window').width < Dimensions.get('window').height
+      ? 'Portrait'
+      : 'Landscape',
+  );
+
+  // Events
+  Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+    if (width < height) {
+      setOrientation('Portrait');
+    } else {
+      setOrientation('Landscape');
+    }
+  });
+
   const styles = StyleSheet.create({
     containerActions: {
       width: 44,
@@ -575,7 +590,11 @@ const ChatUI = (props: MessagesParams) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         horizontal
-        contentContainerStyle={{ justifyContent: 'center', width: '100%' }}>
+        contentContainerStyle={{
+          justifyContent:
+            orientation === 'Landscape' ? 'center' : 'space-between',
+          width: '100%',
+        }}>
         {user?.level !== 2 && (
           <Pressable
             style={{
