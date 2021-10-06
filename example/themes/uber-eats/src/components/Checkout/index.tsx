@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Animated } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 import {
@@ -16,7 +16,7 @@ import {
   useToast
 } from 'ordering-components/native';
 
-import { OText, OButton } from '../shared';
+import { OText, OButton, OIcon, OModal } from '../shared';
 import { MomentOption } from '../MomentOption'
 import { OBottomPopup } from '../shared'
 
@@ -28,6 +28,7 @@ import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
 import { OrderTypeSelector } from '../OrderTypeSelector'
 import { SafeAreaContainer } from '../../layouts/SafeAreaContainer'
+import NavBar from '../NavBar'
 
 import {
   ChContainer,
@@ -41,7 +42,8 @@ import {
   ChCart,
   ChErrors,
   ChBusinessDetails,
-  ChUserDetails
+  ChUserDetails,
+  PayActionCont
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
@@ -114,6 +116,7 @@ const CheckoutUI = (props: any) => {
   const [userErrors, setUserErrors] = useState<any>([]);
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
+	const [isOpenPaymethods, setOpenPaymethods] = useState(false);
   const [openMomentOption, setOpenMomentOption] = useState(false)
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
@@ -164,6 +167,27 @@ const CheckoutUI = (props: any) => {
 
     setUserErrors(errors)
   }
+
+  const getPayIcon = (method: string) => {
+		switch (method) {
+			case 'cash':
+				return theme.images.general.cash
+			case 'card_delivery':
+				return theme.images.general.carddelivery
+			case 'paypal':
+				return theme.images.general.paypal
+			case 'stripe':
+				return theme.images.general.stripe
+			case 'stripe_direct':
+				return theme.images.general.stripecc
+			case 'stripe_connect':
+				return theme.images.general.stripes
+			case 'stripe_redirect':
+				return theme.images.general.stripesb
+			default:
+				return theme.images.general.creditCard
+		}
+	}
 
   const togglePhoneUpdate = (val: boolean) => {
     setPhoneUpdate(val)
@@ -391,31 +415,35 @@ const CheckoutUI = (props: any) => {
             {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
               <ChSection>
                 <ChPaymethods>
-                  <OText size={16} weight={500} style={{ textAlign: 'left' }}>
-                    {t('PAYMENT_METHOD', 'Payment Method')}
-                  </OText>
-                  {!cartState.loading && cart?.status === 4 && (
-                    <OText
-                      style={{ textAlign: 'center', marginTop: 20 }}
-                      color={theme.colors.error}
-                      size={16}
-                    >
-                      {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
-                    </OText>
-                  )}
-                  <PaymentOptions
-                    cart={cart}
-                    isDisabled={cart?.status === 2}
-                    businessId={businessDetails?.business?.id}
-                    isLoading={businessDetails.loading}
-                    paymethods={businessDetails?.business?.paymethods}
-                    onPaymentChange={handlePaymethodChange}
-                    errorCash={errorCash}
-                    setErrorCash={setErrorCash}
-                    onNavigationRedirect={onNavigationRedirect}
-                    paySelected={paymethodSelected}
-                  />
-                </ChPaymethods>
+									<OText style={{ fontWeight: '500', marginBottom: 4 }}>
+										{t('PAYMENT_METHOD', 'Payment Method')}
+									</OText>
+									{!cartState.loading && cart?.status === 4 && (
+										<OText
+											style={{ textAlign: 'center', marginTop: 20 }}
+											color={theme.colors.error}
+											size={12}
+										>
+											{t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
+										</OText>
+									)}
+									<PayActionCont onPress={() => setOpenPaymethods(true)} activeOpacity={0.7}>
+										<OIcon src={getPayIcon(paymethodSelected?.gateway)} color={theme.colors.textSecondary} width={16} style={{ marginEnd: 15 }} />
+										<Animated.View>
+											{paymethodSelected ? (
+												<>
+													{paymethodSelected?.data?.last4 ? (
+														<OText size={12} color={theme.colors.textSecondary}>{`${paymethodSelected?.paymethod?.name}  \u2022\u2022\u2022 ${paymethodSelected.data.last4}`}</OText>
+													) : (
+														<OText size={12} color={theme.colors.textSecondary}>{`${paymethodSelected?.paymethod?.name}`}</OText>
+													)}
+												</>
+											) : (
+												<OText size={12} color={theme.colors.textSecondary}>{t('SELECT_PAYMENT_METHOD', 'Please select a payment method')}</OText>
+											)}
+										</Animated.View>
+									</PayActionCont>
+								</ChPaymethods>
               </ChSection>
             )}
 
@@ -503,6 +531,42 @@ const CheckoutUI = (props: any) => {
         </>
       )}
 
+      <OModal
+				entireModal
+				customClose
+				open={isOpenPaymethods}
+				onClose={() => setOpenPaymethods(false)}
+			>
+				<View style={{ paddingHorizontal: 40, paddingVertical: 12 }}>
+					<NavBar
+						title={t('PAYMENTS_METHODS', 'Payment methods')}
+						onActionLeft={() => setOpenPaymethods(false)}
+					/>
+					<PaymentOptions
+						cart={cart}
+						isDisabled={cart?.status === 2}
+						businessId={businessDetails?.business?.id}
+						isLoading={businessDetails.loading}
+						paymethods={businessDetails?.business?.paymethods}
+						onPaymentChange={handlePaymethodChange}
+						errorCash={errorCash}
+						setErrorCash={setErrorCash}
+						onNavigationRedirect={onNavigationRedirect}
+						paySelected={paymethodSelected}
+						renderFooter={
+							<OButton
+								text={t('CONFIRM', 'Confirm')}
+								bgColor={theme.colors.white}
+								borderColor={theme.colors.primary}
+								style={{ height: 42, borderWidth: 1, borderRadius: 3, marginTop: 100 }}
+								textStyle={{color: theme.colors.primary, fontSize: 14, fontWeight: '600'}}
+								onClick={() => setOpenPaymethods(false)}
+							/>
+						}
+					/>
+				</View>
+			</OModal>
+
       <OBottomPopup
         customHeaderShow
         title={t('SELECT_DELIVERY_TIME', 'Select delivery time')}
@@ -576,7 +640,7 @@ export const Checkout = (props: any) => {
             loading: false,
             cart: result
           })
-        } catch (error) {
+        } catch (error: any) {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
       } else if (result.status === 2 && stripePaymentOptions.includes(result.paymethod_data?.gateway)) {
@@ -616,7 +680,7 @@ export const Checkout = (props: any) => {
               })
               return
             }
-          } catch (error) {
+          } catch (error: any) {
             showToast(ToastType.Error, error?.toString() || error.message)
           }
         } catch (error) {
@@ -638,7 +702,7 @@ export const Checkout = (props: any) => {
           error: cart ? null : result
         })
       }
-    } catch (e) {
+    } catch (e: any) {
       setCartState({
         ...cartState,
         loading: false,
