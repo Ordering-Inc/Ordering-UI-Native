@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { Home as HomePage } from '../components/Home';
+import { Home as HomePage } from '../../themes/uber-eats/src/components/Home';
 import { useTheme } from 'styled-components/native';
 
 export const Home = (props: any) => {
