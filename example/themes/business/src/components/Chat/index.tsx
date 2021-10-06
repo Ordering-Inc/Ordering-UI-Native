@@ -445,7 +445,7 @@ const ChatUI = (props: MessagesParams) => {
         <View style={styles.firstMessage}>
           <OText style={styles.firstMessageText}>
             {t('ORDER_PLACED_FOR', 'Order placed for')}{' '}
-            <OText style={{ ...styles.firstMessageText, fontWeight: '600' }}>
+            <OText style={{ ...styles.firstMessageText, fontWeight: 'bold' }}>
               {parseDate(order?.created_at)}
             </OText>
           </OText>
