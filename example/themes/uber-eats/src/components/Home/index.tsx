@@ -61,7 +61,7 @@ export const Home = (props: any) => {
             : handleGuessFlow('AddressForm',{ isGuestUser: true } )
           }
         >
-          <OText weight={500} size={16} mBottom={10}>
+          <OText weight='500' size={16} mBottom={10}>
             {t('CONTINUE_AS_GUEST', 'Continue as guest')}
           </OText>
         </TouchableOpacity>
