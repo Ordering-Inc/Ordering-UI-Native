@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
-import { LoginForm } from '../../themes/uber-eats/src/components/LoginForm';
+import { LoginForm } from '../components/LoginForm';
 import { SafeAreaContainer } from '../../themes/uber-eats/src/layouts/SafeAreaContainer';
 
 import { useLanguage } from 'ordering-components/native';

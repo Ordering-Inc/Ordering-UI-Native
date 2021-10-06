@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { Checkout } from '../../themes/uber-eats/src/components/Checkout';
+import { Checkout } from '../components/Checkout';
 
 import { initStripe, useConfirmPayment  } from '@stripe/stripe-react-native';
 import styled from 'styled-components/native';
