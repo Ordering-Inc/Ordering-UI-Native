@@ -146,6 +146,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
 
   // States
+  const [isLoadedOrders, setIsLoadedOrders] = useState<any>({
+    pending: { isFetched: true },
+    inProgress: { isFetched: false },
+    completed: { isFetched: false },
+    cancelled: { isFetched: false },
+  });
   const [activeTab, setActiveTab] = useState<Tab>(tabs[0]);
   const [tagsStatus, setTagsStatus] = useState<number[]>(tabs[0].tags);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -158,9 +164,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [windowsWidth, setWindowsWidth] = useState<number>(
     parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
   );
+  const filterByTags = useRef(tabs[0].tags);
 
   // Handles
-  const handleChangeTab = async (tab: Tab) => {
+  const handleChangeTab = async (tab: Tab, tabTitle: string) => {
     if (tab.key === activeTab.key) {
       return;
     }
@@ -178,17 +185,41 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       animated: true,
     });
 
+    filterByTags.current = tab.tags;
     setActiveTab(tab);
     setTagsStatus(tab.tags);
-    loadOrders?.(tab.title, false);
+
+    if (!isLoadedOrders[tabTitle].isFetched) {
+      loadOrders?.(tab.title, true);
+      setIsLoadedOrders({
+        ...isLoadedOrders,
+        [tabTitle]: { isFetched: true, hasMorePagination: false },
+      });
+    }
   };
 
   const handleChangeTag = (key: number) => {
+    const updateFilterByTags: any = filterByTags.current.reduce(
+      (a, v) => ({ ...a, [v]: v }),
+      {},
+    );
+
     if (activeStatus?.includes(key)) {
       setActiveStatus?.(activeStatus?.filter((tag: number) => tag !== key));
+      delete updateFilterByTags[key];
     } else {
+      updateFilterByTags[key] = key;
       activeStatus && setActiveStatus?.(activeStatus.concat(key));
     }
+    filterByTags.current = Object.values(updateFilterByTags);
+
+    loadOrders?.(
+      tabs[activeTab.key].title,
+      true,
+      false,
+      filterByTags.current,
+      true,
+    );
   };
 
   const handleRefreshAndReload = (loadType: string) => {
@@ -256,7 +287,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     tab: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontSize: 14,
       marginBottom: 10,
       paddingLeft: 8,
       paddingRight: 8,
@@ -290,6 +320,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       fontSize: 18,
     },
   });
+
+  const tagsFilter = activeStatus?.filter((key: number) =>
+    tagsStatus.includes(key),
+  );
 
   const actualTabOrders: any = {
     0: { ...pending },
@@ -333,7 +367,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               <Pressable
                 key={tab.key}
                 style={styles.pressable}
-                onPress={() => handleChangeTab(tab)}>
+                onPress={() => handleChangeTab(tab, tab.title)}>
                 <OText
                   style={styles.tab}
                   color={
@@ -408,11 +442,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               tab={tabs[activeTab.key].title}
               loadOrders={loadOrders}
               isRefreshing={isRefreshing}
-              tagsFilter={activeStatus?.filter((key: number) =>
-                tagsStatus.includes(key),
-              )}
+              tagsFilter={tagsFilter}
               onNavigationRedirect={onNavigationRedirect}
               getOrderStatus={getOrderStatus}
+              filterByTags={filterByTags}
             />
           )}
 

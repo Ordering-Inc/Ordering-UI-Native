@@ -15,13 +15,14 @@ import dayjs from 'dayjs';
 
 export const PreviousOrders = (props: PreviousOrdersParams) => {
   const {
-    data: { orders, pagination, loading, error },
+    data: { orders, loading, error, isLoadMoreOrder },
     tab,
     loadOrders,
     isRefreshing,
     tagsFilter,
     getOrderStatus,
     onNavigationRedirect,
+    filterByTags,
   } = props;
 
   // Hooks
@@ -96,8 +97,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   return (
     <>
       {!loading &&
-        (!orders?.filter((order: any) => tagsFilter?.includes(order.status))
-          ?.length ||
+        (orders?.filter((order: any) => tagsFilter?.includes(order.status))
+          ?.length < 1 ||
           error ||
           !tagsFilter?.length) && (
           <NotFoundSource
@@ -180,13 +181,12 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
           ))}
 
       {!error &&
-        pagination?.totalPages &&
         !loading &&
+        isLoadMoreOrder &&
         !isRefreshing &&
-        pagination?.currentPage < pagination?.totalPages &&
         !!tagsFilter?.length && (
           <OButton
-            onClick={() => loadOrders?.(tab, true)}
+            onClick={() => loadOrders?.(tab, true, false, filterByTags.current)}
             text={t('LOAD_MORE_ORDERS', 'Load more orders')}
             imgRightSrc={null}
             textStyle={styles.loadButtonText}

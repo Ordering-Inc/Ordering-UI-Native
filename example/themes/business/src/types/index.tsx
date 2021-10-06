@@ -263,6 +263,7 @@ export interface OrdersOptionParams {
     isNextPage?: boolean,
     isRefresh?: boolean,
     activeStatus?: number[] | undefined,
+    isClean?: boolean,
   ) => void;
   onNavigationRedirect?: (route: string, params?: any) => void;
 }
@@ -278,8 +279,14 @@ export interface ActiveOrdersParams {
 export interface PreviousOrdersParams {
   data?: any;
   tab?: any;
+  filterByTags?: any;
   isRefreshing: boolean;
-  loadOrders?: (tab: string, isNextPage?: boolean, isRefresh?: boolean) => void;
+  loadOrders?: (
+    tab: string,
+    isNextPage?: boolean,
+    isRefresh?: boolean,
+    tags?: any,
+  ) => void;
   getOrderStatus?: (status: number) => string;
   tagsFilter?: number[];
   onNavigationRedirect?: (route: string, params?: any) => void;
