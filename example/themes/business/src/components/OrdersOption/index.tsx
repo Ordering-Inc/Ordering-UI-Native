@@ -257,12 +257,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontSize: 14,
-      marginBottom: 10,
-      paddingLeft: 8,
-      paddingRight: 8,
+      paddingBottom: 10,
+      marginBottom: -1,
+      zIndex: 100,
+      borderColor: theme.colors.textGray
     },
     tagsContainer: {
-      marginBottom: 10,
+      marginBottom: 20,
     },
     tag: {
       fontFamily: 'Poppins',
@@ -271,8 +272,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       fontSize: 14,
     },
     pressable: {
-      flex: 1,
-      minWidth: 88,
       alignItems: 'center',
     },
     loadButton: {
@@ -335,7 +334,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 style={styles.pressable}
                 onPress={() => handleChangeTab(tab)}>
                 <OText
-                  style={styles.tab}
+                  style={{
+                    ...styles.tab,
+                    fontSize: tab.key === activeTab.key ? 16 : 14,
+                    borderBottomWidth: tab.key === activeTab.key ? 1 : 0
+                  }}
                   color={
                     tab.key === activeTab.key
                       ? theme.colors.textGray
@@ -345,16 +348,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                   {tab.text}
                 </OText>
 
-                <View
-                  style={{
-                    width: '100%',
-                    borderBottomColor:
-                      tab.key === activeTab.key
-                        ? theme.colors.textGray
-                        : theme.colors.tabBar,
-                    borderBottomWidth: 2,
-                  }}
-                />
               </Pressable>
             ))}
           </TabsContainer>
@@ -385,6 +378,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                     : theme.colors.black
                 }>
                 {getOrderStatus(key)}
+                {activeStatus?.includes(key) && "  X"}
               </OText>
             </Tag>
           ))}

@@ -7,6 +7,9 @@ export const FiltersTab = styled.View`
 export const TabsContainer = styled.View`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  border-bottom-width: 1px;
+  border-bottom-color: #E9ECEF;
 `;
 
 export const TagsContainer = styled.ScrollView`

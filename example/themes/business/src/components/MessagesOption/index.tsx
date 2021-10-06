@@ -15,7 +15,7 @@ import { PreviousMessages } from '../PreviousMessages';
 // import { Contacts } from '../Contacts';
 import { FiltersTab, TabsContainer, TagsContainer, Tag } from './styles';
 import { MessagesOptionParams } from '../../types';
-
+import {useDeviceOrientation} from '../../../../../src/hooks/DeviceOrientation'
 const MessagesOptionUI = (props: MessagesOptionParams) => {
   const {
     orders,
@@ -31,7 +31,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
   const [, t] = useLanguage();
 
   const { loading, error, data: values } = orders;
-
+  const [{dimensions}] = useDeviceOrientation()
   const tabs = [
     { key: 0, text: t('ORDERS', 'Orders'), tags: [0, 1] },
     // { key: 1, text: t('CONTACTS', 'Contacts'), tags: [2, 3, 4] },
@@ -52,6 +52,8 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
     { key: 3, text: t('CUSTOMERS', 'Customers') },
     { key: 4, text: t('DRIVERS', 'Drivers') },
   ];
+
+  console.log(dimensions)
 
   const [tabsFilter, setTabsFilter] = useState(tabs[0].tags);
   const [activeTag, setActiveTag] = useState(tags[0].key);
@@ -139,11 +141,14 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
     tab: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
-      fontSize: 14,
-      marginBottom: 10,
+      fontSize: 16,
+      paddingBottom: 5,
+      marginBottom: -1,
+      zIndex: 100,
+      borderColor: theme.colors.textGray
     },
     tagsContainer: {
-      alignItems: 'center',
+      marginBottom: 20,
     },
     tag: {
       fontFamily: 'Poppins',
@@ -152,7 +157,6 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       fontSize: 14,
     },
     pressable: {
-      flex: 0.5,
       alignItems: 'center',
     },
     loadButton: {
@@ -178,11 +182,14 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       </View>
 
       <FiltersTab>
-        <TabsContainer>
+        <TabsContainer width={dimensions.width - 42}>
           {tabs.map((tab: any) => (
             <Pressable
               key={tab.key}
-              style={styles.pressable}
+              style={{
+                ...styles.tab,
+                borderBottomWidth: 1
+              }}
               onPress={() => handleChangeTab(tab.tags)}>
               <OText
                 style={styles.tab}
@@ -199,16 +206,6 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
                 {tab.text}
                 {` ${tab.key === 0 ? `(${unreadMessages || 0})` : ''}`}
               </OText>
-
-              <View
-                style={{
-                  width: '100%',
-                  borderBottomColor:
-                    JSON.stringify(tabsFilter) === JSON.stringify(tab.tags)
-                      ? theme.colors.textGray
-                      : theme.colors.tabBar,
-                  borderBottomWidth: 1.75,
-                }}></View>
             </Pressable>
           ))}
         </TabsContainer>
