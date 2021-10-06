@@ -110,5 +110,12 @@ export const Map = styled.View`
   width: 100%;
   height: 250px;
   margin-top: 20px;
-  border-radius: 20px
+  border-radius: 20px;
+`
+
+export const LoadingWrapper = styled.View`
+  display: flex;
+  padding: 20px;
+  justify-content: flex-start;
+  align-content: flex-start;
 `

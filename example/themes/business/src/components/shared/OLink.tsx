@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { Alert, Linking, Pressable, TextStyle } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
-import { useTheme } from 'styled-components/native';
 import OText from './OText';
-import OIcon from './OIcon';
 
 interface Props {
   url: string | undefined;
@@ -16,7 +14,6 @@ interface Props {
 
 const OLink = (props: Props): React.ReactElement => {
   const { url, shorcut, color, PressStyle, TextStyle, type } = props;
-  const theme = useTheme();
   const [, t] = useLanguage();
 
   const handleAlert = () =>
@@ -49,12 +46,6 @@ const OLink = (props: Props): React.ReactElement => {
     }
   };
 
-  const iconToShow: any = {
-    email: theme?.images?.general?.messages,
-    location: theme?.images?.general?.location,
-    telephone: theme?.images?.general?.telephone,
-  };
-
   return (
     <Pressable style={PressStyle} onPress={() => handleOpenUrl()}>
       <OText
@@ -64,13 +55,6 @@ const OLink = (props: Props): React.ReactElement => {
         color={color}>
         {shorcut}
       </OText>
-      <OIcon
-        src={iconToShow[type]}
-        color={theme.colors.backArrow}
-        width={17}
-        height={17}
-        style={{ marginRight: 5 }}
-      />
     </Pressable>
   );
 };
