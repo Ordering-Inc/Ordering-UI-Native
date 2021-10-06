@@ -2,7 +2,7 @@ import React from 'react';
 import { Platform } from 'react-native';
 import styled from 'styled-components/native';
 import { LoginForm } from '../components/LoginForm';
-import { SafeAreaContainer } from '../../themes/uber-eats/src/layouts/SafeAreaContainer';
+import { Container } from '../layouts/Container';
 
 import { useLanguage } from 'ordering-components/native';
 import { _setStoreData } from '../providers/StoreUtil';
@@ -19,10 +19,10 @@ export const Login = ({ navigation, route }: any) => {
   const loginProps = {
     navigation,
     useLoginByCellphone: true,
-    loginButtonText: t('SIGN_IN', 'Sign in'),
+    loginButtonText: t('LOGIN', 'Login'),
     loginButtonBackground: theme.colors.primary,
     forgotButtonText: t('FORGOT_YOUR_PASSWORD', 'Forgot your password?'),
-    registerButtonText: t('CREATE_ACCOUNT', 'Create account'),
+    registerButtonText: t('SIGNUP', 'Signup'),
     onNavigationRedirect: (page: string) => {
       if (!page) return
       navigation.navigate(page);
@@ -33,14 +33,14 @@ export const Login = ({ navigation, route }: any) => {
   _setStoreData('notification_state', route?.params?.notification_state);
 
   return (
-    <SafeAreaContainer>
-      <KeyboardView
-        enabled
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
+    <KeyboardView
+      enabled
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <Container>
         <LoginForm {...loginProps} />
-      </KeyboardView>
-    </SafeAreaContainer>
+      </Container>
+    </KeyboardView>
   );
 };
 
