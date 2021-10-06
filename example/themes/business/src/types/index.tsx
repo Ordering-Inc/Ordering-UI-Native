@@ -252,19 +252,22 @@ export interface MessagesOptionParams {
   setSortBy?: any;
 }
 export interface OrdersOptionParams {
-  pending?: any;
-  inProgress?: any;
-  completed?: any;
-  cancelled?: any;
-  activeStatus?: number[];
-  setActiveStatus?: (state: number[]) => void;
-  loadOrders?: (
-    tab: string,
-    isNextPage?: boolean,
-    isRefresh?: boolean,
-    activeStatus?: number[] | undefined,
-  ) => void;
-  onNavigationRedirect?: (route: string, params?: any) => void;
+  orderList?: any;
+  activeOrders?: boolean;
+  pagination?: any;
+  setRememberOrderStatus?: any;
+  rememberOrderStatus?: any;
+  titleContent?: string;
+  customArray?: Array<any>;
+  loadMoreOrders?: (status: any) => {};
+  loadOrders?: (isNextPage: any, status: any, keepOrders?: any) => {};
+  messages?: any;
+  setMessages?: () => {};
+  loadMessages?: () => {};
+  navigation?: any;
+  setUpdateOtherStatus?: any;
+  onNavigationRedirect?: any;
+  orderStatus?: any;
 }
 export interface ActiveOrdersParams {
   orders?: any;
@@ -276,13 +279,18 @@ export interface ActiveOrdersParams {
   onNavigationRedirect?: (route: string, params?: any) => {};
 }
 export interface PreviousOrdersParams {
-  data?: any;
-  tab?: any;
-  isRefreshing: boolean;
-  loadOrders?: (tab: string, isNextPage?: boolean, isRefresh?: boolean) => void;
-  getOrderStatus?: (status: number) => string;
-  tagsFilter?: number[];
-  onNavigationRedirect?: (route: string, params?: any) => void;
+  orders?: any;
+  pagination?: any;
+  getOrderStatus?: any;
+  orderID?: number;
+  reorderLoading?: boolean;
+  messages?: any;
+  setMessages?: any;
+  tabsFilter?: any;
+  loadMoreOrders?: (status: any) => {};
+  loadMessages?: (id: any) => {};
+  handleReorder?: (order: any) => {};
+  onNavigationRedirect?: (route: string, params?: any) => {};
 }
 
 export interface ContactParams {
@@ -485,7 +493,7 @@ export interface GoogleMapsParams {
   navigation: any;
   updateDriverPosition?: any;
   driverUpdateLocation?: any;
-  setDriverUpdateLocation?: any;
+  setDriverUpdateLocation?: (state: any) => void;
 }
 
 export interface TagsParams {
