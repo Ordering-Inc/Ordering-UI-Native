@@ -53,8 +53,6 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
     { key: 4, text: t('DRIVERS', 'Drivers') },
   ];
 
-  console.log(dimensions)
-
   const [tabsFilter, setTabsFilter] = useState(tabs[0].tags);
   const [activeTag, setActiveTag] = useState(tags[0].key);
   const [reload, setReload] = useState(false);
