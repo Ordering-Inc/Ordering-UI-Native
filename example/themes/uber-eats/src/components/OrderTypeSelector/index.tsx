@@ -27,11 +27,12 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
       color: theme.colors.secundaryContrast,
       borderWidth: 1,
       borderColor: 'transparent',
-      borderRadius: 10,
+      borderRadius: 30,
       paddingHorizontal: 20,
       backgroundColor: theme.colors.mediumGray,
-      fontSize: 15,
-      textAlign: I18nManager.isRTL ? 'right' : 'left'
+      fontSize: 14,
+      textAlign: I18nManager.isRTL ? 'right' : 'left',
+      height: 45,
     },
     inputIOS: {
       color: theme.colors.secundaryContrast,
@@ -41,11 +42,11 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
       borderRadius: 30,
       paddingHorizontal: 20,
       backgroundColor: theme.colors.mediumGray,
-      fontSize: 15,
+      fontSize: 14,
       textAlign: I18nManager.isRTL ? 'right' : 'left'
     },
     icon: {
-      top: Platform.OS === 'ios' ? 10 : 15,
+      top: Platform.OS === 'ios' ? 10 : 12,
       right: Platform.OS === 'ios' ? 0 : 7,
       position: 'absolute',
       marginHorizontal: 10,
