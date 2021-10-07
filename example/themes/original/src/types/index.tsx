@@ -129,10 +129,6 @@ export interface BusinessesListingParams {
 	businessTypes?: any;
 	defaultBusinessType?: any;
 }
-export interface HighestRatedBusinessesParams {
-	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
-	onBusinessClick?: void;
-}
 export interface BusinessTypeFilterParams {
 	businessTypes?: Array<any>;
 	handleChangeBusinessType: any;
@@ -372,6 +368,7 @@ export interface MomentOptionParams {
 	handleChangeTime: (value: any) => {};
 }
 export interface OrderTypeSelectParams {
+	navigation?: any;
 	handleChangeOrderType: (value: any) => {};
 	typeSelected?: number;
 	defaultValue?: number;

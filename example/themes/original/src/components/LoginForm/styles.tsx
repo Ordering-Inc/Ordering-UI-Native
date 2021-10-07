@@ -26,6 +26,11 @@ export const OTab = styled.View`
   margin-end: 14px;
 `;
 
+export const TabBtn = styled.TouchableOpacity`
+  min-height: 30px;
+  height: 30px;
+`;
+
 export const LoginWith = styled.View`
   font-size: 14px;
   width: 100%;

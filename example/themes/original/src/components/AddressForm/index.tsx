@@ -792,7 +792,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 										? isEditing ||
 											(!auth && orderState.options?.address?.address)
 											? t('UPDATE', 'Update')
-											: t('SAVE', 'Save')
+											: t('CONTINUE', 'Continue')
 										: t('LOADING', 'Loading')
 								}
 								onClick={handleSubmit(onSubmit)}
@@ -801,6 +801,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 								textStyle={{ color: theme.colors.white }}
 								isDisabled={formState.loading}
 								style={{ borderRadius: 7.6, shadowOpacity: 0 }}
+								showNextIcon
 							/>
 						) : (
 							<OButton

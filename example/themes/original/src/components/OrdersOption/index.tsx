@@ -59,7 +59,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			}
 			setReorderLoading(false)
 
-		} catch (err) {
+		} catch (err: any) {
 			showToast(ToastType.Error, t('ERROR', err.message))
 			setReorderLoading(false)
 		}
@@ -97,11 +97,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		return objectStatus && objectStatus
 	}
 
-	// useFocusEffect(
-	//   React.useCallback(() => {
-	//     loadOrders()
-	//   }, [navigation])
-	// )
+	useFocusEffect(
+	  React.useCallback(() => {
+	    loadOrders()
+	  }, [navigation])
+	)
 
 	return (
 		<>
@@ -180,7 +180,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 				) : (
 					<PreviousOrders
 						reorderLoading={reorderLoading}
-						orders={orders.filter((order: any) => orderStatus.includes(order.status))}
+						orders={orders.filter((order: any) => orderStatus.includes(order.status)).sort((a: any, b: any) => a?.id < b?.id)}
 						pagination={pagination}
 						loadMoreOrders={loadMoreOrders}
 						getOrderStatus={getOrderStatus}
@@ -203,7 +203,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
 		useDefualtSessionManager: true,
 		paginationSettings: {
 			initialPage: 1,
-			pageSize: props.activeOrders || props.preOrders ? 0 : 10,
+			pageSize: props.activeOrders || props.preOrders ? -1 : 10,
 			controlType: 'infinity'
 		}
 	}

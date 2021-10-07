@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { Platform } from 'react-native';
 
 export const BusinessContainer = styled.View`
   flex-direction: column;
@@ -15,7 +16,10 @@ export const BusinessLogo = styled.View`
   start: 40px;
   top: -36px;
   z-index: 50;
-  box-shadow: 0 0 2px #0000001A;
+  box-shadow: 0 0 2px ${Platform.OS == 'android' ? '#000000DD' : '#0000001A'};
+  elevation: 2;
+  background-color: white;
+  border-radius: 7.6px;
 `;
 export const BusinessInfo = styled.View`
   justify-content: flex-start;
