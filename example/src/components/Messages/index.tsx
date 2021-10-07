@@ -217,7 +217,7 @@ const MessagesUI = (props: MessagesParams) => {
           name='close-octagon-outline'
           size={24}
         />
-        <OText>{t('NOT_SEND_MESSAGES', 'You can\'t send messages because the order has ended')}</OText>
+        <OText size={14}>{t('NOT_SEND_MESSAGES', 'You can\'t send messages because the order has ended')}</OText>
       </View>
     ) : (
       <View style={{flexDirection: 'row', width: '80%'}}>
