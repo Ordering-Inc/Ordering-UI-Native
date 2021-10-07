@@ -36,6 +36,9 @@ const MessagesUI = (props: MessagesParams) => {
 
 	const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false)
+	const previousStatus = [1, 2, 5, 6, 10, 11, 12, 16, 17]
+  const chatDisabled = previousStatus.includes(order?.status)
+
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
 
@@ -236,36 +239,52 @@ const MessagesUI = (props: MessagesParams) => {
 	)
 
 	const renderComposer = (props: typeof ComposerProps) => (
-		<View style={{
-			flexDirection: 'row', width: '80%', alignItems: 'center', backgroundColor: theme.colors.backgroundGray100,
-			borderRadius: 7.6,
-		}}>
-			<Composer
-				{...props}
-				textInputStyle={{
-					height: 32,
-					minHeight: 32,
-					alignItems: 'center',
-					justifyContent: 'center',
-					paddingHorizontal: 12,
-					borderColor: '#DBDCDB',
-					color: '#010300',
-				}}
-				textInputProps={{
-					value: message,
-					onSubmitEditing: onSubmit,
-					returnKeyType: message ? 'send' : 'done',
-					blurOnSubmit: true,
-					multiline: false,
-					numberOfLines: 1,
-					autoCorrect: false,
-					autoCompleteType: 'off',
-					enablesReturnKeyAutomatically: false
-				}}
-				placeholder={t('WRITE_MESSAGE', 'Write message...')}
-			/>
-			<RenderActions {...props} />
-		</View>
+		chatDisabled ? (
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
+        <MaterialCommunityIcon
+          name='close-octagon-outline'
+          size={24}
+        />
+        <OText size={14}>{t('NOT_SEND_MESSAGES', 'You can\'t send messages because the order has ended')}</OText>
+      </View>
+    ) : (
+			<View style={{
+				flexDirection: 'row', width: '80%', alignItems: 'center', backgroundColor: theme.colors.backgroundGray100,
+				borderRadius: 7.6,
+			}}>
+				<Composer
+					{...props}
+					textInputStyle={{
+						height: 32,
+						minHeight: 32,
+						alignItems: 'center',
+						justifyContent: 'center',
+						paddingHorizontal: 12,
+						borderColor: '#DBDCDB',
+						color: '#010300',
+					}}
+					textInputProps={{
+						value: message,
+						onSubmitEditing: onSubmit,
+						returnKeyType: message ? 'send' : 'done',
+						blurOnSubmit: true,
+						multiline: false,
+						numberOfLines: 1,
+						autoCorrect: false,
+						autoCompleteType: 'off',
+						enablesReturnKeyAutomatically: false
+					}}
+					placeholder={t('WRITE_MESSAGE', 'Write message...')}
+				/>
+				<RenderActions {...props} />
+			</View>
+		)
 	)
 
 	const renderSend = (props: any) => (
