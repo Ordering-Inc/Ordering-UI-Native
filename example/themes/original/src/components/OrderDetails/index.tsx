@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, BackHandler } from 'react-native';
+import { View, StyleSheet, BackHandler, KeyboardAvoidingView, Platform } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import LinearGradient from 'react-native-linear-gradient';
 import { Messages } from '../Messages';
@@ -620,7 +620,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 							<OText
 								size={24}
 								color={theme.colors.textNormal}
-								style={{ fontWeight: '600', marginBottom: 16 }}>
+								style={{ fontWeight: Platform.OS == 'ios' ? '600' : 'bold', marginBottom: 16 }}>
 								{t(
 									'YOUR_ORDER_HAS_BEEN_RECEIVED',
 									'Your Order has been received',
@@ -743,14 +743,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 				entireModal
 				customClose
 				onClose={() => handleCloseModal()}>
-				<Messages
-					type={openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER}
-					orderId={order?.id}
-					messages={messages}
-					order={order}
-					setMessages={setMessages}
-					onClose={handleCloseModal}
-				/>
+					<Messages
+						type={openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER}
+						orderId={order?.id}
+						messages={messages}
+						order={order}
+						setMessages={setMessages}
+						onClose={handleCloseModal}
+					/>
 			</OModal>
 		</OrderDetailsContainer>
 	);

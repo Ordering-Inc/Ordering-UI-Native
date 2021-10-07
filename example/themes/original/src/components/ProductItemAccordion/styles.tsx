@@ -51,7 +51,7 @@ export const ProductOptionsList = styled.View`
 export const ProductOption = styled.View``
 
 export const ProductSubOption = styled.View`
-  margin-left: 10px;
+  margin-left: 0px;
 `
 
 export const ProductComment = styled.View``

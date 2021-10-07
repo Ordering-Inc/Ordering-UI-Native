@@ -47,7 +47,8 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 			shadowColor: '#000000',
 			shadowOffset: { width: 0, height: 1 },
 			shadowOpacity: 0.1,
-			shadowRadius: 1
+			shadowRadius: 1,
+			elevation: 2
 		},
 		businessStateView: {
 			backgroundColor: '#DEE2E6',

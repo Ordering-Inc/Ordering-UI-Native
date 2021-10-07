@@ -11,6 +11,7 @@ export const IconsContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 20px;
+  margin-horizontal: -16px;
 `
 
 export const AutocompleteInput = styled.View`
