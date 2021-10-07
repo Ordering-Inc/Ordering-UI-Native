@@ -5,12 +5,10 @@ export const FiltersTab = styled.View`
 `;
 
 export const TabsContainer = styled.View`
-  flex: 1;
+  min-width: ${({ width }: { width: number }) => `${width}px`};
+  width: auto;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  border-bottom-width: 1px;
-  border-bottom-color: #e9ecef;
 `;
 
 export const Tag = styled.Pressable`
