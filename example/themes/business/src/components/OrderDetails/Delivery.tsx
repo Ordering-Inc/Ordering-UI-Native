@@ -20,21 +20,18 @@ import { AcceptOrRejectOrder } from '../AcceptOrRejectOrder';
 import { Chat } from '../Chat';
 import { FloatingButton } from '../FloatingButton';
 import { DriverMap } from '../DriverMap';
-import { OButton, } from '../shared';
+import { OButton } from '../shared';
 import { OModal } from '../shared';
 import { OrderDetailsParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
 import { useTheme } from 'styled-components/native';
 import { NotFoundSource } from '../NotFoundSource';
 import { getOrderStatus } from '../../utils';
-import {OrderHeaderComponent} from './OrderHeaderComponent'
-import { OrderContentComponent } from './OrderContentComponent'
+import { OrderHeaderComponent } from './OrderHeaderComponent';
+import { OrderContentComponent } from './OrderContentComponent';
 
 //Styles
-import {
-  OrderDetailsContainer,
-  Pickup,
-} from './styles';
+import { OrderDetailsContainer, Pickup } from './styles';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -95,7 +92,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const handleOpenMessagesForBusiness = () => {
     setOpenModalForBusiness(true);
-    readMessages && readMessages()
+    readMessages && readMessages();
   };
 
   const handleOpenMapView = async () => {
@@ -194,9 +191,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     if (messagesReadList?.length) {
-      openModalForBusiness ? setUnreadAlert({ ...unreadAlert, business: false }) : setUnreadAlert({ ...unreadAlert, driver: false })
+      openModalForBusiness
+        ? setUnreadAlert({ ...unreadAlert, business: false })
+        : setUnreadAlert({ ...unreadAlert, driver: false });
     }
-  }, [messagesReadList])
+  }, [messagesReadList]);
 
   const styles = StyleSheet.create({
     btnPickUp: {
@@ -238,7 +237,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     <>
       {(!order || Object.keys(order).length === 0) &&
         (error?.length < 1 || !error) && (
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             {[...Array(6)].map((item, i) => (
               <Placeholder key={i} Animation={Fade}>
                 <View style={{ flexDirection: 'row', paddingVertical: 20 }}>
@@ -266,13 +265,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         />
       )}
       {order && Object.keys(order).length > 0 && (error?.length < 1 || !error) && (
-        <View style={{ flex: 1}}>
-         <OrderHeaderComponent order={order} handleOpenMapView={handleOpenMapView} handleOpenMessagesForBusiness={handleOpenMessagesForBusiness} getOrderStatus={getOrderStatus} handleArrowBack={handleArrowBack} />
+        <View style={{ flex: 1 }}>
+          <OrderHeaderComponent
+            order={order}
+            handleOpenMapView={handleOpenMapView}
+            handleOpenMessagesForBusiness={handleOpenMessagesForBusiness}
+            getOrderStatus={getOrderStatus}
+            handleArrowBack={handleArrowBack}
+          />
           <OrderDetailsContainer
-            keyboardShouldPersistTaps="handled"           showsVerticalScrollIndicator={false}>
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}>
             <>
-          <OrderContentComponent order={order}/>
-            {order?.status === 8 && order?.delivery_type === 1 && (
+              <OrderContentComponent order={order} />
+              {order?.status === 8 && order?.delivery_type === 1 && (
                 <Pickup>
                   <OButton
                     style={styles.btnPickUp}
@@ -348,10 +354,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               />
             </OModal>
 
-            <View style={{ height:  (order?.status === 8 && order?.delivery_type === 1) ? 50 : 35 }} />
+            <View
+              style={{
+                height:
+                  order?.status === 8 && order?.delivery_type === 1 ? 50 : 35,
+              }}
+            />
           </OrderDetailsContainer>
 
-        
           {showFloatButtonsPickUp[order?.status] && (
             <FloatingButton
               disabled={loading}
@@ -371,22 +381,24 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             />
           )}
           {order?.status === 9 && (
-            <FloatingButton
-              disabled={loading}
-              btnText={t('FAILED', 'Failed')}
-              isSecondaryBtn={false}
-              secondButtonClick={() =>
-                handleChangeOrderStatus && handleChangeOrderStatus(11)
-              }
-              firstButtonClick={() =>
-                handleChangeOrderStatus && handleChangeOrderStatus(12)
-              }
-              secondBtnText={t('DELIVERY_COMPLETE', 'Delivery complete')}
-              secondButton={true}
-              firstColorCustom={theme.colors.red}
-              secondColorCustom={theme.colors.green}
-              widthButton={'45%'}
-            />
+            <>
+              <FloatingButton
+                disabled={loading}
+                btnText={t('FAILED', 'Failed')}
+                isSecondaryBtn={false}
+                secondButtonClick={() =>
+                  handleChangeOrderStatus && handleChangeOrderStatus(11)
+                }
+                firstButtonClick={() =>
+                  handleChangeOrderStatus && handleChangeOrderStatus(12)
+                }
+                secondBtnText={t('DELIVERY_COMPLETE', 'Delivery complete')}
+                secondButton={true}
+                firstColorCustom={theme.colors.red}
+                secondColorCustom={theme.colors.green}
+                widthButton={'45%'}
+              />
+            </>
           )}
           {showFloatButtonsAcceptOrReject[order?.status] && (
             <FloatingButton
@@ -401,7 +413,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               widthButton={'45%'}
             />
           )}
-          
+
           <Alert
             open={alertState.open}
             onAccept={handleArrowBack}
@@ -409,7 +421,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             content={alertState.content}
             title={t('ERROR', 'Error')}
           />
-        </ View>
+        </View>
       )}
     </>
   );

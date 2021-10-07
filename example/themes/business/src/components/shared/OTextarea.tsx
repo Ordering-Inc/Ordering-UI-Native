@@ -3,7 +3,6 @@ import styled from 'styled-components/native';
 import { useTheme } from 'styled-components/native';
 
 const Wrapper = styled.View`
-  padding: 10px;
   border-radius: 10px;
   border: 1px solid ${(props: any) => props.theme.colors.lightGray};
 `;
@@ -18,6 +17,7 @@ interface Props {
   onChange?: any;
   onFocus?: any;
   textTareaRef?: any;
+  autoFocus?: boolean;
 }
 
 const OTextarea = (props: Props) => {
@@ -34,6 +34,7 @@ const OTextarea = (props: Props) => {
         numberOfLines={props.lines}
         underlineColorAndroid={'transparent'}
         value={props.value}
+        autoFocus={props.autoFocus}
         multiline={true}
         selectionColor={theme.colors.primary}
         color={theme.colors.textGray}

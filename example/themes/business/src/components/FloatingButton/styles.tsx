@@ -6,13 +6,12 @@ export const Container = styled.View`
   flex: 1;
   bottom: 0px;
   left: 0;
-  paddingvertical: 10px;
+  padding-vertical: 10px;
   width: 100%;
   display: flex;
   justify-content: center;
   background-color: #fff;
   z-index: 1000;
-
   ${(props: any) =>
     props.isIos &&
     css`

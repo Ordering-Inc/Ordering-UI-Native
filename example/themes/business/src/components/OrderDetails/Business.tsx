@@ -33,8 +33,8 @@ import { verifyDecimals, getProductPrice } from '../../utils';
 import { USER_TYPE } from '../../config/constants';
 import CountryPicker from 'react-native-country-picker-modal';
 import { NotFoundSource } from '../NotFoundSource';
-import {OrderHeaderComponent} from './OrderHeaderComponent'
-import { OrderContentComponent } from './OrderContentComponent'
+import { OrderHeaderComponent } from './OrderHeaderComponent';
+import { OrderContentComponent } from './OrderContentComponent';
 import { getOrderStatus } from '../../utils';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
@@ -347,7 +347,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         (error?.length < 1 || !error) && (
           <View
             style={{
-              padding: 20,
               backgroundColor: theme.colors.backgroundLight,
             }}>
             {[...Array(6)].map((item, i) => (
@@ -378,13 +377,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       )}
 
       {order && Object.keys(order).length > 0 && (error?.length < 1 || !error) && (
-        <>
-          
-          <OrderHeaderComponent order={order} handleOpenMapView={handleOpenMapView} handleOpenMessagesForBusiness={handleOpenMessagesForBusiness} getOrderStatus={getOrderStatus} handleArrowBack={handleArrowBack} />
+        <View style={{ flex: 1 }}>
+          <OrderHeaderComponent
+            order={order}
+            handleOpenMapView={handleOpenMapView}
+            handleOpenMessagesForBusiness={handleOpenMessagesForBusiness}
+            getOrderStatus={getOrderStatus}
+            handleArrowBack={handleArrowBack}
+          />
           <OrderDetailsContainer
-            keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}>
             <>
-          <OrderContentComponent order={order}/>
+              <OrderContentComponent order={order} />
               {(order?.status === 7 || order?.status === 4) &&
                 order?.delivery_type === 1 && (
                   <AssignDriver>
@@ -592,18 +597,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             Object.keys(order).length > 0 &&
             getOrderStatus(order?.status, t)?.value ===
               t('PENDING', 'Pending') && (
-              <>
-                <FloatingButton
-                  btnText={t('REJECT', 'Reject')}
-                  isSecondaryBtn={false}
-                  secondButtonClick={() => handleViewActionOrder('accept')}
-                  firstButtonClick={() => handleViewActionOrder('reject')}
-                  secondBtnText={t('ACCEPT', 'Accept')}
-                  secondButton={true}
-                  firstColorCustom={theme.colors.red}
-                  secondColorCustom={theme.colors.green}
-                />
-              </>
+              <FloatingButton
+                btnText={t('REJECT', 'Reject')}
+                isSecondaryBtn={false}
+                secondButtonClick={() => handleViewActionOrder('accept')}
+                firstButtonClick={() => handleViewActionOrder('reject')}
+                secondBtnText={t('ACCEPT', 'Accept')}
+                secondButton={true}
+                firstColorCustom={theme.colors.red}
+                secondColorCustom={theme.colors.green}
+                widthButton={'45%'}
+              />
             )}
 
           {order &&
@@ -620,15 +624,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 secondButton={true}
                 firstColorCustom="transparent"
                 secondColorCustom={theme.colors.primary}
+                widthButton={'45%'}
               />
             )}
-        </>
+        </View>
       )}
     </>
   );
 };
 
-export const OrderDetails = (props: OrderDetailsParams) => {
+export const OrderDetailsBusiness = (props: OrderDetailsParams) => {
   const orderDetailsProps = {
     ...props,
     UIComponent: OrderDetailsUI,

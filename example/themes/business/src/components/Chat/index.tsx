@@ -759,7 +759,6 @@ const ChatUI = (props: MessagesParams) => {
           borderRadius: 7.6,
           borderColor: theme.colors.transparent,
           borderWidth: 0,
-          textAlign: message ? 'left' : 'center',
           color: '#010300',
         }}
         textInputProps={{

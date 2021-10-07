@@ -139,16 +139,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
   };
 
-  useEffect(() => {
-    if (actions && action === 'accept') {
-      openTimerIOnput();
-    }
-
-    if (actions && action === 'reject') {
-      openTextTareaOInput();
-    }
-  }, []);
-
   const handleAcceptOrReject = () => {
     handleFixTime();
 
@@ -335,6 +325,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             onChangeText={handleTime}
             onPressOut={() => handleFixTime()}
             editable={true}
+            autoFocus={actions && action === 'accept'}
             selectionColor={theme.colors.primary}
             placeholderTextColor={theme.colors.textGray}
             color={theme.colors.textGray}
@@ -345,6 +336,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             <Comments ref={viewRef}>
               <OTextarea
                 textTareaRef={textTareaRef}
+                autoFocus={actions && action === 'reject'}
                 onFocus={handleFocus}
                 placeholder={t(
                   'PLEASE_TYPE_YOUR_COMMENTS_IN_HERE',
