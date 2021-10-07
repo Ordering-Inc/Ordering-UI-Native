@@ -1,5 +1,6 @@
 import {
 	ActivityIndicator,
+	I18nManager,
 	ImageSourcePropType,
 	ImageStyle,
 	TextStyle,
@@ -9,7 +10,7 @@ import {
 } from 'react-native';
 
 import * as React from 'react';
-import styled from 'styled-components/native';
+import styled, { useTheme } from 'styled-components/native';
 import { OIcon } from './';
 
 const StyledButton = styled.View<Props>`
@@ -76,9 +77,12 @@ interface Props {
 	bgColor?: string;
 	borderColor?: string;
 	loadingStyle?: ViewStyle;
+	showNextIcon?: boolean;
 }
 
 const OButton = (props: Props): React.ReactElement => {
+
+	const theme = useTheme();
 
 	if (props.isDisabled) {
 		return (
@@ -116,7 +120,9 @@ const OButton = (props: Props): React.ReactElement => {
 				) : null}
 				{props.imgRightSrc ? (
 					<EndImage style={props.imgRightStyle} source={props.imgRightSrc} />
-				) : null}
+				) : props.showNextIcon ? 
+					<EndImage source={theme.images.general.arrow_left} 
+					style={{width: 16, tintColor: 'white', transform: [{rotate: I18nManager.isRTL ? '0deg' : '180deg'}]}} /> : null }
 			</StyledButton>
 		</TouchableOpacity>
 	);

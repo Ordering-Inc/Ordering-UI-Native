@@ -1,18 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import {
 	OrderTypeControl,
 	useLanguage,
 	useOrder,
 } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
-import { StyleSheet, Platform } from 'react-native'
-import { OrderTypeWrapper } from './styles'
+import { Platform, View } from 'react-native'
+import { BgImage, ListWrapper, MaskCont, OrderTypeWrapper, Wrapper } from './styles'
 import { OrderTypeSelectParams } from '../../types'
-import RNPickerSelect from 'react-native-picker-select'
-import { OIcon } from '../shared'
+import { OIcon, OText } from '../shared'
+import NavBar from '../NavBar';
+import { ORDER_TYPES } from '../../config/constants';
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	const {
+		navigation,
 		handleChangeOrderType,
 		typeSelected,
 		defaultValue,
@@ -21,45 +23,19 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	} = props
 
 	const theme = useTheme();
-
-	const pickerStyle = StyleSheet.create({
-		inputAndroid: {
-			color: theme.colors.textSecondary,
-			height: 26,
-			borderRadius: 7.6,
-			backgroundColor: theme.colors.backgroundGray100,
-			fontSize: 12,
-			paddingStart: 10,
-			paddingRight: 24,
-			paddingBottom: 2,
-			paddingTop: 0
-		},
-		inputIOS: {
-			color: theme.colors.textSecondary,
-			paddingEnd: 24,
-			height: 26,
-			borderRadius: 7.6,
-			paddingStart: 10,
-			backgroundColor: theme.colors.backgroundGray100,
-			fontSize: 12
-		},
-		placeholder: {
-			color: theme.colors.secundaryContrast
-		}
-	})
-
-	const [orderState] = useOrder()
-	const [open, setOpen] = useState(false)
-
-	const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value))
-
+	const [orderState] = useOrder();
+	const [, t] = useLanguage();
+	const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value));
+	
 	const items = _orderTypes.map((type) => {
 		return {
 			value: type.value,
-			label: type.content,
-			inputLabel: type.content
+			label: t(type.content, type.content),
+			description: t(type.description, 'Lorem ipsum dolor sit amet, consectetur.')
 		}
 	})
+
+	const goToBack = () => !orderState?.loading && navigation?.canGoBack() && navigation.goBack();
 
 	const handleChangeOrderTypeCallback = (orderType: number) => {
 		if (!orderState.loading) {
@@ -68,53 +44,48 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	}
 
 	return (
-		typeSelected !== undefined && (
-			<OrderTypeWrapper>
-				<RNPickerSelect
-					onValueChange={(orderType) => handleChangeOrderTypeCallback(orderType)}
-					items={items}
-					placeholder={{}}
-					style={pickerStyle}
-					value={defaultValue || typeSelected}
-					onOpen={() => setOpen(true)}
-					onClose={() => setOpen(false)}
-					useNativeAndroidPickerStyle={false}
-					disabled={orderState.loading && !open}
-					Icon={() => <OIcon src={theme.images.general.arrow_down} width={10} style={{ marginRight: 10 }} />}
-				/>
-			</OrderTypeWrapper>
-		)
+		<Wrapper>
+			<NavBar
+				onActionLeft={() => goToBack()}
+				btnStyle={{ paddingLeft: 0 }}
+				paddingTop={0}
+				style={{ paddingBottom: 0 }}
+				title={t('HOW_WILL_YOUR_ORDER_TYPE', 'How will your order type?')}
+				titleAlign={'center'}
+				titleStyle={{ fontSize: 14 }}
+			/>
+			{
+			items.length > 0 && (
+				<ListWrapper>
+				{
+					items && items.map((item: any, idx: number) => 
+						<OrderTypeWrapper activeOpacity={0.8} key={idx} disabled={orderState.loading} onPress={() => handleChangeOrderTypeCallback(item.value)}>
+							<BgImage source={theme.images.orderTypes[`type${item?.value || 1}`]} resizeMode={'cover'} style={{opacity: item?.value == typeSelected || typeSelected === undefined ? 1 : 0.4}}>
+								<MaskCont>
+									<OText size={12} lineHeight={18} color={theme.colors.white} weight={Platform.OS === 'android' ? 'bold' : '600'}>{item?.label}</OText>
+									<OText size={10} lineHeight={15} color={theme.colors.white}>{item?.description}</OText>
+									<View style={{flexDirection: 'row', alignItems: 'center'}}>
+										<OText size={10} lineHeight={15} color={theme.colors.white}>{t('START_MY_ORDER', 'Start my order')}</OText>
+										<OIcon src={theme.images.general.arrow_left} width={16} color={theme.colors.white} style={{transform: [{ rotate: '180deg' }], marginStart: 4}} />
+									</View>
+								</MaskCont>
+							</BgImage>
+						</OrderTypeWrapper>
+					)
+				}
+				</ListWrapper>
+				)
+			}
+		</Wrapper>
 	)
 }
 
 export const OrderTypeSelector = (props: any) => {
-	const [, t] = useLanguage()
 
 	const orderTypeProps = {
 		...props,
 		UIComponent: OrderTypeSelectorUI,
-		orderTypes: props.orderType || [
-			{
-				value: 1,
-				content: t('DELIVERY', 'Delivery')
-			},
-			{
-				value: 2,
-				content: t('PICKUP', 'Pickup')
-			},
-			{
-				value: 3,
-				content: t('EAT_IN', 'Eat in')
-			},
-			{
-				value: 4,
-				content: t('CURBSIDE', 'Curbside')
-			},
-			{
-				value: 5,
-				content: t('DRIVE_THRU', 'Drive thru')
-			}
-		]
+		orderTypes: props.orderTypes || ORDER_TYPES
 	}
 
 	return <OrderTypeControl {...orderTypeProps} />

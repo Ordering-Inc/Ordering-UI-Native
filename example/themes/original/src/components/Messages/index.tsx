@@ -321,8 +321,16 @@ const MessagesUI = (props: MessagesParams) => {
 		<MaterialCommunityIcon name='chevron-double-down' size={32} />
 	)
 
+	const getViewHeight = () => {
+		if (Platform.OS === 'android') {
+			return height - top - bottom - (isKeyboardShow ? 270 : 24);
+		} else {
+			return height - top - bottom - 10;
+		}
+	}
+
 	return (
-		<View style={{ height: height - top - bottom, width: '100%' }}>
+		<View style={{ height: getViewHeight(), width: '100%', paddingTop: 12, backgroundColor: 'white' }}>
 			<Wrapper>
 				<Header>
 					<OIconButton icon={theme.images.general.arrow_left} style={{ paddingStart: 10, borderColor: theme.colors.clear }} onClick={onClose} />

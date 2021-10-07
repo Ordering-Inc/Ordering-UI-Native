@@ -43,6 +43,7 @@ import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OrderSummary } from '../OrderSummary';
+import { getTypesText } from '../../utils';
 
 const mapConfigs = {
 	mapZoom: 16,
@@ -192,7 +193,15 @@ const CheckoutUI = (props: any) => {
 				<ChContainer style={styles.pagePadding}>
 					<ChSection style={{ paddingTop: 0 }}>
 						<ChHeader>
-							<OrderTypeSelector configTypes={configTypes} />
+							{/* <OrderTypeSelector configTypes={configTypes} /> */}
+							<CHMomentWrapper onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
+								<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(options?.type || 1), 'Delivery')}</OText>
+								<OIcon
+									src={theme.images.general.arrow_down}
+									width={10}
+									style={{ marginStart: 8 }}
+								/>
+							</CHMomentWrapper>
 							<CHMomentWrapper
 								onPress={() => navigation.navigate('MomentOption')}
 								disabled={loading}

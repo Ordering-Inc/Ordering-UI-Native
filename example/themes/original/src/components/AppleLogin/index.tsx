@@ -16,12 +16,12 @@ export const AppleLogin = (props: any) => {
   } = props
 
   const [ordering] = useApi();
-  const [{ auth }] = useSession();
-  const [, t] = useLanguage();
+	const [{ auth }] = useSession();
+	const [, t] = useLanguage();
 
-  const buttonText = auth
-    ? t('CONTINUE_WITH_APPLE', 'Logout with Apple')
-    : t('CONTINUE_WITH_FACEBOOK', 'Continue with Apple');
+	const buttonText = auth
+		? t('CONTINUE_WITH_APPLE', 'Logout with Apple')
+		: t('CONTINUE_WITH_FACEBOOK', 'Continue with Apple');
 
   const performAppleLogin = async (code: string) => {
     try {
@@ -52,16 +52,16 @@ export const AppleLogin = (props: any) => {
   }
 
   const onIOSButtonPress = async () => {
-
+    
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,
       requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
     });
-
+  
     // get current authentication state for user
     // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
     const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
-
+  
     // use credentialState response to ensure the user is authenticated
     if (credentialState === appleAuth.State.AUTHORIZED) {
       // user is authenticated
@@ -117,33 +117,33 @@ export const AppleLogin = (props: any) => {
   }
   return (
     <Container>
-      {canShowButton() &&
-        <AppleButton
-          onPress={() => Platform.OS == 'android' ? onAndroidButtonPress() : onIOSButtonPress()}
-        >
-          <Icon
-            name="apple"
-            size={20}
-            color={'black'}
-            style={style.fbBtn}
-          />
-          <Text style={style.textBtn}>
-            {buttonText}
-          </Text>
-        </AppleButton>
+      {canShowButton() && 
+				<AppleButton
+					onPress={() => Platform.OS == 'android' ? onAndroidButtonPress() : onIOSButtonPress()}
+				>
+					<Icon
+						name="apple"
+						size={20}
+						color={'black'}
+						style={style.fbBtn}
+					/>
+					<Text style={style.textBtn}>
+						{buttonText}
+					</Text>
+				</AppleButton>
       }
     </Container>
   );
 }
 
 const style = StyleSheet.create({
-  fbBtn: {
-    position: 'absolute',
-    left: 0,
-    marginHorizontal: 16
-  },
-  textBtn: {
-    fontSize: 14,
-    color: '#000000'
-  }
+	fbBtn: {
+		position: 'absolute',
+		left: 0,
+		marginHorizontal: 16
+	},
+	textBtn: {
+		fontSize: 14,
+		color: '#000000'
+	}
 })

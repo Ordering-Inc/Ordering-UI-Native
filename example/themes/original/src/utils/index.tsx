@@ -2,6 +2,7 @@ import React from 'react';
 import { useLanguage } from 'ordering-components/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {CODES} from 'ordering-components/native'
+import { ORDER_TYPES } from '../config/constants';
 
 export const flatArray = (arr: any) => [].concat(...arr)
 
@@ -162,4 +163,9 @@ export const transformCountryCode = (countryCode : number) => {
   } else {
     return parser(value)
   }
+}
+
+export const getTypesText = (value: number) => {
+  const ret = ORDER_TYPES.find((type: any) => type.value == value);
+  return ret?.content;
 }
