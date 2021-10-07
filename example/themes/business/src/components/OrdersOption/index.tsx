@@ -1,242 +1,63 @@
-// React & React Native
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  View,
-  Pressable,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-  RefreshControl,
-} from 'react-native';
-
-// Ordering
-import { useLanguage, CumulativeOrders } from 'ordering-components/native';
-import { useTheme } from 'styled-components/native';
-
-// Third-party
+import { View, Pressable, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { useLanguage, OrderListGroups } from 'ordering-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
 
-// Own
+import { useTheme } from 'styled-components/native';
+import { OText, OButton } from '../shared';
+import { NotFoundSource } from '../NotFoundSource';
 import { FiltersTab, TabsContainer, Tag } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
-import { OText, OIconButton } from '../shared';
 import { OrdersOptionParams } from '../../types';
 
-// Interfaces
-interface Tab {
-  key: number;
-  text: any;
-  tags: number[];
-  title: string;
-}
+import GestureRecognizer from 'react-native-swipe-gestures';
+
+const tabsList: any = {
+  pending: 1,
+  inProgress: 2,
+  completed: 3,
+  cancelled: 4
+};
+
+const tabsListText: any = {
+  1: 'pending',
+  2: 'inProgress',
+  3: 'completed',
+  4: 'cancelled'
+};
+
+const swipeConfig = {
+  velocityThreshold: 0.3,
+  directionalOffsetThreshold: 80
+};
+
+const { useDeviceOrientation, PORTRAIT } = DeviceOrientationMethods
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
   const {
-    pending,
-    inProgress,
-    completed,
-    cancelled,
-    activeStatus,
-    setActiveStatus,
+    setCurrentFilters,
+    tabs,
+    currentTabSelected,
+    setCurrentTabSelected,
+    ordersGroup,
+    setOrdersGroup,
+    orderStatus,
+    orderList,
     loadOrders,
+    loadMoreOrders,
+    rememberOrderStatus,
     onNavigationRedirect,
   } = props;
 
-  // Hooks
-  const theme = useTheme();
+  const [theme] = useTheme();
   const [, t] = useLanguage();
+  const [orientationState] = useDeviceOrientation();
 
-  const orderStatus = [
-    { key: 0, text: t('PENDING', 'Pending') },
-    { key: 1, text: t('COMPLETED', 'Completed') },
-    { key: 2, text: t('REJECTED', 'Rejected') },
-    { key: 3, text: t('DRIVER_IN_BUSINESS', 'Driver in business') },
-    { key: 4, text: t('READY_FOR_PICKUP', 'Ready for pickup') },
-    { key: 5, text: t('REJECTED_BY_BUSINESS', 'Rejected by business') },
-    { key: 6, text: t('REJECTED_BY_DRIVER', 'Rejected by Driver') },
-    { key: 7, text: t('ACCEPTED_BY_BUSINESS', 'Accepted by business') },
-    { key: 8, text: t('ACCEPTED_BY_DRIVER', 'Accepted by driver') },
-    {
-      key: 9,
-      text: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver'),
-    },
-    {
-      key: 10,
-      text: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver'),
-    },
-    {
-      key: 11,
-      text: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver'),
-    },
-    {
-      key: 12,
-      text: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver'),
-    },
-    { key: 13, text: t('PREORDER', 'Preorder') },
-    { key: 14, text: t('ORDER_NOT_READY', 'Order not ready') },
-    {
-      key: 15,
-      text: t(
-        'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
-        'Order picked up completed by customer',
-      ),
-    },
-    { key: 16, text: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer') },
-    {
-      key: 17,
-      text: t(
-        'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
-        'Order not picked up by customer',
-      ),
-    },
-    {
-      key: 18,
-      text: t(
-        'DRIVER_ALMOST_ARRIVED_TO_BUSINESS',
-        'Driver almost arrived to business',
-      ),
-    },
-    {
-      key: 19,
-      text: t(
-        'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER',
-        'Driver almost arrived to customer',
-      ),
-    },
-    {
-      key: 20,
-      text: t(
-        'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
-        'Customer almost arrived to business',
-      ),
-    },
-    {
-      key: 21,
-      text: t(
-        'ORDER_CUSTOMER_ARRIVED_BUSINESS',
-        'Customer arrived to business',
-      ),
-    },
-  ];
+  const WIDTH_SCREEN = orientationState?.dimensions?.width
 
-  const tabs = [
-    { key: 0, text: t('PENDING', 'Pending'), tags: [0, 13], title: 'pending' },
-    {
-      key: 1,
-      text: t('IN_PROGRESS', 'In Progress'),
-      tags: [3, 4, 7, 8, 9, 14, 18, 19, 20, 21],
-      title: 'inProgress',
-    },
-    {
-      key: 2,
-      text: t('COMPLETED', 'Completed'),
-      tags: [1, 11, 15],
-      title: 'completed',
-    },
-    {
-      key: 3,
-      text: t('CANCELLED', 'Cancelled'),
-      tags: [2, 5, 6, 10, 12, 16, 17],
-      title: 'cancelled',
-    },
-  ];
+  const IS_PORTRAIT = orientationState.orientation === PORTRAIT
 
-  // Refs
-  const scrollRefTag = useRef() as React.MutableRefObject<ScrollView>;
-  const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
-
-  // States
-  const [activeTab, setActiveTab] = useState<Tab>(tabs[0]);
-  const [tagsStatus, setTagsStatus] = useState<number[]>(tabs[0].tags);
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [reload, setReload] = useState<boolean>(false);
-  const [orientation, setOrientation] = useState<string>(
-    Dimensions.get('window').width < Dimensions.get('window').height
-      ? 'Portrait'
-      : 'Landscape',
-  );
-  const [windowsWidth, setWindowsWidth] = useState<number>(
-    parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
-  );
-
-  // Handles
-  const handleChangeTab = async (tab: Tab) => {
-    if (tab.key === activeTab.key) {
-      return;
-    }
-
-    if (tab.key === tabs[3].key) {
-      scrollRefTab.current?.scrollToEnd({ animated: true });
-    }
-
-    if (tab.key === tabs[0].key) {
-      scrollRefTab.current?.scrollTo({ animated: true });
-    }
-
-    scrollRefTag.current?.scrollTo({
-      y: 0,
-      animated: true,
-    });
-
-    setActiveTab(tab);
-    setTagsStatus(tab.tags);
-    loadOrders?.(tab.title, false);
-  };
-
-  const handleChangeTag = (key: number) => {
-    if (activeStatus?.includes(key)) {
-      setActiveStatus?.(activeStatus?.filter((tag: number) => tag !== key));
-    } else {
-      activeStatus && setActiveStatus?.(activeStatus.concat(key));
-    }
-  };
-
-  const handleRefreshAndReload = (loadType: string) => {
-    if (loadType === 'refresh') {
-      setIsRefreshing(true);
-    } else {
-      setReload(true);
-    }
-
-    loadOrders?.(activeTab.title, false, true);
-  };
-
-  const getOrderStatus = (key: number) => {
-    return orderStatus.find(status => status.key === key)?.text;
-  };
-
-  // Events
-  Dimensions.addEventListener('change', ({ window: { width, height } }) => {
-    setWindowsWidth(
-      parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0)),
-    );
-
-    if (width < height) {
-      setOrientation('Portrait');
-    } else {
-      setOrientation('Landscape');
-    }
-  });
-
-  // Effects
-  useEffect(() => {
-    if (
-      !pending?.loading ||
-      !inProgress?.loading ||
-      !completed?.loading ||
-      !cancelled?.loading
-    ) {
-      setIsRefreshing(false);
-      setReload(false);
-    }
-  }, [
-    pending?.loading,
-    inProgress?.loading,
-    completed?.loading,
-    cancelled?.loading,
-  ]);
-
-  // Styles
   const styles = StyleSheet.create({
     header: {
       marginBottom: 25,
@@ -257,12 +78,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontSize: 14,
-      marginBottom: 10,
-      paddingLeft: 8,
-      paddingRight: 8,
+      paddingBottom: 10,
+      marginBottom: -1,
+      zIndex: 100,
+      borderColor: theme.colors.textGray,
     },
     tagsContainer: {
-      marginBottom: 10,
+      marginBottom: 20,
     },
     tag: {
       fontFamily: 'Poppins',
@@ -271,8 +93,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       fontSize: 14,
     },
     pressable: {
-      flex: 1,
-      minWidth: 88,
       alignItems: 'center',
     },
     loadButton: {
@@ -291,35 +111,90 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     },
   });
 
-  const actualTabOrders: any = {
-    0: { ...pending },
-    1: { ...inProgress },
-    2: { ...completed },
-    3: { ...cancelled },
+  const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
+  const scrollListRef = useRef() as React.MutableRefObject<ScrollView>;
+  const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
+
+  const [refreshing] = useState(false);
+
+  const tagsList = ordersGroup[currentTabSelected].defaultFilter ?? []
+  const currentOrdersGroup = ordersGroup[currentTabSelected]
+
+  const isEqual = (array1: any, array2: any) => {
+    return array1.every((item: any) => array2.includes(item)) && array2.every((item: any) => array1.includes(item))
+  }
+
+  const handleLoadMore = () => {
+    loadMoreOrders && loadMoreOrders();
   };
 
+  const getOrderStatus = (key: number) => {
+    return orderStatus.find((status: any) => status.key === key)?.text;
+  };
+
+  const handleTagSelected = (tag: any) => {
+    const tags = currentOrdersGroup.currentFilter.includes(tag)
+      ? currentOrdersGroup.currentFilter.filter((t: any) => t === tag)
+      : [...currentOrdersGroup.currentFilter, tag]
+
+    setCurrentFilters(tags)
+
+    setOrdersGroup({
+      ...ordersGroup,
+      [currentTabSelected]: {
+        ...ordersGroup[currentTabSelected],
+        currentFilter: tags
+      }
+    })
+  }
+
+  const handleAllSelect = () => {
+    setCurrentFilters(tagsList)
+    setOrdersGroup({
+      ...ordersGroup,
+      [currentTabSelected]: {
+        ...ordersGroup[currentTabSelected],
+        currentFilter: tagsList
+      }
+    })
+  }
+
+  const onSwipeLeft = () => {
+    let currentTab = tabsList[currentTabSelected]
+    currentTab = currentTab >= 4 ? null : currentTab + 1
+
+    if (!currentTab) return
+
+    const nextTab = tabsListText[currentTab]
+    nextTab && setCurrentTabSelected(nextTab)
+  }
+
+  const onSwipeRight = () => {
+    let currentTab = tabsList[currentTabSelected]
+    currentTab = currentTab <= 1 ? null : currentTab - 1
+
+    if (!currentTab) return
+
+    const nextTab = tabsListText[currentTab]
+    nextTab && setCurrentTabSelected(nextTab)
+  }
+
+  useEffect(() => {
+    setCurrentFilters(null)
+    scrollRefTab.current?.scrollTo({ animated: true });
+    scrollListRef.current?.scrollTo({ animated: true });
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
+  }, [currentTabSelected])
+
   return (
-    <>
+    <GestureRecognizer
+      onSwipeLeft={onSwipeLeft}
+      onSwipeRight={onSwipeRight}
+      config={swipeConfig}
+      style={{ flex: 1 }}
+    >
       <View style={styles.header}>
         <OText style={styles.title}>{t('MY_ORDERS', 'My orders')}</OText>
-
-        <View style={styles.icons}>
-          <OIconButton
-            icon={theme.images.general.reload}
-            borderColor={theme.colors.clear}
-            iconStyle={{ width: 25, height: 25 }}
-            style={{ maxWidth: 40, height: 35 }}
-            onClick={() => handleRefreshAndReload('reload')}
-          />
-
-          {/* <OIconButton
-            icon={theme.images.general.search}
-            borderColor={theme.colors.clear}
-            iconStyle={{ width: 25, height: 25 }}
-            style={{ maxWidth: 40, height: 35 }}
-            onClick={() => {}}
-          /> */}
-        </View>
       </View>
 
       <FiltersTab>
@@ -327,64 +202,96 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           ref={scrollRefTab}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          horizontal>
-          <TabsContainer width={windowsWidth - 42}>
-            {tabs.map(tab => (
+          horizontal
+          nestedScrollEnabled={true}
+        >
+          <TabsContainer width={WIDTH_SCREEN}>
+            {tabs.map((tab: any) => (
               <Pressable
                 key={tab.key}
                 style={styles.pressable}
-                onPress={() => handleChangeTab(tab)}>
+                onPress={() => setCurrentTabSelected(tab?.title)}>
                 <OText
-                  style={styles.tab}
+                  style={{
+                    ...styles.tab,
+                    fontSize: tab.title === currentTabSelected ? 16 : 14,
+                    borderBottomWidth: tab.title === currentTabSelected ? 1 : 0,
+                  }}
                   color={
-                    tab.key === activeTab.key
+                    tab.title === currentTabSelected
                       ? theme.colors.textGray
                       : theme.colors.unselectText
                   }
-                  weight={tab.key === activeTab.key ? '600' : 'normal'}>
+                  weight={tab.title === currentTabSelected ? '600' : 'normal'}
+                >
                   {tab.text}
                 </OText>
-
-                <View
-                  style={{
-                    width: '100%',
-                    borderBottomColor:
-                      tab.key === activeTab.key
-                        ? theme.colors.textGray
-                        : theme.colors.tabBar,
-                    borderBottomWidth: 2,
-                  }}
-                />
               </Pressable>
             ))}
           </TabsContainer>
         </ScrollView>
       </FiltersTab>
 
-      <View>
-        <ScrollView
-          ref={scrollRefTag}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.tagsContainer}
-          horizontal>
-          {tagsStatus.map((key: number) => (
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {tagsList && tagsList?.length > 1 && (
+          <View style={{ marginBottom: 20 }}>
             <Tag
-              key={key}
-              onPress={() => handleChangeTag(key)}
+              onPress={() => handleAllSelect()}
               isSelected={
-                activeStatus?.includes(key)
+                isEqual(currentOrdersGroup.currentFilter, tagsList)
                   ? theme.colors.primary
                   : theme.colors.tabBar
               }>
               <OText
                 style={styles.tag}
                 color={
-                  activeStatus?.includes(key)
+                  isEqual(currentOrdersGroup.currentFilter, tagsList)
+                    ? theme.colors.white
+                    : theme.colors.black
+                }>
+                {t('All', 'All')}
+              </OText>
+            </Tag>
+          </View>
+        )}
+        <ScrollView
+          ref={scrollRef}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tagsContainer}
+          horizontal
+        >
+          {tagsList && tagsList.map((key: number) => (
+            <Tag
+              key={key}
+              onPress={() => handleTagSelected(key)}
+              isSelected={
+                currentOrdersGroup.currentFilter.includes(key) &&
+                !isEqual(currentOrdersGroup.currentFilter, tagsList)
+                  ? theme.colors.primary
+                  : theme.colors.tabBar
+              }>
+              <OText
+                style={styles.tag}
+                color={
+                  currentOrdersGroup.currentFilter.includes(key) &&
+                  !isEqual(currentOrdersGroup.currentFilter, tagsList)
                     ? theme.colors.white
                     : theme.colors.black
                 }>
                 {getOrderStatus(key)}
+                {
+                  currentOrdersGroup.currentFilter.includes(key) &&
+                  !isEqual(currentOrdersGroup.currentFilter, tagsList) &&
+                  ' X'
+                }
               </OText>
             </Tag>
           ))}
@@ -392,38 +299,32 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       </View>
 
       <ScrollView
+        ref={scrollListRef}
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
+        nestedScrollEnabled={true}
         refreshControl={
           <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={() => handleRefreshAndReload('refresh')}
+            refreshing={refreshing}
+            onRefresh={() => loadOrders && loadOrders({ newFetch: true })}
           />
-        }>
-        {!(reload && actualTabOrders[activeTab.key]?.loading) &&
-          !actualTabOrders[activeTab.key]?.error &&
-          actualTabOrders[activeTab.key]?.orders?.length > 0 && (
-            <PreviousOrders
-              data={actualTabOrders[activeTab.key]}
-              tab={tabs[activeTab.key].title}
-              loadOrders={loadOrders}
-              isRefreshing={isRefreshing}
-              tagsFilter={activeStatus?.filter((key: number) =>
-                tagsStatus.includes(key),
-              )}
-              onNavigationRedirect={onNavigationRedirect}
-              getOrderStatus={getOrderStatus}
-            />
-          )}
+        }
+      >
+        {!currentOrdersGroup.error?.length &&
+          !!currentOrdersGroup.orders?.length &&
+        (
+          <PreviousOrders
+            orders={currentOrdersGroup.orders}
+            onNavigationRedirect={onNavigationRedirect}
+            getOrderStatus={getOrderStatus}
+            tabsFilter={rememberOrderStatus}
+          />
+        )}
 
-        {(pending?.loading ||
-          inProgress?.loading ||
-          completed?.loading ||
-          cancelled?.loading ||
-          reload) && (
+        {currentOrdersGroup.loading && (
           <>
             <View>
-              {[...Array(5)].map((item, i) => (
+              {[...Array(5)].map((_, i) => (
                 <Placeholder key={i} Animation={Fade}>
                   <View
                     style={{
@@ -432,7 +333,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                       marginBottom: 10,
                     }}>
                     <PlaceholderLine
-                      width={orientation === 'Portrait' ? 22 : 11}
+                      width={IS_PORTRAIT ? 22 : 11}
                       height={74}
                       style={{
                         marginRight: 20,
@@ -451,16 +352,152 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             </View>
           </>
         )}
+
+        {!currentOrdersGroup.error?.length &&
+          !currentOrdersGroup.loading &&
+          currentOrdersGroup.pagination.totalPages &&
+          currentOrdersGroup.pagination.currentPage < currentOrdersGroup.pagination.totalPages &&
+          currentOrdersGroup.orders.length &&
+        (
+          <OButton
+            onClick={handleLoadMore}
+            text={t('LOAD_MORE_ORDERS', 'Load more orders')}
+            imgRightSrc={null}
+            textStyle={styles.loadButtonText}
+            style={styles.loadButton}
+            bgColor={theme.colors.primary}
+            borderColor={theme.colors.primary}
+          />
+        )}
       </ScrollView>
-    </>
+
+      {!currentOrdersGroup.loading &&
+        currentOrdersGroup.error?.length &&
+        !currentOrdersGroup.orders?.length &&
+      (
+        <NotFoundSource
+          content={
+            !orderList.error
+              ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
+              : orderList?.error[0]?.message ||
+                orderList?.error[0] ||
+                t('NETWORK_ERROR', 'Network Error')
+          }
+          image={theme.images.general.notFound}
+          conditioned={false}
+        />
+      )}
+    </GestureRecognizer>
   );
 };
 
 export const OrdersOption = (props: OrdersOptionParams) => {
-  const MyOrdersProps = {
+  const [, t] = useLanguage();
+
+  const ordersProps = {
     ...props,
     UIComponent: OrdersOptionUI,
+    useDefualtSessionManager: true,
+    asDashboard: true,
+    orderStatus: [
+      { key: 0, text: t('PENDING', 'Pending') },
+      { key: 1, text: t('COMPLETED', 'Completed') },
+      { key: 2, text: t('REJECTED', 'Rejected') },
+      { key: 3, text: t('DRIVER_IN_BUSINESS', 'Driver in business') },
+      { key: 4, text: t('READY_FOR_PICKUP', 'Ready for pickup') },
+      { key: 5, text: t('REJECTED_BY_BUSINESS', 'Rejected by business') },
+      { key: 6, text: t('REJECTED_BY_DRIVER', 'Rejected by Driver') },
+      { key: 7, text: t('ACCEPTED_BY_BUSINESS', 'Accepted by business') },
+      { key: 8, text: t('ACCEPTED_BY_DRIVER', 'Accepted by driver') },
+      {
+        key: 9,
+        text: t('PICK_UP_COMPLETED_BY_DRIVER', 'Pick up completed by driver'),
+      },
+      {
+        key: 10,
+        text: t('PICK_UP_FAILED_BY_DRIVER', 'Pick up Failed by driver'),
+      },
+      {
+        key: 11,
+        text: t('DELIVERY_COMPLETED_BY_DRIVER', 'Delivery completed by driver'),
+      },
+      {
+        key: 12,
+        text: t('DELIVERY_FAILED_BY_DRIVER', 'Delivery Failed by driver'),
+      },
+      { key: 13, text: t('PREORDER', 'Preorder') },
+      { key: 14, text: t('ORDER_NOT_READY', 'Order not ready') },
+      {
+        key: 15,
+        text: t(
+          'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
+          'Order picked up completed by customer',
+        ),
+      },
+      { key: 16, text: t('CANCELLED_BY_CUSTOMER', 'Cancelled by customer') },
+      {
+        key: 17,
+        text: t(
+          'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
+          'Order not picked up by customer',
+        ),
+      },
+      {
+        key: 18,
+        text: t(
+          'DRIVER_ALMOST_ARRIVED_TO_BUSINESS',
+          'Driver almost arrived to business',
+        ),
+      },
+      {
+        key: 19,
+        text: t(
+          'DRIVER_ALMOST_ARRIVED_TO_CUSTOMER',
+          'Driver almost arrived to customer',
+        ),
+      },
+      {
+        key: 20,
+        text: t(
+          'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
+          'Customer almost arrived to business',
+        ),
+      },
+      {
+        key: 21,
+        text: t(
+          'ORDER_CUSTOMER_ARRIVED_BUSINESS',
+          'Customer arrived to business',
+        ),
+      },
+    ],
+    tabs: [
+      {
+        key: 0,
+        text: t('PENDING', 'Pending'),
+        tags: [0, 13],
+        title: 'pending'
+      },
+      {
+        key: 1,
+        text: t('IN_PROGRESS', 'In Progress'),
+        tags: [3, 4, 7, 8, 9, 14, 18, 19, 20, 21],
+        title: 'inProgress',
+      },
+      {
+        key: 2,
+        text: t('COMPLETED', 'Completed'),
+        tags: [1, 11, 15],
+        title: 'completed',
+      },
+      {
+        key: 3,
+        text: t('CANCELLED', 'Cancelled'),
+        tags: [2, 5, 6, 10, 12, 16, 17],
+        title: 'cancelled',
+      },
+    ]
   };
 
-  return <CumulativeOrders {...MyOrdersProps} />;
+  return <OrderListGroups {...ordersProps} />;
 };
