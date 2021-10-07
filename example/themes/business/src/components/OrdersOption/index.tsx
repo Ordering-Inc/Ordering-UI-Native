@@ -187,12 +187,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   }, [currentTabSelected])
 
   return (
-    <GestureRecognizer
-      onSwipeLeft={onSwipeLeft}
-      onSwipeRight={onSwipeRight}
-      config={swipeConfig}
-      style={{ flex: 1 }}
-    >
+    // <GestureRecognizer
+    //   onSwipeLeft={onSwipeLeft}
+    //   onSwipeRight={onSwipeRight}
+    //   config={swipeConfig}
+    //   style={{ flex: 1 }}
+    // >
+    <>
       <View style={styles.header}>
         <OText style={styles.title}>{t('MY_ORDERS', 'My orders')}</OText>
       </View>
@@ -387,7 +388,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           conditioned={false}
         />
       )}
-    </GestureRecognizer>
+    {/* </GestureRecognizer> */}
+    </>
   );
 };
 
