@@ -9,13 +9,13 @@ import {
 import { Contacts, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
-import { OText, OButton, OIcon } from '../shared';
+import { OText, OButton } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { PreviousMessages } from '../PreviousMessages';
 // import { Contacts } from '../Contacts';
 import { FiltersTab, TabsContainer, TagsContainer, Tag } from './styles';
 import { MessagesOptionParams } from '../../types';
-import {useDeviceOrientation} from '../../../../../src/hooks/DeviceOrientation'
+import { useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
 const MessagesOptionUI = (props: MessagesOptionParams) => {
   const {
     orders,
@@ -31,7 +31,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
   const [, t] = useLanguage();
 
   const { loading, error, data: values } = orders;
-  const [{dimensions}] = useDeviceOrientation()
+  const [{ dimensions }] = useDeviceOrientation();
   const tabs = [
     { key: 0, text: t('ORDERS', 'Orders'), tags: [0, 1] },
     // { key: 1, text: t('CONTACTS', 'Contacts'), tags: [2, 3, 4] },
@@ -143,7 +143,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
       paddingBottom: 5,
       marginBottom: -1,
       zIndex: 100,
-      borderColor: theme.colors.textGray
+      borderColor: theme.colors.textGray,
     },
     tagsContainer: {
       marginBottom: 20,
@@ -186,7 +186,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
               key={tab.key}
               style={{
                 ...styles.tab,
-                borderBottomWidth: 1
+                borderBottomWidth: 1,
               }}
               onPress={() => handleChangeTab(tab.tags)}>
               <OText
@@ -229,15 +229,6 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
                 }>
                 {getTagFilter(key)}
               </OText>
-
-              {activeTag === key && (
-                <OIcon
-                  src={theme.images.general.close}
-                  width={10}
-                  height={10}
-                  style={{ marginHorizontal: 3, tintColor: 'white' }}
-                />
-              )}
             </Tag>
           ))}
         </TagsContainer>

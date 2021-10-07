@@ -9,7 +9,7 @@ export const TabsContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   border-bottom-width: 1px;
-  border-bottom-color: #E9ECEF;
+  border-bottom-color: #e9ecef;
 `;
 
 export const TagsContainer = styled.ScrollView`
@@ -17,9 +17,8 @@ export const TagsContainer = styled.ScrollView`
 `;
 
 export const Tag = styled.Pressable`
-  flex-direction: row;
   background-color: ${({ isSelected }: { isSelected: string }) => isSelected};
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   min-height: 34px;
   padding: 4px 10px;

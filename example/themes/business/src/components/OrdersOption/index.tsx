@@ -19,7 +19,7 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 // Own
 import { FiltersTab, TabsContainer, Tag } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
-import { OText, OIconButton, OIcon } from '../shared';
+import { OText, OIconButton } from '../shared';
 import { OrdersOptionParams } from '../../types';
 
 // Interfaces
@@ -344,10 +344,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                       ? theme.colors.textGray
                       : theme.colors.unselectText
                   }
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  weight={tab.key === activeTab.key ? '600' : 'normal'}
-                  size={tab.key === activeTab.key ? 15 : 13}>
+                  weight={tab.key === activeTab.key ? '600' : 'normal'}>
                   {tab.text}
                 </OText>
               </Pressable>
@@ -382,15 +379,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 {getOrderStatus(key)}
                 {activeStatus?.includes(key) && '  X'}
               </OText>
-
-              {activeStatus?.includes(key) && (
-                <OIcon
-                  src={theme.images.general.close}
-                  width={10}
-                  height={10}
-                  style={{ marginHorizontal: 3, tintColor: 'white' }}
-                />
-              )}
             </Tag>
           ))}
         </ScrollView>

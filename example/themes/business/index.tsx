@@ -12,8 +12,8 @@ import { LogoutButton } from './src/components/LogoutButton';
 import { MessagesOption } from './src/components/MessagesOption';
 import { NotFoundSource } from './src/components/NotFoundSource';
 import { OrderMessage } from './src/components/OrderMessage';
-import { OrderDetails } from './src/components/OrderDetails';
-import { OrderDetailsDelivery } from './src/components/OrderDetailsDelivery';
+import { OrderDetailsBusiness } from './src/components/OrderDetails/Business';
+import { OrderDetailsDelivery } from './src/components/OrderDetails/Delivery';
 import { OrdersOption } from './src/components/OrdersOption';
 import { OrderSummary } from './src/components/OrderSummary';
 import { PhoneInputNumber } from './src/components/PhoneInputNumber';
@@ -38,7 +38,7 @@ import {
   OTextarea,
   OAlert,
   OModal,
-  OLink
+  OLink,
 } from './src/components/shared';
 
 //layouts
