@@ -48,7 +48,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     onNavigationRedirect,
   } = props;
 
-  const [theme] = useTheme();
+  const theme = useTheme();
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
 
