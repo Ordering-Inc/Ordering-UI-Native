@@ -1,9 +1,8 @@
 import styled from 'styled-components/native';
 
 export const Content = styled.ScrollView`
-  margin-bottom: 60px;
   background-color: ${(props: any) => props.theme.colors.white};
-  flex: 1;
+  margin-bottom: 30px;
 `;
 
 export const Timer = styled.TouchableOpacity`
@@ -33,6 +32,5 @@ export const Header = styled.View``;
 export const Action = styled.View``;
 
 export const Comments = styled.View`
-  margin-bottom: 40px;
   margin-top: 20px;
 `;

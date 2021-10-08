@@ -5,7 +5,7 @@ import {
   Platform,
   View,
   KeyboardAvoidingView,
-  SafeAreaView,
+  TextInput
 } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { useLanguage } from 'ordering-components/native';
@@ -13,6 +13,7 @@ import { Content, Timer, TimeField, Header, Action, Comments } from './styles';
 import { FloatingButton } from '../FloatingButton';
 import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const {
@@ -33,7 +34,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const theme = useTheme();
   const scrollViewRef = useRef<any>(null);
   const viewRef = useRef<any>(null);
-  const timerRef = useRef<any>();
+  const timerRef = useRef() as React.MutableRefObject<TextInput>;
   const textTareaRef = useRef<any>();
   const [hour, setHour] = useState('00');
   const [min, setMin] = useState('00');
@@ -42,6 +43,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
   const phoneNumber = customerCellphone;
   let codeNumberPhone, numberPhone, numberToShow;
+  const { top, bottom} = useSafeAreaInsets()
 
   const handleFocus = () => {
     viewRef?.current?.measure((x: any, y: any) => {
@@ -104,6 +106,16 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     setTime(`${hours}${mins}`);
   };
 
+  useEffect(() => {
+    if (actions && action === 'accept') {
+      openTimerIOnput();
+    }
+
+    if (actions && action === 'reject') {
+      openTextTareaOInput();
+    }
+  }, []);
+
   const handleFixTime = () => {
     if (min >= '60') {
       setMin('59');
@@ -117,11 +129,11 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
   const openTimerIOnput = () => {
     const isFocus = timerRef.current.isFocused();
-    if (isFocus && timerRef?.current) {
+    if (isFocus) {
       timerRef.current.blur();
     }
 
-    if (!isFocus && timerRef?.current) {
+    if (!isFocus) {
       if (time.length > 1) timerRef.current.clear();
       timerRef.current.focus();
       handleFocusTimer();
@@ -181,10 +193,11 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
+      enabled
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1, paddingHorizontal: 30, paddingTop: 30 }}>
+        style={{ flex: 1, paddingHorizontal: 30, paddingTop: 30, marginTop: top, marginBottom: bottom,justifyContent: 'space-between' }}>
+          <View>
         <OIconButton
           icon={theme.images.general.arrow_left}
           borderColor={theme.colors.clear}
@@ -209,6 +222,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             ? `${t(titleAccept?.key, titleAccept?.text)}:`
             : t(titleReject?.key, titleReject?.text)}
         </OText>
+        </View>
         <Content showsVerticalScrollIndicator={false} ref={scrollViewRef}>
           <Header>
             {action === 'reject' && (
@@ -316,7 +330,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
               </Timer>
             </View>
           )}
-
+            
           <TimeField
             ref={timerRef}
             keyboardType="numeric"
@@ -365,6 +379,5 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           />
         </Action>
       </KeyboardAvoidingView>
-    </SafeAreaView>
   );
 };
