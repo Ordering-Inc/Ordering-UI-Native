@@ -60,7 +60,7 @@ const LoginFormUI = (props: LoginParams) => {
 		onNavigationRedirect,
 	} = props;
 
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
 	const [, { login }] = useSession();
