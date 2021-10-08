@@ -10,7 +10,7 @@ import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
 
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager, Platform } from 'react-native'
 import Icon from 'react-native-vector-icons/Feather';
 
 import {
@@ -135,12 +135,12 @@ export const ProductOptionsUI = (props: any) => {
 										</View>
 									</Placeholder>
 								) : (
-									<OText mBottom={7} style={{ flex: I18nManager.isRTL ? 0 : 1, ...theme.labels.subtitle }}>{product?.name || productCart.name}</OText>
+									<OText mBottom={7} style={{ flex: I18nManager.isRTL ? 0 : 1, ...theme.labels.subtitle, fontWeight: Platform.OS === 'ios' ? '600' : 'bold' }}>{product?.name || productCart.name}</OText>
 								)}
 							</ProductTitle>
 							<ProductDescription>
 								<OText mBottom={7} style={{ ...theme.labels.small }} color={theme.colors.textSecondary}>{product?.description?.trim() || productCart?.description?.trim()}</OText>
-								<OText style={{ flex: I18nManager.isRTL ? 1 : 0, ...theme.labels.subtitle }} color={theme.colors.textPrimary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+								<OText style={{ flex: I18nManager.isRTL ? 1 : 0, ...theme.labels.subtitle, fontWeight: Platform.OS === 'ios' ? '600' : 'bold' }} color={theme.colors.textPrimary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
 								{(
 									(product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
 									(productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1')

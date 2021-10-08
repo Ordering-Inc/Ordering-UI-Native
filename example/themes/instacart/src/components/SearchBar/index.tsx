@@ -36,8 +36,8 @@ export const SearchBar = (props: any) => {
     },
     inputStyle: {
       flex: 1,
-		paddingStart: 0,
-		height: 40
+      paddingStart: 0,
+      height: 40
     },
     buttonStyle: {
       maxHeight: 30,
@@ -72,10 +72,10 @@ export const SearchBar = (props: any) => {
         style={styles.inputStyle}
         placeholder={placeholder}
         icon={theme.images.general.tab_explore}
-		  iconStyle={{width: 16, height: 16}}
+		    iconStyle={{width: 16, height: 16}}
         returnKeyType='done'
-		  inputStyle={inputStyle}
-		  clearButtonMode={isCancelXButtonShow ? 'while-editing' : 'never'}
+        inputStyle={inputStyle}
+        clearButtonMode={isCancelXButtonShow ? 'while-editing' : 'never'}
       />
       {isCancelButtonShow && (
         <OButton

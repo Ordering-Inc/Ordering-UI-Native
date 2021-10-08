@@ -59,7 +59,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       }
       setReorderLoading(false)
 
-    } catch (err) {
+    } catch (err: any) {
       showToast(ToastType.Error, t('ERROR', err.message))
       setReorderLoading(false)
     }

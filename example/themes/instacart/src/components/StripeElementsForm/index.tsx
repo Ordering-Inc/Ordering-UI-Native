@@ -96,8 +96,8 @@ const StripeElementsFormUI = (props: any) => {
         !!card?.last4 &&
         !!card?.expiryMonth &&
         !!card?.expiryYear &&
-        !!card?.brand &&
-        !!card?.postalCode
+        !!card?.brand
+        // !!card?.postalCode
       )
     }
   }, [card])
