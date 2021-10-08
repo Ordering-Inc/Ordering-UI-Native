@@ -5,6 +5,7 @@ import {
   Platform,
   View,
   KeyboardAvoidingView,
+  SafeAreaView,
 } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { useLanguage } from 'ordering-components/native';
@@ -12,7 +13,6 @@ import { Content, Timer, TimeField, Header, Action, Comments } from './styles';
 import { FloatingButton } from '../FloatingButton';
 import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const {
@@ -42,7 +42,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
   const phoneNumber = customerCellphone;
   let codeNumberPhone, numberPhone, numberToShow;
-  const { top } = useSafeAreaInsets();
 
   const handleFocus = () => {
     viewRef?.current?.measure((x: any, y: any) => {
@@ -137,19 +136,8 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
     if (!isFocus && textTareaRef?.current) {
       textTareaRef.current.focus();
-      handleFocusTimer();
     }
   };
-
-  useEffect(() => {
-    if (actions && action === 'accept') {
-      openTimerIOnput();
-    }
-
-    if (actions && action === 'reject') {
-      openTextTareaOInput();
-    }
-  }, []);
 
   const handleAcceptOrReject = () => {
     handleFixTime();
@@ -193,31 +181,36 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   };
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1, marginTop: top }}>
-        <Content ref={scrollViewRef}>
+        style={{ flex: 1, paddingHorizontal: 30, paddingTop: 30 }}>
+        <OIconButton
+          icon={theme.images.general.arrow_left}
+          borderColor={theme.colors.clear}
+          iconStyle={{ width: 20, height: 20 }}
+          style={{
+            maxWidth: 40,
+            height: 35,
+            justifyContent: 'flex-end',
+            marginBottom: 30,
+          }}
+          onClick={() => handleArrowBack()}
+        />
+        <OText
+          size={20}
+          color={theme.colors.textGray}
+          style={{
+            fontFamily: 'Poppins',
+            fontStyle: 'normal',
+          }}
+          weight="600">
+          {action === 'accept'
+            ? `${t(titleAccept?.key, titleAccept?.text)}:`
+            : t(titleReject?.key, titleReject?.text)}
+        </OText>
+        <Content showsVerticalScrollIndicator={false} ref={scrollViewRef}>
           <Header>
-            <OIconButton
-              icon={theme.images.general.arrow_left}
-              borderColor={theme.colors.clear}
-              iconStyle={{ width: 20, height: 20 }}
-              style={{
-                maxWidth: 40,
-                height: 35,
-                justifyContent: 'flex-end',
-                marginBottom: 30,
-              }}
-              onClick={() => handleArrowBack()}
-            />
-
-            <OText size={20} color={theme.colors.textGray} weight="600">
-              {action === 'accept'
-                ? `${t(titleAccept?.key, titleAccept?.text)}:`
-                : t(titleReject?.key, titleReject?.text)}
-            </OText>
-
             {action === 'reject' && (
               <>
                 {!notShowCustomerPhone && (
@@ -332,6 +325,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             onChangeText={handleTime}
             onPressOut={() => handleFixTime()}
             editable={true}
+            autoFocus={actions && action === 'accept'}
             selectionColor={theme.colors.primary}
             placeholderTextColor={theme.colors.textGray}
             color={theme.colors.textGray}
@@ -342,6 +336,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             <Comments ref={viewRef}>
               <OTextarea
                 textTareaRef={textTareaRef}
+                autoFocus={actions && action === 'reject'}
                 onFocus={handleFocus}
                 placeholder={t(
                   'PLEASE_TYPE_YOUR_COMMENTS_IN_HERE',
@@ -355,10 +350,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           )}
         </Content>
 
-        <Action
-          style={{
-            marginBottom: isKeyboardShow ? (Platform.OS === 'ios' ? 0 : 10) : 0,
-          }}>
+        <Action>
           <FloatingButton
             firstButtonClick={() => {
               handleAcceptOrReject();
@@ -369,9 +361,10 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
                 : t('REJECT', 'Reject')
             }
             color={action === 'accept' ? theme.colors.green : theme.colors.red}
+            widthButton={'100%'}
           />
         </Action>
       </KeyboardAvoidingView>
-    </>
+    </SafeAreaView>
   );
 };

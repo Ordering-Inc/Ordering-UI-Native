@@ -12,8 +12,8 @@ import { LogoutButton } from './src/components/LogoutButton';
 import { MessagesOption } from './src/components/MessagesOption';
 import { NotFoundSource } from './src/components/NotFoundSource';
 import { OrderMessage } from './src/components/OrderMessage';
-import { OrderDetails } from './src/components/OrderDetails';
-import { OrderDetailsDelivery } from './src/components/OrderDetailsDelivery';
+import { OrderDetailsBusiness } from './src/components/OrderDetails/Business';
+import { OrderDetailsDelivery } from './src/components/OrderDetails/Delivery';
 import { OrdersOption } from './src/components/OrdersOption';
 import { OrderSummary } from './src/components/OrderSummary';
 import { PhoneInputNumber } from './src/components/PhoneInputNumber';
@@ -38,7 +38,7 @@ import {
   OTextarea,
   OAlert,
   OModal,
-  OLink
+  OLink,
 } from './src/components/shared';
 
 //layouts
@@ -51,26 +51,26 @@ export {
   AcceptOrRejectOrder,
   BusinessController,
   Chat,
+  DriverMap,
   FloatingButton,
   ForgotPasswordForm,
   GoogleMap,
-  DriverMap,
   Home,
   LanguageSelector,
   LoginForm,
   LogoutButton,
   MessagesOption,
+  NotFoundSource,
+  OrderDetailsBusiness,
   OrderDetailsDelivery,
   OrderMessage,
-  NotFoundSource,
-  OrderDetails,
   OrdersOption,
   OrderSummary,
   PhoneInputNumber,
-  SafeAreaContainerLayout,
   PreviousMessages,
   PreviousOrders,
   ProductItemAccordion,
+  SafeAreaContainerLayout,
   SearchBar,
   SignupForm,
   StoresList,
@@ -78,15 +78,15 @@ export {
   UserProfileForm,
   VerifyPhone,
   //OComponents
-  OText,
+  OAlert,
   OButton,
-  OInput,
   OIcon,
   OIconButton,
-  OTextarea,
-  OAlert,
-  OModal,
+  OInput,
   OLink,
+  OModal,
+  OText,
+  OTextarea,
   //layouts
   Container,
   SafeAreaContainer,

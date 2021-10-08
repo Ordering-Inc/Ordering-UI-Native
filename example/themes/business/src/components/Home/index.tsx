@@ -50,10 +50,7 @@ export const Home = (props: any) => {
             </OText>
 
             <OText style={styles.textSubtitle} color={theme.colors.inputChat}>
-              {t(
-                'BUSINESS_WELCOME_SUBTITLE',
-                "Let's start to administrate your business now",
-              )}
+              {t(props.title.key, props.title.value)}
             </OText>
           </View>
 
@@ -80,7 +77,7 @@ export const Home = (props: any) => {
 const styles = StyleSheet.create({
   logo: {
     height: 65,
-    width: 250,
+    width: 300,
   },
   wrapperContent: {
     width: '100%',

@@ -14,6 +14,7 @@ import { OrderDetailsParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
 import { useTheme } from 'styled-components/native';
 import Alert from '../../providers/AlertProvider';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const OrderMessageUI = (props: OrderDetailsParams) => {
   const {
@@ -33,6 +34,7 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
     business: false,
     driver: false,
   });
+  const { top } = useSafeAreaInsets();
   const [{ user }] = useSession();
   const { order, loading } = props.order;
   const [alertState, setAlertState] = useState<{
@@ -110,8 +112,9 @@ export const OrderMessageUI = (props: OrderDetailsParams) => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingHorizontal: 20,
-      height: 45,
+      paddingHorizontal: 30,
+      paddingTop: 30,
+      paddingBottom: 25,
       borderBottomWidth: 2,
       borderBottomColor: '#e6e6e6',
     },

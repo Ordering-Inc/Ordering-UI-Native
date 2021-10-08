@@ -28,15 +28,11 @@ export const TimeField = styled.TextInput`
   opacity: 0;
 `;
 
-export const Header = styled.View`
-  padding-horizontal: 20px;
-`;
+export const Header = styled.View``;
 
-export const Action = styled.View`
-  margin-horizontal: 30px;
-`;
+export const Action = styled.View``;
 
 export const Comments = styled.View`
-  padding-horizontal: 20px;
   margin-bottom: 40px;
+  margin-top: 20px;
 `;
