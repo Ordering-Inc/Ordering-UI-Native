@@ -6,7 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import { FacebookLogin } from '../FacebookLogin'
-
+import { GoogleLogin } from '../GoogleLogin'
 import {
   SignupForm as SignUpController,
   useLanguage,
@@ -513,29 +513,37 @@ const SignupFormUI = (props: SignupParams) => {
           )
         }
 
-        {
-          configs && Object.keys(configs).length > 0 && (
-            (configs?.facebook_login?.value === 'true' ||
-              configs?.facebook_login?.value === '1') &&
-            configs?.facebook_id?.value &&
-            (
-              <ButtonsSection>
-                <OText size={18} color={theme.colors.disabled}>
-                  {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
-                </OText>
-
-                <SocialButtons>
+        {configs && Object.keys(configs).length > 0 && (
+          (((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
+          (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
+          (
+            <ButtonsSection>
+              <OText size={18} mBottom={10} color={theme.colors.disabled}>
+                {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
+              </OText>
+              <SocialButtons>
+                {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
+                  configs?.facebook_id?.value && (
                   <FacebookLogin
                     notificationState={notificationState}
                     handleErrors={(err: any) => showToast(ToastType.Error, err)}
                     handleLoading={(val: boolean) => setIsFBLoading(val)}
                     handleSuccessFacebookLogin={handleSuccessFacebook}
                   />
-                </SocialButtons>
-              </ButtonsSection>
-            )
+                )}
+                {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+                  <GoogleLogin
+                    notificationState={notificationState}
+                    webClientId={configs?.google_login_client_id?.value}
+                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                    handleLoading={(val: boolean) => setIsFBLoading(val)}
+                    handleSuccessGoogleLogin={handleSuccessFacebook}
+                  />
+                )}
+              </SocialButtons>
+            </ButtonsSection>
           )
-        }
+        )}
       </FormSide >
       <OModal
         open={isModalVisible}
