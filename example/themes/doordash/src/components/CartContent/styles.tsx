@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 
 export const CCContainer = styled.View`
-  padding-bottom: 30px;
+  padding-bottom: 50px;
 `
 
 export const CCNotCarts = styled.View`
