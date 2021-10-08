@@ -323,7 +323,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           />
         )}
 
-        {currentOrdersGroup.loading && (
+        {(currentOrdersGroup.loading ||
+          currentOrdersGroup.pagination.total === null) &&
+        (
           <>
             <View>
               {[...Array(5)].map((_, i) => (
