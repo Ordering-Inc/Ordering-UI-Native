@@ -43,10 +43,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     ordersGroup,
     setOrdersGroup,
     orderStatus,
-    orderList,
     loadOrders,
     loadMoreOrders,
-    rememberOrderStatus,
     onNavigationRedirect,
   } = props;
 
@@ -117,6 +115,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const [refreshing] = useState(false);
 
+  const [tagsState, setTags] = useState<any>({ values: [] })
+
   const tagsList = ordersGroup[currentTabSelected].defaultFilter ?? []
   const currentOrdersGroup = ordersGroup[currentTabSelected]
 
@@ -133,23 +133,25 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   };
 
   const handleTagSelected = (tag: any) => {
-    const tags = currentOrdersGroup.currentFilter.includes(tag)
-      ? currentOrdersGroup.currentFilter.filter((t: any) => t === tag)
-      : [...currentOrdersGroup.currentFilter, tag]
+    const tags = tagsState?.values.includes(tag)
+      ? tagsState?.values.filter((t: any) => t !== tag)
+      : [...tagsState?.values, tag]
 
-    setCurrentFilters(tags)
+    setCurrentFilters(!tags.length ? tagsList : tags)
+    setTags({ values: isEqual(tags, tagsList) ? [] : tags })
 
     setOrdersGroup({
       ...ordersGroup,
       [currentTabSelected]: {
         ...ordersGroup[currentTabSelected],
-        currentFilter: tags
+        currentFilter: !tags.length ? tagsList : tags
       }
     })
   }
 
   const handleAllSelect = () => {
     setCurrentFilters(tagsList)
+    setTags({ values: [] })
     setOrdersGroup({
       ...ordersGroup,
       [currentTabSelected]: {
@@ -272,7 +274,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           {tagsList && tagsList.map((key: number) => (
             <Tag
               key={key}
-              onPress={() => handleTagSelected(key)}
+              onPress={() => !currentOrdersGroup.loading && handleTagSelected(key)}
               isSelected={
                 currentOrdersGroup.currentFilter.includes(key) &&
                 !isEqual(currentOrdersGroup.currentFilter, tagsList)
@@ -318,7 +320,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             orders={currentOrdersGroup.orders}
             onNavigationRedirect={onNavigationRedirect}
             getOrderStatus={getOrderStatus}
-            tabsFilter={rememberOrderStatus}
           />
         )}
 
@@ -370,24 +371,24 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             borderColor={theme.colors.primary}
           />
         )}
-      </ScrollView>
 
-      {!currentOrdersGroup.loading &&
-        currentOrdersGroup.error?.length &&
-        !currentOrdersGroup.orders?.length &&
-      (
-        <NotFoundSource
-          content={
-            !orderList.error
-              ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
-              : orderList?.error[0]?.message ||
-                orderList?.error[0] ||
-                t('NETWORK_ERROR', 'Network Error')
-          }
-          image={theme.images.general.notFound}
-          conditioned={false}
-        />
-      )}
+        {!currentOrdersGroup.loading &&
+          (currentOrdersGroup.error?.length ||
+          !currentOrdersGroup.orders?.length) &&
+        (
+          <NotFoundSource
+            content={
+              !currentOrdersGroup.error?.length
+                ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
+                : currentOrdersGroup?.error[0]?.message ||
+                  currentOrdersGroup?.error[0] ||
+                  t('NETWORK_ERROR', 'Network Error')
+            }
+            image={theme.images.general.notFound}
+            conditioned={false}
+          />
+        )}
+      </ScrollView>
     {/* </GestureRecognizer> */}
     </>
   );
