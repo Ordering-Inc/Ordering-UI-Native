@@ -132,7 +132,7 @@ export const ProductOptionsUI = (props: any) => {
   const goToBack = () => navigation?.goBack();
 
   const navBarProps = {
-    style: { backgroundColor: 'transparent', width: orientationState?.dimensions?.width },
+    style: { backgroundColor: 'transparent', width: orientationState?.dimensions?.width, borderBottomWidth: 0 },
     paddingTop: 20,
     title: t('YOUR_DISH', 'Your dish'),
     btnStyle: { backgroundColor: 'transparent' },
@@ -196,7 +196,6 @@ export const ProductOptionsUI = (props: any) => {
       borderRadius: 24,
       marginRight: 15,
     },
-  
     container: {
       flex: 1,
       backgroundColor: '#fff',
