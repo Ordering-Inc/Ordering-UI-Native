@@ -252,19 +252,28 @@ export interface MessagesOptionParams {
   setSortBy?: any;
 }
 export interface OrdersOptionParams {
-  pending?: any;
-  inProgress?: any;
-  completed?: any;
-  cancelled?: any;
-  activeStatus?: number[];
-  setActiveStatus?: (state: number[]) => void;
-  loadOrders?: (
-    tab: string,
-    isNextPage?: boolean,
-    isRefresh?: boolean,
-    activeStatus?: number[] | undefined,
-  ) => void;
-  onNavigationRedirect?: (route: string, params?: any) => void;
+  orderList?: any;
+  activeOrders?: boolean;
+  pagination?: any;
+  setRememberOrderStatus?: any;
+  rememberOrderStatus?: any;
+  titleContent?: string;
+  customArray?: Array<any>;
+  loadMoreOrders?: () => {};
+  loadOrders?: ({}: any) => {};
+  messages?: any;
+  setMessages?: () => {};
+  loadMessages?: () => {};
+  navigation?: any;
+  setUpdateOtherStatus?: any;
+  onNavigationRedirect?: any;
+  orderStatus?: any;
+  tabs?: any;
+  currentTabSelected?: any;
+  setCurrentTabSelected?: any;
+  ordersGroup?: any;
+  setOrdersGroup?: any;
+  setCurrentFilters?: any;
 }
 export interface ActiveOrdersParams {
   orders?: any;
@@ -412,6 +421,8 @@ export interface FloatingButtonParams {
   btnRightValue?: string;
   btnText: string;
   secondBtnText?: string;
+  isPadding?: boolean;
+  widthButton?: number | string;
   firstButtonClick?: any;
   secondButtonClick?: any;
   color?: string;

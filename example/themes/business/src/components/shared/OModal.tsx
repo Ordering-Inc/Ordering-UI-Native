@@ -68,14 +68,16 @@ const OModal = (props: Props): React.ReactElement => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingHorizontal: 20,
-      height: 45,
+      paddingHorizontal: 30,
+      paddingTop: 30,
+      paddingBottom: 25,
       borderBottomWidth: 2,
       borderBottomColor: '#e6e6e6',
     },
     titleGroups: {
       alignItems: 'center',
       flexDirection: 'row',
+      minHeight: 33,
     },
     titleIcons: {
       height: 33,
@@ -87,7 +89,7 @@ const OModal = (props: Props): React.ReactElement => {
       height: 34,
       width: 34,
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
       marginLeft: 15,
       backgroundColor: theme.colors.clear,
       paddingHorizontal: 3,
@@ -104,16 +106,16 @@ const OModal = (props: Props): React.ReactElement => {
     cancelBtn: {
       marginRight: 5,
       zIndex: 10000,
-      height: 30,
-      width: 20,
+      maxWidth: 40,
+      height: 25,
       justifyContent: 'flex-end',
+      alignItems: 'flex-start',
     },
     modalText: {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: '600',
       color: theme.colors.textGray,
-      textAlign: 'center',
       zIndex: 10,
     },
     wrapperIcon: {
@@ -203,7 +205,7 @@ const OModal = (props: Props): React.ReactElement => {
                 <View style={styles.titleGroups}>
                   <OIconButton
                     icon={theme.images.general.arrow_left}
-                    iconStyle={{ width: 23, height: 23 }}
+                    iconStyle={{ width: 20, height: 20 }}
                     borderColor={theme.colors.clear}
                     style={styleCloseButton || styles.cancelBtn}
                     onClick={onClose}
