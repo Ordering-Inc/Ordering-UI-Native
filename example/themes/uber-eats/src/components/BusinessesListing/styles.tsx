@@ -7,6 +7,7 @@ export const BusinessListContainer = styled.View`
 `
 
 export const Divider = styled.View`
+  margin-top: 10px;
   height: 8px;
   background-color: ${(props: any) => props.theme.colors.backgroundGray};
 `

@@ -2972,9 +2972,9 @@ camelize@^1.0.0:
   integrity sha1-FkpUg+Yw+kMh5a8HAg5TGDGyYJs=
 
 caniuse-lite@^1.0.30001264:
-  version "1.0.30001264"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001264.tgz#88f625a60efb6724c7c62ac698bc8dbd9757e55b"
-  integrity sha512-Ftfqqfcs/ePiUmyaySsQ4PUsdcYyXG2rfoBVsk3iY1ahHaJEw65vfb7Suzqm+cEkwwPIv/XWkg27iCpRavH4zA==
+  version "1.0.30001265"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001265.tgz#0613c9e6c922e422792e6fcefdf9a3afeee4f8c3"
+  integrity sha512-YzBnspggWV5hep1m9Z6sZVLOt7vrju8xWooFAgN6BA5qvy98qPAPb7vNUzypFaoh2pb3vlfzbDO8tB57UPGbtw==
 
 capture-exit@^2.0.0:
   version "2.0.0"
@@ -3547,9 +3547,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.857:
-  version "1.3.859"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.859.tgz#4e0abc918e1c22b306ba13b4c3649f78295f5937"
-  integrity sha512-gXRXKNWedfdiKIzwr0Mg/VGCvxXzy+4SuK9hp1BDvfbCwx0O5Ot+2f4CoqQkqEJ3Zj/eAV/GoAFgBVFgkBLXuQ==
+  version "1.3.860"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.860.tgz#d612e54ed75fa524c12af8da3ad8121ebfe2802b"
+  integrity sha512-gWwGZ+Wv4Mou2SJRH6JQzhTPjL5f95SX7n6VkLTQ/Q/INsZLZNQ1vH2GlZjozKyvT0kkFuCmWTwIoCj+/hUDPw==
 
 emittery@^0.7.1:
   version "0.7.2"
@@ -5098,9 +5098,9 @@ istanbul-lib-source-maps@^4.0.0:
     source-map "^0.6.1"
 
 istanbul-reports@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-3.0.2.tgz#d593210e5000683750cb09fc0644e4b6e27fd53b"
-  integrity sha512-9tZvz7AiR3PEDNGiV9vIouQ/EAcqMXFmkcA1CDFTwOB98OZVDL0PH9glHotf5Ugp6GCOTypfzGWI/OqjWNCRUw==
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-3.0.3.tgz#974d682037f6d12b15dc55f9a2a5f8f1ea923831"
+  integrity sha512-0i77ZFLsb9U3DHi22WzmIngVzfoyxxbQcZRqlF3KoKmCJGq9nhFHoGi8FqBztN2rE8w6hURnZghetn0xpkVb6A==
   dependencies:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
@@ -6799,7 +6799,7 @@ ora@^3.4.0:
 
 "ordering-components@github:Ordering-Inc/ordering-components#development":
   version "0.0.1"
-  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/172e3e6812a3ab95232fe44a07e585699ba400fd"
+  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/90cd51be74ffdeb0560ab9d6f49f0c30ee25e37d"
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@react-native-async-storage/async-storage" "^1.13.1"

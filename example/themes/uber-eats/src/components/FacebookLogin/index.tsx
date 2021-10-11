@@ -46,9 +46,10 @@ export const FacebookLogin = (props: any) => {
         }
       } else {
         handleLoading && handleLoading(false)
+        handleErrors && handleErrors(response.content.result)
         logoutWithFacebook()
       }
-    } catch (err) {
+    } catch (err: any) {
       handleLoading && handleLoading(false)
       handleErrors && handleErrors(err.message)
     }
@@ -66,6 +67,9 @@ export const FacebookLogin = (props: any) => {
           AccessToken.getCurrentAccessToken().then((data: any) => {
             const accessToken = data.accessToken.toString();
             handleLoginClick(accessToken)
+          }).catch((err : any) => {
+            handleErrors && handleErrors(err.message)
+            handleLoading && handleLoading(false)
           });
         }
       },
@@ -76,7 +80,10 @@ export const FacebookLogin = (props: any) => {
         handleLoading && handleLoading(false)
         handleErrors && handleErrors(err)
       },
-    );
+    ).catch((err : any) => {
+        handleErrors && handleErrors(err.message)
+        handleLoading && handleLoading(false)
+    });
   };
 
   const onPressButton = auth
@@ -106,11 +113,12 @@ const style = StyleSheet.create({
   fbBtn: {
     position: 'absolute',
     left: 0,
-    marginHorizontal: 10
+    marginHorizontal: 20
   },
   textBtn: {
     fontSize: 14,
     color: '#000000',
-    marginLeft: 20
+    marginLeft: 20,
+    fontWeight: '500'
   }
 })
