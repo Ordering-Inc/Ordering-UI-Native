@@ -9,7 +9,7 @@ const bottomPosition = 20;
 export const Toast: React.FC = () => {
 	const theme = useTheme();
 	// const insets = useSafeAreaInsets();
-	const { toastConfig, hideToast } = useToast();
+	const [, { toastConfig, hideToast }] = useToast();
 	const opacity = React.useRef(new Animated.Value(0)).current;
 
 	const fadeIn = React.useCallback(() => {

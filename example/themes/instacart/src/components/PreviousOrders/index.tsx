@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useLanguage, useUtils } from 'ordering-components/native'
 import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import { OButton, OIcon, OText } from '../shared'
-import { Card, Logo, Information, MyOrderOptions, Status, WrappButton } from './styles'
+import { Card, Logo, Information, MyOrderOptions, Status, WrappButton, Wrapper } from './styles'
 import { PreviousOrdersParams } from '../../types'
 import { useTheme } from 'styled-components/native'
 
@@ -65,10 +65,8 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   }
 
   return (
-    <ScrollView
-      style={{ height: '60%', marginBottom: 30 }}
-    >
-      {orders.map((order: any) => (
+    <Wrapper>
+      {orders.sort((a: any, b: any) => a.delivery_datetime < b.delivery_datetime).map((order: any) => (
         <Card
           key={order.id}
         >
@@ -130,7 +128,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
           />
         </WrappButton>
       )}
-    </ScrollView>
+    </Wrapper>
 
   )
 }

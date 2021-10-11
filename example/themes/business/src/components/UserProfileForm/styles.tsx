@@ -9,7 +9,6 @@ export const UserData = styled.View`
   align-items: center;
   flex-direction: column;
   width: 100%;
-  margin-top: 20px;
 `;
 
 export const EditButton = styled.View`
@@ -23,7 +22,6 @@ export const EnabledStatusDriver = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
 `;
 
 export const Actions = styled.View`

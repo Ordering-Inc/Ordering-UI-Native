@@ -113,6 +113,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 														<Details>
 															<OText size={12} color={theme.colors.textPrimary}>{parsePrice(upsellingProducts.products[idx - 1].price)}</OText>
 															<OText size={10} numberOfLines={2} ellipsizeMode='tail'>{upsellingProducts.products[idx - 1].name}</OText>
+															<OText size={8} numberOfLines={2} ellipsizeMode='tail'>{upsellingProducts.products[idx - 1]?.description}</OText>
 														</Details>
 														<AddButton onPress={() => handleFormProduct(upsellingProducts.products[idx - 1])}>
 															<OIcon src={theme.images.general.plus_circle} width={16} />
@@ -127,6 +128,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 														<Details>
 															<OText size={12} color={theme.colors.textPrimary}>{parsePrice(upsellingProducts.products[idx].price)}</OText>
 															<OText size={10} numberOfLines={2} ellipsizeMode='tail'>{upsellingProducts.products[idx].name}</OText>
+															<OText size={8} numberOfLines={2} ellipsizeMode='tail'>{upsellingProducts.products[idx]?.description}</OText>
 														</Details>
 														<AddButton onPress={() => handleFormProduct(upsellingProducts.products[idx])}>
 															<OIcon src={theme.images.general.plus_circle} width={16} />
@@ -143,8 +145,9 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 															style={styles.imageStyle}
 														/>
 														<Details>
-															<OText size={12} numberOfLines={1} ellipsizeMode='tail'>{upsellingProducts.products[upsellingProducts.products.length - 1].name}</OText>
-															<OText color={theme.colors.primary} weight='bold'>{parsePrice(upsellingProducts.products[upsellingProducts.products.length - 1].price)}</OText>
+															<OText size={12} color={theme.colors.textPrimary}>{parsePrice(upsellingProducts.products[upsellingProducts.products.length - 1].price)}</OText>
+															<OText size={10} numberOfLines={2} ellipsizeMode='tail'>{upsellingProducts.products[upsellingProducts.products.length - 1].name}</OText>
+															<OText size={8} numberOfLines={2} ellipsizeMode='tail'>{upsellingProducts.products[upsellingProducts.products.length - 1]?.description}</OText>
 														</Details>
 														<AddButton onPress={() => handleFormProduct(upsellingProducts.products[upsellingProducts.products.length - 1])}>
 															<OIcon src={theme.images.general.plus_circle} width={16} />

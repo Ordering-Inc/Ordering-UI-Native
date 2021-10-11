@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { View, StyleSheet, ScrollView, Platform, PanResponder, I18nManager, TouchableOpacity } from 'react-native'
 import {
@@ -42,6 +42,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [{ parseDate }] = useUtils()
 	const [, { showToast }] = useToast()
 
+	const [businesses, setBusinesses] = useState(businessesList?.businesses || []);
+
 	const theme = useTheme();
 
 	const styles = StyleSheet.create({
@@ -75,17 +77,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		}
 	})
 
-	// const timerId = useRef<any>(false)
-	// const panResponder = useRef(
-	//   PanResponder.create({
-	//     onMoveShouldSetPanResponder: (e, gestureState) => {
-	//       const {dx, dy} = gestureState;
-	//       resetInactivityTimeout()
-	//       return (Math.abs(dx) > 20) || (Math.abs(dy) > 20);
-	//     },
-	//   })
-	// ).current
-
 	const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
 	const handleScroll = ({ nativeEvent }: any) => {
@@ -118,23 +109,34 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		}
 	]
 
-	const handleFilterBy = (value: string) => {
-		console.log(value);
+	const handleSortBy = (value: string) => {
+		if (businessesList?.businesses.length == 0) return;
+
+		const tmp = businessesList.businesses.sort((a: any, b: any) => {
+			if (value == sorts[0].value) {
+				return a.distance > b.distance ? 1 : -1
+			} else if (value == sorts[1].value) {
+				return a.reviews.total > b.reviews.total ? 1 : -1
+			} else if (value == sorts[2].value) {
+				return a.id > b.id ? 1 : -1
+			} else if (value == sorts[3].value) {
+				return a.name > b.name ? 1 : -1
+			} else {
+				return 1;
+			}
+		});
+		console.log(tmp.length)
+		setBusinesses([...tmp]);
 	}
 
-	// const resetInactivityTimeout = () => {
-	//   clearTimeout(timerId.current)
-	//   timerId.current = setInterval(() => {
-	//     getBusinesses(true)
-	//   }, 600000)
-	// }
-
-	// useEffect(() => {
-	//   resetInactivityTimeout()
-	// }, [])
+	useEffect(() => {
+		if (!businessesList.loading && businessesList?.businesses.length > 0) {
+			setBusinesses(businessesList.businesses);
+		}
+	}, [businessesList])
 
 	return (
-		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)}>
+		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} scrollEventThrottle={50}>
 			<HeaderCont>
 				{!auth && (
 					<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()}>
@@ -156,26 +158,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				</AddressInput>
 			</HeaderCont>
 			<View style={{ height: 1, backgroundColor: theme.colors.border, marginHorizontal: -40 }} />
-			{/* {auth && (
-				<WelcomeTitle>
-					<View style={styles.welcome}>
-						<OText style={{ fontWeight: 'bold' }} size={28} >
-							{t('WELCOME_TITLE_APP', 'Hello there')}
-						</OText>
-						<View style={{ maxWidth: '65%' }}>
-							<OText
-								style={{ fontWeight: 'bold' }}
-								size={28}
-								color={theme.colors.primary}
-								numberOfLines={1}
-								ellipsizeMode='tail'
-							>
-								{I18nManager.isRTL ? `${user?.name}, ` : `, ${user?.name}`}
-							</OText>
-						</View>
-					</View>
-				</WelcomeTitle>
-			)} */}
 			{!auth && (
 				<Search>
 					<SearchBar
@@ -190,20 +172,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					/>
 				</Search>
 			)}
-			{/* <OrderControlContainer>
-				<View style={styles.wrapperOrderOptions}>
-					<OrderTypeSelector configTypes={configTypes} />
-					<WrapMomentOption
-						onPress={() => navigation.navigate('MomentOption')}
-					>
-						<OText size={14} numberOfLines={1} ellipsizeMode='tail'>
-							{orderState.options?.moment
-								? parseDate(orderState.options?.moment, { outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm' })
-								: t('ASAP_ABBREVIATION', 'ASAP')}
-						</OText>
-					</WrapMomentOption>
-				</View>
-			</OrderControlContainer> */}
 			<View>
 				<BusinessTypeFilter
 					images={props.images}
@@ -213,11 +181,11 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				/>
 				<BusinessesSortBy
 					items={sorts}
-					onHandleFilter={handleFilterBy}
+					onHandleFilter={handleSortBy}
 				/>
 				<FeaturedBussiCont horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 40 }}>
 					{
-						businessesList.businesses?.map((business: any) => business?.featured && (
+						businesses?.map((business: any) => business?.featured && (
 							<BusinessController
 								key={business.id}
 								business={business}
@@ -231,14 +199,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				</FeaturedBussiCont>
 			</View>
 			{
-				!businessesList.loading && businessesList.businesses.length === 0 && (
+				!businessesList.loading && businesses.length === 0 && (
 					<NotFoundSource
 						content={t('NOT_FOUND_BUSINESSES', 'No businesses to delivery / pick up at this address, please change filters or change address.')}
 					/>
 				)
 			}
 			{
-				businessesList.businesses?.map((business: any) => !business?.featured && (
+				businesses?.map((business: any) => !business?.featured && (
 					<BusinessController
 						key={business.id}
 						business={business}

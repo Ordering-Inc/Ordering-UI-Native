@@ -22,6 +22,7 @@ export const ProductHeader = styled.ImageBackground`
   width: 100%;
   position: relative;
   max-height: ${w}px;
+  height: ${w}px;
   min-height: 300px;
   z-index: 0;
 `

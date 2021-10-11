@@ -97,7 +97,7 @@ const CheckoutUI = (props: any) => {
 		}
 	})
 
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
 	const [{ user }] = useSession();
 	const [{ configs }] = useConfig();
@@ -515,7 +515,7 @@ export const Checkout = (props: any) => {
 		onNavigationRedirect,
 	} = props
 
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
 	const [{ token }] = useSession();
 	const [ordering] = useApi();

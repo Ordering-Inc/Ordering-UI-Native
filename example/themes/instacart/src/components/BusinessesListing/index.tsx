@@ -58,7 +58,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			width: '100%',
 			display: 'flex',
 			flexDirection: 'row',
-			justifyContent: 'space-between',
 			alignItems: 'center',
 			marginBottom: 10,
 			zIndex: 100
@@ -109,36 +108,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			{auth && (
 				<WelcomeTitle>
 					<View style={{...styles.welcome, marginTop: auth ? 17 : 0}}>
-						<OText style={{ fontWeight: '600', alignSelf: 'center' }} size={20} lineHeight={30} color={theme.colors.textPrimary} >
+						<OText style={{ fontWeight: Platform.OS == 'ios' ? '600' : 'bold', textAlign: 'center', width: '100%', alignSelf: 'center' }} size={20} lineHeight={30} color={theme.colors.textPrimary} >
 							{t('SELECT_A_STORE_TO_SHOP', 'Select a store to shop')}
 						</OText>
-						{/* <View style={{ maxWidth: '65%' }}>
-              <OText
-                style={{ fontWeight: 'bold' }}
-                size={28}
-                color={theme.colors.primary}
-                numberOfLines={1}
-                ellipsizeMode='tail'
-              >
-                {I18nManager.isRTL ? `${user?.name}, ` : `, ${user?.name}`}
-              </OText>
-            </View> */}
 					</View>
 				</WelcomeTitle>
 			)}
-			{/* <Search>
-        <SearchBar
-          onSearch={handleChangeSearch}
-          searchValue={searchValue}
-          lazyLoad
-          isCancelXButtonShow={!!searchValue}
-          borderStyle={styles.borderStyle}
-          onCancel={() => handleChangeSearch('')}
-          placeholder={t('FIND_BUSINESS', 'Find a Business')}
-        />
-      </Search> */}
-			<OrderControlContainer>
-
+			<OrderControlContainer style={{paddingHorizontal: 12}}>
 				<AddressInput
 					onPress={() => auth
 						? navigation.navigate('AddressList', { isFromBusinesses: true })

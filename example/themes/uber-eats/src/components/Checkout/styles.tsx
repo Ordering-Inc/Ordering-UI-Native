@@ -66,3 +66,7 @@ export const ChErrors = styled.View`
   align-items: center;
   margin-bottom: 20px;
 `
+export const PayActionCont = styled.TouchableOpacity`
+	flex-direction: row;
+	align-items: center;
+`;

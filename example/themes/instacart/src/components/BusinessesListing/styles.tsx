@@ -35,7 +35,6 @@ export const OrderControlContainer = styled.View`
   width: 100%;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   z-index: 10;
   padding-bottom: 20px;
   flex: 1;
@@ -48,4 +47,6 @@ export const WrapMomentOption = styled.TouchableOpacity`
   max-width: 240px;
   flex-direction: row;
   align-items: center;
+  margin-start: 15px;
+  min-height: 28px;
 `

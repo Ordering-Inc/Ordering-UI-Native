@@ -64,6 +64,44 @@ const ProfileUI = (props: ProfileParams) => {
     },
   });
   const [phoneUpdate, setPhoneUpdate] = useState(false);
+  const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null);
+  const [phoneToShow, setPhoneToShow] = useState('');
+
+  useEffect(() => {
+    if (phoneInputData.phone.cellphone) {
+      const codeNumberPhone = phoneInputData.phone.cellphone.slice(0, 3);
+      const numberPhone = phoneInputData.phone.cellphone.slice(
+        3,
+        phoneInputData.phone.cellphone?.length,
+      );
+      setPhoneToShow(`(${codeNumberPhone}) ${numberPhone}`);
+    }
+  }, [phoneInputData.phone.cellphone]);
+
+  const setUserCellPhone = (isEdit = false) => {
+    if (userPhoneNumber && !userPhoneNumber.includes('null') && !isEdit) {
+      setUserPhoneNumber(userPhoneNumber);
+      return;
+    }
+    if (user?.cellphone) {
+      let phone = null;
+      if (user?.country_phone_code) {
+        phone = `+${user?.country_phone_code} ${user?.cellphone}`;
+      } else {
+        phone = user?.cellphone;
+      }
+      setUserPhoneNumber(phone);
+      setPhoneInputData({
+        ...phoneInputData,
+        phone: {
+          country_phone_code: user?.country_phone_code || null,
+          cellphone: user?.cellphone || null,
+        },
+      });
+      return;
+    }
+    setUserPhoneNumber(user?.cellphone || '');
+  };
 
   const handleImagePicker = () => {
     launchImageLibrary(
@@ -119,6 +157,16 @@ const ProfileUI = (props: ProfileParams) => {
       }
     }
   }, [userState?.loadingDriver]);
+
+  useEffect(() => {
+    if ((user || !isEdit) && !formState?.loading) {
+      setUserCellPhone();
+      if (!isEdit && !formState?.loading) {
+        cleanFormState && cleanFormState({ changes: {} });
+        setUserCellPhone(true);
+      }
+    }
+  }, [user, isEdit]);
 
   useEffect(() => {
     if (formState.result.result && !formState.loading) {
@@ -295,12 +343,17 @@ const ProfileUI = (props: ProfileParams) => {
 
           {user?.level === 4 && (
             <EnabledStatusDriver>
-              <OText style={{ ...styles.label, paddingHorizontal: 0 }}>
-                {t(
-                  'AVAILABLE_TO_RECEIVE_ORDERS',
-                  'Available to receive orders',
-                )}
-              </OText>
+              <View style={{ flex: 1 }}>
+                <OText
+                  numberOfLines={2}
+                  adjustsFontSizeToFit
+                  style={{ ...styles.label, paddingHorizontal: 0 }}>
+                  {t(
+                    'AVAILABLE_TO_RECEIVE_ORDERS',
+                    'Available to receive orders',
+                  )}
+                </OText>
+              </View>
 
               {userState.loadingDriver ? (
                 <ActivityIndicator size="small" color={theme.colors.primary} />
@@ -373,6 +426,20 @@ const ProfileUI = (props: ProfileParams) => {
                     <OInput
                       isSecured={true}
                       placeholder={'·············'}
+                      placeholderTextColor={theme.colors.textGray}
+                      style={styles.inputStyle}
+                      isDisabled={true}
+                      selectionColor={theme.colors.primary}
+                      color={theme.colors.textGray}
+                    />
+
+                    <OText style={styles.label}>{t('PHONE', 'Phone')}</OText>
+
+                    <OInput
+                      isSecured={true}
+                      placeholder={
+                        phoneToShow || `${t('NOT_PHONE', 'Not Phone')}`
+                      }
                       placeholderTextColor={theme.colors.textGray}
                       style={styles.inputStyle}
                       isDisabled={true}

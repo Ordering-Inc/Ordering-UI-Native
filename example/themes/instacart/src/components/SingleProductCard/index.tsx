@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useLanguage, useConfig, useOrder, useUtils } from 'ordering-components/native'
 import { SingleProductCardParams } from '../../types'
 import {
@@ -66,6 +66,10 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
   maxCartProductInventory = !isNaN(maxCartProductInventory) ? maxCartProductInventory : maxCartProductConfig
 
   const maxProductQuantity = Math.min(maxCartProductConfig, maxCartProductInventory)
+
+  useEffect(() => {
+    
+  }, [product]);
 
   return (
     <CardContainer style={[styles.container, (isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle]}
