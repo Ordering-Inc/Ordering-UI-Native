@@ -22,7 +22,7 @@ import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
 import { useTheme } from 'styled-components/native';
 import { OrderSummary } from '../OrderSummary';
-import { I18nManager, TouchableOpacity, View } from 'react-native';
+import { I18nManager, Platform, TouchableOpacity, View } from 'react-native';
 import { FloatingButton } from '../FloatingButton';
 
 const CartSingleUI = (props: any) => {
@@ -110,7 +110,7 @@ const CartSingleUI = (props: any) => {
 				<TouchableOpacity onPress={() => navigation.canGoBack() && navigation.goBack()}>
 					<OIcon src={theme.images.general.arrow_left} width={16} color={theme.colors.primary} />
 				</TouchableOpacity>
-				<OText size={14} lineHeight={21} weight={'600'} style={{ textAlign: 'center', flexGrow: 1 }}>{t('PERSONAL_CART', 'Personal cart')}</OText>
+				<OText size={14} lineHeight={21} weight={Platform.OS === 'android' ? 'bold' : '600'} style={{ textAlign: 'center', flexGrow: 1 }}>{t('PERSONAL_CART', 'Personal cart')}</OText>
 			</HeaderNav>
 			<ProductsScroll showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 40, paddingBottom: 20 }}>
 				<BusinessInfoView>
@@ -120,7 +120,7 @@ const CartSingleUI = (props: any) => {
 							{curCart?.business?.name}
 						</OText>
 					</View>
-					<OText size={14} lineHeight={21} weight={'600'}>{parsePrice(curCart?.business?.minimum)}</OText>
+					<OText size={14} lineHeight={21} weight={Platform.OS == 'android' ? 'bold' : '600'}>{parsePrice(curCart?.business?.minimum)}</OText>
 				</BusinessInfoView>
 				<OrderSummary
 					cart={curCart}

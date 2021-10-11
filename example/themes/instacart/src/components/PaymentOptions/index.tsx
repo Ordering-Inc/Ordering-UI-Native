@@ -19,10 +19,6 @@ import {
 import { PaymentOptionCash } from '../PaymentOptionCash';
 import { StripeElementsForm } from '../StripeElementsForm';
 import { StripeCardsList } from '../StripeCardsList';
-// import { PaymentOptionStripe } from '../PaymentOptionStripe';
-// import { StripeRedirectForm } from '../StripeRedirectForm';
-// import { PaymentOptionPaypal } from '../PaymentOptionPaypal'
-// import { NotFoundSource } from '../NotFoundSource'
 
 import { OText, OIcon, OModal, OButton, OBottomPopup } from '../shared';
 
@@ -38,12 +34,6 @@ import { useTheme } from 'styled-components/native';
 import { useWindowDimensions } from 'react-native';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
-// const stripeRedirectOptions = [
-//   { name: 'Bancontact', value: 'bancontact' },
-//   { name: 'Alipay', value: 'alipay' },
-//   { name: 'Giropay', value: 'giropay' },
-//   { name: 'iDEAL', value: 'ideal' }
-// ]
 
 const PaymentOptionsUI = (props: any) => {
 	const {
@@ -149,6 +139,10 @@ const PaymentOptionsUI = (props: any) => {
 			setPaymethodData && setPaymethodData(props.paySelected?.data)
 		}
 	}, [props.paySelected])
+
+	useEffect(() => {
+		console.log(JSON.stringify(addCardOpen));
+	}, [addCardOpen])
 
 	const renderPaymethods = ({ item }: any) => {
 		return (
@@ -303,29 +297,29 @@ const PaymentOptionsUI = (props: any) => {
 						imgRightSrc={null}
 					/>
 				</View>
-			</OBottomPopup>
 
-			<OModal
-				entireModal
-				title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-				open={addCardOpen.stripe}
-				onClose={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
-			>
-				<KeyboardAvoidingView
-					behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-					keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
-					enabled={Platform.OS === 'ios' ? true : false}
+				<OModal
+					entireModal
+					title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
+					open={addCardOpen.stripe}
+					onClose={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
 				>
-					<StripeElementsForm
-						toSave
-						businessId={props.businessId}
-						publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
-						requirements={props.clientSecret}
-						onSelectCard={handlePaymethodDataChange}
-						onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
-					/>
-				</KeyboardAvoidingView>
-			</OModal>
+					<KeyboardAvoidingView
+						behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+						keyboardVerticalOffset={Platform.OS == 'ios' ? 0 : 0}
+						enabled={Platform.OS === 'ios' ? true : false}
+					>
+						<StripeElementsForm
+							toSave
+							businessId={props.businessId}
+							publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
+							requirements={props.clientSecret}
+							onSelectCard={handlePaymethodDataChange}
+							onCancel={() => setAddCardOpen({ ...addCardOpen, stripe: false })}
+						/>
+					</KeyboardAvoidingView>
+				</OModal>
+			</OBottomPopup>
 
 			{/* Stripe direct */}
 			<OModal
@@ -395,49 +389,6 @@ const PaymentOptionsUI = (props: any) => {
 				</KeyboardAvoidingView>
 			</OModal>
 
-			{/* Stripe Redirect */}
-			{/* <OModal
-        isNotDecoration
-        open={['stripe_redirect'].includes(paymethodSelected?.gateway) && !paymethodData.type}
-        title={t('STRIPE_REDIRECT', 'Stripe Redirect')}
-        onClose={() => handlePaymethodClick(null)}
-      >
-        <StripeRedirectForm
-          businessId={props.businessId}
-          currency={props.currency}
-          // paymethods={flatArray([stripeRedirectValues, stripeRedirectOptions])}
-          publicKey={paymethodSelected?.credentials?.publishable}
-          paymethods={stripeRedirectOptions}
-          handleStripeRedirect={handlePaymethodDataChange}
-        />
-      </OModal> */}
-
-			{/* Paypal */}
-			{/* <Modal
-        className='modal-info'
-        open={paymethodSelected?.gateway === 'paypal' && !paymethodData.id}
-        onClose={() => handlePaymethodClick(null)}
-        title={t('PAY_WITH_PAYPAL', 'Pay with PayPal')}
-      >
-        {paymethodSelected?.gateway === 'paypal' && (
-          <PaymentOptionPaypal
-            clientId={paymethodSelected?.credentials?.client_id}
-            body={{
-              paymethod_id: paymethodSelected.id,
-              amount: cart.total,
-              delivery_zone_id: cart.delivery_zone_id,
-              cartUuid: cart.uuid
-            }}
-            btnStyle={paypalBtnStyle}
-            noAuthMessage={
-              !token
-                ? t('NEED_LOGIN_TO_USE', 'Sorry, you need to login to use this method')
-                : null
-            }
-            handlerChangePaypal={(uuid) => onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid })}
-          />
-        )}
-      </Modal> */}
 			<OModal
 				open={showGateway.open && paymethodSelected.gateway === 'paypal'}
 				onCancel={() => setShowGateway({ open: false, closedByUser: true })}
