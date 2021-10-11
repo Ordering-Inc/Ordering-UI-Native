@@ -62,6 +62,7 @@ const NavBar = (props: Props) => {
 		<Wrapper style={{ paddingTop: props.paddingTop, ...{ flexDirection: props.isVertical ? 'column' : 'row', alignItems: props.isVertical ? 'flex-start' : 'center' }, ...props.style }}>
 			<OButton
 				imgLeftSrc={props.leftImg || theme.images.general.arrow_left}
+				imgLeftStyle={{width: 18}}
 				imgRightSrc={null}
 				style={{ ...btnBackArrow, ...props.btnStyle, ...props.isVertical ? (I18nManager.isRTL ? { paddingRight: 0 } : { paddingLeft: 0 }) : {} }}
 				onClick={props?.onActionLeft}
@@ -81,7 +82,7 @@ const NavBar = (props: Props) => {
 					)
 					: null
 				}
-				<TitleWrapper style={{ ...{ paddingStart: props.isVertical ? 0 : 10 }, ...props.titleWrapStyle }}>
+				<TitleWrapper style={{ ...{ paddingHorizontal: props.isVertical ? 0 : 10 }, ...props.titleWrapStyle }}>
 					<OText
 						size={24}
 						lineHeight={36}
@@ -92,6 +93,7 @@ const NavBar = (props: Props) => {
 								marginRight: props.showCall ? 0 : 40,
 								color: props.titleColor || theme.colors.textNormal,
 								paddingHorizontal: props.titleAlign == 'left' ? 12 : 0,
+								width: '100%',
 								...props.titleStyle,
 							}
 						}

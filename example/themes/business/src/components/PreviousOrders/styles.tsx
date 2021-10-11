@@ -3,6 +3,8 @@ import styled from 'styled-components/native';
 export const Card = styled.View`
   flex: 1;
   flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
 `;
 
 export const Logo = styled.View`
@@ -11,11 +13,10 @@ export const Logo = styled.View`
 `;
 
 export const Information = styled.View`
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: flex-start;
   margin-horizontal: 10px;
   flex: 1;
-  min-height: 64px;
+  max-height: 70px;
 `;
 
 export const MyOrderOptions = styled.View`

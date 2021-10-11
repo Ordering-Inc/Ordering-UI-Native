@@ -22,6 +22,7 @@ import { HelpAccountAndPayment } from './src/components/HelpAccountAndPayment';
 import { HelpGuide } from './src/components/HelpGuide';
 import { HelpOrder } from './src/components/HelpOrder';
 import { NotFoundSource } from './src/components/NotFoundSource';
+import { OrderTypeSelector } from './src/components/OrderTypeSelector';
 
 import { Toast } from './src/components/shared/OToast';
 import {
@@ -74,6 +75,7 @@ export {
 	HelpGuide,
 	HelpOrder,
 	NotFoundSource,
+	OrderTypeSelector,
 
 	// OComponents
 	Toast,

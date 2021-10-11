@@ -75,13 +75,13 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 
 	useEffect(() => {
 		if (!isCustomMode) {
-			if (upsellingProducts?.products?.length && !upsellingProducts.loading) {
+			if (!upsellingProducts.loading) {
 				setCanOpenUpselling && setCanOpenUpselling(true)
 			}
-			if ((!upsellingProducts?.products?.length && !upsellingProducts.loading && !canOpenUpselling && openUpselling) ||
-				(!upsellingProducts?.products?.length && !upsellingProducts.loading && openUpselling)) {
-				handleUpsellingPage && handleUpsellingPage()
-			}
+			// if ((!upsellingProducts?.products?.length && !upsellingProducts.loading && !canOpenUpselling && openUpselling) ||
+			// 	(!upsellingProducts?.products?.length && !upsellingProducts.loading && openUpselling)) {
+			// 	handleUpsellingPage && handleUpsellingPage()
+			// }
 		}
 	}, [upsellingProducts.loading, upsellingProducts?.products.length])
 
@@ -142,7 +142,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 				<UpsellingLayout />
 			) : (
 				<>
-					{!canOpenUpselling || upsellingProducts?.products?.length === 0 ? null : (
+					{!canOpenUpselling ? null : (
 						<>
 							{!modalIsOpen && (
 								<OBottomPopup
@@ -168,8 +168,12 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 										</View>
 										<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40, marginBottom: 23 }} />
 										<View style={{ paddingHorizontal: 40, overflow: 'visible' }}>
-											<OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
-											<UpsellingLayout />
+											{upsellingProducts?.products?.length > 0 && 
+												<>
+													<OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
+													<UpsellingLayout />
+												</>
+											}
 											<CloseUpselling>
 												<OButton
 													imgRightSrc=''

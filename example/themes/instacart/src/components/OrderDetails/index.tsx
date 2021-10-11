@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager } from 'react-native'
+import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager, Image } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -268,7 +268,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 						<DivideView />
 
 						<OrderCustomer style={{overflow: 'visible', zIndex: 9999}}>
-							<View style={{ flexDirection: 'row', paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: theme.colors.border }}>
+							<View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: theme.colors.border }}>
 								<OIcon
 									src={theme.images.general.clock}
 									width={16}
@@ -290,6 +290,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 									width={16}
 									height={16}
 									color={theme.colors.textSecondary}
+									style={{marginTop: 2}}
 								/>
 								<InfoBlock>
 									<OText size={14}>{order?.customer?.name} {order?.customer?.lastname}</OText>
@@ -302,10 +303,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 									<Customer>
 										<OIcon
 											url={order?.driver?.photo || theme.images.dummies.driverPhoto}
-											width={34}
-											height={34}
-											color={theme.colors.textSecondary}
-											style={{ borderRadius: 20 }}
+											style={{width: 36, height: 36, borderRadius: 7.6, marginTop: 2}}
 										/>
 										<InfoBlock style={{ marginStart: 7, flex: 1 }}>
 											<OText size={14}>{order?.driver?.name} {order?.driver?.lastname}</OText>

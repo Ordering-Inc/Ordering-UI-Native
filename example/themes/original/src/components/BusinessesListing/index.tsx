@@ -36,7 +36,7 @@ import { BusinessController } from '../BusinessController';
 import { OrderTypeSelector } from '../OrderTypeSelector';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BusinessFeaturedController } from '../BusinessFeaturedController';
-import { HighestRatedBusinesses } from '../HighestRatedBusinesses';
+import { getTypesText } from '../../utils';
 
 const PIXELS_TO_SCROLL = 1000;
 
@@ -178,7 +178,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				</Search>
 				<OrderControlContainer>
 					<View style={styles.wrapperOrderOptions}>
-						<OrderTypeSelector configTypes={configTypes} />
+						<WrapMomentOption onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
+							<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(orderState?.options?.type || 1), 'Delivery')}</OText>
+							<OIcon
+								src={theme.images.general.arrow_down}
+								width={10}
+								style={{ marginStart: 8 }}
+							/>
+						</WrapMomentOption>
 						<WrapMomentOption
 							onPress={() => navigation.navigate('MomentOption')}>
 							<OText
@@ -244,11 +251,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</ScrollView>
 				</FeaturedWrapper>
 			)}
-			
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-			<HighestRatedBusinesses onBusinessClick={handleBusinessClick} />
-			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-	
 			<ListWrapper>
 				<BusinessTypeFilter
 					images={props.images}

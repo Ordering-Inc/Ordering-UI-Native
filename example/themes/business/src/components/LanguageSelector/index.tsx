@@ -60,8 +60,6 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
           withCountryNameButton
           countryCodes={countryCodes}
           //@ts-ignore
-          closeButtonImageStyle={{ width: 15, height: 15 }}
-          closeButtonImage={theme.images.general.close}
           renderFlagButton={() => (
             <TouchableOpacity onPress={() => setCountryModalVisible(true)}>
               <LanguageItem justifyContent="space-between">
@@ -79,7 +77,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
                 <OIcon
                   src={theme?.images?.general?.chevronDown}
-                  color={theme.colors.backArrow}
+
                   width={20}
                   height={20}
                 />

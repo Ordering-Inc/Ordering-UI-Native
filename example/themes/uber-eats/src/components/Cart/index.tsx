@@ -83,6 +83,7 @@ const CartUI = (props: any) => {
   const handleUpsellingPage = () => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
+    handleCartOpen && handleCartOpen(false)
     props.onNavigationRedirect('CheckoutNavigator', {
       screen: 'CheckoutPage',
       cartUuid: cart?.uuid,

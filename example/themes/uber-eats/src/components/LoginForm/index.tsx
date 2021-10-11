@@ -222,7 +222,7 @@ const LoginFormUI = (props: LoginParams) => {
                 <Pressable onPress={() => handleChangeTab('email')}>
                   <OTab>
                     <OText size={16} numberOfLines={2} color={loginTab === 'email' ? theme.colors.primary : theme.colors.disabled}>
-                      {t('LOGIN_BY_EMAIL', 'Login by Email')}
+                      {t('BY_EMAIL', 'by Email')}
                     </OText>
                   </OTab>
                 </Pressable>
@@ -231,7 +231,7 @@ const LoginFormUI = (props: LoginParams) => {
                 <Pressable onPress={() => handleChangeTab('cellphone')}>
                   <OTab>
                     <OText size={16} color={loginTab === 'cellphone' ? theme.colors.primary : theme.colors.disabled}>
-                      {t('LOGIN_BY_PHONE', 'Login by Phone')}
+                      {t('BY_PHONE', 'by Phone')}
                     </OText>
                   </OTab>
                 </Pressable>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View, SafeAreaView } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig, useUtils } from 'ordering-components/native';
@@ -37,7 +37,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   const [{ optimizeImage }] = useUtils();
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / height;
-  const [isMapReady, setIsMapReady] = useState(false)
+  const [isMapReady, setIsMapReady] = useState(false);
   const [markerPosition, setMarkerPosition] = useState({
     latitude: locations ? locations[locations.length - 1].lat : location.lat,
     longitude: locations ? locations[locations.length - 1].lng : location.lng,
@@ -217,9 +217,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   }, [saveLocation]);
 
   useEffect(() => {
-      if (mapRef.current && locations && isMapReady) {
-        fitAllMarkers();
-      }
+    if (mapRef.current && locations && isMapReady) {
+      fitAllMarkers();
+    }
   }, [isMapReady]);
 
   const styles = StyleSheet.create({
@@ -252,7 +252,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   });
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, position: 'relative' }}>
         <MapView
           provider={PROVIDER_GOOGLE}
@@ -269,7 +269,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
           cacheEnabled
           moveOnMarkerPress
           ref={mapRef}
-          onMapReady = {() => setIsMapReady(true)}>
+          onMapReady={() => setIsMapReady(true)}>
           {locations ? (
             <>
               {MARKERS &&
@@ -330,6 +330,8 @@ export const GoogleMap = (props: GoogleMapsParams) => {
           secondButton={false}
           firstColorCustom={theme.colors.red}
           secondColorCustom={theme.colors.green}
+          widthButton={'100%'}
+          isPadding
         />
       )}
       <View style={styles.buttonContainer}>
@@ -340,6 +342,6 @@ export const GoogleMap = (props: GoogleMapsParams) => {
           onClick={() => handleArrowBack()}
         />
       </View>
-    </>
+    </SafeAreaView>
   );
 };

@@ -10,7 +10,7 @@ import {
   WrapperNotFound
 } from './styles'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import { ScrollView } from 'react-native-gesture-handler'
 
@@ -52,7 +52,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         !category.id && (
           featured && categoryState?.products?.find((product: any) => product.featured) && (
             <>
-              <OText style={theme.labels.subtitle} mBottom={10}>{t('FEATURED', 'Featured')}</OText>
+              <OText style={{...theme.labels.subtitle, fontWeight: Platform.OS == 'ios' ? '600' : 'bold'}} mBottom={10}>{t('FEATURED', 'Featured')}</OText>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {categoryState.products?.map((product: any) => product.featured && (
                   <SingleProductCard
@@ -77,7 +77,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               {
                 products.length > 0 && (
                   <>
-                    <OText style={theme.labels.subtitle} mBottom={10}>{category.name}</OText>
+                    <OText style={{...theme.labels.subtitle, fontWeight: Platform.OS === 'ios' ? '600' : 'bold'}} mBottom={10}>{category.name}</OText>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                       {
                         products.map((product: any) => (

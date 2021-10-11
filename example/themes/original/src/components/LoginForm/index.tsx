@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Pressable, StyleSheet, View, Keyboard } from 'react-native';
+import { StyleSheet, View, Keyboard } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber';
@@ -29,6 +29,7 @@ import {
 	OrSeparator,
 	LineSeparator,
 	SkeletonWrapper,
+	TabBtn,
 } from './styles';
 
 import NavBar from '../NavBar';
@@ -38,6 +39,7 @@ import { LoginParams } from '../../types';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { GoogleLogin } from '../GoogleLogin';
 import { AppleLogin } from '../AppleLogin';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const LoginFormUI = (props: LoginParams) => {
 	const {
@@ -58,7 +60,7 @@ const LoginFormUI = (props: LoginParams) => {
 		onNavigationRedirect,
 	} = props;
 
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
 	const [, { login }] = useSession();
@@ -222,13 +224,14 @@ const LoginFormUI = (props: LoginParams) => {
 				paddingTop={0}
 				style={{ flexDirection: 'column', alignItems: 'flex-start' }}
 				titleWrapStyle={{ paddingHorizontal: 0 }}
+				isVertical
 			/>
 			<FormSide>
 				{useLoginByEmail && useLoginByCellphone && (
 					<LoginWith>
 						<OTabs>
 							{useLoginByEmail && (
-								<Pressable onPress={() => handleChangeTab('email')}>
+								<TabBtn onPress={() => handleChangeTab('email')}>
 									<OTab
 										style={{
 											borderBottomColor:
@@ -247,10 +250,10 @@ const LoginFormUI = (props: LoginParams) => {
 											{t('LOGIN_BY_EMAIL', 'by Email')}
 										</OText>
 									</OTab>
-								</Pressable>
+								</TabBtn>
 							)}
 							{useLoginByCellphone && (
-								<Pressable onPress={() => handleChangeTab('cellphone')}>
+								<TabBtn onPress={() => handleChangeTab('cellphone')}>
 									<OTab
 										style={{
 											borderBottomColor:
@@ -269,7 +272,7 @@ const LoginFormUI = (props: LoginParams) => {
 											{t('LOGIN_BY_PHONE', 'by Phone')}
 										</OText>
 									</OTab>
-								</Pressable>
+								</TabBtn>
 							)}
 						</OTabs>
 					</LoginWith>
@@ -384,11 +387,11 @@ const LoginFormUI = (props: LoginParams) => {
 				)}
 
 				{onNavigationRedirect && forgotButtonText && (
-					<Pressable onPress={() => onNavigationRedirect('Forgot')}>
+					<TouchableOpacity onPress={() => onNavigationRedirect('Forgot')}>
 						<OText size={16} mBottom={18}>
 							{forgotButtonText}
 						</OText>
-					</Pressable>
+					</TouchableOpacity>
 				)}
 
 				{useLoginByCellphone &&

@@ -74,4 +74,5 @@ export const InputWrapper = styled.View`
 	height: 40px;
 	max-height: 40px;
 	margin-vertical: 6px;
+  justify-content: space-between;
 `;

@@ -14,11 +14,10 @@ import {
 	useWindowDimensions,
 	View,
 } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { MomentOptionParams } from '../../types';
 import NavBar from '../NavBar';
-import { OIcon, OText } from '../shared';
+import { OButton, OIcon, OText } from '../shared';
 import { Container } from '../../layouts/Container';
 import {
 	HeaderTitle,
@@ -32,6 +31,7 @@ import {
 } from './styles';
 import CalendarPicker from 'react-native-calendar-picker';
 import { TouchableRipple } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const MomentOptionUI = (props: MomentOptionParams) => {
 	const {
@@ -98,8 +98,10 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		isEditing: false,
 	});
 	const { width } = useWindowDimensions();
+	const { bottom } = useSafeAreaInsets();
 
 	const [toggleTime, setToggleTime] = useState(false);
+	const [selectedTime, setSelectedTime] = useState(timeSelected);
 
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
@@ -112,9 +114,9 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		}
 	};
 
-	const handleChangeMoment = (time: any) => {
+	const handleChangeMoment = () => {
 		setMomentState({ isLoading: 1, isEditing: true });
-		handleChangeTime(time);
+		handleChangeTime(selectedTime);
 	};
 
 	const momento = moment(
@@ -171,8 +173,9 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 	};
 
 	return (
+		<>
 		<Container style={{ paddingLeft: 40, paddingRight: 40 }}>
-			<View style={{ paddingBottom: 10 }}>
+			<View style={{ paddingBottom: 90 }}>
 				<NavBar
 					onActionLeft={() => goToBack()}
 					btnStyle={{ paddingLeft: 0 }}
@@ -277,13 +280,13 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 											{hoursList.map((hour: any, i: any) => (
 												<Hour
 													key={i}
-													onPress={() => handleChangeMoment(hour.startTime)}
+													onPress={() => setSelectedTime(hour.startTime)}
 													disabled={orderState.loading}
-													style={{ borderColor: timeSelected === hour.startTime ? theme.colors.primary : theme.colors.border }}
+													style={{ borderColor: selectedTime === hour.startTime ? theme.colors.primary : theme.colors.border }}
 												>
 													<OText
 														color={
-															timeSelected === hour.startTime
+															selectedTime === hour.startTime
 																? theme.colors.primary
 																: theme.colors.textSecondary
 														}>
@@ -309,6 +312,10 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			</View>
 			<Spinner visible={momentState.isLoading === 1} />
 		</Container>
+		<View style={{position: 'absolute', bottom: bottom, paddingBottom: 20, paddingHorizontal: 40, backgroundColor: 'white', width: '100%'}}>
+			<OButton onClick={handleChangeMoment} isDisabled={!selectedTime} text={t('CONTINUE', 'Continue')} style={{borderRadius: 7.6, height: 44, shadowOpacity: 0}} textStyle={{color: 'white', fontSize: 14}} showNextIcon />
+		</View>
+		</>
 	);
 };
 
