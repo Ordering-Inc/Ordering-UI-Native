@@ -84,7 +84,7 @@ const ProfileListUI = (props: ProfileParams) => {
 
 	const [{ user }] = useSession();
 	const [, t] = useLanguage();
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const { errors } = useForm();
 
 	const { height } = useWindowDimensions();
