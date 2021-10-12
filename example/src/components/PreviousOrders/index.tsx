@@ -49,7 +49,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
   const [, t] = useLanguage()
   const [reorderSelected,setReorderSelected] = useState<number | null>(null)
   const [{ parseDate, optimizeImage }] = useUtils()
-  const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12]
+  const allowedOrderStatus = [1, 11, 15]
   const [isReviewedOrders, setIsReviewedOrders] = useState<Array<any>>([])
 
   const handleReviewState = (orderId: any) => {
