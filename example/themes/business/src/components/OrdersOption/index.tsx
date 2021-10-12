@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Pressable, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { useLanguage, OrderListGroups } from 'ordering-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
 
 import { useTheme } from 'styled-components/native';
@@ -61,6 +62,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       marginBottom: 25,
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center'
     },
     title: {
       fontFamily: 'Poppins',
@@ -198,6 +200,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     <>
       <View style={styles.header}>
         <OText style={styles.title}>{t('MY_ORDERS', 'My orders')}</OText>
+        <FeatherIcon
+          name='refresh-cw'
+          color={theme.colors.backgroundDark}
+          size={24}
+          onPress={() => loadOrders && loadOrders({ newFetch: true })}
+        />
       </View>
 
       <FiltersTab>
