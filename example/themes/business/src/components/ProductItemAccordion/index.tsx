@@ -21,6 +21,7 @@ import { ProductItemAccordionParams } from '../../types';
 
 export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const {
+    isClickableEvent,
     isCartPending,
     isCartProduct,
     product,
@@ -73,17 +74,10 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     return parseFloat(price.toFixed(2));
   };
 
-  const getFormattedSubOptionName = ({
-    quantity,
-    name,
-    position,
-    price,
-  }: any) => {
+  const getFormattedSubOptionName = ({ quantity, name, position, price }: any) => {
     if (name !== 'No') {
       const pos = position ? `(${position})` : '';
-      return price > 0
-        ? `${name} ${pos} ${parsePrice(quantity * price)}`
-        : `${name} ${pos}`;
+      return `${quantity} x ${name} ${pos} +${price}`
     } else {
       return 'No';
     }
@@ -117,7 +111,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
       <Accordion
         isValid={product?.valid ?? true}
         onPress={() =>
-          !product?.valid_menu && isCartProduct ? {} : setActiveState(!isActive)
+          (!product?.valid_menu && isCartProduct) || isClickableEvent ? {} : setActiveState(!isActive)
         }
         activeOpacity={1}>
         <View
@@ -155,9 +149,11 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                   {parsePrice(getProductPrice(product))}
                 </OText>
 
-                {(productInfo().ingredients.length > 0 ||
+                {(
+                  productInfo().ingredients.length > 0 ||
                   productInfo().options.length > 0 ||
-                  product.comment) && (
+                  product.comment
+                ) && !isClickableEvent && (
                   <MaterialCommunityIcon name="chevron-down" size={12} />
                 )}
               </View>
@@ -271,7 +267,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                                     suboption.position,
                                   )
                                 : '',
-                            price: suboption.price,
+                            price: parsePrice(suboption.price),
                           })}
                         </OText>
                       </ProductSubOption>

@@ -584,17 +584,18 @@ const ChatUI = (props: MessagesParams) => {
     );
   };
 
-  const renderAccessory = (props: any) => (
-    <View>
+  const renderAccessory = () => (
       <Header
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         horizontal
-        contentContainerStyle={{
-          justifyContent:
-            orientation === 'Landscape' ? 'center' : 'space-between',
-          width: '100%',
-        }}>
+        // contentContainerStyle={{
+        //   justifyContent:
+        //     orientation === 'Landscape' ? 'center' : 'space-between',
+        //   width: '100%',
+        // }}
+        nestedScrollEnabled={true}
+      >
         {user?.level !== 2 && (
           <Pressable
             style={{
@@ -719,7 +720,6 @@ const ChatUI = (props: MessagesParams) => {
           </Pressable>
         )}
       </Header>
-    </View>
   );
 
   const userRoles: any = {
@@ -731,17 +731,17 @@ const ChatUI = (props: MessagesParams) => {
     5: t('DRIVER_MANAGER', 'Driver manager'),
   };
 
-  const renderInputToolbar = (props: InputToolbarProps) => (
+  const renderInputToolbar = (props: any) => (
     <InputToolbar
       {...props}
       containerStyle={styles.toolbarStyle}
       primaryStyle={{ alignItems: 'center', justifyContent: 'space-between' }}
       accessoryStyle={{ position: 'relative', marginBottom: 10 }}
-      renderAccessory={order ? renderAccessory : undefined}
+      renderAccessory={order ? () => renderAccessory && renderAccessory() : undefined}
     />
   );
 
-  const renderComposer = (props: ComposerProps) => (
+  const renderComposer = (props: any) => (
     <View
       style={{
         flexDirection: 'row',
@@ -777,7 +777,6 @@ const ChatUI = (props: MessagesParams) => {
         placeholderTextColor={theme.colors.composerPlaceHolder}
       />
 
-      {/* {!image && <RenderActionsAttach {...props} />} */}
       {!file.type && (
         <Actions
           {...props}

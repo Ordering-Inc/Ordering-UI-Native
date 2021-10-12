@@ -29,13 +29,12 @@ import { FloatingButton } from '../FloatingButton';
 import { GoogleMap } from '../GoogleMap';
 import { OButton, OModal, OText, OIcon } from '../shared';
 import { OrderDetailsParams } from '../../types';
-import { verifyDecimals, getProductPrice } from '../../utils';
+import { verifyDecimals, getProductPrice, getOrderStatus } from '../../utils';
 import { USER_TYPE } from '../../config/constants';
 import CountryPicker from 'react-native-country-picker-modal';
 import { NotFoundSource } from '../NotFoundSource';
 import { OrderHeaderComponent } from './OrderHeaderComponent';
 import { OrderContentComponent } from './OrderContentComponent';
-import { getOrderStatus } from '../../utils';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -122,6 +121,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }
 
+  const getFormattedSubOptionName = ({ quantity, name, position, price }: any) => {
+    if (name !== 'No') {
+      const pos = position && position !== 'whole' ? `(${t(position.toUpperCase(), position)})` : '';
+      return pos
+        ? `${quantity} x ${name} ${pos} +${parsePrice(price)}\n`
+        : `${quantity} x ${name} +${parsePrice(price)}\n`;
+    } else {
+      return 'No\n';
+    }
+  };
+
   const handleCopyClipboard = () => {
     const businessName = !!order?.business?.name
       ? `${order?.business?.name} \n`
@@ -186,12 +196,43 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             : t('DRIVER_THRU', 'Driver thru')
         }\n`
       : '';
+
+    const getSuboptions = (suboptions: any) => {
+      const array: any = []
+      suboptions?.length > 0 &&
+      suboptions?.map((suboption: any) => {
+        const string = `${getFormattedSubOptionName(suboption)}`
+        array.push(string)
+      })
+
+      return array.join('')
+    }
+
+    const getOptions = (options: any, productComment: string = '') => {
+      const array: any = [];
+
+      options?.length &&
+      options?.map((option: any) => {
+        const string =
+        `  ${option.name}\n    ${getSuboptions(option.suboptions)}`;
+
+        array.push(string)
+      })
+
+      if (productComment) {
+        array.push(`  ${t('COMMENT', 'Comment')}\n    ${productComment}\n`)
+      }
+
+      return array.join('')
+    }
+
     const productsInArray =
       order?.products.length &&
       order?.products.map((product: any, i: number) => {
-        return ` ${product?.quantity} X ${product?.name} ${parsePrice(
-          product.total ?? getProductPrice(product),
-        )}\n`;
+        const string =
+          `${product?.quantity} X ${product?.name} ${parsePrice(product.total ?? getProductPrice(product))}\n${getOptions(product.options, product.comment)}`;
+
+        return i === 0 ? ` ${string}` : string
       });
 
     const productsInString = productsInArray.join(' ');
