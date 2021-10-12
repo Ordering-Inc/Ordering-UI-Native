@@ -405,17 +405,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
             onTouchStart={() => (following.current = false)}>
             {location ? (
               <>
-                <Polyline
-                  coordinates={[
-                    { latitude: location.lat, longitude: location.lng },
-                    {
-                      latitude: userLocation.latitude,
-                      longitude: userLocation.longitude,
-                    },
-                  ]}
-                  strokeColor="blue"
-                  strokeWidth={3}
-                />
                 <Marker
                   coordinate={{
                     latitude: location.lat,
