@@ -4,7 +4,7 @@ export const Container = styled.View`
   margin-bottom: 10px;
 `
 
-export const FacebookButton = styled.TouchableOpacity`
+export const GoogleButton = styled.TouchableOpacity`
   background-color: #EFEFEF;
   border-color: #EFEFEF;
   border-radius: 30px;
