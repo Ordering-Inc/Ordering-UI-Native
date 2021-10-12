@@ -684,27 +684,17 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
         <View style={{ height: 40 }} />
       </Content>
 
-      <FloatingButton
-        firstButtonClick={() =>
-          Platform.OS === 'ios' ? selectPrinter() : printPDF()
-        }
-        btnText={
-          Platform.OS === 'ios'
-            ? t('SELECT_PRINTER', 'Select Printer')
-            : t('PRINT', 'Print')
-        }
-        color={theme.colors.green}
-        widthButton={'100%'}
-        isPadding
-      />
-
-      {Platform.OS === 'ios' && state.selectedPrinter && (
+      <View style={{ marginBottom: 0 }}>
         <FloatingButton
-          firstButtonClick={() => silentPrint()}
+          firstButtonClick={() =>
+            Platform.OS === 'ios' ? silentPrint() : printPDF()
+          }
           btnText={t('PRINT', 'Print')}
           color={theme.colors.green}
+          widthButton={'100%'}
+          isPadding
         />
-      )}
+      </View>
     </>
   );
 };
