@@ -33,7 +33,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [orientationState] = useDeviceOrientation();
   const [configState] = useConfig()
   const [ordering] = useApi()
-  const [{showToast}] = useToast()
+  const [, {showToast}] = useToast()
   const [addressState, setAddressState] = useState<any>({ loading: false, changes: {}, error: null, address: {} })
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
 
@@ -105,10 +105,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           ...addressState,
           address: content.result
         })
-          changeAddress(content.result.id, {
-            address: content.result,
-            isEdit: false
-          })
+        changeAddress(content.result.id, {
+          address: content.result,
+          isEdit: false
+        })
       }
     } catch (err : any) {
       setAddressState({
