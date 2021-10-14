@@ -84,7 +84,6 @@ export const useLocation = () => {
     try {
       setNewLocation({...newLocation, loading: true})
       const { content: { error, result } } = await ordering.setAccessToken(token).users(user?.id).driverLocations().save(newLocation)
-      console.log(result)
       if (error) {
         setNewLocation({ ...newLocation, loading: false, error: [result[0] || result || t('ERROR_UPDATING_POSITION', 'Error updating position')] })
       } else {
