@@ -30,7 +30,7 @@ export const OrderContent = styled.View`
 export const OrderHeader = styled.View`
   padding-vertical: 20px;
   border-bottom-width: 10px;
-  /* border-bottom-color: ${(props: any) => props.theme.colors.inputChat}; */
+  border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
 `;
 
 export const OrderBusiness = styled.View`
@@ -39,13 +39,13 @@ export const OrderBusiness = styled.View`
   padding-vertical: 20px;
   flex-direction: column;
   border-bottom-width: 10px;
-  /* border-bottom-color: ${(props: any) => props.theme.colors.inputChat}; */
+  border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
   align-items: flex-start;
 `;
 
 export const OrderCustomer = styled.View`
   border-bottom-width: 10px;
-  /* border-bottom-color: ${(props: any) => props.theme.colors.inputChat}; */
+  border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
   padding-vertical: 20px;
 `;
 
@@ -65,7 +65,7 @@ export const OrderBill = styled.View`
 
 export const Total = styled.View`
   border-top-width: 1px;
-  /* border-top-color: ${(props: any) => props.theme.colors.borderTops}; */
+  border-top-color: ${(props: any) => props.theme.colors.borderTops};
   padding-vertical: 10px;
 `;
 

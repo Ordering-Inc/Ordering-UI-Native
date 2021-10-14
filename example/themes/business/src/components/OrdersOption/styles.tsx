@@ -10,11 +10,11 @@ export const TabsContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   border-bottom-width: 1px;
-  /* border-bottom-color: ${(props: any) => props.theme.colors.tabBar}; */
+  border-bottom-color: ${(props: any) => props.theme.colors.tabBar};
 `;
 
 export const Tag = styled.Pressable`
-  /* background-color: ${({ isSelected }: { isSelected: string }) => isSelected}; */
+  background-color: ${({ isSelected }: { isSelected: string }) => isSelected};
   justify-content: center;
   align-items: center;
   min-height: 34px;

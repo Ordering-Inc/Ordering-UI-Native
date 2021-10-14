@@ -15,7 +15,7 @@ import RNBootSplash from "react-native-bootsplash";
 import { Toast } from './components/shared/OToast';
 import Alert from './providers/AlertProvider';
 import { ThemeProvider } from './context/Theme';
-import { PermissionsProvider } from './context/PermissionsContext';
+
 
 import settings from './config.json';
 import theme from './theme.json';
@@ -144,10 +144,8 @@ const DeliveryApp = () => {
   return (
     <ThemeProvider theme={theme}>
       <OrderingProvider settings={settings} Alert={Alert}>
-        <PermissionsProvider>
-          <AppContainer />
-          <Toast />
-        </PermissionsProvider>
+        <AppContainer />
+        <Toast />
       </OrderingProvider>
     </ThemeProvider>
   );

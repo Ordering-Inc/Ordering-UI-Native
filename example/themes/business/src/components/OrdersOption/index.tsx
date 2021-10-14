@@ -12,7 +12,7 @@ import { FiltersTab, TabsContainer, Tag } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
 import { OrdersOptionParams } from '../../types';
 
-// import GestureRecognizer from 'react-native-swipe-gestures';
+import GestureRecognizer from 'react-native-swipe-gestures';
 
 const tabsList: any = {
   pending: 1,
@@ -191,6 +191,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   }, [currentTabSelected])
 
   return (
+    // <GestureRecognizer
+    //   onSwipeLeft={onSwipeLeft}
+    //   onSwipeRight={onSwipeRight}
+    //   config={swipeConfig}
+    //   style={{ flex: 1 }}
+    // >
     <>
       <View style={styles.header}>
         <OText style={styles.title}>{t('MY_ORDERS', 'My orders')}</OText>
@@ -393,6 +399,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           />
         )}
       </ScrollView>
+    {/* </GestureRecognizer> */}
     </>
   );
 };
