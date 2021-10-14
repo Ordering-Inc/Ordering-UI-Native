@@ -1,8 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import GeoLocation from 'react-native-geolocation-service';
 import { Location } from '../types';
+import {useApi, useSession, useLanguage} from 'ordering-components/native'
 
 export const useLocation = () => {
+  const [,t] = useLanguage()
+  const [ordering] = useApi()
+  const [{token, user}] = useSession()
   const [hasLocation, setHasLocation] = useState(false);
   const [initialPosition, setInitialPosition] = useState<Location>({
     longitude: 0,
@@ -14,6 +18,7 @@ export const useLocation = () => {
     latitude: 0,
     speed: 0,
   });
+  const [newLocation,setNewLocation] = useState<any>({ loading: false, error: null, newLocation: null })
   const [routeLines, setRoutesLines] = useState<Location[]>([]);
   const isMounted = useRef(true);
 
@@ -75,6 +80,21 @@ export const useLocation = () => {
     if (watchId.current) GeoLocation.clearWatch(watchId.current);
   };
 
+  const updateDriverPosition = async (newLocation = {}) => {
+    try {
+      setNewLocation({...newLocation, loading: true})
+      const { content: { error, result } } = await ordering.setAccessToken(token).users(user?.id).driverLocations().save(newLocation)
+      console.log(result)
+      if (error) {
+        setNewLocation({ ...newLocation, loading: false, error: [result[0] || result || t('ERROR_UPDATING_POSITION', 'Error updating position')] })
+      } else {
+        setNewLocation({ ...newLocation, loading: false, newLocation: { ...newLocation, ...result } })
+      }
+    } catch (error : any) {
+      setNewLocation({ ...newLocation, loading: false, error: [error?.message || t('NETWORK_ERROR', 'Network Error')] })
+    }
+  }
+
   return {
     hasLocation,
     initialPosition,
@@ -83,5 +103,8 @@ export const useLocation = () => {
     stopFollowUserLocation,
     userLocation,
     routeLines,
+    updateDriverPosition,
+    newLocation,
+    setNewLocation
   };
 };

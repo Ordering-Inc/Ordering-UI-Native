@@ -221,10 +221,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
       center: { latitude, longitude },
     });
 
-    if (userLocation.latitude && userLocation.longitude)
-      updateDriverPosition({
-        location: { lat: userLocation.latitude, lng: userLocation.longitude },
-      });
   }, [userLocation]);
 
   const handleArrowBack: any = () => {
