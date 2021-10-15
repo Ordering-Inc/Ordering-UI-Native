@@ -27,7 +27,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const theme = useTheme();
   const [, t] = useLanguage();
   const [{user, accessToken}] = useSession()
-  const [{changeAddress}] = useOrder()
+  const [, {changeAddress}] = useOrder()
   const [orientationState] = useDeviceOrientation();
   const [configState] = useConfig()
   const [ordering] = useApi()
