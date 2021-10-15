@@ -494,7 +494,7 @@ const SignupFormUI = (props: SignupParams) => {
 										}}
 										defaultValue={false}
 									/>
-									<OText style={{ ...theme.labels.normal, paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
+									<OText style={{ fontSize: 14, paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
 									<OButton
 										imgRightSrc={null}
 										text={t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
