@@ -5,6 +5,7 @@ import styled, { useTheme } from 'styled-components/native'
 const Wrapper = styled.ScrollView`
 	background-color: ${(props: any) => props.theme.colors.whiteGray};
 	flex-direction: row;
+  padding-left: 10px;
 `
 const SegItem = styled.View`
 	padding: 24px 12px;
@@ -32,8 +33,7 @@ interface Props {
 }
 
 const OSegment = (props: Props) => {
-    
-    var [curIndex, onSelected] = React.useState(props.selectedIdx)
+    const [curIndex, onSelected] = React.useState(props.selectedIdx)
     const onSelectItem = (idx: number) => {
         onSelected(idx)
         props.onSelectItem(idx)
