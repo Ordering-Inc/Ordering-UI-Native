@@ -6,9 +6,7 @@ import {
   useOrder,
   useSession,
   useConfig,
-  useApi,
-  useToast,
-  ToastType
+  useApi
 } from 'ordering-components/native'
 import Carousel from 'react-native-snap-carousel';
 import Geocoder from 'react-native-geocoding';
@@ -28,12 +26,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const theme = useTheme();
   const [, t] = useLanguage();
-  const [{user, auth, accessToken}] = useSession()
-  const [orderState, {changeAddress}] = useOrder()
+  const [{user, accessToken}] = useSession()
+  const [{changeAddress}] = useOrder()
   const [orientationState] = useDeviceOrientation();
   const [configState] = useConfig()
   const [ordering] = useApi()
-  const [, {showToast}] = useToast()
   const [addressState, setAddressState] = useState<any>({ loading: false, changes: {}, error: null, address: {} })
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
 
