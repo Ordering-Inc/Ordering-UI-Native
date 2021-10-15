@@ -187,14 +187,14 @@ const TopBar = (props:any) => {
 		<StyledTopBar>
 			<View>
 				<OText
-					size={20}
+					size={24}
 					weight="700"
 					mBottom={4}
 				>
 					{t('YOUR_ORDER', 'your order')}
 				</OText>
 				<OText
-					size={20}
+					size={18}
 					weight="500"
 					color={theme.colors.mediumGray}
 				>

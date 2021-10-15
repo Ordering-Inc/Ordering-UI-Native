@@ -6,9 +6,7 @@ import {
   useOrder,
   useSession,
   useConfig,
-  useApi,
-  useToast,
-  ToastType
+  useApi
 } from 'ordering-components/native'
 import Carousel from 'react-native-snap-carousel';
 import Geocoder from 'react-native-geocoding';
@@ -28,18 +26,16 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const theme = useTheme();
   const [, t] = useLanguage();
-  const [{user, auth, accessToken}] = useSession()
-  const [, {changeAddress}] = useOrder()
+  const [{user, accessToken}] = useSession()
+  const [{changeAddress}] = useOrder()
   const [orientationState] = useDeviceOrientation();
   const [configState] = useConfig()
   const [ordering] = useApi()
-  const [, {showToast}] = useToast()
   const [addressState, setAddressState] = useState<any>({ loading: false, changes: {}, error: null, address: {} })
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
 
   const _categories: any = business?.original?.categories;
   let _promos: any = [];
-
   _categories?.forEach((categ: any) => {
     const _featuredProds = categ?.products?.filter(
       (prod: any) => prod.featured,
@@ -52,7 +48,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const handleCurrentUserLocation = async () => {
     let addressValue : any = []
-    const data: any = { address: null, error: null }
+    let data: any = { address: null, error: null }
     const filterAddressInfo = [
       { tag: 'street_number', isShort: true },
       { tag: 'route', isShort: true },
@@ -60,13 +56,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       { tag: 'administrative_area_level_1', isShort: false },
       { tag: 'country', isShort: false },
     ]
-
-    try {
       Geocoder.init(googleMapsApiKey);
       Geocoder.from({
-        latitude: business.location.lat,
-        longitude: business.location.lng
-      }).then((json : any) => {
+        latitude: business.location?.lat,
+        longitude: business.location?.lng
+      }).then( async (json : any) => {
         if(json.results && json.results?.length > 0){
             for (const component of json.results?.[0].address_components) {
               const addressType = component.types?.[0]
@@ -76,7 +70,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 }
               }
             }
-            data.address = {
+            data = {
               address: addressValue.join(', '),
               location: json.results[0].geometry.location,
               map_data: {
@@ -84,44 +78,38 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 place_id: json.results?.[0].place_id
               }
             }
+            setAddressState({ ...addressState, loading: true })
+            try {
+              const { content } = await ordering
+              .users(user?.id)
+              .addresses()
+              .save(data.address, { accessToken })
+              setAddressState({
+                ...addressState,
+                loading: false,
+                error: content.error ? content.result : null,
+              })
+              if (!content.error && data) {
+                setAddressState({
+                  ...addressState,
+                  address: data
+                })
+                changeAddress(data)
+              }
+            } catch (err : any) {
+              setAddressState({
+                ...addressState,
+                loading: false,
+                error: [err.message],
+                address: {}
+              })
+            }
         }
       })
-    } catch (err : any){
-      showToast(ToastType.Error, err?.message)
-    }
-    setAddressState({ ...addressState, loading: true })
-    try {
-      const { content } = await ordering
-        .users(user?.id)
-        .addresses()
-        .save(data.address, { accessToken })
-      setAddressState({
-        ...addressState,
-        loading: false,
-        error: content.error ? content.result : null,
-      })
-      if (!content.error) {
-        setAddressState({
-          ...addressState,
-          address: content.result
-        })
-        changeAddress(content.result.id, {
-          address: content.result,
-          isEdit: false
-        })
-      }
-    } catch (err : any) {
-      setAddressState({
-        ...addressState,
-        loading: false,
-        error: [err.message],
-        address: {}
-      })
-    }
   }
 
   useEffect(() => {
-    if(business?.location && auth && googleMapsApiKey){
+    if(business?.location?.lat && business?.location?.lng){
       handleCurrentUserLocation()
     }
   }, [business?.location, googleMapsApiKey])
@@ -212,7 +200,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   );
 
   if (businessState?.error || addressState.error) {
-    return <OText>error!</OText>;
+    return <OText>{t('ERROR', 'Error')}</OText>;
   }
 
   return (

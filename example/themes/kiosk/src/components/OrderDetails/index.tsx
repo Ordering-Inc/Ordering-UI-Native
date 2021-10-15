@@ -18,6 +18,7 @@ import {
   OSTable,
   OSActions,
   OSInputWrapper,
+  SentReceipt
 } from './styles'
 import { OrderDetailsParams, Product } from '../../types'
 import { Container } from '../../layouts/Container';
@@ -29,7 +30,7 @@ import { verifyDecimals } from '../../../../../src/utils'
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation'
 import { useTheme } from 'styled-components/native'
 import { _retrieveStoreData } from '../../../../../src/providers/StoreUtil';
-
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 const _EMAIL = 'email';
 const _SMS = 'sms';
 
@@ -161,7 +162,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         setCountReceipts(countReceipts - 1)
       }
 
-    }catch (error) {
+    } catch (error : any) {
       showToast(ToastType.Error, error.message)
     }
     setIsLoading(false)
@@ -243,17 +244,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             marginBottom: 10,
           }}
         >
-
-          <OText>{t('SEND_RECEIPT', 'Send receipt')}</OText>
+          <SentReceipt>
+            <MaterialIcon name='check-circle' color={theme.colors.primary} size={28} />
+            <OText size={20} mLeft={10}>{t('SEND_RECEIPT', 'Send receipt')}</OText>
+          </SentReceipt>
+          <OText size={20}>
+            {countReceipts}/5 {t('RECIPTS_REMAINING', 'Recipts remaining')}
+          </OText>
 
           {/* <OptionSwitch
             options={optionsToSendReceipt}
             onChange={setOptionToSendReceipt}
           /> */}
         </OSTable>
-        <OText size={14} style={{alignSelf: 'flex-end'}}>
-          {countReceipts}/5 {t('RECIPTS_REMAINING', 'Recipts remaining')}
-        </OText>
         <OSTable>
           {optionToSendReceipt?.value === _EMAIL && (
             <Controller
@@ -334,21 +337,21 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       }}
     >
       <OSTable>
-        <OText>
+        <View style={{flexDirection: 'row', bottom: 10}}>
           <OText
-            size={orientationState?.dimensions?.width * 0.04}
+            size={orientationState?.dimensions?.width * 0.039}
             weight="700"
           >
             {t('ORDER_NUMBER', 'Order No.')} {' '}
           </OText>
           <OText
-            size={orientationState?.dimensions?.width * 0.04}
+            size={orientationState?.dimensions?.width * 0.039}
             weight="700"
             color={theme.colors.primary}
           >
             {order?.id}
           </OText>
-        </OText>
+        </View>
       </OSTable>
 
       {order?.products?.length && (
@@ -392,7 +395,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         >
           {t('PROMO_CODE', 'Promo code')}
           {'\n'}
-          <OText weight="400">
+          <OText weight="400" style={{fontSize: 14}}>
             {order?.offer_type === 1 ? `${verifyDecimals(order?.offer_rate, parseNumber)}%` : parsePrice(order?.summary?.discount || order?.discount)} {t('OFF', 'off')}
           </OText>
         </OText>

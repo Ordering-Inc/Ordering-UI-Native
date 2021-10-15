@@ -122,7 +122,7 @@ const CartUI = (props: any) => {
         >
           <OText
             weight="500"
-            size={21}
+            size={18}
             color={theme.colors.black}
           >
             {t('THIS_ORDER_IS_TO', 'This order is to')}
@@ -136,7 +136,7 @@ const CartUI = (props: any) => {
             bgColor="transparent"
             borderColor="transparent"
             style={{ paddingEnd: 0 }}
-            textStyle={{ color: theme.colors.primary, marginEnd: 0 }}
+            textStyle={{ color: theme.colors.primary, marginEnd: 0, fontSize: 18 }}
             onClick={handleChangeOrderType}
           />
         </OrderTypeWrapper>
