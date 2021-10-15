@@ -469,12 +469,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               {
                 (
                   parseInt(order?.status) === 1 ||
-                  parseInt(order?.status) === 2 ||
-                  parseInt(order?.status) === 5 ||
-                  parseInt(order?.status) === 6 ||
-                  parseInt(order?.status) === 10 ||
                   parseInt(order?.status) === 11 ||
-                  parseInt(order?.status) === 12
+                  parseInt(order?.status) === 15 
                 ) && !order.review && !isReviewed && (
                   <OButton
                     onClick={() => handleClickOrderReview(order)}
