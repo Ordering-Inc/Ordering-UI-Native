@@ -436,6 +436,7 @@ export interface FloatingButtonParams {
   secondButton?: boolean;
   firstColorCustom?: string;
   secondColorCustom?: string;
+  paddingBottomIos?: any;
 }
 export interface MomentOptionParams {
   navigation: any;

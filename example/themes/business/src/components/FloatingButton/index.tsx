@@ -53,6 +53,7 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
   return (
     <Container
       isIos={Platform.OS === 'ios'}
+      paddingBottomIos={props.paddingBottomIos}
       style={{ paddingHorizontal: props.isPadding ? 30 : 0 }}>
       <View
         style={{

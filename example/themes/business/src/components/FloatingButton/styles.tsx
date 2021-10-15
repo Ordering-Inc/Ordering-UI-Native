@@ -15,7 +15,7 @@ export const Container = styled.View`
   ${(props: any) =>
     props.isIos &&
     css`
-      padding-bottom: 5px;
+      padding-bottom: ${(props: any) => props.paddingBottomIos ? `${props.paddingBottomIos}px` : '5px'};
     `}
 `;
 
