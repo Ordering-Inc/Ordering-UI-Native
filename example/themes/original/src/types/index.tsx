@@ -387,6 +387,7 @@ export interface UpsellingProductsParams {
 	setCanOpenUpselling?: (value: any) => void;
 	cart?: any;
 	handleCloseUpsellingPage: () => void;
+	isFromCart?: boolean;
 }
 
 export interface GoogleMapsParams {

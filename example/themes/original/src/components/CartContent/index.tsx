@@ -34,6 +34,7 @@ export const CartContent = (props: any) => {
 										onNavigationRedirect={props.onNavigationRedirect}
 										isCartsLoading={isCartsLoading}
 										setIsCartsLoading={setIsCartsLoading}
+										hideUpselling
 									/>
 									<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40, marginTop: 20 }} />
 								</>

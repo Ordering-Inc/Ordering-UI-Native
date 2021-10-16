@@ -337,7 +337,7 @@ const LoginFormUI = (props: LoginParams) => {
 								<OInput
 									isSecured={!passwordSee ? true : false}
 									placeholder={t('PASSWORD', 'Password')}
-									style={loginStyle.inputStyle}
+									style={{...loginStyle.inputStyle, marginBottom: 14}}
 									icon={theme.images.general.lock}
 									iconCustomRight={
 										!passwordSee ? (
@@ -373,6 +373,13 @@ const LoginFormUI = (props: LoginParams) => {
 							}}
 							defaultValue=""
 						/>
+						{onNavigationRedirect && forgotButtonText && (
+							<TouchableOpacity onPress={() => onNavigationRedirect('Forgot')}>
+								<OText size={14} mBottom={18}>
+									{forgotButtonText}
+								</OText>
+							</TouchableOpacity>
+						)}
 						<OButton
 							onClick={handleSubmit(onSubmit)}
 							text={loginButtonText}
@@ -386,13 +393,6 @@ const LoginFormUI = (props: LoginParams) => {
 					</FormInput>
 				)}
 
-				{onNavigationRedirect && forgotButtonText && (
-					<TouchableOpacity onPress={() => onNavigationRedirect('Forgot')}>
-						<OText size={16} mBottom={18}>
-							{forgotButtonText}
-						</OText>
-					</TouchableOpacity>
-				)}
 
 				{useLoginByCellphone &&
 					loginTab === 'cellphone' &&

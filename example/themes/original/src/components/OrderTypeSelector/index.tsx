@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	OrderTypeControl,
 	useLanguage,
@@ -26,6 +26,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
 	const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value));
+	const [isChanging, setChanging] = useState(false);
 	
 	const items = _orderTypes.map((type) => {
 		return {
@@ -40,8 +41,13 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	const handleChangeOrderTypeCallback = (orderType: number) => {
 		if (!orderState.loading) {
 			handleChangeOrderType(orderType)
+			setChanging(true);
 		}
 	}
+
+	useEffect(() => {
+		if (isChanging)	goToBack();
+	}, [orderState?.options])
 
 	return (
 		<Wrapper>

@@ -535,11 +535,25 @@ const SignupFormUI = (props: SignupParams) => {
 							textStyle={{ color: 'white' }}
 							imgRightSrc={null}
 							isDisabled={formState.loading || validationFields.loading}
-							style={{ borderRadius: 7.6, marginTop: 6 }}
+							style={{ borderRadius: 7.6, marginTop: 6,shadowOpacity: 0 }}
 						/>
 					)}
 				</FormInput>
 
+				{
+          onNavigationRedirect && loginButtonText && (
+            <View style={style.wrappText}>
+              <OText size={14} style={{ marginRight: 5 }}>
+                {t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
+              </OText>
+              <Pressable onPress={() => onNavigationRedirect('Login')}>
+                <OText size={14} color={theme.colors.primary}>
+                  {loginButtonText}
+                </OText>
+              </Pressable>
+            </View>
+          )
+        }
 				<View
 					style={{
 						flexDirection: 'row',
@@ -579,20 +593,6 @@ const SignupFormUI = (props: SignupParams) => {
 					</SocialButtons>
 				</ButtonsWrapper>
 
-				{/* {
-          onNavigationRedirect && loginButtonText && (
-            <View style={style.wrappText}>
-              <OText size={18} style={{ marginRight: 5 }}>
-                {t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
-              </OText>
-              <Pressable onPress={() => onNavigationRedirect('Login')}>
-                <OText size={18} color={theme.colors.primary}>
-                  {loginButtonText}
-                </OText>
-              </Pressable>
-            </View>
-          )
-        } */}
 
 				{/* {
           configs && Object.keys(configs).length > 0 && (
