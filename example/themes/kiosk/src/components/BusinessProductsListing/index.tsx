@@ -9,7 +9,6 @@ import {
   useApi
 } from 'ordering-components/native'
 import Carousel from 'react-native-snap-carousel';
-import Geocoder from 'react-native-geocoding';
 import { BusinessProductsListingParams, Business, Product } from '../../types'
 import { OCard, OText } from '../shared'
 import GridContainer from '../../layouts/GridContainer'
@@ -26,13 +25,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const theme = useTheme();
   const [, t] = useLanguage();
-  const [{user, accessToken}] = useSession()
-  const [, {changeAddress}] = useOrder()
   const [orientationState] = useDeviceOrientation();
-  const [configState] = useConfig()
-  const [ordering] = useApi()
-  const [addressState, setAddressState] = useState<any>({ loading: false, changes: {}, error: null, address: {} })
-  const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
 
   const _categories: any = business?.original?.categories;
   let _promos: any = [];
@@ -45,74 +38,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       _promos = [..._promos, ..._featuredProds];
     }
   });
-
-  const handleCurrentUserLocation = async () => {
-    let addressValue : any = []
-    let data: any = { address: null, error: null }
-    const filterAddressInfo = [
-      { tag: 'street_number', isShort: true },
-      { tag: 'route', isShort: true },
-      { tag: 'locality', isShort: true },
-      { tag: 'administrative_area_level_1', isShort: false },
-      { tag: 'country', isShort: false },
-    ]
-      Geocoder.init(googleMapsApiKey);
-      Geocoder.from({
-        latitude: business.location?.lat,
-        longitude: business.location?.lng
-      }).then( async (json : any) => {
-        if(json.results && json.results?.length > 0){
-            for (const component of json.results?.[0].address_components) {
-              const addressType = component.types?.[0]
-              for (const filterProps of filterAddressInfo)  {
-                if(filterProps.tag.includes(addressType)) {
-                  addressValue.push(filterProps.isShort ? component.short_name : component.long_name)
-                }
-              }
-            }
-            data = {
-              address: addressValue.join(', '),
-              location: json.results[0].geometry.location,
-              map_data: {
-                library: 'google',
-                place_id: json.results?.[0].place_id
-              }
-            }
-            setAddressState({ ...addressState, loading: true })
-            try {
-              const { content } = await ordering
-              .users(user?.id)
-              .addresses()
-              .save(data.address, { accessToken })
-              setAddressState({
-                ...addressState,
-                loading: false,
-                error: content.error ? content.result : null,
-              })
-              if (!content.error && data) {
-                setAddressState({
-                  ...addressState,
-                  address: data
-                })
-                changeAddress(data)
-              }
-            } catch (err : any) {
-              setAddressState({
-                ...addressState,
-                loading: false,
-                error: [err.message],
-                address: {}
-              })
-            }
-        }
-      })
-  }
-
-  useEffect(() => {
-    if(business?.location?.lat && business?.location?.lng){
-      handleCurrentUserLocation()
-    }
-  }, [business?.location, googleMapsApiKey])
 
   const _renderTitle = (title: string): React.ReactElement => (
     <View style={{paddingHorizontal: 20, paddingVertical: 40}}>
@@ -199,7 +124,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     </>
   );
 
-  if (businessState?.error || addressState.error) {
+  if (businessState?.error) {
     return <OText>{t('ERROR', 'Error')}</OText>;
   }
 

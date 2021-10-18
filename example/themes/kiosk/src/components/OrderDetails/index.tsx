@@ -435,6 +435,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           <Container>
             <NavBar
               title={t('TAKE_YOUR_RECEIPT', 'Take your receipt')}
+              style={{right: 10}}
             />
 
             <View style={{
