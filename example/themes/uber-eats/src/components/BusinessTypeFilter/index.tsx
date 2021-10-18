@@ -115,14 +115,6 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
         )}
         {!typesState?.loading && !typesState?.error && typesState?.types && typesState?.types.length > 0 && (
           <>
-            {/* <BusinessCategoriesTitle>
-              <OText
-                size={16}
-                color={theme.colors.textSecondary}
-              >
-                {t('BUSINESS_CATEGORIES', 'Business Categories')}
-              </OText>
-            </BusinessCategoriesTitle> */}
             <BusinessCategories>
               {typesState?.types.slice(0, 3).map((type: any) => (
                 <RenderTypes
