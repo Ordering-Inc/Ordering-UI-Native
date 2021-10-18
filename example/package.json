@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.11.16",
+  "version": "0.11.17",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -95,6 +95,7 @@
     "react-native-signature-canvas": "^4.3.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-swipe-gestures": "^1.0.5",
+    "react-native-uuid": "^2.0.1",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^11.6.4",
     "rn-placeholder": "^3.0.3",
