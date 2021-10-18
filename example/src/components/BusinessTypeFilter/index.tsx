@@ -27,20 +27,20 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
       padding: 10
     },
     logo: {
-      width: isOpenAllCategories ? windowWidth / 3 - 30 : windowWidth / 4 - 20,
-      height: isOpenAllCategories ? windowWidth / 3 - 30 : windowWidth / 4 - 20,
+      width: isOpenAllCategories ? windowWidth / 3 - 27 : windowWidth / 4 - 20,
+      height: isOpenAllCategories ? windowWidth / 3 - 27 : windowWidth / 4 - 20,
       marginBottom: 15,
       borderRadius: 8,
       justifyContent: 'center',
       alignItems: 'center',
     },
     categoryStyle: {
-      width: isOpenAllCategories ? windowWidth / 3 - 25 : windowWidth / 4 - 20,
+      width: isOpenAllCategories ? windowWidth / 3 - 27 : windowWidth / 4 - 20,
       height: 150,
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      marginHorizontal: isOpenAllCategories ? 5 : 0,
+      marginHorizontal: isOpenAllCategories ? 10 : 0,
       marginBottom: isOpenAllCategories ? 40 : 0
     },
     allCategoriesContainer : {
