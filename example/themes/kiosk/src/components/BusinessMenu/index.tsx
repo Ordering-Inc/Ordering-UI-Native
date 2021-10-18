@@ -79,7 +79,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
               includeOrderTypeSelector
               rightComponent={cart && (
                 <TouchableOpacity
-                  style={{ paddingHorizontal: 0, flexDirection: 'row', alignItems: 'center' }}
+                  style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center' }}
                   onPress={onToggleCart}
                 >
                   <OText
