@@ -13,7 +13,7 @@ export const DTWrapperTips = styled.View`
   display: flex;
   flex-direction: row;
   width: 100%;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
 `
@@ -22,11 +22,12 @@ export const DTCard = styled.View`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
-  border: 1px solid ${(props: any) => props.theme.colors.primary};
+  border: 1px solid ${(props: any) => props.isActive ? props.theme.colors.primary : props.theme.colors.border};
   text-transform: capitalize;
-  min-height: 60px;
-  min-width: 60px;
+  min-height: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  max-height: 48px;
   margin-right: 10px;
   margin-top: 10px;
 

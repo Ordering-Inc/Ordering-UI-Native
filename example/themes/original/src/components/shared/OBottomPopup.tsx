@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, TouchableWithoutFeedback, Dimensions, StyleSheet, View, Text } from 'react-native'
+import { Modal, TouchableWithoutFeedback, Dimensions, StyleSheet, View, Text, Platform, StatusBar } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 const deviceHeight = Dimensions.get('window').height
 
@@ -8,13 +8,15 @@ interface Props {
 	title?: string;
 	children?: any;
 	onClose?: any;
+	isStatusBar?: boolean;
 }
 const OBottomPopup = (props: Props) => {
 	const {
 		open,
 		title,
 		onClose,
-		children
+		children,
+		isStatusBar
 	} = props
 	const { top, bottom } = useSafeAreaInsets();
 	return (
@@ -25,6 +27,7 @@ const OBottomPopup = (props: Props) => {
 			onRequestClose={() => onClose()}
 			presentationStyle={'fullScreen'}
 		>
+		  {isStatusBar && <StatusBar translucent={false} />}
 			<View style={styles.container}>
 				<TouchableWithoutFeedback
 					style={styles.touchableOutsideStyle}

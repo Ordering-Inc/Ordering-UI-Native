@@ -5,3 +5,6 @@ export const Container = styled.View`
   justify-content: flex-start;
   flex-direction: row;
 `
+export const DummyContainer = styled.View`
+  height: 40px;
+`
