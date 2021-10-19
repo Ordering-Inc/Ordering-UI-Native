@@ -19,6 +19,7 @@ export interface LoginParams {
   emailInputIcon?: any;
   passwordInputIcon?: any;
   allowedLevels?: any;
+  useRootPoint?: any;
 }
 export interface ProfileParams {
   navigation?: any;
