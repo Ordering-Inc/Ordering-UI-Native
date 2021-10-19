@@ -84,7 +84,7 @@ const ODropDown = (props: Props) => {
   const onSelectOption = (option: any) => {
     setSelectedOption(option)
     setValue(option.value)
-    onSelect(option.value || option.name)
+    onSelect(option.name || option.value)
     setIsOpen(false)
   }
 

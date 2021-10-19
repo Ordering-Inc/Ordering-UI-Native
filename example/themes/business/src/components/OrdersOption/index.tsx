@@ -23,6 +23,7 @@ import { OrdersOptionParams } from '../../types';
 
 import GestureRecognizer from 'react-native-swipe-gestures';
 import ODropDown from '../shared/ODropDown';
+import { OrdersOptionStatus } from '../OrdersOptionStatus'
 
 const tabsList: any = {
   pending: 1,
@@ -63,6 +64,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
   const [openModal, setOpenModal] = useState(false)
+  const [search, setSearch] = useState({
+    state: ''
+  })
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
 
@@ -471,15 +475,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             placeholder={t('ORDER_NUMBER', 'Order number')}
             autoCorrect={false}
           />
-          <ODropDown
-            options={paymethods}
-            defaultValue={paymentValue}
-            onSelect={(option: any) => handleChangeBankOption(option)}
-            isModal
-            bgcolor={theme.colors.inputDisabled}
-            textcolor={theme.colors.unselectText}
-            placeholder={t('SELECT_STATUS', 'Select Status')}
-          />
           <FilterBtnWrapper>
             <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
               {t('SELECT_DATE', 'Select Date')}
@@ -490,6 +485,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               size={24}
             />
           </FilterBtnWrapper>
+          <OrdersOptionStatus
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
           <FilterBtnWrapper>
             <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
               {t('SELECT_STATUS', 'Select Status')}
