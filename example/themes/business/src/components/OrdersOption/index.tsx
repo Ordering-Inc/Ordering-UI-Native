@@ -1,18 +1,28 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Pressable, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Text } from 'react-native';
 import { useLanguage, OrderListGroups } from 'ordering-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import FontistoIcon from 'react-native-vector-icons/Fontisto'
+import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
 
-import { useTheme } from 'styled-components/native';
-import { OText, OButton } from '../shared';
+import { OText, OButton, OModal, OIconButton, OInput } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
-import { FiltersTab, TabsContainer, Tag } from './styles';
+import {
+  FiltersTab,
+  TabsContainer,
+  Tag,
+  IconWrapper,
+  ModalContainer,
+  ModalTitle,
+  FilterBtnWrapper
+} from './styles';
 import { PreviousOrders } from '../PreviousOrders';
 import { OrdersOptionParams } from '../../types';
 
 import GestureRecognizer from 'react-native-swipe-gestures';
+import ODropDown from '../shared/ODropDown';
 
 const tabsList: any = {
   pending: 1,
@@ -52,6 +62,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const theme = useTheme();
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
+  const [openModal, setOpenModal] = useState(false)
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
 
@@ -109,6 +120,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       fontWeight: 'normal',
       fontSize: 18,
     },
+    inputStyle: {
+      width: '100%',
+      borderWidth: 1,
+      borderColor: '#DEE2E6',
+      borderRadius: 7.6,
+      marginBottom: 24
+    }
   });
 
   const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
@@ -118,6 +136,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [refreshing] = useState(false);
 
   const [tagsState, setTags] = useState<any>({ values: [] })
+  const [orderNumber, setOrderNumber] = useState('')
 
   const tagsList = ordersGroup[currentTabSelected].defaultFilter ?? []
   const currentOrdersGroup = ordersGroup[currentTabSelected]
@@ -183,12 +202,31 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     nextTab && setCurrentTabSelected(nextTab)
   }
 
+  let timeout: null | any = null
+  const onChangeSearch = (e: any) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(function () {
+      setOrderNumber(e.target.value)
+    }, 500)
+  }
+
   useEffect(() => {
     setCurrentFilters(null)
     scrollRefTab.current?.scrollTo({ animated: true });
     scrollListRef.current?.scrollTo({ animated: true });
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   }, [currentTabSelected])
+
+  const paymethods = [
+    {value: '2', content: '2'},
+    {value: '3', content: '3'}
+  ]
+  const [paymentValue, setPaymentValue] = useState('2')
+
+  const handleChangeBankOption = (option: any) => {
+    console.log(option)
+    setPaymentValue(option.value)
+  }
 
   return (
     // <GestureRecognizer
@@ -200,12 +238,21 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     <>
       <View style={styles.header}>
         <OText style={styles.title}>{t('MY_ORDERS', 'My orders')}</OText>
-        <FeatherIcon
-          name='refresh-cw'
-          color={theme.colors.backgroundDark}
-          size={24}
-          onPress={() => loadOrders && loadOrders({ newFetch: true })}
-        />
+        <IconWrapper>
+          <FeatherIcon
+            name='refresh-cw'
+            color={theme.colors.backgroundDark}
+            size={24}
+            onPress={() => loadOrders && loadOrders({ newFetch: true })}
+            style={{ marginRight: 20 }}
+          />
+          <FontistoIcon
+            name='search'
+            color={theme.colors.backgroundDark}
+            size={24}
+            onPress={() => setOpenModal(true)}
+          />
+        </IconWrapper>
       </View>
 
       <FiltersTab>
@@ -400,6 +447,118 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         )}
       </ScrollView>
     {/* </GestureRecognizer> */}
+      <OModal open={openModal} entireModal customClose>
+        <ModalContainer>
+          <OIconButton
+            icon={theme.images.general.arrow_left}
+            borderColor={theme.colors.clear}
+            iconColor={theme.colors.backArrow}
+            iconStyle={{ width: 20, height: 13 }}
+            style={{
+              maxWidth: 40,
+              height: 35,
+              justifyContent: 'flex-end',
+              marginBottom: 30,
+              marginTop: 30
+            }}
+            onClick={() => setOpenModal(false)}
+          />
+          <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
+          <OInput
+            value={orderNumber}
+            onChange={onChangeSearch}
+            style={styles.inputStyle}
+            placeholder={t('ORDER_NUMBER', 'Order number')}
+            autoCorrect={false}
+          />
+          <ODropDown
+            options={paymethods}
+            defaultValue={paymentValue}
+            onSelect={(option: any) => handleChangeBankOption(option)}
+            isModal
+            bgcolor={theme.colors.inputDisabled}
+            textcolor={theme.colors.unselectText}
+            placeholder={t('SELECT_STATUS', 'Select Status')}
+          />
+          <FilterBtnWrapper>
+            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
+              {t('SELECT_DATE', 'Select Date')}
+            </OText>
+            <FeatherIcon
+              name='calendar'
+              color={theme.colors.backArrow}
+              size={24}
+            />
+          </FilterBtnWrapper>
+          <FilterBtnWrapper>
+            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
+              {t('SELECT_STATUS', 'Select Status')}
+            </OText>
+            <FeatherIcon
+              name='chevron-down'
+              color={theme.colors.backArrow}
+              size={24}
+            />
+          </FilterBtnWrapper>
+          <FilterBtnWrapper>
+            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
+              {t('SELECT_CITY', 'Select City')}
+            </OText>
+            <FeatherIcon
+              name='chevron-down'
+              color={theme.colors.backArrow}
+              size={24}
+            />
+          </FilterBtnWrapper>
+          <FilterBtnWrapper>
+            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
+              {t('SELECT_BUSINESS', 'Select Business')}
+            </OText>
+            <FeatherIcon
+              name='chevron-down'
+              color={theme.colors.backArrow}
+              size={24}
+            />
+          </FilterBtnWrapper>
+          <FilterBtnWrapper>
+            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
+              {t('SELECT_DELIVERY_TYPE', 'Select Delivery Type')}
+            </OText>
+            <FeatherIcon
+              name='chevron-down'
+              color={theme.colors.backArrow}
+              size={24}
+            />
+          </FilterBtnWrapper>
+          <FilterBtnWrapper>
+            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
+              {t('SELECT_PAYMENT_METHOD', 'Select Payment Method')}
+            </OText>
+            <FeatherIcon
+              name='chevron-down'
+              color={theme.colors.backArrow}
+              size={24}
+            />
+          </FilterBtnWrapper>
+          <FilterBtnWrapper>
+            <OText size={14} color={theme.colors.unselectText} numberOfLines={1} ellipsizeMode='tail'>
+              {t('SELECT_DRIVER', 'Select Driver')}
+            </OText>
+            <FeatherIcon
+              name='chevron-down'
+              color={theme.colors.backArrow}
+              size={24}
+            />
+          </FilterBtnWrapper>
+          <OButton
+            text={t('SEARCH', 'Search')}
+            textStyle={{ color: theme.colors.white }}
+            imgRightSrc={null}
+            style={{ borderRadius: 7.6, marginBottom: 50 }}
+            onClick={() => console.log('dsdfs')}
+          />
+        </ModalContainer>
+      </OModal>
     </>
   );
 };
