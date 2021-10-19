@@ -27,6 +27,7 @@ import { OrdersOptionStatus } from '../OrdersOptionStatus'
 import { OrdersOptionCity } from '../OrdersOptionCity';
 import { OrdersOptionBusiness } from '../OrdersOptionBusiness';
 import { OrdersOptionDelivery } from '../OrdersOptionDelivery';
+import { OrdersOptionPaymethod } from '../OrdersOptionPaymethod';
 
 const tabsList: any = {
   pending: 1,
@@ -71,7 +72,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     state: '',
     city: '',
     business: '',
-    delivery_type: ''
+    delivery_type: '',
+    paymethod: ''
   })
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
@@ -500,16 +502,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             search={search}
             onSearch={setSearch}
           />
-          <FilterBtnWrapper>
-            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
-              {t('SELECT_PAYMENT_METHOD', 'Select Payment Method')}
-            </OText>
-            <FeatherIcon
-              name='chevron-down'
-              color={theme.colors.backArrow}
-              size={24}
-            />
-          </FilterBtnWrapper>
+          <OrdersOptionPaymethod
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
           <FilterBtnWrapper>
             <OText size={14} color={theme.colors.unselectText} numberOfLines={1} ellipsizeMode='tail'>
               {t('SELECT_DRIVER', 'Select Driver')}
