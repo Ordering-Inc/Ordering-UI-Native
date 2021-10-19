@@ -73,6 +73,7 @@ const CustomerName = (props: Props): React.ReactElement => {
         <NavBar
           title={t('YOUR_NAME', 'Your name')}
           onActionLeft={goToBack}
+          btnStyle={{paddingLeft: 0}}
         />
 
         <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>

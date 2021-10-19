@@ -33,6 +33,7 @@ const Intro = (props: any): React.ReactElement => {
 
   return (
     <ScrollView
+      scrollEnabled={false}
       refreshControl={
         <RefreshControl
           refreshing={showLogoutPopup ? false : refreshing}

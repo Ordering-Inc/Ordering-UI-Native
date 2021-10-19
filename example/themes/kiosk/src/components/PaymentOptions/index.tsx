@@ -192,6 +192,7 @@ const PaymentOptionsUI = (props: any) => {
         <NavBar
           title={t('PAYMENT_METHODS', 'Payment methods')}
           onActionLeft={goToBack}
+          btnStyle={{paddingLeft: 0}}
         />
 
         <View
@@ -209,7 +210,9 @@ const PaymentOptionsUI = (props: any) => {
         {supportedMethods?.length > 0 && (
           <GridContainer style={{justifyContent: 'space-between'}}>
             {propsOfItems.CARD_ON_DELIVERY_ID && (
-              <OptionCard {...propsOfItems?.CARD_ON_DELIVERY_ID} />
+              <View style={{marginBottom: orientationState?.orientation === LANDSCAPE ? 20 : 0}}>
+                <OptionCard {...propsOfItems?.CARD_ON_DELIVERY_ID} styke/>
+              </View>
             )}
 
             <View
