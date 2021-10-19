@@ -59,6 +59,7 @@ const LoginFormUI = (props: LoginParams) => {
 
   const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
   const inputRef = useRef<any>(null);
+  const inputMailRef = useRef<any>(null);
 
   const [passwordSee, setPasswordSee] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
@@ -474,7 +475,7 @@ const LoginFormUI = (props: LoginParams) => {
                   returnKeyType='next'
                   autoCorrect={false}
                   autoCapitalize='none'
-                  onSubmitEditing={() => inputRef.current?.focus()}
+                  onSubmitEditing={() => inputMailRef.current?.focus()}
                   blurOnSubmit={false}
                 />
               )}
@@ -501,6 +502,7 @@ const LoginFormUI = (props: LoginParams) => {
                   autoCorrect={false}
                   type="email-address"
                   autoCompleteType="email"
+                  forwardRef={inputMailRef}
                   returnKeyType="next"
                   onSubmitEditing={() => inputRef.current?.focus()}
                   blurOnSubmit={false}
