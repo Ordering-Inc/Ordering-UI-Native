@@ -30,7 +30,7 @@ export const OrdersOptionCityUI = (props: any) => {
     <Container>
       <ODropDown
         options={optionsList}
-        defaultValue={search.state}
+        defaultValue={search.city}
         onSelect={(option: any) => onSearch({ ...search, city: option })}
         isModal
         bgcolor={theme.colors.inputDisabled}
@@ -42,9 +42,9 @@ export const OrdersOptionCityUI = (props: any) => {
 };
 
 export const OrdersOptionCity = (props: any) => {
-  const orderDetailsProps = {
+  const ordersOptionCityProps = {
     ...props,
     UIComponent: OrdersOptionCityUI
   };
-  return <MainSearchController {...orderDetailsProps} />;
+  return <MainSearchController {...ordersOptionCityProps} />;
 };

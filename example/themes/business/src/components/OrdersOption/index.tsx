@@ -25,6 +25,7 @@ import GestureRecognizer from 'react-native-swipe-gestures';
 import ODropDown from '../shared/ODropDown';
 import { OrdersOptionStatus } from '../OrdersOptionStatus'
 import { OrdersOptionCity } from '../OrdersOptionCity';
+import { OrdersOptionBusiness } from '../OrdersOptionBusiness';
 
 const tabsList: any = {
   pending: 1,
@@ -67,7 +68,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [openModal, setOpenModal] = useState(false)
   const [search, setSearch] = useState({
     state: '',
-    city: ''
+    city: '',
+    business: ''
   })
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
@@ -222,17 +224,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     scrollListRef.current?.scrollTo({ animated: true });
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   }, [currentTabSelected])
-
-  const paymethods = [
-    {value: '2', content: '2'},
-    {value: '3', content: '3'}
-  ]
-  const [paymentValue, setPaymentValue] = useState('2')
-
-  const handleChangeBankOption = (option: any) => {
-    console.log(option)
-    setPaymentValue(option.value)
-  }
 
   return (
     // <GestureRecognizer
@@ -497,16 +488,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             search={search}
             onSearch={setSearch}
           />
-          <FilterBtnWrapper>
-            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
-              {t('SELECT_BUSINESS', 'Select Business')}
-            </OText>
-            <FeatherIcon
-              name='chevron-down'
-              color={theme.colors.backArrow}
-              size={24}
-            />
-          </FilterBtnWrapper>
+          <OrdersOptionBusiness
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
           <FilterBtnWrapper>
             <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
               {t('SELECT_DELIVERY_TYPE', 'Select Delivery Type')}
