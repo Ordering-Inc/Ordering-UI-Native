@@ -15,6 +15,7 @@ import { OrderMessage } from './src/components/OrderMessage';
 import { OrderDetailsBusiness } from './src/components/OrderDetails/Business';
 import { OrderDetailsDelivery } from './src/components/OrderDetails/Delivery';
 import { OrdersOption } from './src/components/OrdersOption';
+import { OrdersOptionStatus } from './src/components/OrdersOptionStatus';
 import { OrderSummary } from './src/components/OrderSummary';
 import { PhoneInputNumber } from './src/components/PhoneInputNumber';
 import { PreviousMessages } from './src/components/PreviousMessages';
@@ -65,6 +66,7 @@ export {
   OrderDetailsDelivery,
   OrderMessage,
   OrdersOption,
+  OrdersOptionStatus,
   OrderSummary,
   PhoneInputNumber,
   PreviousMessages,
