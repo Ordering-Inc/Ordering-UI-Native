@@ -24,6 +24,7 @@ import { OrdersOptionParams } from '../../types';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import ODropDown from '../shared/ODropDown';
 import { OrdersOptionStatus } from '../OrdersOptionStatus'
+import { OrdersOptionCity } from '../OrdersOptionCity';
 
 const tabsList: any = {
   pending: 1,
@@ -65,7 +66,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [orientationState] = useDeviceOrientation();
   const [openModal, setOpenModal] = useState(false)
   const [search, setSearch] = useState({
-    state: ''
+    state: '',
+    city: ''
   })
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
@@ -490,26 +492,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             search={search}
             onSearch={setSearch}
           />
-          <FilterBtnWrapper>
-            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
-              {t('SELECT_STATUS', 'Select Status')}
-            </OText>
-            <FeatherIcon
-              name='chevron-down'
-              color={theme.colors.backArrow}
-              size={24}
-            />
-          </FilterBtnWrapper>
-          <FilterBtnWrapper>
-            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
-              {t('SELECT_CITY', 'Select City')}
-            </OText>
-            <FeatherIcon
-              name='chevron-down'
-              color={theme.colors.backArrow}
-              size={24}
-            />
-          </FilterBtnWrapper>
+          <OrdersOptionCity
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
           <FilterBtnWrapper>
             <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
               {t('SELECT_BUSINESS', 'Select Business')}
