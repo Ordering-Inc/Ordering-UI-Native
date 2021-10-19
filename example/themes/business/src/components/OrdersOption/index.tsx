@@ -26,6 +26,7 @@ import ODropDown from '../shared/ODropDown';
 import { OrdersOptionStatus } from '../OrdersOptionStatus'
 import { OrdersOptionCity } from '../OrdersOptionCity';
 import { OrdersOptionBusiness } from '../OrdersOptionBusiness';
+import { OrdersOptionDelivery } from '../OrdersOptionDelivery';
 
 const tabsList: any = {
   pending: 1,
@@ -69,7 +70,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [search, setSearch] = useState({
     state: '',
     city: '',
-    business: ''
+    business: '',
+    delivery_type: ''
   })
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
@@ -493,16 +495,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             search={search}
             onSearch={setSearch}
           />
-          <FilterBtnWrapper>
-            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
-              {t('SELECT_DELIVERY_TYPE', 'Select Delivery Type')}
-            </OText>
-            <FeatherIcon
-              name='chevron-down'
-              color={theme.colors.backArrow}
-              size={24}
-            />
-          </FilterBtnWrapper>
+          <OrdersOptionDelivery
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
           <FilterBtnWrapper>
             <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
               {t('SELECT_PAYMENT_METHOD', 'Select Payment Method')}
