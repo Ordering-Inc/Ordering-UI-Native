@@ -102,13 +102,15 @@ export const PreviousOrders = (props: any) => {
                 <OText numberOfLines={1} style={styles.title}>
                   {order.business?.name}
                 </OText>
-                <NotificationIcon>
-                  <EntypoIcon
-                    name="dot-single"
-                    size={32}
-                    color={theme.colors.primary}
-                  />
-                </NotificationIcon>
+                {order?.showNotification && (
+                  <NotificationIcon>
+                    <EntypoIcon
+                      name="dot-single"
+                      size={32}
+                      color={theme.colors.primary}
+                    />
+                  </NotificationIcon>
+                )}
                 <OText
                   style={styles.date}
                   numberOfLines={1}
