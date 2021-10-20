@@ -490,7 +490,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
       {
         key: 0,
         text: t('PENDING', 'Pending'),
-        tags: props?.orderGroupStatusCustom?.inProgress ?? [0, 13, 7, 4],
+        tags: props?.orderGroupStatusCustom?.inProgress ?? [0, 13],
         title: 'pending'
       },
       {
