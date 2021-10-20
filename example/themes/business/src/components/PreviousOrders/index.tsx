@@ -3,15 +3,17 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { useLanguage, useUtils } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
-import { Card, Logo, Information, MyOrderOptions } from './styles';
+import { Card, Logo, Information, MyOrderOptions, NotificationIcon } from './styles';
+import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 export const PreviousOrders = (props: any) => {
-  const { orders, onNavigationRedirect, getOrderStatus } = props;
+  const { orders, onNavigationRedirect, getOrderStatus, handleClickOrder } = props;
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
   const theme = useTheme();
 
   const handlePressOrder = (order: any) => {
+    handleClickOrder && handleClickOrder(order)
     onNavigationRedirect &&
       onNavigationRedirect('OrderDetails', { order: order });
   };
@@ -96,12 +98,19 @@ export const PreviousOrders = (props: any) => {
                   />
                 </Logo>
               )}
-
               <Information>
                 <OText numberOfLines={1} style={styles.title}>
                   {order.business?.name}
                 </OText>
-
+                {order?.showNotification && (
+                  <NotificationIcon>
+                    <EntypoIcon
+                      name="dot-single"
+                      size={32}
+                      color={theme.colors.primary}
+                    />
+                  </NotificationIcon>
+                )}
                 <OText
                   style={styles.date}
                   numberOfLines={1}

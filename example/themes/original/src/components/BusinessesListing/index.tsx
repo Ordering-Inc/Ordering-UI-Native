@@ -36,6 +36,7 @@ import { BusinessController } from '../BusinessController';
 import { OrderTypeSelector } from '../OrderTypeSelector';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BusinessFeaturedController } from '../BusinessFeaturedController';
+import { HighestRatedBusinesses } from '../HighestRatedBusinesses';
 import { getTypesText } from '../../utils';
 
 const PIXELS_TO_SCROLL = 1000;
@@ -251,6 +252,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</ScrollView>
 				</FeaturedWrapper>
 			)}
+			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
+			<HighestRatedBusinesses onBusinessClick={handleBusinessClick} />
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 			<ListWrapper>
 				<BusinessTypeFilter
