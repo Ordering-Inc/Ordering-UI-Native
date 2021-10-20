@@ -75,80 +75,80 @@ export const PreviousOrders = (props: any) => {
 
   return (
     <>
-      {orders &&
-        orders?.length > 0 &&
+      {orders && orders?.length > 0 &&
         orders
-          .filter((order: any) =>
-            hash[order?.id] ? false : (hash[order?.id] = true),
-          )
-          .map((order: any) => (
-            <React.Fragment key={order.id}>
-              <TouchableOpacity
-                onPress={() => handlePressOrder(order)}
-                style={styles.cardButton}
-                activeOpacity={1}>
-                <Card key={order.id}>
-                  {!!order.business?.logo && (
-                    <Logo style={styles.logo}>
-                      <OIcon
-                        url={optimizeImage(
-                          order.business?.logo,
-                          'h_300,c_limit',
-                        )}
-                        style={styles.icon}
-                      />
-                    </Logo>
-                  )}
+          .filter((order: any) => hash[order?.id] ? false : (hash[order?.id] = true))
+          .map((order: any) =>
+      (
+        <React.Fragment key={order.id}>
+          <TouchableOpacity
+            onPress={() => handlePressOrder(order)}
+            style={styles.cardButton}
+            activeOpacity={1}
+          >
+            <Card key={order.id}>
+              {!!order.business?.logo && (
+                <Logo style={styles.logo}>
+                  <OIcon
+                    url={optimizeImage(
+                      order.business?.logo,
+                      'h_300,c_limit',
+                    )}
+                    style={styles.icon}
+                  />
+                </Logo>
+              )}
 
-                  <Information>
-                    <OText numberOfLines={1} style={styles.title}>
-                      {order.business?.name}
-                    </OText>
-                    <NotificationIcon>
-                      <EntypoIcon
-                        name="dot-single"
-                        size={32}
-                        color={theme.colors.primary}
-                      />
-                    </NotificationIcon>
-                    <OText
-                      style={styles.date}
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
-                      size={20}>
-                      {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
-                      {order?.delivery_datetime_utc
-                        ? parseDate(order?.delivery_datetime_utc)
-                        : parseDate(order?.delivery_datetime, { utc: false })}
-                    </OText>
+              <Information>
+                <OText numberOfLines={1} style={styles.title}>
+                  {order.business?.name}
+                </OText>
+                <NotificationIcon>
+                  <EntypoIcon
+                    name="dot-single"
+                    size={32}
+                    color={theme.colors.primary}
+                  />
+                </NotificationIcon>
+                <OText
+                  style={styles.date}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  size={20}>
+                  {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
+                  {order?.delivery_datetime_utc
+                    ? parseDate(order?.delivery_datetime_utc)
+                    : parseDate(order?.delivery_datetime, { utc: false })}
+                </OText>
 
-                    <MyOrderOptions>
-                      <OText
-                        style={styles.orderType}
-                        mRight={5}
-                        numberOfLines={1}
-                        adjustsFontSizeToFit>
-                        {order.delivery_type === 1
-                          ? t('DELIVERY', 'Delivery')
-                          : order.delivery_type === 2
-                          ? t('PICKUP', 'Pickup')
-                          : order.delivery_type === 3
-                          ? t('EAT_IN', 'Eat in')
-                          : order.delivery_type === 4
-                          ? t('CURBSIDE', 'Curbside')
-                          : t('DRIVER_THRU', 'Driver thru')}
-                        {` · ${getOrderStatus(order.status)}`}
-                      </OText>
-                    </MyOrderOptions>
-                  </Information>
-                </Card>
-              </TouchableOpacity>
-            </React.Fragment>
-          ))}
+                <MyOrderOptions>
+                  <OText
+                    style={styles.orderType}
+                    mRight={5}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                  >
+                    {order.delivery_type === 1
+                      ? t('DELIVERY', 'Delivery')
+                      : order.delivery_type === 2
+                      ? t('PICKUP', 'Pickup')
+                      : order.delivery_type === 3
+                      ? t('EAT_IN', 'Eat in')
+                      : order.delivery_type === 4
+                      ? t('CURBSIDE', 'Curbside')
+                      : t('DRIVER_THRU', 'Driver thru')}
+                    {` · ${getOrderStatus(order.status)}`}
+                  </OText>
+                </MyOrderOptions>
+              </Information>
+            </Card>
+          </TouchableOpacity>
+        </React.Fragment>
+      ))}
     </>
   );
 };
 
 PreviousOrders.defaultProps = {
-  orders: [],
-};
+  orders: []
+}
