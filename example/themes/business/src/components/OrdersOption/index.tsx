@@ -47,6 +47,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     loadOrders,
     loadMoreOrders,
     onNavigationRedirect,
+    handleClickOrder
   } = props;
 
   const theme = useTheme();
@@ -328,6 +329,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             orders={currentOrdersGroup.orders}
             onNavigationRedirect={onNavigationRedirect}
             getOrderStatus={getOrderStatus}
+            handleClickOrder={handleClickOrder}
           />
         )}
 

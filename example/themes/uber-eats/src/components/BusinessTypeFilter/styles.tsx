@@ -16,15 +16,6 @@ export const BusinessCategories = styled.View`
   margin: 10px 0px;
   width: 100%;
 `
-export const Category = styled.View`
-  height: 100px;
-  min-width: 70px;
-  margin-right: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
 
 export const IconContainer = styled.View`
   border-width: 1px;

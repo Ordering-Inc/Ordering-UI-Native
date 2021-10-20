@@ -19,6 +19,7 @@ export interface LoginParams {
   emailInputIcon?: any;
   passwordInputIcon?: any;
   allowedLevels?: any;
+  useRootPoint?: any;
 }
 export interface ProfileParams {
   navigation?: any;
@@ -274,6 +275,7 @@ export interface OrdersOptionParams {
   ordersGroup?: any;
   setOrdersGroup?: any;
   setCurrentFilters?: any;
+  handleClickOrder?: any;
 }
 export interface ActiveOrdersParams {
   orders?: any;
