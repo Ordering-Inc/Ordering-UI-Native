@@ -129,6 +129,10 @@ export interface BusinessesListingParams {
 	businessTypes?: any;
 	defaultBusinessType?: any;
 }
+export interface HighestRatedBusinessesParams {
+	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
+	onBusinessClick?: void;
+}
 export interface BusinessTypeFilterParams {
 	businessTypes?: Array<any>;
 	handleChangeBusinessType: any;
