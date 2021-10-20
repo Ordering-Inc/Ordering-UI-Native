@@ -20,7 +20,7 @@ export const NewOrderNotification = (props: any) => {
   const [newOrderIds, setNewOrderIds] = useState<Array<any>>([])
   const [soundTimeout, setSoundTimeout] = useState<any>(null)
 
-  const notificationSound = new Sound(theme.sounds.notification, Sound.MAIN_BUNDLE, error => {
+  const notificationSound = new Sound(theme.sounds.notification, error => {
     if (error) {
       console.log('failed to load the sound', error);
       return
