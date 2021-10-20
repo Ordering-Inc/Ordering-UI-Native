@@ -11,6 +11,7 @@ import { NotFoundSource } from '../NotFoundSource';
 import { FiltersTab, TabsContainer, Tag } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
 import { OrdersOptionParams } from '../../types';
+import { NewOrderNotification } from '../NewOrderNotification';
 
 import GestureRecognizer from 'react-native-swipe-gestures';
 
@@ -400,6 +401,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         )}
       </ScrollView>
     {/* </GestureRecognizer> */}
+    
+      <NewOrderNotification />
     </>
   );
 };

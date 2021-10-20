@@ -97,7 +97,8 @@ theme.images = {
     stripesb: require('./assets/icons/stripe-sb.png'),
     creditCard: require('./assets/icons/credit-card.png'),
     help: require('./assets/images/help.png'),
-    close: require('./assets/icons/close.png')
+    close: require('./assets/icons/close.png'),
+    newOrder: require('./assets/images/new-order.png')
   },
   order: {
     status0: require('./assets/images/status-0.png'),
@@ -132,6 +133,10 @@ theme.images = {
     driverPhoto: 'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png',
     customerPhoto: 'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png'
   }
+}
+
+theme.sounds = {
+  notification: require('./assets/sounds/notification.mp3')
 }
 
 const DeliveryApp = () => {
