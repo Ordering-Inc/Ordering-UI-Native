@@ -81,7 +81,7 @@ export const SearchBar = (props: any) => {
 				icon={theme.images.general.search}
 				iconStyle={{ width: 12 }}
 				returnKeyType='done'
-				inputStyle={inputStyle}
+				inputStyle={{padding: 0, paddingTop: Platform.OS == 'android' ? 2 : 0, ...inputStyle}}
 			/>
 			{isCancelButtonShow && (
 				<OButton

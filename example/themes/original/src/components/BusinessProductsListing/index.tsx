@@ -25,6 +25,7 @@ import {
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
+
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const {
 		navigation,
@@ -139,7 +140,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 										imgRightSrc={null}
 										style={styles.btnBackArrow}
 										onClick={() => navigation?.canGoBack() && navigation.goBack()}
-										imgLeftStyle={{ tintColor: theme.colors.textNormal }}
+										imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
 									/>
 									{/* <AddressInput
                       onPress={() => auth

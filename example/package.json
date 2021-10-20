@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.11.3",
+  "version": "0.11.22",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -33,6 +33,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@invertase/react-native-apple-authentication": "^2.1.5",
     "@react-native-async-storage/async-storage": "^1.15.5",
     "@react-native-clipboard/clipboard": "^1.8.4",
     "@react-native-community/checkbox": "^0.5.8",
@@ -40,6 +41,7 @@
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^6.0.2",
     "@react-native-community/picker": "^1.8.1",
+    "@react-native-google-signin/google-signin": "^7.0.1",
     "@react-navigation/drawer": "^5.10.2",
     "@react-navigation/material-bottom-tabs": "^5.3.14",
     "@react-navigation/native": "^5.7.6",
@@ -91,8 +93,10 @@
     "react-native-restart": "^0.0.22",
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.11.0",
+    "react-native-signature-canvas": "^4.3.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-swipe-gestures": "^1.0.5",
+    "react-native-uuid": "^2.0.1",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^11.6.4",
     "rn-placeholder": "^3.0.3",

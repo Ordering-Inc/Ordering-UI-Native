@@ -26,3 +26,7 @@ export const OSInputWrapper = styled.View`
 	min-height: 150px;
   background-color: #FFF;
 `
+
+export const SentReceipt = styled.View`
+  flex-direction: row;
+`

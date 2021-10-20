@@ -9,6 +9,7 @@ export const CardContainer = styled.TouchableOpacity`
   width: 150px;
   margin-end: 10px;
   border-radius: 3px;
+  min-height: 200px;
 `
 export const CardInfo = styled.View`
   flex: 1;

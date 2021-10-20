@@ -18,12 +18,10 @@ import {
 	BusinessInfo,
 	Metadata,
 	BusinessState,
-	BusinessLogo,
-	Reviews,
 } from './styles';
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-	const { business, handleClick, isBusinessOpen, businessWillCloseSoonMinutes, isBusinessClose, isHorizontal } = props;
+	const { business, handleClick, isBusinessOpen, businessWillCloseSoonMinutes, isHorizontal } = props;
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
@@ -104,15 +102,10 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 			<BusinessHero
 				source={{ uri: optimizeImage(business?.header, 'h_400,c_limit') }}
 				imageStyle={styles.headerStyle}
-				isClosed={isBusinessOpen || isBusinessClose}
+				isClosed={!isBusinessOpen}
 				style={{ height: isHorizontal ? 117 : 128 }}
 			>
-				{/* {business?.featured && (
-					<View style={styles.featured}>
-						<FontAwesomeIcon name='crown' size={26} color='gold' />
-					</View>
-				)} */}
-				{!isBusinessOpen || isBusinessClose && (
+				{!isBusinessOpen && (
 					<View style={styles.closed}>
 						<OText size={20} color={theme.colors.white}>{t('CLOSED', 'CLOSED')}</OText>
 					</View>
@@ -122,9 +115,6 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						<OText size={32} color={theme.colors.white}>{businessWillCloseSoonMinutes} {t('MINUTES_TO_CLOSE', 'minutes to close')}</OText>
 					</View>
 				)}
-				{/* <BusinessLogo>
-          <OIcon url={optimizeImage(business?.logo, 'h_300,c_limit')} style={styles.businessLogo} />
-        </BusinessLogo> */}
 				<BusinessState>
 					{!isBusinessOpen && (
 						<View style={styles.businessStateView}>
@@ -146,17 +136,6 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 							{business?.name}
 						</OText>
 					</View>
-					{/* {business?.reviews?.total > 0 && (
-            <Reviews>
-              <IconAntDesign
-                name="star"
-                color={theme.colors.primary}
-                size={16}
-                style={styles.starIcon}
-              />
-              <OText>{parseNumber(business?.reviews?.total, { separator: '.' })}</OText>
-            </Reviews>
-          )} */}
 				</BusinessInfo>
 				<BusinessCategory>
 					<OText color={theme.colors.textSecondary} size={12} style={{ lineHeight: 18, fontWeight: '400' }}>{getBusinessType()}</OText>

@@ -106,8 +106,7 @@ const StripeElementsFormUI = (props: any) => {
 				!!card?.last4 &&
 				!!card?.expiryMonth &&
 				!!card?.expiryYear &&
-				!!card?.brand &&
-				!!card?.postalCode
+				!!card?.brand
 			)
 		}
 	}, [card])
@@ -118,12 +117,13 @@ const StripeElementsFormUI = (props: any) => {
 				<View style={{ flex: 1 }}>
 					<StripeProvider publishableKey={publicKey}>
 						<CardField
-							postalCodeEnabled={true}
+							postalCodeEnabled={false}
 							cardStyle={{
 								backgroundColor: '#FFFFFF',
 								textColor: '#000000',
+								fontSize: 17,
 								styles: {
-
+									
 								}
 							}}
 							style={{
@@ -132,7 +132,7 @@ const StripeElementsFormUI = (props: any) => {
 								marginVertical: 50,
 								borderWidth: 1,
 								borderColor: theme.colors.border,
-								borderRadius: 7.6
+								borderRadius: 7.6,
 							}}
 							onCardChange={(cardDetails: any) => setCard(cardDetails)}
 						/>

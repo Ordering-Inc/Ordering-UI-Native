@@ -118,28 +118,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 										onClick={() => (navigation?.canGoBack() && navigation.goBack()) || (auth && navigation.navigate('BottomTab'))}
 										imgLeftStyle={{ tintColor: '#fff' }}
 									/>
-									{/* <AddressInput
-										onPress={() => auth
-											? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
-											: onRedirect('AddressForm', { address: orderState.options?.address })}
-									>
-										<OText color={theme.colors.white} numberOfLines={1}>
-											{orderState?.options?.address?.address}
-										</OText>
-									</AddressInput> */}
 								</View>
-
 							</TopHeader>
-							{/* <WrapSearchBar>
-								<SearchBar
-									onSearch={handleChangeSearch}
-									onCancel={() => handleCancel()}
-									isCancelXButtonShow
-									noBorderShow
-									placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
-									lazyLoad={businessState?.business?.lazy_load_products_recommended}
-								/>
-							</WrapSearchBar> */}
 						</>
 					)}
 					<BusinessBasicInformation
@@ -153,15 +133,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				</WrapHeader>
 				{!loading && business?.id && (
 					<>
-						{/* {!(business?.categories?.length === 0) && (
-							<BusinessProductsCategories
-								categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
-								categorySelected={categorySelected}
-								onClickCategory={handleChangeCategory}
-								featured={featuredProducts}
-								openBusinessInformation={openBusinessInformation}
-							/>
-						)} */}
 						<WrapContent>
 							<BusinessProductsList
 								categories={[

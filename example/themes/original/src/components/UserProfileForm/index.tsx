@@ -52,7 +52,7 @@ const ProfileUI = (props: ProfileParams) => {
 
 	const [{ user }] = useSession();
 	const [, t] = useLanguage();
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const { handleSubmit, errors, setValue, control } = useForm();
 
 	const [phoneInputData, setPhoneInputData] = useState({

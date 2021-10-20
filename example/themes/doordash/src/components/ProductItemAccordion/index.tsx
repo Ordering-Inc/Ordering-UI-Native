@@ -42,12 +42,15 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 			borderWidth: 1,
 			borderColor: 'transparent',
 			borderRadius: 15,
-			backgroundColor: theme.colors.black,
+			backgroundColor: theme.colors.red,
 			width: 24,
 			height: 24,
-			padding: 0,
 			textAlign: 'center',
-			paddingEnd: 6
+			paddingLeft: 0,
+			paddingTop: 0,
+			paddingBottom: 0,
+			paddingRight: 5,
+			opacity: 0
 		},
 		inputIOS: {
 			color: theme.colors.white,
@@ -149,6 +152,15 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 					<ProductInfo>
 						{isCartProduct && !isCartPending && getProductMax && !isMini && (
 							<View style={{flex: 1}}>
+								{Platform.OS == 'android' && 
+									<View style={{
+										paddingTop: 2,
+										alignItems: 'center', justifyContent: 'center',
+										position: 'absolute', width: 24, height: 24, 
+										borderRadius: 15, backgroundColor: 'black'}}>
+										<OText size={10} color={'white'}>{`${product.quantity}x`}</OText>
+									</View>
+								}
 								<RNPickerSelect
 									items={productOptions}
 									onValueChange={handleChangeQuantity}
@@ -156,7 +168,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 									style={pickerStyle}
 									useNativeAndroidPickerStyle={false}
 									placeholder={{}}
-									Icon={() => <OText color={theme.colors.white} size={12} style={pickerStyle.icon}>{'x'}</OText>}
+									Icon={() => <OText color={theme.colors.white} size={12} style={pickerStyle.icon}>{Platform.OS === 'android' ? '' : 'x'}</OText>}
 									disabled={orderState.loading}
 								/>
 								{Platform.OS === 'android' && <Text	style={styles.emptyText}>{' '}</Text>}
@@ -164,9 +176,13 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 						)}
 					</ProductInfo>
 					<ContentInfo>
-						{product?.images && !isMini && (
+						{!isMini && (
 							<ProductImage>
-								<OIcon url={product?.images} style={styles.productImage} />
+								{product?.images ? 	
+									<OIcon url={product?.images} style={styles.productImage} />
+									:
+									<OIcon src={theme.images.dummies.product} style={styles.productImage} />
+								}
 							</ProductImage>
 						)}
 						<View style={{ flex: 1, flexDirection: isMini ? 'row' : 'column', justifyContent: 'space-between', alignItems: isMini ? 'center' : 'flex-start' }}>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { TouchableOpacity, View } from 'react-native'
-import { LanguageSelector as LanguageSelectorController } from 'ordering-components/native'
+import { TouchableOpacity, View, StyleSheet } from 'react-native'
+import { LanguageSelector as LanguageSelectorController, useLanguage } from 'ordering-components/native'
 import CountryPicker, { Flag } from 'react-native-country-picker-modal'
 
 import { Container, LanguageItem } from './styles'
@@ -17,6 +17,16 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   } = props
 
 	const theme = useTheme()
+  const [{loading}] = useLanguage()
+
+  const styles = StyleSheet.create({
+    closeIcon: {
+      width: 48, marginLeft: 32
+    },
+    flagsContainer: {
+      marginLeft: 40
+    }
+  })
 
   const _languages = languagesState?.languages?.map((language: any) => {
     return {
@@ -37,7 +47,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
 	const currentLanguageData = _languages?.find((item:any) => item.value == currentLanguage);
 
-  return (
+	return (
     <Container>
       {languagesState?.languages && (
 				<CountryPicker
@@ -46,9 +56,11 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 					onClose={() => setCountryModalVisible(false)}
 					withCountryNameButton
 					countryCodes={countryCodes}
+					closeButtonStyle={styles.closeIcon}
 					renderFlagButton={() => (
 						<TouchableOpacity
 							onPress={() => setCountryModalVisible(true)}
+							disabled={loading}
 						>
 							<LanguageItem>
 									<Flag
@@ -65,16 +77,17 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 						/* @ts-ignore */
 						keyExtractor: (item) => item.value,
 						data: _languages || [],
-						renderItem: ({item}) => (
+						renderItem: ({item} : any) => (
 							<TouchableOpacity
 								onPress={() => {
 									/* @ts-ignore */
 									handleChangeLanguage(item.value);
 									setCountryModalVisible(false);
 								}}
+								disabled={loading}
 							>
 								<LanguageItem>
-									<View style={{ width: 40 }} />
+									<View style={styles.flagsContainer} />
 									<Flag
 										withEmoji
 										flagSize={24}

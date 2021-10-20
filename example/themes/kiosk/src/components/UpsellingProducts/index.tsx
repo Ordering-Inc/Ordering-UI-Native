@@ -38,6 +38,24 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const [, t] = useLanguage()
   const [orientationState] = useDeviceOrientation();
 
+  const styles = StyleSheet.create({
+    imageStyle: {
+      width: '100%',
+      height: Platform.OS === 'ios' ? 250 : 180,
+      resizeMode: 'cover',
+      borderRadius: 10,
+    },
+    closeUpsellingButton: {
+      marginVertical: 10,
+      marginHorizontal: 20,
+      marginLeft: orientationState.orientation === PORTRAIT ? 20 : 0
+    },
+    upsellingModal: {
+      height: '50%',
+      top: 250
+    }
+  })
+
   useEffect(() => {
     if (!isCustomMode) {
       if (upsellingProducts?.products?.length && !upsellingProducts.loading) {
@@ -68,11 +86,12 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
       <Container>
         {
           !upsellingProducts.loading ? (
-            orientationState.orientation == PORTRAIT ? (
+            orientationState.orientation === PORTRAIT ? (
             <>
               <NavBar
                 title={t('BEFORE_YOU_GO', 'Before you go')}
                 onActionLeft={onClose}
+                btnStyle={{paddingLeft: 0}}
               />
 
               <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
@@ -149,6 +168,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                 <NavBar
                   title={t('BEFORE_YOU_GO', 'Before you go')}
                   onActionLeft={onClose}
+                  btnStyle={{paddingLeft: 0}}
                 />
 
                 <View
@@ -298,23 +318,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  imageStyle: {
-    width: '100%',
-    height: Platform.OS === 'ios' ? 250 : 180,
-    resizeMode: 'cover',
-    borderRadius: 10,
-  },
-  closeUpsellingButton: {
-    marginVertical: 10,
-    marginHorizontal: 20,
-  },
-  upsellingModal: {
-    height: '50%',
-    top: 250
-  }
-})
 
 export const UpsellingProducts = (props : UpsellingProductsParams) => {
   const upsellingProductsProps = {

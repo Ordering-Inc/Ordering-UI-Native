@@ -4,6 +4,9 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '11.0'
 
 target 'delivery' do
+  # Pods for google signin
+    pod 'GoogleSignIn', '~> 6.0.2'
+
   # React Native Maps dependencies
     permissions_path = '../node_modules/react-native-permissions/ios'
     pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"

@@ -21,6 +21,8 @@ import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import RNPrint from 'react-native-print';
 import { useTheme } from 'styled-components/native';
 
+import { ProductItemAccordion } from '../ProductItemAccordion';
+
 export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
   const handleArrowBack: any = () => {
     navigation?.canGoBack() && navigation.goBack();
@@ -31,6 +33,46 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
   const [state, setState] = useState({
     selectedPrinter: { url: undefined },
   });
+
+  const getFormattedSubOptionName = ({ quantity, name, position, price }: any) => {
+    if (name !== 'No') {
+      const pos = position && position !== 'whole' ? `(${t(position.toUpperCase(), position)})` : '';
+      return pos
+        ? `${quantity} x ${name} ${pos} +${parsePrice(price)}\n`
+        : `${quantity} x ${name} +${parsePrice(price)}\n`;
+    } else {
+      return 'No\n';
+    }
+  };
+
+  const getSuboptions = (suboptions: any) => {
+    const array: any = []
+    suboptions?.length > 0 &&
+    suboptions?.map((suboption: any) => {
+      const string = `&nbsp;&nbsp;&nbsp;${getFormattedSubOptionName(suboption)}<br/>`
+      array.push(string)
+    })
+
+    return array.join('')
+  }
+
+  const getOptions = (options: any, productComment: string = '') => {
+    const array: any = [];
+
+    options?.length &&
+    options?.map((option: any) => {
+      const string =
+      `  ${option.name}<br/>${getSuboptions(option.suboptions)}`;
+
+      array.push(string)
+    })
+
+    if (productComment) {
+      array.push(`${t('COMMENT', 'Comment')}<br/>&nbsp;&nbsp;&nbsp;&nbsp;${productComment}`)
+    }
+
+    return array.join('')
+  }
 
   const theme = useTheme();
   const percentTip =
@@ -105,11 +147,11 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
             : ''
         } 
 
-        ${t('ADDRES', 'Addres')}: ${order?.business?.address} 
+        ${t('ADDRESS', 'Address')}: ${order?.business?.address} 
         </br>
         ${
           !!order?.business?.address_notes
-            ? `${t('SPECIAL_ADDRES', 'Special Addres')}: ${
+            ? `${t('SPECIAL_ADDRESS', 'Special Address')}: ${
                 order?.business?.address_notes
               } `
             : ''
@@ -117,23 +159,26 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
         </p>
         <h1> ${t('ORDER_DETAILS', 'Order Details')}</h1>
 
-        ${
-          order?.products.length &&
+        ${order?.products.length &&
           order?.products.map(
             (product: any, i: number) =>
-              `
-              <div style="display: flex;">
+              `<div style="display: flex;flexDirection:row;flex-wrap:wrap">
+                <div style="display:flex;width:100%">
+                  <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
+                  ${product?.quantity}  ${product?.name}
+                  </div>
 
-                <div style="display:flex; justify-content: flex-start; font-size: 26px; width: 70%">
-                ${product?.quantity}  ${product?.name}
+                  <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
+                  ${parsePrice(product.total ?? getProductPrice(product))}
+                  </div>
                 </div>
 
-                <div style="display:flex; justify-content: flex-end; font-size: 26px; width: 30%">
-                ${parsePrice(product.total ?? getProductPrice(product))}
+                <div style="font-size: 26px;width:100%">
+                  <div style="width:90%;display:flex;justifyContent:center;margin:auto;">
+                    ${getOptions(product.options, product.comment)}
+                  </div>
                 </div>
-
-              </div>
-              `,
+              </div>`
           )
         }
         <div style="display: flex;">
@@ -518,43 +563,13 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
 
             {order?.products.length &&
               order?.products.map((product: any, i: number) => (
-                <View
-                  key={i}
-                  style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View key={i}>
                   <ContentInfo>
-                    <View style={{ flexDirection: 'row', width: '85%' }}>
-                      <OText
-                        style={{ marginBottom: 5 }}
-                        color={theme.colors.quantityProduct}
-                        space>
-                        {product?.quantity}
-                      </OText>
-
-                      <OText
-                        size={12}
-                        color={theme.colors.textGray}
-                        style={{ marginLeft: 5, marginBottom: 5 }}>
-                        {product?.name}
-                      </OText>
-                    </View>
-
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        flex: 1,
-                        alignItems: 'flex-end',
-                        width: '15%',
-                      }}>
-                      <OText
-                        style={{ marginBottom: 5 }}
-                        adjustsFontSizeToFit
-                        size={12}
-                        color={theme.colors.textGray}
-                        numberOfLines={1}>
-                        {parsePrice(product.total ?? getProductPrice(product))}
-                      </OText>
-                    </View>
+                    <ProductItemAccordion
+                      key={product?.id || i}
+                      product={product}
+                      isClickableEvent
+                    />
                   </ContentInfo>
                 </View>
               ))}
@@ -669,25 +684,17 @@ export const OrderSummary = ({ order, navigation, orderStatus }: any) => {
         <View style={{ height: 40 }} />
       </Content>
 
-      <FloatingButton
-        firstButtonClick={() =>
-          Platform.OS === 'ios' ? selectPrinter() : printPDF()
-        }
-        btnText={
-          Platform.OS === 'ios'
-            ? t('SELECT_PRINTER', 'Select Printer')
-            : t('PRINT', 'Print')
-        }
-        color={theme.colors.green}
-      />
-
-      {Platform.OS === 'ios' && state.selectedPrinter && (
+      <View style={{ marginBottom: 0 }}>
         <FloatingButton
-          firstButtonClick={() => silentPrint()}
+          firstButtonClick={() =>
+            Platform.OS === 'ios' ? silentPrint() : printPDF()
+          }
           btnText={t('PRINT', 'Print')}
           color={theme.colors.green}
+          widthButton={'100%'}
+          isPadding
         />
-      )}
+      </View>
     </>
   );
 };

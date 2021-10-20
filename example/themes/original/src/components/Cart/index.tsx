@@ -31,6 +31,7 @@ const CartUI = (props: any) => {
 		removeProduct,
 		handleCartOpen,
 		setIsCartsLoading,
+		hideUpselling
 		// isFromCart
 	} = props
 
@@ -248,6 +249,7 @@ const CartUI = (props: any) => {
 					canOpenUpselling={canOpenUpselling}
 					setCanOpenUpselling={setCanOpenUpselling}
 					handleCloseUpsellingPage={() => { }}
+					isFromCart
 				/>
 			)}
 		</CContainer>

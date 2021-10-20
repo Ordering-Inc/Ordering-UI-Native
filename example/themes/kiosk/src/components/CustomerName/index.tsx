@@ -55,6 +55,7 @@ const CustomerName = (props: Props): React.ReactElement => {
   const submitButton  = (<OButton
     text={t('PROCEED_TO_PAY', 'Proceed to Pay')}
     onClick={handleSubmit(onSubmit)}
+    textStyle={{color: theme.colors.primaryContrast, fontSize: 20}}
     parentStyle={{
       height: orientationState?.orientation === PORTRAIT
          ? 50 : 100
@@ -72,6 +73,7 @@ const CustomerName = (props: Props): React.ReactElement => {
         <NavBar
           title={t('YOUR_NAME', 'Your name')}
           onActionLeft={goToBack}
+          btnStyle={{paddingLeft: 0}}
         />
 
         <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
@@ -118,14 +120,13 @@ const CustomerName = (props: Props): React.ReactElement => {
                 'Invalid name',
               ).replace('_attribute_', t('NAME', 'Name')),
             }
-          
           }}
           defaultValue=""
         />
 
         {orientationState?.orientation === LANDSCAPE && submitButton}
       </Container>
-      
+
       {(orientationState?.orientation === PORTRAIT) && (
         <OSActions>
           {submitButton}

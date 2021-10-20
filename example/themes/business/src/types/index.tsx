@@ -19,6 +19,7 @@ export interface LoginParams {
   emailInputIcon?: any;
   passwordInputIcon?: any;
   allowedLevels?: any;
+  useRootPoint?: any;
 }
 export interface ProfileParams {
   navigation?: any;
@@ -365,6 +366,7 @@ export interface ProductItemAccordionParams {
   onEditProduct?: (product: any) => void;
   offsetDisabled?: any;
   isFromCheckout?: any;
+  isClickableEvent?: any;
 }
 export interface ReviewOrderParams {
   order?: { orderId: number; businessId: number; logo: string };
@@ -435,6 +437,7 @@ export interface FloatingButtonParams {
   secondButton?: boolean;
   firstColorCustom?: string;
   secondColorCustom?: string;
+  paddingBottomIos?: any;
 }
 export interface MomentOptionParams {
   navigation: any;

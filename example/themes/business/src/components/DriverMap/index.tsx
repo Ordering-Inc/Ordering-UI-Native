@@ -221,10 +221,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
       center: { latitude, longitude },
     });
 
-    if (userLocation.latitude && userLocation.longitude)
-      updateDriverPosition({
-        location: { lat: userLocation.latitude, lng: userLocation.longitude },
-      });
   }, [userLocation]);
 
   const handleArrowBack: any = () => {
@@ -405,17 +401,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
             onTouchStart={() => (following.current = false)}>
             {location ? (
               <>
-                <Polyline
-                  coordinates={[
-                    { latitude: location.lat, longitude: location.lng },
-                    {
-                      latitude: userLocation.latitude,
-                      longitude: userLocation.longitude,
-                    },
-                  ]}
-                  strokeColor="blue"
-                  strokeWidth={3}
-                />
                 <Marker
                   coordinate={{
                     latitude: location.lat,

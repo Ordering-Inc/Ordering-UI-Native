@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, StyleSheet } from 'react-native'
 import {
   BusinessAndProductList,
   useLanguage,
+  useOrder,
+  useSession,
+  useConfig,
+  useApi
 } from 'ordering-components/native'
 import Carousel from 'react-native-snap-carousel';
-
 import { BusinessProductsListingParams, Business, Product } from '../../types'
 import { OCard, OText } from '../shared'
 import GridContainer from '../../layouts/GridContainer'
@@ -26,7 +29,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const _categories: any = business?.original?.categories;
   let _promos: any = [];
-
   _categories?.forEach((categ: any) => {
     const _featuredProds = categ?.products?.filter(
       (prod: any) => prod.featured,
@@ -123,7 +125,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   );
 
   if (businessState?.error) {
-    return <OText>error!</OText>;
+    return <OText>{t('ERROR', 'Error')}</OText>;
   }
 
   return (

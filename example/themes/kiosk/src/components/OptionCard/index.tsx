@@ -1,10 +1,10 @@
 import React from 'react';
-import { ImageSourcePropType, ImageStyle, TextStyle, ViewStyle } from 'react-native';
+import { ImageSourcePropType, ImageStyle, TextStyle, ViewStyle, ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'styled-components/native';
 
 import { OButton, OIcon, OText } from '../shared';
-import { Container, InnerContainer } from './styles';
+import { Container, InnerContainer, ActivityIndicatorContainer } from './styles';
 
 const OptionCard = (props: Props) => {
   const theme = useTheme();
@@ -13,6 +13,7 @@ const OptionCard = (props: Props) => {
     <TouchableOpacity
       onPress={props.onClick}
       activeOpacity={1}
+      disabled={props.isDisabled}
     >
       <Container
         source={props.bgImage}
@@ -20,7 +21,13 @@ const OptionCard = (props: Props) => {
       >
         <InnerContainer
           style={props.innerStyle}
+          isLoading={props.isLoading}
         >
+          {props.isLoading && (
+            <ActivityIndicatorContainer>
+              <ActivityIndicator size='large' color='#ffffff' />
+            </ActivityIndicatorContainer>
+          )}
           <OIcon
             src={props.icon}
             style={{ marginBottom: 10, ...props?.iconStyle }}
@@ -79,6 +86,7 @@ interface Props {
   description: string;
   descriptionStyle?: TextStyle;
   isDisabled?: boolean;
+  isLoading?: boolean;
   onClick?: () => void;
   style?: ViewStyle;
   bgImage: ImageSourcePropType;

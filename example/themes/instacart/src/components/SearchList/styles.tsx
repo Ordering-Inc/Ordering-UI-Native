@@ -19,6 +19,7 @@ export const Search = styled.View`
   margin-vertical: 10px;
   height: 60px;
   min-height: 60px;
+  max-height: 60px;
   padding-horizontal: 40px;
 `
 

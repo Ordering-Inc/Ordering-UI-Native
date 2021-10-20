@@ -33,6 +33,7 @@ const Intro = (props: any): React.ReactElement => {
 
   return (
     <ScrollView
+      scrollEnabled={false}
       refreshControl={
         <RefreshControl
           refreshing={showLogoutPopup ? false : refreshing}
@@ -85,7 +86,7 @@ const Intro = (props: any): React.ReactElement => {
             <OImage
               source={theme.images.general.homeHeroLandscape}
               width={orientationState?.dimensions?.width * 0.40}
-              height={orientationState?.dimensions?.height}
+              height={orientationState?.dimensions?.height * 1.1}
               style={{bottom: 100, right: 100}}
               resizeMode='cover'
             />

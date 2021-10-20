@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Pressable, StyleSheet, View, Keyboard, TextStyle } from 'react-native';
+import { Pressable, StyleSheet, View, Keyboard, TextStyle, TouchableOpacity } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber'
@@ -75,7 +75,6 @@ const LoginFormUI = (props: LoginParams) => {
 		},
 		inputHead: {
 			flexBasis: '25%',
-			marginTop: 9
 		},
 		socialButton: {
 			height: 40,
@@ -116,6 +115,7 @@ const LoginFormUI = (props: LoginParams) => {
 	const { width } = useWindowDimensions();
 
 	const inputRef = useRef<any>({})
+	const emailRef = useRef<any>({})
 
 	const handleChangeTab = (val: string) => {
 		props.handleChangeTab(val);
@@ -312,7 +312,9 @@ const LoginFormUI = (props: LoginParams) => {
 					<FormInput>
 						{useLoginByEmail && loginTab === 'email' && (
 							<InputWrapper>
-								<OText style={{ ...loginStyle.inputHead, ...theme.labels.middle } as TextStyle}>{t('EMAIL', 'Email')}</OText>
+								<Pressable onPress={() => emailRef.current?.focus()} style={{...loginStyle.inputHead, justifyContent: 'center', minHeight: 40}}> 
+									<OText style={{ ...theme.labels.middle } as TextStyle}>{t('EMAIL', 'Email')}</OText> 
+								</Pressable>
 								<Controller
 									control={control}
 									render={({ onChange, value }: any) => (
@@ -322,6 +324,7 @@ const LoginFormUI = (props: LoginParams) => {
 											onChange={(e: any) => {
 												handleChangeInputEmail(e, onChange)
 											}}
+											forwardRef={emailRef}
 											value={value}
 											autoCapitalize='none'
 											autoCorrect={false}
@@ -359,7 +362,9 @@ const LoginFormUI = (props: LoginParams) => {
 						)}
 						<View style={{ height: 1, backgroundColor: theme.colors.border, width: width, marginStart: -40 }} />
 						<InputWrapper>
-							<OText style={{ ...loginStyle.inputHead, ...theme.labels.middle } as TextStyle}>{t('PASSWORD', 'Password')}</OText>
+							<Pressable onPress={() => inputRef.current?.focus()} style={{...loginStyle.inputHead, justifyContent: 'center', minHeight: 40}}> 
+								<OText style={{ ...theme.labels.middle } as TextStyle}>{t('PASSWORD', 'Password')}</OText>
+							</Pressable>
 							<Controller
 								control={control}
 								render={({ onChange, value }: any) => (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   TouchableOpacity,
   ActivityIndicator,
@@ -42,6 +42,8 @@ import { OIcon, OIconButton, OText } from '../shared';
 import { MessagesParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
 
+import SignatureScreen from 'react-native-signature-canvas';
+
 const ChatUI = (props: MessagesParams) => {
   const {
     type,
@@ -81,6 +83,8 @@ const ChatUI = (props: MessagesParams) => {
       ? 'Portrait'
       : 'Landscape',
   );
+
+  const [isShowSignaturePad, setIsShowSignaturePad] = useState(false)
 
   // Events
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
@@ -350,6 +354,7 @@ const ChatUI = (props: MessagesParams) => {
     setImage && setImage(null);
     setFile && setFile({ ...file, uri: '', type: '', name: '', size: 0 });
     setMessage && setMessage('');
+    setIsShowSignaturePad(false)
   };
 
   const messageConsole = (message: any) => {
@@ -584,17 +589,18 @@ const ChatUI = (props: MessagesParams) => {
     );
   };
 
-  const renderAccessory = (props: any) => (
-    <View>
+  const renderAccessory = () => (
       <Header
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         horizontal
-        contentContainerStyle={{
-          justifyContent:
-            orientation === 'Landscape' ? 'center' : 'space-between',
-          width: '100%',
-        }}>
+        // contentContainerStyle={{
+        //   justifyContent:
+        //     orientation === 'Landscape' ? 'center' : 'space-between',
+        //   width: '100%',
+        // }}
+        nestedScrollEnabled={true}
+      >
         {user?.level !== 2 && (
           <Pressable
             style={{
@@ -719,7 +725,6 @@ const ChatUI = (props: MessagesParams) => {
           </Pressable>
         )}
       </Header>
-    </View>
   );
 
   const userRoles: any = {
@@ -731,17 +736,17 @@ const ChatUI = (props: MessagesParams) => {
     5: t('DRIVER_MANAGER', 'Driver manager'),
   };
 
-  const renderInputToolbar = (props: InputToolbarProps) => (
+  const renderInputToolbar = (props: any) => (
     <InputToolbar
       {...props}
       containerStyle={styles.toolbarStyle}
       primaryStyle={{ alignItems: 'center', justifyContent: 'space-between' }}
       accessoryStyle={{ position: 'relative', marginBottom: 10 }}
-      renderAccessory={order ? renderAccessory : undefined}
+      renderAccessory={order ? () => renderAccessory && renderAccessory() : undefined}
     />
   );
 
-  const renderComposer = (props: ComposerProps) => (
+  const renderComposer = (props: any) => (
     <View
       style={{
         flexDirection: 'row',
@@ -777,7 +782,20 @@ const ChatUI = (props: MessagesParams) => {
         placeholderTextColor={theme.colors.composerPlaceHolder}
       />
 
-      {/* {!image && <RenderActionsAttach {...props} />} */}
+      <TouchableOpacity
+        onPress={() => {
+          setImage && setImage(null);
+          setIsShowSignaturePad(!isShowSignaturePad);
+        }}>
+        <MaterialCommunityIcon
+          name="pen"
+          color={
+            isShowSignaturePad ? theme.colors.primary : theme.colors.arrowColor
+          }
+          size={24}
+        />
+      </TouchableOpacity>
+
       {!file.type && (
         <Actions
           {...props}
@@ -790,7 +808,9 @@ const ChatUI = (props: MessagesParams) => {
                   <OIconButton
                     borderColor={theme.colors.transparent}
                     icon={
-                      image ? { uri: image } : theme.images.general.imageChat
+                      !isShowSignaturePad && image
+                        ? { uri: image }
+                        : theme.images.general.imageChat
                     }
                     iconStyle={{
                       borderRadius: image ? 10 : 0,
@@ -801,7 +821,7 @@ const ChatUI = (props: MessagesParams) => {
                     iconCover
                   />
 
-                  {image && (
+                  {image && !isShowSignaturePad && (
                     <TouchableOpacity
                       style={{
                         position: 'absolute',
@@ -1001,6 +1021,80 @@ const ChatUI = (props: MessagesParams) => {
     );
   };
 
+  const imgHeight = 120;
+  const signatureStyle = `
+    .m-signature-pad {
+      box-shadow: none;
+      border: none;
+    } 
+    .m-signature-pad--body {
+      border: none;
+    }
+    .m-signature-pad--footer {
+      display: none;
+      margin: 0px;
+    }
+    body,html {
+      height: ${imgHeight}px;
+      border-radius: 7.6px;
+    }
+    .m-signature-pad--footer
+    .button {
+      background-color: red;
+      color: #FFF;
+    }
+  `;
+
+  const signatureRef = useRef<any>();
+
+  const handleClear = () => {
+    setImage && setImage(null);
+    signatureRef.current.clearSignature();
+  };
+
+  const handleEnd = () => {
+    signatureRef.current.readSignature();
+  };
+
+  const handleOK = (signature: any) => {
+    setImage && setImage(signature);
+  };
+
+  const renderChatFooter = () => {
+    return (
+      <View
+        style={{
+          height: imgHeight,
+          paddingHorizontal: 30,
+          paddingVertical: 10,
+          borderTopColor: theme.colors.tabBar,
+          borderTopWidth: 1
+        }}
+      >
+        <SignatureScreen
+          ref={signatureRef}
+          onOK={handleOK}
+          webStyle={signatureStyle}
+          backgroundColor={theme.colors.composerView}
+          onEnd={handleEnd}
+        />
+         <TouchableOpacity
+          style={{
+            position: 'absolute',
+            right: 35,
+            top: 15
+          }}
+          onPress={handleClear}>
+          <MaterialCommunityIcon
+            name="close"
+            color={theme.colors.textGray}
+            size={24}
+          />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Wrapper>
@@ -1026,6 +1120,7 @@ const ChatUI = (props: MessagesParams) => {
           scrollToBottom
           renderAvatar={renderAvatar}
           showAvatarForEveryMessage={true}
+          renderChatFooter={isShowSignaturePad ? renderChatFooter : undefined}
           renderInputToolbar={renderInputToolbar}
           renderComposer={renderComposer}
           renderSend={renderSend}

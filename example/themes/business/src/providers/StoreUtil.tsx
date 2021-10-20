@@ -5,21 +5,17 @@ export const _retrieveStoreData = async (key: string) => {
   if (!key) return
   try {
     const value = await AsyncStorage.getItem(key);
-    if (value !== null) {
-      return JSON.parse(value)
-    }
+    return value != null ? JSON.parse(value) : null;
   } catch {
     return null
   }
 };
 
-export const _setStoreData = (key: string, val: any) => {
+export const _setStoreData = async (key: string, val: any) => {
   if (!key) return
   try {
-    AsyncStorage.setItem(
-      key,
-      typeof (val) === 'string' ? val : JSON.stringify(val)
-    )
+    const value = JSON.stringify(val)
+    await AsyncStorage.setItem(key, value)
   } catch {
     return null
   }

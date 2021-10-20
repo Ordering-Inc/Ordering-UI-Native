@@ -30,5 +30,9 @@ export const Status = styled.View`
   width: 100px;
 `
 
+export const Wrapper = styled.View`
+
+`;
+
 export const WrappButton = styled.View`
 `

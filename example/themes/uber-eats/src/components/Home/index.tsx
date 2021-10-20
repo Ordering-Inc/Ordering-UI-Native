@@ -38,20 +38,21 @@ export const Home = (props: any) => {
       </View>
       <View style={styles.wrapperBtn}>
         <OButton
-          text={t('LOGIN', 'Login')}
+          text={t('SIGNUP', 'Signup')}
           bgColor={theme.colors.primary}
           borderColor={theme.colors.primary}
           style={styles.buttons}
           textStyle={{ color: 'white' }}
+          onClick={() => onNavigationRedirect('Signup')}
           imgRightSrc={null}
-          onClick={() => onNavigationRedirect('Login')}
         />
         <OButton
-          text={t('SIGNUP', 'Signup')}
+          text={t('SIGN_IN', 'Sign in')}
           bgColor={theme.colors.white}
           borderColor={theme.colors.primary}
           style={styles.buttons}
-          onClick={() => onNavigationRedirect('Signup')}
+          imgRightSrc={null}
+          onClick={() => onNavigationRedirect('Login')}
         />
         <TouchableOpacity
           style={{ ...styles.textLink, marginTop: 15 }}
@@ -60,7 +61,7 @@ export const Home = (props: any) => {
             : handleGuessFlow('AddressForm',{ isGuestUser: true } )
           }
         >
-          <OText weight='500' size={18}>
+          <OText weight='500' size={16} mBottom={10}>
             {t('CONTINUE_AS_GUEST', 'Continue as guest')}
           </OText>
         </TouchableOpacity>

@@ -3,7 +3,7 @@ import { View, Pressable, StyleSheet, Keyboard, TextStyle, Linking, TouchableOpa
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-
+import CheckBox from '@react-native-community/checkbox';
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import { FacebookLogin } from '../FacebookLogin'
 
@@ -30,7 +30,6 @@ import NavBar from '../NavBar'
 import { VerifyPhone } from '../VerifyPhone';
 
 import { OText, OButton, OInput, OModal, OIcon } from '../shared';
-import CheckBox from '@react-native-community/checkbox';
 import { SignupParams } from '../../types';
 import { useTheme } from 'styled-components/native';
 import { sortInputFields } from '../../utils';
@@ -422,7 +421,9 @@ const SignupFormUI = (props: SignupParams) => {
 									showField && showField(field.code) && (
 										<View key={field.id}>
 											<InputWrapper>
-												<OText style={{ ...registerStyles.inputHead, ...theme.labels.middle } as TextStyle}>{t(field.name)}</OText>
+												<Pressable onPress={() => handleFocusRef(field.code)} style={{...registerStyles.inputHead, justifyContent: 'center', minHeight: 40}}> 
+													<OText style={{ ...theme.labels.middle } as TextStyle}>{t(field.name)}</OText>
+												</Pressable>
 												<Controller
 													control={control}
 													render={({ onChange, value }: any) => (
