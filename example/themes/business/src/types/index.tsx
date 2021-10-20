@@ -275,6 +275,7 @@ export interface OrdersOptionParams {
   ordersGroup?: any;
   setOrdersGroup?: any;
   setCurrentFilters?: any;
+  handleClickOrder?: any;
 }
 export interface ActiveOrdersParams {
   orders?: any;

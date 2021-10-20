@@ -7,12 +7,13 @@ import { Card, Logo, Information, MyOrderOptions, NotificationIcon } from './sty
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 export const PreviousOrders = (props: any) => {
-  const { orders, onNavigationRedirect, getOrderStatus } = props;
+  const { orders, onNavigationRedirect, getOrderStatus, handleClickOrder } = props;
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
   const theme = useTheme();
 
   const handlePressOrder = (order: any) => {
+    handleClickOrder && handleClickOrder(order)
     onNavigationRedirect &&
       onNavigationRedirect('OrderDetails', { order: order });
   };
