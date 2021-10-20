@@ -98,7 +98,6 @@ export const PreviousOrders = (props: any) => {
                   />
                 </Logo>
               )}
-
               <Information>
                 <OText numberOfLines={1} style={styles.title}>
                   {order.business?.name}
