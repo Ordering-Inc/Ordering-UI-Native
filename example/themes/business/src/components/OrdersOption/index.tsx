@@ -28,6 +28,7 @@ import { OrdersOptionCity } from '../OrdersOptionCity';
 import { OrdersOptionBusiness } from '../OrdersOptionBusiness';
 import { OrdersOptionDelivery } from '../OrdersOptionDelivery';
 import { OrdersOptionPaymethod } from '../OrdersOptionPaymethod';
+import { OrdersOptionDriver } from '../OrdersOptionDriver';
 
 const tabsList: any = {
   pending: 1,
@@ -73,7 +74,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     city: '',
     business: '',
     delivery_type: '',
-    paymethod: ''
+    paymethod: '',
+    driver: ''
   })
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
@@ -507,21 +509,20 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             search={search}
             onSearch={setSearch}
           />
-          <FilterBtnWrapper>
-            <OText size={14} color={theme.colors.unselectText} numberOfLines={1} ellipsizeMode='tail'>
-              {t('SELECT_DRIVER', 'Select Driver')}
-            </OText>
-            <FeatherIcon
-              name='chevron-down'
-              color={theme.colors.backArrow}
-              size={24}
-            />
-          </FilterBtnWrapper>
+          <OrdersOptionDriver
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
           <OButton
             text={t('SEARCH', 'Search')}
             textStyle={{ color: theme.colors.white }}
             imgRightSrc={null}
-            style={{ borderRadius: 7.6, marginBottom: 50 }}
+            style={{
+              borderRadius: 7.6,
+              marginBottom: 50,
+              marginTop: 60
+            }}
             onClick={() => console.log('dsdfs')}
           />
         </ModalContainer>
