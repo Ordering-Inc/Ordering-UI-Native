@@ -66,6 +66,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
       visible: bottomSheetVisibility,
     },
     showNotFound: false,
+    showCartBottomSheet,
   }
 
   const onToggleCart = () => {
@@ -147,17 +148,16 @@ const CategoriesMenu = (props: any): React.ReactElement => {
         </Container>
       </View>
 
-      {bottomSheetVisibility &&
-        (<View
+        <View
           style={{
             flex: bottomSheetVisibility && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
+            display: bottomSheetVisibility ? 'flex' : 'none'
           }}
         >
           <CartContent
             {...cartProps}
           />
-        </View>)
-      }
+        </View>
     </View>
 	);
 };

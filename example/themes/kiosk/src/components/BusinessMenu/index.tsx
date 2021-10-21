@@ -107,7 +107,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
         <View
           style={{
             flex: bottomSheetVisibility && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
-            position: bottomSheetVisibility ? 'relative' : 'absolute'
+            display: bottomSheetVisibility ? 'flex' : 'none'
           }}
         >
           <CartContent
