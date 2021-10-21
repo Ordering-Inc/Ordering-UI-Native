@@ -48,8 +48,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
       height: VISIBLE_CART_BOTTOM_SHEET_HEIGHT,
       visible: bottomSheetVisibility,
     },
-    showNotFound: false,
-    showCartBottomSheet
+    showNotFound: false
   }
 
   const goToBack = () => navigation.goBack()
