@@ -36,6 +36,7 @@ import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 import { useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation'
+import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
 
 export const ProductOptionsUI = (props: any) => {
   const {
@@ -63,6 +64,7 @@ export const ProductOptionsUI = (props: any) => {
   const [orderState] = useOrder();
   const [{ auth }] = useSession();
   const [orientationState] = useDeviceOrientation();
+  const [, { showCartBottomSheet }] = useCartBottomSheet();
 
   const { product, loading, error } = productObject;
 
@@ -84,6 +86,7 @@ export const ProductOptionsUI = (props: any) => {
     const isErrors = Object.values(errors).length > 0
     if (!isErrors) {
       handleSave && handleSave()
+      showCartBottomSheet()
       return
     }
   }
@@ -254,12 +257,14 @@ export const ProductOptionsUI = (props: any) => {
               flexDirection: 'row',
               alignItems: 'center',
               padding: 20,
+              paddingTop: 0,
+              paddingBottom: 10
             }}
           >
             <OImage
               source={{uri: product?.images}}
-              width={80}
-              height={80}
+              width={70}
+              height={70}
               resizeMode="cover"
               borderRadius={6}
             />

@@ -49,6 +49,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
       visible: bottomSheetVisibility,
     },
     showNotFound: false,
+    showCartBottomSheet
   }
 
   const goToBack = () => navigation.goBack()
@@ -104,17 +105,16 @@ const BusinessMenu = (props:any): React.ReactElement => {
         </Container>
       </View>
 
-      {bottomSheetVisibility &&
-        (<View
+        <View
           style={{
             flex: bottomSheetVisibility && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
+            position: bottomSheetVisibility ? 'relative' : 'absolute'
           }}
         >
           <CartContent
             {...cartProps}
           />
-        </View>)
-      }
+        </View>
     </View>
   );
 };

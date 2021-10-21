@@ -30,3 +30,13 @@ export const Checkbox = styled.TouchableOpacity`
 
 export const Circle = styled.TouchableOpacity`
 `
+
+export const LeftSide = styled.View`
+  flex-direction: row;
+  align-items: center;
+`
+
+export const RightSide = styled.View`
+  flex-direction: row;
+  align-items: center;
+`
