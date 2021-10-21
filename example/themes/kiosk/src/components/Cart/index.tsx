@@ -138,7 +138,7 @@ const CartUI = (props: any) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           style={{
-            minHeight: orientationState?.dimensions?.height * 0.05,
+            minHeight: orientationState?.dimensions?.height * 0.5,
             maxHeight: orientationState?.dimensions?.height * 0.5,
           }}
         >
