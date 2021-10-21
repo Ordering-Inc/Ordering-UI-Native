@@ -72,7 +72,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
         }}
       >
         <Container nopadding nestedScrollEnabled>
-          <View style={{ paddingVertical: 20 }}>
+          <View style={{ paddingTop: 20 }}>
             <NavBar
               title={t('MENU', 'Menu')}
               onActionLeft={goToBack}

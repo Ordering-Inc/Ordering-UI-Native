@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 export const CContainer = styled.View`
   padding: 0 20px;
@@ -50,3 +50,21 @@ export const OrderTypeWrapper = styled.View`
   border-bottom-width: 1px;
   margin-bottom: 30px;
 `;
+
+export const FloatingLayout = styled.View`
+  position: absolute;
+  flex: 1;
+  bottom: 0px;
+  left: 0;
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFF;
+  z-index: 1000;
+
+  ${((props: any) => props.isIos && css`
+    padding-bottom: 20px;
+  `)}
+`

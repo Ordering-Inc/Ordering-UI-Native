@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { useTheme } from 'styled-components/native';
 
@@ -22,7 +22,6 @@ import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/ho
 const LoginFormUI = (props: LoginParams) => {
   const {
     loginButtonText,
-    forgotButtonText,
     formState,
     handleButtonLoginClick,
   } = props;
@@ -161,12 +160,6 @@ const LoginFormUI = (props: LoginParams) => {
         style={{ borderRadius: 0 }}
         textStyle={{ fontSize: 24 }}
       />
-
-      <Pressable>
-        <OText size={24} mBottom={18} style={styles.forgotStyle}>
-          {forgotButtonText}
-        </OText>
-      </Pressable>
     </>
   );
 

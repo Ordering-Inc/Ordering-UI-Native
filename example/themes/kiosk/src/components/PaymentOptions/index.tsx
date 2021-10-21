@@ -83,7 +83,8 @@ const PaymentOptionsUI = (props: any) => {
     }
   }, [isOpenMethod.paymethod, placing, isLoading, paySelected]);
 
-  const includePaymethods = ['cash', 'card_delivery', 'stripe'];
+  // const includePaymethods = ['cash', 'card_delivery', 'stripe'];
+  const includePaymethods = ['cash', 'card_delivery'];
 
   const supportedMethods = paymethodsList.paymethods.filter((p: any) =>
     includePaymethods.includes(p.gateway),

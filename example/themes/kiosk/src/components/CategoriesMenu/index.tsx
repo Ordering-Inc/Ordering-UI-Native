@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Platform, View } from 'react-native';
 import { useLanguage, useOrder, useUtils } from 'ordering-components/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -87,7 +87,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
         }}
       >
         <Container nopadding nestedScrollEnabled>
-          <View style={{ paddingVertical: 20 }}>
+          <View style={{ paddingTop: 20 }}>
             <NavBar
               title={t('CATEGORY', 'Category')}
               onActionLeft={goToBack}
@@ -114,21 +114,12 @@ const CategoriesMenu = (props: any): React.ReactElement => {
               items={categories.map((category) => ({
                 text: category.name
               }))}
-              selectedIdx={curIndexCateg} 
+              selectedIdx={curIndexCateg}
               onSelectItem={onChangeTabs}
             />
           </View>
-          
-          <View style={{ paddingHorizontal: 20, paddingVertical: 8 }}>
-            <OText
-              size={orientationState?.dimensions?.width * 0.048}
-              weight="bold"
-            >
-              {categories[curIndexCateg].name}
-            </OText>
-          </View>
 
-          <GridContainer>
+          <GridContainer style={{ marginTop: 20 }}>
             {categories[curIndexCateg].products.map((product) => (
               <OCard
                 key={product.id}
@@ -137,7 +128,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
                 style={{
                   width: orientationState?.orientation === LANDSCAPE
                     ? orientationState?.dimensions?.width * 0.16
-                    : orientationState?.dimensions?.width * 0.21,
+                    : orientationState?.dimensions?.width * 0.21
                 }}
                 titleStyle={{marginTop: Platform.OS === 'ios' ? 10 : 0}}
                 onPress={() => {
@@ -156,7 +147,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
         </Container>
       </View>
 
-      {bottomSheetVisibility &&  
+      {bottomSheetVisibility &&
         (<View
           style={{
             flex: bottomSheetVisibility && orientationState?.orientation === PORTRAIT ? 0 : 0.8,

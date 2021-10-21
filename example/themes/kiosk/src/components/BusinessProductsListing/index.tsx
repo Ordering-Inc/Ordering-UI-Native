@@ -1,22 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import {
-  BusinessAndProductList,
-  useLanguage,
-  useOrder,
-  useSession,
-  useConfig,
-  useApi
-} from 'ordering-components/native'
+import { BusinessAndProductList, useLanguage } from 'ordering-components/native'
 import Carousel from 'react-native-snap-carousel';
 import { BusinessProductsListingParams, Business, Product } from '../../types'
-import { OCard, OText } from '../shared'
+import { OCard, OText, OIcon } from '../shared'
 import GridContainer from '../../layouts/GridContainer'
 import PromoCard from '../PromoCard';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { LANDSCAPE, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
 import { useTheme } from 'styled-components/native';
-import { OIcon } from '../shared';
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {navigation, businessState} = props;
@@ -40,8 +32,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   });
 
   const _renderTitle = (title: string): React.ReactElement => (
-    <View style={{paddingHorizontal: 20, paddingVertical: 40}}>
-      <OText size={orientationState?.dimensions?.width * 0.035} weight="bold">
+    <View style={{paddingHorizontal: 20, paddingVertical: 15 }}>
+      <OText size={orientationState?.dimensions?.width * 0.022} weight="bold">
         {title}
       </OText>
     </View>
@@ -69,7 +61,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const _renderPromos = (): React.ReactElement => (
     <>
-      {_renderTitle(t('PROMOS', 'Promos'))}
+      {_renderTitle(t('FEATURED', 'Featured'))}
       <Carousel
         keyExtractor={(item: any) => item.id}
         ref={(c: any) => {
