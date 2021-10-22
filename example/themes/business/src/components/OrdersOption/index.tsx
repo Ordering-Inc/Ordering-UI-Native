@@ -29,6 +29,7 @@ import { OrdersOptionBusiness } from '../OrdersOptionBusiness';
 import { OrdersOptionDelivery } from '../OrdersOptionDelivery';
 import { OrdersOptionPaymethod } from '../OrdersOptionPaymethod';
 import { OrdersOptionDriver } from '../OrdersOptionDriver';
+import { OrdersOptionDate } from '../OrdersOptionDate';
 
 const tabsList: any = {
   pending: 1,
@@ -70,12 +71,18 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [orientationState] = useDeviceOrientation();
   const [openModal, setOpenModal] = useState(false)
   const [search, setSearch] = useState({
+    id: '',
     state: '',
     city: '',
     business: '',
     delivery_type: '',
     paymethod: '',
-    driver: ''
+    driver: '',
+    date: {
+      from: '',
+      to: '',
+      type: ''
+    }
   })
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
@@ -150,7 +157,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [refreshing] = useState(false);
 
   const [tagsState, setTags] = useState<any>({ values: [] })
-  const [orderNumber, setOrderNumber] = useState('')
 
   const tagsList = ordersGroup[currentTabSelected].defaultFilter ?? []
   const currentOrdersGroup = ordersGroup[currentTabSelected]
@@ -214,14 +220,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
     const nextTab = tabsListText[currentTab]
     nextTab && setCurrentTabSelected(nextTab)
-  }
-
-  let timeout: null | any = null
-  const onChangeSearch = (e: any) => {
-    clearTimeout(timeout)
-    timeout = setTimeout(function () {
-      setOrderNumber(e.target.value)
-    }, 500)
   }
 
   useEffect(() => {
@@ -468,22 +466,17 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           />
           <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
           <OInput
-            value={orderNumber}
-            onChange={onChangeSearch}
+            value={search.id}
+            onChange={(e: any) => setSearch({...search, id: e.target.value})}
             style={styles.inputStyle}
             placeholder={t('ORDER_NUMBER', 'Order number')}
             autoCorrect={false}
           />
-          <FilterBtnWrapper>
-            <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.unselectText}>
-              {t('SELECT_DATE', 'Select Date')}
-            </OText>
-            <FeatherIcon
-              name='calendar'
-              color={theme.colors.backArrow}
-              size={24}
-            />
-          </FilterBtnWrapper>
+          <OrdersOptionDate
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
           <OrdersOptionStatus
             {...props}
             search={search}

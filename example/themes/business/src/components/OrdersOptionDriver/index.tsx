@@ -22,7 +22,6 @@ export const OrdersOptionDriverUI = (props: any) => {
       drivers.push({value: driver.id, content: driver.name})
     }
     setOptionsList(drivers)
-    console.log(driverList?.drivers)
   }, [driverList?.drivers])
 
   return (

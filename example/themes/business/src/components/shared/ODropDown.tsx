@@ -5,8 +5,6 @@ import { ScrollView as CustomScrollView, TouchableOpacity as CustomTouchableOpac
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Text } from 'react-native-paper';
-import { OInput, OIcon } from '../shared';
-import CalendarPicker from 'react-native-calendar-picker';
 
 interface Props {
   secondary?: boolean,
@@ -18,8 +16,7 @@ interface Props {
   dropViewMaxHeight?: any,
   isModal?: any,
   bgcolor?: string,
-  textcolor?: string,
-  isCalendar?: boolean
+  textcolor?: string
 }
 
 const Wrapper = styled.View`
@@ -44,7 +41,7 @@ const SelectedLabel = styled.Text`
 const DropView = styled.View`
   position: absolute;
   z-index: 9999;
-  top: 59px;
+  top: 60px;
   border-width: 1px;
   border-color: ${(props: any) => props.theme.colors.lightGray};
   background-color: ${(props: any) => props.theme.colors.white};
@@ -70,8 +67,7 @@ const ODropDown = (props: Props) => {
     placeholder,
     onSelect,
     dropViewMaxHeight,
-    isModal,
-    isCalendar
+    isModal
   } = props
 
   const theme = useTheme();
@@ -80,8 +76,6 @@ const ODropDown = (props: Props) => {
   const defaultOption = options?.find((option: any) => option.value === defaultValue)
   const [selectedOption, setSelectedOption] = useState<any>(defaultOption)
   const [value, setValue] = useState(defaultValue)
-  const [startDate, setStartDate] = useState(null)
-  const [endDate, setEndDate] = useState(null)
 
   const onToggle = () => {
     setIsOpen(!isOpen)
@@ -92,15 +86,6 @@ const ODropDown = (props: Props) => {
     setValue(option.value)
     onSelect(option.name || option.value)
     setIsOpen(false)
-  }
-
-  const onDateChange = (date: any, type: any) => {
-    if (type === 'END_DATE') {
-      setEndDate(date)
-    } else {
-      setStartDate(date)
-      setEndDate(null)
-    }
   }
 
   useEffect(() => {
@@ -194,30 +179,6 @@ const ODropDown = (props: Props) => {
                   </DropOption>
                 </CustomTouchableOpacity>
               ))}
-              {isCalendar && (
-                <>
-                  {/* <OInput
-                    value={from}
-                    onChange={onChangeSearch}
-                    placeholder={t('FROM', 'From')}
-                    autoCorrect={false}
-                  />
-                  <OInput
-                    value={from}
-                    onChange={onChangeSearch}
-                    placeholder={t('FROM', 'From')}
-                    autoCorrect={false}
-                  /> */}
-                  <CalendarPicker
-                    startFromMonday={true}
-                    allowRangeSelection={true}
-                    todayBackgroundColor="#f2e6ff"
-                    selectedDayColor="#7300e6"
-                    selectedDayTextColor="#FFFFFF"
-                    onDateChange={onDateChange}
-                  />
-                </>
-              )}
             </CustomScrollView>
           )}
         </DropView>
