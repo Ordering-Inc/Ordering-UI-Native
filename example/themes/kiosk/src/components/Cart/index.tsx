@@ -97,6 +97,7 @@ const CartUI = (props: any) => {
           title={t('CONFIRM_YOUR_ORDER', 'Confirm your order')}
           onActionLeft={goToBack}
           style={{ height: orientationState?.dimensions?.height * 0.08 }}
+          btnStyle={{paddingLeft: 0}}
           rightComponent={(
             <OButton
               text={t('CANCEL_ORDER', 'Cancel order')}
