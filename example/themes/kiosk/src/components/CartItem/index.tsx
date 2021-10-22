@@ -136,9 +136,9 @@ const CartItem = (props: CartItemProps) => {
           <AccordionContent>
             {productInfo()?.ingredients.length > 0 && productInfo()?.ingredients.some((ingredient: any) => !ingredient.selected) && (
               <ProductOptionsList>
-                <OText>{t('INGREDIENTS', 'Ingredients')}</OText>
+                <OText size={16}>{t('INGREDIENTS', 'Ingredients')}</OText>
                 {productInfo()?.ingredients.map((ingredient: any) => !ingredient.selected && (
-                  <OText key={ingredient.id} style={{ marginLeft: 10 }}>{t('NO', 'No')} {ingredient.name}</OText>
+                  <OText size={16} key={ingredient.id} style={{ marginLeft: 10 }}>{t('NO', 'No')} {ingredient.name}</OText>
                 ))}
               </ProductOptionsList>
             )}
@@ -146,10 +146,10 @@ const CartItem = (props: CartItemProps) => {
               <ProductOptionsList>
                 {productInfo()?.options.map((option: any, i: number) => (
                   <ProductOption key={option.id + i}>
-                    <OText>{option.name}</OText>
+                    <OText size={16}>{option.name}</OText>
                     {option.suboptions.map((suboption: any) => (
                       <ProductSubOption key={suboption.id}>
-                        <OText>
+                        <OText size={16}>
                           {getFormattedSubOptionName({
                             quantity: suboption.quantity,
                             name: suboption.name,
@@ -165,8 +165,8 @@ const CartItem = (props: CartItemProps) => {
             )}
             {product && product?.comment && (
               <ProductComment>
-                <OText>{t('SPECIAL_COMMENT', 'Special Comment')}</OText>
-                <OText>{product.comment}</OText>
+                <OText size={16}>{t('SPECIAL_COMMENT', 'Special Comment')}</OText>
+                <OText size={16}>{product.comment}</OText>
               </ProductComment>
             )}
           </AccordionContent>

@@ -391,6 +391,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           <OText
             color={theme.colors.primary}
             weight="bold"
+            mRight={30}
           >
             {parsePrice((order?.summary?.total || order?.total) - (order?.summary?.discount || order?.discount))}
           </OText>
