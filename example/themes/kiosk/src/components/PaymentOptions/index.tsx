@@ -160,7 +160,7 @@ const PaymentOptionsUI = (props: any) => {
             ),
             bgImage: theme.images.general.carddelivery,
             icon: theme.images.general.pushPin,
-            callToActionText: t("LET'S GO", "Let's go"),
+            callToActionText: t("LETS_GO", "Let's go"),
             onClick: () => onSelectPaymethod(supportedMethods[cardOnDeliveryIndex], false),
             ...supportedMethods[cardOnDeliveryIndex],
           }
