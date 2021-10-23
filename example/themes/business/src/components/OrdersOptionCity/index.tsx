@@ -36,6 +36,7 @@ export const OrdersOptionCityUI = (props: any) => {
         bgcolor={theme.colors.inputDisabled}
         textcolor={theme.colors.unselectText}
         placeholder={t('SELECT_CITY', 'Select City')}
+        dropViewMaxHeight={200}
       />
     </Container>
   );

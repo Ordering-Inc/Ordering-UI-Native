@@ -38,6 +38,7 @@ export const OrdersOptionStatus = (props: any) => {
         bgcolor={theme.colors.inputDisabled}
         textcolor={theme.colors.unselectText}
         placeholder={t('SELECT_STATUS', 'Select Status')}
+        dropViewMaxHeight={200}
       />
     </Container>
   );

@@ -23,7 +23,7 @@ export const OrdersOptionDate = (props: any) => {
     if (option === 'calendar') {
       onSearch({...search, date: {...search.date, type: option}})
     } else {
-      onSearch({...search, date: {from: '', to: '', type: option}})
+      onSearch({...search, date: {from: '1/12/21', to: '', type: option}})
     }
   }
 

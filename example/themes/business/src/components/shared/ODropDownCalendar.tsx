@@ -49,9 +49,12 @@ const SelectedLabel = styled.Text`
 const DropView = styled.View`
   position: absolute;
   z-index: 9999;
-  top: 60px;
+  top: 65px;
   border-width: 1px;
-  border-color: ${(props: any) => props.theme.colors.lightGray};
+  border-color: ${(props: any) => props.theme.colors.inputChat};
+  shadow-color: 'rgba(0.0, 0.0, 0.0, 0.5)';
+  shadow-opacity: 0.21;
+  elevation: 7;
   background-color: ${(props: any) => props.theme.colors.white};
   border-radius: 7.6px;
   padding-left: 10px;
@@ -137,11 +140,8 @@ const ODropDownCalendar = (props: Props) => {
 	};
 
   const calendarText = (from: any, to: any, placeholder: any) => {
-    console.log(from, 'this is from')
-    const end = ` -${to}`
-    const str = (from || to) ? (from + (to ? end : '')) : placeholder
-    console.log(str)
-    return str
+    const end = ` ~ ${to}`
+    return (from || to) ? (from + (to ? end : '')) : placeholder
   }
 
   useEffect(() => {
@@ -210,6 +210,7 @@ const ODropDownCalendar = (props: Props) => {
             <CustomScrollView style={{
               maxHeight: dropViewMaxHeight || null
             }}
+            nestedScrollEnabled={true}
             >
               {options.map((option: any, index: number) => (
                 <CustomTouchableOpacity
@@ -318,7 +319,6 @@ const ODropDownCalendar = (props: Props) => {
                       />
                     )
                   }
-
                 </>
               )}
             </CustomScrollView>

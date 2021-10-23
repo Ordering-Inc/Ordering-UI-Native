@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Text } from 'react-native';
-import { useLanguage, OrderListGroups } from 'ordering-components/native';
+import { View, Pressable, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { useLanguage } from 'ordering-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontistoIcon from 'react-native-vector-icons/Fontisto'
 import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+import { OrderListGroups } from './naked'
 
 import { OText, OButton, OModal, OIconButton, OInput } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
@@ -64,26 +65,15 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     loadOrders,
     loadMoreOrders,
     onNavigationRedirect,
+    search,
+    onSearch,
+    applyFilters
   } = props;
 
   const theme = useTheme();
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
   const [openModal, setOpenModal] = useState(false)
-  const [search, setSearch] = useState({
-    id: '',
-    state: '',
-    city: '',
-    business: '',
-    delivery_type: '',
-    paymethod: '',
-    driver: '',
-    date: {
-      from: '',
-      to: '',
-      type: ''
-    }
-  })
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
 
@@ -172,6 +162,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const getOrderStatus = (key: number) => {
     return orderStatus.find((status: any) => status.key === key)?.text;
   };
+
+  const handleClickSearch = () => {
+    applyFilters && applyFilters()
+    setOpenModal(false)
+  }
 
   const handleTagSelected = (tag: any) => {
     const tags = tagsState?.values.includes(tag)
@@ -449,7 +444,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       </ScrollView>
     {/* </GestureRecognizer> */}
       <OModal open={openModal} entireModal customClose>
-        <ModalContainer>
+        <ModalContainer
+          nestedScrollEnabled={true}
+        >
           <OIconButton
             icon={theme.images.general.arrow_left}
             borderColor={theme.colors.clear}
@@ -467,7 +464,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
           <OInput
             value={search.id}
-            onChange={(e: any) => setSearch({...search, id: e.target.value})}
+            onChange={(value: any) => onSearch({...search, id: value})}
             style={styles.inputStyle}
             placeholder={t('ORDER_NUMBER', 'Order number')}
             autoCorrect={false}
@@ -475,37 +472,37 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           <OrdersOptionDate
             {...props}
             search={search}
-            onSearch={setSearch}
+            onSearch={onSearch}
           />
           <OrdersOptionStatus
             {...props}
             search={search}
-            onSearch={setSearch}
+            onSearch={onSearch}
           />
           <OrdersOptionCity
             {...props}
             search={search}
-            onSearch={setSearch}
+            onSearch={onSearch}
           />
           <OrdersOptionBusiness
             {...props}
             search={search}
-            onSearch={setSearch}
+            onSearch={onSearch}
           />
           <OrdersOptionDelivery
             {...props}
             search={search}
-            onSearch={setSearch}
+            onSearch={onSearch}
           />
           <OrdersOptionPaymethod
             {...props}
             search={search}
-            onSearch={setSearch}
+            onSearch={onSearch}
           />
           <OrdersOptionDriver
             {...props}
             search={search}
-            onSearch={setSearch}
+            onSearch={onSearch}
           />
           <OButton
             text={t('SEARCH', 'Search')}
@@ -513,10 +510,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             imgRightSrc={null}
             style={{
               borderRadius: 7.6,
-              marginBottom: 50,
+              marginBottom: 70,
               marginTop: 60
             }}
-            onClick={() => console.log('dsdfs')}
+            onClick={handleClickSearch}
           />
         </ModalContainer>
       </OModal>

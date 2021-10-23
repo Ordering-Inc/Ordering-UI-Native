@@ -274,6 +274,9 @@ export interface OrdersOptionParams {
   ordersGroup?: any;
   setOrdersGroup?: any;
   setCurrentFilters?: any;
+  search?: any,
+  onSearch?: any,
+  applyFilters?: () => {}
 }
 export interface ActiveOrdersParams {
   orders?: any;

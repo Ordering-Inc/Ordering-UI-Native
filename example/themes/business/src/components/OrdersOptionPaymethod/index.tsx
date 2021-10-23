@@ -34,6 +34,7 @@ export const OrdersOptionPaymethodUI = (props: any) => {
         bgcolor={theme.colors.inputDisabled}
         textcolor={theme.colors.unselectText}
         placeholder={t('SELECT_PAYMETHOD', 'Select Paymethod')}
+        dropViewMaxHeight={200}
       />
     </Container>
   );

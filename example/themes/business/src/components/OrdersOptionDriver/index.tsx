@@ -34,6 +34,7 @@ export const OrdersOptionDriverUI = (props: any) => {
         bgcolor={theme.colors.inputDisabled}
         textcolor={theme.colors.unselectText}
         placeholder={t('SELECT_DRIVER', 'Select Driver')}
+        dropViewMaxHeight={165}
       />
     </Container>
   );

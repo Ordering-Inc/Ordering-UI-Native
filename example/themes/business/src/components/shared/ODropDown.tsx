@@ -41,9 +41,12 @@ const SelectedLabel = styled.Text`
 const DropView = styled.View`
   position: absolute;
   z-index: 9999;
-  top: 60px;
+  top: 65px;
   border-width: 1px;
-  border-color: ${(props: any) => props.theme.colors.lightGray};
+  border-color: ${(props: any) => props.theme.colors.inputChat};
+  shadow-color: 'rgba(0.0, 0.0, 0.0, 0.5)';
+  shadow-opacity: 0.21;
+  elevation: 7;
   background-color: ${(props: any) => props.theme.colors.white};
   border-radius: 7.6px;
   padding-left: 10px;
@@ -148,8 +151,10 @@ const ODropDown = (props: Props) => {
             </ScrollView>
           ) : (
             <CustomScrollView style={{
-              maxHeight: dropViewMaxHeight || null
+              maxHeight: dropViewMaxHeight || null,
+              paddingBottom: 15
             }}
+            nestedScrollEnabled={true}
             >
               {options.map((option: any, index: number) => (
                 <CustomTouchableOpacity
