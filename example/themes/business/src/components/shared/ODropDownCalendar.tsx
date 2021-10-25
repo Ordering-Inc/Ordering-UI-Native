@@ -7,9 +7,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Text } from 'react-native-paper';
-import { OInput, OIcon } from '../shared';
 import CalendarPicker from 'react-native-calendar-picker';
-import moment, { Moment } from 'moment';
 
 interface Props {
   secondary?: boolean,
@@ -108,8 +106,6 @@ const ODropDownCalendar = (props: Props) => {
   const defaultOption = options?.find((option: any) => option.value === defaultValue)
   const [selectedOption, setSelectedOption] = useState<any>(defaultOption)
   const [value, setValue] = useState(defaultValue)
-  // const [startDate, setStartDate] = useState('')
-  // const [endDate, setEndDate] = useState('')
 
   const onToggle = () => {
     setIsOpen(!isOpen)
