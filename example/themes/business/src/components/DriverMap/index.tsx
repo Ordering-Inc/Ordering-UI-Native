@@ -533,7 +533,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
         </View>
         <View>
           <OLink
-            PressStyle={{paddingHorizontal: 80, paddingVertical: 10}}
+            PressStyle={{paddingHorizontal: 80, paddingVertical: 10,bottom: showAcceptOrReject ? 80 : 0}}
             hasButton
             url={Platform.select({
               ios: `maps:0,0?q=${destination.latitude},${destination.longitude}`,
