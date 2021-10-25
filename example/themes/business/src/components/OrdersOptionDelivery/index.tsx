@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Container } from './styles';
