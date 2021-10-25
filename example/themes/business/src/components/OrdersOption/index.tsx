@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Pressable, StyleSheet, ScrollView, RefreshControl } from 'react-native';
-import { useLanguage } from 'ordering-components/native';
+import { useLanguage, useUtils, OrderListGroups } from 'ordering-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontistoIcon from 'react-native-vector-icons/Fontisto'
 import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
-import { OrderListGroups } from './naked'
 
 import { OText, OButton, OModal, OIconButton, OInput } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
@@ -65,15 +64,31 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     loadOrders,
     loadMoreOrders,
     onNavigationRedirect,
-    search,
-    onSearch,
-    applyFilters
+    filtered,
+    onFiltered
   } = props;
+
+  const defaultSearchList = {
+    id: '',
+    state: '',
+    city: '',
+    business: '',
+    delivery_type: '',
+    paymethod: '',
+    driver: '',
+    date: {
+      from: '',
+      to: '',
+      type: ''
+    }
+  }
 
   const theme = useTheme();
   const [, t] = useLanguage();
+  const [{ parseDate }] = useUtils()
   const [orientationState] = useDeviceOrientation();
   const [openModal, setOpenModal] = useState(false)
+  const [search, setSearch] = useState(defaultSearchList)
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
 
@@ -163,8 +178,16 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     return orderStatus.find((status: any) => status.key === key)?.text;
   };
 
-  const handleClickSearch = () => {
-    applyFilters && applyFilters()
+  const applyFilters = () => {
+    setOrdersGroup({
+      ...ordersGroup,
+      [currentTabSelected]: {
+        ...ordersGroup[currentTabSelected],
+        orders: []
+      }
+    })
+    const dateRange = calculateDate(search.date.type, search.date.from, search.date.to)
+    onFiltered && onFiltered({...search, date: {...dateRange}})
     setOpenModal(false)
   }
 
@@ -217,8 +240,40 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     nextTab && setCurrentTabSelected(nextTab)
   }
 
+  const calculateDate = (type: any, from: any, to: any) => {
+    switch (type) {
+      case 'today':
+        const date = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
+        return {from: `${date} 00:00:00`, to: `${date} 23:59:59`}
+      case 'yesterday':
+        const yesterday = new Date()
+        yesterday.setDate(yesterday.getDate() - 1)
+        const start1 = parseDate(yesterday, { outputFormat: 'MM/DD/YYYY' })
+        const end1 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
+        return {from: `${start1} 00:00:00`, to: `${end1} 23:59:59`}
+      case 'last_7days':
+        const last_7days = new Date()
+        last_7days.setDate(last_7days.getDate() - 6)
+        const start7 = parseDate(last_7days, { outputFormat: 'MM/DD/YYYY' })
+        const end7 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
+        return {from: `${start7} 00:00:00`, to: `${end7} 23:59:59`}
+      case 'last_30days':
+        const last_30days = new Date()
+        last_30days.setDate(last_30days.getDate() - 29)
+        const start30 = parseDate(last_30days, { outputFormat: 'MM/DD/YYYY' })
+        const end30 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
+        return {from: `${start30} 00:00:00`, to: `${end30} 23:59:59`}
+      default:
+        const start = from ? `${parseDate(from, { outputFormat: 'MM/DD/YYYY' })} 00:00:00` : ''
+        const end = to ? `${parseDate(to, { outputFormat: 'MM/DD/YYYY' })} 23:59:59` : ''
+        return {from: start, to: end}
+    }
+  }
+
   useEffect(() => {
     setCurrentFilters(null)
+    onFiltered && onFiltered(null)
+    setSearch(defaultSearchList)
     scrollRefTab.current?.scrollTo({ animated: true });
     scrollListRef.current?.scrollTo({ animated: true });
     scrollRef.current?.scrollTo({ y: 0, animated: true });
@@ -365,7 +420,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         }
       >
         {!currentOrdersGroup.error?.length &&
-          !!currentOrdersGroup.orders?.length &&
+          currentOrdersGroup.orders?.length > 0 &&
         (
           <PreviousOrders
             orders={currentOrdersGroup.orders}
@@ -412,7 +467,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           !currentOrdersGroup.loading &&
           currentOrdersGroup.pagination.totalPages &&
           currentOrdersGroup.pagination.currentPage < currentOrdersGroup.pagination.totalPages &&
-          currentOrdersGroup.orders.length &&
+          currentOrdersGroup.orders.length > 0 &&
         (
           <OButton
             onClick={handleLoadMore}
@@ -427,7 +482,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
         {!currentOrdersGroup.loading &&
           (currentOrdersGroup.error?.length ||
-          !currentOrdersGroup.orders?.length) &&
+          currentOrdersGroup.orders?.length === 0) &&
         (
           <NotFoundSource
             content={
@@ -464,7 +519,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
           <OInput
             value={search.id}
-            onChange={(value: any) => onSearch({...search, id: value})}
+            onChange={(value: any) => setSearch({...search, id: value})}
             style={styles.inputStyle}
             placeholder={t('ORDER_NUMBER', 'Order number')}
             autoCorrect={false}
@@ -472,37 +527,37 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           <OrdersOptionDate
             {...props}
             search={search}
-            onSearch={onSearch}
+            onSearch={setSearch}
           />
           <OrdersOptionStatus
             {...props}
             search={search}
-            onSearch={onSearch}
+            onSearch={setSearch}
           />
           <OrdersOptionCity
             {...props}
             search={search}
-            onSearch={onSearch}
+            onSearch={setSearch}
           />
           <OrdersOptionBusiness
             {...props}
             search={search}
-            onSearch={onSearch}
+            onSearch={setSearch}
           />
           <OrdersOptionDelivery
             {...props}
             search={search}
-            onSearch={onSearch}
+            onSearch={setSearch}
           />
           <OrdersOptionPaymethod
             {...props}
             search={search}
-            onSearch={onSearch}
+            onSearch={setSearch}
           />
           <OrdersOptionDriver
             {...props}
             search={search}
-            onSearch={onSearch}
+            onSearch={setSearch}
           />
           <OButton
             text={t('SEARCH', 'Search')}
@@ -513,7 +568,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               marginBottom: 70,
               marginTop: 60
             }}
-            onClick={handleClickSearch}
+            onClick={applyFilters}
           />
         </ModalContainer>
       </OModal>

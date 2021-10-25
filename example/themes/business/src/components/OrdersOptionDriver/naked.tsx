@@ -22,7 +22,7 @@ export const DriverList = (props: any) => {
   /**
    * Method to get cities from API
    */
-  const getPaymethods = async () => {
+  const getDriverList = async () => {
     try {
       setDriverList({
         ...driverList,
@@ -56,7 +56,7 @@ export const DriverList = (props: any) => {
     if (drivers) {
       setDriverList({ ...driverList, loading: false, drivers: drivers })
     } else {
-      getPaymethods()
+      getDriverList()
     }
   }, [])
 

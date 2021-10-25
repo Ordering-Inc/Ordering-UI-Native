@@ -5,8 +5,7 @@ import React, { useEffect, useState } from 'react'
 // import { ToastType, useToast } from '../../contexts/ToastContext'
 // import { useLanguage } from '../../contexts/LanguageContext'
 // import { useEvent } from '../../contexts/EventContext'
-// import { useUtils } from '../../../src/contexts/UtilsContext'
-import { useApi, useSession, useWebsocket, ToastType, useToast, useLanguage, useEvent, useUtils } from 'ordering-components/native'
+import { useApi, useSession, useWebsocket, ToastType, useToast, useLanguage, useEvent } from 'ordering-components/native'
 
 export const OrderListGroups = (props) => {
   const {
@@ -22,7 +21,6 @@ export const OrderListGroups = (props) => {
   const [session] = useSession()
   const [events] = useEvent()
   const socket = useWebsocket()
-  const [{ parseDate }] = useUtils()
   const [, t] = useLanguage()
   const [, { showToast }] = useToast()
 
@@ -73,20 +71,7 @@ export const OrderListGroups = (props) => {
   const [currentTabSelected, setCurrentTabSelected] = useState('pending')
   const [messages, setMessages] = useState({ loading: false, error: null, messages: [] })
   const [currentFilters, setCurrentFilters] = useState(null)
-  const [search, setSearch] = useState({
-    id: '',
-    state: '',
-    city: '',
-    business: '',
-    delivery_type: '',
-    paymethod: '',
-    driver: '',
-    date: {
-      from: '',
-      to: '',
-      type: ''
-    }
-  })
+  const [filtered, setFiltered] = useState(null)
 
   const accessToken = useDefualtSessionManager ? session.token : props.accessToken
   const requestsState = {}
@@ -106,73 +91,73 @@ export const OrderListGroups = (props) => {
     }
     options.query.where = []
     if (orderStatus) {
-      if (!search.state) options.query.where.push({ attribute: 'status', value: orderStatus })
+      if (!filtered?.state) options.query.where.push({ attribute: 'status', value: orderStatus })
 
       if (ordersGroup[currentTabSelected].orders.length > 0 && !newFetch) {
         options.query = {
           ...options.query,
           page: 1
         }
-        options.query.where.push({
-          attribute: 'id',
-          value: {
-            condition: '!=',
-            value: ordersGroup[currentTabSelected].orders.map((o) => o.id)
-          }
-        })
+        if (!filtered?.id) {
+          options.query.where.push({
+            attribute: 'id',
+            value: {
+              condition: '!=',
+              value: ordersGroup[currentTabSelected].orders.map((o) => o.id)
+            }
+          })
+        }
+
       }
     }
 
-    if (search.id) {
-      options.query.where.push({ attribute: 'id', value: search.id })
+    if (filtered?.id) {
+      options.query.where.push({ attribute: 'id', value: filtered.id })
     }
 
-    if (search.state) {
-      options.query.where.push({ attribute: 'status', value: search.state })
+    if (filtered?.state) {
+      options.query.where.push({ attribute: 'status', value: filtered.state })
     }
 
-    if (search.city) {
+    if (filtered?.city) {
       options.query.where.push({
         attribute: 'business',
         conditions: [{
           attribute: 'city_id',
-          value: search.city
+          value: filtered?.city
         }]
       })
     }
 
-    if (search.paymethod) {
-      options.query.where.push({ attribute: 'paymethod_id', value: search.paymethod })
+    if (filtered?.paymethod) {
+      options.query.where.push({ attribute: 'paymethod_id', value: filtered.paymethod })
     }
 
-    if (search.driver) {
-      options.query.where.push({ attribute: 'driver_id', value: search.driver })
+    if (filtered?.driver) {
+      options.query.where.push({ attribute: 'driver_id', value: filtered?.driver })
     }
 
-    if (search.delivery_type) {
-      options.query.where.push({ attribute: 'delivery_type', value: search.delivery_type })
+    if (filtered?.delivery_type) {
+      options.query.where.push({ attribute: 'delivery_type', value: filtered?.delivery_type })
     }
 
-    if (search?.date?.type) {
-      const dateRange = calculateDate(search?.date?.type, search?.date?.from, search?.date?.to)
-      if (dateRange.from) {
-        options.query.where.push({
-          attribute: 'delivery_datetime',
-          value: {
-            condition: '>=',
-            value: dateRange.from
-          }
-        })
-      }
-      if (dateRange.to) {
-        options.query.where.push({
-          attribute: 'delivery_datetime',
-          value: {
-            condition: '<=',
-            value: dateRange.to
-          }
-        })
-      }
+    if (filtered?.date?.from) {
+      options.query.where.push({
+        attribute: 'delivery_datetime',
+        value: {
+          condition: '>=',
+          value: filtered?.date?.from
+        }
+      })
+    }
+    if (filtered?.date?.to) {
+      options.query.where.push({
+        attribute: 'delivery_datetime',
+        value: {
+          condition: '<=',
+          value: filtered?.date?.to
+        }
+      })
     }
 
     const source = {}
@@ -215,7 +200,6 @@ export const OrderListGroups = (props) => {
         orderStatus: ordersGroup[currentTabSelected].currentFilter,
         newFetch
       })
-
       setOrdersGroup({
         ...ordersGroup,
         [currentTabSelected]: {
@@ -247,36 +231,6 @@ export const OrderListGroups = (props) => {
           }
         })
       }
-    }
-  }
-
-  const calculateDate = (type, from, to) => {
-    switch (type) {
-      case 'today':
-        const date = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
-        return {from: `${date} 00:00:00`, to: `${date} 23:59:59`}
-      case 'yesterday':
-        const yesterday = new Date()
-        yesterday.setDate(yesterday.getDate() - 1)
-        const start1 = parseDate(yesterday, { outputFormat: 'MM/DD/YYYY' })
-        const end1 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
-        return {from: `${start1} 00:00:00`, to: `${end1} 23:59:59`}
-      case 'last_7days':
-        const last_7days = new Date()
-        last_7days.setDate(last_7days.getDate() - 6)
-        const start7 = parseDate(last_7days, { outputFormat: 'MM/DD/YYYY' })
-        const end7 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
-        return {from: `${start7} 00:00:00`, to: `${end7} 23:59:59`}
-      case 'last_30days':
-        const last_30days = new Date()
-        last_30days.setDate(last_30days.getDate() - 29)
-        const start30 = parseDate(last_30days, { outputFormat: 'MM/DD/YYYY' })
-        const end30 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
-        return {from: `${start30} 00:00:00`, to: `${end30} 23:59:59`}
-      default:
-        const start = from ? `${parseDate(from, { outputFormat: 'MM/DD/YYYY' })} 00:00:00` : ''
-        const end = to ? `${parseDate(to, { outputFormat: 'MM/DD/YYYY' })} 23:59:59` : ''
-        return {from: start, to: end}
     }
   }
 
@@ -430,11 +384,6 @@ export const OrderListGroups = (props) => {
     })
   }
 
-  const applyFilters = () => {
-    console.log(ordersGroup, 'this is order group')
-    loadOrders({ newFetch: true })
-  }
-
   useEffect(() => {
     loadOrders({ newFetch: !!currentFilters })
   }, [currentTabSelected])
@@ -567,6 +516,11 @@ export const OrderListGroups = (props) => {
     }
   }, [requestsState.orders])
 
+  useEffect(() => {
+    if (!filtered) return
+    loadOrders({ newFetch: true })
+  }, [filtered])
+
   return (
     <>
       {UIComponent && (
@@ -584,9 +538,8 @@ export const OrderListGroups = (props) => {
           loadMessages={loadMessages}
           loadMoreOrders={loadMoreOrders}
           handleClickOrder={handleClickOrder}
-          search={search}
-          onSearch={setSearch}
-          applyFilters={applyFilters}
+          filtered={filtered}
+          onFiltered={setFiltered}
         />
       )}
     </>

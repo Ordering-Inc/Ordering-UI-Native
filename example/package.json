@@ -52,7 +52,7 @@
     "@types/styled-components": "^5.1.3",
     "axios": "^0.21.0",
     "moment": "^2.29.1",
-    "ordering-components": "github:Ordering-Inc/ordering-components#development",
+    "ordering-components": "github:Ordering-Inc/ordering-components#search-order",
     "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
     "prop-types": "^15.7.2",

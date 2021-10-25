@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from 'ordering-components/native';
+import { useLanguage, PaymethodList as PyamethodListControllder } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Container } from './styles';
 import ODropDown from '../shared/ODropDown';
-import { PaymethodList as PyamethodListControllder } from './naked'
 
 export const OrdersOptionPaymethodUI = (props: any) => {
   const {
