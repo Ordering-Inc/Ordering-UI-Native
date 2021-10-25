@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { View, StyleSheet, ScrollView, Animated } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
@@ -18,7 +17,6 @@ import {
 
 import { OText, OButton, OIcon, OModal } from '../shared';
 import { MomentOption } from '../MomentOption'
-import { OBottomPopup } from '../shared'
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -117,7 +115,6 @@ const CheckoutUI = (props: any) => {
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
 	const [isOpenPaymethods, setOpenPaymethods] = useState(false);
-  const [openMomentOption, setOpenMomentOption] = useState(false)
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -298,27 +295,10 @@ const CheckoutUI = (props: any) => {
 
             <ChSection>
               <ChMoment>
-                <OText size={16} style={{ textAlign: 'left' }}>
+                <OText size={16} style={{ textAlign: 'left' }} mBottom={15}>
                   {t('DELIVERY_TIME', 'Delivery time')}
                 </OText>
-                <CHMomentWrapper
-                  disabled={loading}
-                  onPress={() => setOpenMomentOption(true)}
-                >
-                  <MaterialCommunityIcon
-                    name='clock-outline'
-                    size={24}
-                    color={theme.colors.white}
-                    style={{ marginRight: 5 }}
-                  />
-                  <OText size={18} color={theme.colors.white} numberOfLines={1} ellipsizeMode='tail'>
-                    {options?.moment
-                      ? parseDate(options?.moment, {
-                        outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
-                      })
-                      : t('ASAP_ABBREVIATION', 'ASAP')}
-                  </OText>
-                </CHMomentWrapper>
+                <MomentOption nopadding />
               </ChMoment>
             </ChSection>
 
@@ -566,17 +546,6 @@ const CheckoutUI = (props: any) => {
 					/>
 				</View>
 			</OModal>
-
-      <OBottomPopup
-        customHeaderShow
-        title={t('SELECT_DELIVERY_TIME', 'Select delivery time')}
-        open={openMomentOption}
-        onClose={() => setOpenMomentOption(false)}
-      >
-        <MomentOption
-          onClose={() => setOpenMomentOption(false)}
-        />
-      </OBottomPopup>
     </>
   )
 }
