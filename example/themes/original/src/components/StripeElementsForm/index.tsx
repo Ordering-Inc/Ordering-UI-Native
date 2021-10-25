@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Keyboard } from 'react-native';
 import { useLanguage, useSession } from 'ordering-components/native';
 import {
 	StripeProvider,
@@ -35,6 +35,7 @@ const StripeElementsFormUI = (props: any) => {
 	const [createPmLoading, setCreatePmLoading] = useState(false);
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
+	const [isKeyboardShow, setIsKeyboardShow] = useState(false);
 
 	const billingDetails = {
 		name: `${user.name} ${user.lastname}`,
@@ -67,7 +68,7 @@ const StripeElementsFormUI = (props: any) => {
 			//       : error.message
 			//   );
 			// }
-		} catch (error) {
+		} catch (error: any) {
 			setErrors(error?.message || error?.toString());
 		}
 	}
@@ -95,7 +96,7 @@ const StripeElementsFormUI = (props: any) => {
 						: error.message
 				);
 			}
-		} catch (error) {
+		} catch (error: any) {
 			setErrors(error?.message || error?.toString());
 		}
 	};
@@ -111,8 +112,29 @@ const StripeElementsFormUI = (props: any) => {
 		}
 	}, [card])
 
+	useEffect(() => {
+		const keyboardDidShowListener = Keyboard.addListener(
+			'keyboardDidShow',
+			() => {
+				setIsKeyboardShow(true);
+				console.log('----- keyboard showing ----')
+			},
+		);
+		const keyboardDidHideListener = Keyboard.addListener(
+			'keyboardDidHide',
+			() => {
+				setIsKeyboardShow(false);
+				console.log('----- keyboard hidding ----')
+			},
+		);
+		return () => {
+			keyboardDidShowListener.remove();
+			keyboardDidHideListener.remove();
+		};
+	}, []);
+
 	return (
-		<View style={{ ...styles.container, ...{ height: height - top - bottom - 60 } }}>
+		<View style={{ ...styles.container, height: height - top - bottom - 60 - (isKeyboardShow ? 250 : 0) }}>
 			{publicKey ? (
 				<View style={{ flex: 1 }}>
 					<StripeProvider publishableKey={publicKey}>
