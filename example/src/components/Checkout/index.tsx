@@ -119,9 +119,7 @@ const CheckoutUI = (props: any) => {
   const [userErrors, setUserErrors] = useState<any>([]);
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
-  const [prog, setProg] = useState(true);
   const [showGateway, setShowGateway] = useState<any>({closedByUsed: false, open: false});
-  const [progClr, setProgClr] = useState('#424242');
   const [paypalMethod, setPaypalMethod] = useState<any>(null)
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
@@ -130,7 +128,6 @@ const CheckoutUI = (props: any) => {
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
-  
   const cartsWithProducts = carts && Object.values(carts).filter((cart: any) => cart.products.length) || null
 
   const handlePlaceOrder = () => {
@@ -205,8 +202,12 @@ const CheckoutUI = (props: any) => {
   }
 
   const handlePaymentMethodClick = (paymethod : any) => {
-      setShowGateway({closedByUser: false, open: true})
-      setPaypalMethod(paymethod)
+    setShowGateway({closedByUser: false, open: true})
+    setPaypalMethod(paymethod)
+  }
+
+  const handleCloseWebview = () => {
+    setShowGateway({open: false, closedByUser: true})
   }
 
   useEffect(() => {
@@ -558,9 +559,9 @@ const CheckoutUI = (props: any) => {
       )}
       <OModal
         open={paypalMethod && showGateway.open}
-        onCancel={() => setShowGateway({open: false, closedByUser: true})}
-        onAccept={() => setShowGateway({open: false, closedByUser: true})}
-        onClose={() => setShowGateway({open: false, closedByUser: true})}
+        onCancel={handleCloseWebview}
+        onAccept={handleCloseWebview}
+        onClose={handleCloseWebview}
         entireModal
       >
         <OText
@@ -573,9 +574,6 @@ const CheckoutUI = (props: any) => {
           }}>
           {t('PAYPAL_GATEWAY', 'PayPal GateWay')}
         </OText>
-        <View style={{padding: 13, opacity: prog ? 1 : 0}}>
-          <ActivityIndicator size={24} color={progClr} />
-        </View>
         <WebView
           source={{ uri: `${ordering.root}/html/paypal_react_native` }}
           onMessage={onMessage}
@@ -585,18 +583,6 @@ const CheckoutUI = (props: any) => {
           cacheEnabled={false}
           cacheMode='LOAD_NO_CACHE'
           style={{ flex: 1 }}
-          onLoadStart={() => {
-            setProg(true);
-            setProgClr('#424242');
-          }}
-          onLoadProgress={() => {
-            setProg(true);
-            setProgClr('#00457C');
-          }}
-          onLoad={() => {
-            setProg(true);
-            setProgClr('#00457C');
-          }}
           onLoadEnd={(e) => {
             const message = {
               action: 'init',
@@ -614,7 +600,6 @@ const CheckoutUI = (props: any) => {
                 clientId: paypalMethod?.credentials?.client_id
               }
             }
-            setProg(false);
             webviewRef.current.postMessage(JSON.stringify(message))
           }}
         />
