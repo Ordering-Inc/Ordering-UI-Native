@@ -76,6 +76,6 @@ export const SelectItemBtn = styled(SelectItem)`
   width: 65px;
   max-width: 140px;
   margin-vertical: 5px;
-  padding: 15px 15px;
+  padding: 15px;
   background-color: ${(props: any) => props.theme.colors.inputDisabled};
 `

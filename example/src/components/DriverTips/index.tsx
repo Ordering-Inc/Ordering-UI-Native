@@ -118,7 +118,7 @@ const DriverTipsUI = (props: any) => {
               text={t('APPLY_TIP', 'Apply Tip')}
               bgColor={theme.colors.primary}
               borderColor={theme.colors.primary}
-              textStyle={{ color: 'white', fontSize: 18, maxWidth: 110, width: 110 }}
+              textStyle={{ color: 'white', fontSize: 18, maxWidth: 110, minWidth: 60 }}
               imgRightSrc={null}
               textProps={{numberOfLines: 1}}
               isDisabled={!(value > 0 && value !== driverTip) || !value}
