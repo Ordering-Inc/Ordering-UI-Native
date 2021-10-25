@@ -40,6 +40,7 @@ const Selected = styled.TouchableOpacity`
   border-width: 1px;
   border-color: ${(props: any) => props.bgcolor || (props.secondary ? props.theme.colors.lightGray : props.theme.colors.primary)};
   background-color: ${(props: any) => props.bgcolor || (props.secondary ? props.theme.colors.white : props.theme.colors.primary)};
+  z-index: 100;
 `
 const SelectedLabel = styled.Text`
   font-size: 16px;
