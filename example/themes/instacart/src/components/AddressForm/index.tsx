@@ -13,6 +13,7 @@ import { AddressFormParams } from '../../types'
 import { getTraduction } from '../../utils'
 import { GoogleMap } from '../GoogleMap'
 import NavBar from '../NavBar'
+import { Container } from '../../layouts/Container';
 
 import {
 	AddressFormContainer,
@@ -398,13 +399,13 @@ const AddressFormUI = (props: AddressFormParams) => {
 	}, [])
 
 	return (
-		<>
+		<Container>
 			<NavBar
 				title={t('WHERE_DO_WE_DELIVERY', 'Where do we delivery?')}
 				titleAlign={'center'}
 				onActionLeft={goToBack}
 				showCall={false}
-				style={{ paddingHorizontal: 14 }}
+				style={{ paddingHorizontal: 0, marginHorizontal: -7 }}
 			/>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 				<AddressFormContainer
@@ -650,7 +651,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 					<Spinner visible={saveMapLocation} />
 				</AddressFormContainer>
 			</TouchableWithoutFeedback>
-		</>
+		</Container>
 	)
 }
 

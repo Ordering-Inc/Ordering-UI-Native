@@ -88,9 +88,9 @@ const ForgotPasswordUI = (props: any) => {
 			onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
 			showCall={false}
 			paddingTop={0}
-			style={{paddingStart: 20}}
+			btnStyle={{marginStart: -6, paddingEnd: 10}}
 		/>
-		<Container style={{ paddingHorizontal: 20}}>
+		<Container>
 			<FormSide>
 				<OText
 					color={theme.colors.textSecondary}
