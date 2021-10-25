@@ -566,7 +566,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             style={{
               borderRadius: 7.6,
               marginBottom: 70,
-              marginTop: 60
+              marginTop: 60,
+              zIndex: 12
             }}
             onClick={applyFilters}
           />
