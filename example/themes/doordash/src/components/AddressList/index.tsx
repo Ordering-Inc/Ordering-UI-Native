@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder, useSession } from 'ordering-components/native'
 import { AddressListContainer, AddressItem } from './styles'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import { OButton, OText, OAlert, OModal, OIcon } from '../shared'
 import { Container } from '../../layouts/Container'
@@ -133,7 +133,7 @@ const AddressListUI = (props: AddressListParams) => {
 			{(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile)) && (
 				<AddressListContainer>
 					{isFromProfile && (
-						<OText size={16} lineHeight={21} weight={'600'} mBottom={12}>{t('SAVED_PLACES', 'My saved places')}</OText>
+						<OText size={16} lineHeight={21} weight={Platform.OS == 'ios' ? '600' : 'bold'} mBottom={12}>{t('SAVED_PLACES', 'My saved places')}</OText>
 					)}
 					{
 						route &&
@@ -259,7 +259,7 @@ const AddressListUI = (props: AddressListParams) => {
 								imgLeftSrc={''}
 								bgColor={theme.colors.white}
 								style={styles.button}
-								textStyle={{ fontSize: 14, fontWeight: '600', color: theme.colors.primary }}
+								textStyle={{ fontSize: 14, fontWeight: Platform.OS == 'ios' ? '600' : 'bold', color: theme.colors.primary }}
 								borderColor={theme.colors.primary}
 								onClick={() => !afterSignup ? onNavigationRedirect(
 									'AddressForm',

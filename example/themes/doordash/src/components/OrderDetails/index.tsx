@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager, TextStyle } from 'react-native'
+import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager, TextStyle, Platform } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
 import { Messages } from '../Messages'
@@ -215,7 +215,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 						/>
 						{/* <HeaderInfo>
 							<OIcon src={theme.images.logos.logotypeInvert} height={50} width={180} />
-							<OText size={28} color={theme.colors.white} style={{ fontWeight: '600', alignItems: 'flex-start' }}>
+							<OText size={28} color={theme.colors.white} style={{ fontWeight: Platform.OS === 'ios' ? '600' : 'bold', alignItems: 'flex-start' }}>
 								{order?.customer?.name} {t('THANKS_ORDER', 'thanks for your order!')}
 							</OText>
 							<OText color={theme.colors.white}>{t('ORDER_MESSAGE_HEADER_TEXT', 'Once business accepts your order, we will send you an email, thank you!')}</OText>
@@ -229,7 +229,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 						<OrderInfo>
 							<OrderData>
 								<View style={{ alignItems: 'flex-start', marginBottom: 19 }}>
-									<OText size={20} weight={'600'} style={{ lineHeight: 30, marginBottom: 16 }}>{t('ORDER', 'Order')} {order?.id}</OText>
+									<OText size={20} weight={Platform.OS === 'ios' ? '600' : 'bold'} style={{ lineHeight: 30, marginBottom: 16 }}>{t('ORDER', 'Order')} {order?.id}</OText>
 									<OText color={theme.colors.textPrimary} style={theme.labels.middle as TextStyle}>{getOrderStatus(order?.status)?.value}</OText>
 									<OText style={theme.labels.small as TextStyle} color={theme.colors.textSecondary}>
 										{`${order?.business?.name} \u2022 ${order?.delivery_datetime_utc
@@ -389,8 +389,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 							</Table>
 							<Total>
 								<Table>
-									<OText size={12} weight={'600'}>{t('TOTAL', 'Total')}</OText>
-									<OText size={12} weight={'600'}>{parsePrice(order?.summary?.total || order?.total)}</OText>
+									<OText size={12} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('TOTAL', 'Total')}</OText>
+									<OText size={12} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{parsePrice(order?.summary?.total || order?.total)}</OText>
 								</Table>
 							</Total>
 						</OrderBill>

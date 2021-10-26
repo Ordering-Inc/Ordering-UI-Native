@@ -8,7 +8,7 @@ import {
 } from 'ordering-components/native'
 import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
-import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager, TextStyle } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager, TextStyle, Platform } from 'react-native'
 import {
 	ProductHeader,
 	WrapHeader,
@@ -291,7 +291,7 @@ export const ProductOptionsUI = (props: any) => {
 														<OIcon src={theme.images.general.minus} width={16} color={productCart.quantity === 1 || isSoldOut ? theme.colors.textSecondary : theme.colors.backgroundDark} />
 													</TouchableOpacity>
 													<View style={styles.quantityWrap}>
-														<OText size={12} weight={'600'}>{productCart.quantity}</OText>
+														<OText size={12} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{productCart.quantity}</OText>
 													</View>
 													<TouchableOpacity
 														onPress={increment}
@@ -324,7 +324,7 @@ export const ProductOptionsUI = (props: any) => {
 								imgRightSrc=''
 								text={`${orderState.loading ? t('LOADING', 'Loading') : editMode ? t('UPDATE', 'Update') : t('ADD_TO_CART', 'Add to Cart')}`}
 								textSub={`${orderState.loading ? '' : productCart.total ? parsePrice(productCart?.total) : ''}`}
-								textStyle={{ color: saveErrors ? theme.colors.textSecondary : theme.colors.white, fontSize: 14, fontWeight: '600' }}
+								textStyle={{ color: saveErrors ? theme.colors.textSecondary : theme.colors.white, fontSize: 14, fontWeight: Platform.OS === 'ios' ? '600' : 'bold' }}
 								style={{
 									backgroundColor: saveErrors ? theme.colors.backgroundGray300 : theme.colors.primary,
 									borderWidth: 1, shadowOpacity: 0, height: 40,

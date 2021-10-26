@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, TouchableOpacity, Text, TextStyle } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Text, TextStyle, Platform } from 'react-native'
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native'
 import { OIcon, OText, OModal } from '../shared'
 import { BusinessBasicInformationParams } from '../../types'
@@ -130,7 +130,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 							<View style={{ justifyContent: 'flex-start' }}>
 								<OText
 									size={24}
-									weight='600'
+									weight={Platform.OS == 'ios' ? '600' : 'bold'}
 									numberOfLines={1}
 									ellipsizeMode='tail'
 									style={{ lineHeight: 36 }}

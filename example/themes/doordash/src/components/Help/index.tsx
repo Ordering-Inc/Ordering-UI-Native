@@ -28,6 +28,7 @@ export const Help = (props: HelpParams) => {
         onActionLeft={goToBack}
         paddingTop={10}
         btnStyle={{ paddingLeft: 0 }}
+        style={{paddingLeft: 0, paddingRight: 0}}
       />
       <HelpSubItem
         onPress={() => onRedirect('HelpOrder')}
