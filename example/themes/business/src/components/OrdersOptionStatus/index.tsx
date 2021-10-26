@@ -3,6 +3,7 @@ import { useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Container } from './styles';
 import ODropDown from '../shared/ODropDown';
+import { Platform } from 'react-native'
 
 export const OrdersOptionStatus = (props: any) => {
   const {
@@ -29,7 +30,7 @@ export const OrdersOptionStatus = (props: any) => {
   }, [currentTabSelected, tabs, orderStatus])
 
   return (
-    <Container>
+    <Container isIos={Platform.OS === 'ios'}>
       <ODropDown
         options={optionsList}
         defaultValue={search.state}

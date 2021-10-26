@@ -3,6 +3,7 @@ import { useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Container } from './styles';
 import ODropDown from '../shared/ODropDown';
+import { Platform } from 'react-native'
 
 export const OrdersOptionDelivery = (props: any) => {
   const {
@@ -18,7 +19,7 @@ export const OrdersOptionDelivery = (props: any) => {
   ]
 
   return (
-    <Container>
+    <Container isIos={Platform.OS === 'ios'}>
       <ODropDown
         options={optionsList}
         defaultValue={search.delivery_type}

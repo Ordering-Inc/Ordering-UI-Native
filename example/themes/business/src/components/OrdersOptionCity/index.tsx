@@ -4,6 +4,7 @@ import { useTheme } from 'styled-components/native';
 import { Container } from './styles';
 import ODropDown from '../shared/ODropDown';
 import { MainSearch as MainSearchController } from 'ordering-components/native'
+import { Platform } from 'react-native';
 
 export const OrdersOptionCityUI = (props: any) => {
   const {
@@ -27,7 +28,7 @@ export const OrdersOptionCityUI = (props: any) => {
   }, [allListValues?.countries])
 
   return (
-    <Container>
+    <Container isIos={Platform.OS === 'ios'}>
       <ODropDown
         options={optionsList}
         defaultValue={search.city}

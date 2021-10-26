@@ -3,6 +3,7 @@ import { useLanguage, PaymethodList as PyamethodListControllder } from 'ordering
 import { useTheme } from 'styled-components/native';
 import { Container } from './styles';
 import ODropDown from '../shared/ODropDown';
+import { Platform } from 'react-native'
 
 export const OrdersOptionPaymethodUI = (props: any) => {
   const {
@@ -24,7 +25,7 @@ export const OrdersOptionPaymethodUI = (props: any) => {
   }, [paymethodList?.paymethods])
 
   return (
-    <Container>
+    <Container isIos={Platform.OS === 'ios'}>
       <ODropDown
         options={optionsList}
         defaultValue={search.paymethod}

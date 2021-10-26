@@ -3,6 +3,7 @@ import { useLanguage, DriverList as DriverListControllder } from 'ordering-compo
 import { useTheme } from 'styled-components/native';
 import { Container } from './styles';
 import ODropDown from '../shared/ODropDown';
+import { Platform } from 'react-native'
 
 export const OrdersOptionDriverUI = (props: any) => {
   const {
@@ -24,7 +25,7 @@ export const OrdersOptionDriverUI = (props: any) => {
   }, [driverList?.drivers])
 
   return (
-    <Container>
+    <Container isIos={Platform.OS === 'ios'}>
       <ODropDown
         options={optionsList}
         defaultValue={search.driver}

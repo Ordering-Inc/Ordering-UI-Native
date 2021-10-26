@@ -3,6 +3,7 @@ import { useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Container } from './styles';
 import ODropDownCalendar from '../shared/ODropDownCalendar';
+import { Platform } from 'react-native'
 
 export const OrdersOptionDate = (props: any) => {
   const {
@@ -32,7 +33,7 @@ export const OrdersOptionDate = (props: any) => {
   }
 
   return (
-    <Container>
+    <Container isIos={Platform.OS === 'ios'}>
       <ODropDownCalendar
         options={optionsList}
         defaultValue={search.date.type}

@@ -4,6 +4,7 @@ import { useTheme } from 'styled-components/native';
 import { Container } from './styles';
 import ODropDown from '../shared/ODropDown';
 import { BusinessList as BusinessListController } from 'ordering-components/native'
+import { Platform } from 'react-native'
 
 export const OrdersOptionBusinessUI = (props: any) => {
   const {
@@ -25,7 +26,7 @@ export const OrdersOptionBusinessUI = (props: any) => {
   }, [businessesList?.businesses])
 
   return (
-    <Container>
+    <Container isIos={Platform.OS === 'ios'}>
       <ODropDown
         options={optionsList}
         defaultValue={search.business}

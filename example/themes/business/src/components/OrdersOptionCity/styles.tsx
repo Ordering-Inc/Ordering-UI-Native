@@ -1,6 +1,8 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 export const Container = styled.View`
   margin-bottom: 24px;
-  z-index: 18;
+  ${(props: any) => props.isIos && css`
+    z-index: 18;
+  `}
 `;

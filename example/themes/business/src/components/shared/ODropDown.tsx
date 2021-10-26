@@ -21,7 +21,6 @@ interface Props {
 
 const Wrapper = styled.View`
   position: relative;
-  z-index: 4000;
 `
 const Selected = styled.TouchableOpacity`
   flex-direction: row;
