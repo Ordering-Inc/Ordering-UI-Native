@@ -65,7 +65,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     loadMoreOrders,
     onNavigationRedirect,
     filtered,
-    onFiltered
+    onFiltered,
     handleClickOrder
   } = props;
 
