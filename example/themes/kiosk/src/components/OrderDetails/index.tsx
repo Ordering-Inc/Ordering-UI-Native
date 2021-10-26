@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, BackHandler, Alert, Keyboard  } from 'react-native'
+import { View, StyleSheet, BackHandler, Alert, Keyboard } from 'react-native'
 import Spinner from 'react-native-loading-spinner-overlay'
-import {useForm, Controller} from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -10,15 +10,19 @@ import {
   useSession,
   useToast,
   ToastType,
+  useConfig
 } from 'ordering-components/native'
 
-import {PhoneInputNumber} from '../PhoneInputNumber'
+import { PhoneInputNumber } from '../PhoneInputNumber'
 import {
   OSOrderDetailsWrapper,
   OSTable,
   OSActions,
   OSInputWrapper,
-  SentReceipt
+  SentReceipt,
+  Table,
+  OrderBill,
+  Total,
 } from './styles'
 import { OrderDetailsParams, Product } from '../../types'
 import { Container } from '../../layouts/Container';
@@ -40,10 +44,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const theme = useTheme();
   const [, t] = useLanguage()
   const [ordering] = useApi()
-  const [, {showToast}] = useToast()
+  const [, { showToast }] = useToast()
   const [{ parsePrice, parseNumber }] = useUtils()
   const [orientationState] = useDeviceOrientation()
   const [{ token }] = useSession()
+  const [{ configs }] = useConfig()
   const { control, handleSubmit, errors } = useForm();
   const [customerName, setCustomerName] = useState(null)
   const [countReceipts, setCountReceipts] = useState(5)
@@ -56,6 +61,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     },
   });
   const { order } = props.order;
+  const isTaxIncluded = order?.tax_type === 1
   const styles = StyleSheet.create({
     inputsStyle: {
       borderColor: theme.colors.disabled,
@@ -81,7 +87,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       color: theme.colors.white,
       marginLeft: 0,
       marginRight: 0
-    }
+    },
+    textBold: {
+      fontWeight: 'bold'
+    },
   });
 
   const optionsToSendReceipt: Opt[] = [
@@ -121,9 +130,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
   };
 
-  const onSubmit = async (values : any) => {
+  const onSubmit = async (values: any) => {
     Keyboard.dismiss();
-    if(countReceipts <= 0){
+    if (countReceipts <= 0) {
       showToast(ToastType.Error, t('MAXIMUM_RECEIPTS_SEND_EXCEEDED', 'The maximum receipts sent has been exceeded'))
       return
     }
@@ -148,21 +157,21 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         name: customerName
       }
     }
-    try{
+    try {
       const response = await fetch(`${ordering.root}/orders/${order.id}/receipt`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`},
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(body),
       })
-      const {error, result} = await response.json()
-      if(error){
+      const { error, result } = await response.json()
+      if (error) {
         showToast(ToastType.Error, result)
       } else {
         showToast(ToastType.Success, t('RECEIPT_SEND_SUCCESSFULLY', 'Receipt send successfully'))
         setCountReceipts(countReceipts - 1)
       }
 
-    } catch (error : any) {
+    } catch (error: any) {
       showToast(ToastType.Error, error.message)
     }
     setIsLoading(false)
@@ -197,7 +206,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     const getCustomerName = async () => {
-      const {customerName : name} = await _retrieveStoreData('customer_name')
+      const { customerName: name } = await _retrieveStoreData('customer_name')
       setCustomerName(name)
     }
     getCustomerName()
@@ -209,7 +218,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       const list = Object.values(errors);
       let stringError = '';
       if (phoneInputData.error) {
-        list.unshift({message: phoneInputData.error});
+        list.unshift({ message: phoneInputData.error });
       }
       if (
         optionToSendReceipt?.value === _SMS &&
@@ -260,37 +269,37 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         <OSTable>
           {optionToSendReceipt?.value === _EMAIL && (
             <Controller
-            control={control}
-            render={({onChange, value} : any) => (
-              <OInput
-                placeholder="yourname@mailhost.com"
-                onChange={(e: any) => handleChangeInputEmail(e, onChange)}
-                style={styles.inputsStyle}
-                value={value}
-                autoCapitalize="none"
-                autoCorrect={false}
-                returnKeyType="done"
-                onSubmitEditing={handleSubmit(onSubmit)}
-                blurOnSubmit
-                type="email-address"
-              />
-            )}
-            name="email"
-            rules={{
-              required: t(
-                'VALIDATION_ERROR_EMAIL_REQUIRED',
-                'The field Email is required',
-              ).replace('_attribute_', t('EMAIL', 'Email')),
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: t(
-                  'INVALID_ERROR_EMAIL',
-                  'Invalid email address',
+              control={control}
+              render={({ onChange, value }: any) => (
+                <OInput
+                  placeholder="yourname@mailhost.com"
+                  onChange={(e: any) => handleChangeInputEmail(e, onChange)}
+                  style={styles.inputsStyle}
+                  value={value}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit(onSubmit)}
+                  blurOnSubmit
+                  type="email-address"
+                />
+              )}
+              name="email"
+              rules={{
+                required: t(
+                  'VALIDATION_ERROR_EMAIL_REQUIRED',
+                  'The field Email is required',
                 ).replace('_attribute_', t('EMAIL', 'Email')),
-              },
-            }}
-            defaultValue=""
-          />
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: t(
+                    'INVALID_ERROR_EMAIL',
+                    'Invalid email address',
+                  ).replace('_attribute_', t('EMAIL', 'Email')),
+                },
+              }}
+              defaultValue=""
+            />
           )}
 
           {optionToSendReceipt?.value === _SMS && (
@@ -301,7 +310,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 returnKeyType: 'done',
                 onSubmitEditing: handleSubmit(onSubmit),
               }}
-          />
+            />
           )}
 
           <OButton
@@ -337,7 +346,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       }}
     >
       <OSTable>
-        <View style={{flexDirection: 'row', bottom: 10}}>
+        <View style={{ flexDirection: 'row', bottom: 10 }}>
           <OText
             size={orientationState?.dimensions?.width * 0.039}
             weight="700"
@@ -382,47 +391,89 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           <OText
             color={theme.colors.primary}
             weight="bold"
+            mRight={30}
           >
             {parsePrice((order?.summary?.total || order?.total) - (order?.summary?.discount || order?.discount))}
           </OText>
         </OSTable>
       )}
 
-      {((order?.summary?.discount || order?.discount) > 0 && (order?.summary?.total || order?.total) >= 0) && (<OSTable>
-        <OText
-          weight="bold"
-          mBottom={15}
-        >
-          {t('PROMO_CODE', 'Promo code')}
-          {'\n'}
-          <OText weight="400" style={{fontSize: 14}}>
-            {order?.offer_type === 1 ? `${verifyDecimals(order?.offer_rate, parseNumber)}%` : parsePrice(order?.summary?.discount || order?.discount)} {t('OFF', 'off')}
+      <OrderBill>
+        <Table>
+          <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
+          <OText>
+            {parsePrice(isTaxIncluded
+              ? (order?.summary?.subtotal + order?.summary?.tax) ?? 0
+              : order?.summary?.subtotal ?? 0
+            )}
           </OText>
-        </OText>
-
-        <OText
-          color={theme.colors.primary}
-          weight="bold"
-        >
-          {`-${parsePrice(order?.summary?.discount || order?.discount)}`}
-        </OText>
-      </OSTable>)}
-
-      <OSTable style={{ justifyContent: 'flex-end' }}>
-        <OText
-          weight="bold"
-          style={{ textAlign: 'right' }}
-        >
-          {t('TOTAL', 'Total')}
-          {'\n'}
-          <OText
-            color={theme.colors.primary}
-            weight="bold"
-          >
-            {parsePrice(order?.summary?.total || order?.total)}
-          </OText>
-        </OText>
-      </OSTable>
+        </Table>
+        {order?.summary?.discount > 0 && (
+          <Table>
+            {order?.offer_type === 1 ? (
+              <OText>
+                {t('DISCOUNT', 'Discount')}
+                <OText>{`(${verifyDecimals(order?.offer_rate, parsePrice)}%)`}</OText>
+              </OText>
+            ) : (
+              <OText>{t('DISCOUNT', 'Discount')}</OText>
+            )}
+            <OText>- {parsePrice(order?.summary?.discount)}</OText>
+          </Table>
+        )}
+        {order?.summary?.subtotal_with_discount > 0 && order?.summary?.discount > 0 && order?.summary?.total >= 0 && (
+          <Table>
+            <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+            <OText>{parsePrice(order?.summary?.subtotal_with_discount ?? 0)}</OText>
+          </Table>
+        )}
+        {order?.tax_type !== 1 && (
+          <Table>
+            <OText>
+              {t('TAX', 'Tax')}
+              {`(${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%)`}
+            </OText>
+            <OText>{parsePrice(order?.summary?.tax)}</OText>
+          </Table>
+        )}
+        {order?.summary?.delivery_price > 0 && (
+          <Table>
+            <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
+            <OText>{parsePrice(order?.summary?.delivery_price)}</OText>
+          </Table>
+        )}
+        {order?.summary?.driver_tip > 0 && (
+          <Table>
+            <OText>
+              {t('DRIVER_TIP', 'Driver tip')}
+              {order?.summary?.driver_tip > 0 &&
+                parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
+                !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
+                (
+                  `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`
+                )}
+            </OText>
+            <OText>{parsePrice(order?.summary?.driver_tip ?? 0)}</OText>
+          </Table>
+        )}
+        {order?.summary?.service_fee > 0 && (
+          <Table>
+            <OText>
+              {t('SERVICE_FEE', 'Service Fee')}
+              {`(${verifyDecimals(order?.summary?.service_fee, parseNumber)}%)`}
+            </OText>
+            <OText>{parsePrice(order?.summary?.service_fee)}</OText>
+          </Table>
+        )}
+        <Total>
+          <Table>
+            <OText style={styles.textBold}>{t('TOTAL', 'Total')}</OText>
+            <OText style={styles.textBold} color={theme.colors.primary}>
+              {parsePrice(order?.summary?.total ?? 0)}
+            </OText>
+          </Table>
+        </Total>
+      </OrderBill>
     </OSOrderDetailsWrapper>
   );
 
@@ -435,7 +486,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           <Container>
             <NavBar
               title={t('TAKE_YOUR_RECEIPT', 'Take your receipt')}
-              style={{right: 10}}
+              style={{ right: 10 }}
             />
 
             <View style={{

@@ -54,6 +54,8 @@ interface Props {
   onSubmitEditing?: any;
   blurOnSubmit?: boolean;
   inputStyle?: TextInputProps
+  onFocus?: TextInputProps
+  onBlur?: TextInputProps
 }
 
 const OInput = (props: Props): React.ReactElement => {
@@ -93,6 +95,8 @@ const OInput = (props: Props): React.ReactElement => {
         returnKeyType={props.returnKeyType}
         onSubmitEditing={props.onSubmitEditing}
         blurOnSubmit={props.blurOnSubmit}
+        onFocus={props.onFocus}
+        onBlur={props.onBlur}
       />
       {props.iconRight && (
         <OIcon

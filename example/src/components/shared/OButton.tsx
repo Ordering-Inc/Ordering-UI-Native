@@ -77,6 +77,7 @@ interface Props {
   borderColor?: string;
   loadingStyle?: ViewStyle;
   theme?: any;
+  textProps?: any
 }
 
 const OButton = (props: Props): React.ReactElement => {
@@ -84,7 +85,7 @@ const OButton = (props: Props): React.ReactElement => {
     return (
       <View style={props.parentStyle}>
       <StyledButtonDisabled style={props.style}>
-        <StyledTextDisabled style={props.textStyle}>
+        <StyledTextDisabled style={props.textStyle} {...props.textProps}>
           {props.text}
         </StyledTextDisabled>
       </StyledButtonDisabled>
@@ -112,7 +113,7 @@ const OButton = (props: Props): React.ReactElement => {
           <StyledImage style={{transform: [{scaleX: I18nManager.isRTL ? -1 : 1}], ...props.imgLeftStyle}} source={props.imgLeftSrc} />
         ) : null}
         {props.text ? (
-          <StyledText style={props.textStyle}>{props.text}</StyledText>
+          <StyledText style={props.textStyle} {...props.textProps}>{props.text}</StyledText>
         ) : null}
         {props.imgRightSrc ? (
           <EndImage style={props.imgRightStyle} source={props.imgRightSrc} />

@@ -276,6 +276,12 @@ export interface OrdersOptionParams {
   setOrdersGroup?: any;
   setCurrentFilters?: any;
   handleClickOrder?: any;
+  orderGroupStatusCustom?: {
+    pending?: Array<number>;
+    inProgress?: Array<number>;
+    completed?: Array<number>;
+    cancelled?: Array<number>;
+  };
 }
 export interface ActiveOrdersParams {
   orders?: any;

@@ -35,7 +35,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
       alignItems: 'center',
     },
     categoryStyle: {
-      width: isOpenAllCategories ? windowWidth / 3 - 27 : windowWidth / 4 - 20,
+      width: isOpenAllCategories ? windowWidth / 3 - 27 : windowWidth / 4 - 10,
       height: 150,
       flexDirection: 'column',
       justifyContent: 'center',

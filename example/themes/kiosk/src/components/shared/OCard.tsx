@@ -8,7 +8,7 @@ import OText from './OText';
 
 const CardContainer = styled.TouchableOpacity`
 	width: 21%;
-	margin: 2%;
+	margin: 10px 20px;
 	overflow: hidden;
 `
 

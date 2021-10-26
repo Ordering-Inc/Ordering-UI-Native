@@ -30,7 +30,7 @@ const CouponControlUI = (props: any) => {
       borderColor: theme.colors.secundaryContrast,
       borderRadius: 50,
       flex: 1,
-      marginRight: 30
+      marginRight: 20
     },
   });
 
@@ -102,7 +102,8 @@ const CouponControlUI = (props: any) => {
             onClick={() => handleButtonApplyClick()}
             bgColor={theme.colors.primary}
             borderColor={theme.colors.primary}
-            textStyle={{color: 'white'}}
+            textStyle={{ color: 'white', fontSize: 18, maxWidth: 110, minWidth: 60 }}
+            textProps={{numberOfLines: 1}}
             imgRightSrc={null}
             text={t('APPLY', 'Apply')}
             isDisabled={!couponInput}

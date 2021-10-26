@@ -493,25 +493,25 @@ export const OrdersOption = (props: OrdersOptionParams) => {
       {
         key: 0,
         text: t('PENDING', 'Pending'),
-        tags: [0, 13],
+        tags: props?.orderGroupStatusCustom?.inProgress ?? [0, 13],
         title: 'pending'
       },
       {
         key: 1,
         text: t('IN_PROGRESS', 'In Progress'),
-        tags: [3, 4, 7, 8, 9, 14, 18, 19, 20, 21],
+        tags: props?.orderGroupStatusCustom?.inProgress ?? [3, 4, 7, 8, 9, 14, 18, 19, 20, 21],
         title: 'inProgress',
       },
       {
         key: 2,
         text: t('COMPLETED', 'Completed'),
-        tags: [1, 11, 15],
+        tags: props?.orderGroupStatusCustom?.completed ?? [1, 11, 15],
         title: 'completed',
       },
       {
         key: 3,
         text: t('CANCELLED', 'Cancelled'),
-        tags: [2, 5, 6, 10, 12, 16, 17],
+        tags: props?.orderGroupStatusCustom?.cancelled ?? [2, 5, 6, 10, 12, 16, 17],
         title: 'cancelled',
       },
     ]
