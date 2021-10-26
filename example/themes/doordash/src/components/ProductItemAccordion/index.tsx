@@ -188,7 +188,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 						<View style={{ flex: 1, flexDirection: isMini ? 'row' : 'column', justifyContent: 'space-between', alignItems: isMini ? 'center' : 'flex-start' }}>
 							{isMini && (
 								<ProductQuantity>
-									<OText size={12} weight={'600'}>
+									<OText size={12} weight={Platform.OS === 'ios' ? '600' : 'bold'}>
 										{product?.quantity}x
 									</OText>
 								</ProductQuantity>

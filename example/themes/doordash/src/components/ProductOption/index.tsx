@@ -6,7 +6,7 @@ import {
 } from './styles'
 import { OText } from '../shared'
 import { useTheme } from 'styled-components/native'
-import { TextStyle, View } from 'react-native'
+import { Platform, TextStyle, View } from 'react-native'
 
 const ProductOptionUI = (props: any) => {
 	const {
@@ -36,7 +36,7 @@ const ProductOptionUI = (props: any) => {
 					<OText style={theme.labels.middle as TextStyle}>{option.name}</OText>
 					<OText style={theme.labels.small as TextStyle} color={theme.colors.textSecondary}>{maxMin}</OText>
 				</View>
-				<OText size={10} weight={'600'} color={theme.colors.error}>{required}</OText>
+				<OText size={10} weight={Platform.OS == 'ios' ? '600' : 'bold'} color={theme.colors.error}>{required}</OText>
 			</WrapHeader>
 			{children}
 		</Container>

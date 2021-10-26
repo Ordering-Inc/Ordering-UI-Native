@@ -15,7 +15,7 @@ import {
 	PlaceholderLine,
 	Fade
 } from "rn-placeholder";
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
 	const {
@@ -121,7 +121,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		<>
 			<OptionTitle>
 				{(!activeOrders || (activeOrders && ordersLength.activeOrdersLength > 0) || (ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength === 0)) && !isLoadingFirstRender && (
-					<OText size={16} color={theme.colors.textPrimary} weight={'600'} mBottom={24} >
+					<OText size={16} color={theme.colors.textPrimary} weight={Platform.OS === 'ios' ? '600' : 'bold'} mBottom={24} >
 						{titleContent || (activeOrders
 							? t('ACTIVE_ORDERS', 'Active Orders')
 							: t('PREVIOUS_ORDERS', 'Previous Orders'))}

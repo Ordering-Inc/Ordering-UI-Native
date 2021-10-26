@@ -6,6 +6,7 @@ import { CCContainer, CCNotCarts, CCList } from './styles';
 import { Cart } from '../Cart';
 import { OText } from '../shared';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { Platform } from 'react-native';
 
 export const CartContent = (props: any) => {
   const {
@@ -20,7 +21,7 @@ export const CartContent = (props: any) => {
     <CCContainer>
       {isOrderStateCarts && carts?.length > 0 && (
         <>
-          <OText style={{ fontSize: 14, fontWeight: '600', textAlign: 'center' }} lineHeight={21}>
+          <OText style={{ fontSize: 14, fontWeight: Platform.OS === 'ios' ? '600' : 'bold', textAlign: 'center' }} lineHeight={21}>
             {carts.length > 1 ? t('CARTS', 'Carts') : t('CART', 'Cart')}
           </OText>
           {carts.map((cart: any) => (

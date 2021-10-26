@@ -99,7 +99,7 @@ const CouponControlUI = (props: any) => {
             onClick={() => handleButtonApplyClick()}
             bgColor={theme.colors.primary}
             borderColor={theme.colors.primary}
-            textStyle={{ color: theme.colors.white, fontSize: 14, fontWeight: '600' }}
+            textStyle={{ color: theme.colors.white, fontSize: 14, fontWeight: Platform.OS == 'ios' ? '600' : 'bold' }}
             imgRightSrc={null}
             text={t('APPLY', 'Apply')}
             isDisabled={!couponInput}

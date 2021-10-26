@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, StyleSheet, ActivityIndicator, TextStyle } from 'react-native';
+import { TouchableOpacity, StyleSheet, ActivityIndicator, TextStyle, Platform } from 'react-native';
 import {
 	DriverTips as DriverTipsController,
 	useUtils,
@@ -135,7 +135,7 @@ const DriverTipsUI = (props: any) => {
 							text={t('APPLY_TIP', 'Apply Tip')}
 							bgColor={theme.colors.primary}
 							borderColor={theme.colors.primary}
-							textStyle={{ color: 'white', fontSize: 12, fontWeight: '600', textAlign: 'center' }}
+							textStyle={{ color: 'white', fontSize: 12, fontWeight: Platform.OS === 'ios' ? '600' : 'bold', textAlign: 'center' }}
 							style={{ height: 40, shadowOpacity: 0, flexBasis: '25%' }}
 							parentStyle={{flexBasis: '45%'}}
 							imgRightSrc={null}

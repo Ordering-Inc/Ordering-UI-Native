@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { useSession, useLanguage, ToastType, useToast } from 'ordering-components/native';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -185,7 +185,7 @@ export const UserFormDetailsUI = (props: any) => {
 							(
 								showField && showField(field.code) && (
 									<InputWrap key={field.id}>
-										<OText style={{ flexBasis: '30%', fontSize: 14, fontWeight: '600' }}>{field?.name}</OText>
+										<OText style={{ flexBasis: '30%', fontSize: 14, fontWeight: Platform.OS == 'ios' ? '600' : 'bold' }}>{field?.name}</OText>
 										<React.Fragment>
 											<Controller
 												control={control}
@@ -229,6 +229,7 @@ export const UserFormDetailsUI = (props: any) => {
 											style: { borderWidth: 0, fontSize: 12 }
 										}}
 										textWrapStyle={{ borderColor: theme.colors.clear, borderWidth: 0, height: 40, paddingStart: 0 }}
+										countryButtonStyle={{ marginStart: -2, justifyContent: 'flex-start', flexBasis: '36%'}}
 									/>
 									{phoneUpdate && (
 										<OText color={theme.colors.error} style={{ marginHorizontal: 10, textAlign: 'center' }}>{t('YOUR_PREVIOUS_CELLPHONE', 'Your previous cellphone')}: {user?.cellphone}</OText>
