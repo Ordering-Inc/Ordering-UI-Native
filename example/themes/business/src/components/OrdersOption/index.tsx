@@ -29,7 +29,7 @@ import { OrdersOptionBusiness } from '../OrdersOptionBusiness';
 import { OrdersOptionDelivery } from '../OrdersOptionDelivery';
 import { OrdersOptionPaymethod } from '../OrdersOptionPaymethod';
 import { OrdersOptionDriver } from '../OrdersOptionDriver';
-// import { OrdersOptionDate } from '../OrdersOptionDate';
+import { OrdersOptionDate } from '../OrdersOptionDate';
 
 const tabsList: any = {
   pending: 1,
@@ -526,11 +526,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             placeholder={t('ORDER_NUMBER', 'Order number')}
             autoCorrect={false}
           />
-          {/* <OrdersOptionDate
+          <OrdersOptionDate
             {...props}
             search={search}
             onSearch={setSearch}
-          /> */}
+          />
           <OrdersOptionStatus
             {...props}
             search={search}
