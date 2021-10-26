@@ -16,6 +16,12 @@ import { OrderDetailsBusiness } from './src/components/OrderDetails/Business';
 import { OrderDetailsDelivery } from './src/components/OrderDetails/Delivery';
 import { OrdersOption } from './src/components/OrdersOption';
 import { OrdersOptionStatus } from './src/components/OrdersOptionStatus';
+import { OrdersOptionBusiness } from './src/components/OrdersOptionBusiness';
+import { OrdersOptionCity } from './src/components/OrdersOptionCity';
+import { OrdersOptionDate } from './src/components/OrdersOptionDate';
+import { OrdersOptionDelivery } from './src/components/OrdersOptionDelivery';
+import { OrdersOptionDriver } from './src/components/OrdersOptionDriver';
+import { OrdersOptionPaymethod } from './src/components/OrdersOptionPaymethod';
 import { OrderSummary } from './src/components/OrderSummary';
 import { PhoneInputNumber } from './src/components/PhoneInputNumber';
 import { PreviousMessages } from './src/components/PreviousMessages';
@@ -40,6 +46,8 @@ import {
   OAlert,
   OModal,
   OLink,
+  ODropDown,
+  ODropDownCalendar
 } from './src/components/shared';
 
 //layouts
@@ -67,6 +75,12 @@ export {
   OrderMessage,
   OrdersOption,
   OrdersOptionStatus,
+  OrdersOptionBusiness,
+  OrdersOptionCity,
+  OrdersOptionDate,
+  OrdersOptionDelivery,
+  OrdersOptionDriver,
+  OrdersOptionPaymethod,
   OrderSummary,
   PhoneInputNumber,
   PreviousMessages,
@@ -89,6 +103,8 @@ export {
   OModal,
   OText,
   OTextarea,
+  ODropDown,
+  ODropDownCalendar,
   //layouts
   Container,
   SafeAreaContainer,

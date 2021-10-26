@@ -8,6 +8,8 @@ import OModal from './OModal';
 import OAlert from './OAlert';
 import OFab from './OFab';
 import OLink from './OLink';
+import ODropDown from './ODropDown';
+import ODropDownCalendar from './ODropDownCalendar';
 
 export {
   OText,
@@ -20,4 +22,6 @@ export {
   OModal,
   OFab,
   OLink,
+  ODropDown,
+  ODropDownCalendar
 };
