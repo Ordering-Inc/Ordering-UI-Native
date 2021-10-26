@@ -73,6 +73,7 @@ const CustomerName = (props: Props): React.ReactElement => {
         <NavBar
           title={t('YOUR_NAME', 'Your name')}
           onActionLeft={goToBack}
+          btnStyle={{paddingLeft: 0}}
         />
 
         <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
@@ -109,13 +110,13 @@ const CustomerName = (props: Props): React.ReactElement => {
           name="name"
           rules={{
             required: t(
-              'VALIDATION_ERROR_CUSTOMER_NAME_REQUIRED',
+              'VALIDATION_ERROR_REQUIRED',
               'The field Customer Name is required',
-            ).replace('_attribute_', t('CUSTOMER_NAME', 'Customer Name')),
+            ).replace('_attribute_', t('REQUEST_COLLECTION_CUSTOMER_NAME', 'Customer Name')),
             pattern: {
               value: /^[a-zA-Z áéíóúüñçÁÉÍÓÚÜÑÇ]+$/i,
               message: t(
-                'INVALID_ERROR_NAME',
+                'INVALID_ERROR',
                 'Invalid name',
               ).replace('_attribute_', t('NAME', 'Name')),
             }

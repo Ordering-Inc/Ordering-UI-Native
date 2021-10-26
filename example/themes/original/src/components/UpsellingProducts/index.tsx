@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Spinner from 'react-native-loading-spinner-overlay';
-import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { Platform, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 import {
 	UpsellingPage as UpsellingPageController,
 	useUtils,
@@ -23,7 +21,6 @@ import {
 import { ProductForm } from '../ProductForm';
 import { OrderSummary } from '../OrderSummary';
 import { ScrollView } from 'react-native-gesture-handler';
-import NavBar from '../NavBar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
@@ -36,7 +33,8 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		handleCloseUpsellingPage,
 		openUpselling,
 		canOpenUpselling,
-		setCanOpenUpselling
+		setCanOpenUpselling,
+		isFromCart
 	} = props
 
 	const theme = useTheme();
@@ -76,7 +74,11 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 	useEffect(() => {
 		if (!isCustomMode) {
 			if (!upsellingProducts.loading) {
-				setCanOpenUpselling && setCanOpenUpselling(true)
+				if (upsellingProducts?.products?.length && !isFromCart) {
+					setCanOpenUpselling && setCanOpenUpselling(true)
+				} else {
+					handleUpsellingPage && handleUpsellingPage()
+				}
 			}
 			// if ((!upsellingProducts?.products?.length && !upsellingProducts.loading && !canOpenUpselling && openUpselling) ||
 			// 	(!upsellingProducts?.products?.length && !upsellingProducts.loading && openUpselling)) {
@@ -84,6 +86,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 			// }
 		}
 	}, [upsellingProducts.loading, upsellingProducts?.products.length])
+
+	useEffect(() => {
+		if (!cart?.validate && cart?.products?.length == 0) handleCloseUpsellingPage()
+	}, [cart])
 
 	const handleFormProduct = (product: any) => {
 		setActualProduct(product)
@@ -149,6 +155,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 									title={''}
 									open={openUpselling}
 									onClose={() => handleUpsellingPage()}
+									isStatusBar
 								>
 									<TopBar style={{ paddingTop: Platform.OS == 'ios' ? 10 : 30 }}>
 										<TopActions onPress={() => handleCloseUpsellingPage()}>

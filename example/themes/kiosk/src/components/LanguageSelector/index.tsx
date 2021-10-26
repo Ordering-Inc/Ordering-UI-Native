@@ -21,7 +21,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
   const styles = StyleSheet.create({
     closeIcon: {
-      width: 48, marginLeft: 24
+      width: 48, marginLeft: 32
     },
     flagsContainer: {
       marginLeft: 40

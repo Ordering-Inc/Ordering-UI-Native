@@ -55,6 +55,10 @@ import { Container } from './src/layouts/Container';
 import { SafeAreaContainer } from './src/layouts/SafeAreaContainer';
 import { SafeAreaContainerLayout } from './src/layouts/SafeAreaContainer';
 import { useLocation } from './src/hooks/useLocation';
+
+// providers
+import { StoreMethods } from './src/providers/StoreUtil';
+
 export {
   //Components
   AcceptOrRejectOrder,
@@ -108,5 +112,7 @@ export {
   //layouts
   Container,
   SafeAreaContainer,
-  useLocation
+  useLocation,
+  // providers
+  StoreMethods,
 };

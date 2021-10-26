@@ -13,7 +13,9 @@ import {
   QuantityControl,
   Checkbox,
   PositionControl,
-  Circle
+  Circle,
+  LeftSide,
+  RightSide
 } from './styles'
 import { OText } from '../shared'
 import { useTheme } from 'styled-components/native'
@@ -66,24 +68,33 @@ export const ProductOptionSubOptionUI = (props: any) => {
 
   return (
     <Container onPress={() => handleSuboptionClick()} disabled={disabled}>
+       <LeftSide>
+        {((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
+          state?.selected ? (
+            <MaterialCommunityIcon name='checkbox-marked' color={theme.colors.primary} size={24} />
+          ) : (
+            <MaterialCommunityIcon name='checkbox-blank-outline' color={theme.colors.backgroundDark} size={24} />
+          )
+        ) : (
+          state?.selected ? (
+            <MaterialCommunityIcon name='radiobox-marked' color={theme.colors.primary} size={24} />
+          ) : (
+            <MaterialCommunityIcon name='radiobox-blank' color={theme.colors.backgroundDark} size={24} />
+          )
+        )}
       <View
         style={{
-          alignItems: "flex-start"
+          alignItems: "flex-start",
+          marginLeft: 10,
         }}
       >
         <OText size={20}>
           {suboption?.name}
         </OText>
-        <OText
-          color="#909BA9"
-          size={16}
-          weight="bold"
-        >
-          + {parsePrice(price)}
-        </OText>
       </View>
-
+      </LeftSide>
       {showMessage && <OText mLeft={10} mRight={10} style={{ flex: 1, textAlign: 'center' }} color={theme.colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
+      <RightSide>
       {option?.allow_suboption_quantity && (
         <QuantityControl>
           <Checkbox disabled={state.quantity === 0} onPress={handleDecrement}>
@@ -105,49 +116,42 @@ export const ProductOptionSubOptionUI = (props: any) => {
           </Checkbox>
         </QuantityControl>
       )}
-      {
-        option?.with_half_option && (
-          <PositionControl>
-            <Circle onPress={() => handlePosition('left')}>
-              <MaterialCommunityIcon
-                name='circle-half-full'
-                color={state.selected && state.position === 'left' ? theme.colors.primary : theme.colors.backgroundDark}
-                size={24}
-                style={styles.inverse}
-              />
-            </Circle>
-            <Circle onPress={() => handlePosition('whole')}>
-              <MaterialCommunityIcon
-                name='checkbox-blank-circle'
-                color={state.selected && state.position === 'whole' ? theme.colors.primary : theme.colors.backgroundDark}
-                size={24}
-              />
-            </Circle>
-            <Circle onPress={() => handlePosition('right')}>
-              <MaterialCommunityIcon
-                name='circle-half-full'
-                color={state.selected && state.position === 'right' ? theme.colors.primary : theme.colors.backgroundDark}
-                size={24}
-              />
-            </Circle>
-          </PositionControl>
-        )
-      }
-      <>
-        {((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
-          state?.selected ? (
-            <MaterialCommunityIcon name='checkbox-marked' color={theme.colors.primary} size={24} />
-          ) : (
-            <MaterialCommunityIcon name='checkbox-blank-outline' color={theme.colors.backgroundDark} size={24} />
+        {
+          option?.with_half_option && (
+            <PositionControl>
+              <Circle onPress={() => handlePosition('left')}>
+                <MaterialCommunityIcon
+                  name='circle-half-full'
+                  color={state.selected && state.position === 'left' ? theme.colors.primary : theme.colors.backgroundDark}
+                  size={24}
+                  style={styles.inverse}
+                />
+              </Circle>
+              <Circle onPress={() => handlePosition('whole')}>
+                <MaterialCommunityIcon
+                  name='checkbox-blank-circle'
+                  color={state.selected && state.position === 'whole' ? theme.colors.primary : theme.colors.backgroundDark}
+                  size={24}
+                />
+              </Circle>
+              <Circle onPress={() => handlePosition('right')}>
+                <MaterialCommunityIcon
+                  name='circle-half-full'
+                  color={state.selected && state.position === 'right' ? theme.colors.primary : theme.colors.backgroundDark}
+                  size={24}
+                />
+              </Circle>
+            </PositionControl>
           )
-        ) : (
-          state?.selected ? (
-            <MaterialCommunityIcon name='radiobox-marked' color={theme.colors.primary} size={24} />
-          ) : (
-            <MaterialCommunityIcon name='radiobox-blank' color={theme.colors.backgroundDark} size={24} />
-          )
-        )}
-      </>
+        }
+          <OText
+            color="#909BA9"
+            size={16}
+            weight="bold"
+          >
+            + {parsePrice(price)}
+          </OText>
+      </RightSide>
     </Container>
   )
 }

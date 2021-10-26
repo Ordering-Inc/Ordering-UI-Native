@@ -176,7 +176,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   return (
     <>
       <MapView
-        provider={Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
+        provider={PROVIDER_GOOGLE}
         initialRegion={region}
         style={styles.map}
         onRegionChangeComplete={!readOnly ? (coordinates) => handleChangeRegion(coordinates) : () => { }}

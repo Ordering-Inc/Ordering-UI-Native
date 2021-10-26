@@ -10,7 +10,7 @@ import {
   useValidationFields,
 } from 'ordering-components/native';
 
-import { CheckoutAction, Actions, KeyboardView, OrderTypeWrapper } from './styles';
+import { CheckoutAction, OrderTypeWrapper, FloatingLayout } from './styles';
 
 import { OSBill, OSCoupon, OSTable } from '../OrderSummary/styles';
 
@@ -22,8 +22,8 @@ import CartItem from '../CartItem';
 import NavBar from '../NavBar';
 import { CouponControl } from '../CouponControl';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation} from "../../../../../src/hooks/DeviceOrientation";
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
+import { Container } from '../../../../../src/layouts/Container';
 
 const CartUI = (props: any) => {
   const {
@@ -91,20 +91,13 @@ const CartUI = (props: any) => {
   const goToBack = () => navigation.goBack();
 
   return (
-    <KeyboardView
-      enabled
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <SafeAreaView style={{
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#fff',
-      }}>
-
+    <>
+      <Container>
         <NavBar
           title={t('CONFIRM_YOUR_ORDER', 'Confirm your order')}
           onActionLeft={goToBack}
           style={{ height: orientationState?.dimensions?.height * 0.08 }}
+          btnStyle={{paddingLeft: 0}}
           rightComponent={(
             <OButton
               text={t('CANCEL_ORDER', 'Cancel order')}
@@ -141,29 +134,54 @@ const CartUI = (props: any) => {
           />
         </OrderTypeWrapper>
 
-        <ScrollView style={{flex: 1}}>
-          {cart?.products?.length > 0 && cart?.products.map((product: any) => (
-            <CartItem
-              key={product.code}
-              isCartPending={isCartPending}
-              isCartProduct
-              product={product}
-              changeQuantity={changeQuantity}
-              getProductMax={getProductMax}
-              offsetDisabled={offsetDisabled}
-              onDeleteProduct={handleDeleteClick}
-              onEditProduct={handleEditProduct}
-            />
-          ))}
-        </ScrollView>
-
-        <Actions
+        <ScrollView
+          nestedScrollEnabled={true}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           style={{
-            flex: 1
+            minHeight: orientationState?.orientation == PORTRAIT
+              ? orientationState?.dimensions?.height * 0.5
+              : orientationState?.dimensions?.height * 0.35,
+            maxHeight: orientationState?.orientation == PORTRAIT
+              ? orientationState?.dimensions?.height * 0.5
+              : orientationState?.dimensions?.height * 0.35,
           }}
         >
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              opacity: 1
+            }}
+          >
+            {cart?.products?.length > 0 && cart?.products.map((product: any) => (
+              <CartItem
+                isCartProduct
+                key={product.code}
+                product={product}
+                isCartPending={isCartPending}
+                changeQuantity={changeQuantity}
+                getProductMax={getProductMax}
+                offsetDisabled={offsetDisabled}
+                onDeleteProduct={handleDeleteClick}
+                onEditProduct={handleEditProduct}
+              />
+            ))}
+          </View>
+        </ScrollView>
+
+        <View style={{ marginTop: 10 }}>
           {cart?.valid_products && (
             <OSBill>
+              <OSTable>
+                <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
+                <OText>
+                  {cart.business.tax_type === 1
+                    ? parsePrice((cart?.subtotal + cart?.tax) || 0)
+                    : parsePrice(cart?.subtotal || 0)}
+                </OText>
+              </OSTable>
               {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == PORTRAIT && (
                 <OSTable
                   style={{
@@ -260,19 +278,21 @@ const CartUI = (props: any) => {
                   </OSCoupon>
                 </OSTable>
               )}
-              {/*ESTE CODIGO GENERA UNA LINEA EN LA PAGINA QUE SE VE MAL, validar si es necesario este codigo*/}
-              {/*<OSTotal>*/}
-              {/*  <OSTable style={{ marginTop: 15 }}>*/}
-              {/*    <OText style={{ fontWeight: 'bold' }}>*/}
-              {/*      {t('TOTAL', 'Total')}*/}
-              {/*    </OText>*/}
-              {/*    <OText style={{ fontWeight: 'bold' }} color={theme.colors.primary}>*/}
-              {/*      {cart?.total >= 1 && parsePrice(cart?.total)}*/}
-              {/*    </OText>*/}
-              {/*  </OSTable>*/}
-              {/*</OSTotal>*/}
+              <OSTable>
+                <OText weight='bold'>
+                  {t('TOTAL', 'Total')}
+                </OText>
+                <OText weight='bold' color={theme.colors.primary}>
+                  {cart?.total >= 1 && parsePrice(cart?.total)}
+                </OText>
+              </OSTable>
             </OSBill>
           )}
+        </View>
+      </Container>
+
+      <>
+        <FloatingLayout isIos={Platform.OS === 'ios'}>
           <CheckoutAction>
             <View style={{display: 'flex', flexDirection: 'row'}}>
               {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == LANDSCAPE && (
@@ -337,7 +357,7 @@ const CartUI = (props: any) => {
               }}>
                 <OButton
                   text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-                    `${t('CONFIRM_THIS', 'Confirm this')} ${parsePrice(cart?.total)} ${t('ORDER', 'order')}`
+                    `${t('CONFIRM_THIS_ORDER', 'Confirm this order')}`
                   ) : !cart?.valid_address ? (
                     `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
                   ) : (
@@ -354,27 +374,27 @@ const CartUI = (props: any) => {
               </View>
             </View>
           </CheckoutAction>
-        </Actions>
+        </FloatingLayout>
+      </>
 
-        <OModal
-          open={openProduct}
-          entireModal
-          customClose
+      <OModal
+        open={openProduct}
+        entireModal
+        customClose
+        onClose={() => setModalIsOpen(false)}
+      >
+        <ProductForm
+          productCart={curProduct}
+          businessSlug={cart?.business?.slug}
+          businessId={curProduct?.business_id}
+          categoryId={curProduct?.category_id}
+          productId={curProduct?.id}
+          onSave={handlerProductAction}
           onClose={() => setModalIsOpen(false)}
-        >
-          <ProductForm
-            productCart={curProduct}
-            businessSlug={cart?.business?.slug}
-            businessId={curProduct?.business_id}
-            categoryId={curProduct?.category_id}
-            productId={curProduct?.id}
-            onSave={handlerProductAction}
-            onClose={() => setModalIsOpen(false)}
-          />
+        />
 
-        </OModal>
-      </SafeAreaView>
-    </KeyboardView>
+      </OModal>
+    </>
   )
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLanguage, useOrder, useApi, useSession, useUtils } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { StyleSheet, View, Dimensions, TextStyle, Animated, PanResponder, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, View, Dimensions, TextStyle, Animated, PanResponder, KeyboardAvoidingView, Platform, BackHandler } from 'react-native';
 import { OBottomPopup, OButton, OIcon, OText } from '../shared';
 import { BottomPopup, LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
@@ -11,6 +11,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { LoginForm } from '../LoginForm';
 import { SignupForm } from '../SignupForm';
 import Modal from 'react-native-modal';
+import { useFocusEffect } from '@react-navigation/core';
 
 const windowHeight = Dimensions.get('window').height
 
@@ -150,6 +151,25 @@ export const Home = (props: any) => {
 	useEffect(() => {
 		resetPositionAnim.start();
 	}, [])
+
+	useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        if (openLogin) {
+          setOpenLogin(false)
+          return true;
+        } else if (openSignUp) {
+          setOpenSignUp(false)
+          return true;
+        } else {
+          return false;
+        }
+      };
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [openLogin, openSignUp])
+  );
 
 	return (
 		<>

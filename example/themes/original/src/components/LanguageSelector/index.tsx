@@ -4,7 +4,7 @@ import { useTheme } from 'styled-components/native';
 import { Platform, StyleSheet, View } from 'react-native'
 
 import RNPickerSelect from 'react-native-picker-select'
-import { Container } from './styles'
+import { Container, DummyContainer } from './styles'
 import { LanguageSelectorParams } from '../../types'
 import { OIcon } from '../shared'
 
@@ -63,7 +63,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
 	return (
 		<Container>
-			{languagesState?.languages && (
+			{languagesState?.languages ? (
 				<>
 					{iconColor && <OIcon src={theme.images.general.language} color={iconColor} style={{ marginEnd: 14 }} width={16} />}
 					<RNPickerSelect
@@ -77,7 +77,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 						disabled={orderState.loading}
 					/>
 				</>
-			)}
+			) : <DummyContainer />}
 		</Container>
 	)
 }

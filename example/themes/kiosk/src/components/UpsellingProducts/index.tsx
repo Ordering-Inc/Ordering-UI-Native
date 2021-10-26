@@ -38,6 +38,24 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const [, t] = useLanguage()
   const [orientationState] = useDeviceOrientation();
 
+  const styles = StyleSheet.create({
+    imageStyle: {
+      width: '100%',
+      height: Platform.OS === 'ios' ? 250 : 180,
+      resizeMode: 'cover',
+      borderRadius: 10,
+    },
+    closeUpsellingButton: {
+      marginVertical: 10,
+      marginHorizontal: 20,
+      marginLeft: orientationState.orientation === PORTRAIT ? 20 : 0
+    },
+    upsellingModal: {
+      height: '50%',
+      top: 250
+    }
+  })
+
   useEffect(() => {
     if (!isCustomMode) {
       if (upsellingProducts?.products?.length && !upsellingProducts.loading) {
@@ -68,11 +86,12 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
       <Container>
         {
           !upsellingProducts.loading ? (
-            orientationState.orientation == PORTRAIT ? (
+            orientationState.orientation === PORTRAIT ? (
             <>
               <NavBar
                 title={t('BEFORE_YOU_GO', 'Before you go')}
                 onActionLeft={onClose}
+                btnStyle={{paddingLeft: 0}}
               />
 
               <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
@@ -149,6 +168,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                 <NavBar
                   title={t('BEFORE_YOU_GO', 'Before you go')}
                   onActionLeft={onClose}
+                  btnStyle={{paddingLeft: 0}}
                 />
 
                 <View
@@ -186,47 +206,50 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                     <GridContainer>
                       {
                         !upsellingProducts.error ? upsellingProducts.products.map((product: any) => (
-                          <Item key={product.id}>
-                            <OImage source={{ uri: product.images }} style={styles.imageStyle} />
-                            <Details>
-                              <OText
-                                weight="500"
-                                size={18}
-                                numberOfLines={3}
-                                mBottom={10}
-                              >
-                                {product.name}
-                              </OText>
-
-                              {product?.price && (
-                                <OText>
-                                  <OText
-                                    color={theme.colors.primary}
-                                    weight="500"
+                          <React.Fragment key={product.id}>
+                          {!product?.inventoried && (
+                            <Item>
+                              <OImage source={{ uri: product.images }} style={styles.imageStyle} />
+                              <Details>
+                                <OText
+                                  weight="500"
+                                  size={18}
+                                  numberOfLines={3}
+                                  mBottom={10}
                                   >
-                                    {parsePrice(product.price)}
-                                  </OText>
-
-                                  <OText
-                                    color={theme.colors.mediumGray}
-                                    size={12}
-                                    style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
-                                  >
-                                    {product?.offer_price ? parsePrice(product?.offer_price) : ''}
-                                  </OText>
+                                  {product.name}
                                 </OText>
-                              )}
-                            </Details>
 
-                            <OButton
-                              text={t('ADD_PRODUCT', 'add product')}
-                              textStyle={{ color: theme.colors.primary, textAlign: "center" }}
-                              style={{ minHeight: 40, height: 'auto', width: '100%' }}
-                              bgColor="#EAF2FE"
-                              borderColor="#EAF2FE"
-                              onClick={() => handleFormProduct(product)}
-                            />
-                          </Item>
+                                {product?.price && (
+                                  <OText>
+                                    <OText
+                                      color={theme.colors.primary}
+                                      weight="500"
+                                      >
+                                      {parsePrice(product.price)}
+                                    </OText>
+
+                                    <OText
+                                      color={theme.colors.mediumGray}
+                                      size={12}
+                                      style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
+                                      >
+                                      {product?.offer_price ? parsePrice(product?.offer_price) : ''}
+                                    </OText>
+                                  </OText>
+                                )}
+                              </Details>
+                              <OButton
+                                text={t('ADD_PRODUCT', 'add product')}
+                                textStyle={{ color: theme.colors.primary, textAlign: "center" }}
+                                style={{ minHeight: 40, height: 'auto', width: '100%' }}
+                                bgColor="#EAF2FE"
+                                borderColor="#EAF2FE"
+                                onClick={() => handleFormProduct(product)}
+                              />
+                            </Item>
+                          )}
+                          </React.Fragment>
                         )) : (
                           <OText>
                             {upsellingProducts.message}
@@ -298,23 +321,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  imageStyle: {
-    width: '100%',
-    height: Platform.OS === 'ios' ? 250 : 180,
-    resizeMode: 'cover',
-    borderRadius: 10,
-  },
-  closeUpsellingButton: {
-    marginVertical: 10,
-    marginHorizontal: 20,
-  },
-  upsellingModal: {
-    height: '50%',
-    top: 250
-  }
-})
 
 export const UpsellingProducts = (props : UpsellingProductsParams) => {
   const upsellingProductsProps = {

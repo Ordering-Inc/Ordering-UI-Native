@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Alert, Linking, Pressable, TextStyle } from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 import OText from './OText';
+import OButton from './OButton';
 
 interface Props {
   url: string | undefined;
@@ -10,10 +11,11 @@ interface Props {
   PressStyle?: TextStyle;
   TextStyle?: TextStyle;
   type?: string;
+  hasButton?: boolean;
 }
 
 const OLink = (props: Props): React.ReactElement => {
-  const { url, shorcut, color, PressStyle, TextStyle, type } = props;
+  const { url, shorcut, color, PressStyle, TextStyle, type, hasButton } = props;
   const [, t] = useLanguage();
 
   const handleAlert = () =>
@@ -27,7 +29,10 @@ const OLink = (props: Props): React.ReactElement => {
       ],
     );
 
-  const handleOpenUrl = async () => {
+  const handleOpenUrl = async (breakFunction = false) => {
+    if(breakFunction) {
+      return
+    }
     if (!url) {
       handleAlert();
       return;
@@ -47,7 +52,15 @@ const OLink = (props: Props): React.ReactElement => {
   };
 
   return (
-    <Pressable style={PressStyle} onPress={() => handleOpenUrl()}>
+    <Pressable style={PressStyle} onPress={() => handleOpenUrl(hasButton)}>
+      {hasButton ? (
+        <OButton
+          onClick={() => handleOpenUrl()}
+          text={shorcut} imgRightSrc=''
+          textStyle={{color: 'white'}}
+          style={{width: '100%', alignSelf: 'center', borderRadius: 10}}
+        />
+      ) : (
       <OText
         style={TextStyle}
         numberOfLines={1}
@@ -55,6 +68,7 @@ const OLink = (props: Props): React.ReactElement => {
         color={color}>
         {shorcut}
       </OText>
+      )}
     </Pressable>
   );
 };

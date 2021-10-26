@@ -19,6 +19,7 @@ export interface LoginParams {
   emailInputIcon?: any;
   passwordInputIcon?: any;
   allowedLevels?: any;
+  useRootPoint?: any;
 }
 export interface ProfileParams {
   navigation?: any;
@@ -276,6 +277,13 @@ export interface OrdersOptionParams {
   setCurrentFilters?: any;
   onFiltered?: ({}: any) => {};
   filtered?: any;
+  handleClickOrder?: any;
+  orderGroupStatusCustom?: {
+    pending?: Array<number>;
+    inProgress?: Array<number>;
+    completed?: Array<number>;
+    cancelled?: Array<number>;
+  };
 }
 export interface ActiveOrdersParams {
   orders?: any;

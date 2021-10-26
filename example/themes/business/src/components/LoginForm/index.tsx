@@ -15,6 +15,7 @@ import {
   LoginForm as LoginFormController,
   useLanguage,
   useConfig,
+  useApi
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
@@ -25,6 +26,7 @@ import {
   OrSeparator,
   LineSeparator,
 } from './styles';
+import { _setStoreData } from '../../providers/StoreUtil'
 import { OText, OButton, OInput, OIconButton, OModal } from '../shared';
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { VerifyPhone } from '../VerifyPhone';
@@ -45,8 +47,10 @@ const LoginFormUI = (props: LoginParams) => {
     handleCheckPhoneCode,
     setCheckPhoneCodeState,
     allowedLevels,
+    useRootPoint
   } = props;
 
+  const [ordering, { setOrdering }] = useApi();
   const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const theme = useTheme();
@@ -55,6 +59,7 @@ const LoginFormUI = (props: LoginParams) => {
 
   const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
   const inputRef = useRef<any>(null);
+  const inputMailRef = useRef<any>(null);
 
   const [passwordSee, setPasswordSee] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
@@ -75,6 +80,9 @@ const LoginFormUI = (props: LoginParams) => {
       ? 'Portrait'
       : 'Landscape',
   );
+
+  const [submitted, setSubmitted] = useState(false);
+  const [formValues, setFormValues] = useState(null);
 
   const getTraduction = (key: string) => {
     const keyList: any = {
@@ -142,9 +150,20 @@ const LoginFormUI = (props: LoginParams) => {
       return;
     }
 
+    if (values?.project_name) {
+      setOrdering({
+        ...ordering,
+        project: values?.project_name
+      })
+      _setStoreData('project_name', values?.project_name)
+      setFormValues({ ...values, ...phoneInputData.phone })
+      setSubmitted(true)
+      return
+    }
+
     handleButtonLoginClick({
       ...values,
-      ...phoneInputData.phone,
+      ...phoneInputData.phone
     });
   };
 
@@ -194,6 +213,7 @@ const LoginFormUI = (props: LoginParams) => {
                 t('PHONE_NUMER', 'Phone number'),
               ),
         );
+      setSubmitted(false)
     }
   }, [formState]);
 
@@ -255,6 +275,15 @@ const LoginFormUI = (props: LoginParams) => {
       setLoading(false);
     }
   }, [loading]);
+
+  useEffect(() => {
+    if (ordering.project === null || !submitted || !useRootPoint) return
+    const values: any = formValues
+    if (values?.project_name) {
+      delete values.project_name
+    }
+    handleButtonLoginClick({ ...values })
+  }, [ordering, submitted])
 
   Dimensions.addEventListener('change', ({ window: { width, height } }) => {
     setWindowWidth(
@@ -422,6 +451,37 @@ const LoginFormUI = (props: LoginParams) => {
 
       {(useLoginByCellphone || useLoginByEmail) && (
         <FormInput>
+          {useRootPoint && (
+            <Controller
+              control={control}
+              name='project_name'
+              rules={{ required: t(`VALIDATION_ERROR_PROJECT_NAME_REQUIRED`, 'The field project name is required') }}
+              defaultValue=""
+              render={({ onChange, value }: any) => (
+                <OInput
+                  name='project_name'
+                  placeholderTextColor={theme.colors.arrowColor}
+                  placeholder={t('PROJECT_NAME', 'Project Name')}
+                  icon={theme.images.general.project}
+                  iconColor={theme.colors.arrowColor}
+                  onChange={(e: any) => {
+                    onChange(e?.target?.value);
+                    setSubmitted(false);
+                  }}
+                  selectionColor={theme.colors.primary}
+                  color={theme.colors.textGray}
+                  value={value}
+                  style={styles.input}
+                  returnKeyType='next'
+                  autoCorrect={false}
+                  autoCapitalize='none'
+                  onSubmitEditing={() => inputMailRef.current?.focus()}
+                  blurOnSubmit={false}
+                />
+              )}
+            />
+          )}
+
           {useLoginByEmail && loginTab === 'email' && (
             <Controller
               control={control}
@@ -442,6 +502,7 @@ const LoginFormUI = (props: LoginParams) => {
                   autoCorrect={false}
                   type="email-address"
                   autoCompleteType="email"
+                  forwardRef={inputMailRef}
                   returnKeyType="next"
                   onSubmitEditing={() => inputRef.current?.focus()}
                   blurOnSubmit={false}

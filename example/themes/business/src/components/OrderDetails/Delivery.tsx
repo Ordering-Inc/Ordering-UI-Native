@@ -75,6 +75,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const showFloatButtonsPickUp: any = {
     8: true,
     3: true,
+    4: true,
+    18: true
   };
 
   const showFloatButtonsAcceptOrReject: any = {
@@ -278,7 +280,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             showsVerticalScrollIndicator={false}>
             <>
               <OrderContentComponent order={order} />
-              {order?.status === 8 && order?.delivery_type === 1 && (
+              {(order?.status === 8 || order?.status === 18) && order?.delivery_type === 1 && (
                 <Pickup>
                   <OButton
                     style={styles.btnPickUp}
@@ -380,7 +382,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               widthButton={'45%'}
             />
           )}
-          {order?.status === 9 && (
+          {(order?.status === 9 || order?.status === 19) && (
             <>
               <FloatingButton
                 disabled={loading}

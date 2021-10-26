@@ -7,17 +7,17 @@ export const BCContainer = styled.View`
   text-align: center;
 `
 
-export const BusinessCategoriesTitle = styled.View`
-  flex: 1;
-`
-
 export const BusinessCategories = styled.View`
   flex: 1;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   margin: 10px 0px;
   width: 100%;
+  min-height: 35px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
 `
 export const Category = styled.View`
   height: 150px;

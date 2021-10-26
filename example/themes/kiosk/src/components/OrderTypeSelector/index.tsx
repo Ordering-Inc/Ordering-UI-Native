@@ -52,7 +52,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
         /* @ts-ignore */
         renderButtonText={(value) => value?.label}
         renderRow={(item : any) => (
-          <View style={{ padding: 5, backgroundColor: theme.colors.white }}>
+          <View style={{ padding: 5, paddingVertical: 0, backgroundColor: theme.colors.white }}>
             <OText>{item.label}</OText>
           </View>
         )}
@@ -62,7 +62,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
           </View>
         )}
         dropdownStyle={{
-          height: 110,
+          height: 80,
           borderRadius: 6,
           padding: 10,
         }}

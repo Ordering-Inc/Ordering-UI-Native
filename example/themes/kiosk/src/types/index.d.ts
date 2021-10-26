@@ -164,6 +164,9 @@ export interface Product {
   extras: Extra[];
   gallery: any[];
   ingredients: Ingredient[];
+  options: any;
+  comment: string;
+  valid_menu: boolean;
 }
 
 export interface Gallery {

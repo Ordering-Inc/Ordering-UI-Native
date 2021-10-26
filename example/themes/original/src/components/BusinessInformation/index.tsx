@@ -16,7 +16,7 @@ import {
 	DivideView,
 	MediaWrapper,
 } from './styles';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { BusinessInformationParams } from '../../types';
 import { GoogleMap } from '../GoogleMap';
 import { WebView } from 'react-native-webview';
@@ -116,7 +116,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 										lineHeight={21}
 										mBottom={16}
 										size={14}
-										weight={'600'}
+										weight={Platform.OS === 'android' ? 'bold' : '600'}
 										style={{ flexBasis: '20%' }}>
 										{daysOfWeek[i].toUpperCase()}
 									</OText>

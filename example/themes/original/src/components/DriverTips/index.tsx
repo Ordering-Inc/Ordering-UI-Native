@@ -36,7 +36,7 @@ const DriverTipsUI = (props: any) => {
 
 	const style = StyleSheet.create({
 		circle: {
-			borderRadius: 20
+			borderRadius: 30
 		},
 		inputStyle: {
 			flex: 1,
@@ -74,7 +74,7 @@ const DriverTipsUI = (props: any) => {
 									style={style.circle}
 									isActive={option === optionSelected}
 								>
-									<OText size={18} color={option === optionSelected ? '#FFF' : '#000'}>
+									<OText size={13} color={option === optionSelected ? '#FFF' : theme.colors.textSecondary}>
 										{`${isFixedPrice ? parsePrice(option) : `${option}%`}`}
 									</OText>
 								</DTCard>

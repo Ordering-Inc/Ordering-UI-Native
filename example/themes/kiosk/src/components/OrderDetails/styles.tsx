@@ -30,3 +30,24 @@ export const OSInputWrapper = styled.View`
 export const SentReceipt = styled.View`
   flex-direction: row;
 `
+
+export const Table = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  flex: 1;
+  align-items: center;
+`
+
+export const OrderBill = styled.View`
+  padding-horizontal: 30px;
+  padding-vertical: 10px;
+  flex: 1;
+  background-color: ${(props: any) => props.theme.colors.paleGray};
+`
+
+export const Total = styled.View`
+  border-top-width: 1px;
+  border-top-color: #d9d9d9;
+  padding-vertical: 10px;
+`
+

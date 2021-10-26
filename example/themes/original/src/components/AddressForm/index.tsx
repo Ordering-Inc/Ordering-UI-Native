@@ -5,6 +5,8 @@ import {
 	TouchableOpacity,
 	Keyboard,
 	TouchableWithoutFeedback,
+	KeyboardAvoidingView,
+	Platform,
 } from 'react-native';
 import {
 	AddressForm as AddressFormController,
@@ -35,6 +37,7 @@ import {
 	FormInput,
 } from './styles';
 import { GPSButton } from '../GPSButton';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const inputNames = [
 	{ name: 'address', code: 'Address' },
@@ -94,6 +97,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 			marginBottom: 20,
 			height: 104,
 			maxHeight: 104,
+			minHeight: 104,
 			textAlignVertical: 'top',
 			alignItems: 'flex-start',
 		},
@@ -491,7 +495,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 	}, [orderState.loading]);
 
 	return (
-		<>
+		<ScrollView>
 			<NavBar
 				title={t('WHERE_DO_WE_DELIVERY', 'Where do we delivery?')}
 				titleAlign={'center'}
@@ -759,29 +763,27 @@ const AddressFormUI = (props: AddressFormParams) => {
 								)}
 							/>
 						</FormInput>
-						{!isKeyboardShow && (
-							<IconsContainer>
-								{tagsName.map((tag) => (
-									<TouchableOpacity
-										key={tag.value}
-										onPress={() => handleAddressTag(tag.value)}>
-										<View
-											style={{
-												...styles.iconContainer,
-											}}>
-											<OIcon
-												src={tag.icon}
-												width={24}
-												color={
-													addressTag === tag.value ?
-														theme.colors.primary : theme.colors.disabled
-												}
-											/>
-										</View>
-									</TouchableOpacity>
-								))}
-							</IconsContainer>
-						)}
+						<IconsContainer>
+							{tagsName.map((tag) => (
+								<TouchableOpacity
+									key={tag.value}
+									onPress={() => handleAddressTag(tag.value)}>
+									<View
+										style={{
+											...styles.iconContainer,
+										}}>
+										<OIcon
+											src={tag.icon}
+											width={24}
+											color={
+												addressTag === tag.value ?
+													theme.colors.primary : theme.colors.disabled
+											}
+										/>
+									</View>
+								</TouchableOpacity>
+							))}
+						</IconsContainer>
 					</View>
 
 					<View>
@@ -841,7 +843,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 					<Spinner visible={saveMapLocation} />
 				</AddressFormContainer>
 			</TouchableWithoutFeedback>
-		</>
+		</ScrollView>
 	);
 };
 

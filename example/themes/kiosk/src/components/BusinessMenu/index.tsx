@@ -48,7 +48,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
       height: VISIBLE_CART_BOTTOM_SHEET_HEIGHT,
       visible: bottomSheetVisibility,
     },
-    showNotFound: false,
+    showNotFound: false
   }
 
   const goToBack = () => navigation.goBack()
@@ -72,9 +72,9 @@ const BusinessMenu = (props:any): React.ReactElement => {
         }}
       >
         <Container nopadding nestedScrollEnabled>
-          <View style={{ paddingVertical: 20 }}>
+          <View style={{ paddingTop: 20 }}>
             <NavBar
-              title={t('MENU', 'Menu')}
+              title={t('MENU_V21', 'Menu')}
               onActionLeft={goToBack}
               includeOrderTypeSelector
               rightComponent={cart && (
@@ -104,17 +104,16 @@ const BusinessMenu = (props:any): React.ReactElement => {
         </Container>
       </View>
 
-      {bottomSheetVisibility &&
-        (<View
+        <View
           style={{
             flex: bottomSheetVisibility && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
+            display: bottomSheetVisibility ? 'flex' : 'none'
           }}
         >
           <CartContent
             {...cartProps}
           />
-        </View>)
-      }
+        </View>
     </View>
   );
 };

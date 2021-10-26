@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import {
   Cart as CartController,
@@ -45,7 +45,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
   const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
-  const [, { hideCartBottomSheet }] = useCartBottomSheet();
+  const [, {hideCartBottomSheet }] = useCartBottomSheet();
 
   const selectedOrderType = orderState?.options?.type;
 
@@ -53,6 +53,9 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
 
   const handleDeleteClick = (product: any) => {
     removeProduct(product, cart)
+    if(cart?.products?.length === 1){
+      hideCartBottomSheet()
+    }
   }
 
   const handleEditProduct = (product: any) => {

@@ -13,6 +13,7 @@ export const Logo = styled.View`
 `;
 
 export const Information = styled.View`
+  position: relative;
   justify-content: flex-start;
   margin-horizontal: 10px;
   flex: 1;
@@ -23,3 +24,8 @@ export const MyOrderOptions = styled.View`
   flex-direction: column;
   justify-content: space-between;
 `;
+
+export const NotificationIcon = styled.View`
+  position: absolute;
+  left: 90%;
+`

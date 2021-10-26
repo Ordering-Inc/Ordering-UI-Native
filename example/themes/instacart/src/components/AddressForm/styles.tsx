@@ -2,7 +2,7 @@ import styled from 'styled-components/native'
 
 export const AddressFormContainer = styled.View`
   flex: 1;
-  padding: 5px 40px;
+  padding-vertical: 5px;
   background-color: ${(props: any) => props.theme.colors.backgroundPage};
   justify-content: space-between;
 `

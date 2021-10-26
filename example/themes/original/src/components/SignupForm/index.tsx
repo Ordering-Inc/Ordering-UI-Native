@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet, Linking, Platform } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import CheckBox from '@react-native-community/checkbox';
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { FacebookLogin } from '../FacebookLogin';
 
@@ -90,6 +90,10 @@ const SignupFormUI = (props: SignupParams) => {
 			flexGrow: 1,
 			marginBottom: 7,
 		},
+		checkBoxStyle: {
+      width: 25,
+      height: 25,
+    }
 	});
 
 	const showInputPhoneNumber =
@@ -272,6 +276,16 @@ const SignupFormUI = (props: SignupParams) => {
 		onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
 	};
 
+	const handleOpenTermsUrl = async (url: any) => {
+		const supported = await Linking.canOpenURL(url);
+
+		if (supported) {
+		  	await Linking.openURL(url);
+		} else {
+		  	showToast(ToastType.Error, t('VALIDATION_ERROR_ACTIVE_URL', 'The _attribute_ is not a valid URL.').replace('_attribute_', t('URL', 'URL')))
+		}
+	}
+
 	useEffect(() => {
 		if (!formState.loading && formState.result?.error) {
 			formState.result?.result &&
@@ -453,6 +467,46 @@ const SignupFormUI = (props: SignupParams) => {
 								</View>
 							)}
 
+							{configs?.terms_and_conditions?.value === 'true' && (
+								<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+									<Controller
+										control={control}
+										render={({ onChange, value }: any) => (
+											<CheckBox
+												value={value}
+												onValueChange={newValue => {
+													onChange(newValue)
+												}}
+												boxType={'square'}
+												tintColors={{
+													true: theme.colors.primary,
+													false: theme.colors.disabled
+												}}
+												tintColor={theme.colors.disabled}
+												onCheckColor={theme.colors.primary}
+												onTintColor={theme.colors.primary}
+												style={Platform.OS === 'ios' && style.checkBoxStyle}
+											/>
+										)}
+										name='termsAccept'
+										rules={{
+											required: t('VALIDATION_ERROR_ACCEPTED', 'The _attribute_ must be accepted.').replace('_attribute_', t('TERMS_AND_CONDITIONS', 'Terms & Conditions'))
+										}}
+										defaultValue={false}
+									/>
+									<OText style={{ fontSize: 14, paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
+									<OButton
+										imgRightSrc={null}
+										text={t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
+										bgColor='#FFF'
+										borderColor='#FFF'
+										style={{ paddingLeft: 0, paddingRight: 0, height: 30, shadowColor: '#FFF' }}
+										textStyle={{ color: theme.colors.primary, marginLeft: 0, marginRight: 0 }}
+										onClick={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}
+									/>
+								</View>
+							)}
+
 							{signupTab !== 'cellphone' && (
 								<Controller
 									control={control}
@@ -535,11 +589,25 @@ const SignupFormUI = (props: SignupParams) => {
 							textStyle={{ color: 'white' }}
 							imgRightSrc={null}
 							isDisabled={formState.loading || validationFields.loading}
-							style={{ borderRadius: 7.6, marginTop: 6 }}
+							style={{ borderRadius: 7.6, marginTop: 6,shadowOpacity: 0 }}
 						/>
 					)}
 				</FormInput>
 
+				{
+          onNavigationRedirect && loginButtonText && (
+            <View style={style.wrappText}>
+              <OText size={14} style={{ marginRight: 5 }}>
+                {t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
+              </OText>
+              <Pressable onPress={() => onNavigationRedirect('Login')}>
+                <OText size={14} color={theme.colors.primary}>
+                  {loginButtonText}
+                </OText>
+              </Pressable>
+            </View>
+          )
+        }
 				<View
 					style={{
 						flexDirection: 'row',
@@ -579,20 +647,6 @@ const SignupFormUI = (props: SignupParams) => {
 					</SocialButtons>
 				</ButtonsWrapper>
 
-				{/* {
-          onNavigationRedirect && loginButtonText && (
-            <View style={style.wrappText}>
-              <OText size={18} style={{ marginRight: 5 }}>
-                {t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
-              </OText>
-              <Pressable onPress={() => onNavigationRedirect('Login')}>
-                <OText size={18} color={theme.colors.primary}>
-                  {loginButtonText}
-                </OText>
-              </Pressable>
-            </View>
-          )
-        } */}
 
 				{/* {
           configs && Object.keys(configs).length > 0 && (
