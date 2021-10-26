@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useEvent, useLanguage } from 'ordering-components/native'
+import { useEvent, useLanguage, useUtils, useSession } from 'ordering-components/native'
 import { View, Modal, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
@@ -15,6 +15,8 @@ export const NewOrderNotification = (props: any) => {
   const [events] = useEvent()
   const theme = useTheme()
   const [, t] = useLanguage()
+  const [{ user }] = useSession()
+  const [{ getTimeAgo }] = useUtils()
 
   const [modalOpen, setModalOpen] = useState(false)
   const [newOrderIds, setNewOrderIds] = useState<Array<any>>([])
@@ -61,6 +63,26 @@ export const NewOrderNotification = (props: any) => {
       events.off('order_added', handleNotification)
     }
   }, [handleNotification])
+
+  const handleUpdateOrder = useCallback((order: any) => {
+    if (order?.driver) {
+      const assignedTimeDiff = getTimeAgo(order?.driver?.last_order_assigned_at)
+      if (assignedTimeDiff === 'a few seconds ago') {
+        clearInterval(soundTimeout)
+        handlePlayNotificationSound()
+        setModalOpen(true)
+        setNewOrderIds([...newOrderIds, order.id])
+      }
+    }
+  }, [newOrderIds, notificationSound, soundTimeout])
+
+  useEffect(() => {
+    if (user?.level !== 4) return
+    events.on('order_updated', handleUpdateOrder)
+    return () => {
+      events.off('order_updated', handleUpdateOrder)
+    }
+  }, [handleUpdateOrder, user])
 
   useEffect(() => {
     notificationSound.setVolume(1);
