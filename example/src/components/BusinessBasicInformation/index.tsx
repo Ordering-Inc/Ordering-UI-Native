@@ -159,6 +159,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
             <OText color={theme.colors.textSecondary} style={styles.metadata}>{business && parsePrice(business?.delivery_price || 0)}</OText>
           </BusinessInfoItem>
         </View>
+        {!loading && (
           <WrapReviews>
             <View style={styles.reviewStyle}>
               <IconAntDesign
@@ -174,7 +175,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
                 <OText color={theme.colors.primary}>{t('SEE_REVIEWS', 'See reviews')}</OText>
               </TouchableOpacity>
             )}
-          </WrapReviews>
+          </WrapReviews>)}
       </BusinessInfo>
       <OModal
         titleSectionStyle={styles.modalTitleSectionStyle}
