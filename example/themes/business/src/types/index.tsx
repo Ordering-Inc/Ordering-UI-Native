@@ -275,6 +275,8 @@ export interface OrdersOptionParams {
   ordersGroup?: any;
   setOrdersGroup?: any;
   setCurrentFilters?: any;
+  onFiltered?: ({}: any) => {};
+  filtered?: any;
   handleClickOrder?: any;
   orderGroupStatusCustom?: {
     pending?: Array<number>;
