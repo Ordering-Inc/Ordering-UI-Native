@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, TextStyle, ScrollView, I18nManager } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, TextStyle, ScrollView, I18nManager, Platform } from 'react-native'
 import {
 	BusinessAndProductList,
 	useLanguage,
@@ -221,10 +221,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						</WrapSearchBar>
 						<SortWrap>
 							<SortButton onPress={() => setSortBy('rank')} style={{ marginEnd: 7 }}>
-								<OText size={12} weight={'600'} color={theme.colors.textPrimary}>{t('RANK', 'Rank')}</OText>
+								<OText size={12} weight={Platform.OS == 'ios' ? '600' : 'bold'} color={theme.colors.textPrimary}>{t('RANK', 'Rank')}</OText>
 							</SortButton>
 							<SortButton onPress={() => setSortBy('alphabet')}>
-								<OText size={12} weight={'600'} color={theme.colors.textPrimary}>{t('A_TO_Z', 'A to Z')}</OText>
+								<OText size={12} weight={Platform.OS == 'ios' ? '600' : 'bold'} color={theme.colors.textPrimary}>{t('A_TO_Z', 'A to Z')}</OText>
 							</SortButton>
 						</SortWrap>
 					</View>

@@ -36,9 +36,6 @@ const MessagesUI = (props: MessagesParams) => {
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
 
-  const previousStatus = [1, 2, 5, 6, 10, 11, 12, 16, 17]
-  const chatDisabled = previousStatus.includes(order?.status)
-
   const onChangeMessage = (val: string) => {
     setMessage && setMessage(val)
   }
@@ -55,11 +52,21 @@ const MessagesUI = (props: MessagesParams) => {
         console.log('ImagePicker Error: ', response.errorMessage);
         showToast(ToastType.Error, response.errorMessage);
       } else {
-        if (response.uri) {
-          const url = `data:${response.type};base64,${response.base64}`
-          setImage && setImage(url);
+        if (response?.assets) {
+          if (response?.assets?.length > 0) {
+            const image = response?.assets[0]
+            const url = `data:${image.type};base64,${image.base64}`
+            setImage && setImage(url);
+          } else {
+            showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+          }
         } else {
-          showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+          if (response.uri) {
+            const url = `data:${response.type};base64,${response.base64}`
+            setImage && setImage(url);
+          } else {
+            showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+          }
         }
       }
     });
@@ -224,49 +231,33 @@ const MessagesUI = (props: MessagesParams) => {
   )
 
   const renderComposer = (props: any) => (
-    chatDisabled ? (
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'column',
-          alignItems: 'center'
+    <View style={{ flexDirection: 'row', width: '80%' }}>
+      <Composer
+        {...props}
+        textInputStyle={{
+          backgroundColor: theme.colors.white,
+          borderRadius: 25,
+          paddingHorizontal: 10,
+          borderColor: '#DBDCDB',
+          borderWidth: 1,
+          color: '#010300',
+          textAlign: I18nManager.isRTL ? 'right' : 'left'
         }}
-      >
-        <MaterialCommunityIcon
-          name='close-octagon-outline'
-          size={24}
-        />
-        <OText size={14}>{t('NOT_SEND_MESSAGES', 'You can\'t send messages because the order has ended')}</OText>
-      </View>
-    ) : (
-      <View style={{ flexDirection: 'row', width: '80%' }}>
-        <Composer
-          {...props}
-          textInputStyle={{
-            backgroundColor: theme.colors.white,
-            borderRadius: 25,
-            paddingHorizontal: 10,
-            borderColor: '#DBDCDB',
-            borderWidth: 1,
-            color: '#010300',
-            textAlign: I18nManager.isRTL ? 'right' : 'left'
-          }}
-          textInputProps={{
-            value: message,
-            onSubmitEditing: onSubmit,
-            returnKeyType: message ? 'send' : 'done',
-            blurOnSubmit: true,
-            multiline: false,
-            numberOfLines: 1,
-            autoCorrect: false,
-            autoCompleteType: 'off',
-            enablesReturnKeyAutomatically: false
-          }}
-          placeholder={t('WRITE_MESSAGE', 'Write message...')}
-        />
-        <RenderActions {...props} />
-      </View>
-    )
+        textInputProps={{
+          value: message,
+          onSubmitEditing: onSubmit,
+          returnKeyType: message ? 'send' : 'done',
+          blurOnSubmit: true,
+          multiline: false,
+          numberOfLines: 1,
+          autoCorrect: false,
+          autoCompleteType: 'off',
+          enablesReturnKeyAutomatically: false
+        }}
+        placeholder={t('WRITE_MESSAGE', 'Write message...')}
+      />
+      <RenderActions {...props} />
+    </View>
   )
 
   const renderSend = (props: any) => (

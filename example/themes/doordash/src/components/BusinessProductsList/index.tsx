@@ -10,7 +10,7 @@ import {
   WrapperNotFound
 } from './styles'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 
 const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   const {
@@ -59,7 +59,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         !category.id && (
           featured && allProducts?.find((product: any) => product.featured) && (
             <>
-              <OText size={16} weight={'600'} mBottom={20}>{t('FEATURED', 'Featured')}</OText>
+              <OText size={16} weight={Platform.OS == 'ios' ? '600' : 'bold'} mBottom={20}>{t('FEATURED', 'Featured')}</OText>
               {allProducts?.map((product: any) => product.featured && (
                 <SingleProductCard
                   key={product.id}
@@ -82,7 +82,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               {
                 products.length > 0 && (
                   <>
-                    <OText size={16} weight={'600'} mBottom={20}>{category.name}</OText>
+                    <OText size={16} weight={Platform.OS == 'ios' ? '600' : 'bold'} mBottom={20}>{category.name}</OText>
                     <>
                     {
                       products.map((product: any) => (

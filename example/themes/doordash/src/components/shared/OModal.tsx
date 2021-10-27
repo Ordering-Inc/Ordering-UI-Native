@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, Text, SafeAreaView, View, Dimensions, useWindowDimensions } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, Dimensions, useWindowDimensions, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
 import Modal from 'react-native-modal';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { OIcon } from '.';
+import { useTheme } from 'styled-components/native';
 
 interface Props {
   open?: boolean;
@@ -49,6 +51,7 @@ const OModal = (props: Props): React.ReactElement => {
 
   const { top, bottom } = useSafeAreaInsets();
   const { height } = useWindowDimensions();
+  const theme = useTheme();
 
   return (
     <Modal
@@ -77,12 +80,13 @@ const OModal = (props: Props): React.ReactElement => {
           <>
             {!customClose && (
               <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-                <Icon
-                  name="x"
-                  size={35}
-                  style={styleCloseButton || styles.cancelBtn}
-                  onPress={onClose}
-                />
+                <TouchableOpacity onPress={onClose}>
+                  <OIcon
+                    src={theme.images.general.close}
+                    width={16}
+                    style={styleCloseButton || styles.cancelBtn}
+                  />
+                </TouchableOpacity>
                 <Text style={styles.modalText}>{title}</Text>
               </View>
             )}
@@ -97,7 +101,8 @@ const OModal = (props: Props): React.ReactElement => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: Dimensions.get('window').width
+    width: Dimensions.get('window').width,
+    backgroundColor: 'white'
   },
   centeredView: {
     justifyContent: "center",
@@ -108,15 +113,15 @@ const styles = StyleSheet.create({
   titleSection: {
     width: '100%',
     display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
+    paddingTop: 10,
+    paddingHorizontal: 40,
   },
   cancelBtn: {
-    position: 'absolute',
-    left: 0,
-    margin: 15,
-    zIndex: 10000
+    tintColor: '#191919'
   },
   modalText: {
     marginTop: 15,

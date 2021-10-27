@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Pressable, StyleSheet, View, Keyboard, TextStyle, TouchableOpacity } from 'react-native';
+import { Pressable, StyleSheet, View, Keyboard, TextStyle, TouchableOpacity, Platform } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber'
@@ -88,7 +88,7 @@ const LoginFormUI = (props: LoginParams) => {
 		socialText: {
 			fontSize: 14,
 			lineHeight: 20,
-			fontWeight: '600',
+			fontWeight: Platform.OS == 'ios' ? '600' : 'bold',
 			color: theme.colors.white,
 			textTransform: 'capitalize',
 			textAlign: 'center',

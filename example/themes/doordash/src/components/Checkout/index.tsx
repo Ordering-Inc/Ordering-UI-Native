@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextStyle, TouchableOpacity, Animated } from 'react-native';
+import { View, TextStyle, TouchableOpacity, Animated, Platform } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 import {
@@ -455,7 +455,7 @@ const CheckoutUI = (props: any) => {
 					<NavBar
 						title={t('SELECT_A_PAYMENT_METHOD', 'Select a payment method')}
 						onActionLeft={() => setOpenPaymethods(false)}
-						style={{paddingStart: 0, paddingEnd: 0}}
+						style={{paddingLeft: 0, paddingRight: 0}}
 					/>
 					<PaymentOptions
 						cart={cart}
@@ -474,7 +474,7 @@ const CheckoutUI = (props: any) => {
 								bgColor={theme.colors.white}
 								borderColor={theme.colors.primary}
 								style={{ height: 42, borderWidth: 1, borderRadius: 3, marginTop: 100 }}
-								textStyle={{color: theme.colors.primary, fontSize: 14, fontWeight: '600'}}
+								textStyle={{color: theme.colors.primary, fontSize: 14, fontWeight: Platform.OS == 'ios' ? '600' : 'bold'}}
 								onClick={() => setOpenPaymethods(false)}
 							/>
 						}

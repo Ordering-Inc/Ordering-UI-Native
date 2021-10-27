@@ -44,7 +44,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 		buttonText: {
 			color: theme.colors.white,
 			fontSize: 11,
-			fontWeight: '600',
+			fontWeight: Platform.OS === 'ios' ? '600' : 'bold',
 			marginLeft: 2,
 			marginRight: 2
 		}
@@ -75,7 +75,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 			{orders.map((order: any) => (
 				<Card key={order.id}>
 					<Information>
-						<OText size={14} numberOfLines={1} weight={'600'}>
+						<OText size={14} numberOfLines={1} weight={Platform.OS === 'ios' ? '600' : 'bold'}>
 							{order.business?.name}
 						</OText>
 						<OText size={12} color={theme.colors.textSecondary} numberOfLines={1}>
@@ -83,14 +83,14 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 						</OText>
 						<MyOrderOptions>
 							<TouchableOpacity onPress={() => handleClickViewOrder(order?.uuid)}>
-								<OText size={12} weight={'600'} color={theme.colors.textPrimary} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
+								<OText size={12} weight={Platform.OS === 'ios' ? '600' : 'bold'} color={theme.colors.textPrimary} numberOfLines={1}>{t('MOBILE_FRONT_BUTTON_VIEW_ORDER', 'View order')}</OText>
 							</TouchableOpacity>
 							{
 								allowedOrderStatus.includes(parseInt(order?.status)) && !order.review && (
 									<>
-										<OText size={12} weight={'600'} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+										<OText size={12} weight={Platform.OS === 'ios' ? '600' : 'bold'} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
 										<TouchableOpacity onPress={() => handleClickOrderReview(order)}>
-											<OText size={12} weight={'600'} color={theme.colors.primary} numberOfLines={1}>{t('REVIEW', 'Review')}</OText>
+											<OText size={12} weight={Platform.OS === 'ios' ? '600' : 'bold'} color={theme.colors.primary} numberOfLines={1}>{t('REVIEW', 'Review')}</OText>
 										</TouchableOpacity>
 									</>
 								)}
@@ -124,7 +124,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 						onClick={loadMoreOrders}
 						text={t('LOAD_MORE_ORDERS', 'Load more orders')}
 						imgRightSrc={null}
-						textStyle={{ color: theme.colors.white, fontSize: 14, fontWeight: '600' }}
+						textStyle={{ color: theme.colors.white, fontSize: 14, fontWeight: Platform.OS === 'ios' ? '600' : 'bold' }}
 						style={{ height: 40 }}
 					/>
 				</WrappButton>

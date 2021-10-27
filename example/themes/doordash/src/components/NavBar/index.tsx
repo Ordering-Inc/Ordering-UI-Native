@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled, { css } from 'styled-components/native'
 import { OButton, OIcon, OText } from '../shared'
 import { useTheme } from 'styled-components/native'
-import { TextStyle } from 'react-native'
+import { Platform, TextStyle } from 'react-native'
 import { ViewStyle } from 'react-native'
 
 const btnBackArrow = {
@@ -10,7 +10,7 @@ const btnBackArrow = {
   backgroundColor: '#FFF',
   borderColor: '#FFF',
   shadowColor: '#FFF',
-  paddingStart: 0,
+  paddingLeft: 0,
   height: 40,
 }
 
@@ -85,7 +85,7 @@ const NavBar = (props: Props) => {
         }
         <TitleWrapper>
           <OText
-            weight={'600'}
+            weight={Platform.OS === 'ios' ? '600' : 'bold'}
             style={
               {
                 textAlign: props.titleAlign ? props.titleAlign : 'center',

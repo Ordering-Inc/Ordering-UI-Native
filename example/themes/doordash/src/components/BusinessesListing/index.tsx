@@ -148,9 +148,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						? navigation.navigate('AddressList', { isFromBusinesses: true })
 						: navigation.navigate('AddressForm', { address: orderState.options?.address, isFromBusinesses: true })}
 				>
-					<OText color={theme.colors.red} size={12} weight={'600'}>{t('DELIVER_TO', 'Deliver to')}</OText>
+					<OText color={theme.colors.red} size={12} weight={Platform.OS == 'ios' ? '600' : 'bold'}>{t('DELIVER_TO', 'Deliver to')}</OText>
 					<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-						<OText size={14} style={styles.inputStyle} numberOfLines={1} weight={'600'}>
+						<OText size={14} style={styles.inputStyle} numberOfLines={1} weight={Platform.OS == 'ios' ? '600' : 'bold'}>
 							{orderState?.options?.address?.address}
 						</OText>
 						<OIcon color={theme.colors.red} src={theme.images.general.chevron_right} style={{ transform: [{ rotate: '90deg' }] }} width={16} />

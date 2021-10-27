@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { I18nManager, StyleSheet, TextStyle, View } from 'react-native'
+import { I18nManager, Platform, StyleSheet, TextStyle, View } from 'react-native'
 import {
 	UpsellingPage as UpsellingPageController,
 	useUtils,
@@ -96,11 +96,11 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 										<Item key={product.id}>
 											<Details>
 												<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-													<OText size={12} weight={'600'} numberOfLines={1} ellipsizeMode='tail' style={{ flexBasis: '76%' }}>{product.name}</OText>
+													<OText size={12} weight={Platform.OS == 'ios' ? '600' : 'bold'} numberOfLines={1} ellipsizeMode='tail' style={{ flexBasis: '76%' }}>{product.name}</OText>
 													<OText color={theme.colors.textThird} style={theme.labels.small as TextStyle}>{parsePrice(product.price)}</OText>
 												</View>
 												<AddButton onPress={() => handleFormProduct(product)}>
-													<OText color={theme.colors.white} size={10} weight={'600'}>{t('ADD', 'Add')}</OText>
+													<OText color={theme.colors.white} size={10} weight={Platform.OS == 'ios' ? '600' : 'bold'}>{t('ADD', 'Add')}</OText>
 												</AddButton>
 											</Details>
 											<OIcon url={product.images} style={styles.imageStyle} />

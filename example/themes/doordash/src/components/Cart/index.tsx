@@ -21,6 +21,7 @@ import { useTheme } from 'styled-components/native';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
+import { Platform } from 'react-native';
 
 const CartUI = (props: any) => {
   const {
@@ -211,7 +212,7 @@ const CartUI = (props: any) => {
               isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
               borderColor={theme.colors.primary}
               imgRightSrc={null}
-              textStyle={{ color: 'white', textAlign: 'center', flex: 1, fontWeight: '600' }}
+              textStyle={{ color: 'white', textAlign: 'center', flex: 1, fontWeight: Platform.OS === 'ios' ? '600' : 'bold' }}
               onClick={() => setOpenUpselling(true)}
               style={{ width: '100%', height: 40, shadowOpacity: 0, flexDirection: 'row', justifyContent: 'center' }}
             />
