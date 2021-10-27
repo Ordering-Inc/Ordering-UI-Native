@@ -19,7 +19,7 @@ export const NewOrderNotification = (props: any) => {
   const [{ getTimeAgo }] = useUtils()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const [newOrderIds, setNewOrderIds] = useState<Array<any>>([])
+  const [newOrderId, setNewOrderId] = useState(null)
   const [soundTimeout, setSoundTimeout] = useState<any>(null)
 
   const notificationSound = new Sound(theme.sounds.notification, error => {
@@ -47,15 +47,14 @@ export const NewOrderNotification = (props: any) => {
   const handleCloseModal = () => {
     clearInterval(soundTimeout)
     setModalOpen(false)
-    setNewOrderIds([])
   }
 
   const handleNotification = useCallback((order: any) => {
     clearInterval(soundTimeout)
     handlePlayNotificationSound()
+    setNewOrderId(order.id)
     setModalOpen(true)
-    setNewOrderIds([...newOrderIds, order.id])
-  }, [newOrderIds, notificationSound, soundTimeout])
+  }, [newOrderId, notificationSound, soundTimeout])
 
   useEffect(() => {
     events.on('order_added', handleNotification)
@@ -70,11 +69,11 @@ export const NewOrderNotification = (props: any) => {
       if (assignedTimeDiff === 'a few seconds ago') {
         clearInterval(soundTimeout)
         handlePlayNotificationSound()
+        setNewOrderId(order.id)
         setModalOpen(true)
-        setNewOrderIds([...newOrderIds, order.id])
       }
     }
-  }, [newOrderIds, notificationSound, soundTimeout])
+  }, [newOrderId, notificationSound, soundTimeout])
 
   useEffect(() => {
     if (user?.level !== 4) return
@@ -121,15 +120,12 @@ export const NewOrderNotification = (props: any) => {
               width={250}
               height={200}
             />
-            {newOrderIds.map(orderId => (
-              <OText
-                key={orderId}
-                color={theme.colors.textGray}
-                mBottom={15}
-              >
-                {t('ORDER_N_ORDERED', 'Order #_order_id_ has been ordered.').replace('_order_id_', orderId)}
-              </OText>
-            ))}
+            <OText
+              color={theme.colors.textGray}
+              mBottom={15}
+            >
+              {t('ORDER_N_ORDERED', 'Order #_order_id_ has been ordered.').replace('_order_id_', newOrderId)}
+            </OText>
           </View>
         </NotificationContainer>
       </Modal>
