@@ -13,9 +13,9 @@ export const DTWrapperTips = styled.View`
   display: flex;
   flex-direction: row;
   width: 100%;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 `
 
 export const DTCard = styled.View`
@@ -29,6 +29,7 @@ export const DTCard = styled.View`
   max-width: 48px;
   max-height: 48px;
   margin-right: 10px;
+  margin-left: 10px;
   margin-top: 10px;
 
   ${(props: any) => props.isActive && css`
@@ -47,7 +48,7 @@ export const DTForm = styled.View`
 export const DTLabel = styled.Text`
   font-size: 14px;
   align-self: flex-start;
-  color: ${(props: any) => props.theme.colors.textSecondary}
+  color: ${(props: any) => props.theme.colors.textSecondary};
   margin-top: 10px;
 
   ${(props: any) => props.theme?.rtl && css`
