@@ -373,7 +373,7 @@ const LoginFormUI = (props: LoginParams) => {
 							}}
 							defaultValue=""
 						/>
-						{onNavigationRedirect && forgotButtonText && registerButtonText && (
+						{onNavigationRedirect && forgotButtonText && (
 							<TouchableOpacity onPress={() => onNavigationRedirect('Forgot')}>
 								<OText size={14} mBottom={18}>
 									{forgotButtonText}
