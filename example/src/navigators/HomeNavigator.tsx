@@ -15,6 +15,7 @@ import ReviewOrder from '../pages/ReviewOrder'
 import ReviewProducts from '../pages/ReviewProducts';
 import ReviewDriver from '../pages/ReviewDriver'
 import MomentOption from '../pages/MomentOption'
+import OrderTypes from '../pages/OrderTypes'
 import Account from '../pages/Account'
 import Help from '../pages/Help'
 import HelpOrder from '../pages/HelpOrder'
@@ -157,6 +158,11 @@ const HomeNavigator = (e : any) => {
                    <Stack.Screen
                     name="HelpAccountAndPayment"
                     component={HelpAccountAndPayment}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="OrderTypes"
+                    component={OrderTypes}
                     options={{ headerShown: false }}
                   />
                 </>

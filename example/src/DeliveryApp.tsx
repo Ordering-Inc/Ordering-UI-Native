@@ -99,6 +99,9 @@ theme.images = {
     help: require('./assets/images/help.png'),
     close: require('./assets/icons/close.png')
   },
+  backgrounds: {
+		business_list_header: require('./assets/images/business_list_banner.jpg'),
+	},
   order: {
     status0: require('./assets/images/status-0.png'),
     status1: require('./assets/images/status-1.png'),
@@ -131,7 +134,14 @@ theme.images = {
     businessLogo: require('./assets/images/dummies/store.png'),
     driverPhoto: 'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png',
     customerPhoto: 'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png'
-  }
+  },
+  orderTypes: {
+    type1: require('./assets/images/ordertypes/delivery.png'),
+    type2: require('./assets/images/ordertypes/pickup.png'),
+    type3: require('./assets/images/ordertypes/eatin.png'),
+    type4: require('./assets/images/ordertypes/curbside.png'),
+    type5: require('./assets/images/ordertypes/drivethru.png'),
+  },
 }
 
 const DeliveryApp = () => {
