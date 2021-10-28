@@ -373,7 +373,7 @@ const LoginFormUI = (props: LoginParams) => {
 							}}
 							defaultValue=""
 						/>
-						{onNavigationRedirect && forgotButtonText && (
+						{onNavigationRedirect && forgotButtonText && registerButtonText && (
 							<TouchableOpacity onPress={() => onNavigationRedirect('Forgot')}>
 								<OText size={14} mBottom={18}>
 									{forgotButtonText}
@@ -388,11 +388,22 @@ const LoginFormUI = (props: LoginParams) => {
 							textStyle={{ color: 'white' }}
 							imgRightSrc={null}
 							isLoading={formState.loading}
-							style={{ borderRadius: 7.6, marginTop: 10 }}
+							style={{ borderRadius: 7.6, marginTop: 10, marginBottom: 25 }}
 						/>
+						{onNavigationRedirect && registerButtonText && (
+							<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
+								<OText size={14}>
+									{t('NEW_ON_PLATFORM', 'New on Ordering?')}
+								</OText>
+							<TouchableOpacity onPress={() => onNavigationRedirect('Signup')}>
+									<OText size={14} mLeft={5} color={theme.colors.skyBlue}>
+										{t('CREATE_ACCOUNT', 'Create account')}
+									</OText>
+								</TouchableOpacity>
+							</View>
+						)}
 					</FormInput>
 				)}
-
 
 				{useLoginByCellphone &&
 					loginTab === 'cellphone' &&
@@ -429,7 +440,7 @@ const LoginFormUI = (props: LoginParams) => {
 						width: '100%',
 						justifyContent: 'space-between',
 						alignItems: 'center',
-						marginVertical: 30
+						marginVertical: 15
 					}}>
 					<View style={loginStyle.line} />
 					<OText
