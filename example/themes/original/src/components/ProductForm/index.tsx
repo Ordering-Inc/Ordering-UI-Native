@@ -165,29 +165,7 @@ export const ProductOptionsUI = (props: any) => {
 		Object.keys(errors).length > 0;
 
 	const ExtraOptions = ({ eID, options }: any) => (
-		<ExtraOptionWrap
-			horizontal
-			showsHorizontalScrollIndicator={false}
-			style={{ marginBottom: 20 }}
-			contentContainerStyle={{ paddingHorizontal: 33 }}>
 			<>
-				<TouchableOpacity
-					key={`eopt_all_0`}
-					onPress={() => setSelectedOpt(0)}
-					style={[
-						styles.extraItem,
-						{
-							borderBottomColor:
-								selOpt == 0 ? theme.colors.textNormal : theme.colors.border,
-						},
-					]}>
-					<OText
-						color={selOpt == 0 ? theme.colors.textNormal : theme.colors.textSecondary}
-						size={selOpt == 0 ? 14 : 12}
-						weight={selOpt == 0 ? '600' : 'normal'}>
-						{t('ALL', 'All')}
-					</OText>
-				</TouchableOpacity>
 				{product?.ingredients.length > 0 && (
 					<TouchableOpacity
 						key={`eopt_all_00`}
@@ -233,7 +211,6 @@ export const ProductOptionsUI = (props: any) => {
 					</React.Fragment>
 				))}
 			</>
-		</ExtraOptionWrap>
 	);
 
 	return (
@@ -354,9 +331,32 @@ export const ProductOptionsUI = (props: any) => {
 									</>
 								) : (
 									<ProductEditions>
-										{product?.extras.map((extra: any) => 
+										<ExtraOptionWrap
+											horizontal
+											showsHorizontalScrollIndicator={false}
+											style={{ marginBottom: 20 }}
+											// contentContainerStyle={{ paddingHorizontal: 33 }}
+										>
+										<TouchableOpacity
+											key={`eopt_all_0`}
+											onPress={() => setSelectedOpt(0)}
+											style={[
+												styles.extraItem,
+												{
+													borderBottomColor: selOpt == 0 ? theme.colors.textNormal : theme.colors.border,
+												},
+											]}>
+											<OText
+												color={selOpt == 0 ? theme.colors.textNormal : theme.colors.textSecondary}
+												size={selOpt == 0 ? 14 : 12}
+												weight={selOpt == 0 ? '600' : 'normal'}>
+												{t('ALL', 'All')}
+											</OText>
+										</TouchableOpacity>
+										{product?.extras.map((extra: any) => 					
 											<ExtraOptions key={extra.id} options={extra.options} />
 										)}
+										</ExtraOptionWrap>
 
 										{selOpt == 0 ? (
 											<>
