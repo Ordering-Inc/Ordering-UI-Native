@@ -26,5 +26,8 @@
   "homepage": "https://github.com/sergioaok/Ordering-UI-Native#readme",
   "devDependencies": {
     "react-native": "^0.64.1"
+  },
+  "dependencies": {
+    "react-native-fast-image": "^8.5.11"
   }
 }

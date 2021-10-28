@@ -35,6 +35,7 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
+import FastImage from 'react-native-fast-image'
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -262,10 +263,18 @@ export const ProductOptionsUI = (props: any) => {
 												<OIcon src={theme.images.general.close} width={16} />
 											</TouchableOpacity>
 										</TopHeader>
-										<ProductHeader
+										{/* <ProductHeader
 											source={{ uri: product?.images || productCart?.images }}
 											style={{height: windowWidth}}
 											resizeMode={'contain'}
+										/> */}
+										<FastImage
+											style={{height: windowWidth}}
+											source={{
+												uri: product?.images || productCart?.images,
+												priority: FastImage.priority.normal,
+											}}
+											resizeMode={FastImage.resizeMode.contain}
 										/>
 									</>
 								)}

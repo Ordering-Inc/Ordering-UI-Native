@@ -7,9 +7,12 @@ import { BusinessBasicInformationParams } from '../../types';
 import { convertHoursToMinutes } from '../../utils';
 import { BusinessInformation } from '../BusinessInformation';
 import { BusinessReviews } from '../BusinessReviews';
+import FastImage from 'react-native-fast-image'
+
 import {
 	BusinessContainer,
 	BusinessHeader,
+	BusinessHeaderContainer,
 	BusinessLogo,
 	BusinessInfo,
 	BusinessInfoItem,
@@ -46,7 +49,7 @@ export const BusinessBasicInformation = (
 
 	return (
 		<BusinessContainer>
-			<BusinessHeader
+			{/* <BusinessHeader
 				style={
 					isBusinessInfoShow
 						? styles.businesInfoheaderStyle
@@ -62,7 +65,28 @@ export const BusinessBasicInformation = (
 						<OIcon src={theme.images.general.info} width={24} />
 					</WrapBusinessInfo>
 				)}
-			</BusinessHeader>
+			</BusinessHeader> */}
+			<BusinessHeaderContainer>
+				<FastImage
+					style={
+						isBusinessInfoShow
+							? styles.businesInfoheaderStyle
+							: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
+					}
+					source={{
+						uri:
+							header ||
+							optimizeImage(businessState?.business?.header, 'h_400,c_limit'),
+						priority: FastImage.priority.normal,
+					}}
+					resizeMode={FastImage.resizeMode.cover}
+				/>
+				{/* {!isBusinessInfoShow && ( */}
+					<WrapBusinessInfo onPress={() => setOpenBusinessInformation(true)}>
+						<OIcon src={theme.images.general.info} width={24} />
+					</WrapBusinessInfo>
+				{/* )} */}
+			</BusinessHeaderContainer>
 			<BusinessInfo style={styles.businessInfo}>
 				<BusinessLogo>
 					{loading ? (
@@ -73,12 +97,20 @@ export const BusinessBasicInformation = (
 						</View>
 					) : (
 						!isBusinessInfoShow && (
-							<OIcon
-								url={
-									logo ||
-									optimizeImage(businessState?.business?.logo, 'h_300,c_limit')
-								}
+							// <OIcon
+							// 	url={
+							// 		logo ||
+							// 		optimizeImage(businessState?.business?.logo, 'h_300,c_limit')
+							// 	}
+							// 	style={styles.businessLogo}
+							// />
+							<FastImage
 								style={styles.businessLogo}
+								source={{
+									uri: logo || optimizeImage(businessState?.business?.logo, 'h_300,c_limit'),
+									priority: FastImage.priority.normal,
+								}}
+								resizeMode={FastImage.resizeMode.cover}
 							/>
 						)
 					)}

@@ -11,6 +11,11 @@ export const BusinessHeader = styled.ImageBackground`
   height: 258px;
   resize-mode: cover;
 `;
+export const BusinessHeaderContainer = styled.View`
+  position: relative;
+  height: 258px;
+  max-height: 258px;
+`
 export const BusinessLogo = styled.View`
   position: absolute;
   start: 40px;
