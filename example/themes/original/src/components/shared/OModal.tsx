@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Modal, StyleSheet, Text, SafeAreaView, View, TouchableOpacity } from "react-native";
+import { Modal, StyleSheet, Text, SafeAreaView, View, TouchableOpacity, Platform } from "react-native";
 import { OIcon } from '.';
-import { useTheme } from 'styled-components/native';
+import styled, { useTheme } from 'styled-components/native';
+
 
 interface Props {
 	open?: boolean;
@@ -19,8 +20,14 @@ interface Props {
 	customClose?: boolean;
 	titleSectionStyle?: any;
 	isNotDecoration?: boolean;
-	styleCloseButton?: any
+	styleCloseButton?: any;
+	isAvoidKeyBoardView?: boolean;
 }
+
+const KeyboardView = styled.KeyboardAvoidingView`
+  flex-grow: 1;
+  flex-shrink: 1;
+`;
 
 const OModal = (props: Props): React.ReactElement => {
 	const {
@@ -39,20 +46,14 @@ const OModal = (props: Props): React.ReactElement => {
 		titleSectionStyle,
 		isNotDecoration,
 		style,
-		styleCloseButton
+		styleCloseButton,
+		isAvoidKeyBoardView
 	} = props
 
 	const theme = useTheme();
 
-	return (
-		<Modal
-			animationType="slide"
-			transparent={isTransparent}
-			visible={open}
-			onRequestClose={() => onClose()}
-			style={{ height: '100%', flex: 1, position: 'absolute', ...style, zIndex: 9999 }}
-		>
-			<SafeAreaView style={styles.container}>
+	const RenderSafeAreaView = () => (
+		<SafeAreaView style={styles.container}>
 				{!entireModal ? (
 					<View style={styles.centeredView}>
 						<View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
@@ -84,7 +85,26 @@ const OModal = (props: Props): React.ReactElement => {
 						{children}
 					</View>
 				}
-			</SafeAreaView>
+		</SafeAreaView>
+	)
+	return (
+		<Modal
+			animationType="slide"
+			transparent={isTransparent}
+			visible={open}
+			onRequestClose={() => onClose()}
+			style={{ height: '100%', flex: 1, position: 'absolute', ...style, zIndex: 9999 }}
+		>
+		{isAvoidKeyBoardView ? (
+			<KeyboardView
+				enabled
+				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+			>
+				<RenderSafeAreaView/>
+			</KeyboardView>
+			) : (
+			<RenderSafeAreaView/>
+			)}
 		</Modal>
 	);
 };

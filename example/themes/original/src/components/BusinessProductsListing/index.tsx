@@ -263,6 +263,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				onClose={handleCloseProductModal}
 				entireModal
 				customClose
+				isAvoidKeyBoardView
 			>
 				<ProductForm
 					product={curProduct}

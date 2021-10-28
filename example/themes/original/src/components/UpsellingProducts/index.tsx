@@ -203,6 +203,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 				onClose={() => setModalIsOpen(false)}
 				entireModal
 				customClose
+				isAvoidKeyBoardView
 			>
 				{actualProduct && (
 					<ProductForm

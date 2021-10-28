@@ -225,6 +225,7 @@ const CartUI = (props: any) => {
 				entireModal
 				customClose
 				onClose={() => setModalIsOpen(false)}
+				isAvoidKeyBoardView
 			>
 				<ProductForm
 					isCartProduct
