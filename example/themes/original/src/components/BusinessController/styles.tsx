@@ -15,13 +15,6 @@ export const BusinessHero = styled.ImageBackground`
   position: relative;
 `;
 
-export const BusinessHeroContainer = styled.View`
-  position: relative;
-  border-top-left-radius: 7.6px;
-  border-top-right-radius: 7.6px;
-  overflow: hidden;
-`
-
 export const BusinessContent = styled.View`
     padding-horizontal: 18px;
     padding-bottom: 18px;

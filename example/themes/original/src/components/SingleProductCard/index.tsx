@@ -10,7 +10,6 @@ import { SingleProductCardParams } from '../../types';
 import { CardContainer, CardInfo, SoldOut } from './styles';
 import { StyleSheet } from 'react-native';
 import { OText, OIcon } from '../shared';
-import FastImage from 'react-native-fast-image'
 
 export const SingleProductCard = (props: SingleProductCardParams) => {
 	const { businessId, product, isSoldOut, onProductClick } = props;
@@ -109,17 +108,9 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 					{product?.description}
 				</OText>
 			</CardInfo>
-			{/* <OIcon
+			<OIcon
 				url={optimizeImage(product?.images, 'h_200,c_limit')}
 				style={styles.productStyle}
-			/> */}
-			<FastImage
-				style={styles.productStyle}
-				source={{
-					uri: optimizeImage(product?.images, 'h_200,c_limit'),
-					priority: FastImage.priority.normal,
-				}}
-				resizeMode={FastImage.resizeMode.cover}
 			/>
 			{(isSoldOut || maxProductQuantity <= 0) && (
 				<SoldOut>

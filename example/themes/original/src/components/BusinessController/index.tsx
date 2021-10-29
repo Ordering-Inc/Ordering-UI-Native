@@ -12,7 +12,6 @@ import { convertHoursToMinutes } from '../../utils';
 import {
 	Card,
 	BusinessHero,
-	BusinessHeroContainer,
 	BusinessContent,
 	BusinessCategory,
 	BusinessInfo,
@@ -23,7 +22,6 @@ import {
 } from './styles';
 import { useTheme } from 'styled-components/native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
-import FastImage from 'react-native-fast-image'
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const { business, handleClick } = props;
@@ -101,34 +99,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
 	return (
 		<Card activeOpacity={1} onPress={() => handleClick(business)}>
-			<BusinessHeroContainer>
-				<FastImage
-					style={{ height: 122 }}
-					source={{
-						uri: optimizeImage(business?.header, 'h_400,c_limit'),
-						priority: FastImage.priority.normal,
-					}}
-					resizeMode={FastImage.resizeMode.cover}
-				/>
-				{business?.featured && (
-					<View style={styles.featured}>
-						<FontAwesomeIcon name="crown" size={26} color="gold" />
-					</View>
-				)}
-				<BusinessState>
-					{!business?.open && (
-						<View style={styles.businessStateView}>
-							<OText
-								color={theme.colors.textThird}
-								size={10}
-								style={styles.businessStateText}>
-								{t('PREORDER', 'PREORDER')}
-							</OText>
-						</View>
-					)}
-				</BusinessState>
-			</BusinessHeroContainer>
-			{/* <BusinessHero
+			<BusinessHero
 				source={{ uri: optimizeImage(business?.header, 'h_400,c_limit') }}
 				imageStyle={styles.headerStyle}
 				isClosed={business?.open}>
@@ -149,22 +120,14 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						</View>
 					)}
 				</BusinessState>
-			</BusinessHero> */}
+			</BusinessHero>
 			<BusinessContent>
 				<BusinessInfo>
 					<BusinessLogo style={styles.businessLogo}>
-						{/* <OIcon
+						<OIcon
 							url={optimizeImage(business?.logo, 'h_300,c_limit')}
 							width={56}
 							height={56}
-						/> */}
-						<FastImage
-							style={{ width: 56, height: 56 }}
-							source={{
-								uri: optimizeImage(business?.logo, 'h_300,c_limit'),
-								priority: FastImage.priority.normal,
-							}}
-							resizeMode={FastImage.resizeMode.cover}
 						/>
 					</BusinessLogo>
 					{business?.reviews?.total > 0 && (

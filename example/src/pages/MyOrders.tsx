@@ -1,51 +1,40 @@
-import React, { useState } from 'react';
-import { useLanguage } from 'ordering-components/native';
-import { OrdersOption } from '../../themes/original/src/components/OrdersOption'
-import { OText } from '../../themes/original/src/components/shared'
-import { Container } from '../../themes/original/src/layouts/Container'
-import { View } from 'react-native';
+import React, {useState} from 'react'
+import { useLanguage } from 'ordering-components/native'
+import { OrdersOption } from '../components/OrdersOption'
+import { OText } from '../components/shared'
+import { Container } from '../layouts/Container'
 
 const MyOrders = ({ navigation }: any) => {
-  const [, t] = useLanguage();
-  const [ordersLength, setOrdersLength] = useState({
-    activeOrdersLength: 0,
-    previousOrdersLength: 0,
-  });
+
+  const [, t] = useLanguage()
+  const [ordersLength,setOrdersLength] = useState({activeOrdersLength: 0, previousOrdersLength: 0})
   const myOrderProps = {
     navigation,
     onNavigationRedirect: (page: string, params: any) => {
-      if (!page) {
-        return;
-      }
+      if (!page) return
       navigation.navigate(page, params);
-    },
-  };
+    }
+  }
+
 
   return (
-    <Container noPadding>
-      <OText
-        size={24}
-        mBottom={20}
-        style={{ marginTop: 20, paddingHorizontal: 40 }}>
+    <Container>
+      <OText size={24} mBottom={20}>
         {t('MY_ORDERS', 'My Orders')}
       </OText>
-      <View style={{ paddingLeft: 40, paddingRight: 40 }}>
-        <OrdersOption
-          {...myOrderProps}
-          activeOrders
-          ordersLength={ordersLength}
-          setOrdersLength={setOrdersLength}
-        />
-      </View>
-      <View style={{ paddingLeft: 40, paddingRight: 40 }}>
-        <OrdersOption
-          {...myOrderProps}
-          ordersLength={ordersLength}
-          setOrdersLength={setOrdersLength}
-        />
-      </View>
+      <OrdersOption
+        {...myOrderProps}
+        activeOrders
+        ordersLength={ordersLength}
+        setOrdersLength={setOrdersLength}
+      />
+      <OrdersOption
+        {...myOrderProps}
+        ordersLength={ordersLength}
+        setOrdersLength={setOrdersLength}
+      />
     </Container>
-  );
-};
+  )
+}
 
 export default MyOrders;
