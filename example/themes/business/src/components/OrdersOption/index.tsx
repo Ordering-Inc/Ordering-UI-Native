@@ -318,7 +318,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           <OText size={12}>
             {t('MORE_SETTINGS_GO_TO', 'For more settings go to ')}
           </OText>
-          <TouchableOpacity onPress={() => {Linking.openURL('https://google.com')}}>
+          <TouchableOpacity onPress={() => {Linking.openURL('https://new-admin.tryordering.com/')}}>
               <OText size={12} color={theme.colors.skyBlue}>
                 {t('LINK_MORE_SETTINGS_GO_TO', 'new-admin.ordering.co')}
               </OText>
