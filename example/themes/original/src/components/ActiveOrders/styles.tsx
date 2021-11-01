@@ -5,13 +5,12 @@ export const ActiveOrdersContainer = styled.View`
 `
 
 export const Card = styled.TouchableOpacity`
-  flex: 1;
 `
 
 export const Map = styled.View`
   flex: 1;
   height: 125px;
-  margin-bottom: 10px
+  margin-bottom: 10px;
 `
 
 export const Information = styled.View`

@@ -9,6 +9,7 @@ import { View, ScrollView, Platform, Dimensions } from 'react-native';
 import { OText } from '../shared';
 import { HighestRatedBusinessesParams } from '../../types';
 import { BusinessController } from '../BusinessController'
+import { NotFoundSource } from '../NotFoundSource'
 import {
   ListWrapper
 } from './styles'
@@ -35,25 +36,7 @@ const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
           horizontal
           style={{ height: 300 }}
         >
-          {businessesList.businesses?.map(
-            (business: any) => (
-              <View
-                key={business.id}
-                style={{
-                	width: windowWidth - 100,
-                	paddingHorizontal: 5,
-                	height: '100%'
-                }}
-              >
-                <BusinessController
-                  business={business}
-                  handleCustomClick={onBusinessClick}
-                  orderType={orderState?.options?.type}
-                />
-              </View>
-            )
-          )}
-          {businessesList.loading && (
+          {businessesList.loading ? (
             <>
               {[
                 ...Array(10).keys()
@@ -62,7 +45,7 @@ const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
                   Animation={Fade}
                   key={i}
                   style={{
-                    marginBottom: 20,
+                    marginTop: 20,
                     width: windowWidth - 100,
                     paddingHorizontal: 5,
                     height: '100%'
@@ -103,6 +86,31 @@ const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
                   </View>
                 </Placeholder>
               ))}
+            </>
+          ) : (
+            <>
+              {businessesList.businesses.length > 0 ? (
+                businessesList.businesses?.map(
+                  (business: any) => (
+                    <View
+                      key={business.id}
+                      style={{
+                        width: windowWidth - 100,
+                        paddingHorizontal: 5,
+                        height: '100%'
+                      }}
+                    >
+                      <BusinessController
+                        business={business}
+                        handleCustomClick={onBusinessClick}
+                        orderType={orderState?.options?.type}
+                      />
+                    </View>
+                  )
+                )
+              ) : (
+                <NotFoundSource />
+              )}
             </>
           )}
         </ScrollView>
