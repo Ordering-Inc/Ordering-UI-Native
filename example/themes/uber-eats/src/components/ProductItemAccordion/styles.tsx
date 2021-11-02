@@ -42,6 +42,7 @@ export const ProductImage = styled.View`
 
 export const AccordionContent = styled.View`
   overflow: hidden;
+  margin-left: 117px;
 `
 
 export const ProductOptionsList = styled.View`
@@ -55,4 +56,6 @@ export const ProductSubOption = styled.View`
   margin-left: 10px;
 `
 
-export const ProductComment = styled.View``
+export const ProductComment = styled.View`
+  margin-left: 20px;
+`
