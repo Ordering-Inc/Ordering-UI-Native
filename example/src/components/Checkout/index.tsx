@@ -50,6 +50,7 @@ import { useTheme } from 'styled-components/native';
 import { ActivityIndicator } from 'react-native-paper';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/Feather';
+import { OrderCreating } from '../OrderCreating';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -124,6 +125,8 @@ const CheckoutUI = (props: any) => {
   const [paypalMethod, setPaypalMethod] = useState<any>(null)
   const [progClr, setProgClr] = useState('#424242');
   const [prog, setProg] = useState(true);
+  const [openOrderCreating, setOpenOrderCreating] = useState(false)
+  const [openOrderSuccess, setOpenOrderSuccess] = useState(false)
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -249,6 +252,10 @@ const CheckoutUI = (props: any) => {
               <OrderTypeSelector configTypes={configTypes} />
             </ChHeader>
           </ChSection>
+          <OButton
+            onClick={() => setOpenOrderCreating(true)}
+            text='creating'
+          />
 
           {!cartState.loading && (cart?.status === 2 || cart?.status === 4) && (
             <ChSection style={{ paddingBottom: 20 }}>
@@ -629,6 +636,13 @@ const CheckoutUI = (props: any) => {
           />
         </View>
       )}
+      <OModal
+        entireModal
+        open={openOrderCreating}
+        isNotDecoration
+      >
+        <OrderCreating />
+      </OModal>
     </>
   )
 }
