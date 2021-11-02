@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, Platform } from 'react-native';
 import { useUtils, useOrder, useLanguage, useSession, useConfig } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -78,7 +78,7 @@ export const BusinessBasicInformation = (
 						activeOpacity={0.8}
 					>
 						<OIcon src={theme.images.general.pin} width={16} color={theme.colors.textSecondary} />
-						<OText color={theme.colors.textPrimary} numberOfLines={1} lineHeight={20} weight={Platform.OS === 'android' ? 'middle' : '600'} style={{paddingStart: 10, flexBasis: '90%'}}>
+						<OText color={theme.colors.textPrimary} numberOfLines={1} lineHeight={20} weight={Platform.OS === 'android' ? 'bold' : '600'} style={{paddingStart: 10, flexBasis: '90%'}}>
 							{orderState?.options?.address?.address}
 						</OText>
 					</AddressInput>
