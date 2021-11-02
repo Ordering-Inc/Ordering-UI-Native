@@ -43,7 +43,7 @@ interface Props {
 
 const OText = (props: Props): React.ReactElement => {
   return (
-    <SText {...props} style={[props.style, {lineHeight: props.lineHeight}]}>
+    <SText {...props} style={{...props.style, lineHeight: props.lineHeight}}>
       {props.children}{props.space && ' '}
     </SText>
   );

@@ -88,7 +88,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                           style={{ borderRadius: 7.6 }}
                         />
                       </View>
-                      <OText size={16} weight="600">
+                      <OText size={16} weight={'600'}>
                         {category.name}
                       </OText>
                     </View>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -8,7 +8,7 @@ import {
 	useSession,
 	useUtils,
 } from 'ordering-components/native'
-import { OButton, OIcon, OModal, OText } from '../shared'
+import { OButton, OModal } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { SearchBar } from '../SearchBar'
 import { BusinessProductsCategories } from '../BusinessProductsCategories'
