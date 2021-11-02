@@ -20,6 +20,7 @@ import {
 } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
 import { OrdersOptionParams } from '../../types';
+import { NewOrderNotification } from '../NewOrderNotification';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import GestureRecognizer from 'react-native-swipe-gestures';
@@ -518,6 +519,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </ScrollView>
       </View>
     {/* </GestureRecognizer> */}
+    
+      <NewOrderNotification />
       <OModal open={openModal} entireModal customClose>
         <ModalContainer
           nestedScrollEnabled={true}
