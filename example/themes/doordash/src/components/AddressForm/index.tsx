@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback, TextStyle } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback, TextStyle, Platform } from 'react-native'
 import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -457,7 +457,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 													flexGrow: 1,
 													fontSize: 14,
 													lineHeight: 21,
-													fontWeight: '600',
+													fontWeight: Platform.OS == 'ios' ? '600' : 'bold',
 													paddingStart: 30,
 													paddingEnd: 20,
 													minHeight: 50,
@@ -626,7 +626,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 					</OModal> */}
 						<Spinner visible={saveMapLocation} />
 					</AddressFormContainer>
-					<View style={{ paddingHorizontal: 40 }}>
+					<View style={{ paddingHorizontal: 40, marginBottom: 14 }}>
 						{Object.keys(formState?.changes).length > 0 ? (
 							<OButton
 								text={

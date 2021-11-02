@@ -2,7 +2,7 @@ import React from 'react'
 import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
 import { OButton, OText } from '../shared'
 import { ActiveOrdersContainer, Card, Information, OrderInformation, BusinessInformation, Price } from './styles'
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 import { ActiveOrdersParams } from '../../types'
 import { useWindowDimensions } from 'react-native'
@@ -43,7 +43,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 								size={14}
 								numberOfLines={1}
 								ellipsizeMode='tail'
-								weight={'600'}
+								weight={Platform.OS == 'ios' ? '600' : 'bold'}
 								lineHeight={21}
 							>
 								{order.business?.name}
@@ -54,7 +54,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 							<OText size={12} space color={theme.colors.textSecondary} lineHeight={18}>{`${t('ORDER_NUMBER', 'Order No.')} ${order.id}`}</OText>
 						</BusinessInformation>
 						<Price>
-							<OText size={14} weight={'600'}>{parsePrice(order?.summary?.total || order?.total)}</OText>
+							<OText size={14} weight={Platform.OS == 'ios' ? '600' : 'bold'}>{parsePrice(order?.summary?.total || order?.total)}</OText>
 						</Price>
 					</OrderInformation>
 					{order?.status !== 0 && (

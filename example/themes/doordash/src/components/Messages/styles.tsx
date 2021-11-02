@@ -13,6 +13,7 @@ export const Header = styled.View`
   border-bottom-color: #d9d9d9;
   padding-bottom: 10px;
   padding-horizontal: 20px;
+  background-color: white;
 `
 
 export const TitleHeader = styled.View`

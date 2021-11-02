@@ -9,7 +9,7 @@ import { OModal } from '../../../../../src/components/shared'
 import { useTheme } from 'styled-components/native'
 import { BusinessTypeFilterParams } from '../../types'
 import { useWindowDimensions } from 'react-native'
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 	const {
@@ -21,7 +21,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 	const theme = useTheme();
 	const [, t] = useLanguage();
 	const { width, height } = useWindowDimensions();
-  const [isOpenAllCategories, setIsOpenAllCategories] = useState(false)
+  const [isOpenAllCategories, setIsOpenAllCategories] = useState(false);
 
 	const styles = StyleSheet.create({
 		icons: {
@@ -64,7 +64,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 				style={styles.categoryStyle}
 				onPress={() => {
 					handleChangeBusinessType(item.id)
-          isOpenAllCategories && setIsOpenAllCategories(false)
+					isOpenAllCategories && setIsOpenAllCategories(false)
 				}}
 			>
 				{item.image ? (
@@ -151,34 +151,34 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 									</OText>
 								</TouchableOpacity>
 							)}
-						</BusinessCategories>
-					</>
-				)}
+					</BusinessCategories>
+				</>
+			)}
 			</BCContainer>
 			<OModal
-        open={isOpenAllCategories}
-        onClose={() => setIsOpenAllCategories(false)}
-        entireModal
-      >
-        <ScrollView style={styles.allCategoriesContainer}>
-          <OText
-            size={20}
-            mBottom={30}
-            color={theme.colors.textSecondary}
-            style={{ paddingHorizontal: 10 }}
-          >
-            {t('ALL_CATEGORIES', 'All categories')}
-          </OText>
-          <View style={styles.allCategoriesWrapper}>
-            {typesState?.types.map((type: any) => (
-              <RenderTypes
-                key={type.id}
-                item={type}
-              />
-            ))}
-          </View>
-        </ScrollView>
-      </OModal>
+				open={isOpenAllCategories}
+				onClose={() => setIsOpenAllCategories(false)}
+				entireModal
+			>
+				<ScrollView style={styles.allCategoriesContainer}>
+					<OText
+						size={20}
+						mBottom={30}
+						color={theme.colors.textSecondary}
+						style={{ paddingHorizontal: 10 }}
+					>
+						{t('ALL_CATEGORIES', 'All categories')}
+					</OText>
+					<View style={styles.allCategoriesWrapper}>
+						{typesState?.types.map((type: any) => (
+							<RenderTypes
+								key={type.id}
+								item={type}
+							/>
+						))}
+					</View>
+				</ScrollView>
+			</OModal>
 		</>
 	)
 }

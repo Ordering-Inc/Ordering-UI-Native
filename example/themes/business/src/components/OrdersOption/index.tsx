@@ -1,18 +1,36 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Pressable, StyleSheet, ScrollView, RefreshControl } from 'react-native';
-import { useLanguage, OrderListGroups } from 'ordering-components/native';
+import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Linking } from 'react-native';
+import { useLanguage, useUtils, OrderListGroups } from 'ordering-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import FontistoIcon from 'react-native-vector-icons/Fontisto'
+import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
 
-import { useTheme } from 'styled-components/native';
-import { OText, OButton } from '../shared';
+import { OText, OButton, OModal, OIconButton, OInput, OIcon } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
-import { FiltersTab, TabsContainer, Tag } from './styles';
+import {
+  FiltersTab,
+  TabsContainer,
+  Tag,
+  IconWrapper,
+  ModalContainer,
+  ModalTitle,
+  FilterBtnWrapper
+} from './styles';
 import { PreviousOrders } from '../PreviousOrders';
 import { OrdersOptionParams } from '../../types';
 
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import GestureRecognizer from 'react-native-swipe-gestures';
+import ODropDown from '../shared/ODropDown';
+import { OrdersOptionStatus } from '../OrdersOptionStatus'
+import { OrdersOptionCity } from '../OrdersOptionCity';
+import { OrdersOptionBusiness } from '../OrdersOptionBusiness';
+import { OrdersOptionDelivery } from '../OrdersOptionDelivery';
+import { OrdersOptionPaymethod } from '../OrdersOptionPaymethod';
+import { OrdersOptionDriver } from '../OrdersOptionDriver';
+import { OrdersOptionDate } from '../OrdersOptionDate';
 
 const tabsList: any = {
   pending: 1,
@@ -47,12 +65,32 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     loadOrders,
     loadMoreOrders,
     onNavigationRedirect,
+    filtered,
+    onFiltered,
     handleClickOrder
   } = props;
 
+  const defaultSearchList = {
+    id: '',
+    state: '',
+    city: '',
+    business: '',
+    delivery_type: '',
+    paymethod: '',
+    driver: '',
+    date: {
+      from: '',
+      to: '',
+      type: ''
+    }
+  }
+
   const theme = useTheme();
   const [, t] = useLanguage();
+  const [{ parseDate }] = useUtils()
   const [orientationState] = useDeviceOrientation();
+  const [openModal, setOpenModal] = useState(false)
+  const [search, setSearch] = useState(defaultSearchList)
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
 
@@ -60,7 +98,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const styles = StyleSheet.create({
     header: {
-      marginBottom: 25,
+      marginBottom: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center'
@@ -110,6 +148,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       fontWeight: 'normal',
       fontSize: 18,
     },
+    inputStyle: {
+      width: '100%',
+      borderWidth: 1,
+      borderColor: '#DEE2E6',
+      borderRadius: 7.6,
+      marginBottom: 24
+    }
   });
 
   const scrollRef = useRef() as React.MutableRefObject<ScrollView>;
@@ -134,6 +179,19 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const getOrderStatus = (key: number) => {
     return orderStatus.find((status: any) => status.key === key)?.text;
   };
+
+  const applyFilters = () => {
+    setOrdersGroup({
+      ...ordersGroup,
+      [currentTabSelected]: {
+        ...ordersGroup[currentTabSelected],
+        orders: []
+      }
+    })
+    const dateRange = calculateDate(search.date.type, search.date.from, search.date.to)
+    onFiltered && onFiltered({...search, date: {...dateRange}})
+    setOpenModal(false)
+  }
 
   const handleTagSelected = (tag: any) => {
     const tags = tagsState?.values.includes(tag)
@@ -184,8 +242,40 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     nextTab && setCurrentTabSelected(nextTab)
   }
 
+  const calculateDate = (type: any, from: any, to: any) => {
+    switch (type) {
+      case 'today':
+        const date = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
+        return {from: `${date} 00:00:00`, to: `${date} 23:59:59`}
+      case 'yesterday':
+        const yesterday = new Date()
+        yesterday.setDate(yesterday.getDate() - 1)
+        const start1 = parseDate(yesterday, { outputFormat: 'MM/DD/YYYY' })
+        const end1 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
+        return {from: `${start1} 00:00:00`, to: `${end1} 23:59:59`}
+      case 'last_7days':
+        const last_7days = new Date()
+        last_7days.setDate(last_7days.getDate() - 6)
+        const start7 = parseDate(last_7days, { outputFormat: 'MM/DD/YYYY' })
+        const end7 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
+        return {from: `${start7} 00:00:00`, to: `${end7} 23:59:59`}
+      case 'last_30days':
+        const last_30days = new Date()
+        last_30days.setDate(last_30days.getDate() - 29)
+        const start30 = parseDate(last_30days, { outputFormat: 'MM/DD/YYYY' })
+        const end30 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
+        return {from: `${start30} 00:00:00`, to: `${end30} 23:59:59`}
+      default:
+        const start = from ? `${parseDate(from, { outputFormat: 'MM/DD/YYYY' })} 00:00:00` : ''
+        const end = to ? `${parseDate(to, { outputFormat: 'MM/DD/YYYY' })} 23:59:59` : ''
+        return {from: start, to: end}
+    }
+  }
+
   useEffect(() => {
     setCurrentFilters(null)
+    onFiltered && onFiltered(null)
+    setSearch(defaultSearchList)
     scrollRefTab.current?.scrollTo({ animated: true });
     scrollListRef.current?.scrollTo({ animated: true });
     scrollRef.current?.scrollTo({ y: 0, animated: true });
@@ -201,14 +291,39 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     <>
       <View style={styles.header}>
         <OText style={styles.title}>{t('MY_ORDERS', 'My orders')}</OText>
-        <FeatherIcon
-          name='refresh-cw'
-          color={theme.colors.backgroundDark}
-          size={24}
-          onPress={() => loadOrders && loadOrders({ newFetch: true })}
-        />
+        <IconWrapper>
+          <FeatherIcon
+            name='refresh-cw'
+            color={theme.colors.backgroundDark}
+            size={24}
+            onPress={() => loadOrders && loadOrders({ newFetch: true })}
+            style={{ marginRight: 20 }}
+          />
+          <FontistoIcon
+            name='search'
+            color={theme.colors.backgroundDark}
+            size={24}
+            onPress={() => setOpenModal(true)}
+          />
+        </IconWrapper>
       </View>
-
+      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', maxHeight:40}}>
+          <OIcon
+            src={theme.images.general.information}
+            width={12}
+            height={12}
+            color={theme.colors.skyBlue}
+            style={{marginRight: 5}}
+          />
+          <OText size={12}>
+            {t('MORE_SETTINGS_GO_TO', 'For more settings go to ')}
+          </OText>
+          <TouchableOpacity onPress={() => {Linking.openURL('https://new-admin.tryordering.com/')}}>
+              <OText size={12} color={theme.colors.skyBlue}>
+                {t('LINK_MORE_SETTINGS_GO_TO', 'new-admin.ordering.co')}
+              </OText>
+          </TouchableOpacity>
+      </View>
       <FiltersTab>
         <ScrollView
           ref={scrollRefTab}
@@ -323,7 +438,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         }
       >
         {!currentOrdersGroup.error?.length &&
-          !!currentOrdersGroup.orders?.length &&
+          currentOrdersGroup.orders?.length > 0 &&
         (
           <PreviousOrders
             orders={currentOrdersGroup.orders}
@@ -371,7 +486,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           !currentOrdersGroup.loading &&
           currentOrdersGroup.pagination.totalPages &&
           currentOrdersGroup.pagination.currentPage < currentOrdersGroup.pagination.totalPages &&
-          currentOrdersGroup.orders.length &&
+          currentOrdersGroup.orders.length > 0 &&
         (
           <OButton
             onClick={handleLoadMore}
@@ -386,7 +501,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
         {!currentOrdersGroup.loading &&
           (currentOrdersGroup.error?.length ||
-          !currentOrdersGroup.orders?.length) &&
+          currentOrdersGroup.orders?.length === 0) &&
         (
           <NotFoundSource
             content={
@@ -402,6 +517,81 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         )}
       </ScrollView>
     {/* </GestureRecognizer> */}
+      <OModal open={openModal} entireModal customClose>
+        <ModalContainer
+          nestedScrollEnabled={true}
+        >
+          <OIconButton
+            icon={theme.images.general.arrow_left}
+            borderColor={theme.colors.clear}
+            iconColor={theme.colors.backArrow}
+            iconStyle={{ width: 20, height: 13 }}
+            style={{
+              maxWidth: 40,
+              height: 35,
+              justifyContent: 'flex-end',
+              marginBottom: 30,
+              marginTop: 30
+            }}
+            onClick={() => setOpenModal(false)}
+          />
+          <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
+          <OInput
+            value={search.id}
+            onChange={(value: any) => setSearch({...search, id: value})}
+            style={styles.inputStyle}
+            placeholder={t('ORDER_NUMBER', 'Order number')}
+            autoCorrect={false}
+          />
+          <OrdersOptionDate
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
+          <OrdersOptionStatus
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
+          <OrdersOptionCity
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
+          <OrdersOptionBusiness
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
+          <OrdersOptionDelivery
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
+          <OrdersOptionPaymethod
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
+          <OrdersOptionDriver
+            {...props}
+            search={search}
+            onSearch={setSearch}
+          />
+          <OButton
+            text={t('SEARCH', 'Search')}
+            textStyle={{ color: theme.colors.white }}
+            imgRightSrc={null}
+            style={{
+              borderRadius: 7.6,
+              marginBottom: 70,
+              marginTop: 60,
+              zIndex: 12
+            }}
+            onClick={applyFilters}
+          />
+        </ModalContainer>
+      </OModal>
     </>
   );
 };

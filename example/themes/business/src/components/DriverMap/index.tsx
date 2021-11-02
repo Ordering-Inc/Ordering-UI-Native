@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Dimensions, Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import MapView, {
   PROVIDER_GOOGLE,
-  Marker,
-  Region,
-  Polyline,
+  Marker
 } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig, useUtils } from 'ordering-components/native';
 import { GoogleMapsParams } from '../../types';
 import Alert from '../../providers/AlertProvider';
-import { OIconButton, OIcon, OFab, OText } from '../shared';
+import { OIconButton, OIcon, OFab, OText, OLink } from '../shared';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useTheme } from 'styled-components/native';
 import { useLocation } from '../../hooks/useLocation';
@@ -533,7 +531,17 @@ export const DriverMap = (props: GoogleMapsParams) => {
             </View>
           </View>
         </View>
-
+        <View>
+          <OLink
+            PressStyle={{paddingHorizontal: 80, paddingVertical: 10,bottom: showAcceptOrReject ? 80 : 0}}
+            hasButton
+            url={Platform.select({
+              ios: `maps:0,0?q=${destination.latitude},${destination.longitude}`,
+              android: `geo:0,0?q=${destination.latitude},${destination.longitude}`,
+            })}
+            shorcut={t('SHOW_IN_OTHER_MAPS', 'Show in other maps')}
+          />
+        </View>
         {showAcceptOrReject && (
           <FloatingButton
             btnText={t('REJECT', 'Reject')}

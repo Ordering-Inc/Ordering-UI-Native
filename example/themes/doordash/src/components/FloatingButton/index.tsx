@@ -48,7 +48,7 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
         <OText color={theme.colors.white} size={16} mLeft={20}>
           {btnLeftValueShow ? btnLeftValue : ''}
         </OText>
-        <OText style={styles.btnTextStyle} color={theme.colors.white} size={14} weight={'600'}>
+        <OText style={styles.btnTextStyle} color={theme.colors.white} size={14} weight={Platform.OS === 'ios' ? '600' : 'bold'}>
           {btnText}
         </OText>
         <OText color={theme.colors.white} size={16} mRight={20}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 import {

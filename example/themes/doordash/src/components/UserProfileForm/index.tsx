@@ -8,7 +8,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Platform } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useTheme } from 'styled-components/native';
 import { ProfileParams } from '../../types';
@@ -78,8 +78,9 @@ const ProfileUI = (props: ProfileParams) => {
 		helpStyle: {
 			flexDirection: 'row',
 			alignItems: 'center',
-			marginVertical: 12
-		  }
+			marginVertical: 12,
+			marginStart: -2
+		}
 	});
 
 	const [{ user }] = useSession();
@@ -247,22 +248,22 @@ const ProfileUI = (props: ProfileParams) => {
 			{!isEdit ? (
 				<UserData>
 					<Names>
-						<OText size={14} weight={'600'} lineHeight={21} style={{ flexBasis: '30%' }}>{t('NAME', 'Name')}</OText>
+						<OText size={14} weight={Platform.OS == 'ios' ? '600' : 'bold'} lineHeight={21} style={{ flexBasis: '30%' }}>{t('NAME', 'Name')}</OText>
 						<OText size={12} lineHeight={18}>{`${user?.name} ${user?.middle_name} ${user?.lastname} ${user?.second_lastname}`}</OText>
 					</Names>
 					{/* {(!!user?.middle_name || !!user?.second_lastname) && (
 						<Names>
-							<OText size={14} weight={'600'} lineHeight={21} style={{ flexBasis: '30%' }}>{t('MIDDLE_NAME', 'Middle Name')}</OText>
+							<OText size={14} weight={Platform.OS == 'ios' ? '600' : 'bold'} lineHeight={21} style={{ flexBasis: '30%' }}>{t('MIDDLE_NAME', 'Middle Name')}</OText>
 							<OText size={12} lineHeight={18}>{`${user?.middle_name} ${user?.second_lastname}`}</OText>
 						</Names>
 					)} */}
 					<Names>
-						<OText size={14} weight={'600'} lineHeight={21} style={{ flexBasis: '30%' }}>{t('EMAIL', 'Email')}</OText>
+						<OText size={14} weight={Platform.OS == 'ios' ? '600' : 'bold'} lineHeight={21} style={{ flexBasis: '30%' }}>{t('EMAIL', 'Email')}</OText>
 						<OText size={12} lineHeight={18}>{`${user?.email}`}</OText>
 					</Names>
 					{!!user?.cellphone && (
 						<Names>
-							<OText size={14} weight={'600'} lineHeight={21} style={{ flexBasis: '30%' }}>{t('PHONE', 'Phone')}</OText>
+							<OText size={14} weight={Platform.OS == 'ios' ? '600' : 'bold'} lineHeight={21} style={{ flexBasis: '30%' }}>{t('PHONE', 'Phone')}</OText>
 							<OText size={12} lineHeight={18}>{`${user?.cellphone}`}</OText>
 						</Names>
 					)}
@@ -291,7 +292,7 @@ const ProfileUI = (props: ProfileParams) => {
 							borderColor={theme.colors.primaryContrast}
 							isDisabled={formState.loading}
 							imgRightSrc={null}
-							textStyle={{ fontSize: 14, fontWeight: '600', color: theme.colors.primary }}
+							textStyle={{ fontSize: 14, fontWeight: Platform.OS == 'ios' ? '600' : 'bold', color: theme.colors.primary }}
 							style={{ ...styles.editButton }}
 							onClick={toggleIsEdit}
 						/>
@@ -299,7 +300,7 @@ const ProfileUI = (props: ProfileParams) => {
 						<>
 							<OButton
 								text={t('CANCEL', 'Cancel')}
-								textStyle={{ color: theme.colors.primary, fontSize: 14, fontWeight: '600' }}
+								textStyle={{ color: theme.colors.primary, fontSize: 14, fontWeight: Platform.OS == 'ios' ? '600' : 'bold' }}
 								bgColor={theme.colors.primaryContrast}
 								borderColor={theme.colors.primary}
 								isDisabled={formState.loading}
@@ -313,7 +314,7 @@ const ProfileUI = (props: ProfileParams) => {
 									<OButton
 										text={formState.loading ? t('UPDATING', 'Updating...') : t('UPDATE', 'Update')}
 										bgColor={theme.colors.primary}
-										textStyle={{ color: formState.loading ? 'black' : 'white', fontSize: 14, fontWeight: '600' }}
+										textStyle={{ color: formState.loading ? 'black' : 'white', fontSize: 14, fontWeight: Platform.OS == 'ios' ? '600' : 'bold' }}
 										borderColor={theme.colors.primary}
 										isDisabled={formState.loading}
 										imgRightSrc={null}

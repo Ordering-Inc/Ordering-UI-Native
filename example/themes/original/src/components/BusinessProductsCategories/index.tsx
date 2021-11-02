@@ -11,9 +11,11 @@ const BusinessProductsCategoriesUI = (props: any) => {
 	const {
 		featured,
 		categories,
-		handlerClickCategory,
 		categorySelected,
 		loading,
+		scrollViewRef,
+		productListLayout,
+		categoriesLayout
 	} = props;
 
 	const theme = useTheme();
@@ -21,11 +23,26 @@ const BusinessProductsCategoriesUI = (props: any) => {
 		container: {
 			paddingVertical: 14,
 			borderColor: theme.colors.clear,
+			backgroundColor: '#FFF'
 		},
 		featuredStyle: {
 			display: 'none',
 		},
 	});
+
+	const handleCategoryScroll = (categoryId: any) => {
+		if (categoryId) {
+			scrollViewRef.current.scrollTo({
+				y: categoriesLayout[`cat_${categoryId}`]?.y + productListLayout?.y - 70,
+				animated: true
+			})
+		} else {
+			scrollViewRef.current.scrollTo({
+				y: productListLayout?.y - 70,
+				animated: true
+			})
+		}
+	}
 
 	return (
 		<ScrollView
@@ -48,7 +65,7 @@ const BusinessProductsCategoriesUI = (props: any) => {
 				categories.map((category: any) => (
 					<Tab
 						key={category.name}
-						onPress={() => handlerClickCategory(category)}
+						onPress={() => handleCategoryScroll(category.id)}
 						style={[
 							category.id === 'featured' && !featured && styles.featuredStyle,
 							{

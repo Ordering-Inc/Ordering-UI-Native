@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, StyleSheet, Platform , I18nManager } from 'react-native';
+import { View, StyleSheet, Platform, I18nManager, ScrollView } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 import {
@@ -49,6 +49,7 @@ import { Container } from '../../layouts/Container';
 import { useTheme } from 'styled-components/native';
 import { ActivityIndicator } from 'react-native-paper';
 import WebView from 'react-native-webview';
+import Icon from 'react-native-vector-icons/Feather';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -105,12 +106,12 @@ const CheckoutUI = (props: any) => {
     }
   })
 
-  const [, { showToast }]= useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const [{ user, token }] = useSession();
   const [{ configs }] = useConfig();
   const [{ parsePrice, parseDate }] = useUtils();
-  const [{ options, carts, loading }, {confirmCart}] = useOrder();
+  const [{ options, carts, loading }, { confirmCart }] = useOrder();
   const [validationFields] = useValidationFields();
   const [ordering] = useApi()
   const webviewRef = useRef<any>(null)
@@ -119,10 +120,10 @@ const CheckoutUI = (props: any) => {
   const [userErrors, setUserErrors] = useState<any>([]);
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
-  const [prog, setProg] = useState(true);
-  const [showGateway, setShowGateway] = useState<any>({closedByUsed: false, open: false});
-  const [progClr, setProgClr] = useState('#424242');
+  const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
   const [paypalMethod, setPaypalMethod] = useState<any>(null)
+  const [progClr, setProgClr] = useState('#424242');
+  const [prog, setProg] = useState(true);
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -130,7 +131,6 @@ const CheckoutUI = (props: any) => {
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
-  
   const cartsWithProducts = carts && Object.values(carts).filter((cart: any) => cart.products.length) || null
 
   const handlePlaceOrder = () => {
@@ -178,35 +178,42 @@ const CheckoutUI = (props: any) => {
     setPhoneUpdate(val)
   }
 
-  const onMessage = (e : any) => {
-    if(e?.nativeEvent?.data){
-        let payment = JSON.parse(e.nativeEvent.data);
-        if(payment === 'api error'){
-        setShowGateway({closedByUser: false, open: false})
+  const onMessage = (e: any) => {
+    if (e?.nativeEvent?.data) {
+      let payment = JSON.parse(e.nativeEvent.data);
+
+      if (payment === 'api error') {
+        setShowGateway({ closedByUser: true, open: false })
+        setProg(true);
       }
 
-      if(payment){
-        if(payment.error){
+      if (payment) {
+        if (payment.error) {
           showToast(ToastType.Error, payment.result)
-          setShowGateway({closedByUser: false, open: false})
-        } else if(payment?.result?.order?.uuid) {
+        } else if (payment?.result?.order?.uuid) {
           showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfully'))
           onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment?.result?.order?.uuid, goToBusinessList: true })
-          setShowGateway({closedByUser: false, open: false})
         }
+        setProg(true);
+        setShowGateway({ closedByUser: false, open: false })
       }
-  }
+    }
   }
 
   const onFailPaypal = async () => {
-    if(showGateway.closedByUser === true){
+    if (showGateway.closedByUser === true) {
       await confirmCart(cart.uuid)
     }
   }
 
-  const handlePaymentMethodClick = (paymethod : any) => {
-      setShowGateway({closedByUser: false, open: true})
-      setPaypalMethod(paymethod)
+  const handlePaymentMethodClick = (paymethod: any) => {
+    setShowGateway({ closedByUser: false, open: true })
+    setPaypalMethod(paymethod)
+  }
+
+  const handleCloseWebview = () => {
+    setProg(true);
+    setShowGateway({ open: false, closedByUser: true })
   }
 
   useEffect(() => {
@@ -298,7 +305,7 @@ const CheckoutUI = (props: any) => {
             </ChAddress>
           </ChSection>
           <ChSection style={style.paddSectionH}>
-          {(isPreOrderSetting || configs?.preorder_status_enabled?.value === undefined) && (
+            {(isPreOrderSetting || configs?.preorder_status_enabled?.value === undefined) && (
               <ChMoment>
                 {cartState.loading ? (
                   <Placeholder Animation={Fade}>
@@ -324,7 +331,7 @@ const CheckoutUI = (props: any) => {
                   </CHMomentWrapper>
                 )}
               </ChMoment>
-          )}
+            )}
           </ChSection>
 
           <ChSection style={style.paddSection}>
@@ -370,7 +377,7 @@ const CheckoutUI = (props: any) => {
                 businessDetails?.business &&
                 Object.values(businessDetails?.business).length > 0 &&
                 (
-                  <View style={{alignItems: 'flex-start'}}>
+                  <View style={{ alignItems: 'flex-start' }}>
                     <OText size={20}>
                       {t('BUSINESS_DETAILS', 'Business Details')}
                     </OText>
@@ -445,12 +452,12 @@ const CheckoutUI = (props: any) => {
           {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
             <ChSection style={style.paddSectionH}>
               <ChPaymethods>
-                <OText size={20} style= {{alignItems: 'flex-start', textAlign: 'left'}}>
+                <OText size={20} style={{ alignItems: 'flex-start', textAlign: 'left' }}>
                   {t('PAYMENT_METHOD', 'Payment Method')}
                 </OText>
                 {!cartState.loading && cart?.status === 4 && (
                   <OText
-                    style={{ textAlign: 'center', marginTop: 20}}
+                    style={{ textAlign: 'center', marginTop: 20 }}
                     color={theme.colors.error}
                     size={17}
                   >
@@ -484,7 +491,7 @@ const CheckoutUI = (props: any) => {
                   />
                 ) : (
                   <>
-                    <OText size={20} style= {{alignItems: 'flex-start', textAlign: 'left'}}>
+                    <OText size={20} style={{ alignItems: 'flex-start', textAlign: 'left' }}>
                       {t('ORDER_SUMMARY', 'Order Summary')}
                     </OText>
                     <OrderSummary
@@ -556,69 +563,72 @@ const CheckoutUI = (props: any) => {
           </>
         </>
       )}
-      <OModal
-        open={paypalMethod && showGateway.open}
-        onCancel={() => setShowGateway({open: false, closedByUser: true})}
-        onAccept={() => setShowGateway({open: false, closedByUser: true})}
-        onClose={() => setShowGateway({open: false, closedByUser: true})}
-        entireModal
-      >
-        <OText
-          style={{
-            textAlign: 'center',
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: '#00457C',
-            marginBottom: 5
-          }}>
-          {t('PAYPAL_GATEWAY', 'PayPal GateWay')}
-        </OText>
-        <View style={{padding: 13, opacity: prog ? 1 : 0}}>
-          <ActivityIndicator size={24} color={progClr} />
-        </View>
-        <WebView
-          source={{ uri: `${ordering.root}/html/paypal_react_native` }}
-          onMessage={onMessage}
-          ref={webviewRef}
-          javaScriptEnabled={true}
-          javaScriptEnabledAndroid={true}
-          cacheEnabled={false}
-          cacheMode='LOAD_NO_CACHE'
-          style={{ flex: 1 }}
-          onLoadStart={() => {
-            setProg(true);
-            setProgClr('#424242');
-          }}
-          onLoadProgress={() => {
-            setProg(true);
-            setProgClr('#00457C');
-          }}
-          onLoad={() => {
-            setProg(true);
-            setProgClr('#00457C');
-          }}
-          onLoadEnd={(e) => {
-            const message = {
-              action: 'init',
-              data: {
-                urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
-                urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
-                payData: {
-                  paymethod_id: paypalMethod?.id,
-                  amount: cart?.total,
-                  delivery_zone_id: cart?.delivery_zone_id,
-                  user_id: user?.id
-                },
-                currency: configs?.stripe_currency?.value || currency,
-                userToken: token,
-                clientId: paypalMethod?.credentials?.client_id
+      {paypalMethod && showGateway.open && (
+        <View style={{ zIndex: 9999, height: '100%', width: '100%', position: 'absolute', backgroundColor: 'white' }}>
+          <Icon
+            name="x"
+            size={35}
+            style={{ backgroundColor: 'white', paddingTop: 30, paddingLeft: 10 }}
+            onPress={handleCloseWebview}
+          />
+          <OText
+            style={{
+              textAlign: 'center',
+              fontSize: 16,
+              fontWeight: 'bold',
+              color: '#00457C',
+              marginBottom: 5,
+              marginTop: 10
+            }}>
+            {t('PAYPAL_GATEWAY', 'PayPal GateWay')}
+          </OText>
+          <View style={{ padding: 20, opacity: prog ? 1 : 0, backgroundColor: 'white' }}>
+            <ActivityIndicator size={24} color={progClr} />
+          </View>
+          <WebView
+            source={{ uri: `${ordering.root}/html/paypal_react_native` }}
+            onMessage={onMessage}
+            ref={webviewRef}
+            javaScriptEnabled={true}
+            javaScriptEnabledAndroid={true}
+            cacheEnabled={false}
+            cacheMode='LOAD_NO_CACHE'
+            style={{ flex: 1 }}
+            onLoadStart={() => {
+              setProg(true);
+              setProgClr('#424242');
+            }}
+            onLoadProgress={() => {
+              setProg(true);
+              setProgClr('#00457C');
+            }}
+            onLoad={() => {
+              setProg(true);
+              setProgClr('#00457C');
+            }}
+            onLoadEnd={(e) => {
+              const message = {
+                action: 'init',
+                data: {
+                  urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
+                  urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
+                  payData: {
+                    paymethod_id: paypalMethod?.id,
+                    amount: cart?.total,
+                    delivery_zone_id: cart?.delivery_zone_id,
+                    user_id: user?.id
+                  },
+                  currency: configs?.stripe_currency?.value || currency,
+                  userToken: token,
+                  clientId: paypalMethod?.credentials?.client_id
+                }
               }
-            }
-            setProg(false);
-            webviewRef.current.postMessage(JSON.stringify(message))
-          }}
-        />
-      </OModal>
+              setProg(false);
+              webviewRef.current.postMessage(JSON.stringify(message))
+            }}
+          />
+        </View>
+      )}
     </>
   )
 }
@@ -684,7 +694,7 @@ export const Checkout = (props: any) => {
             loading: false,
             cart: result
           })
-        } catch (error : any) {
+        } catch (error: any) {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
       } else if (result.status === 2 && stripePaymentOptions.includes(result.paymethod_data?.gateway)) {
@@ -724,7 +734,7 @@ export const Checkout = (props: any) => {
               })
               return
             }
-          } catch (error : any) {
+          } catch (error: any) {
             showToast(ToastType.Error, error?.toString() || error.message)
           }
         } catch (error) {
@@ -746,7 +756,7 @@ export const Checkout = (props: any) => {
           error: cart ? null : result
         })
       }
-    } catch (e : any) {
+    } catch (e: any) {
       setCartState({
         ...cartState,
         loading: false,
@@ -778,7 +788,7 @@ export const Checkout = (props: any) => {
 
   return (
     <>
-    {cartState?.error?.length > 0 ? (
+      {cartState?.error?.length > 0 ? (
         <NotFoundSource
           content={t(cartState.error)}
           btnTitle={t('GO_TO_BUSINESSLIST', 'Go to business list')}

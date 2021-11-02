@@ -7,6 +7,7 @@ import { BusinessBasicInformationParams } from '../../types';
 import { convertHoursToMinutes } from '../../utils';
 import { BusinessInformation } from '../BusinessInformation';
 import { BusinessReviews } from '../BusinessReviews';
+
 import {
 	BusinessContainer,
 	BusinessHeader,
