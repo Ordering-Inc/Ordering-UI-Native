@@ -51,6 +51,7 @@ import { ActivityIndicator } from 'react-native-paper';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/Feather';
 import { OrderCreating } from '../OrderCreating';
+import { OrderSuccess } from '../OrderSuccess';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -138,6 +139,7 @@ const CheckoutUI = (props: any) => {
 
   const handlePlaceOrder = () => {
     if (!userErrors.length) {
+      setOpenOrderCreating(true)
       handlerClickPlaceOrder && handlerClickPlaceOrder()
       return
     }
@@ -640,8 +642,12 @@ const CheckoutUI = (props: any) => {
         entireModal
         open={openOrderCreating}
         isNotDecoration
+        customClose
       >
-        <OrderCreating />
+        <OrderCreating
+          business={businessDetails?.business}
+          cart={cartState.cart}
+        />
       </OModal>
     </>
   )
