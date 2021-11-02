@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-export const FiltersTab = styled.ScrollView`
+export const FiltersTab = styled.View`
   margin-bottom: 20px;
 `;
 

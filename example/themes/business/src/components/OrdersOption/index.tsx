@@ -93,7 +93,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [search, setSearch] = useState(defaultSearchList)
 
   const WIDTH_SCREEN = orientationState?.dimensions?.width
-
+  const HEIGHT_SCREEN = orientationState?.dimensions?.height
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
 
   const styles = StyleSheet.create({
@@ -307,7 +307,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           />
         </IconWrapper>
       </View>
-      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', maxHeight:40}}>
+      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', minHeight: 40}}>
           <OIcon
             src={theme.images.general.information}
             width={12}
@@ -358,164 +358,165 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           </TabsContainer>
         </ScrollView>
       </FiltersTab>
-
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        {tagsList && tagsList?.length > 1 && (
-          <View style={{ marginBottom: 20 }}>
-            <Tag
-              onPress={() => handleAllSelect()}
-              isSelected={
-                isEqual(currentOrdersGroup.currentFilter, tagsList)
-                  ? theme.colors.primary
-                  : theme.colors.tabBar
-              }>
-              <OText
-                style={styles.tag}
-                color={
-                  isEqual(currentOrdersGroup.currentFilter, tagsList)
-                    ? theme.colors.white
-                    : theme.colors.black
-                }>
-                {t('All', 'All')}
-              </OText>
-            </Tag>
-          </View>
-        )}
-        <ScrollView
-          ref={scrollRef}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.tagsContainer}
-          horizontal
+      <View style={{ flex: 1, minHeight: HEIGHT_SCREEN - 250 }}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          {tagsList && tagsList.map((key: number) => (
-            <Tag
-              key={key}
-              onPress={() => !currentOrdersGroup.loading && handleTagSelected(key)}
-              isSelected={
-                currentOrdersGroup.currentFilter.includes(key) &&
-                !isEqual(currentOrdersGroup.currentFilter, tagsList)
-                  ? theme.colors.primary
-                  : theme.colors.tabBar
-              }>
-              <OText
-                style={styles.tag}
-                color={
+          {tagsList && tagsList?.length > 1 && (
+            <View style={{ marginBottom: 20 }}>
+              <Tag
+                onPress={() => handleAllSelect()}
+                isSelected={
+                  isEqual(currentOrdersGroup.currentFilter, tagsList)
+                    ? theme.colors.primary
+                    : theme.colors.tabBar
+                }>
+                <OText
+                  style={styles.tag}
+                  color={
+                    isEqual(currentOrdersGroup.currentFilter, tagsList)
+                      ? theme.colors.white
+                      : theme.colors.black
+                  }>
+                  {t('All', 'All')}
+                </OText>
+              </Tag>
+            </View>
+          )}
+          <ScrollView
+            ref={scrollRef}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.tagsContainer}
+            horizontal
+          >
+            {tagsList && tagsList.map((key: number) => (
+              <Tag
+                key={key}
+                onPress={() => !currentOrdersGroup.loading && handleTagSelected(key)}
+                isSelected={
                   currentOrdersGroup.currentFilter.includes(key) &&
                   !isEqual(currentOrdersGroup.currentFilter, tagsList)
-                    ? theme.colors.white
-                    : theme.colors.black
+                    ? theme.colors.primary
+                    : theme.colors.tabBar
                 }>
-                {getOrderStatus(key)}
-                {
-                  currentOrdersGroup.currentFilter.includes(key) &&
-                  !isEqual(currentOrdersGroup.currentFilter, tagsList) &&
-                  ' X'
-                }
-              </OText>
-            </Tag>
-          ))}
+                <OText
+                  style={styles.tag}
+                  color={
+                    currentOrdersGroup.currentFilter.includes(key) &&
+                    !isEqual(currentOrdersGroup.currentFilter, tagsList)
+                      ? theme.colors.white
+                      : theme.colors.black
+                  }>
+                  {getOrderStatus(key)}
+                  {
+                    currentOrdersGroup.currentFilter.includes(key) &&
+                    !isEqual(currentOrdersGroup.currentFilter, tagsList) &&
+                    ' X'
+                  }
+                </OText>
+              </Tag>
+            ))}
+          </ScrollView>
+        </View>
+
+        <ScrollView
+          ref={scrollListRef}
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }}
+          nestedScrollEnabled={true}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => loadOrders && loadOrders({ newFetch: true })}
+            />
+          }
+        >
+          {!currentOrdersGroup.error?.length &&
+            currentOrdersGroup.orders?.length > 0 &&
+          (
+            <PreviousOrders
+              orders={currentOrdersGroup.orders}
+              onNavigationRedirect={onNavigationRedirect}
+              getOrderStatus={getOrderStatus}
+              handleClickOrder={handleClickOrder}
+            />
+          )}
+
+          {(currentOrdersGroup.loading ||
+            currentOrdersGroup.pagination.total === null) &&
+          (
+            <>
+              <View>
+                {[...Array(5)].map((_, i) => (
+                  <Placeholder key={i} Animation={Fade}>
+                    <View
+                      style={{
+                        width: '100%',
+                        flexDirection: 'row',
+                        marginBottom: 10,
+                      }}>
+                      <PlaceholderLine
+                        width={IS_PORTRAIT ? 22 : 11}
+                        height={74}
+                        style={{
+                          marginRight: 20,
+                          marginBottom: 20,
+                          borderRadius: 7.6,
+                        }}
+                      />
+                      <Placeholder>
+                        <PlaceholderLine width={30} style={{ marginTop: 5 }} />
+                        <PlaceholderLine width={50} />
+                        <PlaceholderLine width={20} />
+                      </Placeholder>
+                    </View>
+                  </Placeholder>
+                ))}
+              </View>
+            </>
+          )}
+
+          {!currentOrdersGroup.error?.length &&
+            !currentOrdersGroup.loading &&
+            currentOrdersGroup.pagination.totalPages &&
+            currentOrdersGroup.pagination.currentPage < currentOrdersGroup.pagination.totalPages &&
+            currentOrdersGroup.orders.length > 0 &&
+          (
+            <OButton
+              onClick={handleLoadMore}
+              text={t('LOAD_MORE_ORDERS', 'Load more orders')}
+              imgRightSrc={null}
+              textStyle={styles.loadButtonText}
+              style={styles.loadButton}
+              bgColor={theme.colors.primary}
+              borderColor={theme.colors.primary}
+            />
+          )}
+
+          {!currentOrdersGroup.loading &&
+            (currentOrdersGroup.error?.length ||
+            currentOrdersGroup.orders?.length === 0) &&
+          (
+            <NotFoundSource
+              content={
+                !currentOrdersGroup.error?.length
+                  ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
+                  : currentOrdersGroup?.error[0]?.message ||
+                    currentOrdersGroup?.error[0] ||
+                    t('NETWORK_ERROR', 'Network Error')
+              }
+              image={theme.images.general.notFound}
+              conditioned={false}
+            />
+          )}
         </ScrollView>
       </View>
-
-      <ScrollView
-        ref={scrollListRef}
-        showsVerticalScrollIndicator={false}
-        style={{ flex: 1 }}
-        nestedScrollEnabled={true}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => loadOrders && loadOrders({ newFetch: true })}
-          />
-        }
-      >
-        {!currentOrdersGroup.error?.length &&
-          currentOrdersGroup.orders?.length > 0 &&
-        (
-          <PreviousOrders
-            orders={currentOrdersGroup.orders}
-            onNavigationRedirect={onNavigationRedirect}
-            getOrderStatus={getOrderStatus}
-            handleClickOrder={handleClickOrder}
-          />
-        )}
-
-        {(currentOrdersGroup.loading ||
-          currentOrdersGroup.pagination.total === null) &&
-        (
-          <>
-            <View>
-              {[...Array(5)].map((_, i) => (
-                <Placeholder key={i} Animation={Fade}>
-                  <View
-                    style={{
-                      width: '100%',
-                      flexDirection: 'row',
-                      marginBottom: 10,
-                    }}>
-                    <PlaceholderLine
-                      width={IS_PORTRAIT ? 22 : 11}
-                      height={74}
-                      style={{
-                        marginRight: 20,
-                        marginBottom: 20,
-                        borderRadius: 7.6,
-                      }}
-                    />
-                    <Placeholder>
-                      <PlaceholderLine width={30} style={{ marginTop: 5 }} />
-                      <PlaceholderLine width={50} />
-                      <PlaceholderLine width={20} />
-                    </Placeholder>
-                  </View>
-                </Placeholder>
-              ))}
-            </View>
-          </>
-        )}
-
-        {!currentOrdersGroup.error?.length &&
-          !currentOrdersGroup.loading &&
-          currentOrdersGroup.pagination.totalPages &&
-          currentOrdersGroup.pagination.currentPage < currentOrdersGroup.pagination.totalPages &&
-          currentOrdersGroup.orders.length > 0 &&
-        (
-          <OButton
-            onClick={handleLoadMore}
-            text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-            imgRightSrc={null}
-            textStyle={styles.loadButtonText}
-            style={styles.loadButton}
-            bgColor={theme.colors.primary}
-            borderColor={theme.colors.primary}
-          />
-        )}
-
-        {!currentOrdersGroup.loading &&
-          (currentOrdersGroup.error?.length ||
-          currentOrdersGroup.orders?.length === 0) &&
-        (
-          <NotFoundSource
-            content={
-              !currentOrdersGroup.error?.length
-                ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
-                : currentOrdersGroup?.error[0]?.message ||
-                  currentOrdersGroup?.error[0] ||
-                  t('NETWORK_ERROR', 'Network Error')
-            }
-            image={theme.images.general.notFound}
-            conditioned={false}
-          />
-        )}
-      </ScrollView>
     {/* </GestureRecognizer> */}
       <OModal open={openModal} entireModal customClose>
         <ModalContainer
