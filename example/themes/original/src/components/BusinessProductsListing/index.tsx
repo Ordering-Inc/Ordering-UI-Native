@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -283,14 +283,23 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				entireModal
 				customClose
 			>
-				<ProductForm
-					product={curProduct}
-					businessSlug={business.slug}
-					businessId={business.id}
-					onClose={handleCloseProductModal}
-					navigation={navigation}
-					onSave={handlerProductAction}
-				/>
+				<KeyboardAvoidingView
+					style={{
+						flexGrow: 1,
+						flexShrink: 1
+					}}
+					enabled
+					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+				>
+					<ProductForm
+						product={curProduct}
+						businessSlug={business.slug}
+						businessId={business.id}
+						onClose={handleCloseProductModal}
+						navigation={navigation}
+						onSave={handlerProductAction}
+					/>
+				</KeyboardAvoidingView>
 			</OModal>
 			{openUpselling && (
 				<UpsellingProducts
