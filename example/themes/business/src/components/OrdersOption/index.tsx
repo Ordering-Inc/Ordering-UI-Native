@@ -68,7 +68,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     onNavigationRedirect,
     filtered,
     onFiltered,
-    handleClickOrder
+    handleClickOrder,
+    isBusinessApp
   } = props;
 
   const defaultSearchList = {
@@ -99,7 +100,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const styles = StyleSheet.create({
     header: {
-      marginBottom: 10,
+      marginBottom: isBusinessApp ? 10 : 20,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center'
@@ -308,23 +309,25 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           />
         </IconWrapper>
       </View>
-      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', minHeight: 40}}>
-          <OIcon
-            src={theme.images.general.information}
-            width={12}
-            height={12}
-            color={theme.colors.skyBlue}
-            style={{marginRight: 5}}
-          />
-          <OText size={12}>
-            {t('MORE_SETTINGS_GO_TO', 'For more settings go to ')}
-          </OText>
-          <TouchableOpacity onPress={() => {Linking.openURL('https://new-admin.tryordering.com/')}}>
-              <OText size={12} color={theme.colors.skyBlue}>
-                {t('LINK_MORE_SETTINGS_GO_TO', 'new-admin.ordering.co')}
-              </OText>
-          </TouchableOpacity>
-      </View>
+      {isBusinessApp && (
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', maxHeight:40}}>
+            <OIcon
+              src={theme.images.general.information}
+              width={12}
+              height={12}
+              color={theme.colors.skyBlue}
+              style={{marginRight: 5}}
+            />
+            <OText size={12}>
+              {t('MORE_SETTINGS_GO_TO', 'For more settings go to ')}
+            </OText>
+            <TouchableOpacity onPress={() => {Linking.openURL('https://new-admin.tryordering.com/')}}>
+                <OText size={12} color={theme.colors.skyBlue}>
+                  {t('LINK_MORE_SETTINGS_GO_TO', 'new-admin.ordering.co')}
+                </OText>
+            </TouchableOpacity>
+        </View>
+      )}
       <FiltersTab>
         <ScrollView
           ref={scrollRefTab}

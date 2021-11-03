@@ -284,6 +284,7 @@ export interface OrdersOptionParams {
     completed?: Array<number>;
     cancelled?: Array<number>;
   };
+  isBusinessApp?: boolean;
 }
 export interface ActiveOrdersParams {
   orders?: any;
