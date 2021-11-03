@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -282,6 +282,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				onClose={handleCloseProductModal}
 				entireModal
 				customClose
+				isAvoidKeyBoardView
 			>
 				<ProductForm
 					product={curProduct}
