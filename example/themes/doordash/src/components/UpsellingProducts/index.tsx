@@ -121,7 +121,12 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 	return (
 		<>
 			{isCustomMode ? (
-				<UpsellingLayout />
+				<View>
+					{upsellingProducts?.products?.length > 0 && 
+						<OText style={{ ...theme.labels.middle, paddingHorizontal: 40, marginBottom: 10 } as TextStyle}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
+					}
+					<UpsellingLayout />
+				</View>
 			) : (
 				<>
 					{!canOpenUpselling || upsellingProducts?.products?.length === 0 ? null : (

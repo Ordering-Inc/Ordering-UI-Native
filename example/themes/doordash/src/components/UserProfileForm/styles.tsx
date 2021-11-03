@@ -10,10 +10,11 @@ export const UserData = styled.View`
 
 export const Names = styled.View`
   flex-direction: row;
-  align-items: baseline;
+  align-items: center;
   padding: 17px 40px;
   border-bottom-width: 1px;
   border-bottom-color: ${(props: any) => props.theme.colors.border};
+  overflow: hidden;
 `
 
 export const EditButton = styled.View`

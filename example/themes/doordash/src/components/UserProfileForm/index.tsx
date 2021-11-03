@@ -133,7 +133,13 @@ const ProfileUI = (props: ProfileParams) => {
 					const url = `data:${response.type};base64,${response.base64}`
 					handleButtonUpdateClick(null, true, url);
 				} else {
-					showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+					if (response?.assets?.length > 0) {
+						const image = response?.assets[0]
+						const url = `data:${image.type};base64,${image.base64}`
+						handleButtonUpdateClick(null, true, url);
+					} else {
+						showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
+					}
 				}
 			}
 		});
@@ -249,7 +255,7 @@ const ProfileUI = (props: ProfileParams) => {
 				<UserData>
 					<Names>
 						<OText size={14} weight={Platform.OS == 'ios' ? '600' : 'bold'} lineHeight={21} style={{ flexBasis: '30%' }}>{t('NAME', 'Name')}</OText>
-						<OText size={12} lineHeight={18}>{`${user?.name} ${user?.middle_name} ${user?.lastname} ${user?.second_lastname}`}</OText>
+						<OText size={12} lineHeight={18} style={{flexShrink: 1}}>{`${user?.name} ${user?.middle_name} ${user?.lastname} ${user?.second_lastname}`}</OText>
 					</Names>
 					{/* {(!!user?.middle_name || !!user?.second_lastname) && (
 						<Names>
