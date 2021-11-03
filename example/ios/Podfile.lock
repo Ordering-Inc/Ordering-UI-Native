@@ -335,8 +335,6 @@ PODS:
     - React
   - react-native-geolocation (2.0.2):
     - React
-  - react-native-geolocation-service (5.3.0-beta.3):
-    - React
   - react-native-google-maps (0.28.0):
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 3.5.0)
@@ -456,11 +454,6 @@ PODS:
   - RNSentry (2.6.2):
     - React-Core
     - Sentry (= 7.1.4)
-  - RNSound (0.11.1):
-    - React-Core
-    - RNSound/Core (= 0.11.1)
-  - RNSound/Core (0.11.1):
-    - React-Core
   - RNVectorIcons (7.1.0):
     - React
   - SDWebImage (5.11.1):
@@ -535,7 +528,6 @@ DEPENDENCIES:
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
-  - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-html-to-pdf (from `../node_modules/react-native-html-to-pdf`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
@@ -572,7 +564,6 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
-  - RNSound (from `../node_modules/react-native-sound`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -652,8 +643,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fbsdk"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
-  react-native-geolocation-service:
-    :path: "../node_modules/react-native-geolocation-service"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-html-to-pdf:
@@ -726,8 +715,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSentry:
     :path: "../node_modules/@sentry/react-native"
-  RNSound:
-    :path: "../node_modules/react-native-sound"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   stripe-react-native:
@@ -742,7 +729,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: b84df3b8f1dc1718956c2611c0787a20693caa62
+  FBReactNativeSpec: b4e9bf642cb0ba077aec07e640dab6676d07041d
   FBSDKCoreKit: 4afd6ff53d8133a433dbcda44451c9498f8c6ce4
   FBSDKLoginKit: 7181765f2524d7ebf82d9629066c8e6caafc99d0
   FBSDKShareKit: 0c0d51b3af47075a85ed9bea0e28b2fc70e3594b
@@ -780,7 +767,6 @@ SPEC CHECKSUMS:
   react-native-document-picker: 226068006be4c52f8ef7f32d855ee025a12e9e64
   react-native-fbsdk: 8e92c7a334fd8d9c2b5d8b8fcd7ae2c314161099
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
-  react-native-geolocation-service: 32e50a2e4e4518b51b829fdfe137562a672d95d2
   react-native-google-maps: 46dea4aa4acb7300beff508f64d9f8c84e9fb106
   react-native-html-to-pdf: 1214f9c795a587fe60a950d11a891cd05be29625
   react-native-image-picker: 92f51a85a62c2d829dcbd0dda5af99e6f988a113
@@ -817,7 +803,6 @@ SPEC CHECKSUMS:
   RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNSentry: 68644ef607b780551cc555f084869764f2566652
-  RNSound: 27e8268bdb0a1f191f219a33267f7e0445e8d62f
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
