@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet, Keyboard, TextStyle } from 'react-native';
+import { View, Pressable, StyleSheet, Keyboard, TextStyle, Platform } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -88,7 +88,7 @@ const SignupFormUI = (props: SignupParams) => {
 		socialText: {
 			fontSize: 14,
 			lineHeight: 20,
-			fontWeight: '600',
+			fontWeight: Platform.OS == 'android' ? 'bold' : '600',
 			color: theme.colors.white,
 			textTransform: 'capitalize',
 			textAlign: 'center',

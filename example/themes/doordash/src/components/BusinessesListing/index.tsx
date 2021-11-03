@@ -43,6 +43,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [, { showToast }] = useToast()
 
 	const [businesses, setBusinesses] = useState(businessesList?.businesses || []);
+	const [hasFeatured, setHasFeatured] = useState(false);
 
 	const theme = useTheme();
 
@@ -135,6 +136,15 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		}
 	}, [businessesList])
 
+	useEffect(() => {
+		if (businesses.length > 0) {
+			const aFeatured = businesses.find(({featured}) => featured === true);
+			setHasFeatured(aFeatured ? true : false);
+		} else {
+			setHasFeatured(false);
+		}
+	}, [businesses])
+
 	return (
 		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} scrollEventThrottle={50}>
 			<HeaderCont>
@@ -183,20 +193,25 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					items={sorts}
 					onHandleFilter={handleSortBy}
 				/>
-				<FeaturedBussiCont horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 40 }}>
-					{
-						businesses?.map((business: any) => business?.featured && (
-							<BusinessController
-								key={business.id}
-								business={business}
-								handleCustomClick={handleBusinessClick}
-								orderType={orderState?.options?.type}
-								isBusinessOpen={business?.open}
-								isHorizontal={true}
-							/>
-						))
-					}
-				</FeaturedBussiCont>
+				{hasFeatured && 
+				<>
+					<OText size={16} weight={Platform.OS == 'android' ? 'bold' : '600'}>{t('FEATURED BUSINESSES', 'Featured Businesses')}</OText>
+					<FeaturedBussiCont horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 40 }}>
+						{
+							businesses?.map((business: any) => business?.featured && (
+								<BusinessController
+									key={business.id}
+									business={business}
+									handleCustomClick={handleBusinessClick}
+									orderType={orderState?.options?.type}
+									isBusinessOpen={business?.open}
+									isHorizontal={true}
+								/>
+							))
+						}
+					</FeaturedBussiCont>
+				</>
+				}
 			</View>
 			{
 				!businessesList.loading && businesses.length === 0 && (
@@ -204,6 +219,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						content={t('NOT_FOUND_BUSINESSES', 'No businesses to delivery / pick up at this address, please change filters or change address.')}
 					/>
 				)
+			}
+			{businesses.length > 0 &&
+				<>
+				<View style={{height: 7, marginBottom: 26, marginHorizontal: -40, backgroundColor: theme.colors.backgroundGray}} />
+				<OText size={16} weight={Platform.OS == 'android' ? 'bold' : '600'}>{t('ALL BUSINESSES', 'All Businesses')}</OText>
+				</>
 			}
 			{
 				businesses?.map((business: any) => !business?.featured && (
