@@ -91,19 +91,16 @@ const OrderSummaryUI = (props: any) => {
 					</OSProductList>
 					{hasUpSelling && (
 						<View style={{ marginVertical: 28, paddingBottom: 36, borderBottomWidth: 8, borderBottomColor: theme.colors.inputDisabled }}>
-							<OText style={{ ...theme.labels.middle, paddingHorizontal: paddingH, marginBottom: 10 } as TextStyle}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
-							<View>
-								<UpsellingProducts
-									businessId={cart?.business_id}
-									business={cart?.business}
-									cartProducts={cart?.products}
-									handleUpsellingPage={() => { }}
-									openUpselling={true}
-									canOpenUpselling={true}
-									isCustomMode
-									scrollContainerStyle={{ paddingHorizontal: paddingH }}
-								/>
-							</View>
+							<UpsellingProducts
+								businessId={cart?.business_id}
+								business={cart?.business}
+								cartProducts={cart?.products}
+								handleUpsellingPage={() => { }}
+								openUpselling={true}
+								canOpenUpselling={true}
+								isCustomMode
+								scrollContainerStyle={{ paddingHorizontal: paddingH }}
+							/>
 						</View>
 					)}
 					{cart?.valid && (
