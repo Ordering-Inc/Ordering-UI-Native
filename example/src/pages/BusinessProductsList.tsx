@@ -1,6 +1,6 @@
 import React from 'react'
 import { useApi } from 'ordering-components/native'
-import { BusinessProductsListing as BusinessProductsListController } from '../components/BusinessProductsListing'
+import { BusinessProductsListing as BusinessProductsListController } from '../../themes/original/src/components/BusinessProductsListing'
 import styled from 'styled-components/native'
 import { useTheme } from 'styled-components/native'
 

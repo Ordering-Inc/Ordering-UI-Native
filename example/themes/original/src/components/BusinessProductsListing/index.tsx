@@ -282,24 +282,16 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				onClose={handleCloseProductModal}
 				entireModal
 				customClose
+				isAvoidKeyBoardView
 			>
-				<KeyboardAvoidingView
-					style={{
-						flexGrow: 1,
-						flexShrink: 1
-					}}
-					enabled
-					behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-				>
-					<ProductForm
-						product={curProduct}
-						businessSlug={business.slug}
-						businessId={business.id}
-						onClose={handleCloseProductModal}
-						navigation={navigation}
-						onSave={handlerProductAction}
-					/>
-				</KeyboardAvoidingView>
+				<ProductForm
+					product={curProduct}
+					businessSlug={business.slug}
+					businessId={business.id}
+					onClose={handleCloseProductModal}
+					navigation={navigation}
+					onSave={handlerProductAction}
+				/>
 			</OModal>
 			{openUpselling && (
 				<UpsellingProducts

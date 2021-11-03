@@ -60,6 +60,8 @@ export const ProductComment = styled.View`
 `
 
 export const ProductActions = styled.View`
+  position: absolute;
+  bottom: 0px;
 	min-height: 70px;
   padding: 12px 40px;
   width: 100%;
