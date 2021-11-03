@@ -128,10 +128,6 @@ const CheckoutUI = (props: any) => {
   const [openOrderCreating, setOpenOrderCreating] = useState(false)
   const [cardData, setCardData] = useState(null)
 
-  useEffect(() => {
-    console.log(cardData, 'this is card data')
-  }, [cardData])
-
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
@@ -198,6 +194,7 @@ const CheckoutUI = (props: any) => {
       if (payment) {
         if (payment.error) {
           showToast(ToastType.Error, payment.result)
+          setOpenOrderCreating(false)
         } else if (payment?.result?.order?.uuid) {
           showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfully'))
           onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment?.result?.order?.uuid, goToBusinessList: true })
