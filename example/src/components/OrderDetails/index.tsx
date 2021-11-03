@@ -5,6 +5,7 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Messages } from '../Messages'
 import { ShareComponent } from '../ShareComponent'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -46,6 +47,7 @@ import { GoogleMap } from '../GoogleMap'
 import { verifyDecimals } from '../../utils'
 import { useTheme } from 'styled-components/native'
 import { NotFoundSource } from '../NotFoundSource'
+import { OrderCreating } from '../OrderCreating';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -100,6 +102,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openModalForDriver, setOpenModalForDriver] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
   const [isReviewed, setIsReviewed] = useState(false)
+  const [openOrderCreating, setOpenOrderCreating] = useState(true)
   const { order, loading, businessData, error } = props.order
   const isTaxIncluded = order?.tax_type === 1
 
@@ -216,6 +219,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       locations[0] = driverLocation
     }
   }, [driverLocation])
+
+  useEffect(() => {
+    if (!loading) {
+      setOpenOrderCreating(false)
+      try {
+        AsyncStorage.removeItem('business-address')
+      } catch {
+        console.log('error')
+      }
+    }
+  }, [loading])
 
   return (
     <OrderDetailsContainer keyboardShouldPersistTaps='handled'>
@@ -523,6 +537,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           messages={messages}
           order={order}
           setMessages={setMessages}
+        />
+      </OModal>
+      <OModal
+        entireModal
+        open={openOrderCreating}
+        isNotDecoration
+        customClose
+      >
+        <OrderCreating
+          isOrderDetail
         />
       </OModal>
     </OrderDetailsContainer>
