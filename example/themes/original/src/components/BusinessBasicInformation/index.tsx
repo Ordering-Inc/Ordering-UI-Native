@@ -56,7 +56,7 @@ export const BusinessBasicInformation = (
 				source={{
 					uri:
 						header ||
-						optimizeImage(businessState?.business?.header, 'h_400,c_limit'),
+						optimizeImage(businessState?.business?.header, 'h_250,c_limit'),
 				}}>
 				{!isBusinessInfoShow && (
 					<WrapBusinessInfo onPress={() => setOpenBusinessInformation(true)}>
@@ -77,7 +77,7 @@ export const BusinessBasicInformation = (
 							<OIcon
 								url={
 									logo ||
-									optimizeImage(businessState?.business?.logo, 'h_300,c_limit')
+									optimizeImage(businessState?.business?.logo, 'h_70,c_limit')
 								}
 								style={styles.businessLogo}
 							/>

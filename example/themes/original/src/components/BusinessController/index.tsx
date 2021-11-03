@@ -22,6 +22,7 @@ import {
 } from './styles';
 import { useTheme } from 'styled-components/native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
+import FastImage from 'react-native-fast-image'
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const { business, handleClick } = props;
@@ -99,10 +100,15 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
 	return (
 		<Card activeOpacity={1} onPress={() => handleClick(business)}>
-			<BusinessHero
-				source={{ uri: optimizeImage(business?.header, 'h_400,c_limit') }}
-				imageStyle={styles.headerStyle}
-				isClosed={business?.open}>
+			<BusinessHero>
+				<FastImage
+					style={{ height: 120 }}
+					source={{
+							uri: optimizeImage(business?.header, 'h_120,c_limit'),
+							priority: FastImage.priority.normal,
+					}}
+					resizeMode={FastImage.resizeMode.cover}
+				/>
 				{business?.featured && (
 					<View style={styles.featured}>
 						<FontAwesomeIcon name="crown" size={26} color="gold" />
@@ -124,10 +130,13 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 			<BusinessContent>
 				<BusinessInfo>
 					<BusinessLogo style={styles.businessLogo}>
-						<OIcon
-							url={optimizeImage(business?.logo, 'h_300,c_limit')}
-							width={56}
-							height={56}
+						<FastImage
+							style={{ width: 56, height: 56 }}
+							source={{
+									uri: optimizeImage(business?.logo, 'h_60,c_limit'),
+									priority: FastImage.priority.normal,
+							}}
+							resizeMode={FastImage.resizeMode.cover}
 						/>
 					</BusinessLogo>
 					{business?.reviews?.total > 0 && (
