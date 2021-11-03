@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet, Keyboard, Linking, Platform } from 'react-native';
+import { View, Pressable, StyleSheet, Keyboard, Linking, Platform, TouchableOpacity, ScrollView } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -462,16 +462,18 @@ const SignupFormUI = (props: SignupParams) => {
                 }}
                 defaultValue={false}
               />
+              <ScrollView 
+              horizontal
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              >
               <OText size={16} style={{ paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
-              <OButton
-                imgRightSrc={null}
-                text={t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
-                bgColor='#FFF'
-                borderColor='#FFF'
-                style={{ paddingLeft: 0, paddingRight: 0, height: 30, shadowColor: '#FFF' }}
-                textStyle={{ color: theme.colors.primary, marginLeft: 0, marginRight: 0 }}
-                onClick={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}
-              />
+              <TouchableOpacity onPress={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}>
+                <OText size={16} color={theme.colors.primary}>
+                  {t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
+                </OText>
+              </TouchableOpacity>
+              </ScrollView>
             </View>
           )}
 

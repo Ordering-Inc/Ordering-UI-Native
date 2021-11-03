@@ -90,7 +90,8 @@
       "help": "",
       "close": "",
       "orderCreating": "",
-      "orderSuccess": ""
+      "orderSuccess": "",
+      "newOrder": ""
     },
     "order": {
       "status0": "",
@@ -125,5 +126,8 @@
       "driverPhoto": "",
       "customerPhoto": ""
     }
+  },
+  "sounds": {
+    "notification": ""
   }
 }

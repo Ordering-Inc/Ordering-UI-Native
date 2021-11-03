@@ -151,7 +151,7 @@ const ProfileListUI = (props: ProfileParams) => {
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MY_SAVED_PLACES', 'My saved places')}</OText>
 					</ListItem>
 					<ListItem onPress={() => navigation.navigate('Help', {})} activeOpacity={0.7}>
-						<OIcon src={theme.images.general.help} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
+						<OIcon src={theme.images.general.ic_help} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('HELP', 'Help')}</OText>
 					</ListItem>
 				</Actions>

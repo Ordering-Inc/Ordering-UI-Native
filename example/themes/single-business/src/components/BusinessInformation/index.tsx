@@ -16,7 +16,7 @@ import {
 	DivideView,
 	MediaWrapper,
 } from './styles';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { BusinessInformationParams } from '../../types';
 import { GoogleMap } from '../GoogleMap';
 import { WebView } from 'react-native-webview';
@@ -68,7 +68,6 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 		);
 		return vAry;
 	};
-	//{uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4?_=1'}
 	const bImages: any = () => {
 		const len = businessState?.business?.gallery?.length | 0;
 		if (len == 0) return [];
@@ -82,11 +81,11 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 		<BusinessInformationContainer>
 			<WrapMainContent contentContainerStyle={{}}>
 				<InnerContent>
-					<OText size={24} weight={'600'}>
+					<OText size={24} weight={Platform.OS === 'ios' ? '600' : 'bold'}>
 						{businessState?.business?.name}
 					</OText>
 					<GrayBackground>
-						<OText size={16} weight="500">
+						<OText size={16} weight={Platform.OS === 'ios' ? '600' : 'bold'}>
 							{t('BUSINESS_LOCATION', 'Business Location')}
 						</OText>
 					</GrayBackground>
@@ -104,7 +103,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 					</OText>
 					<DivideView />
 					<GrayBackground>
-						<OText size={16} weight="500">
+						<OText size={16} weight={Platform.OS === 'ios' ? '600' : 'bold'}>
 							{t('OPENING_TIME', 'Opening Time')}
 						</OText>
 					</GrayBackground>
@@ -116,7 +115,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 										lineHeight={21}
 										mBottom={16}
 										size={14}
-										weight={'600'}
+										weight={Platform.OS === 'ios' ? '600' : 'bold'}
 										style={{ flexBasis: '20%' }}>
 										{daysOfWeek[i].toUpperCase()}
 									</OText>
@@ -135,13 +134,12 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 							))}
 						</WrapScheduleBlock>
 					)}
-					{/* {businessState?.business?.gallery?.length > 0 && ( */}
 					<>
 						{bVideos().length > 0 && (
 							<>
 								<DivideView />
 								<GrayBackground>
-									<OText size={16} weight="500">
+									<OText size={16} weight={Platform.OS === 'ios' ? '600' : 'bold'}>
 										{t('VIDEOS', 'Videos')}
 									</OText>
 								</GrayBackground>
@@ -162,7 +160,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 							<>
 								<DivideView />
 								<GrayBackground>
-									<OText size={16} weight="500">
+									<OText size={16} weight={Platform.OS === 'ios' ? '600' : 'bold'}>
 										{t('IMAGES', 'Images')}
 									</OText>
 								</GrayBackground>
@@ -171,14 +169,12 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 										i.file != null &&
 										<View key={i.id} style={{ width: 210, height: 127, borderRadius: 7.6, marginEnd: 20, overflow: 'hidden' }}>
 											<OIcon cover url={optimizeImage(i?.file, 'h_150,c_limit')} width={210} height={127} />
-											{/* <OText size={12} color={colors.red} style={{position: 'absolute'}}>{i.file}</OText> */}
 										</View>
 									))}
 								</MediaWrapper>
 							</>
 						)}
 					</>
-					{/* )} */}
 				</InnerContent>
 			</WrapMainContent>
 		</BusinessInformationContainer>
