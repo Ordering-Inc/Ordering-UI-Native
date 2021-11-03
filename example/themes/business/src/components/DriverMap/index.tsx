@@ -47,7 +47,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
   const [travelTime, setTravelTime] = useState(0);
   const [distancesFromTwoPlacesKm, setDistancesFromTwoPlacesKm] = useState(0);
   const [isMin, setIsMin] = useState(false);
-  const [infoRealTime, setInfoRealTime] = useState({ formatted_address: '' });
   const [{ parseDate }] = useUtils();
   const mapErrors: any = {
     ERROR_NOT_FOUND_ADDRESS: "Sorry, we couldn't find an address",
@@ -84,51 +83,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
       };
     }
   }, []);
-
-  useEffect(() => {
-    Geocoder.init(googleMapsApiKey);
-  }, []);
-
-  useEffect(() => {
-    geocodePosition({ latitude: location.lat, longitude: location.lng });
-  }, []);
-
-  const geocodePosition = (pos: { latitude: number; longitude: number }) => {
-    Geocoder.from({
-      latitude: pos.latitude,
-      longitude: pos.longitude,
-    })
-      .then(({ results }: any) => {
-        let zipcode = null;
-        if (results && results.length > 0) {
-          for (const component of results[0].address_components) {
-            const addressType = component.types[0];
-            if (addressType === 'postal_code') {
-              zipcode = component.short_name;
-              break;
-            }
-          }
-          let data = null;
-          const details = {
-            geometry: { location: { lat: pos.latitude, lng: pos.longitude } },
-          };
-          if (isSetInputs) {
-            data = {
-              address: results[0]?.formatted_address,
-              location: results[0]?.geometry?.location,
-              zipcode,
-              place_id: results[0]?.place_id,
-            };
-          }
-          setInfoRealTime(results[0]);
-        } else {
-          setMapErrors && setMapErrors('ERROR_NOT_FOUND_ADDRESS');
-        }
-      })
-      .catch((err: any) => {
-        setMapErrors && setMapErrors(err.message);
-      });
-  };
 
   const setMapErrors = (errKey: string) => {
     setAlertState({
@@ -524,9 +478,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
                 {`${travelTime.toFixed(2)} - ${
                   isMin ? t('MINNUTES', 'mins') : t('HOURS', 'hours')
                 } ${distancesFromTwoPlacesKm.toFixed(2)} km`}
-              </OText>
-              <OText size={13} numberOfLines={3} adjustsFontSizeToFit>
-                {infoRealTime?.formatted_address}
               </OText>
             </View>
           </View>
