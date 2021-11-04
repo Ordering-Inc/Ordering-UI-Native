@@ -436,7 +436,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             onAccept={handleArrowBack}
             onClose={handleArrowBack}
             content={alertState.content}
-            title={t('ERROR', 'Error')}
+            title={t('WARNING', 'Warning')}
           />
         </View>
       )}
