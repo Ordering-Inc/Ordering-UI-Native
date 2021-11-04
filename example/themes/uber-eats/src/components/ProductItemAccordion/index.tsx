@@ -233,7 +233,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
             {product.comment && (
               <ProductComment>
                 <OText color={theme.colors.gray} style={{ textAlign: 'left' }}>{t('SPECIAL_COMMENT', 'Special Comment')}</OText>
-                <OText color={theme.colors.gray} style={{ textAlign: 'left' }}>{product.comment}</OText>
+                <OText color={theme.colors.gray} style={{ textAlign: 'left', marginLeft: 10 }}>{product.comment}</OText>
               </ProductComment>
             )}
           </AccordionContent>
