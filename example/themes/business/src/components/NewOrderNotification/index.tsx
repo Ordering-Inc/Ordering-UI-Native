@@ -6,6 +6,7 @@ import { useTheme } from 'styled-components/native'
 import Icon from 'react-native-vector-icons/Feather'
 import { NotificationContainer } from './styles'
 import Sound from 'react-native-sound'
+import moment from 'moment'
 
 Sound.setCategory('Playback')
 
@@ -63,9 +64,10 @@ export const NewOrderNotification = (props: any) => {
     }
   }, [handleNotification])
 
+  
   const handleUpdateOrder = useCallback((order: any) => {
     if (order?.driver) {
-      const assignedTimeDiff = getTimeAgo(order?.driver?.last_order_assigned_at)
+      const assignedTimeDiff = moment.utc(order?.driver?.last_order_assigned_at).local().fromNow()
       if (assignedTimeDiff === 'a few seconds ago') {
         clearInterval(soundTimeout)
         handlePlayNotificationSound()
