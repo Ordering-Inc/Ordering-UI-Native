@@ -680,7 +680,14 @@
     pirates "^4.0.0"
     source-map-support "^0.5.16"
 
-"@babel/runtime@^7.10.4", "@babel/runtime@^7.11.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.10.4":
+  version "7.16.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.0.tgz#e27b977f2e2088ba24748bf99b5e1dece64e4f0b"
+  integrity sha512-Nht8L0O8YCktmsDV6FqFue7vQLRx3Hb0B37lS5y0jDRqRxlBG4wIJHnf9/bgSE2UyipKFA01YtS+npRdTWBUyw==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
+"@babel/runtime@^7.11.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4":
   version "7.15.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.4.tgz#fd17d16bfdf878e6dd02d19753a39fa8a8d9c84a"
   integrity sha512-99catp6bHCaxr4sJ/DbTGgHS4+Rs2RVd2g7iOap6SLGPDknRK9ztKNsE/Fg6QhSeh1FGE5f6gHGQmvvn3I3xhw==
@@ -1359,7 +1366,14 @@
     "@babel/runtime" "^7.7.2"
     regenerator-runtime "^0.13.3"
 
-"@react-native-async-storage/async-storage@^1.13.1", "@react-native-async-storage/async-storage@^1.15.5":
+"@react-native-async-storage/async-storage@^1.13.1":
+  version "1.15.10"
+  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.15.10.tgz#9a3e7545e55e285679233d8bdf8688764e9a7c3c"
+  integrity sha512-/E2iMs0n/P1SiHoyXXaRe98i5OgC+QV+RRVfdsR4HgLVdUbxmZVWYABSL9jZUbLWW+AQvma9ej0ggw4iH+iEuA==
+  dependencies:
+    merge-options "^3.0.4"
+
+"@react-native-async-storage/async-storage@^1.15.5":
   version "1.15.9"
   resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.15.9.tgz#744ecd566f108e86b6b59e617c23fdb4b8d53358"
   integrity sha512-LrVPfhKqodRiDWCgZp7J2X55JQqOhdQUxbl17RrktIGCZ0ud2XHdNoTIvyI1VccqHoF/CZK6v+G0IoX5NYZ1JA==
@@ -1860,9 +1874,9 @@
     prop-types "^15.7.2"
 
 "@stripe/stripe-js@^1.9.0":
-  version "1.20.2"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.20.2.tgz#5bb8deff1ba6cdc83d0bfac58e4d61fe2e4a53e7"
-  integrity sha512-gTPpXQgAgKrAAvV2R5WO4NCuozALD4n3xaDLhPv+nAomIdPLtgEwI2xIGY7WMSKp9KfkKmlcjoPO4pkz8f/bpw==
+  version "1.21.1"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.21.1.tgz#e56cd01f889dc06af4a68ebf61d2492a87e80da1"
+  integrity sha512-/HhRol0Bia/6L7JstXUOpg3m0U3nBW8c2tvaBE6QdonN+OMusYT9AIqCMR/PyzoF3ROifFJ2kbWT7xQjbKN3tw==
 
 "@stripe/stripe-react-native@^0.2.0":
   version "0.2.2"
@@ -5756,9 +5770,9 @@ levn@~0.3.0:
     type-check "~0.3.2"
 
 libphonenumber-js@^1.9.17:
-  version "1.9.38"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.9.38.tgz#d0388deebc95a8691382313d2f7dac2de2219387"
-  integrity sha512-7CCl9NZPYtX4JNXdvV5RnrQqrXp7LsLOTpYSUfEJBiySEnC5hysdwouXAuWgPDB55D/fpKm4RjM2/tUUh8kuoA==
+  version "1.9.41"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.9.41.tgz#9bd7b7c7bf0246fa9a02f89de5654fdf61926190"
+  integrity sha512-AE4NLPwITwzra8mOJPtSbbjMO17Nv+6/tzUKa4AN6LY2Un97HfGOT8MATXmnNZsj5dkd/iOfN3MJA/6OKpJV0g==
 
 lie@3.1.1:
   version "3.1.1"
@@ -6809,7 +6823,7 @@ ora@^3.4.0:
 
 "ordering-components@github:Ordering-Inc/ordering-components#development":
   version "0.0.1"
-  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/7dc23b41571857e4893ef22303c6638c54c75bf0"
+  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/87c21bb4055b8514e60dc55a9ed227ce2132bfab"
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@react-native-async-storage/async-storage" "^1.13.1"
@@ -7386,6 +7400,11 @@ react-native-geocoding@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/react-native-geocoding/-/react-native-geocoding-0.5.0.tgz#69748f896047a63d1c3c1d55255f9d67c8e275c2"
   integrity sha512-peTXRpRxPLiZpbTW43AOvoXXAEoS+eLnSo4KRY0hcL9F2hulWE5r7o5KiaLx8AWj35c6EJP3fdGHe754q2Gd2Q==
+
+react-native-geolocation-service@^5.3.0-beta.3:
+  version "5.3.0-beta.3"
+  resolved "https://registry.yarnpkg.com/react-native-geolocation-service/-/react-native-geolocation-service-5.3.0-beta.3.tgz#6afd291e886ecb5fdf8c096ea0a694ccb0975330"
+  integrity sha512-TRIrkD1CV6yAOUNAqFsHiYuTyzBXJ8bttk84r4dCSKLJbYzKkvGyKoqtIIydAVlHRyZhU6u6U4Uz1bkdXPlT3g==
 
 react-native-gesture-handler@^1.8.0:
   version "1.10.3"
