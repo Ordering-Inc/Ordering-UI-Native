@@ -76,7 +76,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
                     />
                     <OText>{review.total}</OText>
                   </View>
-                  <OText mLeft={20}>{review.comment}</OText>
+                  <OText mLeft={20} style={{ flex: 1 }}>{review.comment}</OText>
                 </WrapCustomerReviewTotal>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   <Score star={review.quality} text={t('REVIEW_QUALITY', 'Quality of products')} />

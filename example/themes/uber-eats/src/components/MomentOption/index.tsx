@@ -80,21 +80,30 @@ const MomentOptionUI = (props: MomentOptionParams) => {
         <ButtonGroup>
           <OButton
             text={t('ASAP_ABBREVIATION', 'ASAP')}
-            bgColor={optionSelected.isAsap ? theme.colors.primary : theme.colors.gray}
-            borderColor={optionSelected.isAsap ? theme.colors.primary : theme.colors.gray}
+            bgColor={optionSelected.isAsap ? theme.colors.primary : theme.colors.mediumGray}
+            borderColor={optionSelected.isAsap ? theme.colors.primary : theme.colors.mediumGray}
             textStyle={{ color: optionSelected.isAsap ? theme.colors.white : theme.colors.primary, fontSize: 14 }}
-            style={{ height: 42 }}
+            style={{
+              height: 32,
+              paddingLeft: 10,
+              paddingRight: 10
+            }}
             imgRightSrc={null}
             isLoading={orderState.loading}
             onClick={() => _handleAsap()}
           />
           <OButton
-            text={t('SCHEDULE_FOR_LATER', 'Schedule for later')}
-            bgColor={optionSelected.isSchedule ? theme.colors.primary : theme.colors.gray}
-            borderColor={optionSelected.isSchedule ? theme.colors.primary : theme.colors.gray}
+            text={t('SCHEDULE', 'Schedule')}
+            bgColor={optionSelected.isSchedule ? theme.colors.primary : theme.colors.mediumGray}
+            borderColor={optionSelected.isSchedule ? theme.colors.primary : theme.colors.mediumGray}
             textStyle={{ color: optionSelected.isSchedule ? theme.colors.white : theme.colors.primary, fontSize: 14 }}
             imgRightSrc={null}
-            style={{ marginHorizontal: 10, height: 42 }}
+            style={{
+              marginHorizontal: 10,
+              height: 32,
+              paddingLeft: 10,
+              paddingRight: 10
+            }}
             isLoading={orderState.loading}
             onClick={() => setOptionSelected({ isAsap: false, isSchedule: true })}
           />

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -81,6 +81,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [curProduct, setCurProduct] = useState(null)
 	const [openUpselling, setOpenUpselling] = useState(false)
 	const [canOpenUpselling, setCanOpenUpselling] = useState(false)
+	const scrollViewRef = useRef<any>(null)
+	const [categoriesLayout, setCategoriesLayout] = useState<any>({})
+	const [productListLayout, setProductListLayout] = useState<any>(null)
 
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
@@ -128,7 +131,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	return (
 		<>
-			<BusinessProductsListingContainer style={styles.mainContainer} isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}>
+			<BusinessProductsListingContainer
+				stickyHeaderIndices={[2]}
+				style={styles.mainContainer}
+				ref={scrollViewRef}
+				isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
+			>
 				<WrapHeader>
 					{/* {!loading && business?.id && ( */}
 					<TopHeader>
@@ -196,9 +204,18 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								onClickCategory={handleChangeCategory}
 								featured={featuredProducts}
 								openBusinessInformation={openBusinessInformation}
+								scrollViewRef={scrollViewRef}
+								productListLayout={productListLayout}
+								categoriesLayout={categoriesLayout}
 							/>
 						)}
-						<WrapContent>
+					</>
+				)}
+				{!loading && business?.id && (
+					<>
+						<WrapContent
+							onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}
+						>
 							<BusinessProductsList
 								categories={[
 									{ id: null, name: t('ALL', 'All') },
@@ -216,6 +233,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								handleClearSearch={handleChangeSearch}
 								errorQuantityProducts={errorQuantityProducts}
 								handleCancelSearch={handleCancel}
+								categoriesLayout={categoriesLayout}
+								setCategoriesLayout={setCategoriesLayout}
 							/>
 						</WrapContent>
 					</>
@@ -263,6 +282,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				onClose={handleCloseProductModal}
 				entireModal
 				customClose
+				isAvoidKeyBoardView
 			>
 				<ProductForm
 					product={curProduct}

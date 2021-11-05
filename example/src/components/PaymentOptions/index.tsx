@@ -142,7 +142,7 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeIds: any = [32, 66]; //exclude connect & redirect
+  const excludeGateway: any = ['stripe_connect', 'stripe_redirect']; //exclude connect & redirect
 
   return (
     <PMContainer>
@@ -151,7 +151,7 @@ const PaymentOptionsUI = (props: any) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           // data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
-          data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeIds.includes(p.id))}
+          data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeGateway.includes(p.gateway))}
           renderItem={renderPaymethods}
           keyExtractor={(paymethod: any) => paymethod.id.toString()}
         />

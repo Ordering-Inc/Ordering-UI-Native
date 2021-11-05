@@ -185,6 +185,9 @@ export interface BusinessProductsCategoriesParams {
 	categorySelected: any;
 	featured: boolean;
 	loading?: any;
+	scrollViewRef?: any;
+	productListLayout?: any;
+	categoriesLayout?: any;
 }
 export interface BusinessProductsListParams {
 	errors?: any;
@@ -199,7 +202,9 @@ export interface BusinessProductsListParams {
 	handleClearSearch?: (value: any) => {};
 	isBusinessLoading?: any,
 	errorQuantityProducts?: boolean,
-	handleCancelSearch?: () => void
+	handleCancelSearch?: () => void,
+	categoriesLayout?: any,
+	setCategoriesLayout?: any
 }
 export interface SingleProductCardParams {
 	businessId: any,

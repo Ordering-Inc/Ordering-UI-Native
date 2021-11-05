@@ -277,7 +277,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           />
           <OrderDetailsContainer
             keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}>
+            showsVerticalScrollIndicator={false}
+          >
             <>
               <OrderContentComponent order={order} />
               {(order?.status === 8 || order?.status === 18) && order?.delivery_type === 1 && (
@@ -292,6 +293,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     imgLeftStyle={{ tintColor: theme.colors.backArrow }}
                   />
                 </Pickup>
+              )}
+              {(order?.status === 3) && order?.delivery_type === 1 && (
+                <View style={{paddingVertical: 20, marginBottom: 20}}>
+                  <OButton
+                    style={styles.btnPickUp}
+                    textStyle={{ color: theme.colors.white }}
+                    text={t('ORDER_NOT_READY', 'Order not ready')}
+                    onClick={() =>
+                      handleChangeOrderStatus && handleChangeOrderStatus(14)
+                    }
+                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+                    bgColor={theme.colors.red}
+                  />
+                </View>
               )}
             </>
 
@@ -421,7 +436,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             onAccept={handleArrowBack}
             onClose={handleArrowBack}
             content={alertState.content}
-            title={t('ERROR', 'Error')}
+            title={t('WARNING', 'Warning')}
           />
         </View>
       )}

@@ -207,7 +207,7 @@ export const getOrderStatus = (s: string, t: any) => {
     },
     {
       key: 5,
-      value: t('REJECTED', 'Rejected'),
+      value: t('REJECTED_BY_BUSINESS', 'Rejected by business'),
       slug: 'REJECTED_BY_BUSINESS',
       percentage: 0,
     },

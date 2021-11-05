@@ -214,362 +214,360 @@ export const ProductOptionsUI = (props: any) => {
 	);
 
 	return (
-		<View style={{ height: height }}>
-			<View style={{ height: height - top - bottom - (Platform.OS === 'android' ? 94 : 69) }}>
-				<ScrollView>
-					{!error && (
-						<>
-							<WrapHeader>
+		<>
+			<ScrollView>
+				{!error && (
+					<View style={{ paddingBottom: 80 }}>
+						<WrapHeader>
+							{loading && !product ? (
+								<View style={styles.productHeaderSkeleton}>
+									<Placeholder Animation={Fade}>
+										<PlaceholderLine
+											height={258}
+											style={{ borderRadius: 0 }}
+											width={windowWidth}
+										/>
+									</Placeholder>
+								</View>
+							) : (
+								<>
+									<TopHeader>
+										<TouchableOpacity
+											style={styles.headerItem}
+											onPress={onClose}>
+											<OIcon src={theme.images.general.close} width={16} />
+										</TouchableOpacity>
+									</TopHeader>
+									<ProductHeader
+										source={{ uri: product?.images || productCart?.images }}
+										style={{height: windowWidth}}
+										resizeMode={'contain'}
+									/>
+								</>
+							)}
+						</WrapHeader>
+						<WrapContent>
+							<ProductTitle>
 								{loading && !product ? (
-									<View style={styles.productHeaderSkeleton}>
-										<Placeholder Animation={Fade}>
-											<PlaceholderLine
-												height={258}
-												style={{ borderRadius: 0 }}
-												width={windowWidth}
-											/>
-										</Placeholder>
-									</View>
+									<Placeholder Animation={Fade}>
+										<View
+											style={{
+												flexDirection: 'row',
+												justifyContent: 'space-between',
+											}}>
+											<PlaceholderLine width={40} height={20} />
+											<PlaceholderLine width={30} height={20} />
+										</View>
+									</Placeholder>
 								) : (
 									<>
-										<TopHeader>
-											<TouchableOpacity
-												style={styles.headerItem}
-												onPress={onClose}>
-												<OIcon src={theme.images.general.close} width={16} />
-											</TouchableOpacity>
-										</TopHeader>
-										<ProductHeader
-											source={{ uri: product?.images || productCart?.images }}
-											style={{height: windowWidth}}
-											resizeMode={'contain'}
-										/>
+										<OText
+											size={20}
+											lineHeight={30}
+											weight={'600'}
+											style={{ flex: 1, marginBottom: 5 }}>
+											{product?.name || productCart.name}
+										</OText>
+										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
+											{productCart.price ? parsePrice(productCart.price) : ''}
+										</OText>
 									</>
 								)}
-							</WrapHeader>
-							<WrapContent>
-								<ProductTitle>
-									{loading && !product ? (
-										<Placeholder Animation={Fade}>
-											<View
-												style={{
-													flexDirection: 'row',
-													justifyContent: 'space-between',
-												}}>
-												<PlaceholderLine width={40} height={20} />
-												<PlaceholderLine width={30} height={20} />
-											</View>
-										</Placeholder>
-									) : (
+							</ProductTitle>
+							<ProductDescription>
+								<OText color={theme.colors.textSecondary} size={12} lineHeight={18}>
+									{product?.description || productCart?.description}
+								</OText>
+								{((product?.sku &&
+									product?.sku !== '-1' &&
+									product?.sku !== '1') ||
+									(productCart?.sku &&
+										productCart?.sku !== '-1' &&
+										productCart?.sku !== '1')) && (
 										<>
-											<OText
-												size={20}
-												lineHeight={30}
-												weight={'600'}
-												style={{ flex: 1, marginBottom: 5 }}>
-												{product?.name || productCart.name}
-											</OText>
-											<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
-												{productCart.price ? parsePrice(productCart.price) : ''}
-											</OText>
+											<OText size={16}>{t('SKU', 'Sku')}</OText>
+											<OText>{product?.sku || productCart?.sku}</OText>
 										</>
 									)}
-								</ProductTitle>
-								<ProductDescription>
-									<OText color={theme.colors.textSecondary} size={12} lineHeight={18}>
-										{product?.description || productCart?.description}
-									</OText>
-									{((product?.sku &&
-										product?.sku !== '-1' &&
-										product?.sku !== '1') ||
-										(productCart?.sku &&
-											productCart?.sku !== '-1' &&
-											productCart?.sku !== '1')) && (
-											<>
-												<OText size={16}>{t('SKU', 'Sku')}</OText>
-												<OText>{product?.sku || productCart?.sku}</OText>
-											</>
-										)}
-								</ProductDescription>
-								{loading && !product ? (
-									<>
-										{[...Array(2)].map((item, i) => (
-											<Placeholder
-												key={i}
-												style={{ marginBottom: 20 }}
-												Animation={Fade}>
-												<PlaceholderLine
-													height={40}
-													style={{ flex: 1, marginTop: 10 }}
-												/>
-												{[...Array(3)].map((item, i) => (
-													<View
-														key={'place_key_' + i}
-														style={{
-															flexDirection: 'row',
-															justifyContent: 'space-between',
-														}}>
-														<PlaceholderLine
-															height={30}
-															width={10}
-															style={{ marginBottom: 20 }}
-														/>
-														<PlaceholderLine
-															height={30}
-															width={50}
-															style={{ marginBottom: 20 }}
-														/>
-														<PlaceholderLine
-															height={30}
-															width={30}
-															style={{ marginBottom: 20 }}
-														/>
-													</View>
-												))}
-											</Placeholder>
-										))}
-									</>
-								) : (
-									<ProductEditions>
-										<ExtraOptionWrap
-											horizontal
-											showsHorizontalScrollIndicator={false}
+							</ProductDescription>
+							{loading && !product ? (
+								<>
+									{[...Array(2)].map((item, i) => (
+										<Placeholder
+											key={i}
 											style={{ marginBottom: 20 }}
-											contentContainerStyle={{ paddingHorizontal: 33 }}
-										>
-										<TouchableOpacity
-											key={`eopt_all_0`}
-											onPress={() => setSelectedOpt(0)}
-											style={[
-												styles.extraItem,
-												{
-													borderBottomColor: selOpt == 0 ? theme.colors.textNormal : theme.colors.border,
-												},
-											]}>
-											<OText
-												color={selOpt == 0 ? theme.colors.textNormal : theme.colors.textSecondary}
-												size={selOpt == 0 ? 14 : 12}
-												weight={selOpt == 0 ? '600' : 'normal'}>
-												{t('ALL', 'All')}
-											</OText>
-										</TouchableOpacity>
-										{product?.extras.map((extra: any) => 					
-											<ExtraOptions key={extra.id} options={extra.options} />
-										)}
-										</ExtraOptionWrap>
-
-										{selOpt == 0 ? (
-											<>
-												{product?.ingredients.length > 0 && (
-													<View style={styles.optionContainer}>
-														<SectionTitle>
-															<OText size={16}>
-																{t('INGREDIENTS', 'Ingredients')}
-															</OText>
-														</SectionTitle>
-														<WrapperIngredients
-															style={{
-																backgroundColor:
-																	isSoldOut || maxProductQuantity <= 0
-																		? 'hsl(0, 0%, 72%)'
-																		: theme.colors.white,
-															}}>
-															{product?.ingredients.map((ingredient: any) => (
-																<ProductIngredient
-																	key={ingredient.id}
-																	ingredient={ingredient}
-																	state={
-																		productCart.ingredients[`id:${ingredient.id}`]
-																	}
-																	onChange={handleChangeIngredientState}
-																/>
-															))}
-														</WrapperIngredients>
-													</View>
-												)}
-												{product?.extras.map((extra: any) =>
-													extra.options.map((option: any) => {
-														const currentState =
-															productCart.options[`id:${option.id}`] || {};
-														return (
-															<React.Fragment key={`popt_${option.id}`}>
-																{showOption(option) && (
-																	<View style={styles.optionContainer}>
-																		<ProductOption
-																			option={option}
-																			currentState={currentState}
-																			error={errors[`id:${option.id}`]}>
-																			<WrapperSubOption
-																				style={{
-																					backgroundColor: isError(option.id),
-																				}}>
-																				{option.suboptions.map(
-																					(suboption: any) => {
-																						const currentState =
-																							productCart.options[
-																								`id:${option.id}`
-																							]?.suboptions[
-																							`id:${suboption.id}`
-																							] || {};
-																						const balance =
-																							productCart.options[
-																								`id:${option.id}`
-																							]?.balance || 0;
-																						return (
-																							<ProductOptionSubOption
-																								key={suboption.id}
-																								onChange={
-																									handleChangeSuboptionState
-																								}
-																								balance={balance}
-																								option={option}
-																								suboption={suboption}
-																								state={currentState}
-																								disabled={
-																									isSoldOut ||
-																									maxProductQuantity <= 0
-																								}
-																							/>
-																						);
-																					},
-																				)}
-																			</WrapperSubOption>
-																		</ProductOption>
-																	</View>
-																)}
-															</React.Fragment>
-														);
-													}),
-												)}
-											</>
-										) : (
-											<>
-												{selOpt == -1 ? (
-													<View style={styles.optionContainer}>
-														<SectionTitle>
-															<OText size={16}>
-																{t('INGREDIENTS', 'Ingredients')}
-															</OText>
-														</SectionTitle>
-														<WrapperIngredients
-															style={{
-																backgroundColor:
-																	isSoldOut || maxProductQuantity <= 0
-																		? 'hsl(0, 0%, 72%)'
-																		: theme.colors.white,
-															}}>
-															{product?.ingredients.map((ingredient: any) => (
-																<ProductIngredient
-																	key={ingredient.id}
-																	ingredient={ingredient}
-																	state={
-																		productCart.ingredients[`id:${ingredient.id}`]
-																	}
-																	onChange={handleChangeIngredientState}
-																/>
-															))}
-														</WrapperIngredients>
-													</View>
-												) : (
-													<>
-														{product?.extras.map((extra: any) =>
-															extra.options.map((option: any) => {
-																if (
-																	option.id == selOpt ||
-																	(hasRespected(
-																		extra.options,
-																		option.respect_to,
-																	) &&
-																		showOption(option))
-																) {
-																	const currentState =
-																		productCart.options[`id:${option.id}`] || {};
-																	return (
-																		<React.Fragment key={option.id}>
-																			{showOption(option) && (
-																				<View style={styles.optionContainer}>
-																					<ProductOption
-																						option={option}
-																						currentState={currentState}
-																						error={errors[`id:${option.id}`]}>
-																						<WrapperSubOption
-																							style={{
-																								backgroundColor: isError(
-																									option.id,
-																								),
-																							}}>
-																							{option.suboptions.map(
-																								(suboption: any) => {
-																									const currentState =
-																										productCart.options[
-																											`id:${option.id}`
-																										]?.suboptions[
-																										`id:${suboption.id}`
-																										] || {};
-																									const balance =
-																										productCart.options[
-																											`id:${option.id}`
-																										]?.balance || 0;
-																									return (
-																										<ProductOptionSubOption
-																											key={suboption.id}
-																											onChange={
-																												handleChangeSuboptionState
-																											}
-																											balance={balance}
-																											option={option}
-																											suboption={suboption}
-																											state={currentState}
-																											disabled={
-																												isSoldOut ||
-																												maxProductQuantity <= 0
-																											}
-																										/>
-																									);
-																								},
-																							)}
-																						</WrapperSubOption>
-																					</ProductOption>
-																				</View>
-																			)}
-																		</React.Fragment>
-																	);
-																}
-															}),
-														)}
-													</>
-												)}
-											</>
-										)}
-										<ProductComment>
-											<SectionTitle>
-												<OText size={16} weight={'600'} lineHeight={24}>
-													{t('SPECIAL_COMMENT', 'Special comment')}
-												</OText>
-											</SectionTitle>
-											<OInput
-												multiline
-												placeholder={t('SPECIAL_COMMENT', 'Special comment')}
-												value={productCart.comment}
-												onChange={(val: string) =>
-													handleChangeCommentState({ target: { value: val } })
-												}
-												isDisabled={
-													!(productCart && !isSoldOut && maxProductQuantity)
-												}
-												style={styles.comment}
+											Animation={Fade}>
+											<PlaceholderLine
+												height={40}
+												style={{ flex: 1, marginTop: 10 }}
 											/>
-										</ProductComment>
-									</ProductEditions>
-								)}
-							</WrapContent>
-						</>
-					)}
-					{error && error.length > 0 && (
-						<NotFoundSource content={error[0]?.message || error[0]} />
-					)}
-				</ScrollView>
-			</View>
+											{[...Array(3)].map((item, i) => (
+												<View
+													key={'place_key_' + i}
+													style={{
+														flexDirection: 'row',
+														justifyContent: 'space-between',
+													}}>
+													<PlaceholderLine
+														height={30}
+														width={10}
+														style={{ marginBottom: 20 }}
+													/>
+													<PlaceholderLine
+														height={30}
+														width={50}
+														style={{ marginBottom: 20 }}
+													/>
+													<PlaceholderLine
+														height={30}
+														width={30}
+														style={{ marginBottom: 20 }}
+													/>
+												</View>
+											))}
+										</Placeholder>
+									))}
+								</>
+							) : (
+								<ProductEditions>
+									<ExtraOptionWrap
+										horizontal
+										showsHorizontalScrollIndicator={false}
+										style={{ marginBottom: 20 }}
+										contentContainerStyle={{ paddingHorizontal: 33 }}
+									>
+									<TouchableOpacity
+										key={`eopt_all_0`}
+										onPress={() => setSelectedOpt(0)}
+										style={[
+											styles.extraItem,
+											{
+												borderBottomColor: selOpt == 0 ? theme.colors.textNormal : theme.colors.border,
+											},
+										]}>
+										<OText
+											color={selOpt == 0 ? theme.colors.textNormal : theme.colors.textSecondary}
+											size={selOpt == 0 ? 14 : 12}
+											weight={selOpt == 0 ? '600' : 'normal'}>
+											{t('ALL', 'All')}
+										</OText>
+									</TouchableOpacity>
+									{product?.extras.map((extra: any) => 					
+										<ExtraOptions key={extra.id} options={extra.options} />
+									)}
+									</ExtraOptionWrap>
+
+									{selOpt == 0 ? (
+										<>
+											{product?.ingredients.length > 0 && (
+												<View style={styles.optionContainer}>
+													<SectionTitle>
+														<OText size={16}>
+															{t('INGREDIENTS', 'Ingredients')}
+														</OText>
+													</SectionTitle>
+													<WrapperIngredients
+														style={{
+															backgroundColor:
+																isSoldOut || maxProductQuantity <= 0
+																	? 'hsl(0, 0%, 72%)'
+																	: theme.colors.white,
+														}}>
+														{product?.ingredients.map((ingredient: any) => (
+															<ProductIngredient
+																key={ingredient.id}
+																ingredient={ingredient}
+																state={
+																	productCart.ingredients[`id:${ingredient.id}`]
+																}
+																onChange={handleChangeIngredientState}
+															/>
+														))}
+													</WrapperIngredients>
+												</View>
+											)}
+											{product?.extras.map((extra: any) =>
+												extra.options.map((option: any) => {
+													const currentState =
+														productCart.options[`id:${option.id}`] || {};
+													return (
+														<React.Fragment key={`popt_${option.id}`}>
+															{showOption(option) && (
+																<View style={styles.optionContainer}>
+																	<ProductOption
+																		option={option}
+																		currentState={currentState}
+																		error={errors[`id:${option.id}`]}>
+																		<WrapperSubOption
+																			style={{
+																				backgroundColor: isError(option.id),
+																			}}>
+																			{option.suboptions.map(
+																				(suboption: any) => {
+																					const currentState =
+																						productCart.options[
+																							`id:${option.id}`
+																						]?.suboptions[
+																						`id:${suboption.id}`
+																						] || {};
+																					const balance =
+																						productCart.options[
+																							`id:${option.id}`
+																						]?.balance || 0;
+																					return (
+																						<ProductOptionSubOption
+																							key={suboption.id}
+																							onChange={
+																								handleChangeSuboptionState
+																							}
+																							balance={balance}
+																							option={option}
+																							suboption={suboption}
+																							state={currentState}
+																							disabled={
+																								isSoldOut ||
+																								maxProductQuantity <= 0
+																							}
+																						/>
+																					);
+																				},
+																			)}
+																		</WrapperSubOption>
+																	</ProductOption>
+																</View>
+															)}
+														</React.Fragment>
+													);
+												}),
+											)}
+										</>
+									) : (
+										<>
+											{selOpt == -1 ? (
+												<View style={styles.optionContainer}>
+													<SectionTitle>
+														<OText size={16}>
+															{t('INGREDIENTS', 'Ingredients')}
+														</OText>
+													</SectionTitle>
+													<WrapperIngredients
+														style={{
+															backgroundColor:
+																isSoldOut || maxProductQuantity <= 0
+																	? 'hsl(0, 0%, 72%)'
+																	: theme.colors.white,
+														}}>
+														{product?.ingredients.map((ingredient: any) => (
+															<ProductIngredient
+																key={ingredient.id}
+																ingredient={ingredient}
+																state={
+																	productCart.ingredients[`id:${ingredient.id}`]
+																}
+																onChange={handleChangeIngredientState}
+															/>
+														))}
+													</WrapperIngredients>
+												</View>
+											) : (
+												<>
+													{product?.extras.map((extra: any) =>
+														extra.options.map((option: any) => {
+															if (
+																option.id == selOpt ||
+																(hasRespected(
+																	extra.options,
+																	option.respect_to,
+																) &&
+																	showOption(option))
+															) {
+																const currentState =
+																	productCart.options[`id:${option.id}`] || {};
+																return (
+																	<React.Fragment key={option.id}>
+																		{showOption(option) && (
+																			<View style={styles.optionContainer}>
+																				<ProductOption
+																					option={option}
+																					currentState={currentState}
+																					error={errors[`id:${option.id}`]}>
+																					<WrapperSubOption
+																						style={{
+																							backgroundColor: isError(
+																								option.id,
+																							),
+																						}}>
+																						{option.suboptions.map(
+																							(suboption: any) => {
+																								const currentState =
+																									productCart.options[
+																										`id:${option.id}`
+																									]?.suboptions[
+																									`id:${suboption.id}`
+																									] || {};
+																								const balance =
+																									productCart.options[
+																										`id:${option.id}`
+																									]?.balance || 0;
+																								return (
+																									<ProductOptionSubOption
+																										key={suboption.id}
+																										onChange={
+																											handleChangeSuboptionState
+																										}
+																										balance={balance}
+																										option={option}
+																										suboption={suboption}
+																										state={currentState}
+																										disabled={
+																											isSoldOut ||
+																											maxProductQuantity <= 0
+																										}
+																									/>
+																								);
+																							},
+																						)}
+																					</WrapperSubOption>
+																				</ProductOption>
+																			</View>
+																		)}
+																	</React.Fragment>
+																);
+															}
+														}),
+													)}
+												</>
+											)}
+										</>
+									)}
+									<ProductComment>
+										<SectionTitle>
+											<OText size={16} weight={'600'} lineHeight={24}>
+												{t('SPECIAL_COMMENT', 'Special comment')}
+											</OText>
+										</SectionTitle>
+										<OInput
+											multiline
+											placeholder={t('SPECIAL_COMMENT', 'Special comment')}
+											value={productCart.comment}
+											onChange={(val: string) =>
+												handleChangeCommentState({ target: { value: val } })
+											}
+											isDisabled={
+												!(productCart && !isSoldOut && maxProductQuantity)
+											}
+											style={styles.comment}
+										/>
+									</ProductComment>
+								</ProductEditions>
+							)}
+						</WrapContent>
+					</View>
+				)}
+				{error && error.length > 0 && (
+					<NotFoundSource content={error[0]?.message || error[0]} />
+				)}
+			</ScrollView>
 			{!loading && !error && product && (
 				<ProductActions style={{ paddingBottom: bottom + 12 }}>
 					<OText size={16} lineHeight={24} weight={'600'}>
@@ -682,7 +680,7 @@ export const ProductOptionsUI = (props: any) => {
 					</View>
 				</ProductActions>
 			)}
-		</View>
+		</>
 	);
 };
 
