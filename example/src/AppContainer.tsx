@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import RootNavigator from './navigators/RootNavigator';
 import { navigationRef } from './navigators/NavigationRef';
 import {useSession, useOrder} from 'ordering-components/native'
+import analytics from '@react-native-firebase/analytics';
 
 const AppContainer = () => {
   const [{auth}] = useSession()
@@ -66,8 +67,27 @@ const AppContainer = () => {
     }
   }
 
+  const routeNameRef = React.useRef();
+
   return (
-    <NavigationContainer linking={linking} ref={navigationRef}>
+    <NavigationContainer
+      linking={linking}
+      ref={navigationRef}
+      onReady={() => {
+        routeNameRef.current = navigationRef.current.getCurrentRoute().name;
+      }}
+      onStateChange={async () => {
+        const previousRouteName = routeNameRef.current;
+        const currentRouteName = navigationRef.current.getCurrentRoute().name;
+        if (previousRouteName !== currentRouteName) {
+          await analytics().logScreenView({
+            screen_name: currentRouteName,
+            screen_class: currentRouteName,
+          });
+        }
+        routeNameRef.current = currentRouteName;
+      }}
+    >
       <RootNavigator />
     </NavigationContainer>
   )
