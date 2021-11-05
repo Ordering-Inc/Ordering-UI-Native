@@ -16,7 +16,7 @@ import {
   useToast
 } from 'ordering-components/native';
 
-import { OText, OButton, OIcon, OModal } from '../shared';
+import { OText, OButton, OIcon } from '../shared';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
@@ -50,6 +50,7 @@ import { useTheme } from 'styled-components/native';
 import { ActivityIndicator } from 'react-native-paper';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/Feather';
+import { OrderCreating } from '../OrderCreating';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -124,6 +125,8 @@ const CheckoutUI = (props: any) => {
   const [paypalMethod, setPaypalMethod] = useState<any>(null)
   const [progClr, setProgClr] = useState('#424242');
   const [prog, setProg] = useState(true);
+  const [openOrderCreating, setOpenOrderCreating] = useState(false)
+  const [cardData, setCardData] = useState(null)
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -135,6 +138,7 @@ const CheckoutUI = (props: any) => {
 
   const handlePlaceOrder = () => {
     if (!userErrors.length) {
+      setOpenOrderCreating(true)
       handlerClickPlaceOrder && handlerClickPlaceOrder()
       return
     }
@@ -190,6 +194,7 @@ const CheckoutUI = (props: any) => {
       if (payment) {
         if (payment.error) {
           showToast(ToastType.Error, payment.result)
+          setOpenOrderCreating(false)
         } else if (payment?.result?.order?.uuid) {
           showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfully'))
           onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment?.result?.order?.uuid, goToBusinessList: true })
@@ -226,6 +231,7 @@ const CheckoutUI = (props: any) => {
     if (errors) {
       const errorText = manageErrorsToShow(errors)
       showToast(ToastType.Error, errorText)
+      setOpenOrderCreating(false)
     }
   }, [errors])
 
@@ -476,6 +482,7 @@ const CheckoutUI = (props: any) => {
                   onNavigationRedirect={onNavigationRedirect}
                   paySelected={paymethodSelected}
                   handlePaymentMethodClickCustom={handlePaymentMethodClick}
+                  setCardData={setCardData}
                 />
               </ChPaymethods>
             </ChSection>
@@ -626,6 +633,17 @@ const CheckoutUI = (props: any) => {
               setProg(false);
               webviewRef.current.postMessage(JSON.stringify(message))
             }}
+          />
+        </View>
+      )}
+      {openOrderCreating && (
+        <View style={{ zIndex: 9999, height: '100%', width: '100%', position: 'absolute', backgroundColor: 'white' }}>
+          <OrderCreating
+            business={businessDetails?.business}
+            businessLogo={businessLogo}
+            cart={cartState.cart}
+            cardData={cardData}
+            isCheckOut
           />
         </View>
       )}

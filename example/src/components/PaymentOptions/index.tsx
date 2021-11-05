@@ -58,7 +58,8 @@ const PaymentOptionsUI = (props: any) => {
     handlePaymethodClick,
     handlePaymethodDataChange,
     handlePaymentMethodClickCustom,
-    isOpenMethod
+    isOpenMethod,
+    setCardData
   } = props
 
   const theme = useTheme();
@@ -91,9 +92,10 @@ const PaymentOptionsUI = (props: any) => {
   const handlePaymentMethodClick = (paymethod: any) => {
     const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
     handlePaymethodClick(paymethod, isPopupMethod)
-    if(paymethod?.gateway === 'paypal'){
+    if(paymethod?.gateway === 'paypal') {
       handlePaymentMethodClickCustom(paymethod)
     }
+    setCardData(paymethodData)
   }
 
   useEffect(() => {
@@ -113,6 +115,10 @@ const PaymentOptionsUI = (props: any) => {
       setPaymethodData && setPaymethodData(props.paySelected?.data)
     }
   }, [props.paySelected])
+
+  useEffect(() => {
+    setCardData(paymethodData)
+  }, [paymethodData])
 
   const renderPaymethods = ({ item }: any) => {
     return (
