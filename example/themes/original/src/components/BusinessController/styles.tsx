@@ -7,13 +7,12 @@ export const Card = styled.TouchableOpacity`
   width: 100%;
 `;
 
-export const BusinessHero = styled.ImageBackground`
-  height: 122px;
-  resize-mode: cover;
-  border-radius: 7.6px;
-  flex-direction: row;
+export const BusinessHero = styled.View`
   position: relative;
-`;
+  border-top-right-radius: 7.6px;
+  border-top-left-radius: 7.6px;
+  overflow: hidden;
+`
 
 export const BusinessContent = styled.View`
     padding-horizontal: 18px;
