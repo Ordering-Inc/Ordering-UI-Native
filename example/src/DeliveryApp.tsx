@@ -99,6 +99,8 @@ theme.images = {
     creditCard: require('./assets/icons/credit-card.png'),
     help: require('./assets/images/help.png'),
     close: require('./assets/icons/close.png'),
+    orderCreating: require('./assets/images/order-creating.png'),
+    orderSuccess: require('./assets/images/order-success.png'),
     newOrder: require('./assets/images/new-order.png')
   },
   order: {

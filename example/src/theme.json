@@ -89,6 +89,8 @@
       "creditCard": "",
       "help": "",
       "close": "",
+      "orderCreating": "",
+      "orderSuccess": "",
       "newOrder": ""
     },
     "order": {
