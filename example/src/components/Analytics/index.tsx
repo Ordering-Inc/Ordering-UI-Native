@@ -38,7 +38,11 @@ export const Analytics = (props: any) => {
   const handleLogin = async (data: any) => {
     try {
       await analytics().setUserId(`${data.id}`)
-      await analytics().setUserProperty(data?.name, `${data?.level}`)
+      await analytics().setUserProperties({
+        'name': data?.name,
+        'email': data?.email,
+        'level': `${data?.level}`
+      });
     } catch (err) {
       console.log(err)
     }
