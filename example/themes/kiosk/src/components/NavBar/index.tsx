@@ -30,7 +30,8 @@ const btnBackArrow = {
   borderWidth: 0,
   backgroundColor: '#FFF',
   borderColor: '#FFF',
-  shadowColor: '#FFF'
+  shadowColor: '#FFF',
+  paddingTop: '5%'
 }
 
 interface Props {
