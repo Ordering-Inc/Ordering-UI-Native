@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback, Platform } from 'react-native'
-import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder, ToastType, useToast } from 'ordering-components/native'
+import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder, useValidationFields, ToastType, useToast } from 'ordering-components/native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -105,6 +105,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   const [configState] = useConfig()
   const [orderState] = useOrder()
   const { handleSubmit, errors, control, setValue } = useForm()
+  const [validationFields] = useValidationFields()
   const [toggleMap, setToggleMap] = useState(false)
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<string>, key?: string | null }>({ open: false, content: [], key: null })
   const [addressTag, setAddressTag] = useState(addressState?.address?.tag)
@@ -552,6 +553,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                   </OText>
                 </TouchableOpacity>
               )}
+              {validationFields?.fields?.address['internal_number'].enabled && (
               <Controller
                 control={control}
                 name='internal_number'
@@ -573,8 +575,8 @@ const AddressFormUI = (props: AddressFormParams) => {
                     blurOnSubmit={false}
                   />
                 )}
-              />
-
+              />)}
+            {validationFields.fields?.address['zipcode'].enabled && (
               <Controller
                 control={control}
                 name='zipcode'
@@ -596,7 +598,8 @@ const AddressFormUI = (props: AddressFormParams) => {
                     blurOnSubmit={false}
                   />
                 )}
-              />
+              />)}
+              {validationFields.fields?.address['address_notes'].enabled && (
               <Controller
                 control={control}
                 name='address_notes'
@@ -618,7 +621,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                     blurOnSubmit
                   />
                 )}
-              />
+              />)}
             </FormInput>
             {!isKeyboardShow && (
               <IconsContainer>
