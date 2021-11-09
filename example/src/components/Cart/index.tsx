@@ -214,15 +214,15 @@ const CartUI = (props: any) => {
         {cart?.valid_products && (
           <CheckoutAction>
             <OButton
-              text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
+              text={(cart?.subtotal_to_calculate >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
                 !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
               ) : !cart?.valid_address ? (
                 `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
               ) : (
                 `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
               )}
-              bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
-              isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
+              bgColor={(cart?.subtotal_to_calculate < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
+              isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal_to_calculate < cart?.minimum || !cart?.valid_address}
               borderColor={theme.colors.primary}
               imgRightSrc={null}
               textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}

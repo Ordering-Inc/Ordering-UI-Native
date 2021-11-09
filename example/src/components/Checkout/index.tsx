@@ -554,9 +554,9 @@ const CheckoutUI = (props: any) => {
           <>
             <FloatingButton
               handleClick={() => handlePlaceOrder()}
-              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
-              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
-              btnText={cart?.subtotal >= cart?.minimum
+              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal_to_calculate < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
+              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal_to_calculate < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
+              btnText={cart?.subtotal_to_calculate >= cart?.minimum
                 ? (
                   placing
                     ? t('PLACING', 'Placing')
