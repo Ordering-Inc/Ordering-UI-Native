@@ -3,6 +3,7 @@ import { ActiveOrders } from './components/ActiveOrders';
 import { AddressDetails } from './components/AddressDetails';
 import { AddressForm } from './components/AddressForm';
 import { AddressList } from './components/AddressList';
+import { Analytics } from './components/Analytics'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation';
 import { BusinessController } from './components/BusinessController';
 import { BusinessInformation } from './components/BusinessInformation';
@@ -100,6 +101,7 @@ export {
   AddressDetails,
   AddressForm,
   AddressList,
+  Analytics,
   BusinessBasicInformation,
   BusinessController,
   BusinessInformation,

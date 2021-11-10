@@ -13,6 +13,7 @@ import { OrderingProvider } from 'ordering-components/native';
 import RNBootSplash from "react-native-bootsplash";
 
 import { Toast } from './components/shared/OToast';
+import { Analytics } from './components/Analytics'
 import Alert from './providers/AlertProvider';
 import { ThemeProvider } from './context/Theme';
 
@@ -153,6 +154,7 @@ const DeliveryApp = () => {
       <OrderingProvider settings={settings} Alert={Alert}>
         <AppContainer />
         <Toast />
+        <Analytics />
       </OrderingProvider>
     </ThemeProvider>
   );

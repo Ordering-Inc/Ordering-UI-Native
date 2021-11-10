@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>804067233067-98vbbb5m743sdmu5s241puioc109tav7.apps.googleusercontent.com</string>
+	<string>804067233067-ff63uuo1h1d1di3imsp4v44q6o1go69s.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.804067233067-98vbbb5m743sdmu5s241puioc109tav7</string>
+	<string>com.googleusercontent.apps.804067233067-ff63uuo1h1d1di3imsp4v44q6o1go69s</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>804067233067-832qdh8ilgq26tuhv4n2ji6ej09rjqge.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDgfgMEJVOELMkvRYv6jhbkAY0YxAFabjU</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,22 +15,22 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.delivery</string>
+	<string>com.ordering.app1</string>
 	<key>PROJECT_ID</key>
 	<string>login-51112</string>
 	<key>STORAGE_BUCKET</key>
 	<string>login-51112.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<true/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:804067233067:ios:74bef399fe32ce9842896e</string>
+	<string>1:804067233067:ios:1ada0539e2c5e88b42896e</string>
 </dict>
 </plist>
