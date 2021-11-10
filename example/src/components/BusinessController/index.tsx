@@ -91,7 +91,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       borderTopLeftRadius: 25,
     },
     textClosed: {
-      bottom: 20
+      bottom: 10
     },
     bullet: {
       flexDirection: 'row',
@@ -128,7 +128,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
             <FontAwesomeIcon name='crown' size={26} color='gold' />
           </View>
         )}
-        {!isBusinessOpen || isBusinessClose && (
+        {(!isBusinessOpen || isBusinessClose) && (
           <View style={styles.closed}>
             <OText size={32} color={theme.colors.white} style={styles.textClosed}>{t('CLOSED', 'CLOSED')}</OText>
           </View>
