@@ -2,7 +2,6 @@ import styled, { css } from 'styled-components/native'
 
 export const WrapHeader = styled.View`
   position: relative;
-  padding-bottom: 35px;
 `
 export const TopHeader = styled.View`
   width: 100%;

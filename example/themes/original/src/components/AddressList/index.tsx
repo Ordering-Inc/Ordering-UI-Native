@@ -148,6 +148,7 @@ const AddressListUI = (props: AddressListParams) => {
 							paddingTop={0}
 							isVertical
 							titleWrapStyle={{ paddingHorizontal: 0 }}
+							titleStyle={{ marginLeft: 0, marginRight: 0 }}
 						/>
 					)}
 					{
@@ -168,6 +169,7 @@ const AddressListUI = (props: AddressListParams) => {
 								paddingTop={0}
 								style={{ flexDirection: 'column', alignItems: 'flex-start' }}
 								titleWrapStyle={{ paddingHorizontal: 0 }}
+								titleStyle={{ marginLeft: 0, marginRight: 0 }}
 							/>
 						)}
 					{addressList.loading && (
@@ -190,12 +192,15 @@ const AddressListUI = (props: AddressListParams) => {
 						!addressList.error &&
 						addressList?.addresses?.length > 0 && (
 							<>
-								{uniqueAddressesList.map((address: any) => (
+								{uniqueAddressesList.map((address: any, index: any) => (
 									<AddressItem
 										key={address.id}
 										isSelected={checkAddress(address)}
 										onPress={() => handleSetAddress(address)}
-										style={{ borderColor: checkAddress(address) ? theme.colors.primary : theme.colors.border }}
+										style={{
+											borderColor: checkAddress(address) ? theme.colors.primary : theme.colors.border,
+											borderBottomWidth: index === uniqueAddressesList.length - 1 ? 0 : 1
+										}}
 									>
 										<OIcon src={addressIcon(address?.tag)} width={24} color={checkAddress(address) ? theme.colors.primary : theme.colors.disabled} style={{ marginEnd: 16 }} />
 										<OText style={styles.address} size={12}>{address.address}</OText>
@@ -225,18 +230,20 @@ const AddressListUI = (props: AddressListParams) => {
 										>
 											<OIcon src={theme.images.general.pencil} width={16} style={{ marginHorizontal: 4 }} />
 										</TouchableRipple>
-										<OAlert
-											title={t('DELETE_ADDRESS', 'Delete Address')}
-											message={t('QUESTION_DELETE_ADDRESS', 'Are you sure to you wants delete the selected address')}
-											onAccept={() => handleDelete(address)}
-											disabled={checkAddress(address)}
-										>
-											<OIcon
-												src={theme.images.general.trash}
-												width={16}
-												color={theme.colors.disabled}
-											/>
-										</OAlert>
+										{!checkAddress(address) && (
+											<OAlert
+												title={t('DELETE_ADDRESS', 'Delete Address')}
+												message={t('QUESTION_DELETE_ADDRESS', 'Are you sure to you wants delete the selected address')}
+												onAccept={() => handleDelete(address)}
+												disabled={checkAddress(address)}
+											>
+												<OIcon
+													src={theme.images.general.trash}
+													width={16}
+													color={theme.colors.disabled}
+												/>
+											</OAlert>
+										)}
 									</AddressItem>
 								))}
 							</>
@@ -254,13 +261,6 @@ const AddressListUI = (props: AddressListParams) => {
 					)}
 					{!addressList.loading && !addressList.error && (
 						<>
-							{!(
-								route && (route?.params?.isFromBusinesses || route?.params?.isFromCheckout)
-							) && !isFromProfile && (
-									<OText size={24}>
-										{t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}
-									</OText>
-								)}
 							<OButton
 								text={t('ADD_NEW_ADDRESS', 'Add new Address')}
 								imgRightSrc=''

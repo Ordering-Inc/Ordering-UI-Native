@@ -62,10 +62,10 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             </OText>
             <>
               {categoryState.products?.map(
-                (product: any) =>
+                (product: any, i: any) =>
                   product.featured && (
                     <SingleProductCard
-                      key={product.id}
+                      key={i}
                       isSoldOut={product.inventoried && !product.quantity}
                       product={product}
                       businessId={businessId}
@@ -107,9 +107,9 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       </OText>
                     </View>
                     <>
-                      {products.map((product: any) => (
+                      {products.map((product: any, i: any) => (
                         <SingleProductCard
-                          key={product.id}
+                          key={i}
                           isSoldOut={product.inventoried && !product.quantity}
                           businessId={businessId}
                           product={product}

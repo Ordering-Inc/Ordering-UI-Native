@@ -165,6 +165,7 @@ export interface BusinessProductsListingParams {
 	header?: any;
 	logo?: any;
 	productModal?: any;
+  getNextProducts?: () => {};
 	handleChangeCategory: (value: any) => {};
 	setProductLogin?: () => {};
 	updateProductModal?: (value: any) => {}
@@ -188,6 +189,8 @@ export interface BusinessProductsCategoriesParams {
 	scrollViewRef?: any;
 	productListLayout?: any;
 	categoriesLayout?: any;
+	selectedCategoryId?: any;
+	lazyLoadProductsRecommended?: any;
 }
 export interface BusinessProductsListParams {
 	errors?: any;

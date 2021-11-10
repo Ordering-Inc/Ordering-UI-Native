@@ -221,10 +221,9 @@ const LoginFormUI = (props: LoginParams) => {
 				onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
 				showCall={false}
 				btnStyle={{ paddingLeft: 0 }}
-				paddingTop={0}
 				style={{ flexDirection: 'column', alignItems: 'flex-start' }}
 				titleWrapStyle={{ paddingHorizontal: 0 }}
-				isVertical
+				titleStyle={{ marginRight: 0, marginLeft: 0 }}
 			/>
 			<FormSide>
 				{useLoginByEmail && useLoginByCellphone && (
@@ -454,26 +453,33 @@ const LoginFormUI = (props: LoginParams) => {
 				</View>
 
 				{configs && Object.keys(configs).length > 0 ? (
-					(configs?.facebook_login?.value === 'true' ||
-						configs?.facebook_login?.value === '1') &&
-					configs?.facebook_id?.value && (
+          (((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
+          (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
+          (
 						<ButtonsWrapper>
 							<SocialButtons>
-								<FacebookLogin
-									handleErrors={(err: any) => showToast(ToastType.Error, err)}
-									handleLoading={(val: boolean) => setIsFBLoading(val)}
-									handleSuccessFacebookLogin={handleSuccessFacebook}
-								/>
-								<GoogleLogin
-									handleErrors={(err: any) => showToast(ToastType.Error, err)}
-									handleLoading={(val: boolean) => setIsFBLoading(val)}
-									handleSuccessFacebookLogin={handleSuccessFacebook}
-								/>
-								<AppleLogin
-									handleErrors={(err: any) => showToast(ToastType.Error, err)}
-									handleLoading={(val: boolean) => setIsFBLoading(val)}
-									handleSuccessFacebookLogin={handleSuccessFacebook}
-								/>
+								{(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
+                  configs?.facebook_id?.value && (
+									<FacebookLogin
+										handleErrors={(err: any) => showToast(ToastType.Error, err)}
+										handleLoading={(val: boolean) => setIsFBLoading(val)}
+										handleSuccessFacebookLogin={handleSuccessFacebook}
+									/>
+								)}
+                {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+									<GoogleLogin
+										handleErrors={(err: any) => showToast(ToastType.Error, err)}
+										handleLoading={(val: boolean) => setIsFBLoading(val)}
+										handleSuccessFacebookLogin={handleSuccessFacebook}
+									/>
+								)}
+                {(configs?.apple_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+									<AppleLogin
+										handleErrors={(err: any) => showToast(ToastType.Error, err)}
+										handleLoading={(val: boolean) => setIsFBLoading(val)}
+										handleSuccessFacebookLogin={handleSuccessFacebook}
+									/>
+								)}
 							</SocialButtons>
 						</ButtonsWrapper>
 					)

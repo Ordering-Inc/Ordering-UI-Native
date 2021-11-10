@@ -47,7 +47,6 @@ const Wrapper = styled.View`
 	height: 50px;
 	flex-direction: row;
 	align-items: center;
-	flex: 1;
 	justify-content: center;
 `;
 

@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 
 export const BusinessContainer = styled.View`
   flex-direction: column;
+  padding-bottom: 35px;
 `;
 export const BusinessHeader = styled.ImageBackground`
   width: 100%;

@@ -12,7 +12,6 @@ export const AddressItem = styled.TouchableOpacity`
     flex-direction: row;
     justify-content: center;
     align-items: center;
-	 border-bottom-width: 1px;
 `
 
 export const ContainerButtons = styled.View`

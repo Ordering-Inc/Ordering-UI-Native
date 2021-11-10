@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { BusinessProductsCategories as ProductsCategories } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, Dimensions } from 'react-native';
 import { Tab } from './styles';
 import { OText } from '../shared';
 import { BusinessProductsCategoriesParams } from '../../types';
@@ -15,13 +15,21 @@ const BusinessProductsCategoriesUI = (props: any) => {
 		loading,
 		scrollViewRef,
 		productListLayout,
-		categoriesLayout
+		categoriesLayout,
+		selectedCategoryId,
+		handlerClickCategory,
+		lazyLoadProductsRecommended
 	} = props;
 
 	const theme = useTheme();
+	const windowWidth = Dimensions.get('window').width
+	const [tabLayouts, setTabLayouts] = useState<any>({})
+	const [scrollOffsetX, setScrollOffsetX] = useState<any>(0)
+	const tabsRef = useRef<any>(null)
+
 	const styles = StyleSheet.create({
 		container: {
-			paddingVertical: 14,
+			paddingVertical: 5,
 			borderColor: theme.colors.clear,
 			backgroundColor: '#FFF'
 		},
@@ -30,26 +38,49 @@ const BusinessProductsCategoriesUI = (props: any) => {
 		},
 	});
 
-	const handleCategoryScroll = (categoryId: any) => {
-		if (categoryId) {
-			scrollViewRef.current.scrollTo({
-				y: categoriesLayout[`cat_${categoryId}`]?.y + productListLayout?.y - 70,
-				animated: true
-			})
+	const handleCategoryScroll = (category: any) => {
+		if (!lazyLoadProductsRecommended) {
+			if (category?.id) {
+				scrollViewRef.current.scrollTo({
+					y: categoriesLayout[`cat_${category?.id}`]?.y + productListLayout?.y - 70,
+					animated: true
+				})
+			} else {
+				scrollViewRef.current.scrollTo({
+					y: productListLayout?.y - 70,
+					animated: true
+				})
+			}
 		} else {
-			scrollViewRef.current.scrollTo({
-				y: productListLayout?.y - 70,
-				animated: true
-			})
+			handlerClickCategory(category)
 		}
 	}
 
+	const handleOnLayout = (event: any, categoryId: any) => {
+    const _tabLayouts = { ...tabLayouts }
+    const categoryKey = 'cat_' + categoryId
+    _tabLayouts[categoryKey] = event.nativeEvent.layout
+    setTabLayouts(_tabLayouts)
+  }
+
+	useEffect(() => {
+		if (!selectedCategoryId || Object.keys(tabLayouts).length === 0) return
+		tabsRef.current.scrollTo({
+			x: tabLayouts[selectedCategoryId]?.x - 40,
+			animated: true
+		})
+	}, [selectedCategoryId, tabLayouts])
+
 	return (
 		<ScrollView
+			ref={tabsRef}
 			horizontal
 			style={{ ...styles.container, borderBottomWidth: loading ? 0 : 1 }}
 			contentContainerStyle={{ paddingHorizontal: 40 }}
-			showsHorizontalScrollIndicator={false}>
+			showsHorizontalScrollIndicator={false}
+			onScroll={(e: any) => setScrollOffsetX(e.nativeEvent.contentOffset.x)}
+			scrollEventThrottle={16}
+		>
 			{loading && (
 				<Placeholder Animation={Fade}>
 					<View style={{ flexDirection: 'row' }}>
@@ -65,23 +96,41 @@ const BusinessProductsCategoriesUI = (props: any) => {
 				categories.map((category: any) => (
 					<Tab
 						key={category.name}
-						onPress={() => handleCategoryScroll(category.id)}
+						onPress={() => handleCategoryScroll(category)}
 						style={[
 							category.id === 'featured' && !featured && styles.featuredStyle,
 							{
 								borderColor:
-									categorySelected?.id === category.id
-										? theme.colors.textNormal
-										: theme.colors.border,
+									(!lazyLoadProductsRecommended
+										?	(selectedCategoryId === (category.id ? `cat_${category.id}` : null))
+										:	(categorySelected?.id === category.id))
+											? theme.colors.textNormal
+											: theme.colors.border,
 							},
-						]}>
+						]}
+						onLayout={(event: any) => handleOnLayout(event, category.id)}
+					>
 						<OText
-							size={categorySelected?.id === category.id ? 14 : 12}
-							weight={categorySelected?.id === category.id ? '600' : '400'}
+							size={
+								(!lazyLoadProductsRecommended
+									?	(selectedCategoryId === (category.id ? `cat_${category.id}` : null))
+									:	(categorySelected?.id === category.id))
+										? 14
+										: 12
+							}
+							weight={
+								(!lazyLoadProductsRecommended
+									?	(selectedCategoryId === (category.id ? `cat_${category.id}` : null))
+									:	(categorySelected?.id === category.id))
+										? '600'
+										: '400'
+							}
 							color={
-								categorySelected?.id === category.id
-									? theme.colors.textNormal
-									: theme.colors.textSecondary
+								(!lazyLoadProductsRecommended
+									?	(selectedCategoryId === (category.id ? `cat_${category.id}` : null))
+									:	(categorySelected?.id === category.id))
+										? theme.colors.textNormal
+										: theme.colors.textSecondary
 							}
 							style={{ alignSelf: 'center' }}>
 							{category.name}
