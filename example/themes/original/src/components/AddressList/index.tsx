@@ -237,6 +237,7 @@ const AddressListUI = (props: AddressListParams) => {
 												onAccept={() => handleDelete(address)}
 												disabled={checkAddress(address)}
 											>
+												<OIcon
 													src={theme.images.general.trash}
 													width={16}
 													color={theme.colors.disabled}
