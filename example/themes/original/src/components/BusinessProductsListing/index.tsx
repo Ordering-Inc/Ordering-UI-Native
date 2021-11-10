@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Platform } from 'react-native'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -7,6 +7,8 @@ import {
 	useOrder,
 	useSession,
 	useUtils,
+	ToastType,
+	useToast
 } from 'ordering-components/native'
 import { OButton, OIcon, OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -26,6 +28,8 @@ import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
 
+const PIXELS_TO_SCROLL = 1000
+
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const {
 		navigation,
@@ -40,7 +44,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		featuredProducts,
 		errorQuantityProducts,
 		header,
-		logo
+		logo,
+		getNextProducts
 	} = props
 
 	const theme = useTheme();
@@ -48,6 +53,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [{ auth }] = useSession()
 	const [orderState] = useOrder()
 	const [{ parsePrice }] = useUtils()
+  const [ ,{showToast}] = useToast()
 
 	const styles = StyleSheet.create({
 		mainContainer: {
@@ -123,6 +129,30 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		setOpenUpselling(false)
 	}
 
+	const [selectedCategoryId, setSelectedCategoryId] = useState<any>(null)
+
+	const handleScroll = ({ nativeEvent }: any) => {
+		const scrollOffset = nativeEvent.contentOffset.y
+		if (businessState?.business?.lazy_load_products_recommended) {
+			const height = nativeEvent.contentSize.height
+			const hasMore = !(categoryState.pagination.totalPages === categoryState.pagination.currentPage)
+			if (scrollOffset + PIXELS_TO_SCROLL > height && !loading && hasMore && getNextProducts) {
+				getNextProducts()
+				showToast(ToastType.Info, t('LOADING_MORE_PRODUCTS', 'Loading more products'))
+			}
+		} else {
+			if (!scrollOffset || !categoriesLayout || !productListLayout) return
+			for (const key in categoriesLayout) {
+				const categoryOffset = categoriesLayout[key].y + productListLayout?.y - 70
+				if (categoryOffset - 50 <= scrollOffset && scrollOffset <= categoryOffset + 50) {
+					if (selectedCategoryId !== key) {
+						setSelectedCategoryId(key)
+					}
+				}
+			}
+		}
+	}
+
 	useEffect(() => {
 		if (!orderState.loading) {
 			handleCloseProductModal()
@@ -130,70 +160,63 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}, [orderState.loading])
 
 	return (
-		<>
+		<SafeAreaView
+			style={{ flex: 1 }}
+		>
+			<WrapHeader>
+				<TopHeader>
+					{!isOpenSearchBar && (
+						<>
+							<View style={{ ...styles.headerItem, flex: 1 }}>
+								<OButton
+									imgLeftSrc={theme.images.general.arrow_left}
+									imgRightSrc={null}
+									style={styles.btnBackArrow}
+									onClick={() => navigation?.canGoBack() && navigation.goBack()}
+									imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
+								/>
+							</View>
+							{!errorQuantityProducts && (
+								<View style={{ ...styles.headerItem }}>
+									<TouchableOpacity
+										onPress={() => setIsOpenSearchBar(true)}
+										style={styles.searchIcon}
+									>
+										<OIcon src={theme.images.general.search} color={theme.colors.textNormal} width={16} />
+									</TouchableOpacity>
+								</View>
+							)}
+						</>
+					)}
+					{isOpenSearchBar && (
+						<WrapSearchBar>
+							<SearchBar
+								onSearch={handleChangeSearch}
+								onCancel={() => handleCancel()}
+								isCancelXButtonShow
+								noBorderShow
+								placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
+								lazyLoad={businessState?.business?.lazy_load_products_recommended}
+							/>
+						</WrapSearchBar>
+					)}
+				</TopHeader>
+			</WrapHeader>
 			<BusinessProductsListingContainer
 				stickyHeaderIndices={[2]}
 				style={styles.mainContainer}
 				ref={scrollViewRef}
 				isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
+				onScroll={(e: any) => handleScroll(e)}
+				scrollEventThrottle={16}
 			>
-				<WrapHeader>
-					{/* {!loading && business?.id && ( */}
-					<TopHeader>
-						{!isOpenSearchBar && (
-							<>
-								<View style={{ ...styles.headerItem, flex: 1 }}>
-									<OButton
-										imgLeftSrc={theme.images.general.arrow_left}
-										imgRightSrc={null}
-										style={styles.btnBackArrow}
-										onClick={() => navigation?.canGoBack() && navigation.goBack()}
-										imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
-									/>
-									{/* <AddressInput
-                      onPress={() => auth
-                        ? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
-                        : onRedirect('AddressForm', { address: orderState.options?.address })}
-                    >
-                      <OText color={theme.colors.white} numberOfLines={1}>
-                        {orderState?.options?.address?.address}
-                      </OText>
-                    </AddressInput> */}
-								</View>
-								{!errorQuantityProducts && (
-									<View style={{ ...styles.headerItem }}>
-										<TouchableOpacity
-											onPress={() => setIsOpenSearchBar(true)}
-											style={styles.searchIcon}
-										>
-											<OIcon src={theme.images.general.search} color={theme.colors.textNormal} width={16} />
-										</TouchableOpacity>
-									</View>
-								)}
-							</>
-						)}
-						{isOpenSearchBar && (
-							<WrapSearchBar>
-								<SearchBar
-									onSearch={handleChangeSearch}
-									onCancel={() => handleCancel()}
-									isCancelXButtonShow
-									noBorderShow
-									placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
-									lazyLoad={businessState?.business?.lazy_load_products_recommended}
-								/>
-							</WrapSearchBar>
-						)}
-					</TopHeader>
-					{/* )} */}
-					<BusinessBasicInformation
-						navigation={navigation}
-						businessState={businessState}
-						openBusinessInformation={openBusinessInformation}
-						header={header}
-						logo={logo}
-					/>
-				</WrapHeader>
+				<BusinessBasicInformation
+					navigation={navigation}
+					businessState={businessState}
+					openBusinessInformation={openBusinessInformation}
+					header={header}
+					logo={logo}
+				/>
 				<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 				{!loading && business?.id && (
 					<>
@@ -207,6 +230,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								scrollViewRef={scrollViewRef}
 								productListLayout={productListLayout}
 								categoriesLayout={categoriesLayout}
+								selectedCategoryId={selectedCategoryId}
+								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
 							/>
 						)}
 					</>
@@ -306,7 +331,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					setCanOpenUpselling={setCanOpenUpselling}
 				/>
 			)}
-		</>
+		</SafeAreaView>
 	)
 }
 

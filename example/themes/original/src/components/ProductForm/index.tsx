@@ -76,7 +76,7 @@ export const ProductOptionsUI = (props: any) => {
 		},
 		comment: {
 			borderWidth: 1,
-			borderRadius: 7.6,
+			borderRadius: 8,
 			borderColor: theme.colors.border,
 			height: 100,
 			alignItems: 'flex-start',
@@ -215,6 +215,13 @@ export const ProductOptionsUI = (props: any) => {
 
 	return (
 		<>
+			<TopHeader>
+				<TouchableOpacity
+					style={styles.headerItem}
+					onPress={onClose}>
+					<OIcon src={theme.images.general.close} width={16} />
+				</TouchableOpacity>
+			</TopHeader>
 			<ScrollView>
 				{!error && (
 					<View style={{ paddingBottom: 80 }}>
@@ -231,13 +238,6 @@ export const ProductOptionsUI = (props: any) => {
 								</View>
 							) : (
 								<>
-									<TopHeader>
-										<TouchableOpacity
-											style={styles.headerItem}
-											onPress={onClose}>
-											<OIcon src={theme.images.general.close} width={16} />
-										</TouchableOpacity>
-									</TopHeader>
 									<ProductHeader
 										source={{ uri: product?.images || productCart?.images }}
 										style={{height: windowWidth}}
@@ -617,7 +617,7 @@ export const ProductOptionsUI = (props: any) => {
 					)}
 					<View
 						style={{
-							width: isSoldOut || maxProductQuantity <= 0 ? '100%' : '40%',
+							width: isSoldOut || maxProductQuantity <= 0 ? '60%' : '40%',
 						}}>
 						{productCart &&
 							!isSoldOut &&
@@ -638,7 +638,7 @@ export const ProductOptionsUI = (props: any) => {
 										fontSize: orderState.loading || editMode ? 10 : 14
 									}}
 									style={{
-										backgroundColor: saveErrors ? theme.colors.white : theme.colors.primary,
+										backgroundColor: saveErrors ? theme.colors.lightGray : theme.colors.primary,
 										borderColor: saveErrors ? theme.colors.white : theme.colors.primary,
 										opacity: saveErrors ? 0.3 : 1,
 										borderRadius: 7.6,
@@ -670,8 +670,9 @@ export const ProductOptionsUI = (props: any) => {
 										: t('LOGIN_SIGNUP', 'Login / Sign Up')
 								}
 								imgRightSrc=""
-								textStyle={{ color: theme.colors.primary, fontSize: 10 }}
+								textStyle={{ color: theme.colors.primary, fontSize: 14 }}
 								style={{
+									height: 44,
 									borderColor: theme.colors.primary,
 									backgroundColor: theme.colors.white,
 								}}

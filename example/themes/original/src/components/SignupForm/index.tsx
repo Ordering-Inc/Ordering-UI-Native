@@ -355,6 +355,7 @@ const SignupFormUI = (props: SignupParams) => {
 				btnStyle={{ paddingLeft: 0 }}
 				style={{ flexDirection: 'column', alignItems: 'flex-start' }}
 				titleWrapStyle={{ paddingHorizontal: 0 }}
+				titleStyle={{ marginLeft: 0, marginRight: 0 }}
 			/>
 			<FormSide>
 				{useSignupByEmail &&
@@ -494,7 +495,7 @@ const SignupFormUI = (props: SignupParams) => {
 										}}
 										defaultValue={false}
 									/>
-									<OText style={{ fontSize: 14, paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
+									<OText style={{ fontSize: 14, paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I agree with')}</OText>
 									<OButton
 										imgRightSrc={null}
 										text={t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
@@ -627,49 +628,39 @@ const SignupFormUI = (props: SignupParams) => {
 					<View style={style.line} />
 				</View>
 
-				<ButtonsWrapper>
-					<SocialButtons>
-						<FacebookLogin
-							handleErrors={(err: any) => showToast(ToastType.Error, err)}
-							handleLoading={(val: boolean) => setIsFBLoading(val)}
-							handleSuccessFacebookLogin={handleSuccessFacebook}
-						/>
-						<GoogleLogin
-							handleErrors={(err: any) => showToast(ToastType.Error, err)}
-							handleLoading={(val: boolean) => setIsFBLoading(val)}
-							handleSuccessFacebookLogin={handleSuccessFacebook}
-						/>
-						<AppleLogin
-							handleErrors={(err: any) => showToast(ToastType.Error, err)}
-							handleLoading={(val: boolean) => setIsFBLoading(val)}
-							handleSuccessFacebookLogin={handleSuccessFacebook}
-						/>
-					</SocialButtons>
-				</ButtonsWrapper>
+				{configs && Object.keys(configs).length > 0 && (
+					(((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
+					(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
+					(
+						<ButtonsWrapper>
+							<SocialButtons>
+								{(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
+								configs?.facebook_id?.value && (
+									<FacebookLogin
+										handleErrors={(err: any) => showToast(ToastType.Error, err)}
+										handleLoading={(val: boolean) => setIsFBLoading(val)}
+										handleSuccessFacebookLogin={handleSuccessFacebook}
+									/>
+								)}
+								{(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+									<GoogleLogin
+										handleErrors={(err: any) => showToast(ToastType.Error, err)}
+										handleLoading={(val: boolean) => setIsFBLoading(val)}
+										handleSuccessFacebookLogin={handleSuccessFacebook}
+									/>
+								)}
+								{(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && (
+									<AppleLogin
+										handleErrors={(err: any) => showToast(ToastType.Error, err)}
+										handleLoading={(val: boolean) => setIsFBLoading(val)}
+										handleSuccessFacebookLogin={handleSuccessFacebook}
+									/>
+								)}
+							</SocialButtons>
+						</ButtonsWrapper>
+					)
+				)}
 
-
-				{/* {
-          configs && Object.keys(configs).length > 0 && (
-            (configs?.facebook_login?.value === 'true' ||
-              configs?.facebook_login?.value === '1') &&
-            configs?.facebook_id?.value &&
-            (
-              <ButtonsSection>
-                <OText size={18} color={theme.colors.disabled}>
-                  {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
-                </OText>
-
-                <SocialButtons>
-                  <FacebookLogin
-                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                    handleLoading={(val: boolean) => setIsFBLoading(val)}
-                    handleSuccessFacebookLogin={handleSuccessFacebook}
-                  />
-                </SocialButtons>
-              </ButtonsSection>
-            )
-          )
-        } */}
 			</FormSide>
 			<OModal open={isModalVisible} onClose={() => setIsModalVisible(false)}>
 				<VerifyPhone

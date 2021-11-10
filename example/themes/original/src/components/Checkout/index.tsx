@@ -189,7 +189,13 @@ const CheckoutUI = (props: any) => {
 	return (
 		<>
 			<Container noPadding>
-				<NavBar isVertical onActionLeft={() => navigation?.canGoBack() && navigation.goBack()} title={t('CHECKOUT', 'Checkout')} style={styles.pagePadding} />
+				<NavBar
+					isVertical
+					onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+					title={t('CHECKOUT', 'Checkout')}
+					style={styles.pagePadding}
+					titleStyle={{ marginLeft: 0, marginRight: 0 }}
+				/>
 				<ChContainer style={styles.pagePadding}>
 					<ChSection style={{ paddingTop: 0 }}>
 						<ChHeader>

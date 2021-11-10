@@ -8,6 +8,7 @@ import { OIcon } from '../shared';
 
 export const GoogleLogin = (props: any) => {
   const {
+    webClientId,
     handleErrors,
     handleLoading,
     handleSuccessGoogleLogin,
@@ -20,7 +21,7 @@ export const GoogleLogin = (props: any) => {
 	const [{ auth }] = useSession();
 
 	const buttonText = auth
-		? t('LOGOUT_WITH_FACEBOOK', 'Logout with Google')
+		? t('LOGOUT_WITH_GOOGLE', 'Logout with Google')
 		: t('CONTINUE_WITH_GOOGLE', 'Continue with Google');
 
   const performGoogleLogin = async (accessToken: string) => {
@@ -32,11 +33,7 @@ export const GoogleLogin = (props: any) => {
         body.notification_token = notificationState.notification_token
         body.notification_app = notificationState.notification_app
       }
-      const response: any = await fetch(`${ordering.root}/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      })
+      const response: any = await ordering.users().authGoogle(body)
       if (!response.content.error) {
         if (handleSuccessGoogleLogin) {
           handleSuccessGoogleLogin(response.content.result)
@@ -56,7 +53,7 @@ export const GoogleLogin = (props: any) => {
     try {
 			
 			await GoogleSignin.configure({
-				iosClientId: '733099999972-s1s5amppj9qlfi5t16oemqbfvetap2t5.apps.googleusercontent.com',
+				webClientId: webClientId,
 				offlineAccess: false
 			})
 
@@ -81,10 +78,10 @@ export const GoogleLogin = (props: any) => {
 
   const onSignoutFromGoogle = async () => {
     try {
+      await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
-      // this.setState({ user: null }); // Remember to remove the user from your app's state as well
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      handleErrors && handleErrors(error.message)
     }
   }
 

@@ -180,11 +180,11 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 					onActionLeft={() => goToBack()}
 					btnStyle={{ paddingLeft: 0 }}
 					paddingTop={0}
-					style={{ paddingBottom: 0 }}
-					title={t('WHEN_DO_WE_DELIVERY', 'When do we delivery?')}
+					style={{ paddingBottom: 0, flexDirection: 'column', alignItems: 'flex-start' }}
+					title={t('QUESTION_WHEN_ORDER', 'When do you want your order?')}
 					titleAlign={'center'}
-					titleStyle={{ fontSize: 14 }}
-					titleWrapStyle={{ flexBasis: '80%' }}
+					titleStyle={{ fontSize: 14, marginRight: 0, marginLeft: 0 }}
+					titleWrapStyle={{ paddingHorizontal: 0 }}
 				/>
 
 				<WrapSelectOption
@@ -260,6 +260,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 									customDayHeaderStyles={customDayHeaderStylesCallback}
 									weekdays={weekDays}
 									selectedStartDate={momento}
+									minDate={moment()}
 								/>
 							</View>
 						)}
