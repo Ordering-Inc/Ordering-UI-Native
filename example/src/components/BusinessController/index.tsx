@@ -115,7 +115,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
     });
     return _types.join(', ');
   };
-  console.log(isBusinessOpen)
+
   return (
     <Card activeOpacity={1} onPress={() => handleClick(business)}>
       <BusinessHero
