@@ -56,7 +56,7 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
     typeSelected !== undefined && (
       <Container>
         <NavBar
-          title={t('DELIVERY_TYPE', 'Delivery type')}
+          title={t('ORDER_TYPE_X_ID', 'Order type')}
           {...(goBack && { onActionLeft: goBack } )}
           btnStyle={{paddingLeft: 0}}
         />
