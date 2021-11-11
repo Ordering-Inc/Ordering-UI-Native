@@ -57,13 +57,15 @@ export const WrapperSubOption = styled.View`
 `
 
 export const ProductComment = styled.View`
+  padding-bottom: 50px;
 `
 
 export const ProductActions = styled.View`
   position: absolute;
   bottom: 0px;
 	min-height: 70px;
-  padding: 12px 40px;
+  padding-top: 12px;
+  padding-horizontal: 40px;
   width: 100%;
   flex-direction: row;
   background-color: #FFF;

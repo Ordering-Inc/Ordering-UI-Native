@@ -48,6 +48,7 @@ const Wrapper = styled.View`
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+	width: 100%;
 `;
 
 const OInput = (props: Props): React.ReactElement => {

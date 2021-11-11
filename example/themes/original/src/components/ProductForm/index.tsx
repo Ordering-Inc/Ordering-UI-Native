@@ -569,7 +569,11 @@ export const ProductOptionsUI = (props: any) => {
 				)}
 			</ScrollView>
 			{!loading && !error && product && (
-				<ProductActions style={{ paddingBottom: bottom + 12 }}>
+				<ProductActions
+					style={{
+						paddingBottom: Platform.OS === 'ios' ? bottom + 30 : bottom + 80
+					}}
+				>
 					<OText size={16} lineHeight={24} weight={'600'}>
 						{productCart.total ? parsePrice(productCart?.total) : ''}
 					</OText>

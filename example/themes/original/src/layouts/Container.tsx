@@ -1,9 +1,12 @@
 import React from 'react';
 import styled, { css } from 'styled-components/native';
+import { Platform } from 'react-native';
 
 const ContainerStyled = styled.ScrollView`
   flex: 1;
-  padding: ${(props: any) => props.noPadding ? '0' : '0 40px'};
+  ${(props: any) => !props.nopadding && css`
+    padding: ${Platform.OS === 'ios' ? '0px 40px' : '20px 40px'};
+  `}
   background-color: ${(props: any) => props.theme.colors.backgroundPage};
 `;
 
