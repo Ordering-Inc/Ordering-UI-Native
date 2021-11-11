@@ -62,6 +62,7 @@ const SignupFormUI = (props: SignupParams) => {
 		setCheckPhoneCodeState,
 		handleSendVerifyCode,
 		handleCheckPhoneCode,
+		notificationState
 	} = props;
 
 	const theme = useTheme();
@@ -637,6 +638,7 @@ const SignupFormUI = (props: SignupParams) => {
 								{(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
 								configs?.facebook_id?.value && (
 									<FacebookLogin
+										notificationState={notificationState}
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
 										handleSuccessFacebookLogin={handleSuccessFacebook}
@@ -644,16 +646,19 @@ const SignupFormUI = (props: SignupParams) => {
 								)}
 								{(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
 									<GoogleLogin
+										notificationState={notificationState}
+                    					webClientId={configs?.google_login_client_id?.value}
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
-										handleSuccessFacebookLogin={handleSuccessFacebook}
+										handleSuccessGoogleLogin={handleSuccessFacebook}
 									/>
 								)}
 								{(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && (
 									<AppleLogin
+										notificationState={notificationState}
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
-										handleSuccessFacebookLogin={handleSuccessFacebook}
+										handleSuccessAppleLogin={handleSuccessFacebook}
 									/>
 								)}
 							</SocialButtons>
