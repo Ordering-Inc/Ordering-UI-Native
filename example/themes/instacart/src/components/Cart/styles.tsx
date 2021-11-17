@@ -26,3 +26,14 @@ export const CheckoutAction = styled.View`
   margin-top: 10px;
   margin-bottom: 10px;
 `
+
+export const TotalCont = styled.View`
+  position: absolute;
+  end: 10px;
+  top: 10px;
+  background-color: rgba(0,0,0, 0.16);
+  align-items: center;
+  justify-content: center;
+  padding: 6px 7px;
+  border-radius: 4px;
+`

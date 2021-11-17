@@ -35,6 +35,8 @@ import {
 	OText,
 	OToast
 } from './src/components/shared';
+import { ReviewProduct } from './src/components/ReviewProduct';
+import { ReviewDriver } from './src/components/ReviewDriver';
 
 export {
 	Home as HomePage,
@@ -59,6 +61,8 @@ export {
 	OrdersOption,
 	UserProfileForm,
 	ReviewOrder,
+	ReviewProduct,
+	ReviewDriver,
 
 	// OComponents
 	OAlert,

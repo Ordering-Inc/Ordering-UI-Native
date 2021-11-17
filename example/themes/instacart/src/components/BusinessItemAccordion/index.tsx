@@ -46,6 +46,7 @@ export const BusinessItemAccordion = (props: any) => {
     <BIContainer isClosed={isClosed}>
       <BIHeader
         isClosed={isClosed}
+        isExpanded={isActive}
         onPress={() => isExpanded ? {} : !isClosed ? setActiveState(!isActive) : isClosed}
         activeOpacity={1}
       >
@@ -53,80 +54,54 @@ export const BusinessItemAccordion = (props: any) => {
           {cart?.business?.logo && (
             <OIcon
               url={cart?.business?.logo}
-              width={70}
-              height={70}
-              style={{ borderRadius: 16 }}
+              width={42}
+              height={42}
+              style={{ borderRadius: 22, borderColor: '#E9ECEF', borderWidth: 1 }}
             />
           )}
           <BIContentInfo>
-            <OText>{cart?.business?.name}</OText>
-            {orderState?.options?.type === 1 ? (
+            <OText style={{marginBottom: 2}}>{cart?.business?.name}</OText>
+            {/* {orderState?.options?.type === 1 ? (
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <MaterialCommunityIcon
                   name='clock-outline'
-                  size={24}
+                  size={14}
+                  color={'gray'}
+                  style={{marginEnd: 4}}
                 />
-                <OText>{convertHoursToMinutes(cart?.business?.delivery_time)}</OText>
+                <OText size={12}>{convertHoursToMinutes(cart?.business?.delivery_time)}</OText>
               </View>
             ) : (
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <MaterialCommunityIcon
                   name='clock-outline'
-                  size={24}
+                  size={14}
                 />
                 <OText>{convertHoursToMinutes(cart?.business?.pickup_time)}</OText>
               </View>
-            )}
+            )} */}
           </BIContentInfo>
         </BIInfo>
 
         {!isClosed && !!isProducts && cart?.valid_products && cart?.total > 0 && (
           <BITotal>
-            <OText color='#000'>{parsePrice(cart?.total)}</OText>
-            <OText>{t('CART_TOTAL', 'Total')}</OText>
+            <OText weight={'bold'} color='#000'>{parsePrice(cart?.total)}</OText>
+            {/* {!isActive && <MaterialCommunityIcon name='chevron-down' size={20} />} */}
           </BITotal>
         )}
 
         {isClosed && (
           <BITotal>
-            <OText>{t('CLOSED', 'Closed')} {moment}</OText>
+            <OText size={12}>{t('CLOSED', 'Closed')} {moment}</OText>
           </BITotal>
         )}
 
         {!isClosed && !isProducts && (
           <BITotal>
-            <OText>{t('NO_PRODUCTS', 'No products')}</OText>
+            <OText size={12}>{t('NO_PRODUCTS', 'No products')}</OText>
           </BITotal>
         )}
 
-        <BIActions>
-          {props.onNavigationRedirect && !isClosed && (
-            <MaterialCommunityIcon
-              name='store'
-              size={26}
-              color='#CCC'
-              onPress={() => props.onNavigationRedirect('Business', { store: cart?.business?.slug })}
-            />
-          )}
-          {!isClosed && !!isProducts && (
-            <>
-              {!isCartPending && (
-                <OAlert
-                  title={t('DELETE_CART', 'Delete Cart')}
-                  message={t('QUESTION_DELETE_CART', 'Are you sure to you wants delete the selected cart')}
-                  onAccept={() => handleClearProducts()}
-                >
-                  <MaterialCommunityIcon
-                    name='trash-can-outline'
-                    size={26}
-                    color='#D81212'
-                  />
-                </OAlert>
-              )}
-				  {!isExpanded && <MaterialCommunityIcon name='chevron-down' size={20} />}
-            </>
-          )}
-        </BIActions>
       </BIHeader>
 
       <BIContent style={{ display: isActive ? 'flex' : 'none' }}>

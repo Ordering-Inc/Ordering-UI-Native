@@ -296,13 +296,36 @@ export interface ProductItemAccordionParams {
 	isExpanded?: boolean,
 }
 export interface ReviewOrderParams {
-	order?: { orderId: number, businessId: number, logo: string },
+	order?: { orderId: number, businessId: number, logo: string, products: Array<{id: number, name: string}> },
 	stars?: any,
 	handleChangeInput?: any,
 	handleChangeRating?: any,
 	handleSendReview?: any,
 	formState?: any,
-	navigation?: any
+	navigation?: any,
+	route?: any,
+	orderComments?: any,
+	setStars?: any
+}
+export interface ReviewProductParams {
+	order?: any,
+	products?: Array<{id: number, name: string}>,
+	formState?: any,
+	navigation?: any,
+	handleChangeFormState?: any,
+	closeReviewProduct?: any,
+	handleSendProductReview?: any,
+	setIsProductReviewed?: any
+}
+export interface ReviewDriverParams {
+	dirverReviews?: any,
+	order?: any,
+	formState?: any,
+	setDriverReviews?: any,
+	closeReviewDriver?: any,
+	setIsDriverReviewed?: any,
+	handleSendDriverReview?: any,
+	navigation?: any,
 }
 export interface MessagesParams {
 	type?: string,

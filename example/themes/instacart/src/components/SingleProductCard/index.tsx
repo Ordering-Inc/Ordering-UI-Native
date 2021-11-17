@@ -27,17 +27,17 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
     textStyle: {
       flex: 1,
     },
-    soldOutBackgroundStyle: {
-      backgroundColor: '#B8B8B8',
-    },
     soldOutTextStyle : {
-      textTransform: 'uppercase'
+      textTransform: 'capitalize',
+      color: 'white',
+      fontSize: 12,
+      lineHeight: 18
     },
     productStyle: {
       width: 100,
       height: 100,
       borderRadius: 3,
-		marginTop: 5
+		  marginTop: 5
     },
 	 addBtn: {
 		 position: 'absolute',
@@ -72,13 +72,13 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
   }, [product]);
 
   return (
-    <CardContainer style={[styles.container, (isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle]}
+    <CardContainer style={styles.container}
       onPress={() => onProductClick(product)}
 		activeOpacity={0.8}
     >
       <OIcon
         url={optimizeImage(product?.images, 'h_200,c_limit')}
-        style={styles.productStyle}
+        style={{...styles.productStyle, opacity: (isSoldOut || maxProductQuantity <= 0) ? 0.4 : 1}}
       />
       <CardInfo>
         <OText color={theme.colors.textPrimary} style={{...theme.labels.normal, marginTop: 9}}>{parsePrice(product?.price)}</OText>
@@ -92,7 +92,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 
       {(isSoldOut || maxProductQuantity <= 0) && (
         <SoldOut>
-          <OText size={10} weight='bold' style={styles.soldOutTextStyle}>{t('SOLD_OUT', 'SOLD OUT')}</OText>
+          <OText size={10} style={styles.soldOutTextStyle}>{t('SOLD_OUT', 'SOLD OUT')}</OText>
         </SoldOut>
       )}
     </CardContainer>

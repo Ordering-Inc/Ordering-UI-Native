@@ -18,11 +18,10 @@ export const BIHeader = styled.TouchableOpacity`
   align-items: center;
   justify-content: space-between;
   position: relative;
-  padding: 10px;
-  background-color: #F8F8F8;
-
-  ${(props: any) => props.isClosed && css`
-    background-color: rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  ${(props: any) => props.isExpanded && `
+    border-bottom-width: 1px;
+    border-bottom-color: #EFEFEF;
   `}
 `
 
@@ -46,7 +45,6 @@ export const BIContentInfo = styled.View`
 `
 
 export const BITotal = styled.View`
-  width: 25%;
   display: flex;
   flex-direction: column;
   align-items: center;

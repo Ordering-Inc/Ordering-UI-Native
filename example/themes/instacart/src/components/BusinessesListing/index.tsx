@@ -141,12 +141,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				</View>
 
 			</OrderControlContainer>
-			{/* <BusinessTypeFilter
+			<BusinessTypeFilter
 				images={props.images}
 				businessTypes={props.businessTypes}
 				defaultBusinessType={props.defaultBusinessType}
 				handleChangeBusinessType={handleChangeBusinessType}
-			/> */}
+			/>
 
 			{
 				!businessesList.loading && businessesList.businesses.length === 0 && (
