@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled, { useTheme } from 'styled-components/native'
 import { OButton, OIcon, OText } from '../shared'
-import { TextStyle } from 'react-native'
+import { ImageStyle, TextStyle } from 'react-native'
 
 const Wrapper = styled.View`
   background-color: ${(props: any) => props.theme.colors.white};
@@ -50,6 +50,8 @@ interface Props {
   btnStyle?: TextStyle,
   style?: TextStyle,
   paddingTop?: number,
+  isVertical?: boolean;
+  leftImageStyle?: ImageStyle;
 }
 
 const NavBar = (props: Props) => {
@@ -63,7 +65,7 @@ const NavBar = (props: Props) => {
     <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
       <OButton
         imgLeftSrc={props.leftImg || theme.images.general.arrow_left}
-		    imgLeftStyle={{tintColor: theme.colors.primary}}
+		    imgLeftStyle={{tintColor: theme.colors.primary, ...props.leftImageStyle}}
         imgRightSrc={null}
         style={{ ...btnBackArrow, ...props.btnStyle }}
         onClick={props.onActionLeft}

@@ -21,7 +21,7 @@ export const CartContent = (props: any) => {
       {isOrderStateCarts && carts?.length > 0 && (
         <>
           <OText style={{ fontSize: 28 }}>
-            {carts.length > 1 ? t('CARTS', 'Carts') : t('CART', 'Cart')}
+            {carts.length > 1 ? t('MY_CARTS', 'My carts') : t('CART', 'Cart')}
           </OText>
           {carts.map((cart: any) => (
             <CCList key={cart.uuid}>
@@ -31,6 +31,7 @@ export const CartContent = (props: any) => {
                   onNavigationRedirect={props.onNavigationRedirect}
                   isCartsLoading={isCartsLoading}
                   setIsCartsLoading={setIsCartsLoading}
+                  isExpanded={false}
                 />
               )}
             </CCList>

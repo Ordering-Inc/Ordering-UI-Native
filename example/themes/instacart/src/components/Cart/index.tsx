@@ -8,7 +8,7 @@ import {
   useValidationFields,
 } from 'ordering-components/native';
 
-import { CContainer, CheckoutAction } from './styles';
+import { CContainer, CheckoutAction, TotalCont } from './styles';
 
 import { OSBill, OSTable, OSCoupon, OSTotal } from '../OrderSummary/styles';
 
@@ -32,7 +32,7 @@ const CartUI = (props: any) => {
     removeProduct,
     handleCartOpen,
     setIsCartsLoading,
-	 isExpanded
+	  isExpanded
   } = props
 
   const theme = useTheme()
@@ -99,7 +99,7 @@ const CartUI = (props: any) => {
         handleClearProducts={handleClearProducts}
         handleCartOpen={handleCartOpen}
         onNavigationRedirect={props.onNavigationRedirect}
-		  isExpanded
+		    isExpanded={isExpanded}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any) => (
           <ProductItemAccordion
@@ -217,7 +217,7 @@ const CartUI = (props: any) => {
           <CheckoutAction>
             <OButton
               text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-                !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
+                !openUpselling !== canOpenUpselling ? t('GO_TO_CHECKOUT', 'Go to checkout') : t('LOADING', 'Loading')
               ) : !cart?.valid_address ? (
                 `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
               ) : (
@@ -229,8 +229,11 @@ const CartUI = (props: any) => {
               imgRightSrc={null}
               textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
               onClick={() => setOpenUpselling(true)}
-              style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}
+              style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 3 }}
             />
+            <TotalCont>
+              <OText color={'white'}>{cart?.total >= 1 && parsePrice(cart?.total)}</OText>
+            </TotalCont>
           </CheckoutAction>
         )}
       </BusinessItemAccordion>

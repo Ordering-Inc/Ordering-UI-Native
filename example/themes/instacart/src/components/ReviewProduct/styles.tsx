@@ -33,6 +33,10 @@ export const Category = styled.View`
 export const Stars = styled.View`
   flex-direction: row;
 `
+export const HWrapper = styled.View`
+  flex-direction: row;
+  align-items: center;
+`
 
 export const BlockWrap = styled.View`
   margin-vertical: 16px;
@@ -43,4 +47,7 @@ export const CommentItem = styled.TouchableOpacity`
   padding: 3px 10px;
   border-radius: 20px;
   min-height: 24px;
+`;
+export const IconBtn = styled.TouchableOpacity`
+  padding-horizontal: 7px;
 `;
