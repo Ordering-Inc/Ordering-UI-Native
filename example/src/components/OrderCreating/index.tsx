@@ -67,13 +67,17 @@ export const OrderCreating = (props: any) => {
     let hour = 0
     let min = 0
     if (orderState?.options?.type === 1 && cart) {
-      hour = (cart?.business?.delivery_time).split(':')[0]
-      min = (cart?.business?.delivery_time).split(':')[1]
+      if (cart?.business?.delivery_time) {
+        hour = (cart?.business?.delivery_time).split(':')[0]
+        min = (cart?.business?.delivery_time).split(':')[1]
+      }
     }
 
     if (orderState?.options?.type === 2 && cart) {
-      hour = (cart?.business?.pickup_time).split(':')[0]
-      min = (cart?.business?.pickup_time).split(':')[1]
+      if (cart?.business?.pickup_time) {
+        hour = (cart?.business?.pickup_time).split(':')[0]
+        min = (cart?.business?.pickup_time).split(':')[1]
+      }
     }
     return getHourMin(hour, min)
   }
