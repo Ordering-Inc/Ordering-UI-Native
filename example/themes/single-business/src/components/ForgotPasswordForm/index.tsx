@@ -22,7 +22,7 @@ const ForgotPasswordUI = (props: any) => {
 		handleButtonForgotPasswordClick,
 	} = props;
 	const [, t] = useLanguage();
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const { control, handleSubmit, errors } = useForm();
 
 	const theme = useTheme();
@@ -31,7 +31,7 @@ const ForgotPasswordUI = (props: any) => {
 		inputStyle: {
 			marginBottom: 25,
 			borderWidth: 1,
-			borderColor: theme.theme.colors.border,
+			borderColor: theme.colors.border,
 			minHeight: 40,
 			borderRadius: 7.6,
 		}
