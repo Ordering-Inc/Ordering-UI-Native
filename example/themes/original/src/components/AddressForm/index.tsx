@@ -90,6 +90,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 			height: 50,
 			maxHeight: 50,
 			minHeight: 50,
+			flex: 1,
 		},
 		textAreaStyles: {
 			borderColor: theme.colors.border,
@@ -495,7 +496,10 @@ const AddressFormUI = (props: AddressFormParams) => {
 	}, [orderState.loading]);
 
 	return (
-		<ScrollView>
+		<ScrollView
+			keyboardShouldPersistTaps='always'
+			listViewDisplayed={false}
+		>
 			<NavBar
 				title={t('WHERE_DO_WE_DELIVERY', 'Where do we delivery?')}
 				titleAlign={'center'}
@@ -504,7 +508,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 				paddingTop={20}
 				btnStyle={{ paddingLeft: 40 }}
 				titleStyle={{ fontSize: 14 }}
-				titleWrapStyle={{ flexBasis: '75%' }}
+				titleWrapStyle={{ paddingHorizontal: 0 }}
 			/>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 				<AddressFormContainer style={{ height: 600, overflow: 'scroll' }}>
