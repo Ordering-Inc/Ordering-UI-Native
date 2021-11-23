@@ -60,8 +60,9 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
 
 	return (
 		<Container
-			isIos={Platform.OS === 'ios'}
-			style={{ paddingBottom: bottom + 16 }}>
+			style={{
+				paddingBottom: Platform.OS === 'ios' ? 0 : bottom + 16
+			}}>
 
 			<View style={styles.infoCont}>
 				<OText color={theme.colors.textNormal} size={16} lineHeight={24} weight={'600'} mRight={20}>

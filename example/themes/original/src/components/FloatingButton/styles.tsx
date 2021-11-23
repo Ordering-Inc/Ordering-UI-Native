@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components/native'
+import styled from 'styled-components/native'
 
 export const Container = styled.View`
   position: absolute;
@@ -21,6 +21,6 @@ export const Button = styled.TouchableOpacity`
   align-items: center;
   border-radius: 7.6px;
   height: 44px;
-  max-height; 44px;
+  max-height: 44px;
   padding-horizontal: 20px;
 `

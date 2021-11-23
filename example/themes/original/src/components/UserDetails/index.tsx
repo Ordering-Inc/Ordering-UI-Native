@@ -25,7 +25,8 @@ const UserDetailsUI = (props: any) => {
 		validationFields,
 		isUserDetailsEdit,
 		phoneUpdate,
-		togglePhoneUpdate
+		togglePhoneUpdate,
+		isCheckout
 	} = props
 
 	const theme = useTheme();
@@ -116,7 +117,7 @@ const UserDetailsUI = (props: any) => {
 							)}
 						</UDInfo>
 					) : (
-						<UserFormDetailsUI {...props} phoneUpdate={phoneUpdate} togglePhoneUpdate={togglePhoneUpdate} />
+						<UserFormDetailsUI {...props} phoneUpdate={phoneUpdate} togglePhoneUpdate={togglePhoneUpdate} isCheckout={isCheckout} />
 					)}
 				</UDContainer>
 			)}
