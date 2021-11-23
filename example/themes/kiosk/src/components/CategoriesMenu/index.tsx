@@ -90,7 +90,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
         <Container nopadding nestedScrollEnabled>
           <View style={{ paddingTop: 20 }}>
             <NavBar
-              title={t('CATEGORY_X_ID', 'Category')}
+              title={categories[curIndexCateg].name}
               onActionLeft={goToBack}
               rightComponent={cart && (
                 <TouchableOpacity

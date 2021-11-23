@@ -82,6 +82,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         inactiveSlideOpacity={1}
         initialScrollIndex={0}
         onScrollToIndexFailed={(_: any) => {}}
+        enableMomentum={true}
       />
     </>
   );
