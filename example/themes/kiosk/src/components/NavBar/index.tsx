@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
 import { OIcon, OButton, OText } from '../shared'
-import { TextStyle, View } from 'react-native'
+import { ImageStyle, TextStyle, View } from 'react-native'
 import { OrderTypeSelector } from '../OrderTypeSelector'
 import { useConfig } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
@@ -53,6 +53,7 @@ interface Props {
   style?: TextStyle,
   paddingTop?: number,
   includeOrderTypeSelector?: boolean,
+  imgLeftStyle?: ImageStyle
 }
 
 const NavBar = (props: Props) => {
@@ -68,6 +69,7 @@ const NavBar = (props: Props) => {
           imgRightSrc={null}
           style={{ ...btnBackArrow, ...props.btnStyle }}
           onClick={props.onActionLeft}
+          imgLeftStyle= {props.imgLeftStyle}
         />)
       }
       <TitleTopWrapper>
