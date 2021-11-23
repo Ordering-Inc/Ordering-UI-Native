@@ -178,30 +178,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                     alignItems: 'center'
                   }}
                 >
-
-                  <View style={{ height: '100%', width: '35%' }}>
-                    <OText
-                      size={orientationState?.dimensions?.width * 0.048}
-                    >
-                      {t('DO_YOU_WANT', 'Do you want')} {'\n'}
-                      <OText
-                        size={orientationState?.dimensions?.width * 0.048}
-                        weight={'700'}
-                      >
-                        {t('SOMETHING_ELSE', 'something else')} {'?'}
-                      </OText>
-                    </OText>
-
-                    <CloseUpsellingLand>
-                      <OButton
-                        imgRightSrc=''
-                        text={t('I_AM_FINE_THANK_YOU', 'I’m fine, thank you')}
-                        style={styles.closeUpsellingButton}
-                        onClick={() => handleUpsellingPage()}
-                      />
-                    </CloseUpsellingLand>
-                  </View>
-
                   <View style={{ width: '65%', marginBottom: 30 }}>
                     <GridContainer>
                       {
@@ -258,7 +234,27 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                       }
                     </GridContainer>
                   </View>
-
+                  <View style={{ height: '100%', width: '35%' }}>
+                    <OText
+                      size={orientationState?.dimensions?.width * 0.040}
+                    >
+                      {t('DO_YOU_WANT', 'Do you want')} {'\n'}
+                      <OText
+                        size={orientationState?.dimensions?.width * 0.040}
+                        weight={'700'}
+                      >
+                        {t('SOMETHING_ELSE', 'something else')} {'?'}
+                      </OText>
+                    </OText>
+                    <CloseUpsellingLand>
+                      <OButton
+                        imgRightSrc=''
+                        text={t('I_AM_FINE_THANK_YOU', 'I’m fine, thank you')}
+                        style={styles.closeUpsellingButton}
+                        onClick={() => handleUpsellingPage()}
+                      />
+                    </CloseUpsellingLand>
+                  </View>
                 </View>
               </>
             )
