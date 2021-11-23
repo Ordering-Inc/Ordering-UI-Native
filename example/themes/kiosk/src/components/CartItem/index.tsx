@@ -10,7 +10,8 @@ import {
   ProductSubOption,
   ProductComment
 } from './styles';
-import { OButton, OImage, OText } from '../shared';
+import { OButton, OImage, OText, OIconButton } from '../shared';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { Product } from '../../types';
 import QuantityControl from '../QuantityControl';
 import { LANDSCAPE, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
@@ -52,7 +53,7 @@ const CartItem = (props: CartItemProps) => {
     }
     return product
   }
-
+  const isProductIngredients = productInfo()?.ingredients.length > 0 || productInfo()?.options.length > 0 || product?.comment
   const getFormattedSubOptionName = ({ quantity, name, position, price }: { quantity: number, name: string, position: string, price: number }) => {
     const pos = position ? `(${position})` : ''
     return `${quantity} x ${name} ${pos} +${price}`
@@ -64,7 +65,7 @@ const CartItem = (props: CartItemProps) => {
         onPress={() => (!product?.valid_menu && isCartProduct)
           ? {}
           : setActiveState(!isActive)}
-        activeOpacity={1}
+        activeOpacity={0.5}
       >
         <StyledCartItem>
           <View style={{ flexDirection: 'row' }}>
@@ -104,6 +105,21 @@ const CartItem = (props: CartItemProps) => {
                     marginLeft: 6,
                   }}
                   onClick={() => { onEditProduct ? onEditProduct(product) : null }}
+                />
+                <OIconButton
+                  bgColor="transparent"
+                  borderColor="transparent"
+                  RenderIcon={isProductIngredients && (() => 
+                      <EvilIcons
+                        name={isActive ? 'chevron-up': 'chevron-down'}
+                        size={40}
+                        color={theme.colors.primary}
+                      />
+                  )}
+                  style={{ justifyContent: 'flex-start', right: 40 }}
+                  onClick={() => (!product?.valid_menu && isCartProduct)
+                    ? {}
+                    : setActiveState(!isActive)}
                 />
               </View>
             </View>

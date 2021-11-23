@@ -48,9 +48,10 @@ interface Props {
   iconCover?: boolean,
   urlIcon?: any,
   cover?: any,
+  RenderIcon?: React.FunctionComponent
 }
-
 const OIconButton = (props: Props) => {
+  const { RenderIcon } = props
   const theme = useTheme()
 
   return (
@@ -66,7 +67,7 @@ const OIconButton = (props: Props) => {
             ...props.style
           }}
         >
-          {props.icon ? (
+          {props.icon && typeof props.icon !== 'object' ? (
             <Icon
               source={props.icon}
               style={{
@@ -74,6 +75,9 @@ const OIconButton = (props: Props) => {
                 ...props.iconStyle
               }}
             />
+          ) : null}
+          {RenderIcon ? (
+            <RenderIcon />
           ) : null}
           {props.title ? (
             <Title style={{
@@ -97,13 +101,16 @@ const OIconButton = (props: Props) => {
         >
           {props.icon ? (
             <Icon
-              source={props.urlIcon ? {uri: props.icon} : props.icon}
+              source={props.urlIcon ? { uri: props.icon } : props.icon}
               resizeMode={props.cover ? 'cover' : 'contain'}
               style={{
                 tintColor: props.iconColor,
                 ...props.iconStyle
               }}
             />
+          ) : null}
+          {RenderIcon ? (
+            <RenderIcon />
           ) : null}
           {props.title ? (
             <Title style={{

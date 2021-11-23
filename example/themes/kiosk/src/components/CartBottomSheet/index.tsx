@@ -13,7 +13,8 @@ import {
 	StyledContent,
 	StyledTopBar,
 } from './styles';
-import { OButton, OModal, OText } from '../shared';
+import { OButton, OModal, OText, OIconButton } from '../shared';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import CartItem from '../CartItem';
 import { Cart as TypeCart } from '../../types';
 import { ProductForm } from '../ProductForm';
@@ -109,6 +110,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
           {...props}
           handleClearProducts={handleClearProducts}
           selectedOrderType={selectedOrderType}
+          hideCartBottomSheet={hideCartBottomSheet}
         />
 
         {cart?.products?.length > 0 && cart?.products.map((product: any) => (
@@ -126,13 +128,27 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
         ))}
 
       </StyledContent>
-
-      <StyledBottomContent
-        minHeight={props.height * 0.1}
+      <TouchableOpacity
+          onPress={handleClearProducts}
+          style={{flex:1, justifyContent:'center', alignItems:'center', bottom: 20, paddingTop: 5}}
       >
+        <View>
+          <OText
+            size={20}
+            weight="700"
+            color={theme.colors.red}
+          >
+            {t('CANCEL_ORDER', 'Cancel order')}
+          </OText>
+        </View>
+      </TouchableOpacity>
+      <StyledBottomContent
+        style={{bottom:10}}
+        minHeight={props.height * 0.01}
+      > 
         <OButton
           text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-            !openUpselling !== canOpenUpselling ? `${t('CONFIRM_THIS', 'Confirm this')} ${parsePrice(cart?.total)} ${t('ORDER', 'order')}`: t('LOADING', 'Loading')
+            !openUpselling !== canOpenUpselling ? `${t('CHECKOUT', 'Checkout')} ${parsePrice(cart?.total)}`: t('LOADING', 'Loading')
           ) : !cart?.valid_address ? (
             `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
           ) : (
@@ -205,20 +221,19 @@ const TopBar = (props:any) => {
           {props?.selectedOrderType === 3 && t('EAT_IN', 'Eat in')}
 				</OText>
 			</View>
-
-			<TouchableOpacity
-				onPress={props?.handleClearProducts}
-			>
-				<View>
-					<OText
-						size={20}
-						weight="500"
-						color={theme.colors.primary}
-					>
-						{t('CANCEL_ORDER', 'Cancel order')}
-					</OText>
-				</View>
-			</TouchableOpacity>
+			<OIconButton
+        bgColor="transparent"
+        borderColor="transparent"
+        RenderIcon={() => 
+            <EvilIcons
+              name={'close'}
+              size={40}
+              color={theme.colors.primary}
+            />
+        }
+        style={{ flex:1, justifyContent: 'flex-end', left: 30 }}
+        onClick={props.hideCartBottomSheet}
+      />
 		</StyledTopBar>
 	);
 }
