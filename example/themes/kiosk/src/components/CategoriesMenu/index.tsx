@@ -128,7 +128,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
                 image={{ uri: product?.images }}
                 style={{
                   width: orientationState?.orientation === LANDSCAPE
-                    ? orientationState?.dimensions?.width * 0.16
+                    ? bottomSheetVisibility ? orientationState?.dimensions?.width * 0.15 :orientationState?.dimensions?.width * 0.16
                     : orientationState?.dimensions?.width * 0.21
                 }}
                 titleStyle={{marginTop: Platform.OS === 'ios' ? 10 : 0}}
