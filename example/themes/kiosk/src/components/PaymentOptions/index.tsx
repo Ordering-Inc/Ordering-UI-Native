@@ -135,14 +135,14 @@ const PaymentOptionsUI = (props: any) => {
       cashIndex !== -1
         ? {
             style: cardStyle,
-            title: t('CASH', supportedMethods[cashIndex]?.name),
+            title: t('CASH', 'Cash'),
             description: t(
               'GO_FOR_YOR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER',
-              'Go for yor receipt and go to the front counter',
+              'Pay with cash in the front counter',
             ),
             bgImage: theme.images.general.cash,
             icon: theme.images.general.shoppingCart,
-            callToActionText: t('TAKE_MY_RECEIPT', 'Take my receipt'),
+            callToActionText: t('LETS_GO', 'LETS_GO'),
             onClick: () =>
               onSelectPaymethod(supportedMethods[cashIndex], false),
             ...supportedMethods[cashIndex],
