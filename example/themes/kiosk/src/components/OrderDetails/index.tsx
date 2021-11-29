@@ -27,7 +27,7 @@ import {
 import { OrderDetailsParams, Product } from '../../types'
 import { Container } from '../../layouts/Container';
 import NavBar from '../../components/NavBar';
-import { OButton, OImage, OInput, OText } from '../../components/shared';
+import { OButton, OIconButton, OImage, OInput, OText } from '../../components/shared';
 import GridContainer from '../../layouts/GridContainer';
 import OptionSwitch, { Opt } from '../../components/shared/OOptionToggle';
 import { verifyDecimals } from '../../../../../src/utils'
@@ -35,6 +35,7 @@ import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/ho
 import { useTheme } from 'styled-components/native'
 import { _retrieveStoreData } from '../../../../../src/providers/StoreUtil';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import EvilIcons from 'react-native-vector-icons/EvilIcons'
 const _EMAIL = 'email';
 const _SMS = 'sms';
 
@@ -493,8 +494,27 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         <>
           <Container>
             <NavBar
-              title={t('TAKE_YOUR_RECEIPT', 'Take your receipt')}
+              title={t('BACK_BUTTON_CONFIRMATION', 'Confirmation')}
               style={{ right: 10 }}
+              rightComponent={
+                <OIconButton
+                  bgColor="transparent"
+                  borderColor="transparent"
+                  RenderIcon={() => 
+                      <EvilIcons
+                        name={'close'}
+                        size={40}
+                        color={theme.colors.primary}
+                      />
+                  }
+                  style={{ flex:1, justifyContent: 'flex-end', left: 30 }}
+                  onClick={() => {
+                    navigation.reset({
+                      routes: [{ name: 'Intro' }],
+                    });
+                  }}
+                />
+              }
             />
 
             <View style={{
