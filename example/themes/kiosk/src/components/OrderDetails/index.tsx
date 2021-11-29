@@ -521,10 +521,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               marginVertical: orientationState?.dimensions?.height * 0.03,
               flexDirection: orientationState?.orientation === PORTRAIT ? 'column' : 'row',
             }}>
+              <View
+                style={{
+                  flex: 1,
+                  marginVertical: orientationState?.orientation === PORTRAIT ? 40 : 0,
+                }}
+              >
+                {orderDetailsContent}
+              </View>
               <View style={{
-                flex: 1,
+                flex: 1.1,
                 marginRight: orientationState?.orientation === PORTRAIT ? 0 : 20,
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                marginLeft: 20
               }}>
                 <View>
                   <OText
@@ -543,21 +552,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText
                     size={orientationState?.dimensions?.width * (orientationState?.orientation === PORTRAIT ? 0.04 : 0.025)}
                   >
-                    {t('TO_FINISH_TAKE_YOUR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER', 'To finish take your receipt and go to the front counter.')}
+                    {t('TO_FINISH_TAKE_YOUR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER', "We`ve received your order and we will call you by your name or your order number.")}
                   </OText>
 
                 </View>
 
                 {orientationState?.orientation === LANDSCAPE && actionsContent}
-              </View>
-
-              <View
-                style={{
-                  flex: 1.4,
-                  marginVertical: orientationState?.orientation === PORTRAIT ? 40 : 0,
-                }}
-              >
-                {orderDetailsContent}
               </View>
             </View>
           </Container>
