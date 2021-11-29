@@ -210,6 +210,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       setCustomerName(name)
     }
     getCustomerName()
+    const redirectHome = setTimeout(() =>{
+      navigation.reset({
+        routes: [{ name: 'Intro' }],
+      });
+    }, 60000);
+    return () => {
+      clearTimeout(redirectHome);
+    }
   }, [])
 
   useEffect(() => {
