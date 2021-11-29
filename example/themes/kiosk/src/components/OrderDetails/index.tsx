@@ -336,7 +336,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       </OSInputWrapper>
 
       <OButton
-        text={`${t('YOU_ARE_DONE', 'You are done')}!`}
+        text={`${t('YOU_ARE_DONE', 'You are done! Click to close')}!`}
         onClick={() => {
           navigation.reset({
             routes: [{ name: 'Intro' }],
