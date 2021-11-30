@@ -23,6 +23,7 @@ const SText = styled.Text`
     css`
       flex: ${props.weight ? 1 : 0};
     `};
+  text-decoration: ${(props : any) => props.textDecorationLine};
 `;
 interface Props {
   color?: string;
@@ -39,6 +40,7 @@ interface Props {
   numberOfLines?: number;
   ellipsizeMode?: string;
   adjustsFontSizeToFit?: boolean;
+  textDecorationLine?: string
 }
 
 const OText = (props: Props): React.ReactElement => {
