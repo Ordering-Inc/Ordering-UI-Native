@@ -125,6 +125,7 @@ const CustomerName = (props: Props): React.ReactElement => {
                     autoCapitalize="words"
                     autoCorrect={false}
                     onChange={(val: any) => onChange(val)}
+                    onSubmitEditing={handleSubmit(onSubmit)}
                   />
                 )}
                 name="name"
