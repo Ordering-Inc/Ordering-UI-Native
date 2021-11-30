@@ -98,6 +98,7 @@ const MapViewComponent = (props: MapViewParams) => {
       return () => {
         stopFollowUserLocation()
         setIsFocused(false)
+        setLocationSelected(null)
       }
     }, [])
   )
@@ -124,6 +125,8 @@ const MapViewComponent = (props: MapViewParams) => {
         markerRef?.current?.props?.coordinate?.longitude === locationSelected?.longitude
       ) {
         markerRef?.current?.showCallout()
+      } else {
+        markerRef?.current?.hideCallout()
       }
     }, [locationSelected])
 
@@ -156,12 +159,12 @@ const MapViewComponent = (props: MapViewParams) => {
           />
         </View>
         <Callout
-          onPress={() => orderIds && orderIds?.length > 0 ? onNavigationRedirect('Orders') : onNavigationRedirect('OrderDetails', { order: marker })}
+          onPress={() => !!orderIds && orderIds.toString().includes(',') ? onNavigationRedirect('Orders') : onNavigationRedirect('OrderDetails', { order: marker })}
         >
           <View style={{ flex: 1, width: 200, padding: 5 }}>
             <OText weight='bold'>{customer ? `${marker?.customer?.name} ${marker?.customer?.lastname}` : marker?.business?.name}</OText>
             <OText>
-              {orderIds && orderIds?.length > 0 ? (
+              {!!orderIds && orderIds.toString().includes(',') ? (
                 <>
                   {t('ORDER_NUMBERS', 'Order Numbers')} {orderIds}
                 </>
@@ -182,7 +185,7 @@ const MapViewComponent = (props: MapViewParams) => {
               <OText>{marker?.customer?.internal_number}</OText>
             )}
             <OText textDecorationLine='underline' color={theme.colors.primary}>
-              {orderIds && orderIds?.length > 0 ? (
+              {!!orderIds && orderIds.toString().includes(',') ? (
                 <>
                   {t('SHOW_ORDERS', 'Show orders')}
                 </>
