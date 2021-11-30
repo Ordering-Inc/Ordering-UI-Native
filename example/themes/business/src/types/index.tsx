@@ -539,3 +539,11 @@ export interface AcceptOrRejectOrderParams {
   titleReject?: textTranslate;
   appTitle?: textTranslate;
 }
+
+export interface MapViewParams {
+  onNavigationRedirect: (page : string, params ?: any) => void,
+  getBusinessLocations: () => void,
+  isLoadingBusinessMarkers?: boolean,
+  markerGroups: Array<any>,
+  customerMarkerGroups: Array<any>
+}
