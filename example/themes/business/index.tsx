@@ -34,7 +34,7 @@ import { UserFormDetailsUI } from './src/components/UserFormDetails';
 import { UserProfileForm } from './src/components/UserProfileForm';
 import { VerifyPhone } from './src/components/VerifyPhone';
 import { DriverMap } from './src/components/DriverMap';
-
+import { MapViewUI as MapView } from './src/components/MapView'
 //OComponents
 import {
   OText,
@@ -74,6 +74,7 @@ export {
   LogoutButton,
   MessagesOption,
   NotFoundSource,
+  MapView,
   OrderDetailsBusiness,
   OrderDetailsDelivery,
   OrderMessage,
