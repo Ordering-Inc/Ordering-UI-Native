@@ -8,7 +8,7 @@ export const GrayBackground = styled.View`
   margin-top: 27px;
 `
 export const WrapMainContent = styled.ScrollView`
-  margin-top: 40px;
+  /* margin-top: 40px; */
 `
 export const MediaWrapper = styled.ScrollView`
   margin-top: 16px;

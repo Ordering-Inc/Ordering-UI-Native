@@ -66,11 +66,9 @@ export const PMDropDownWrapper = styled.TouchableOpacity`
 `;
 
 export const PMDropDownCont = styled.View`
-  background-color: white;
-  border-radius: 7.6px;
-  position: absolute;
-  top: 44px;
+  border-radius: 8px;
   width: 100%;
-  padding: 10px 16px;
+  padding: 10px 0 0;
   box-shadow: 0 2px 3px #0000004D;
+  z-index: 99999;
 `;

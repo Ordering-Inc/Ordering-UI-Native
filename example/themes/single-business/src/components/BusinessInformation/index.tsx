@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	BusinessInformation as BusinessInformationController,
 	useLanguage, useUtils
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { OIcon, OText } from '../shared';
+import { SliderBox } from 'react-native-image-slider-box';
+import { OIcon, OText, OModal } from '../shared';
 import {
 	BusinessInformationContainer,
 	WrapMainContent,
@@ -16,17 +17,21 @@ import {
 	DivideView,
 	MediaWrapper,
 } from './styles';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { BusinessInformationParams } from '../../types';
 import { GoogleMap } from '../GoogleMap';
 import { WebView } from 'react-native-webview';
+import NavBar from '../../../../../src/components/NavBar'
 
 const BusinessInformationUI = (props: BusinessInformationParams) => {
-	const { businessState, businessSchedule, businessLocation } = props;
+	const { businessState, business, businessSchedule, businessLocation } = props;
 
 	const theme = useTheme();
 	const [, t] = useLanguage();
 	const [{ optimizeImage }] = useUtils();
+
+  const [openImages, setOpenImages] = useState(false)
+
 	const daysOfWeek = [
 		t('SUNDAY_ABBREVIATION', 'Sun'),
 		t('MONDAY_ABBREVIATION', 'Mon'),
@@ -69,7 +74,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 		return vAry;
 	};
 	const bImages: any = () => {
-		const len = businessState?.business?.gallery?.length | 0;
+		const len = businessState?.business?.gallery?.length ?? 0;
 		if (len == 0) return [];
 		const iAry = businessState?.business?.gallery.filter(
 			({ type, video }: any) => type == 1 && video == null,
@@ -79,6 +84,10 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 
 	return (
 		<BusinessInformationContainer>
+      <NavBar
+        style={{ paddingBottom: 0 }}
+        onActionLeft={() => props.navigation?.canGoBack() && props.navigation.goBack()}
+      />
 			<WrapMainContent contentContainerStyle={{}}>
 				<InnerContent>
 					<OText size={24} weight={Platform.OS === 'ios' ? '600' : 'bold'}>
@@ -89,7 +98,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 							{t('BUSINESS_LOCATION', 'Business Location')}
 						</OText>
 					</GrayBackground>
-					{businessLocation.location && (
+					{!!businessLocation.location && (
 						<WrapBusinessMap style={styles.wrapMapStyle}>
 							<GoogleMap
 								readOnly
@@ -107,7 +116,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 							{t('OPENING_TIME', 'Opening Time')}
 						</OText>
 					</GrayBackground>
-					{businessSchedule && businessSchedule?.length > 0 && (
+					{!!businessSchedule && businessSchedule?.length > 0 && (
 						<WrapScheduleBlock>
 							{businessSchedule.map((schedule: any, i: number) => (
 								<ScheduleBlock key={i}>
@@ -164,19 +173,41 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 										{t('IMAGES', 'Images')}
 									</OText>
 								</GrayBackground>
+
 								<MediaWrapper horizontal>
-									{bImages().map((i: any) => (
-										i.file != null &&
-										<View key={i.id} style={{ width: 210, height: 127, borderRadius: 7.6, marginEnd: 20, overflow: 'hidden' }}>
-											<OIcon cover url={optimizeImage(i?.file, 'h_150,c_limit')} width={210} height={127} />
-										</View>
-									))}
+									{bImages().map((i: any) => ( i.file != null && (
+                    <View key={i.id} style={{ width: 210, height: 127, borderRadius: 7.6, marginEnd: 20, overflow: 'hidden' }}>
+                      <TouchableOpacity  onPress={() => setOpenImages(true)}>
+                        <OIcon cover url={optimizeImage(i?.file, 'h_150,c_limit')} width={210} height={127} />
+                      </TouchableOpacity>
+                    </View>
+                  )))}
 								</MediaWrapper>
 							</>
 						)}
 					</>
 				</InnerContent>
 			</WrapMainContent>
+      <OModal
+				titleSectionStyle={styles.modalTitleSectionStyle}
+				open={openImages}
+				onClose={() => setOpenImages(false)}
+				isNotDecoration
+      >
+        <View style={{ height: '100%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{ marginTop: 20, height: 200}}>
+            <SliderBox
+              // circleLoop
+              sliderBoxHeight={200}
+              images={bImages().map((image: any) => optimizeImage(image?.file, 'h_300,c_limit'))}
+              dotColor={theme.colors.primary}
+              inactiveDotColor={theme.colors.backgroundGray}
+              dotStyle={styles.dotStyle}
+              activeOpacity={1}
+            />
+          </View>
+        </View>
+			</OModal>
 		</BusinessInformationContainer>
 	);
 };
@@ -186,6 +217,21 @@ const styles = StyleSheet.create({
 		overflow: 'hidden',
 		marginTop: 15,
 		marginBottom: 10,
+	},
+  dotStyle: {
+    width: 15,
+    height: 15,
+    borderRadius: 15,
+    marginHorizontal: 10,
+    padding: 0,
+    margin: 0
+  },
+  modalTitleSectionStyle: {
+		position: 'absolute',
+		width: '100%',
+		top: 0,
+		zIndex: 100,
+		left: 40
 	},
 });
 

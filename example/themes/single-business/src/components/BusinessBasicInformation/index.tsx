@@ -55,6 +55,11 @@ export const BusinessBasicInformation = (
 		return _types.join(', ');
 	};
 
+  const onNavigationRedirect = (page: string, params: any) => {
+    if (!page) return
+    navigation.navigate(page, params);
+  }
+
 	return (
 		<BusinessContainer>
 			<BusinessHeader
@@ -150,7 +155,12 @@ export const BusinessBasicInformation = (
 								{business?.name}
 							</OText>
 							{!isBusinessInfoShow && (
-								<WrapBusinessInfo onPress={() => setOpenBusinessInformation(true)}>
+								<WrapBusinessInfo
+                  onPress={() => onNavigationRedirect(
+                    'BusinessInformation',
+                    { businessState, business }
+                  )}
+                >
 									<OIcon src={theme.images.general.info} width={16} color={theme.colors.textSecondary} />
 								</WrapBusinessInfo>
 							)}
@@ -227,7 +237,7 @@ export const BusinessBasicInformation = (
 					)}
 				</WrapReviews>
 			</BusinessInfo>
-			<OModal
+			{/* <OModal
 				titleSectionStyle={styles.modalTitleSectionStyle}
 				open={openBusinessInformation}
 				onClose={() => setOpenBusinessInformation(false)}
@@ -236,7 +246,7 @@ export const BusinessBasicInformation = (
 					businessState={businessState}
 					business={business}
 				/>
-			</OModal>
+			</OModal> */}
 			<OModal
 				entireModal
 				titleSectionStyle={styles.modalTitleSectionStyle}
