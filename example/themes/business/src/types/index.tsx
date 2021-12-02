@@ -545,5 +545,7 @@ export interface MapViewParams {
   getBusinessLocations: () => void,
   isLoadingBusinessMarkers?: boolean,
   markerGroups: Array<any>,
-  customerMarkerGroups: Array<any>
+  customerMarkerGroups: Array<any>,
+  alertState: { open: boolean, content: Array<string>, key?: string | null },
+  setAlertState: ({open, content, key} : { open: boolean, content: Array<string>, key?: string | null }) => void
 }

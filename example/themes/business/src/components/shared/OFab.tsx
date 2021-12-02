@@ -7,20 +7,25 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 interface Props {
   iconName: string;
   onPress: () => void;
   style?: StyleProp<ViewStyle>;
+  materialIcon?: boolean
 }
-const OFab = ({ iconName, onPress, style = {} }: Props) => {
+const OFab = ({ iconName, materialIcon, onPress, style = {} }: Props) => {
   return (
     <View style={{ ...(style as any) }}>
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={onPress}
         style={styles.blackButton}>
-        <Icon name={iconName} color="white" size={20} />
+        {materialIcon ? (
+          <MaterialIcon name={iconName} color="white" size={20} />
+        ) : (
+          <Icon name={iconName} color="white" size={20} />
+        )}
       </TouchableOpacity>
     </View>
   );
