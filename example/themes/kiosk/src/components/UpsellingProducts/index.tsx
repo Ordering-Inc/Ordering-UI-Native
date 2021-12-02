@@ -31,6 +31,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     canOpenUpselling,
     setCanOpenUpselling,
     onClose,
+    resetInactivityTimeout,
   } = props
   const [actualProduct, setActualProduct] = useState<any>(null)
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -150,7 +151,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                         style={{ height: 40, width: '100%' }}
                         bgColor="#EAF2FE"
                         borderColor="#EAF2FE"
-                        onClick={() => handleFormProduct(product)}
+                        onClick={() => {
+                          resetInactivityTimeout()
+                          handleFormProduct(product)
+                        }}
                       />
                     </Item>
                   )) : (
@@ -221,7 +225,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                                 style={{ minHeight: 40, height: 'auto', width: '100%' }}
                                 bgColor="#EAF2FE"
                                 borderColor="#EAF2FE"
-                                onClick={() => handleFormProduct(product)}
+                                onClick={() => {
+                                  resetInactivityTimeout()
+                                  handleFormProduct(product)
+                                }}
                               />
                             </Item>
                           )}
@@ -251,7 +258,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                         imgRightSrc=''
                         text={t('I_AM_FINE_THANK_YOU', 'I’m fine, thank you')}
                         style={styles.closeUpsellingButton}
-                        onClick={() => handleUpsellingPage()}
+                        onClick={() => {
+                          resetInactivityTimeout()
+                          handleUpsellingPage()
+                        }}
                       />
                     </CloseUpsellingLand>
                   </View>

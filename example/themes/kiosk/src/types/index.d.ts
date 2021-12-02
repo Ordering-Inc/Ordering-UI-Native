@@ -12,6 +12,9 @@ export interface BusinessProductsListingParams {
   errorQuantityProducts?: boolean;
   header?: any;
   logo?: any;
+  resetInactivityTimeout: any;
+  clearInactivityTimeout: any;
+  bottomSheetVisibility: any;
 }
 
 export interface OrderDetailsParams {
@@ -49,6 +52,7 @@ export interface UpsellingProductsParams {
   canOpenUpselling?: boolean;
   setCanOpenUpselling?: (value: any) => void;
   onClose?: () => void;
+  resetInactivityTimeout: any;
 }
 
 export interface LanguageSelectorParams {
@@ -464,4 +468,5 @@ export interface Cart {
   service_fee_with_discount: number;
   delivery_price_with_discount: number;
   total: number;
+  clearInactivityTimeout: any;
 }

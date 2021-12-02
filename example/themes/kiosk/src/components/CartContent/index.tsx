@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLanguage } from 'ordering-components/native';
 
 import { CCNotCarts } from './styles';
@@ -16,6 +16,8 @@ export const CartContent = (props: any) => {
     CustomCartComponent,
     extraPropsCustomCartComponent,
     showNotFound,
+    clearInactivityTimeout,
+    resetInactivityTimeout,
   }: Props = props
 
   const [, t] = useLanguage()
@@ -27,6 +29,8 @@ export const CartContent = (props: any) => {
     onNavigationRedirect: props.onNavigationRedirect,
     isCartsLoading,
     setIsCartsLoading,
+    clearInactivityTimeout,
+    resetInactivityTimeout,
   }
 
   const content = (
@@ -67,4 +71,6 @@ interface Props {
   CustomCartComponent?: any,
   extraPropsCustomCartComponent?: JSON,
   showNotFound?: boolean,
+  clearInactivityTimeout: any,
+  resetInactivityTimeout: any,
 }

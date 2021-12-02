@@ -11,7 +11,7 @@ import { LANDSCAPE, useDeviceOrientation } from '../../../../../src/hooks/Device
 import { useTheme } from 'styled-components/native';
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
-  const {navigation, businessState} = props;
+  const {navigation, businessState, resetInactivityTimeout, clearInactivityTimeout, bottomSheetVisibility } = props;
 
   const business: Business = businessState.business;
 
@@ -47,6 +47,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         image={{uri: item?.images}}
         isOutOfStock={!item?.inventoried}
         onPress={() => {
+          resetInactivityTimeout()
           navigation.navigate('ProductDetails', {
             businessId: business?.api?.businessId,
             businessSlug: business?.slug,
@@ -99,15 +100,18 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             style={{
               width:
                 orientationState?.orientation === LANDSCAPE
-                  ? orientationState?.dimensions?.width * 0.16
+                  ? bottomSheetVisibility ? orientationState?.dimensions?.width * 0.15 :orientationState?.dimensions?.width * 0.16
                   : orientationState?.dimensions?.width * 0.21,
             }}
             onPress={() => {
+              resetInactivityTimeout()
               navigation.navigate('Category', {
                 category,
                 categories: business.original.categories,
                 businessId: business?.api?.businessId,
                 businessSlug: business?.slug,
+                clearInactivityTimeout,
+                resetInactivityTimeout,
               });
             }}
             titleStyle={{textAlign: 'center'}}
