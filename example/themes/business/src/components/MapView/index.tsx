@@ -12,16 +12,17 @@ import Alert from '../../providers/AlertProvider';
 import { useTheme } from 'styled-components/native';
 import { useLocation } from '../../hooks/useLocation';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { OIcon, OText } from '../shared'
-
+import { OIcon, OText, OFab } from '../shared'
 const MapViewComponent = (props: MapViewParams) => {
 
   const {
-    onNavigationRedirect,
     isLoadingBusinessMarkers,
-    getBusinessLocations,
     markerGroups,
-    customerMarkerGroups
+    customerMarkerGroups,
+    alertState,
+    setAlertState,
+    onNavigationRedirect,
+    getBusinessLocations,
   } = props;
 
   const theme = useTheme();
@@ -29,16 +30,10 @@ const MapViewComponent = (props: MapViewParams) => {
   const [{ user }] = useSession()
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / height;
-  const mapRef = useRef<MapView>(null);
+  const mapRef = useRef<MapView | any>(null);
   const following = useRef<boolean>(true);
   const [isFocused, setIsFocused] = useState(false)
   const [locationSelected, setLocationSelected] = useState<any>(null)
-  const [alertState, setAlertState] = useState<{
-    open: boolean;
-    content: Array<string>;
-    key?: string | null;
-  }>({ open: false, content: [], key: null });
-
   const {
     initialPosition,
     userLocation,
@@ -72,6 +67,24 @@ const MapViewComponent = (props: MapViewParams) => {
     }
   };
 
+  const onPressZoomIn = () => {
+    const lastRegion = mapRef?.current?.__lastRegion
+    mapRef?.current && mapRef.current.animateToRegion({
+      ...mapRef?.current?.__lastRegion,
+      longitudeDelta: lastRegion.longitudeDelta / 8,
+      latitudeDelta: lastRegion.longitudeDelta / 8
+    })
+  }
+
+  const onPressZoomOut = () => {
+    const lastRegion = mapRef?.current?.__lastRegion
+    mapRef?.current && mapRef.current.animateToRegion({
+      ...lastRegion,
+      longitudeDelta: lastRegion.longitudeDelta * 8,
+      latitudeDelta: lastRegion.longitudeDelta * 8
+    })
+  }
+
   useEffect(() => {
     fitCoordinates(locationSelected || userLocation);
   }, [userLocation, locationSelected]);
@@ -90,7 +103,6 @@ const MapViewComponent = (props: MapViewParams) => {
       stopFollowUserLocation();
     };
   }, []);
-
 
   useFocusEffect(
     useCallback(() => {
@@ -125,8 +137,6 @@ const MapViewComponent = (props: MapViewParams) => {
         markerRef?.current?.props?.coordinate?.longitude === locationSelected?.longitude
       ) {
         markerRef?.current?.showCallout()
-      } else {
-        markerRef?.current?.hideCallout()
       }
     }, [locationSelected])
 
@@ -200,19 +210,20 @@ const MapViewComponent = (props: MapViewParams) => {
       </Marker>
     )
   }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
-        <View style={{ flex: 1 }}>
-          {typeof initialPosition?.latitude === 'number' && !isLoadingBusinessMarkers && isFocused && (
+        {!isLoadingBusinessMarkers && isFocused && (
+          <View style={{ flex: 1 }}>
             <MapView
               ref={mapRef}
               provider={PROVIDER_GOOGLE}
               initialRegion={{
                 latitude: initialPosition.latitude,
                 longitude: initialPosition.longitude,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01 * ASPECT_RATIO,
+                latitudeDelta: 0.001,
+                longitudeDelta: 0.001 * ASPECT_RATIO,
               }}
               style={{ flex: 1 }}
               zoomTapEnabled
@@ -261,8 +272,28 @@ const MapViewComponent = (props: MapViewParams) => {
                 </Marker>
               </>
             </MapView>
-          )}
-        </View>
+            <OFab
+              materialIcon
+              iconName="plus"
+              onPress={() => onPressZoomIn()}
+              style={{
+                position: 'absolute',
+                bottom: 75,
+                right: 20,
+              }}
+            />
+            <OFab
+              materialIcon
+              iconName="minus"
+              onPress={() => onPressZoomOut()}
+              style={{
+                position: 'absolute',
+                bottom: 35,
+                right: 20,
+              }}
+            />
+          </View>
+        )}
       </View>
       <View>
         <Alert
