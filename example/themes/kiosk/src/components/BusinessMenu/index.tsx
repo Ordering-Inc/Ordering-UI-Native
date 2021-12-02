@@ -59,7 +59,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
       navigation.reset({
         routes: [{ name: 'Intro' }],
       })
-    }, 1000*10);
+    }, 60000*2);
   }, []);
   
   useEffect(() => {
