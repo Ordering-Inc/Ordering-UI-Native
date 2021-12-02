@@ -34,6 +34,8 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
     setIsCartsLoading,
 		isFromCart,
 		navigation,
+    clearInactivityTimeout,
+    resetInactivityTimeout,
 	}  = props
 
   const theme = useTheme()
@@ -87,6 +89,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
   }
 
   const handleUpsellingPage = () => {
+    clearInactivityTimeout()
     onCloseUpselling()
     navigation?.navigate('Cart', { businessId: cart?.business_id })
   }
@@ -159,7 +162,10 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
           borderColor={theme.colors.primary}
           imgRightSrc={null}
           textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-          onClick={() => setOpenUpselling(true)}
+          onClick={() => {
+            resetInactivityTimeout()
+            setOpenUpselling(true)
+          }}
           style={{width: '100%', flexDirection: 'row', justifyContent: 'center'}}
         />
       </StyledBottomContent>
@@ -192,6 +198,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
           canOpenUpselling={canOpenUpselling}
           setCanOpenUpselling={setCanOpenUpselling}
           onClose={onCloseUpselling}
+          resetInactivityTimeout={resetInactivityTimeout}
         />
       )}
     </StyledContainer>
@@ -251,6 +258,8 @@ interface CartBottomSheetUIProps {
 	isFromCart: any,
 	navigation: any,
 	onNavigationRedirect: any,
+  clearInactivityTimeout: any,
+  resetInactivityTimeout: any,
 }
 
 export const CartBottomSheet = (props: any) => {

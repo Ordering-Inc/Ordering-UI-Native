@@ -31,6 +31,8 @@ const CategoriesMenu = (props: any): React.ReactElement => {
     categories,
     businessId,
     businessSlug,
+    clearInactivityTimeout,
+    resetInactivityTimeout
   }: Params = route.params;
 
   const theme = useTheme()
@@ -40,7 +42,10 @@ const CategoriesMenu = (props: any): React.ReactElement => {
   const [orientationState] = useDeviceOrientation();
   const [bottomSheetVisibility, { showCartBottomSheet, hideCartBottomSheet }] = useCartBottomSheet();
 
-  const onChangeTabs = (idx: number) => setIndexCateg(idx);
+  const onChangeTabs = (idx: number) => {
+    resetInactivityTimeout();
+    setIndexCateg(idx);
+  }
 
   const goToBack = () => navigation.goBack()
 
@@ -64,6 +69,8 @@ const CategoriesMenu = (props: any): React.ReactElement => {
       orientationState,
       height: VISIBLE_CART_BOTTOM_SHEET_HEIGHT,
       visible: bottomSheetVisibility,
+      clearInactivityTimeout,
+      resetInactivityTimeout,
     },
     showNotFound: false,
     showCartBottomSheet,
@@ -133,6 +140,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
                 }}
                 titleStyle={{marginTop: Platform.OS === 'ios' ? 10 : 0}}
                 onPress={() => {
+                  resetInactivityTimeout()
                   navigation.navigate('ProductDetails', {
                     businessId,
                     businessSlug,
@@ -167,6 +175,8 @@ interface Params {
   categories: Category[];
   businessId: string;
   businessSlug: string;
+  clearInactivityTimeout: any;
+  resetInactivityTimeout: any;
 }
 
 export default CategoriesMenu;

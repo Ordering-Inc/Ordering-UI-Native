@@ -1,5 +1,5 @@
-import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { PanResponder, TouchableOpacity, View } from 'react-native';
 import {
   useLanguage,
   useOrder,
@@ -27,7 +27,8 @@ const BusinessMenu = (props:any): React.ReactElement => {
 
   const { navigation, businessProductsListingProps } = props;
 
-  const [{ carts }] = useOrder();
+  const [{ carts }, {clearCart} ] = useOrder();
+  const [isClearCart, setClearCart] = useState(false)
   const cartsList = (carts && Object.values(carts).filter((cart: any) => cart.products.length > 0)) || []
   const VISIBLE_CART_BOTTOM_SHEET_HEIGHT = orientationState?.dimensions?.height * (orientationState.orientation === PORTRAIT ? 0.5 : 1);
 
@@ -36,6 +37,39 @@ const BusinessMenu = (props:any): React.ReactElement => {
   if (cartsList?.length > 0) {
     cart = cartsList?.find((item: any) => item.business_id == businessProductsListingProps.slug);
   }
+  const clearCartWhenTimeOut = () => {
+    if (cart?.uuid) clearCart(cart?.uuid)
+  }
+  const timerId = useRef(false);
+
+  const clearInactivityTimeout = () =>{ 
+    clearTimeout(timerId.current);
+  }
+  const panResponder = React.useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponderCapture: () => {
+        resetInactivityTimeout()
+      },
+    })
+  ).current
+  const resetInactivityTimeout = useCallback(() => {
+    clearTimeout(timerId.current);
+    timerId.current = setTimeout(() => {
+      setClearCart(true)
+      navigation.reset({
+        routes: [{ name: 'Intro' }],
+      })
+    }, 1000*10);
+  }, []);
+  
+  useEffect(() => {
+    if(isClearCart && cart?.uuid) clearCart(cart?.uuid)
+  }, [cart, isClearCart]);
+
+  useEffect(() => {
+    resetInactivityTimeout();
+    hideCartBottomSheet()
+  }, []);
 
   const cartProps = {
     ...props,
@@ -51,7 +85,10 @@ const BusinessMenu = (props:any): React.ReactElement => {
     showNotFound: false
   }
 
-  const goToBack = () => navigation.goBack()
+  const goToBack = () => {
+    clearInactivityTimeout()
+    navigation.goBack()
+  }
 
   const onToggleCart = () => {
     if (bottomSheetVisibility) hideCartBottomSheet();
@@ -62,7 +99,9 @@ const BusinessMenu = (props:any): React.ReactElement => {
     <View style={{
       flex: 1,
       flexDirection: orientationState?.orientation === PORTRAIT ? 'column' : 'row'
-    }}>
+    }}
+    {...panResponder.panHandlers}
+    >
       <View
         style={{
           flex: 1,
@@ -100,6 +139,9 @@ const BusinessMenu = (props:any): React.ReactElement => {
 
           <BusinessProductsListing
             { ...businessProductsListingProps }
+            resetInactivityTimeout={resetInactivityTimeout}
+            clearInactivityTimeout={clearInactivityTimeout}
+            bottomSheetVisibility={bottomSheetVisibility}
           />
         </Container>
       </View>
@@ -112,6 +154,8 @@ const BusinessMenu = (props:any): React.ReactElement => {
         >
           <CartContent
             {...cartProps}
+            resetInactivityTimeout={resetInactivityTimeout}
+            clearInactivityTimeout={clearInactivityTimeout}
           />
         </View>
     </View>
