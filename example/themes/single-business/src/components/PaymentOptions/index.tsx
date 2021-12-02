@@ -134,7 +134,7 @@ const PaymentOptionsUI = (props: any) => {
 					/>
 					<OText
 						size={10}
-						style={{ marginStart: 12 }}
+						style={{ marginLeft: 12 }}
 						color={paymethodSelected?.id === item.id ? theme.colors.white : '#000'}
 					>
 						{t(item.gateway.toUpperCase(), item.name)}
@@ -151,19 +151,21 @@ const PaymentOptionsUI = (props: any) => {
 	return (
 		<PMContainer>
 			{paymethodsList.paymethods.length > 0 && (
-				<PMDropDownWrapper onPress={() => setShowMethods(true)}>
-					<OText color={theme.colors.textSecondary} style={{marginStart: 14}}>{paymethodSelected?.paymethod?.name || t('SELECT_PAYMENT_METHOD', 'Select Paymethod')}</OText>
-					<OIcon color={theme.colors.textSecondary} width={16} src={theme.images.general.chevron_right} style={{transform: [{rotate: '90deg'}], marginEnd: 14}} />
-					{isShowMethods && <PMDropDownCont>
-						{
-							pmData.map((item: any, idx: number) => 
-							<React.Fragment key={idx}>
-								{renderPaymethods({item})}
-							</React.Fragment>	
-							)
-						}
-					</PMDropDownCont>}
-				</PMDropDownWrapper>
+        <View style={{ flexDirection: 'column' }}>
+          <PMDropDownWrapper onPress={() => setShowMethods(!isShowMethods)}>
+            <OText color={theme.colors.textSecondary} style={{marginLeft: 14}}>{paymethodSelected?.paymethod?.name || t('SELECT_PAYMENT_METHOD', 'Select Paymethod')}</OText>
+            <OIcon color={theme.colors.textSecondary} width={16} src={theme.images.general.chevron_right} style={{transform: [{rotate: '90deg'}], marginEnd: 14}} />
+          </PMDropDownWrapper>
+          {isShowMethods && (
+            <PMDropDownCont>
+              {pmData.map((item: any, idx: number) =>
+                <TouchableOpacity key={idx} onPress={() => console.log('asdasdasda')}>
+                  {renderPaymethods({item})}
+                </TouchableOpacity>
+              )}
+            </PMDropDownCont>
+          )}
+        </View>
 			)}
 
 			{(paymethodsList.loading || isLoading) && (

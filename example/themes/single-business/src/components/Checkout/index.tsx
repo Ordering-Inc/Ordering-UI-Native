@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
-
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import {
 	Checkout as CheckoutController,
 	useOrder,
@@ -22,6 +22,10 @@ import { PaymentOptions } from '../PaymentOptions';
 import { DriverTips } from '../DriverTips';
 import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
+import { FloatingButton } from '../FloatingButton';
+import { Container } from '../../layouts/Container';
+import NavBar from '../NavBar';
+import { OrderSummary } from '../OrderSummary';
 
 import {
 	ChContainer,
@@ -36,12 +40,7 @@ import {
 	ChUserDetails,
 	ChCart
 } from './styles';
-import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
-import { FloatingButton } from '../FloatingButton';
-import { Container } from '../../layouts/Container';
-import NavBar from '../NavBar';
-import { OrderSummary } from '../OrderSummary';
 import { getTypesText } from '../../utils';
 
 const mapConfigs = {

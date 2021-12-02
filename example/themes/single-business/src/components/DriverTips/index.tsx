@@ -84,6 +84,7 @@ const DriverTipsUI = (props: any) => {
 							<TouchableOpacity
 								key={i}
 								onPress={() => handleChangeOpt(option)}
+                disabled={loading}
 							>
 								<DTCard
 									style={style.circle}
