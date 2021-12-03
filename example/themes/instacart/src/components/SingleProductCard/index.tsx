@@ -78,6 +78,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
     >
       <OIcon
         url={optimizeImage(product?.images, 'h_200,c_limit')}
+        src={!product?.images && theme.images.dummies.product}
         style={{...styles.productStyle, opacity: (isSoldOut || maxProductQuantity <= 0) ? 0.4 : 1}}
       />
       <CardInfo>
