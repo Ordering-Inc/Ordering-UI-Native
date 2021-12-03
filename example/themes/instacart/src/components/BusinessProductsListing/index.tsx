@@ -239,9 +239,11 @@ const styles = StyleSheet.create({
 	btnBackArrow: {
 		borderWidth: 0,
 		color: '#FFF',
-		backgroundColor: 'transparent',
-		borderRadius: 24,
+		backgroundColor: 'rgba(0,0,0,0.3)',
+		borderRadius: 16,
+		paddingHorizontal: 15,
 		marginRight: 15,
+		marginTop: 20
 	},
 	searchIcon: {
 		borderWidth: 0,
