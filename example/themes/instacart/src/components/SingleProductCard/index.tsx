@@ -6,7 +6,7 @@ import {
   CardInfo,
   SoldOut
 } from './styles'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
 
@@ -19,10 +19,13 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
   } = props
 
   const theme = useTheme();
+  const windowWidth = Dimensions.get('window').width;
 
   const styles = StyleSheet.create({
     container: {
       marginBottom: 15,
+      width: (windowWidth - 140) / 2,
+      minHeight: (windowWidth - 140) / 2 + 50
     },
     textStyle: {
       flex: 1,
@@ -34,8 +37,8 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
       lineHeight: 18
     },
     productStyle: {
-      width: 100,
-      height: 100,
+      width: (windowWidth - 200) / 2,
+      height: (windowWidth - 200) / 2,
       borderRadius: 3,
 		  marginTop: 5
     },
@@ -74,10 +77,11 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
   return (
     <CardContainer style={styles.container}
       onPress={() => onProductClick(product)}
-		activeOpacity={0.8}
+		  activeOpacity={0.8}
     >
       <OIcon
         url={optimizeImage(product?.images, 'h_200,c_limit')}
+        src={!product?.images && theme.images.dummies.product}
         style={{...styles.productStyle, opacity: (isSoldOut || maxProductQuantity <= 0) ? 0.4 : 1}}
       />
       <CardInfo>

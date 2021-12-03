@@ -10,7 +10,7 @@ import {
   WrapperNotFound
 } from './styles'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
-import { Platform, View } from 'react-native'
+import { Platform, View, TouchableOpacity } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import { ScrollView } from 'react-native-gesture-handler'
 
@@ -28,7 +28,8 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     handleSearchRedirect,
     handleClearSearch,
     errorQuantityProducts,
-    handleCancelSearch
+    handleCancelSearch,
+    handlerClickCategory
   } = props
 
   const [, t] = useLanguage()
@@ -52,7 +53,11 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         !category.id && (
           featured && categoryState?.products?.find((product: any) => product.featured) && (
             <>
-              <OText style={{...theme.labels.subtitle, fontWeight: Platform.OS == 'ios' ? '600' : 'bold'}} mBottom={10}>{t('FEATURED', 'Featured')}</OText>
+              <TouchableOpacity
+                onPress={() => handlerClickCategory({ id: 'featured', name: 'Featured' })}
+              >
+                <OText style={{...theme.labels.subtitle, fontWeight: Platform.OS == 'ios' ? '600' : 'bold'}} mBottom={10}>{t('FEATURED', 'Featured')}</OText>
+              </TouchableOpacity>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {categoryState.products?.map((product: any) => product.featured && (
                   <SingleProductCard
@@ -77,7 +82,11 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               {
                 products.length > 0 && (
                   <>
-                    <OText style={{...theme.labels.subtitle, fontWeight: Platform.OS === 'ios' ? '600' : 'bold'}} mBottom={10}>{category.name}</OText>
+                    <TouchableOpacity
+                      onPress={() => handlerClickCategory(category)}
+                    >
+                      <OText style={{...theme.labels.subtitle, fontWeight: Platform.OS === 'ios' ? '600' : 'bold'}} mBottom={10}>{category.name}</OText>
+                    </TouchableOpacity>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                       {
                         products.map((product: any) => (
@@ -104,7 +113,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
           <>
             {[...Array(categoryState?.pagination?.nextPageItems).keys()].map((item, i) => (
               <Placeholder key={i} style={{ padding: 5, marginBottom: 20 }} Animation={Fade}>
-                <PlaceholderLine width={70} height={20} style={{ marginBottom: 20 }} />
+                <PlaceholderLine width={50} height={20} style={{ marginBottom: 20 }} />
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <View style={{flexBasis: '47%'}}>
                     <PlaceholderLine width={80} height={100} style={{ marginBottom: 10 }} />

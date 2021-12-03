@@ -162,7 +162,7 @@ export interface BusinessProductsListingParams {
 	productModal?: any;
 	handleChangeCategory: (value: any) => {};
 	setProductLogin?: () => {};
-	updateProductModal?: (value: any) => {}
+	updateProductModal?: (value: any) => {},
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -196,9 +196,11 @@ export interface BusinessProductsListParams {
 	handleClearSearch?: (value: any) => {};
 	isBusinessLoading?: any,
 	errorQuantityProducts?: boolean,
-	handleCancelSearch?: () => void
+	handleCancelSearch?: () => void,
+	handlerClickCategory?: any,
 }
 export interface SingleProductCardParams {
+	isFullCategoryView?: boolean,
 	businessId: any,
 	product: any;
 	isSoldOut: boolean;
