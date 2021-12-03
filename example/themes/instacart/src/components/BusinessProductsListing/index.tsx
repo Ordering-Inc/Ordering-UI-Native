@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {
 	BusinessAndProductList,
@@ -29,6 +29,8 @@ import { useTheme } from 'styled-components/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { OrderSummary } from '../OrderSummary'
 import { Cart } from '../Cart'
+import { SingleProductCard } from '../../../../../src/components/SingleProductCard'
+import NavBar from '../NavBar'
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const {
@@ -151,20 +153,21 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								handleClearSearch={handleChangeSearch}
 								errorQuantityProducts={errorQuantityProducts}
 								handleCancelSearch={handleCancel}
+								handlerClickCategory={handleChangeCategory}
 							/>
 						</WrapContent>
 					</>
 				)}
 				{loading && !error && (
 					<>
-						<BusinessProductsCategories
+						{/* <BusinessProductsCategories
 							categories={[]}
 							categorySelected={categorySelected}
 							onClickCategory={handleChangeCategory}
 							featured={featuredProducts}
 							openBusinessInformation={openBusinessInformation}
 							loading={loading}
-						/>
+						/> */}
 						<WrapContent>
 							<BusinessProductsList
 								categories={[]}
@@ -207,6 +210,40 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					onSave={handlerProductAction}
 					setProductLogin={setProductLogin}
 				/>
+			</OModal>
+
+			<OModal
+				open={categorySelected.id !== null}
+				onClose={() => handleChangeCategory({ id: null, name: 'All' })}
+				entireModal
+				customClose
+			>
+				<ScrollView
+					contentContainerStyle={{
+						paddingHorizontal: 40,
+						paddingVertical: 20
+					}}
+				>
+					<NavBar
+						title={categorySelected?.name}
+						onActionLeft={() => handleChangeCategory({ id: null, name: 'All' })}
+						showCall={false}
+						style={{ paddingHorizontal: 0, marginHorizontal: -7 }}
+					/>
+					<View>
+						{categorySelected.id && (
+							categoryState.products?.map((product: any) => (
+								<SingleProductCard
+									key={product.id}
+									isSoldOut={(product.inventoried && !product.quantity)}
+									product={product}
+									businessId={business.id}
+									onProductClick={() => onProductClick(product)}
+								/>
+							))
+						)}
+					</View>
+				</ScrollView>
 			</OModal>
 
 			{openUpselling && (
