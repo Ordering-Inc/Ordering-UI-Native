@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { LanguageSelector as LanguageSelectorController, useOrder } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { Platform, StyleSheet, View } from 'react-native'
@@ -61,13 +61,19 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 		(a.content > b.content) ? 1 : ((b.content > a.content) ? -1 : 0)
 	)
 
+  const changeLang = useCallback((lang) => {
+		if (lang !== currentLanguage || orderState.loading)	{
+			handleChangeLanguage(lang);
+		}
+	}, []);
+
 	return (
 		<Container>
 			{languagesState?.languages && (
 				<>
 					{iconColor && <OIcon src={theme.images.general.language} color={iconColor} style={{ marginEnd: 14 }} width={16} />}
 					<RNPickerSelect
-						onValueChange={handleChangeLanguage}
+						onValueChange={changeLang}
 						items={_languages || []}
 						value={currentLanguage}
 						style={pickerStyle ? pickerStyle : _pickerStyle}

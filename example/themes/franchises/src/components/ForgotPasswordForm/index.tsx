@@ -22,7 +22,7 @@ const ForgotPasswordUI = (props: any) => {
 		handleButtonForgotPasswordClick,
 	} = props;
 	const [, t] = useLanguage();
-	const { showToast } = useToast();
+	const [, { showToast }] = useToast();
 	const { control, handleSubmit, errors } = useForm();
 
 	const theme = useTheme();

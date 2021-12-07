@@ -142,7 +142,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 				activeOpacity={1}
 			>
 				<View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-					<ContentInfo>
+          <ContentInfo style={{alignItems: 'center'}}>
 						{product?.images && (
 							<ProductImage>
 								{isFromCheckout ? (

@@ -73,4 +73,5 @@ export const PMDropDownCont = styled.View`
   width: 100%;
   padding: 10px 16px;
   box-shadow: 0 2px 3px #0000004D;
+  border: 1px solid #EEE;
 `;

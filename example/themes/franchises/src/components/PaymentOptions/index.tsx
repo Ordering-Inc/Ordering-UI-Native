@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import {
 	Placeholder,
 	PlaceholderLine,
@@ -24,12 +24,10 @@ import { OText, OIcon, OModal, OButton } from '../shared';
 import {
 	PMContainer,
 	PMItem,
-	PMCardSelected,
-	PMCardItemContent,
 	PMDropDownWrapper,
 	PMDropDownCont
 } from './styles'
-import { getIconCard, flatArray } from '../../utils';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 // const stripeRedirectOptions = [
@@ -134,7 +132,7 @@ const PaymentOptionsUI = (props: any) => {
 					/>
 					<OText
 						size={10}
-						style={{ marginStart: 12 }}
+						style={{ marginLeft: 12, marginRight: 12 }}
 						color={paymethodSelected?.id === item.id ? theme.colors.white : '#000'}
 					>
 						{t(item.gateway.toUpperCase(), item.name)}
@@ -151,8 +149,8 @@ const PaymentOptionsUI = (props: any) => {
 	return (
 		<PMContainer>
 			{paymethodsList.paymethods.length > 0 && (
-				<PMDropDownWrapper onPress={() => setShowMethods(true)}>
-					<OText color={theme.colors.textSecondary} style={{marginStart: 14}}>{paymethodSelected?.paymethod?.name || t('SELECT_PAYMENT_METHOD', 'Select Paymethod')}</OText>
+				<PMDropDownWrapper onPress={() => setShowMethods(!isShowMethods)}>
+        <OText color={theme.colors.textSecondary} style={{marginLeft: 14, marginRight: 14}}>{paymethodSelected?.paymethod?.name || t('SELECT_PAYMENT_METHOD', 'Select Paymethod')}</OText>
 					<OIcon color={theme.colors.textSecondary} width={16} src={theme.images.general.chevron_right} style={{transform: [{rotate: '90deg'}], marginEnd: 14}} />
 					{isShowMethods && <PMDropDownCont>
 						{
