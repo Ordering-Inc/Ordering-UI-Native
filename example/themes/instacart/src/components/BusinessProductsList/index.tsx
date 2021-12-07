@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { ProductsList, useLanguage } from 'ordering-components/native'
 import { SingleProductCard } from '../SingleProductCard'
 import { NotFoundSource } from '../NotFoundSource'
@@ -34,49 +34,57 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
 
   const [, t] = useLanguage()
   const theme = useTheme()
+  const [allProducts, setAllProducts] = useState([])
+
+  useEffect(() => {
+    if (category?.id) return
+    if (Array.isArray(categoryState?.products)) {
+      if (categoryState?.products.length > allProducts.length) {
+        setAllProducts(categoryState?.products.sort((a: any, b: any) => a.id - b.id))
+      }
+    }
+  }, [category, categoryState])
 
   return (
     <ProductsContainer>
-      {category.id && (
-        categoryState.products?.map((product: any) => (
+      {/* {category.id && (
+        categoryState.products?.map((product: any, index: number) => (
           <SingleProductCard
-            key={product.id}
+            key={index}
             isSoldOut={(product.inventoried && !product.quantity)}
             product={product}
             businessId={businessId}
             onProductClick={() => onProductClick(product)}
           />
         ))
-      )}
+      )} */}
 
       {
-        !category.id && (
-          featured && categoryState?.products?.find((product: any) => product.featured) && (
-            <>
-              <TouchableOpacity
-                onPress={() => handlerClickCategory({ id: 'featured', name: 'Featured' })}
-              >
-                <OText style={{...theme.labels.subtitle, fontWeight: Platform.OS == 'ios' ? '600' : 'bold'}} mBottom={10}>{t('FEATURED', 'Featured')}</OText>
-              </TouchableOpacity>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {categoryState.products?.map((product: any) => product.featured && (
-                  <SingleProductCard
-                    key={product.id}
-                    isSoldOut={(product.inventoried && !product.quantity)}
-                    product={product}
-                    businessId={businessId}
-                    onProductClick={onProductClick}
-                  />
-                ))}
-              </ScrollView>
-            </>
-          )
+        featured && allProducts?.find((product: any) => product.featured) && (
+          <>
+            <TouchableOpacity
+              onPress={() => handlerClickCategory({ id: 'featured', name: 'Featured' })}
+            >
+              <OText style={{...theme.labels.subtitle, fontWeight: Platform.OS == 'ios' ? '600' : 'bold'}} mBottom={10}>{t('FEATURED', 'Featured')}</OText>
+            </TouchableOpacity>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {allProducts?.map((product: any, index: number) => product.featured && (
+                <SingleProductCard
+                  key={index}
+                  isSoldOut={(product.inventoried && !product.quantity)}
+                  product={product}
+                  businessId={businessId}
+                  onProductClick={onProductClick}
+                />
+              ))}
+            </ScrollView>
+          </>
         )
       }
 
       {
-        !category.id && categories && categories.filter(category => category.id !== null).map((category, i, _categories) => {
-          const products = categoryState.products?.filter((product: any) => product.category_id === category.id) || []
+        categories && categories.filter(category => category.id !== null).map((category, i, _categories) => {
+          const products = allProducts?.filter((product: any) => product.category_id === category.id) || []
           return (
             <View key={category.id} style={{alignItems: 'flex-start'}}>
               {
@@ -89,9 +97,9 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                     </TouchableOpacity>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                       {
-                        products.map((product: any) => (
+                        products.map((product: any, index: number) => (
                           <SingleProductCard
-                            key={product.id}
+                            key={index}
                             isSoldOut={product.inventoried && !product.quantity}
                             businessId={businessId}
                             product={product}

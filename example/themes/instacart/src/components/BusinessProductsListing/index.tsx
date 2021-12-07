@@ -6,7 +6,9 @@ import {
 	useLanguage,
 	useOrder,
 	useSession,
-	useUtils
+	useUtils,
+	useToast,
+	ToastType
 } from 'ordering-components/native'
 import { OButton, OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -31,6 +33,9 @@ import { OrderSummary } from '../OrderSummary'
 import { Cart } from '../Cart'
 import { SingleProductCard } from '../../../../../src/components/SingleProductCard'
 import NavBar from '../NavBar'
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+
+const PIXELS_TO_SCROLL = 1000
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const {
@@ -47,6 +52,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		header,
 		logo,
 		productModal,
+		getNextProducts,
 		handleChangeCategory,
 		setProductLogin,
 		updateProductModal
@@ -57,6 +63,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [{ auth }] = useSession()
 	const [orderState] = useOrder()
 	const [{ parsePrice }] = useUtils()
+	const [ ,{ showToast }] = useToast()
 	const { business, loading, error } = businessState
 	const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
 	const [curProduct, setCurProduct] = useState(null)
@@ -100,6 +107,16 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		setOpenUpselling(false)
 	}
 
+	const handleScroll = ({ nativeEvent }: any) => {
+		const y = nativeEvent.contentOffset.y
+		const height = nativeEvent.contentSize.height
+		const hasMore = !(categoryState.pagination.totalPages === categoryState.pagination.currentPage)
+		if (y + PIXELS_TO_SCROLL > height && !loading && hasMore && getNextProducts) {
+		  getNextProducts()
+		  showToast(ToastType.Info, t('LOADING_MORE_PRODUCTS', 'Loading more products'))
+		}
+	}
+
 	return (
 		<>
 			<BusinessProductsListingContainer
@@ -107,6 +124,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
 				contentContainerStyle={{ paddingBottom: 40 }}
 				showsVerticalScrollIndicator={false}
+				onScroll={(e: any) => handleScroll(e)}
 			>
 				<WrapHeader>
 					{!loading && business?.id && (
@@ -223,6 +241,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						paddingHorizontal: 40,
 						paddingVertical: 20
 					}}
+					onScroll={(e: any) => handleScroll(e)}
 				>
 					<NavBar
 						title={categorySelected?.name}
@@ -232,9 +251,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					/>
 					<View>
 						{categorySelected.id && (
-							categoryState.products?.map((product: any) => (
+							categoryState.products?.map((product: any, index: number) => (
 								<SingleProductCard
-									key={product.id}
+									key={index}
 									isSoldOut={(product.inventoried && !product.quantity)}
 									product={product}
 									businessId={business.id}
@@ -243,6 +262,28 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							))
 						)}
 					</View>
+
+					{
+						categoryState.loading && (
+						<>
+							{[...Array(10).keys()].map((item, i) => (
+							<Placeholder key={i} style={{ marginBottom: 10 }} Animation={Fade}>
+								<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+									<View
+										style={{ width: 80, height: 80 }}
+									>
+										<PlaceholderLine width={80} height={70} />
+									</View>
+									<Placeholder>
+										<PlaceholderLine width={60} style={{marginBottom: 30}}/>
+										<PlaceholderLine width={20} />
+									</Placeholder>
+								</View>
+							</Placeholder>
+							))}
+						</>
+						)
+					}
 				</ScrollView>
 			</OModal>
 
