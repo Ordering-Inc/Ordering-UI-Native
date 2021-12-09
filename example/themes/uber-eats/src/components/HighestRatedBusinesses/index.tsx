@@ -25,8 +25,6 @@ const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
 
   const windowWidth = Dimensions.get('window').width;
 
-  console.log(businessesList)
-
   return (
     <>
       <ListWrapper>
