@@ -101,9 +101,15 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
             </Logo>
           )}
           <Information>
-            <OText size={17} numberOfLines={1}>
-              {order.business?.name}
-            </OText>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              horizontal
+            >
+              <OText size={17} >
+                {order.business?.name}
+              </OText>
+            </ScrollView>
             <OText size={15} color={theme.colors.textSecondary} numberOfLines={1}>
               {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
             </OText>
@@ -120,13 +126,19 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
             </MyOrderOptions>
           </Information>
           <Status>
-            <OText
-              color={theme.colors.primary}
-              size={16}
-              numberOfLines={1}
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                horizontal
             >
-              {getOrderStatus(order.status)?.value}
-            </OText>
+              <OText
+                color={theme.colors.primary}
+                size={16}
+                numberOfLines={1}
+              >
+                {getOrderStatus(order.status)?.value}
+              </OText>
+            </ScrollView>
             <OButton
               text={t('REORDER', 'Reorder')}
               imgRightSrc={''}

@@ -213,7 +213,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 </OText>
               )}
             </View>
-            <View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end' }}>
+            <View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end', marginLeft: 10}}>
               {!isProductUnavailable && (
                 <View style={{ flexDirection: 'row' }}>
                   <OText size={18}>{parsePrice(product.total || product.price)}</OText>
