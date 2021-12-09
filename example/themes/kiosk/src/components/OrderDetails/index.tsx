@@ -207,8 +207,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     const getCustomerName = async () => {
-      const { customerName: name } = await _retrieveStoreData('customer_name')
-      setCustomerName(name)
+      try {
+        const { customerName: name } = await _retrieveStoreData('customer_name')
+          setCustomerName(name)
+      } catch (e) {
+        if (e) {
+          setCustomerName('')
+        }
+      }
     }
     getCustomerName()
     const redirectHome = setTimeout(() =>{

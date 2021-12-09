@@ -43,7 +43,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     imageStyle: {
       width: '100%',
       height: Platform.OS === 'ios' ? 250 : 180,
-      resizeMode: 'cover',
+      resizeMode: Platform.OS === 'ios' ? 'contain' : 'cover',
       borderRadius: 10,
     },
     closeUpsellingButton: {
