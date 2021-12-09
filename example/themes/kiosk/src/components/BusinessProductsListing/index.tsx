@@ -100,8 +100,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             style={{
               width:
                 orientationState?.orientation === LANDSCAPE
-                  ? bottomSheetVisibility ? orientationState?.dimensions?.width * 0.15 :orientationState?.dimensions?.width * 0.16
-                  : orientationState?.dimensions?.width * 0.21,
+                  ? bottomSheetVisibility ? orientationState?.dimensions?.width * 0.145 :orientationState?.dimensions?.width * 0.16
+                  : orientationState?.dimensions?.width * 0.20,
             }}
             onPress={() => {
               resetInactivityTimeout()

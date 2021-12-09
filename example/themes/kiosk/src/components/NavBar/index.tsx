@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
 import { OIcon, OButton, OText } from '../shared'
-import { ImageStyle, TextStyle, View } from 'react-native'
+import { ImageStyle, TextStyle, View, Platform } from 'react-native'
 import { OrderTypeSelector } from '../OrderTypeSelector'
 import { useConfig } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
@@ -15,6 +15,7 @@ const Wrapper = styled.View`
   position: relative;
   border-bottom-color: #E1E8ED;
   border-bottom-width: 1px;
+  margin-top: ${Platform.OS === 'ios' ? '10px' : '0px'};
 `
 const TitleWrapper = styled.View`
   flex-direction: column;
@@ -124,7 +125,7 @@ const NavBar = (props: Props) => {
 
 NavBar.defaultProps = {
   title: '',
-  textAlign: 'center'
+  textAlign: 'center',
 };
 
 export default NavBar;
