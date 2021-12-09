@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
@@ -8,7 +8,9 @@ import {
   useOrder,
   useSession,
   useUtils,
-  useConfig
+  useConfig,
+  ToastType,
+	useToast
 } from 'ordering-components/native'
 import { OModal, OText } from '../shared'
 import { OBottomPopup } from '../shared'
@@ -37,6 +39,8 @@ import {
   WrapBusinesssProductsCategories
 } from './styles'
 
+const PIXELS_TO_SCROLL = 1000
+
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {
     navigation,
@@ -55,7 +59,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleChangeCategory,
     setProductLogin,
     updateProductModal,
-    isCartOnProductsList
+    isCartOnProductsList,
+    getNextProducts
   } = props
 
   const theme = useTheme()
@@ -101,6 +106,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [orderState] = useOrder()
   const [{ parsePrice }] = useUtils()
   const [{ configs }] = useConfig()
+  const [ ,{showToast}] = useToast()
 
   const { business, loading, error } = businessState
   const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
@@ -108,6 +114,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [curProduct, setCurProduct] = useState(null)
   const [isCartOpen, setIsCartOpen] = useState(false)
 	const [isStickyCategory, setStickyCategory] = useState(false)
+  const scrollViewRef = useRef<any>(null)
+	const [categoriesLayout, setCategoriesLayout] = useState<any>({})
+	const [productListLayout, setProductListLayout] = useState<any>(null)
+	const [selectedCategoryId, setSelectedCategoryId] = useState<any>(null)
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
@@ -136,12 +146,31 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     handleCloseProductModal()
   }
 
-  const handlePageScroll = (event: any) => {
-		const y = event?.nativeEvent?.contentOffset?.y || 0;
-		if (y > 30 && !isStickyCategory) {
+  const handlePageScroll = ({ nativeEvent }: any) => {
+		const scrollOffset = nativeEvent?.contentOffset?.y || 0;
+		if (scrollOffset > 30 && !isStickyCategory) {
 			setStickyCategory(true);
-		} else if (y < 19 && isStickyCategory) {
+		} else if (scrollOffset < 19 && isStickyCategory) {
 			setStickyCategory(false);
+		}
+
+    if (businessState?.business?.lazy_load_products_recommended) {
+			const height = nativeEvent.contentSize.height
+			const hasMore = !(categoryState.pagination.totalPages === categoryState.pagination.currentPage)
+			if (scrollOffset + PIXELS_TO_SCROLL > height && !loading && hasMore && getNextProducts) {
+				getNextProducts()
+				showToast(ToastType.Info, t('LOADING_MORE_PRODUCTS', 'Loading more products'))
+			}
+		} else {
+			if (!scrollOffset || !categoriesLayout || !productListLayout) return
+			for (const key in categoriesLayout) {
+				const categoryOffset = categoriesLayout[key].y + productListLayout?.y - 70
+				if (categoryOffset - 50 <= scrollOffset && scrollOffset <= categoryOffset + 50) {
+					if (selectedCategoryId !== key) {
+						setSelectedCategoryId(key)
+					}
+				}
+			}
 		}
 	}
 
@@ -194,7 +223,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         stickyHeaderIndices={[2]}
         style={{ ...styles.mainContainer, marginTop: isStickyCategory ? 60 : 0 }}
         isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
-        onScroll={handlePageScroll}
+				ref={scrollViewRef}
+        onScroll={(e: any) => handlePageScroll(e)}
         scrollEventThrottle={14}
       >
         <WrapHeader>
@@ -240,6 +270,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 categorySelected={categorySelected}
                 onClickCategory={handleChangeCategory}
                 featured={featuredProducts}
+
+                scrollViewRef={scrollViewRef}
+								productListLayout={productListLayout}
+								categoriesLayout={categoriesLayout}
+								selectedCategoryId={selectedCategoryId}
+								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
               />
             )}
           </WrapBusinesssProductsCategories>
@@ -247,7 +283,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         
         {!loading && business?.id && (
           <>
-            <WrapContent>
+            <WrapContent
+							onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}
+            >
               <BusinessProductsList
                 categories={[
                   { id: null, name: t('ALL', 'All') },
@@ -265,6 +303,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 handleClearSearch={handleChangeSearch}
                 errorQuantityProducts={errorQuantityProducts}
                 handleCancelSearch={handleCancel}
+
+                categoriesLayout={categoriesLayout}
+								setCategoriesLayout={setCategoriesLayout}
               />
             </WrapContent>
           </>

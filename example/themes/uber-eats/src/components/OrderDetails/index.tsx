@@ -210,7 +210,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'flex-start',
-                  flexGrow: 1
+                  width: '70%'
                 }}
               >
                 <View>
@@ -223,7 +223,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     {order?.business?.name}
                   </OText>
                 </View>
-                <OText color={theme.colors.gray} numberOfLines={1}>{order?.business?.address}</OText>
+                <OText color={theme.colors.gray} numberOfLines={1}>
+                  {order?.business?.address}
+                </OText>
                 <OText>
                   {
                     order?.delivery_datetime_utc

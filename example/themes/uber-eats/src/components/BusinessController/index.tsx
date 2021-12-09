@@ -194,7 +194,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 export const BusinessController = (props: BusinessControllerParams) => {
   const BusinessControllerProps = {
     ...props,
-    UIComponent: BusinessControllerUI,
+    UIComponent: BusinessControllerUI
   };
 
   return <BusinessSingleCard {...BusinessControllerProps} />;
