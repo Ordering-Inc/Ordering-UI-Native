@@ -445,3 +445,7 @@ export interface HelpGuideParams {
 export interface HelpAccountAndPaymentParams {
   navigation: any;
 }
+export interface HighestRatedBusinessesParams {
+	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
+	onBusinessClick?: void;
+}

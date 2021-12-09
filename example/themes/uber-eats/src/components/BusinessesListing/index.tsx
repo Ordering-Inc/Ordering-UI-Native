@@ -25,6 +25,7 @@ import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { OrderTypeSelector } from '../OrderTypeSelector'
 import { MomentOption } from '../MomentOption'
+import { HighestRatedBusinesses } from '../HighestRatedBusinesses'
 import { useTheme } from 'styled-components/native'
 
 const PIXELS_TO_SCROLL = 1200
@@ -138,6 +139,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
             placeholder={t('FIND_BUSINESS', 'Find a Business')}
           />
         </Search>
+
+  			<HighestRatedBusinesses onBusinessClick={handleBusinessClick} />
+        <Divider />
 
         <BusinessTypeFilter
           images={props.images}
