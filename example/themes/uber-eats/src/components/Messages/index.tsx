@@ -108,7 +108,7 @@ const MessagesUI = (props: MessagesParams) => {
 
   useEffect(() => {
     let newMessages: Array<any> = []
-    const console = `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
+    const console = `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)}`
     const firstMessage = {
       _id: 0,
       text: console,
