@@ -19,8 +19,8 @@ export const PromotionCard = (props: any) => {
     onPromotionClick,
   } = props
 
-  const [theme] = useTheme();
-  const [{ optimizeImage }] = useUtils();
+  const theme = useTheme();
+  const [{ optimizeImage, parseDate }] = useUtils();
 
   return (
     <>
@@ -75,6 +75,14 @@ export const PromotionCard = (props: any) => {
                   {promotion?.description}
                 </OText>
               )}
+              <OText
+                size={16}
+                numberOfLines={1}
+                ellipsizeMode='tail'
+                style={styles.textStyle}
+              >
+                {`Expires ${parseDate(promotion?.end)}`}
+              </OText>
             </>
           )}
         </WrapContent>

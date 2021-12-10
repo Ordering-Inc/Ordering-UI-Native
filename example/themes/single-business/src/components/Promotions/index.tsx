@@ -12,7 +12,7 @@ const PromotionsUI = (props: any) => {
   const { offersState, loadMoreOffers } = props
 
   const [, t] = useLanguage();
-  const [theme] = useTheme();
+  const theme = useTheme();
   const { height } = useWindowDimensions();
 
   return (
