@@ -17,7 +17,7 @@ export const MediaWrapper = styled.ScrollView`
   height: 127px;
 `
 export const InnerContent = styled.View`
-  padding: 20px 40px;
+  padding: 20px;
 `
 export const WrapScheduleBlock = styled.View`
   margin: 20px 0;

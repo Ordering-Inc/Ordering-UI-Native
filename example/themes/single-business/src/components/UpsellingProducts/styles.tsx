@@ -7,6 +7,7 @@ export const Container = styled.View`
 `
 export const UpsellingContainer = styled.ScrollView`
   max-height: 92px;
+  margin-right: 40px;
 `
 export const Item = styled.View`
   border-width: 1px;
