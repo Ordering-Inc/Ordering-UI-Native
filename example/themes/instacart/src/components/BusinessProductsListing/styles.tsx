@@ -3,7 +3,7 @@ import styled from 'styled-components/native'
 export const WrapHeader = styled.View`
   position: relative;
   border-bottom-width: 16px;
-  border-bottom-color: ${(props: any) => props.theme.colors.secundary}
+  border-bottom-color: ${(props: any) => props.theme.colors.secundary};
 `
 export const TopHeader = styled.View`
   position: absolute;

@@ -160,6 +160,7 @@ export interface BusinessProductsListingParams {
 	header?: any;
 	logo?: any;
 	productModal?: any;
+	getNextProducts?: () => {};
 	handleChangeCategory: (value: any) => {};
 	setProductLogin?: () => {};
 	updateProductModal?: (value: any) => {},
