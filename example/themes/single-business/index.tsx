@@ -55,6 +55,8 @@ import { ProductIngredient } from './src/components/ProductIngredient';
 import { ProductItemAccordion } from './src/components/ProductItemAccordion';
 import { ProductOption } from './src/components/ProductOption';
 import { ProductOptionSubOption } from './src/components/ProductOptionSubOption';
+import { PromotionCard } from './src/components/PromotionCard';
+import { Promotions } from './src/components/Promotions';
 import { ReviewOrder } from './src/components/ReviewOrder';
 import { SearchBar } from './src/components/SearchBar';
 import { SignupForm } from './src/components/SignupForm';
@@ -159,6 +161,8 @@ export {
   ProductItemAccordion,
   ProductOption,
   ProductOptionSubOption,
+  PromotionCard,
+  Promotions,
   SearchBar,
   SingleProductCard,
   StripeCardForm,

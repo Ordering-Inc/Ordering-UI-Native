@@ -172,7 +172,7 @@ const MessagesUI = (props: MessagesParams) => {
 		)
 	}
 
-	const renderInputToolbar = (props: typeof InputToolbarProps) => (
+	const renderInputToolbar = (props: any) => (
 		<InputToolbar
 			{...props}
 			containerStyle={{
@@ -183,7 +183,7 @@ const MessagesUI = (props: MessagesParams) => {
 		/>
 	)
 
-	const renderComposer = (props: typeof ComposerProps) => (
+	const renderComposer = (props: any) => (
 		<View style={{
 			flexDirection: 'row', width: '80%', alignItems: 'center', backgroundColor: theme.colors.backgroundGray100,
 			borderRadius: 7.6,
@@ -274,10 +274,10 @@ const MessagesUI = (props: MessagesParams) => {
 	)
 
 	return (
-		<View style={{ height: height - top - bottom, width: '100%' }}>
+		<View style={{ height: '100%', width: '100%' }}>
 			<Wrapper>
 				<Header>
-					<OIconButton icon={theme.images.general.arrow_left} style={{ paddingStart: 10, borderColor: theme.colors.clear }} onClick={onClose} />
+					<OIconButton icon={theme.images.general.arrow_left} style={{ borderColor: theme.colors.clear }} onClick={onClose} />
 					<View style={{ marginRight: 10, shadowColor: theme.colors.black, shadowOpacity: 0.1, shadowOffset: { width: 0, height: 1 }, shadowRadius: 2 }}>
 						<OIcon
 							url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}

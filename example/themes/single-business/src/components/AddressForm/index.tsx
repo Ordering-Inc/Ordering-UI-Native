@@ -4,7 +4,7 @@ import {
 	View,
 	TouchableOpacity,
 	Keyboard,
-	TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import {
 	AddressForm as AddressFormController,
@@ -510,8 +510,13 @@ const AddressFormUI = (props: AddressFormParams) => {
 				titleStyle={{ fontSize: 14 }}
 				titleWrapStyle={{ flexBasis: '75%' }}
 			/>
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-				<AddressFormContainer style={{ height: 600, overflow: 'scroll' }}>
+
+      <ScrollView
+        horizontal={false}
+        keyboardShouldPersistTaps='handled'
+        style={{ paddingBottom: 60 }}
+      >
+				<AddressFormContainer style={{ overflow: 'scroll' }}>
 					<View>
 						<FormInput>
 							<AutocompleteInput>
@@ -593,13 +598,13 @@ const AddressFormUI = (props: AddressFormParams) => {
 										/>
 									)}
 								/>
-								{hasEditing ? (
+								{(hasEditing && !formState?.changes?.address) ? (
 									<View style={styles.pinIcon}>
-										<GPSButton 
+										<GPSButton
 											apiKey={googleMapsApiKey}
 											handleGPS={(data: any, detail: any) => {
 												handleChangeAddress(data, detail);
-												setValue(data.address);
+												setValue('address', data.address);
 												if (googleInput?.current) {
 													googleInput?.current?.setAddressText( data.address );
 												}
@@ -609,17 +614,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 									</View>
 								) : null}
 							</AutocompleteInput>
-
-							{/* {!isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) && (
-                <TouchableOpacity onPress={handleToggleMap} style={{ marginBottom: 10 }}>
-                  <OText
-                    color={theme.colors.primary}
-                    style={{ textAlign: 'center' }}
-                  >
-                    {t('VIEW_MAP', 'View map to modify the exact location')}
-                  </OText>
-                </TouchableOpacity>
-              )} */}
 
 							{(locationChange || formState.changes?.location) && (
 								<View
@@ -820,34 +814,35 @@ const AddressFormUI = (props: AddressFormParams) => {
 							/>
 						)}
 					</View>
-					<OModal
-						open={toggleMap}
-						onClose={() => handleToggleMap()}
-						entireModal
-						customClose>
-						{(locationChange || formState.changes?.location) && (
-							<GoogleMapContainer>
-								<GoogleMap
-									location={locationChange || formState.changes?.location}
-									handleChangeAddressMap={handleChangeAddress}
-									maxLimitLocation={maxLimitLocation}
-									saveLocation={saveMapLocation}
-									setSaveLocation={setSaveMapLocation}
-									handleToggleMap={handleToggleMap}
-								/>
-							</GoogleMapContainer>
-						)}
-						<OButton
-							text={t('SAVE', 'Save')}
-							textStyle={{ color: theme.colors.white }}
-							imgRightSrc={null}
-							style={{ marginHorizontal: 30, marginBottom: 10 }}
-							onClick={() => setSaveMapLocation(true)}
-						/>
-					</OModal>
-					<Spinner visible={saveMapLocation} />
 				</AddressFormContainer>
-			</TouchableWithoutFeedback>
+			</ScrollView>
+
+      <OModal
+        open={toggleMap}
+        onClose={() => handleToggleMap()}
+        entireModal
+        customClose>
+        {(locationChange || formState.changes?.location) && (
+          <GoogleMapContainer>
+            <GoogleMap
+              location={locationChange || formState.changes?.location}
+              handleChangeAddressMap={handleChangeAddress}
+              maxLimitLocation={maxLimitLocation}
+              saveLocation={saveMapLocation}
+              setSaveLocation={setSaveMapLocation}
+              handleToggleMap={handleToggleMap}
+            />
+          </GoogleMapContainer>
+        )}
+        <OButton
+          text={t('SAVE', 'Save')}
+          textStyle={{ color: theme.colors.white }}
+          imgRightSrc={null}
+          style={{ marginHorizontal: 30, marginBottom: 10 }}
+          onClick={() => setSaveMapLocation(true)}
+        />
+      </OModal>
+      <Spinner visible={saveMapLocation} />
 		</>
 	);
 };
