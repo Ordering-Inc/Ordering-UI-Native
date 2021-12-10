@@ -9,12 +9,7 @@ import { PromotionCard } from '../PromotionCard'
 import { Container } from './styles'
 
 const PromotionsUI = (props: any) => {
-  const {
-    loading,
-    error,
-    offers,
-    pagination
-   } = props.offersState
+  const { offersState, loadMoreOffers } = props
 
   const [, t] = useLanguage();
   const [theme] = useTheme();
@@ -26,16 +21,16 @@ const PromotionsUI = (props: any) => {
         {t('PROMOTIONS', 'Promotions')}
       </OText>
 
-      {!error && (
+      {!offersState?.error && (
         <>
           <ScrollView style={{ paddingBottom: 20 }}>
-            {offers?.length > 0 && offers?.map((offer: any) => (
+            {offersState?.offers?.length > 0 && offersState?.offers?.map((offer: any) => (
               <PromotionCard
                 key={offer.id}
                 promotion={offer}
               />
             ))}
-            {loading && (
+            {offersState?.loading && (
               <ScrollView>
                 {[...Array(8)].map((_, i) => (
                   <PromotionCard
@@ -45,10 +40,10 @@ const PromotionsUI = (props: any) => {
                 ))}
               </ScrollView>
             )}
-            {pagination.totalPages && pagination.currentPage < pagination.totalPages && (
+            {offersState?.pagination?.totalPages && offersState?.pagination?.currentPage < offersState?.pagination?.totalPages && (
               <View>
                 <OButton
-                  onClick={props.loadMoreOffers}
+                  onClick={loadMoreOffers}
                   text={t('LOAD_MORE_PROMOTIONS', 'Load more promotions')}
                   imgRightSrc={null}
                   textStyle={{ color: theme.colors.white }}
@@ -60,11 +55,11 @@ const PromotionsUI = (props: any) => {
         </>
       )}
 
-      {(error || offers?.length === 0) && !loading && (
+      {(offersState?.error || offersState?.offers?.length === 0) && !offersState?.loading && (
         <View style={{ height: height * 0.7, justifyContent: 'center' }}>
           <NotFoundSource
-            content={error
-              ? error[0]
+            content={offersState?.error
+              ? offersState?.error[0]
               : t('NO_PROMOTIONS_FOUND', 'Sorry, no promotions found')}
             image={theme.images.general.notFound}
           />
