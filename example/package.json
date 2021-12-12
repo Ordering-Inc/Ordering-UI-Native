@@ -100,6 +100,7 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-sound": "^0.11.1",
     "react-native-swipe-gestures": "^1.0.5",
+    "react-native-swiper": "^1.6.0",
     "react-native-uuid": "^2.0.1",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^11.6.4",
