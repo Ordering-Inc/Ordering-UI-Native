@@ -14,6 +14,7 @@ import { ForgotPasswordForm } from './src/components/ForgotPasswordForm';
 import { MomentOption } from './src/components/MomentOption';
 import { OrdersOption } from './src/components/OrdersOption';
 import { OrderDetails } from './src/components/OrderDetails';
+import { OrderProgress } from './src/components/OrderProgress';
 import { UserProfileForm } from './src/components/UserProfileForm';
 import { ReviewOrder } from './src/components/ReviewOrder';
 import { UserProfile } from './src/components/UserProfile';
@@ -67,6 +68,7 @@ export {
 	MomentOption,
 	OrdersOption,
 	OrderDetails,
+	OrderProgress,
 	UserProfileForm,
 	ReviewOrder,
 	UserProfile,
