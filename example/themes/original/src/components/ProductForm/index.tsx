@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	ProductForm as ProductOptions,
 	useSession,
 	useLanguage,
 	useOrder,
-	useUtils,
+	useUtils
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { ProductIngredient } from '../ProductIngredient';
 import { ProductOption } from '../ProductOption';
+import Swiper from 'react-native-swiper'
+import FastImage from 'react-native-fast-image';
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
 
-import { View, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, Platform, AppRegistry } from 'react-native';
 
 import {
 	ProductHeader,
@@ -25,7 +28,7 @@ import {
 	WrapperSubOption,
 	ProductComment,
 	ProductActions,
-	ExtraOptionWrap,
+	ExtraOptionWrap
 } from './styles';
 import { OButton, OIcon, OInput, OText } from '../shared';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -110,13 +113,30 @@ export const ProductOptionsUI = (props: any) => {
 			borderBottomColor: theme.colors.border,
 			justifyContent: 'center',
 		},
+		slide1: {
+			flex: 1,
+		},
+		mainSwiper : {
+			height: 258,
+		},
+		swiperButton: {
+			marginHorizontal: 30,
+			alignItems: 'center',
+			justifyContent: 'center',
+			width: 32,
+			height: 32,
+			borderRadius: 16,
+			backgroundColor: 'rgba(255,255,255,0.3)'
+		}
 	});
 
-	const [{ parsePrice }] = useUtils();
+	const [{ parsePrice, optimizeImage }] = useUtils();
 	const [, t] = useLanguage();
 	const [orderState] = useOrder();
 	const [{ auth }] = useSession();
 	const { product, loading, error } = productObject;
+	const [gallery, setGallery] = useState([])
+	const [thumbsSwiper, setThumbsSwiper] = useState(0)
 
 	const { top, bottom } = useSafeAreaInsets();
 	const { height } = useWindowDimensions();
@@ -154,10 +174,23 @@ export const ProductOptionsUI = (props: any) => {
 		return sel[0]?.id !== undefined;
 	};
 
+	const handleChangeMainIndex = (index: number) => {
+		setThumbsSwiper(index)
+	}
+
 	const handleRedirectLogin = () => {
 		onClose();
 		navigation.navigate('Login');
 	};
+
+	useEffect(() => {
+		const productImgList: any = []
+		product?.images && productImgList.push(product.images)
+		for (const img of product?.gallery) {
+			productImgList.push(img.file)
+		}
+		setGallery(productImgList)
+	}, [product])
 
 	const saveErrors =
 		orderState.loading ||
@@ -165,52 +198,52 @@ export const ProductOptionsUI = (props: any) => {
 		Object.keys(errors).length > 0;
 
 	const ExtraOptions = ({ eID, options }: any) => (
-			<>
-				{product?.ingredients.length > 0 && (
-					<TouchableOpacity
-						key={`eopt_all_00`}
-						onPress={() => setSelectedOpt(-1)}
-						style={[
-							styles.extraItem,
-							{
-								borderBottomColor:
-									selOpt == -1 ? theme.colors.textNormal : theme.colors.border,
-							},
-						]}>
-						<OText
-							color={selOpt == -1 ? theme.colors.textNormal : theme.colors.textSecondary}
-							size={selOpt == -1 ? 14 : 12}
-							weight={selOpt == -1 ? '600' : 'normal'}>
-							{t('INGREDIENTS', 'Ingredients')}
-						</OText>
-					</TouchableOpacity>
-				)}
-				{options.map(({ id, name, respect_to }: any) => (
-					<React.Fragment key={`cont_key_${id}`}>
-						{respect_to == null && (
-							<TouchableOpacity
-								key={`eopt_key_${id}`}
-								onPress={() => setSelectedOpt(id)}
-								style={[
-									styles.extraItem,
-									{
-										borderBottomColor:
-											selOpt == id ? theme.colors.textNormal : theme.colors.border,
-									},
-								]}>
-								<OText
-									color={
-										selOpt == id ? theme.colors.textNormal : theme.colors.textSecondary
-									}
-									size={selOpt == id ? 14 : 12}
-									weight={selOpt == id ? '600' : 'normal'}>
-									{name}
-								</OText>
-							</TouchableOpacity>
-						)}
-					</React.Fragment>
-				))}
-			</>
+		<>
+			{product?.ingredients.length > 0 && (
+				<TouchableOpacity
+					key={`eopt_all_00`}
+					onPress={() => setSelectedOpt(-1)}
+					style={[
+						styles.extraItem,
+						{
+							borderBottomColor:
+								selOpt == -1 ? theme.colors.textNormal : theme.colors.border,
+						},
+					]}>
+					<OText
+						color={selOpt == -1 ? theme.colors.textNormal : theme.colors.textSecondary}
+						size={selOpt == -1 ? 14 : 12}
+						weight={selOpt == -1 ? '600' : 'normal'}>
+						{t('INGREDIENTS', 'Ingredients')}
+					</OText>
+				</TouchableOpacity>
+			)}
+			{options.map(({ id, name, respect_to }: any) => (
+				<React.Fragment key={`cont_key_${id}`}>
+					{respect_to == null && (
+						<TouchableOpacity
+							key={`eopt_key_${id}`}
+							onPress={() => setSelectedOpt(id)}
+							style={[
+								styles.extraItem,
+								{
+									borderBottomColor:
+										selOpt == id ? theme.colors.textNormal : theme.colors.border,
+								},
+							]}>
+							<OText
+								color={
+									selOpt == id ? theme.colors.textNormal : theme.colors.textSecondary
+								}
+								size={selOpt == id ? 14 : 12}
+								weight={selOpt == id ? '600' : 'normal'}>
+								{name}
+							</OText>
+						</TouchableOpacity>
+					)}
+				</React.Fragment>
+			))}
+		</>
 	);
 
 	return (
@@ -238,11 +271,81 @@ export const ProductOptionsUI = (props: any) => {
 								</View>
 							) : (
 								<>
-									<ProductHeader
-										source={{ uri: product?.images || productCart?.images }}
-										style={{height: windowWidth}}
-										resizeMode={'contain'}
-									/>
+									<Swiper
+										loop={false}
+										showsButtons={true}
+										style={styles.mainSwiper}
+										// index={thumbsSwiper}
+										onIndexChanged={(index) => handleChangeMainIndex(index)}
+										prevButton={
+											<View style={styles.swiperButton}>
+												<IconAntDesign
+													name="caretleft"
+													color={theme.colors.white}
+													size={13}
+													// style={styles.starIcon}
+												/>
+											</View>
+										}
+										nextButton={
+											<View style={styles.swiperButton}>
+												<IconAntDesign
+													name="caretright"
+													color={theme.colors.white}
+													size={13}
+													// style={styles.starIcon}
+												/>
+											</View>
+										}
+									>
+										{gallery.length > 0 && gallery.map((img, i) => (
+											<View
+												style={styles.slide1}
+												key={i}
+											>
+												<FastImage
+													style={{ height: '100%' }}
+													source={{
+														uri: optimizeImage(img, 'h_258,c_limit'),
+														priority: FastImage.priority.normal,
+													}}
+												/>
+											</View>
+										))}
+									</Swiper>
+									<ScrollView
+										horizontal
+										contentContainerStyle={{
+											paddingHorizontal: 30,
+											paddingVertical: 15
+										}}
+									>
+										{gallery.length > 0 && gallery.map((img, index) => (
+											<View
+												key={index}
+												style={{
+													height: 56,
+													borderRadius: 8,
+													margin: 8,
+													opacity: index === thumbsSwiper ? 1 : 0.8
+												}}
+											>
+												<OIcon
+													url={img}
+													style={{
+														borderColor: theme.colors.lightGray,
+														borderRadius: 8,
+														minHeight: '100%'
+													}}
+													width={56}
+													height={56}
+													cover
+												/>
+												{/* {thumbsSwiper === 2 && <OText color='red'>{index.toString()}</OText>}
+												{thumbsSwiper === 3 && <OText color='red'>{index.toString()}</OText>} */}
+											</View>
+										))}
+									</ScrollView>
 								</>
 							)}
 						</WrapHeader>
