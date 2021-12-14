@@ -25,6 +25,7 @@ import {
 	HeaderWrapper,
 	ListWrapper,
 	FeaturedWrapper,
+	OrderProgressWrapper
 } from './styles';
 
 import { SearchBar } from '../SearchBar';
@@ -38,6 +39,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BusinessFeaturedController } from '../BusinessFeaturedController';
 import { HighestRatedBusinesses } from '../HighestRatedBusinesses';
 import { getTypesText } from '../../utils';
+import { OrderProgress } from '../OrderProgress';
 
 const PIXELS_TO_SCROLL = 1000;
 
@@ -224,6 +226,11 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</View>
 				</OrderControlContainer>
 			</HeaderWrapper>
+			<OrderProgressWrapper>
+				<OrderProgress
+					{...props}
+				/>
+			</OrderProgressWrapper>
 			{featuredBusiness && featuredBusiness.length > 0 && (
 				<FeaturedWrapper>
 					<OText size={16} style={{ marginLeft: 40 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('FEATURED_BUSINESS', 'Featured business')}</OText>
