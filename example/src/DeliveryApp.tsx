@@ -103,9 +103,6 @@ theme.images = {
     orderSuccess: require('./assets/images/order-success.png'),
     newOrder: require('./assets/images/new-order.png')
   },
-  backgrounds: {
-    business_list_header: require('./assets/images/business_list_banner.jpg'),
-  },
   order: {
     status0: require('./assets/images/status-0.png'),
     status1: require('./assets/images/status-1.png'),
