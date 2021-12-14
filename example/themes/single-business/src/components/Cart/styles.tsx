@@ -11,6 +11,7 @@ export const Title = styled.View`
 export const LineDivider = styled.View`
   height: 8px;
   background-color: ${(props: any) => props.theme.colors.backgroundGray100};
+  margin-bottom: 20px;
 `
 
 export const OrderBill = styled.View`

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-components/native'
-import { useFocusEffect } from '@react-navigation/native'
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
@@ -32,7 +31,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     ordersLength,
     setOrdersLength,
 		businessId,
-		preOrders
+		preOrders,
+    sortOrders
   } = props
 
   const theme = useTheme()
@@ -45,7 +45,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     ? theme.images.general.emptyActiveOrders
     : theme.images.general.emptyPastOrders
 
-  const orders = customArray || values || []
+  let [orders, setOrders] = useState(values)
 
   const [reorderLoading, setReorderLoading] = useState(false)
   const [isLoadingFirstRender, setIsLoadingFirstRender] = useState(false)
@@ -99,44 +99,44 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     return objectStatus && objectStatus
   }
 
-  useFocusEffect(
-    React.useCallback(() => {
-      loadOrders && loadOrders()
-      setIsLoadingFirstRender(false)
-      return () => {
-        setIsLoadingFirstRender(true)
-      }
-    }, [navigation])
-  )
-
   useEffect(() => {
     setOrdersLength && setOrdersLength({
       ...ordersLength,
-      [activeOrders ? 'activeOrdersLength' : 'previousOrdersLength']: orders.length
+      [activeOrders ? 'activeOrdersLength' : 'previousOrdersLength']: values.length
     })
-  }, [orders.length])
+  }, [values.length])
 
+  useEffect(() => {
+    setOrders(
+      sortOrders(
+        values.filter((order: any) => orderStatus.includes(order.status))
+      )
+    )
+  }, [values])
 
   return (
     <>
       <OptionTitle>
-        {(!activeOrders || (activeOrders && ordersLength.activeOrdersLength > 0) || (ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength === 0)) && !isLoadingFirstRender && (
-          <OText size={16} color={theme.colors.textPrimary} mBottom={10} style={activeOrders ? { paddingHorizontal: 0 } : {}}>
+        {orders.length > 0 && !isLoadingFirstRender && (
+          <OText
+            size={16}
+            color={theme.colors.textPrimary}
+            mBottom={10}
+            style={activeOrders ? { paddingHorizontal: 0 } : {}}
+          >
             {titleContent || (
-							preOrders ? t('UPCOMING', 'UPCOMING') 
+							preOrders ? t('UPCOMING', 'Upcoming')
 							: activeOrders ? t('ACTIVE', 'Active')
               : t('PAST', 'Past'))}
           </OText>
         )}
       </OptionTitle>
-      {!loading && orders.length === 0 && !isLoadingFirstRender && activeOrders && ordersLength.previousOrdersLength === 0 && ordersLength.activeOrdersLength !== 0 && (
-        <NotFoundSource
-          content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
-          image={imageFails}
-          conditioned
-        />
-      )}
-      {!loading && orders.length === 0 && !isLoadingFirstRender && ordersLength.previousOrdersLength === 0 && (
+      {!loading &&
+        orders.length === 0 &&
+        !isLoadingFirstRender &&
+        ordersLength.previousOrdersLength === 0 &&
+        ordersLength.activeOrdersLength === 0 &&
+      (
         <NotFoundSource
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           image={imageFails}
@@ -191,31 +191,31 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             setScreen={setScreen}
             screen={screen}
           />
-					) : (
+				) : (
 					<>
-					{preOrders ? 
-						<ActiveOrders
-							orders={orders.filter((order: any) => businessId !== null ? order?.business_id === parseInt(businessId) : true)}
-							pagination={pagination}
-							loadMoreOrders={loadMoreOrders}
-							reorderLoading={reorderLoading}
-							customArray={customArray}
-							getOrderStatus={getOrderStatus}
-							onNavigationRedirect={onNavigationRedirect}
-							setScreen={setScreen}
-							screen={screen}
-							isPreorders
-						/>
-					: <PreviousOrders
-							reorderLoading={reorderLoading}
-							orders={orders.filter((order: any) => businessId !== null ? order?.business_id === parseInt(businessId) : true)}
-							pagination={pagination}
-							loadMoreOrders={loadMoreOrders}
-							getOrderStatus={getOrderStatus}
-							onNavigationRedirect={onNavigationRedirect}
-							handleReorder={handleReorder}
-						/>
-					}
+            {preOrders ?
+              <ActiveOrders
+                orders={orders.filter((order: any) => businessId !== null ? order?.business_id === parseInt(businessId) : true)}
+                pagination={pagination}
+                loadMoreOrders={loadMoreOrders}
+                reorderLoading={reorderLoading}
+                customArray={customArray}
+                getOrderStatus={getOrderStatus}
+                onNavigationRedirect={onNavigationRedirect}
+                setScreen={setScreen}
+                screen={screen}
+                isPreorders
+              />
+            : <PreviousOrders
+                reorderLoading={reorderLoading}
+                orders={orders.filter((order: any) => businessId !== null ? order?.business_id === parseInt(businessId) : true)}
+                pagination={pagination}
+                loadMoreOrders={loadMoreOrders}
+                getOrderStatus={getOrderStatus}
+                onNavigationRedirect={onNavigationRedirect}
+                handleReorder={handleReorder}
+              />
+            }
 					</>
         )
       )}

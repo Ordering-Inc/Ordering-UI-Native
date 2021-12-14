@@ -53,6 +53,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 		messagesReadList,
 		isFromCheckout,
 		driverLocation,
+    onNavigationRedirect
 	} = props;
 
 	const theme = useTheme();
@@ -92,6 +93,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
 	const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
 	const [openModalForDriver, setOpenModalForDriver] = useState(false);
+  const [isReviewed, setIsReviewed] = useState(false)
 	const [unreadAlert, setUnreadAlert] = useState({
 		business: false,
 		driver: false,
@@ -394,18 +396,36 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 										? parseDate(order?.delivery_datetime_utc)
 										: parseDate(order?.delivery_datetime, { utc: false })}
 								</OText>
-								<TouchableOpacity
-									activeOpacity={0.7}
-									style={{ marginTop: 6 }}
-									onPress={() => { }}>
-									<OText
-										size={10}
-										lineHeight={15}
-										color={theme.colors.textSecondary}
-										style={{ textDecorationLine: 'underline' }}>
-										{t('REVIEW_ORDER', 'Review order')}
-									</OText>
-								</TouchableOpacity>
+                {(
+                  parseInt(order?.status, 10) === 1 ||
+                  parseInt(order?.status, 10) === 11 ||
+                  parseInt(order?.status, 10) === 15
+                ) && !order.review && !isReviewed && (
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={{ marginTop: 6 }}
+                    onPress={() => onNavigationRedirect('ReviewOrder', {
+                      order: {
+                        id: order?.id,
+                        business_id: order?.business_id,
+                        logo: order.business?.logo,
+                        driver: order?.driver,
+                        products: order?.products,
+                        review: order?.review,
+                        user_review: order?.user_review
+                      },
+                      setIsReviewed
+                    })}
+                  >
+                    <OText
+                      size={10}
+                      lineHeight={15}
+                      color={theme.colors.textSecondary}
+                      style={{ textDecorationLine: 'underline' }}>
+                      {t('REVIEW_ORDER', 'Review order')}
+                    </OText>
+                  </TouchableOpacity>
+                )}
 
 								<StaturBar>
 									<LinearGradient

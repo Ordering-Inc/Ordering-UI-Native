@@ -23,7 +23,7 @@ import {
 } from './styles'
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
-import { UpsellingProducts } from '../UpsellingProducts'
+// import { UpsellingProducts } from '../UpsellingProducts'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { _setStoreData } from '../../providers/StoreUtil';
 
@@ -237,7 +237,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					btnLeftValue={currentCart?.products?.length}
 					btnRightValue={parsePrice(currentCart?.total)}
 					disabled={openUpselling || currentCart?.subtotal < currentCart?.minimum}
-					handleClick={() => setOpenUpselling(true)}
+					handleClick={() => onRedirect('Cart')}
 					hasBottom
 				/>
 			)}
@@ -256,7 +256,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					onSave={handlerProductAction}
 				/>
 			</OModal>
-			{openUpselling && (
+			{/* {openUpselling && (
 				<UpsellingProducts
 					businessId={currentCart?.business_id}
 					business={currentCart?.business}
@@ -268,7 +268,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					canOpenUpselling={canOpenUpselling}
 					setCanOpenUpselling={setCanOpenUpselling}
 				/>
-			)}
+			)} */}
 		</>
 	)
 }

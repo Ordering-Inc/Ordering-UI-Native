@@ -235,6 +235,7 @@ export interface NotFoundSourceParams {
 }
 export interface OrdersOptionParams {
 	orderList?: any,
+	sortOrders?: any,
 	activeOrders?: boolean,
 	pagination?: any,
 	titleContent?: string,
@@ -285,6 +286,7 @@ export interface OrderDetailsParams {
 	isFromCheckout?: boolean,
 	driverLocation?: any,
 	isFromRoot?: any,
+	onNavigationRedirect?: any,
 	goToBusinessList?: boolean
 }
 export interface ProductItemAccordionParams {
@@ -300,7 +302,7 @@ export interface ProductItemAccordionParams {
 	isFromCheckout?: any
 }
 export interface ReviewOrderParams {
-	order?: { orderId: number, businessId: number, logo: string },
+	order?: any,
 	stars?: any,
 	handleChangeInput?: any,
 	handleChangeRating?: any,
@@ -308,6 +310,10 @@ export interface ReviewOrderParams {
 	formState?: any,
 	navigation?: any,
 	orderComments?: any,
+	setStars?: any,
+  onNavigationRedirect?: any,
+  handleReviewState?: any,
+  setIsReviewed?: any,
 }
 export interface MessagesParams {
 	type?: string,
@@ -385,6 +391,7 @@ export interface OrderTypeSelectParams {
 }
 export interface UpsellingProductsParams {
 	isCustomMode?: boolean;
+	isShowTitle?: boolean;
 	upsellingProducts?: any;
 	business?: any;
 	businessId?: number;
@@ -394,6 +401,7 @@ export interface UpsellingProductsParams {
 	canOpenUpselling?: boolean;
 	setCanOpenUpselling?: (value: any) => void;
 	cart?: any;
+	handleUpsellingProducts?: any;
 	handleCloseUpsellingPage: () => void;
 }
 

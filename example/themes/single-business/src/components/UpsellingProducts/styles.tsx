@@ -1,43 +1,49 @@
 import styled from 'styled-components/native'
 
 export const Container = styled.View`
-  margin: 20px 0;
-  margin-start: -40px;
-  margin-end: -40px;
+  /* margin: 20px 0; */
 `
 export const UpsellingContainer = styled.ScrollView`
-  max-height: 92px;
-  margin-right: 40px;
+  max-height: 220px;
 `
 export const Item = styled.View`
   border-width: 1px;
   border-color: ${(props: any) => props.theme.colors.border};
-  border-radius: 7.6px;
+  border-radius: 10px;
   flex-direction: row;
-  align-items: flex-start;
+  width: 250px;
+  align-items: center;
   justify-content: space-between;
   padding: 10px;
-  margin-right: 12px;
-  min-width: 207px;
-  max-width: 207px;
-  width: 207px;
+  margin-right: 15px;
 `
 export const Details = styled.View`
+  flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
+  max-width: 69%;
 `
 export const AddButton = styled.TouchableOpacity`
-	padding: 4px 8px;
-	background-color: ${(props: any) => props.theme.colors.primaryContrast};
-	border-radius: 30px;
-	width: 40%;
-	align-items: center;
-	margin-top: 6px;
+  margin-top: 7px;
 `
 export const CloseUpselling = styled.View`
   margin-vertical: 10px;
   width: 100%;
 `
+
+export const WrapperAdd = styled.View`
+  padding: 6px 20px;
+  border-radius: 50px;
+  background-color: ${(props: any) => props.theme.colors.primaryContrast};
+`
+
+export const WrapPrice = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 5px;
+`
+
 export const TopBar = styled.View`
   flex-direction: row;
   justify-content: space-between;

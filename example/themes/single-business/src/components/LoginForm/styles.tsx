@@ -4,34 +4,17 @@ export const Container = styled.View`
   padding-bottom: 40px;
 `
 
-export const FormSide = styled.View`
+export const LoginWith = styled.View`
   display: flex;
   width: 100%;
-  flex-direction: column;
-  align-items: center;
-  margin: auto;
+  /* border-bottom-width: 2px;
+  border-bottom-color: ${(props: any) => props.theme.colors.border}; */
 `;
 
-export const OTabs = styled.View`
+export const TabsContainer = styled.View`
+  width: auto;
+  display: flex;
   flex-direction: row;
-  width: 100%;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  margin-bottom: -1px;
-`;
-
-export const OTab = styled.View`
-  padding-bottom: 10px;
-  border-bottom-width: 1px;
-  margin-end: 14px;
-`;
-
-export const LoginWith = styled.View`
-  font-size: 14px;
-  width: 100%;
-  align-items: flex-start;
-  border-bottom-width: 1px;
-  border-bottom-color: ${(props: any) => props.theme.colors.border}
 `;
 
 export const FormInput = styled.View`
@@ -52,11 +35,6 @@ export const ButtonsWrapper = styled.View`
   `}
 `
 
-export const SocialButtons = styled.View`
-  width: 100%;
-  margin: 0px auto 20px;
-`
-
 export const OrSeparator = styled.View`
   width: 90%;
   display: flex;
@@ -64,6 +42,33 @@ export const OrSeparator = styled.View`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+`
+
+export const FormSide = styled.View`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+`;
+
+export const OTabs = styled.View`
+  flex-direction: row;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-bottom: -1px;
+`;
+
+export const OTab = styled.View`
+  padding-bottom: 5px;
+  border-bottom-width: 1px;
+  margin-end: 14px;
+`;
+
+export const SocialButtons = styled.View`
+  width: 100%;
+  margin: 0px auto 20px;
 `
 
 export const LineSeparator = styled.View`

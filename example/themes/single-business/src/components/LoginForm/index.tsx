@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Pressable, StyleSheet, View, Keyboard } from 'react-native';
+import { Pressable, StyleSheet, View, Keyboard, ScrollView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber';
@@ -29,6 +29,7 @@ import {
 	OrSeparator,
 	LineSeparator,
 	SkeletonWrapper,
+  TabsContainer,
 } from './styles';
 
 import NavBar from '../NavBar';
@@ -76,6 +77,7 @@ const LoginFormUI = (props: LoginParams) => {
 	});
 
 	const theme = useTheme();
+  const scrollRefTab = useRef() as React.MutableRefObject<ScrollView>;
 
 	const loginStyle = StyleSheet.create({
 		btnOutline: {
@@ -95,6 +97,45 @@ const LoginFormUI = (props: LoginParams) => {
 			flexGrow: 1,
 			marginBottom: 7,
 		},
+    btnTab: {
+      flex: 1,
+      minWidth: 88,
+      alignItems: 'flex-start',
+      borderBottomWidth: 1,
+    },
+    btnTabText: {
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontSize: 14,
+      marginBottom: 10,
+      paddingLeft: 8,
+      paddingRight: 8,
+    },
+    btn: {
+      borderRadius: 7.6,
+      height: 44,
+    },
+    btnText: {
+      color: theme.colors.inputTextColor,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 18,
+    },
+    btnFlag: {
+      width: 79,
+      borderWidth: 1,
+      borderRadius: 7.6,
+      marginRight: 9,
+      borderColor: theme.colors.inputSignup,
+    },
+    textForgot: {
+      color: theme.colors.arrowColor,
+      fontFamily: 'Poppins',
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 16,
+    },
 	});
 
 	const inputRef = useRef<any>({});
@@ -102,6 +143,14 @@ const LoginFormUI = (props: LoginParams) => {
 	const handleChangeTab = (val: string) => {
 		props.handleChangeTab(val);
 		setPasswordSee(false);
+
+    if (loginTab === 'email') {
+      scrollRefTab.current?.scrollToEnd({ animated: true });
+    }
+
+    if (loginTab === 'cellphone') {
+      scrollRefTab.current?.scrollTo({ animated: true });
+    }
 	};
 
 	const onSubmit = (values: any) => {
@@ -222,56 +271,64 @@ const LoginFormUI = (props: LoginParams) => {
 				isVertical={true}
 			/>
 			<FormSide>
-				{useLoginByEmail && useLoginByCellphone && (
-					<LoginWith>
-						<OTabs>
-							{useLoginByEmail && (
-								<Pressable onPress={() => handleChangeTab('email')}>
-									<OTab
-										style={{
-											borderBottomColor:
-												loginTab === 'email'
-													? theme.colors.textNormal
-													: theme.colors.border,
-										}}>
-										<OText
-											size={14}
-											color={
-												loginTab === 'email'
-													? theme.colors.textNormal
-													: theme.colors.disabled
-											}
-											weight={loginTab === 'email' ? 'bold' : 'normal'}>
-											{t('BY_EMAIL', 'by Email')}
-										</OText>
-									</OTab>
-								</Pressable>
-							)}
-							{useLoginByCellphone && (
-								<Pressable onPress={() => handleChangeTab('cellphone')}>
-									<OTab
-										style={{
-											borderBottomColor:
-												loginTab === 'cellphone'
-													? theme.colors.textNormal
-													: theme.colors.border,
-										}}>
-										<OText
-											size={14}
-											color={
-												loginTab === 'cellphone'
-													? theme.colors.textNormal
-													: theme.colors.disabled
-											}
-											weight={loginTab === 'cellphone' ? 'bold' : 'normal'}>
-											{t('BY_PHONE', 'by Phone')}
-										</OText>
-									</OTab>
-								</Pressable>
-							)}
-						</OTabs>
-					</LoginWith>
-				)}
+        {(useLoginByEmail || useLoginByCellphone) && (
+          <LoginWith>
+            <ScrollView
+              ref={scrollRefTab}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              style={{
+                borderBottomColor: theme.colors.border,
+                borderBottomWidth: 2
+              }}
+            >
+              <TabsContainer>
+                {useLoginByEmail && (
+                  <Pressable
+                    style={{
+                      ...loginStyle.btnTab,
+                      borderBottomWidth: loginTab === 'email' ? 2 : 0,
+                      borderBottomColor: theme.colors.textNormal,
+                    }}
+                    onPress={() => handleChangeTab('email')}>
+                    <OText
+                      style={loginStyle.btnTabText}
+                      color={
+                        loginTab === 'email'
+                          ? theme.colors.textNormal
+                          : theme.colors.border
+                      }
+                      weight={loginTab === 'email' ? '600' : 'normal'}>
+                      {t('BY_EMAIL', 'by Email')}
+                    </OText>
+                  </Pressable>
+                )}
+
+                {useLoginByCellphone && (
+                  <Pressable
+                    style={{
+                      ...loginStyle.btnTab,
+                      borderBottomWidth: loginTab === 'cellphone' ? 2 : 0,
+                      borderBottomColor: theme.colors.textNormal
+                    }}
+                    onPress={() => handleChangeTab('cellphone')}>
+                    <OText
+                      style={loginStyle.btnTabText}
+                      color={
+                        loginTab === 'cellphone'
+                          ? theme.colors.textNormal
+                          : theme.colors.border
+                      }
+                      weight={loginTab === 'cellphone' ? '600' : 'normal'}>
+                      {t('BY_PHONE', 'by Phone')}
+                    </OText>
+                  </Pressable>
+                )}
+              </TabsContainer>
+            </ScrollView>
+          </LoginWith>
+        )}
 
 				{(useLoginByCellphone || useLoginByEmail) && (
 					<FormInput>
@@ -418,48 +475,49 @@ const LoginFormUI = (props: LoginParams) => {
 						</>
 					)}
 
-				<View
-					style={{
-						flexDirection: 'row',
-						width: '100%',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						marginVertical: 30
-					}}>
-					<View style={loginStyle.line} />
-					<OText
-						size={14}
-						mBottom={10}
-						style={{ paddingHorizontal: 19 }}
-						color={theme.colors.disabled}>
-						{t('OR', 'or')}
-					</OText>
-					<View style={loginStyle.line} />
-				</View>
-
 				{configs && Object.keys(configs).length > 0 ? (
 					(configs?.facebook_login?.value === 'true' ||
 						configs?.facebook_login?.value === '1') &&
 					configs?.facebook_id?.value && (
-						<ButtonsWrapper>
-							<SocialButtons>
-								<FacebookLogin
-									handleErrors={(err: any) => showToast(ToastType.Error, err)}
-									handleLoading={(val: boolean) => setIsFBLoading(val)}
-									handleSuccessFacebookLogin={handleSuccessFacebook}
-								/>
-								<GoogleLogin
-									handleErrors={(err: any) => showToast(ToastType.Error, err)}
-									handleLoading={(val: boolean) => setIsFBLoading(val)}
-									handleSuccessFacebookLogin={handleSuccessFacebook}
-								/>
-								<AppleLogin
-									handleErrors={(err: any) => showToast(ToastType.Error, err)}
-									handleLoading={(val: boolean) => setIsFBLoading(val)}
-									handleSuccessFacebookLogin={handleSuccessFacebook}
-								/>
-							</SocialButtons>
-						</ButtonsWrapper>
+            <>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginVertical: 30
+                }}>
+                <View style={loginStyle.line} />
+                <OText
+                  size={14}
+                  mBottom={10}
+                  style={{ paddingHorizontal: 19 }}
+                  color={theme.colors.disabled}>
+                  {t('OR', 'or')}
+                </OText>
+                <View style={loginStyle.line} />
+              </View>
+              <ButtonsWrapper>
+                <SocialButtons>
+                  <FacebookLogin
+                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                    handleLoading={(val: boolean) => setIsFBLoading(val)}
+                    handleSuccessFacebookLogin={handleSuccessFacebook}
+                  />
+                  <GoogleLogin
+                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                    handleLoading={(val: boolean) => setIsFBLoading(val)}
+                    handleSuccessFacebookLogin={handleSuccessFacebook}
+                  />
+                  <AppleLogin
+                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                    handleLoading={(val: boolean) => setIsFBLoading(val)}
+                    handleSuccessFacebookLogin={handleSuccessFacebook}
+                  />
+                </SocialButtons>
+              </ButtonsWrapper>
+            </>
 					)
 				) : (
 					<SkeletonWrapper>

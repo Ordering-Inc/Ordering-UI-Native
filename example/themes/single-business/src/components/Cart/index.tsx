@@ -54,6 +54,7 @@ const CartUI = (props: any) => {
   const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
+  const [isUpsellingProducts, setIsUpsellingProducts] = useState(false)
 
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
@@ -100,6 +101,7 @@ const CartUI = (props: any) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        style={{ height, backgroundColor: theme.colors.backgroundPage }}
       >
         <Container>
           <Title>
@@ -126,7 +128,7 @@ const CartUI = (props: any) => {
                   onEditProduct={handleEditProduct}
                 />
               ))}
-  
+
               {cart?.valid_products && (
                 <OSBill>
                   <OSTable>
@@ -218,27 +220,16 @@ const CartUI = (props: any) => {
         {cart?.products?.length > 0 && (
           <>
             <LineDivider />
-  
+
             <Container>
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-              >
-                <View
-                  style={{
-                    paddingTop: 20,
-                    overflow: 'visible'
-                  }}
+              <View style={{ padding: 0, }}>
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false}
                 >
-                  <OText
-                    size={16}
-                    lineHeight={24}
-                    weight={'500'}
-                  >
-                    {t('WANT_SOMETHING_ELSE', 'Do you want something else?')}
-                  </OText>
                   <UpsellingProducts
                     isCustomMode
+                    isShowTitle
                     openUpselling={openUpselling}
                     businessId={cart?.business_id}
                     business={cart?.business}
@@ -247,36 +238,37 @@ const CartUI = (props: any) => {
                     setCanOpenUpselling={setCanOpenUpselling}
                     handleUpsellingPage={handleUpsellingPage}
                     handleCloseUpsellingPage={() => { }}
+                    handleUpsellingProducts={setIsUpsellingProducts}
                   />
-                </View>
-              </ScrollView>
-  
-              {cart?.valid_products && (
-                <CheckoutAction>
-                  <OButton
-                    text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-                      !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
-                    ) : !cart?.valid_address ? (
-                      `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
-                    ) : (
-                      `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
-                    )}
-                    bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
-                    isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
-                    borderColor={theme.colors.primary}
-                    imgRightSrc={null}
-                    textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-                    onClick={() => props.onNavigationRedirect('CheckoutNavigator', {
-                      screen: 'CheckoutPage',
-                      cartUuid: cart?.uuid,
-                      businessLogo: cart?.business?.logo,
-                      businessName: cart?.business?.name,
-                      cartTotal: cart?.total
-                    })}
-                    style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
-                  />
-                </CheckoutAction>
-              )}
+                </ScrollView>
+
+                {cart?.valid_products && (
+                  <CheckoutAction>
+                    <OButton
+                      text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
+                        !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
+                      ) : !cart?.valid_address ? (
+                        `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
+                      ) : (
+                        `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+                      )}
+                      bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
+                      isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
+                      borderColor={theme.colors.primary}
+                      imgRightSrc={null}
+                      textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+                      onClick={() => props.onNavigationRedirect('CheckoutNavigator', {
+                        screen: 'CheckoutPage',
+                        cartUuid: cart?.uuid,
+                        businessLogo: cart?.business?.logo,
+                        businessName: cart?.business?.name,
+                        cartTotal: cart?.total
+                      })}
+                      style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
+                    />
+                  </CheckoutAction>
+                )}
+              </View>
             </Container>
           </>
         )}

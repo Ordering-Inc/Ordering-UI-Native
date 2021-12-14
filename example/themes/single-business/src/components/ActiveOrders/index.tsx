@@ -10,12 +10,11 @@ import {
 	BusinessInformation,
 	Price,
 } from './styles';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { ActiveOrdersParams } from '../../types';
 import moment from 'moment';
 import { useTheme } from 'styled-components/native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const ActiveOrders = (props: ActiveOrdersParams) => {
 	const {
@@ -85,11 +84,11 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 							<OText size={12} lineHeight={18}>
 								{parsePrice(order?.summary?.total || order?.total)}
 							</OText>
-							{!isPreorders &&
+							{/* {!isPreorders &&
 								<TouchableOpacity onPress={handleLike}>
 									<OIcon src={theme.images.general.heart} color={theme.colors.red} width={16} />
 								</TouchableOpacity>
-							}
+							} */}
 						</Price>
 					</OrderInformation>
 				</Information>
@@ -98,21 +97,23 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 	);
 
 	return (
-		<>
-			<ActiveOrdersContainer isMiniCards={configs?.google_maps_api_key?.value}>
-				{orders.length > 0 &&
-					orders.map((order: any, index: any) => (
-						<Order key={order?.id || order?.uuid} order={order} index={index} />
-					))}
-			</ActiveOrdersContainer>
-			<View
-				style={{
-					height: 8,
-					backgroundColor: theme.colors.backgroundGray100,
-					marginHorizontal: -40,
-				}}
-			/>
-		</>
+    orders.length === 0 ? null : (
+      <>
+        <ActiveOrdersContainer isMiniCards={configs?.google_maps_api_key?.value}>
+          {orders.length > 0 &&
+            orders.map((order: any, index: any) => (
+              <Order key={order?.id || order?.uuid} order={order} index={index} />
+            ))}
+        </ActiveOrdersContainer>
+        <View
+          style={{
+            height: 8,
+            backgroundColor: theme.colors.backgroundGray100,
+            marginHorizontal: -40,
+          }}
+        />
+      </>
+    )
 	);
 };
 
