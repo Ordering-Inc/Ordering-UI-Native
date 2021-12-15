@@ -73,7 +73,7 @@ const AccountUI = (props: AccountParams) => {
         console.log('ImagePicker Error: ', response.errorMessage);
         showToast(ToastType.Error, response.errorMessage);
       } else {
-        if (response.uri) {
+        if (response?.assets) {
           const url = `data:${response.type};base64,${response.base64}`
           handleButtonUpdateClick(null, true, url);
         } else {
