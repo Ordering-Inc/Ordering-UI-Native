@@ -74,7 +74,7 @@ const AccountUI = (props: AccountParams) => {
         showToast(ToastType.Error, response.errorMessage);
       } else {
         if (response?.assets) {
-          const url = `data:${response.type};base64,${response.base64}`
+          const url = `data:${response.assets[0].type};base64,${response.assets[0].base64}`
           handleButtonUpdateClick(null, true, url);
         } else {
           showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
