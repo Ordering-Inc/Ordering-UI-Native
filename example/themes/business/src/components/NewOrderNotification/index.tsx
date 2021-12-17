@@ -33,15 +33,21 @@ export const NewOrderNotification = (props: any) => {
 
 
   const handlePlayNotificationSound = () => {
+    let times = 0
     const _timeout = setInterval(function () {
       notificationSound.play(success => {
         if (success) {
           console.log('successfully finished playing');
+          times = times + 1
         } else {
           console.log('playback failed due to audio decoding errors');
         }
       })
       setSoundTimeout(_timeout)
+      if(times === 3){
+        console.log('cleared')
+        clearInterval(soundTimeout)
+      }
     }, 2500)
   }
 

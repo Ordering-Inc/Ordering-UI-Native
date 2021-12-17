@@ -519,6 +519,7 @@ export interface TagsParams {
 interface actions {
   accept: string;
   reject: string;
+  failed: string;
 }
 
 interface textTranslate {

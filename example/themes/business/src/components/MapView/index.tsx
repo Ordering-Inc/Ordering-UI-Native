@@ -42,7 +42,7 @@ const MapViewComponent = (props: MapViewParams) => {
   } = useLocation();
 
   const location = { lat: userLocation.latitude, lng: userLocation.longitude }
-
+  const haveOrders = Object.values(markerGroups)?.length > 0 && Object.values(customerMarkerGroups)?.length > 0
   const closeAlert = () => {
     setAlertState({
       open: false,
@@ -222,8 +222,8 @@ const MapViewComponent = (props: MapViewParams) => {
               initialRegion={{
                 latitude: initialPosition.latitude,
                 longitude: initialPosition.longitude,
-                latitudeDelta: 0.001,
-                longitudeDelta: 0.001 * ASPECT_RATIO,
+                latitudeDelta: haveOrders ? 0.01 : 0.1,
+                longitudeDelta: haveOrders ? 0.01 * ASPECT_RATIO : 0.1 * ASPECT_RATIO,
               }}
               style={{ flex: 1 }}
               zoomTapEnabled
@@ -241,7 +241,7 @@ const MapViewComponent = (props: MapViewParams) => {
                     orderIds={marker.map((order: any) => order.id).join(', ')}
                   />
                 ))}
-                {Object.values(customerMarkerGroups).map((marker: any) => (
+                {Object.values(customerMarkerGroups).map((marker: any) =>  (
                   <RenderMarker
                     key={marker[0]?.customer_id}
                     marker={marker[0]}

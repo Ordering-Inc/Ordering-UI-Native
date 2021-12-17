@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Linking } from 'react-native';
+import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Linking, Platform } from 'react-native';
 import { useLanguage, useUtils, OrderListGroups } from 'ordering-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -41,10 +41,11 @@ const tabsList: any = {
 };
 
 const tabsListText: any = {
-  1: 'pending',
-  2: 'inProgress',
-  3: 'completed',
-  4: 'cancelled'
+  1: 'logistic_pending',
+  2: 'pending',
+  3: 'inProgress',
+  4: 'completed',
+  5: 'cancelled'
 };
 
 const swipeConfig = {
@@ -167,7 +168,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
   const [tagsState, setTags] = useState<any>({ values: [] })
 
-  const tagsList = ordersGroup[currentTabSelected].defaultFilter ?? []
+  const tagsList = ordersGroup[currentTabSelected]?.defaultFilter ?? []
   const currentOrdersGroup = ordersGroup[currentTabSelected]
 
   const isEqual = (array1: any, array2: any) => {
@@ -191,7 +192,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       }
     })
     const dateRange = calculateDate(search.date.type, search.date.from, search.date.to)
-    onFiltered && onFiltered({...search, date: {...dateRange}})
+    onFiltered && onFiltered({ ...search, date: { ...dateRange } })
     setOpenModal(false)
   }
 
@@ -248,29 +249,29 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     switch (type) {
       case 'today':
         const date = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
-        return {from: `${date} 00:00:00`, to: `${date} 23:59:59`}
+        return { from: `${date} 00:00:00`, to: `${date} 23:59:59` }
       case 'yesterday':
         const yesterday = new Date()
         yesterday.setDate(yesterday.getDate() - 1)
         const start1 = parseDate(yesterday, { outputFormat: 'MM/DD/YYYY' })
         const end1 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
-        return {from: `${start1} 00:00:00`, to: `${end1} 23:59:59`}
+        return { from: `${start1} 00:00:00`, to: `${end1} 23:59:59` }
       case 'last_7days':
         const last_7days = new Date()
         last_7days.setDate(last_7days.getDate() - 6)
         const start7 = parseDate(last_7days, { outputFormat: 'MM/DD/YYYY' })
         const end7 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
-        return {from: `${start7} 00:00:00`, to: `${end7} 23:59:59`}
+        return { from: `${start7} 00:00:00`, to: `${end7} 23:59:59` }
       case 'last_30days':
         const last_30days = new Date()
         last_30days.setDate(last_30days.getDate() - 29)
         const start30 = parseDate(last_30days, { outputFormat: 'MM/DD/YYYY' })
         const end30 = parseDate(new Date(), { outputFormat: 'MM/DD/YYYY' })
-        return {from: `${start30} 00:00:00`, to: `${end30} 23:59:59`}
+        return { from: `${start30} 00:00:00`, to: `${end30} 23:59:59` }
       default:
         const start = from ? `${parseDate(from, { outputFormat: 'MM/DD/YYYY' })} 00:00:00` : ''
         const end = to ? `${parseDate(to, { outputFormat: 'MM/DD/YYYY' })} 23:59:59` : ''
-        return {from: start, to: end}
+        return { from: start, to: end }
     }
   }
 
@@ -310,22 +311,22 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </IconWrapper>
       </View>
       {isBusinessApp && (
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', maxHeight:40}}>
-            <OIcon
-              src={theme.images.general.information}
-              width={12}
-              height={12}
-              color={theme.colors.skyBlue}
-              style={{marginRight: 5}}
-            />
-            <OText size={12}>
-              {t('MORE_SETTINGS_GO_TO', 'For more settings go to ')}
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', maxHeight: 40 }}>
+          <OIcon
+            src={theme.images.general.information}
+            width={12}
+            height={12}
+            color={theme.colors.skyBlue}
+            style={{ marginRight: 5 }}
+          />
+          <OText size={12}>
+            {t('MORE_SETTINGS_GO_TO', 'For more settings go to ')}
+          </OText>
+          <TouchableOpacity onPress={() => { Linking.openURL('https://new-admin.tryordering.com/') }}>
+            <OText size={12} color={theme.colors.skyBlue}>
+              {t('LINK_MORE_SETTINGS_GO_TO', 'new-admin.ordering.co')}
             </OText>
-            <TouchableOpacity onPress={() => {Linking.openURL('https://new-admin.tryordering.com/')}}>
-                <OText size={12} color={theme.colors.skyBlue}>
-                  {t('LINK_MORE_SETTINGS_GO_TO', 'new-admin.ordering.co')}
-                </OText>
-            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
       )}
       <FiltersTab>
@@ -405,7 +406,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 onPress={() => !currentOrdersGroup.loading && handleTagSelected(key)}
                 isSelected={
                   currentOrdersGroup.currentFilter.includes(key) &&
-                  !isEqual(currentOrdersGroup.currentFilter, tagsList)
+                    !isEqual(currentOrdersGroup.currentFilter, tagsList)
                     ? theme.colors.primary
                     : theme.colors.tabBar
                 }>
@@ -413,7 +414,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                   style={styles.tag}
                   color={
                     currentOrdersGroup.currentFilter.includes(key) &&
-                    !isEqual(currentOrdersGroup.currentFilter, tagsList)
+                      !isEqual(currentOrdersGroup.currentFilter, tagsList)
                       ? theme.colors.white
                       : theme.colors.black
                   }>
@@ -443,86 +444,86 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         >
           {!currentOrdersGroup.error?.length &&
             currentOrdersGroup.orders?.length > 0 &&
-          (
-            <PreviousOrders
-              orders={currentOrdersGroup.orders}
-              onNavigationRedirect={onNavigationRedirect}
-              getOrderStatus={getOrderStatus}
-              handleClickOrder={handleClickOrder}
-            />
-          )}
+            (
+              <PreviousOrders
+                orders={currentOrdersGroup.orders}
+                onNavigationRedirect={onNavigationRedirect}
+                getOrderStatus={getOrderStatus}
+                handleClickOrder={handleClickOrder}
+              />
+            )}
 
-          {(currentOrdersGroup.loading ||
-            currentOrdersGroup.pagination.total === null) &&
-          (
-            <>
-              <View>
-                {[...Array(5)].map((_, i) => (
-                  <Placeholder key={i} Animation={Fade}>
-                    <View
-                      style={{
-                        width: '100%',
-                        flexDirection: 'row',
-                        marginBottom: 10,
-                      }}>
-                      <PlaceholderLine
-                        width={IS_PORTRAIT ? 22 : 11}
-                        height={74}
+          {(currentOrdersGroup?.loading ||
+            currentOrdersGroup?.pagination?.total === null) &&
+            (
+              <>
+                <View>
+                  {[...Array(5)].map((_, i) => (
+                    <Placeholder key={i} Animation={Fade}>
+                      <View
                         style={{
-                          marginRight: 20,
-                          marginBottom: 20,
-                          borderRadius: 7.6,
-                        }}
-                      />
-                      <Placeholder>
-                        <PlaceholderLine width={30} style={{ marginTop: 5 }} />
-                        <PlaceholderLine width={50} />
-                        <PlaceholderLine width={20} />
-                      </Placeholder>
-                    </View>
-                  </Placeholder>
-                ))}
-              </View>
-            </>
-          )}
+                          width: '100%',
+                          flexDirection: 'row',
+                          marginBottom: 10,
+                        }}>
+                        <PlaceholderLine
+                          width={IS_PORTRAIT ? 22 : 11}
+                          height={74}
+                          style={{
+                            marginRight: 20,
+                            marginBottom: 20,
+                            borderRadius: 7.6,
+                          }}
+                        />
+                        <Placeholder>
+                          <PlaceholderLine width={30} style={{ marginTop: 5 }} />
+                          <PlaceholderLine width={50} />
+                          <PlaceholderLine width={20} />
+                        </Placeholder>
+                      </View>
+                    </Placeholder>
+                  ))}
+                </View>
+              </>
+            )}
 
-          {!currentOrdersGroup.error?.length &&
-            !currentOrdersGroup.loading &&
-            currentOrdersGroup.pagination.totalPages &&
-            currentOrdersGroup.pagination.currentPage < currentOrdersGroup.pagination.totalPages &&
-            currentOrdersGroup.orders.length > 0 &&
-          (
-            <OButton
-              onClick={handleLoadMore}
-              text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-              imgRightSrc={null}
-              textStyle={styles.loadButtonText}
-              style={styles.loadButton}
-              bgColor={theme.colors.primary}
-              borderColor={theme.colors.primary}
-            />
-          )}
+          {!currentOrdersGroup?.error?.length &&
+            !currentOrdersGroup?.loading &&
+            currentOrdersGroup?.pagination?.totalPages &&
+            currentOrdersGroup?.pagination?.currentPage < currentOrdersGroup?.pagination?.totalPages &&
+            currentOrdersGroup?.orders?.length > 0 &&
+            (
+              <OButton
+                onClick={handleLoadMore}
+                text={t('LOAD_MORE_ORDERS', 'Load more orders')}
+                imgRightSrc={null}
+                textStyle={styles.loadButtonText}
+                style={styles.loadButton}
+                bgColor={theme.colors.primary}
+                borderColor={theme.colors.primary}
+              />
+            )}
 
-          {!currentOrdersGroup.loading &&
-            (currentOrdersGroup.error?.length ||
-            currentOrdersGroup.orders?.length === 0) &&
-          (
-            <NotFoundSource
-              content={
-                !currentOrdersGroup.error?.length
-                  ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
-                  : currentOrdersGroup?.error[0]?.message ||
+          {!currentOrdersGroup?.loading &&
+            (currentOrdersGroup?.error?.length ||
+              currentOrdersGroup?.orders?.length === 0) &&
+            (
+              <NotFoundSource
+                content={
+                  !currentOrdersGroup?.error?.length
+                    ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
+                    : currentOrdersGroup?.error[0]?.message ||
                     currentOrdersGroup?.error[0] ||
                     t('NETWORK_ERROR', 'Network Error')
-              }
-              image={theme.images.general.notFound}
-              conditioned={false}
-            />
-          )}
+                }
+                image={theme.images.general.notFound}
+                conditioned={false}
+              />
+            )}
         </ScrollView>
       </View>
-    {/* </GestureRecognizer> */}
-    
+      {/* </GestureRecognizer> */}
+
       <NewOrderNotification />
       <OModal open={openModal} entireModal customClose>
         <ModalContainer
@@ -545,7 +546,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
           <OInput
             value={search.id}
-            onChange={(value: any) => setSearch({...search, id: value})}
+            onChange={(value: any) => setSearch({ ...search, id: value })}
             style={styles.inputStyle}
             placeholder={t('ORDER_NUMBER', 'Order number')}
             autoCorrect={false}
@@ -611,6 +612,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
     UIComponent: OrdersOptionUI,
     useDefualtSessionManager: true,
     asDashboard: true,
+    isIos: Platform.OS === 'ios',
     orderStatus: [
       { key: 0, text: t('PENDING', 'Pending') },
       { key: 1, text: t('COMPLETED', 'Completed') },
@@ -687,7 +689,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
       {
         key: 0,
         text: t('PENDING', 'Pending'),
-        tags: props?.orderGroupStatusCustom?.inProgress ?? [0, 13],
+        tags: props?.orderGroupStatusCustom?.pending ?? [0, 13],
         title: 'pending'
       },
       {

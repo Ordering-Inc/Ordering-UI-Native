@@ -111,7 +111,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       openTimerIOnput();
     }
 
-    if (actions && action === 'reject') {
+    if (actions && (action === 'reject' || action === 'failed')) {
       openTextTareaOInput();
     }
   }, []);
@@ -178,6 +178,10 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
         comment: comments,
         status: 6,
       },
+      failedByDriver: {
+        comment: comments,
+        status: 12
+      }
     };
 
     if (actions && action === 'accept') {
@@ -185,6 +189,9 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
     if (actions && action === 'reject') {
       bodyToSend = orderStatus[actions.reject];
+    }
+    if(actions && action === 'failed'){
+      bodyToSend = orderStatus[actions.failed]
     }
 
     bodyToSend.id = orderId;
@@ -330,7 +337,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
               </Timer>
             </View>
           )}
-            
           <TimeField
             ref={timerRef}
             keyboardType="numeric"
@@ -346,11 +352,11 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             onEndEditing={handleFixTime}
           />
 
-          {action === 'reject' && (
+          {(action === 'reject' || action === 'failed') && (
             <Comments ref={viewRef}>
               <OTextarea
                 textTareaRef={textTareaRef}
-                autoFocus={actions && action === 'reject'}
+                autoFocus={actions && (action === 'reject' || action === 'failed')}
                 onFocus={handleFocus}
                 placeholder={t(
                   'PLEASE_TYPE_YOUR_COMMENTS_IN_HERE',

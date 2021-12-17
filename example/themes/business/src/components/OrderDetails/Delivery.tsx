@@ -75,12 +75,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const showFloatButtonsPickUp: any = {
     8: true,
     3: true,
-    4: true,
     18: true
   };
 
   const showFloatButtonsAcceptOrReject: any = {
     0: true,
+    4: true,
     7: true,
   };
 
@@ -295,7 +295,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </Pickup>
               )}
               {(order?.status === 3) && order?.delivery_type === 1 && (
-                <View style={{paddingVertical: 20, marginBottom: 20}}>
+                <View style={{ paddingVertical: 20, marginBottom: 20 }}>
                   <OButton
                     style={styles.btnPickUp}
                     textStyle={{ color: theme.colors.white }}
@@ -382,13 +382,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           {showFloatButtonsPickUp[order?.status] && (
             <FloatingButton
               disabled={loading}
-              btnText={t('FAILED', 'Failed')}
+              btnText={t('PICKUP_FAILED', 'Pickup failed')}
               isSecondaryBtn={false}
               secondButtonClick={() =>
                 handleChangeOrderStatus && handleChangeOrderStatus(9)
               }
               firstButtonClick={() =>
-                handleChangeOrderStatus && handleChangeOrderStatus(12)
+                handleViewActionOrder && handleViewActionOrder('failed')
               }
               secondBtnText={t('PICKUP_COMPLETE', 'Pickup complete')}
               secondButton={true}
@@ -401,13 +401,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <>
               <FloatingButton
                 disabled={loading}
-                btnText={t('FAILED', 'Failed')}
+                btnText={t('DELIVERY_FAILED', 'Delivery Failed')}
                 isSecondaryBtn={false}
                 secondButtonClick={() =>
                   handleChangeOrderStatus && handleChangeOrderStatus(11)
                 }
                 firstButtonClick={() =>
-                  handleChangeOrderStatus && handleChangeOrderStatus(12)
+                  handleViewActionOrder && handleViewActionOrder('failed')
                 }
                 secondBtnText={t('DELIVERY_COMPLETE', 'Delivery complete')}
                 secondButton={true}
