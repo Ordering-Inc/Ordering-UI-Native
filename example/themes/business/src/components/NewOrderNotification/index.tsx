@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useEvent, useLanguage, useUtils, useSession } from 'ordering-components/native'
+import { useEvent, useLanguage, useUtils, useSession, useApi } from 'ordering-components/native'
 import { View, Modal, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Feather'
 import { NotificationContainer } from './styles'
 import Sound from 'react-native-sound'
 import moment from 'moment'
-
+import { useLocation } from '../../hooks/useLocation'
 Sound.setCategory('Playback')
 
 const windowWidth = Dimensions.get('screen').width
@@ -16,9 +16,10 @@ export const NewOrderNotification = (props: any) => {
   const [events] = useEvent()
   const theme = useTheme()
   const [, t] = useLanguage()
-  const [{ user }] = useSession()
+  const [{ user, token }] = useSession()
+  const [ordering] = useApi()
   const [{ getTimeAgo }] = useUtils()
-
+  const { getCurrentLocation } = useLocation();
   const [modalOpen, setModalOpen] = useState(false)
   const [newOrderId, setNewOrderId] = useState(null)
   const [soundTimeout, setSoundTimeout] = useState<any>(null)
@@ -33,15 +34,21 @@ export const NewOrderNotification = (props: any) => {
 
 
   const handlePlayNotificationSound = () => {
+    let times = 0
     const _timeout = setInterval(function () {
       notificationSound.play(success => {
         if (success) {
           console.log('successfully finished playing');
+          times = times + 1
         } else {
           console.log('playback failed due to audio decoding errors');
         }
       })
       setSoundTimeout(_timeout)
+      if (times === 3) {
+        clearInterval(_timeout)
+        clearInterval(soundTimeout)
+      }
     }, 2500)
   }
 
@@ -64,9 +71,16 @@ export const NewOrderNotification = (props: any) => {
     }
   }, [handleNotification])
 
-  
-  const handleUpdateOrder = useCallback((order: any) => {
+  const handleUpdateOrder = useCallback(async (order: any) => {
     if (order?.driver) {
+      const location = await getCurrentLocation()
+      await fetch(`${ordering.root}/users/${user.id}/locations`, {
+        method: 'POST',
+        body: JSON.stringify({
+          location: JSON.stringify({location: `{lat: ${location.latitude}, lng: ${location.longitude}}`})
+        }),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+      })
       const assignedTimeDiff = moment.utc(order?.driver?.last_order_assigned_at).local().fromNow()
       if (assignedTimeDiff === 'a few seconds ago') {
         clearInterval(soundTimeout)

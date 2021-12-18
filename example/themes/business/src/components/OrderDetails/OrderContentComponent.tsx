@@ -49,6 +49,9 @@ export const OrderContentComponent = (props: OrderContent) => {
         textBold: {
             fontWeight: '600',
         },
+        textLink: {
+          color: '#365CC7'
+        }
     })
     return (
         <OrderContent>
@@ -67,6 +70,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                 PressStyle={styles.linkWithIcons}
                 url={`mailto:${order?.business?.email}`}
                 shorcut={order?.business?.email}
+                TextStyle={styles.textLink}
               />
             </View>
           )}
@@ -77,6 +81,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                 PressStyle={styles.linkWithIcons}
                 url={`tel:${order?.business?.cellphone}`}
                 shorcut={`${order?.business?.cellphone}`}
+                TextStyle={styles.textLink}
               />
             </View>
           )}
@@ -87,6 +92,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                 PressStyle={styles.linkWithIcons}
                 url={`tel:${order?.business?.phone}`}
                 shorcut={order?.business?.phone}
+                TextStyle={styles.textLink}
               />
             </View>
           )}
@@ -100,6 +106,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                   android: `geo:0,0?q=${order?.business?.address}`,
                 })}
                 shorcut={order?.business?.address}
+                TextStyle={styles.textLink}
               />
             </View>
           )}
@@ -113,6 +120,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                   android: `geo:0,0?q=${order?.business?.address_notes}`,
                 })}
                 shorcut={order?.business?.address_notes}
+                TextStyle={styles.textLink}
               />
             </View>
           )}
@@ -165,6 +173,8 @@ export const OrderContentComponent = (props: OrderContent) => {
                 PressStyle={styles.linkWithIcons}
                 url={`mailto:${order?.customer?.email}`}
                 shorcut={order?.customer?.email}
+                TextStyle={styles.textLink}
+
               />
             </View>
           )}
@@ -175,6 +185,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                 PressStyle={styles.linkWithIcons}
                 url={`tel:${order?.customer?.cellphone}`}
                 shorcut={order?.customer?.cellphone}
+                TextStyle={styles.textLink}
               />
             </View>
           )}
@@ -185,6 +196,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                 PressStyle={styles.linkWithIcons}
                 url={`tel:${order?.customer?.phone}`}
                 shorcut={order?.customer?.phone}
+                TextStyle={styles.textLink}
               />
             </View>
           )}
@@ -198,6 +210,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                   android: `geo:0,0?q=${order?.customer?.address}`,
                 })}
                 shorcut={order?.customer?.address}
+                TextStyle={styles.textLink}
               />
             </View>
           )}
