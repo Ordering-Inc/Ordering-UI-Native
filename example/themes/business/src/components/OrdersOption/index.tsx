@@ -41,11 +41,10 @@ const tabsList: any = {
 };
 
 const tabsListText: any = {
-  1: 'logistic_pending',
-  2: 'pending',
-  3: 'inProgress',
-  4: 'completed',
-  5: 'cancelled'
+  1: 'pending',
+  2: 'inProgress',
+  3: 'completed',
+  4: 'cancelled'
 };
 
 const swipeConfig = {
