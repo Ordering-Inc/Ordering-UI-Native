@@ -75,13 +75,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const showFloatButtonsPickUp: any = {
     8: true,
     3: true,
-    18: true
+    18: true,
   };
 
   const showFloatButtonsAcceptOrReject: any = {
     0: true,
     4: true,
     7: true,
+    14: true
   };
 
   const marginContainer: any = {
