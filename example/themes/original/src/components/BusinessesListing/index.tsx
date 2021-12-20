@@ -40,6 +40,7 @@ import { BusinessFeaturedController } from '../BusinessFeaturedController';
 import { HighestRatedBusinesses } from '../HighestRatedBusinesses';
 import { getTypesText } from '../../utils';
 import { OrderProgress } from '../OrderProgress';
+import { useIsFocused } from '@react-navigation/native';
 
 const PIXELS_TO_SCROLL = 1000;
 
@@ -56,7 +57,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	} = props;
 
 	const theme = useTheme();
-
+	const isFocused = useIsFocused();
 
 	const styles = StyleSheet.create({
 		container: {
@@ -226,11 +227,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</View>
 				</OrderControlContainer>
 			</HeaderWrapper>
-			<OrderProgressWrapper>
-				<OrderProgress
-					{...props}
-				/>
-			</OrderProgressWrapper>
+			{isFocused && (
+				<OrderProgressWrapper>
+					<OrderProgress
+						{...props}
+					/>
+				</OrderProgressWrapper>
+			)}
 			{featuredBusiness && featuredBusiness.length > 0 && (
 				<FeaturedWrapper>
 					<OText size={16} style={{ marginLeft: 40 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('FEATURED_BUSINESS', 'Featured business')}</OText>
