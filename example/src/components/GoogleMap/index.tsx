@@ -41,7 +41,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
     ERROR_MAX_LIMIT_LOCATION_TO: 'Sorry, You can only set the position to'
   }
-  const MARKERS = locations && locations.map((location: { lat: number, lng: number }) => {
+  let MARKERS = locations && locations.map((location: { lat: number, lng: number }) => {
     return {
       latitude: location.lat,
       longitude: location.lng
@@ -175,6 +175,17 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     }, 1000)
     return () => clearInterval(interval)
   }, [locations])
+
+  useEffect(() => {
+    if(!locations) return
+    locations[0] = {...locations[0], lat: location.lat, lng: location.lng}
+    MARKERS = locations && locations.map((location: { lat: number, lng: number }) => {
+      return {
+        latitude: location.lat,
+        longitude: location.lng
+      }
+    })
+  }, [location])
 
   return (
     <>
