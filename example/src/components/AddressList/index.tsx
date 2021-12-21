@@ -57,7 +57,7 @@ const AddressListUI = (props: AddressListParams) => {
 
   const [orderState] = useOrder()
   const [, t] = useLanguage()
-  const [{ auth }] = useSession()
+  const [{ auth }, { logout }] = useSession()
   const [alert, setAlert] = useState<any>({ show: false })
 
   const onNavigatorRedirect = () => {
@@ -261,6 +261,8 @@ const AddressListUI = (props: AddressListParams) => {
                   addressList.error[0] ||
                   t('NETWORK_ERROR', 'Network Error, please reload the app')
                 }
+                btnTitle={t('LOGIN', 'Login')}
+                onClickButton={() => logout()}
               />
             )
           )}
