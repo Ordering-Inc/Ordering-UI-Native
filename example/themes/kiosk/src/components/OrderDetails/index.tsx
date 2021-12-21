@@ -33,7 +33,7 @@ import OptionSwitch, { Opt } from '../../components/shared/OOptionToggle';
 import { verifyDecimals } from '../../../../../src/utils'
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation'
 import { useTheme } from 'styled-components/native'
-import { _retrieveStoreData } from '../../../../../src/providers/StoreUtil';
+import { _retrieveStoreData, _setStoreData } from '../../../../../src/providers/StoreUtil';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 const _EMAIL = 'email';
@@ -218,6 +218,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
     getCustomerName()
     const redirectHome = setTimeout(() =>{
+      _setStoreData('customer_name', {customerName: ''});
       navigation.reset({
         routes: [{ name: 'Intro' }],
       });
@@ -344,6 +345,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       <OButton
         text={`${t('YOU_ARE_DONE', 'You are done! Click to close')}!`}
         onClick={() => {
+          _setStoreData('customer_name', {customerName: ''});
           navigation.reset({
             routes: [{ name: 'Intro' }],
           });
