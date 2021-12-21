@@ -106,11 +106,11 @@ const OrderProgressUI = (props: any) => {
   const convertDiffToHours = (order: any) => {
     const time = order.delivery_type === 1 ? order?.business?.delivery_time : order?.business?.pickup_time
     const deliveryTime = order?.delivery_datetime_utc
-      ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'YYYY-MM-DD hh:mm A' })
-      : parseDate(order?.delivery_datetime, { utc: false, outputFormat: 'YYYY-MM-DD hh:mm A' })
+      ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'YYYY-MM-DD HH:mm' })
+      : parseDate(order?.delivery_datetime, { utc: false, outputFormat: 'YYYY-MM-DD HH:mm' })
     const [hour, minute] = time.split(':')
     const result = time ? (parseInt(hour, 10) * 60) + parseInt(minute, 10) : 0
-    const returnedDate = moment(new Date(deliveryTime)).add(result, 'minutes').format('hh:mm A')
+    const returnedDate = moment(deliveryTime).add(result, 'minutes').format('hh:mm A')
     return returnedDate
   }
 
