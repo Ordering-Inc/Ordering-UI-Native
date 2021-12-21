@@ -230,130 +230,6 @@ export const ProductOptionsUI = (props: any) => {
 
   return (
     <>
-      <Animated.View style={[styles.header, { height: headerHeight }]}>
-        <Animated.View style={{ opacity: navBar1ContainerOpacity }}>
-          <NavBar
-            {...navBarProps}
-            titleColor={theme.colors.white}
-            {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left_white })}
-            btnStyle={{
-              width: 55,
-              height: 55,
-              backgroundColor: 'black',
-              borderRadius: 100,
-              opacity: 0.8,
-              left: 20,
-            }}
-            imgLeftStyle={{ width: 27, height: 27 }}
-          />
-        </Animated.View>
-        <Animated.View style={{ opacity: navBar2ContainerOpacity, position: 'absolute' }}>
-          <NavBar
-            {...navBarProps}
-            {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left })}
-            btnStyle={{
-              width: 55,
-              height: 55,
-              backgroundColor: 'transparent',
-              borderRadius: 100,
-              left: 20,
-            }}
-            imgLeftStyle={{ width: 27, height: 27 }}
-          />
-        </Animated.View>
-
-        <Animated.View style={{
-          backgroundColor: 'white',
-          width: orientationState?.dimensions?.width,
-          opacity: collapsedBarContainerOpacity,
-        }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              padding: 20,
-              paddingTop: 0,
-              paddingBottom: 10
-            }}
-          >
-            <OImage
-              source={{uri: product?.images}}
-              width={70}
-              height={70}
-              resizeMode="cover"
-              borderRadius={6}
-            />
-            <OText
-              size={orientationState?.dimensions?.width * 0.025}
-              weight="bold"
-              mLeft={20}
-              numberOfLines={2}
-            >
-              {product?.name}
-            </OText>
-          </View>
-          <View
-            style={{
-              position: 'absolute',
-              bottom: -2,
-              height: 1,
-              backgroundColor: 'white',
-              width: orientationState?.dimensions?.width,
-              ...styles.shadow,
-            }}
-          />
-        </Animated.View>
-
-        <Animated.View style={{
-          opacity: heroContainerOpacity,
-          position: 'absolute',
-          zIndex: -100,
-          transform: [{translateY: heroTranslateY }],
-        }}>
-          <View
-            style={{
-              width: orientationState?.dimensions?.width,
-              height: HEADER_EXPANDED_HEIGHT,
-              position: 'absolute',
-              zIndex: 1,
-              backgroundColor: 'rgba(24, 28, 50, 0.4)',
-            }}
-          >
-            <ImageBackground source={{ uri: product?.images }} resizeMode='cover' style={{ flex:1, justifyContent: 'center' }} />
-
-          </View>
-
-          <Animated.View
-            style={{
-              transform: [{translateY: heroTranslateY }],
-              width: orientationState?.dimensions?.width * 0.75,
-              height: HEADER_EXPANDED_HEIGHT / 2,
-              position: 'relative',
-              top: HEADER_EXPANDED_HEIGHT / 3,
-              zIndex: 100,
-              padding: 20,
-            }}
-          >
-            <OText
-              color={theme.colors.white}
-              size={orientationState?.dimensions?.width * 0.048}
-              weight="bold"
-              mBottom={10}
-              numberOfLines={2}
-            >
-              {product?.name || productCart?.name}
-            </OText>
-
-            <OText
-              color={theme.colors.white}
-              numberOfLines={4}
-            >
-              {product?.description || productCart?.description}
-            </OText>
-          </Animated.View>
-        </Animated.View>
-      </Animated.View>
-
       <ScrollView
         style={styles.mainContainer}
         contentContainerStyle={styles.scrollContainer}
@@ -363,6 +239,130 @@ export const ProductOptionsUI = (props: any) => {
         }
         scrollEventThrottle={16}
       >
+        <Animated.View style={[styles.header, { height: headerHeight }]}>
+          <Animated.View style={{ opacity: navBar1ContainerOpacity }}>
+            <NavBar
+              {...navBarProps}
+              titleColor={theme.colors.white}
+              {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left_white })}
+              btnStyle={{
+                width: 55,
+                height: 55,
+                backgroundColor: 'black',
+                borderRadius: 100,
+                opacity: 0.8,
+                left: 20,
+              }}
+              imgLeftStyle={{ width: 27, height: 27 }}
+            />
+          </Animated.View>
+          <Animated.View style={{ opacity: navBar2ContainerOpacity, position: 'absolute' }}>
+            <NavBar
+              {...navBarProps}
+              {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left })}
+              btnStyle={{
+                width: 55,
+                height: 55,
+                backgroundColor: 'transparent',
+                borderRadius: 100,
+                left: 20,
+              }}
+              imgLeftStyle={{ width: 27, height: 27 }}
+            />
+          </Animated.View>
+
+          <Animated.View style={{
+            backgroundColor: 'white',
+            width: orientationState?.dimensions?.width,
+            opacity: collapsedBarContainerOpacity,
+          }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                padding: 20,
+                paddingTop: 0,
+                paddingBottom: 10
+              }}
+            >
+              <OImage
+                source={{uri: product?.images}}
+                width={70}
+                height={70}
+                resizeMode="cover"
+                borderRadius={6}
+              />
+              <OText
+                size={orientationState?.dimensions?.width * 0.025}
+                weight="bold"
+                mLeft={20}
+                numberOfLines={2}
+              >
+                {product?.name}
+              </OText>
+            </View>
+            <View
+              style={{
+                position: 'absolute',
+                bottom: -2,
+                height: 1,
+                backgroundColor: 'white',
+                width: orientationState?.dimensions?.width,
+                ...styles.shadow,
+              }}
+            />
+          </Animated.View>
+
+          <Animated.View style={{
+            opacity: heroContainerOpacity,
+            position: 'absolute',
+            zIndex: -100,
+            transform: [{translateY: heroTranslateY }],
+          }}>
+            <View
+              style={{
+                width: orientationState?.dimensions?.width,
+                height: HEADER_EXPANDED_HEIGHT,
+                position: 'absolute',
+                zIndex: 1,
+                backgroundColor: 'rgba(24, 28, 50, 0.4)',
+              }}
+            >
+              <ImageBackground source={{ uri: product?.images }} resizeMode='cover' style={{ flex:1, justifyContent: 'center' }} />
+
+            </View>
+
+            <Animated.View
+              style={{
+                transform: [{translateY: heroTranslateY }],
+                width: orientationState?.dimensions?.width * 0.75,
+                height: HEADER_EXPANDED_HEIGHT / 2,
+                position: 'relative',
+                top: HEADER_EXPANDED_HEIGHT / 3,
+                zIndex: 100,
+                padding: 20,
+              }}
+            >
+              <OText
+                color={theme.colors.white}
+                size={orientationState?.dimensions?.width * 0.048}
+                weight="bold"
+                mBottom={10}
+                numberOfLines={2}
+              >
+                {product?.name || productCart?.name}
+              </OText>
+
+              <OText
+                color={theme.colors.white}
+                numberOfLines={4}
+              >
+                {product?.description || productCart?.description}
+              </OText>
+            </Animated.View>
+          </Animated.View>
+        </Animated.View>
+
         {!isFromCheckout && (
           <Spinner visible={loading} />
         )}
