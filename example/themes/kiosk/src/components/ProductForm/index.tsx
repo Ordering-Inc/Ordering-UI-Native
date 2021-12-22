@@ -55,7 +55,8 @@ export const ProductOptionsUI = (props: any) => {
     handleChangeCommentState,
     productObject,
     onClose,
-    isFromCheckout
+    isFromCheckout,
+    isDrawer
   } = props;
 
   const theme = useTheme();
@@ -240,22 +241,23 @@ export const ProductOptionsUI = (props: any) => {
         scrollEventThrottle={16}
       >
         <Animated.View style={[styles.header, { height: headerHeight }]}>
-          <Animated.View style={{ opacity: navBar1ContainerOpacity }}>
-            <NavBar
-              {...navBarProps}
-              titleColor={theme.colors.white}
-              {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left_white })}
-              btnStyle={{
-                width: 55,
-                height: 55,
-                backgroundColor: 'black',
-                borderRadius: 100,
-                opacity: 0.8,
-                left: 20,
-              }}
-              imgLeftStyle={{ width: 27, height: 27 }}
-            />
-          </Animated.View>
+          {!isDrawer && (<Animated.View style={{ opacity: navBar1ContainerOpacity }}>
+              <NavBar
+                {...navBarProps}
+                titleColor={theme.colors.white}
+                {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left_white })}
+                btnStyle={{
+                  width: 55,
+                  height: 55,
+                  backgroundColor: 'black',
+                  borderRadius: 100,
+                  opacity: 0.8,
+                  left: 20,
+                }}
+                imgLeftStyle={{ width: 27, height: 27 }}
+              />
+            </Animated.View>
+          )}
           <Animated.View style={{ opacity: navBar2ContainerOpacity, position: 'absolute' }}>
             <NavBar
               {...navBarProps}
@@ -367,8 +369,8 @@ export const ProductOptionsUI = (props: any) => {
           <Spinner visible={loading} />
         )}
         {!loading && !error && product && (
-          <View style={{ paddingTop: 20, paddingBottom: 80 }}> 
-            <WrapContent>
+          <View style={{ paddingTop: isDrawer ? 10 : 20, paddingBottom: 80 }}> 
+            <WrapContent isDrawer={isDrawer}>
               <ProductDescription>
                 {(
                   (product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
@@ -500,7 +502,7 @@ export const ProductOptionsUI = (props: any) => {
               </TouchableOpacity>
             </View>
           )}
-          <View style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : '80%' }}>
+          <View style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : isDrawer ? '70%':'80%' }}>
             {productCart && !isSoldOut && maxProductQuantity > 0 && auth && orderState.options?.address_id && (
               <OButton
                 onClick={() => handleSaveProduct()}
