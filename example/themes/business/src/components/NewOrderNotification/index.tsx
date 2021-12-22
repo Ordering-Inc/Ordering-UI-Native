@@ -8,6 +8,7 @@ import { NotificationContainer } from './styles'
 import Sound from 'react-native-sound'
 import moment from 'moment'
 import { useLocation } from '../../hooks/useLocation'
+import { useFocusEffect } from '@react-navigation/core'
 Sound.setCategory('Playback')
 
 const windowWidth = Dimensions.get('screen').width
@@ -23,6 +24,7 @@ export const NewOrderNotification = (props: any) => {
   const [modalOpen, setModalOpen] = useState(false)
   const [newOrderId, setNewOrderId] = useState(null)
   const [soundTimeout, setSoundTimeout] = useState<any>(null)
+  const [isFocused, setIsFocused] = useState(false)
 
   const notificationSound = new Sound(theme.sounds.notification, error => {
     if (error) {
@@ -86,7 +88,9 @@ export const NewOrderNotification = (props: any) => {
         clearInterval(soundTimeout)
         handlePlayNotificationSound()
         setNewOrderId(order.id)
-        setModalOpen(true)
+        if(isFocused){
+          setModalOpen(true)
+        }
       }
     }
   }, [newOrderId, notificationSound, soundTimeout])
@@ -105,6 +109,15 @@ export const NewOrderNotification = (props: any) => {
       notificationSound.release();
     }
   }, [])
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsFocused(true)
+      return () => {
+        setIsFocused(false)
+      }
+    }, [])
+  )
 
   return (
     <>
