@@ -341,6 +341,7 @@ export interface OrderDetailsParams {
   actions?: actions;
   titleAccept?: textTranslate;
   titleReject?: textTranslate;
+  titleNotReady?: textTranslate;
   appTitle?: textTranslate;
   drivers?: any;
   loadingDriver?: boolean;
@@ -520,6 +521,7 @@ interface actions {
   accept: string;
   reject: string;
   failed: string;
+  notReady: string;
 }
 
 interface textTranslate {
@@ -531,13 +533,14 @@ export interface AcceptOrRejectOrderParams {
   customerCellphone?: string;
   closeModal?: any;
   loading?: boolean;
-  action?: string;
+  action: string;
   orderId?: number;
   handleUpdateOrder?: (status: number, isAccept: any) => {};
   notShowCustomerPhone?: boolean | undefined;
   actions?: actions;
   titleAccept?: textTranslate;
   titleReject?: textTranslate;
+  titleNotReady?: textTranslate;
   appTitle?: textTranslate;
 }
 

@@ -570,21 +570,25 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             search={search}
             onSearch={setSearch}
           />
-          <OrdersOptionDelivery
-            {...props}
-            search={search}
-            onSearch={setSearch}
-          />
-          <OrdersOptionPaymethod
-            {...props}
-            search={search}
-            onSearch={setSearch}
-          />
-          <OrdersOptionDriver
-            {...props}
-            search={search}
-            onSearch={setSearch}
-          />
+          {isBusinessApp && (
+            <>
+              <OrdersOptionDelivery
+                {...props}
+                search={search}
+                onSearch={setSearch}
+              />
+              <OrdersOptionDriver
+                {...props}
+                search={search}
+                onSearch={setSearch}
+              />
+              <OrdersOptionPaymethod
+                {...props}
+                search={search}
+                onSearch={setSearch}
+              />
+            </>
+          )}
           <OButton
             text={t('SEARCH', 'Search')}
             textStyle={{ color: theme.colors.white }}
