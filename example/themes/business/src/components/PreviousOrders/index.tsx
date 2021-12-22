@@ -1,13 +1,12 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { useLanguage, useUtils } from 'ordering-components/native';
-import { OIcon, OText } from '../shared';
-import { Card, Logo, Information, MyOrderOptions, NotificationIcon } from './styles';
+import { OButton, OIcon, OText } from '../shared';
+import { Card, Logo, Information, MyOrderOptions, NotificationIcon, AcceptOrRejectOrder } from './styles';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
-
 export const PreviousOrders = (props: any) => {
-  const { orders, onNavigationRedirect, getOrderStatus, handleClickOrder } = props;
+  const { orders, onNavigationRedirect, getOrderStatus, handleClickOrder, isLogisticOrder } = props;
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
   const theme = useTheme();
@@ -22,7 +21,7 @@ export const PreviousOrders = (props: any) => {
     cardButton: {
       flex: 1,
       minHeight: 64,
-      marginBottom: 30,
+      marginBottom: isLogisticOrder ? 0 : 30,
       marginLeft: 3,
     },
     icon: {
@@ -79,73 +78,106 @@ export const PreviousOrders = (props: any) => {
         orders
           .filter((order: any) => hash[order?.id] ? false : (hash[order?.id] = true))
           .map((order: any) =>
-      (
-        <React.Fragment key={order.id}>
-          <TouchableOpacity
-            onPress={() => handlePressOrder(order)}
-            style={styles.cardButton}
-            activeOpacity={1}
-          >
-            <Card key={order.id}>
-              {!!order.business?.logo && (
-                <Logo style={styles.logo}>
-                  <OIcon
-                    url={optimizeImage(
-                      order.business?.logo,
-                      'h_300,c_limit',
+          (
+            <React.Fragment key={order.id}>
+              <TouchableOpacity
+                onPress={() => handlePressOrder(order)}
+                style={styles.cardButton}
+                activeOpacity={1}
+              >
+                <Card key={order.id}>
+                  {!!order.business?.logo && (
+                    <Logo style={styles.logo}>
+                      <OIcon
+                        url={optimizeImage(
+                          order.business?.logo,
+                          'h_300,c_limit',
+                        )}
+                        style={styles.icon}
+                      />
+                    </Logo>
+                  )}
+                  <Information>
+                    <OText numberOfLines={1} style={styles.title}>
+                      {order.business?.name}
+                    </OText>
+                    {order?.order_group && (
+                      <OText>
+                        <OText>{order?.order_group?.orders?.length} {t('ORDERS', 'Orders')}</OText>
+                        {order?.order_group?.orders.map(order => (
+                          <OText key={order?.id}>#{order?.id} </OText>
+                        ))}
+                      </OText>
                     )}
-                    style={styles.icon}
+                    {order?.showNotification && (
+                      <NotificationIcon>
+                        <EntypoIcon
+                          name="dot-single"
+                          size={32}
+                          color={theme.colors.primary}
+                        />
+                      </NotificationIcon>
+                    )}
+                    <OText
+                      style={styles.date}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      size={20}>
+                      {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
+                      {order?.delivery_datetime_utc
+                        ? parseDate(order?.delivery_datetime_utc)
+                        : parseDate(order?.delivery_datetime, { utc: false })}
+                    </OText>
+                    {!isLogisticOrder && (
+                      <MyOrderOptions>
+                        <OText
+                          style={styles.orderType}
+                          mRight={5}
+                          numberOfLines={1}
+                          adjustsFontSizeToFit
+                        >
+                          {order.delivery_type === 1
+                            ? t('DELIVERY', 'Delivery')
+                            : order.delivery_type === 2
+                              ? t('PICKUP', 'Pickup')
+                              : order.delivery_type === 3
+                                ? t('EAT_IN', 'Eat in')
+                                : order.delivery_type === 4
+                                  ? t('CURBSIDE', 'Curbside')
+                                  : t('DRIVER_THRU', 'Driver thru')}
+                          {` · ${getOrderStatus(order.status)}`}
+                        </OText>
+                      </MyOrderOptions>
+                    )}
+                  </Information>
+                </Card>
+              </TouchableOpacity>
+              {isLogisticOrder && (
+                <AcceptOrRejectOrder>
+                  <OButton
+                    text={t('REJECT', 'Reject')}
+                    onClick={() => console.log('reject')}
+                    bgColor={theme.colors.danger}
+                    borderColor={theme.colors.danger}
+                    imgRightSrc={null}
+                    style={{ borderRadius: 7 }}
+                    parentStyle={{width: '45%'}}
+                    textStyle={{ color: theme.colors.dangerText }}
                   />
-                </Logo>
+                  <OButton
+                    text={t('ACCEPT', 'Accept')}
+                    onClick={() => console.log('Accept')}
+                    bgColor={theme.colors.successOrder}
+                    borderColor={theme.colors.successOrder}
+                    imgRightSrc={null}
+                    style={{ borderRadius: 7 }}
+                    parentStyle={{width: '45%'}}
+                    textStyle={{ color: theme.colors.successText }}
+                  />
+                </AcceptOrRejectOrder>
               )}
-              <Information>
-                <OText numberOfLines={1} style={styles.title}>
-                  {order.business?.name}
-                </OText>
-                {order?.showNotification && (
-                  <NotificationIcon>
-                    <EntypoIcon
-                      name="dot-single"
-                      size={32}
-                      color={theme.colors.primary}
-                    />
-                  </NotificationIcon>
-                )}
-                <OText
-                  style={styles.date}
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  size={20}>
-                  {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
-                  {order?.delivery_datetime_utc
-                    ? parseDate(order?.delivery_datetime_utc)
-                    : parseDate(order?.delivery_datetime, { utc: false })}
-                </OText>
-
-                <MyOrderOptions>
-                  <OText
-                    style={styles.orderType}
-                    mRight={5}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                  >
-                    {order.delivery_type === 1
-                      ? t('DELIVERY', 'Delivery')
-                      : order.delivery_type === 2
-                      ? t('PICKUP', 'Pickup')
-                      : order.delivery_type === 3
-                      ? t('EAT_IN', 'Eat in')
-                      : order.delivery_type === 4
-                      ? t('CURBSIDE', 'Curbside')
-                      : t('DRIVER_THRU', 'Driver thru')}
-                    {` · ${getOrderStatus(order.status)}`}
-                  </OText>
-                </MyOrderOptions>
-              </Information>
-            </Card>
-          </TouchableOpacity>
-        </React.Fragment>
-      ))}
+            </React.Fragment>
+          ))}
     </>
   );
 };

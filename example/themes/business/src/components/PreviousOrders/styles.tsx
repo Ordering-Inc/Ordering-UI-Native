@@ -29,3 +29,10 @@ export const NotificationIcon = styled.View`
   position: absolute;
   left: 90%;
 `
+
+export const AcceptOrRejectOrder = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  flex: 1;
+  margin-bottom: 30px;
+`

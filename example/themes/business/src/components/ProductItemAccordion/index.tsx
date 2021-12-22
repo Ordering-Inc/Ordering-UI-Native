@@ -37,6 +37,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const [isActive, setActiveState] = useState(false);
 
   const productInfo = () => {
+    console.log(isCartProduct)
     if (isCartProduct) {
       const ingredients = JSON.parse(
         JSON.stringify(Object.values(product.ingredients ?? {})),
@@ -49,7 +50,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
         option.suboptions = Object.values(option.suboptions ?? {});
         return option;
       });
-
+      console.log(productInfo, ingredients, options)
       return {
         ...productInfo,
         ingredients,
@@ -60,11 +61,13 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     return product;
   };
 
+  const parseOptions = typeof productInfo().options === 'string' ? JSON.parse(productInfo().options) : productInfo().options
+
   const getProductPrice = (product: any) => {
     let subOptionPrice = 0;
-    if (product.options.length > 0) {
-      for (const option of product.options) {
-        for (const suboption of option.suboptions) {
+    if (product?.options?.length > 0 && product?.options?.suboptions?.length > 0) {
+      for (const option of product?.options) {
+        for (const suboption of option?.suboptions) {
           subOptionPrice += suboption.quantity * suboption.price;
         }
       }
@@ -98,8 +101,8 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   useEffect(() => {
     if (
-      productInfo().ingredients.length > 0 ||
-      productInfo().options.length > 0 ||
+      productInfo?.()?.ingredients?.length > 0 ||
+      productInfo?.()?.options?.length > 0 ||
       product.comment !== ''
     ) {
       setActiveState(true);
@@ -150,12 +153,12 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 </OText>
 
                 {(
-                  productInfo().ingredients.length > 0 ||
-                  productInfo().options.length > 0 ||
+                  productInfo?.()?.ingredients?.length > 0 ||
+                  productInfo?.()?.options?.length > 0 ||
                   product.comment
                 ) && !isClickableEvent && (
-                  <MaterialCommunityIcon name="chevron-down" size={12} />
-                )}
+                    <MaterialCommunityIcon name="chevron-down" size={12} />
+                  )}
               </View>
 
               <View
@@ -201,20 +204,20 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
           product?.valid_menu &&
           !product?.valid_quantity) ||
           (!product?.valid_menu && isCartProduct && !isCartPending)) && (
-          <OText
-            size={24}
-            color={theme.colors.red}
-            style={{ textAlign: 'center', marginTop: 10 }}>
-            {t('NOT_AVAILABLE', 'Not available')}
-          </OText>
-        )}
+            <OText
+              size={24}
+              color={theme.colors.red}
+              style={{ textAlign: 'center', marginTop: 10 }}>
+              {t('NOT_AVAILABLE', 'Not available')}
+            </OText>
+          )}
       </Accordion>
 
       <View style={{ display: isActive ? 'flex' : 'none' }}>
         <Animated.View>
           <AccordionContent>
-            {productInfo().ingredients.length > 0 &&
-              productInfo().ingredients.some(
+            {productInfo?.()?.ingredients?.length > 0 &&
+              productInfo?.()?.ingredients?.some(
                 (ingredient: any) => !ingredient.selected,
               ) && (
                 <ProductOptionsList>
@@ -225,7 +228,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                     {t('INGREDIENTS', 'Ingredients')}:
                   </OText>
 
-                  {productInfo().ingredients.map(
+                  {productInfo?.()?.ingredients?.map(
                     (ingredient: any) =>
                       !ingredient.selected && (
                         <OText
@@ -240,9 +243,9 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 </ProductOptionsList>
               )}
 
-            {productInfo().options.length > 0 && (
+            {parseOptions?.length > 0 && (
               <ProductOptionsList>
-                {productInfo().options.map((option: any, i: number) => (
+                {parseOptions?.map((option: any, i: number) => (
                   <ProductOption key={option.id + i}>
                     <OText
                       size={12}
@@ -263,9 +266,9 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                             position:
                               suboption.position !== 'whole'
                                 ? t(
-                                    suboption.position.toUpperCase(),
-                                    suboption.position,
-                                  )
+                                  suboption.position.toUpperCase(),
+                                  suboption.position,
+                                )
                                 : '',
                             price: parsePrice(suboption.price),
                           })}

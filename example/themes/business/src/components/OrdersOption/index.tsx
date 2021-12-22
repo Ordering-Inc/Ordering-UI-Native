@@ -69,7 +69,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     filtered,
     onFiltered,
     handleClickOrder,
-    isBusinessApp
+    handleClickLogisticOrder,
+    isBusinessApp,
+    logisticOrders,
+    loadLogisticOrders
   } = props;
 
   const defaultSearchList = {
@@ -124,6 +127,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       zIndex: 100,
       borderColor: theme.colors.textGray,
     },
+    icon: {
+      paddingBottom: 10,
+      zIndex: 100,
+      marginBottom: 5,
+    },
     tagsContainer: {
       marginBottom: 20,
     },
@@ -171,7 +179,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const currentOrdersGroup = ordersGroup[currentTabSelected]
 
   const isEqual = (array1: any, array2: any) => {
-    return array1.every((item: any) => array2.includes(item)) && array2.every((item: any) => array1.includes(item))
+    return array1?.every((item: any) => array2.includes(item)) && array2?.every((item: any) => array1.includes(item))
   }
 
   const handleLoadMore = () => {
@@ -298,7 +306,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             name='refresh-cw'
             color={theme.colors.backgroundDark}
             size={24}
-            onPress={() => loadOrders && loadOrders({ newFetch: true })}
+            onPress={() => { currentTabSelected === 'logisticOrders' ? loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true }) }}
             style={{ marginRight: 20 }}
           />
           <FontistoIcon
@@ -337,6 +345,22 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           nestedScrollEnabled={true}
         >
           <TabsContainer width={WIDTH_SCREEN}>
+            <Pressable
+              style={styles.pressable}
+              onPress={() => setCurrentTabSelected('logisticOrders')}>
+              <OIcon
+                src={theme.images?.general?.chronometer}
+                borderBottomWidth={currentTabSelected === 'logisticOrders' ? 1 : 0}
+                width={currentTabSelected === 'logisticOrders' ? 26 : 24}
+                height={currentTabSelected === 'logisticOrders' ? 26 : 24}
+                color={
+                  currentTabSelected === 'logisticOrders'
+                    ? theme.colors.textGray
+                    : theme.colors.unselectText
+                }
+                style={styles.icon}
+              />
+            </Pressable>
             {tabs.map((tab: any) => (
               <Pressable
                 key={tab.key}
@@ -363,71 +387,73 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </ScrollView>
       </FiltersTab>
       <View style={{ flex: 1, minHeight: HEIGHT_SCREEN - 250 }}>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {tagsList && tagsList?.length > 1 && (
-            <View style={{ marginBottom: 20 }}>
-              <Tag
-                onPress={() => handleAllSelect()}
-                isSelected={
-                  isEqual(currentOrdersGroup.currentFilter, tagsList)
-                    ? theme.colors.primary
-                    : theme.colors.tabBar
-                }>
-                <OText
-                  style={styles.tag}
-                  color={
-                    isEqual(currentOrdersGroup.currentFilter, tagsList)
-                      ? theme.colors.white
-                      : theme.colors.black
-                  }>
-                  {t('All', 'All')}
-                </OText>
-              </Tag>
-            </View>
-          )}
-          <ScrollView
-            ref={scrollRef}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.tagsContainer}
-            horizontal
+        {currentTabSelected !== 'logisticOrders' && (
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignContent: 'center',
+              alignItems: 'center',
+            }}
           >
-            {tagsList && tagsList.map((key: number) => (
-              <Tag
-                key={key}
-                onPress={() => !currentOrdersGroup.loading && handleTagSelected(key)}
-                isSelected={
-                  currentOrdersGroup.currentFilter.includes(key) &&
-                    !isEqual(currentOrdersGroup.currentFilter, tagsList)
-                    ? theme.colors.primary
-                    : theme.colors.tabBar
-                }>
-                <OText
-                  style={styles.tag}
-                  color={
+            {tagsList && tagsList?.length > 1 && (
+              <View style={{ marginBottom: 20 }}>
+                <Tag
+                  onPress={() => handleAllSelect()}
+                  isSelected={
+                    isEqual(currentOrdersGroup.currentFilter, tagsList)
+                      ? theme.colors.primary
+                      : theme.colors.tabBar
+                  }>
+                  <OText
+                    style={styles.tag}
+                    color={
+                      isEqual(currentOrdersGroup.currentFilter, tagsList)
+                        ? theme.colors.white
+                        : theme.colors.black
+                    }>
+                    {t('All', 'All')}
+                  </OText>
+                </Tag>
+              </View>
+            )}
+            <ScrollView
+              ref={scrollRef}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.tagsContainer}
+              horizontal
+            >
+              {tagsList && tagsList.map((key: number) => (
+                <Tag
+                  key={key}
+                  onPress={() => !currentOrdersGroup.loading && handleTagSelected(key)}
+                  isSelected={
                     currentOrdersGroup.currentFilter.includes(key) &&
                       !isEqual(currentOrdersGroup.currentFilter, tagsList)
-                      ? theme.colors.white
-                      : theme.colors.black
+                      ? theme.colors.primary
+                      : theme.colors.tabBar
                   }>
-                  {getOrderStatus(key)}
-                  {
-                    currentOrdersGroup.currentFilter.includes(key) &&
-                    !isEqual(currentOrdersGroup.currentFilter, tagsList) &&
-                    ' X'
-                  }
-                </OText>
-              </Tag>
-            ))}
-          </ScrollView>
-        </View>
+                  <OText
+                    style={styles.tag}
+                    color={
+                      currentOrdersGroup.currentFilter.includes(key) &&
+                        !isEqual(currentOrdersGroup.currentFilter, tagsList)
+                        ? theme.colors.white
+                        : theme.colors.black
+                    }>
+                    {getOrderStatus(key)}
+                    {
+                      currentOrdersGroup.currentFilter.includes(key) &&
+                      !isEqual(currentOrdersGroup.currentFilter, tagsList) &&
+                      ' X'
+                    }
+                  </OText>
+                </Tag>
+              ))}
+            </ScrollView>
+          </View>
+        )}
 
         <ScrollView
           ref={scrollListRef}
@@ -437,12 +463,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
-              onRefresh={() => loadOrders && loadOrders({ newFetch: true })}
+              onRefresh={() => { currentTabSelected === 'logisticOrders' ? loadLogisticOrders() : loadOrders && loadOrders({ newFetch: true }) }}
             />
           }
         >
-          {!currentOrdersGroup.error?.length &&
-            currentOrdersGroup.orders?.length > 0 &&
+          {!currentOrdersGroup?.error?.length &&
+            currentOrdersGroup?.orders?.length > 0 &&
+            currentTabSelected !== 'logisticOrders' &&
             (
               <PreviousOrders
                 orders={currentOrdersGroup.orders}
@@ -451,9 +478,21 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 handleClickOrder={handleClickOrder}
               />
             )}
-
-          {(currentOrdersGroup?.loading ||
-            currentOrdersGroup?.pagination?.total === null) &&
+          {!logisticOrders?.error?.length &&
+            logisticOrders?.orders?.length > 0 &&
+            currentTabSelected === 'logisticOrders' && (
+              <PreviousOrders
+                orders={logisticOrders.orders.map(order => !order?.order && !!order?.order_group ? order : order?.order)}
+                onNavigationRedirect={onNavigationRedirect}
+                getOrderStatus={getOrderStatus}
+                handleClickOrder={handleClickLogisticOrder}
+                isLogisticOrder
+              />
+            )
+          }
+          {((currentOrdersGroup?.loading ||
+            currentOrdersGroup?.pagination?.total === null) ||
+            (logisticOrders?.loading)) &&
             (
               <>
                 <View>
@@ -503,9 +542,12 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               />
             )}
 
-          {!currentOrdersGroup?.loading &&
+          {(!currentOrdersGroup?.loading &&
             (currentOrdersGroup?.error?.length ||
-              currentOrdersGroup?.orders?.length === 0) &&
+              currentOrdersGroup?.orders?.length === 0) ||
+            (currentTabSelected === 'logisticOrders' &&
+              (currentOrdersGroup?.error?.length || logisticOrders?.orders?.length === 0))
+          ) &&
             (
               <NotFoundSource
                 content={
@@ -605,7 +647,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 export const OrdersOption = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
-
+  const theme = useTheme()
   const ordersProps = {
     ...props,
     UIComponent: OrdersOptionUI,

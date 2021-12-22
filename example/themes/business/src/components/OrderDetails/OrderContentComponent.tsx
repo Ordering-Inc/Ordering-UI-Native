@@ -239,7 +239,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             {t('ORDER_DETAILS', 'Order Details')}
           </OText>
 
-          {order?.products?.length &&
+          {order?.products?.length > 0 &&
             order?.products.map((product: any, i: number) => (
               <ProductItemAccordion
                 key={product?.id || i}

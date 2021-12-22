@@ -51,10 +51,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     titleAccept,
     titleReject,
     appTitle,
+    isLogistic
   } = props;
 
   const [, { showToast }] = useToast();
-  const { order, loading, error } = props.order;
+  const orderAux = props.order;
+  const order = isLogistic && !orderAux ? props.order : orderAux?.order
   const theme = useTheme();
   const [, t] = useLanguage();
   const [session] = useSession();
@@ -144,7 +146,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     if (openModalForMapView) {
       setOpenModalForMapView(false);
     }
-  }, [loading]);
+  }, [order?.loading]);
 
   const handleCloseModal = () => {
     setOpenModalForBusiness(false);
@@ -239,7 +241,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   return (
     <>
       {(!order || Object.keys(order).length === 0) &&
-        (error?.length < 1 || !error) && (
+        (order?.error?.length < 1 || !order?.error) && (
           <View style={{ flex: 1 }}>
             {[...Array(6)].map((item, i) => (
               <Placeholder key={i} Animation={Fade}>
@@ -256,7 +258,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </View>
         )}
 
-      {(!!error || error) && (
+      {(!!order?.error || order?.error) && (
         <NotFoundSource
           btnTitle={t('GO_TO_MY_ORDERS', 'Go to my orders')}
           content={
@@ -267,7 +269,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           onClickButton={() => navigation.navigate('Orders')}
         />
       )}
-      {order && Object.keys(order).length > 0 && (error?.length < 1 || !error) && (
+      {order && Object.keys(order).length > 0 && (order?.error?.length < 1 || !order?.error) && (
         <View style={{ flex: 1 }}>
           <OrderHeaderComponent
             order={order}
@@ -337,7 +339,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 handleUpdateOrder={handleChangeOrderStatus}
                 closeModal={setOpenModalForAccept}
                 customerCellphone={order?.customer?.cellphone}
-                loading={loading}
+                loading={order?.loading}
                 action={actionOrder}
                 orderId={order?.id}
                 notShowCustomerPhone
@@ -382,7 +384,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
           {showFloatButtonsPickUp[order?.status] && (
             <FloatingButton
-              disabled={loading}
+              disabled={order?.loading}
               btnText={t('PICKUP_FAILED', 'Pickup failed')}
               isSecondaryBtn={false}
               secondButtonClick={() =>
@@ -401,7 +403,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           {(order?.status === 9 || order?.status === 19) && (
             <>
               <FloatingButton
-                disabled={loading}
+                disabled={order?.loading}
                 btnText={t('DELIVERY_FAILED', 'Delivery Failed')}
                 isSecondaryBtn={false}
                 secondButtonClick={() =>
