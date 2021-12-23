@@ -144,7 +144,14 @@ const CategoriesMenu = (props: any): React.ReactElement => {
               />
             </View>
 
-            <GridContainer style={{ marginTop: 20 }}>
+            <GridContainer 
+              style={{ 
+                marginTop: 20, 
+                paddingLeft: orientationState?.orientation === LANDSCAPE
+                        ? bottomSheetVisibility ? orientationState?.dimensions?.width * 0.004 :orientationState?.dimensions?.width * 0.008
+                        : 0
+              }}
+            >
               {categories[curIndexCateg].products.map((product) => (
                 <OCard
                   key={product.id}
