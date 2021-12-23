@@ -24,10 +24,19 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     handleClearSearch,
     errorQuantityProducts,
     handleCancelSearch,
+    categoriesLayout,
+    setCategoriesLayout
   } = props;
 
   const [, t] = useLanguage();
   const [{ optimizeImage }] = useUtils()
+
+  const handleOnLayout = (event: any, categoryId: any) => {
+    const _categoriesLayout = { ...categoriesLayout }
+    const categoryKey = 'cat_' + categoryId
+    _categoriesLayout[categoryKey] = event.nativeEvent.layout
+    setCategoriesLayout(_categoriesLayout)
+  }
 
   return (
     <ProductsContainer>
@@ -45,16 +54,18 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
       {!category.id &&
         featured &&
         categoryState?.products?.find((product: any) => product.featured) && (
-          <>
+          <View
+            onLayout={(event: any) => handleOnLayout(event, 'featured')}
+          >
             <OText size={16} weight={'600'} mBottom={15}>
               {t('FEATURED', 'Featured')}
             </OText>
             <>
               {categoryState.products?.map(
-                (product: any) =>
+                (product: any, i: any) =>
                   product.featured && (
                     <SingleProductCard
-                      key={product.id}
+                      key={i}
                       isSoldOut={product.inventoried && !product.quantity}
                       product={product}
                       businessId={businessId}
@@ -63,7 +74,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   ),
               )}
             </>
-          </>
+          </View>
         )}
 
       {!category.id &&
@@ -79,7 +90,10 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               <React.Fragment key={'cat_' + category.id}>
                 {products.length > 0 && (
                   <>
-                    <View style={bpStyles.catWrap}>
+                    <View
+                      style={bpStyles.catWrap}
+        							onLayout={(event: any) => handleOnLayout(event, category?.id)}
+                    >
                       <View style={bpStyles.catIcon}>
                         <OIcon
                           url={optimizeImage(category.image, 'h_100,c_limit')}
@@ -88,14 +102,14 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                           style={{ borderRadius: 7.6 }}
                         />
                       </View>
-                      <OText size={16} weight={'600'}>
+                      <OText size={16} weight="600">
                         {category.name}
                       </OText>
                     </View>
                     <>
-                      {products.map((product: any) => (
+                      {products.map((product: any, i: any) => (
                         <SingleProductCard
-                          key={product.id}
+                          key={i}
                           isSoldOut={product.inventoried && !product.quantity}
                           businessId={businessId}
                           product={product}

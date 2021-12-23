@@ -154,10 +154,10 @@ const ProfileListUI = (props: ProfileParams) => {
 						<OIcon src={theme.images.general.help} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('HELP', 'Help')}</OText>
 					</ListItem>
-					<ListItem onPress={() => navigation.navigate('Notifications', {})} activeOpacity={0.7}>
+					{/* <ListItem onPress={() => navigation.navigate('Notifications', {})} activeOpacity={0.7}>
 						<OIcon src={theme.images.general.bell} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('NOTIFICATIONS', ' Notifications')}</OText>
-					</ListItem>
+					</ListItem> */}
 				</Actions>
 
 				<Actions>
