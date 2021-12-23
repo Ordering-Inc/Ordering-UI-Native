@@ -136,6 +136,10 @@ const LoginFormUI = (props: LoginParams) => {
       fontWeight: 'normal',
       fontSize: 16,
     },
+    linkTxt: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+    }
 	});
 
 	const inputRef = useRef<any>({});
@@ -425,6 +429,15 @@ const LoginFormUI = (props: LoginParams) => {
 							}}
 							defaultValue=""
 						/>
+
+            {onNavigationRedirect && forgotButtonText && (
+              <Pressable onPress={() => onNavigationRedirect('Forgot')}>
+                <OText size={14} mBottom={18}>
+                  {forgotButtonText}
+                </OText>
+              </Pressable>
+            )}
+
 						<OButton
 							onClick={handleSubmit(onSubmit)}
 							text={loginButtonText}
@@ -438,13 +451,18 @@ const LoginFormUI = (props: LoginParams) => {
 					</FormInput>
 				)}
 
-				{onNavigationRedirect && forgotButtonText && (
-					<Pressable onPress={() => onNavigationRedirect('Forgot')}>
-						<OText size={16} mBottom={18}>
-							{forgotButtonText}
-						</OText>
-					</Pressable>
-				)}
+        {onNavigationRedirect && registerButtonText && (
+          <View style={loginStyle.linkTxt}>
+            <OText size={14} space>
+              {t('NEW_ON_PLATFORM', 'New on Ordering?')}
+            </OText>
+            <Pressable onPress={() => onNavigationRedirect('Signup')}>
+              <OText size={14} color={theme.colors.primary}>
+                {registerButtonText}
+              </OText>
+            </Pressable>
+          </View>
+        )}
 
 				{useLoginByCellphone &&
 					loginTab === 'cellphone' &&
@@ -453,13 +471,24 @@ const LoginFormUI = (props: LoginParams) => {
 					(configs?.twilio_service_enabled?.value === 'true' ||
 						configs?.twilio_service_enabled?.value === '1') && (
 						<>
-							<OrSeparator>
-								<LineSeparator />
-								<OText size={18} mRight={20} mLeft={20}>
-									{t('OR', 'Or')}
-								</OText>
-								<LineSeparator />
-							</OrSeparator>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginVertical: 30
+                }}>
+                <View style={loginStyle.line} />
+                <OText
+                  size={14}
+                  mBottom={10}
+                  style={{ paddingHorizontal: 19 }}
+                  color={theme.colors.disabled}>
+                  {t('OR', 'or')}
+                </OText>
+                <View style={loginStyle.line} />
+              </View>
 
 							<ButtonsWrapper mBottom={20}>
 								<OButton
@@ -533,18 +562,6 @@ const LoginFormUI = (props: LoginParams) => {
 						</Placeholder>
 					</SkeletonWrapper>
 				)}
-
-				{/* {onNavigationRedirect && registerButtonText && (
-          <ButtonsWrapper>
-            <OButton
-              onClick={() => onNavigationRedirect('Signup')}
-              text={registerButtonText}
-              style={loginStyle.btnOutline}
-              borderColor={theme.colors.primary}
-              imgRightSrc={null}
-            />
-          </ButtonsWrapper>
-        )} */}
 			</FormSide>
 			<OModal open={isModalVisible} onClose={() => setIsModalVisible(false)}>
 				<VerifyPhone
