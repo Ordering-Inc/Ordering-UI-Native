@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import {
   OrderList as OrderListController,
   useUtils,
@@ -17,10 +17,12 @@ import {
   OrderContainer,
   OrderInfo
 } from './styles'
+import { StackActions } from '@react-navigation/native'
 
 const LastOrdersUI = (props: LastOrdersParams) => {
   const {
-    orderList
+    orderList,
+    navigation
   } = props
   const { loading, error, orders } = orderList
 
@@ -40,6 +42,10 @@ const LastOrdersUI = (props: LastOrdersParams) => {
     }
   })
 
+  const goToOrders = useCallback((order) => {
+    navigation.navigate('BottomTab', { screen: 'MyOrders' });
+  }, [])
+
   return (
     <>
       {loading ? (
@@ -53,7 +59,7 @@ const LastOrdersUI = (props: LastOrdersParams) => {
       ) : (
         <>
           {orders.map((order: any) => (
-            <OrderContainer key={order.id}>
+            <OrderContainer key={order.id} onPress={() => goToOrders(order)}>
               <OIcon
                 url={optimizeImage(order.business?.header, 'h_300,c_limit')}
                 style={styles.headerLogo}

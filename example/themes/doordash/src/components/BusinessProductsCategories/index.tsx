@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { BusinessProductsCategories as ProductsCategories } from 'ordering-components/native'
 import { I18nManager, ScrollView, StyleSheet, View } from 'react-native'
 import { Tab } from './styles'
@@ -15,7 +15,19 @@ const BusinessProductsCategoriesUI = (props: any) => {
     categorySelected,
     loading,
     contentStyle,
+    scrollViewRef,
+    productListLayout,
+    categoriesLayout,
+    selectedCategoryId,
+    lazyLoadProductsRecommended,
+    setSelectedCategoryId,
+    setCategoryClicked
   } = props
+
+  const [tabLayouts, setTabLayouts] = useState<any>({});
+  const [scrollOffsetX, setScrollOffsetX] = useState<any>(0);
+	const tabsRef = useRef<any>(null);
+
 
   const theme = useTheme();
 
@@ -41,8 +53,50 @@ const BusinessProductsCategoriesUI = (props: any) => {
     }
   })
 
+  const handleCategoryScroll = (category: any) => {
+    setCategoryClicked(true);
+    setSelectedCategoryId(`cat_${category?.id}`);
+    
+		if (!lazyLoadProductsRecommended) {
+			if (category?.id) {
+				scrollViewRef.current.scrollTo({
+					y: categoriesLayout[`cat_${category?.id}`]?.y + productListLayout?.y + 270,
+					animated: true
+				})
+			} else {
+				scrollViewRef.current.scrollTo({
+					y: productListLayout?.y - 70,
+					animated: true
+				})
+			}
+		} else {
+			handlerClickCategory(category)
+		}
+	}
+
+  
+	const handleOnLayout = (event: any, categoryId: any) => {
+    const _tabLayouts = { ...tabLayouts }
+    const categoryKey = 'cat_' + categoryId
+    _tabLayouts[categoryKey] = event.nativeEvent.layout
+    setTabLayouts(_tabLayouts)
+  }
+
+	useEffect(() => {
+		if (!selectedCategoryId || Object.keys(tabLayouts).length === 0) return
+		tabsRef.current.scrollTo({
+			x: tabLayouts[selectedCategoryId]?.x - 40,
+			animated: true
+		})
+	}, [selectedCategoryId, tabLayouts])
+
+
   return (
-    <ScrollView horizontal contentContainerStyle={contentStyle} style={{ ...styles.container, borderBottomWidth: loading ? 0 : 1 }} showsHorizontalScrollIndicator={false}>
+    <ScrollView ref={tabsRef} horizontal contentContainerStyle={contentStyle} 
+      style={{ ...styles.container, borderBottomWidth: loading ? 0 : 1 }} showsHorizontalScrollIndicator={false}
+      onScroll={(e: any) => setScrollOffsetX(e.nativeEvent.contentOffset.x)}
+			scrollEventThrottle={16}
+      >
       {loading && (
         <Placeholder Animation={Fade}>
           <View style={{ flexDirection: 'row' }}>
@@ -56,15 +110,16 @@ const BusinessProductsCategoriesUI = (props: any) => {
         !loading && categories && categories.length && categories.map((category: any) => (
           <Tab
             key={category.name}
-            onPress={() => handlerClickCategory(category)}
+            onPress={() => handleCategoryScroll(category)}
             style={{ ...(category.id === 'featured') && !featured && styles.featuredStyle }}
+            onLayout={(event: any) => handleOnLayout(event, category.id)}
           >
             <OText
-              color={categorySelected?.id === category.id ? theme.colors.textPrimary : theme.colors.textSecondary}
+              color={selectedCategoryId === `cat_${category.id}` ? theme.colors.textPrimary : theme.colors.textSecondary}
             >
               {category.name}
             </OText>
-            <View style={categorySelected?.id === category.id ? styles.tabStyle : styles.tabDeactived} />
+            <View style={selectedCategoryId === `cat_${category.id}` ? styles.tabStyle : styles.tabDeactived} />
           </Tab>
         ))
       }
