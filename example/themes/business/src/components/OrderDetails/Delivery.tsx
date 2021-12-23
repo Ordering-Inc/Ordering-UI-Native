@@ -50,6 +50,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setDriverUpdateLocation,
     titleAccept,
     titleReject,
+    titleNotReady,
     appTitle,
     isLogistic
   } = props;
@@ -304,7 +305,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     textStyle={{ color: theme.colors.white }}
                     text={t('ORDER_NOT_READY', 'Order not ready')}
                     onClick={() =>
-                      handleChangeOrderStatus && handleChangeOrderStatus(14)
+                      handleViewActionOrder && handleViewActionOrder('notReady')
                     }
                     imgLeftStyle={{ tintColor: theme.colors.backArrow }}
                     bgColor={theme.colors.red}
@@ -346,6 +347,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 actions={actions}
                 titleAccept={titleAccept}
                 titleReject={titleReject}
+                titleNotReady={titleNotReady}
                 appTitle={appTitle}
               />
             </OModal>
