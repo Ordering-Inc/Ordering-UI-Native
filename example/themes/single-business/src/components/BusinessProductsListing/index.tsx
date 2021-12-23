@@ -94,12 +94,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
   const [categoriesLayout, setCategoriesLayout] = useState<any>({})
 	const [productListLayout, setProductListLayout] = useState<any>(null)
-  const [selectedCategoryId, setSelectedCategoryId] = useState<any>(
-    business?.categories?.sort((a: any, b: any) => a.rank - b.rank)[0]?.id &&
-    !businessState?.business?.lazy_load_products_recommended
-      ? `cat_${business?.categories?.sort((a: any, b: any) => a.rank - b.rank)[0]?.id}`
-      : null
-  )
+  const [selectedCategoryId, setSelectedCategoryId] = useState<any>(null)
 
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
@@ -170,9 +165,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		if (businessState?.business?.logo) {
 			_setStoreData('b_logo', {businessLogo: businessState.business?.logo});
 		}
-    if (businessState?.business?.categories?.length > 0 && !businessState?.business?.lazy_load_products_recommended) {
-      setSelectedCategoryId(`cat_${business?.categories?.sort((a: any, b: any) => a.rank - b.rank)[0]?.id}`)
-    }
 	}, [businessState])
 
 	return (

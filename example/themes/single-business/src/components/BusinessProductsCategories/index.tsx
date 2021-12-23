@@ -72,6 +72,8 @@ const BusinessProductsCategoriesUI = (props: any) => {
 		})
 	}, [selectedCategoryId, tabLayouts])
 
+  const initialCategory = featured ? 0 : 1
+
 	return (
 		<ScrollView
 			ref={tabsRef}
@@ -103,7 +105,7 @@ const BusinessProductsCategoriesUI = (props: any) => {
 							{
 								borderColor:
 									(!lazyLoadProductsRecommended
-										?	(selectedCategoryId === (`cat_${category.id}`) || (i === 1 && selectedCategoryId === null))
+										?	(selectedCategoryId === (`cat_${category.id}`) || (i === initialCategory && selectedCategoryId === null))
 										:	(categorySelected?.id === category.id))
 											? theme.colors.textNormal
 											: theme.colors.border,
@@ -114,21 +116,21 @@ const BusinessProductsCategoriesUI = (props: any) => {
 						<OText
 							size={
 								(!lazyLoadProductsRecommended
-									?	(selectedCategoryId === (`cat_${category.id}`) || (i === 1 && selectedCategoryId === null))
+									?	(selectedCategoryId === (`cat_${category.id}`) || (i === initialCategory && selectedCategoryId === null))
 									:	(categorySelected?.id === category.id))
 										? 14
 										: 12
 							}
 							weight={
 								(!lazyLoadProductsRecommended
-									?	(selectedCategoryId === (`cat_${category.id}`) || (i === 1 && selectedCategoryId === null))
+									?	(selectedCategoryId === (`cat_${category.id}`) || (i === initialCategory && selectedCategoryId === null))
 									:	(categorySelected?.id === category.id))
 										? '600'
 										: '400'
 							}
 							color={
 								(!lazyLoadProductsRecommended
-									?	(selectedCategoryId === (`cat_${category.id}`) || (i === 1 && selectedCategoryId === null))
+									?	(selectedCategoryId === (`cat_${category.id}`) || (i === initialCategory && selectedCategoryId === null))
 									:	(categorySelected?.id === category.id))
 										? theme.colors.textNormal
 										: theme.colors.textSecondary
