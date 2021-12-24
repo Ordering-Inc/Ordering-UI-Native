@@ -14,6 +14,6 @@ export const Header = styled.View`
   padding-horizontal: 20px;
 `
 
-export const TitleHeader = styled.View`
+export const TitleHeader = styled.View``
 
-`
+export const QuickMessageContainer = styled.ScrollView``

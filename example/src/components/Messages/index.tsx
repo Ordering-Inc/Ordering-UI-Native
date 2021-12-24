@@ -238,7 +238,7 @@ const MessagesUI = (props: MessagesParams) => {
             borderColor='#E9ECEF'
             imgRightSrc={null}
             textStyle={{
-              fontSize: 10,
+              fontSize: 11,
               lineHeight: 16,
               color: '#414954'
             }}
@@ -383,7 +383,7 @@ const MessagesUI = (props: MessagesParams) => {
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
           messagesContainerStyle={{
-            paddingBottom: 20
+            paddingBottom: 55
           }}
           isLoadingEarlier={messages.loading}
           renderLoading={() => <ActivityIndicator size="small" color="#000" />}
