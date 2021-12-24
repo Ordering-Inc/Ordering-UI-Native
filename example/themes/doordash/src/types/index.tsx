@@ -164,6 +164,7 @@ export interface BusinessProductsListingParams {
   handleChangeCategory: (value: any) => {};
   setProductLogin?: () => {};
   updateProductModal?: (value: any) => {}
+  getNextProducts?: () => {};
 }
 export interface BusinessBasicInformationParams {
   businessState?: any;
@@ -175,13 +176,19 @@ export interface BusinessBasicInformationParams {
 }
 export interface BusinessProductsCategoriesParams {
   categories: Array<any>;
-  // handlerClickCategory: any;
   onClickCategory: any;
   openBusinessInformation: any;
   categorySelected: any;
   featured: boolean;
   loading?: any;
   contentStyle?: ViewStyle;
+  scrollViewRef?: any;
+	productListLayout?: any;
+	categoriesLayout?: any;
+	selectedCategoryId?: any;
+	lazyLoadProductsRecommended?: any;
+  setSelectedCategoryId?: any;
+  setCategoryClicked?: any;
 }
 export interface BusinessProductsListParams {
   errors?: any;
@@ -198,6 +205,8 @@ export interface BusinessProductsListParams {
   errorQuantityProducts?: boolean;
   handleCancelSearch?: () => void;
   sortBy?: string;
+  categoriesLayout?: any,
+	setCategoriesLayout?: any
 }
 export interface SingleProductCardParams {
   businessId: any;
@@ -407,6 +416,7 @@ export interface HelpParams {
 }
 
 export interface LastOrdersParams {
+  navigation?: any,
   orderList?: any,
 }
 

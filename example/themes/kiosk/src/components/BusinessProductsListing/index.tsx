@@ -91,7 +91,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const _renderCategories = (): React.ReactElement => (
     <>
       {_renderTitle(t('CATEGORIES', 'Categories'))}
-      <GridContainer>
+      <GridContainer 
+        style={{
+          paddingLeft: orientationState?.orientation === LANDSCAPE
+          ? bottomSheetVisibility ? orientationState?.dimensions?.width * 0.004 :orientationState?.dimensions?.width * 0.008
+          : 0
+        }}
+      >
         {_categories && _categories.map((category: any) => (
           <OCard
             key={category.id}

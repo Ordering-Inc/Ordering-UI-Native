@@ -27,7 +27,7 @@ export const ProductHeader = styled.ImageBackground`
 `
 
 export const WrapContent = styled.View`
-  padding: 0 20px;
+  padding: ${(props: any) => props.isDrawer ? '0 5px' : '0 20px'};
   position: relative;
   bottom: 20px;
   background-color: white;

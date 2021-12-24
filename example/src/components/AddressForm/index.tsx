@@ -131,7 +131,20 @@ const AddressFormUI = (props: AddressFormParams) => {
   const maxLimitLocation = configState?.configs?.meters_to_change_address?.value
 
   const isGuestUser = props.isGuestUser || props.isGuestFromStore;
+  const isCountryAutocomplete = configState.configs?.country_autocomplete?.value !== '*'
 
+  const queryCountryAutoComplete = () => {
+    if (isCountryAutocomplete) {
+      return {
+        key: googleMapsApiKey,
+        components: `country:${configState.configs?.country_autocomplete?.value}`
+      }
+    } else {
+      return {
+        key: googleMapsApiKey,
+      }
+    }
+  }
   const continueAsGuest = () => navigation.navigate('BusinessList', {store, businessId, productId, categoryId})
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
@@ -487,7 +500,9 @@ const AddressFormUI = (props: AddressFormParams) => {
                       onPress={(data: any, details: any) => {
                         handleChangeAddress(data, details)
                       }}
-                      query={{ key: googleMapsApiKey }}
+                      query={
+                        queryCountryAutoComplete()
+                      }
                       fetchDetails
                       ref={googleInput}
                       textInputProps={{

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   OrderList,
   useLanguage,
@@ -10,7 +10,7 @@ import moment from 'moment';
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { Placeholder, Fade } from "rn-placeholder";
+import { Placeholder, Fade, PlaceholderLine } from "rn-placeholder";
 import FastImage from 'react-native-fast-image'
 import {
   ProgressContentWrapper,
@@ -29,8 +29,8 @@ const OrderProgressUI = (props: any) => {
 	const theme = useTheme();
 
 	const [, t] = useLanguage()
-	const { loading, error, orders: values } = orderList
   const [{ optimizeImage, parseDate, parseTime }] = useUtils()
+  const [lastOrder, setLastOrder] = useState<any>(null)
   const imageFails = theme.images.general.emptyActiveOrders
 
   const styles = StyleSheet.create({
@@ -103,13 +103,14 @@ const OrderProgressUI = (props: any) => {
 		return objectStatus && objectStatus
 	}
 
-  const convertDiffToHours = (time: any, order: any) => {
+  const convertDiffToHours = (order: any) => {
+    const time = order.delivery_type === 1 ? order?.business?.delivery_time : order?.business?.pickup_time
     const deliveryTime = order?.delivery_datetime_utc
-      ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'YYYY-MM-DD hh:mm A' })
-      : parseDate(order?.delivery_datetime, { utc: false, outputFormat: 'YYYY-MM-DD hh:mm A' })
+      ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'YYYY-MM-DD HH:mm' })
+      : parseDate(order?.delivery_datetime, { utc: false, outputFormat: 'YYYY-MM-DD HH:mm' })
     const [hour, minute] = time.split(':')
     const result = time ? (parseInt(hour, 10) * 60) + parseInt(minute, 10) : 0
-    const returnedDate = moment(new Date(deliveryTime)).add(result, 'minutes').format('hh:mm A')
+    const returnedDate = moment(deliveryTime).add(result, 'minutes').format('hh:mm A')
     return returnedDate
   }
 
@@ -117,17 +118,30 @@ const OrderProgressUI = (props: any) => {
     navigation && navigation.navigate(index)
   }
 
+  useEffect(() => {
+    if (orderList?.orders.length > 0) {
+      const sortedOrders = orderList.orders.sort((a: any, b:any) => a.id > b.id ? -1 : 1)
+      setLastOrder(sortedOrders[0])
+    }
+  }, [orderList?.orders])
+
 	return (
 		<>
-      {orderList?.loading && <Placeholder height={150} Animation={Fade} />}
-      {!orderList?.loading && orderList?.orders?.length > 0 && orderList?.orders.map((order: any) => (
-        <View style={styles.main} key={order.id}>
+      {orderList?.loading && (
+        <Placeholder Animation={Fade} height={130}>
+          <PlaceholderLine height={50} style={{ borderRadius: 8, marginBottom: 10 }} />
+          <PlaceholderLine height={15} style={{ marginBottom: 10 }} />
+          <PlaceholderLine height={30} style={{ borderRadius: 8, marginBottom: 10 }} />
+        </Placeholder>
+      )}
+      {!orderList?.loading && orderList?.orders?.length > 0 && lastOrder && (
+        <View style={styles.main}>
           <OrderInfoWrapper style={{ flex: 1 }}>
             <View style={styles.logoWrapper}>
               <FastImage
                 style={{ width: 50, height: 50 }}
                 source={{
-                    uri: optimizeImage(order?.business?.logo, 'h_50,c_limit'),
+                    uri: optimizeImage(lastOrder?.business?.logo, 'h_50,c_limit'),
                     priority: FastImage.priority.normal,
                 }}
                 resizeMode={FastImage.resizeMode.cover}
@@ -161,24 +175,24 @@ const OrderProgressUI = (props: any) => {
           </OrderInfoWrapper>
           <View style={{ flex: 1 }}>
             <ProgressContentWrapper>
-              <ProgressBar style={{ width: getOrderStatus(order.status)?.percentage ? `${getOrderStatus(order.status)?.percentage}%` : '0%' }} />
+              <ProgressBar style={{ width: getOrderStatus(lastOrder.status)?.percentage ? `${getOrderStatus(lastOrder.status)?.percentage}%` : '0%' }} />
             </ProgressContentWrapper>
             <ProgressTextWrapper>
-              <OText size={12}>{getOrderStatus(order.status)?.value}</OText>
+              <OText size={12}>{getOrderStatus(lastOrder.status)?.value}</OText>
               <TimeWrapper>
                 <OText size={11}>{t('ESTIMATED_DELIVERY', 'Estimated delivery')}</OText>
                 <OText size={11}>
-                  {order?.delivery_datetime_utc
-                    ? parseTime(order?.delivery_datetime_utc, { outputFormat: 'hh:mm A' })
-                    : parseTime(order?.delivery_datetime, { utc: false })}
+                  {lastOrder?.delivery_datetime_utc
+                    ? parseTime(lastOrder?.delivery_datetime_utc, { outputFormat: 'hh:mm A' })
+                    : parseTime(lastOrder?.delivery_datetime, { utc: false })}
                     &nbsp;-&nbsp;
-                  {convertDiffToHours(order.delivery_type === 1 ? order?.business?.delivery_time : order?.business?.pickup_time, order)}
+                  {convertDiffToHours(lastOrder)}
                 </OText>
               </TimeWrapper>
             </ProgressTextWrapper>
           </View>
         </View>
-      ))}
+      )}
       {!orderList?.loading && orderList?.orders?.length === 0 && (
         <NotFoundSource
           image={imageFails}

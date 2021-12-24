@@ -208,7 +208,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }, [messagesReadList])
 
-  const locations = [
+  let locations = [
     { ...order?.driver?.location, title: t('DRIVER', 'Driver'), icon: order?.driver?.photo || 'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png' },
     { ...order?.business?.location, title: order?.business?.name, icon: order?.business?.logo || theme.images.dummies.businessLogo },
     { ...order?.customer?.location, title: t('YOUR_LOCATION', 'Your Location'), icon: order?.customer?.photo || 'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png' }
@@ -216,7 +216,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     if (driverLocation) {
-      locations[0] = driverLocation
+      locations[0] = {...locations[0], lat: driverLocation.lat, lng: driverLocation.lng}
     }
   }, [driverLocation])
 
@@ -361,9 +361,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {order?.driver?.location && parseInt(order?.status) === 9 && (
                     <Map>
                       <GoogleMap
-                        location={order?.driver?.location}
+                        location={driverLocation ?? order?.driver?.location}
                         locations={locations}
-                        readOnly
                       />
                     </Map>
                   )}

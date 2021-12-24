@@ -27,6 +27,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     notShowCustomerPhone,
     titleAccept,
     titleReject,
+    titleNotReady,
     appTitle,
   } = props;
 
@@ -43,7 +44,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
   const phoneNumber = customerCellphone;
   let codeNumberPhone, numberPhone, numberToShow;
-  const { top, bottom} = useSafeAreaInsets()
+  const { top, bottom } = useSafeAreaInsets()
 
   const handleFocus = () => {
     viewRef?.current?.measure((x: any, y: any) => {
@@ -111,7 +112,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       openTimerIOnput();
     }
 
-    if (actions && (action === 'reject' || action === 'failed')) {
+    if (actions && (action === 'reject' || action === 'failed' || action === 'notReady')) {
       openTextTareaOInput();
     }
   }, []);
@@ -181,6 +182,10 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       failedByDriver: {
         comment: comments,
         status: 12
+      },
+      orderNotReady: {
+        comment: comments,
+        status: 14
       }
     };
 
@@ -190,8 +195,11 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     if (actions && action === 'reject') {
       bodyToSend = orderStatus[actions.reject];
     }
-    if(actions && action === 'failed'){
+    if (actions && action === 'failed') {
       bodyToSend = orderStatus[actions.failed]
+    }
+    if (actions && action === 'notReady') {
+      bodyToSend = orderStatus[actions.notReady]
     }
 
     bodyToSend.id = orderId;
@@ -200,11 +208,11 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   };
 
   return (
-      <KeyboardAvoidingView
+    <KeyboardAvoidingView
       enabled
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1, paddingHorizontal: 30, paddingTop: 30, marginTop: top, marginBottom: bottom,justifyContent: 'space-between' }}>
-          <View>
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1, paddingHorizontal: 30, paddingTop: 30, marginTop: top, marginBottom: bottom, justifyContent: 'space-between' }}>
+      <View>
         <OIconButton
           icon={theme.images.general.arrow_left}
           borderColor={theme.colors.clear}
@@ -227,163 +235,167 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           weight="600">
           {action === 'accept'
             ? `${t(titleAccept?.key, titleAccept?.text)}:`
-            : t(titleReject?.key, titleReject?.text)}
+            : action === 'notReady'
+              ? t(titleNotReady?.key, titleNotReady?.text)
+              : t(titleReject?.key, titleReject?.text)}
         </OText>
-        </View>
-        <Content showsVerticalScrollIndicator={false} ref={scrollViewRef}>
-          <Header>
-            {action === 'reject' && (
-              <>
-                {!notShowCustomerPhone && (
-                  <>
-                    <OText
-                      size={15}
-                      color={theme.colors.textGray}
-                      style={{ marginTop: 10 }}>
-                      {t(
-                        'CALL_YOUR_CUSTOMER_TO_RESOLVE_THE_ISSUE_AS_POLITELY_AS_POSSIBLE',
-                        'Call your customer to resolve the issue as politely as possible',
-                      )}
-                    </OText>
-
-                    {numberToShow ? (
-                      <OButton
-                        bgColor="transparent"
-                        borderColor={theme.colors.primary}
-                        textStyle={{
-                          color: theme.colors.primary,
-                          fontSize: 20,
-                        }}
-                        style={{
-                          borderRadius: 10,
-                          marginVertical: 20,
-                        }}
-                        imgLeftStyle={{
-                          resizeMode: 'contain',
-                          left: 20,
-                          position: 'absolute',
-                        }}
-                        imgLeftSrc={theme.images.general.cellphone}
-                        text={numberToShow}
-                        onClick={() =>
-                          Linking.openURL(`tel:${customerCellphone}`)
-                        }
-                      />
-                    ) : (
-                      <OButton
-                        bgColor="transparent"
-                        borderColor={theme.colors.primary}
-                        textStyle={{
-                          color: theme.colors.primary,
-                          fontSize: 15,
-                        }}
-                        style={{
-                          borderRadius: 10,
-                          marginVertical: 20,
-                        }}
-                        imgLeftStyle={{
-                          resizeMode: 'contain',
-                          left: 20,
-                          position: 'absolute',
-                        }}
-                        isDisabled={true}
-                        imgLeftSrc={theme.images.general.cellphone}
-                        text={t('NOT_NUMBER', "There's not phonenumber.")}
-                        onClick={() =>
-                          Linking.openURL(`tel:${customerCellphone}`)
-                        }
-                      />
+      </View>
+      <Content showsVerticalScrollIndicator={false} ref={scrollViewRef}>
+        <Header>
+          {action === 'reject' && (
+            <>
+              {!notShowCustomerPhone && (
+                <>
+                  <OText
+                    size={15}
+                    color={theme.colors.textGray}
+                    style={{ marginTop: 10 }}>
+                    {t(
+                      'CALL_YOUR_CUSTOMER_TO_RESOLVE_THE_ISSUE_AS_POLITELY_AS_POSSIBLE',
+                      'Call your customer to resolve the issue as politely as possible',
                     )}
-                  </>
-                )}
+                  </OText>
 
-                <OText
-                  size={15}
-                  color={theme.colors.textGray}
-                  style={{ marginBottom: 10 }}>
+                  {numberToShow ? (
+                    <OButton
+                      bgColor="transparent"
+                      borderColor={theme.colors.primary}
+                      textStyle={{
+                        color: theme.colors.primary,
+                        fontSize: 20,
+                      }}
+                      style={{
+                        borderRadius: 10,
+                        marginVertical: 20,
+                      }}
+                      imgLeftStyle={{
+                        resizeMode: 'contain',
+                        left: 20,
+                        position: 'absolute',
+                      }}
+                      imgLeftSrc={theme.images.general.cellphone}
+                      text={numberToShow}
+                      onClick={() =>
+                        Linking.openURL(`tel:${customerCellphone}`)
+                      }
+                    />
+                  ) : (
+                    <OButton
+                      bgColor="transparent"
+                      borderColor={theme.colors.primary}
+                      textStyle={{
+                        color: theme.colors.primary,
+                        fontSize: 15,
+                      }}
+                      style={{
+                        borderRadius: 10,
+                        marginVertical: 20,
+                      }}
+                      imgLeftStyle={{
+                        resizeMode: 'contain',
+                        left: 20,
+                        position: 'absolute',
+                      }}
+                      isDisabled={true}
+                      imgLeftSrc={theme.images.general.cellphone}
+                      text={t('NOT_NUMBER', "There's not phonenumber.")}
+                      onClick={() =>
+                        Linking.openURL(`tel:${customerCellphone}`)
+                      }
+                    />
+                  )}
+                </>
+              )}
+
+              <OText
+                size={15}
+                color={theme.colors.textGray}
+                style={{ marginBottom: 10 }}>
+                {t(
+                  'MARK_THE_ORDER_AS_REJECTED',
+                  'Mark the order as rejected',
+                )}
+              </OText>
+
+              <OText>
+                <OText style={{ fontWeight: '600' }}>
+                  {t('NOTE', 'Note')}
+                  {': '}
+                </OText>
+
+                <OText size={15} color={theme.colors.textGray}>
                   {t(
-                    'MARK_THE_ORDER_AS_REJECTED',
-                    'Mark the order as rejected',
+                    'YOUR_CUSTOMER_WILL_RECEIVE_A_NOTIFICATION_ABOUT_THIS_ACTIONS',
+                    'Your customer will receive a notification about this actions',
                   )}
                 </OText>
-
-                <OText>
-                  <OText style={{ fontWeight: '600' }}>
-                    {t('NOTE', 'Note')}
-                    {': '}
-                  </OText>
-
-                  <OText size={15} color={theme.colors.textGray}>
-                    {t(
-                      'YOUR_CUSTOMER_WILL_RECEIVE_A_NOTIFICATION_ABOUT_THIS_ACTIONS',
-                      'Your customer will receive a notification about this actions',
-                    )}
-                  </OText>
-                </OText>
-              </>
-            )}
-          </Header>
-
-          {action === 'accept' && (
-            <View style={{ height: 400, justifyContent: 'center' }}>
-              <Timer onPress={() => openTimerIOnput()}>
-                <OText weight="600" style={{ textAlign: 'center' }} size={55}>
-                  {hour}
-                </OText>
-                {hour.length > 0 && <OText size={55}>:</OText>}
-                <OText weight="600" style={{ textAlign: 'center' }} size={55}>
-                  {min}
-                </OText>
-              </Timer>
-            </View>
+              </OText>
+            </>
           )}
-          <TimeField
-            ref={timerRef}
-            keyboardType="numeric"
-            value={time}
-            placeholder={'00:00'}
-            onChangeText={handleTime}
-            onPressOut={() => handleFixTime()}
-            editable={true}
-            autoFocus={actions && action === 'accept'}
-            selectionColor={theme.colors.primary}
-            placeholderTextColor={theme.colors.textGray}
-            color={theme.colors.textGray}
-            onEndEditing={handleFixTime}
-          />
+        </Header>
 
-          {(action === 'reject' || action === 'failed') && (
-            <Comments ref={viewRef}>
-              <OTextarea
-                textTareaRef={textTareaRef}
-                autoFocus={actions && (action === 'reject' || action === 'failed')}
-                onFocus={handleFocus}
-                placeholder={t(
-                  'PLEASE_TYPE_YOUR_COMMENTS_IN_HERE',
-                  'Please type your comments in here',
-                )}
-                value={comments}
-                onChange={setComments}
-              />
-              <View style={{ height: 20 }} />
-            </Comments>
-          )}
-        </Content>
+        {action === 'accept' && (
+          <View style={{ height: 400, justifyContent: 'center' }}>
+            <Timer onPress={() => openTimerIOnput()}>
+              <OText weight="600" style={{ textAlign: 'center' }} size={55}>
+                {hour}
+              </OText>
+              {hour.length > 0 && <OText size={55}>:</OText>}
+              <OText weight="600" style={{ textAlign: 'center' }} size={55}>
+                {min}
+              </OText>
+            </Timer>
+          </View>
+        )}
+        <TimeField
+          ref={timerRef}
+          keyboardType="numeric"
+          value={time}
+          placeholder={'00:00'}
+          onChangeText={handleTime}
+          onPressOut={() => handleFixTime()}
+          editable={true}
+          autoFocus={actions && action === 'accept'}
+          selectionColor={theme.colors.primary}
+          placeholderTextColor={theme.colors.textGray}
+          color={theme.colors.textGray}
+          onEndEditing={handleFixTime}
+        />
 
-        <Action>
-          <FloatingButton
-            firstButtonClick={() => {
-              handleAcceptOrReject();
-            }}
-            btnText={
-              action === 'accept'
-                ? t('ACCEPT', 'Accept')
+        {(['failed', 'reject', 'notReady']?.includes(action)) && (
+          <Comments ref={viewRef}>
+            <OTextarea
+              textTareaRef={textTareaRef}
+              autoFocus={actions && (action === 'reject' || action === 'failed' || action === 'notReady')}
+              onFocus={handleFocus}
+              placeholder={t(
+                'PLEASE_TYPE_YOUR_COMMENTS_IN_HERE',
+                'Please type your comments in here',
+              )}
+              value={comments}
+              onChange={setComments}
+            />
+            <View style={{ height: 20 }} />
+          </Comments>
+        )}
+      </Content>
+
+      <Action>
+        <FloatingButton
+          firstButtonClick={() => {
+            handleAcceptOrReject();
+          }}
+          btnText={
+            action === 'accept'
+              ? t('ACCEPT', 'Accept')
+              : action === 'notReady'
+                ? t('ORDER_NOT_READY', 'Order not ready')
                 : t('REJECT', 'Reject')
-            }
-            color={action === 'accept' ? theme.colors.green : theme.colors.red}
-            widthButton={'100%'}
-          />
-        </Action>
-      </KeyboardAvoidingView>
+          }
+          color={action === 'accept' ? theme.colors.green : theme.colors.red}
+          widthButton={'100%'}
+        />
+      </Action>
+    </KeyboardAvoidingView>
   );
 };
