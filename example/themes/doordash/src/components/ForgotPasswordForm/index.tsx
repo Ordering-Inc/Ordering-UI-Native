@@ -10,7 +10,7 @@ import {
 
 import NavBar from '../NavBar';
 import { FormInput, FormSide } from '../LoginForm/styles'
-import { Container } from './styles'
+import { Container, InputWrap } from './styles'
 
 import { OButton, OInput, OText } from '../shared';
 import { useTheme } from 'styled-components/native';
@@ -26,9 +26,8 @@ const ForgotPasswordUI = (props: any) => {
 
   const styles = StyleSheet.create({
     inputStyle: {
-      marginBottom: 25,
-      borderWidth: 1,
-      borderColor: theme.colors.disabled
+      borderWidth: 0,
+      minHeight: 44
     }
   });
 
@@ -84,47 +83,50 @@ const ForgotPasswordUI = (props: any) => {
         onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
         rightImg={null}
         paddingTop={0}
+        style={{paddingLeft: 0, paddingRight: 0}}
       />
       <FormSide>
         <OText
           color={'gray'}
           size={16}
           weight={'300'}
-          style={{ marginBottom: 30 }}
+          style={{ marginBottom: 30, marginTop: 30 }}
         >
           {t('FORGOT_PASSWORD_TEXT_MESSAGE', "Enter your email address and we'll sent a link to reset your password.")}
         </OText>
         <FormInput>
-          <Controller
-            control={control}
-            render={({ onChange, value }: any) => (
-              <OInput
-                placeholder={t('EMAIL', 'Email')}
-                style={styles.inputStyle}
-                icon={theme.images.general.email}
-                onChange={(e: any) => {
-                  handleChangeInputEmail(e, onChange)
-                }}
-                value={value}
-                autoCapitalize='none'
-                autoCorrect={false}
-                type='email-address'
-                autoCompleteType='email'
-                returnKeyType='done'
-                blurOnSubmit
-                onSubmitEditing={handleSubmit(onSubmit)}
-              />
-            )}
-            name="email"
-            rules={{
-              required: t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email')),
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
-              }
-            }}
-            defaultValue=""
-          />
+          <InputWrap>
+            <OText weight="bold">Email</OText>
+            <Controller
+              control={control}
+              render={({ onChange, value }: any) => (
+                <OInput
+                  placeholder={t('EXAMPLE@MAIL.COM', 'your@email.com')}
+                  style={styles.inputStyle}
+                  onChange={(e: any) => {
+                    handleChangeInputEmail(e, onChange)
+                  }}
+                  value={value}
+                  autoCapitalize='none'
+                  autoCorrect={false}
+                  type='email-address'
+                  autoCompleteType='email'
+                  returnKeyType='done'
+                  blurOnSubmit
+                  onSubmitEditing={handleSubmit(onSubmit)}
+                />
+              )}
+              name="email"
+              rules={{
+                required: t('VALIDATION_ERROR_EMAIL_REQUIRED', 'The field Email is required').replace('_attribute_', t('EMAIL', 'Email')),
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: t('INVALID_ERROR_EMAIL', 'Invalid email address').replace('_attribute_', t('EMAIL', 'Email'))
+                }
+              }}
+              defaultValue=""
+            />
+          </InputWrap>
 
           <OButton
             text={emailSent && !formState.result?.error ? t('LINK_SEND_FORGOT_PASSWORD', 'Link Sent') : t('FRONT_RECOVER_PASSWORD', 'Recover Password')}

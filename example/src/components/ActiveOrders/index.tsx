@@ -3,10 +3,11 @@ import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { OButton, OIcon, OText } from '../shared'
 import { ActiveOrdersContainer, Card, Map, Information, Logo, OrderInformation, BusinessInformation, Price } from './styles'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import { getGoogleMapImage } from '../../utils'
 
 import { ActiveOrdersParams } from '../../types'
+import { ScrollView as GestureHandlerScrollView } from 'react-native-gesture-handler'
 
 export const ActiveOrders = (props: ActiveOrdersParams) => {
   const {
@@ -73,19 +74,35 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
           )}
           <OrderInformation>
             <BusinessInformation style={{ width: '60%' }}>
-              <View>
-                <OText
-                  size={16}
-                  numberOfLines={1}
-                  ellipsizeMode='tail'
-                >
-                  {order.business?.name}
-                </OText>
-              </View>
-              <View style={styles.orderNumber}>
-                <OText size={12} space color={theme.colors.textSecondary}>{t('ORDER_NUMBER', 'Order No.')}</OText>
-                <OText size={12} color={theme.colors.textSecondary}>{order.id}</OText>
-              </View>
+              <GestureHandlerScrollView
+                  showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false}
+                  horizontal
+              >
+                <TouchableWithoutFeedback>
+                  <View>
+                    <OText
+                      size={16}
+                      numberOfLines={1}
+                      ellipsizeMode='tail'
+                    >
+                      {order.business?.name}
+                    </OText>
+                  </View>
+                </TouchableWithoutFeedback>
+              </GestureHandlerScrollView>
+              <GestureHandlerScrollView
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+              >
+                <TouchableWithoutFeedback>
+                  <View style={styles.orderNumber}>
+                    <OText size={12} space color={theme.colors.textSecondary}>{t('ORDER_NUMBER', 'Order No.')}</OText>
+                    <OText size={12} color={theme.colors.textSecondary}>{order.id}</OText>
+                  </View>
+                </TouchableWithoutFeedback>
+              </GestureHandlerScrollView>
               <OText size={12} color={theme.colors.textSecondary}>{order?.delivery_datetime_utc
                 ? parseDate(order?.delivery_datetime_utc)
                 : parseDate(order?.delivery_datetime, { utc: false })}</OText>

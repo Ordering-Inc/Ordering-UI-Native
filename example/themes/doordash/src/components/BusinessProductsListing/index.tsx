@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import { View, TouchableOpacity, StyleSheet, TextStyle, ScrollView, I18nManager, Platform } from 'react-native'
 import {
 	BusinessAndProductList,
 	useLanguage,
 	useOrder,
 	useSession,
-	useUtils
+	useUtils,
+	useToast,
+	ToastType
 } from 'ordering-components/native'
 import { OButton, OIcon, OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -35,6 +37,8 @@ import { OrderSummary } from '../OrderSummary'
 import NavBar from '../NavBar'
 import SocialShareFav from '../SocialShare'
 
+const PIXELS_TO_SCROLL = 1000
+
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const {
 		navigation,
@@ -52,7 +56,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		productModal,
 		handleChangeCategory,
 		setProductLogin,
-		updateProductModal
+		updateProductModal,
+		getNextProducts
 	} = props
 	const theme = useTheme()
 
@@ -97,14 +102,19 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [{ auth }] = useSession()
 	const [orderState] = useOrder()
 	const [{ parsePrice }] = useUtils()
+	const [ ,{showToast}] = useToast()
 	const { business, loading, error } = businessState
 	const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
 	const [curProduct, setCurProduct] = useState(null)
 	const [openUpselling, setOpenUpselling] = useState(false)
 	const [openCart, setOpenCart] = useState(false)
-	const [canOpenUpselling, setCanOpenUpselling] = useState(false)
+	const [isCategoryClicked, setCategoryClicked] = useState(false)
+	const [categoriesLayout, setCategoriesLayout] = useState<any>({})
+	const [productListLayout, setProductListLayout] = useState<any>(null)
+	const [selectedCategoryId, setSelectedCategoryId] = useState<any>('cat_all')
 
-	const [isStickyCategory, setStickyCategory] = useState(false);
+	const scrollViewRef = useRef<any>(null)
+
 	const { top } = useSafeAreaInsets();
 	const [sortBy, setSortBy] = useState('alphabet');
 
@@ -146,19 +156,36 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		setOpenCart(false)
 	}
 
-	const handlePageScroll = (event: any) => {
-		const y = event?.nativeEvent?.contentOffset?.y || 0;
-		if (y > 30 && !isStickyCategory) {
-			setStickyCategory(true);
-		} else if (y < 19 && isStickyCategory) {
-			setStickyCategory(false);
+	const handlePageScroll = useCallback(({ nativeEvent }: any) => {
+		const scrollOffset = nativeEvent.contentOffset.y
+		if (businessState?.business?.lazy_load_products_recommended) {
+			const height = nativeEvent.contentSize.height
+			const hasMore = !(categoryState.pagination.totalPages === categoryState.pagination.currentPage)
+			if (scrollOffset + PIXELS_TO_SCROLL > height && !loading && hasMore && getNextProducts) {
+				getNextProducts()
+				showToast(ToastType.Info, t('LOADING_MORE_PRODUCTS', 'Loading more products'))
+			}
+		} else {
+			if (!scrollOffset || !categoriesLayout || !productListLayout || isCategoryClicked) return
+			
+			for (const key in categoriesLayout) {
+				const categoryOffset = categoriesLayout[key].y + productListLayout?.y - 70
+				if (scrollOffset < 10) {
+					setSelectedCategoryId('cat_all');
+					return;
+				}
+				if (categoryOffset - 50 <= scrollOffset && scrollOffset <= categoryOffset + 50) {
+					if (selectedCategoryId !== key) {
+						setSelectedCategoryId(key)
+					}
+				}
+			}
 		}
-	}
-	// useEffect(() => {
-	//   if (!orderState.loading) {
-	//     handleCloseProductModal()
-	//   }
-	// }, [orderState.loading])
+	}, [isCategoryClicked, selectedCategoryId])
+
+	const handleTouchDrag = useCallback(() => {
+		setCategoryClicked(false);
+	}, []);
 
 	return (
 		<>
@@ -172,11 +199,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							onClick={() => (navigation?.canGoBack() && navigation.goBack()) || (auth && navigation.navigate('BottomTab'))}
 							imgLeftStyle={{ tintColor: theme.colors.textPrimary }}
 						/>
-						{isStickyCategory && (
-							<Animated.View style={{ flexBasis: '74%', paddingHorizontal: 10, alignItems: 'center' }}>
-								<OText style={theme.labels.middle as TextStyle} numberOfLines={1} ellipsizeMode={'tail'}>{business?.name}</OText>
-							</Animated.View>
-						)}
 						{!errorQuantityProducts && (
 							<View style={{ ...styles.headerItem }}>
 								<View
@@ -196,8 +218,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				style={styles.mainContainer}
 				isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
 				stickyHeaderIndices={[1]}
+				ref={scrollViewRef}
 				onScroll={handlePageScroll}
-				scrollEventThrottle={14}
+				onScrollBeginDrag={handleTouchDrag}
+				scrollEventThrottle={16}
 			>
 				<WrapHeader>
 					<BusinessBasicInformation
@@ -211,7 +235,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						<WrapSearchBar>
 							<SearchBar
 								onSearch={handleChangeSearch}
-								// onCancel={() => handleCancel()}
 								isCancelXButtonShow
 								noBorderShow
 								placeholder={t('SEARCH', 'Search')}
@@ -232,18 +255,25 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				{!loading && business?.id && !(business?.categories?.length === 0) && (
 					<CategoryWrap>
 						<BusinessProductsCategories
-							categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
+							categories={[{ id: 'all', name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
 							categorySelected={categorySelected}
 							onClickCategory={handleChangeCategory}
 							featured={featuredProducts}
 							openBusinessInformation={openBusinessInformation}
+							scrollViewRef={scrollViewRef}
 							contentStyle={{ paddingHorizontal: 40 }}
+							productListLayout={productListLayout}
+							categoriesLayout={categoriesLayout}
+							selectedCategoryId={selectedCategoryId}
+							setSelectedCategoryId={setSelectedCategoryId}
+							setCategoryClicked={setCategoryClicked}
+							lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
 						/>
 					</CategoryWrap>
 				)}
 				<View>
 					{!loading && business?.id && (
-						<WrapContent>
+						<WrapContent onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}>
 							<BusinessProductsList
 								categories={[
 									{ id: null, name: t('ALL', 'All') },
@@ -262,6 +292,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								errorQuantityProducts={errorQuantityProducts}
 								handleCancelSearch={handleCancel}
 								sortBy={sortBy}
+								categoriesLayout={categoriesLayout}
+								setCategoriesLayout={setCategoriesLayout}
 							/>
 						</WrapContent>
 					)}
