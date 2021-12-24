@@ -3,7 +3,8 @@ import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager } from 're
 import LinearGradient from 'react-native-linear-gradient'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { Messages } from '../Messages'
+import { Messages } from '../../../themes/instacart/src/components/Messages'
+// import { Messages } from '../Messages'
 import { ShareComponent } from '../ShareComponent'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
