@@ -34,5 +34,5 @@ export const AcceptOrRejectOrder = styled.View`
   flex-direction: row;
   justify-content: space-between;
   flex: 1;
-  margin-bottom: 30px;
+  margin: 10px;
 `

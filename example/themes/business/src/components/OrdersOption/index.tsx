@@ -69,8 +69,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     filtered,
     onFiltered,
     handleClickOrder,
-    handleClickLogisticOrder,
     isBusinessApp,
+    handleClickLogisticOrder,
     logisticOrders,
     loadLogisticOrders
   } = props;
@@ -96,7 +96,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [orientationState] = useDeviceOrientation();
   const [openModal, setOpenModal] = useState(false)
   const [search, setSearch] = useState(defaultSearchList)
-
   const WIDTH_SCREEN = orientationState?.dimensions?.width
   const HEIGHT_SCREEN = orientationState?.dimensions?.height
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
@@ -454,7 +453,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             </ScrollView>
           </View>
         )}
-
         <ScrollView
           ref={scrollListRef}
           showsVerticalScrollIndicator={false}
@@ -482,10 +480,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             logisticOrders?.orders?.length > 0 &&
             currentTabSelected === 'logisticOrders' && (
               <PreviousOrders
-                orders={logisticOrders.orders.map(order => !order?.order && !!order?.order_group ? order : order?.order)}
+                orders={logisticOrders.orders.filter((order: any) => !order?.expired).map((order: any) => ({ ...order, isLogistic: true }))}
                 onNavigationRedirect={onNavigationRedirect}
                 getOrderStatus={getOrderStatus}
-                handleClickOrder={handleClickLogisticOrder}
+                handleClickLogisticOrder={handleClickLogisticOrder}
                 isLogisticOrder
               />
             )
@@ -542,19 +540,21 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               />
             )}
 
-          {(!currentOrdersGroup?.loading &&
+          {((!currentOrdersGroup?.loading &&
             (currentOrdersGroup?.error?.length ||
-              currentOrdersGroup?.orders?.length === 0) ||
+              currentOrdersGroup?.orders?.length === 0)) ||
             (currentTabSelected === 'logisticOrders' &&
-              (currentOrdersGroup?.error?.length || logisticOrders?.orders?.length === 0))
+              (logisticOrders?.error?.length > 0 || logisticOrders?.orders?.length === 0))
           ) &&
             (
               <NotFoundSource
                 content={
-                  !currentOrdersGroup?.error?.length
+                  ((currentTabSelected !== 'logisticOrders' && !currentOrdersGroup?.error?.length) ||
+                    (currentTabSelected === 'logisticOrders' && !logisticOrders?.error?.length))
                     ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
-                    : currentOrdersGroup?.error[0]?.message ||
-                    currentOrdersGroup?.error[0] ||
+                    : currentOrdersGroup?.error?.[0]?.message ||
+                    currentOrdersGroup?.error?.[0] ||
+                    (currentTabSelected === 'logisticOrders' && logisticOrders?.error) ||
                     t('NETWORK_ERROR', 'Network Error')
                 }
                 image={theme.images.general.notFound}

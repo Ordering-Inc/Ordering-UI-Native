@@ -5,22 +5,31 @@ import { useLanguage, useUtils } from 'ordering-components/native';
 import { OButton, OIcon, OText } from '../shared';
 import { Card, Logo, Information, MyOrderOptions, NotificationIcon, AcceptOrRejectOrder } from './styles';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
+
 export const PreviousOrders = (props: any) => {
-  const { orders, onNavigationRedirect, getOrderStatus, handleClickOrder, isLogisticOrder } = props;
+  const {
+    orders,
+    onNavigationRedirect,
+    getOrderStatus,
+    handleClickOrder,
+    isLogisticOrder,
+    handleClickLogisticOrder
+  } = props;
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
   const theme = useTheme();
 
   const handlePressOrder = (order: any) => {
+    if (order?.locked) return
     handleClickOrder && handleClickOrder(order)
     onNavigationRedirect &&
-      onNavigationRedirect('OrderDetails', { order: order });
+      onNavigationRedirect('OrderDetails', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
   };
 
   const styles = StyleSheet.create({
     cardButton: {
       flex: 1,
-      minHeight: 64,
+      minHeight: isLogisticOrder ? 50 : 64,
       marginBottom: isLogisticOrder ? 0 : 30,
       marginLeft: 3,
     },
@@ -77,107 +86,117 @@ export const PreviousOrders = (props: any) => {
       {orders && orders?.length > 0 &&
         orders
           .filter((order: any) => hash[order?.id] ? false : (hash[order?.id] = true))
-          .map((order: any) =>
-          (
-            <React.Fragment key={order.id}>
-              <TouchableOpacity
-                onPress={() => handlePressOrder(order)}
-                style={styles.cardButton}
-                activeOpacity={1}
+          .map((_order: any) => {
+            const order = _order?.isLogistic && !_order?.order_group ? _order?.order : _order
+            return (
+              <View
+                style={{
+                  backgroundColor: order?.locked ? '#ccc' : '#fff',
+                  marginBottom: isLogisticOrder ? 10 : 0
+                }}
+                key={order.id}
               >
-                <Card key={order.id}>
-                  {!!order.business?.logo && (
-                    <Logo style={styles.logo}>
-                      <OIcon
-                        url={optimizeImage(
-                          order.business?.logo,
-                          'h_300,c_limit',
-                        )}
-                        style={styles.icon}
-                      />
-                    </Logo>
-                  )}
-                  <Information>
-                    <OText numberOfLines={1} style={styles.title}>
-                      {order.business?.name}
-                    </OText>
-                    {order?.order_group && (
-                      <OText>
-                        <OText>{order?.order_group?.orders?.length} {t('ORDERS', 'Orders')}</OText>
-                        {order?.order_group?.orders.map(order => (
-                          <OText key={order?.id}>#{order?.id} </OText>
-                        ))}
-                      </OText>
-                    )}
-                    {order?.showNotification && (
-                      <NotificationIcon>
-                        <EntypoIcon
-                          name="dot-single"
-                          size={32}
-                          color={theme.colors.primary}
-                        />
-                      </NotificationIcon>
-                    )}
-                    <OText
-                      style={styles.date}
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
-                      size={20}>
-                      {t('INVOICE_ORDER_NO', 'Order No.') + order.id + ' · '}
-                      {order?.delivery_datetime_utc
-                        ? parseDate(order?.delivery_datetime_utc)
-                        : parseDate(order?.delivery_datetime, { utc: false })}
-                    </OText>
-                    {!isLogisticOrder && (
-                      <MyOrderOptions>
-                        <OText
-                          style={styles.orderType}
-                          mRight={5}
-                          numberOfLines={1}
-                          adjustsFontSizeToFit
-                        >
-                          {order.delivery_type === 1
-                            ? t('DELIVERY', 'Delivery')
-                            : order.delivery_type === 2
-                              ? t('PICKUP', 'Pickup')
-                              : order.delivery_type === 3
-                                ? t('EAT_IN', 'Eat in')
-                                : order.delivery_type === 4
-                                  ? t('CURBSIDE', 'Curbside')
-                                  : t('DRIVER_THRU', 'Driver thru')}
-                          {` · ${getOrderStatus(order.status)}`}
+                <TouchableOpacity
+                  onPress={() => handlePressOrder({ ...order, logistic_order_id: _order?.id })}
+                  style={styles.cardButton}
+                  disabled={order?.locked}
+                  activeOpacity={1}
+                >
+                  <Card key={order.id}>
+                    {
+                      order.business?.logo && (
+                        <Logo style={styles.logo}>
+                          <OIcon
+                            url={optimizeImage(
+                              order.business?.logo,
+                              'h_300,c_limit',
+                            )}
+                            style={styles.icon}
+                          />
+                        </Logo>
+                      )}
+                    <Information>
+                      {order?.order_group && order?.order_group_id && (
+                        <OText>
+                          <OText>{order?.order_group?.orders?.length} {t('ORDERS', 'Orders')}</OText>
                         </OText>
-                      </MyOrderOptions>
-                    )}
-                  </Information>
-                </Card>
-              </TouchableOpacity>
-              {isLogisticOrder && (
-                <AcceptOrRejectOrder>
-                  <OButton
-                    text={t('REJECT', 'Reject')}
-                    onClick={() => console.log('reject')}
-                    bgColor={theme.colors.danger}
-                    borderColor={theme.colors.danger}
-                    imgRightSrc={null}
-                    style={{ borderRadius: 7 }}
-                    parentStyle={{width: '45%'}}
-                    textStyle={{ color: theme.colors.dangerText }}
-                  />
-                  <OButton
-                    text={t('ACCEPT', 'Accept')}
-                    onClick={() => console.log('Accept')}
-                    bgColor={theme.colors.successOrder}
-                    borderColor={theme.colors.successOrder}
-                    imgRightSrc={null}
-                    style={{ borderRadius: 7 }}
-                    parentStyle={{width: '45%'}}
-                    textStyle={{ color: theme.colors.successText }}
-                  />
-                </AcceptOrRejectOrder>
-              )}
-            </React.Fragment>
-          ))}
+                      )}
+                      {order.business?.name && (
+                        <OText numberOfLines={1} style={styles.title}>
+                          {order.business?.name}
+                        </OText>
+                      )}
+                      {order?.showNotification && (
+                        <NotificationIcon>
+                          <EntypoIcon
+                            name="dot-single"
+                            size={32}
+                            color={theme.colors.primary}
+                          />
+                        </NotificationIcon>
+                      )}
+                      <OText
+                        style={styles.date}
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                        size={20}>
+                        {(order?.order_group && order?.order_group_id ? (t('INVOICE_GROUP_NO', 'Group No.') + order?.order_group_id) : (t('INVOICE_ORDER_NO', 'Order No.') + order.id)) + ' · '}
+                        {order?.delivery_datetime_utc
+                          ? parseDate(order?.delivery_datetime_utc)
+                          : parseDate(order?.delivery_datetime, { utc: false })}
+                      </OText>
+                      {!isLogisticOrder && (
+                        <MyOrderOptions>
+                          <OText
+                            style={styles.orderType}
+                            mRight={5}
+                            numberOfLines={1}
+                            adjustsFontSizeToFit
+                          >
+                            {order.delivery_type === 1
+                              ? t('DELIVERY', 'Delivery')
+                              : order.delivery_type === 2
+                                ? t('PICKUP', 'Pickup')
+                                : order.delivery_type === 3
+                                  ? t('EAT_IN', 'Eat in')
+                                  : order.delivery_type === 4
+                                    ? t('CURBSIDE', 'Curbside')
+                                    : t('DRIVER_THRU', 'Driver thru')}
+                            {` · ${getOrderStatus(order.status)}`}
+                          </OText>
+                        </MyOrderOptions>
+                      )}
+                    </Information>
+                  </Card>
+                </TouchableOpacity>
+                {isLogisticOrder && (
+                  <AcceptOrRejectOrder>
+                    <OButton
+                      text={t('REJECT', 'Reject')}
+                      onClick={() => handleClickLogisticOrder(2, _order?.id)}
+                      bgColor={theme.colors.danger}
+                      borderColor={theme.colors.danger}
+                      imgRightSrc={null}
+                      style={{ borderRadius: 7, height: 40 }}
+                      parentStyle={{ width: '45%' }}
+                      textStyle={{ color: theme.colors.dangerText }}
+                    />
+                    <OButton
+                      text={t('ACCEPT', 'Accept')}
+                      onClick={() => handleClickLogisticOrder(1, _order?.id)}
+                      bgColor={theme.colors.successOrder}
+                      borderColor={theme.colors.successOrder}
+                      imgRightSrc={null}
+                      style={{ borderRadius: 7, height: 40 }}
+                      parentStyle={{ width: '45%' }}
+                      textStyle={{ color: theme.colors.successText }}
+                    />
+                  </AcceptOrRejectOrder>
+                )}
+              </View>
+            )
+          }
+          )}
     </>
   );
 };
