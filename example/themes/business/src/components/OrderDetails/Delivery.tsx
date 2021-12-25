@@ -156,6 +156,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     navigation?.canGoBack() && navigation.goBack();
   };
 
+  const handleRejectLogisticOrder = () => {
+    handleClickLogisticOrder?.(2, order?.logistic_order_id)
+    handleArrowBack()
+  }
+
   useEffect(() => {
     if (order?.driver === null && session?.user?.level === 4) {
       setAlertState({
@@ -390,7 +395,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             btnText={t('REJECT', 'Reject')}
             isSecondaryBtn={false}
             secondButtonClick={() => order?.isLogistic ? handleClickLogisticOrder?.(1, order?.logistic_order_id) : handleViewActionOrder('accept')}
-            firstButtonClick={() => order?.isLogistic ? handleClickLogisticOrder?.(2, order?.logistic_order_id) : handleViewActionOrder('reject')}
+            firstButtonClick={() => order?.isLogistic ? handleRejectLogisticOrder() : handleViewActionOrder('reject')}
             secondBtnText={t('ACCEPT', 'Accept')}
             secondButton={true}
             firstColorCustom={theme.colors.red}
