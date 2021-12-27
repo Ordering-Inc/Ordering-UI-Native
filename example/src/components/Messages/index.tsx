@@ -5,9 +5,9 @@ import { useTheme } from 'styled-components/native';
 import { GiftedChat, Actions, InputToolbar, Composer, Send, Bubble, MessageImage } from 'react-native-gifted-chat'
 import { USER_TYPE } from '../../config/constants'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { OIcon, OIconButton, OText } from '../shared'
+import { OIcon, OIconButton, OText, OButton } from '../shared'
 import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard,I18nManager } from 'react-native'
-import { Header, TitleHeader, Wrapper } from './styles'
+import { Header, TitleHeader, Wrapper, QuickMessageContainer } from './styles'
 import { MessagesParams } from '../../types'
 
 const ImageDummy = require('../../assets/images/image.png')
@@ -66,6 +66,13 @@ const MessagesUI = (props: MessagesParams) => {
   const [, { showToast }] = useToast();
   const theme = useTheme();
 
+  const quickMessageList = [
+    { key: 'driver_message_1', text: t('DRIVER_MESSAGE_1', 'driver_message_1') },
+    { key: 'driver_message_2', text: t('DRIVER_MESSAGE_2', 'driver_message_2') },
+    { key: 'driver_message_3', text: t('DRIVER_MESSAGE_3', 'driver_message_3') },
+    { key: 'driver_message_4', text: t('DRIVER_MESSAGE_4', 'driver_message_4') }
+  ]
+
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
 
@@ -74,6 +81,10 @@ const MessagesUI = (props: MessagesParams) => {
 
   const onChangeMessage = (val: string) => {
     setMessage && setMessage(val)
+  }
+
+  const handleClickQuickMessage = (text: string) => {
+    setMessage && setMessage(`${message}${text}`)
   }
 
   const removeImage = () => {
@@ -198,11 +209,46 @@ const MessagesUI = (props: MessagesParams) => {
     <InputToolbar
       {...props}
       containerStyle={{
-        padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10
+        padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
+        flexDirection: 'column-reverse'
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}
+      renderAccessory={() => renderAccessory()}
     />
   )
+
+  const renderAccessory = () => {
+    return (
+      <QuickMessageContainer
+        style={{
+          marginLeft: 10,
+          marginBottom: 10
+        }}
+        contentContainerStyle={{
+          alignItems: 'center',
+        }}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      >
+        {quickMessageList.map((quickMessage, i) => (
+          <OButton
+            key={i}
+            text={quickMessage.text}
+            bgColor='#E9ECEF'
+            borderColor='#E9ECEF'
+            imgRightSrc={null}
+            textStyle={{
+              fontSize: 11,
+              lineHeight: 16,
+              color: '#414954'
+            }}
+            style={{ ...styles.editButton }}
+            onClick={() => handleClickQuickMessage(quickMessage.text)}
+          />
+        ))}
+      </QuickMessageContainer>
+    )
+  }
 
   const renderComposer = (props: any) => (
     chatDisabled ? (
@@ -337,7 +383,7 @@ const MessagesUI = (props: MessagesParams) => {
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
           messagesContainerStyle={{
-            paddingBottom: 20
+            paddingBottom: 55
           }}
           isLoadingEarlier={messages.loading}
           renderLoading={() => <ActivityIndicator size="small" color="#000" />}
@@ -363,6 +409,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 4
+  },
+  editButton : {
+    borderRadius: 50,
+    backgroundColor: '#E9ECEF',
+    marginRight: 10,
+    height: 24,
+    borderWidth: 1,
+    paddingLeft: 0,
+    paddingRight: 0
   }
 })
 
