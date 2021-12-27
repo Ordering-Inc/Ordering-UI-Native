@@ -257,7 +257,7 @@ const AddressListUI = (props: AddressListParams) => {
 							{!(
 								route && (route?.params?.isFromBusinesses || route?.params?.isFromCheckout)
 							) && !isProfile && (
-									<OText size={24}>
+									<OText size={20} style={{ marginTop: 20 }}>
 										{t('WHERE_DELIVER_NOW', 'Where do we deliver you?')}
 									</OText>
 								)}
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 	},
 	button: {
-		marginTop: 30,
+		marginTop: 20,
 		marginBottom: 0,
 		borderRadius: 7.6,
 		borderWidth: 1,
