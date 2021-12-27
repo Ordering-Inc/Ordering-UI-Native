@@ -287,7 +287,8 @@ export interface OrdersOptionParams {
   isBusinessApp?: boolean;
   handleClickLogisticOrder: (status: number, orderId: number) => void,
   logisticOrders: {orders: Array<any>, loading: boolean, error: Array<string> | string},
-  loadLogisticOrders: () => void
+  loadLogisticOrders: () => void;
+  isLogisticActivated?: boolean
 }
 export interface ActiveOrdersParams {
   orders?: any;

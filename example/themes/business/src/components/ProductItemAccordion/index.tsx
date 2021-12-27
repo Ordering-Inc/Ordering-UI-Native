@@ -37,7 +37,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   const [isActive, setActiveState] = useState(false);
 
   const productInfo = () => {
-    console.log(isCartProduct)
     if (isCartProduct) {
       const ingredients = JSON.parse(
         JSON.stringify(Object.values(product.ingredients ?? {})),
@@ -50,7 +49,6 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
         option.suboptions = Object.values(option.suboptions ?? {});
         return option;
       });
-      console.log(productInfo, ingredients, options)
       return {
         ...productInfo,
         ingredients,

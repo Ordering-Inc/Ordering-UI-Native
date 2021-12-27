@@ -26,14 +26,15 @@ import { useTheme } from 'styled-components/native';
 
 
 interface OrderContent {
-  order: any
+  order: any,
+  logisticOrderStatus?: Array<number>
 }
 
 export const OrderContentComponent = (props: OrderContent) => {
   const [, t] = useLanguage();
   const theme = useTheme()
 
-  const { order } = props;
+  const { order, logisticOrderStatus } = props;
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
   const styles = StyleSheet.create({
@@ -51,6 +52,7 @@ export const OrderContentComponent = (props: OrderContent) => {
       color: '#365CC7'
     }
   })
+
   return (
     <OrderContent>
       <OrderBusiness>
@@ -61,7 +63,7 @@ export const OrderContentComponent = (props: OrderContent) => {
         <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
           {order?.business?.name}
         </OText>
-        {!order?.isLogistic && (
+        {(!order?.isLogistic || !logisticOrderStatus?.includes(order?.status)) && (
           <>
             {!!order?.business?.email && (
               <View style={styles.linkWithIcons}>

@@ -26,11 +26,19 @@ interface OrderHeader {
   handleArrowBack?: any,
   handleOpenMapView?: any,
   handleOpenMessagesForBusiness?: any,
-  getOrderStatus?: any
+  getOrderStatus?: any,
+  logisticOrderStatus?: Array<number>
 }
 
 export const OrderHeaderComponent = (props: OrderHeader) => {
-  const { order, handleArrowBack, handleOpenMapView, handleOpenMessagesForBusiness, getOrderStatus } = props
+  const {
+    order,
+    handleArrowBack,
+    handleOpenMapView,
+    handleOpenMessagesForBusiness,
+    getOrderStatus,
+    logisticOrderStatus
+  } = props
   const theme = useTheme();
   const [, t] = useLanguage();
   const [{ parseDate }] = useUtils();
@@ -83,7 +91,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
         />
 
         {
-          !order?.isLogistic && (
+          (!order?.isLogistic || !logisticOrderStatus?.includes(order?.status)) && (
             <Actions>
               <OIconButton
                 icon={theme.images.general.map}
@@ -121,7 +129,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
         <OText numberOfLines={2} size={20} weight="600">
           <>
             {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} `}
-            {!order?.isLogistic && (
+            {(!order?.isLogistic || !logisticOrderStatus?.includes(order?.status)) && (
               <>
                 {t('IS', 'is')}{' '}
                 <OText
@@ -134,7 +142,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
             )}
           </>
         </OText>
-        {!order?.isLogistic && (
+        {(!order?.isLogistic || !logisticOrderStatus?.includes(order?.status)) && (
           <OText size={13}>
             {`${order?.paymethod?.name} - ${order.delivery_type === 1
               ? t('DELIVERY', 'Delivery')

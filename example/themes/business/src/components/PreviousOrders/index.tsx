@@ -20,7 +20,7 @@ export const PreviousOrders = (props: any) => {
   const theme = useTheme();
 
   const handlePressOrder = (order: any) => {
-    if (order?.locked) return
+    if (order?.locked && isLogisticOrder) return
     handleClickOrder && handleClickOrder(order)
     onNavigationRedirect &&
       onNavigationRedirect('OrderDetails', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
@@ -91,7 +91,7 @@ export const PreviousOrders = (props: any) => {
             return (
               <View
                 style={{
-                  backgroundColor: order?.locked ? '#ccc' : '#fff',
+                  backgroundColor: order?.locked && isLogisticOrder ? '#ccc' : '#fff',
                   marginBottom: isLogisticOrder ? 10 : 0
                 }}
                 key={order.id}
@@ -99,7 +99,7 @@ export const PreviousOrders = (props: any) => {
                 <TouchableOpacity
                   onPress={() => handlePressOrder({ ...order, logistic_order_id: _order?.id })}
                   style={styles.cardButton}
-                  disabled={order?.locked}
+                  disabled={order?.locked && isLogisticOrder}
                   activeOpacity={1}
                 >
                   <Card key={order.id}>

@@ -72,7 +72,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     isBusinessApp,
     handleClickLogisticOrder,
     logisticOrders,
-    loadLogisticOrders
+    loadLogisticOrders,
+    isLogisticActivated
   } = props;
 
   const defaultSearchList = {
@@ -344,22 +345,24 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           nestedScrollEnabled={true}
         >
           <TabsContainer width={WIDTH_SCREEN}>
-            <Pressable
-              style={styles.pressable}
-              onPress={() => setCurrentTabSelected('logisticOrders')}>
-              <OIcon
-                src={theme.images?.general?.chronometer}
-                borderBottomWidth={currentTabSelected === 'logisticOrders' ? 1 : 0}
-                width={currentTabSelected === 'logisticOrders' ? 26 : 24}
-                height={currentTabSelected === 'logisticOrders' ? 26 : 24}
-                color={
-                  currentTabSelected === 'logisticOrders'
-                    ? theme.colors.textGray
-                    : theme.colors.unselectText
-                }
-                style={styles.icon}
-              />
-            </Pressable>
+            {isLogisticActivated && (
+              <Pressable
+                style={styles.pressable}
+                onPress={() => setCurrentTabSelected('logisticOrders')}>
+                <OIcon
+                  src={theme.images?.general?.chronometer}
+                  borderBottomWidth={currentTabSelected === 'logisticOrders' ? 1 : 0}
+                  width={currentTabSelected === 'logisticOrders' ? 26 : 24}
+                  height={currentTabSelected === 'logisticOrders' ? 26 : 24}
+                  color={
+                    currentTabSelected === 'logisticOrders'
+                      ? theme.colors.textGray
+                      : theme.colors.unselectText
+                  }
+                  style={styles.icon}
+                />
+              </Pressable>
+            )}
             {tabs.map((tab: any) => (
               <Pressable
                 key={tab.key}

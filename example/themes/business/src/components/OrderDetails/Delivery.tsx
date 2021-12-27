@@ -74,6 +74,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     key?: string | null;
   }>({ open: false, content: [], key: null });
 
+  const logisticOrderStatus = [4, 7]
+
   const showFloatButtonsPickUp: any = {
     8: true,
     3: true,
@@ -243,7 +245,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     );
   }
 
-  const OrderDetailsInformation = (_order: any) => {
+  const OrderDetailsInformation = (_order: any, isOrderGroup: boolean) => {
     const { order } = _order
     return (
       <>
@@ -252,7 +254,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           showsVerticalScrollIndicator={false}
         >
           <>
-            <OrderContentComponent order={order} />
+            <OrderContentComponent
+              order={order}
+              logisticOrderStatus={logisticOrderStatus}
+              isOrderGroup={isOrderGroup}
+            />
             {(order?.status === 8 || order?.status === 18) && order?.delivery_type === 1 && (
               <Pickup>
                 <OButton
@@ -453,6 +459,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           handleOpenMessagesForBusiness={handleOpenMessagesForBusiness}
           getOrderStatus={getOrderStatus}
           handleArrowBack={handleArrowBack}
+          logisticOrderStatus={logisticOrderStatus}
         />
         {order && Object.keys(order).length > 0 && (order?.error?.length < 1 || !order?.error) && (
           <>
