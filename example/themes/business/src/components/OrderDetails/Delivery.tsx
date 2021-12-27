@@ -74,7 +74,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     key?: string | null;
   }>({ open: false, content: [], key: null });
 
-  const logisticOrderStatus = [4, 7]
+  const logisticOrderStatus = [4, 6, 7]
 
   const showFloatButtonsPickUp: any = {
     8: true,
@@ -400,8 +400,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           <FloatingButton
             btnText={t('REJECT', 'Reject')}
             isSecondaryBtn={false}
-            secondButtonClick={() => order?.isLogistic ? handleClickLogisticOrder?.(1, order?.logistic_order_id) : handleViewActionOrder('accept')}
-            firstButtonClick={() => order?.isLogistic ? handleRejectLogisticOrder() : handleViewActionOrder('reject')}
+            secondButtonClick={() => order?.isLogistic && logisticOrderStatus.includes(order?.status) ? handleClickLogisticOrder?.(1, order?.logistic_order_id) : handleViewActionOrder('accept')}
+            firstButtonClick={() => order?.isLogistic && logisticOrderStatus.includes(order?.status) ? handleRejectLogisticOrder() : handleViewActionOrder('reject')}
             secondBtnText={t('ACCEPT', 'Accept')}
             secondButton={true}
             firstColorCustom={theme.colors.red}
