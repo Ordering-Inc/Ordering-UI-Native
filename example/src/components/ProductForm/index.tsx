@@ -131,22 +131,29 @@ export const ProductOptionsUI = (props: any) => {
                   </Placeholder>
                 ) : (
                   <>
-                    <OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1 }}>{product?.name || productCart.name}</OText>
-                    <OText size={20} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+                    <View style={{ flexDirection: 'column', width: '100%' }}>
+                      <OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1, marginBottom: 10 }}>{product?.name || productCart.name}{'price'}</OText>
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+                        <OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+                        <OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'}>
+                          {
+                            ((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
+                            && <>{t('SKU', 'Sku')}{' '}{product?.sku || productCart?.sku}</>
+                          }
+                          {product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
+                            <>&nbsp;&#183;&nbsp;</>
+                          )}
+                          {product?.estimated_person
+                            && <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
+                          }
+                        </OText>
+                      </View>
+                    </View>
                   </>
                 )}
               </ProductTitle>
               <ProductDescription>
                 <OText>{product?.description || productCart?.description}</OText>
-                {(
-                  (product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
-                  (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1')
-                ) && (
-                    <>
-                      <OText size={20}>{t('SKU', 'Sku')}</OText>
-                      <OText>{product?.sku || productCart?.sku}</OText>
-                    </>
-                  )}
               </ProductDescription>
               {loading && !product ? (
                 <>
