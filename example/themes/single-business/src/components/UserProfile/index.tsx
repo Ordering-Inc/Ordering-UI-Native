@@ -123,6 +123,12 @@ const ProfileListUI = (props: ProfileParams) => {
 		onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params)
 	}
 
+  const getName = () => {
+    return user?.lastname
+      ? `${user?.name} ${user?.lastname}`
+      : user?.name
+  }
+
 	return (
 		<View style={{ flex: 1, height: height - top - bottom - 62 }}>
 			<OText size={24} color={theme.colors.textNormal} lineHeight={36} weight={Platform.OS === 'ios' ? '600' : 'bold'} style={{ marginTop: 14, marginBottom: 24, ...styles.pagePadding }}>{t('PROFILE', 'Profile')}</OText>
@@ -136,7 +142,7 @@ const ProfileListUI = (props: ProfileParams) => {
 					/>
 				</View>
 				<View style={{ flexBasis: '70%' }}>
-					<OText size={20} lineHeight={30} weight={Platform.OS === 'ios' ? '500' : 'bold'} color={theme.colors.textNormal}>{`${user?.name} ${user?.lastname}`}</OText>
+					<OText size={20} lineHeight={30} weight={Platform.OS === 'ios' ? '500' : 'bold'} color={theme.colors.textNormal}>{getName()}</OText>
 					<TouchableOpacity onPress={() => navigation.navigate('ProfileForm', { ...detailProps })}>
 						<OText size={12} lineHeight={18} color={theme.colors.primary} style={{ textDecorationLine: 'underline' }}>{t('VIEW_ACCOUNT', 'View account')}</OText>
 					</TouchableOpacity>
