@@ -289,7 +289,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
       <ActionButtonWrapper>
         <FloatingButton
           firstButtonClick={() => handleSendCustomerReview()}
-          btnText={t('SEND_REVIEW', 'Send Review')}
+          btnText={actionState.loading ? t('LOADING', 'Loading') : t('SEND_REVIEW', 'Send Review')}
           color={theme.colors.primary}
           widthButton={'100%'}
         />
