@@ -53,6 +53,15 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
   const [extraComment, setExtraComment] = useState('')
 
   const styles = StyleSheet.create({
+    photoWrapper: {
+      shadowColor: theme.colors.black,
+      shadowRadius: 3,
+      shadowOffset: {width: 1, height: 4},
+      elevation: 3,
+      borderRadius: 8,
+      shadowOpacity: 0.1,
+      overflow: 'hidden'
+    },
     statusBar: {
       transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
       height: 8,
@@ -169,13 +178,21 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
         contentContainerStyle={{ paddingBottom: 30 }}
       >
         <CustomerInfoContainer>
-          <OIcon
-            url={optimizeImage(order?.customer?.photo, 'h_100,c_limit')}
-            src={!order?.customer?.photo && theme.images.general.user}
-            width={72}
-            height={72}
-            style={{ borderRadius: 7.6 }}
-          />
+          <View
+            style={{
+              ...styles.photoWrapper,
+              backgroundColor: theme.colors.white,
+              padding: !order?.customer?.photo ? 5 : 0
+            }}
+          >
+            <OIcon
+              url={optimizeImage(order?.customer?.photo, 'h_100,c_limit')}
+              src={!order?.customer?.photo && theme.images.general.user}
+              width={72}
+              height={72}
+              style={{ borderRadius: 7.6 }}
+            />
+          </View>
           <OText
             size={14}
             weight="500"
