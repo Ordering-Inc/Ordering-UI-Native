@@ -553,3 +553,13 @@ export interface MapViewParams {
   alertState: { open: boolean, content: Array<string>, key?: string | null },
   setAlertState: ({open, content, key} : { open: boolean, content: Array<string>, key?: string | null }) => void
 }
+
+export interface ReviewCustomerParams {
+  order?: any,
+  closeModal?: any,
+  reviewState?: any,
+  setReviewState?: any,
+  actionState?: any,
+  handleChangeQualification?: any,
+  handleSendCustomerReview?: any,
+}

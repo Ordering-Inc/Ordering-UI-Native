@@ -1,25 +1,34 @@
-import React from 'react'
-import { OrderDetails as OrderDetailsController } from '../components/OrderDetails'
-import { SafeAreaContainer } from '../layouts/SafeAreaContainer'
+import React from 'react';
+import {useTheme} from '../context/Theme';
+import { OrderDetailsBusiness as OrderDetailsController } from '../../themes/business/src/components/OrderDetails/Business'
+import { SafeAreaContainerLayout } from '../../themes/business/src/layouts/SafeAreaContainer'
+// import {
+//   OrderDetailsBusiness as OrderDetailsController,
+//   SafeAreaContainerLayout,
+// } from 'ordering-ui-react-native/themes/business';
 
-const OrderDetails = ({ navigation, route } : any) => {
+const OrderDetails = ({navigation, route}: any) => {
   const orderDetailsProps = {
     navigation,
-    orderId: route.params?.orderId,
+    orderId: route.params?.orderId || route.params?.order?.id,
+    driverAndBusinessId: true,
+    order: route.params?.order,
     isFromCheckout: route.params?.isFromCheckout,
     isFromRoot: route.params?.isFromRoot,
-    goToBusinessList: route?.params?.goToBusinessList,
-    onNavigationRedirect: (page: string, params: any) => {
-      if (!page) return
-      navigation.navigate(page, params);
-    }
-  }
+    isFetchDrivers: true,
+    isBusiness: true,
+    isDisabledOrdersRoom: true,
+    actions: {accept: 'acceptByBusiness', reject: 'rejectByBusiness'},
+    titleAccept: {key: 'PREPARATION_TIME', text: 'Preparation time'},
+    titleReject: {key: 'REJECT_ORDER', text: 'Reject Order'},
+    appTitle: {key: 'BUSINESS_APP', text: 'Business App'},
+  };
 
   return (
-    <SafeAreaContainer>
+    <SafeAreaContainerLayout>
       <OrderDetailsController {...orderDetailsProps} />
-    </SafeAreaContainer>
-  )
-}
+    </SafeAreaContainerLayout>
+  );
+};
 
 export default OrderDetails;
