@@ -442,6 +442,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       style={{
                         backgroundColor: theme.colors.inputChat,
                         borderRadius: 7.5,
+                        marginBottom: 20
                       }}>
                       <CountryPicker
                         // @ts-ignore

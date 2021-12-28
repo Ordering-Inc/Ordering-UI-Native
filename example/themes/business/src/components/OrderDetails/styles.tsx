@@ -5,7 +5,7 @@ export const OrderDetailsContainer = styled.ScrollView`
 `;
 
 export const Pickup = styled.View`
-  padding-vertical: 10px;
+  padding-vertical: 20px;
   margin-bottom: 20px;
 `;
 
