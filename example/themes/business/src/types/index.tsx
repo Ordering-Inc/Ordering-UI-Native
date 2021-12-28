@@ -365,6 +365,7 @@ export interface OrderDetailsParams {
   updateDriverPosition?: any;
   driverUpdateLocation?: any;
   setDriverUpdateLocation?: any;
+  orderTitle?: any
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean;
@@ -520,7 +521,8 @@ export interface TagsParams {
 interface actions {
   accept: string;
   reject: string;
-  failed: string;
+  pickupFailed: string;
+  deliveryFailed: string;
   notReady: string;
 }
 
@@ -542,6 +544,7 @@ export interface AcceptOrRejectOrderParams {
   titleReject?: textTranslate;
   titleNotReady?: textTranslate;
   appTitle?: textTranslate;
+  orderTitle?: any
 }
 
 export interface MapViewParams {
