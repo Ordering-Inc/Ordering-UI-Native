@@ -167,7 +167,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       });
     }
   }, [order?.driver]);
-  console.log(order?.status)
+
   const locations = [
     {
       ...order?.business?.location,
