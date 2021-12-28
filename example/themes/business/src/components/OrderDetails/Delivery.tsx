@@ -48,9 +48,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     updateDriverPosition,
     driverUpdateLocation,
     setDriverUpdateLocation,
-    titleAccept,
-    titleReject,
-    titleNotReady,
+    orderTitle,
     appTitle,
   } = props;
 
@@ -169,7 +167,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       });
     }
   }, [order?.driver]);
-
+  console.log(order?.status)
   const locations = [
     {
       ...order?.business?.location,
@@ -343,9 +341,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 orderId={order?.id}
                 notShowCustomerPhone
                 actions={actions}
-                titleAccept={titleAccept}
-                titleReject={titleReject}
-                titleNotReady={titleNotReady}
+                orderTitle={orderTitle}
                 appTitle={appTitle}
               />
             </OModal>
@@ -391,7 +387,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 handleChangeOrderStatus && handleChangeOrderStatus(9)
               }
               firstButtonClick={() =>
-                handleViewActionOrder && handleViewActionOrder('failed')
+                handleViewActionOrder && handleViewActionOrder('pickupFailed')
               }
               secondBtnText={t('PICKUP_COMPLETE', 'Pickup complete')}
               secondButton={true}
@@ -410,7 +406,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   handleChangeOrderStatus && handleChangeOrderStatus(11)
                 }
                 firstButtonClick={() =>
-                  handleViewActionOrder && handleViewActionOrder('failed')
+                  handleViewActionOrder && handleViewActionOrder('deliveryFailed')
                 }
                 secondBtnText={t('DELIVERY_COMPLETE', 'Delivery complete')}
                 secondButton={true}
