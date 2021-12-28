@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Platform, StyleSheet, View } from 'react-native';
 
-import { OText, OLink } from '../shared'
+import { OButton, OText, OLink, OModal } from '../shared'
 import {
     OrderContent,
     OrderBusiness,
@@ -23,7 +23,7 @@ import {
     useConfig,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-
+import { ReviewCustomer } from '../ReviewCustomer'
 
 interface OrderContent {
     order: any
@@ -37,6 +37,10 @@ export const OrderContentComponent = (props: OrderContent) => {
 
     const [{ parsePrice, parseNumber }] = useUtils();
     const [{ configs }] = useConfig();
+    const [openReviewModal, setOpenReviewModal] = useState(false)
+    const [isCustomerReviewed, setIsCustomerReviewed] = useState(false)
+
+    const pastOrderStatuses = [1, 2, 5, 6, 10, 11, 12, 16, 17]
 
     const styles = StyleSheet.create({
         linkWithIcons: {
@@ -51,8 +55,18 @@ export const OrderContentComponent = (props: OrderContent) => {
         },
         textLink: {
           color: '#365CC7'
+        },
+        btnReview: {
+          borderWidth: 0,
+          backgroundColor: theme.colors.primary,
+          borderRadius: 8,
         }
     })
+
+    const handleSuccessReviewed = () => {
+      setOpenReviewModal(false)
+      setIsCustomerReviewed(true)
+    }
     return (
         <OrderContent>
         <OrderBusiness>
@@ -232,6 +246,16 @@ export const OrderContentComponent = (props: OrderContent) => {
               {order?.customer?.zipcode}
             </OText>
           )}
+
+          {!order?.user_review && pastOrderStatuses.includes(order?.status) && !isCustomerReviewed && (
+            <OButton
+              style={styles.btnReview}
+              textStyle={{ color: theme.colors.white }}
+              text={t('REVIEW_CUSTOMER', 'Review customer')}
+              imgRightSrc={false}
+              onClick={() => setOpenReviewModal(true)}
+            />
+          )}
         </OrderCustomer>
 
         <OrderProducts>
@@ -386,6 +410,19 @@ export const OrderContentComponent = (props: OrderContent) => {
             </Table>
           </Total>
         </OrderBill>
+
+        <OModal
+          open={openReviewModal}
+          onClose={() => setOpenReviewModal(false)}
+          entireModal
+          customClose
+        >
+          <ReviewCustomer
+            order={order}
+            closeModal={() => setOpenReviewModal(false)}
+            onClose={() => handleSuccessReviewed()}
+          />
+        </OModal>
       </OrderContent>
     )
 }

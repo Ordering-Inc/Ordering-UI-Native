@@ -27,6 +27,7 @@ import { PhoneInputNumber } from './src/components/PhoneInputNumber';
 import { PreviousMessages } from './src/components/PreviousMessages';
 import { PreviousOrders } from './src/components/PreviousOrders';
 import { ProductItemAccordion } from './src/components/ProductItemAccordion';
+import { ReviewCustomer } from './src/components/ReviewCustomer'
 import { SearchBar } from './src/components/SearchBar';
 import { SignupForm } from './src/components/SignupForm';
 import { StoresList } from './src/components/StoresList';
@@ -91,6 +92,7 @@ export {
   PreviousMessages,
   PreviousOrders,
   ProductItemAccordion,
+  ReviewCustomer,
   SafeAreaContainerLayout,
   SearchBar,
   SignupForm,
