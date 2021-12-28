@@ -555,23 +555,18 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             search={search}
             onSearch={setSearch}
           />
-          <OrdersOptionStatus
-            {...props}
-            search={search}
-            onSearch={setSearch}
-          />
           <OrdersOptionCity
-            {...props}
-            search={search}
-            onSearch={setSearch}
-          />
-          <OrdersOptionBusiness
             {...props}
             search={search}
             onSearch={setSearch}
           />
           {isBusinessApp && (
             <>
+              <OrdersOptionBusiness
+                {...props}
+                search={search}
+                onSearch={setSearch}
+              />
               <OrdersOptionDelivery
                 {...props}
                 search={search}
