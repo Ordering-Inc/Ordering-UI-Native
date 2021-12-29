@@ -143,17 +143,6 @@ const StoresListUI = (props: BusinessesListingParams) => {
         showsVerticalScrollIndicator={false}
         style={styles.container}
         onScroll={(e: any) => handleScroll(e)}>
-        {!loading && !loadBusinesses && businesses?.length === 0 && (
-          <NotFoundSource
-            content={
-              !isConnected
-                ? t('NETWORK_ERROR', 'Network Error')
-                : t('NO_RESULTS_FOUND', 'Sorry, no results found')
-            }
-            image={theme.images.general.notFound}
-            conditioned={false}
-          />
-        )}
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', maxHeight: 40 }}>
           <OIcon
             src={theme.images.general.information}
@@ -171,7 +160,18 @@ const StoresListUI = (props: BusinessesListingParams) => {
             </OText>
           </TouchableOpacity>
         </View>
-        {!error &&
+        {!loading && !loadBusinesses && businesses?.length === 0 && (
+          <NotFoundSource
+            content={
+              !isConnected
+                ? t('NETWORK_ERROR', 'Network Error')
+                : t('NO_RESULTS_FOUND', 'Sorry, no results found')
+            }
+            image={theme.images.general.notFound}
+            conditioned={false}
+          />
+        )}
+        {!error && businesses &&
           businesses?.map((business: any) => (
             <BusinessController
               key={business?.id}
