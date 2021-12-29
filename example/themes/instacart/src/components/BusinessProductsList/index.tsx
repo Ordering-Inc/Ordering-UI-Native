@@ -42,8 +42,11 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
       if (categoryState?.products.length > allProducts.length) {
         setAllProducts(categoryState?.products.sort((a: any, b: any) => a.id - b.id))
       }
+      if (searchValue) {
+        setAllProducts(categoryState?.products.sort((a: any, b: any) => a.id - b.id))
+      }
     }
-  }, [category, categoryState])
+  }, [category, categoryState, searchValue])
 
   return (
     <ProductsContainer>
