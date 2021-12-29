@@ -140,13 +140,15 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 								<OText color={theme.colors.textSecondary} numberOfLines={1} style={{ flexBasis: '85%', marginEnd: 6 }}>
 									{orderState?.options?.address?.address}
 								</OText>
-								<TouchableOpacity
-									onPress={() => auth
-										? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
-										: onRedirect('AddressForm', { address: orderState.options?.address })}
-								>
-									<OIcon width={16} src={theme.images.general.pencil} />
-								</TouchableOpacity>
+								{!isBusinessInfoShow && (
+									<TouchableOpacity
+										onPress={() => auth
+											? onRedirect('AddressList', { isGoBack: true, isFromProductsList: true })
+											: onRedirect('AddressForm', { address: orderState.options?.address })}
+									>
+										<OIcon width={16} src={theme.images.general.pencil} />
+									</TouchableOpacity>
+								)}
 							</View>
 							<View style={{ ...styles.infoItem, paddingStart: 12 }}>
 								<OText color={theme.colors.textSecondary} numberOfLines={1} style={{ flexBasis: '85%', paddingEnd: 6 }}>
@@ -154,46 +156,16 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 										? moment(orderState.options?.moment).format('dddd, MMM.DD.yyyy hh:mm A')
 										: t('ASAP_ABBREVIATION', 'ASAP')}
 								</OText>
-								<TouchableOpacity
-									onPress={() => navigation.navigate('MomentOption')}
-								>
-									<OIcon src={theme.images.general.info} width={16} />
-								</TouchableOpacity>
+								{!isBusinessInfoShow && (
+									<TouchableOpacity
+										onPress={() => navigation.navigate('MomentOption')}
+									>
+										<OIcon src={theme.images.general.info} width={16} />
+									</TouchableOpacity>
+								)}
 							</View>
 							</>
-						}
-						{/* <View style={styles.bullet}>
-							<IconEvilIcons
-								name='clock'
-								color={theme.colors.textSecondary}
-								size={16}
-							/>
-							{orderState?.options?.type === 1 ? (
-								<OText color={theme.colors.textSecondary} style={styles.metadata}>
-									{convertHoursToMinutes(business?.delivery_time)}
-								</OText>
-							) : (
-								<OText color={theme.colors.textSecondary} style={styles.metadata}>
-									{convertHoursToMinutes(business?.pickup_time)}
-								</OText>
-							)}
-						</View>
-						<View style={styles.bullet}>
-							<IconEvilIcons
-								name='location'
-								color={theme.colors.textSecondary}
-								size={16}
-							/>
-							<OText color={theme.colors.textSecondary} style={styles.metadata}>{parseDistance(business?.distance || 0)}</OText>
-						</View>
-						<View style={styles.bullet}>
-							<MaterialComIcon
-								name='truck-delivery'
-								color={theme.colors.textSecondary}
-								size={16}
-							/>
-						</View>
-						<OText color={theme.colors.textSecondary} style={styles.metadata}>{business && parsePrice(business?.delivery_price || 0)}</OText> */}
+						}					
 					</BusinessInfoItem>
 				</View>
 				{showReview && (
