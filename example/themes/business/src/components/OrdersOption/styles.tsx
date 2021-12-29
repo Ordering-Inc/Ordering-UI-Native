@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 
 export const FiltersTab = styled.View`
   margin-bottom: 20px;
+  max-height: 35px;
 `;
 
 export const TabsContainer = styled.View`

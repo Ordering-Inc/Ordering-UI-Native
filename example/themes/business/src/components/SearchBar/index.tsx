@@ -38,7 +38,7 @@ export const SearchBar = (props: any) => {
       clearTimeout(timeout);
       timeout = setTimeout(function () {
         onSearch(e);
-      }, 750);
+      }, 1000);
     }
   };
 
