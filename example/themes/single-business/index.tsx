@@ -45,6 +45,8 @@ import { OrderDetails } from './src/components/OrderDetails';
 import { OrdersOption } from './src/components/OrdersOption';
 import { OrderSummary } from './src/components/OrderSummary';
 import { OrderTypeSelector } from './src/components/OrderTypeSelector';
+import { OrdersListing } from './src/components/OrdersListing';
+import { OrderListOption } from './src/components/OrderListOption';
 import { PaymentOptionCash } from './src/components/PaymentOptionCash';
 import { PaymentOptions } from './src/components/PaymentOptions';
 import { PaymentOptionStripe } from './src/components/PaymentOptionStripe';
@@ -125,6 +127,8 @@ export {
 	HelpOrder,
 	HelpAccountAndPayment,
 	OrderTypeSelector,
+	OrdersListing,
+	OrderListOption,
 	Notifications,
   BottomWrapper,
   BusinessBasicInformation,

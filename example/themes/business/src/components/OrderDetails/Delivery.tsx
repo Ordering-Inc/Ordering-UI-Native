@@ -48,9 +48,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     updateDriverPosition,
     driverUpdateLocation,
     setDriverUpdateLocation,
-    titleAccept,
-    titleReject,
-    titleNotReady,
+    orderTitle,
     appTitle,
     handleClickLogisticOrder
   } = props;
@@ -319,9 +317,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               orderId={order?.id}
               notShowCustomerPhone
               actions={actions}
-              titleAccept={titleAccept}
-              titleReject={titleReject}
-              titleNotReady={titleNotReady}
+              orderTitle={orderTitle}
               appTitle={appTitle}
             />
           </OModal>

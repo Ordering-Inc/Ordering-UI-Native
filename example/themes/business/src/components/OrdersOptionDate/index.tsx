@@ -42,10 +42,11 @@ export const OrdersOptionDate = (props: any) => {
         bgcolor={theme.colors.inputDisabled}
         textcolor={theme.colors.unselectText}
         placeholder={t('SELECT_DATE', 'Select Date')}
-        dropViewMaxHeight={500}
+        dropViewMaxHeight={220}
         isCalendar
         rangeDate={search.date}
         handleChangeDate={handleChangeDate}
+        isCalendarAlwaysVisible
       />
     </Container>
   );

@@ -317,25 +317,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           />
         </IconWrapper>
       </View>
-      {isBusinessApp && (
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', maxHeight: 40 }}>
-          <OIcon
-            src={theme.images.general.information}
-            width={12}
-            height={12}
-            color={theme.colors.skyBlue}
-            style={{ marginRight: 5 }}
-          />
-          <OText size={12}>
-            {t('MORE_SETTINGS_GO_TO', 'For more settings go to ')}
-          </OText>
-          <TouchableOpacity onPress={() => { Linking.openURL('https://new-admin.tryordering.com/') }}>
-            <OText size={12} color={theme.colors.skyBlue}>
-              {t('LINK_MORE_SETTINGS_GO_TO', 'new-admin.ordering.co')}
-            </OText>
-          </TouchableOpacity>
-        </View>
-      )}
       <FiltersTab>
         <ScrollView
           ref={scrollRefTab}
@@ -569,85 +550,82 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {/* </GestureRecognizer> */}
 
       <NewOrderNotification />
-      <OModal open={openModal} entireModal customClose>
-        <ModalContainer
-          nestedScrollEnabled={true}
-        >
-          <OIconButton
-            icon={theme.images.general.arrow_left}
-            borderColor={theme.colors.clear}
-            iconColor={theme.colors.backArrow}
-            iconStyle={{ width: 20, height: 13 }}
-            style={{
-              maxWidth: 40,
-              height: 35,
-              justifyContent: 'flex-end',
-              marginBottom: 30,
-              marginTop: 30
-            }}
-            onClick={() => setOpenModal(false)}
-          />
-          <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
-          <OInput
-            value={search.id}
-            onChange={(value: any) => setSearch({ ...search, id: value })}
-            style={styles.inputStyle}
-            placeholder={t('ORDER_NUMBER', 'Order number')}
-            autoCorrect={false}
-          />
-          <OrdersOptionDate
-            {...props}
-            search={search}
-            onSearch={setSearch}
-          />
-          <OrdersOptionStatus
-            {...props}
-            search={search}
-            onSearch={setSearch}
-          />
-          <OrdersOptionCity
-            {...props}
-            search={search}
-            onSearch={setSearch}
-          />
-          <OrdersOptionBusiness
-            {...props}
-            search={search}
-            onSearch={setSearch}
-          />
-          {isBusinessApp && (
-            <>
-              <OrdersOptionDelivery
-                {...props}
-                search={search}
-                onSearch={setSearch}
-              />
-              <OrdersOptionDriver
-                {...props}
-                search={search}
-                onSearch={setSearch}
-              />
-              <OrdersOptionPaymethod
-                {...props}
-                search={search}
-                onSearch={setSearch}
-              />
-            </>
-          )}
-          <OButton
-            text={t('SEARCH', 'Search')}
-            textStyle={{ color: theme.colors.white }}
-            imgRightSrc={null}
-            style={{
-              borderRadius: 7.6,
-              marginBottom: 70,
-              marginTop: 60,
-              zIndex: 12
-            }}
-            onClick={applyFilters}
-          />
-        </ModalContainer>
-      </OModal>
+      {openModal && (
+        <OModal open={openModal} entireModal customClose>
+          <ModalContainer
+            nestedScrollEnabled={true}
+          >
+            <OIconButton
+              icon={theme.images.general.arrow_left}
+              borderColor={theme.colors.clear}
+              iconColor={theme.colors.backArrow}
+              iconStyle={{ width: 20, height: 13 }}
+              style={{
+                maxWidth: 40,
+                height: 35,
+                justifyContent: 'flex-end',
+                marginBottom: 30,
+                marginTop: 30
+              }}
+              onClick={() => setOpenModal(false)}
+            />
+            <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
+            <OInput
+              value={search.id}
+              onChange={(value: any) => setSearch({ ...search, id: value })}
+              style={styles.inputStyle}
+              placeholder={t('ORDER_NUMBER', 'Order number')}
+              autoCorrect={false}
+            />
+            <OrdersOptionDate
+              {...props}
+              search={search}
+              onSearch={setSearch}
+            />
+            <OrdersOptionCity
+              {...props}
+              search={search}
+              onSearch={setSearch}
+            />
+            {isBusinessApp && (
+              <>
+                <OrdersOptionBusiness
+                  {...props}
+                  search={search}
+                  onSearch={setSearch}
+                />
+                <OrdersOptionDelivery
+                  {...props}
+                  search={search}
+                  onSearch={setSearch}
+                />
+                <OrdersOptionDriver
+                  {...props}
+                  search={search}
+                  onSearch={setSearch}
+                />
+                <OrdersOptionPaymethod
+                  {...props}
+                  search={search}
+                  onSearch={setSearch}
+                />
+              </>
+            )}
+            <OButton
+              text={t('SEARCH', 'Search')}
+              textStyle={{ color: theme.colors.white }}
+              imgRightSrc={null}
+              style={{
+                borderRadius: 7.6,
+                marginBottom: 70,
+                marginTop: 60,
+                zIndex: 12
+              }}
+              onClick={applyFilters}
+            />
+          </ModalContainer>
+        </OModal>
+      )}
     </>
   );
 };

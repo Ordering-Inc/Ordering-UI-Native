@@ -4,16 +4,15 @@ import MapView, {
   PROVIDER_GOOGLE,
   Marker
 } from 'react-native-maps';
-import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig, useUtils } from 'ordering-components/native';
 import { GoogleMapsParams } from '../../types';
 import Alert from '../../providers/AlertProvider';
-import { OIconButton, OIcon, OFab, OText, OLink } from '../shared';
+import { OIconButton, OIcon, OFab, OText, OButton } from '../shared';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useTheme } from 'styled-components/native';
 import { useLocation } from '../../hooks/useLocation';
-// import MapViewDirections from 'react-native-maps-directions';
 import { FloatingButton } from '../FloatingButton';
+import { showLocation } from 'react-native-map-link';
 
 export const DriverMap = (props: GoogleMapsParams) => {
   const {
@@ -90,11 +89,11 @@ export const DriverMap = (props: GoogleMapsParams) => {
       content: !(errKey === 'ERROR_MAX_LIMIT_LOCATION_TO')
         ? [t(errKey, mapErrors[errKey])]
         : [
-            `${t(errKey, mapErrors[errKey])} ${maxLimitLocation} ${t(
-              'METTERS',
-              'meters',
-            )}`,
-          ],
+          `${t(errKey, mapErrors[errKey])} ${maxLimitLocation} ${t(
+            'METTERS',
+            'meters',
+          )}`,
+        ],
       key: errKey,
     });
   };
@@ -322,6 +321,17 @@ export const DriverMap = (props: GoogleMapsParams) => {
     arrowDistance: {
       borderWidth: 0,
     },
+    buttonContainer: {
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 10,
+      paddingHorizontal: 80,
+    },
+    showButton: {
+      alignSelf: 'center',
+      borderRadius: 10,
+    }
   });
 
   return (
@@ -453,7 +463,6 @@ export const DriverMap = (props: GoogleMapsParams) => {
               </OText>
             </View>
           </View>
-
           <View style={styles.facDistance}>
             <View
               style={{
@@ -475,22 +484,31 @@ export const DriverMap = (props: GoogleMapsParams) => {
                 size={13}
                 numberOfLines={2}
                 adjustsFontSizeToFit>
-                {`${travelTime.toFixed(2)} - ${
-                  isMin ? t('MINNUTES', 'mins') : t('HOURS', 'hours')
-                } ${distancesFromTwoPlacesKm.toFixed(2)} km`}
+                {`${travelTime.toFixed(2)} - ${isMin ? t('MINNUTES', 'mins') : t('HOURS', 'hours')
+                  } ${distancesFromTwoPlacesKm.toFixed(2)} km`}
               </OText>
             </View>
           </View>
         </View>
-        <View>
-          <OLink
-            PressStyle={{paddingHorizontal: 80, paddingVertical: 10,bottom: showAcceptOrReject ? 80 : 0}}
-            hasButton
-            url={Platform.select({
-              ios: `maps:0,0?q=${destination.latitude},${destination.longitude}`,
-              android: `geo:0,0?q=${destination.latitude},${destination.longitude}`,
+        <View style={styles.buttonContainer}>
+          <OButton
+            imgRightSrc=''
+            textStyle={{ color: theme.colors.white }}
+            style={{
+              ...styles.showButton,
+              bottom: showAcceptOrReject ? 80 : 0
+            }}
+            onClick={() => showLocation({
+              latitude: destination.latitude,
+              longitude: destination.longitude,
+              sourceLatitude: userLocation.latitude,
+              sourceLongitude: userLocation.longitude,
+              naverCallerName: 'com.deliveryapp',
+              dialogTitle: t('SHOW_IN_OTHER_MAPS', 'Show in other maps'),
+              dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
+              cancelText: t('CANCEL', 'Cancel'),
             })}
-            shorcut={t('SHOW_IN_OTHER_MAPS', 'Show in other maps')}
+            text={t('SHOW_IN_OTHER_MAPS', 'Show in other maps')}
           />
         </View>
         {showAcceptOrReject && (

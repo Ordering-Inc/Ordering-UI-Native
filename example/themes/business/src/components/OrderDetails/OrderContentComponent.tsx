@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Platform, StyleSheet, View } from 'react-native';
 
-import { OText, OLink } from '../shared'
+import { OButton, OText, OLink, OModal } from '../shared'
 import {
   OrderContent,
   OrderBusiness,
@@ -23,7 +23,7 @@ import {
   useConfig,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-
+import { ReviewCustomer } from '../ReviewCustomer'
 
 interface OrderContent {
   order: any,
@@ -37,6 +37,11 @@ export const OrderContentComponent = (props: OrderContent) => {
   const { order, logisticOrderStatus } = props;
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
+  const [openReviewModal, setOpenReviewModal] = useState(false)
+  const [isCustomerReviewed, setIsCustomerReviewed] = useState(false)
+
+  const pastOrderStatuses = [1, 2, 5, 6, 10, 11, 12, 16, 17]
+
   const styles = StyleSheet.create({
     linkWithIcons: {
       flexDirection: 'row',
@@ -50,8 +55,18 @@ export const OrderContentComponent = (props: OrderContent) => {
     },
     textLink: {
       color: '#365CC7'
+    },
+    btnReview: {
+      borderWidth: 0,
+      backgroundColor: theme.colors.primary,
+      borderRadius: 8,
     }
   })
+
+  const handleSuccessReviewed = () => {
+    setOpenReviewModal(false)
+    setIsCustomerReviewed(true)
+  }
 
   return (
     <OrderContent>
@@ -235,6 +250,15 @@ export const OrderContentComponent = (props: OrderContent) => {
             {order?.customer?.zipcode}
           </OText>
         )}
+        {!order?.user_review && pastOrderStatuses.includes(order?.status) && !isCustomerReviewed && (
+          <OButton
+            style={styles.btnReview}
+            textStyle={{ color: theme.colors.white }}
+            text={t('REVIEW_CUSTOMER', 'Review customer')}
+            imgRightSrc={false}
+            onClick={() => setOpenReviewModal(true)}
+          />
+        )}
       </OrderCustomer>
 
       <OrderProducts>
@@ -276,33 +300,36 @@ export const OrderContentComponent = (props: OrderContent) => {
             <OText mBottom={4}>
               {parsePrice(order?.summary?.tax ?? 0)}
             </OText>
-          </Table>
+          </Table >
         )}
 
-        {order?.summary?.discount > 0 && (
-          <Table>
-            {order?.offer_type === 1 ? (
-              <OText mBottom={4}>
-                <OText>{t('DISCOUNT', 'Discount')}</OText>
+        {
+          order?.summary?.discount > 0 && (
+            <Table>
+              {order?.offer_type === 1 ? (
+                <OText mBottom={4}>
+                  <OText>{t('DISCOUNT', 'Discount')}</OText>
 
-                <OText>
-                  {`(${verifyDecimals(
-                    order?.offer_rate,
-                    parsePrice,
-                  )}%)`}
+                  <OText>
+                    {`(${verifyDecimals(
+                      order?.offer_rate,
+                      parsePrice,
+                    )}%)`}
+                  </OText>
                 </OText>
+              ) : (
+                <OText mBottom={4}>{t('DISCOUNT', 'Discount')}</OText>
+              )}
+
+              <OText mBottom={4}>
+                - {parsePrice(order?.summary?.discount)}
               </OText>
-            ) : (
-              <OText mBottom={4}>{t('DISCOUNT', 'Discount')}</OText>
-            )}
+            </Table>
+          )
+        }
 
-            <OText mBottom={4}>
-              - {parsePrice(order?.summary?.discount)}
-            </OText>
-          </Table>
-        )}
-
-        {order?.summary?.subtotal_with_discount > 0 &&
+        {
+          order?.summary?.subtotal_with_discount > 0 &&
           order?.summary?.discount > 0 &&
           order?.summary?.total >= 0 && (
             <Table>
@@ -327,19 +354,22 @@ export const OrderContentComponent = (props: OrderContent) => {
                 </OText>
               )}
             </Table>
-          )}
+          )
+        }
 
-        {order?.summary?.delivery_price > 0 && (
-          <Table>
-            <OText mBottom={4}>
-              {t('DELIVERY_FEE', 'Delivery Fee')}
-            </OText>
+        {
+          order?.summary?.delivery_price > 0 && (
+            <Table>
+              <OText mBottom={4}>
+                {t('DELIVERY_FEE', 'Delivery Fee')}
+              </OText>
 
-            <OText mBottom={4}>
-              {parsePrice(order?.summary?.delivery_price)}
-            </OText>
-          </Table>
-        )}
+              <OText mBottom={4}>
+                {parsePrice(order?.summary?.delivery_price)}
+              </OText>
+            </Table>
+          )
+        }
 
         <Table>
           <OText mBottom={4}>
@@ -358,21 +388,23 @@ export const OrderContentComponent = (props: OrderContent) => {
           </OText>
         </Table>
 
-        {order?.summary?.service_fee > 0 && (
-          <Table>
-            <OText mBottom={4}>
-              {t('SERVICE_FEE', 'Service Fee')}{' '}
-              {`(${verifyDecimals(
-                order?.summary?.service_fee,
-                parseNumber,
-              )}%)`}
-            </OText>
+        {
+          order?.summary?.service_fee > 0 && (
+            <Table>
+              <OText mBottom={4}>
+                {t('SERVICE_FEE', 'Service Fee')}{' '}
+                {`(${verifyDecimals(
+                  order?.summary?.service_fee,
+                  parseNumber,
+                )}%)`}
+              </OText>
 
-            <OText mBottom={4}>
-              {parsePrice(order?.summary?.service_fee)}
-            </OText>
-          </Table>
-        )}
+              <OText mBottom={4}>
+                {parsePrice(order?.summary?.service_fee)}
+              </OText>
+            </Table>
+          )
+        }
 
         <Total>
           <Table>
@@ -388,7 +420,19 @@ export const OrderContentComponent = (props: OrderContent) => {
             </OText>
           </Table>
         </Total>
-      </OrderBill>
+      </OrderBill >
+      <OModal
+        open={openReviewModal}
+        onClose={() => setOpenReviewModal(false)}
+        entireModal
+        customClose
+      >
+        <ReviewCustomer
+          order={order}
+          closeModal={() => setOpenReviewModal(false)}
+          onClose={() => handleSuccessReviewed()}
+        />
+      </OModal>
     </OrderContent>
   )
 }

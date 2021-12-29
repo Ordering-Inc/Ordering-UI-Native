@@ -5,9 +5,9 @@ import { launchImageLibrary } from 'react-native-image-picker'
 import { GiftedChat, Actions, ActionsProps, InputToolbar, Composer, Send, Bubble, MessageImage, InputToolbarProps, ComposerProps } from 'react-native-gifted-chat'
 import { USER_TYPE } from '../../config/constants'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { OIcon, OIconButton, OText } from '../shared'
+import { OIcon, OIconButton, OText, OButton } from '../shared'
 import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard } from 'react-native'
-import { Header, TitleHeader, Wrapper } from './styles'
+import { Header, TitleHeader, Wrapper, QuickMessageContainer } from './styles'
 import { MessagesParams } from '../../types'
 import { useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -42,6 +42,17 @@ const MessagesUI = (props: MessagesParams) => {
 	const { top, bottom } = useSafeAreaInsets();
 
 	const theme = useTheme();
+
+	const quickMessageList = [
+    { key: 'customer_message_1', text: t('CUSTOMER_MESSAGE_1', 'Lorem ipsum 1') },
+    { key: 'customer_message_2', text: t('CUSTOMER_MESSAGE_2', 'Lorem ipsum 2') },
+    { key: 'customer_message_3', text: t('CUSTOMER_MESSAGE_3', 'Lorem ipsum 3') },
+    { key: 'customer_message_4', text: t('CUSTOMER_MESSAGE_4', 'Lorem ipsum 4') }
+  ]
+
+  const handleClickQuickMessage = (text: string) => {
+    setMessage && setMessage(`${message}${text}`)
+  }
 
 	const onChangeMessage = (val: string) => {
 		setMessage && setMessage(val)
@@ -227,13 +238,48 @@ const MessagesUI = (props: MessagesParams) => {
 		)
 	}
 
+	const renderAccessory = () => {
+    return (
+      <QuickMessageContainer
+        style={{
+          marginLeft: 10,
+          marginBottom: 10
+        }}
+        contentContainerStyle={{
+          alignItems: 'center',
+        }}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      >
+        {quickMessageList.map((quickMessage, i) => (
+          <OButton
+            key={i}
+            text={quickMessage.text}
+            bgColor='#E9ECEF'
+            borderColor='#E9ECEF'
+            imgRightSrc={null}
+            textStyle={{
+              fontSize: 11,
+              lineHeight: 16,
+              color: '#414954'
+            }}
+            style={{ ...styles.editButton }}
+            onClick={() => handleClickQuickMessage(quickMessage.text)}
+          />
+        ))}
+      </QuickMessageContainer>
+    )
+  }
+
 	const renderInputToolbar = (props: typeof InputToolbarProps) => (
 		<InputToolbar
 			{...props}
 			containerStyle={{
-				padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10
+				padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
+				flexDirection: 'column-reverse'
 			}}
 			primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}
+			renderAccessory={() => renderAccessory()}
 		/>
 	)
 
@@ -385,8 +431,9 @@ const MessagesUI = (props: MessagesParams) => {
 					renderMessageImage={renderMessageImage}
 					scrollToBottomComponent={() => renderScrollToBottomComponent()}
 					messagesContainerStyle={{
-						paddingVertical: 18,
+						paddingTop: 18,
 						paddingHorizontal: 28,
+						paddingBottom: 55
 					}}
 					isLoadingEarlier={messages.loading}
 					renderLoading={() => <ActivityIndicator size="small" color="#000" />}
@@ -412,7 +459,16 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		marginHorizontal: 4
-	}
+	},
+  editButton : {
+    borderRadius: 50,
+    backgroundColor: '#E9ECEF',
+    marginRight: 10,
+    height: 24,
+    borderWidth: 1,
+    paddingLeft: 0,
+    paddingRight: 0
+  }
 })
 
 export const Messages = (props: MessagesParams) => {

@@ -369,7 +369,8 @@ export interface OrderDetailsParams {
   updateDriverPosition?: any;
   driverUpdateLocation?: any;
   setDriverUpdateLocation?: any;
-  handleClickLogisticOrder?: (status: number, orderId: number) => void
+  handleClickLogisticOrder?: (status: number, orderId: number) => void;
+  orderTitle?: any
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean;
@@ -525,7 +526,8 @@ export interface TagsParams {
 interface actions {
   accept: string;
   reject: string;
-  failed: string;
+  pickupFailed: string;
+  deliveryFailed: string;
   notReady: string;
 }
 
@@ -547,6 +549,7 @@ export interface AcceptOrRejectOrderParams {
   titleReject?: textTranslate;
   titleNotReady?: textTranslate;
   appTitle?: textTranslate;
+  orderTitle?: any
 }
 
 export interface MapViewParams {
@@ -557,4 +560,14 @@ export interface MapViewParams {
   customerMarkerGroups: Array<any>,
   alertState: { open: boolean, content: Array<string>, key?: string | null },
   setAlertState: ({open, content, key} : { open: boolean, content: Array<string>, key?: string | null }) => void
+}
+
+export interface ReviewCustomerParams {
+  order?: any,
+  closeModal?: any,
+  reviewState?: any,
+  setReviewState?: any,
+  actionState?: any,
+  handleChangeQualification?: any,
+  handleSendCustomerReview?: any,
 }

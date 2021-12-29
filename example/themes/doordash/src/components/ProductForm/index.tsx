@@ -99,7 +99,7 @@ export const ProductOptionsUI = (props: any) => {
 			minHeight: 200,
 			zIndex: 0
 		},
-		closeButton: { width: 32, height: 32, borderRadius: 17, backgroundColor: theme.colors.white, alignItems: 'center', justifyContent: 'center' },
+		closeButton: { width: 11, height: 32, backgroundColor: theme.colors.white, alignItems: 'center', justifyContent: 'center' },
 		quantityWrap: { width: 40, height: 24, alignItems: 'center', justifyContent: 'center', borderRadius: 7.6, backgroundColor: theme.colors.inputDisabled }
 	})
 	const [{ parsePrice }] = useUtils()

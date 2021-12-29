@@ -25,9 +25,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     closeModal,
     orderId,
     notShowCustomerPhone,
-    titleAccept,
-    titleReject,
-    titleNotReady,
+    orderTitle,
     appTitle,
   } = props;
 
@@ -45,7 +43,9 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const phoneNumber = customerCellphone;
   let codeNumberPhone, numberPhone, numberToShow;
   const { top, bottom } = useSafeAreaInsets()
-
+  const titleOrder = t(orderTitle[action].key, orderTitle[action].text)
+  const buttonText = t(orderTitle[action].btnKey, orderTitle[action].btnText)
+  const showTextArea = ['reject', 'deliveryFailed', 'pickupFailed', 'notReady'].includes(action)
   const handleFocus = () => {
     viewRef?.current?.measure((x: any, y: any) => {
       scrollViewRef?.current?.scrollTo({ x: 0, y });
@@ -112,7 +112,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       openTimerIOnput();
     }
 
-    if (actions && (action === 'reject' || action === 'failed' || action === 'notReady')) {
+    if (actions && showTextArea) {
       openTextTareaOInput();
     }
   }, []);
@@ -179,7 +179,11 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
         comment: comments,
         status: 6,
       },
-      failedByDriver: {
+      pickupFailedByDriver: {
+        comment: comments,
+        status: 10
+      },
+      deliveryFailedByDriver: {
         comment: comments,
         status: 12
       },
@@ -195,8 +199,11 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     if (actions && action === 'reject') {
       bodyToSend = orderStatus[actions.reject];
     }
-    if (actions && action === 'failed') {
-      bodyToSend = orderStatus[actions.failed]
+    if (actions && action === 'pickupFailed') {
+      bodyToSend = orderStatus[actions.pickupFailed]
+    }
+    if (actions && action === 'deliveryFailed') {
+      bodyToSend = orderStatus[actions.deliveryFailed]
     }
     if (actions && action === 'notReady') {
       bodyToSend = orderStatus[actions.notReady]
@@ -233,11 +240,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
             fontStyle: 'normal',
           }}
           weight="600">
-          {action === 'accept'
-            ? `${t(titleAccept?.key, titleAccept?.text)}:`
-            : action === 'notReady'
-              ? t(titleNotReady?.key, titleNotReady?.text)
-              : t(titleReject?.key, titleReject?.text)}
+          {titleOrder}
         </OText>
       </View>
       <Content showsVerticalScrollIndicator={false} ref={scrollViewRef}>
@@ -362,11 +365,11 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           onEndEditing={handleFixTime}
         />
 
-        {(['failed', 'reject', 'notReady']?.includes(action)) && (
+        {showTextArea && (
           <Comments ref={viewRef}>
             <OTextarea
               textTareaRef={textTareaRef}
-              autoFocus={actions && (action === 'reject' || action === 'failed' || action === 'notReady')}
+              autoFocus
               onFocus={handleFocus}
               placeholder={t(
                 'PLEASE_TYPE_YOUR_COMMENTS_IN_HERE',
@@ -385,13 +388,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           firstButtonClick={() => {
             handleAcceptOrReject();
           }}
-          btnText={
-            action === 'accept'
-              ? t('ACCEPT', 'Accept')
-              : action === 'notReady'
-                ? t('ORDER_NOT_READY', 'Order not ready')
-                : t('REJECT', 'Reject')
-          }
+          btnText={buttonText}
           color={action === 'accept' ? theme.colors.green : theme.colors.red}
           widthButton={'100%'}
         />

@@ -22,7 +22,8 @@ interface Props {
   textcolor?: string,
   isCalendar?: boolean,
   handleChangeDate?: any,
-  rangeDate?: any
+  rangeDate?: any,
+  isCalendarAlwaysVisible?: boolean
 }
 
 const Wrapper = styled.View`
@@ -94,7 +95,8 @@ const ODropDownCalendar = (props: Props) => {
     isModal,
     isCalendar,
     handleChangeDate,
-    rangeDate
+    rangeDate,
+    isCalendarAlwaysVisible
   } = props
 
   const theme = useTheme();
@@ -127,13 +129,13 @@ const ODropDownCalendar = (props: Props) => {
   }
 
   const customDayHeaderStylesCallback = () => {
-		return {
-			textStyle: {
-				color: theme.colors.unselectText,
-				fontSize: 12,
-			},
-		};
-	};
+    return {
+      textStyle: {
+        color: theme.colors.unselectText,
+        fontSize: 12,
+      },
+    };
+  };
 
   const calendarText = (from: any, to: any, placeholder: any) => {
     const end = ` ~ ${to}`
@@ -204,9 +206,9 @@ const ODropDownCalendar = (props: Props) => {
             </ScrollView>
           ) : (
             <CustomScrollView style={{
-              maxHeight: dropViewMaxHeight || null
+              maxHeight: dropViewMaxHeight || null,
             }}
-            nestedScrollEnabled={true}
+              nestedScrollEnabled={true}
             >
               {options.map((option: any, index: number) => (
                 <CustomTouchableOpacity
@@ -243,8 +245,8 @@ const ODropDownCalendar = (props: Props) => {
                     alignItems: 'center',
                     marginTop: 10
                   }}>
-                    <View style={{marginRight: 10, flex: 1, marginBottom: 15}}>
-                      <Text style={{marginBottom: 5}}>{t('FROM', 'From')}</Text>
+                    <View style={{ marginRight: 10, flex: 1, marginBottom: 15 }}>
+                      <Text style={{ marginBottom: 5 }}>{t('FROM', 'From')}</Text>
                       <DateInput
                         value={rangeDate.from}
                         placeholder={t('FROM', 'From')}
@@ -259,12 +261,12 @@ const ODropDownCalendar = (props: Props) => {
                         name='close'
                         color={theme.colors.disabled}
                         size={20}
-                        style={{position: 'absolute', bottom: 13, right: 10}}
+                        style={{ position: 'absolute', bottom: 13, right: 10 }}
                         onPress={() => handleChangeDate('', rangeDate.to)}
                       />
                     </View>
-                    <View style={{marginLeft: 10, flex: 1, marginBottom: 15}}>
-                      <Text style={{marginBottom: 5}}>{t('TO', 'To')}</Text>
+                    <View style={{ marginLeft: 10, flex: 1, marginBottom: 15 }}>
+                      <Text style={{ marginBottom: 5 }}>{t('TO', 'To')}</Text>
                       <DateInput
                         value={rangeDate.to}
                         placeholder={t('TO', 'To')}
@@ -279,13 +281,13 @@ const ODropDownCalendar = (props: Props) => {
                         name='close'
                         color={theme.colors.disabled}
                         size={20}
-                        style={{position: 'absolute', bottom: 13, right: 10}}
+                        style={{ position: 'absolute', bottom: 13, right: 10 }}
                         onPress={() => handleChangeDate(rangeDate.from, '')}
                       />
                     </View>
                   </View>
                   {
-                    defaultValue === 'calendar' && (
+                    (defaultValue === 'calendar' || isCalendarAlwaysVisible) && (
                       <CalendarPicker
                         previousComponent={
                           <FeatherIcon

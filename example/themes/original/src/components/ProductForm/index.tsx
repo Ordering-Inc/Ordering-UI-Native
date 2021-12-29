@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
 	ProductForm as ProductOptions,
 	useSession,
@@ -120,13 +120,13 @@ export const ProductOptionsUI = (props: any) => {
 			height: 258,
 		},
 		swiperButton: {
-			marginHorizontal: 30,
+			marginHorizontal: 25,
 			alignItems: 'center',
 			justifyContent: 'center',
 			width: 32,
 			height: 32,
 			borderRadius: 16,
-			backgroundColor: 'rgba(255,255,255,0.3)'
+			backgroundColor: 'rgba(208,208,208,0.5)'
 		}
 	});
 
@@ -141,6 +141,8 @@ export const ProductOptionsUI = (props: any) => {
 	const { top, bottom } = useSafeAreaInsets();
 	const { height } = useWindowDimensions();
 	const [selOpt, setSelectedOpt] = useState(0);
+
+	const swiperRef: any = useRef(null)
 
 	const isError = (id: number) => {
 		let bgColor = theme.colors.white;
@@ -175,7 +177,15 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleChangeMainIndex = (index: number) => {
+		if (index < 0 || index > gallery.length - 1) {
+			setThumbsSwiper(0)
+			return
+		}
 		setThumbsSwiper(index)
+	}
+
+	const handleClickThumb = (index: number) => {
+		swiperRef?.current.scrollBy(index - thumbsSwiper, true);
 	}
 
 	const handleRedirectLogin = () => {
@@ -186,8 +196,10 @@ export const ProductOptionsUI = (props: any) => {
 	useEffect(() => {
 		const productImgList: any = []
 		product?.images && productImgList.push(product.images)
-		for (const img of product?.gallery) {
-			productImgList.push(img.file)
+		if(product?.gallery && product?.gallery.length > 0) {
+			for (const img of product?.gallery) {
+				productImgList.push(img.file)
+			}
 		}
 		setGallery(productImgList)
 	}, [product])
@@ -273,9 +285,10 @@ export const ProductOptionsUI = (props: any) => {
 								<>
 									<Swiper
 										loop={false}
+										ref={swiperRef}
 										showsButtons={true}
 										style={styles.mainSwiper}
-										// index={thumbsSwiper}
+										showsPagination={false}
 										onIndexChanged={(index) => handleChangeMainIndex(index)}
 										prevButton={
 											<View style={styles.swiperButton}>
@@ -321,29 +334,32 @@ export const ProductOptionsUI = (props: any) => {
 										}}
 									>
 										{gallery.length > 0 && gallery.map((img, index) => (
-											<View
+											<TouchableOpacity
 												key={index}
-												style={{
-													height: 56,
-													borderRadius: 8,
-													margin: 8,
-													opacity: index === thumbsSwiper ? 1 : 0.8
-												}}
+												onPress={() => handleClickThumb(index)}
 											>
-												<OIcon
-													url={img}
+												<View
 													style={{
-														borderColor: theme.colors.lightGray,
+														height: 56,
 														borderRadius: 8,
-														minHeight: '100%'
+														margin: 8,
+														opacity: index === thumbsSwiper ? 1 : 0.8
 													}}
-													width={56}
-													height={56}
-													cover
-												/>
-												{/* {thumbsSwiper === 2 && <OText color='red'>{index.toString()}</OText>}
-												{thumbsSwiper === 3 && <OText color='red'>{index.toString()}</OText>} */}
-											</View>
+												>
+													<OIcon
+														url={img}
+														style={{
+															borderColor: theme.colors.lightGray,
+															borderRadius: 8,
+															minHeight: '100%'
+														}}
+														width={56}
+														height={56}
+														cover
+													/>
+												</View>
+											</TouchableOpacity>
+
 										))}
 									</ScrollView>
 								</>

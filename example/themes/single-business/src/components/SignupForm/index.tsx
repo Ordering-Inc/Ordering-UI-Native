@@ -82,7 +82,6 @@ const SignupFormUI = (props: SignupParams) => {
 			display: 'flex',
 			flexDirection: 'row',
 			justifyContent: 'space-between',
-			marginBottom: 30,
 		},
 		line: {
 			height: 1,
@@ -539,6 +538,21 @@ const SignupFormUI = (props: SignupParams) => {
 					)}
 				</FormInput>
 
+        {
+          onNavigationRedirect && loginButtonText && (
+            <View style={style.wrappText}>
+              <OText size={14} style={{ marginRight: 5 }}>
+                {t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
+              </OText>
+              <Pressable onPress={() => onNavigationRedirect('Login')}>
+                <OText size={14} color={theme.colors.primary}>
+                  {loginButtonText}
+                </OText>
+              </Pressable>
+            </View>
+          )
+        }
+
 				<View
 					style={{
 						flexDirection: 'row',
@@ -577,21 +591,6 @@ const SignupFormUI = (props: SignupParams) => {
 						/>
 					</SocialButtons>
 				</ButtonsWrapper>
-
-				{/* {
-          onNavigationRedirect && loginButtonText && (
-            <View style={style.wrappText}>
-              <OText size={18} style={{ marginRight: 5 }}>
-                {t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
-              </OText>
-              <Pressable onPress={() => onNavigationRedirect('Login')}>
-                <OText size={18} color={theme.colors.primary}>
-                  {loginButtonText}
-                </OText>
-              </Pressable>
-            </View>
-          )
-        } */}
 
 				{/* {
           configs && Object.keys(configs).length > 0 && (

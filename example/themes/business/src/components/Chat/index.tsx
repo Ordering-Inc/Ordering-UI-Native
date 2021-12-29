@@ -37,8 +37,8 @@ import {
   useUtils,
   useLanguage,
 } from 'ordering-components/native';
-import { Header, TitleHeader, Wrapper } from './styles';
-import { OIcon, OIconButton, OText } from '../shared';
+import { Header, TitleHeader, Wrapper, QuickMessageContainer } from './styles';
+import { OIcon, OIconButton, OText, OButton } from '../shared';
 import { MessagesParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
 
@@ -66,6 +66,17 @@ const ChatUI = (props: MessagesParams) => {
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
   const theme = useTheme();
+
+  const quickMessageList = [
+    { key: 'store_message_1', text: t('STORE_MESSAGE_1', 'store_message_1') },
+    { key: 'store_message_2', text: t('STORE_MESSAGE_2', 'store_message_2') },
+    { key: 'store_message_3', text: t('STORE_MESSAGE_3', 'store_message_3') },
+    { key: 'store_message_4', text: t('STORE_MESSAGE_4', 'store_message_4') }
+  ]
+
+  const handleClickQuickMessage = (text: string) => {
+    setMessage && setMessage(`${message}${text}`)
+  }
 
   const { bottom } = useSafeAreaInsets();
 
@@ -131,6 +142,7 @@ const ChatUI = (props: MessagesParams) => {
     accessoryIcon: {
       height: 32,
       width: 32,
+      minWidth: 32,
       borderRadius: 7.6,
       resizeMode: 'stretch',
     },
@@ -198,6 +210,15 @@ const ChatUI = (props: MessagesParams) => {
       paddingLeft: 12,
       paddingRight: 5,
     },
+    editButton : {
+      borderRadius: 50,
+      backgroundColor: '#E9ECEF',
+      marginRight: 10,
+      height: 24,
+      borderWidth: 1,
+      paddingLeft: 0,
+      paddingRight: 0
+    }
   });
   const [file, setFile] = useState({
     uri: '',
@@ -590,6 +611,7 @@ const ChatUI = (props: MessagesParams) => {
   };
 
   const renderAccessory = () => (
+    <View>
       <Header
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
@@ -636,7 +658,7 @@ const ChatUI = (props: MessagesParams) => {
               <OText
                 adjustsFontSizeToFit
                 color={theme.colors.unselectText}
-                size={14}>
+                size={13}>
                 {t('BUSINESS', 'Business')}
               </OText>
             </TitleHeader>
@@ -677,7 +699,7 @@ const ChatUI = (props: MessagesParams) => {
             <OText
               adjustsFontSizeToFit
               color={theme.colors.unselectText}
-              size={14}>
+              size={13}>
               {t('CUSTOMER', 'Customer')}
             </OText>
           </TitleHeader>
@@ -718,13 +740,39 @@ const ChatUI = (props: MessagesParams) => {
               <OText
                 adjustsFontSizeToFit
                 color={theme.colors.unselectText}
-                size={14}>
+                size={13}>
                 {t('DRIVER', 'Driver')}
               </OText>
             </TitleHeader>
           </Pressable>
         )}
       </Header>
+      <QuickMessageContainer
+        contentContainerStyle={{
+          alignItems: 'center'
+        }}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      >
+        {quickMessageList.map((quickMessage, i) => (
+          <OButton
+            key={i}
+            text={quickMessage.text}
+            bgColor='#E9ECEF'
+            borderColor='#E9ECEF'
+            imgRightSrc={null}
+            textStyle={{
+              fontSize: 11,
+              lineHeight: 16,
+              color: '#414954'
+            }}
+            style={{ ...styles.editButton }}
+            onClick={() => handleClickQuickMessage(quickMessage.text)}
+          />
+        ))}
+      </QuickMessageContainer>
+    </View>
+
   );
 
   const userRoles: any = {
@@ -741,7 +789,7 @@ const ChatUI = (props: MessagesParams) => {
       {...props}
       containerStyle={styles.toolbarStyle}
       primaryStyle={{ alignItems: 'center', justifyContent: 'space-between' }}
-      accessoryStyle={{ position: 'relative', marginBottom: 10 }}
+      accessoryStyle={{ position: 'relative', marginBottom: 45 }}
       renderAccessory={order ? () => renderAccessory && renderAccessory() : undefined}
     />
   );
@@ -1128,10 +1176,10 @@ const ChatUI = (props: MessagesParams) => {
           renderBubble={renderBubble}
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
-          messagesContainerStyle={{ paddingBottom: 12 }}
+          messagesContainerStyle={{ paddingBottom: 25 }}
           showUserAvatar={true}
           bottomOffset={bottom}
-          minInputToolbarHeight={115}
+          minInputToolbarHeight={145}
           isLoadingEarlier={messages?.loading}
           renderLoading={() => (
             <ActivityIndicator size="small" color={theme.colors.black} />

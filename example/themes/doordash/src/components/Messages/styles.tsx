@@ -20,3 +20,5 @@ export const TitleHeader = styled.View`
   align-items: flex-start;
   max-width: 85%;
 `
+
+export const QuickMessageContainer = styled.ScrollView``

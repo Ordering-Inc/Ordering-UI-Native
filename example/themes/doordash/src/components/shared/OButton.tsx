@@ -47,6 +47,7 @@ interface Props {
 	bgColor?: string;
 	borderColor?: string;
 	loadingStyle?: ViewStyle;
+	wrapperStyle?: ViewStyle
 }
 
 const StyledButton = styled.View<Props>`
@@ -114,7 +115,7 @@ const OButton = (props: Props): React.ReactElement => {
 					<StyledImage style={{ transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }], ...props.imgLeftStyle }} source={props.imgLeftSrc} />
 				) : null}
 				{props.text ? (
-					<View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: props.textSub ? 'space-between' : 'center' }}>
+					<View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: props.textSub ? 'space-between' : 'center', ...props.wrapperStyle }}>
 						<StyledText style={props.textStyle}>{props.text}</StyledText>
 						{props.textSub ? <StyledText style={props.textStyle}>{props.textSub}</StyledText> : null}
 					</View>

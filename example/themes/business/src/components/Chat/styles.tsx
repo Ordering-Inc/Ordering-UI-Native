@@ -10,3 +10,7 @@ export const Header = styled.ScrollView``;
 export const TitleHeader = styled.View`
   margin-left: 11px;
 `;
+
+export const QuickMessageContainer = styled.ScrollView`
+  margin-top: 8px;
+`

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { View, StyleSheet } from 'react-native'
+import React, { useEffect, useState, useRef } from 'react'
+import { View, StyleSheet, SafeAreaView } from 'react-native'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -7,6 +7,8 @@ import {
 	useOrder,
 	useSession,
 	useUtils,
+  useToast,
+  ToastType
 } from 'ordering-components/native'
 import { OButton, OModal } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -27,6 +29,8 @@ import { ProductForm } from '../ProductForm'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { _setStoreData } from '../../providers/StoreUtil';
 
+const PIXELS_TO_SCROLL = 1000
+
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const {
 		navigation,
@@ -41,7 +45,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		featuredProducts,
 		errorQuantityProducts,
 		header,
-		logo
+		logo,
+    getNextProducts
 	} = props
 
 	const theme = useTheme();
@@ -49,6 +54,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [{ auth }] = useSession()
 	const [orderState] = useOrder()
 	const [{ parsePrice }] = useUtils()
+  const [ ,{showToast}] = useToast()
 	const { top, bottom } = useSafeAreaInsets()
 
 	const styles = StyleSheet.create({
@@ -84,6 +90,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [curProduct, setCurProduct] = useState(null)
 	const [openUpselling, setOpenUpselling] = useState(false)
 	const [canOpenUpselling, setCanOpenUpselling] = useState(false)
+  const scrollViewRef = useRef<any>(null)
+
+  const [categoriesLayout, setCategoriesLayout] = useState<any>({})
+	const [productListLayout, setProductListLayout] = useState<any>(null)
+  const [selectedCategoryId, setSelectedCategoryId] = useState<any>(null)
 
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
@@ -122,6 +133,28 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		setOpenUpselling(false)
 	}
 
+  const handleScroll = ({ nativeEvent }: any) => {
+		const scrollOffset = nativeEvent.contentOffset.y
+		if (businessState?.business?.lazy_load_products_recommended) {
+			const height = nativeEvent.contentSize.height
+			const hasMore = !(categoryState.pagination.totalPages === categoryState.pagination.currentPage)
+			if (scrollOffset + PIXELS_TO_SCROLL > height && !loading && hasMore && getNextProducts) {
+				getNextProducts()
+				showToast(ToastType.Info, t('LOADING_MORE_PRODUCTS', 'Loading more products'))
+			}
+		} else {
+			if (!scrollOffset || !categoriesLayout || !productListLayout) return
+			for (const key in categoriesLayout) {
+				const categoryOffset = categoriesLayout[key].y + productListLayout?.y - 70
+				if (categoryOffset - 50 <= scrollOffset && scrollOffset <= categoryOffset + 50) {
+					if (selectedCategoryId !== key) {
+						setSelectedCategoryId(key)
+					}
+				}
+			}
+		}
+	}
+
 	useEffect(() => {
 		if (!orderState.loading) {
 			handleCloseProductModal()
@@ -131,16 +164,23 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	useEffect(() => {
 		if (businessState?.business?.logo) {
 			_setStoreData('b_logo', {businessLogo: businessState.business?.logo});
-		} else {
-			console.log('logo undefined!!')
 		}
 	}, [businessState])
 
 	return (
-		<>
-			<BusinessProductsListingContainer style={styles.mainContainer} isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}>
+		<SafeAreaView
+      style={{ flex: 1 }}
+    >
+			<BusinessProductsListingContainer
+        stickyHeaderIndices={[2]}
+        style={styles.mainContainer}
+				ref={scrollViewRef}
+				isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
+				onScroll={(e: any) => handleScroll(e)}
+				scrollEventThrottle={16}
+      >
 				<WrapHeader>
-					{!auth && 
+					{!auth &&
 						<TopHeader style={{top: top}}>
 							<OButton
 								imgLeftSrc={theme.images.general.arrow_left}
@@ -173,14 +213,30 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						</WrapSearchBar>
 						{!(business?.categories?.length === 0) && (
 							<BusinessProductsCategories
-								categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
+								categories={[
+                  { id: null, name: t('ALL', 'All') },
+                  { id: 'featured', name: t('FEATURED', 'Featured') },
+                  ...business?.categories?.sort((a: any, b: any) => a.rank - b.rank)
+                ]}
 								categorySelected={categorySelected}
 								onClickCategory={handleChangeCategory}
 								featured={featuredProducts}
 								openBusinessInformation={openBusinessInformation}
+                scrollViewRef={scrollViewRef}
+                productListLayout={productListLayout}
+								categoriesLayout={categoriesLayout}
+								selectedCategoryId={selectedCategoryId}
+                setSelectedCategoryId={setSelectedCategoryId}
+								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
 							/>
 						)}
-						<WrapContent>
+					</>
+				)}
+        {!loading && business?.id && (
+					<>
+            <WrapContent
+							onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}
+						>
 							<BusinessProductsList
 								categories={[
 									{ id: null, name: t('ALL', 'All') },
@@ -198,10 +254,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								handleClearSearch={handleChangeSearch}
 								errorQuantityProducts={errorQuantityProducts}
 								handleCancelSearch={handleCancel}
+                categoriesLayout={categoriesLayout}
+								setCategoriesLayout={setCategoriesLayout}
 							/>
 						</WrapContent>
-					</>
-				)}
+          </>
+        )}
 				{loading && !error && (
 					<>
 						<BusinessProductsCategories
@@ -256,20 +314,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					onSave={handlerProductAction}
 				/>
 			</OModal>
-			{/* {openUpselling && (
-				<UpsellingProducts
-					businessId={currentCart?.business_id}
-					business={currentCart?.business}
-					cartProducts={currentCart?.products}
-					cart={currentCart}
-					handleUpsellingPage={handleUpsellingPage}
-					handleCloseUpsellingPage={handleCloseUpsellingPage}
-					openUpselling={openUpselling}
-					canOpenUpselling={canOpenUpselling}
-					setCanOpenUpselling={setCanOpenUpselling}
-				/>
-			)} */}
-		</>
+    </SafeAreaView>
 	)
 }
 

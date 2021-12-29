@@ -574,6 +574,7 @@ const LoginFormUI = (props: LoginParams) => {
                 forwardRef={inputRef}
                 onChange={(val: any) => onChange(val)}
                 returnKeyType="done"
+                onSubmitEditing={() => handleLogin()}
                 blurOnSubmit
               />
             )}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { View, StyleSheet, Dimensions, Linking } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import NetInfo from '@react-native-community/netinfo';
 import { useTheme } from 'styled-components/native';
@@ -14,7 +14,7 @@ import {
 import { NotFoundSource } from '../NotFoundSource';
 import { SearchBar } from '../SearchBar';
 import { BusinessController } from '../BusinessController';
-import { OText } from '../shared';
+import { OIcon, OText } from '../shared';
 import { BusinessesListingParams } from '../../types';
 
 const StoresListUI = (props: BusinessesListingParams) => {
@@ -154,7 +154,23 @@ const StoresListUI = (props: BusinessesListingParams) => {
             conditioned={false}
           />
         )}
-
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', maxHeight: 40 }}>
+          <OIcon
+            src={theme.images.general.information}
+            width={12}
+            height={12}
+            color={theme.colors.skyBlue}
+            style={{ marginRight: 5 }}
+          />
+          <OText size={12}>
+            {t('MORE_SETTINGS_GO_TO', 'For more settings go to ')}
+          </OText>
+          <TouchableOpacity onPress={() => { Linking.openURL(t('LINK_MORE_SETTINGS_GO_TO', 'https://app.ordering.co')) }}>
+            <OText size={12} color={theme.colors.skyBlue}>
+              {t('LINK_MORE_SETTINGS_GO_TO', 'https://app.ordering.co')}
+            </OText>
+          </TouchableOpacity>
+        </View>
         {!error &&
           businesses?.map((business: any) => (
             <BusinessController
