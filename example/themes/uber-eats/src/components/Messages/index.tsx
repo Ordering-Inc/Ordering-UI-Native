@@ -10,9 +10,6 @@ import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboa
 import { Header, TitleHeader, Wrapper, QuickMessageContainer } from './styles'
 import { MessagesParams } from '../../types'
 
-const ImageDummy = require('../../assets/images/image.png')
-const paperIcon = require('../../assets/images/paper-plane.png')
-
 const ORDER_STATUS: any = {
   0: 'ORDER_STATUS_PENDING',
   1: 'ORDERS_COMPLETED',
@@ -61,8 +58,11 @@ const MessagesUI = (props: MessagesParams) => {
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
   const previousStatus = [1, 2, 5, 6, 10, 11, 12, 16, 17]
-  const chatDisabled = previousStatus.includes(order?.status)
 
+  const ImageDummy = theme.images?.general?.ImageDummy
+  const paperIcon = theme?.images?.general?.paperIcon
+
+  const chatDisabled = previousStatus.includes(order?.status)
   const quickMessageList = [
     { key: 'customer_message_1', text: t('CUSTOMER_MESSAGE_1', 'customer_message_1') },
     { key: 'customer_message_2', text: t('CUSTOMER_MESSAGE_2', 'customer_message_2') },

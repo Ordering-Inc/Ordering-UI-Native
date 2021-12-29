@@ -11,7 +11,6 @@ import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 
-const addIcon = require('../../assets/icons/add-circular-outlined-button.png')
 
 const AddressListUI = (props: AddressListParams) => {
   const {
@@ -32,6 +31,7 @@ const AddressListUI = (props: AddressListParams) => {
   } = props
 
   const theme = useTheme()
+  const addIcon = theme.general?.images?.addCircularOutlined
 
   const styles = StyleSheet.create({
     address: {
