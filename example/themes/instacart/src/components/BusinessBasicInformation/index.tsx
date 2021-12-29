@@ -71,7 +71,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 		<BusinessContainer>
 			<BusinessHeader
 				style={{...styles.businesInfoheaderStyle}}
-				source={{ uri: header || optimizeImage(businessState?.business?.header, 'h_400,c_limit') }}
+				source={{ uri: header || optimizeImage(businessState?.business?.header, 'h_300,c_limit') }}
 			>
 				<BusinessLogo>
 					{loading ? (
@@ -83,7 +83,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
 					) : (
 						!isBusinessInfoShow && (
 							<OIcon
-								url={logo || optimizeImage(businessState?.business?.logo, 'h_300,c_limit')}
+								url={logo || optimizeImage(businessState?.business?.logo, 'h_100,c_limit')}
 								style={styles.businessLogo}
 								cover
 							/>
