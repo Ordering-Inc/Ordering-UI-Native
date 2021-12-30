@@ -20,6 +20,7 @@ interface Props {
   cover?: boolean;
   children?: any;
   borderRadius?: number;
+  borderBottomWidth?: number
 }
 
 const OImage = (props: Props): React.ReactElement => {
@@ -30,6 +31,7 @@ const OImage = (props: Props): React.ReactElement => {
         borderRadius: props.style?.borderRadius,
         overflow: 'hidden',
         marginHorizontal: props.style?.marginHorizontal,
+        borderBottomWidth: props.borderBottomWidth
       }}>
       <SImage
         source={

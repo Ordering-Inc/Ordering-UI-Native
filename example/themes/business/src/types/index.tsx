@@ -285,6 +285,10 @@ export interface OrdersOptionParams {
     cancelled?: Array<number>;
   };
   isBusinessApp?: boolean;
+  handleClickLogisticOrder: (status: number, orderId: number) => void,
+  logisticOrders: {orders: Array<any>, loading: boolean, error: Array<string> | string},
+  loadLogisticOrders: () => void;
+  isLogisticActivated?: boolean
 }
 export interface ActiveOrdersParams {
   orders?: any;
@@ -365,6 +369,7 @@ export interface OrderDetailsParams {
   updateDriverPosition?: any;
   driverUpdateLocation?: any;
   setDriverUpdateLocation?: any;
+  handleClickLogisticOrder?: (status: number, orderId: number) => void;
   orderTitle?: any
 }
 export interface ProductItemAccordionParams {
