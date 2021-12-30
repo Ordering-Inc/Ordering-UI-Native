@@ -7,6 +7,7 @@ import { StyleSheet } from 'react-native'
 import {
   Content
 } from './styles'
+import NavBar from '../NavBar'
 
 export const HelpGuide = (props: HelpParams) => {
   const {
@@ -36,11 +37,11 @@ export const HelpGuide = (props: HelpParams) => {
 
   return (
     <>
-      <OButton
-        imgLeftSrc={theme.images.general.arrow_left}
-        imgRightSrc={null}
-        style={styles.btnBackArrow}
-        onClick={() => goToBack()}
+      <NavBar
+        style={{ paddingBottom: 0, marginLeft:-20, backgroundColor: 'transparent' }}
+        btnStyle={{ backgroundColor: 'transparent' }}
+        leftImageStyle={{ tintColor: theme.colors.textThird }}
+        onActionLeft={() => goToBack()}
       />
       <OText size={22} weight={600}>{t('GUIDE_TO_ORDERING', 'Guide to Ordering')}</OText>
       <Content>

@@ -79,7 +79,7 @@ export const BusinessBasicInformation = (
 						onPress={() => auth
 							? navigation.navigate('AddressList', { isGoBack: true, isFromProductsList: true })
 							: navigation.navigate('AddressForm', { address: orderState.options?.address })}
-						style={{marginTop: !auth ? 36 : top > 0 ? 0 : 20}}
+						style={{marginTop: (!auth || props.isFranchiseApp) ? 36 : top > 0 ? 0 : 20}}
 						activeOpacity={0.8}
 					>
 						<OIcon src={theme.images.general.pin} width={16} color={theme.colors.textSecondary} />

@@ -21,8 +21,8 @@ const DisabledWrapper = styled.View`
     justify-content: center;
 `
 const Icon = styled.Image`
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
 `
 const Title = styled.Text`
     font-size: 16px;

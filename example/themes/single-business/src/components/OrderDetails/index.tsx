@@ -43,6 +43,7 @@ import { OrderDetailsParams } from '../../types';
 import { USER_TYPE } from '../../config/constants';
 import { GoogleMap } from '../GoogleMap';
 import { verifyDecimals } from '../../utils';
+import NavBar from '../NavBar';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
 	const {
@@ -375,13 +376,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 			{order && Object.keys(order).length > 0 && (
 				<>
 					<Header>
-						<OButton
-							imgLeftSrc={theme.images.general.arrow_left}
-							imgRightSrc={null}
-							style={styles.btnBackArrow}
-							onClick={() => handleArrowBack()}
-							imgLeftStyle={{ tintColor: theme.colors.disabled, width: 20 }}
-						/>
+            <NavBar
+              style={{ paddingBottom: 0, marginLeft: -20, backgroundColor: 'transparent' }}
+              btnStyle={{ backgroundColor: 'transparent' }}
+              leftImageStyle={{ tintColor: theme.colors.textThird }}
+              onActionLeft={() => handleArrowBack()}
+            />
 						<OrderInfo>
 							<OrderData>
 								<OText

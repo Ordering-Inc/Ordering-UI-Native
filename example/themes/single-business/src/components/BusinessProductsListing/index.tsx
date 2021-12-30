@@ -28,6 +28,7 @@ import { ProductForm } from '../ProductForm'
 // import { UpsellingProducts } from '../UpsellingProducts'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { _setStoreData } from '../../providers/StoreUtil';
+import NavBar from '../NavBar';
 
 const PIXELS_TO_SCROLL = 1000
 
@@ -180,15 +181,14 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				scrollEventThrottle={16}
       >
 				<WrapHeader>
-					{!auth &&
+					{(!auth || props.isFranchiseApp) && !loading &&
 						<TopHeader style={{top: top}}>
-							<OButton
-								imgLeftSrc={theme.images.general.arrow_left}
-								imgRightSrc={null}
-								style={styles.btnBackArrow}
-								onClick={() => navigation?.canGoBack() && navigation.goBack()}
-								imgLeftStyle={{ tintColor: theme.colors.white }}
-							/>
+              <NavBar
+                style={{ paddingBottom: 0, marginLeft: 20, backgroundColor: 'transparent' }}
+                btnStyle={{ backgroundColor: 'transparent' }}
+                leftImageStyle={{ tintColor: theme.colors.white }}
+                onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+              />
 						</TopHeader>
 					}
 					<BusinessBasicInformation
@@ -197,6 +197,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						openBusinessInformation={openBusinessInformation}
 						header={header}
 						logo={logo}
+            isFranchiseApp={props.isFranchiseApp}
 					/>
 				</WrapHeader>
 				<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />

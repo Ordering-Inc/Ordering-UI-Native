@@ -160,6 +160,7 @@ export interface BusinessProductsListingParams {
 	categorySelected: any;
 	handleSearchRedirect: any;
 	errorQuantityProducts?: boolean;
+	isFranchiseApp?: boolean;
 	header?: any;
 	logo?: any;
 	getNextProducts?: any;
@@ -173,6 +174,7 @@ export interface BusinessBasicInformationParams {
 	businessState?: any;
 	openBusinessInformation?: any;
 	isBusinessInfoShow?: boolean;
+	isFranchiseApp?: boolean;
 	header?: any;
 	logo?: any;
 }
