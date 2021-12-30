@@ -48,8 +48,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     isFromCheckout,
     driverLocation,
     actions,
-    titleAccept,
-    titleReject,
+    orderTitle,
     appTitle,
   } = props;
 
@@ -607,8 +606,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   orderId={order?.id}
                   notShowCustomerPhone={false}
                   actions={actions}
-                  titleAccept={titleAccept}
-                  titleReject={titleReject}
+                  orderTitle={orderTitle}
                   appTitle={appTitle}
                 />
               </OModal>

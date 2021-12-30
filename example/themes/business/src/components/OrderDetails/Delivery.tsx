@@ -128,6 +128,36 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setOpenModalForAccept(true);
   };
 
+  const handleCloseModal = () => {
+    setOpenModalForBusiness(false);
+  };
+
+  const handleArrowBack: any = () => {
+    navigation?.canGoBack() && navigation.goBack();
+  };
+
+  const handleRejectLogisticOrder = () => {
+    handleClickLogisticOrder?.(2, order?.logistic_order_id)
+    handleArrowBack()
+  }
+
+  const locations = [
+    {
+      ...order?.business?.location,
+      title: order?.business?.name,
+      icon: order?.business?.logo || theme.images.dummies.businessLogo,
+      type: 'Business',
+    },
+    {
+      ...order?.customer?.location,
+      title: order?.customer?.name,
+      icon:
+        order?.customer?.photo ||
+        'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',
+      type: 'Customer',
+    },
+  ];
+
   useEffect(() => {
     if (permissions.locationStatus !== 'granted' && openModalForMapView) {
       setOpenModalForMapView(false);
@@ -146,20 +176,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     if (openModalForMapView) {
       setOpenModalForMapView(false);
     }
-  }, [order?.loading]);
-
-  const handleCloseModal = () => {
-    setOpenModalForBusiness(false);
-  };
-
-  const handleArrowBack: any = () => {
-    navigation?.canGoBack() && navigation.goBack();
-  };
-
-  const handleRejectLogisticOrder = () => {
-    handleClickLogisticOrder?.(2, order?.logistic_order_id)
-    handleArrowBack()
-  }
+  }, [props.order?.loading]);
 
   useEffect(() => {
     if (order?.driver === null && session?.user?.level === 4) {
@@ -175,23 +192,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       });
     }
   }, [order?.driver]);
-
-  const locations = [
-    {
-      ...order?.business?.location,
-      title: order?.business?.name,
-      icon: order?.business?.logo || theme.images.dummies.businessLogo,
-      type: 'Business',
-    },
-    {
-      ...order?.customer?.location,
-      title: order?.customer?.name,
-      icon:
-        order?.customer?.photo ||
-        'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',
-      type: 'Customer',
-    },
-  ];
 
   useEffect(() => {
     if (driverLocation) {
@@ -312,7 +312,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               handleUpdateOrder={handleChangeOrderStatus}
               closeModal={setOpenModalForAccept}
               customerCellphone={order?.customer?.cellphone}
-              loading={order?.loading}
+              loading={props.order?.loading}
               action={actionOrder}
               orderId={order?.id}
               notShowCustomerPhone
@@ -356,14 +356,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
         {showFloatButtonsPickUp[order?.status] && (
           <FloatingButton
-            disabled={order?.loading}
+            disabled={props.order?.loading}
             btnText={t('PICKUP_FAILED', 'Pickup failed')}
             isSecondaryBtn={false}
             secondButtonClick={() =>
               handleChangeOrderStatus && handleChangeOrderStatus(9)
             }
             firstButtonClick={() =>
-              handleViewActionOrder && handleViewActionOrder('failed')
+              handleViewActionOrder && handleViewActionOrder('pickupFailed')
             }
             secondBtnText={t('PICKUP_COMPLETE', 'Pickup complete')}
             secondButton={true}
@@ -375,14 +375,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         {(order?.status === 9 || order?.status === 19) && (
           <>
             <FloatingButton
-              disabled={order?.loading}
+              disabled={props.order?.loading}
               btnText={t('DELIVERY_FAILED', 'Delivery Failed')}
               isSecondaryBtn={false}
               secondButtonClick={() =>
                 handleChangeOrderStatus && handleChangeOrderStatus(11)
               }
               firstButtonClick={() =>
-                handleViewActionOrder && handleViewActionOrder('failed')
+                handleViewActionOrder && handleViewActionOrder('deliveryFailed')
               }
               secondBtnText={t('DELIVERY_COMPLETE', 'Delivery complete')}
               secondButton={true}
@@ -405,14 +405,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             widthButton={'45%'}
           />
         )}
-
-        <Alert
-          open={alertState.open}
-          onAccept={handleArrowBack}
-          onClose={handleArrowBack}
-          content={alertState.content}
-          title={t('WARNING', 'Warning')}
-        />
       </>
     )
   }
@@ -420,7 +412,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   return (
     <>
       {(!order || Object.keys(order).length === 0) &&
-        (order?.error?.length < 1 || !order?.error) && (
+        (props.order?.error?.length < 1 || !props.order?.error) && (
           <View style={{ flex: 1 }}>
             {[...Array(6)].map((item, i) => (
               <Placeholder key={i} Animation={Fade}>
@@ -437,7 +429,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </View>
         )}
 
-      {(!!order?.error || order?.error) && (
+      {(!!props.order?.error || props.order?.error) && (
         <NotFoundSource
           btnTitle={t('GO_TO_MY_ORDERS', 'Go to my orders')}
           content={
@@ -457,7 +449,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           handleArrowBack={handleArrowBack}
           logisticOrderStatus={logisticOrderStatus}
         />
-        {order && Object.keys(order).length > 0 && (order?.error?.length < 1 || !order?.error) && (
+        {order && Object.keys(order).length > 0 && (props.order?.error?.length < 1 || !props.order?.error) && (
           <>
             {order?.order_group && order?.order_group_id ? order?.order_group?.orders.map((order: any) => (
               <OrderDetailsInformation order={order} />
@@ -467,6 +459,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </>
         )}
       </View>
+      {alertState?.open && (
+        <Alert
+          open={alertState.open}
+          onAccept={handleArrowBack}
+          onClose={handleArrowBack}
+          content={alertState.content}
+          title={t('WARNING', 'Warning')}
+        />
+      )}
     </>
   );
 };
