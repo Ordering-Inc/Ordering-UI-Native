@@ -40,12 +40,14 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const [time, setTime] = useState('');
   const [comments, setComments] = useState('');
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
-  const phoneNumber = customerCellphone;
-  let codeNumberPhone, numberPhone, numberToShow;
   const { top, bottom } = useSafeAreaInsets()
-  const titleOrder = t(orderTitle[action].key, orderTitle[action].text)
-  const buttonText = t(orderTitle[action].btnKey, orderTitle[action].btnText)
+
+  let codeNumberPhone, numberPhone, numberToShow;
+  const phoneNumber = customerCellphone;
+  const titleOrder = t(orderTitle[action]?.key, orderTitle[action]?.text)
+  const buttonText = t(orderTitle[action]?.btnKey, orderTitle[action]?.btnText)
   const showTextArea = ['reject', 'deliveryFailed', 'pickupFailed', 'notReady'].includes(action)
+
   const handleFocus = () => {
     viewRef?.current?.measure((x: any, y: any) => {
       scrollViewRef?.current?.scrollTo({ x: 0, y });
@@ -210,7 +212,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
 
     bodyToSend.id = orderId;
-
     handleUpdateOrder && handleUpdateOrder(bodyToSend.status, bodyToSend);
   };
 
