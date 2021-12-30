@@ -117,6 +117,7 @@ export interface LanguageSelectorParams {
 	handleChangeLanguage?: any;
 	iconColor?: any;
 	pickerStyle?: any;
+	allowLoading?: boolean;
 }
 export interface BusinessesListingParams {
 	navigation?: any;

@@ -7,6 +7,7 @@ import OIconButton from './OIconButton'
 import OIconText from './OIconText'
 import OInput from './OInput'
 import OKeyButton from './OKeyButton'
+import OLink from './OLink'
 import OModal from './OModal'
 import OText from './OText'
 import OTextarea from './OTextarea'
@@ -24,6 +25,7 @@ export {
 	OTextarea,
 	OToggle,
 	OKeyButton,
+  OLink,
 	OAlert,
   OModal,
 	OBottomPopup,

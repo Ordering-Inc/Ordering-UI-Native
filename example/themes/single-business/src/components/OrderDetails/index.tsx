@@ -36,7 +36,7 @@ import {
 	OrderDriver,
 	Map,
 } from './styles';
-import { OButton, OIcon, OModal, OText } from '../shared';
+import { OButton, OIcon, OModal, OText, OLink } from '../shared';
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { OrderDetailsParams } from '../../types';
@@ -487,19 +487,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 										{order?.business?.name}
 									</OText>
 									<Icons>
-										<TouchableOpacity
-											onPress={() =>
-												props.navigation.navigate('Business', {
-													store: businessData?.slug,
-												})
-											}
-											style={{ paddingEnd: 5 }}>
-											<OIcon
-												src={theme.images.general.phone}
-												width={16}
-												color={theme.colors.disabled}
-											/>
-										</TouchableOpacity>
+                    {(!!order?.business?.cellphone || !!order?.business?.phone) && (
+                      <View style={{ paddingEnd: 5 }}>
+                        <OLink
+                          url={`tel:${order?.business?.cellphone ?? order?.business?.phone}`}
+                        >
+                          <OIcon
+                            src={theme.images.general.phone}
+                            width={16}
+                            color={theme.colors.disabled}
+                          />
+                        </OLink>
+                      </View>
+                    )}
 										<TouchableOpacity
 											style={{ paddingStart: 5 }}
 											onPress={() => handleOpenMessagesForBusiness()}>
