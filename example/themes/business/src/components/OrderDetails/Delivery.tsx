@@ -270,7 +270,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 />
               </Pickup>
             )}
-            {(order?.status === 3) && order?.delivery_type === 1 && (
+            {order?.status === 3 && order?.delivery_type === 1 && (
               <View style={{ paddingVertical: 20, marginBottom: 20 }}>
                 <OButton
                   style={styles.btnPickUp}
@@ -285,67 +285,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </View>
             )}
           </>
-
-          <OModal
-            open={openModalForBusiness}
-            order={order}
-            title={`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id}`}
-            entireModal
-            onClose={() => handleCloseModal()}>
-            <Chat
-              type={
-                openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER
-              }
-              orderId={order?.id}
-              messages={messages}
-              order={order}
-              setMessages={setMessages}
-            />
-          </OModal>
-
-          <OModal
-            open={openModalForAccept}
-            onClose={() => setOpenModalForAccept(false)}
-            entireModal
-            customClose>
-            <AcceptOrRejectOrder
-              handleUpdateOrder={handleChangeOrderStatus}
-              closeModal={setOpenModalForAccept}
-              customerCellphone={order?.customer?.cellphone}
-              loading={props.order?.loading}
-              action={actionOrder}
-              orderId={order?.id}
-              notShowCustomerPhone
-              actions={actions}
-              orderTitle={orderTitle}
-              appTitle={appTitle}
-            />
-          </OModal>
-
-          <OModal
-            open={openModalForMapView}
-            onClose={() => handleOpenMapView()}
-            entireModal
-            customClose>
-            <DriverMap
-              navigation={navigation}
-              order={order}
-              orderStatus={getOrderStatus(order?.status, t)?.value || ''}
-              location={locationMarker}
-              readOnly
-              updateDriverPosition={updateDriverPosition}
-              driverUpdateLocation={driverUpdateLocation}
-              setDriverUpdateLocation={setDriverUpdateLocation}
-              handleViewActionOrder={handleViewActionOrder}
-              isBusinessMarker={isBusinessMarker}
-              isToFollow={isToFollow}
-              showAcceptOrReject={
-                showFloatButtonsAcceptOrReject[order?.status]
-              }
-              handleOpenMapView={handleOpenMapView}
-            />
-          </OModal>
-
           <View
             style={{
               height:
@@ -457,6 +396,69 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <OrderDetailsInformation order={order} />
             )}
           </>
+        )}
+        {openModalForMapView && (
+          <OModal
+            open={openModalForMapView}
+            onClose={() => handleOpenMapView()}
+            entireModal
+            customClose>
+            <DriverMap
+              navigation={navigation}
+              order={order}
+              orderStatus={getOrderStatus(order?.status, t)?.value || ''}
+              location={locationMarker}
+              readOnly
+              updateDriverPosition={updateDriverPosition}
+              driverUpdateLocation={driverUpdateLocation}
+              setDriverUpdateLocation={setDriverUpdateLocation}
+              handleViewActionOrder={handleViewActionOrder}
+              isBusinessMarker={isBusinessMarker}
+              isToFollow={isToFollow}
+              showAcceptOrReject={
+                showFloatButtonsAcceptOrReject[order?.status]
+              }
+              handleOpenMapView={handleOpenMapView}
+            />
+          </OModal>
+        )}
+        {openModalForBusiness && (
+          <OModal
+            open={openModalForBusiness}
+            order={order}
+            title={`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id}`}
+            entireModal
+            onClose={() => handleCloseModal()}>
+            <Chat
+              type={
+                openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER
+              }
+              orderId={order?.id}
+              messages={messages}
+              order={order}
+              setMessages={setMessages}
+            />
+          </OModal>
+        )}
+        {openModalForAccept && (
+          <OModal
+            open={openModalForAccept}
+            onClose={() => setOpenModalForAccept(false)}
+            entireModal
+            customClose>
+            <AcceptOrRejectOrder
+              handleUpdateOrder={handleChangeOrderStatus}
+              closeModal={setOpenModalForAccept}
+              customerCellphone={order?.customer?.cellphone}
+              loading={props.order?.loading}
+              action={actionOrder}
+              orderId={order?.id}
+              notShowCustomerPhone
+              actions={actions}
+              orderTitle={orderTitle}
+              appTitle={appTitle}
+            />
+          </OModal>
         )}
       </View>
       {alertState?.open && (

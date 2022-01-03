@@ -526,9 +526,9 @@ export interface TagsParams {
 interface actions {
   accept: string;
   reject: string;
-  pickupFailed: string;
-  deliveryFailed: string;
-  notReady: string;
+  pickupFailed?: string;
+  deliveryFailed?: string;
+  notReady?: string;
 }
 
 interface textTranslate {
