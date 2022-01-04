@@ -288,7 +288,7 @@ const LoginFormUI = (props: LoginParams) => {
                   handleData={(val: any) => setPhoneInputData(val)}
                   textInputProps={{
                     returnKeyType: 'next',
-                    onSubmitEditing: () => inputRef.current.focus(),
+                    onSubmitEditing: () => inputRef?.current?.focus?.(),
                   }}
                 />
               </View>
