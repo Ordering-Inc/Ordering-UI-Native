@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   ProductForm as ProductOptions,
   useSession,
@@ -9,7 +9,7 @@ import {
 import { useTheme } from 'styled-components/native';
 import { ProductIngredient } from '../ProductIngredient';
 import { ProductOption } from '../ProductOption';
-import { View, TouchableOpacity, StyleSheet, Dimensions, Platform, useWindowDimensions, Keyboard } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, Platform, useWindowDimensions, Keyboard, KeyboardAvoidingView } from 'react-native';
 
 import {
   ProductHeader,
@@ -120,7 +120,7 @@ export const ProductOptionsUI = (props: any) => {
   const { top, bottom } = useSafeAreaInsets();
   const { height } = useWindowDimensions();
   const [selOpt, setSelectedOpt] = useState(0);
-
+  const scrollViewRef = useRef<any>()
   const isError = (id: number) => {
     let bgColor = theme.colors.white;
     if (errors[`id:${id}`]) {
@@ -241,6 +241,7 @@ export const ProductOptionsUI = (props: any) => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       () => {
+        scrollViewRef?.current && scrollViewRef?.current?.scrollToEnd()
         setIsKeyboardShow(true);
       }
     );
@@ -259,7 +260,7 @@ export const ProductOptionsUI = (props: any) => {
 
   return (
     <>
-      <ScrollView style={{ height: windowHeight * 0.85 }}>
+      <ScrollView ref={scrollViewRef}>
         {!error && (
           <>
             <WrapHeader>
@@ -560,7 +561,7 @@ export const ProductOptionsUI = (props: any) => {
                       )}
                     </>
                   )}
-                  <ProductComment style={{ paddingBottom: isKeyboardShow ? 200 : 0 }}>
+                  <ProductComment>
                     <SectionTitle>
                       <OText size={16} weight={'600'} lineHeight={24}>
                         {t('SPECIAL_COMMENT', 'Special comment')}
@@ -597,7 +598,7 @@ export const ProductOptionsUI = (props: any) => {
         )}
       </ScrollView>
       {!loading && !error && product && (
-        <ProductActions style={{ maxHeight: windowHeight * 0.15 }}>
+        <ProductActions>
           <OText size={16} lineHeight={24} weight={'600'}>
             {productCart.total ? parsePrice(productCart?.total) : ''}
           </OText>
