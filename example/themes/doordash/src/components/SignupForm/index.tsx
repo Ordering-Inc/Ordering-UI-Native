@@ -426,7 +426,7 @@ const SignupFormUI = (props: SignupParams) => {
 															returnKeyType='next'
 															blurOnSubmit={false}
 															forwardRef={(ref: any) => handleRefs(ref, field.code)}
-															onSubmitEditing={() => field.code === 'email' ? phoneRef.current.focus() : handleFocusRef(getNextFieldCode(i))}
+															onSubmitEditing={() => field.code === 'email' ? phoneRef?.current?.focus?.() : handleFocusRef(getNextFieldCode(i))}
 															inputStyle={{ color: theme.colors.textPrimary, fontSize: 12 }}
 														/>
 													)}
@@ -451,7 +451,7 @@ const SignupFormUI = (props: SignupParams) => {
 											forwardRef={phoneRef}
 											textInputProps={{
 												returnKeyType: 'next',
-												onSubmitEditing: () => passwordRef.current.focus(),
+												onSubmitEditing: () => passwordRef?.current?.focus?.(),
 												style: { borderWidth: 0, fontSize: 12 }
 											}}
 											textWrapStyle={{ borderColor: theme.colors.clear, borderWidth: 0, height: 40, paddingStart: 0 }}

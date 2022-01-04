@@ -535,7 +535,7 @@ const LoginFormUI = (props: LoginParams) => {
                 onSubmitEditing={() => null}
                 textInputProps={{
                   returnKeyType: 'next',
-                  onSubmitEditing: () => inputRef.current.focus(),
+                  onSubmitEditing: () => inputRef?.current?.focus?.(),
                 }}
               />
             </View>

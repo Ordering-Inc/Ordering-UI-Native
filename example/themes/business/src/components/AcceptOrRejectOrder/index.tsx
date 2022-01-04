@@ -138,7 +138,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
     if (!isFocus) {
       if (time.length > 1) timerRef.current.clear();
-      timerRef.current.focus();
+      timerRef?.current?.focus?.();
       handleFocusTimer();
     }
   };
@@ -150,7 +150,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
 
     if (!isFocus && textTareaRef?.current) {
-      textTareaRef.current.focus();
+      textTareaRef?.current?.focus?.();
     }
   };
 
@@ -163,7 +163,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
     const time = parseInt(hour || '0') * 60 + (parseInt(minsToSend) || 0);
 
-    let bodyToSend;
+    let bodyToSend : any = {};
     const orderStatus: any = {
       acceptByBusiness: {
         prepared_in: time,

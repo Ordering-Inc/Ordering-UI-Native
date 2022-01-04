@@ -425,7 +425,7 @@ const SignupFormUI = (props: SignupParams) => {
 													forwardRef={(ref: any) => handleRefs(ref, field.code)}
 													onSubmitEditing={() =>
 														field.code === 'email'
-															? phoneRef.current.focus()
+															? phoneRef?.current?.focus?.()
 															: handleFocusRef(getNextFieldCode(i))
 													}
 												/>
@@ -445,7 +445,7 @@ const SignupFormUI = (props: SignupParams) => {
 										forwardRef={phoneRef}
 										textInputProps={{
 											returnKeyType: 'next',
-											onSubmitEditing: () => passwordRef.current.focus(),
+											onSubmitEditing: () => passwordRef?.current?.focus?.(),
 										}}
 									/>
 								</View>
