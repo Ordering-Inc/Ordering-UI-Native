@@ -250,7 +250,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             {order?.customer?.zipcode}
           </OText>
         )}
-        {!order?.user_review && pastOrderStatuses.includes(order?.status) && !isCustomerReviewed && (
+        {/* {!order?.user_review && pastOrderStatuses.includes(order?.status) && !isCustomerReviewed && (
           <OButton
             style={styles.btnReview}
             textStyle={{ color: theme.colors.white }}
@@ -258,7 +258,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             imgRightSrc={false}
             onClick={() => setOpenReviewModal(true)}
           />
-        )}
+        )} */}
       </OrderCustomer>
 
       <OrderProducts>
