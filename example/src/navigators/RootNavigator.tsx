@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import OneSignal from 'react-native-onesignal';
+import NetInfo from '@react-native-community/netinfo'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(utc)
@@ -14,19 +15,23 @@ import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import Forgot from '../pages/ForgotPassword';
 import Home from '../pages/Home';
+import IntroductoryTutorial from '../pages/IntroductoryTutorial';
 import AddressForm from '../pages/AddressForm';
 import MomentOption from '../pages/MomentOption';
 import Splash from '../pages/Splash';
 import BusinessList from '../pages/BusinessesListing';
 import BusinessProductsList from '../pages/BusinessProductsList';
+import NotFound from '../pages/NotFound'
 import HomeNavigator from './HomeNavigator';
 import settings from '../config.json';
+import NetworkError from '../pages/NetworkError';
+
 import * as RootNavigation from '../navigators/NavigationRef';
-import { _retrieveStoreData } from '../providers/StoreUtil';
+import { _retrieveStoreData, _setStoreData } from '../providers/StoreUtil';
 
 const Stack = createStackNavigator();
-
 const RootNavigator = () => {
+  const [orderId, setOrderId] = useState(null)
   const [{ auth, loading: sessionLoading }] = useSession();
   const [orderStatus, { changeMoment }] = useOrder();
   const [{ configs, loading: configsLoading }] = useConfig();
@@ -35,8 +40,11 @@ const RootNavigator = () => {
   const [oneSignalState, setOneSignalState] = useState<any>({
     notification_app: settings.notification_app
   });
-
+  const [ isTutorial, setTutorial] = useState(true)
   const [isPushLoading, setIsPushLoading] = useState({ loading: true })
+  const [connectionState, setConnectionState] = useState<{
+    connection_status: boolean;
+  } | null>(null);
 
   const validDate = (date : any) => {
     if (!date) return
@@ -53,17 +61,14 @@ const RootNavigator = () => {
     OneSignal.setAppId(configs?.onesignal_orderingapp_id?.value);
 
     if (Platform.OS === 'ios') {
-      OneSignal.promptForPushNotificationsWithUserResponse(response => {
+      OneSignal.promptForPushNotificationsWithUserResponse((response : any) => {
         console.log('Prompt response:', response);
       });
     }
 
     OneSignal.setNotificationOpenedHandler(({ notification }: any) => {
-      if (notification?.additionalData?.order_uuid) {
-        RootNavigation.navigate('OrderDetails', {
-          orderId: notification?.additionalData?.order_uuid,
-          isFromRoot: true
-        });
+      if(notification?.additionalData?.order_uuid) {
+        setOrderId(notification?.additionalData?.order_uuid)
       }
     });
 
@@ -87,12 +92,32 @@ const RootNavigator = () => {
     setOneSignalState(data);
     setIsPushLoading({ loading: false });
   };
-
   useEffect(() => {
     if (!loaded && !orderStatus.loading && !isPushLoading.loading) {
       setLoaded(true)
     }
   }, [orderStatus, isPushLoading])
+
+  useEffect(() => {
+    if (orderId && loaded && auth) {
+      RootNavigation.navigate('OrderDetails', {
+        orderId: orderId,
+        isFromRoot: true
+      });
+
+      setOrderId(null)
+    }
+  }, [loaded, orderId])
+
+  useEffect(() => {
+    const setTutorialLocal = async () => {
+      const data = await _retrieveStoreData('isTutorial');
+      if(data === false){
+        setTutorial(false)
+      }
+    }
+    setTutorialLocal();
+  }, [isTutorial])
 
   useEffect(() => {
     if (!sessionLoading && !isPushLoading.loading && !auth) {
@@ -127,6 +152,19 @@ const RootNavigator = () => {
     }
   }, [configsLoading]);
 
+  let netInfoSuscription : any = null
+  useEffect(() => {
+    netInfoSuscription = NetInfo.addEventListener(handleConnectivityChange);
+
+    return () => {
+      netInfoSuscription && netInfoSuscription()
+    }
+  }, []);
+
+  const handleConnectivityChange = (state : any) => {
+    setConnectionState({ connection_status: state.isConnected });
+  };
+
   return (
     <Stack.Navigator>
       {
@@ -139,15 +177,22 @@ const RootNavigator = () => {
         )
       }
       {
-        loaded && (
+        loaded && connectionState?.connection_status && (
           <>
             {!auth ? (
               <>
-                <Stack.Screen
-                  name="Home"
-                  component={Home}
-                  options={{ headerShown: false }}
-                />
+                { isTutorial ? (
+                  <Stack.Screen
+                    name="IntroductoryTutorial"
+                    component={IntroductoryTutorial}
+                    options={{ headerShown: false }}
+                    initialParams={{ setTutorial }}
+                  />):(
+                  <Stack.Screen
+                    name="Home"
+                    component={Home}
+                    options={{ headerShown: false }}
+                  />)}
                 <Stack.Screen
                   name="Login"
                   component={Login}
@@ -205,8 +250,20 @@ const RootNavigator = () => {
           </>
         )
       }
+      {connectionState?.connection_status === false ? (
+        <Stack.Screen
+          name='NetworkError'
+          component={NetworkError}
+          options={{ headerShown: false }}
+        />
+      ) : (
+        <Stack.Screen
+          name='NotFound'
+          component={NotFound}
+          options={{ headerShown: false }}
+        />
+      )}
     </Stack.Navigator>
   );
 };
-
 export default RootNavigator;

@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { OButton, OIcon, OText } from '../shared'
 import { ActiveOrdersContainer, Card, Map, Information, Logo, OrderInformation, BusinessInformation, Price } from './styles'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import { getGoogleMapImage } from '../../utils'
 
 import { ActiveOrdersParams } from '../../types'
+import { ScrollView as GestureHandlerScrollView } from 'react-native-gesture-handler'
 
 export const ActiveOrders = (props: ActiveOrdersParams) => {
   const {
@@ -14,19 +15,39 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
     orders,
     pagination,
     loadMoreOrders,
-    getOrderStatus
+    getOrderStatus,
+    isPreorders,
+    preordersLength
   } = props
 
   const theme = useTheme()
   const [{configs}] = useConfig()
   const [, t] = useLanguage()
   const [{ parseDate, parsePrice, optimizeImage }] = useUtils()
+  const containerRef = useRef<any>()
 
   const handleClickCard = (uuid: string) => {
     onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: uuid })
   }
+  const scrollToBegin = () => {
+    containerRef?.current?.scrollTo({x: 0, y: 0, animated: true})
+  }
 
-  const Order = ({ order, index }: { order: any, index: number }) => (
+  const scrollToEnd = () => {
+    containerRef?.current?.scrollTo({x: 330 * (orders?.length - preordersLength - pagination.pageSize + 1 || 0), y: 0,  animated: true})
+  }
+
+  useEffect(() => {
+      scrollToBegin()
+  }, [isPreorders])
+
+  useEffect(() => {
+    if(orders.length > 10){
+      scrollToEnd()
+    }
+  }, [orders.length])
+
+  const Order = ({ order }: { order: any }) => (
     <React.Fragment>
       <Card
         isMiniCard={configs?.google_maps_api_key?.value}
@@ -53,19 +74,35 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
           )}
           <OrderInformation>
             <BusinessInformation style={{ width: '60%' }}>
-              <View>
-                <OText
-                  size={16}
-                  numberOfLines={1}
-                  ellipsizeMode='tail'
-                >
-                  {order.business?.name}
-                </OText>
-              </View>
-              <View style={styles.orderNumber}>
-                <OText size={12} space color={theme.colors.textSecondary}>{t('ORDER_NUMBER', 'Order No.')}</OText>
-                <OText size={12} color={theme.colors.textSecondary}>{order.id}</OText>
-              </View>
+              <GestureHandlerScrollView
+                  showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false}
+                  horizontal
+              >
+                <TouchableWithoutFeedback>
+                  <View>
+                    <OText
+                      size={16}
+                      numberOfLines={1}
+                      ellipsizeMode='tail'
+                    >
+                      {order.business?.name}
+                    </OText>
+                  </View>
+                </TouchableWithoutFeedback>
+              </GestureHandlerScrollView>
+              <GestureHandlerScrollView
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+              >
+                <TouchableWithoutFeedback>
+                  <View style={styles.orderNumber}>
+                    <OText size={12} space color={theme.colors.textSecondary}>{t('ORDER_NUMBER', 'Order No.')}</OText>
+                    <OText size={12} color={theme.colors.textSecondary}>{order.id}</OText>
+                  </View>
+                </TouchableWithoutFeedback>
+              </GestureHandlerScrollView>
               <OText size={12} color={theme.colors.textSecondary}>{order?.delivery_datetime_utc
                 ? parseDate(order?.delivery_datetime_utc)
                 : parseDate(order?.delivery_datetime, { utc: false })}</OText>
@@ -79,7 +116,26 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
           </OrderInformation>
         </Information>
       </Card>
-      {pagination?.totalPages && pagination?.currentPage < pagination?.totalPages && index === (10 * pagination?.currentPage) - 1 && (
+    </React.Fragment>
+  )
+
+  return (
+    <ActiveOrdersContainer
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+      horizontal
+      isMiniCards={configs?.google_maps_api_key?.value}
+      ref={containerRef}
+    >
+      {orders.length > 0 && (
+        orders.map((order: any) => (
+          <Order
+            key={order?.id || order?.uuid}
+            order={order}
+          />
+        ))
+      )}
+      {!isPreorders && pagination?.totalPages && pagination?.currentPage < pagination?.totalPages && (
         <Card
           style={{ ...styles.loadOrders, height: configs?.google_maps_api_key?.value ? 200 : 100 }}
           onPress={loadMoreOrders}
@@ -93,25 +149,6 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
             onClick={loadMoreOrders}
           />
         </Card>
-      )}
-    </React.Fragment>
-  )
-
-  return (
-    <ActiveOrdersContainer
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-      horizontal
-      isMiniCards={configs?.google_maps_api_key?.value}
-    >
-      {orders.length > 0 && (
-        orders.map((order: any, index: any) => (
-          <Order
-            key={order?.id || order?.uuid}
-            order={order}
-            index={index}
-          />
-        ))
       )}
     </ActiveOrdersContainer>
   )

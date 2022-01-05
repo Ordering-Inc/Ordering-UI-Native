@@ -51,7 +51,7 @@ const BottomNavigator = () => {
         component={BusinessList}
         options={{
           tabBarIcon:
-            ({ color }) => (
+            ({ color }: any) => (
               <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0  }}>
                 <MaterialCommunityIcon name='home' size={46} color={color} />
               </View>
@@ -64,7 +64,7 @@ const BottomNavigator = () => {
         options={
           {
             tabBarIcon:
-              ({ color }) => (
+              ({ color }: any) => (
                 <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0 }}>
                   <MaterialIcon name='format-list-bulleted' size={46} color={color} />
                 </View>
@@ -76,7 +76,7 @@ const BottomNavigator = () => {
         component={CartList}
         options={{
           tabBarIcon:
-            ({ color }) => (
+            ({ color }: any) => (
               <View style={{
                   width: 50,
                   height: 50,
@@ -104,7 +104,7 @@ const BottomNavigator = () => {
         component={Profile}
         options={{
           tabBarIcon:
-            ({ color }) => (
+            ({ color }: any) => (
               <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0  }}>
                 <MaterialIcon name='person' size={46} color={color} />
               </View>

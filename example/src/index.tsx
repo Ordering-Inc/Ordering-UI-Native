@@ -1,7 +1,9 @@
+import { Account } from './components/Account';
 import { ActiveOrders } from './components/ActiveOrders';
 import { AddressDetails } from './components/AddressDetails';
 import { AddressForm } from './components/AddressForm';
 import { AddressList } from './components/AddressList';
+import { Analytics } from './components/Analytics'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation';
 import { BusinessController } from './components/BusinessController';
 import { BusinessInformation } from './components/BusinessInformation';
@@ -21,14 +23,20 @@ import { FacebookLogin } from './components/FacebookLogin';
 import { FloatingButton } from './components/FloatingButton';
 import { ForgotPasswordForm } from './components/ForgotPasswordForm';
 import { GoogleMap } from './components/GoogleMap';
+import { Help } from './components/Help';
+import { HelpAccountAndPayment } from './components/HelpAccountAndPayment';
+import { HelpGuide } from './components/HelpGuide';
+import { HelpOrder } from './components/HelpOrder';
 import { Home } from './components/Home';
 import { LanguageSelector } from './components/LanguageSelector';
+import { LastOrders } from './components/LastOrders';
 import { LoginForm } from './components/LoginForm';
 import { LogoutButton } from './components/LogoutButton';
 import { Messages } from './components/Messages';
 import { MomentOption } from './components/MomentOption';
 import NavBar from './components/NavBar';
 import { NotFoundSource } from './components/NotFoundSource';
+import { OrderCreating } from './components/OrderCreating';
 import { OrderDetails } from './components/OrderDetails';
 import { OrderSummary } from './components/OrderSummary';
 import { OrderTypeSelector } from './components/OrderTypeSelector';
@@ -43,7 +51,9 @@ import { ProductIngredient } from './components/ProductIngredient';
 import { ProductItemAccordion } from './components/ProductItemAccordion';
 import { ProductOption } from './components/ProductOption';
 import { ProductOptionSubOption } from './components/ProductOptionSubOption';
+import { ReviewDriver } from './components/ReviewDriver';
 import { ReviewOrder } from './components/ReviewOrder';
+import { ReviewProducts } from './components/ReviewProducts';
 import { SearchBar } from './components/SearchBar';
 import { SignupForm } from './components/SignupForm';
 import { SingleProductCard } from './components/SingleProductCard';
@@ -56,6 +66,7 @@ import { UserDetails } from './components/UserDetails';
 import { UserFormDetailsUI } from './components/UserFormDetails';
 import { UserProfileForm } from './components/UserProfileForm';
 import { VerifyPhone } from './components/VerifyPhone';
+import { HelpParams } from './types';
 import {
   OAlert,
   OBottomPopup,
@@ -71,6 +82,7 @@ import {
 
 // layouts
 import { Container } from './layouts/Container';
+import { FloatingBottomContainer } from './layouts/FloatingBottomContainer';
 import { SafeAreaContainer } from './layouts/SafeAreaContainer';
 
 // providers
@@ -80,14 +92,16 @@ import { StoreMethods } from './providers/StoreUtil';
 // contexts
 import { ThemeProvider, useTheme } from './context/Theme';
 
-// themes
-import ThemeKiosk from './themes/kiosk'
+// hooks
+import { DeviceOrientationMethods } from './hooks/DeviceOrientation';
 
 export {
+  Account,
   ActiveOrders,
   AddressDetails,
   AddressForm,
   AddressList,
+  Analytics,
   BusinessBasicInformation,
   BusinessController,
   BusinessInformation,
@@ -107,14 +121,20 @@ export {
   FloatingButton,
   ForgotPasswordForm,
   GoogleMap,
+  Help,
+  HelpAccountAndPayment,
+  HelpGuide,
+  HelpOrder,
   Home,
   LanguageSelector,
+  LastOrders,
   LoginForm,
   LogoutButton,
   Messages,
   MomentOption,
   NavBar,
   NotFoundSource,
+  OrderCreating,
   OrderDetails,
   OrderSummary,
   OrderTypeSelector,
@@ -129,7 +149,9 @@ export {
   ProductItemAccordion,
   ProductOption,
   ProductOptionSubOption,
+  ReviewDriver,
   ReviewOrder,
+  ReviewProducts,
   SearchBar,
   SignupForm,
   SingleProductCard,
@@ -154,6 +176,7 @@ export {
   OToast,
   // layouts
   Container,
+  FloatingBottomContainer,
   SafeAreaContainer,
   // providers
   Alert,
@@ -161,6 +184,8 @@ export {
   // contexts
   ThemeProvider,
   useTheme,
-  // themes
-  ThemeKiosk
+  // hooks
+  DeviceOrientationMethods,
+  //types
+  HelpParams,
 }

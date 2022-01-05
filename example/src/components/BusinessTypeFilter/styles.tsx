@@ -23,7 +23,7 @@ export const BusinessCategories = styled.View`
 `
 export const Category = styled.View`
   height: 150px;
-  min-width: 90px;
+  width: 100px;
   margin-right: 15px;
   display: flex;
   flex-direction: column;

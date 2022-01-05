@@ -26,6 +26,7 @@ export const BusinessItemAccordion = (props: any) => {
   const [orderState] = useOrder();
   const [, t] = useLanguage();
   const [{ parsePrice }] = useUtils();
+  const [alert, setAlert] = useState<any>({ show: false })
 
   const isCartPending = cart?.status === 2
   const isClosed = !cart?.valid_schedule
@@ -110,17 +111,20 @@ export const BusinessItemAccordion = (props: any) => {
           {!isClosed && !!isProducts && (
             <>
               {!isCartPending && (
-                <OAlert
-                  title={t('DELETE_CART', 'Delete Cart')}
-                  message={t('QUESTION_DELETE_CART', 'Are you sure to you wants delete the selected cart')}
-                  onAccept={() => handleClearProducts()}
-                >
-                  <MaterialCommunityIcon
-                    name='trash-can-outline'
-                    size={26}
-                    color='#D81212'
-                  />
-                </OAlert>
+                <MaterialCommunityIcon
+                  name='trash-can-outline'
+                  size={26}
+                  color='#D81212'
+                  onPress={() => setAlert({
+                    show: true,
+                    title: t('DELETE_CART', 'Delete Cart'),
+                    onAccept: () => {
+                      handleClearProducts && handleClearProducts()
+                      setAlert({ show: false })
+                    },
+                    content: [t('QUESTION_DELETE_CART', 'Are you sure to you wants delete the selected cart')]
+                  })}
+                />
               )}
               <MaterialCommunityIcon name='chevron-down' size={20} />
             </>
@@ -131,6 +135,14 @@ export const BusinessItemAccordion = (props: any) => {
       <BIContent style={{ display: isActive ? 'flex' : 'none' }}>
         {props.children}
       </BIContent>
+      <OAlert
+        open={alert.show}
+        title={alert.title}
+        onAccept={alert.onAccept}
+        onClose={() => setAlert({ show: false })}
+        onCancel={() => setAlert({ show: false })}
+        content={alert.content}
+      />
     </BIContainer>
   )
 }

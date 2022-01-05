@@ -31,23 +31,36 @@
     "backgroundDark": "#484848",
     "backgroundGray": "#CCCCCC",
     "clear": "transparent",
-    "error": "#C90800",
+    "error": "#D83520",
     "success": "#90C68E",
     "btnFont": "black",
     "inputDisabled": "#F7F7F7",
     "textSecondary": "#858585",
     "editColor": "#F2BB40",
     "cancelColor": "#D81212",
-    "black": "#000000"
+    "black": "#000000",
+    "colorTextTutorial": "#000000",
+    "toastSuccess":"#90C68E",
+    "toastError":"#D83520",
+    "toastInfo":"#6BA4FF"
   },
   "images": {
     "logos": {
       "logotype": "",
       "logotypeInvert": ""
     },
+    "tutorials":{
+      "slide1": "",
+      "slide2": "",
+      "slide3": "",
+      "slide4": "",
+      "slide5": "",
+      "slide6": ""
+    },
     "general": {
       "homeHero": "",
       "notFound": "",
+      "loadingSplash": "",
       "emptyActiveOrders": "",
       "emptyPastOrders": "",
       "menu": "",
@@ -73,7 +86,12 @@
       "stripecc": "",
       "stripes": "",
       "stripesb": "",
-      "creditCard": ""
+      "creditCard": "",
+      "help": "",
+      "close": "",
+      "orderCreating": "",
+      "orderSuccess": "",
+      "newOrder": ""
     },
     "order": {
       "status0": "",
@@ -108,6 +126,8 @@
       "driverPhoto": "",
       "customerPhoto": ""
     }
+  },
+  "sounds": {
+    "notification": ""
   }
 }
-

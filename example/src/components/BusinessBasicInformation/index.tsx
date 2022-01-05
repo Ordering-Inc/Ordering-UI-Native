@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import IconEvilIcons from 'react-native-vector-icons/EvilIcons'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native'
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 
@@ -84,14 +84,20 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
               </Placeholder>
             ) : (
               <View style={{ maxWidth: '75%', justifyContent: 'flex-start' }}>
-                <OText
-                  size={20}
-                  weight='bold'
-                  numberOfLines={1}
-                  ellipsizeMode='tail'
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false}
+                  horizontal
                 >
-                  {business?.name}
-                </OText>
+                  <OText
+                    size={20}
+                    weight='bold'
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                  >
+                    {business?.name}
+                  </OText>
+                </ScrollView>
               </View>
             )}
             {!isBusinessInfoShow && (
@@ -159,6 +165,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
             <OText color={theme.colors.textSecondary} style={styles.metadata}>{business && parsePrice(business?.delivery_price || 0)}</OText>
           </BusinessInfoItem>
         </View>
+        {!loading && (
           <WrapReviews>
             <View style={styles.reviewStyle}>
               <IconAntDesign
@@ -174,7 +181,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
                 <OText color={theme.colors.primary}>{t('SEE_REVIEWS', 'See reviews')}</OText>
               </TouchableOpacity>
             )}
-          </WrapReviews>
+          </WrapReviews>)}
       </BusinessInfo>
       <OModal
         titleSectionStyle={styles.modalTitleSectionStyle}

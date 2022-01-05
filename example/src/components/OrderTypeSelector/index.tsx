@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   OrderTypeControl,
   useLanguage,
   useOrder
 } from 'ordering-components/native'
-import {StyleSheet, Platform} from 'react-native'
-import { OrderTypeWrapper } from './styles'
-import { OrderTypeSelectParams } from '../../types'
-import RNPickerSelect from 'react-native-picker-select'
+import { StyleSheet, TouchableOpacity, View, ActivityIndicator, Platform } from 'react-native'
+import Picker from 'react-native-country-picker-modal';
 import { useTheme } from 'styled-components/native'
+
+import { OrderTypeWrapper, SelectItem, SelectItemBtn } from './styles'
+import { OrderTypeSelectParams } from '../../types'
+import { OText } from '../shared'
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   const {
@@ -20,71 +22,103 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
   } = props
 
   const theme = useTheme();
+  const [orderState] = useOrder();
+  const [isOpen, setIsOpen] = useState(false);
+  const [optionSelected, setOptionSelected] = useState<any>(null)
+  let currentDriver;
 
-  const pickerStyle = StyleSheet.create({
-    inputAndroid: {
-      color: theme.colors.secundaryContrast,
-      borderWidth: 1,
-      borderColor: 'transparent',
-      borderRadius: 10,
-      paddingHorizontal: 20,
-      backgroundColor: theme.colors.inputDisabled,
-      fontSize: 15
+  const styles = StyleSheet.create({
+    itemSelected: {
+      backgroundColor: theme.colors.disabled,
     },
-    inputIOS: {
-      color: theme.colors.secundaryContrast,
-      paddingEnd: 20,
-      height: 50,
-      borderWidth: 1,
-      borderColor: 'transparent',
-      borderRadius: 10,
-      paddingHorizontal: 20,
-      backgroundColor: theme.colors.inputDisabled,
-      fontSize: 15
-    },
-    icon: {
-      top: Platform.OS === 'ios' ? 10 : 15,
-      right: Platform.OS === 'ios' ? 0 : 7,
-      position: 'absolute',
-      fontSize: 20
-    },
-    placeholder: {
-      color: theme.colors.secundaryContrast
+    closeBtn: {
+      width: 40,
+      height: 40,
     }
   })
-
-  const [orderState] = useOrder()
-  const [open,setOpen] = useState(false)
 
   const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value))
 
-  const items = _orderTypes.map((type) => {
+  const items: any[] = _orderTypes.map((type) => {
     return {
+      key: type.value,
       value: type.value,
-      label: type.content,
-      inputLabel: type.content
+      label: type.content
     }
   })
 
-  const handleChangeOrderTypeCallback = (orderType : number) => {
+  const typeSelectedObj: any = items.find(item => item.value === (defaultValue || typeSelected)) || {}
+
+  const handleChangeOrderTypeCallback = (orderType: number) => {
+    setOptionSelected(orderType)
     if(!orderState.loading){
       handleChangeOrderType(orderType)
     }
   }
 
+  useEffect(() => {
+    if (optionSelected === orderState?.options?.type && !orderState.loading) {
+      setIsOpen(false)
+    }
+  }, [orderState])
+
   return (
     typeSelected !== undefined && (
       <OrderTypeWrapper>
-        <RNPickerSelect
-          onValueChange={(orderType: any) => handleChangeOrderTypeCallback(orderType)}
-          items={items}
-          placeholder={{}}
-          style={pickerStyle}
-          value={defaultValue || typeSelected}
-          onOpen={() => setOpen(true)}
-          onClose={() => setOpen(false)}
-          useNativeAndroidPickerStyle={false}
-          disabled={orderState.loading && !open}
+        <Picker
+          countryCodes={currentDriver}
+          visible={isOpen}
+          onClose={() => setIsOpen(false)}
+          withCountryNameButton
+          // @ts-ignore
+          closeButtonStyle={{
+            width: '100%',
+            alignItems: 'flex-end',
+            padding: 10
+          }}
+          closeButtonImageStyle={Platform.OS === 'ios' && styles.closeBtn}
+          renderFlagButton={() => (
+            <>
+              <TouchableOpacity
+                onPress={() => setIsOpen(true)}
+                disabled={items.length === 0 || orderState.loading}
+              >
+                <SelectItemBtn>
+                  <OText
+                    color={theme.colors.secundaryContrast}
+                    size={14}
+                  >
+                    {typeSelectedObj.label}
+                  </OText>
+                </SelectItemBtn>
+              </TouchableOpacity>
+            </>
+          )}
+          flatListProps={{
+            keyExtractor: (item: any) => item.value,
+            data: items || [],
+            renderItem: ({ item }: any) => (
+              <TouchableOpacity
+                style={typeSelectedObj.value === item.value && styles.itemSelected}
+                disabled={typeSelectedObj.value === item.value || orderState.loading}
+                onPress={() => handleChangeOrderTypeCallback(item.value)}
+              >
+                <SelectItem>
+                  <View style={{ width: 40 }}>
+                    {optionSelected === item.value && orderState.loading && (
+                      <ActivityIndicator size="small" color={theme.colors.primary} />
+                    )}
+                  </View>
+                  <OText
+                    size={14}
+                    style={{ marginRight: 10 }}
+                  >
+                    {item.label}
+                  </OText>
+                </SelectItem>
+              </TouchableOpacity>
+            ),
+          }}
         />
       </OrderTypeWrapper>
     )

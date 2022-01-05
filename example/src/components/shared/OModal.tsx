@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Modal, StyleSheet, Text, SafeAreaView, View } from "react-native";
+import { Modal, StyleSheet, Text, SafeAreaView, View, Platform } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
+import styled from 'styled-components/native'
 
 interface Props {
   open?: boolean;
@@ -16,8 +17,12 @@ interface Props {
   isNotDecoration?: boolean;
   style?: any;
   styleCloseButton?: any;
+  isAvoidKeyBoardView?: boolean;
 }
-
+const KeyboardView = styled.KeyboardAvoidingView`
+  flex-grow: 1;
+  flex-shrink: 1;
+`;
 const OModal = (props: Props): React.ReactElement => {
   const {
     open,
@@ -30,9 +35,44 @@ const OModal = (props: Props): React.ReactElement => {
     titleSectionStyle,
     isNotDecoration,
     style,
-    styleCloseButton
+    styleCloseButton,
+    isAvoidKeyBoardView
   } = props
-
+  const RenderSafeAreaView = () => (
+    <SafeAreaView style={styles.container}>
+          {!entireModal ? (
+            <View style={styles.centeredView}>
+              <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
+                <View style={styles.wrapperIcon}>
+                  <Icon
+                    name="x"
+                    size={35}
+                    style={isNotDecoration && (styleCloseButton || styles.cancelBtn)}
+                    onPress={onClose}
+                  />
+                </View>
+                <Text style={styles.modalText}>{title}</Text>
+              </View>
+              {children}
+            </View>
+          ) :
+            <>
+              {!customClose && (
+                <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
+                  <Icon
+                    name="x"
+                    size={35}
+                    style={styleCloseButton || styles.cancelBtn}
+                    onPress={onClose}
+                  />
+                  <Text style={styles.modalText}>{title}</Text>
+                </View>
+              )}
+              {children}
+            </>
+          }
+    </SafeAreaView>
+  )
   return (
     <Modal
       animationType="slide"
@@ -41,39 +81,16 @@ const OModal = (props: Props): React.ReactElement => {
       onRequestClose={() => { onClose() }}
       style={{ height: '100%', flex: 1, position: 'absolute', ...style, zIndex: 9999 }}
     >
-      <SafeAreaView style={styles.container}>
-        {!entireModal ? (
-          <View style={styles.centeredView}>
-            <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-              <View style={styles.wrapperIcon}>
-                <Icon
-                  name="x"
-                  size={35}
-                  style={isNotDecoration && (styleCloseButton || styles.cancelBtn)}
-                  onPress={onClose}
-                />
-              </View>
-              <Text style={styles.modalText}>{title}</Text>
-            </View>
-            {children}
-          </View>
-        ) :
-          <>
-            {!customClose && (
-              <View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-                <Icon
-                  name="x"
-                  size={35}
-                  style={styleCloseButton || styles.cancelBtn}
-                  onPress={onClose}
-                />
-                <Text style={styles.modalText}>{title}</Text>
-              </View>
-            )}
-            {children}
-          </>
-        }
-      </SafeAreaView>
+     {isAvoidKeyBoardView ? (
+      <KeyboardView
+       enabled
+       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <RenderSafeAreaView/>
+      </KeyboardView>
+     ) : (
+      <RenderSafeAreaView/>
+     )}
     </Modal>
   );
 };

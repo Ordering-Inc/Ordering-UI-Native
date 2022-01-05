@@ -1,0 +1,140 @@
+[
+	{
+		"inputLabel":"EN",
+		"label":"English",
+		"value":"en",
+		"countryCode": "US"
+	},
+	{
+		"inputLabel":"DE",
+		"label":"German",
+		"value":"de",
+		"countryCode": "DE"
+	},
+	{
+		"inputLabel":"ES",
+		"label":"Spanish",
+		"value":"es",
+		"countryCode": "ES"
+	},
+	{
+		"inputLabel":"DA",
+		"label":"Danish",
+		"value":"da",
+		"countryCode": "DK"
+	},
+	{
+		"inputLabel":"NL",
+		"label":"Dutch",
+		"value":"nl",
+		"countryCode": "NL"
+	},
+	{
+		"inputLabel":"PT",
+		"label":"Portuguese",
+		"value":"pt",
+		"countryCode": "PT"
+	},
+	{
+		"inputLabel":"CA",
+		"label":"Catalan",
+		"value":"ca",
+		"countryCode": "ES"
+	},
+	{
+		"inputLabel":"FR",
+		"label":"French",
+		"value":"fr",
+		"countryCode": "FR"
+	},
+	{
+		"inputLabel":"TR",
+		"label":"Turkish",
+		"value":"tr",
+		"countryCode": "TR"
+	},
+	{
+		"inputLabel":"KM",
+		"label":"Cambodian",
+		"value":"km",
+		"countryCode": "KH"
+	},
+	{
+		"inputLabel":"ZH-CN",
+		"label":"Chinese Simplified",
+		"value":"zh-CN",
+		"countryCode": "CN"
+	},
+	{
+		"inputLabel":"HI",
+		"label":"Hindi",
+		"value":"hi",
+		"countryCode": "IN"
+	},
+	{
+		"inputLabel":"ID",
+		"label":"Indonesian",
+		"value":"id",
+		"countryCode": "ID"
+	},
+	{
+		"inputLabel":"KN",
+		"label":"Kannad",
+		"value":"kn",
+		"countryCode": "IN"
+	},
+	{
+		"inputLabel":"MS",
+		"label":"Malay",
+		"value":"ms",
+		"countryCode": "MY"
+	},
+	{
+		"inputLabel":"TA",
+		"label":"Tamil",
+		"value":"ta",
+		"countryCode": "IN"
+	},
+	{
+		"inputLabel":"AR",
+		"label":"Arabic",
+		"value":"ar",
+		"countryCode": "EG"
+	},
+	{
+		"inputLabel":"RU",
+		"label":"Russian",
+		"value":"ru",
+		"countryCode": "RU"
+	},
+	{
+		"inputLabel":"JA",
+		"label":"Japanese",
+		"value":"ja",
+		"countryCode": "JP"
+	},
+	{
+		"inputLabel":"BN",
+		"label":"Bengali",
+		"value":"bn",
+		"countryCode": "BD"
+	},
+	{
+		"inputLabel":"IT",
+		"label":"Italian",
+		"value":"it",
+		"countryCode": "IT"
+	},
+	{
+		"inputLabel":"EL",
+		"label":"Greek",
+		"value":"el",
+		"countryCode": "GR"
+	},
+	{
+		"inputLabel":"BG",
+		"label":"Bulgarian Translation",
+		"value":"bg",
+		"countryCode": "BG"
+	}
+]

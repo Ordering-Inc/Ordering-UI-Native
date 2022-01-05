@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { View, StyleSheet, ScrollView, Platform, PanResponder, I18nManager } from 'react-native'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -44,7 +44,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const styles = StyleSheet.create({
     container: {
       padding: 20,
-      marginBottom: 20
+      marginBottom: 20,
+      left: Platform.OS === 'ios' && I18nManager.isRTL ? 20 : 0
     },
     welcome: {
       flex: 1,
@@ -76,8 +77,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
   const [{ configs }] = useConfig()
   const [{ parseDate }] = useUtils()
   const [, {showToast}] = useToast()
-
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
+  const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
 
   const handleScroll = ({ nativeEvent }: any) => {
     const y = nativeEvent.contentOffset.y
@@ -86,7 +87,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
     if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
       getBusinesses()
-      showToast(ToastType.Info, 'loading more business')
+      showToast(ToastType.Info, t('LOADING_MORE_BUSINESS', 'Loading more business'))
     }
   }
 
@@ -134,6 +135,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       <OrderControlContainer>
         <View style={styles.wrapperOrderOptions}>
           <OrderTypeSelector configTypes={configTypes} />
+          {(isPreOrderSetting || configs?.preorder_status_enabled?.value === undefined) && (
           <WrapMomentOption
             onPress={() => navigation.navigate('MomentOption')}
           >
@@ -143,6 +145,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
                 : t('ASAP_ABBREVIATION', 'ASAP')}
             </OText>
           </WrapMomentOption>
+          )}
         </View>
         <AddressInput
           onPress={() => auth

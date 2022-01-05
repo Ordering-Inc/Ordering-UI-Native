@@ -64,7 +64,9 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
   const maxProductQuantity = Math.min(maxCartProductConfig, maxCartProductInventory)
 
   return (
-    <CardContainer style={[styles.container, (isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle]}
+    <CardContainer
+      style={[styles.container, (isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle]}
+      activeOpacity={1}
       onPress={() => onProductClick(product)}
     >
       <OIcon

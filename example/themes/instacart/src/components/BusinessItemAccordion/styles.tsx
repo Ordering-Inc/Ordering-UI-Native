@@ -1,0 +1,59 @@
+import React from 'react';
+import styled, { css } from 'styled-components/native';
+
+export const BIContainer = styled.View`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  opacity: 1;
+
+  ${(props: any) => props.isClosed && css`
+    background-color: rgba(0, 0, 0, 0.5);
+  `}
+`
+
+export const BIHeader = styled.TouchableOpacity`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 10px 0;
+  ${(props: any) => props.isExpanded && `
+    border-bottom-width: 1px;
+    border-bottom-color: #EFEFEF;
+  `}
+`
+
+export const BIInfo = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 55%;
+`
+
+export const BIContent = styled.View`
+`
+
+export const BIContentInfo = styled.View`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  text-transform: capitalize;
+  margin-left: 10px;
+  max-width: 65%;
+`
+
+export const BITotal = styled.View`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+export const BIActions = styled.View`
+  max-width: 30%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+`

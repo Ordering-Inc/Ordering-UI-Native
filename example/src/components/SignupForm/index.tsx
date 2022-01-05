@@ -1,12 +1,12 @@
 import React, { createRef, useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet, Keyboard } from 'react-native';
+import { View, Pressable, StyleSheet, Keyboard, Linking, Platform, TouchableOpacity, ScrollView } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import { FacebookLogin } from '../FacebookLogin'
-
+import { GoogleLogin } from '../GoogleLogin'
 import {
   SignupForm as SignUpController,
   useLanguage,
@@ -30,6 +30,7 @@ import NavBar from '../NavBar'
 import { VerifyPhone } from '../VerifyPhone';
 
 import { OText, OButton, OInput, OModal } from '../shared';
+import CheckBox from '@react-native-community/checkbox';
 import { SignupParams } from '../../types';
 import { sortInputFields } from '../../utils';
 import { useTheme } from 'styled-components/native';
@@ -77,6 +78,10 @@ const SignupFormUI = (props: SignupParams) => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 30
+    },
+    checkBoxStyle: {
+      width: 25,
+      height: 25,
     }
   });
 
@@ -110,8 +115,8 @@ const SignupFormUI = (props: SignupParams) => {
   const phoneRef = useRef<any>(null)
   const passwordRef = useRef<any>(null)
 
-  const handleRefs = (ref : any, code : string) => {
-    switch(code){
+  const handleRefs = (ref: any, code: string) => {
+    switch (code) {
       case 'name': {
         nameRef.current = ref
         break
@@ -134,8 +139,8 @@ const SignupFormUI = (props: SignupParams) => {
     }
   }
 
-  const handleFocusRef = (code : string) => {
-    switch(code) {
+  const handleFocusRef = (code: string) => {
+    switch (code) {
       case 'name': {
         nameRef?.current?.focus()
         break
@@ -159,8 +164,8 @@ const SignupFormUI = (props: SignupParams) => {
     }
   }
 
-  const getNextFieldCode = (index : number) => {
-    const fields = sortInputFields({ values: validationFields?.fields?.checkout })?.filter((field : any) => !notValidationFields.includes(field.code) && showField(field.code))
+  const getNextFieldCode = (index: number) => {
+    const fields = sortInputFields({ values: validationFields?.fields?.checkout })?.filter((field: any) => !notValidationFields.includes(field.code) && showField(field.code))
     return fields[index + 1]?.code
   }
 
@@ -172,7 +177,7 @@ const SignupFormUI = (props: SignupParams) => {
     })
   }
 
-  const handleSuccessApple = (user : any) => {
+  const handleSuccessApple = (user: any) => {
     _removeStoreData('isGuestUser')
     login({
       user,
@@ -242,6 +247,16 @@ const SignupFormUI = (props: SignupParams) => {
 
   const handleChangeInputEmail = (value: string, onChange: any) => {
     onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
+  }
+
+  const handleOpenTermsUrl = async (url: any) => {
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      showToast(ToastType.Error, t('VALIDATION_ERROR_ACTIVE_URL', 'The _attribute_ is not a valid URL.').replace('_attribute_', t('URL', 'URL')))
+    }
   }
 
   useEffect(() => {
@@ -341,7 +356,7 @@ const SignupFormUI = (props: SignupParams) => {
         <FormInput>
           {!(useChekoutFileds && validationFields?.loading && validationFields?.fields?.checkout) ? (
             <>
-              {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any, i : number) =>
+              {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any, i: number) =>
                 !notValidationFields.includes(field.code) &&
                 (
                   showField && showField(field.code) && (
@@ -361,8 +376,8 @@ const SignupFormUI = (props: SignupParams) => {
                           autoCompleteType={field.code === 'email' ? 'email' : 'off'}
                           returnKeyType='next'
                           blurOnSubmit={false}
-                          forwardRef={(ref : any) => handleRefs(ref,field.code)}
-                          onSubmitEditing={() => field.code === 'email' ? phoneRef.current.focus() : handleFocusRef(getNextFieldCode(i))}
+                          forwardRef={(ref: any) => handleRefs(ref, field.code)}
+                          onSubmitEditing={() => field.code === 'email' ? phoneRef?.current?.focus?.() : handleFocusRef(getNextFieldCode(i))}
                         />
                       )}
                       name={field.code}
@@ -381,7 +396,7 @@ const SignupFormUI = (props: SignupParams) => {
                     forwardRef={phoneRef}
                     textInputProps={{
                       returnKeyType: 'next',
-                      onSubmitEditing: () => passwordRef.current.focus()
+                      onSubmitEditing: () => passwordRef?.current?.focus?.()
                     }}
                   />
                 </View>
@@ -429,6 +444,48 @@ const SignupFormUI = (props: SignupParams) => {
             <Spinner visible />
           )}
 
+          {configs?.terms_and_conditions?.value === 'true' && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+              <Controller
+                control={control}
+                render={({ onChange, value }: any) => (
+                  <CheckBox
+                    value={value}
+                    onValueChange={newValue => {
+                      onChange(newValue)
+                    }}
+                    boxType={'square'}
+                    tintColors={{
+                      true: theme.colors.primary,
+                      false: theme.colors.disabled
+                    }}
+                    tintColor={theme.colors.disabled}
+                    onCheckColor={theme.colors.primary}
+                    onTintColor={theme.colors.primary}
+                    style={Platform.OS === 'ios' && style.checkBoxStyle}
+                  />
+                )}
+                name='termsAccept'
+                rules={{
+                  required: t('VALIDATION_ERROR_ACCEPTED', 'The _attribute_ must be accepted.').replace('_attribute_', t('TERMS_AND_CONDITIONS', 'Terms & Conditions'))
+                }}
+                defaultValue={false}
+              />
+              <ScrollView
+                horizontal
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+              >
+                <OText size={16} style={{ paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
+                <TouchableOpacity onPress={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}>
+                  <OText size={16} color={theme.colors.primary}>
+                    {t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
+                  </OText>
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
+          )}
+
           {signupTab === 'cellphone' && useSignupByEmail && useSignupByCellphone ? (
             <OButton
               onClick={handleSubmit(onSubmit)}
@@ -449,7 +506,6 @@ const SignupFormUI = (props: SignupParams) => {
               imgRightSrc={null}
               isDisabled={formState.loading || validationFields.loading}
             />
-
           )}
         </FormInput>
 
@@ -468,35 +524,43 @@ const SignupFormUI = (props: SignupParams) => {
           )
         }
 
-        {
-          configs && Object.keys(configs).length > 0 && (
-            (configs?.facebook_login?.value === 'true' ||
-              configs?.facebook_login?.value === '1') &&
-            configs?.facebook_id?.value &&
-            (
-              <ButtonsSection>
-                <OText size={18} color={theme.colors.disabled}>
-                  {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
-                </OText>
-
-                <SocialButtons>
-                  <FacebookLogin
+        {configs && Object.keys(configs).length > 0 && (
+          (((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
+            (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
+          (
+            <ButtonsSection>
+              <OText size={18} mBottom={10} color={theme.colors.disabled}>
+                {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
+              </OText>
+              <SocialButtons>
+                {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
+                  configs?.facebook_id?.value && (
+                    <FacebookLogin
+                      notificationState={notificationState}
+                      handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                      handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                      handleSuccessFacebookLogin={handleSuccessFacebook}
+                    />
+                  )}
+                {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+                  <GoogleLogin
                     notificationState={notificationState}
+                    webClientId={configs?.google_login_client_id?.value}
                     handleErrors={(err: any) => showToast(ToastType.Error, err)}
                     handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
-                    handleSuccessFacebookLogin={handleSuccessFacebook}
+                    handleSuccessGoogleLogin={handleSuccessFacebook}
                   />
-                  <AppleLogin
-                    notificationState={notificationState}
-                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
-                    handleSuccessApple={handleSuccessApple}
-                  />
-                </SocialButtons>
-              </ButtonsSection>
-            )
+                )}
+                <AppleLogin
+                  notificationState={notificationState}
+                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                  handleSuccessApple={handleSuccessApple}
+                />
+              </SocialButtons>
+            </ButtonsSection>
           )
-        }
+        )}
       </FormSide >
       <OModal
         open={isModalVisible}

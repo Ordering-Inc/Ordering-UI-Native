@@ -33,8 +33,9 @@ export const WrapHours = styled.ScrollView`
   border-color: ${(props: any) => props.theme.colors.textSecondary};
   border-radius: 10px;
   margin: 20px 0;
-  height: 140px;
-  max-height: 140px;
+  height: auto;
+  min-height: 180px;
+  max-height: 280px;
 `
 export const Hours = styled.View`
   flex: 1;

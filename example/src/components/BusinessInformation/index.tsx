@@ -17,6 +17,7 @@ import { StyleSheet } from 'react-native'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { BusinessInformationParams } from '../../types'
 import { GoogleMap } from '../GoogleMap'
+import { useTheme } from 'styled-components/native';
 const BusinessInformationUI = (props: BusinessInformationParams) => {
   const {
     businessState,
@@ -24,6 +25,7 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
     businessLocation
   } = props
   const [, t] = useLanguage()
+  const theme = useTheme()
   const daysOfWeek = [
     t('SUNDAY_ABBREVIATION', 'Sun'),
     t('MONDAY_ABBREVIATION', 'Mon'),
@@ -71,8 +73,18 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
               {businessSchedule.map((schedule: any, i: number) => (
                 <ScheduleBlock key={i}>
                   <OText size={20}>{daysOfWeek[i]}</OText>
-                  <OText>{scheduleFormatted(schedule.lapses[0].open)}</OText>
-                  <OText>{scheduleFormatted(schedule.lapses[0].close)}</OText>
+                  {schedule.enabled ? (
+                    schedule.lapses.map( (time: any, k: number) => (
+                    <React.Fragment key={k}>
+                      <OText>{scheduleFormatted(time.open)}</OText>
+                      <OText mBottom={10} style={{
+                        padding: 3,
+                        borderBottomColor: theme.colors.primary,
+                        borderBottomWidth: 1
+                      }}
+                      >{scheduleFormatted(time.close)}</OText>
+                    </React.Fragment>
+                  ))) : ( <OText>{t('CLOSED', 'Closed')}</OText>)}
                 </ScheduleBlock>
               ))}
             </WrapScheduleBlock>

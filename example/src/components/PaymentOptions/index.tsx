@@ -57,22 +57,16 @@ const PaymentOptionsUI = (props: any) => {
     onNavigationRedirect,
     handlePaymethodClick,
     handlePaymethodDataChange,
-    isOpenMethod
+    handlePaymentMethodClickCustom,
+    isOpenMethod,
+    setCardData
   } = props
 
   const theme = useTheme();
   const [, t] = useLanguage();
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
-  const [showGateway, setShowGateway] = useState<any>({closedByUsed: false, open: false});
-  const [prog, setProg] = useState(true);
-  const [progClr, setProgClr] = useState('#424242');
-  const [, { showToast }] = useToast();
-  const webviewRef = useRef<any>(null)
-  const [ordering] = useApi()
-  const [, {confirmCart}] = useOrder()
-  const [{ token, user }] = useSession()
-  const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
+  let paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
 
   const getPayIcon = (method: string) => {
     switch (method) {
@@ -95,35 +89,14 @@ const PaymentOptionsUI = (props: any) => {
     }
   }
 
-  const onMessage = (e : any) => {
-    let data = e.nativeEvent.data;
-    let payment = JSON.parse(data);
-    if(payment.error){
-      showToast(ToastType.Error, payment.result)
-    } else {
-      showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfullyS'))
-      onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment.result.order.uuid, goToBusinessList: true })
-    }
-    setShowGateway({closedByUser: false, open: false})
-  }
-
   const handlePaymentMethodClick = (paymethod: any) => {
     const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
     handlePaymethodClick(paymethod, isPopupMethod)
-    if(paymethod?.gateway === 'paypal'){
-      setShowGateway({closedByUser: false, open: true})
+    if(paymethod?.gateway === 'paypal') {
+      handlePaymentMethodClickCustom(paymethod)
     }
+    setCardData(paymethodData)
   }
-
-  const onFailPaypal = async () => {
-    if(showGateway.closedByUser === true){
-      const {result} = await confirmCart(cart.uuid)
-    }
-  }
-
-  useEffect(() => {
-    onFailPaypal()
-  }, [showGateway.closedByUser])
 
   useEffect(() => {
     if (paymethodsList.paymethods.length === 1) {
@@ -142,6 +115,10 @@ const PaymentOptionsUI = (props: any) => {
       setPaymethodData && setPaymethodData(props.paySelected?.data)
     }
   }, [props.paySelected])
+
+  useEffect(() => {
+    setCardData(paymethodData)
+  }, [paymethodData])
 
   const renderPaymethods = ({ item }: any) => {
     return (
@@ -171,7 +148,7 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeIds: any = [32, 66]; //exclude connect & redirect
+  const excludeGateway: any = ['stripe_connect', 'stripe_redirect']; //exclude connect & redirect
 
   return (
     <PMContainer>
@@ -180,9 +157,9 @@ const PaymentOptionsUI = (props: any) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           // data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
-          data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeIds.includes(p.id))}
+          data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeGateway.includes(p.gateway))}
           renderItem={renderPaymethods}
-          keyExtractor={(paymethod: any) => paymethod.id.toString()}
+          keyExtractor={(paymethod: any) => paymethod?.id?.toString?.()}
         />
       )}
       {(paymethodsList.loading || isLoading) && (
@@ -255,8 +232,8 @@ const PaymentOptionsUI = (props: any) => {
       )}
 
       {/* Stripe */}
-      {isOpenMethod?.paymethod?.gateway === 'stripe' && !paymethodData.id && (
-        <View>
+      {isOpenMethod?.paymethod?.gateway === 'stripe' && !paymethodData?.id && (
+        <View style={{ width: '100%' }}>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
             bgColor={theme.colors.primary}
@@ -304,7 +281,7 @@ const PaymentOptionsUI = (props: any) => {
       <OModal
         entireModal
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-        open={isOpenMethod?.paymethod?.gateway === 'stripe_direct' && !paymethodData.id}
+        open={isOpenMethod?.paymethod?.gateway === 'stripe_direct' && !paymethodData?.id}
         onClose={() => handlePaymethodClick(null)}
       >
         <KeyboardAvoidingView
@@ -322,7 +299,7 @@ const PaymentOptionsUI = (props: any) => {
       </OModal>
 
       {/* Stripe Connect */}
-      {isOpenMethod?.paymethod?.gateway === 'stripe_connect' && !paymethodData.id && (
+      {isOpenMethod?.paymethod?.gateway === 'stripe_connect' && !paymethodData?.id && (
         <View>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
@@ -388,7 +365,7 @@ const PaymentOptionsUI = (props: any) => {
       {/* Paypal */}
       {/* <Modal
         className='modal-info'
-        open={paymethodSelected?.gateway === 'paypal' && !paymethodData.id}
+        open={paymethodSelected?.gateway === 'paypal' && !paymethodData?.id}
         onClose={() => handlePaymethodClick(null)}
         title={t('PAY_WITH_PAYPAL', 'Pay with PayPal')}
       >
@@ -411,64 +388,6 @@ const PaymentOptionsUI = (props: any) => {
           />
         )}
       </Modal> */}
-      <OModal
-        open={showGateway.open && paymethodSelected.gateway === 'paypal'}
-        onCancel={() => setShowGateway({open: false, closedByUser: true})}
-        onAccept={() => setShowGateway({open: false, closedByUser: true})}
-        onClose={() => setShowGateway({open: false, closedByUser: true})}
-        entireModal
-      >
-        <OText
-          style={{
-            textAlign: 'center',
-            fontSize: 16,
-            fontWeight: 'bold',
-            color: '#00457C',
-            marginBottom: 5
-          }}>
-          {t('PAYPAL_GATEWAY', 'PayPal GateWay')}
-        </OText>
-        <View style={{padding: 13, opacity: prog ? 1 : 0}}>
-          <ActivityIndicator size={24} color={progClr} />
-        </View>
-        <WebView
-          source={{ uri: 'https://test-90135.web.app' }}
-          onMessage={onMessage}
-          ref={webviewRef}
-          javaScriptEnabled={true}
-          javaScriptEnabledAndroid={true}
-          cacheEnabled={false}
-          cacheMode='LOAD_NO_CACHE'
-          style={{ flex: 1 }}
-          onLoadStart={() => {
-            setProg(true);
-            setProgClr('#424242');
-          }}
-          onLoadProgress={() => {
-            setProg(true);
-            setProgClr('#00457C');
-          }}
-          onLoadEnd={(e) => {
-            const message = {
-              action: 'init',
-              data: {
-                urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
-                urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
-                payData: {
-                  paymethod_id: paymethodSelected?.id,
-                  amount: cart?.total,
-                  delivery_zone_id: cart?.delivery_zone_id,
-                  user_id: user?.id
-                },
-                userToken: token,
-                clientId: isOpenMethod?.paymethod?.credentials?.client_id
-              }
-            }
-            setProg(false);
-            webviewRef.current.postMessage(JSON.stringify(message))
-          }}
-        />
-      </OModal>
     </PMContainer>
   )
 }

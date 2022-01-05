@@ -16,6 +16,7 @@ import {
 
 import { FacebookLogin } from '../FacebookLogin';
 import { VerifyPhone } from '../VerifyPhone';
+import { GoogleLogin } from '../GoogleLogin'
 
 import {
   Container,
@@ -81,6 +82,7 @@ const LoginFormUI = (props: LoginParams) => {
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoadingSocialButton, setIsLoadingSocialButton] = useState(false);
+  const [isFBLoading, setIsFBLoading] = useState(false)
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
     phone: {
@@ -278,7 +280,7 @@ const LoginFormUI = (props: LoginParams) => {
                   handleData={(val: any) => setPhoneInputData(val)}
                   textInputProps={{
                     returnKeyType: 'next',
-                    onSubmitEditing: () => inputRef.current.focus(),
+                    onSubmitEditing: () => inputRef?.current?.focus?.(),
                   }}
                 />
               </View>
@@ -298,6 +300,7 @@ const LoginFormUI = (props: LoginParams) => {
                       <MaterialCommunityIcons name='eye-off-outline' size={24} onPress={() => setPasswordSee(!passwordSee)} />
                   }
                   value={value}
+                  autoCompleteType='password'
                   forwardRef={inputRef}
                   onChange={(val: any) => onChange(val)}
                   returnKeyType='done'
@@ -334,6 +337,7 @@ const LoginFormUI = (props: LoginParams) => {
           configs && Object.keys(configs).length > 0 &&
           (configs?.twilio_service_enabled?.value === 'true' ||
             configs?.twilio_service_enabled?.value === '1') &&
+          configs?.twilio_module?.value &&
           (
             <>
               <OrSeparator>
@@ -360,22 +364,32 @@ const LoginFormUI = (props: LoginParams) => {
         }
 
         {configs && Object.keys(configs).length > 0 && (
-          (configs?.facebook_login?.value === 'true' ||
-            configs?.facebook_login?.value === '1') &&
-          configs?.facebook_id?.value &&
+          (((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
+          (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
           (
             <ButtonsWrapper>
               <OText size={18} mBottom={10} color={theme.colors.disabled}>
                 {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
               </OText>
-
               <SocialButtons>
+                {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
+                configs?.facebook_id?.value && (
                 <FacebookLogin
                   notificationState={notificationState}
                   handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                  handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                  handleLoading={(val: boolean) => setIsFBLoading(val)}
                   handleSuccessFacebookLogin={handleSuccessFacebook}
                 />
+              )}
+              {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+                <GoogleLogin
+                  notificationState={notificationState}
+                  webClientId={configs?.google_login_client_id?.value}
+                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleLoading={(val: boolean) => setIsFBLoading(val)}
+                  handleSuccessGoogleLogin={handleSuccessFacebook}
+                />
+              )}
                 <AppleLogin
                   notificationState={notificationState}
                   handleErrors={(err: any) => showToast(ToastType.Error, err)}
@@ -402,6 +416,7 @@ const LoginFormUI = (props: LoginParams) => {
       <OModal
         open={isModalVisible}
         onClose={() => setIsModalVisible(false)}
+        entireModal
       >
         <VerifyPhone
           phone={phoneInputData.phone}

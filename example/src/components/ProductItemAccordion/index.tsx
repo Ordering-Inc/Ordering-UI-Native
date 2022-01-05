@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { View, Animated, StyleSheet, Platform, I18nManager } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Animated, StyleSheet, Platform, I18nManager, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { useUtils, useLanguage, useOrder } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import RNPickerSelect from 'react-native-picker-select'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import Picker from 'react-native-country-picker-modal';
 
 import {
   Accordion,
@@ -16,7 +16,9 @@ import {
   ProductOptionsList,
   ProductOption,
   ProductSubOption,
-  ProductComment
+  ProductComment,
+  SelectItemBtn,
+  SelectItem
 } from './styles'
 import { OIcon, OText, OAlert } from '../shared'
 
@@ -35,34 +37,24 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
   } = props
 
   const theme = useTheme();
+  const [alert, setAlert] = useState<any>({ show: false });
+  const [isOpen, setIsOpen] = useState(false);
+  const [optionSelected, setOptionSelected] = useState<any>(null);
+  let current;
 
   const pickerStyle = StyleSheet.create({
-    inputAndroid: {
-      color: theme.colors.secundaryContrast,
-      borderWidth: 1,
-      borderColor: 'transparent',
-      borderRadius: 15,
-      backgroundColor: theme.colors.inputDisabled,
-      width: 50,
-    },
-    inputIOS: {
-      color: theme.colors.secundaryContrast,
-      paddingEnd: 20,
-      height: 40,
-      borderWidth: 1,
-      borderColor: 'transparent',
-      borderRadius: 15,
-      paddingHorizontal: 10,
-      backgroundColor: theme.colors.inputDisabled
-    },
     icon: {
-      top: Platform.OS === 'ios' ? 10 : 15,
-      right: Platform.OS === 'ios' ? 0 : (I18nManager.isRTL ? 30 : 7),
+      top: 15,
+      right: Platform.OS === 'ios' ? 5 : (I18nManager.isRTL ? 30 : 0),
       position: 'absolute',
       fontSize: 20
     },
-    placeholder: {
-      color: theme.colors.secundaryContrast,
+    itemSelected: {
+      backgroundColor: theme.colors.disabled,
+    },
+    closeBtn: {
+      width: 40,
+      height: 40,
     }
   })
 
@@ -90,25 +82,12 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     return product
   }
 
-  /* const toggleAccordion = () => {
-     if ((!product?.valid_menu && isCartProduct)) return
-     if (isActive) {
-       Animated.timing(setHeight.height, {
-         toValue: 100,
-         duration: 500,
-         easing: Easing.linear,
-         useNativeDriver: false,
-       }).start()
-     } else {
-       setHeightState({height: new Animated.Value(0)})
-     }
-   }*/
-
   const handleChangeQuantity = (value: string) => {
+    setOptionSelected(value)
     if(!orderState.loading){
       if (parseInt(value) === 0) {
         onDeleteProduct && onDeleteProduct(product)
-      } else {     
+      } else {
         changeQuantity && changeQuantity(product, parseInt(value))
       }
     }
@@ -119,16 +98,24 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     return `${quantity} x ${name} ${pos} +${price}`
   }
 
-  /*useEffect(() => {
-    toggleAccordion()
-  }, [isActive])*/
-
   const productOptions = getProductMax && [...Array(getProductMax(product) + 1),].map((_: any, opt: number) => {
     return {
       label: opt === 0 ? t('REMOVE', 'Remove') : opt.toString(),
       value: opt.toString()
     }
   })
+
+  const isProductUnavailable = (
+    (isCartProduct && !isCartPending && product?.valid_menu && !product?.valid_quantity) ||
+    (!product?.valid_menu && isCartProduct && !isCartPending)
+  )
+
+  useEffect(() => {
+    if (optionSelected === product.quantity.toString() && !orderState.loading) {
+      setIsOpen(false)
+      setOptionSelected(null)
+    }
+  }, [orderState])
 
   return (
     <AccordionSection>
@@ -139,18 +126,67 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
           : setActiveState(!isActive)}
         activeOpacity={1}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <ProductInfo>
-            {isCartProduct && !isCartPending && getProductMax ? (
-              <RNPickerSelect
-                items={productOptions}
-                onValueChange={handleChangeQuantity}
-                value={product.quantity.toString()}
-                style={pickerStyle}
-                useNativeAndroidPickerStyle={false}
-                placeholder={{}}
-                Icon={() => <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />}
-                disabled={orderState.loading}
+            {isCartProduct && !isCartPending && getProductMax && !isProductUnavailable ? (
+              <Picker
+                countryCodes={current}
+                visible={isOpen}
+                onClose={() => setIsOpen(false)}
+                withCountryNameButton
+                // @ts-ignore
+                closeButtonStyle={{
+                  width: '100%',
+                  alignItems: 'flex-end',
+                  padding: 10,
+                }}
+                closeButtonImageStyle={Platform.OS === 'ios' && pickerStyle.closeBtn}
+                renderFlagButton={() => (
+                  <>
+                    <TouchableOpacity
+                      onPress={() => setIsOpen(true)}
+                      disabled={productOptions.length === 0 || orderState.loading}
+                    >
+                      <SelectItemBtn>
+                        <OText
+                          color={theme.colors.secundaryContrast}
+                          size={14}
+                        >
+                          {product.quantity.toString()}
+                        </OText>
+                        <MaterialIcons name='keyboard-arrow-down' style={pickerStyle.icon} />
+                      </SelectItemBtn>
+                    </TouchableOpacity>
+                  </>
+                )}
+                flatListProps={{
+                  keyExtractor: (item: any) => item.value,
+                  data: productOptions || [],
+                  renderItem: ({ item }: any) => (
+                    <TouchableOpacity
+                      style={product.quantity.toString() === item.value &&
+                        !optionSelected &&
+                        pickerStyle.itemSelected
+                      }
+                      disabled={product.quantity.toString() === item.value || orderState.loading}
+                      onPress={() => handleChangeQuantity(item.value)}
+                    >
+                      <SelectItem>
+                        <View style={{ width: 40 }}>
+                          {optionSelected === item.value && orderState.loading && (
+                            <ActivityIndicator size="small" color={theme.colors.primary} />
+                          )}
+                        </View>
+                        <OText
+                          size={14}
+                          style={{ marginRight: 10 }}
+                        >
+                          {item.label}
+                        </OText>
+                      </SelectItem>
+                    </TouchableOpacity>
+                  ),
+                }}
               />
             ) : (
               <ProductQuantity>
@@ -171,15 +207,22 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
             )}
             <View style={{flex: 1, alignItems: 'flex-start'}}>
               <OText>{product.name}</OText>
+              {isProductUnavailable && (
+                <OText size={14} color={theme.colors.red} style={{ marginRight: 5 }}>
+                  {t('NOT_AVAILABLE', 'Not available')}
+                </OText>
+              )}
             </View>
-            <View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <OText size={18}>{parsePrice(product.total || product.price)}</OText>
-                {(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
-                  <MaterialCommunityIcon name='chevron-down' size={18} />
-                )}
-              </View>
-              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+            <View style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end', marginLeft: 10}}>
+              {!isProductUnavailable && (
+                <View style={{ flexDirection: 'row' }}>
+                  <OText size={18}>{parsePrice(product.total || product.price)}</OText>
+                  {(productInfo().ingredients.length > 0 || productInfo().options.length > 0 || product.comment) && (
+                    <MaterialCommunityIcon name='chevron-down' size={18} />
+                  )}
+                </View>
+              )}
+              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', marginRight: 5 }}>
                 {onEditProduct && isCartProduct && !isCartPending && product?.valid_menu && (
                   <MaterialCommunityIcon
                     name='pencil-outline'
@@ -189,29 +232,25 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                   />
                 )}
                 {onDeleteProduct && isCartProduct && !isCartPending && (
-                  <OAlert
-                    title={t('DELETE_PRODUCT', 'Delete Product')}
-                    message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
-                    onAccept={() => onDeleteProduct(product)}
-                  >
-                    <MaterialCommunityIcon
-                      name='trash-can-outline'
-                      size={26}
-                      color={theme.colors.red}
-                    />
-                  </OAlert>
+                  <MaterialCommunityIcon
+                    name='trash-can-outline'
+                    size={26}
+                    color={theme.colors.red}
+                    onPress={() => setAlert({
+                      show: true,
+                      title: t('DELETE_PRODUCT', 'Delete Product'),
+                      onAccept: () => {
+                        onDeleteProduct && onDeleteProduct(product)
+                        setAlert({ show: false })
+                      },
+                      content: [t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')]
+                    })}
+                  />
                 )}
               </View>
             </View>
           </ContentInfo>
         </View>
-
-        {((isCartProduct && !isCartPending && product?.valid_menu && !product?.valid_quantity) ||
-          (!product?.valid_menu && isCartProduct && !isCartPending)) && (
-          <OText size={24} color={theme.colors.red} style={{ textAlign: 'center', marginTop: 10 }}>
-            {t('NOT_AVAILABLE', 'Not available')}
-          </OText>
-        )}
       </Accordion>
 
       <View style={{ display: isActive ? 'flex' : 'none' }}>
@@ -255,6 +294,14 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
           </AccordionContent>
         </Animated.View>
       </View>
+      <OAlert
+        open={alert.show}
+        title={alert.title}
+        onAccept={alert.onAccept}
+        onClose={() => setAlert({ show: false })}
+        onCancel={() => setAlert({ show: false })}
+        content={alert.content}
+      />
     </AccordionSection>
   )
 }

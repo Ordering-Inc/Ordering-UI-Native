@@ -9,24 +9,30 @@
 import * as React from 'react';
 import { LogBox, Platform } from 'react-native';
 import * as Sentry from "@sentry/react-native";
-import { NavigationContainer } from '@react-navigation/native';
 import { OrderingProvider } from 'ordering-components/native';
 import RNBootSplash from "react-native-bootsplash";
 
-import RootNavigator from './navigators/RootNavigator';
 import { Toast } from './components/shared/OToast';
+import { Analytics } from './components/Analytics'
 import Alert from './providers/AlertProvider';
 import { ThemeProvider } from './context/Theme';
 
-import { navigationRef } from './navigators/NavigationRef';
 
 import settings from './config.json';
 import theme from './theme.json';
+import AppContainer from './AppContainer';
 
 Sentry.init({
   environment: Platform.OS === 'ios' ? 'ios' : 'android',
   dsn: 'https://90197fffe6a1431b8c3eb79e1e36f0ee@o460529.ingest.sentry.io/5722123',
-  release: "ordering-ui-native@" + process.env.npm_package_version
+  release: process.env.npm_package_version ? 'ordering-ui-native@' + process.env.npm_package_version : 'ordering-ui-native@' + '0.0.2',
+  ignoreErrors: [
+    'is not defined',
+    'is not a function',
+    'can\'t find variable',
+    'objects are not valid',
+    'element type is invalid'
+  ],
 });
 
 LogBox.ignoreLogs([
@@ -37,7 +43,8 @@ LogBox.ignoreLogs([
   'Can\'t perform a React state update',
   'Remote debugger',
   'Task orphaned for request',
-  'JSON value \'<null>\''
+  'JSON value \'<null>\'',
+  'Animated.event now requires a second argument for options'
 ])
 
 theme.images = {
@@ -47,9 +54,18 @@ theme.images = {
     // isotype,
     // isotypeInvert
   },
+  tutorials: {
+    slide1: require('./assets/images/slide1.png'),
+    slide2: require('./assets/images/slide2.png'),
+    slide3: require('./assets/images/slide3.png'),
+    slide4: require('./assets/images/slide4.png'),
+    slide5: require('./assets/images/slide5.png'),
+    slide6: require('./assets/images/slide6.png')
+  },
   general: {
     homeHero: require('./assets/images/home-hero.png'),
     notFound: require('./assets/images/not-found.png'),
+    loadingSplash: require('./assets/images/loading-splash.png'),
     //   notFound404,
     //   notFoundLighting,
     //   searchIcon,
@@ -80,7 +96,12 @@ theme.images = {
     stripecc: require('./assets/icons/cc-stripe.png'),
     stripes: require('./assets/icons/stripe-s.png'),
     stripesb: require('./assets/icons/stripe-sb.png'),
-    creditCard: require('./assets/icons/credit-card.png')
+    creditCard: require('./assets/icons/credit-card.png'),
+    help: require('./assets/images/help.png'),
+    close: require('./assets/icons/close.png'),
+    orderCreating: require('./assets/images/order-creating.png'),
+    orderSuccess: require('./assets/images/order-success.png'),
+    newOrder: require('./assets/images/new-order.png')
   },
   order: {
     status0: require('./assets/images/status-0.png'),
@@ -117,6 +138,10 @@ theme.images = {
   }
 }
 
+theme.sounds = {
+  notification: require('./assets/sounds/notification.mp3')
+}
+
 const DeliveryApp = () => {
   React.useEffect(() => {
     setTimeout(() => {
@@ -127,10 +152,9 @@ const DeliveryApp = () => {
   return (
     <ThemeProvider theme={theme}>
       <OrderingProvider settings={settings} Alert={Alert}>
-        <NavigationContainer ref={navigationRef}>
-          <RootNavigator />
-        </NavigationContainer>
+        <AppContainer />
         <Toast />
+        <Analytics />
       </OrderingProvider>
     </ThemeProvider>
   );

@@ -18,7 +18,7 @@ export const InnerContent = styled.View`
 `
 export const WrapScheduleBlock = styled.ScrollView`
   margin: 20px 0;
-  max-height: 90px;
+  max-height: 500px;
 `
 export const ScheduleBlock = styled.View`
   display: flex;
@@ -27,6 +27,7 @@ export const ScheduleBlock = styled.View`
   padding: 0 20px;
   border-left-width: 1px;
   border-color: ${(props: any) => props.theme.colors.lightGray};
+  max-width: 100px;
 `
 export const WrapBusinessMap = styled.View`
   max-height: 200px;

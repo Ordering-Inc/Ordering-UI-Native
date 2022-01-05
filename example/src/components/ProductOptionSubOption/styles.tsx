@@ -23,6 +23,7 @@ export const PositionControl = styled.View`
   flex-direction: row;
   align-items: center;
   margin-right: 5px;
+  flex: 1
 `
 
 export const Checkbox = styled.TouchableOpacity`

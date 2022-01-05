@@ -5,6 +5,7 @@ export const AccordionSection = styled.View`
   padding-vertical: 10px;
   border-bottom-width: 1px;
   border-bottom-color: #d9d9d9;
+  align-items: flex-start;
 `
 
 export const Accordion = styled.TouchableOpacity`
@@ -18,7 +19,9 @@ export const Accordion = styled.TouchableOpacity`
 `
 
 export const ProductInfo = styled.View`
-  width: 15%;
+  width: 22%;
+  align-items: flex-start;
+  justify-content: flex-start;
 `
 
 export const ProductQuantity = styled.View``
@@ -28,7 +31,8 @@ export const ContentInfo = styled.View`
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-  width: 85%;
+  width: 78%;
+  position: relative;
 `
 
 export const ProductImage = styled.View`
@@ -37,17 +41,41 @@ export const ProductImage = styled.View`
 
 export const AccordionContent = styled.View`
   overflow: hidden;
+  align-items: flex-start;
 `
 
 export const ProductOptionsList = styled.View`
   margin-top: 20px;
   margin-left: 20px;
+  align-items: flex-start;
 `
 
-export const ProductOption = styled.View``
+export const ProductOption = styled.View`
+  align-items: flex-start;
+`
 
 export const ProductSubOption = styled.View`
+  align-items: flex-start;
   margin-left: 10px;
 `
 
-export const ProductComment = styled.View``
+export const ProductComment = styled.View`
+    align-items: flex-start;
+`
+
+export const SelectItem = styled.View`
+  padding: 8px;
+  align-items: center;
+  flex-direction: row;
+`;
+
+export const SelectItemBtn = styled(SelectItem)`
+  border-width: 1px;
+  border-color: transparent;
+  border-radius: 10px;
+  width: 65px;
+  max-width: 140px;
+  margin-vertical: 5px;
+  padding: 15px;
+  background-color: ${(props: any) => props.theme.colors.inputDisabled};
+`

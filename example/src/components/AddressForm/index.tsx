@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native'
-import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder, ToastType, useToast } from 'ordering-components/native'
+import { StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback, Platform } from 'react-native'
+import { AddressForm as AddressFormController, useLanguage, useConfig, useSession, useOrder, useValidationFields, ToastType, useToast } from 'ordering-components/native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -14,6 +14,14 @@ import { AddressFormParams } from '../../types'
 import { getTraduction } from '../../utils'
 import { GoogleMap } from '../GoogleMap'
 import NavBar from '../NavBar'
+import Geolocation from '@react-native-community/geolocation';
+
+import {
+  PERMISSIONS,
+  PermissionStatus,
+  request,
+  openSettings,
+} from 'react-native-permissions';
 
 import {
   AddressFormContainer,
@@ -50,7 +58,11 @@ const AddressFormUI = (props: AddressFormParams) => {
     isRequiredField,
     isFromProductsList,
     afterSignup,
-    isFromCheckout
+    isFromCheckout,
+    businessId,
+    productId,
+    categoryId,
+    store
   } = props
 
   const theme = useTheme();
@@ -93,6 +105,7 @@ const AddressFormUI = (props: AddressFormParams) => {
   const [configState] = useConfig()
   const [orderState] = useOrder()
   const { handleSubmit, errors, control, setValue } = useForm()
+  const [validationFields] = useValidationFields()
   const [toggleMap, setToggleMap] = useState(false)
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<string>, key?: string | null }>({ open: false, content: [], key: null })
   const [addressTag, setAddressTag] = useState(addressState?.address?.tag)
@@ -103,9 +116,9 @@ const AddressFormUI = (props: AddressFormParams) => {
       ? addressState?.address?.location
       : formState.changes?.location ?? null
   )
+  const [isLoadingLocation, setLoadingLocation] = useState(false)
   const [saveMapLocation, setSaveMapLocation] = useState(false)
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
-  const [isSignUpEffect, setIsSignUpEffect] = useState(false)
 
   const googleInput: any = useRef(null)
   const internalNumberRef: any = useRef(null)
@@ -118,12 +131,69 @@ const AddressFormUI = (props: AddressFormParams) => {
   const maxLimitLocation = configState?.configs?.meters_to_change_address?.value
 
   const isGuestUser = props.isGuestUser || props.isGuestFromStore;
+  const isCountryAutocomplete = configState.configs?.country_autocomplete?.value !== '*'
 
-  const continueAsGuest = () => navigation.navigate('BusinessList')
+  const queryCountryAutoComplete = () => {
+    if (isCountryAutocomplete) {
+      return {
+        key: googleMapsApiKey,
+        components: `country:${configState.configs?.country_autocomplete?.value}`
+      }
+    } else {
+      return {
+        key: googleMapsApiKey,
+      }
+    }
+  }
+  const continueAsGuest = () => navigation.navigate('BusinessList', {store, businessId, productId, categoryId})
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
+
+  const requestLocationPermission = async () => {
+    let permissionStatus: PermissionStatus;
+    setLoadingLocation(true)
+    if (Platform.OS === 'ios') {
+      permissionStatus = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+    } else {
+      permissionStatus = await request(
+        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+      );
+    }
+
+    if (permissionStatus === 'denied') {
+      openSettings();
+    }
+    getOneTimeLocation();
+  };
+
+
+  const getOneTimeLocation = () => {
+    Geolocation.getCurrentPosition( (position) => {
+      getAddressFormatted({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+      })
+    },(error) => {
+        console.log(error.message);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 1000
+      },
+    );
+  };
 
   const getAddressFormatted = (address: any) => {
     const data: any = { address: null, error: null }
+    const isObjet = typeof address === 'object';
+    const filterAddressInfo = [
+      { tag: 'street_number', isShort: true },
+      { tag: 'route', isShort: true },
+      { tag: 'locality', isShort: true },
+      { tag: 'administrative_area_level_1', isShort: false },
+      { tag: 'country', isShort: false },
+    ]
+    let addressValue: any = [];
     Geocoder.init(googleMapsApiKey);
     Geocoder.from(address)
       .then((json: any) => {
@@ -131,11 +201,18 @@ const AddressFormUI = (props: AddressFormParams) => {
           let postalCode = null
           for (const component of json.results?.[0].address_components) {
             const addressType = component.types?.[0]
-            if (addressType === 'postal_code') {
+            if (typeof address === 'object') {
+              for (const filterProps of filterAddressInfo)  {
+                if(filterProps.tag.includes(addressType)) {
+                  addressValue.push(filterProps.isShort ? component.short_name : component.long_name)
+                }
+              }
+            }
+            if ( addressType === 'postal_code') {
               postalCode = component.short_name
-              break
             }
           }
+          isObjet ? address = addressValue.join(', ') : address
           data.address = {
             address,
             location: json.results[0].geometry.location,
@@ -208,6 +285,7 @@ const AddressFormUI = (props: AddressFormParams) => {
         return
       }
       getAddressFormatted(formState?.changes?.address)
+      setLoadingLocation(false)
       return
     }
 
@@ -227,7 +305,7 @@ const AddressFormUI = (props: AddressFormParams) => {
       }
       if (!isGuestUser && !auth && !afterSignup) {
         !isFromProductsList
-          ? navigation.navigate('Business')
+          ? navigation.navigate('Business', {store})
           : navigation?.canGoBack() && navigation.goBack()
       }
       return
@@ -292,7 +370,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 
   useEffect(() => {
     if (orderState.loading && !addressesList && orderState.options.address && auth && !afterSignup && !isFromCheckout) {
-      !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business')
+      !isFromProductsList ? navigation.navigate('BottomTab') : navigation.navigate('Business', {store})
     }
   }, [orderState.options.address])
 
@@ -422,7 +500,9 @@ const AddressFormUI = (props: AddressFormParams) => {
                       onPress={(data: any, details: any) => {
                         handleChangeAddress(data, details)
                       }}
-                      query={{ key: googleMapsApiKey }}
+                      query={
+                        queryCountryAutoComplete()
+                      }
                       fetchDetails
                       ref={googleInput}
                       textInputProps={{
@@ -433,12 +513,12 @@ const AddressFormUI = (props: AddressFormParams) => {
                           }
                           setIsFirstTime(false)
                         },
-                        onSubmitEditing: () => internalNumberRef.current.focus(),
+                        onSubmitEditing: () => internalNumberRef?.current?.focus?.(),
                         autoCorrect: false,
                         blurOnSubmit: false,
                         returnKeyType: 'next'
                       }}
-                      onFail={(error: any) => setAlertState({ open: true, content: getTraduction(error) })}
+                      onFail={(error: any) => setAlertState({ open: true, content: getTraduction(error, t) })}
                       styles={{
                         listView: {
                           position: 'relative',
@@ -478,12 +558,22 @@ const AddressFormUI = (props: AddressFormParams) => {
                   </OText>
                 </TouchableOpacity>
               )}
-
+              {!isKeyboardShow && (
+                <TouchableOpacity onPress={requestLocationPermission} style={{ marginBottom: 15 }}>
+                  <OText
+                    color={theme.colors.primary}
+                    style={{ textAlign: 'center' }}
+                  >
+                    {isLoadingLocation ? t('MOBILE_GETTING_CURRENT_LOCATION', 'Getting current location') : t('USE_MY_CURRENT_LOCATION', 'Use my current location')}
+                  </OText>
+                </TouchableOpacity>
+              )}
+              {validationFields?.fields?.address['internal_number'].enabled && (
               <Controller
                 control={control}
                 name='internal_number'
                 rules={{ required: isRequiredField && isRequiredField('internal_number') ? t(`VALIDATION_ERROR_INTERNAL_NUMBER_REQUIRED`, `The field internal number is required`) : null }}
-                defaultValue={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
+                defaultValue={address?.internal_number || formState.changes?.internal_number || addressState?.address?.internal_number || ''}
                 render={() => (
                   <OInput
                     name='internal_number'
@@ -492,16 +582,16 @@ const AddressFormUI = (props: AddressFormParams) => {
                       handleChangeInput(text)
                       setValue('internal_number', text)
                     }}
-                    value={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
+                    value={address?.internal_number || formState.changes?.internal_number || addressState?.address?.internal_number || ''}
                     style={styles.inputsStyle}
                     forwardRef={internalNumberRef}
                     returnKeyType='next'
-                    onSubmitEditing={() => zipCodeRef.current.focus()}
+                    onSubmitEditing={() => zipCodeRef?.current?.focus?.()}
                     blurOnSubmit={false}
                   />
                 )}
-              />
-
+              />)}
+            {validationFields.fields?.address['zipcode'].enabled && (
               <Controller
                 control={control}
                 name='zipcode'
@@ -519,11 +609,12 @@ const AddressFormUI = (props: AddressFormParams) => {
                     style={styles.inputsStyle}
                     forwardRef={zipCodeRef}
                     returnKeyType='next'
-                    onSubmitEditing={() => addressNotesRef.current.focus()}
+                    onSubmitEditing={() => addressNotesRef?.current?.focus?.()}
                     blurOnSubmit={false}
                   />
                 )}
-              />
+              />)}
+              {validationFields.fields?.address['address_notes'].enabled && (
               <Controller
                 control={control}
                 name='address_notes'
@@ -545,7 +636,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                     blurOnSubmit
                   />
                 )}
-              />
+              />)}
             </FormInput>
             {!isKeyboardShow && (
               <IconsContainer>

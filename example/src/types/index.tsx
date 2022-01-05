@@ -72,6 +72,10 @@ export interface AddressFormParams {
   isFromCheckout?: boolean
   afterSignup?: boolean
   isGuestFromStore?: boolean
+  businessId?: number
+  productId?: number
+  categoryId?: number
+  store?: string
 }
 export interface SignupParams {
   navigation?: any;
@@ -108,6 +112,7 @@ export interface LanguageSelectorParams {
   languagesState?: any;
   currentLanguage?: string;
   handleChangeLanguage?: any;
+  isFromProfile?: boolean,
 }
 export interface BusinessesListingParams {
   navigation?: any;
@@ -125,7 +130,7 @@ export interface BusinessesListingParams {
 export interface BusinessTypeFilterParams {
   businessTypes?: Array<any>;
   handleChangeBusinessType: any;
-  currentTypeSelected?: string | null;
+  currentTypeSelected?: any;
   defaultBusinessType?: string | null;
   images?: any
   typesState?: any
@@ -154,6 +159,10 @@ export interface BusinessProductsListingParams {
   header?: any;
   logo?: any;
   productModal?: any;
+  businessId?: number;
+  categoryId?: number;
+  productId?: number;
+  getNextProducts?: () => {};
   handleChangeCategory: (value: any) => {};
   setProductLogin?: () => {};
   updateProductModal?: (value: any) => {}
@@ -246,6 +255,8 @@ export interface ActiveOrdersParams {
   customArray?: Array<any>
   setScreen?: any,
   screen?: any,
+  isPreorders?: boolean,
+  preordersLength: number,
   loadMoreOrders?: () => {},
   onNavigationRedirect?: (route: string, params?: any) => {}
 }
@@ -260,18 +271,21 @@ export interface PreviousOrdersParams {
   onNavigationRedirect?: (route: string, params?: any) => {}
 }
 export interface OrderDetailsParams {
-  navigation?: any,
-  messagesReadList?: any,
-  urlToShare?: string,
-  messages?: any,
-  order?: any,
-  handleOrderRedirect?: () => {},
-  setMessages?: () => {},
-  readMessages?: () => {},
-  isFromCheckout?: boolean,
-  driverLocation?: any,
-  isFromRoot?: any,
-  goToBusinessList?: boolean
+  navigation?: any;
+  messagesReadList?: any;
+  urlToShare?: string;
+  messages?: any;
+  handleAssignDriver?: (id: any) => {};
+  handleChangeOrderStatus?: (status: any) => {};
+  order?: any;
+  handleOrderRedirect?: () => {};
+  setMessages?: () => {};
+  readMessages?: () => {};
+  isFromCheckout?: boolean;
+  driverLocation?: any;
+  isFromRoot?: any;
+  goToBusinessList?: any;
+  onNavigationRedirect?: any;
 }
 export interface ProductItemAccordionParams {
   key?: any;
@@ -286,13 +300,40 @@ export interface ProductItemAccordionParams {
   isFromCheckout?: any
 }
 export interface ReviewOrderParams {
-  order?: { orderId: number, businessId: number, logo: string },
+  order?: { id: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
   stars?: any,
   handleChangeInput?: any,
   handleChangeRating?: any,
   handleSendReview?: any,
   formState?: any,
-  navigation?: any
+  navigation?: any,
+  setIsReviewed?: (isReviewed: boolean) => {},
+  handleReviewState?: any,
+  setStars?: any,
+  onNavigationRedirect?: any
+}
+export interface ReviewProductParams {
+  navigation?: any,
+  onNavigationRedirect?: any,
+  order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
+  formState?: any,
+  handleChangeFormState?: any,
+  handleSendProductReview?: any
+}
+export interface ReviewDriverParams {
+  navigation?: any,
+  onNavigationRedirect?: any,
+  order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
+  formState?: any,
+  setIsDriverReviewed?: (isReviewed: boolean) => {},
+  dirverReviews?: any,
+  setDriverReviews?: any,
+  handleSendDriverReview?: any
+}
+export interface SingleProductReviewParams {
+  product: any,
+  formState?: any,
+  handleChangeFormState?: any,
 }
 export interface MessagesParams {
   type?: string,
@@ -394,4 +435,39 @@ export interface AppleLoginParams {
   handleLoading?: (val: boolean) => void,
   handleSuccessApple?: (result: any) => void,
   notificationState?: any,
+}
+export interface ShareComponentParams {
+  orderId?: number;
+  hashkey?: string;
+}
+
+export interface AccountParams {
+  navigation: any;
+  formState?: any;
+  isEdit?: boolean;
+  cleanFormState?: any;
+  toggleIsEdit?: any;
+  validationFields?: any;
+  handleButtonUpdateClick?: any;
+}
+
+export interface HelpParams {
+  navigation: any;
+}
+
+export interface LastOrdersParams {
+  orderList?: any,
+  onRedirect?: any,
+}
+
+export interface HelpOrderParams {
+  navigation: any;
+}
+
+export interface HelpGuideParams {
+  navigation: any;
+}
+
+export interface HelpAccountAndPaymentParams {
+  navigation: any;
 }

@@ -59,6 +59,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
   }
 
   const handleChangeMoment = (time : any) => {
+    if (!time || time === timeSelected) return
     setMomentState({ isLoading: 1, isEditing: true })
     handleChangeTime(time)
   }

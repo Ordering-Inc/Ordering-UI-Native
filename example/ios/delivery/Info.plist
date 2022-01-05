@@ -23,9 +23,35 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleIdentifier</key>
+			<string></string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb_FACEBOOK_ID_</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleIdentifier</key>
+			<string></string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>delivery</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>delivery</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleIdentifier</key>
+			<string></string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>REVERSED_CLIENT_ID</string>
 			</array>
 		</dict>
 	</array>
@@ -60,7 +86,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>The app requires access to the camera for the profile picture, to upload images to communicate via the messaging features of the app.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>app will require location access to get customer's location</string>
+	<string>App will require location access to get customer&apos;s location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app requires access to the photo library for the profile picture, to upload images to communicate via the messaging features of the app.</string>
 	<key>UIAppFonts</key>
@@ -99,10 +125,6 @@
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>
-	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -113,5 +135,9 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

@@ -1,10 +1,9 @@
 import styled from 'styled-components/native'
 
-export const ReviewOrderContainer = styled.View`
-  width: 100%;
-  flex: 1;
+export const ReviewOrderContainer = styled.ScrollView`
+  padding: 20px;
+  margin-bottom: 100px;
 `
-export const ReviewOrderTitle = styled.View``
 
 export const BusinessLogo = styled.View`
   margin-vertical: 5px;
@@ -14,18 +13,32 @@ export const BusinessLogo = styled.View`
 export const FormReviews = styled.View`
   flex: 1;
   height: 100%;
+  margin-top: 30px;
 `
 
-export const Category = styled.View`
-  padding: 10px;
-  border-width: 1px;
-  border-color: ${({ colors }: any) => colors.secundaryContrast};
+export const CommentsButtonGroup = styled.View`
   flex-direction: row;
+  flex-wrap: wrap;
+`
+
+export const ActionContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
   justify-content: space-between;
-  margin-vertical: 5px;
-  border-radius: 10px;
+  padding: 3px 10px;
 `
 
-export const Stars = styled.View`
+export const SkipButton = styled.TouchableOpacity`
+`
+
+export const RatingBarContainer = styled.View`
+  margin-top: 10px;
+  margin-bottom: 25px;
+`
+
+export const RatingTextContainer = styled.View`
   flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
 `

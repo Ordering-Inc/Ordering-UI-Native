@@ -26,7 +26,7 @@ export const FacebookLogin = (props: any) => {
     : t('LOGIN_WITH_FACEBOOK', 'Login with Facebook');
 
   const logoutWithFacebook = () => {
-    LoginManager.logOut();
+    LoginManager && LoginManager.logOut();
   };
 
   const handleLoginClick = async (accessToken: string) => {
@@ -46,6 +46,7 @@ export const FacebookLogin = (props: any) => {
         }
       } else {
         handleLoading && handleLoading(false)
+        handleErrors && handleErrors(response.content.result)
         logoutWithFacebook()
       }
     } catch (err) {
@@ -56,7 +57,7 @@ export const FacebookLogin = (props: any) => {
 
   const loginWithFacebook = () => {
     handleLoading && handleLoading(true)
-    LoginManager.logInWithPermissions(['public_profile']).then(
+    LoginManager && LoginManager.logInWithPermissions(['public_profile']).then(
       (login: any) => {
         if (login.isCancelled) {
           const err = t('LOGIN_WITH_FACEBOOK_CANCELLED', 'Login cancelled')
@@ -66,6 +67,9 @@ export const FacebookLogin = (props: any) => {
           AccessToken.getCurrentAccessToken().then((data: any) => {
             const accessToken = data.accessToken.toString();
             handleLoginClick(accessToken)
+          }).catch((err : any) => {
+            handleErrors && handleErrors(err.message)
+            handleLoading && handleLoading(false)
           });
         }
       },
@@ -76,7 +80,10 @@ export const FacebookLogin = (props: any) => {
         handleLoading && handleLoading(false)
         handleErrors && handleErrors(err)
       },
-    );
+    ).catch((err : any) => {
+        handleErrors && handleErrors(err.message)
+        handleLoading && handleLoading(false)
+    });
   };
 
   const onPressButton = auth

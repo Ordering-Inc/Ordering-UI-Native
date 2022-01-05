@@ -46,7 +46,7 @@ export const ButtonsWrapper = styled.View`
 
 export const SocialButtons = styled.View`
   width: 100%;
-  margin: 0px auto 20px;
+  margin: 0px auto 10px;
 `
 
 export const OrSeparator = styled.View`

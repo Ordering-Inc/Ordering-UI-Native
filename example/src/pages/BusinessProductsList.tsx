@@ -12,6 +12,10 @@ const BusinessProductsList = (props: any) => {
   const header = props.route.params?.header
   const logo = props.route.params?.logo
   const product = props.route.params?.productLogin
+  const businessId = props.route.params?.businessId
+  const categoryId = props.route.params?.categoryId
+  const productId = props.route.params?.productId
+
   const businessProductsProps = {
     ...props,
     ordering,
@@ -45,7 +49,8 @@ const BusinessProductsList = (props: any) => {
       'groceries',
       'slug',
       'products',
-      'zones'
+      'zones',
+      'timezone'
     ],
     handleSearchRedirect: () => {
       props.navigation.navigate('BusinessList')
@@ -54,7 +59,10 @@ const BusinessProductsList = (props: any) => {
     onCheckoutRedirect: (cartUuid: any) => {},
     logo,
     header,
-    product
+    product,
+    productId,
+    categoryId,
+    businessId
   }
 
   const BusinessProductsListView = styled.SafeAreaView`

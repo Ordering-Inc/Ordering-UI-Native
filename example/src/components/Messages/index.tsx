@@ -5,9 +5,9 @@ import { useTheme } from 'styled-components/native';
 import { GiftedChat, Actions, InputToolbar, Composer, Send, Bubble, MessageImage } from 'react-native-gifted-chat'
 import { USER_TYPE } from '../../config/constants'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { OIcon, OIconButton, OText } from '../shared'
+import { OIcon, OIconButton, OText, OButton } from '../shared'
 import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard,I18nManager } from 'react-native'
-import { Header, TitleHeader, Wrapper } from './styles'
+import { Header, TitleHeader, Wrapper, QuickMessageContainer } from './styles'
 import { MessagesParams } from '../../types'
 
 const ImageDummy = require('../../assets/images/image.png')
@@ -38,6 +38,14 @@ const ORDER_STATUS: any = {
   21: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
 }
 
+const imgOptions = {
+  mediaType: 'photo',
+  maxHeight: 300,
+  maxWidth: 300,
+  includeBase64: true,
+  selectionLimit: 0
+}
+
 const MessagesUI = (props: MessagesParams) => {
   const {
     type,
@@ -58,11 +66,25 @@ const MessagesUI = (props: MessagesParams) => {
   const [, { showToast }] = useToast();
   const theme = useTheme();
 
+  const quickMessageList = [
+    { key: 'driver_message_1', text: t('DRIVER_MESSAGE_1', 'driver_message_1') },
+    { key: 'driver_message_2', text: t('DRIVER_MESSAGE_2', 'driver_message_2') },
+    { key: 'driver_message_3', text: t('DRIVER_MESSAGE_3', 'driver_message_3') },
+    { key: 'driver_message_4', text: t('DRIVER_MESSAGE_4', 'driver_message_4') }
+  ]
+
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
 
+  const previousStatus = [1, 2, 5, 6, 10, 11, 12, 16, 17]
+  const chatDisabled = previousStatus.includes(order?.status)
+
   const onChangeMessage = (val: string) => {
     setMessage && setMessage(val)
+  }
+
+  const handleClickQuickMessage = (text: string) => {
+    setMessage && setMessage(`${message}${text}`)
   }
 
   const removeImage = () => {
@@ -70,15 +92,15 @@ const MessagesUI = (props: MessagesParams) => {
   }
 
   const handleImagePicker = () => {
-    launchImageLibrary({ mediaType: 'photo', maxHeight: 300, maxWidth: 300, includeBase64: true }, (response : any) => {
+    launchImageLibrary(imgOptions, (response : any) => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        // showToast(ToastType.Error, response.errorMessage);
       } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
         showToast(ToastType.Error, response.errorMessage);
       } else {
-        if (response.uri) {
-          const url = `data:${response.type};base64,${response.base64}`
+        if (response?.assets?.length > 0) {
+          const image = response?.assets[0]
+          const url = `data:${image.type};base64,${image.base64}`
           setImage && setImage(url);
         } else {
           showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
@@ -187,40 +209,91 @@ const MessagesUI = (props: MessagesParams) => {
     <InputToolbar
       {...props}
       containerStyle={{
-        padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10
+        padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
+        flexDirection: 'column-reverse'
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}
+      renderAccessory={() => renderAccessory()}
     />
   )
 
+  const renderAccessory = () => {
+    return (
+      <QuickMessageContainer
+        style={{
+          marginLeft: 10,
+          marginBottom: 10
+        }}
+        contentContainerStyle={{
+          alignItems: 'center',
+        }}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      >
+        {quickMessageList.map((quickMessage, i) => (
+          <OButton
+            key={i}
+            text={quickMessage.text}
+            bgColor='#E9ECEF'
+            borderColor='#E9ECEF'
+            imgRightSrc={null}
+            textStyle={{
+              fontSize: 11,
+              lineHeight: 16,
+              color: '#414954'
+            }}
+            style={{ ...styles.editButton }}
+            onClick={() => handleClickQuickMessage(quickMessage.text)}
+          />
+        ))}
+      </QuickMessageContainer>
+    )
+  }
+
   const renderComposer = (props: any) => (
-    <View style={{flexDirection: 'row', width: '80%'}}>
-      <Composer
-        {...props}
-        textInputStyle={{
-          backgroundColor: theme.colors.white,
-          borderRadius: 25,
-          paddingHorizontal: 10,
-          borderColor: '#DBDCDB',
-          borderWidth: 1,
-          color: '#010300',
-          textAlign: I18nManager.isRTL ? 'right' : 'left'
+    chatDisabled ? (
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'column',
+          alignItems: 'center'
         }}
-        textInputProps={{
-          value: message,
-          onSubmitEditing: onSubmit,
-          returnKeyType: message ? 'send' : 'done',
-          blurOnSubmit: true,
-          multiline: false,
-          numberOfLines: 1,
-          autoCorrect: false,
-          autoCompleteType: 'off',
-          enablesReturnKeyAutomatically: false
-        }}
-        placeholder={t('WRITE_MESSAGE', 'Write message...')}
-      />
-      <RenderActions {...props} />
-    </View>
+      >
+        <MaterialCommunityIcon
+          name='close-octagon-outline'
+          size={24}
+        />
+        <OText size={14}>{t('NOT_SEND_MESSAGES', 'You can\'t send messages because the order has ended')}</OText>
+      </View>
+    ) : (
+      <View style={{flexDirection: 'row', width: '80%'}}>
+        <Composer
+          {...props}
+          textInputStyle={{
+            backgroundColor: theme.colors.white,
+            borderRadius: 25,
+            paddingHorizontal: 10,
+            borderColor: '#DBDCDB',
+            borderWidth: 1,
+            color: '#010300',
+            textAlign: I18nManager.isRTL ? 'right' : 'left'
+          }}
+          textInputProps={{
+            value: message,
+            onSubmitEditing: onSubmit,
+            returnKeyType: message ? 'send' : 'done',
+            blurOnSubmit: true,
+            multiline: false,
+            numberOfLines: 1,
+            autoCorrect: false,
+            autoCompleteType: 'off',
+            enablesReturnKeyAutomatically: false
+          }}
+          placeholder={t('WRITE_MESSAGE', 'Write message...')}
+        />
+        <RenderActions {...props} />
+      </View>
+    )
   )
 
   const renderSend = (props: any) => (
@@ -310,7 +383,7 @@ const MessagesUI = (props: MessagesParams) => {
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
           messagesContainerStyle={{
-            paddingBottom: 20
+            paddingBottom: 55
           }}
           isLoadingEarlier={messages.loading}
           renderLoading={() => <ActivityIndicator size="small" color="#000" />}
@@ -336,6 +409,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 4
+  },
+  editButton : {
+    borderRadius: 50,
+    backgroundColor: '#E9ECEF',
+    marginRight: 10,
+    height: 24,
+    borderWidth: 1,
+    paddingLeft: 0,
+    paddingRight: 0
   }
 })
 

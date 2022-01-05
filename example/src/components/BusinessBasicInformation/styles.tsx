@@ -30,6 +30,8 @@ export const WrapReviews = styled.View`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  right: 20px
 `
 export const WrapBusinessInfo = styled.TouchableOpacity`
   margin-horizontal: 10px;

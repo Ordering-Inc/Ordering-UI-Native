@@ -136,6 +136,21 @@ const CartUI = (props: any) => {
                 <OText>- {parsePrice(cart?.discount || 0)}</OText>
               </OSTable>
             )}
+            {cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
+              <OSTable>
+                {cart?.discount_type === 1 ? (
+                  <>
+                    <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                    <OText>{parsePrice(cart?.subtotal_with_discount + cart?.tax || 0)}</OText>
+                  </>
+                ) : (
+                  <>
+                    <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                    <OText>{parsePrice(cart?.subtotal_with_discount || 0)}</OText>
+                  </>
+                )}
+              </OSTable>
+            )}
             {cart.business.tax_type !== 1 && (
               <OSTable>
                 <OText>
@@ -199,15 +214,15 @@ const CartUI = (props: any) => {
         {cart?.valid_products && (
           <CheckoutAction>
             <OButton
-              text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-                !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
-              ) : !cart?.valid_address ? (
-                `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
-              ) : (
+              text={!cart?.valid_address ? (
+                t('OUT_OF_COVERAGE', 'Out of Coverage')
+              ) : !cart?.valid_maximum ? (
+                `${t('MAXIMUM_SUBTOTAL_ORDER', 'Maximum subtotal order')}: ${parsePrice(cart?.maximum)}`
+              ) : (!cart?.valid_minimum && !(cart?.discount_type === 1 && cart?.discount_rate === 100)) ? (
                 `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
-              )}
-              bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
-              isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
+              ) : !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')}
+              bgColor={(!cart?.valid_maximum || (!cart?.valid_minimum && !(cart?.discount_type === 1 && cart?.discount_rate === 100)) || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
+              isDisabled={(openUpselling && !canOpenUpselling) || !cart?.valid_maximum || (!cart?.valid_minimum && !(cart?.discount_type === 1 && cart?.discount_rate === 100)) || !cart?.valid_address}
               borderColor={theme.colors.primary}
               imgRightSrc={null}
               textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
@@ -222,6 +237,7 @@ const CartUI = (props: any) => {
         entireModal
         customClose
         onClose={() => setModalIsOpen(false)}
+        isAvoidKeyBoardView
       >
         <ProductForm
           isCartProduct

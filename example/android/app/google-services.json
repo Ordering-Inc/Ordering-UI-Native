@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "669747972899",
+    "project_id": "ordering-rn-firebase",
+    "storage_bucket": "ordering-rn-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669747972899:android:e4c2bfc819bf6a94e95a96",
+        "android_client_info": {
+          "package_name": "com.delivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "669747972899-uu9tdmcr2m479qc287tvd75lsdq18i8e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUyl9OkhpNzr-nCbUIMwH1lrjrC-xxuVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669747972899-uu9tdmcr2m479qc287tvd75lsdq18i8e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "669747972899-bjq7rjsv8kb74j1plkadd639ehvanrss.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ordering.delivery"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

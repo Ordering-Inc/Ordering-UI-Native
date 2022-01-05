@@ -56,7 +56,7 @@ const StripeElementsFormUI = (props: any) => {
           last4: paymentMethod.Card.last4
         }
       })
-    } catch (error) {
+    } catch (error: any) {
       setErrors(error?.message || error?.toString());
     }
   }
@@ -85,7 +85,7 @@ const StripeElementsFormUI = (props: any) => {
             : error.message
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       setErrors(error?.message || error?.toString());
     }
   };

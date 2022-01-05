@@ -70,7 +70,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         !category.id && categories && categories.filter(category => category.id !== null).map((category, i, _categories) => {
           const products = categoryState.products?.filter((product: any) => product.category_id === category.id) || []
           return (
-            <View key={category.id} style={{alignItems: 'flex-start'}}>
+            <View key={category.id} style={{alignItems: 'flex-start', flex:1}}>
               {
                 products.length > 0 && (
                   <>

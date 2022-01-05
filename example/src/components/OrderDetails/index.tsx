@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager } from 'react-native'
-import Spinner from 'react-native-loading-spinner-overlay'
 import LinearGradient from 'react-native-linear-gradient'
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Messages } from '../Messages'
+import { ShareComponent } from '../ShareComponent'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
@@ -34,7 +36,8 @@ import {
   Total,
   Icons,
   OrderDriver,
-  Map
+  Map,
+  LoadingWrapper
 } from './styles'
 import { OButton, OIcon, OModal, OText } from '../shared'
 import { ProductItemAccordion } from '../ProductItemAccordion'
@@ -43,6 +46,8 @@ import { USER_TYPE } from '../../config/constants'
 import { GoogleMap } from '../GoogleMap'
 import { verifyDecimals } from '../../utils'
 import { useTheme } from 'styled-components/native'
+import { NotFoundSource } from '../NotFoundSource'
+import { OrderCreating } from '../OrderCreating';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -54,7 +59,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     isFromCheckout,
     isFromRoot,
     driverLocation,
-    goToBusinessList
+    goToBusinessList,
+    onNavigationRedirect
   } = props
 
   const theme = useTheme()
@@ -64,7 +70,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       flexDirection: 'row'
     },
     statusBar: {
-      transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
+      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
       height: 10,
     },
     logo: {
@@ -92,10 +98,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ user }] = useSession()
   const [{ configs }] = useConfig()
   const [, { refreshOrderOptions }] = useOrder()
-  const [openModalForBusiness,setOpenModalForBusiness] = useState(false)
-  const [openModalForDriver,setOpenModalForDriver] = useState(false)
+  const [openModalForBusiness, setOpenModalForBusiness] = useState(false)
+  const [openModalForDriver, setOpenModalForDriver] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
-  const { order, businessData } = props.order
+  const [isReviewed, setIsReviewed] = useState(false)
+  const [openOrderCreating, setOpenOrderCreating] = useState(true)
+  const { order, loading, businessData, error } = props.order
+  const isTaxIncluded = order?.tax_type === 1
 
 
   const getOrderStatus = (s: string) => {
@@ -162,10 +171,28 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       navigation?.canGoBack() && navigation.goBack();
       return
     }
-    if(goToBusinessList){
+    if (goToBusinessList) {
       refreshOrderOptions()
     }
     navigation.navigate('BottomTab');
+  }
+
+  const handleClickOrderReview = (order: any) => {
+    navigation.navigate(
+      'ReviewOrder',
+      {
+        order: {
+          id: order?.id,
+          business_id: order?.business_id,
+          logo: order.business?.logo,
+          driver: order?.driver,
+          products: order?.products,
+          review: order?.review,
+          user_review: order?.user_review
+        },
+        setIsReviewed
+      }
+    )
   }
 
   useEffect(() => {
@@ -181,7 +208,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }, [messagesReadList])
 
-  const locations = [
+  let locations = [
     { ...order?.driver?.location, title: t('DRIVER', 'Driver'), icon: order?.driver?.photo || 'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png' },
     { ...order?.business?.location, title: order?.business?.name, icon: order?.business?.logo || theme.images.dummies.businessLogo },
     { ...order?.customer?.location, title: t('YOUR_LOCATION', 'Your Location'), icon: order?.customer?.photo || 'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png' }
@@ -189,14 +216,24 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     if (driverLocation) {
-      locations[0] = driverLocation
+      locations[0] = {...locations[0], lat: driverLocation.lat, lng: driverLocation.lng}
     }
   }, [driverLocation])
 
+  useEffect(() => {
+    if (!loading) {
+      setOpenOrderCreating(false)
+      try {
+        AsyncStorage.removeItem('business-address')
+      } catch {
+        console.log('error')
+      }
+    }
+  }, [loading])
+
   return (
     <OrderDetailsContainer keyboardShouldPersistTaps='handled'>
-      <Spinner visible={!order || Object.keys(order).length === 0} />
-      {order && Object.keys(order).length > 0 && (
+      {order && order?.id && !error && !loading && (
         <>
           <Header>
             <OButton
@@ -226,7 +263,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </Header>
           <OrderContent>
             <OrderBusiness>
-              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                 <Logo>
                   <OIcon
                     url={order?.business?.logo}
@@ -249,6 +286,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </View>
               </View>
               <Icons>
+                {order.uuid && order.hash_key && (
+                  <ShareComponent orderId={order.uuid} hashkey={order.hash_key} />
+                )}
                 <MaterialCommunityIcon
                   name='store'
                   size={28}
@@ -301,7 +341,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderStatus>
             </View>
             <OrderCustomer>
-              <OText size={18}>{t('CUSTOMER', 'Customer')}</OText>
+              <OText size={18} style={{textAlign: 'left'}}>{t('CUSTOMER', 'Customer')}</OText>
               <Customer>
                 <CustomerPhoto>
                   <OIcon
@@ -312,8 +352,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   />
                 </CustomerPhoto>
                 <InfoBlock>
-                  <OText size={18}>{order?.customer?.name} {order?.customer?.lastname}</OText>
-                  <OText>{order?.customer?.address}</OText>
+                  <OText size={18} style={{textAlign: 'left'}} >{order?.customer?.name} {order?.customer?.lastname}</OText>
+                  <OText style={{textAlign: 'left'}}>{order?.customer?.address}</OText>
                 </InfoBlock>
               </Customer>
               {order?.driver && (
@@ -321,9 +361,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {order?.driver?.location && parseInt(order?.status) === 9 && (
                     <Map>
                       <GoogleMap
-                        location={order?.driver?.location}
+                        location={driverLocation ?? order?.driver?.location}
                         locations={locations}
-                        readOnly
                       />
                     </Map>
                   )}
@@ -359,7 +398,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderDriver>
             )}
             <OrderProducts>
-              <OText size={18}>{t('YOUR_ORDER', 'Your Order')}</OText>
+              <OText size={18} style={{textAlign: 'left'}}>{t('YOUR_ORDER', 'Your Order')}</OText>
               {order?.products?.length && order?.products.map((product: any, i: number) => (
                 <ProductItemAccordion
                   key={product?.id || i}
@@ -370,9 +409,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <OrderBill>
               <Table>
                 <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
-                <OText>{parsePrice(order?.summary?.subtotal || order?.subtotal)}</OText>
+                <OText>
+                  {parsePrice(isTaxIncluded
+                    ? (order?.summary?.subtotal + order?.summary?.tax) ?? 0
+                    : order?.summary?.subtotal ?? 0
+                  )}
+                </OText>
               </Table>
-              {(order?.summary?.discount > 0 || order?.discount > 0) && (
+              {order?.summary?.discount > 0 && (
                 <Table>
                   {order?.offer_type === 1 ? (
                     <OText>
@@ -382,54 +426,110 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   ) : (
                     <OText>{t('DISCOUNT', 'Discount')}</OText>
                   )}
-                  <OText>- {parsePrice(order?.summary?.discount || order?.discount)}</OText>
+                  <OText>- {parsePrice(order?.summary?.discount)}</OText>
+                </Table>
+              )}
+              {order?.summary?.subtotal_with_discount > 0 && order?.summary?.discount > 0 && order?.summary?.total >= 0 && (
+                <Table>
+                  <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                  <OText>{parsePrice(order?.summary?.subtotal_with_discount ?? 0)}</OText>
                 </Table>
               )}
               {order?.tax_type !== 1 && (
                 <Table>
                   <OText>
                     {t('TAX', 'Tax')}
-                    {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
+                    {`(${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%)`}
                   </OText>
-                  <OText>{parsePrice(order?.summary?.tax || order?.totalTax)}</OText>
+                  <OText>{parsePrice(order?.summary?.tax)}</OText>
                 </Table>
               )}
-              {(order?.summary?.delivery_price > 0 || order?.deliveryFee > 0) && (
+              {order?.summary?.delivery_price > 0 && (
                 <Table>
                   <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                  <OText>{parsePrice(order?.summary?.delivery_price || order?.deliveryFee)}</OText>
+                  <OText>{parsePrice(order?.summary?.delivery_price)}</OText>
                 </Table>
               )}
               <Table>
                 <OText>
                   {t('DRIVER_TIP', 'Driver tip')}
-                  {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) &&
+                  {order?.summary?.driver_tip > 0 &&
                     parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
                     !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
                     (
-                      `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`
+                      `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`
                     )}
                 </OText>
-                <OText>{parsePrice(order?.summary?.driver_tip || order?.totalDriverTip)}</OText>
+                <OText>{parsePrice(order?.summary?.driver_tip ?? 0)}</OText>
               </Table>
-              <Table>
-                <OText>
-                  {t('SERVICE_FEE', 'Service Fee')}
-                  {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
-                </OText>
-                <OText>{parsePrice(order?.summary?.service_fee || order?.serviceFee || 0)}</OText>
-              </Table>
+              {order?.summary?.service_fee > 0 && (
+                <Table>
+                  <OText>
+                    {t('SERVICE_FEE', 'Service Fee')}
+                    {`(${verifyDecimals(order?.summary?.service_fee, parseNumber)}%)`}
+                  </OText>
+                  <OText>{parsePrice(order?.summary?.service_fee)}</OText>
+                </Table>
+              )}
               <Total>
                 <Table>
                   <OText style={styles.textBold}>{t('TOTAL', 'Total')}</OText>
-                  <OText style={styles.textBold} color={theme.colors.primary}>{parsePrice(order?.summary?.total || order?.total)}</OText>
+                  <OText style={styles.textBold} color={theme.colors.primary}>
+                    {parsePrice(order?.summary?.total ?? 0)}
+                  </OText>
                 </Table>
               </Total>
+              {
+                (
+                  parseInt(order?.status) === 1 ||
+                  parseInt(order?.status) === 11 ||
+                  parseInt(order?.status) === 15 
+                ) && !order.review && !isReviewed && (
+                  <OButton
+                    onClick={() => handleClickOrderReview(order)}
+                    text={t('REVIEW_YOUR_ORDER', 'Review your order')}
+                    textStyle={{ color: theme.colors.white }}
+                    imgRightSrc=''
+                  />
+                )}
             </OrderBill>
           </OrderContent>
         </>
       )}
-      <OModal open={openModalForBusiness || openModalForDriver} entireModal onClose={() => handleCloseModal()}>
+
+      {loading && !error && (
+        <Placeholder Animation={Fade}>
+          <LoadingWrapper>
+            <PlaceholderLine height={60} style={{ marginBottom: 20 }} />
+            <PlaceholderLine height={35} width={60} style={{ marginBottom: 15 }} />
+            <PlaceholderLine height={35} width={45} style={{ marginBottom: 35 }} />
+            <PlaceholderLine height={60} style={{ marginBottom: 20 }} />
+            <PlaceholderLine height={35} width={60} style={{ marginBottom: 15 }} />
+            <PlaceholderLine height={35} width={80} style={{ marginBottom: 35 }} />
+            <PlaceholderLine height={28} width={50} style={{ marginBottom: 10 }} />
+            <PlaceholderLine height={28} width={60} style={{ marginBottom: 10 }} />
+            <PlaceholderLine height={28} width={55} style={{ marginBottom: 10 }} />
+            <PlaceholderLine height={28} width={80} style={{ marginBottom: 10 }} />
+          </LoadingWrapper>
+        </Placeholder>
+      )}
+
+      {!loading && error && (
+        <NotFoundSource
+          content={error && error.includes('ERROR_ACCESS_EXPIRED')
+            ? t(error[0], 'Sorry, the order has expired.')
+            : t('NOT_FOUND_ORDER', 'Sorry, we couldn\'t find the requested order.')
+          }
+          btnTitle={t('GO_TO_BUSINESSLIST', 'Go to business list')}
+          onClickButton={() => onNavigationRedirect('BusinessList')}
+        />
+      )}
+
+      <OModal
+        entireModal
+        open={openModalForBusiness || openModalForDriver}
+        onClose={() => handleCloseModal()}
+      >
         <Messages
           type={openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER}
           orderId={order?.id}
@@ -438,7 +538,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           setMessages={setMessages}
         />
       </OModal>
-
+      <OModal
+        entireModal
+        open={openOrderCreating}
+        isNotDecoration
+        customClose
+      >
+        <OrderCreating
+          isOrderDetail
+        />
+      </OModal>
     </OrderDetailsContainer>
   )
 }

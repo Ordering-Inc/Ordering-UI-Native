@@ -12,6 +12,7 @@ const AddressList = ({ route, navigation }: any) => {
     isFromBusinesses: route?.params?.isFromBusinesses,
     isFromProductsList: route?.params?.isFromProductsList,
     isFromCheckout: route?.params?.isFromCheckout,
+    isFromProfile: route?.params?.isFromProfile,
     afterSignup: route?.params?.afterSignup
   }
 

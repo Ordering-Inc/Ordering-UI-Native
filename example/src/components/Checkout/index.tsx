@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform, I18nManager, ScrollView } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 import {
@@ -39,13 +39,18 @@ import {
   ChCart,
   ChErrors,
   ChBusinessDetails,
-  ChUserDetails
+  ChUserDetails,
+  TextDetails
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 import { FloatingButton } from '../FloatingButton';
 import { Container } from '../../layouts/Container';
 import { useTheme } from 'styled-components/native';
+import { ActivityIndicator } from 'react-native-paper';
+import WebView from 'react-native-webview';
+import Icon from 'react-native-vector-icons/Feather';
+import { OrderCreating } from '../OrderCreating';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -78,7 +83,8 @@ const CheckoutUI = (props: any) => {
     onNavigationRedirect,
     businessLogo,
     businessName,
-    cartTotal
+    cartTotal,
+    currency
   } = props
 
   const theme = useTheme();
@@ -101,29 +107,38 @@ const CheckoutUI = (props: any) => {
     }
   })
 
-  const [, { showToast }]= useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage();
-  const [{ user }] = useSession();
+  const [{ user, token }] = useSession();
   const [{ configs }] = useConfig();
   const [{ parsePrice, parseDate }] = useUtils();
-  const [{ options, carts, loading }] = useOrder();
+  const [{ options, carts, loading }, { confirmCart }] = useOrder();
   const [validationFields] = useValidationFields();
+  const [ordering] = useApi()
+  const webviewRef = useRef<any>(null)
 
   const [errorCash, setErrorCash] = useState(false);
   const [userErrors, setUserErrors] = useState<any>([]);
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
+  const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
+  const [paypalMethod, setPaypalMethod] = useState<any>(null)
+  const [progClr, setProgClr] = useState('#424242');
+  const [prog, setProg] = useState(true);
+  const [openOrderCreating, setOpenOrderCreating] = useState(false)
+  const [cardData, setCardData] = useState(null)
 
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
 
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
-
+  const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
   const cartsWithProducts = carts && Object.values(carts).filter((cart: any) => cart.products.length) || null
 
   const handlePlaceOrder = () => {
     if (!userErrors.length) {
+      setOpenOrderCreating(true)
       handlerClickPlaceOrder && handlerClickPlaceOrder()
       return
     }
@@ -167,6 +182,45 @@ const CheckoutUI = (props: any) => {
     setPhoneUpdate(val)
   }
 
+  const onMessage = (e: any) => {
+    if (e?.nativeEvent?.data) {
+      let payment = JSON.parse(e.nativeEvent.data);
+
+      if (payment === 'api error') {
+        setShowGateway({ closedByUser: true, open: false })
+        setProg(true);
+      }
+
+      if (payment) {
+        if (payment.error) {
+          showToast(ToastType.Error, payment.result)
+          setOpenOrderCreating(false)
+        } else if (payment?.result?.order?.uuid) {
+          showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfully'))
+          onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment?.result?.order?.uuid, goToBusinessList: true })
+        }
+        setProg(true);
+        setShowGateway({ closedByUser: false, open: false })
+      }
+    }
+  }
+
+  const onFailPaypal = async () => {
+    if (showGateway.closedByUser === true) {
+      await confirmCart(cart.uuid)
+    }
+  }
+
+  const handlePaymentMethodClick = (paymethod: any) => {
+    setShowGateway({ closedByUser: false, open: true })
+    setPaypalMethod(paymethod)
+  }
+
+  const handleCloseWebview = () => {
+    setProg(true);
+    setShowGateway({ open: false, closedByUser: true })
+  }
+
   useEffect(() => {
     if (validationFields && validationFields?.fields?.checkout) {
       checkValidationFields()
@@ -177,8 +231,13 @@ const CheckoutUI = (props: any) => {
     if (errors) {
       const errorText = manageErrorsToShow(errors)
       showToast(ToastType.Error, errorText)
+      setOpenOrderCreating(false)
     }
   }, [errors])
+
+  useEffect(() => {
+    onFailPaypal()
+  }, [showGateway.closedByUser])
 
   return (
     <>
@@ -235,8 +294,8 @@ const CheckoutUI = (props: any) => {
             <ChAddress>
               {(businessDetails?.loading || cartState.loading) ? (
                 <Placeholder Animation={Fade}>
-                  <PlaceholderLine height={20} style={{ marginBottom: 50 }} />
-                  <PlaceholderLine height={100} />
+                  <PlaceholderLine height={40} style={{ marginBottom: 20 }} />
+                  <PlaceholderLine height={100} style={{ marginBottom: 20 }} />
                 </Placeholder>
               ) : (
                 <AddressDetails
@@ -252,35 +311,43 @@ const CheckoutUI = (props: any) => {
             </ChAddress>
           </ChSection>
           <ChSection style={style.paddSectionH}>
-            <ChMoment>
-              <CHMomentWrapper
-                disabled={loading}
-                onPress={() => navigation.navigate('MomentOption')}
-              >
-                <MaterialCommunityIcon
-                  name='clock-outline'
-                  size={24}
-                  style={{ marginRight: 5 }}
-                />
-                <OText size={18} numberOfLines={1} ellipsizeMode='tail'>
-                  {options?.moment
-                    ? parseDate(options?.moment, {
-                      outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
-                    })
-                    : t('ASAP_ABBREVIATION', 'ASAP')}
-                </OText>
-              </CHMomentWrapper>
-            </ChMoment>
+            {(isPreOrderSetting || configs?.preorder_status_enabled?.value === undefined) && (
+              <ChMoment>
+                {cartState.loading ? (
+                  <Placeholder Animation={Fade}>
+                    <PlaceholderLine height={50} style={{ marginBottom: 0 }} />
+                  </Placeholder>
+                ) : (
+                  <CHMomentWrapper
+                    disabled={loading}
+                    onPress={() => navigation.navigate('MomentOption')}
+                  >
+                    <MaterialCommunityIcon
+                      name='clock-outline'
+                      size={24}
+                      style={{ marginRight: 5 }}
+                    />
+                    <OText size={18} numberOfLines={1} ellipsizeMode='tail'>
+                      {options?.moment
+                        ? parseDate(options?.moment, {
+                          outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
+                        })
+                        : t('ASAP_ABBREVIATION', 'ASAP')}
+                    </OText>
+                  </CHMomentWrapper>
+                )}
+              </ChMoment>
+            )}
           </ChSection>
 
           <ChSection style={style.paddSection}>
             <ChUserDetails>
               {cartState.loading ? (
                 <Placeholder Animation={Fade}>
-                  <PlaceholderLine height={20} width={70} />
-                  <PlaceholderLine height={15} width={60} />
-                  <PlaceholderLine height={15} width={60} />
-                  <PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+                  <PlaceholderLine height={25} width={70} />
+                  <PlaceholderLine height={20} width={60} />
+                  <PlaceholderLine height={20} width={60} />
+                  <PlaceholderLine height={20} width={80} style={{ marginBottom: 20 }} />
                 </Placeholder>
               ) : (
                 <UserDetails
@@ -305,10 +372,10 @@ const CheckoutUI = (props: any) => {
                 !businessDetails?.error &&
                 (
                   <Placeholder Animation={Fade}>
-                    <PlaceholderLine height={20} width={70} />
-                    <PlaceholderLine height={15} width={60} />
-                    <PlaceholderLine height={15} width={60} />
-                    <PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+                    <PlaceholderLine height={25} width={70} />
+                    <PlaceholderLine height={20} width={60} />
+                    <PlaceholderLine height={20} width={60} />
+                    <PlaceholderLine height={20} width={80} style={{ marginBottom: 20 }} />
                   </Placeholder>
                 )}
               {
@@ -316,33 +383,33 @@ const CheckoutUI = (props: any) => {
                 businessDetails?.business &&
                 Object.values(businessDetails?.business).length > 0 &&
                 (
-                  <View>
+                  <View style={{ alignItems: 'flex-start' }}>
                     <OText size={20}>
                       {t('BUSINESS_DETAILS', 'Business Details')}
                     </OText>
                     <View>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails>
                           {t('NAME', 'Name')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.name}
                       </OText>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails size={18} weight='bold'>
                           {t('EMAIL', 'Email')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.email}
                       </OText>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails size={18} weight='bold'>
                           {t('CELLPHONE', 'Cellphone')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.cellphone}
                       </OText>
                       <OText size={16}>
-                        <OText size={18} weight='bold'>
+                        <TextDetails size={18} weight='bold'>
                           {t('ADDRESS', 'Address')}:{' '}
-                        </OText>
+                        </TextDetails>
                         {businessDetails?.business?.address}
                       </OText>
                     </View>
@@ -391,7 +458,7 @@ const CheckoutUI = (props: any) => {
           {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
             <ChSection style={style.paddSectionH}>
               <ChPaymethods>
-                <OText size={20}>
+                <OText size={20} style={{ alignItems: 'flex-start', textAlign: 'left' }}>
                   {t('PAYMENT_METHOD', 'Payment Method')}
                 </OText>
                 {!cartState.loading && cart?.status === 4 && (
@@ -414,6 +481,8 @@ const CheckoutUI = (props: any) => {
                   setErrorCash={setErrorCash}
                   onNavigationRedirect={onNavigationRedirect}
                   paySelected={paymethodSelected}
+                  handlePaymentMethodClickCustom={handlePaymentMethodClick}
+                  setCardData={setCardData}
                 />
               </ChPaymethods>
             </ChSection>
@@ -429,7 +498,7 @@ const CheckoutUI = (props: any) => {
                   />
                 ) : (
                   <>
-                    <OText size={20}>
+                    <OText size={20} style={{ alignItems: 'flex-start', textAlign: 'left' }}>
                       {t('ORDER_SUMMARY', 'Order Summary')}
                     </OText>
                     <OrderSummary
@@ -485,9 +554,9 @@ const CheckoutUI = (props: any) => {
           <>
             <FloatingButton
               handleClick={() => handlePlaceOrder()}
-              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
-              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
-              btnText={cart?.subtotal >= cart?.minimum
+              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal_to_calculate < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
+              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal_to_calculate < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
+              btnText={cart?.subtotal_to_calculate >= cart?.minimum
                 ? (
                   placing
                     ? t('PLACING', 'Placing')
@@ -501,6 +570,83 @@ const CheckoutUI = (props: any) => {
           </>
         </>
       )}
+      {paypalMethod && showGateway.open && (
+        <View style={{ zIndex: 9999, height: '100%', width: '100%', position: 'absolute', backgroundColor: 'white' }}>
+          <Icon
+            name="x"
+            size={35}
+            style={{ backgroundColor: 'white', paddingTop: 30, paddingLeft: 10 }}
+            onPress={handleCloseWebview}
+          />
+          <OText
+            style={{
+              textAlign: 'center',
+              fontSize: 16,
+              fontWeight: 'bold',
+              color: '#00457C',
+              marginBottom: 5,
+              marginTop: 10
+            }}>
+            {t('PAYPAL_GATEWAY', 'PayPal GateWay')}
+          </OText>
+          <View style={{ padding: 20, opacity: prog ? 1 : 0, backgroundColor: 'white' }}>
+            <ActivityIndicator size={24} color={progClr} />
+          </View>
+          <WebView
+            source={{ uri: `${ordering.root}/html/paypal_react_native` }}
+            onMessage={onMessage}
+            ref={webviewRef}
+            javaScriptEnabled={true}
+            javaScriptEnabledAndroid={true}
+            cacheEnabled={false}
+            cacheMode='LOAD_NO_CACHE'
+            style={{ flex: 1 }}
+            onLoadStart={() => {
+              setProg(true);
+              setProgClr('#424242');
+            }}
+            onLoadProgress={() => {
+              setProg(true);
+              setProgClr('#00457C');
+            }}
+            onLoad={() => {
+              setProg(true);
+              setProgClr('#00457C');
+            }}
+            onLoadEnd={(e) => {
+              const message = {
+                action: 'init',
+                data: {
+                  urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
+                  urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
+                  payData: {
+                    paymethod_id: paypalMethod?.id,
+                    amount: cart?.total,
+                    delivery_zone_id: cart?.delivery_zone_id,
+                    user_id: user?.id
+                  },
+                  currency: configs?.stripe_currency?.value || currency,
+                  userToken: token,
+                  clientId: paypalMethod?.credentials?.client_id
+                }
+              }
+              setProg(false);
+              webviewRef.current.postMessage(JSON.stringify(message))
+            }}
+          />
+        </View>
+      )}
+      {openOrderCreating && (
+        <View style={{ zIndex: 9999, height: '100%', width: '100%', position: 'absolute', backgroundColor: 'white' }}>
+          <OrderCreating
+            business={businessDetails?.business}
+            businessLogo={businessLogo}
+            cart={cartState.cart}
+            cardData={cardData}
+            isCheckOut
+          />
+        </View>
+      )}
     </>
   )
 }
@@ -512,6 +658,7 @@ export const Checkout = (props: any) => {
     cartUuid,
     stripePaymentOptions,
     onNavigationRedirect,
+    navigation
   } = props
 
   const [, { showToast }] = useToast();
@@ -522,7 +669,8 @@ export const Checkout = (props: any) => {
   const { confirmPayment, loading: confirmPaymentLoading } = useConfirmPayment();
 
   const [cartState, setCartState] = useState<any>({ loading: true, error: [], cart: null });
-  const [orderState] = useOrder()
+
+  const confirmMethods = ['stripe_redirect', 'paypal']
 
   const getOrder = async (cartId: any) => {
     try {
@@ -550,7 +698,7 @@ export const Checkout = (props: any) => {
       if (result.status === 1 && result.order?.uuid) {
         onNavigationRedirect('OrderDetails', { orderId: result.order.uuid })
         setCartState({ ...cartState, loading: false })
-      } else if (result.status === 2 && result.paymethod_data?.gateway === 'stripe_redirect') {
+      } else if (result.status === 2 && confirmMethods.includes(result.paymethod_data?.gateway)) {
         try {
           const confirmCartRes = await confirmCart(cartUuid)
           if (confirmCartRes.error) {
@@ -564,7 +712,7 @@ export const Checkout = (props: any) => {
             loading: false,
             cart: result
           })
-        } catch (error) {
+        } catch (error: any) {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
       } else if (result.status === 2 && stripePaymentOptions.includes(result.paymethod_data?.gateway)) {
@@ -604,7 +752,7 @@ export const Checkout = (props: any) => {
               })
               return
             }
-          } catch (error) {
+          } catch (error: any) {
             showToast(ToastType.Error, error?.toString() || error.message)
           }
         } catch (error) {
@@ -626,7 +774,7 @@ export const Checkout = (props: any) => {
           error: cart ? null : result
         })
       }
-    } catch (e) {
+    } catch (e: any) {
       setCartState({
         ...cartState,
         loading: false,
@@ -658,7 +806,15 @@ export const Checkout = (props: any) => {
 
   return (
     <>
-      <CheckoutController {...checkoutProps} />
+      {cartState?.error?.length > 0 ? (
+        <NotFoundSource
+          content={t(cartState.error)}
+          btnTitle={t('GO_TO_BUSINESSLIST', 'Go to business list')}
+          onClickButton={() => navigation.navigate('BusinessList')}
+        />
+      ) : (
+        <CheckoutController {...checkoutProps} />
+      )}
     </>
   )
 }

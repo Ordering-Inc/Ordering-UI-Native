@@ -4,7 +4,7 @@ import {
   useLanguage,
   ProductOptionSuboption as ProductSubOptionController
 } from 'ordering-components/native'
-import { StyleSheet, I18nManager } from 'react-native'
+import { StyleSheet, I18nManager, Text  } from 'react-native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import {
@@ -49,7 +49,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
     }
   }, [balance])
 
-  const disableIncrement = option?.limit_suboptions_by_max ? balance === option?.max : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
+  const disableIncrement = option?.limit_suboptions_by_max ? (balance === option?.max || state.quantity === suboption.max) : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
   const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
 
   return (
@@ -82,9 +82,9 @@ export const ProductOptionSubOptionUI = (props: any) => {
               color={state.quantity === 0 ? theme.colors.backgroundDark : theme.colors.primary}
             />
           </Checkbox>
-          <OText mLeft={5} mRight={5}>
+          <Text style={{marginLeft: 5, marginRight: 5}}>
             {state.quantity}
-          </OText>
+          </Text>
           <Checkbox disabled={disableIncrement} onPress={increment}>
             <MaterialCommunityIcon
               name='plus-circle-outline'
