@@ -115,6 +115,10 @@ const SignupFormUI = (props: SignupParams) => {
   const phoneRef = useRef<any>(null)
   const passwordRef = useRef<any>(null)
 
+  const anySocialButtonActivated = ((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
+    (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) ||
+    (configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null)
+
   const handleRefs = (ref: any, code: string) => {
     switch (code) {
       case 'name': {
@@ -524,10 +528,7 @@ const SignupFormUI = (props: SignupParams) => {
           )
         }
 
-        {configs && Object.keys(configs).length > 0 && (
-          (((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
-            (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
-          (
+        {configs && Object.keys(configs).length > 0 && anySocialButtonActivated && (
             <ButtonsSection>
               <OText size={18} mBottom={10} color={theme.colors.disabled}>
                 {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
@@ -551,17 +552,18 @@ const SignupFormUI = (props: SignupParams) => {
                     handleSuccessGoogleLogin={handleSuccessFacebook}
                   />
                 )}
-                <AppleLogin
-                  notificationState={notificationState}
-                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                  handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
-                  handleSuccessApple={handleSuccessApple}
-                />
+                {(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && (
+                  <AppleLogin
+                    notificationState={notificationState}
+                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                    handleSuccessApple={handleSuccessApple}
+                  />
+                )}
               </SocialButtons>
             </ButtonsSection>
-          )
-        )}
-      </FormSide >
+          )}
+      </FormSide>
       <OModal
         open={isModalVisible}
         onClose={() => setIsModalVisible(false)}

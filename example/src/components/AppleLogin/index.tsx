@@ -55,7 +55,7 @@ export const AppleLogin = (props : AppleLoginParams) => {
           handleErrors && handleErrors(t('ERROR_LOGIN_APPLE', 'Error login with apple'))
         }
 
-      } catch (error) {
+      } catch (error : any) {
         handleErrors && handleErrors(error.message)
       }
     } else {
@@ -70,8 +70,8 @@ export const AppleLogin = (props : AppleLoginParams) => {
         });
         const { code } = await appleAuthAndroid.signIn();
         handleLoginApple(code)
-      } catch (error) {
-        handleErrors && handleErrors(error.message)
+      } catch (error : any) {
+        handleErrors && handleErrors(error?.message)
       }
     }
   }
@@ -97,11 +97,11 @@ export const AppleLogin = (props : AppleLoginParams) => {
       if (!error && result) {
         handleSuccessApple && handleSuccessApple(result)
       } else {
-        handleErrors && handleErrors(result?.error || t('ERROR_LOGIN_AUTH_APPLE', 'Error login auth with apple'))
+        handleErrors && handleErrors(result || t('ERROR_LOGIN_AUTH_APPLE', 'Error login auth with apple'))
       }
-    } catch (error) {
+    } catch (error : any) {
       handleLoading && handleLoading(false)
-      handleErrors && handleErrors(error)
+      handleErrors && handleErrors(error?.message)
     }
   }
 
