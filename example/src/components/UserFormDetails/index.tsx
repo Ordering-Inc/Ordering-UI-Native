@@ -23,9 +23,7 @@ export const UserFormDetailsUI = (props: any) => {
     handleChangeInput,
     handleButtonUpdateClick,
     phoneUpdate,
-    hideUpdateButton,
     handleCancelEdit,
-    toggleIsEdit,
     isCheckout
   } = props
 

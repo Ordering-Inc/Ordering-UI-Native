@@ -34,6 +34,7 @@ import CheckBox from '@react-native-community/checkbox';
 import { SignupParams } from '../../types';
 import { sortInputFields } from '../../utils';
 import { useTheme } from 'styled-components/native';
+import { AppleLogin } from '../AppleLogin';
 
 const notValidationFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'address_notes']
 
@@ -97,7 +98,7 @@ const SignupFormUI = (props: SignupParams) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [signupTab, setSignupTab] = useState(useSignupByCellphone && !useSignupByEmail ? 'cellphone' : 'email')
-  const [isFBLoading, setIsFBLoading] = useState(false)
+  const [isLoadingSocialButton, setIsLoadingSocialButton] = useState(false);
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
     phone: {
@@ -114,8 +115,12 @@ const SignupFormUI = (props: SignupParams) => {
   const phoneRef = useRef<any>(null)
   const passwordRef = useRef<any>(null)
 
-  const handleRefs = (ref : any, code : string) => {
-    switch(code){
+  const anySocialButtonActivated = ((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
+    (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) ||
+    (configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null)
+
+  const handleRefs = (ref: any, code: string) => {
+    switch (code) {
       case 'name': {
         nameRef.current = ref
         break
@@ -138,8 +143,8 @@ const SignupFormUI = (props: SignupParams) => {
     }
   }
 
-  const handleFocusRef = (code : string) => {
-    switch(code) {
+  const handleFocusRef = (code: string) => {
+    switch (code) {
       case 'name': {
         nameRef?.current?.focus()
         break
@@ -163,8 +168,8 @@ const SignupFormUI = (props: SignupParams) => {
     }
   }
 
-  const getNextFieldCode = (index : number) => {
-    const fields = sortInputFields({ values: validationFields?.fields?.checkout })?.filter((field : any) => !notValidationFields.includes(field.code) && showField(field.code))
+  const getNextFieldCode = (index: number) => {
+    const fields = sortInputFields({ values: validationFields?.fields?.checkout })?.filter((field: any) => !notValidationFields.includes(field.code) && showField(field.code))
     return fields[index + 1]?.code
   }
 
@@ -173,6 +178,14 @@ const SignupFormUI = (props: SignupParams) => {
     login({
       user,
       token: user.session.access_token
+    })
+  }
+
+  const handleSuccessApple = (user: any) => {
+    _removeStoreData('isGuestUser')
+    login({
+      user,
+      token: user?.session?.access_token
     })
   }
 
@@ -347,7 +360,7 @@ const SignupFormUI = (props: SignupParams) => {
         <FormInput>
           {!(useChekoutFileds && validationFields?.loading && validationFields?.fields?.checkout) ? (
             <>
-              {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any, i : number) =>
+              {sortInputFields({ values: validationFields?.fields?.checkout }).map((field: any, i: number) =>
                 !notValidationFields.includes(field.code) &&
                 (
                   showField && showField(field.code) && (
@@ -367,7 +380,7 @@ const SignupFormUI = (props: SignupParams) => {
                           autoCompleteType={field.code === 'email' ? 'email' : 'off'}
                           returnKeyType='next'
                           blurOnSubmit={false}
-                          forwardRef={(ref : any) => handleRefs(ref,field.code)}
+                          forwardRef={(ref: any) => handleRefs(ref, field.code)}
                           onSubmitEditing={() => field.code === 'email' ? phoneRef?.current?.focus?.() : handleFocusRef(getNextFieldCode(i))}
                         />
                       )}
@@ -462,17 +475,17 @@ const SignupFormUI = (props: SignupParams) => {
                 }}
                 defaultValue={false}
               />
-              <ScrollView 
-              horizontal
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
+              <ScrollView
+                horizontal
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
               >
-              <OText size={16} style={{ paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
-              <TouchableOpacity onPress={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}>
-                <OText size={16} color={theme.colors.primary}>
-                  {t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
-                </OText>
-              </TouchableOpacity>
+                <OText size={16} style={{ paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I’m agree with')}</OText>
+                <TouchableOpacity onPress={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}>
+                  <OText size={16} color={theme.colors.primary}>
+                    {t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
+                  </OText>
+                </TouchableOpacity>
               </ScrollView>
             </View>
           )}
@@ -515,10 +528,7 @@ const SignupFormUI = (props: SignupParams) => {
           )
         }
 
-        {configs && Object.keys(configs).length > 0 && (
-          (((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
-          (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
-          (
+        {configs && Object.keys(configs).length > 0 && anySocialButtonActivated && (
             <ButtonsSection>
               <OText size={18} mBottom={10} color={theme.colors.disabled}>
                 {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
@@ -526,27 +536,34 @@ const SignupFormUI = (props: SignupParams) => {
               <SocialButtons>
                 {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
                   configs?.facebook_id?.value && (
-                  <FacebookLogin
-                    notificationState={notificationState}
-                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                    handleLoading={(val: boolean) => setIsFBLoading(val)}
-                    handleSuccessFacebookLogin={handleSuccessFacebook}
-                  />
-                )}
+                    <FacebookLogin
+                      notificationState={notificationState}
+                      handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                      handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                      handleSuccessFacebookLogin={handleSuccessFacebook}
+                    />
+                  )}
                 {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
                   <GoogleLogin
                     notificationState={notificationState}
                     webClientId={configs?.google_login_client_id?.value}
                     handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                    handleLoading={(val: boolean) => setIsFBLoading(val)}
+                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
                     handleSuccessGoogleLogin={handleSuccessFacebook}
+                  />
+                )}
+                {(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && (
+                  <AppleLogin
+                    notificationState={notificationState}
+                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                    handleSuccessApple={handleSuccessApple}
                   />
                 )}
               </SocialButtons>
             </ButtonsSection>
-          )
-        )}
-      </FormSide >
+          )}
+      </FormSide>
       <OModal
         open={isModalVisible}
         onClose={() => setIsModalVisible(false)}
@@ -561,7 +578,7 @@ const SignupFormUI = (props: SignupParams) => {
           handleVerifyCodeClick={onSubmit}
         />
       </OModal>
-      <Spinner visible={formState.loading || isFBLoading} />
+      <Spinner visible={formState.loading || isLoadingSocialButton} />
     </View >
   );
 };
