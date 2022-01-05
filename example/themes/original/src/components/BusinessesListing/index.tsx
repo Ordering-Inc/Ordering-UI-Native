@@ -281,15 +281,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					/>
 				)}
 				{businessesList.businesses?.map(
-					(business: any) =>
-						!business.featured && (
-							<BusinessController
-								key={business.id}
-								business={business}
-								handleCustomClick={handleBusinessClick}
-								orderType={orderState?.options?.type}
-							/>
-						),
+					(business: any) => (
+						<BusinessController
+							key={business.id}
+							business={business}
+							handleCustomClick={handleBusinessClick}
+							orderType={orderState?.options?.type}
+						/>
+					)
 				)}
 				{businessesList.loading && (
 					<>

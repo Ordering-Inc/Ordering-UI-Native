@@ -29,7 +29,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 	const [, t] = useLanguage();
 
 	const theme = useTheme();
-  const [isOpenAllCategories, setIsOpenAllCategories] = useState(false)
+	const [isOpenAllCategories, setIsOpenAllCategories] = useState(false)
 
 	const renderTypes = ({ item }: any) => {
 		return (
@@ -110,17 +110,17 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 				entireModal
 			>
 				<ScrollView style={styles.allCategoriesContainer}>
-          <OText
-            size={20}
-            mBottom={30}
-            color={theme.colors.textSecondary}
-            style={{ paddingHorizontal: 10 }}
-          >
-            {t('ALL_CATEGORIES', 'All categories')}
-          </OText>
-          <View style={styles.allCategoriesWrapper}>
-            {typesState?.types.map((item: any) => (
-              <TouchableOpacity
+					<OText
+						size={20}
+						mBottom={30}
+						color={theme.colors.textSecondary}
+						style={{ paddingHorizontal: 10 }}
+					>
+						{t('ALL_CATEGORIES', 'All categories')}
+					</OText>
+					<View style={styles.allCategoriesWrapper}>
+						{typesState?.types.map((item: any) => (
+							<TouchableOpacity
 								key={item.id}
 								style={styles.categoryStyle}
 								onPress={() => {
@@ -149,9 +149,9 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 									{t(`BUSINESS_TYPE_${item.name.replace(/\s/g, '_').toUpperCase()}`, item.name)}
 								</OText>
 							</TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
+						))}
+					</View>
+				</ScrollView>
 			</OModal>
 		</>
 	);
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 10,
 		marginBottom: 40
 	},
-	allCategoriesContainer : {
+	allCategoriesContainer: {
 		paddingHorizontal: 30,
 		paddingVertical: 30
 	},
