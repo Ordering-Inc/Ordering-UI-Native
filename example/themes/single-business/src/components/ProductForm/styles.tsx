@@ -59,9 +59,12 @@ export const WrapperSubOption = styled.View`
 `
 
 export const ProductComment = styled.View`
+  padding-bottom: 40px
 `
 
 export const ProductActions = styled.View`
+  position: absolute;
+  bottom: 0px;
 	min-height: 70px;
   padding: 12px 40px;
   width: 100%;
@@ -72,7 +75,10 @@ export const ProductActions = styled.View`
   justify-content: space-between;
   border-top-width: 1px;
   border-top-color: ${(props: any) => props.theme.colors.border};
+  flex: 1;
+  flex-direction: row;
 `
+
 export const ExtraOptionWrap = styled.ScrollView`
 	margin-horizontal: -40px;
 `;

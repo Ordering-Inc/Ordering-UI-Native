@@ -39,7 +39,7 @@ const BottomNavigator = () => {
     : {height: 40, position: 'relative', bottom: 15}
   return (
     <Tab.Navigator
-      initialRouteName='BusinessList'
+      initialRouteName="BusinessList"
       activeColor={theme.colors.primary}
       barStyle={{ backgroundColor: theme.colors.white, ...androidStyles }}
       labeled={false}
