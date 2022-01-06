@@ -3,6 +3,7 @@ import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager } from 're
 import LinearGradient from 'react-native-linear-gradient'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import AntIcon from 'react-native-vector-icons/AntDesign'
 import { Messages } from '../Messages'
 import { ShareComponent } from '../ShareComponent'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -48,6 +49,8 @@ import { verifyDecimals } from '../../utils'
 import { useTheme } from 'styled-components/native'
 import { NotFoundSource } from '../NotFoundSource'
 import { OrderCreating } from '../OrderCreating';
+import { OSRow } from '../OrderSummary/styles';
+import { TaxInformation } from '../TaxInformation';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -103,6 +106,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
   const [isReviewed, setIsReviewed] = useState(false)
   const [openOrderCreating, setOpenOrderCreating] = useState(true)
+  const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null })
   const { order, loading, businessData, error } = props.order
   const isTaxIncluded = order?.tax_type === 1
 
@@ -195,6 +199,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     )
   }
 
+  const getIncludedTaxes = () => {
+    if (order?.taxes?.length === 0) {
+      return order.tax_type === 1 ? order?.summary?.tax ?? 0 : 0
+    } else {
+      return order?.taxes.reduce((taxIncluded: number, tax: any) => {
+        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+      }, 0)
+    }
+  }
+
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleArrowBack);
     return () => {
@@ -216,7 +230,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     if (driverLocation) {
-      locations[0] = {...locations[0], lat: driverLocation.lat, lng: driverLocation.lng}
+      locations[0] = { ...locations[0], lat: driverLocation.lat, lng: driverLocation.lng }
     }
   }, [driverLocation])
 
@@ -341,7 +355,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderStatus>
             </View>
             <OrderCustomer>
-              <OText size={18} style={{textAlign: 'left'}}>{t('CUSTOMER', 'Customer')}</OText>
+              <OText size={18} style={{ textAlign: 'left' }}>{t('CUSTOMER', 'Customer')}</OText>
               <Customer>
                 <CustomerPhoto>
                   <OIcon
@@ -352,8 +366,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   />
                 </CustomerPhoto>
                 <InfoBlock>
-                  <OText size={18} style={{textAlign: 'left'}} >{order?.customer?.name} {order?.customer?.lastname}</OText>
-                  <OText style={{textAlign: 'left'}}>{order?.customer?.address}</OText>
+                  <OText size={18} style={{ textAlign: 'left' }} >{order?.customer?.name} {order?.customer?.lastname}</OText>
+                  <OText style={{ textAlign: 'left' }}>{order?.customer?.address}</OText>
                 </InfoBlock>
               </Customer>
               {order?.driver && (
@@ -398,7 +412,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </OrderDriver>
             )}
             <OrderProducts>
-              <OText size={18} style={{textAlign: 'left'}}>{t('YOUR_ORDER', 'Your Order')}</OText>
+              <OText size={18} style={{ textAlign: 'left' }}>{t('YOUR_ORDER', 'Your Order')}</OText>
               {order?.products?.length && order?.products.map((product: any, i: number) => (
                 <ProductItemAccordion
                   key={product?.id || i}
@@ -410,10 +424,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <Table>
                 <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
                 <OText>
-                  {parsePrice(isTaxIncluded
-                    ? (order?.summary?.subtotal + order?.summary?.tax) ?? 0
-                    : order?.summary?.subtotal ?? 0
-                  )}
+                  {parsePrice(((order?.summary?.subtotal || order?.subtotal) + getIncludedTaxes()))}
                 </OText>
               </Table>
               {order?.summary?.discount > 0 && (
@@ -435,40 +446,77 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText>{parsePrice(order?.summary?.subtotal_with_discount ?? 0)}</OText>
                 </Table>
               )}
-              {order?.tax_type !== 1 && (
-                <Table>
-                  <OText>
-                    {t('TAX', 'Tax')}
-                    {`(${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%)`}
-                  </OText>
-                  <OText>{parsePrice(order?.summary?.tax)}</OText>
-                </Table>
-              )}
+              {
+                order?.taxes?.length === 0 && order?.tax_type === 2 && (
+                  <Table>
+                    <OText>
+                      {t('TAX', 'Tax')} {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
+                    </OText>
+                    <OText>{parsePrice(order?.summary?.tax || 0)}</OText>
+                  </Table>
+                )
+              }
+              {
+                order?.fees?.length === 0 && (
+                  <Table>
+                    <OText>
+                      {t('SERVICE_FEE', 'Service fee')}
+                      {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
+                    </OText>
+                    <OText>{parsePrice(order?.summary?.service_fee || 0)}</OText>
+                  </Table>
+                )
+              }
+              {
+                order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 || tax?.rate === 0).map((tax: any) => (
+                  <Table key={tax.id}>
+                    <OSRow>
+                      <OText numberOfLines={1}>
+                        {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                        {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
+                      </OText>
+                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: tax })}>
+                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    </OSRow>
+                    <OText>{parsePrice(tax?.summary?.tax || 0)}</OText>
+                  </Table>
+                ))
+              }
+              {
+                order?.fees?.length > 0 && order?.fees?.filter((fee : any) => !(fee.fixed === 0 && fee.percentage === 0))?.map((fee: any) => (
+                    <Table key={fee.id}>
+                      <OSRow>
+                        <OText numberOfLines={1}>
+                          {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                          ({parsePrice(fee?.fixed)} + {fee.percentage}%){' '}
+                        </OText>
+                        <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee })}>
+                          <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                        </TouchableOpacity>
+                      </OSRow>
+                      <OText>{parsePrice(fee?.fixed + fee?.summary?.percentage || 0)}</OText>
+                    </Table>
+                ))
+              }
               {order?.summary?.delivery_price > 0 && (
                 <Table>
                   <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
                   <OText>{parsePrice(order?.summary?.delivery_price)}</OText>
                 </Table>
               )}
-              <Table>
-                <OText>
-                  {t('DRIVER_TIP', 'Driver tip')}
-                  {order?.summary?.driver_tip > 0 &&
-                    parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
-                    !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                    (
-                      `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`
-                    )}
-                </OText>
-                <OText>{parsePrice(order?.summary?.driver_tip ?? 0)}</OText>
-              </Table>
-              {order?.summary?.service_fee > 0 && (
+              {order?.summary?.driver_tip > 0 && (
                 <Table>
                   <OText>
-                    {t('SERVICE_FEE', 'Service Fee')}
-                    {`(${verifyDecimals(order?.summary?.service_fee, parseNumber)}%)`}
+                    {t('DRIVER_TIP', 'Driver tip')}
+                    {order?.summary?.driver_tip > 0 &&
+                      parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
+                      !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
+                      (
+                        `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`
+                      )}
                   </OText>
-                  <OText>{parsePrice(order?.summary?.service_fee)}</OText>
+                  <OText>{parsePrice(order?.summary?.driver_tip ?? 0)}</OText>
                 </Table>
               )}
               <Total>
@@ -483,7 +531,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 (
                   parseInt(order?.status) === 1 ||
                   parseInt(order?.status) === 11 ||
-                  parseInt(order?.status) === 15 
+                  parseInt(order?.status) === 15
                 ) && !order.review && !isReviewed && (
                   <OButton
                     onClick={() => handleClickOrderReview(order)}
@@ -547,6 +595,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         <OrderCreating
           isOrderDetail
         />
+      </OModal>
+      <OModal
+        open={openTaxModal.open}
+        onClose={() => setOpenTaxModal({ open: false, data: null })}
+        entireModal
+      >
+        <TaxInformation data={openTaxModal.data} products={order?.products} />
       </OModal>
     </OrderDetailsContainer>
   )
