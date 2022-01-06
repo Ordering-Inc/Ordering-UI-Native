@@ -164,7 +164,7 @@ const CartUI = (props: any) => {
               </OSTable>
             )}
             {
-              cart.taxes?.length > 0 && cart.taxes.filter((tax: any) => tax.type === 2 || tax?.rate === 0).map((tax: any) => (
+              cart.taxes?.length > 0 && cart.taxes.filter((tax: any) => tax.type === 2 || tax?.rate !== 0).map((tax: any) => (
                 <OSTable key={tax.id}>
                   <OSRow>
                     <OText numberOfLines={1} >
