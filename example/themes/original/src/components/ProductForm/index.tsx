@@ -13,7 +13,7 @@ import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 
-import { View, TouchableOpacity, StyleSheet, Dimensions, Platform, AppRegistry } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, Platform, AppRegistry, I18nManager } from 'react-native';
 
 import {
 	ProductHeader,
@@ -116,7 +116,7 @@ export const ProductOptionsUI = (props: any) => {
 		slide1: {
 			flex: 1,
 		},
-		mainSwiper : {
+		mainSwiper: {
 			height: 258,
 		},
 		swiperButton: {
@@ -196,7 +196,7 @@ export const ProductOptionsUI = (props: any) => {
 	useEffect(() => {
 		const productImgList: any = []
 		product?.images && productImgList.push(product.images)
-		if(product?.gallery && product?.gallery.length > 0) {
+		if (product?.gallery && product?.gallery.length > 0) {
 			for (const img of product?.gallery) {
 				productImgList.push(img.file)
 			}
@@ -296,7 +296,7 @@ export const ProductOptionsUI = (props: any) => {
 													name="caretleft"
 													color={theme.colors.white}
 													size={13}
-													// style={styles.starIcon}
+												// style={styles.starIcon}
 												/>
 											</View>
 										}
@@ -306,7 +306,7 @@ export const ProductOptionsUI = (props: any) => {
 													name="caretright"
 													color={theme.colors.white}
 													size={13}
-													// style={styles.starIcon}
+												// style={styles.starIcon}
 												/>
 											</View>
 										}
@@ -387,6 +387,20 @@ export const ProductOptionsUI = (props: any) => {
 											style={{ flex: 1, marginBottom: 5 }}>
 											{product?.name || productCart.name}
 										</OText>
+										{((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (product?.estimated_person)) && (
+											<OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'} mBottom={7}>
+												{
+													((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
+													&& <>{t('SKU', 'Sku')}{' '}{product?.sku || productCart?.sku}</>
+												}
+												{product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
+													<>&nbsp;&#183;&nbsp;</>
+												)}
+												{product?.estimated_person
+													&& <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
+												}
+											</OText>
+										)}
 										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
 											{productCart.price ? parsePrice(productCart.price) : ''}
 										</OText>
@@ -397,17 +411,6 @@ export const ProductOptionsUI = (props: any) => {
 								<OText color={theme.colors.textSecondary} size={12} lineHeight={18}>
 									{product?.description || productCart?.description}
 								</OText>
-								{((product?.sku &&
-									product?.sku !== '-1' &&
-									product?.sku !== '1') ||
-									(productCart?.sku &&
-										productCart?.sku !== '-1' &&
-										productCart?.sku !== '1')) && (
-										<>
-											<OText size={16}>{t('SKU', 'Sku')}</OText>
-											<OText>{product?.sku || productCart?.sku}</OText>
-										</>
-									)}
 							</ProductDescription>
 							{loading && !product ? (
 								<>
@@ -455,25 +458,25 @@ export const ProductOptionsUI = (props: any) => {
 										style={{ marginBottom: 20 }}
 										contentContainerStyle={{ paddingHorizontal: 33 }}
 									>
-									<TouchableOpacity
-										key={`eopt_all_0`}
-										onPress={() => setSelectedOpt(0)}
-										style={[
-											styles.extraItem,
-											{
-												borderBottomColor: selOpt == 0 ? theme.colors.textNormal : theme.colors.border,
-											},
-										]}>
-										<OText
-											color={selOpt == 0 ? theme.colors.textNormal : theme.colors.textSecondary}
-											size={selOpt == 0 ? 14 : 12}
-											weight={selOpt == 0 ? '600' : 'normal'}>
-											{t('ALL', 'All')}
-										</OText>
-									</TouchableOpacity>
-									{product?.extras.map((extra: any) => 					
-										<ExtraOptions key={extra.id} options={extra.options} />
-									)}
+										<TouchableOpacity
+											key={`eopt_all_0`}
+											onPress={() => setSelectedOpt(0)}
+											style={[
+												styles.extraItem,
+												{
+													borderBottomColor: selOpt == 0 ? theme.colors.textNormal : theme.colors.border,
+												},
+											]}>
+											<OText
+												color={selOpt == 0 ? theme.colors.textNormal : theme.colors.textSecondary}
+												size={selOpt == 0 ? 14 : 12}
+												weight={selOpt == 0 ? '600' : 'normal'}>
+												{t('ALL', 'All')}
+											</OText>
+										</TouchableOpacity>
+										{product?.extras.map((extra: any) =>
+											<ExtraOptions key={extra.id} options={extra.options} />
+										)}
 									</ExtraOptionWrap>
 
 									{selOpt == 0 ? (
@@ -778,7 +781,7 @@ export const ProductOptionsUI = (props: any) => {
 									isDisabled
 									text={t('LOADING', 'Loading')}
 									imgRightSrc=""
-									textStyle={{fontSize: 10}}
+									textStyle={{ fontSize: 10 }}
 								/>
 							) : (
 								<OButton onClick={navigation.navigate('AddressList')} />

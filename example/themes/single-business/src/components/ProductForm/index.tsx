@@ -9,7 +9,7 @@ import {
 import { useTheme } from 'styled-components/native';
 import { ProductIngredient } from '../ProductIngredient';
 import { ProductOption } from '../ProductOption';
-import { View, TouchableOpacity, StyleSheet, Dimensions, Platform, useWindowDimensions, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, Platform, useWindowDimensions, Keyboard, KeyboardAvoidingView, I18nManager } from 'react-native';
 
 import {
   ProductHeader,
@@ -312,6 +312,20 @@ export const ProductOptionsUI = (props: any) => {
                       style={{ flex: 1, marginBottom: 5 }}>
                       {product?.name || productCart.name}
                     </OText>
+                    {((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (product?.estimated_person)) && (
+											<OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'} mBottom={7}>
+												{
+													((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
+													&& <>{t('SKU', 'Sku')}{' '}{product?.sku || productCart?.sku}</>
+												}
+												{product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
+													<>&nbsp;&#183;&nbsp;</>
+												)}
+												{product?.estimated_person
+													&& <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
+												}
+											</OText>
+										)}
                     <OText size={16} lineHeight={24} color={theme.colors.textNormal}>
                       {productCart.price ? parsePrice(productCart.price) : ''}
                     </OText>
@@ -322,17 +336,6 @@ export const ProductOptionsUI = (props: any) => {
                 <OText color={theme.colors.textSecondary} size={12} lineHeight={18}>
                   {product?.description || productCart?.description}
                 </OText>
-                {((product?.sku &&
-                  product?.sku !== '-1' &&
-                  product?.sku !== '1') ||
-                  (productCart?.sku &&
-                    productCart?.sku !== '-1' &&
-                    productCart?.sku !== '1')) && (
-                    <>
-                      <OText size={16}>{t('SKU', 'Sku')}</OText>
-                      <OText>{product?.sku || productCart?.sku}</OText>
-                    </>
-                  )}
               </ProductDescription>
               {loading && !product ? (
                 <>
