@@ -468,7 +468,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 )
               }
               {
-                order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 || tax?.rate !== 0).map((tax: any) => (
+                order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0).map((tax: any) => (
                   <Table key={tax.id}>
                     <OSRow>
                       <OText numberOfLines={1}>

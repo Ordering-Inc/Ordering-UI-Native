@@ -113,7 +113,7 @@ const OrderSummaryUI = (props: any) => {
                 </OSTable>
               )}
               {
-                cart?.taxes?.length > 0 && cart?.taxes?.filter((tax: any) => tax?.type === 2 || tax?.rate !== 0).map((tax: any) => (
+                cart?.taxes?.length > 0 && cart?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0).map((tax: any) => (
                   <OSTable key={tax?.id}>
                     <OSRow>
                       <OText size={18} numberOfLines={1}>
