@@ -772,17 +772,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 									)}
 								</OText>
 							</Table>
-							<Table>
-								<OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-									{t('SERVICE_FEE', 'Service Fee')}
-									{`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
-								</OText>
-								<OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-									{parsePrice(
-										order?.summary?.service_fee || order?.serviceFee || 0,
-									)}
-								</OText>
-							</Table>
 							<Total>
 								<Table>
 									<OText size={20} lineHeight={30} weight={'600'} color={theme.colors.textNormal}>{t('TOTAL', 'Total')}</OText>
