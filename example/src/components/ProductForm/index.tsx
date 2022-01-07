@@ -132,7 +132,7 @@ export const ProductOptionsUI = (props: any) => {
                 ) : (
                   <>
                     <View style={{ flexDirection: 'column', width: '100%' }}>
-                      <OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1, marginBottom: 10 }}>{product?.name || productCart.name}{'price'}</OText>
+                      <OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1, marginBottom: 10 }}>{product?.name || productCart.name}</OText>
                       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
                         <OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
                         <OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'}>
