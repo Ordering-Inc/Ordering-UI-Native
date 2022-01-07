@@ -136,11 +136,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       timerRef.current.blur();
     }
 
-    if (!isFocus) {
-      if (time.length > 1) timerRef.current.clear();
-      timerRef?.current?.focus?.();
-      handleFocusTimer();
-    }
   };
 
   const openTextTareaOInput = () => {
@@ -163,7 +158,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
     const time = parseInt(hour || '0') * 60 + (parseInt(minsToSend) || 0);
 
-    let bodyToSend : any = {};
+    let bodyToSend: any = {};
     const orderStatus: any = {
       acceptByBusiness: {
         prepared_in: time,
@@ -214,6 +209,17 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     bodyToSend.id = orderId;
     handleUpdateOrder && handleUpdateOrder(bodyToSend.status, bodyToSend);
   };
+
+  useEffect(() => {
+    if (actions && action === 'accept') {
+      const interval = setTimeout(() => {
+        timerRef?.current?.focus?.()
+      }, 250)
+      return () => {
+        clearTimeout(interval)
+      }
+    }
+  }, [timerRef?.current])
 
   return (
     <KeyboardAvoidingView
@@ -359,7 +365,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           onChangeText={handleTime}
           onPressOut={() => handleFixTime()}
           editable={true}
-          autoFocus={actions && action === 'accept'}
           selectionColor={theme.colors.primary}
           placeholderTextColor={theme.colors.textGray}
           color={theme.colors.textGray}
