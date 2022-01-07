@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import {
 	Cart,
 	useOrder,
@@ -13,7 +13,8 @@ import {
 	OSContainer,
 	OSProductList,
 	OSBill,
-	OSTable
+	OSTable,
+  OSRow
 } from './styles';
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -21,7 +22,9 @@ import { CouponControl } from '../CouponControl';
 import { OModal, OText } from '../shared';
 import { ProductForm } from '../ProductForm';
 import { verifyDecimals } from '../../utils';
-
+import { useTheme } from 'styled-components/native';
+import { TaxInformation } from '../TaxInformation';
+import AntIcon from 'react-native-vector-icons/AntDesign'
 
 const OrderSummaryUI = (props: any) => {
 	const {
@@ -34,6 +37,7 @@ const OrderSummaryUI = (props: any) => {
 		isFromCheckout
 	} = props;
 
+  const theme = useTheme()
 	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
 	const [orderState] = useOrder();
@@ -41,6 +45,7 @@ const OrderSummaryUI = (props: any) => {
 	const [validationFields] = useValidationFields();
 	const [openProduct, setModalIsOpen] = useState(false)
 	const [curProduct, setCurProduct] = useState<any>(null)
+  const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null })
 
 	const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
 
@@ -58,6 +63,16 @@ const OrderSummaryUI = (props: any) => {
 			setModalIsOpen(false)
 		}
 	}
+
+  const getIncludedTaxes = () => {
+    if (cart?.taxes === null) {
+      return cart.business.tax_type === 1 ? cart?.tax : 0
+    } else {
+      return cart?.taxes.reduce((taxIncluded: number, tax: any) => {
+        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+      }, 0)
+    }
+  }
 
 	return (
 		<OSContainer>
@@ -83,9 +98,7 @@ const OrderSummaryUI = (props: any) => {
 						<OSBill>
 							<OSTable>
 								<OText size={12}>{t('SUBTOTAL', 'Subtotal')}</OText>
-								<OText size={12}>{cart.business.tax_type === 1
-									? parsePrice((cart?.subtotal + cart?.tax) || 0)
-									: parsePrice(cart?.subtotal || 0)}</OText>
+								<OText size={12}>{parsePrice(cart?.subtotal + getIncludedTaxes())}</OText>
 							</OSTable>
 							{cart?.discount > 0 && cart?.total >= 0 && (
 								<OSTable>
@@ -100,15 +113,38 @@ const OrderSummaryUI = (props: any) => {
 									<OText size={12}>- {parsePrice(cart?.discount || 0)}</OText>
 								</OSTable>
 							)}
-							{cart.business.tax_type !== 1 && (
-								<OSTable>
-									<OText size={12}>
-										{t('TAX', 'Tax')}
-										{`(${verifyDecimals(cart?.business?.tax, parseNumber)}%)`}
-									</OText>
-									<OText size={12}>{parsePrice(cart?.tax || 0)}</OText>
-								</OSTable>
-							)}
+							{
+                cart?.taxes?.length > 0 && cart?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0).map((tax: any) => (
+                  <OSTable key={tax?.id}>
+                    <OSRow>
+                      <OText size={12} numberOfLines={1}>
+                        {tax?.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
+                        {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
+                      </OText>
+                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: tax })} >
+                        <AntIcon name='exclamationcircleo' size={14} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    </OSRow>
+                    <OText size={12}>{parsePrice(tax?.summary?.tax || 0)}</OText>
+                  </OSTable>
+                ))
+              }
+              {
+                cart?.fees?.length > 0 && cart?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0))?.map((fee: any) => (
+                  <OSTable key={fee.id}>
+                    <OSRow>
+                      <OText size={12} numberOfLines={1}>
+                        {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
+                        ({parsePrice(fee?.fixed)} + {fee.percentage}%){' '}
+                      </OText>
+                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee })} >
+                        <AntIcon name='exclamationcircleo' size={14} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    </OSRow>
+                    <OText size={12}>{parsePrice(fee?.summary?.fixed + fee?.summary?.percentage || 0)}</OText>
+                  </OSTable>
+                ))
+              }
 							{orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
 								<OSTable>
 									<OText size={12}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
@@ -127,15 +163,6 @@ const OrderSummaryUI = (props: any) => {
 											)}
 									</OText>
 									<OText size={12}>{parsePrice(cart?.driver_tip)}</OText>
-								</OSTable>
-							)}
-							{cart?.service_fee > 0 && (
-								<OSTable>
-									<OText size={12}>
-										{t('SERVICE_FEE', 'Service Fee')}
-										{`(${verifyDecimals(cart?.business?.service_fee, parseNumber)}%)`}
-									</OText>
-									<OText size={12}>{parsePrice(cart?.service_fee)}</OText>
 								</OSTable>
 							)}
 							{isCouponEnabled && !isCartPending && (
@@ -180,6 +207,13 @@ const OrderSummaryUI = (props: any) => {
 							isFromCheckout={isFromCheckout}
 						/>
 					</OModal>
+          <OModal
+            open={openTaxModal.open}
+            onClose={() => setOpenTaxModal({ open: false, data: null })}
+            entireModal
+          >
+            <TaxInformation data={openTaxModal.data} products={cart.products} />
+          </OModal>
 				</>
 			)}
 		</OSContainer>

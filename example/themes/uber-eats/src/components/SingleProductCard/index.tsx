@@ -59,7 +59,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 
   return (
     <CardContainer style={[(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle]}
-      onPress={() => onProductClick(product)}
+      onPress={() => onProductClick?.(product)}
     >
       <CardInfo>
         <OText weight={500} numberOfLines={1} ellipsizeMode='tail' style={styles.textStyle}>{product?.name}</OText>
