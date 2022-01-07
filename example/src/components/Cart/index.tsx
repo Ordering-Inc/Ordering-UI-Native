@@ -23,7 +23,7 @@ import { verifyDecimals } from '../../utils';
 import { useTheme } from 'styled-components/native';
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 const CartUI = (props: any) => {
   const {
