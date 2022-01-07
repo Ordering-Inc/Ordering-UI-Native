@@ -73,7 +73,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 
 	return (
 		<CardContainer style={styles.container}
-			onPress={() => onProductClick(product)}
+			onPress={() => onProductClick?.(product)}
 			activeOpacity={0.8}
 		>
 			<CardInfo>
