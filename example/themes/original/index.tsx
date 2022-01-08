@@ -15,6 +15,7 @@ import { MomentOption } from './src/components/MomentOption';
 import { OrdersOption } from './src/components/OrdersOption';
 import { OrderDetails } from './src/components/OrderDetails';
 import { OrderProgress } from './src/components/OrderProgress';
+import { BusinessPreorder } from './src/components/BusinessPreorder';
 import { UserProfileForm } from './src/components/UserProfileForm';
 import { ReviewOrder } from './src/components/ReviewOrder';
 import { UserProfile } from './src/components/UserProfile';
@@ -69,6 +70,7 @@ export {
 	OrdersOption,
 	OrderDetails,
 	OrderProgress,
+	BusinessPreorder,
 	UserProfileForm,
 	ReviewOrder,
 	UserProfile,
