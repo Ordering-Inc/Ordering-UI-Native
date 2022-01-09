@@ -28,14 +28,13 @@ export const OrderContent = styled.View`
 `;
 
 export const OrderHeader = styled.View`
-  padding-vertical: 20px;
-  border-bottom-width: 10px;
-  border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
+  padding-top: 20px;
+  padding-bottom: 10px;
 `;
 
 export const OrderBusiness = styled.View`
   position: relative;
-  bottom: 10px;
+  bottom: 20px;
   padding-vertical: 20px;
   flex-direction: column;
   border-bottom-width: 10px;
