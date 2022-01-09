@@ -420,6 +420,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             handleOpenMapView={handleOpenMapView}
             handleOpenMessagesForBusiness={handleOpenMessagesForBusiness}
             getOrderStatus={getOrderStatus}
+            handleViewSummaryOrder={handleViewSummaryOrder}
+            handleCopyClipboard={handleCopyClipboard}
             handleArrowBack={handleArrowBack}
           />
           <OrderDetailsContainer
