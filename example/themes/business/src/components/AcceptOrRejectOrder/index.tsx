@@ -369,6 +369,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           placeholderTextColor={theme.colors.textGray}
           color={theme.colors.textGray}
           onEndEditing={handleFixTime}
+          onSubmitEditing={() => handleAcceptOrReject()}
           onBlur={() => actions && action === 'accept' && timerRef?.current?.focus?.()}
         />
 
