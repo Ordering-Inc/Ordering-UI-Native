@@ -214,7 +214,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     if (actions && action === 'accept') {
       const interval = setTimeout(() => {
         timerRef?.current?.focus?.()
-      }, 250)
+      }, 200)
       return () => {
         clearTimeout(interval)
       }
@@ -225,7 +225,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     <KeyboardAvoidingView
       enabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, paddingHorizontal: 30, paddingTop: 30, marginTop: top, marginBottom: bottom, justifyContent: 'space-between' }}>
+      style={{ flex: 1, paddingHorizontal: 30, paddingVertical: 30, marginTop: top, marginBottom: bottom, justifyContent: 'space-between' }}>
       <View>
         <OIconButton
           icon={theme.images.general.arrow_left}
@@ -369,6 +369,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           placeholderTextColor={theme.colors.textGray}
           color={theme.colors.textGray}
           onEndEditing={handleFixTime}
+          onBlur={() => actions && action === 'accept' && timerRef?.current?.focus?.()}
         />
 
         {showTextArea && (
@@ -384,7 +385,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
               value={comments}
               onChange={setComments}
             />
-            <View style={{ height: 20 }} />
           </Comments>
         )}
       </Content>

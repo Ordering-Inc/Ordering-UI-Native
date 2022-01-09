@@ -33,4 +33,5 @@ export const Action = styled.View``;
 
 export const Comments = styled.View`
   margin-top: 20px;
+  padding-bottom: 40px;
 `;
