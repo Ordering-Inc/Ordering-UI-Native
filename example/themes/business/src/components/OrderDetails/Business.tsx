@@ -588,24 +588,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 widthButton={'45%'}
               />
             )}
-
-          {/* {order &&
-            Object.keys(order).length > 0 &&
-            getOrderStatus(order?.status, t)?.value !==
-              t('PENDING', 'Pending') && (
-              <FloatingButton
-                btnText={t('COPY', 'Copy')}
-                isSecondaryBtn={false}
-                colorTxt1={theme.colors.primary}
-                secondButtonClick={handleViewSummaryOrder}
-                firstButtonClick={handleCopyClipboard}
-                secondBtnText={t('PRINT', 'Print')}
-                secondButton={true}
-                firstColorCustom="transparent"
-                secondColorCustom={theme.colors.primary}
-                widthButton={'45%'}
-              />
-            )} */}
           {order?.status === 7 && (
             <FloatingButton
               btnText={t('READY_FOR_PICKUP', 'Ready for pickup')}
