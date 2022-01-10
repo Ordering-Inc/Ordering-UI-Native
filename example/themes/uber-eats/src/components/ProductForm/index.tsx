@@ -32,7 +32,7 @@ import {
 import { OButton, OInput, OText } from '../shared'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
-import { Placeholder,PlaceholderLine,Fade } from 'rn-placeholder'
+import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { useTheme } from 'styled-components/native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -149,9 +149,9 @@ export const ProductOptionsUI = (props: any) => {
     }
   }
 
-  const handleRedirectLogin = (product : any) => {
+  const handleRedirectLogin = (product: any) => {
     onClose()
-    navigation.navigate('Login', {product: {businessId: product?.businessId, id: product?.id, categoryId: product?.categoryId, slug: businessSlug} })
+    navigation.navigate('Login', { product: { businessId: product?.businessId, id: product?.id, categoryId: product?.categoryId, slug: businessSlug } })
   }
 
   const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0
@@ -215,49 +215,46 @@ export const ProductOptionsUI = (props: any) => {
                       </View>
                     </Placeholder>
                   ) : (
-                    <>
-                      <OText
-                        weight={600}
-                        size={20}
-                        numberOfLines={1}
-                        ellipsizeMode='tail'
-                        style={{
-                          flex: 1,
-                          marginRight: 30,
-                          textAlign: 'left'
-                        }}
-                      >
-                        {product?.name || productCart.name}
-                      </OText>
-                      <OText weight={600} size={20} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
-                    </>
+                    <View style={{ flexDirection: 'column', width: '100%' }}>
+                      <OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1, marginBottom: 10 }}>{product?.name || productCart.name}</OText>
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        {((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (product?.estimated_person)) && (
+                          <OText size={14} style={{ marginBottom: 10, flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'}>
+                            {
+                              ((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
+                              && <>{t('SKU', 'Sku')}{' '}{product?.sku || productCart?.sku}</>
+                            }
+                            {product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
+                              <>&nbsp;&#183;&nbsp;</>
+                            )}
+                            {product?.estimated_person
+                              && <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
+                            }
+                          </OText>
+                        )}
+                      </View>
+                      <OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+                    </View>
                   )}
                 </ProductTitle>
-                <ProductDescription>
-                  <OText color={theme.colors.gray} style={{ textAlign: 'left' }}>{product?.description || productCart?.description}</OText>
-                  {(
-                    (product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
-                    (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1')
-                  ) && (
-                      <>
-                        <OText size={20}>{t('SKU', 'Sku')}</OText>
-                        <OText>{product?.sku || productCart?.sku}</OText>
-                      </>
-                    )}
-                </ProductDescription>
+                {(product?.description || productCart?.description) && (
+                  <ProductDescription>
+                    <OText color={theme.colors.gray} style={{ textAlign: 'left', marginBottom: 10 }}>{product?.description || productCart?.description}</OText>
+                  </ProductDescription>
+                )}
                 {loading && !product ? (
                   <>
-                    {[...Array(2)].map((item,i) => (
-                    <Placeholder key={i} style={{marginBottom: 20}} Animation={Fade}>
-                      <PlaceholderLine height={40} style={{ flex: 1, marginTop: 10 }} />
-                      {[...Array(3)].map((item,i) => (
-                        <View key={i} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                          <PlaceholderLine height={30} width={10} style={{marginBottom: 20}} />
-                          <PlaceholderLine height={30} width={50} style={{marginBottom: 20}} />
-                          <PlaceholderLine height={30} width={30} style={{marginBottom: 20}} />
-                        </View>
-                      ))}
-                    </Placeholder>
+                    {[...Array(2)].map((item, i) => (
+                      <Placeholder key={i} style={{ marginBottom: 20 }} Animation={Fade}>
+                        <PlaceholderLine height={40} style={{ flex: 1, marginTop: 10 }} />
+                        {[...Array(3)].map((item, i) => (
+                          <View key={i} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <PlaceholderLine height={30} width={10} style={{ marginBottom: 20 }} />
+                            <PlaceholderLine height={30} width={50} style={{ marginBottom: 20 }} />
+                            <PlaceholderLine height={30} width={30} style={{ marginBottom: 20 }} />
+                          </View>
+                        ))}
+                      </Placeholder>
                     ))}
                   </>
                 ) : (
@@ -279,7 +276,7 @@ export const ProductOptionsUI = (props: any) => {
                         </SectionTitle>
                         <WrapperIngredients
                           style={{ backgroundColor: isSoldOut || maxProductQuantity <= 0 ? 'hsl(0, 0%, 72%)' : theme.colors.white }}
-                          hidden={!openIngredient}  
+                          hidden={!openIngredient}
                         >
                           {product?.ingredients.map((ingredient: any) => (
                             <ProductIngredient
@@ -319,7 +316,7 @@ export const ProductOptionsUI = (props: any) => {
                                             state={currentState}
                                             disabled={isSoldOut || maxProductQuantity <= 0}
                                           />
-                                        ): null
+                                        ) : null
                                       })
                                     }
                                   </WrapperSubOption>
