@@ -149,7 +149,8 @@ export interface BusinessControllerParams {
 	handleClick?: any;
 	isBusinessOpen?: boolean;
 	businessWillCloseSoonMinutes?: number
-	isBusinessClose?: number
+	isBusinessClose?: number,
+	onPreorderBusiness?: any
 }
 export interface BusinessProductsListingParams {
 	navigation?: any;

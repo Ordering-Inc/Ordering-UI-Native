@@ -16,6 +16,7 @@ import {
 	useUtils,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
+import { BusinessPreorder } from '../BusinessPreorder';
 
 import {
 	Search,
@@ -29,7 +30,7 @@ import {
 } from './styles';
 
 import { SearchBar } from '../SearchBar';
-import { OIcon, OText } from '../shared';
+import { OIcon, OText, OModal } from '../shared';
 import { BusinessesListingParams } from '../../types';
 import { NotFoundSource } from '../NotFoundSource';
 import { BusinessTypeFilter } from '../BusinessTypeFilter';
@@ -58,6 +59,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
 	const theme = useTheme();
 	const isFocused = useIsFocused();
+	const [isPreorder, setIsPreOrder] = useState(false)
+	const [preorderBusiness, setPreorderBusiness] = useState({})
 
 	const styles = StyleSheet.create({
 		container: {
@@ -127,6 +130,15 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		}
 	};
 
+	const handlePreorderClose = () => {
+		setIsPreOrder(false)
+		setPreorderBusiness({})
+	}
+
+	useEffect(() => {
+		if (Object.keys(preorderBusiness).length > 0) setIsPreOrder(true)
+	}, [preorderBusiness])
+
 	useEffect(() => {
 		if (businessesList.businesses.length > 0) {
 			const fb = businessesList.businesses.filter((b) => b.featured == true);
@@ -149,201 +161,217 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	// }, [])
 
 	return (
-		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}>
-			<HeaderWrapper
-				source={theme.images.backgrounds.business_list_header}
-				style={{ paddingTop: top + 20 }}>
-				{!auth && (
-					<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
-						<OIcon src={theme.images.general.arrow_left} width={20} style={{ tintColor: theme.colors.white }} />
-					</TouchableOpacity>
-				)}
+		<>
+			<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}>
+				<HeaderWrapper
+					source={theme.images.general.homeHero}
+					style={{ paddingTop: top + 20 }}>
+					{!auth && (
+						<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
+							<OIcon src={theme.images.general.arrow_left} width={20} style={{ tintColor: theme.colors.white }} />
+						</TouchableOpacity>
+					)}
 
-				<Search>
-					<AddressInput
-						onPress={() =>
-							auth
-								? navigation.navigate('AddressList', { isFromBusinesses: true })
-								: navigation.navigate('AddressForm', {
-									address: orderState.options?.address,
-									isFromBusinesses: true,
-								})
-						}>
-						<OIcon
-							src={theme.images.general.pin}
-							color={theme.colors.disabled}
-							width={16}
-							style={{ marginRight: 10 }}
-						/>
-						<OText size={12} numberOfLines={1} style={{ width: '90%' }}>
-							{orderState?.options?.address?.address}
-						</OText>
-					</AddressInput>
-				</Search>
-				<OrderControlContainer>
-					<View style={styles.wrapperOrderOptions}>
-						<WrapMomentOption onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
-							<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(orderState?.options?.type || 1), 'Delivery')}</OText>
-							<OIcon
-								src={theme.images.general.arrow_down}
-								width={10}
-								style={{ marginStart: 8 }}
-							/>
-						</WrapMomentOption>
-						<WrapMomentOption
-							onPress={() => navigation.navigate('MomentOption')}>
-							<OText
-								size={12}
-								numberOfLines={1}
-								ellipsizeMode="tail"
-								color={theme.colors.textSecondary}>
-								{orderState.options?.moment
-									? parseDate(orderState.options?.moment, {
-										outputFormat:
-											configs?.format_time?.value === '12'
-												? 'MM/DD hh:mma'
-												: 'MM/DD HH:mm',
+					<Search>
+						<AddressInput
+							onPress={() =>
+								auth
+									? navigation.navigate('AddressList', { isFromBusinesses: true })
+									: navigation.navigate('AddressForm', {
+										address: orderState.options?.address,
+										isFromBusinesses: true,
 									})
-									: t('ASAP_ABBREVIATION', 'ASAP')}
-							</OText>
+							}>
 							<OIcon
-								src={theme.images.general.arrow_down}
-								width={10}
-								style={{ marginStart: 8 }}
+								src={theme.images.general.pin}
+								color={theme.colors.disabled}
+								width={16}
+								style={{ marginRight: 10 }}
 							/>
-						</WrapMomentOption>
-
-						<SearchBar
-							onSearch={handleChangeSearch}
-							searchValue={searchValue}
-							lazyLoad
-							isCancelXButtonShow={!!searchValue}
-							borderStyle={styles.borderStyle}
-							onCancel={() => handleChangeSearch('')}
-							placeholder={t('SEARCH', 'Search')}
-							height={26}
-							inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
-						/>
-					</View>
-				</OrderControlContainer>
-			</HeaderWrapper>
-			{isFocused && (
-				<OrderProgressWrapper>
-					<OrderProgress
-						{...props}
-					/>
-				</OrderProgressWrapper>
-			)}
-			{featuredBusiness && featuredBusiness.length > 0 && (
-				<FeaturedWrapper>
-					<OText size={16} style={{ marginLeft: 40 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('FEATURED_BUSINESS', 'Featured business')}</OText>
-					<ScrollView
-						showsHorizontalScrollIndicator={false}
-						nestedScrollEnabled
-						horizontal contentContainerStyle={{ paddingHorizontal: 40 }}>
-						{featuredBusiness.map((bAry: any, idx) => (
-							<View key={'f-listing_' + idx}>
-								<BusinessFeaturedController
-									key={bAry[0].id}
-									business={bAry[0]}
-									handleCustomClick={handleBusinessClick}
-									orderType={orderState?.options?.type}
+							<OText size={12} numberOfLines={1} style={{ width: '90%' }}>
+								{orderState?.options?.address?.address}
+							</OText>
+						</AddressInput>
+					</Search>
+					<OrderControlContainer>
+						<View style={styles.wrapperOrderOptions}>
+							<WrapMomentOption onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
+								<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(orderState?.options?.type || 1), 'Delivery')}</OText>
+								<OIcon
+									src={theme.images.general.arrow_down}
+									width={10}
+									style={{ marginStart: 8 }}
 								/>
-								{bAry.length > 1 && (
+							</WrapMomentOption>
+							<WrapMomentOption
+								onPress={() => navigation.navigate('MomentOption')}>
+								<OText
+									size={12}
+									numberOfLines={1}
+									ellipsizeMode="tail"
+									color={theme.colors.textSecondary}>
+									{orderState.options?.moment
+										? parseDate(orderState.options?.moment, {
+											outputFormat:
+												configs?.format_time?.value === '12'
+													? 'MM/DD hh:mma'
+													: 'MM/DD HH:mm',
+										})
+										: t('ASAP_ABBREVIATION', 'ASAP')}
+								</OText>
+								<OIcon
+									src={theme.images.general.arrow_down}
+									width={10}
+									style={{ marginStart: 8 }}
+								/>
+							</WrapMomentOption>
+
+							<SearchBar
+								onSearch={handleChangeSearch}
+								searchValue={searchValue}
+								lazyLoad
+								isCancelXButtonShow={!!searchValue}
+								borderStyle={styles.borderStyle}
+								onCancel={() => handleChangeSearch('')}
+								placeholder={t('SEARCH', 'Search')}
+								height={26}
+								inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
+							/>
+						</View>
+					</OrderControlContainer>
+				</HeaderWrapper>
+				{isFocused && (
+					<OrderProgressWrapper>
+						<OrderProgress
+							{...props}
+						/>
+					</OrderProgressWrapper>
+				)}
+				{featuredBusiness && featuredBusiness.length > 0 && (
+					<FeaturedWrapper>
+						<OText size={16} style={{ marginLeft: 40 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('FEATURED_BUSINESS', 'Featured business')}</OText>
+						<ScrollView
+							showsHorizontalScrollIndicator={false}
+							nestedScrollEnabled
+							horizontal contentContainerStyle={{ paddingHorizontal: 40 }}>
+							{featuredBusiness.map((bAry: any, idx) => (
+								<View key={'f-listing_' + idx}>
 									<BusinessFeaturedController
-										key={bAry[1].id}
-										business={bAry[1]}
+										key={bAry[0].id}
+										business={bAry[0]}
 										handleCustomClick={handleBusinessClick}
 										orderType={orderState?.options?.type}
 									/>
-								)}
-							</View>
-						))}
-					</ScrollView>
-				</FeaturedWrapper>
-			)}
-			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-			<HighestRatedBusinesses onBusinessClick={handleBusinessClick} />
-			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-			<ListWrapper>
-				<BusinessTypeFilter
-					images={props.images}
-					businessTypes={props.businessTypes}
-					defaultBusinessType={props.defaultBusinessType}
-					handleChangeBusinessType={handleChangeBusinessType}
-				/>
-				{!businessesList.loading && businessesList.businesses.length === 0 && (
-					<NotFoundSource
-						content={t(
-							'NOT_FOUND_BUSINESSES',
-							'No businesses to delivery / pick up at this address, please change filters or change address.',
-						)}
+									{bAry.length > 1 && (
+										<BusinessFeaturedController
+											key={bAry[1].id}
+											business={bAry[1]}
+											handleCustomClick={handleBusinessClick}
+											orderType={orderState?.options?.type}
+										/>
+									)}
+								</View>
+							))}
+						</ScrollView>
+					</FeaturedWrapper>
+				)}
+				<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
+				<HighestRatedBusinesses onBusinessClick={handleBusinessClick} />
+				<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
+				<ListWrapper>
+					<BusinessTypeFilter
+						images={props.images}
+						businessTypes={props.businessTypes}
+						defaultBusinessType={props.defaultBusinessType}
+						handleChangeBusinessType={handleChangeBusinessType}
 					/>
-				)}
-				{businessesList.businesses?.map(
-					(business: any) =>
-						!business.featured && (
-							<BusinessController
-								key={business.id}
-								business={business}
-								handleCustomClick={handleBusinessClick}
-								orderType={orderState?.options?.type}
-							/>
-						),
-				)}
-				{businessesList.loading && (
-					<>
-						{[
-							...Array(
-								paginationProps.nextPageItems
-									? paginationProps.nextPageItems
-									: 8,
-							).keys(),
-						].map((item, i) => (
-							<Placeholder
-								Animation={Fade}
-								key={i}
-								style={{ marginBottom: 20 }}>
-								<View style={{ width: '100%' }}>
-									<PlaceholderLine
-										height={200}
-										style={{ marginBottom: 20, borderRadius: 25 }}
-									/>
-									<View style={{ paddingHorizontal: 10 }}>
-										<View
-											style={{
-												flexDirection: 'row',
-												justifyContent: 'space-between',
-											}}>
+					{!businessesList.loading && businessesList.businesses.length === 0 && (
+						<NotFoundSource
+							content={t(
+								'NOT_FOUND_BUSINESSES',
+								'No businesses to delivery / pick up at this address, please change filters or change address.',
+							)}
+						/>
+					)}
+					{businessesList.businesses?.map(
+						(business: any) =>
+							!business.featured && (
+								<BusinessController
+									key={business.id}
+									business={business}
+									handleCustomClick={handleBusinessClick}
+									orderType={orderState?.options?.type}
+									onPreorderBusiness={setPreorderBusiness}
+								/>
+							),
+					)}
+					{businessesList.loading && (
+						<>
+							{[
+								...Array(
+									paginationProps.nextPageItems
+										? paginationProps.nextPageItems
+										: 8,
+								).keys(),
+							].map((item, i) => (
+								<Placeholder
+									Animation={Fade}
+									key={i}
+									style={{ marginBottom: 20 }}>
+									<View style={{ width: '100%' }}>
+										<PlaceholderLine
+											height={200}
+											style={{ marginBottom: 20, borderRadius: 25 }}
+										/>
+										<View style={{ paddingHorizontal: 10 }}>
+											<View
+												style={{
+													flexDirection: 'row',
+													justifyContent: 'space-between',
+												}}>
+												<PlaceholderLine
+													height={25}
+													width={40}
+													style={{ marginBottom: 10 }}
+												/>
+												<PlaceholderLine
+													height={25}
+													width={20}
+													style={{ marginBottom: 10 }}
+												/>
+											</View>
 											<PlaceholderLine
-												height={25}
-												width={40}
+												height={20}
+												width={30}
 												style={{ marginBottom: 10 }}
 											/>
 											<PlaceholderLine
-												height={25}
-												width={20}
+												height={20}
+												width={80}
 												style={{ marginBottom: 10 }}
 											/>
 										</View>
-										<PlaceholderLine
-											height={20}
-											width={30}
-											style={{ marginBottom: 10 }}
-										/>
-										<PlaceholderLine
-											height={20}
-											width={80}
-											style={{ marginBottom: 10 }}
-										/>
 									</View>
-								</View>
-							</Placeholder>
-						))}
-					</>
-				)}
-			</ListWrapper>
-		</ScrollView>
+								</Placeholder>
+							))}
+						</>
+					)}
+				</ListWrapper>
+			</ScrollView>
+			<OModal
+				open={isPreorder}
+				onClose={() => handlePreorderClose()}
+				customClose
+				entireModal
+			>
+				<BusinessPreorder
+					onClose={() => handlePreorderClose()}
+					handleBusinessClick={handleBusinessClick}
+					business={preorderBusiness}
+				/>
+			</OModal>
+		</>
+		
 	);
 };
 

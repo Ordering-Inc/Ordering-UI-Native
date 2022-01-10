@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native'
-import { useLanguage, useUtils, useConfig, MomentOption } from 'ordering-components/native'
+import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
+import { MomentOption } from './naked'
 import { OButton, OModal, OText } from '../shared'
 import { useTheme } from 'styled-components/native';
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
@@ -26,7 +27,7 @@ const BusinessPreorderUI = (props: any) => {
   const {
     onClose,
     business,
-    handleClick,
+    handleBusinessClick,
     datesList,
     hoursList,
     dateSelected,
@@ -39,11 +40,11 @@ const BusinessPreorderUI = (props: any) => {
   const [, t] = useLanguage()
   const [{ optimizeImage, parseTime }] = useUtils()
   const [{ configs }] = useConfig()
-  const [selectedPreorderType, setSelectedPreorderType] = useState({ key: 'business_menu', name: t('BUSINESS_MENU', 'Business menu') })
+  const [selectedPreorderType, setSelectedPreorderType] = useState({ key: 'business_hours', name: t('BUSINESS_HOURS', 'Business hours') })
   const [isPreorderTypeList, setIsPreorderTypeList] = useState(false)
   const [menu, setMenu] = useState({})
   const [timeList, setTimeList] = useState([])
-  const [selectDate, setSelectedDate] = useState(new Date())
+  const [selectDate, setSelectedDate] = useState<any>(null)
   const [minDate, setMinDate] = useState(new Date())
   const [maxDate, setMaxDate] = useState(new Date())
 
@@ -124,7 +125,6 @@ const BusinessPreorderUI = (props: any) => {
   }
 
   const getTimes = (curdate: any, menu: any) => {
-    // var date = new Date().toLocaleString('en-US', { timeZone: gBusiness.getData().timezone })
     const date = new Date()
     var dateSeleted = new Date(curdate)
     var times = []
@@ -177,9 +177,33 @@ const BusinessPreorderUI = (props: any) => {
     if (handleChangeDate) handleChangeDate(moment(val).format('YYYY-MM-DD'))
   }
 
+  const LeftSelector = () => {
+    return (
+      <View style={{height: '100%', justifyContent: 'flex-end'}}>
+        <IconAntDesign
+          name='caretleft'
+          color={theme.colors.textNormal}
+          size={16}
+        />
+      </View>
+    )
+  }
+
+  const RightSelector = () => {
+    return (
+      <View style={{height: '100%', justifyContent: 'flex-end'}}>
+        <IconAntDesign
+          name='caretright'
+          color={theme.colors.textNormal}
+          size={16}
+        />
+      </View>
+    )
+  }
+
   useEffect(() => {
     if (datesList?.length > 0) {
-      const _datesList = datesList.slice(0, Number(configs?.max_days_preorder?.value || 6, 10))
+      const _datesList = datesList.slice(0, Number(configs?.max_days_preorder?.value || 6))
       const minDateParts = _datesList[0].split('-')
       const maxDateParts = _datesList[_datesList.length - 1].split('-')
       const _minDate = new Date(minDateParts[0], minDateParts[1] - 1, minDateParts[2])
@@ -188,6 +212,11 @@ const BusinessPreorderUI = (props: any) => {
       setMaxDate(_maxDate)
     }
   }, [datesList])
+
+  const handleClickBusiness = () => {
+    onClose && onClose()
+    handleBusinessClick && handleBusinessClick(business)
+  }
 
   useEffect(() => {
     if (Object.keys(menu).length === 0 && !hoursList) return
@@ -237,7 +266,7 @@ const BusinessPreorderUI = (props: any) => {
           <OText
             size={20}
             style={{
-              fontWeight: '600',
+              fontWeight: '600'
             }}
           >{t('PREORDER', 'Preorder')}</OText>
           <View style={styles.businessLogo}>
@@ -311,38 +340,26 @@ const BusinessPreorderUI = (props: any) => {
             {t('ORDER_TIME', 'Order time')}
           </OText>
           <View style={{ flex: 1 }}>
-            <CalendarStrip
-              scrollable
-              style={styles.calendar}
-              calendarHeaderContainerStyle={styles.calendarHeaderContainer}
-              calendarHeaderStyle={styles.calendarHeader}
-              dateNumberStyle={styles.dateNumber}
-              dateNameStyle={styles.dateName}
-              iconContainer={{flex: 0.1}}
-              highlightDateNameStyle={styles.highlightDateName}
-              highlightDateNumberStyle={styles.highlightDateNumber}
-              calendarHeaderFormat='MMMM, YYYY'
-              iconStyle={{borderWidth: 1}}
-              selectedDate={selectDate}
-              onDateSelected={(date) => onSelectDate(date)}
-              leftSelector={
-                <View style={{height: '100%', justifyContent: 'flex-end'}}>
-                  <IconAntDesign
-                    name='caretleft'
-                    color={theme.colors.textNormal}
-                    size={16}
-                  />
-                </View>
-              }
-              rightSelector={
-              <View style={{height: '100%', justifyContent: 'flex-end'}}>
-                <IconAntDesign
-                  name='caretright'
-                  color={theme.colors.textNormal}
-                  size={16}
-                />
-              </View>}
-            />
+            {selectDate && (
+              <CalendarStrip
+                scrollable
+                style={styles.calendar}
+                calendarHeaderContainerStyle={styles.calendarHeaderContainer}
+                calendarHeaderStyle={styles.calendarHeader}
+                dateNumberStyle={styles.dateNumber}
+                dateNameStyle={styles.dateName}
+                iconContainer={{flex: 0.1}}
+                highlightDateNameStyle={styles.highlightDateName}
+                highlightDateNumberStyle={styles.highlightDateNumber}
+                calendarHeaderFormat='MMMM, YYYY'
+                iconStyle={{borderWidth: 1}}
+                selectedDate={selectDate}
+                onDateSelected={(date) => onSelectDate(date)}
+                leftSelector={<LeftSelector />}
+                rightSelector={<RightSelector />}
+              />
+            )}
+
           </View>
           <TimeListWrapper nestedScrollEnabled={true}>
             <TimeContentWrapper>
@@ -366,6 +383,7 @@ const BusinessPreorderUI = (props: any) => {
           text={t('GO_TO_MENU', 'Go to menu')}
           textStyle={{color: 'white'}}
           style={{borderRadius: 7.6, marginBottom: 50, marginTop: 30}}
+          onClick={() => handleClickBusiness()}
         />
       </PreOrderContainer>
       <OModal

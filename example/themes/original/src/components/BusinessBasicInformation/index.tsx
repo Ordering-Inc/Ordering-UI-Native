@@ -18,7 +18,6 @@ import {
 	WrapBusinessInfo,
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
-import { BusinessPreorder } from '../BusinessPreorder';
 const types = ['food', 'laundry', 'alcohol', 'groceries'];
 
 export const BusinessBasicInformation = (
@@ -33,7 +32,6 @@ export const BusinessBasicInformation = (
 	const [{ parsePrice, parseDistance, optimizeImage }] = useUtils();
 	const [openBusinessInformation, setOpenBusinessInformation] = useState(false);
 	const [openBusinessReviews, setOpenBusinessReviews] = useState(false);
-	const [isPreorder, setIsPreOrder] = useState(false)
 	const getBusinessType = () => {
 		if (Object.keys(business).length <= 0) return t('GENERAL', 'General');
 		const _types: any = [];
@@ -152,7 +150,7 @@ export const BusinessBasicInformation = (
 				<WrapReviews>
 					{!isBusinessInfoShow && (
 						<>
-							<TouchableOpacity onPress={() => setIsPreOrder(true)}>
+							<TouchableOpacity onPress={() => navigation.navigate('MomentOption')}>
 								<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
 									{t('PRE_ORDER', 'Preorder')}
 								</OText>
@@ -167,17 +165,6 @@ export const BusinessBasicInformation = (
 					)}
 				</WrapReviews>
 			</BusinessInfo>
-			<OModal
-				open={isPreorder}
-				onClose={() => setIsPreOrder(false)}
-				customClose
-				entireModal
-			>
-				<BusinessPreorder
-					onClose={() => setIsPreOrder(false)}
-					business={business}
-				/>
-			</OModal>
 			<OModal
 				titleSectionStyle={styles.modalTitleSectionStyle}
 				open={openBusinessInformation}
