@@ -66,12 +66,20 @@ const ChatUI = (props: MessagesParams) => {
   const [, t] = useLanguage();
   const [, { showToast }] = useToast();
   const theme = useTheme();
+  const [messageList, setMessageList] = useState<any>([])
 
-  const quickMessageList = [
+  const storeMessageList: any = [
     { key: 'store_message_1', text: t('STORE_MESSAGE_1', 'store_message_1') },
     { key: 'store_message_2', text: t('STORE_MESSAGE_2', 'store_message_2') },
     { key: 'store_message_3', text: t('STORE_MESSAGE_3', 'store_message_3') },
     { key: 'store_message_4', text: t('STORE_MESSAGE_4', 'store_message_4') }
+  ]
+
+  const driverMessageList: any = [
+    { key: 'driver_message_1', text: t('DRIVER_MESSAGE_1', 'driver_message_1') },
+    { key: 'driver_message_2', text: t('DRIVER_MESSAGE_2', 'driver_message_2') },
+    { key: 'driver_message_3', text: t('DRIVER_MESSAGE_3', 'driver_message_3') },
+    { key: 'driver_message_4', text: t('DRIVER_MESSAGE_4', 'driver_message_4') }
   ]
 
   const handleClickQuickMessage = (text: string) => {
@@ -465,6 +473,12 @@ const ChatUI = (props: MessagesParams) => {
   };
 
   useEffect(() => {
+    if (user.level === 2) setMessageList(storeMessageList)
+    else if (user.level === 4) setMessageList(driverMessageList)
+    else setMessageList([])
+  }, [user])
+
+  useEffect(() => {
     let newMessages: Array<any> = [];
     const console = (
       <View style={{ flexDirection: 'column', width: windowWidth - 100 }}>
@@ -754,21 +768,22 @@ const ChatUI = (props: MessagesParams) => {
         horizontal
         showsHorizontalScrollIndicator={false}
       >
-        {quickMessageList.map((quickMessage, i) => (
-          <OButton
-            key={i}
-            text={quickMessage.text}
-            bgColor='#E9ECEF'
-            borderColor='#E9ECEF'
-            imgRightSrc={null}
-            textStyle={{
-              fontSize: 11,
-              lineHeight: 16,
-              color: '#414954'
-            }}
-            style={{ ...styles.editButton }}
-            onClick={() => handleClickQuickMessage(quickMessage.text)}
-          />
+        {messageList.map((quickMessage: any, i: number) => (
+          <React.Fragment key={i}>
+            <OButton
+              text={quickMessage.text}
+              bgColor='#E9ECEF'
+              borderColor='#E9ECEF'
+              imgRightSrc={null}
+              textStyle={{
+                fontSize: 11,
+                lineHeight: 16,
+                color: '#414954'
+              }}
+              style={{ ...styles.editButton }}
+              onClick={() => handleClickQuickMessage(quickMessage.text)}
+            />
+          </React.Fragment>
         ))}
       </QuickMessageContainer>
     </View>
