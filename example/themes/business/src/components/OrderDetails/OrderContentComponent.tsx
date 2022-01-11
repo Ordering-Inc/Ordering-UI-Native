@@ -38,7 +38,6 @@ export const OrderContentComponent = (props: OrderContent) => {
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
   const [openReviewModal, setOpenReviewModal] = useState(false)
-  const [isCustomerReviewed, setIsCustomerReviewed] = useState(false)
 
   const pastOrderStatuses = [1, 2, 5, 6, 10, 11, 12, 16, 17]
 
@@ -62,11 +61,6 @@ export const OrderContentComponent = (props: OrderContent) => {
       borderRadius: 8,
     }
   })
-
-  const handleSuccessReviewed = () => {
-    setOpenReviewModal(false)
-    setIsCustomerReviewed(true)
-  }
 
   return (
     <OrderContent>
@@ -250,7 +244,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             {order?.customer?.zipcode}
           </OText>
         )}
-        {!order?.user_review && pastOrderStatuses.includes(order?.status) && !isCustomerReviewed && (
+        {!order?.user_review && pastOrderStatuses.includes(order?.status) && (
           <OButton
             style={styles.btnReview}
             textStyle={{ color: theme.colors.white }}
@@ -430,7 +424,7 @@ export const OrderContentComponent = (props: OrderContent) => {
         <ReviewCustomer
           order={order}
           closeModal={() => setOpenReviewModal(false)}
-          onClose={() => handleSuccessReviewed()}
+          onClose={() => setOpenReviewModal(false)}
         />
       </OModal>
     </OrderContent>
