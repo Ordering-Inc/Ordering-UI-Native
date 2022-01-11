@@ -16,6 +16,7 @@ import { OrdersOption } from './src/components/OrdersOption';
 import { OrderDetails } from './src/components/OrderDetails';
 import { OrderProgress } from './src/components/OrderProgress';
 import { BusinessPreorder } from './src/components/BusinessPreorder';
+import { BusinessMenuList } from './src/components/BusinessMenuList';
 import { UserProfileForm } from './src/components/UserProfileForm';
 import { ReviewOrder } from './src/components/ReviewOrder';
 import { UserProfile } from './src/components/UserProfile';
@@ -73,6 +74,7 @@ export {
 	BusinessPreorder,
 	UserProfileForm,
 	ReviewOrder,
+	BusinessMenuList,
 	UserProfile,
 	Help,
 	HelpAccountAndPayment,

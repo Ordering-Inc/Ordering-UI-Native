@@ -1,21 +1,19 @@
 import React, { useState } from 'react'
-import {
-  MenuListWrapper,
-  DropOption
-} from './styles'
 import { useLanguage, BusinessMenuListing } from 'ordering-components/native'
 import { OModal, OText } from '../shared'
+import { BusinessMenuListParams } from '../../types'
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+import { MenuListWrapper, DropOption } from './styles'
 
-const BusinessMenuListUI = (props: any) => {
+const BusinessMenuListUI = (props: BusinessMenuListParams) => {
   const {
+    menu,
     businessMenuList,
-    setMenu,
-    menu
+    setMenu
   } = props
 
   const [, t] = useLanguage()

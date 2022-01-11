@@ -394,6 +394,11 @@ export interface BusinessPreorderParams {
 	business: any;
 	handleBusinessClick: (value: any) => {};
 }
+export interface BusinessMenuListParams {
+	menu: any;
+	businessMenuList: any;
+	setMenu: (value: any) => {};
+}
 export interface OrderTypeSelectParams {
 	navigation?: any;
 	handleChangeOrderType: (value: any) => {};
