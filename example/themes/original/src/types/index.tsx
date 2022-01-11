@@ -132,6 +132,7 @@ export interface BusinessesListingParams {
 export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
 	onBusinessClick?: void;
+	navigation? :any;
 }
 export interface BusinessTypeFilterParams {
 	businessTypes?: Array<any>;
