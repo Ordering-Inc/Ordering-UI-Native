@@ -175,7 +175,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
             )}
           </>
         </OText>
-        {!order?.isLogistic && (!order?.order_group_id  || !logisticOrderStatus?.includes(order?.status)) && (
+        {!order?.isLogistic && (!order?.order_group_id || !logisticOrderStatus?.includes(order?.status)) && (
           <OText size={13}>
             {`${order?.paymethod?.name} - ${order.delivery_type === 1
               ? t('DELIVERY', 'Delivery')

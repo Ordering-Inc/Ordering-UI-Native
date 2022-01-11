@@ -87,7 +87,7 @@ export const PreviousOrders = (props: any) => {
         orders
           ?.filter((order: any) => hash[order?.id] ? false : (hash[order?.id] = true))
           ?.map((_order: any) => {
-            const order = _order?.isLogistic && !_order?.order_group_id && isLogisticOrder ? _order?.order : _order
+            const order = _order?.isLogistic && !_order?.order_group && isLogisticOrder ? _order?.order : _order
             return (
               <View
                 style={{
@@ -140,7 +140,7 @@ export const PreviousOrders = (props: any) => {
                         numberOfLines={1}
                         adjustsFontSizeToFit
                         size={20}>
-                        {(order?.order_group_id && isLogisticOrder ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}` : (t('INVOICE_ORDER_NO', 'Order No.') + order.id)) + ' · '}
+                        {(order?.order_group_id && order?.order_group && isLogisticOrder ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}` : (t('INVOICE_ORDER_NO', 'Order No.') + order.id)) + ' · '}
                         {order?.delivery_datetime_utc
                           ? parseDate(order?.delivery_datetime_utc)
                           : parseDate(order?.delivery_datetime, { utc: false })}
@@ -171,7 +171,7 @@ export const PreviousOrders = (props: any) => {
                 </TouchableOpacity>
                 {isLogisticOrder && (
                   <AcceptOrRejectOrder>
-                    {order?.order_group_id ? (
+                    {order?.order_group_id && order?.order_group ? (
                       <OButton
                         text={t('VIEW_ORDER', 'View order')}
                         onClick={() => handlePressOrder({ ...order, logistic_order_id: _order?.id })}
