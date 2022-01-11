@@ -528,13 +528,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             (currentOrdersGroup?.error?.length ||
               currentOrdersGroup?.orders?.length === 0)) ||
             (currentTabSelected === 'logisticOrders' &&
-              (logisticOrders?.error?.length > 0 || logisticOrders?.orders?.length === 0))
+              (logisticOrders?.error?.length > 0 || logisticOrders?.orders?.length === 0 || !logisticOrders?.orders?.some(order => !order?.expired)))
           ) &&
             (
               <NotFoundSource
                 content={
                   ((currentTabSelected !== 'logisticOrders' && !currentOrdersGroup?.error?.length) ||
-                    (currentTabSelected === 'logisticOrders' && !logisticOrders?.error?.length))
+                    (currentTabSelected === 'logisticOrders' && (!logisticOrders?.error?.length || (logisticOrders?.orders?.length > 0 && !logisticOrders?.orders?.some(order => !order?.expired)))))
                     ? t('NO_RESULTS_FOUND', 'Sorry, no results found')
                     : currentOrdersGroup?.error?.[0]?.message ||
                     currentOrdersGroup?.error?.[0] ||

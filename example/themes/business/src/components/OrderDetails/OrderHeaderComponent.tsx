@@ -28,8 +28,8 @@ interface OrderHeader {
   handleOpenMessagesForBusiness?: any,
   getOrderStatus?: any,
   logisticOrderStatus?: Array<number>,
-  handleViewSummaryOrder?: any;
-  handleCopyClipboard?: any
+  handleViewSummaryOrder: any;
+  handleCopyClipboard: any
 }
 
 export const OrderHeaderComponent = (props: OrderHeader) => {
@@ -96,7 +96,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
         />
 
         {
-          (!order?.isLogistic || !logisticOrderStatus?.includes(order?.status)) && (
+          (!order?.isLogistic || (!logisticOrderStatus?.includes(order?.status) && !order?.order_group)) && (
             <Actions>
               {getOrderStatus(order?.status, t)?.value !==
                 t('PENDING', 'Pending') && (
