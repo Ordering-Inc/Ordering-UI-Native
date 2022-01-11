@@ -25,7 +25,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import FastImage from 'react-native-fast-image'
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-	const { business, handleClick, onPreorderBusiness } = props;
+	const { business, handleClick, navigation } = props;
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] =
 		useUtils();
 	const [orderState] = useOrder();
@@ -100,7 +100,9 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
 	const handleBusinessClick = (selectedBusiness: any) => {
 		if (business?.open) handleClick && handleClick(selectedBusiness)
-		else onPreorderBusiness && onPreorderBusiness(selectedBusiness)
+		else {
+			navigation.navigate('BusinessPreorder', { business: selectedBusiness, handleBusinessClick: handleClick })
+		}
 	}
 
 	return (

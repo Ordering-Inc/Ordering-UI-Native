@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native'
-import { useLanguage, useUtils, useConfig } from 'ordering-components/native'
-import { MomentOption } from './naked'
+import { useLanguage, useUtils, useConfig, useOrder, MomentOption } from 'ordering-components/native'
 import { OButton, OModal, OText } from '../shared'
 import { useTheme } from 'styled-components/native';
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
@@ -9,6 +8,7 @@ import FastImage from 'react-native-fast-image'
 import CalendarStrip from 'react-native-calendar-strip'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { BusinessMenuList } from '../BusinessMenuList'
+import Spinner from 'react-native-loading-spinner-overlay';
 import moment from 'moment'
 import {
   PreOrderContainer,
@@ -25,7 +25,7 @@ import {
 
 const BusinessPreorderUI = (props: any) => {
   const {
-    onClose,
+    goToBack,
     business,
     handleBusinessClick,
     datesList,
@@ -40,13 +40,13 @@ const BusinessPreorderUI = (props: any) => {
   const [, t] = useLanguage()
   const [{ optimizeImage, parseTime }] = useUtils()
   const [{ configs }] = useConfig()
+  const [orderState] = useOrder();
   const [selectedPreorderType, setSelectedPreorderType] = useState({ key: 'business_hours', name: t('BUSINESS_HOURS', 'Business hours') })
   const [isPreorderTypeList, setIsPreorderTypeList] = useState(false)
   const [menu, setMenu] = useState({})
   const [timeList, setTimeList] = useState([])
   const [selectDate, setSelectedDate] = useState<any>(null)
-  const [minDate, setMinDate] = useState(new Date())
-  const [maxDate, setMaxDate] = useState(new Date())
+  const [datesWhitelist, setDateWhitelist] = useState<any>([{start: null, end: null}])
 
   const styles = StyleSheet.create({
 		businessLogo: {
@@ -111,6 +111,17 @@ const BusinessPreorderUI = (props: any) => {
       color: '#344050',
       fontSize: 16,
       textTransform: 'capitalize'
+    },
+    disabledDateName: {
+      color: '#B1BCCC',
+      fontSize: 10,
+      textTransform: 'capitalize',
+      opacity: 1
+    },
+    disabledDateNumber: {
+      color: '#B1BCCC',
+      fontSize: 14,
+      fontWeight: '500'
     }
 	})
 
@@ -208,18 +219,16 @@ const BusinessPreorderUI = (props: any) => {
       const maxDateParts = _datesList[_datesList.length - 1].split('-')
       const _minDate = new Date(minDateParts[0], minDateParts[1] - 1, minDateParts[2])
       const _maxDate = new Date(maxDateParts[0], maxDateParts[1] - 1, maxDateParts[2])
-      setMinDate(_minDate)
-      setMaxDate(_maxDate)
+      setDateWhitelist([{ start: _minDate, end: _maxDate }])
     }
   }, [datesList])
 
   const handleClickBusiness = () => {
-    onClose && onClose()
     handleBusinessClick && handleBusinessClick(business)
   }
 
   useEffect(() => {
-    if (Object.keys(menu).length === 0 && !hoursList) return
+    if (hoursList.length === 0) return
     if (Object.keys(menu).length > 0) {
       const _times: any = getTimes(selectDate, menu)
       setTimeList(_times)
@@ -238,10 +247,10 @@ const BusinessPreorderUI = (props: any) => {
       })
       setTimeList(_timeLists)
     }
-  }, [selectDate, hoursList])
+  }, [selectDate, hoursList, menu])
 
   useEffect(() => {
-    if (selectedPreorderType.key === 'business_menu' && Object.keys(menu).length > 0) setMenu({})
+    if (selectedPreorderType.key === 'business_hours' && Object.keys(menu).length > 0) setMenu({})
   }, [selectedPreorderType])
 
   useEffect(() => {
@@ -255,7 +264,7 @@ const BusinessPreorderUI = (props: any) => {
   return (
     <>
       <PreOrderContainer>
-        <TouchableOpacity onPress={() => onClose && onClose()} style={{ marginBottom: 12 }}>
+        <TouchableOpacity onPress={() => goToBack && goToBack()} style={{ marginBottom: 12 }}>
           <IconAntDesign
             name='close'
             color={theme.colors.textThird}
@@ -340,7 +349,7 @@ const BusinessPreorderUI = (props: any) => {
             {t('ORDER_TIME', 'Order time')}
           </OText>
           <View style={{ flex: 1 }}>
-            {selectDate && (
+            {selectDate && datesWhitelist[0].start !== null && (
               <CalendarStrip
                 scrollable
                 style={styles.calendar}
@@ -354,12 +363,15 @@ const BusinessPreorderUI = (props: any) => {
                 calendarHeaderFormat='MMMM, YYYY'
                 iconStyle={{borderWidth: 1}}
                 selectedDate={selectDate}
+                datesWhitelist={datesWhitelist}
+                disabledDateNameStyle={styles.disabledDateName}
+                disabledDateNumberStyle={styles.disabledDateNumber}
+                disabledDateOpacity={0.6}
                 onDateSelected={(date) => onSelectDate(date)}
                 leftSelector={<LeftSelector />}
                 rightSelector={<RightSelector />}
               />
             )}
-
           </View>
           <TimeListWrapper nestedScrollEnabled={true}>
             <TimeContentWrapper>
@@ -376,6 +388,9 @@ const BusinessPreorderUI = (props: any) => {
                   </TimeItem>
                 </TouchableOpacity>
               ))}
+              {timeList.length % 3 === 2 && (
+                <TimeItem style={{backgroundColor: 'transparent'}}/>
+              )}
             </TimeContentWrapper>
           </TimeListWrapper>
         </OrderTimeWrapper>
@@ -386,6 +401,7 @@ const BusinessPreorderUI = (props: any) => {
           onClick={() => handleClickBusiness()}
         />
       </PreOrderContainer>
+      <Spinner visible={orderState.loading} />
       <OModal
         open={isPreorderTypeList}
         onClose={() => setIsPreorderTypeList(false)}

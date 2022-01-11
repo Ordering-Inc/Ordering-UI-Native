@@ -16,7 +16,6 @@ import {
 	useUtils,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { BusinessPreorder } from '../BusinessPreorder';
 
 import {
 	Search,
@@ -30,7 +29,7 @@ import {
 } from './styles';
 
 import { SearchBar } from '../SearchBar';
-import { OIcon, OText, OModal } from '../shared';
+import { OIcon, OText } from '../shared';
 import { BusinessesListingParams } from '../../types';
 import { NotFoundSource } from '../NotFoundSource';
 import { BusinessTypeFilter } from '../BusinessTypeFilter';
@@ -59,8 +58,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
 	const theme = useTheme();
 	const isFocused = useIsFocused();
-	const [isPreorder, setIsPreOrder] = useState(false)
-	const [preorderBusiness, setPreorderBusiness] = useState({})
 
 	const styles = StyleSheet.create({
 		container: {
@@ -129,15 +126,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			getBusinesses();
 		}
 	};
-
-	const handlePreorderClose = () => {
-		setIsPreOrder(false)
-		setPreorderBusiness({})
-	}
-
-	useEffect(() => {
-		if (Object.keys(preorderBusiness).length > 0) setIsPreOrder(true)
-	}, [preorderBusiness])
 
 	useEffect(() => {
 		if (businessesList.businesses.length > 0) {
@@ -301,7 +289,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 									business={business}
 									handleCustomClick={handleBusinessClick}
 									orderType={orderState?.options?.type}
-									onPreorderBusiness={setPreorderBusiness}
+									navigation={navigation}
 								/>
 							),
 					)}
@@ -358,18 +346,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					)}
 				</ListWrapper>
 			</ScrollView>
-			<OModal
-				open={isPreorder}
-				onClose={() => handlePreorderClose()}
-				customClose
-				entireModal
-			>
-				<BusinessPreorder
-					onClose={() => handlePreorderClose()}
-					handleBusinessClick={handleBusinessClick}
-					business={preorderBusiness}
-				/>
-			</OModal>
 		</>
 		
 	);

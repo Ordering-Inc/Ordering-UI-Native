@@ -150,7 +150,7 @@ export interface BusinessControllerParams {
 	isBusinessOpen?: boolean;
 	businessWillCloseSoonMinutes?: number
 	isBusinessClose?: number,
-	onPreorderBusiness?: any
+	navigation?: any
 }
 export interface BusinessProductsListingParams {
 	navigation?: any;
