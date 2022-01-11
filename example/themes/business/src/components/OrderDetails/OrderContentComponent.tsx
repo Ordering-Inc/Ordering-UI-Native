@@ -27,14 +27,16 @@ import { ReviewCustomer } from '../ReviewCustomer'
 
 interface OrderContent {
   order: any,
-  logisticOrderStatus?: Array<number>
+  logisticOrderStatus?: Array<number>,
+  isOrderGroup?: boolean,
+  lastOrder?: boolean
 }
 
 export const OrderContentComponent = (props: OrderContent) => {
   const [, t] = useLanguage();
   const theme = useTheme()
 
-  const { order, logisticOrderStatus } = props;
+  const { order, logisticOrderStatus, isOrderGroup, lastOrder } = props;
   const [{ parsePrice, parseNumber }] = useUtils();
   const [{ configs }] = useConfig();
   const [openReviewModal, setOpenReviewModal] = useState(false)
@@ -69,7 +71,10 @@ export const OrderContentComponent = (props: OrderContent) => {
   }
 
   return (
-    <OrderContent>
+    <OrderContent isOrderGroup={isOrderGroup} lastOrder={lastOrder}>
+      {isOrderGroup && (
+        <OText size={18}>{t('ORDER', 'Order')} #{isOrderGroup ? order?.order_group_id : order?.id}</OText>
+      )}
       <OrderBusiness>
         <OText style={{ marginBottom: 5 }} size={16} weight="600">
           {t('BUSINESS_DETAILS', 'Business details')}
@@ -148,42 +153,52 @@ export const OrderContentComponent = (props: OrderContent) => {
         <OText style={{ marginBottom: 5 }} size={16} weight="600">
           {t('CUSTOMER_DETAILS', 'Customer details')}
         </OText>
-
-        <View style={{ flexDirection: 'row' }}>
-          <OText numberOfLines={2} mBottom={4}>
-            <OText
-              numberOfLines={1}
-              mBottom={4}
-              ellipsizeMode="tail"
-              space>
-              {order?.customer?.name}
-            </OText>
-
-            <OText
-              numberOfLines={1}
-              mBottom={4}
-              ellipsizeMode="tail"
-              space>
-              {order?.customer?.middle_name}
-            </OText>
-
-            <OText
-              numberOfLines={1}
-              mBottom={4}
-              ellipsizeMode="tail"
-              space>
-              {order?.customer?.lastname}
-            </OText>
-
-            <OText
-              numberOfLines={1}
-              mBottom={4}
-              ellipsizeMode="tail"
-              space>
-              {order?.customer?.second_lastname}
-            </OText>
-          </OText>
-        </View>
+        {
+          (order?.customer?.name || order?.customer?.lastname) && (
+            <View style={{ flexDirection: 'row' }}>
+              <OText numberOfLines={2} mBottom={4}>
+                {order?.customer?.name && (
+                  <OText
+                    numberOfLines={1}
+                    mBottom={4}
+                    ellipsizeMode="tail"
+                    space>
+                    {order?.customer?.name}
+                  </OText>
+                )}
+                {order?.customer?.middle_name && (
+                  <OText
+                    numberOfLines={1}
+                    mBottom={4}
+                    ellipsizeMode="tail"
+                    space>
+                    {order?.customer?.middle_name}
+                  </OText>
+                )}
+                {order?.customer?.lastname && (
+                  <OText
+                    numberOfLines={1}
+                    mBottom={4}
+                    ellipsizeMode="tail"
+                    space>
+                    {order?.customer?.lastname}
+                  </OText>
+                )}
+                {
+                  order?.customer?.second_lastname && (
+                    <OText
+                      numberOfLines={1}
+                      mBottom={4}
+                      ellipsizeMode="tail"
+                      space>
+                      {order?.customer?.second_lastname}
+                    </OText>
+                  )
+                }
+              </OText>
+            </View>
+          )
+        }
 
         {!!order?.customer?.email && (
           <View style={styles.linkWithIcons}>
