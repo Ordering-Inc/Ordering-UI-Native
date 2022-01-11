@@ -105,7 +105,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [openModalForDriver, setOpenModalForDriver] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
   const [isReviewed, setIsReviewed] = useState(false)
-  const [openOrderCreating, setOpenOrderCreating] = useState(true)
+  const [openOrderCreating, setOpenOrderCreating] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null })
   const { order, loading, businessData, error } = props.order
   const isTaxIncluded = order?.tax_type === 1
@@ -244,6 +244,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       }
     }
   }, [loading])
+
+  useEffect(() => {
+    AsyncStorage.getItem('business-address', (err, result) => {
+      if (result !== null) setOpenOrderCreating(true)
+    })
+  }, [])
 
   return (
     <OrderDetailsContainer keyboardShouldPersistTaps='handled'>
