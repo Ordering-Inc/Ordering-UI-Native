@@ -152,7 +152,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		<>
 			<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}>
 				<HeaderWrapper
-					source={theme.images.general.homeHero}
+					source={theme.images.backgrounds.business_list_header}
 					style={{ paddingTop: top + 20 }}>
 					{!auth && (
 						<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
