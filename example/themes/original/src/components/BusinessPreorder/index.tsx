@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native'
 import { useLanguage, useUtils, useConfig, useOrder, MomentOption } from 'ordering-components/native'
 import { OButton, OModal, OText } from '../shared'
-import { useTheme } from 'styled-components/native';
+import { useTheme } from 'styled-components/native'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import FastImage from 'react-native-fast-image'
 import CalendarStrip from 'react-native-calendar-strip'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { BusinessMenuList } from '../BusinessMenuList'
-import Spinner from 'react-native-loading-spinner-overlay';
+import Spinner from 'react-native-loading-spinner-overlay'
+import { BusinessPreorderParams } from '../../types'
 import moment from 'moment'
 import {
   PreOrderContainer,
@@ -23,15 +24,15 @@ import {
   DropOption
 } from './styles'
 
-const BusinessPreorderUI = (props: any) => {
+const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   const {
     goToBack,
     business,
-    handleBusinessClick,
     datesList,
     hoursList,
     dateSelected,
     timeSelected,
+    handleBusinessClick,
     handleChangeDate,
     handleChangeTime
   } = props
@@ -40,11 +41,11 @@ const BusinessPreorderUI = (props: any) => {
   const [, t] = useLanguage()
   const [{ optimizeImage, parseTime }] = useUtils()
   const [{ configs }] = useConfig()
-  const [orderState] = useOrder();
+  const [orderState] = useOrder()
   const [selectedPreorderType, setSelectedPreorderType] = useState({ key: 'business_hours', name: t('BUSINESS_HOURS', 'Business hours') })
   const [isPreorderTypeList, setIsPreorderTypeList] = useState(false)
   const [menu, setMenu] = useState({})
-  const [timeList, setTimeList] = useState([])
+  const [timeList, setTimeList] = useState<any>([])
   const [selectDate, setSelectedDate] = useState<any>(null)
   const [datesWhitelist, setDateWhitelist] = useState<any>([{start: null, end: null}])
 

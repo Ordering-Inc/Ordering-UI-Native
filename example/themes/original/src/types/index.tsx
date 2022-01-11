@@ -380,6 +380,20 @@ export interface MomentOptionParams {
 	handleChangeDate: (value: any) => {};
 	handleChangeTime: (value: any) => {};
 }
+export interface BusinessPreorderParams {
+	navigation?: any;
+	datesList: Array<any>;
+	hoursList: Array<any>;
+	dateSelected?: any;
+	timeSelected?: any;
+	isAsap?: boolean;
+	handleAsap?: () => {};
+	handleChangeDate: (value: any) => {};
+	handleChangeTime: (value: any) => {};
+	goToBack: any;
+	business: any;
+	handleBusinessClick: (value: any) => {};
+}
 export interface OrderTypeSelectParams {
 	navigation?: any;
 	handleChangeOrderType: (value: any) => {};
