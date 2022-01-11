@@ -28,8 +28,8 @@ interface OrderHeader {
   handleOpenMessagesForBusiness?: any,
   getOrderStatus?: any,
   logisticOrderStatus?: Array<number>,
-  handleViewSummaryOrder: any;
-  handleCopyClipboard: any
+  handleViewSummaryOrder?: any;
+  handleCopyClipboard?: any
 }
 
 export const OrderHeaderComponent = (props: OrderHeader) => {
