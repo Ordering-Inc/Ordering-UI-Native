@@ -187,7 +187,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   };
 
   const getOrderStatus = (key: number) => {
-    return orderStatus.find((status: any) => status.key === key)?.text;
+    return orderStatus.find((status: any) => status?.key === key)?.text;
   };
 
   const applyFilters = () => {
@@ -454,7 +454,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             currentTabSelected !== 'logisticOrders' &&
             (
               <PreviousOrders
-                orders={currentOrdersGroup.orders}
+                orders={currentOrdersGroup?.orders}
                 onNavigationRedirect={onNavigationRedirect}
                 getOrderStatus={getOrderStatus}
                 handleClickOrder={handleClickOrder}
@@ -464,7 +464,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             logisticOrders?.orders?.length > 0 &&
             currentTabSelected === 'logisticOrders' && (
               <PreviousOrders
-                orders={logisticOrders.orders.filter((order: any) => !order?.expired).map((order: any) => ({ ...order, isLogistic: true }))}
+                orders={logisticOrders?.orders?.filter((order: any) => !order?.expired).map((order: any) => ({ ...order, isLogistic: true }))}
                 onNavigationRedirect={onNavigationRedirect}
                 getOrderStatus={getOrderStatus}
                 handleClickLogisticOrder={handleClickLogisticOrder}

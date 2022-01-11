@@ -27,7 +27,9 @@ import { ReviewCustomer } from '../ReviewCustomer'
 
 interface OrderContent {
   order: any,
-  logisticOrderStatus?: Array<number>
+  logisticOrderStatus?: Array<number>,
+  isOrderGroup?: boolean,
+  lastOrder?: boolean
 }
 
 export const OrderContentComponent = (props: OrderContent) => {
