@@ -86,7 +86,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 				styles.container,
 				(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
 			]}
-			onPress={() => onProductClick(product)}>
+			onPress={() => onProductClick?.(product)}>
 			<CardInfo>
 				<OText
 					size={12}

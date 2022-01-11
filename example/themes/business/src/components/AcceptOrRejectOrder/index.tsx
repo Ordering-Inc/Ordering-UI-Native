@@ -136,11 +136,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       timerRef.current.blur();
     }
 
-    if (!isFocus) {
-      if (time.length > 1) timerRef.current.clear();
-      timerRef?.current?.focus?.();
-      handleFocusTimer();
-    }
   };
 
   const openTextTareaOInput = () => {
@@ -163,7 +158,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
     const time = parseInt(hour || '0') * 60 + (parseInt(minsToSend) || 0);
 
-    let bodyToSend : any = {};
+    let bodyToSend: any = {};
     const orderStatus: any = {
       acceptByBusiness: {
         prepared_in: time,
@@ -215,11 +210,22 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     handleUpdateOrder && handleUpdateOrder(bodyToSend.status, bodyToSend);
   };
 
+  useEffect(() => {
+    if (actions && action === 'accept') {
+      const interval = setTimeout(() => {
+        timerRef?.current?.focus?.()
+      }, 200)
+      return () => {
+        clearTimeout(interval)
+      }
+    }
+  }, [timerRef?.current])
+
   return (
     <KeyboardAvoidingView
       enabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, paddingHorizontal: 30, paddingTop: 30, marginTop: top, marginBottom: bottom, justifyContent: 'space-between' }}>
+      style={{ flex: 1, paddingHorizontal: 30, paddingVertical: 30, marginTop: top, marginBottom: bottom, justifyContent: 'space-between' }}>
       <View>
         <OIconButton
           icon={theme.images.general.arrow_left}
@@ -359,11 +365,12 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           onChangeText={handleTime}
           onPressOut={() => handleFixTime()}
           editable={true}
-          autoFocus={actions && action === 'accept'}
           selectionColor={theme.colors.primary}
           placeholderTextColor={theme.colors.textGray}
           color={theme.colors.textGray}
           onEndEditing={handleFixTime}
+          onSubmitEditing={() => handleAcceptOrReject()}
+          onBlur={() => actions && action === 'accept' && timerRef?.current?.focus?.()}
         />
 
         {showTextArea && (
@@ -379,7 +386,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
               value={comments}
               onChange={setComments}
             />
-            <View style={{ height: 20 }} />
           </Comments>
         )}
       </Content>

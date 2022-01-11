@@ -172,24 +172,33 @@ export const ProductOptionsUI = (props: any) => {
 										</View>
 									</Placeholder>
 								) : (
-									<>
-										<OText style={{ flex: I18nManager.isRTL ? 0 : 1, ...theme.labels.large }}>{product?.name || productCart.name}</OText>
-										{/* <OText size={20} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText> */}
-									</>
+									<View style={{ flexDirection: 'column', width: '100%' }}>
+										<OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1, marginBottom: 10 }}>{product?.name || productCart.name}</OText>
+										<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+											{((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (product?.estimated_person)) && (
+												<OText size={14} style={{ marginBottom: 10, flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'}>
+													{
+														((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
+														&& <>{t('SKU', 'Sku')}{' '}{product?.sku || productCart?.sku}</>
+													}
+													{product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
+														<>&nbsp;&#183;&nbsp;</>
+													)}
+													{product?.estimated_person
+														&& <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
+													}
+												</OText>
+											)}
+										</View>
+										<OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+									</View>
 								)}
 							</ProductTitle>
-							<ProductDescription>
-								<OText style={theme.labels.small as TextStyle} color={theme.colors.textSecondary}>{product?.description || productCart?.description}</OText>
-								{(
-									(product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
-									(productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1')
-								) && (
-										<>
-											<OText size={20}>{t('SKU', 'Sku')}</OText>
-											<OText>{product?.sku || productCart?.sku}</OText>
-										</>
-									)}
-							</ProductDescription>
+							{(product?.description || productCart?.description) && (
+								<ProductDescription>
+									<OText color={theme.colors.textSecondary}>{product?.description || productCart?.description}</OText>
+								</ProductDescription>
+							)}
 							{loading && !product ? (
 								<>
 									{[...Array(2)].map((item, i) => (
@@ -319,18 +328,18 @@ export const ProductOptionsUI = (props: any) => {
 
 					<View style={{ width: '100%' }}>
 						{/* {productCart && !isSoldOut && maxProductQuantity > 0 && auth && orderState.options?.address_id && ( */}
-							<OButton
-								onClick={() => handleSaveProduct()}
-								imgRightSrc=''
-								text={`${orderState.loading ? t('LOADING', 'Loading') : editMode ? t('UPDATE', 'Update') : t('ADD_TO_CART', 'Add to Cart')}`}
-								textSub={`${orderState.loading ? '' : productCart.total ? parsePrice(productCart?.total) : ''}`}
-								textStyle={{ color: saveErrors ? theme.colors.textSecondary : theme.colors.white, fontSize: 14, fontWeight: Platform.OS === 'ios' ? '600' : 'bold' }}
-								style={{
-									backgroundColor: saveErrors ? theme.colors.backgroundGray300 : theme.colors.primary,
-									borderWidth: 1, shadowOpacity: 0, height: 40,
-									borderColor: saveErrors ? theme.colors.backgroundGray300 : theme.colors.primary,
-								}}
-							/>
+						<OButton
+							onClick={() => handleSaveProduct()}
+							imgRightSrc=''
+							text={`${orderState.loading ? t('LOADING', 'Loading') : editMode ? t('UPDATE', 'Update') : t('ADD_TO_CART', 'Add to Cart')}`}
+							textSub={`${orderState.loading ? '' : productCart.total ? parsePrice(productCart?.total) : ''}`}
+							textStyle={{ color: saveErrors ? theme.colors.textSecondary : theme.colors.white, fontSize: 14, fontWeight: Platform.OS === 'ios' ? '600' : 'bold' }}
+							style={{
+								backgroundColor: saveErrors ? theme.colors.backgroundGray300 : theme.colors.primary,
+								borderWidth: 1, shadowOpacity: 0, height: 40,
+								borderColor: saveErrors ? theme.colors.backgroundGray300 : theme.colors.primary,
+							}}
+						/>
 						{/* )} */}
 						{auth && !orderState.options?.address_id && (
 							orderState.loading ? (

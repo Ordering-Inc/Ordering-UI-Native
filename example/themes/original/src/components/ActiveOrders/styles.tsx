@@ -42,3 +42,8 @@ export const Price = styled.View`
   margin-left: 10px;
   width: 30%;
 `
+export const LoadMore = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 10px;
+`

@@ -71,5 +71,6 @@ export const FeaturedWrapper = styled.View`
 
 export const OrderProgressWrapper = styled.View`
   margin-top: 37px;
+  margin-bottom: 20px;
 	padding-horizontal: 40px;
 `

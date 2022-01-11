@@ -27,7 +27,9 @@ interface OrderHeader {
   handleOpenMapView?: any,
   handleOpenMessagesForBusiness?: any,
   getOrderStatus?: any,
-  logisticOrderStatus?: Array<number>
+  logisticOrderStatus?: Array<number>,
+  handleViewSummaryOrder: any;
+  handleCopyClipboard: any
 }
 
 export const OrderHeaderComponent = (props: OrderHeader) => {
@@ -37,7 +39,9 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
     handleOpenMapView,
     handleOpenMessagesForBusiness,
     getOrderStatus,
-    logisticOrderStatus
+    logisticOrderStatus,
+    handleViewSummaryOrder,
+    handleCopyClipboard
   } = props
   const theme = useTheme();
   const [, t] = useLanguage();
@@ -46,7 +50,8 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
   const styles = StyleSheet.create({
     icons: {
       maxWidth: 40,
-      height: 25,
+      height: 40,
+      padding: 10,
       alignItems: 'flex-end',
     },
   })
@@ -93,6 +98,34 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
         {
           (!order?.isLogistic || !logisticOrderStatus?.includes(order?.status)) && (
             <Actions>
+              {getOrderStatus(order?.status, t)?.value !==
+                t('PENDING', 'Pending') && (
+                  <>
+                    <OIconButton
+                      icon={theme.images.general.copy}
+                      iconStyle={{
+                        width: 20,
+                        height: 25,
+                        top: 2,
+                        tintColor: theme.colors.backArrow,
+                      }}
+                      borderColor={theme.colors.clear}
+                      style={styles.icons}
+                      onClick={() => handleCopyClipboard()}
+                    />
+                    <OIconButton
+                      icon={theme.images.general.print}
+                      iconStyle={{
+                        width: 25,
+                        height: 22,
+                        tintColor: theme.colors.backArrow,
+                      }}
+                      borderColor={theme.colors.clear}
+                      style={styles.icons}
+                      onClick={() => handleViewSummaryOrder()}
+                    />
+                  </>
+                )}
               <OIconButton
                 icon={theme.images.general.map}
                 iconStyle={{

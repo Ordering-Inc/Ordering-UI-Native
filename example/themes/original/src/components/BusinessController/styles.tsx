@@ -3,9 +3,9 @@ import styled, { css } from 'styled-components/native';
 export const Card = styled.TouchableOpacity`
   margin-vertical: 20px;
   border-radius: 7.6px;
-  flex: 1;
   width: 100%;
-`;
+  position: relative;
+`
 
 export const BusinessHero = styled.View`
   position: relative;
@@ -40,9 +40,9 @@ export const Metadata = styled.View`
 `;
 
 export const BusinessState = styled.View`
-    position: absolute;
-	 top: 13px;
-	 end: 18px;
+  position: absolute;
+	top: 13px;
+	end: 18px;
 `
 
 export const BusinessLogo = styled.View`

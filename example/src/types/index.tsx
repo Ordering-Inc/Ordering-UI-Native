@@ -202,7 +202,7 @@ export interface SingleProductCardParams {
   businessId: any,
   product: any;
   isSoldOut: boolean;
-  onProductClick: any;
+  onProductClick?: any;
 }
 export interface BusinessInformationParams {
   navigation?: any,
