@@ -339,7 +339,7 @@ const CartUI = (props: any) => {
           onClose={() => setOpenTaxModal({ open: false, data: null })}
           entireModal
         >
-          <TaxInformation data={openTaxModal.data} products={cart.products} />
+          <TaxInformation data={openTaxModal.data} products={cart?.products} />
         </OModal>
       </Container>
     )
