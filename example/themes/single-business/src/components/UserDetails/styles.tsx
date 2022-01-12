@@ -1,15 +1,15 @@
-import styled, { css } from 'styled-components/native';
+import styled from 'styled-components/native';
 
 export const UDContainer = styled.View``
 
 export const UDHeader = styled.View`
+  display: flex;
   flex-direction: row;
   align-items: center;
 `
 
 export const UDForm = styled.View`
   width: 100%;
-  /* margin-top: 25px; */
 `
 
 export const UDInfo = styled.View`
@@ -17,10 +17,5 @@ export const UDInfo = styled.View`
   flex-direction: column;
   width: 100%;
   text-align: left;
+  align-items: flex-start;
 `
-export const EditBtn = styled.TouchableOpacity`
-	align-items: center;
-	justify-content: center;
-	padding-top: 9px;
-	width: 40px;
-`;
