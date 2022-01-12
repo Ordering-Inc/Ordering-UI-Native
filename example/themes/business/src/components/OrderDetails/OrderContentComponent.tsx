@@ -429,6 +429,14 @@ export const OrderContentComponent = (props: OrderContent) => {
             </OText>
           </Table>
         </Total>
+        {order?.comment && (
+          <Table>
+            <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
+            <OText style={{ maxWidth: '70%' }}>
+              {order?.comment}
+            </OText>
+          </Table>
+        )}
       </OrderBill >
       <OModal
         open={openReviewModal}
