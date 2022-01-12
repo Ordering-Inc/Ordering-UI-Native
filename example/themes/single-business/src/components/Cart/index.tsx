@@ -16,26 +16,32 @@ import {
   OSCoupon,
   OSTotal,
   Title,
-  LineDivider
+  LineDivider,
+  BIHeader,
+  BIInfo,
+  BIContentInfo,
+  BITotal
 } from './styles';
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { CouponControl } from '../CouponControl';
 
-import { OButton, OModal, OText } from '../shared';
+import { OButton, OIcon, OModal, OText } from '../shared';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
-import { verifyDecimals } from '../../utils';
+import { convertHoursToMinutes, verifyDecimals } from '../../utils';
 import { Container } from '../../layouts/Container';
 import { NotFoundSource } from '../NotFoundSource'
 import { OSRow } from '../OrderSummary/styles';
 import AntIcon from 'react-native-vector-icons/AntDesign'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { TaxInformation } from '../TaxInformation';
 import { TouchableOpacity } from 'react-native';
 const CartUI = (props: any) => {
   const {
     cart,
     clearCart,
+    isCartList,
     changeQuantity,
     getProductMax,
     offsetDisabled,
@@ -62,6 +68,8 @@ const CartUI = (props: any) => {
 
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
+  const isClosed = !cart?.valid_schedule
+  const isProducts = cart?.products?.length
 
   const handleDeleteClick = (product: any) => {
     removeProduct(product, cart)
@@ -110,22 +118,91 @@ const CartUI = (props: any) => {
     }
   }
 
+  const CartHeader = () => {
+    return (
+      <BIHeader isClosed={isClosed}>
+        <BIInfo>
+          {cart?.business?.logo && (
+            <View
+              style={{
+                height: 72,
+                width: 72,
+                borderWidth: 1,
+                borderColor: theme.colors.border,
+                borderRadius: 8
+              }}
+            >
+              <OIcon
+                url={cart?.business?.logo}
+                width={70}
+                height={70}
+                style={{ borderRadius: 16 }}
+              />
+            </View>
+          )}
+          <BIContentInfo>
+            <OText>{cart?.business?.name}</OText>
+            {orderState?.options?.type === 1 ? (
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <MaterialCommunityIcon
+                  name='clock-outline'
+                  size={20}
+                />
+                <OText size={12}>{convertHoursToMinutes(cart?.business?.delivery_time)}</OText>
+              </View>
+            ) : (
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <MaterialCommunityIcon
+                  name='clock-outline'
+                  size={20}
+                />
+                <OText size={12}>{convertHoursToMinutes(cart?.business?.pickup_time)}</OText>
+              </View>
+            )}
+          </BIContentInfo>
+        </BIInfo>
+
+        {!isClosed && !!isProducts && cart?.valid_products && cart?.total > 0 && (
+          <BITotal>
+            <OText size={12}>{t('CART_TOTAL', 'Total')}</OText>
+            <OText size={12} color='#000'>{parsePrice(cart?.total)}</OText>
+          </BITotal>
+        )}
+
+        {isClosed && (
+          <BITotal>
+            <OText>{t('CLOSED', 'Closed')}</OText>
+          </BITotal>
+        )}
+
+        {!isClosed && !isProducts && (
+          <BITotal>
+            <OText>{t('NO_PRODUCTS', 'No products')}</OText>
+          </BITotal>
+        )}
+      </BIHeader>
+    )
+  }
+
   return (
     cart?.products?.length > 0 ? (
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        style={{ height, backgroundColor: theme.colors.backgroundPage }}
+        style={{ height: isCartList ? 'auto' : height, backgroundColor: theme.colors.backgroundPage }}
       >
-        <Container>
-          <Title>
-            <OText
-              size={20}
-              weight='bold'
-            >
-              {t('YOUR_CART', 'Your cart')}
-            </OText>
-          </Title>
+        <Container noPadding={isCartList}>
+          {!isCartList ? (
+            <Title>
+              <OText
+                size={20}
+              >
+                {t('YOUR_CART', 'Your cart')}
+              </OText>
+            </Title>
+          ) : (
+            <CartHeader />
+          )}
 
           {cart?.products?.length > 0 && (
             <View>
@@ -247,7 +324,7 @@ const CartUI = (props: any) => {
           <>
             <LineDivider />
 
-            <Container>
+            <Container noPadding={isCartList}>
               <View style={{ padding: 0, }}>
                 <ScrollView
                   showsVerticalScrollIndicator={false}
@@ -323,7 +400,6 @@ const CartUI = (props: any) => {
         <Title>
           <OText
             size={20}
-            weight='bold'
           >
             {t('YOUR_CART', 'Your cart')}
           </OText>

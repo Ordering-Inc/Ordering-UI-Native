@@ -1,60 +1,64 @@
-import React, { useEffect, useState } from 'react';
-import { useLanguage, useOrder } from 'ordering-components/native';
+import React, { useState } from 'react';
+import { useWindowDimensions, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
-import { CCContainer, CCNotCarts, CCList } from './styles';
-
-import { Cart } from '../Cart';
-import { OIcon, OText } from '../shared';
+import { useLanguage } from 'ordering-components/native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { View } from 'react-native';
+
+import { Title } from './styles';
+import { Cart } from '../Cart';
+import { NotFoundSource } from '../NotFoundSource';
+import { OText } from '../shared';
 
 export const CartContent = (props: any) => {
-	const {
-		carts,
-		isOrderStateCarts
-	} = props
+  const { carts } = props
 
-	const theme = useTheme();
-	const [, t] = useLanguage()
-	const [isCartsLoading, setIsCartsLoading] = useState(false)
+  const { height } = useWindowDimensions()
+  const theme = useTheme();
+  const [, t] = useLanguage()
+  const [isCartsLoading, setIsCartsLoading] = useState(false)
 
-	return (
-		<CCContainer>
-			{isOrderStateCarts && carts?.length > 0 && (
-				<>
-					<OText size={24} lineHeight={36} weight={'600'} style={{ marginBottom: 20 }}>
-						{carts.length > 1 ? t('MY_CARTS', 'My Carts') : t('CART', 'Cart')}
-					</OText>
-					{carts.map((cart: any) => (
-						<CCList key={cart.uuid} style={{ overflow: 'visible' }}>
-							{cart.products.length > 0 && (
-								<>
-									<Cart
-										cart={cart}
-										onNavigationRedirect={props.onNavigationRedirect}
-										isCartsLoading={isCartsLoading}
-										setIsCartsLoading={setIsCartsLoading}
-									/>
-									<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40, marginTop: 20 }} />
-								</>
-							)}
-						</CCList>
-					))}
-				</>
-			)}
-			{(!carts || carts?.length === 0) && (
-				<CCNotCarts>
-					{/* <OIcon
-            url={props.icon}
-            width={200}
-            height={122}
-          /> */}
-					<OText size={24} style={{ textAlign: 'center' }}>
-						{t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
-					</OText>
-				</CCNotCarts>
-			)}
-			<Spinner visible={isCartsLoading} />
-		</CCContainer>
-	)
+  return (
+    carts?.length > 0 ? (
+      <>
+        <Title>
+          <OText size={20} style={{ marginTop: 20 }}>
+            {carts.length > 1 ? t('MY_CARTS', 'My Carts') : t('CART', 'Cart')}
+          </OText>
+        </Title>
+        {carts.map((cart: any, i: number) => (
+          <View key={cart.uuid} style={{ overflow: 'visible' }}>
+            {cart.products.length > 0 && (
+              <>
+                <Cart
+                  cart={cart}
+                  isCartList
+                  onNavigationRedirect={props.onNavigationRedirect}
+                  isCartsLoading={isCartsLoading}
+                  setIsCartsLoading={setIsCartsLoading}
+                />
+                {!(i === (carts.length - 1)) && (
+                  <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginVertical: 20 }} />
+                )}
+              </>
+            )}
+          </View>
+        ))}
+        <Spinner visible={isCartsLoading} />
+      </>
+    ) : (
+      <>
+        <Title>
+          <OText size={20}>
+            {t('MY_CARTS', 'My Carts')}
+          </OText>
+        </Title>
+        <View style={{ height: height * 0.7, justifyContent: 'center' }}>
+          <NotFoundSource
+            content={t('NO_CARTS_FOUND', 'Sorry, no carts found')}
+            image={theme.images.general.notFound}
+          />
+        </View>
+      </>
+    )
+  )
 }
