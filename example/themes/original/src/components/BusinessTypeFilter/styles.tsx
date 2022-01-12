@@ -5,7 +5,7 @@ export const BCContainer = styled.View`
   width: 100%;
   justify-content: flex-start;
   text-align: center;
-  min-height: 45px; 
+  min-height: 60px;
 `
 
 export const BusinessCategories = styled.View`
