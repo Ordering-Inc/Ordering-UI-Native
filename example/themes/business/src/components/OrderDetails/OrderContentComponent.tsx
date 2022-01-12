@@ -428,15 +428,15 @@ export const OrderContentComponent = (props: OrderContent) => {
               {parsePrice(order?.summary?.total ?? 0)}
             </OText>
           </Table>
+          {order?.comment && (
+            <Table>
+              <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
+              <OText style={{ maxWidth: '70%' }}>
+                {order?.comment}
+              </OText>
+            </Table>
+          )}
         </Total>
-        {order?.comment && (
-          <Table>
-            <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
-            <OText style={{ maxWidth: '70%' }}>
-              {order?.comment}
-            </OText>
-          </Table>
-        )}
       </OrderBill >
       <OModal
         open={openReviewModal}

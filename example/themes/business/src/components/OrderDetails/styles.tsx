@@ -68,6 +68,7 @@ export const Table = styled.View`
 
 export const OrderBill = styled.View`
   padding-vertical: 20px;
+  padding-bottom: 30px;
   flex: 1;
 `;
 
