@@ -242,6 +242,7 @@ const CartUI = (props: any) => {
                         marginTop: 10
                       }}
                       multiline
+                      inputStyle={{color: theme.colors.textPrimary}}
                     />
                     {commentState?.loading && (
                       <View style={{ position: 'absolute', right: 20 }}>

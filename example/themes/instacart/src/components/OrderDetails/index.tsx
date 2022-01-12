@@ -480,8 +480,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </Table>
                 {order?.comment && (
                   <Table>
-                    <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
-                    <OText style={{ maxWidth: '70%' }}>
+                    <OText color={theme.colors.textPrimary} size={12} style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
+                    <OText color={theme.colors.textPrimary} size={12} style={{ maxWidth: '70%' }}>
                       {order?.comment}
                     </OText>
                   </Table>

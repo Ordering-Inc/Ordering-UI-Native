@@ -8,7 +8,7 @@ import {
   useValidationFields,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { ScrollView, View, useWindowDimensions } from 'react-native';
+import { ScrollView, View, useWindowDimensions, ActivityIndicator } from 'react-native';
 import {
   CheckoutAction,
   OSBill,
@@ -26,7 +26,7 @@ import {
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { CouponControl } from '../CouponControl';
 
-import { OButton, OIcon, OModal, OText } from '../shared';
+import { OButton, OInput, OModal, OText, OIcon } from '../shared';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { convertHoursToMinutes, verifyDecimals } from '../../utils';
@@ -37,6 +37,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { TaxInformation } from '../TaxInformation';
 import { TouchableOpacity } from 'react-native';
+
 const CartUI = (props: any) => {
   const {
     cart,
@@ -48,6 +49,8 @@ const CartUI = (props: any) => {
     removeProduct,
     handleCartOpen,
     setIsCartsLoading,
+    handleChangeComment,
+    commentState
   } = props
 
   const theme = useTheme();
@@ -314,6 +317,38 @@ const CartUI = (props: any) => {
                       </OText>
                     </OSTable>
                   </OSTotal>
+                  {cart?.status !== 2 && (
+                    <OSTable>
+                      <View style={{ width: '100%', marginTop: 20 }}>
+                        <OText size={12}>{t('COMMENTS', 'Comments')}</OText>
+                        <View style={{ flex: 1, width: '100%' }}>
+                          <OInput
+                            value={cart?.comment}
+                            placeholder={t('SPECIAL_COMMENTS', 'Special Comments')}
+                            onChange={(value: string) => handleChangeComment(value)}
+                            style={{
+                              alignItems: 'flex-start',
+                              width: '100%',
+                              height: 100,
+                              borderColor: theme.colors.textSecondary,
+                              paddingRight: 50,
+                              marginTop: 10
+                            }}
+                            multiline
+                          />
+                          {commentState?.loading && (
+                            <View style={{ position: 'absolute', right: 20 }}>
+                              <ActivityIndicator
+                                size='large'
+                                style={{ height: 100 }}
+                                color={theme.colors.primary}
+                              />
+                            </View>
+                          )}
+                        </View>
+                      </View>
+                    </OSTable>
+                  )}
                 </OSBill>
               )}
             </View>
