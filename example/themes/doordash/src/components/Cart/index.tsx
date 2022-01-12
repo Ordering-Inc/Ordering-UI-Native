@@ -16,12 +16,12 @@ import { ProductItemAccordion } from '../ProductItemAccordion';
 import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
-import { OButton, OModal, OText } from '../shared';
+import { OButton, OInput, OModal, OText } from '../shared';
 import { useTheme } from 'styled-components/native';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
-import { Platform } from 'react-native';
+import { ActivityIndicator, Platform, View } from 'react-native';
 import { TaxInformation } from '../TaxInformation';
 import { TouchableOpacity } from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign'
@@ -36,6 +36,8 @@ const CartUI = (props: any) => {
     removeProduct,
     handleCartOpen,
     setIsCartsLoading,
+    handleChangeComment,
+    commentState
     // isFromCart
   } = props
   const theme = useTheme();
@@ -222,6 +224,38 @@ const CartUI = (props: any) => {
                 </OText>
               </OSTable>
             </OSTotal>
+            {cart?.status !== 2 && (
+              <OSTable>
+                <View style={{ width: '100%', marginTop: 20 }}>
+                  <OText>{t('COMMENTS', 'Comments')}</OText>
+                  <View style={{ flex: 1, width: '100%' }}>
+                    <OInput
+                      value={cart?.comment}
+                      placeholder={t('SPECIAL_COMMENTS', 'Special Comments')}
+                      onChange={(value: string) => handleChangeComment(value)}
+                      style={{
+                        alignItems: 'flex-start',
+                        width: '100%',
+                        height: 100,
+                        borderColor: theme.colors.textSecondary,
+                        paddingRight: 50,
+                        marginTop: 10
+                      }}
+                      multiline
+                    />
+                    {commentState?.loading && (
+                      <View style={{ position: 'absolute', right: 20 }}>
+                        <ActivityIndicator
+                          size='large'
+                          color={theme.colors.primary}
+                          style={{ height: 100 }}
+                        />
+                      </View>
+                    )}
+                  </View>
+                </View>
+              </OSTable>
+            )}
           </OSBill>
         )}
         {cart?.valid_products && (

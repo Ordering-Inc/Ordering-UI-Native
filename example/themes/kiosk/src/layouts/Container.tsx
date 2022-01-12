@@ -22,7 +22,7 @@ export const Container = (props: Props) => {
     <SafeAreStyled
       nestedScrollEnabled={props.nestedScrollEnabled}
     >
-      <ContainerStyled {...props}>{props.children}</ContainerStyled>
+      <ContainerStyled {...props} ref={props?.forwardRef}>{props.children}</ContainerStyled>
     </SafeAreStyled>
   );
 };
@@ -35,4 +35,5 @@ interface Props {
   nestedScrollEnabled: boolean,
   nopadding?: boolean;
   children?: any;
+  forwardRef?: any
 }

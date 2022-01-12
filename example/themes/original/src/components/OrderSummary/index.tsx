@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import {
   Cart,
   useOrder,
@@ -19,7 +19,7 @@ import {
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { CouponControl } from '../CouponControl';
-import { OModal, OText } from '../shared';
+import { OInput, OModal, OText } from '../shared';
 import { ProductForm } from '../ProductForm';
 import { verifyDecimals } from '../../utils';
 import AntIcon from 'react-native-vector-icons/AntDesign'
@@ -34,7 +34,9 @@ const OrderSummaryUI = (props: any) => {
     offsetDisabled,
     removeProduct,
     isCartPending,
-    isFromCheckout
+    isFromCheckout,
+    commentState,
+    handleChangeComment
   } = props;
 
   const theme = useTheme()
@@ -187,6 +189,38 @@ const OrderSummaryUI = (props: any) => {
                     </OText>
                   </OSTable>
                 </View>
+              )}
+              {cart?.status !== 2 && (
+                <OSTable>
+                  <View style={{ width: '100%', marginTop: 20 }}>
+                    <OText size={12}>{t('COMMENTS', 'Comments')}</OText>
+                    <View style={{ flex: 1, width: '100%' }}>
+                      <OInput
+                        value={cart?.comment}
+                        placeholder={t('SPECIAL_COMMENTS', 'Special Comments')}
+                        onChange={(value: string) => handleChangeComment(value)}
+                        style={{
+                          alignItems: 'flex-start',
+                          width: '100%',
+                          height: 100,
+                          borderColor: theme.colors.textSecondary,
+                          paddingRight: 50,
+                          marginTop: 10
+                        }}
+                        multiline
+                      />
+                      {commentState?.loading && (
+                        <View style={{ position: 'absolute', right: 20 }}>
+                          <ActivityIndicator
+                            size='large'
+                            style={{ height: 100 }}
+                            color={theme.colors.primary}
+                          />
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                </OSTable>
               )}
             </OSBill>
           )}

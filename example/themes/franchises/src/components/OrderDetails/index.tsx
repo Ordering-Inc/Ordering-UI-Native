@@ -781,6 +781,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 									</OText>
 								</Table>
 							</Total>
+              {order?.comment && (
+                <Table>
+                  <OText style={{flex: 1}}>{t('COMMENT', 'Comment')}</OText>
+                  <OText style={{maxWidth: '70%'}}>
+                    {order?.comment}
+                  </OText>
+                </Table>
+              )}
 						</OrderBill>
 					</OrderContent>
 				</>

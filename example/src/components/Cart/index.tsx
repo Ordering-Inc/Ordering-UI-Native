@@ -16,14 +16,14 @@ import { ProductItemAccordion } from '../ProductItemAccordion';
 import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
-import { OButton, OModal, OText } from '../shared';
+import { OButton, OModal, OText, OInput } from '../shared';
 import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
 import { useTheme } from 'styled-components/native';
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
-import { TouchableOpacity } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 
 const CartUI = (props: any) => {
   const {
@@ -35,6 +35,8 @@ const CartUI = (props: any) => {
     removeProduct,
     handleCartOpen,
     setIsCartsLoading,
+    handleChangeComment,
+    commentState
   } = props
 
   const theme = useTheme()
@@ -180,19 +182,19 @@ const CartUI = (props: any) => {
               ))
             }
             {
-              cart?.fees?.length > 0 && cart?.fees?.filter((fee : any) => !(fee.fixed === 0 && fee.percentage === 0)).map((fee: any) => (
-                  <OSTable key={fee?.id}>
-                    <OSRow>
-                      <OText numberOfLines={1}>
-                        {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
-                        ({parsePrice(fee?.fixed)} + {fee?.percentage}%){' '}
-                      </OText>
-                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee })} >
-                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
-                      </TouchableOpacity>
-                    </OSRow>
-                    <OText>{parsePrice(fee?.summary?.fixed + fee?.summary?.percentage || 0)}</OText>
-                  </OSTable>
+              cart?.fees?.length > 0 && cart?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0)).map((fee: any) => (
+                <OSTable key={fee?.id}>
+                  <OSRow>
+                    <OText numberOfLines={1}>
+                      {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
+                      ({parsePrice(fee?.fixed)} + {fee?.percentage}%){' '}
+                    </OText>
+                    <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee })} >
+                      <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                  </OSRow>
+                  <OText>{parsePrice(fee?.summary?.fixed + fee?.summary?.percentage || 0)}</OText>
+                </OSTable>
               ))
             }
             {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
@@ -235,6 +237,38 @@ const CartUI = (props: any) => {
                 </OText>
               </OSTable>
             </OSTotal>
+            {cart?.status !== 2 && (
+              <OSTable>
+                <View style={{ width: '100%', marginTop: 20 }}>
+                  <OText>{t('COMMENTS', 'Comments')}</OText>
+                  <View style={{ flex: 1, width: '100%' }}>
+                    <OInput
+                      value={cart?.comment}
+                      placeholder={t('SPECIAL_COMMENTS', 'Special Comments')}
+                      onChange={(value: string) => handleChangeComment(value)}
+                      style={{
+                        alignItems: 'flex-start',
+                        width: '100%',
+                        height: 100,
+                        borderColor: theme.colors.textSecondary,
+                        paddingRight: 50,
+                        marginTop: 10
+                      }}
+                      multiline
+                    />
+                    {commentState?.loading && (
+                      <View style={{ position: 'absolute', right: 20 }}>
+                        <ActivityIndicator
+                          size='large'
+                          style={{ height: 100 }}
+                          color={theme.colors.primary}
+                        />
+                      </View>
+                    )}
+                  </View>
+                </View>
+              </OSTable>
+            )}
           </OSBill>
         )}
         {cart?.valid_products && (
@@ -294,7 +328,7 @@ const CartUI = (props: any) => {
         onClose={() => setOpenTaxModal({ open: false, data: null })}
         entireModal
       >
-        <TaxInformation data={openTaxModal.data} products={cart.products} />
+        <TaxInformation data={openTaxModal.data} products={cart?.products} />
       </OModal>
     </CContainer>
   )

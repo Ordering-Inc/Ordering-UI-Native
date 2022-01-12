@@ -445,6 +445,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText size={12} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{parsePrice(order?.summary?.total || order?.total)}</OText>
                 </Table>
               </Total>
+              {order?.comment && (
+                <Table>
+                  <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
+                  <OText style={{ maxWidth: '70%' }}>
+                    {order?.comment}
+                  </OText>
+                </Table>
+              )}
             </OrderBill>
           </OrderContent>
         </>
