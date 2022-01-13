@@ -8,7 +8,7 @@ import {
   useValidationFields,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { ScrollView, View, useWindowDimensions, ActivityIndicator } from 'react-native';
+import { ScrollView, View, useWindowDimensions, ActivityIndicator, StyleSheet } from 'react-native';
 import {
   CheckoutAction,
   OSBill,
@@ -20,7 +20,8 @@ import {
   BIHeader,
   BIInfo,
   BIContentInfo,
-  BITotal
+  BITotal,
+  TopHeader
 } from './styles';
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -187,6 +188,15 @@ const CartUI = (props: any) => {
     )
   }
 
+  const styles = StyleSheet.create({
+    headerItem: {
+      overflow: 'hidden',
+      backgroundColor: theme.colors.clear,
+      width: 35,
+      marginVertical: 18,
+    },
+  })
+
   return (
     cart?.products?.length > 0 ? (
       <ScrollView
@@ -307,32 +317,22 @@ const CartUI = (props: any) => {
                     </OSTable>
                   )}
 
-                  <OSTotal>
-                    <OSTable style={{ marginTop: 15 }}>
-                      <OText size={14} lineHeight={21} weight={'600'}>
-                        {t('TOTAL', 'Total')}
-                      </OText>
-                      <OText size={14} lineHeight={21} weight={'600'}>
-                        {cart?.total >= 1 && parsePrice(cart?.total)}
-                      </OText>
-                    </OSTable>
-                  </OSTotal>
                   {cart?.status !== 2 && (
                     <OSTable>
-                      <View style={{ width: '100%', marginTop: 20 }}>
-                        <OText size={12}>{t('COMMENTS', 'Comments')}</OText>
+                      <View style={{ width: '100%', marginTop: 0 }}>
+                        <OText size={14} style={{ marginBottom: 10 }}>{t('COMMENTS', 'Comments')}</OText>
                         <View style={{ flex: 1, width: '100%' }}>
                           <OInput
                             value={cart?.comment}
                             placeholder={t('SPECIAL_COMMENTS', 'Special Comments')}
                             onChange={(value: string) => handleChangeComment(value)}
                             style={{
+                              borderColor: theme.colors.border,
+                              borderRadius: 10,
+                              marginBottom: 20,
+                              height: 104,
+                              maxHeight: 104,
                               alignItems: 'flex-start',
-                              width: '100%',
-                              height: 100,
-                              borderColor: theme.colors.textSecondary,
-                              paddingRight: 50,
-                              marginTop: 10
                             }}
                             multiline
                           />
@@ -349,6 +349,17 @@ const CartUI = (props: any) => {
                       </View>
                     </OSTable>
                   )}
+
+                  <OSTotal>
+                    <OSTable style={{ marginTop: 15 }}>
+                      <OText size={14} lineHeight={21} weight={'600'}>
+                        {t('TOTAL', 'Total')}
+                      </OText>
+                      <OText size={14} lineHeight={21} weight={'600'}>
+                        {cart?.total >= 1 && parsePrice(cart?.total)}
+                      </OText>
+                    </OSTable>
+                  </OSTotal>
                 </OSBill>
               )}
             </View>
@@ -427,7 +438,24 @@ const CartUI = (props: any) => {
             onSave={handlerProductAction}
             onClose={() => setModalIsOpen(false)}
           />
+        </OModal>
 
+        <OModal
+          open={openTaxModal.open}
+          onClose={() => setOpenTaxModal({ open: false, data: null })}
+          entireModal
+          customClose
+        >
+          <>
+            <TopHeader>
+              <TouchableOpacity
+                style={styles.headerItem}
+                onPress={() => setOpenTaxModal({ open: false, data: null })}>
+                <OIcon src={theme.images.general.close} width={16} />
+              </TouchableOpacity>
+            </TopHeader>
+            <TaxInformation data={openTaxModal.data} products={cart?.products} />
+          </>
         </OModal>
       </ScrollView>
     ) : (
@@ -445,13 +473,6 @@ const CartUI = (props: any) => {
             image={theme.images.general.notFound}
           />
         </View>
-        <OModal
-          open={openTaxModal.open}
-          onClose={() => setOpenTaxModal({ open: false, data: null })}
-          entireModal
-        >
-          <TaxInformation data={openTaxModal.data} products={cart?.products} />
-        </OModal>
       </Container>
     )
   )
