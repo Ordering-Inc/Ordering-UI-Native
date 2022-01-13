@@ -43,7 +43,7 @@ const LastOrdersUI = (props: LastOrdersParams) => {
   })
 
   const goToOrders = useCallback((order) => {
-    navigation.navigate('BottomTab', { screen: 'MyOrders' });
+    navigation.navigate('OrderDetails', { orderId: order.uuid });
   }, [])
 
   return (
