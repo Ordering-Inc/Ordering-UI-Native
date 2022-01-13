@@ -10,8 +10,7 @@ import { useTheme } from 'styled-components/native';
 import { OText } from '../shared';
 import { AppleLoginParams } from '../../types';
 
-export const AppleLogin = (props : AppleLoginParams) => {
-
+export const AppleLogin = (props: AppleLoginParams) => {
   const {
     notificationState,
     handleErrors,
@@ -55,7 +54,7 @@ export const AppleLogin = (props : AppleLoginParams) => {
           handleErrors && handleErrors(t('ERROR_LOGIN_APPLE', 'Error login with apple'))
         }
 
-      } catch (error : any) {
+      } catch (error: any) {
         handleErrors && handleErrors(error.message)
       }
     } else {
@@ -70,15 +69,22 @@ export const AppleLogin = (props : AppleLoginParams) => {
         });
         const { code } = await appleAuthAndroid.signIn();
         handleLoginApple(code)
-      } catch (error : any) {
+      } catch (error: any) {
         handleErrors && handleErrors(error?.message)
       }
     }
   }
   const handleLoginApple = async (code: string) => {
-    const body: any = {
-      code,
-      platform: Platform.OS === 'ios' && 'ios'
+    let body: any
+    if (Platform.OS === 'ios') {
+      body = {
+        code,
+        platform: 'ios'
+      }
+    } else {
+      body = {
+        code
+      }
     }
     if (notificationState?.notification_token) {
       body.notification_token = notificationState.notification_token
@@ -99,7 +105,7 @@ export const AppleLogin = (props : AppleLoginParams) => {
       } else {
         handleErrors && handleErrors(result || t('ERROR_LOGIN_AUTH_APPLE', 'Error login auth with apple'))
       }
-    } catch (error : any) {
+    } catch (error: any) {
       handleLoading && handleLoading(false)
       handleErrors && handleErrors(error?.message)
     }
