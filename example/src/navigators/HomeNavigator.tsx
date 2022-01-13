@@ -21,7 +21,6 @@ import HelpOrder from '../pages/HelpOrder'
 import HelpGuide from '../pages/HelpGuide'
 import HelpAccountAndPayment from '../pages/HelpAccountAndPayment'
 import Splash from '../pages/Splash';
-
 const Stack = createStackNavigator();
 
 const HomeNavigator = (e : any) => {

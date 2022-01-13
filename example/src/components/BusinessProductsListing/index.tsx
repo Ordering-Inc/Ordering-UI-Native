@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import {
   BusinessAndProductList,
@@ -325,6 +325,7 @@ const styles = StyleSheet.create({
 export const BusinessProductsListing = (props: BusinessProductsListingParams) => {
   const businessProductslistingProps = {
     ...props,
+    isForceSearch: Platform.OS === 'ios',
     UIComponent: BusinessProductsListingUI
   }
   return (

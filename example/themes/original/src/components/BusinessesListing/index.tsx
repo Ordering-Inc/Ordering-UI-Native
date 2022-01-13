@@ -306,7 +306,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				</FeaturedWrapper>
 			)}
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-			<HighestRatedBusinesses onBusinessClick={handleBusinessClick} />
+			<HighestRatedBusinesses onBusinessClick={handleBusinessClick} navigation={navigation} />
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 			<ListWrapper>
 				<BusinessTypeFilter
@@ -330,6 +330,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							business={business}
 							handleCustomClick={handleBusinessClick}
 							orderType={orderState?.options?.type}
+							navigation={navigation}
 						/>
 					)
 				)}

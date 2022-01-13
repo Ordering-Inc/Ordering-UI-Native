@@ -65,8 +65,8 @@ export const BusinessBasicInformation = (
 			<BusinessHeader
 				style={
 					isBusinessInfoShow
-						? {...styles.businesInfoheaderStyle, paddingTop: top}
-						: { ...styles.headerStyle, paddingTop: top, backgroundColor: theme.colors.backgroundGray }
+						? {...styles.businesInfoheaderStyle, paddingTop: 0}
+						: { ...styles.headerStyle, paddingTop: 0, backgroundColor: theme.colors.backgroundGray }
 				}
 				source={{
 					uri:

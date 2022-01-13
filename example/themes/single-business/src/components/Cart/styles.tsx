@@ -100,3 +100,12 @@ export const BITotal = styled.View`
   flex-direction: column;
   align-items: flex-end;
 `
+
+export const TopHeader = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1;
+  padding-horizontal: 40px;
+`

@@ -17,7 +17,8 @@ import {
 const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
   const {
     businessesList,
-    onBusinessClick
+    onBusinessClick,
+    navigation
   } = props;
 
   const [, t] = useLanguage()
@@ -104,6 +105,7 @@ const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
                         business={business}
                         handleCustomClick={onBusinessClick}
                         orderType={orderState?.options?.type}
+                        navigation={navigation}
                       />
                     </View>
                   )
