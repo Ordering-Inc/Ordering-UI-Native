@@ -319,10 +319,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }, [messagesReadList]);
 
-  const locations = [
+  let locations = [
     {
       ...order?.driver?.location,
-      title: t('DRIVER', 'Driver'),
+      title: order?.driver?.name ?? t('DRIVER', 'Driver'),
       icon:
         order?.driver?.photo ||
         'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png',
@@ -331,12 +331,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     {
       ...order?.business?.location,
       title: order?.business?.name,
+      address: {
+        addressName: order?.business?.address,
+        zipcode: order?.business?.zipcode
+      },
       icon: order?.business?.logo || theme.images.dummies.businessLogo,
       level: 2,
     },
     {
       ...order?.customer?.location,
-      title: t('CUSTOMER', 'Customer'),
+      title: order?.customer?.name ??  t('CUSTOMER', 'Customer'),
+      address: {
+        addressName: order?.customer?.address,
+        zipcode: order?.customer?.zipcode
+      },
       icon:
         order?.customer?.photo ||
         'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',

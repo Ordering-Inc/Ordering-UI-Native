@@ -28,8 +28,8 @@ interface OrderHeader {
   handleOpenMessagesForBusiness?: any,
   getOrderStatus?: any,
   logisticOrderStatus?: Array<number>,
-  handleViewSummaryOrder: any;
-  handleCopyClipboard: any
+  handleViewSummaryOrder?: any;
+  handleCopyClipboard?: any
 }
 
 export const OrderHeaderComponent = (props: OrderHeader) => {
@@ -96,7 +96,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
         />
 
         {
-          (!order?.isLogistic || !logisticOrderStatus?.includes(order?.status)) && (
+          (!order?.isLogistic || (!logisticOrderStatus?.includes(order?.status) && !order?.order_group)) && (
             <Actions>
               {getOrderStatus(order?.status, t)?.value !==
                 t('PENDING', 'Pending') && (
@@ -111,7 +111,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                       }}
                       borderColor={theme.colors.clear}
                       style={styles.icons}
-                      onClick={() => handleCopyClipboard()}
+                      onClick={() => handleCopyClipboard?.()}
                     />
                     <OIconButton
                       icon={theme.images.general.print}
@@ -122,7 +122,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
                       }}
                       borderColor={theme.colors.clear}
                       style={styles.icons}
-                      onClick={() => handleViewSummaryOrder()}
+                      onClick={() => handleViewSummaryOrder?.()}
                     />
                   </>
                 )}
@@ -162,7 +162,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
         <OText numberOfLines={2} size={20} weight="600">
           <>
             {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} `}
-            {(!order?.isLogistic || !logisticOrderStatus?.includes(order?.status)) && (
+            {!order?.isLogistic && (!order?.order_group_id || !logisticOrderStatus?.includes(order?.status)) && (
               <>
                 {t('IS', 'is')}{' '}
                 <OText
@@ -175,7 +175,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
             )}
           </>
         </OText>
-        {(!order?.isLogistic || !logisticOrderStatus?.includes(order?.status)) && (
+        {!order?.isLogistic && (!order?.order_group_id || !logisticOrderStatus?.includes(order?.status)) && (
           <OText size={13}>
             {`${order?.paymethod?.name} - ${order.delivery_type === 1
               ? t('DELIVERY', 'Delivery')

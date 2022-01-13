@@ -85,9 +85,9 @@ export const PreviousOrders = (props: any) => {
     <>
       {orders && orders?.length > 0 &&
         orders
-          .filter((order: any) => hash[order?.id] ? false : (hash[order?.id] = true))
-          .map((_order: any) => {
-            const order = _order?.isLogistic && !_order?.order_group ? _order?.order : _order
+          ?.filter((order: any) => hash[order?.id] ? false : (hash[order?.id] = true))
+          ?.map((_order: any) => {
+            const order = _order?.isLogistic && !_order?.order_group && isLogisticOrder ? _order?.order : _order
             return (
               <View
                 style={{
@@ -116,9 +116,9 @@ export const PreviousOrders = (props: any) => {
                         </Logo>
                       )}
                     <Information>
-                      {order?.order_group && order?.order_group_id && (
+                      {order?.order_group_id && (
                         <OText>
-                          <OText>{order?.order_group?.orders?.length} {t('ORDERS', 'Orders')}</OText>
+                          <OText>{(t('INVOICE_GROUP_NO', 'Group No.') + order?.order_group_id)}</OText>
                         </OText>
                       )}
                       {order.business?.name && (
@@ -140,7 +140,7 @@ export const PreviousOrders = (props: any) => {
                         numberOfLines={1}
                         adjustsFontSizeToFit
                         size={20}>
-                        {(order?.order_group && order?.order_group_id ? (t('INVOICE_GROUP_NO', 'Group No.') + order?.order_group_id) : (t('INVOICE_ORDER_NO', 'Order No.') + order.id)) + ' · '}
+                        {(order?.order_group_id && order?.order_group && isLogisticOrder ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}` : (t('INVOICE_ORDER_NO', 'Order No.') + order.id)) + ' · '}
                         {order?.delivery_datetime_utc
                           ? parseDate(order?.delivery_datetime_utc)
                           : parseDate(order?.delivery_datetime, { utc: false })}
@@ -171,26 +171,41 @@ export const PreviousOrders = (props: any) => {
                 </TouchableOpacity>
                 {isLogisticOrder && (
                   <AcceptOrRejectOrder>
-                    <OButton
-                      text={t('REJECT', 'Reject')}
-                      onClick={() => handleClickLogisticOrder(2, _order?.id)}
-                      bgColor={theme.colors.danger}
-                      borderColor={theme.colors.danger}
-                      imgRightSrc={null}
-                      style={{ borderRadius: 7, height: 40 }}
-                      parentStyle={{ width: '45%' }}
-                      textStyle={{ color: theme.colors.dangerText }}
-                    />
-                    <OButton
-                      text={t('ACCEPT', 'Accept')}
-                      onClick={() => handleClickLogisticOrder(1, _order?.id)}
-                      bgColor={theme.colors.successOrder}
-                      borderColor={theme.colors.successOrder}
-                      imgRightSrc={null}
-                      style={{ borderRadius: 7, height: 40 }}
-                      parentStyle={{ width: '45%' }}
-                      textStyle={{ color: theme.colors.successText }}
-                    />
+                    {order?.order_group_id && order?.order_group ? (
+                      <OButton
+                        text={t('VIEW_ORDER', 'View order')}
+                        onClick={() => handlePressOrder({ ...order, logistic_order_id: _order?.id })}
+                        bgColor={theme.colors.blueLight}
+                        borderColor={theme.colors.blueLight}
+                        imgRightSrc={null}
+                        style={{ borderRadius: 7, height: 40 }}
+                        parentStyle={{ width: '100%' }}
+                        textStyle={{ color: theme.colors.primary }}
+                      />
+                    ) : (
+                    <>
+                      <OButton
+                        text={t('REJECT', 'Reject')}
+                        onClick={() => handleClickLogisticOrder(2, _order?.id)}
+                        bgColor={theme.colors.danger}
+                        borderColor={theme.colors.danger}
+                        imgRightSrc={null}
+                        style={{ borderRadius: 7, height: 40 }}
+                        parentStyle={{ width: '45%' }}
+                        textStyle={{ color: theme.colors.dangerText }}
+                      />
+                      <OButton
+                        text={t('ACCEPT', 'Accept')}
+                        onClick={() => handleClickLogisticOrder(1, _order?.id)}
+                        bgColor={theme.colors.successOrder}
+                        borderColor={theme.colors.successOrder}
+                        imgRightSrc={null}
+                        style={{ borderRadius: 7, height: 40 }}
+                        parentStyle={{ width: '45%' }}
+                        textStyle={{ color: theme.colors.successText }}
+                      />
+                    </>
+                    )}
                   </AcceptOrRejectOrder>
                 )}
               </View>

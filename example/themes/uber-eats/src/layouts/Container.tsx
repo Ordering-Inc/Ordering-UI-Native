@@ -18,7 +18,7 @@ const ContentView = styled.View`
 export const Container = (props: any) => {
   return (
     <SafeAreaStyled>
-      <ContainerStyled keyboardShouldPersistTaps='handled'>
+      <ContainerStyled ref={props?.forwardRef} keyboardShouldPersistTaps='handled'>
         <ContentView>
           {props.children}
         </ContentView>

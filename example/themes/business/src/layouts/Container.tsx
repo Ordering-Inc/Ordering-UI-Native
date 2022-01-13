@@ -46,7 +46,9 @@ export const Container = (props: any) => {
       <ContainerStyled
         contentContainerStyle={props.style}
         keyboardShouldPersistTaps="handled"
-        orientation={orientation}>
+        orientation={orientation}
+        ref={props?.forwardRef}
+      >
         {props.children}
       </ContainerStyled>
     </SafeAreaStyled>

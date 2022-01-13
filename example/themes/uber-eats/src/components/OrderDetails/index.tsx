@@ -410,6 +410,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText style={styles.textBold} color={theme.colors.primary}>{parsePrice(order?.summary?.total || order?.total)}</OText>
                 </Table>
               </Total>
+              {order?.comment && (
+                <Table>
+                  <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
+                  <OText style={{ maxWidth: '70%' }}>
+                    {order?.comment}
+                  </OText>
+                </Table>
+              )}
             </OrderBill>
             <OrderCustomer>
               <OText size={18} mBottom={5} style={{ textAlign: 'left' }}>{t('CUSTOMER', 'Customer')}</OText>

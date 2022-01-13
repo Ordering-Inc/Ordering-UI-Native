@@ -1,6 +1,6 @@
 //React & React Native
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Platform } from 'react-native';
+import { StyleSheet, View, Platform, ScrollView } from 'react-native';
 
 // Thirds
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -50,9 +50,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setDriverUpdateLocation,
     orderTitle,
     appTitle,
-    handleClickLogisticOrder
-  } = props;
+    handleClickLogisticOrder,
 
+  } = props;
   const [, { showToast }] = useToast();
   const { order } = props.order
   const theme = useTheme();
@@ -139,6 +139,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const handleRejectLogisticOrder = () => {
     handleClickLogisticOrder?.(2, order?.logistic_order_id)
     handleArrowBack()
+  }
+
+  const handleAcceptLogisticOrder = (order : any) => {
+    handleClickLogisticOrder?.(1, order?.logistic_order_id)
+    if(order?.order_group){
+      handleArrowBack()
+    }
   }
 
   const locations = [
@@ -243,107 +250,54 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     );
   }
 
-  const OrderDetailsInformation = (_order: any, isOrderGroup: boolean) => {
-    const { order } = _order
+  const OrderDetailsInformation = (props : {order: any, isOrderGroup?: boolean, lastOrder?: boolean}) => {
+    const {
+      order,
+      isOrderGroup,
+      lastOrder,
+    } = props
     return (
       <>
-        <OrderDetailsContainer
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          <>
-            <OrderContentComponent
-              order={order}
-              logisticOrderStatus={logisticOrderStatus}
-              isOrderGroup={isOrderGroup}
+        <OrderContentComponent
+          order={order}
+          logisticOrderStatus={logisticOrderStatus}
+          isOrderGroup={isOrderGroup}
+          lastOrder={lastOrder}
+        />
+        {(order?.status === 8 || order?.status === 18) && order?.delivery_type === 1 && (
+          <Pickup>
+            <OButton
+              style={styles.btnPickUp}
+              textStyle={{ color: theme.colors.primary }}
+              text={t('ARRIVED_TO_BUSINESS', 'Arrived to bussiness')}
+              onClick={() =>
+                handleChangeOrderStatus && handleChangeOrderStatus(3)
+              }
+              imgLeftStyle={{ tintColor: theme.colors.backArrow }}
             />
-            {(order?.status === 8 || order?.status === 18) && order?.delivery_type === 1 && (
-              <Pickup>
-                <OButton
-                  style={styles.btnPickUp}
-                  textStyle={{ color: theme.colors.primary }}
-                  text={t('ARRIVED_TO_BUSINESS', 'Arrived to bussiness')}
-                  onClick={() =>
-                    handleChangeOrderStatus && handleChangeOrderStatus(3)
-                  }
-                  imgLeftStyle={{ tintColor: theme.colors.backArrow }}
-                />
-              </Pickup>
-            )}
-            {order?.status === 3 && order?.delivery_type === 1 && (
-              <View style={{ paddingVertical: 20, marginBottom: 20 }}>
-                <OButton
-                  style={styles.btnPickUp}
-                  textStyle={{ color: theme.colors.white }}
-                  text={t('ORDER_NOT_READY', 'Order not ready')}
-                  onClick={() =>
-                    handleViewActionOrder && handleViewActionOrder('notReady')
-                  }
-                  imgLeftStyle={{ tintColor: theme.colors.backArrow }}
-                  bgColor={theme.colors.red}
-                />
-              </View>
-            )}
-          </>
-          <View
-            style={{
-              height:
-                order?.status === 8 && order?.delivery_type === 1 ? 50 : 35,
-            }}
-          />
-        </OrderDetailsContainer>
+          </Pickup>
+        )}
+        {order?.status === 3 && order?.delivery_type === 1 && (
+          <View style={{ paddingVertical: 20, marginBottom: 20 }}>
+            <OButton
+              style={styles.btnPickUp}
+              textStyle={{ color: theme.colors.white }}
+              text={t('ORDER_NOT_READY', 'Order not ready')}
+              onClick={() =>
+                handleViewActionOrder && handleViewActionOrder('notReady')
+              }
+              imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+              bgColor={theme.colors.red}
+            />
+          </View>
+        )}
+        <View
+          style={{
+            height:
+              order?.status === 8 && order?.delivery_type === 1 ? 50 : 35,
+          }}
+        />
 
-        {showFloatButtonsPickUp[order?.status] && (
-          <FloatingButton
-            disabled={props.order?.loading}
-            btnText={t('PICKUP_FAILED', 'Pickup failed')}
-            isSecondaryBtn={false}
-            secondButtonClick={() =>
-              handleChangeOrderStatus && handleChangeOrderStatus(9)
-            }
-            firstButtonClick={() =>
-              handleViewActionOrder && handleViewActionOrder('pickupFailed')
-            }
-            secondBtnText={t('PICKUP_COMPLETE', 'Pickup complete')}
-            secondButton={true}
-            firstColorCustom={theme.colors.red}
-            secondColorCustom={theme.colors.green}
-            widthButton={'45%'}
-          />
-        )}
-        {(order?.status === 9 || order?.status === 19) && (
-          <>
-            <FloatingButton
-              disabled={props.order?.loading}
-              btnText={t('DELIVERY_FAILED', 'Delivery Failed')}
-              isSecondaryBtn={false}
-              secondButtonClick={() =>
-                handleChangeOrderStatus && handleChangeOrderStatus(11)
-              }
-              firstButtonClick={() =>
-                handleViewActionOrder && handleViewActionOrder('deliveryFailed')
-              }
-              secondBtnText={t('DELIVERY_COMPLETE', 'Delivery complete')}
-              secondButton={true}
-              firstColorCustom={theme.colors.red}
-              secondColorCustom={theme.colors.green}
-              widthButton={'45%'}
-            />
-          </>
-        )}
-        {showFloatButtonsAcceptOrReject[order?.status] && (
-          <FloatingButton
-            btnText={t('REJECT', 'Reject')}
-            isSecondaryBtn={false}
-            secondButtonClick={() => order?.isLogistic && logisticOrderStatus.includes(order?.status) ? handleClickLogisticOrder?.(1, order?.logistic_order_id) : handleViewActionOrder('accept')}
-            firstButtonClick={() => order?.isLogistic && logisticOrderStatus.includes(order?.status) ? handleRejectLogisticOrder() : handleViewActionOrder('reject')}
-            secondBtnText={t('ACCEPT', 'Accept')}
-            secondButton={true}
-            firstColorCustom={theme.colors.red}
-            secondColorCustom={theme.colors.green}
-            widthButton={'45%'}
-          />
-        )}
       </>
     )
   }
@@ -390,10 +344,66 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         />
         {order && Object.keys(order).length > 0 && (props.order?.error?.length < 1 || !props.order?.error) && (
           <>
-            {order?.order_group && order?.order_group_id ? order?.order_group?.orders.map((order: any) => (
-              <OrderDetailsInformation order={order} />
-            )) : (
-              <OrderDetailsInformation order={order} />
+            <OrderDetailsContainer
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+            >
+              {order?.order_group && order?.order_group_id && order?.isLogistic ? order?.order_group?.orders.map((order: any, i: number, hash: any) => (
+                <OrderDetailsInformation key={order?.id} order={order} isOrderGroup lastOrder={hash?.length === i + 1} />
+              )) : (
+                <OrderDetailsInformation order={order} />
+              )}
+            </OrderDetailsContainer>
+            {showFloatButtonsPickUp[order?.status] && (
+              <FloatingButton
+                disabled={props.order?.loading}
+                btnText={t('PICKUP_FAILED', 'Pickup failed')}
+                isSecondaryBtn={false}
+                secondButtonClick={() =>
+                  handleChangeOrderStatus && handleChangeOrderStatus(9)
+                }
+                firstButtonClick={() =>
+                  handleViewActionOrder && handleViewActionOrder('pickupFailed')
+                }
+                secondBtnText={t('PICKUP_COMPLETE', 'Pickup complete')}
+                secondButton={true}
+                firstColorCustom={theme.colors.red}
+                secondColorCustom={theme.colors.green}
+                widthButton={'45%'}
+              />
+            )}
+            {(order?.status === 9 || order?.status === 19) && (
+              <>
+                <FloatingButton
+                  disabled={props.order?.loading}
+                  btnText={t('DELIVERY_FAILED', 'Delivery Failed')}
+                  isSecondaryBtn={false}
+                  secondButtonClick={() =>
+                    handleChangeOrderStatus && handleChangeOrderStatus(11)
+                  }
+                  firstButtonClick={() =>
+                    handleViewActionOrder && handleViewActionOrder('deliveryFailed')
+                  }
+                  secondBtnText={t('DELIVERY_COMPLETE', 'Delivery complete')}
+                  secondButton={true}
+                  firstColorCustom={theme.colors.red}
+                  secondColorCustom={theme.colors.green}
+                  widthButton={'45%'}
+                />
+              </>
+            )}
+            {showFloatButtonsAcceptOrReject[order?.status] && (
+              <FloatingButton
+                btnText={t('REJECT', 'Reject')}
+                isSecondaryBtn={false}
+                secondButtonClick={() => (order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status))) ? handleAcceptLogisticOrder(order) : handleViewActionOrder('accept')}
+                firstButtonClick={() => order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status)) ? handleRejectLogisticOrder() : handleViewActionOrder('reject')}
+                secondBtnText={t('ACCEPT', 'Accept')}
+                secondButton={true}
+                firstColorCustom={theme.colors.red}
+                secondColorCustom={theme.colors.green}
+                widthButton={'45%'}
+              />
             )}
           </>
         )}

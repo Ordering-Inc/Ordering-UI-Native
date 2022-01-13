@@ -478,6 +478,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText style={{ ...theme.labels.normal, fontWeight: '600', color: theme.colors.textPrimary }}>{t('TOTAL', 'Total')}</OText>
                   <OText style={{ ...theme.labels.normal, fontWeight: '600', color: theme.colors.textPrimary }}>{parsePrice(order?.summary?.total || order?.total)}</OText>
                 </Table>
+                {order?.comment && (
+                  <Table>
+                    <OText color={theme.colors.textPrimary} size={12} style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
+                    <OText color={theme.colors.textPrimary} size={12} style={{ maxWidth: '70%' }}>
+                      {order?.comment}
+                    </OText>
+                  </Table>
+                )}
               </OrderBill>
             </OrderContent>
           </>

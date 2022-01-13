@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Dimensions, StyleSheet, View, SafeAreaView } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, Region, Callout } from 'react-native-maps';
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig, useUtils } from 'ordering-components/native';
 import { GoogleMapsParams } from '../../types';
 import Alert from '../../providers/AlertProvider';
-import { OIconButton, OIcon } from '../shared';
+import { OIconButton, OIcon, OText, OButton } from '../shared';
 import { FloatingButton } from '../FloatingButton';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useTheme } from 'styled-components/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useLocation } from '../../hooks/useLocation';
+import { showLocation } from 'react-native-map-link';
 
 export const GoogleMap = (props: GoogleMapsParams) => {
   const {
@@ -29,6 +31,15 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     isSetInputs,
     navigation,
   } = props;
+
+  const {
+    hasLocation,
+    initialPosition,
+    followUserLocation,
+    getCurrentLocation,
+    userLocation,
+    stopFollowUserLocation,
+  } = useLocation();
 
   const { top } = useSafeAreaInsets();
   const theme = useTheme();
@@ -64,7 +75,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     ERROR_MAX_LIMIT_LOCATION_TO: 'Sorry, You can only set the position to',
   };
 
-  const MARKERS =
+  let MARKERS =
     locations &&
     locations.map((location: { lat: number; lng: number; level: number }) => {
       return location.level === 4 && driverLocation?.lat
@@ -221,6 +232,18 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       fitAllMarkers();
     }
   }, [isMapReady]);
+  useEffect(() => {
+    if (!locations) return
+    MARKERS = locations.map((location: { lat: number; lng: number; level: number }) => {
+      return location.level === 4 && driverLocation?.lat
+        ? {
+            latitude: driverLocation?.lat,
+            longitude: driverLocation?.lng,
+          }
+        : { latitude: location.lat, longitude: location.lng };
+    })
+    fitAllMarkers();
+  }, [driverLocation])
 
   const styles = StyleSheet.create({
     map: {
@@ -279,7 +302,13 @@ export const GoogleMap = (props: GoogleMapsParams) => {
                     i: number,
                   ) => (
                     <React.Fragment key={i}>
-                      <Marker coordinate={location} title={locations[i]?.title}>
+                      <Marker 
+                        coordinate={location} 
+                        onPress={() => { 
+                          mapRef.current?.animateCamera({
+                          center: { latitude: location.latitude, longitude:location.longitude },
+                        })}}
+                      >
                         <Icon
                           name="map-marker"
                           size={50}
@@ -296,6 +325,51 @@ export const GoogleMap = (props: GoogleMapsParams) => {
                             height={25}
                           />
                         </View>
+                        <Callout
+                          onPress={() => {
+                            showLocation({
+                                      latitude: location.latitude,
+                                      longitude: location.longitude,
+                                      sourceLatitude: userLocation.latitude,
+                                      sourceLongitude: userLocation.longitude,
+                                      naverCallerName: 'com.businessapp',
+                                      dialogTitle: t('SHOW_IN_OTHER_MAPS', 'Show in other maps'),
+                                      dialogMessage: t('WHAT_APP_WOULD_YOU_USE', 'What app would you like to use?'),
+                                      cancelText: t('CANCEL', 'Cancel'),
+                            })
+                          }}
+                        >
+                          <View style={{flex: 1,width: 250, paddingRight: 10, paddingLeft: 10, justifyContent:'space-between' }}>
+                              <View style={{flex: 1, marginBottom: 20}}>
+                                <OText size={16} weight={'bold'} style={{paddingTop: 10, marginBottom: 10}}>{locations[i]?.title}</OText>
+                                { locations[i]?.address && (
+                                  <>
+                                    <OText size={16} >{locations[i]?.address.addressName}</OText>
+                                    <OText size={16} >{locations[i]?.address.zipcode}</OText>
+                                  </>
+                                )}
+                              </View>
+                              <OButton
+                                text={t('GO_TO_THIS_LOCATION', 'Go to this location')}
+                                imgRightSrc={null}
+                                textStyle={{
+                                  color: theme.colors.white,
+                                  fontFamily: 'Poppins',
+                                  fontStyle: 'normal',
+                                  fontWeight: 'normal',
+                                  fontSize: 16
+                                }}
+                                style={{
+                                  alignContent:'center',
+                                  borderRadius: 10,
+                                  height: 35,
+                                  bottom:10
+                                }}
+                                bgColor={theme.colors.primary}
+                                borderColor={theme.colors.primary}
+                              />   
+                          </View>
+                        </Callout>
                       </Marker>
                     </React.Fragment>
                   ),
