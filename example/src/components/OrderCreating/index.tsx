@@ -86,7 +86,7 @@ export const OrderCreating = (props: any) => {
     if (business?.address) {
       AsyncStorage.setItem(
         'business-address',
-        JSON.stringify(business?.address)
+        business?.address
       );
       setAddress(business?.address)
     }
@@ -97,7 +97,6 @@ export const OrderCreating = (props: any) => {
       if (isOrderDetail) {
         try {
           const value = await AsyncStorage.getItem('business-address');
-          value != null ? JSON.parse(value) : null;
           setAddress(value)
         } catch {
           console.log('err')

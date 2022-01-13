@@ -132,6 +132,7 @@ export interface BusinessesListingParams {
 export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
 	onBusinessClick?: void;
+	navigation? :any;
 }
 export interface BusinessTypeFilterParams {
 	businessTypes?: Array<any>;
@@ -149,7 +150,8 @@ export interface BusinessControllerParams {
 	handleClick?: any;
 	isBusinessOpen?: boolean;
 	businessWillCloseSoonMinutes?: number
-	isBusinessClose?: number
+	isBusinessClose?: number,
+	navigation?: any
 }
 export interface BusinessProductsListingParams {
 	navigation?: any;
@@ -378,6 +380,25 @@ export interface MomentOptionParams {
 	handleAsap: () => {};
 	handleChangeDate: (value: any) => {};
 	handleChangeTime: (value: any) => {};
+}
+export interface BusinessPreorderParams {
+	navigation?: any;
+	datesList: Array<any>;
+	hoursList: Array<any>;
+	dateSelected?: any;
+	timeSelected?: any;
+	isAsap?: boolean;
+	handleAsap?: () => {};
+	handleChangeDate: (value: any) => {};
+	handleChangeTime: (value: any) => {};
+	goToBack: any;
+	business: any;
+	handleBusinessClick: (value: any) => {};
+}
+export interface BusinessMenuListParams {
+	menu: any;
+	businessMenuList: any;
+	setMenu: (value: any) => {};
 }
 export interface OrderTypeSelectParams {
 	navigation?: any;
