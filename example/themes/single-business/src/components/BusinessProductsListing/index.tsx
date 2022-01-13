@@ -182,7 +182,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       >
 				<WrapHeader>
 					{(!auth || props.isFranchiseApp) && !loading &&
-						<TopHeader style={{top: top}}>
+						<TopHeader style={{top: 0}}>
               <NavBar
                 style={{ paddingBottom: 0, marginLeft: 20, backgroundColor: 'transparent' }}
                 btnStyle={{ backgroundColor: 'transparent' }}
@@ -297,7 +297,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					btnRightValue={parsePrice(currentCart?.total)}
 					disabled={openUpselling || currentCart?.subtotal < currentCart?.minimum}
 					handleClick={() => onRedirect('Cart')}
-					hasBottom
+					hasBottom={false}
 				/>
 			)}
 			<OModal

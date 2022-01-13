@@ -163,7 +163,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
               isFromBusinesses: true,
             })
           }
-          style={{ marginTop: !auth ? 36 : top > 0 ? 0 : 20 }}
+          style={{ marginTop: !auth ? 36 : 20 }}
           activeOpacity={0.8}
         >
           <OIcon src={theme.images.general.pin} width={16} color={theme.colors.textSecondary} />
