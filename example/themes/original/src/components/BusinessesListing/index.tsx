@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
+import Geolocation from '@react-native-community/geolocation'
 import {
 	View,
 	StyleSheet,
@@ -16,6 +17,7 @@ import {
 	useUtils,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import {
 	Search,
@@ -25,7 +27,8 @@ import {
 	HeaderWrapper,
 	ListWrapper,
 	FeaturedWrapper,
-	OrderProgressWrapper
+	OrderProgressWrapper,
+	FarAwayMessage
 } from './styles';
 
 import { SearchBar } from '../SearchBar';
@@ -38,7 +41,7 @@ import { OrderTypeSelector } from '../OrderTypeSelector';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BusinessFeaturedController } from '../BusinessFeaturedController';
 import { HighestRatedBusinesses } from '../HighestRatedBusinesses';
-import { getTypesText } from '../../utils';
+import { getTypesText, convertToRadian } from '../../utils';
 import { OrderProgress } from '../OrderProgress';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -85,6 +88,15 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		},
 		searchInput: {
 			fontSize: 12,
+		},
+		iconStyle: {
+			fontSize: 18,
+			color: theme.colors.warning5,
+			marginRight: 8
+		},
+		farAwayMsg: {
+			paddingVertical: 6,
+			paddingHorizontal: 20
 		}
 	});
 
@@ -98,6 +110,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const { top } = useSafeAreaInsets();
 
 	const [featuredBusiness, setFeaturedBusinesses] = useState(Array);
+	const [isFarAway, setIsFarAway] = useState(false)
 
 	// const timerId = useRef<any>(false)
 	// const panResponder = useRef(
@@ -127,6 +140,17 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		}
 	};
 
+	const getDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
+    const R = 6371 // km
+    const dLat = convertToRadian(lat2 - lat1)
+    const dLon = convertToRadian(lon2 - lon1)
+    const curLat1 = convertToRadian(lat1)
+    const curLat2 = convertToRadian(lat2)
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(curLat1) * Math.cos(curLat2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return R * c
+  }
+
 	useEffect(() => {
 		if (businessesList.businesses.length > 0) {
 			const fb = businessesList.businesses.filter((b) => b.featured == true);
@@ -147,6 +171,19 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	// useEffect(() => {
 	//   resetInactivityTimeout()
 	// }, [])
+
+	useEffect(() => {
+		Geolocation.getCurrentPosition((pos) => {
+      const crd = pos.coords
+      const distance = getDistance(crd.latitude, crd.longitude, orderState?.options?.address?.location?.lat, orderState?.options?.address?.location?.lng)
+      if (distance > 20) setIsFarAway(true)
+			else setIsFarAway(false)
+    }, (err) => {
+      console.log(`ERROR(${err.code}): ${err.message}`)
+    }, {
+      enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
+    })
+  }, [orderState?.options?.address?.location])
 
 	return (
 		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}>
@@ -180,6 +217,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						</OText>
 					</AddressInput>
 				</Search>
+				{isFarAway && (
+					<FarAwayMessage style={styles.farAwayMsg}>
+						<Ionicons name='md-warning-outline' style={styles.iconStyle} />
+						<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textNormal}>{t('YOU_ARE_FAR_FROM_ADDRESS', 'Your are far from this address')}</OText>
+					</FarAwayMessage>
+				)}
 				<OrderControlContainer>
 					<View style={styles.wrapperOrderOptions}>
 						<WrapMomentOption onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
