@@ -25,6 +25,8 @@ import {
 import { useTheme } from 'styled-components/native';
 import { ReviewCustomer } from '../ReviewCustomer'
 
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+
 interface OrderContent {
   order: any,
   logisticOrderStatus?: Array<number>,
@@ -150,46 +152,56 @@ export const OrderContentComponent = (props: OrderContent) => {
         {
           (order?.customer?.name || order?.customer?.lastname) && (
             <View style={{ flexDirection: 'row' }}>
-              <OText numberOfLines={2} mBottom={4}>
-                {order?.customer?.name && (
-                  <OText
-                    numberOfLines={1}
-                    mBottom={4}
-                    ellipsizeMode="tail"
-                    space>
-                    {order?.customer?.name}
-                  </OText>
-                )}
-                {order?.customer?.middle_name && (
-                  <OText
-                    numberOfLines={1}
-                    mBottom={4}
-                    ellipsizeMode="tail"
-                    space>
-                    {order?.customer?.middle_name}
-                  </OText>
-                )}
-                {order?.customer?.lastname && (
-                  <OText
-                    numberOfLines={1}
-                    mBottom={4}
-                    ellipsizeMode="tail"
-                    space>
-                    {order?.customer?.lastname}
-                  </OText>
-                )}
-                {
-                  order?.customer?.second_lastname && (
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+                <View style={{ flexDirection: 'row' }}>
+                  {order?.customer?.name && (
                     <OText
                       numberOfLines={1}
                       mBottom={4}
                       ellipsizeMode="tail"
                       space>
-                      {order?.customer?.second_lastname}
+                      {order?.customer?.name}
                     </OText>
-                  )
-                }
-              </OText>
+                  )}
+                  {order?.customer?.middle_name && (
+                    <OText
+                      numberOfLines={1}
+                      mBottom={4}
+                      ellipsizeMode="tail"
+                      space>
+                      {order?.customer?.middle_name}
+                    </OText>
+                  )}
+                  {order?.customer?.lastname && (
+                    <OText
+                      numberOfLines={1}
+                      mBottom={4}
+                      ellipsizeMode="tail"
+                      space>
+                      {order?.customer?.lastname}
+                    </OText>
+                  )}
+                  {
+                    order?.customer?.second_lastname && (
+                      <OText
+                        numberOfLines={1}
+                        mBottom={4}
+                        ellipsizeMode="tail"
+                        space>
+                        {order?.customer?.second_lastname}
+                      </OText>
+                    )
+                  }
+                </View>
+                {order?.user_review?.qualification && (
+                  <View style={{ flexDirection: 'row' }}>
+                    <MaterialIcon style={{ bottom: 2 }} name='star' size={24} color={theme.colors.arrowColor} />
+                    <OText mLeft={5}>
+                      {order?.user_review?.qualification}
+                    </OText>
+                  </View>
+                )}
+              </View>
             </View>
           )
         }
