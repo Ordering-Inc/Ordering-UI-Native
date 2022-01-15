@@ -41,10 +41,11 @@ const DriverTipsUI = (props: any) => {
 			borderRadius: 30
 		},
 		inputStyle: {
+			borderColor: theme.colors.border,
+			borderRadius: 8,
+			marginRight: 20,
+			height: 44,
 			flex: 1,
-			borderWidth: 1,
-			borderColor: theme.colors.disabled,
-			marginRight: 10
 		}
 	})
 
@@ -117,21 +118,23 @@ const DriverTipsUI = (props: any) => {
 						<OInput
 							placeholder={placeholderCurrency}
 							style={style.inputStyle}
+              inputStyle={{ fontSize: 12 }}
 							onChange={handleChangeDriverTip}
 							autoCapitalize='none'
 							autoCorrect={false}
 						/>
 						<OButton
-							text={t('APPLY_TIP', 'Apply Tip')}
+							text={t('APPLY', 'Apply')}
 							bgColor={theme.colors.primary}
 							borderColor={theme.colors.primary}
-							textStyle={{ color: 'white', fontSize: 20 }}
+							textStyle={{ color: 'white', fontSize: 12 }}
 							imgRightSrc={null}
 							isDisabled={!(value > 0 && value !== driverTip) || !value}
 							onClick={() => {
 								handlerChangeOption(value)
 								setvalue(0)
 							}}
+              style={{ borderRadius: 8, height: 44, shadowOpacity: 0 }}
 						/>
 					</DTWrapperInput>
 					{parseFloat(driverTip || 0) > 0 && (
