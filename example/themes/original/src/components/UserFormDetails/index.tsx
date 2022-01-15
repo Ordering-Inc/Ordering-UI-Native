@@ -314,6 +314,41 @@ export const UserFormDetailsUI = (props: any) => {
 									)}
 								</WrapperPhone>
 							)}
+							<Controller
+								control={control}
+								render={() => (
+									<>
+										<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
+										{t('PASSWORD', 'Password')}
+										</OText>
+										<OInput
+											name='password'
+											placeholder={t('FRONT_VISUALS_PASSWORD', 'Password')}
+											inputStyle={styles.inputStyle}
+											style={{ paddingLeft: 0, paddingRight: 0, marginTop: 6, height: 44, minHeight: 44 }}
+											autoCapitalize='none'
+											isDisabled={false}
+											value={
+												formState?.changes['password'] ??
+												(user && user['password']) ??
+												''
+											}
+											onChange={(val: any) => {
+												setValue('password', val.target.value)
+												handleChangeInput(val)
+											}}
+											autoCorrect
+											type='default'
+											returnKeyType="done"
+											autoCompleteType='off'
+											isSecured
+										/>
+									</>
+								)}
+								name='password'
+								rules={getInputRules({name: 'password', code: 'password'})}
+								defaultValue=''
+							/>
 						</UDWrapper>
 					)}
 				{validationFields?.loading && (
@@ -339,7 +374,7 @@ export const UserFormDetailsUI = (props: any) => {
 								borderColor={theme.colors.primary}
 								isDisabled={formState.loading}
 								imgRightSrc={null}
-								style={{ borderRadius: 7.6, shadowOpacity: 0, width: '100%', borderWidth: 1, marginTop: 20 }}
+								style={{ borderRadius: 7.6, shadowOpacity: 0, width: '100%', borderWidth: 1, marginTop: 20, marginBottom: 20 }}
 								onClick={handleSubmit(onSubmit)}
 							/>
 						)}

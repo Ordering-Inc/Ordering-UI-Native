@@ -33,8 +33,8 @@ export const VerifyPhone = (props: any) => {
 
 	const styles = StyleSheet.create({
 		inputStyle: {
-			width: 80,
-			height: 80,
+			width: 75,
+			height: 75,
 			marginBottom: 25,
 			borderWidth: 1,
 			borderColor: theme.colors.disabled,
@@ -50,12 +50,21 @@ export const VerifyPhone = (props: any) => {
 	const [timer, setTimer] = useState(`${TIME_COUNTDOWN / 60}:00`)
 	const [verifyCode, setVerifyCode] = useState({ 0: '', 1: '', 2: '', 3: '' })
 	const [isSendCodeAgain, setIsSendCodeAgain] = useState(false)
+	const inputRefs: any = [
+		React.createRef(),
+		React.createRef(),
+		React.createRef(),
+		React.createRef()
+	]
 
 	const lastNumbers = phone?.cellphone &&
 		`${phone?.cellphone.charAt(phone?.cellphone.length - 2)}${phone?.cellphone.charAt(phone?.cellphone.length - 1)}`
 
-	const handleChangeCode = (val: number, i: number) => {
+	const goNextAfterEdit = (val: number, i: number) => {
 		setVerifyCode({ ...verifyCode, [i]: val })
+		if(val && i < inputRefs.length - 1) {
+			inputRefs[i+1].focus()
+		}
 	}
 
 	const checkResult = (result: any) => {
@@ -141,14 +150,15 @@ export const VerifyPhone = (props: any) => {
 				</CountDownContainer>
 			</WrappCountdown>
 			<InputsSection>
-				{[...Array(4),].map((_: any, i: number) => (
+				{inputRefs.map((k: any, idx: number) => (
 					<TextInput
-						key={i}
+						key={idx}
 						keyboardType='number-pad'
-						placeholder={'0'}
-						style={styles.inputStyle}
-						onChangeText={(val: any) => handleChangeCode(val, i)}
+						ref={r => inputRefs[idx] =  r}
 						maxLength={1}
+						style={styles.inputStyle}
+						placeholder={'0'}
+						onChangeText={(val: any) => goNextAfterEdit(val, idx)}
 						editable={timer !== '00:00'}
 					/>
 				))}
@@ -173,11 +183,11 @@ export const VerifyPhone = (props: any) => {
 					</ErrorSection>
 				)}
 			<ResendSection>
-				<OText size={17} style={{ marginRight: 5 }}>
+				<OText size={16} style={{ marginRight: 5 }}>
 					{t('ARE_YOU_NOT_SEEING_THE_CODE', 'Are you not seeing the code?')}
 				</OText>
 				<Pressable onPress={() => handleSendCodeAgain()}>
-					<OText size={17} color={theme.colors.primary}>
+					<OText size={16} color={theme.colors.primary}>
 						{t('SEND_AGAIN', 'Send Again')}
 					</OText>
 				</Pressable>
