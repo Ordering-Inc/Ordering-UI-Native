@@ -192,19 +192,19 @@ const OrderSummaryUI = (props: any) => {
               {cart?.status !== 2 && (
                 <OSTable>
                   <View style={{ width: '100%', marginTop: 20 }}>
-                    <OText size={12}>{t('COMMENTS', 'Comments')}</OText>
+                    <OText size={12} style={{ marginBottom: 10 }}>{t('COMMENTS', 'Comments')}</OText>
                     <View style={{ flex: 1, width: '100%' }}>
                       <OInput
                         value={cart?.comment}
                         placeholder={t('SPECIAL_COMMENTS', 'Special Comments')}
                         onChange={(value: string) => handleChangeComment(value)}
                         style={{
+                          borderColor: theme.colors.border,
+                          borderRadius: 10,
+                          marginBottom: 20,
+                          height: 104,
+                          maxHeight: 104,
                           alignItems: 'flex-start',
-                          width: '100%',
-                          height: 100,
-                          borderColor: theme.colors.textSecondary,
-                          paddingRight: 50,
-                          marginTop: 10
                         }}
                         multiline
                         inputStyle={{ color: theme.colors.textPrimary, fontSize: 12 }}
