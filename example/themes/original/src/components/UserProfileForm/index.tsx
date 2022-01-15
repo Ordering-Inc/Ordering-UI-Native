@@ -117,7 +117,6 @@ const ProfileUI = (props: ProfileParams) => {
 					if (response?.assets?.length > 0) {
 						const image = response?.assets[0]
 						const url = `data:${image.type};base64,${image.base64}`
-						console.log(url, 'this is url')
 						handleButtonUpdateClick(null, true, url);
 					} else {
 						showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
