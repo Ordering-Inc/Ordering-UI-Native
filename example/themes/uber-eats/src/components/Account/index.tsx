@@ -73,8 +73,9 @@ const AccountUI = (props: AccountParams) => {
         console.log('ImagePicker Error: ', response.errorMessage);
         showToast(ToastType.Error, response.errorMessage);
       } else {
-        if (response.uri) {
-          const url = `data:${response.type};base64,${response.base64}`
+        if (response?.assets?.[0]?.uri) {
+          const image = response?.assets?.[0]
+          const url = `data:${image?.type};base64,${image?.base64}`;
           handleButtonUpdateClick(null, true, url);
         } else {
           showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
