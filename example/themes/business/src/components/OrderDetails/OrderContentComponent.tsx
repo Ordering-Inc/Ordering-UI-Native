@@ -150,11 +150,11 @@ export const OrderContentComponent = (props: OrderContent) => {
           {t('CUSTOMER_DETAILS', 'Customer details')}
         </OText>
         {
-          (order?.customer?.name || order?.customer?.lastname) && (
+          (!!order?.customer?.name || !!order?.customer?.lastname) && (
             <View style={{ flexDirection: 'row' }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
                 <View style={{ flexDirection: 'row' }}>
-                  {order?.customer?.name && (
+                  {!!order?.customer?.name && (
                     <OText
                       numberOfLines={1}
                       mBottom={4}
@@ -163,7 +163,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                       {order?.customer?.name}
                     </OText>
                   )}
-                  {order?.customer?.middle_name && (
+                  {!!order?.customer?.middle_name && (
                     <OText
                       numberOfLines={1}
                       mBottom={4}
@@ -172,7 +172,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                       {order?.customer?.middle_name}
                     </OText>
                   )}
-                  {order?.customer?.lastname && (
+                  {!!order?.customer?.lastname && (
                     <OText
                       numberOfLines={1}
                       mBottom={4}
@@ -182,7 +182,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                     </OText>
                   )}
                   {
-                    order?.customer?.second_lastname && (
+                    !!order?.customer?.second_lastname && (
                       <OText
                         numberOfLines={1}
                         mBottom={4}
@@ -193,7 +193,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                     )
                   }
                 </View>
-                {order?.user_review?.qualification && (
+                {!!order?.user_review?.qualification && (
                   <View style={{ flexDirection: 'row' }}>
                     <MaterialIcon style={{ bottom: 2 }} name='star' size={24} color={theme.colors.arrowColor} />
                     <OText mLeft={5}>
@@ -440,7 +440,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               {parsePrice(order?.summary?.total ?? 0)}
             </OText>
           </Table>
-          {order?.comment && (
+          {!!order?.comment && (
             <Table>
               <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
               <OText style={{ maxWidth: '70%' }}>
