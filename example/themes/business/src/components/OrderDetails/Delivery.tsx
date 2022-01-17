@@ -1,6 +1,6 @@
 //React & React Native
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Platform } from 'react-native';
+import { StyleSheet, View, Platform, ScrollView } from 'react-native';
 
 // Thirds
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -50,10 +50,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setDriverUpdateLocation,
     orderTitle,
     appTitle,
-  } = props;
+    handleClickLogisticOrder,
 
+  } = props;
   const [, { showToast }] = useToast();
-  const { order, loading, error } = props.order;
+  const { order } = props.order
   const theme = useTheme();
   const [, t] = useLanguage();
   const [session] = useSession();
@@ -70,6 +71,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     content: Array<string>;
     key?: string | null;
   }>({ open: false, content: [], key: null });
+
+  const logisticOrderStatus = [4, 6, 7]
 
   const showFloatButtonsPickUp: any = {
     8: true,
@@ -125,6 +128,43 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setOpenModalForAccept(true);
   };
 
+  const handleCloseModal = () => {
+    setOpenModalForBusiness(false);
+  };
+
+  const handleArrowBack: any = () => {
+    navigation?.canGoBack() && navigation.goBack();
+  };
+
+  const handleRejectLogisticOrder = () => {
+    handleClickLogisticOrder?.(2, order?.logistic_order_id)
+    handleArrowBack()
+  }
+
+  const handleAcceptLogisticOrder = (order : any) => {
+    handleClickLogisticOrder?.(1, order?.logistic_order_id)
+    if(order?.order_group){
+      handleArrowBack()
+    }
+  }
+
+  const locations = [
+    {
+      ...order?.business?.location,
+      title: order?.business?.name,
+      icon: order?.business?.logo || theme.images.dummies.businessLogo,
+      type: 'Business',
+    },
+    {
+      ...order?.customer?.location,
+      title: order?.customer?.name,
+      icon:
+        order?.customer?.photo ||
+        'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',
+      type: 'Customer',
+    },
+  ];
+
   useEffect(() => {
     if (permissions.locationStatus !== 'granted' && openModalForMapView) {
       setOpenModalForMapView(false);
@@ -143,15 +183,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     if (openModalForMapView) {
       setOpenModalForMapView(false);
     }
-  }, [loading]);
-
-  const handleCloseModal = () => {
-    setOpenModalForBusiness(false);
-  };
-
-  const handleArrowBack: any = () => {
-    navigation?.canGoBack() && navigation.goBack();
-  };
+  }, [props.order?.loading]);
 
   useEffect(() => {
     if (order?.driver === null && session?.user?.level === 4) {
@@ -167,23 +199,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       });
     }
   }, [order?.driver]);
-
-  const locations = [
-    {
-      ...order?.business?.location,
-      title: order?.business?.name,
-      icon: order?.business?.logo || theme.images.dummies.businessLogo,
-      type: 'Business',
-    },
-    {
-      ...order?.customer?.location,
-      title: order?.customer?.name,
-      icon:
-        order?.customer?.photo ||
-        'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',
-      type: 'Customer',
-    },
-  ];
 
   useEffect(() => {
     if (driverLocation) {
@@ -207,7 +222,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     },
   });
 
-  let locationMarker;
+  let locationMarker: any;
   let isToFollow = false;
   let isBusinessMarker = false;
 
@@ -235,10 +250,62 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     );
   }
 
+  const OrderDetailsInformation = (props : {order: any, isOrderGroup?: boolean, lastOrder?: boolean}) => {
+    const {
+      order,
+      isOrderGroup,
+      lastOrder,
+    } = props
+    return (
+      <>
+        <OrderContentComponent
+          order={order}
+          logisticOrderStatus={logisticOrderStatus}
+          isOrderGroup={isOrderGroup}
+          lastOrder={lastOrder}
+        />
+        {(order?.status === 8 || order?.status === 18) && order?.delivery_type === 1 && (
+          <Pickup>
+            <OButton
+              style={styles.btnPickUp}
+              textStyle={{ color: theme.colors.primary }}
+              text={t('ARRIVED_TO_BUSINESS', 'Arrived to bussiness')}
+              onClick={() =>
+                handleChangeOrderStatus && handleChangeOrderStatus(3)
+              }
+              imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+            />
+          </Pickup>
+        )}
+        {order?.status === 3 && order?.delivery_type === 1 && (
+          <View style={{ paddingVertical: 20, marginBottom: 20 }}>
+            <OButton
+              style={styles.btnPickUp}
+              textStyle={{ color: theme.colors.white }}
+              text={t('ORDER_NOT_READY', 'Order not ready')}
+              onClick={() =>
+                handleViewActionOrder && handleViewActionOrder('notReady')
+              }
+              imgLeftStyle={{ tintColor: theme.colors.backArrow }}
+              bgColor={theme.colors.red}
+            />
+          </View>
+        )}
+        <View
+          style={{
+            height:
+              order?.status === 8 && order?.delivery_type === 1 ? 50 : 35,
+          }}
+        />
+
+      </>
+    )
+  }
+
   return (
     <>
       {(!order || Object.keys(order).length === 0) &&
-        (error?.length < 1 || !error) && (
+        (props.order?.error?.length < 1 || !props.order?.error) && (
           <View style={{ flex: 1 }}>
             {[...Array(6)].map((item, i) => (
               <Placeholder key={i} Animation={Fade}>
@@ -255,7 +322,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </View>
         )}
 
-      {(!!error || error) && (
+      {(!!props.order?.error || props.order?.error) && (
         <NotFoundSource
           btnTitle={t('GO_TO_MY_ORDERS', 'Go to my orders')}
           content={
@@ -266,178 +333,152 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           onClickButton={() => navigation.navigate('Orders')}
         />
       )}
-      {order && Object.keys(order).length > 0 && (error?.length < 1 || !error) && (
-        <View style={{ flex: 1 }}>
-          <OrderHeaderComponent
-            order={order}
-            handleOpenMapView={handleOpenMapView}
-            handleOpenMessagesForBusiness={handleOpenMessagesForBusiness}
-            getOrderStatus={getOrderStatus}
-            handleArrowBack={handleArrowBack}
-          />
-          <OrderDetailsContainer
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <>
-              <OrderContentComponent order={order} />
-              {(order?.status === 8 || order?.status === 18) && order?.delivery_type === 1 && (
-                <Pickup>
-                  <OButton
-                    style={styles.btnPickUp}
-                    textStyle={{ color: theme.colors.primary }}
-                    text={t('ARRIVED_TO_BUSINESS', 'Arrived to bussiness')}
-                    onClick={() =>
-                      handleChangeOrderStatus && handleChangeOrderStatus(3)
-                    }
-                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
-                  />
-                </Pickup>
+      <View style={{ flex: 1 }}>
+        <OrderHeaderComponent
+          order={order}
+          handleOpenMapView={handleOpenMapView}
+          handleOpenMessagesForBusiness={handleOpenMessagesForBusiness}
+          getOrderStatus={getOrderStatus}
+          handleArrowBack={handleArrowBack}
+          logisticOrderStatus={logisticOrderStatus}
+        />
+        {order && Object.keys(order).length > 0 && (props.order?.error?.length < 1 || !props.order?.error) && (
+          <>
+            <OrderDetailsContainer
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+            >
+              {order?.order_group && order?.order_group_id && order?.isLogistic ? order?.order_group?.orders.map((order: any, i: number, hash: any) => (
+                <OrderDetailsInformation key={order?.id} order={order} isOrderGroup lastOrder={hash?.length === i + 1} />
+              )) : (
+                <OrderDetailsInformation order={order} />
               )}
-              {(order?.status === 3) && order?.delivery_type === 1 && (
-                <View style={{ paddingVertical: 20, marginBottom: 20 }}>
-                  <OButton
-                    style={styles.btnPickUp}
-                    textStyle={{ color: theme.colors.white }}
-                    text={t('ORDER_NOT_READY', 'Order not ready')}
-                    onClick={() =>
-                      handleViewActionOrder && handleViewActionOrder('notReady')
-                    }
-                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
-                    bgColor={theme.colors.red}
-                  />
-                </View>
-              )}
-            </>
-
-            <OModal
-              open={openModalForBusiness}
-              order={order}
-              title={`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id}`}
-              entireModal
-              onClose={() => handleCloseModal()}>
-              <Chat
-                type={
-                  openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER
-                }
-                orderId={order?.id}
-                messages={messages}
-                order={order}
-                setMessages={setMessages}
-              />
-            </OModal>
-
-            <OModal
-              open={openModalForAccept}
-              onClose={() => setOpenModalForAccept(false)}
-              entireModal
-              customClose>
-              <AcceptOrRejectOrder
-                handleUpdateOrder={handleChangeOrderStatus}
-                closeModal={setOpenModalForAccept}
-                customerCellphone={order?.customer?.cellphone}
-                loading={loading}
-                action={actionOrder}
-                orderId={order?.id}
-                notShowCustomerPhone
-                actions={actions}
-                orderTitle={orderTitle}
-                appTitle={appTitle}
-              />
-            </OModal>
-
-            <OModal
-              open={openModalForMapView}
-              onClose={() => handleOpenMapView()}
-              entireModal
-              customClose>
-              <DriverMap
-                navigation={navigation}
-                order={order}
-                orderStatus={getOrderStatus(order?.status, t)?.value || ''}
-                location={locationMarker}
-                readOnly
-                updateDriverPosition={updateDriverPosition}
-                driverUpdateLocation={driverUpdateLocation}
-                setDriverUpdateLocation={setDriverUpdateLocation}
-                handleViewActionOrder={handleViewActionOrder}
-                isBusinessMarker={isBusinessMarker}
-                isToFollow={isToFollow}
-                showAcceptOrReject={
-                  showFloatButtonsAcceptOrReject[order?.status]
-                }
-                handleOpenMapView={handleOpenMapView}
-              />
-            </OModal>
-
-            <View
-              style={{
-                height:
-                  order?.status === 8 && order?.delivery_type === 1 ? 50 : 35,
-              }}
-            />
-          </OrderDetailsContainer>
-
-          {showFloatButtonsPickUp[order?.status] && (
-            <FloatingButton
-              disabled={loading}
-              btnText={t('PICKUP_FAILED', 'Pickup failed')}
-              isSecondaryBtn={false}
-              secondButtonClick={() =>
-                handleChangeOrderStatus && handleChangeOrderStatus(9)
-              }
-              firstButtonClick={() =>
-                handleViewActionOrder && handleViewActionOrder('pickupFailed')
-              }
-              secondBtnText={t('PICKUP_COMPLETE', 'Pickup complete')}
-              secondButton={true}
-              firstColorCustom={theme.colors.red}
-              secondColorCustom={theme.colors.green}
-              widthButton={'45%'}
-            />
-          )}
-          {(order?.status === 9 || order?.status === 19) && (
-            <>
+            </OrderDetailsContainer>
+            {showFloatButtonsPickUp[order?.status] && (
               <FloatingButton
-                disabled={loading}
-                btnText={t('DELIVERY_FAILED', 'Delivery Failed')}
+                disabled={props.order?.loading}
+                btnText={t('PICKUP_FAILED', 'Pickup failed')}
                 isSecondaryBtn={false}
                 secondButtonClick={() =>
-                  handleChangeOrderStatus && handleChangeOrderStatus(11)
+                  handleChangeOrderStatus && handleChangeOrderStatus(9)
                 }
                 firstButtonClick={() =>
-                  handleViewActionOrder && handleViewActionOrder('deliveryFailed')
+                  handleViewActionOrder && handleViewActionOrder('pickupFailed')
                 }
-                secondBtnText={t('DELIVERY_COMPLETE', 'Delivery complete')}
+                secondBtnText={t('PICKUP_COMPLETE', 'Pickup complete')}
                 secondButton={true}
                 firstColorCustom={theme.colors.red}
                 secondColorCustom={theme.colors.green}
                 widthButton={'45%'}
               />
-            </>
-          )}
-          {showFloatButtonsAcceptOrReject[order?.status] && (
-            <FloatingButton
-              btnText={t('REJECT', 'Reject')}
-              isSecondaryBtn={false}
-              secondButtonClick={() => handleViewActionOrder('accept')}
-              firstButtonClick={() => handleViewActionOrder('reject')}
-              secondBtnText={t('ACCEPT', 'Accept')}
-              secondButton={true}
-              firstColorCustom={theme.colors.red}
-              secondColorCustom={theme.colors.green}
-              widthButton={'45%'}
+            )}
+            {(order?.status === 9 || order?.status === 19) && (
+              <>
+                <FloatingButton
+                  disabled={props.order?.loading}
+                  btnText={t('DELIVERY_FAILED', 'Delivery Failed')}
+                  isSecondaryBtn={false}
+                  secondButtonClick={() =>
+                    handleChangeOrderStatus && handleChangeOrderStatus(11)
+                  }
+                  firstButtonClick={() =>
+                    handleViewActionOrder && handleViewActionOrder('deliveryFailed')
+                  }
+                  secondBtnText={t('DELIVERY_COMPLETE', 'Delivery complete')}
+                  secondButton={true}
+                  firstColorCustom={theme.colors.red}
+                  secondColorCustom={theme.colors.green}
+                  widthButton={'45%'}
+                />
+              </>
+            )}
+            {showFloatButtonsAcceptOrReject[order?.status] && (
+              <FloatingButton
+                btnText={t('REJECT', 'Reject')}
+                isSecondaryBtn={false}
+                secondButtonClick={() => (order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status))) ? handleAcceptLogisticOrder(order) : handleViewActionOrder('accept')}
+                firstButtonClick={() => order?.isLogistic && (order?.order_group || logisticOrderStatus.includes(order?.status)) ? handleRejectLogisticOrder() : handleViewActionOrder('reject')}
+                secondBtnText={t('ACCEPT', 'Accept')}
+                secondButton={true}
+                firstColorCustom={theme.colors.red}
+                secondColorCustom={theme.colors.green}
+                widthButton={'45%'}
+              />
+            )}
+          </>
+        )}
+        {openModalForMapView && (
+          <OModal
+            open={openModalForMapView}
+            onClose={() => handleOpenMapView()}
+            entireModal
+            customClose>
+            <DriverMap
+              navigation={navigation}
+              order={order}
+              orderStatus={getOrderStatus(order?.status, t)?.value || ''}
+              location={locationMarker}
+              readOnly
+              updateDriverPosition={updateDriverPosition}
+              driverUpdateLocation={driverUpdateLocation}
+              setDriverUpdateLocation={setDriverUpdateLocation}
+              handleViewActionOrder={handleViewActionOrder}
+              isBusinessMarker={isBusinessMarker}
+              isToFollow={isToFollow}
+              showAcceptOrReject={
+                showFloatButtonsAcceptOrReject[order?.status]
+              }
+              handleOpenMapView={handleOpenMapView}
             />
-          )}
-
-          <Alert
-            open={alertState.open}
-            onAccept={handleArrowBack}
-            onClose={handleArrowBack}
-            content={alertState.content}
-            title={t('WARNING', 'Warning')}
-          />
-        </View>
+          </OModal>
+        )}
+        {openModalForBusiness && (
+          <OModal
+            open={openModalForBusiness}
+            order={order}
+            title={`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id}`}
+            entireModal
+            onClose={() => handleCloseModal()}>
+            <Chat
+              type={
+                openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER
+              }
+              orderId={order?.id}
+              messages={messages}
+              order={order}
+              setMessages={setMessages}
+            />
+          </OModal>
+        )}
+        {openModalForAccept && (
+          <OModal
+            open={openModalForAccept}
+            onClose={() => setOpenModalForAccept(false)}
+            entireModal
+            customClose>
+            <AcceptOrRejectOrder
+              handleUpdateOrder={handleChangeOrderStatus}
+              closeModal={setOpenModalForAccept}
+              customerCellphone={order?.customer?.cellphone}
+              loading={props.order?.loading}
+              action={actionOrder}
+              orderId={order?.id}
+              notShowCustomerPhone
+              actions={actions}
+              orderTitle={orderTitle}
+              appTitle={appTitle}
+            />
+          </OModal>
+        )}
+      </View>
+      {alertState?.open && (
+        <Alert
+          open={alertState.open}
+          onAccept={handleArrowBack}
+          onClose={handleArrowBack}
+          content={alertState.content}
+          title={t('WARNING', 'Warning')}
+        />
       )}
     </>
   );

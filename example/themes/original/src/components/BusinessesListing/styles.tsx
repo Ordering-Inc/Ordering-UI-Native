@@ -71,5 +71,15 @@ export const FeaturedWrapper = styled.View`
 
 export const OrderProgressWrapper = styled.View`
   margin-top: 37px;
+  margin-bottom: 20px;
 	padding-horizontal: 40px;
+`
+
+export const FarAwayMessage = styled.View`
+  flex-direction: row;
+  align-items: center;
+	background-color: ${(props: any) => props.theme.colors.warning1};
+  margin-bottom: 25px;
+  border-radius: 7.6px;
+  border: 1px solid ${(props: any) => props.theme.colors.warning5};
 `

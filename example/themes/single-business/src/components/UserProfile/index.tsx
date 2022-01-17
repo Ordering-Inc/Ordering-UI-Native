@@ -130,7 +130,7 @@ const ProfileListUI = (props: ProfileParams) => {
   }
 
 	return (
-		<View style={{ flex: 1, height: height - top - bottom - 62 }}>
+		<View style={{ flex: 1, height: height - top - bottom - 80 }}>
 			<OText size={24} color={theme.colors.textNormal} lineHeight={36} weight={Platform.OS === 'ios' ? '600' : 'bold'} style={{ marginTop: 14, marginBottom: 24, ...styles.pagePadding }}>{t('PROFILE', 'Profile')}</OText>
 			<CenterView style={styles.pagePadding}>
 				<View style={styles.photo}>
@@ -167,7 +167,7 @@ const ProfileListUI = (props: ProfileParams) => {
 				</Actions>
 
 				<Actions>
-					<LanguageSelector iconColor={theme.colors.textNormal} pickerStyle={langPickerStyle} />
+					<LanguageSelector iconColor={theme.colors.textNormal} pickerStyle={langPickerStyle} allowLoading />
 					<View style={{ height: 17 }} />
 					<LogoutButton color={theme.colors.textNormal} text={t('LOGOUT', 'Logout')} />
 				</Actions>

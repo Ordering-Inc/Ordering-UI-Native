@@ -202,7 +202,7 @@ export interface SingleProductCardParams {
   businessId: any,
   product: any;
   isSoldOut: boolean;
-  onProductClick: any;
+  onProductClick?: any;
 }
 export interface BusinessInformationParams {
   navigation?: any,
@@ -430,6 +430,12 @@ export interface GoogleMapsParams {
   handleToggleMap?: () => void
 }
 
+export interface AppleLoginParams {
+  handleErrors?: (error: string) => {},
+  handleLoading?: (val: boolean) => void,
+  handleSuccessApple?: (result: any) => void,
+  notificationState?: any,
+}
 export interface ShareComponentParams {
   orderId?: number;
   hashkey?: string;

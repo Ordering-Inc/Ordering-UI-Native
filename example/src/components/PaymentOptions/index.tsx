@@ -159,7 +159,7 @@ const PaymentOptionsUI = (props: any) => {
           // data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id)}
           data={paymethodsList.paymethods.sort((a: any, b: any) => a.id - b.id).filter((p: any) => !excludeGateway.includes(p.gateway))}
           renderItem={renderPaymethods}
-          keyExtractor={(paymethod: any) => paymethod.id.toString()}
+          keyExtractor={(paymethod: any) => paymethod?.id?.toString?.()}
         />
       )}
       {(paymethodsList.loading || isLoading) && (
@@ -232,7 +232,7 @@ const PaymentOptionsUI = (props: any) => {
       )}
 
       {/* Stripe */}
-      {isOpenMethod?.paymethod?.gateway === 'stripe' && !paymethodData.id && (
+      {isOpenMethod?.paymethod?.gateway === 'stripe' && !paymethodData?.id && (
         <View style={{ width: '100%' }}>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
@@ -281,7 +281,7 @@ const PaymentOptionsUI = (props: any) => {
       <OModal
         entireModal
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-        open={isOpenMethod?.paymethod?.gateway === 'stripe_direct' && !paymethodData.id}
+        open={isOpenMethod?.paymethod?.gateway === 'stripe_direct' && !paymethodData?.id}
         onClose={() => handlePaymethodClick(null)}
       >
         <KeyboardAvoidingView
@@ -299,7 +299,7 @@ const PaymentOptionsUI = (props: any) => {
       </OModal>
 
       {/* Stripe Connect */}
-      {isOpenMethod?.paymethod?.gateway === 'stripe_connect' && !paymethodData.id && (
+      {isOpenMethod?.paymethod?.gateway === 'stripe_connect' && !paymethodData?.id && (
         <View>
           <OButton
             text={t('ADD_PAYMENT_CARD', 'Add New Payment Card')}
@@ -365,7 +365,7 @@ const PaymentOptionsUI = (props: any) => {
       {/* Paypal */}
       {/* <Modal
         className='modal-info'
-        open={paymethodSelected?.gateway === 'paypal' && !paymethodData.id}
+        open={paymethodSelected?.gateway === 'paypal' && !paymethodData?.id}
         onClose={() => handlePaymethodClick(null)}
         title={t('PAY_WITH_PAYPAL', 'Pay with PayPal')}
       >

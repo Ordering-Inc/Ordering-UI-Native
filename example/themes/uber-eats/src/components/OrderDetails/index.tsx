@@ -45,6 +45,9 @@ import { GoogleMap } from '../GoogleMap'
 import { verifyDecimals } from '../../utils'
 import { useTheme } from 'styled-components/native'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import AntIcon from 'react-native-vector-icons/AntDesign'
+import { OSRow } from '../OrderSummary/styles';
+import { TaxInformation } from '../TaxInformation';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -63,7 +66,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const styles = StyleSheet.create({
     statusBar: {
-      transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
+      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
       height: 10,
     },
     logo: {
@@ -85,9 +88,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ user }] = useSession()
   const [{ configs }] = useConfig()
   const [, { refreshOrderOptions }] = useOrder()
-  const [openModalForBusiness,setOpenModalForBusiness] = useState(false)
-  const [openModalForDriver,setOpenModalForDriver] = useState(false)
+  const [openModalForBusiness, setOpenModalForBusiness] = useState(false)
+  const [openModalForDriver, setOpenModalForDriver] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({ business: false, driver: false })
+  const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null })
+
   const { order, businessData } = props.order
 
   const getOrderStatus = (s: string) => {
@@ -152,10 +157,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       navigation?.canGoBack() && navigation.goBack();
       return
     }
-    if(goToBusinessList){
+    if (goToBusinessList) {
       refreshOrderOptions()
     }
     navigation.navigate('BottomTab');
+  }
+
+  const getIncludedTaxes = () => {
+    if (order?.taxes?.length === 0) {
+      return order.tax_type === 1 ? order?.summary?.tax ?? 0 : 0
+    } else {
+      return order?.taxes.reduce((taxIncluded: number, tax: any) => {
+        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+      }, 0)
+    }
   }
 
   useEffect(() => {
@@ -202,7 +217,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       </Header>
       <Spinner visible={!order || Object.keys(order).length === 0} />
       {order && Object.keys(order).length > 0 && (
-        <>          
+        <>
           <OrderContent>
             <OrderBusiness>
               <View
@@ -303,7 +318,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <OrderBill>
               <Table>
                 <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
-                <OText>{parsePrice(order?.summary?.subtotal || order?.subtotal)}</OText>
+                <OText>{parsePrice(((order?.summary?.subtotal || order?.subtotal) + getIncludedTaxes()))}</OText>
               </Table>
               {(order?.summary?.discount > 0 || order?.discount > 0) && (
                 <Table>
@@ -318,15 +333,59 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText>- {parsePrice(order?.summary?.discount || order?.discount)}</OText>
                 </Table>
               )}
-              {order?.tax_type !== 1 && (
-                <Table>
-                  <OText>
-                    {t('TAX', 'Tax')}
-                    {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
-                  </OText>
-                  <OText>{parsePrice(order?.summary?.tax || order?.totalTax)}</OText>
-                </Table>
-              )}
+              {
+                order?.taxes?.length === 0 && order?.tax_type === 2 && (
+                  <Table>
+                    <OText>
+                      {t('TAX', 'Tax')} {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
+                    </OText>
+                    <OText>{parsePrice(order?.summary?.tax || 0)}</OText>
+                  </Table>
+                )
+              }
+              {
+                order?.fees?.length === 0 && (
+                  <Table>
+                    <OText>
+                      {t('SERVICE_FEE', 'Service fee')}
+                      {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
+                    </OText>
+                    <OText>{parsePrice(order?.summary?.service_fee || 0)}</OText>
+                  </Table>
+                )
+              }
+              {
+                order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0).map((tax: any) => (
+                  <Table key={tax.id}>
+                    <OSRow>
+                      <OText numberOfLines={1}>
+                        {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                        {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
+                      </OText>
+                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: tax })}>
+                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    </OSRow>
+                    <OText>{parsePrice(tax?.summary?.tax || 0)}</OText>
+                  </Table>
+                ))
+              }
+              {
+                order?.fees?.length > 0 && order?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0))?.map((fee: any) => (
+                  <Table key={fee.id}>
+                    <OSRow>
+                      <OText numberOfLines={1}>
+                        {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                        ({parsePrice(fee?.fixed)} + {fee.percentage}%){' '}
+                      </OText>
+                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee })}>
+                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    </OSRow>
+                    <OText>{parsePrice(fee?.fixed + fee?.summary?.percentage || 0)}</OText>
+                  </Table>
+                ))
+              }
               {(order?.summary?.delivery_price > 0 || order?.deliveryFee > 0) && (
                 <Table>
                   <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
@@ -345,19 +404,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </OText>
                 <OText>{parsePrice(order?.summary?.driver_tip || order?.totalDriverTip)}</OText>
               </Table>
-              <Table>
-                <OText>
-                  {t('SERVICE_FEE', 'Service Fee')}
-                  {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
-                </OText>
-                <OText>{parsePrice(order?.summary?.service_fee || order?.serviceFee || 0)}</OText>
-              </Table>
               <Total>
                 <Table>
                   <OText style={styles.textBold}>{t('TOTAL', 'Total')}</OText>
                   <OText style={styles.textBold} color={theme.colors.primary}>{parsePrice(order?.summary?.total || order?.total)}</OText>
                 </Table>
               </Total>
+              {order?.comment && (
+                <Table>
+                  <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
+                  <OText style={{ maxWidth: '70%' }}>
+                    {order?.comment}
+                  </OText>
+                </Table>
+              )}
             </OrderBill>
             <OrderCustomer>
               <OText size={18} mBottom={5} style={{ textAlign: 'left' }}>{t('CUSTOMER', 'Customer')}</OText>
@@ -427,6 +487,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           order={order}
           setMessages={setMessages}
         />
+      </OModal>
+      <OModal
+        open={openTaxModal.open}
+        onClose={() => setOpenTaxModal({ open: false, data: null })}
+        entireModal
+      >
+        <TaxInformation data={openTaxModal.data} products={order?.products} />
       </OModal>
     </OrderDetailsContainer>
   )

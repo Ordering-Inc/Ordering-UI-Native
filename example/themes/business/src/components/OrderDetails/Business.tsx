@@ -48,8 +48,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     isFromCheckout,
     driverLocation,
     actions,
-    titleAccept,
-    titleReject,
+    orderTitle,
     appTitle,
   } = props;
 
@@ -158,9 +157,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       : '';
 
     const customerName = !!order?.customer?.name
-      ? `${order?.customer?.name} ${order?.customer?.middle_name || ''} ${
-          order?.customer?.lastname || ''
-        } ${order?.customer?.second_lastname || ''} \n`
+      ? `${order?.customer?.name} ${order?.customer?.middle_name || ''} ${order?.customer?.lastname || ''
+      } ${order?.customer?.second_lastname || ''} \n`
       : '';
 
     const customerEmail = !!order?.customer.email
@@ -184,26 +182,25 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       : '';
 
     const payment = order?.paymethod?.name
-      ? `${order?.paymethod?.name} - ${
-          order.delivery_type === 1
-            ? t('DELIVERY', 'Delivery')
-            : order.delivery_type === 2
-            ? t('PICKUP', 'Pickup')
-            : order.delivery_type === 3
+      ? `${order?.paymethod?.name} - ${order.delivery_type === 1
+        ? t('DELIVERY', 'Delivery')
+        : order.delivery_type === 2
+          ? t('PICKUP', 'Pickup')
+          : order.delivery_type === 3
             ? t('EAT_IN', 'Eat in')
             : order.delivery_type === 4
-            ? t('CURBSIDE', 'Curbside')
-            : t('DRIVER_THRU', 'Driver thru')
-        }\n`
+              ? t('CURBSIDE', 'Curbside')
+              : t('DRIVER_THRU', 'Driver thru')
+      }\n`
       : '';
 
     const getSuboptions = (suboptions: any) => {
       const array: any = []
       suboptions?.length > 0 &&
-      suboptions?.map((suboption: any) => {
-        const string = `${getFormattedSubOptionName(suboption)}`
-        array.push(string)
-      })
+        suboptions?.map((suboption: any) => {
+          const string = `${getFormattedSubOptionName(suboption)}`
+          array.push(string)
+        })
 
       return array.join('')
     }
@@ -212,12 +209,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       const array: any = [];
 
       options?.length &&
-      options?.map((option: any) => {
-        const string =
-        `  ${option.name}\n    ${getSuboptions(option.suboptions)}`;
+        options?.map((option: any) => {
+          const string =
+            `  ${option.name}\n    ${getSuboptions(option.suboptions)}`;
 
-        array.push(string)
-      })
+          array.push(string)
+        })
 
       if (productComment) {
         array.push(`  ${t('COMMENT', 'Comment')}\n    ${productComment}\n`)
@@ -322,10 +319,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }, [messagesReadList]);
 
-  const locations = [
+  let locations = [
     {
       ...order?.driver?.location,
-      title: t('DRIVER', 'Driver'),
+      title: order?.driver?.name ?? t('DRIVER', 'Driver'),
       icon:
         order?.driver?.photo ||
         'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://www.freeiconspng.com/thumbs/driver-icon/driver-icon-14.png',
@@ -334,12 +331,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     {
       ...order?.business?.location,
       title: order?.business?.name,
+      address: {
+        addressName: order?.business?.address,
+        zipcode: order?.business?.zipcode
+      },
       icon: order?.business?.logo || theme.images.dummies.businessLogo,
       level: 2,
     },
     {
       ...order?.customer?.location,
-      title: t('CUSTOMER', 'Customer'),
+      title: order?.customer?.name ??  t('CUSTOMER', 'Customer'),
+      address: {
+        addressName: order?.customer?.address,
+        zipcode: order?.customer?.zipcode
+      },
       icon:
         order?.customer?.photo ||
         'https://res.cloudinary.com/demo/image/upload/c_thumb,g_face,r_max/d_avatar.png/non_existing_id.png',
@@ -416,7 +421,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           onClickButton={() => navigation.navigate('Orders')}
         />
       )}
-
       {order && Object.keys(order).length > 0 && (error?.length < 1 || !error) && (
         <View style={{ flex: 1 }}>
           <OrderHeaderComponent
@@ -424,6 +428,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             handleOpenMapView={handleOpenMapView}
             handleOpenMessagesForBusiness={handleOpenMessagesForBusiness}
             getOrderStatus={getOrderStatus}
+            handleViewSummaryOrder={handleViewSummaryOrder}
+            handleCopyClipboard={handleCopyClipboard}
             handleArrowBack={handleArrowBack}
           />
           <OrderDetailsContainer
@@ -469,7 +475,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                                   <OText>
                                     {itemsDrivers.length > 0
                                       ? order?.driver?.name ||
-                                        t('SELECT_DRIVER', 'Select Driver')
+                                      t('SELECT_DRIVER', 'Select Driver')
                                       : t('WITHOUT_DRIVERS', 'Without drivers')}
                                   </OText>
                                   <OIcon
@@ -516,66 +522,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </AssignDriver>
                 )}
 
-              {order?.status === 7 && (
-                <Pickup>
-                  <OButton
-                    style={styles.btnPickUp}
-                    textStyle={{ color: theme.colors.primary }}
-                    text={t('READY_FOR_PICKUP', 'Ready for pickup')}
-                    onClick={() =>
-                      handleChangeOrderStatus && handleChangeOrderStatus(4)
-                    }
-                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
-                    imgRightSrc={false}
-                    isLoading={loading}
-                  />
-                </Pickup>
-              )}
-
-              {order?.status === 4 && ![1].includes(order?.delivery_type) && (
-                <Pickup>
-                  <OButton
-                    style={{
-                      ...styles.btnPickUp,
-                      backgroundColor: theme.colors.green,
-                    }}
-                    textStyle={{ color: theme.colors.white }}
-                    text={t(
-                      'PICKUP_COMPLETED_BY_CUSTOMER',
-                      'Pickup completed by customer',
-                    )}
-                    onClick={() =>
-                      handleChangeOrderStatus && handleChangeOrderStatus(15)
-                    }
-                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
-                    imgRightSrc={false}
-                    isLoading={loading}
-                  />
-                </Pickup>
-              )}
-
-              {order?.status === 4 && ![1].includes(order?.delivery_type) && (
-                <Pickup>
-                  <OButton
-                    style={{
-                      ...styles.btnPickUp,
-                      backgroundColor: theme.colors.red,
-                    }}
-                    textStyle={{ color: theme.colors.white }}
-                    text={t(
-                      'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
-                      'Order not picked up by customer',
-                    )}
-                    onClick={() =>
-                      handleChangeOrderStatus && handleChangeOrderStatus(17)
-                    }
-                    imgLeftStyle={{ tintColor: theme.colors.backArrow }}
-                    imgRightSrc={false}
-                    isLoading={loading}
-                  />
-                </Pickup>
-              )}
-
               <OModal
                 open={openModalForBusiness}
                 order={order}
@@ -607,8 +553,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   orderId={order?.id}
                   notShowCustomerPhone={false}
                   actions={actions}
-                  titleAccept={titleAccept}
-                  titleReject={titleReject}
+                  orderTitle={orderTitle}
                   appTitle={appTitle}
                 />
               </OModal>
@@ -638,7 +583,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           {order &&
             Object.keys(order).length > 0 &&
             getOrderStatus(order?.status, t)?.value ===
-              t('PENDING', 'Pending') && (
+            t('PENDING', 'Pending') && (
               <FloatingButton
                 btnText={t('REJECT', 'Reject')}
                 isSecondaryBtn={false}
@@ -651,24 +596,37 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 widthButton={'45%'}
               />
             )}
-
-          {order &&
-            Object.keys(order).length > 0 &&
-            getOrderStatus(order?.status, t)?.value !==
-              t('PENDING', 'Pending') && (
-              <FloatingButton
-                btnText={t('COPY', 'Copy')}
-                isSecondaryBtn={false}
-                colorTxt1={theme.colors.primary}
-                secondButtonClick={handleViewSummaryOrder}
-                firstButtonClick={handleCopyClipboard}
-                secondBtnText={t('PRINT', 'Print')}
-                secondButton={true}
-                firstColorCustom="transparent"
-                secondColorCustom={theme.colors.primary}
-                widthButton={'45%'}
-              />
-            )}
+          {order?.status === 7 && (
+            <FloatingButton
+              btnText={t('READY_FOR_PICKUP', 'Ready for pickup')}
+              colorTxt1={theme.colors.primary}
+              color={theme.colors.btnBGWhite}
+              firstButtonClick={() => handleChangeOrderStatus?.(4)}
+              widthButton={'100%'}
+              disabled={loading}
+            />
+          )}
+          {order?.status === 4 && ![1].includes(order?.delivery_type) && (
+            <FloatingButton
+              btnText={t(
+                'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
+                'Order not picked up by customer',
+              )}
+              isSecondaryBtn={false}
+              colorTxt1={theme.colors.white}
+              secondButtonClick={() => handleChangeOrderStatus?.(15)}
+              firstButtonClick={() => handleChangeOrderStatus?.(17)}
+              secondBtnText={t(
+                'PICKUP_COMPLETED_BY_CUSTOMER',
+                'Pickup completed by customer',
+              )}
+              secondButton={true}
+              firstColorCustom={theme.colors.red}
+              secondColorCustom={theme.colors.green}
+              widthButton={'45%'}
+              disabled={loading}
+            />
+          )}
         </View>
       )}
     </>

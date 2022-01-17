@@ -381,7 +381,7 @@ const LoginFormUI = (props: LoginParams) => {
 									handleData={(val: any) => setPhoneInputData(val)}
 									textInputProps={{
 										returnKeyType: 'next',
-										onSubmitEditing: () => inputRef.current.focus(),
+										onSubmitEditing: () => inputRef?.current?.focus?.(),
 									}}
 								/>
 							</View>
@@ -534,7 +534,7 @@ const LoginFormUI = (props: LoginParams) => {
                     handleLoading={(val: boolean) => setIsFBLoading(val)}
                     handleSuccessFacebookLogin={handleSuccessFacebook}
                   />
-                  <GoogleLogin
+                  {/* <GoogleLogin
                     handleErrors={(err: any) => showToast(ToastType.Error, err)}
                     handleLoading={(val: boolean) => setIsFBLoading(val)}
                     handleSuccessFacebookLogin={handleSuccessFacebook}
@@ -543,7 +543,7 @@ const LoginFormUI = (props: LoginParams) => {
                     handleErrors={(err: any) => showToast(ToastType.Error, err)}
                     handleLoading={(val: boolean) => setIsFBLoading(val)}
                     handleSuccessFacebookLogin={handleSuccessFacebook}
-                  />
+                  /> */}
                 </SocialButtons>
               </ButtonsWrapper>
             </>

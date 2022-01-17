@@ -26,7 +26,7 @@ export const AppleLogin = (props: any) => {
 		: t('CONTINUE_WITH_FACEBOOK', 'Continue with Apple');
 
 	const logoutWithFacebook = () => {
-		LoginManager.logOut();
+		LoginManager && LoginManager.logOut();
 	};
 
 	const handleLoginClick = async (accessToken: string) => {
@@ -49,7 +49,7 @@ export const AppleLogin = (props: any) => {
 
 	const loginWithFacebook = () => {
 		handleLoading && handleLoading(true)
-		LoginManager.logInWithPermissions(['public_profile']).then(
+		LoginManager && LoginManager.logInWithPermissions(['public_profile']).then(
 			(login: any) => {
 				if (login.isCancelled) {
 					const err = t('LOGIN_WITH_FACEBOOK_CANCELLED', 'Login cancelled')

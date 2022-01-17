@@ -67,10 +67,10 @@ const MessagesUI = (props: MessagesParams) => {
   const theme = useTheme();
 
   const quickMessageList = [
-    { key: 'driver_message_1', text: t('DRIVER_MESSAGE_1', 'driver_message_1') },
-    { key: 'driver_message_2', text: t('DRIVER_MESSAGE_2', 'driver_message_2') },
-    { key: 'driver_message_3', text: t('DRIVER_MESSAGE_3', 'driver_message_3') },
-    { key: 'driver_message_4', text: t('DRIVER_MESSAGE_4', 'driver_message_4') }
+    { key: 'customer_message_1', text: t('CUSTOMER_MESSAGE_1', 'customer_message_1') },
+    { key: 'customer_message_2', text: t('CUSTOMER_MESSAGE_2', 'customer_message_2') },
+    { key: 'customer_message_3', text: t('CUSTOMER_MESSAGE_3', 'customer_message_3') },
+    { key: 'customer_message_4', text: t('CUSTOMER_MESSAGE_4', 'customer_message_4') }
   ]
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])

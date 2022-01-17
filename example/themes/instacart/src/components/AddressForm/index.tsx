@@ -437,7 +437,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 													}
 													setIsFirstTime(false)
 												},
-												onSubmitEditing: () => internalNumberRef.current.focus(),
+												onSubmitEditing: () => internalNumberRef?.current?.focus?.(),
 												autoCorrect: false,
 												blurOnSubmit: false,
 												returnKeyType: 'next',
@@ -519,7 +519,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 										control={control}
 										name='internal_number'
 										rules={{ required: isRequiredField && isRequiredField('internal_number') ? t(`VALIDATION_ERROR_INTERNAL_NUMBER_REQUIRED`, `The field internal number is required`) : null }}
-										defaultValue={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
+										defaultValue={address?.internal_number || formState.changes?.internal_number || addressState?.address?.internal_number || ''}
 										render={() => (
 											<OInput
 												name='internal_number'
@@ -528,11 +528,11 @@ const AddressFormUI = (props: AddressFormParams) => {
 													handleChangeInput(text)
 													setValue('internal_number', text)
 												}}
-												value={address?.internal_number || formState.changes?.internal_number || addressState.address.internal_number || ''}
+												value={address?.internal_number || formState.changes?.internal_number || addressState?.address?.internal_number || ''}
 												style={styles.inputsStyle}
 												forwardRef={internalNumberRef}
 												returnKeyType='next'
-												onSubmitEditing={() => zipCodeRef.current.focus()}
+												onSubmitEditing={() => zipCodeRef?.current?.focus?.()}
 												blurOnSubmit={false}
 											/>
 										)}
@@ -556,7 +556,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 												style={styles.inputsStyle}
 												forwardRef={zipCodeRef}
 												returnKeyType='next'
-												onSubmitEditing={() => addressNotesRef.current.focus()}
+												onSubmitEditing={() => addressNotesRef?.current?.focus?.()}
 												blurOnSubmit={false}
 											/>
 										)}

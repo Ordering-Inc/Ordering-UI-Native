@@ -76,7 +76,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 
   return (
     <CardContainer style={styles.container}
-      onPress={() => onProductClick(product)}
+      onPress={() => onProductClick?.(product)}
 		  activeOpacity={0.8}
     >
       <OIcon
@@ -90,7 +90,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
         <OText color={theme.colors.textSecondary} size={9} numberOfLines={2} ellipsizeMode='tail' style={{...styles.textStyle, ...theme.labels.small}}>{product?.description}</OText>
       </CardInfo>
 
-		<TouchableOpacity style={styles.addBtn} onPress={() => onProductClick(product)} activeOpacity={0.7}>
+		<TouchableOpacity style={styles.addBtn} onPress={() => onProductClick?.(product)} activeOpacity={0.7}>
 			<OIcon src={theme.images.general.plus_circle} />
 		</TouchableOpacity>
 

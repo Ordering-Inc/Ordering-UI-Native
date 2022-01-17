@@ -5,7 +5,6 @@ export const UDForm = styled.View`
   align-items: center;
   flex-direction: column;
   width: 100%;
-  margin-top: 20px;
 `
 
 export const UDWrapper = styled.View`
@@ -14,7 +13,6 @@ export const UDWrapper = styled.View`
   flex-direction: column;
   width: 100%;
   margin-top: 20px;
-  padding-bottom: 50px;
 `
 
 export const UDLoader = styled.View`
@@ -29,7 +27,11 @@ export const UDLoader = styled.View`
 
 export const WrapperPhone = styled.View`
   margin-bottom: 25px;
-  width: 100%;
-  border-bottom-width: 1px;
-  border-bottom-color: ${(props: any) => props.theme.colors.border};
+`
+
+export const EditButton = styled.View`
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex: 1;
 `

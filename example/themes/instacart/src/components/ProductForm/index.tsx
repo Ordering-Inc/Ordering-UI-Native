@@ -120,7 +120,7 @@ export const ProductOptionsUI = (props: any) => {
 									<ProductHeader
 										source={{ uri: product?.images || productCart?.images }}
 										resizeMode={'contain'}
-										style={{height: windowWidth, maxHeight: windowWidth}}
+										style={{ height: windowWidth, maxHeight: windowWidth }}
 									/>
 								</>
 							)}
@@ -135,22 +135,33 @@ export const ProductOptionsUI = (props: any) => {
 										</View>
 									</Placeholder>
 								) : (
-									<OText mBottom={7} style={{ flex: I18nManager.isRTL ? 0 : 1, ...theme.labels.subtitle, fontWeight: Platform.OS === 'ios' ? '600' : 'bold' }}>{product?.name || productCart.name}</OText>
+									<View style={{ flexDirection: 'column', width: '100%' }}>
+										<OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1, marginBottom: 10, fontWeight: Platform.OS === 'ios' ? '600' : 'bold' }}>{product?.name || productCart.name}</OText>
+										<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+											{((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (product?.estimated_person)) && (
+												<OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'} mBottom={7}>
+													{
+														((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
+														&& <>{t('SKU', 'Sku')}{' '}{product?.sku || productCart?.sku}</>
+													}
+													{product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
+														<>&nbsp;&#183;&nbsp;</>
+													)}
+													{product?.estimated_person
+														&& <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
+													}
+												</OText>
+											)}
+										</View>
+										<OText size={16} mBottom={7} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+									</View>
 								)}
 							</ProductTitle>
-							<ProductDescription>
-								<OText mBottom={7} style={{ ...theme.labels.small }} color={theme.colors.textSecondary}>{product?.description?.trim() || productCart?.description?.trim()}</OText>
-								<OText style={{ flex: I18nManager.isRTL ? 1 : 0, ...theme.labels.subtitle, fontWeight: Platform.OS === 'ios' ? '600' : 'bold' }} color={theme.colors.textPrimary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
-								{(
-									(product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
-									(productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1')
-								) && (
-										<>
-											<OText size={20}>{t('SKU', 'Sku')}</OText>
-											<OText>{product?.sku || productCart?.sku}</OText>
-										</>
-									)}
-							</ProductDescription>
+							{(product?.description || productCart?.description) && (
+								<ProductDescription>
+									<OText mBottom={7} style={{ ...theme.labels.small }} color={theme.colors.textSecondary}>{product?.description?.trim() || productCart?.description?.trim()}</OText>
+								</ProductDescription>
+							)}
 							<View style={{ height: 16, backgroundColor: theme.colors.secundary, marginHorizontal: -40, marginBottom: 20 }} />
 							{loading && !product ? (
 								<>

@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 export const OrderDetailsContainer = styled.ScrollView`
   flex: 1;
@@ -25,17 +25,25 @@ export const Logo = styled.View`
 
 export const OrderContent = styled.View`
   flex: 1;
+  ${(props : any) => props.isOrderGroup && css`
+    border-color: rgba(0, 0, 0, 0.2);
+    border-width: 1px;
+    padding: 10px;
+  `
+  }
+  ${(props : any) => props.lastOrder && css`
+    margin-bottom: 50px;
+  `}
 `;
 
 export const OrderHeader = styled.View`
-  padding-vertical: 20px;
-  border-bottom-width: 10px;
-  border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
+  padding-top: 20px;
+  padding-bottom: 10px;
 `;
 
 export const OrderBusiness = styled.View`
   position: relative;
-  bottom: 10px;
+  bottom: 20px;
   padding-vertical: 20px;
   flex-direction: column;
   border-bottom-width: 10px;
@@ -46,7 +54,7 @@ export const OrderBusiness = styled.View`
 export const OrderCustomer = styled.View`
   border-bottom-width: 10px;
   border-bottom-color: ${(props: any) => props.theme.colors.inputChat};
-  padding-vertical: 20px;
+  padding-vertical: 10px;
 `;
 
 export const OrderProducts = styled(OrderCustomer)``;
@@ -60,6 +68,7 @@ export const Table = styled.View`
 
 export const OrderBill = styled.View`
   padding-vertical: 20px;
+  padding-bottom: 30px;
   flex: 1;
 `;
 

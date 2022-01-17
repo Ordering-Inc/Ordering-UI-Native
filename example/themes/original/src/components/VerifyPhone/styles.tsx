@@ -3,8 +3,8 @@ import styled from 'styled-components/native';
 export const Container = styled.View`
   width: 100%;
   padding-top: 5px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
 `
 
 export const CountDownContainer = styled.View`

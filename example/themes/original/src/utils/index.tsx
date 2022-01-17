@@ -169,3 +169,12 @@ export const getTypesText = (value: number) => {
   const ret = ORDER_TYPES.find((type: any) => type.value == value);
   return ret?.content;
 }
+
+/**
+ * Function to transform degree to radian
+ * @param {number} value for transform
+ *
+ */
+ export const convertToRadian = (value: number) => {
+  return value * Math.PI / 180
+}

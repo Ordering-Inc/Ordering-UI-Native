@@ -10,6 +10,7 @@ import {
 	OrderInformation,
 	BusinessInformation,
 	Price,
+	LoadMore
 } from './styles';
 import { View, StyleSheet } from 'react-native';
 import { getGoogleMapImage } from '../../utils';
@@ -113,6 +114,18 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 					orders.map((order: any, index: any) => (
 						<Order key={order?.id || order?.uuid} order={order} index={index} />
 					))}
+				{pagination?.totalPages && pagination?.currentPage < pagination?.totalPages && (
+					<LoadMore>
+						<OButton
+							bgColor={theme.colors.white}
+							textStyle={{ color: theme.colors.primary, fontSize: 14 }}
+							text={t('LOAD_MORE_ORDERS', 'Load more orders')}
+							borderColor={theme.colors.primary}
+							onClick={loadMoreOrders}
+							style={styles.loadMoreButton}
+						/>
+					</LoadMore>
+				)}
 			</ActiveOrdersContainer>
 			<View
 				style={{
@@ -139,5 +152,11 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		minWidth: 230,
+	},
+	loadMoreButton: {
+		width: 200,
+		height: 46,
+		marginLeft: 'auto',
+		marginRight: 'auto',
 	},
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import styled, { css } from 'styled-components/native'
+import styled, { css, useTheme } from 'styled-components/native'
 import { ScrollView, TouchableOpacity  } from 'react-native-gesture-handler'
 import {
   ScrollView as CustomScrollView,
@@ -76,6 +76,7 @@ const ODropDown = (props: Props) => {
     isModal
   } = props
 
+  const theme = useTheme()
   const [isOpen, setIsOpen] = useState(false)
   const defaultOption = options?.find((option: any) => option.value === defaultValue)
   const [selectedOption, setSelectedOption] = useState<any>(defaultOption)
@@ -114,7 +115,7 @@ const ODropDown = (props: Props) => {
         <DropIcon
           textcolor={props.textcolor}
           secondary={secondary}
-          source={require('../../assets/icons/drop_down.png')}
+          source={theme.images.general.dropDown}
         />
       </Selected>
       {isOpen && options && (

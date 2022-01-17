@@ -27,7 +27,7 @@ export const SearchBar = (props: any) => {
   };
 
   const handleActiveInput = () => {
-    inputRef.current.focus();
+    inputRef?.current?.focus?.();
   };
 
   let timeout: null | any = null;
@@ -38,7 +38,7 @@ export const SearchBar = (props: any) => {
       clearTimeout(timeout);
       timeout = setTimeout(function () {
         onSearch(e);
-      }, 750);
+      }, 1000);
     }
   };
 

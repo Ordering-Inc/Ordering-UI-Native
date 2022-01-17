@@ -61,3 +61,51 @@ export const OSCoupon = styled.View`
   width: 100%;
   padding: 5px 0px;
 `
+
+export const BIHeader = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom-width: 1px;
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
+  padding-bottom: 10px;
+
+  ${(props: any) => props.isClosed && css`
+    background-color: rgba(0, 0, 0, 0.1);
+  `}
+`
+
+export const BIInfo = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 55%;
+`
+
+export const BIContent = styled.View`
+`
+
+export const BIContentInfo = styled.View`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  text-transform: capitalize;
+  margin-left: 10px;
+  max-width: 65%;
+`
+
+export const BITotal = styled.View`
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`
+
+export const TopHeader = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1;
+  padding-horizontal: 40px;
+`

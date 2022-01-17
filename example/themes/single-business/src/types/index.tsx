@@ -117,6 +117,7 @@ export interface LanguageSelectorParams {
 	handleChangeLanguage?: any;
 	iconColor?: any;
 	pickerStyle?: any;
+	allowLoading?: boolean;
 }
 export interface BusinessesListingParams {
 	navigation?: any;
@@ -160,6 +161,7 @@ export interface BusinessProductsListingParams {
 	categorySelected: any;
 	handleSearchRedirect: any;
 	errorQuantityProducts?: boolean;
+	isFranchiseApp?: boolean;
 	header?: any;
 	logo?: any;
 	getNextProducts?: any;
@@ -173,6 +175,7 @@ export interface BusinessBasicInformationParams {
 	businessState?: any;
 	openBusinessInformation?: any;
 	isBusinessInfoShow?: boolean;
+	isFranchiseApp?: boolean;
 	header?: any;
 	logo?: any;
 }
@@ -212,7 +215,7 @@ export interface SingleProductCardParams {
 	businessId: any,
 	product: any;
 	isSoldOut: boolean;
-	onProductClick: any;
+	onProductClick?: any;
 }
 export interface BusinessInformationParams {
 	navigation?: any,

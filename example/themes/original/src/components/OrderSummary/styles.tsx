@@ -33,3 +33,9 @@ export const OSCoupon = styled.View`
   width: 100%;
   padding: 5px 0px;
 `
+
+export const OSRow = styled.View`
+  flex-direction: row;
+  overflow: hidden;
+  width: 80%;
+`

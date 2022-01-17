@@ -37,6 +37,7 @@ import NavBar from '../NavBar'
 import { OText, OButton, OInput, OModal } from '../shared';
 import { LoginParams } from '../../types';
 import { useTheme } from 'styled-components/native';
+import { AppleLogin } from '../AppleLogin'
 
 const LoginFormUI = (props: LoginParams) => {
   const {
@@ -80,7 +81,7 @@ const LoginFormUI = (props: LoginParams) => {
   const [passwordSee, setPasswordSee] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isFBLoading, setIsFBLoading] = useState(false);
+  const [isLoadingSocialButton, setIsLoadingSocialButton] = useState(false);
   const [phoneInputData, setPhoneInputData] = useState({
     error: '',
     phone: {
@@ -90,6 +91,10 @@ const LoginFormUI = (props: LoginParams) => {
   });
 
   const inputRef = useRef<any>({})
+
+  const anySocialButtonActivated = ((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
+    (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) ||
+    (configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null)
 
   const handleChangeTab = (val: string) => {
     props.handleChangeTab(val);
@@ -133,7 +138,15 @@ const LoginFormUI = (props: LoginParams) => {
     })
   }
 
-  const handleChangeInputEmail = (value : string, onChange : any) => {
+  const handleSuccessApple = (user: any) => {
+    _removeStoreData('isGuestUser')
+    login({
+      user,
+      token: user?.session?.access_token
+    })
+  }
+
+  const handleChangeInputEmail = (value: string, onChange: any) => {
     onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
   }
 
@@ -270,7 +283,7 @@ const LoginFormUI = (props: LoginParams) => {
                   handleData={(val: any) => setPhoneInputData(val)}
                   textInputProps={{
                     returnKeyType: 'next',
-                    onSubmitEditing: () => inputRef.current.focus(),
+                    onSubmitEditing: () => inputRef?.current?.focus?.(),
                   }}
                 />
               </View>
@@ -353,10 +366,7 @@ const LoginFormUI = (props: LoginParams) => {
           )
         }
 
-        {configs && Object.keys(configs).length > 0 && (
-          (((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
-          (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
-          (
+        {configs && Object.keys(configs).length > 0 && anySocialButtonActivated && (
             <ButtonsWrapper>
               <OText size={18} mBottom={10} color={theme.colors.disabled}>
                 {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
@@ -364,26 +374,33 @@ const LoginFormUI = (props: LoginParams) => {
               <SocialButtons>
                 {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
                   configs?.facebook_id?.value && (
-                  <FacebookLogin
-                    notificationState={notificationState}
-                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                    handleLoading={(val: boolean) => setIsFBLoading(val)}
-                    handleSuccessFacebookLogin={handleSuccessFacebook}
-                  />
-                )}
+                    <FacebookLogin
+                      notificationState={notificationState}
+                      handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                      handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                      handleSuccessFacebookLogin={handleSuccessFacebook}
+                    />
+                  )}
                 {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
                   <GoogleLogin
                     notificationState={notificationState}
                     webClientId={configs?.google_login_client_id?.value}
                     handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                    handleLoading={(val: boolean) => setIsFBLoading(val)}
+                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
                     handleSuccessGoogleLogin={handleSuccessFacebook}
+                  />
+                )}
+                {(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && (
+                  <AppleLogin
+                    notificationState={notificationState}
+                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                    handleSuccessApple={handleSuccessApple}
                   />
                 )}
               </SocialButtons>
             </ButtonsWrapper>
-          )
-        )}
+          )}
 
         {onNavigationRedirect && registerButtonText && (
           <ButtonsWrapper>
@@ -411,7 +428,7 @@ const LoginFormUI = (props: LoginParams) => {
           handleVerifyCodeClick={handleVerifyCodeClick}
         />
       </OModal>
-      <Spinner visible={isFBLoading} />
+      <Spinner visible={isLoadingSocialButton} />
     </Container>
   );
 };

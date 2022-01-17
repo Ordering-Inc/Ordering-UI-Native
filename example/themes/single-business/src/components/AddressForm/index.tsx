@@ -559,7 +559,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 													setAddressEditing(text.length == 0);
 												},
 												onSubmitEditing: () =>
-													internalNumberRef.current.focus(),
+													internalNumberRef?.current?.focus?.(),
 												autoCorrect: false,
 												blurOnSubmit: false,
 												returnKeyType: 'next',
@@ -652,7 +652,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 									defaultValue={
 										address?.internal_number ||
 										formState.changes?.internal_number ||
-										addressState.address.internal_number ||
+										addressState?.address?.internal_number ||
 										''
 									}
 									render={() => (
@@ -666,13 +666,13 @@ const AddressFormUI = (props: AddressFormParams) => {
 											value={
 												address?.internal_number ||
 												formState.changes?.internal_number ||
-												addressState.address.internal_number ||
+												addressState?.address?.internal_number ||
 												''
 											}
 											style={{ ...styles.inputsStyle, marginRight: 24 }}
 											forwardRef={internalNumberRef}
 											returnKeyType="next"
-											onSubmitEditing={() => zipCodeRef.current.focus()}
+											onSubmitEditing={() => zipCodeRef?.current?.focus?.()}
 											blurOnSubmit={false}
 										/>
 									)}
@@ -713,7 +713,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 											style={styles.inputsStyle}
 											forwardRef={zipCodeRef}
 											returnKeyType="next"
-											onSubmitEditing={() => addressNotesRef.current.focus()}
+											onSubmitEditing={() => addressNotesRef?.current?.focus?.()}
 											blurOnSubmit={false}
 										/>
 									)}

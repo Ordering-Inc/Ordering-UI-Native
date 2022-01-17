@@ -40,12 +40,14 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const [time, setTime] = useState('');
   const [comments, setComments] = useState('');
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
-  const phoneNumber = customerCellphone;
-  let codeNumberPhone, numberPhone, numberToShow;
   const { top, bottom } = useSafeAreaInsets()
-  const titleOrder = t(orderTitle[action].key, orderTitle[action].text)
-  const buttonText = t(orderTitle[action].btnKey, orderTitle[action].btnText)
+
+  let codeNumberPhone, numberPhone, numberToShow;
+  const phoneNumber = customerCellphone;
+  const titleOrder = t(orderTitle[action]?.key, orderTitle[action]?.text)
+  const buttonText = t(orderTitle[action]?.btnKey, orderTitle[action]?.btnText)
   const showTextArea = ['reject', 'deliveryFailed', 'pickupFailed', 'notReady'].includes(action)
+
   const handleFocus = () => {
     viewRef?.current?.measure((x: any, y: any) => {
       scrollViewRef?.current?.scrollTo({ x: 0, y });
@@ -134,11 +136,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       timerRef.current.blur();
     }
 
-    if (!isFocus) {
-      if (time.length > 1) timerRef.current.clear();
-      timerRef.current.focus();
-      handleFocusTimer();
-    }
   };
 
   const openTextTareaOInput = () => {
@@ -148,7 +145,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
 
     if (!isFocus && textTareaRef?.current) {
-      textTareaRef.current.focus();
+      textTareaRef?.current?.focus?.();
     }
   };
 
@@ -161,7 +158,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
     const time = parseInt(hour || '0') * 60 + (parseInt(minsToSend) || 0);
 
-    let bodyToSend;
+    let bodyToSend: any = {};
     const orderStatus: any = {
       acceptByBusiness: {
         prepared_in: time,
@@ -210,15 +207,25 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
 
     bodyToSend.id = orderId;
-
     handleUpdateOrder && handleUpdateOrder(bodyToSend.status, bodyToSend);
   };
+
+  useEffect(() => {
+    if (actions && action === 'accept') {
+      const interval = setTimeout(() => {
+        timerRef?.current?.focus?.()
+      }, 200)
+      return () => {
+        clearTimeout(interval)
+      }
+    }
+  }, [timerRef?.current])
 
   return (
     <KeyboardAvoidingView
       enabled
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, paddingHorizontal: 30, paddingTop: 30, marginTop: top, marginBottom: bottom, justifyContent: 'space-between' }}>
+      style={{ flex: 1, paddingHorizontal: 30, paddingVertical: 30, marginTop: top, marginBottom: bottom, justifyContent: 'space-between' }}>
       <View>
         <OIconButton
           icon={theme.images.general.arrow_left}
@@ -358,11 +365,12 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           onChangeText={handleTime}
           onPressOut={() => handleFixTime()}
           editable={true}
-          autoFocus={actions && action === 'accept'}
           selectionColor={theme.colors.primary}
           placeholderTextColor={theme.colors.textGray}
           color={theme.colors.textGray}
           onEndEditing={handleFixTime}
+          onSubmitEditing={() => handleAcceptOrReject()}
+          onBlur={() => actions && action === 'accept' && timerRef?.current?.focus?.()}
         />
 
         {showTextArea && (
@@ -378,7 +386,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
               value={comments}
               onChange={setComments}
             />
-            <View style={{ height: 20 }} />
           </Comments>
         )}
       </Content>
