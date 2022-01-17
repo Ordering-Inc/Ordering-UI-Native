@@ -38,17 +38,17 @@ const BusinessProductsCategoriesUI = (props: any) => {
 		featuredStyle: {
 			display: 'none',
 		},
-    tabStyle: {
-      marginTop: 10,
-      height: 4,
-      borderTopStartRadius: 4,
-      borderTopEndRadius: 4,
-      backgroundColor: theme.colors.textPrimary,
-    },
-    tabDeactived: {
-      marginTop: 10,
-      height: 4
-    }
+		tabStyle: {
+			marginTop: 10,
+			height: 4,
+			borderTopStartRadius: 4,
+			borderTopEndRadius: 4,
+			backgroundColor: theme.colors.textPrimary,
+		  },
+		  tabDeactived: {
+			marginTop: 10,
+			height: 4
+		  }
 	});
 
 	const handleCategoryScroll = (category: any) => {
@@ -58,7 +58,7 @@ const BusinessProductsCategoriesUI = (props: any) => {
 		if (!lazyLoadProductsRecommended) {
 			if (category?.id) {
 				scrollViewRef.current.scrollTo({
-					y: categoriesLayout[`cat_${category?.id}`]?.y + productListLayout?.y + 270,
+					y: categoriesLayout[`cat_${category?.id}`]?.y + productListLayout?.y - 70,
 					animated: true
 				})
 			} else {
