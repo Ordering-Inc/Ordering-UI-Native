@@ -6926,7 +6926,7 @@ ora@^3.4.0:
 
 "ordering-components@github:Ordering-Inc/ordering-components#development":
   version "0.0.1"
-  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/871d2d537f7fd243e6078381c43de7053d3d756d"
+  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/9e9ae436cdb36d13eb2e2f67bfaac68e600765bd"
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@react-native-async-storage/async-storage" "^1.13.1"

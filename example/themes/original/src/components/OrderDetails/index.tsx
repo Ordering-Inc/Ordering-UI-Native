@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, BackHandler, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, StyleSheet, BackHandler, KeyboardAvoidingView, Platform, Linking } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import LinearGradient from 'react-native-linear-gradient';
 import { Messages } from '../Messages';
@@ -483,10 +483,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </OText>
                   <Icons>
                     <TouchableOpacity
-                      onPress={() =>
-                        props.navigation.navigate('Business', {
-                          store: businessData?.slug,
-                        })
+                      onPress={() => order?.business?.cellphone &&
+                        Linking.openURL(`tel:${order?.business?.cellphone}`)
                       }
                       style={{ paddingEnd: 5 }}>
                       <OIcon
