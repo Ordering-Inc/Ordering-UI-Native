@@ -300,14 +300,6 @@ const AddressListUI = (props: AddressListParams) => {
               />
             </>
           )}
-          {!isFromProfile && addressList?.addresses?.length > 0 && (
-            <OButton
-              text={t('CONTINUE', 'Continue')}
-              style={styles.button}
-              onClick={() => onNavigatorRedirect()}
-              textStyle={{ color: theme.colors.white }}
-            />
-          )}
         </AddressListContainer>
       )}
     </Container>
