@@ -117,10 +117,8 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 				{pagination?.totalPages && pagination?.currentPage < pagination?.totalPages && (
 					<LoadMore>
 						<OButton
-							bgColor={theme.colors.white}
-							textStyle={{ color: theme.colors.primary, fontSize: 14 }}
+							textStyle={{ color: '#fff' }}
 							text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-							borderColor={theme.colors.primary}
 							onClick={loadMoreOrders}
 							style={styles.loadMoreButton}
 						/>
@@ -154,9 +152,9 @@ const styles = StyleSheet.create({
 		minWidth: 230,
 	},
 	loadMoreButton: {
-		width: 200,
-		height: 46,
+		width: '100%',
 		marginLeft: 'auto',
 		marginRight: 'auto',
+		borderRadius: 7.6
 	},
 });
