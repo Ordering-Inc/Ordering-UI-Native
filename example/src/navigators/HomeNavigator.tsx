@@ -21,6 +21,7 @@ import HelpOrder from '../pages/HelpOrder'
 import HelpGuide from '../pages/HelpGuide'
 import HelpAccountAndPayment from '../pages/HelpAccountAndPayment'
 import Splash from '../pages/Splash';
+import BusinessPreorder from '../pages/BusinessPreorder'
 const Stack = createStackNavigator();
 
 const HomeNavigator = (e : any) => {
@@ -156,6 +157,11 @@ const HomeNavigator = (e : any) => {
                    <Stack.Screen
                     name="HelpAccountAndPayment"
                     component={HelpAccountAndPayment}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="BusinessPreorder"
+                    component={BusinessPreorder}
                     options={{ headerShown: false }}
                   />
                 </>

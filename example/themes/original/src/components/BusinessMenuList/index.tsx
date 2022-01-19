@@ -81,6 +81,7 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
             <IconAntDesign
               name='close'
               color={theme.colors.textThird}
+              style={{ marginLeft: 7 }}
               size={24}
             />
           </TouchableOpacity>

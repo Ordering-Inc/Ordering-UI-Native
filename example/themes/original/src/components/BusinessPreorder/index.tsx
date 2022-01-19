@@ -270,6 +270,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             name='close'
             color={theme.colors.textThird}
             size={24}
+            style={{ marginLeft: -4}}
           />
         </TouchableOpacity>
         <BusinessInfoWrapper>
@@ -415,6 +416,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
               name='close'
               color={theme.colors.textThird}
               size={24}
+              style={{ marginLeft: 7 }}
             />
           </TouchableOpacity>
           {preorderTypeList?.map((option: any, index: number) => (
