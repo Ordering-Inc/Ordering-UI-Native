@@ -170,7 +170,7 @@ export interface BusinessProductsListingParams {
   getNextProducts?: () => {};
 	handleChangeCategory: (value: any) => {};
 	setProductLogin?: () => {};
-	updateProductModal?: (value: any) => {}
+	updateProductModal?: (value: any) => {};
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -193,6 +193,8 @@ export interface BusinessProductsCategoriesParams {
 	categoriesLayout?: any;
 	selectedCategoryId?: any;
 	lazyLoadProductsRecommended?: any;
+  setSelectedCategoryId?: any
+  setCategoryClicked?: any
 }
 export interface BusinessProductsListParams {
 	errors?: any;
