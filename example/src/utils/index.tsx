@@ -1,6 +1,7 @@
 import React from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {CODES} from 'ordering-components/native'
+import { useLanguage } from 'ordering-components/native'
 
 export const flatArray = (arr: any) => [].concat(...arr)
 
@@ -42,10 +43,11 @@ export const getTraduction = (key: string, t: any) => {
  * @param {string} time business delivery time
  */
 export const convertHoursToMinutes = (time: any) => {
+  const [, t] = useLanguage()
   if (!time) return '0min'
   const [hour, minute] = time.split(':')
   const result = (parseInt(hour, 10) * 60) + parseInt(minute, 10)
-  return `${result}min`
+  return `${result}${t('MIN', 'min')}`
 }
 
 export const getIconCard = (brand: string, size: number) => {
