@@ -161,7 +161,7 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
 
         <OText numberOfLines={2} size={20} weight="600">
           <>
-            {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order.id} `}
+            {`${t('INVOICE_ORDER_NO', 'Order No.')} ${order?.id} `}
             {!order?.isLogistic && (!order?.order_group_id || !logisticOrderStatus?.includes(order?.status)) && (
               <>
                 {t('IS', 'is')}{' '}
