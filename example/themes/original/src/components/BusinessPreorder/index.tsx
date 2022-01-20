@@ -123,6 +123,17 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
       color: '#B1BCCC',
       fontSize: 14,
       fontWeight: '500'
+    },
+    wrapperIcon: {
+      overflow: 'hidden',
+      backgroundColor: 'transparent',
+      marginBottom: 12,
+      width: 25,
+      height: 25,
+      marginStart: 7,
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 99999
     }
 	})
 
@@ -264,7 +275,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
 
   return (
     <>
-      <PreOrderContainer>
+      <PreOrderContainer contentContainerStyle={{ paddingVertical: 30, paddingHorizontal: 40 }}>
         <TouchableOpacity onPress={() => goToBack && goToBack()} style={{ marginBottom: 12 }}>
           <IconAntDesign
             name='close'
@@ -351,7 +362,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             {t('ORDER_TIME', 'Order time')}
           </OText>
           <View style={{ flex: 1 }}>
-            {selectDate && datesWhitelist[0].start !== null && (
+            {selectDate && datesWhitelist[0]?.start !== null && (
               <CalendarStrip
                 scrollable
                 style={styles.calendar}
@@ -399,7 +410,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
         <OButton
           text={t('GO_TO_MENU', 'Go to menu')}
           textStyle={{color: 'white'}}
-          style={{borderRadius: 7.6, marginBottom: 50, marginTop: 30}}
+          style={{borderRadius: 7.6, marginBottom: 20, marginTop: 30}}
           onClick={() => handleClickBusiness()}
         />
       </PreOrderContainer>
@@ -410,19 +421,19 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
         customClose
         entireModal
       >
-        <PreorderTypeListWrapper>
-          <TouchableOpacity onPress={() => setIsPreorderTypeList(false)} style={{ marginBottom: 12 }}>
+        <PreorderTypeListWrapper contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 40}}>
+          <TouchableOpacity onPress={() => setIsPreorderTypeList(false)} style={styles.wrapperIcon}>
             <IconAntDesign
               name='close'
               color={theme.colors.textThird}
               size={24}
-              style={{ marginLeft: 7 }}
             />
           </TouchableOpacity>
           {preorderTypeList?.map((option: any, index: number) => (
             <TouchableOpacity
               key={index}
               onPress={() => handleClickPreorderType(option)}
+              style={{ zIndex: 99999 }}
             >
               <DropOption
                 numberOfLines={1}

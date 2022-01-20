@@ -116,6 +116,11 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
               </DropOption>
             </TouchableOpacity>
           ))}
+          {businessMenuList?.menus && businessMenuList?.menus.length === 0 && (
+            <View>
+              <OText>{t('NO_RESULTS_FOUND', 'Sorry, no results found')}</OText>
+            </View>
+          )}
         </MenuListWrapper>
       </OModal>
     </>
