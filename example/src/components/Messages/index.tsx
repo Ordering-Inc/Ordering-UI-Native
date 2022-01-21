@@ -209,11 +209,11 @@ const MessagesUI = (props: MessagesParams) => {
     <InputToolbar
       {...props}
       containerStyle={{
-        padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
-        flexDirection: 'column-reverse'
+        marginBottom: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
+        flexDirection: Platform.OS === 'ios' && isKeyboardShow ? 'column' : 'column-reverse'
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}
-      renderAccessory={() => renderAccessory()}
+      renderAccessory={() => !isKeyboardShow && renderAccessory()}
     />
   )
 
