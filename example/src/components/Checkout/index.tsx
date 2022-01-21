@@ -183,7 +183,7 @@ const CheckoutUI = (props: any) => {
   }
 
   const onMessage = (e: any) => {
-    if (e?.nativeEvent?.data) {
+    if (e?.nativeEvent?.data && e?.nativeEvent?.data !== 'undefined') {
       let payment = JSON.parse(e.nativeEvent.data);
 
       if (payment === 'api error') {
