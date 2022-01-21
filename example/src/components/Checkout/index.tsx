@@ -631,7 +631,7 @@ const CheckoutUI = (props: any) => {
                 }
               }
               setProg(false);
-              webviewRef?.current?.postMessage(JSON.stringify(message))
+              webviewRef?.current?.postMessage?.(JSON.stringify(message))
             }}
           />
         </View>
@@ -699,7 +699,7 @@ const CheckoutUI = (props: any) => {
                 }
               }
               setProg(false);
-              webviewRefSquare.current.postMessage(JSON.stringify(message))
+              webviewRefSquare?.current?.postMessage?.(JSON.stringify(message))
             }}
           />
         </View>
