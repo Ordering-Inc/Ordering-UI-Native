@@ -81,6 +81,7 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
             <IconAntDesign
               name='close'
               color={theme.colors.textThird}
+              style={{ marginLeft: 7 }}
               size={24}
             />
           </TouchableOpacity>
@@ -115,6 +116,11 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
               </DropOption>
             </TouchableOpacity>
           ))}
+          {businessMenuList?.menus && businessMenuList?.menus.length === 0 && (
+            <View>
+              <OText>{t('NO_RESULTS_FOUND', 'Sorry, no results found')}</OText>
+            </View>
+          )}
         </MenuListWrapper>
       </OModal>
     </>
