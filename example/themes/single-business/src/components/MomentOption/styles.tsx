@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components/native'
+import styled from 'styled-components/native'
 
 export const Container = styled.ScrollView`
   flex: 1;
@@ -16,23 +16,22 @@ export const WrapSelectOption = styled.TouchableOpacity`
   margin-vertical: 5px;
 `
 export const Days = styled.View`
-  flex-wrap: wrap;
+  display: flex;
   flex-direction: row;
-  margin-vertical: 10px;
+  width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
 `
 export const Day = styled.TouchableOpacity`
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  border-right-width: 1px;
-  width: 25%;
-  margin-vertical: 10px;
-  border-color: ${(props: any) => props.theme.colors.textSecondary};
-
-  ${(props: any) => props.borderLeftShow && css`
-    border-left-width: 1px;
-  `}
+  align-items: center;
+  padding-top: 10px;
+  border: 1px solid ${(props: any) => props.theme.colors.border};
+  text-transform: capitalize;
+  min-height: 60px;
+  min-width: 60px;
+  border-radius: 8px;
 `
 export const WrapHours = styled.ScrollView`
   border-width: 1px;

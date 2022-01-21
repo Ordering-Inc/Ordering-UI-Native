@@ -157,6 +157,7 @@ export interface BusinessProductsListingParams {
 	categoryState: any;
 	searchValue?: string;
 	featuredProducts: boolean;
+	isSingleBusiness: boolean;
 	handleChangeSearch?: any;
 	categorySelected: any;
 	handleSearchRedirect: any;
@@ -210,6 +211,7 @@ export interface BusinessProductsListParams {
 	handleCancelSearch?: () => void
 	categoriesLayout?: any
 	setCategoriesLayout?: any
+	isSingleBusiness?: boolean
 }
 export interface SingleProductCardParams {
 	businessId: any,
@@ -227,6 +229,7 @@ export interface BusinessInformationParams {
 export interface BusinessReviewsParams {
 	businessState: { business: any, loading: boolean, error: null };
 	reviewsList: { reviews: any, loading: boolean, error: null };
+  handleChangeSearch?: any;
 }
 export interface SearchBarParams {
 	searchValue?: any;

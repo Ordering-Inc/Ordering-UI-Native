@@ -602,50 +602,52 @@ export const ProductOptionsUI = (props: any) => {
       </ScrollView>
       {!loading && !error && product && (
         <ProductActions>
-          <OText size={16} lineHeight={24} weight={'600'}>
-            {productCart.total ? parsePrice(productCart?.total) : ''}
-          </OText>
           {productCart && !isSoldOut && maxProductQuantity > 0 && (
-            <View style={styles.quantityControl}>
-              <TouchableOpacity
-                onPress={decrement}
-                disabled={productCart.quantity === 1 || isSoldOut}>
-                <OIcon
-                  src={theme.images.general.minus}
-                  width={16}
-                  color={
-                    productCart.quantity === 1 || isSoldOut
-                      ? theme.colors.backgroundGray
-                      : theme.colors.backgroundDark
-                  }
-                />
-              </TouchableOpacity>
-              <OText
-                size={12}
-                lineHeight={18}
-                style={{ minWidth: 29, textAlign: 'center' }}>
-                {productCart.quantity}
+            <>
+              <OText size={16} lineHeight={24} weight={'600'}>
+                {productCart.total ? parsePrice(productCart?.total) : ''}
               </OText>
-              <TouchableOpacity
-                onPress={increment}
-                disabled={
-                  maxProductQuantity <= 0 ||
-                  productCart.quantity >= maxProductQuantity ||
-                  isSoldOut
-                }>
-                <OIcon
-                  src={theme.images.general.plus}
-                  width={16}
-                  color={
+              <View style={styles.quantityControl}>
+                <TouchableOpacity
+                  onPress={decrement}
+                  disabled={productCart.quantity === 1 || isSoldOut}>
+                  <OIcon
+                    src={theme.images.general.minus}
+                    width={16}
+                    color={
+                      productCart.quantity === 1 || isSoldOut
+                        ? theme.colors.backgroundGray
+                        : theme.colors.backgroundDark
+                    }
+                  />
+                </TouchableOpacity>
+                <OText
+                  size={12}
+                  lineHeight={18}
+                  style={{ minWidth: 29, textAlign: 'center' }}>
+                  {productCart.quantity}
+                </OText>
+                <TouchableOpacity
+                  onPress={increment}
+                  disabled={
                     maxProductQuantity <= 0 ||
-                      productCart.quantity >= maxProductQuantity ||
-                      isSoldOut
-                      ? theme.colors.backgroundGray
-                      : theme.colors.backgroundDark
-                  }
-                />
-              </TouchableOpacity>
-            </View>
+                    productCart.quantity >= maxProductQuantity ||
+                    isSoldOut
+                  }>
+                  <OIcon
+                    src={theme.images.general.plus}
+                    width={16}
+                    color={
+                      maxProductQuantity <= 0 ||
+                        productCart.quantity >= maxProductQuantity ||
+                        isSoldOut
+                        ? theme.colors.backgroundGray
+                        : theme.colors.backgroundDark
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
+            </>
           )}
           <View
             style={{
@@ -690,22 +692,37 @@ export const ProductOptionsUI = (props: any) => {
               ) : (
                 <OButton onClick={navigation.navigate('AddressList')} />
               ))}
-            {(!auth || isSoldOut || maxProductQuantity <= 0) && (
-              <OButton
-                isDisabled={isSoldOut || maxProductQuantity <= 0}
-                onClick={() => handleRedirectLogin()}
-                text={
-                  isSoldOut || maxProductQuantity <= 0
-                    ? t('SOLD_OUT', 'Sold out')
-                    : t('LOGIN_SIGNUP', 'Login / Sign Up')
-                }
-                imgRightSrc=""
-                textStyle={{ color: theme.colors.primary }}
-                style={{
-                  borderColor: theme.colors.primary,
-                  backgroundColor: theme.colors.white,
-                }}
-              />
+            {(isSoldOut || maxProductQuantity <= 0) ? (
+              <View style={{
+                width: '100%',
+                borderWidth: 1,
+                borderColor: theme.colors.primary,
+                borderRadius: 8,
+                paddingVertical: 5
+              }}>
+                <OText
+                  size={18}
+                  color={theme.colors.primary}
+                  style={{textAlign: 'center'}}
+                  >
+                  {t('SOLD_OUT', 'Sold out')}
+                </OText>
+              </View>
+            ) : (
+              <>
+                {!auth && (
+                  <OButton
+                    onClick={() => handleRedirectLogin()}
+                    text={t('LOGIN_SIGNUP', 'Login / Sign Up')}
+                    imgRightSrc=""
+                    textStyle={{ color: theme.colors.primary }}
+                    style={{
+                      borderColor: theme.colors.primary,
+                      backgroundColor: theme.colors.white,
+                    }}
+                  />
+                )}
+              </>
             )}
           </View>
         </ProductActions>
