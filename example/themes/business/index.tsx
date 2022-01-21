@@ -36,6 +36,7 @@ import { UserProfileForm } from './src/components/UserProfileForm';
 import { VerifyPhone } from './src/components/VerifyPhone';
 import { DriverMap } from './src/components/DriverMap';
 import { MapViewUI as MapView } from './src/components/MapView'
+import { NewOrderNotification } from './src/components/NewOrderNotification';
 //OComponents
 import {
   OText,
@@ -74,8 +75,9 @@ export {
   LoginForm,
   LogoutButton,
   MessagesOption,
-  NotFoundSource,
   MapView,
+  NewOrderNotification,
+  NotFoundSource,
   OrderDetailsBusiness,
   OrderDetailsDelivery,
   OrderMessage,

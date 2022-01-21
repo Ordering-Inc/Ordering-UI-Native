@@ -1,8 +1,6 @@
 import styled, { css } from 'styled-components/native'
 
-export const PreOrderContainer = styled.ScrollView`
-  padding: 20px 40px 30px 40px;
-`
+export const PreOrderContainer = styled.ScrollView``
 
 export const BusinessInfoWrapper = styled.View`
   flex-direction: row;
@@ -45,9 +43,7 @@ export const TimeItem = styled.View`
   `}
 `
 
-export const PreorderTypeListWrapper = styled.ScrollView`
-  padding: 20px 40px 30px 40px;
-`
+export const PreorderTypeListWrapper = styled.ScrollView``
 
 export const DropOption = styled.View`
   padding: 10px;
