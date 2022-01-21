@@ -667,6 +667,7 @@ const CheckoutUI = (props: any) => {
             cacheEnabled={false}
             cacheMode='LOAD_NO_CACHE'
             style={{ flex: 1 }}
+            onShouldStartLoadWithRequest={() => true}
             onLoadStart={() => {
               setProg(true);
               setProgClr('#424242');
