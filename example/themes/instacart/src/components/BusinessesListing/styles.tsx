@@ -25,7 +25,6 @@ export const AddressInput = styled.TouchableOpacity`
   border-radius: 3px;
   align-items: center;
   padding-vertical: 4px;
-  margin-bottom: 10px;
   flex: 1;
   width: 100%;
   z-index: -10;
@@ -49,4 +48,15 @@ export const WrapMomentOption = styled.TouchableOpacity`
   align-items: center;
   margin-start: 15px;
   min-height: 28px;
+`
+
+export const FarAwayMessage = styled.View`
+  flex-direction: row;
+  align-items: center;
+	background-color: ${(props: any) => props.theme.colors.warning1};
+  margin-top: 0px;
+  margin-left: 0px;
+  border-radius: 7.6px;
+  border: 1px solid ${(props: any) => props.theme.colors.warning5};
+  width: 100%;
 `
