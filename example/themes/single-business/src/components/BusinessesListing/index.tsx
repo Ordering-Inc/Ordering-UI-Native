@@ -169,7 +169,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       showsVerticalScrollIndicator={false}
     >
       <HeaderWrapper
-        source={theme.images.general.homeHero}
+        source={theme.images.backgrounds.business_list_header}
       >
         {!auth && (
           <TopHeader style={{ top: top }}>
