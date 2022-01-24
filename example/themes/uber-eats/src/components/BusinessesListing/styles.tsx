@@ -52,3 +52,11 @@ export const WrapMomentOption = styled.TouchableOpacity`
   margin-horizontal: 10px;
   max-width: 240px;
 `
+
+export const FarAwayMessage = styled.View`
+  flex-direction: row;
+  align-items: center;
+	background-color: ${(props: any) => props.theme.colors.warning1};
+  border-radius: 7.6px;
+  border: 1px solid ${(props: any) => props.theme.colors.warning5};
+`
