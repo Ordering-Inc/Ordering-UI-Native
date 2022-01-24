@@ -17,3 +17,11 @@ export const Header = styled.View`
 export const TitleHeader = styled.View``
 
 export const QuickMessageContainer = styled.ScrollView``
+
+export const ProfileMessageHeader = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0px;
+  padding-horizontal: 20px;
+`

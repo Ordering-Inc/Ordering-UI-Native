@@ -42,6 +42,16 @@ export const Price = styled.View`
   margin-left: 10px;
   width: 30%;
 `
+
+export const UnreadMessageCounter = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 7.6px;
+  background-color: ${(props: any) => props.theme.colors.primaryContrast};
+`
 export const LoadMore = styled.View`
   flex-direction: row;
   justify-content: center;
