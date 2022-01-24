@@ -259,7 +259,10 @@ export const ProductOptionsUI = (props: any) => {
   }, []);
 
   return (
-    <>
+    <KeyboardAvoidingView
+      enabled
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       <ScrollView ref={scrollViewRef}>
         {!error && (
           <>
@@ -710,7 +713,7 @@ export const ProductOptionsUI = (props: any) => {
           </View>
         </ProductActions>
       )}
-    </>
+    </KeyboardAvoidingView>
   );
 };
 
