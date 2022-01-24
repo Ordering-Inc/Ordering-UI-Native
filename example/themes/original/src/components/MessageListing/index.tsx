@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-components/native'
-import { OrderDetails as OrderDetailsConTableoller } from './naked'
+import { useLanguage, useOrder, ToastType, useToast, OrderList, OrderDetails as OrderDetailsConTableoller } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { useFocusEffect } from '@react-navigation/native'
 import { OText, OModal } from '../shared'
