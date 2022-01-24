@@ -10,6 +10,7 @@ import {
 	OrderInformation,
 	BusinessInformation,
 	Price,
+	UnreadMessageCounter,
 	LoadMore
 } from './styles';
 import { View, StyleSheet } from 'react-native';
@@ -26,6 +27,8 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 		pagination,
 		loadMoreOrders,
 		getOrderStatus,
+		isMessageView,
+		handleClickOrder
 	} = props;
 
 	const theme = useTheme();
@@ -38,6 +41,10 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 	};
 
 	const handleClickCard = (uuid: string) => {
+		if (isMessageView ) {
+			handleClickOrder(uuid)
+			return
+		}
 		onNavigationRedirect &&
 			onNavigationRedirect('OrderDetails', { orderId: uuid });
 	};
@@ -49,15 +56,15 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 				onPress={() => handleClickCard(order?.uuid)}
 				activeOpacity={0.7}>
 				{/* {!!(configs?.google_maps_api_key?.value) && (
-          <Map>
-            <OIcon
-              url={getGoogleMapImage(order?.business?.location, configs?.google_maps_api_key?.value)}
-              height={100}
-              width={320}
-              style={{resizeMode: 'cover', borderTopRightRadius: 24, borderTopLeftRadius: 24}}
-            />
-          </Map>
-        )} */}
+					<Map>
+						<OIcon
+						url={getGoogleMapImage(order?.business?.location, configs?.google_maps_api_key?.value)}
+						height={100}
+						width={320}
+						style={{resizeMode: 'cover', borderTopRightRadius: 24, borderTopLeftRadius: 24}}
+						/>
+					</Map>
+				)} */}
 				<Information>
 					{!!order.business?.logo && (
 						<Logo>
@@ -96,15 +103,28 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 							</OText>
 							{/* )} */}
 						</BusinessInformation>
-						<Price>
-							<OText size={12} lineHeight={18}>
-								{parsePrice(order?.summary?.total || order?.total)}
-							</OText>
-						</Price>
+						{isMessageView ? (
+							<>
+								{order?.unread_count > 0 && (
+									<UnreadMessageCounter>
+										<OText size={12} color={theme.colors.primary} lineHeight={18} >
+											{order?.unread_count}
+										</OText>
+									</UnreadMessageCounter>
+								)}
+							</>
+						) : (
+							<Price>
+								<OText size={12} lineHeight={18}>
+									{parsePrice(order?.summary?.total || order?.total)}
+								</OText>
+							</Price>
+						)}
+
 					</OrderInformation>
 				</Information>
-			</Card>
-		</React.Fragment>
+			</Card >
+		</React.Fragment >
 	);
 
 	return (
