@@ -70,6 +70,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			borderRadius: 7.6,
 			borderColor: theme.colors.border,
 			borderWidth: 1,
+      padding: 17,
 			marginBottom: 23,
 		},
 		timeLabel: {
@@ -201,7 +202,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 								<View style={styles.dateLabel}>
 									<OText size={12} color={theme.colors.disabled}>{dateSelected}</OText>
 								</View>
-                <Days>
+								<Days>
                   {datesList.slice(0, 6).map((date: any, i: any) => {
                     const dateParts = date.split('-')
                     const _date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
