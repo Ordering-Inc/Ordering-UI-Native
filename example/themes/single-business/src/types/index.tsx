@@ -229,7 +229,7 @@ export interface BusinessInformationParams {
 export interface BusinessReviewsParams {
 	businessState: { business: any, loading: boolean, error: null };
 	reviewsList: { reviews: any, loading: boolean, error: null };
-	handleChangeSearch: any;
+  handleChangeSearch?: any;
 }
 export interface SearchBarParams {
 	searchValue?: any;
