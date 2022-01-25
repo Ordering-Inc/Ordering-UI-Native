@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	OrderTypeControl,
 	useLanguage,
@@ -25,13 +25,14 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	const theme = useTheme();
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
+  const [isTypeChanging, setTypeChanging] = useState(false);
 	const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value));
 	
 	const items = _orderTypes.map((type) => {
 		return {
 			value: type.value,
-			label: t(type.content, type.content),
-			description: t(type.description, 'Lorem ipsum dolor sit amet, consectetur.')
+			label: type.content,
+			description: type.description
 		}
 	})
 
@@ -40,8 +41,15 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	const handleChangeOrderTypeCallback = (orderType: number) => {
 		if (!orderState.loading) {
 			handleChangeOrderType(orderType)
+      setTypeChanging(true)
 		}
 	}
+
+  useEffect(() => {
+    if (isTypeChanging && !orderState.loading) {
+      typeSelected === orderState?.options?.type && goToBack()
+    }
+  }, [orderState, typeSelected]);
 
 	return (
 		<Wrapper>
@@ -81,11 +89,37 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 }
 
 export const OrderTypeSelector = (props: any) => {
-
+  const [, t] = useLanguage()
 	const orderTypeProps = {
 		...props,
 		UIComponent: OrderTypeSelectorUI,
-		orderTypes: props.orderType || ORDER_TYPES
+		orderTypes: props.orderTypes || [
+      {
+        value: 1,
+        content: t('DELIVERY', 'Delivery'),
+        description: t('ORDERTYPE_DESCRIPTION_DELIVERY', 'Lorem ipsum dolor sit amet, consectetur.')
+      },
+      {
+        value: 2,
+        content: t('PICKUP', 'Pickup'),
+        description: t('ORDERTYPE_DESCRIPTION_PICKUP', 'Lorem ipsum dolor sit amet, consectetur.')
+      },
+      {
+        value: 3,
+        content: t('EAT_IN', 'Eat in'),
+        description: t('ORDERTYPE_DESCRIPTION_EATIN', 'Lorem ipsum dolor sit amet, consectetur.')
+      },
+      {
+        value: 4,
+        content: t('CURBSIDE', 'Curbside'),
+        description: t('ORDERTYPE_DESCRIPTION_CURBSIDE', 'Lorem ipsum dolor sit amet, consectetur.')
+      },
+      {
+        value: 5,
+        content: t('DRIVE_THRU', 'Drive thru'),
+        description: t('ORDERTYPE_DESCRIPTION_DRIVETHRU', 'Lorem ipsum dolor sit amet, consectetur.')
+      }
+    ]
 	}
 
 	return <OrderTypeControl {...orderTypeProps} />

@@ -244,6 +244,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 									{ id: 'featured', name: t('FEATURED', 'Featured') },
 									...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
 								]}
+                isSingleBusiness={props.isSingleBusiness}
 								category={categorySelected}
 								categoryState={categoryState}
 								businessId={business.id}

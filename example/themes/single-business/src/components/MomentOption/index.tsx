@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import moment, { Moment } from 'moment';
+import React, { useState, useEffect } from 'react';
+import moment from 'moment';
 import {
 	useLanguage,
 	useConfig,
@@ -9,19 +9,17 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
-	ImageStore,
+	TouchableOpacity,
 	StyleSheet,
 	useWindowDimensions,
 	View,
 } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { MomentOptionParams } from '../../types';
 import NavBar from '../NavBar';
 import { OIcon, OText } from '../shared';
 import { Container } from '../../layouts/Container';
 import {
-	HeaderTitle,
 	WrapSelectOption,
 	Days,
 	Day,
@@ -30,7 +28,6 @@ import {
 	Hour,
 	WrapDelveryTime,
 } from './styles';
-import CalendarPicker from 'react-native-calendar-picker';
 import { TouchableRipple } from 'react-native-paper';
 
 const MomentOptionUI = (props: MomentOptionParams) => {
@@ -65,6 +62,8 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			paddingHorizontal: 12,
 			paddingVertical: 9,
 			marginBottom: 12,
+      marginHorizontal: 10,
+      marginTop: 10
 		},
 		dateWrap: {
 			marginTop: 40,
@@ -89,6 +88,9 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 	const [{ configs }] = useConfig();
 	const [{ parseTime }] = useUtils();
 	const [orderState] = useOrder();
+  const { width } = useWindowDimensions();
+
+  const [toggleTime, setToggleTime] = useState(false);
 	const [optionSelected, setOptionSelected] = useState({
 		isAsap: false,
 		isSchedule: false,
@@ -97,9 +99,9 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		isLoading: 0,
 		isEditing: false,
 	});
-	const { width } = useWindowDimensions();
-
-	const [toggleTime, setToggleTime] = useState(false);
+	const momento = moment(`${dateSelected} ${timeSelected}`, 'YYYY-MM-DD HH:mm').toDate();
+	const momentUnix = momento.getTime() / 1000;
+	const momentFormat = moment.unix(momentUnix).utc().format('YYYY-MM-DD HH:mm:ss');
 
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
@@ -116,29 +118,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		setMomentState({ isLoading: 1, isEditing: true });
 		handleChangeTime(time);
 	};
-
-	const momento = moment(
-		`${dateSelected} ${timeSelected}`,
-		'YYYY-MM-DD HH:mm',
-	).toDate();
-	const momentUnix = momento.getTime() / 1000;
-	const momentFormat = moment
-		.unix(momentUnix)
-		.utc()
-		.format('YYYY-MM-DD HH:mm:ss');
-
-	const getTwoChar = (ori: string) => {
-		return ori.substring(0, 2);
-	};
-	const weekDays = [
-		getTwoChar(t('SUNDAY_ABBREVIATION', 'Su')),
-		getTwoChar(t('MONDAY_ABBREVIATION', 'Mo')),
-		getTwoChar(t('TUESDAY_ABBREVIATION', 'Tu')),
-		getTwoChar(t('WEDNESDAY_ABBREVIATION', 'We')),
-		getTwoChar(t('THURSDAY_ABBREVIATION', 'Th')),
-		getTwoChar(t('FRIDAY_ABBREVIATION', 'Fr')),
-		getTwoChar(t('SATURDAY_ABBREVIATION', 'Sa')),
-	];
 
 	useEffect(() => {
 		if (orderState.options?.moment) {
@@ -160,15 +139,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			goToBack();
 		}
 	}, [momentState.isLoading]);
-
-	const customDayHeaderStylesCallback = () => {
-		return {
-			textStyle: {
-				color: theme.colors.disabled,
-				fontSize: 12,
-			},
-		};
-	};
 
 	return (
 		<Container style={{ paddingLeft: 40, paddingRight: 40 }}>
@@ -200,7 +170,11 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 							style={{ marginEnd: 24 }}
 						/>
 					)}
-					<OText color={optionSelected.isAsap ? theme.colors.textNormal : theme.colors.disabled}>{t('ASAP_ABBREVIATION', 'ASAP') + ` (${moment().format('dddd, MMM d, yyyy h:mm A')} + delivery time)`}</OText>
+					<OText
+            color={optionSelected.isAsap ? theme.colors.textNormal : theme.colors.disabled}
+          >
+            {t('ASAP_ABBREVIATION', 'ASAP') + ` (${moment().format('dddd, MMM D, yyyy h:mm A')} + delivery time)`}
+          </OText>
 				</WrapSelectOption>
 				<WrapSelectOption
 					onPress={() => setOptionSelected({ isAsap: false, isSchedule: true })}
@@ -228,36 +202,31 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 								<View style={styles.dateLabel}>
 									<OText size={12} color={theme.colors.disabled}>{dateSelected}</OText>
 								</View>
-								<CalendarPicker
-									nextTitle=">"
-									width={width - 80}
-									previousTitle="<"
-									nextComponent={
-										<OIcon
-											src={theme.images.general.chevron_right}
-											color={theme.colors.disabled}
-											width={12}
-											style={{ marginHorizontal: 4 }}
-										/>
-									}
-									previousComponent={
-										<OIcon
-											src={theme.images.general.chevron_left}
-											color={theme.colors.disabled}
-											width={12}
-											style={{ marginHorizontal: 4 }}
-										/>
-									}
-									onDateChange={(date: moment.Moment) =>
-										handleChangeDate(date.format('YYYY-MM-DD'))
-									}
-									selectedDayColor={theme.colors.primaryContrast}
-									todayBackgroundColor={theme.colors.border}
-									dayLabelsWrapper={{ borderColor: theme.colors.clear }}
-									customDayHeaderStyles={customDayHeaderStylesCallback}
-									weekdays={weekDays}
-									selectedStartDate={momento}
-								/>
+								<Days>
+                  {datesList.slice(0, 6).map((date: any, i: any) => {
+                    const dateParts = date.split('-')
+                    const _date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
+                    const dayName = t('DAY' + (_date.getDay() >= 1 ? _date.getDay() : 7)).substring(0, 3).toUpperCase()
+                    const dayNumber = (_date.getDate() < 10 ? '0' : '') + _date.getDate()
+                    return (
+                      <TouchableOpacity
+                        key={dayNumber}
+                        style={{ paddingHorizontal: 10, paddingBottom: 10, paddingTop: 10, borderColor: 'transparent', borderWidth: 1 }}
+                      >
+                        <Day onPress={() => handleChangeDate(date)} style={{ width: (width * 0.25) - 108 }}>
+                          <OText
+                            style={styles.dayNameStyle}
+                            color={(dateSelected === date && optionSelected.isSchedule) ? theme.colors.primary : theme.colors.textSecondary}
+                          >{dayName}</OText>
+                          <OText
+                            size={20}
+                            color={(dateSelected === date && optionSelected.isSchedule) ? theme.colors.primary : theme.colors.textSecondary}
+                          >{dayNumber}</OText>
+                        </Day>
+                      </TouchableOpacity>
+                    )
+                  })}
+                </Days>
 							</View>
 						)}
 
