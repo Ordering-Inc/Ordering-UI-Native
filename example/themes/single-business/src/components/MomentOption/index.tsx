@@ -70,7 +70,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			borderRadius: 7.6,
 			borderColor: theme.colors.border,
 			borderWidth: 1,
-      padding: 17,
+			padding: 17,
 			marginBottom: 23,
 		},
 		timeLabel: {
