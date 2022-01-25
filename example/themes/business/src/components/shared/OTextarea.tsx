@@ -8,6 +8,7 @@ const Wrapper = styled.View`
 `;
 const Inner = styled.TextInput`
   height: 100px;
+  padding: 5px 10px 5px 10px;
 `;
 
 interface Props {

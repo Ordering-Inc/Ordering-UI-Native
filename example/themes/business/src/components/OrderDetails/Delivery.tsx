@@ -51,7 +51,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     orderTitle,
     appTitle,
     handleClickLogisticOrder,
-
+    forceUpdate
   } = props;
   const [, { showToast }] = useToast();
   const { order } = props.order
@@ -213,6 +213,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         : setUnreadAlert({ ...unreadAlert, driver: false });
     }
   }, [messagesReadList]);
+
+  useEffect(() => {
+    forceUpdate && handleViewActionOrder && handleViewActionOrder(forceUpdate === 9 ? 'forcePickUp': 'forceDelivery')
+  },[forceUpdate])
 
   const styles = StyleSheet.create({
     btnPickUp: {
