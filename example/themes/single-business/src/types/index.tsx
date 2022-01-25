@@ -157,11 +157,11 @@ export interface BusinessProductsListingParams {
 	categoryState: any;
 	searchValue?: string;
 	featuredProducts: boolean;
-	isSingleBusiness: boolean;
 	handleChangeSearch?: any;
 	categorySelected: any;
 	handleSearchRedirect: any;
 	errorQuantityProducts?: boolean;
+	isSingleBusiness: boolean;
 	isFranchiseApp?: boolean;
 	header?: any;
 	logo?: any;
