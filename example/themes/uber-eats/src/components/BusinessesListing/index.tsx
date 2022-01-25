@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { View, StyleSheet, ScrollView, Platform, PanResponder, I18nManager } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import Geolocation from '@react-native-community/geolocation'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+
 import {
   BusinessList as BusinessesListingController,
   useLanguage,
@@ -13,7 +16,7 @@ import {
   useToast
 } from 'ordering-components/native'
 
-import { BusinessListContainer, Divider, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
+import { BusinessListContainer, Divider, Search, OrderControlContainer, AddressInput, WrapMomentOption, FarAwayMessage } from './styles'
 
 import NavBar from '../NavBar'
 import { SearchBar } from '../SearchBar'
@@ -27,6 +30,7 @@ import { OrderTypeSelector } from '../OrderTypeSelector'
 import { MomentOption } from '../MomentOption'
 import { HighestRatedBusinesses } from '../HighestRatedBusinesses'
 import { useTheme } from 'styled-components/native'
+import { getDistance } from '../../utils'
 
 const PIXELS_TO_SCROLL = 1200
 
@@ -61,7 +65,16 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       borderColor: theme.colors.backgroundGray,
       borderWidth: 1,
       borderRadius: 10,
-    }
+    },
+    iconStyle: {
+			fontSize: 18,
+			color: theme.colors.warning5,
+			marginRight: 8
+		},
+		farAwayMsg: {
+			paddingVertical: 6,
+			paddingHorizontal: 20
+		}
   })
 
   const [, t] = useLanguage()
@@ -73,6 +86,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
   const [openMomentOption, setOpenMomentOption] = useState(false)
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
+  const [isFarAway, setIsFarAway] = useState(false)
 
   const handleScroll = ({ nativeEvent }: any) => {
     const y = nativeEvent.contentOffset.y
@@ -84,6 +98,19 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
       showToast(ToastType.Info, 'loading more business')
     }
   }
+
+  useEffect(() => {
+		Geolocation.getCurrentPosition((pos) => {
+      const crd = pos.coords
+      const distance = getDistance(crd.latitude, crd.longitude, orderState?.options?.address?.location?.lat, orderState?.options?.address?.location?.lng)
+      if (distance > 20) setIsFarAway(true)
+			else setIsFarAway(false)
+    }, (err) => {
+      console.log(`ERROR(${err.code}): ${err.message}`)
+    }, {
+      enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
+    })
+  }, [orderState?.options?.address?.location])
 
   return (
     <BusinessListContainer>
@@ -114,6 +141,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
             style={{ marginRight: 10 }}
           />
         </AddressInput>
+        {isFarAway && (
+					<FarAwayMessage style={styles.farAwayMsg}>
+						<Ionicons name='md-warning-outline' style={styles.iconStyle} />
+						<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textNormal}>{t('YOU_ARE_FAR_FROM_ADDRESS', 'Your are far from this address')}</OText>
+					</FarAwayMessage>
+				)}
         <View style={styles.wrapperOrderOptions}>
           <OrderTypeSelector configTypes={configTypes} />
           <WrapMomentOption

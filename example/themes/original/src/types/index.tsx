@@ -261,7 +261,9 @@ export interface OrdersOptionParams {
 	setOrderList?: any,
 	preOrders?: boolean,
 	setOrdersLength?: ({ activeOrdersLength, previousOrdersLength }: { activeOrdersLength: number, previousOrdersLength: number }) => void,
-	ordersLength: { activeOrdersLength: number, previousOrdersLength: number }
+	ordersLength: { activeOrdersLength: number, previousOrdersLength: number },
+	setSelectedOrderId?: any,
+	setOpenMessges?: any
 }
 export interface ActiveOrdersParams {
 	orders?: any,
@@ -272,7 +274,9 @@ export interface ActiveOrdersParams {
 	setScreen?: any,
 	screen?: any,
 	loadMoreOrders?: () => {},
-	onNavigationRedirect?: (route: string, params?: any) => {}
+	onNavigationRedirect?: (route: string, params?: any) => {},
+	isMessageView?: boolean,
+	handleClickOrder?: any
 }
 export interface PreviousOrdersParams {
 	orders?: any,
@@ -334,6 +338,7 @@ export interface MessagesParams {
 	setMessages?: () => {},
 	readMessages?: () => {},
 	onClose?: () => void,
+	isMeesageListing?: boolean
 }
 export interface ViewInterface {
 	navigation?: any;
@@ -460,3 +465,6 @@ export interface HelpAccountAndPaymentParams {
 	navigation: any;
 }
   
+export interface MessageListingParams {
+	navigation: any;
+}

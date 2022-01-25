@@ -20,6 +20,7 @@ import { BusinessMenuList } from './src/components/BusinessMenuList';
 import { UserProfileForm } from './src/components/UserProfileForm';
 import { ReviewOrder } from './src/components/ReviewOrder';
 import { UserProfile } from './src/components/UserProfile';
+import { MessageListing } from './src/components/MessageListing';
 import { Help } from './src/components/Help';
 import { HelpAccountAndPayment } from './src/components/HelpAccountAndPayment';
 import { HelpGuide } from './src/components/HelpGuide';
@@ -76,6 +77,7 @@ export {
 	ReviewOrder,
 	BusinessMenuList,
 	UserProfile,
+	MessageListing,
 	Help,
 	HelpAccountAndPayment,
 	HelpGuide,

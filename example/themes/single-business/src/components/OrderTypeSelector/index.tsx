@@ -90,7 +90,6 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 
 export const OrderTypeSelector = (props: any) => {
   const [, t] = useLanguage()
-
 	const orderTypeProps = {
 		...props,
 		UIComponent: OrderTypeSelectorUI,

@@ -208,10 +208,10 @@ export interface BusinessProductsListParams {
 	handleClearSearch?: (value: any) => {};
 	isBusinessLoading?: any,
 	errorQuantityProducts?: boolean,
+	isSingleBusiness?: boolean,
 	handleCancelSearch?: () => void
 	categoriesLayout?: any
 	setCategoriesLayout?: any
-	isSingleBusiness?: boolean
 }
 export interface SingleProductCardParams {
 	businessId: any,

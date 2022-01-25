@@ -9,8 +9,8 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
-	StyleSheet,
 	TouchableOpacity,
+	StyleSheet,
 	useWindowDimensions,
 	View,
 } from 'react-native';
