@@ -27,6 +27,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	const [, t] = useLanguage();
   const [isTypeChanging, setTypeChanging] = useState(false);
 	const _orderTypes = orderTypes.filter((type: any) => configTypes?.includes(type.value));
+  
 	const items = _orderTypes.map((type) => {
 		return {
 			value: type.value,
