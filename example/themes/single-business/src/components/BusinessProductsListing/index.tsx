@@ -210,6 +210,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								noBorderShow
 								placeholder={t('SEARCH', 'Search')}
 								lazyLoad={businessState?.business?.lazy_load_products_recommended}
+                inputStyle={{
+                  borderRadius: 8,
+                  borderBottomWidth: 1,
+                  borderBottomColor: theme.colors.border,
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
+                }}
 							/>
 						</WrapSearchBar>
 						{!(business?.categories?.length === 0) && (

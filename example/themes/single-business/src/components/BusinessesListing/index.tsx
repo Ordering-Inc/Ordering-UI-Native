@@ -106,10 +106,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			color: theme.colors.warning5,
 			marginRight: 8
 		},
-		farAwayMsg: {
-			paddingVertical: 6,
-			paddingHorizontal: 20
-		}
   });
 
 
@@ -199,11 +195,11 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           </OText>
         </AddressInput>
         {isFarAway && (
-					<FarAwayMessage style={styles.farAwayMsg}>
-						<Ionicons name='md-warning-outline' style={styles.iconStyle} />
-						<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textNormal}>{t('YOU_ARE_FAR_FROM_ADDRESS', 'Your are far from this address')}</OText>
-					</FarAwayMessage>
-				)}
+          <FarAwayMessage>
+            <Ionicons name='md-warning-outline' style={styles.iconStyle} />
+            <OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textNormal}>{t('YOU_ARE_FAR_FROM_ADDRESS', 'You are far from this address')}</OText>
+          </FarAwayMessage>
+        )}
         <OrderControlContainer>
           <View style={styles.wrapperOrderOptions}>
             <DropOptionButton
@@ -256,6 +252,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           noBorderShow
           placeholder={t('SEARCH', 'Search')}
           lazyLoad
+          inputStyle={{
+            borderRadius: 8,
+            borderBottomWidth: 1,
+            borderBottomColor: theme.colors.border,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+          }}
         />
       </WrapSearchBar>
       <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
