@@ -23,7 +23,7 @@ export const AddressInput = styled.TouchableOpacity`
   justify-content: flex-start;
   background-color: white;
   padding-horizontal: 15px;
-  border-radius: 24px;
+  border-radius: 8px;
   height: 44px;
   min-height: 44px;
 `
@@ -93,5 +93,16 @@ export const WrapSearchBar = styled.View`
   padding: 10px 30px;
   margin-bottom: 10px;
   background-color: ${(props: any) => props.theme.colors.white};
-  flex: 1;
+`
+
+export const FarAwayMessage = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+	background-color: ${(props: any) => props.theme.colors.warning1};
+  border-radius: 8px;
+  border: 1px solid ${(props: any) => props.theme.colors.warning5};
+  width: 100%;
+  padding: 6px 20px;
+  margin-top: 20px;
 `

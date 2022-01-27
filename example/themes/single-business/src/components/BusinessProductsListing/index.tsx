@@ -210,6 +210,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								noBorderShow
 								placeholder={t('SEARCH', 'Search')}
 								lazyLoad={businessState?.business?.lazy_load_products_recommended}
+                inputStyle={{
+                  borderRadius: 8,
+                  borderBottomWidth: 1,
+                  borderBottomColor: theme.colors.border,
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
+                }}
 							/>
 						</WrapSearchBar>
 						{!(business?.categories?.length === 0) && (
@@ -244,6 +251,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 									{ id: 'featured', name: t('FEATURED', 'Featured') },
 									...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
 								]}
+                isSingleBusiness={props.isSingleBusiness}
 								category={categorySelected}
 								categoryState={categoryState}
 								businessId={business.id}

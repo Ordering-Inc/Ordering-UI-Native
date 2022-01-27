@@ -56,3 +56,13 @@ export const FeaturedBussiCont = styled.ScrollView`
 	min-height: 190px;
 	margin-horizontal: -40px;
 `;
+
+export const FarAwayMessage = styled.View`
+  flex-direction: row;
+  align-items: center;
+	background-color: ${(props: any) => props.theme.colors.warning1};
+  margin-top: -5px;
+  border-radius: 7.6px;
+  border: 1px solid ${(props: any) => props.theme.colors.warning5};
+  width: 100%;
+`

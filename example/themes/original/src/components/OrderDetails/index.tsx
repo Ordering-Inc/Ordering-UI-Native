@@ -95,6 +95,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
   const [openModalForDriver, setOpenModalForDriver] = useState(false);
+  const [isReviewed, setIsReviewed] = useState(false)
   const [unreadAlert, setUnreadAlert] = useState({
     business: false,
     driver: false,
@@ -339,6 +340,24 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }
 
+  const handleClickOrderReview = (order: any) => {
+    navigation.navigate(
+      'ReviewOrder',
+      {
+        order: {
+          id: order?.id,
+          business_id: order?.business_id,
+          logo: order.business?.logo,
+          driver: order?.driver,
+          products: order?.products,
+          review: order?.review,
+          user_review: order?.user_review
+        },
+        setIsReviewed
+      }
+    )
+  }
+
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleArrowBack);
     return () => {
@@ -382,6 +401,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }, [driverLocation]);
 
+  useEffect(() => {
+    console.log('order: ', order)
+  }, [order]);
+
   return (
     <OrderDetailsContainer keyboardShouldPersistTaps="handled">
       <Spinner visible={!order || Object.keys(order).length === 0} />
@@ -409,19 +432,28 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     ? parseDate(order?.delivery_datetime_utc)
                     : parseDate(order?.delivery_datetime, { utc: false })}
                 </OText>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={{ marginTop: 6 }}
-                  onPress={() => { }}>
-                  <OText
-                    size={10}
-                    lineHeight={15}
-                    color={theme.colors.textSecondary}
-                    style={{ textDecorationLine: 'underline' }}>
-                    {t('REVIEW_ORDER', 'Review order')}
-                  </OText>
-                </TouchableOpacity>
+                {
+                  (
+                    parseInt(order?.status) === 1 ||
+                    parseInt(order?.status) === 11 ||
+                    parseInt(order?.status) === 15
+                  ) && !order.review && !isReviewed && (
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={{ marginTop: 6 }}
+                      onPress={() => handleClickOrderReview(order)}
 
+                    >
+                      <OText
+                        size={10}
+                        lineHeight={15}
+                        color={theme.colors.textSecondary}
+                        style={{ textDecorationLine: 'underline' }}
+                      >
+                        {t('REVIEW_YOUR_ORDER', 'Review your order')}
+                      </OText>
+                    </TouchableOpacity>
+                  )}
                 <StaturBar>
                   <LinearGradient
                     start={{ x: 0.0, y: 0.0 }}

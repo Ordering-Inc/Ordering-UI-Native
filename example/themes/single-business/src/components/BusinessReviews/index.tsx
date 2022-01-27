@@ -24,7 +24,11 @@ import { ProgressBar, TouchableRipple } from 'react-native-paper';
 import moment from 'moment';
 
 const BusinessReviewsUI = (props: BusinessReviewsParams) => {
-	const { businessState, reviewsList } = props;
+	const {
+    reviewsList,
+    businessState,
+    handleChangeSearch,
+  } = props;
 	const [, t] = useLanguage();
 	const theme = useTheme();
 	const [orderState] = useOrder();
@@ -146,11 +150,13 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 						</StarPointsView>
 
 						<ReviewSearchView>
-							<OInput
+              <OInput
 								icon={theme.images.general.search}
 								inputStyle={{ fontSize: 14 }}
 								placeholder={t('SEARCH_REVIEWS', 'Search reviews')}
-								style={{ paddingStart: 0 }}></OInput>
+								style={{ paddingStart: 0 }}
+                onChange={handleChangeSearch}
+              />
 						</ReviewSearchView>
 						<ReviewProgressView>
 							<OText style={{ marginBottom: 6 }}>

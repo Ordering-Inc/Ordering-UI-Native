@@ -13,6 +13,7 @@ import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ProfileParams } from '../../types';
 import { LogoutButton } from '../LogoutButton'
 import { LanguageSelector } from '../LanguageSelector'
+import MessageCircle from 'react-native-vector-icons/AntDesign'
 
 import {
 	OIcon,
@@ -78,6 +79,11 @@ const ProfileListUI = (props: ProfileParams) => {
 		pagePadding: {
 			paddingLeft: 40,
 			paddingRight: 40
+		},
+		messageIconStyle: {
+			fontSize: 18,
+			fontWeight: 'bold',
+            marginEnd: 14
 		}
 	});
 
@@ -149,6 +155,10 @@ const ProfileListUI = (props: ProfileParams) => {
 					<ListItem onPress={() => onRedirect('AddressList', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
 						<OIcon src={theme.images.general.pin} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MY_SAVED_PLACES', 'My saved places')}</OText>
+					</ListItem>
+					<ListItem onPress={() => onRedirect('Messages', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
+						<MessageCircle name='message1' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MESSAGES', 'Messages')}</OText>
 					</ListItem>
 					<ListItem onPress={() => navigation.navigate('Help', {})} activeOpacity={0.7}>
 						<OIcon src={theme.images.general.ic_help} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />

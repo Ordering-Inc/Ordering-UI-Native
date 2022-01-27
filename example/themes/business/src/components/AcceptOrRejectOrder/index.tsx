@@ -46,7 +46,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const phoneNumber = customerCellphone;
   const titleOrder = t(orderTitle[action]?.key, orderTitle[action]?.text)
   const buttonText = t(orderTitle[action]?.btnKey, orderTitle[action]?.btnText)
-  const showTextArea = ['reject', 'deliveryFailed', 'pickupFailed', 'notReady'].includes(action)
+  const showTextArea = ['reject', 'deliveryFailed', 'pickupFailed', 'notReady', 'forcePickUp', 'forceDelivery'].includes(action)
 
   const handleFocus = () => {
     viewRef?.current?.measure((x: any, y: any) => {
@@ -187,6 +187,14 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       orderNotReady: {
         comment: comments,
         status: 14
+      },
+      forcePickUp: {
+        reasons: comments,
+        status: 9
+      },
+      forceDelivery: {
+        reasons: comments,
+        status: 11
       }
     };
 
@@ -204,6 +212,12 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
     }
     if (actions && action === 'notReady') {
       bodyToSend = orderStatus[actions.notReady]
+    }
+    if (actions && action === 'forcePickUp') {
+      bodyToSend = orderStatus[actions.forcePickUp]
+    }
+    if (actions && action === 'forceDelivery') {
+      bodyToSend = orderStatus[actions.forceDelivery]
     }
 
     bodyToSend.id = orderId;
