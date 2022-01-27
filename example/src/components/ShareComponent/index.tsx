@@ -9,7 +9,7 @@ export const ShareComponent = (props : ShareComponentParams) => {
   const {orderId, hashkey} = props
   const [ ,t] = useLanguage()
   const {showToast} = useToast()
-  const url = `https://reactdemo.ordering.co/orders/${orderId}?=${hashkey}`
+  const url = `${t('SHARE_URL', 'https://reactdemo.tryordering.com/')}orders/${orderId}?=${hashkey}`
   const onShare = async () => {
     try {
       const result = await Share.share({
