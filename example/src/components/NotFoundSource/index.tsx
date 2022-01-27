@@ -15,7 +15,8 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
     content,
     btnTitle,
     conditioned,
-    onClickButton
+    onClickButton,
+    textSize
   } = props
 
   const theme = useTheme()
@@ -33,8 +34,8 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
           />
         </NotFoundImage>
       )}
-        {content && conditioned && !errorImage && <OText color={theme.colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}
-        {content && !conditioned && <OText color={theme.colors.disabled} size={18} style={{textAlign: 'center'}}>{content}</OText>}
+        {content && conditioned && !errorImage && <OText color={theme.colors.disabled} size={textSize ?? 18} style={{textAlign: 'center'}}>{content}</OText>}
+        {content && !conditioned && <OText color={theme.colors.disabled} size={textSize ?? 18} style={{textAlign: 'center'}}>{content}</OText>}
       {!onClickButton && props.children && (
         props.children
       )}
