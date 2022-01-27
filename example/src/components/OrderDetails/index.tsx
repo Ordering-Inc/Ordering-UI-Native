@@ -376,6 +376,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText style={{ textAlign: 'left' }}>{order?.customer?.address}</OText>
                 </InfoBlock>
               </Customer>
+                {order?.delivery_type === 1 && (
+                  <View>
+                    <OText size={18} style={{ textAlign: 'left' }}>{t('DELIVERY_PREFERENCE', 'Delivery Preference')}</OText>
+                    <OText style={{ textAlign: 'left' }}>{order?.delivery_option?.name}</OText>
+                  </View>
+                )}
+                {order?.comment && (
+                  <View>
+                    <OText size={18} style={{ textAlign: 'left' }} >{t('COMMENT', 'Comment')}</OText>
+                    <OText style={{ textAlign: 'left' }}>{order?.comment}</OText>
+                  </View>
+                )}
               {order?.driver && (
                 <>
                   {order?.driver?.location && parseInt(order?.status) === 9 && (
@@ -490,19 +502,19 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 ))
               }
               {
-                order?.fees?.length > 0 && order?.fees?.filter((fee : any) => !(fee.fixed === 0 && fee.percentage === 0))?.map((fee: any) => (
-                    <Table key={fee.id}>
-                      <OSRow>
-                        <OText numberOfLines={1}>
-                          {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
-                          ({parsePrice(fee?.fixed)} + {fee.percentage}%){' '}
-                        </OText>
-                        <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee })}>
-                          <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
-                        </TouchableOpacity>
-                      </OSRow>
-                      <OText>{parsePrice(fee?.fixed + fee?.summary?.percentage || 0)}</OText>
-                    </Table>
+                order?.fees?.length > 0 && order?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0))?.map((fee: any) => (
+                  <Table key={fee.id}>
+                    <OSRow>
+                      <OText numberOfLines={1}>
+                        {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                        ({parsePrice(fee?.fixed)} + {fee.percentage}%){' '}
+                      </OText>
+                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee })}>
+                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    </OSRow>
+                    <OText>{parsePrice(fee?.fixed + fee?.summary?.percentage || 0)}</OText>
+                  </Table>
                 ))
               }
               {order?.summary?.delivery_price > 0 && (
@@ -535,8 +547,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               </Total>
               {order?.comment && (
                 <Table>
-                  <OText style={{flex: 1}}>{t('COMMENT', 'Comment')}</OText>
-                  <OText style={{maxWidth: '70%'}}>
+                  <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
+                  <OText style={{ maxWidth: '70%' }}>
                     {order?.comment}
                   </OText>
                 </Table>

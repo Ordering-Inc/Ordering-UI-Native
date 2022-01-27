@@ -3,6 +3,7 @@ import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIc
 import { View, StyleSheet, Platform, I18nManager, ScrollView, TouchableOpacity } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 import Picker from 'react-native-country-picker-modal';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import {
   Checkout as CheckoutController,
@@ -112,6 +113,12 @@ const CheckoutUI = (props: any) => {
     },
     paddSectionH: {
       paddingHorizontal: 20
+    },
+    icon: {
+      top: 15,
+      right: Platform.OS === 'ios' ? 5 : (I18nManager.isRTL ? 30 : 0),
+      position: 'absolute',
+      fontSize: 20
     }
   })
 
@@ -447,9 +454,9 @@ const CheckoutUI = (props: any) => {
             </ChBusinessDetails>
           </ChSection>
 
-          {!cartState.loading && deliveryOptionSelected !== undefined && (
+          {!cartState.loading && deliveryOptionSelected !== undefined && options?.type === 1 && (
             <DeliveryOptionsContainer style={style.paddSection}>
-              <OText size={20}>{t('DELIVERY_DETAILS', 'Delivery Details')}</OText>
+              <OText size={20}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
               <View
                 style={{
                   backgroundColor: theme.colors.inputDisabled,
@@ -464,12 +471,13 @@ const CheckoutUI = (props: any) => {
                   withCountryNameButton
                   renderFlagButton={() => (
                     <TouchableOpacity onPress={() => setIsDeliveryOptionModalVisible(true)}>
-                      <DeliveryOptionItem center>
+                      <DeliveryOptionItem backgroundColor={theme?.colors?.inputDisabled}>
                         <OText
                           size={16}
                         >
                           {deliveryOptions.find((option: any) => option.value === deliveryOptionSelected).label}
                         </OText>
+                        <MaterialIcons name='keyboard-arrow-down' style={style.icon} />
                       </DeliveryOptionItem>
                     </TouchableOpacity>
                   )}
