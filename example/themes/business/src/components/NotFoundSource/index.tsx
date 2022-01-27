@@ -6,7 +6,7 @@ import { useTheme } from 'styled-components/native';
 import { NotFound, NotFoundImage } from './styles';
 
 export const NotFoundSource = (props: NotFoundSourceParams) => {
-  const { image, content, btnTitle, conditioned, onClickButton } = props;
+  const { image, content, btnTitle, conditioned, onClickButton, textSize } = props;
   const theme = useTheme();
 
   const errorImage = image || theme.images.general.notFound;
@@ -21,7 +21,7 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
       {content && conditioned && !errorImage && (
         <OText
           color={theme.colors.textSecondary}
-          size={18}
+          size={textSize ?? 18}
           style={{ textAlign: 'center' }}>
           {content}
         </OText>
@@ -29,7 +29,7 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
       {content && !conditioned && (
         <OText
           color={theme.colors.textSecondary}
-          size={18}
+          size={textSize ?? 18}
           style={{ textAlign: 'center' }}>
           {content}
         </OText>

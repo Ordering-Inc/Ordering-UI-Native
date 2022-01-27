@@ -232,6 +232,7 @@ export interface NotFoundSourceParams {
   conditioned?: boolean;
   onClickButton?: any;
   children?: any;
+  textSize?: number;
 }
 export interface MessagesOptionParams {
   orders?: any;
