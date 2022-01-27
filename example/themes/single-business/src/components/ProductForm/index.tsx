@@ -117,9 +117,10 @@ export const ProductOptionsUI = (props: any) => {
   const [{ auth }] = useSession();
   const { product, loading, error } = productObject;
 
-  const [selOpt, setSelectedOpt] = useState(0);
+  const [selOpt, setSelectedOpt] = useState(null);
+  const [optionsLayout, setOptionsLayout] = useState<any>(null)
 
-  const extraOptions = [].concat(...product?.extras?.map((option: any) => option.options))
+  const extraOptions = [].concat(...product?.extras?.map((option: any) => option.options)).filter((i: any) => i.respect_to === null)
 
   const scrollViewRef = useRef<any>()
   const isError = (id: number) => {
@@ -145,7 +146,7 @@ export const ProductOptionsUI = (props: any) => {
     if (respect_id === null) return;
     const option: any = options.filter(({ id }: any) => id === selOpt);
     if (option === undefined) return false;
-    if (option?.suboptions?.length === 0) return false;
+    if (option?.suboptions?.length === null) return false;
     const sel = option && option[0]?.suboptions?.filter(
       ({ id }: any) => id === respect_id,
     );
@@ -157,7 +158,25 @@ export const ProductOptionsUI = (props: any) => {
     navigation.navigate('Login');
   };
 
-  const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0;
+  const handleClickOption = (value: any) => {
+    setSelectedOpt(value)
+
+    const optionsArray = value
+      ? Object.values(optionsLayout)
+        .filter((opt: any) => opt.position || opt.position === 0)
+        .map((i: any) => i.height)
+        .slice(0, optionsLayout[value]?.position)
+      : []
+
+    scrollViewRef.current.scrollTo({
+      y: optionsArray.length > 0
+        ? optionsLayout?.header?.height + optionsArray?.reduce((acc, cur) => acc + cur)
+        : optionsLayout?.header?.height,
+      animated: true
+    })
+  }
+
+  const saveErrors = orderState.loading || maxProductQuantity === null || Object.keys(errors).length > 0;
 
   const ExtraOptions = ({ options }: any) => (
     <ExtraOptionWrap
@@ -168,36 +187,36 @@ export const ProductOptionsUI = (props: any) => {
       <>
         <TouchableOpacity
           key={`eopt_all_0`}
-          onPress={() => setSelectedOpt(0)}
+          onPress={() => handleClickOption(null)}
           style={[
             styles.extraItem,
             {
               borderBottomColor:
-                selOpt === 0 ? theme.colors.textNormal : theme.colors.border,
+                selOpt === null ? theme.colors.textNormal : theme.colors.border,
             },
           ]}>
           <OText
-            color={selOpt === 0 ? theme.colors.textNormal : theme.colors.textSecondary}
-            size={selOpt === 0 ? 14 : 12}
-            weight={selOpt === 0 ? '600' : 'normal'}>
+            color={selOpt === null ? theme.colors.textNormal : theme.colors.textSecondary}
+            size={selOpt === null ? 14 : 12}
+            weight={selOpt === null ? '600' : 'normal'}>
             {t('ALL', 'All')}
           </OText>
         </TouchableOpacity>
         {product?.ingredients.length > 0 && (
           <TouchableOpacity
             key={`eopt_all_00`}
-            onPress={() => setSelectedOpt(-1)}
+            onPress={() => handleClickOption('ingredients')}
             style={[
               styles.extraItem,
               {
                 borderBottomColor:
-                  selOpt === -1 ? theme.colors.textNormal : theme.colors.border,
+                  selOpt === 'ingredients' ? theme.colors.textNormal : theme.colors.border,
               },
             ]}>
             <OText
-              color={selOpt === -1 ? theme.colors.textNormal : theme.colors.textSecondary}
-              size={selOpt === -1 ? 14 : 12}
-              weight={selOpt === -1 ? '600' : 'normal'}>
+              color={selOpt === 'ingredients' ? theme.colors.textNormal : theme.colors.textSecondary}
+              size={selOpt === 'ingredients' ? 14 : 12}
+              weight={selOpt === 'ingredients' ? '600' : 'normal'}>
               {t('INGREDIENTS', 'Ingredients')}
             </OText>
           </TouchableOpacity>
@@ -207,20 +226,20 @@ export const ProductOptionsUI = (props: any) => {
             {respect_to === null && (
               <TouchableOpacity
                 key={`eopt_key_${id}`}
-                onPress={() => setSelectedOpt(id)}
+                onPress={() => handleClickOption(`opt_${id}`)}
                 style={[
                   styles.extraItem,
                   {
                     borderBottomColor:
-                      selOpt === id ? theme.colors.textNormal : theme.colors.border,
+                      selOpt === `opt_${id}` ? theme.colors.textNormal : theme.colors.border,
                   },
                 ]}>
                 <OText
                   color={
-                    selOpt === id ? theme.colors.textNormal : theme.colors.textSecondary
+                    selOpt === `opt_${id}` ? theme.colors.textNormal : theme.colors.textSecondary
                   }
-                  size={selOpt === id ? 14 : 12}
-                  weight={selOpt === id ? '600' : 'normal'}>
+                  size={selOpt === `opt_${id}` ? 14 : 12}
+                  weight={selOpt === `opt_${id}` ? '600' : 'normal'}>
                   {name}
                 </OText>
               </TouchableOpacity>
@@ -230,6 +249,25 @@ export const ProductOptionsUI = (props: any) => {
       </>
     </ExtraOptionWrap>
   );
+
+  const handleScroll = ({ nativeEvent }: any) => {
+    const scrollOffset = nativeEvent.contentOffset.y
+    const optionsArray = Object.values(optionsLayout)
+      .filter((opt: any) => opt.position || opt.position === 0)
+      .map((i: any) => ({ height: i.height, key: i.key }))
+
+    for (let i = 0; i < optionsArray.length; i++) {
+      const opt = optionsArray[i];
+      if (scrollOffset <= optionsLayout?.header?.height) {
+        setSelectedOpt(null)
+        break
+      } else if (scrollOffset > optionsLayout?.header?.height && scrollOffset < (optionsLayout?.header?.height + opt.height)) {
+        setSelectedOpt(opt.key)
+        break
+      }
+    }
+
+  }
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -248,85 +286,90 @@ export const ProductOptionsUI = (props: any) => {
       {!error && (
         <ScrollView
           ref={scrollViewRef}
-          stickyHeaderIndices={[2]}
+          stickyHeaderIndices={[1]}
           scrollEventThrottle={16}
           contentContainerStyle={{ paddingBottom: 60 }}
+          // onScroll={(e: any) => handleScroll(e)}
         >
-          <WrapHeader>
-            {loading && !product ? (
-              <View style={styles.productHeaderSkeleton}>
-                <Placeholder Animation={Fade}>
-                  <PlaceholderLine
-                    height={258}
-                    style={{ borderRadius: 0 }}
-                    width={windowWidth}
-                  />
-                </Placeholder>
-              </View>
-            ) : (
-              <>
-                <TopHeader>
-                  <TouchableOpacity
-                    style={styles.headerItem}
-                    onPress={onClose}>
-                    <OIcon src={theme.images.general.close} width={16} />
-                  </TouchableOpacity>
-                </TopHeader>
-                <ProductHeader
-                  source={{ uri: product?.images || productCart?.images }}
-                  resizeMode={'contain'}
-                />
-              </>
-            )}
-          </WrapHeader>
-          <WrapContent>
-            <ProductTitle>
+          <View
+            onLayout={(event: any) => setOptionsLayout({ ...optionsLayout, header: event.nativeEvent.layout })}
+          >
+            <WrapHeader>
               {loading && !product ? (
-                <Placeholder Animation={Fade}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <PlaceholderLine width={40} height={20} />
-                    <PlaceholderLine width={30} height={20} />
-                  </View>
-                </Placeholder>
+                <View style={styles.productHeaderSkeleton}>
+                  <Placeholder Animation={Fade}>
+                    <PlaceholderLine
+                      height={258}
+                      style={{ borderRadius: 0 }}
+                      width={windowWidth}
+                    />
+                  </Placeholder>
+                </View>
               ) : (
                 <>
-                  <OText
-                    size={20}
-                    lineHeight={30}
-                    weight={'600'}
-                    style={{ flex: 1, marginBottom: 5 }}>
-                    {product?.name || productCart.name}
-                  </OText>
-                  {((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (product?.estimated_person)) && (
-                    <OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'} mBottom={7}>
-                      {
-                        ((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
-                        && <>{t('SKU', 'Sku')}{' '}{product?.sku || productCart?.sku}</>
-                      }
-                      {product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
-                        <>&nbsp;&#183;&nbsp;</>
-                      )}
-                      {product?.estimated_person
-                        && <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
-                      }
-                    </OText>
-                  )}
-                  <OText size={16} lineHeight={24} color={theme.colors.textNormal}>
-                    {productCart.price ? parsePrice(productCart.price) : ''}
-                  </OText>
+                  <TopHeader>
+                    <TouchableOpacity
+                      style={styles.headerItem}
+                      onPress={onClose}>
+                      <OIcon src={theme.images.general.close} width={16} />
+                    </TouchableOpacity>
+                  </TopHeader>
+                  <ProductHeader
+                    source={{ uri: product?.images || productCart?.images }}
+                    resizeMode={'contain'}
+                  />
                 </>
               )}
-            </ProductTitle>
-            <ProductDescription>
-              <OText color={theme.colors.textSecondary} size={12} lineHeight={18}>
-                {product?.description || productCart?.description}
-              </OText>
-            </ProductDescription>
-          </WrapContent>
+            </WrapHeader>
+            <WrapContent>
+              <ProductTitle>
+                {loading && !product ? (
+                  <Placeholder Animation={Fade}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}>
+                      <PlaceholderLine width={40} height={20} />
+                      <PlaceholderLine width={30} height={20} />
+                    </View>
+                  </Placeholder>
+                ) : (
+                  <>
+                    <OText
+                      size={20}
+                      lineHeight={30}
+                      weight={'600'}
+                      style={{ flex: 1, marginBottom: 5 }}>
+                      {product?.name || productCart.name}
+                    </OText>
+                    {((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (product?.estimated_person)) && (
+                      <OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'} mBottom={7}>
+                        {
+                          ((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
+                          && <>{t('SKU', 'Sku')}{' '}{product?.sku || productCart?.sku}</>
+                        }
+                        {product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
+                          <>&nbsp;&#183;&nbsp;</>
+                        )}
+                        {product?.estimated_person
+                          && <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
+                        }
+                      </OText>
+                    )}
+                    <OText size={16} lineHeight={24} color={theme.colors.textNormal}>
+                      {productCart.price ? parsePrice(productCart.price) : ''}
+                    </OText>
+                  </>
+                )}
+              </ProductTitle>
+              <ProductDescription>
+                <OText color={theme.colors.textSecondary} size={12} lineHeight={18}>
+                  {product?.description || productCart?.description}
+                </OText>
+              </ProductDescription>
+            </WrapContent>
+          </View>
 
           <WrapContent>
             {loading && !product && (
@@ -375,165 +418,116 @@ export const ProductOptionsUI = (props: any) => {
           <WrapContent>
             {!loading && product && (
               <ProductEditions>
-                {selOpt === 0 && (
-                  <>
-                    {product?.ingredients.length > 0 && (
-                      <View style={styles.optionContainer}>
-                        <SectionTitle>
-                          <OText size={16}>
-                            {t('INGREDIENTS', 'Ingredients')}
-                          </OText>
-                        </SectionTitle>
-                        <WrapperIngredients
-                          style={{
-                            backgroundColor:
-                              isSoldOut || maxProductQuantity <= 0
-                                ? 'hsl(0, 0%, 72%)'
-                                : theme.colors.white,
-                          }}>
-                          {product?.ingredients.map((ingredient: any) => (
-                            <ProductIngredient
-                              key={ingredient.id}
-                              ingredient={ingredient}
-                              state={
-                                productCart.ingredients[`id:${ingredient.id}`]
-                              }
-                              onChange={handleChangeIngredientState}
-                            />
-                          ))}
-                        </WrapperIngredients>
-                      </View>
-                    )}
-                    {product?.extras.map((extra: any) =>
-                      extra.options.map((option: any) => {
-                        const currentState = productCart.options[`id:${option.id}`] || {};
-                        return (
-                          <React.Fragment key={`popt_${option.id}`}>
-                            {showOption(option) && (
-                              <View style={styles.optionContainer}>
-                                <ProductOption
-                                  option={option}
-                                  currentState={currentState}
-                                  error={errors[`id:${option.id}`]}>
-                                  <WrapperSubOption
-                                    style={{
-                                      backgroundColor: isError(option.id),
-                                    }}>
-                                    {option.suboptions.map(
-                                      (suboption: any) => {
-                                        const currentState =
-                                          productCart.options[
-                                            `id:${option.id}`
-                                          ]?.suboptions[
-                                          `id:${suboption.id}`
-                                          ] || {};
-                                        const balance =
-                                          productCart.options[
-                                            `id:${option.id}`
-                                          ]?.balance || 0;
-                                        return (
-                                          <ProductOptionSubOption
-                                            key={suboption.id}
-                                            onChange={
-                                              handleChangeSuboptionState
-                                            }
-                                            balance={balance}
-                                            option={option}
-                                            suboption={suboption}
-                                            state={currentState}
-                                            disabled={
-                                              isSoldOut ||
-                                              maxProductQuantity <= 0
-                                            }
-                                          />
-                                        );
-                                      },
-                                    )}
-                                  </WrapperSubOption>
-                                </ProductOption>
-                              </View>
-                            )}
-                          </React.Fragment>
-                        );
-                      }),
-                  )}
-                  </>
-                )}
-
-                {selOpt === -1 && (
-                  <View style={styles.optionContainer}>
-                    <SectionTitle>
-                      <OText size={16}>
-                        {t('INGREDIENTS', 'Ingredients')}
-                      </OText>
-                    </SectionTitle>
-                    <WrapperIngredients
-                      style={{
-                        backgroundColor:
-                          isSoldOut || maxProductQuantity <= 0
-                            ? 'hsl(0, 0%, 72%)'
-                            : theme.colors.white,
-                      }}>
-                      {product?.ingredients.map((ingredient: any) => (
-                        <ProductIngredient
-                          key={ingredient.id}
-                          ingredient={ingredient}
-                          state={
-                            productCart.ingredients[`id:${ingredient.id}`]
+                <View
+                  onLayout={(event: any) => setOptionsLayout({ ...optionsLayout, wrapper: event.nativeEvent.layout })}
+                >
+                  {product?.ingredients.length > 0 && (
+                    <View
+                      style={styles.optionContainer}
+                      onLayout={(event: any) => setOptionsLayout(
+                        {
+                          ...optionsLayout,
+                          ingredients: {
+                            ...event.nativeEvent.layout,
+                            position: 0,
+                            key: 'ingredients'
                           }
-                          onChange={handleChangeIngredientState}
-                        />
-                      ))}
-                    </WrapperIngredients>
-                  </View>
-                )}
-
-                {product?.extras.map((extra: any) => extra.options.map((option: any) => {
-                  if (
-                    option.id === selOpt || (hasRespected(extra.options, option.respect_to) &&
-                    showOption(option))
-                  ) {
+                        }
+                      )}
+                    >
+                      <SectionTitle>
+                        <OText size={16}>
+                          {t('INGREDIENTS', 'Ingredients')}
+                        </OText>
+                      </SectionTitle>
+                      <WrapperIngredients
+                        style={{
+                          backgroundColor:
+                            isSoldOut || maxProductQuantity <= 0
+                              ? 'hsl(0, 0%, 72%)'
+                              : theme.colors.white,
+                        }}>
+                        {product?.ingredients.map((ingredient: any) => (
+                          <ProductIngredient
+                            key={ingredient.id}
+                            ingredient={ingredient}
+                            state={
+                              productCart.ingredients[`id:${ingredient.id}`]
+                            }
+                            onChange={handleChangeIngredientState}
+                          />
+                        ))}
+                      </WrapperIngredients>
+                    </View>
+                  )}
+                  {product?.extras.map((extra: any) => extra.options.map((option: any) => {
                     const currentState = productCart.options[`id:${option.id}`] || {};
                     return (
-                      <React.Fragment key={option.id}>
+                      <React.Fragment key={`popt_${option.id}`}>
                         {showOption(option) && (
-                          <View style={styles.optionContainer}>
+                          <View
+                            style={styles.optionContainer}
+                            onLayout={
+                              (event: any) => setOptionsLayout(
+                                {
+                                  ...optionsLayout,
+                                  [`opt_${option.id}`]: {
+                                    ...event.nativeEvent.layout,
+                                    position: extraOptions.map((i: any) => i.id).indexOf(option.id) + (product?.ingredients.length > 0 ? 1 : 0),
+                                    key: `opt_${option.id}`
+                                  }
+                                }
+                              )
+                            }
+                          >
                             <ProductOption
                               option={option}
                               currentState={currentState}
                               error={errors[`id:${option.id}`]}
                             >
                               <WrapperSubOption
-                                style={{ backgroundColor: isError(option.id) }}
-                              >
-                                {option.suboptions.map((suboption: any) => {
-                                  const currentState = productCart.options[`id:${option.id}`]?.suboptions[`id:${suboption.id}`] || {};
-                                  const balance = productCart.options[`id:${option.id}`]?.balance || 0;
-                                  return (
-                                    <ProductOptionSubOption
-                                      key={suboption.id}
-                                      onChange={
-                                        handleChangeSuboptionState
-                                      }
-                                      balance={balance}
-                                      option={option}
-                                      suboption={suboption}
-                                      state={currentState}
-                                      disabled={
-                                        isSoldOut ||
-                                        maxProductQuantity <= 0
-                                      }
-                                    />
-                                  );
-                                })}
+                                style={{
+                                  backgroundColor: isError(option.id),
+                                }}>
+                                {option.suboptions.map(
+                                  (suboption: any) => {
+                                    const currentState =
+                                      productCart.options[
+                                        `id:${option.id}`
+                                      ]?.suboptions[
+                                      `id:${suboption.id}`
+                                      ] || {};
+                                    const balance =
+                                      productCart.options[
+                                        `id:${option.id}`
+                                      ]?.balance || 0;
+                                    return (
+                                      <ProductOptionSubOption
+                                        key={suboption.id}
+                                        onChange={
+                                          handleChangeSuboptionState
+                                        }
+                                        balance={balance}
+                                        option={option}
+                                        suboption={suboption}
+                                        state={currentState}
+                                        disabled={
+                                          isSoldOut ||
+                                          maxProductQuantity <= 0
+                                        }
+                                      />
+                                    );
+                                  },
+                                )}
                               </WrapperSubOption>
                             </ProductOption>
                           </View>
                         )}
                       </React.Fragment>
                     );
-                  }
-                }))}
+                  }))}
+                </View>
+
                 <ProductComment>
                   <SectionTitle>
                     <OText size={16} weight={'600'} lineHeight={24}>
