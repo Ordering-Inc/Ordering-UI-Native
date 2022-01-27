@@ -42,15 +42,3 @@ export const TimeItem = styled.View`
     background: #F5F9FF;
   `}
 `
-
-export const PreorderTypeListWrapper = styled.ScrollView``
-
-export const DropOption = styled.View`
-  padding: 10px;
-  margin-bottom: 5px;
-  font-size: 16px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${(props: any) => props.theme.colors.lightGray};
-  flex-direction: row;
-  align-items: center;
-`
