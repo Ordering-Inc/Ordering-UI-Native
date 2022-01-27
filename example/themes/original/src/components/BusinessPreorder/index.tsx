@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, StyleSheet, View, Text } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, Dimensions } from 'react-native'
 import { useLanguage, useUtils, useConfig, useOrder, MomentOption } from 'ordering-components/native'
-import { OButton, OModal, OText } from '../shared'
+import { OButton, OText } from '../shared'
 import { useTheme } from 'styled-components/native'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import FastImage from 'react-native-fast-image'
 import CalendarStrip from 'react-native-calendar-strip'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { BusinessMenuList } from '../BusinessMenuList'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { BusinessPreorderParams } from '../../types'
 import moment from 'moment'
+import SelectDropdown from 'react-native-select-dropdown'
 import {
   PreOrderContainer,
   BusinessInfoWrapper,
@@ -19,10 +19,10 @@ import {
   OrderTimeWrapper,
   TimeListWrapper,
   TimeContentWrapper,
-  TimeItem,
-  PreorderTypeListWrapper,
-  DropOption
+  TimeItem
 } from './styles'
+
+const windowHeight = Dimensions.get('window').height;
 
 const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   const {
@@ -42,14 +42,18 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   const [{ optimizeImage, parseTime }] = useUtils()
   const [{ configs }] = useConfig()
   const [orderState] = useOrder()
-  const [selectedPreorderType, setSelectedPreorderType] = useState({ key: 'business_hours', name: t('BUSINESS_HOURS', 'Business hours') })
-  const [isPreorderTypeList, setIsPreorderTypeList] = useState(false)
+  const [selectedPreorderType, setSelectedPreorderType] = useState(0)
   const [menu, setMenu] = useState({})
   const [timeList, setTimeList] = useState<any>([])
   const [selectDate, setSelectedDate] = useState<any>(null)
   const [datesWhitelist, setDateWhitelist] = useState<any>([{start: null, end: null}])
 
   const styles = StyleSheet.create({
+    container: {
+      height: windowHeight,
+      paddingVertical: 30,
+      paddingHorizontal: 40
+    },
 		businessLogo: {
 			backgroundColor: 'white',
 			width: 60,
@@ -68,10 +72,11 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
       borderRadius: 7.6,
       paddingVertical: 10,
       paddingHorizontal: 14,
-      flexDirection: 'row',
+      flexDirection: 'row-reverse',
       alignItems: 'center',
       justifyContent: 'space-between',
-      height: 44
+      height: 44,
+      width: '100%'
     },
     calendar: {
       paddingBottom: 15,
@@ -123,29 +128,13 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
       color: '#B1BCCC',
       fontSize: 14,
       fontWeight: '500'
-    },
-    wrapperIcon: {
-      overflow: 'hidden',
-      backgroundColor: 'transparent',
-      marginBottom: 12,
-      width: 25,
-      height: 25,
-      marginStart: 7,
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 99999
     }
 	})
 
   const preorderTypeList = [
-    { key: 'business_menu', name: t('BUSINESS_MENU', 'Business menu') },
-    { key: 'business_hours', name: t('BUSINESS_HOURS', 'Business hours') }
+    { key: 'business_hours', name: t('BUSINESS_HOURS', 'Business hours') },
+    { key: 'business_menu', name: t('BUSINESS_MENU', 'Business menu') }
   ]
-
-  const handleClickPreorderType = (option: any) => {
-    setSelectedPreorderType(option)
-    setIsPreorderTypeList(false)
-  }
 
   const getTimes = (curdate: any, menu: any) => {
     const date = new Date()
@@ -239,6 +228,16 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
     handleBusinessClick && handleBusinessClick(business)
   }
 
+  const dropDownIcon = () => {
+    return (
+      <IconAntDesign
+        name='down'
+        color={theme.colors.textThird}
+        size={16}
+      />
+    )
+  }
+
   useEffect(() => {
     if (hoursList.length === 0) return
     if (Object.keys(menu).length > 0) {
@@ -262,7 +261,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   }, [selectDate, hoursList, menu])
 
   useEffect(() => {
-    if (selectedPreorderType.key === 'business_hours' && Object.keys(menu).length > 0) setMenu({})
+    if (selectedPreorderType === 0 && Object.keys(menu).length > 0) setMenu({})
   }, [selectedPreorderType])
 
   useEffect(() => {
@@ -275,7 +274,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
 
   return (
     <>
-      <PreOrderContainer contentContainerStyle={{ paddingVertical: 30, paddingHorizontal: 40 }}>
+      <PreOrderContainer contentContainerStyle={{ paddingVertical: 32, paddingHorizontal: 40 }}>
         <TouchableOpacity onPress={() => goToBack && goToBack()} style={{ marginBottom: 12 }}>
           <IconAntDesign
             name='close'
@@ -313,26 +312,50 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
           >
             {t('PREORDER_TYPE', 'Preorder type')}
           </OText>
-          <TouchableOpacity onPress={() => setIsPreorderTypeList(true)}>
-            <View style={styles.selectOption}>
-              <OText
-                size={14}
-                color={theme.colors.disabled}
-                style={{
-                  lineHeight: 24
-                }}
-              >
-                {selectedPreorderType.name}
-              </OText>
-              <IconAntDesign
-                name='down'
-                color={theme.colors.textThird}
-                size={16}
-              />
-            </View>
-          </TouchableOpacity>
+          <SelectDropdown
+            defaultValueByIndex={selectedPreorderType}
+            data={preorderTypeList}
+            // disabled={orderState.loading}
+            onSelect={(selectedItem, index) => {
+              setSelectedPreorderType(index)
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem.name
+            }}
+            rowTextForSelection={(item, index) => {
+              return item.name
+            }}
+            buttonStyle={styles.selectOption}
+            buttonTextStyle={{
+              color: theme.colors.disabled,
+              fontSize: 14,
+              textAlign: 'left',
+              marginHorizontal: 0
+            }}
+            dropdownStyle={{
+              borderRadius: 8,
+              borderColor: theme.colors.lightGray,
+              marginTop: 5
+            }}
+            rowStyle={{
+              borderBottomColor: theme.colors.backgroundGray100,
+              backgroundColor: theme.colors.backgroundGray100,
+              height: 40,
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              paddingTop: 8,
+              paddingHorizontal: 14
+            }}
+            rowTextStyle={{
+              color: theme.colors.disabled,
+              fontSize: 14,
+              marginHorizontal: 0
+            }}
+            renderDropdownIcon={() => dropDownIcon()}
+            dropdownOverlayColor='transparent'
+          />
         </PreorderTypeWrapper>
-        {selectedPreorderType?.key === 'business_menu' && (
+        {selectedPreorderType === 1 && (
           <MenuWrapper>
             <OText
               size={16}
@@ -415,51 +438,6 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
         />
       </PreOrderContainer>
       <Spinner visible={orderState.loading} />
-      <OModal
-        open={isPreorderTypeList}
-        onClose={() => setIsPreorderTypeList(false)}
-        customClose
-        entireModal
-      >
-        <PreorderTypeListWrapper contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 40}}>
-          <TouchableOpacity onPress={() => setIsPreorderTypeList(false)} style={styles.wrapperIcon}>
-            <IconAntDesign
-              name='close'
-              color={theme.colors.textThird}
-              size={24}
-            />
-          </TouchableOpacity>
-          {preorderTypeList?.map((option: any, index: number) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handleClickPreorderType(option)}
-              style={{ zIndex: 99999 }}
-            >
-              <DropOption
-                numberOfLines={1}
-                selected={option.key === selectedPreorderType.key}
-              >
-                <View style={{ marginRight: 10 }}>
-                  {option.key === selectedPreorderType.key ? (
-                    <MaterialCommunityIcons
-                      name='radiobox-marked'
-                      size={24}
-                      color={theme.colors.primary}
-                    />
-                  ) : (
-                    <MaterialCommunityIcons
-                      name='radiobox-blank'
-                      size={24}
-                      color={theme.colors.arrowColor}
-                    />
-                  )}
-                </View>
-                <Text>{option.name}</Text>
-              </DropOption>
-            </TouchableOpacity>
-          ))}
-        </PreorderTypeListWrapper>
-      </OModal>
     </>
   )
 }

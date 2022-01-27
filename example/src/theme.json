@@ -42,7 +42,9 @@
     "colorTextTutorial": "#000000",
     "toastSuccess":"#90C68E",
     "toastError":"#D83520",
-    "toastInfo":"#6BA4FF"
+    "toastInfo":"#6BA4FF",
+    "warning5": "#FFC700",
+    "warning1": "#FFF4CC"
   },
   "images": {
     "logos": {
