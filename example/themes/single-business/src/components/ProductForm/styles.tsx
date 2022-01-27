@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components/native'
 export const WrapHeader = styled.View`
   position: relative;
   z-index: 1;
+  margin-bottom: 20px;
 `
 
 export const TopHeader = styled.View`
@@ -26,11 +27,8 @@ export const ProductHeader = styled.ImageBackground`
 `
 
 export const WrapContent = styled.View`
-  padding: 26px 40px;
-  position: relative;
-  bottom: 20px;
-  background-color: white;
-  z-index: 100;
+  padding: 0 40px;
+  background-color: #FFF;
 `
 
 export const ProductTitle = styled.View`
@@ -39,7 +37,7 @@ export const ProductTitle = styled.View`
 `
 
 export const ProductDescription = styled.View`
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 `
 
 export const ProductEditions = styled.View`
