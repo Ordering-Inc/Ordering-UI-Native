@@ -271,6 +271,20 @@ export const OrderContentComponent = (props: OrderContent) => {
             {order?.customer?.zipcode}
           </OText>
         )}
+        {((order?.delivery_option !== undefined && order?.delivery_type === 1) || !!order?.comment) && (
+          <View style={{marginTop: 10}}>
+            {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
+              <OText>
+                {order?.delivery_option?.name}
+              </OText>
+            )}
+            {!!order?.comment && (
+              <OText style={{fontStyle: 'italic', opacity: 0.6, marginBottom: 5}}>
+                {order?.comment}
+              </OText>
+            )}
+          </View>
+        )}
         {!order?.user_review && pastOrderStatuses.includes(order?.status) && (
           <OButton
             style={styles.btnReview}
@@ -440,14 +454,6 @@ export const OrderContentComponent = (props: OrderContent) => {
               {parsePrice(order?.summary?.total ?? 0)}
             </OText>
           </Table>
-          {!!order?.comment && (
-            <Table>
-              <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
-              <OText style={{ maxWidth: '70%' }}>
-                {order?.comment}
-              </OText>
-            </Table>
-          )}
         </Total>
       </OrderBill >
       <OModal

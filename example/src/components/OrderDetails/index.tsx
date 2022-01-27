@@ -376,7 +376,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText style={{ textAlign: 'left' }}>{order?.customer?.address}</OText>
                 </InfoBlock>
               </Customer>
-                {order?.delivery_type === 1 && (
+                {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
                   <View>
                     <OText size={18} style={{ textAlign: 'left' }}>{t('DELIVERY_PREFERENCE', 'Delivery Preference')}</OText>
                     <OText style={{ textAlign: 'left' }}>{order?.delivery_option?.name}</OText>
@@ -545,14 +545,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </OText>
                 </Table>
               </Total>
-              {order?.comment && (
-                <Table>
-                  <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
-                  <OText style={{ maxWidth: '70%' }}>
-                    {order?.comment}
-                  </OText>
-                </Table>
-              )}
               {
                 (
                   parseInt(order?.status) === 1 ||
