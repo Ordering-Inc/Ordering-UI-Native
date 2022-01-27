@@ -567,86 +567,87 @@ export const ProductOptionsUI = (props: any) => {
 
       {!loading && !error && product && (
         <ProductActions>
-          <OText size={16} lineHeight={24} weight={'600'}>
-            {productCart.total ? parsePrice(productCart?.total) : ''}
-          </OText>
           {productCart && !isSoldOut && maxProductQuantity > 0 && (
-            <View style={styles.quantityControl}>
-              <TouchableOpacity
-                onPress={decrement}
-                disabled={productCart.quantity === 1 || isSoldOut}>
-                <OIcon
-                  src={theme.images.general.minus}
-                  width={16}
-                  color={
-                    productCart.quantity === 1 || isSoldOut
-                      ? theme.colors.backgroundGray
-                      : theme.colors.backgroundDark
-                  }
-                />
-              </TouchableOpacity>
-              <OText
-                size={12}
-                lineHeight={18}
-                style={{ minWidth: 29, textAlign: 'center' }}>
-                {productCart.quantity}
+            <>
+              <OText size={16} lineHeight={24} weight={'600'}>
+                {productCart.total ? parsePrice(productCart?.total) : ''}
               </OText>
-              <TouchableOpacity
-                onPress={increment}
-                disabled={
-                  maxProductQuantity <= 0 ||
-                  productCart.quantity >= maxProductQuantity ||
-                  isSoldOut
-                }>
-                <OIcon
-                  src={theme.images.general.plus}
-                  width={16}
-                  color={
+              <View style={styles.quantityControl}>
+                <TouchableOpacity
+                  onPress={decrement}
+                  disabled={productCart.quantity === 1 || isSoldOut}>
+                  <OIcon
+                    src={theme.images.general.minus}
+                    width={16}
+                    color={
+                      productCart.quantity === 1 || isSoldOut
+                        ? theme.colors.backgroundGray
+                        : theme.colors.backgroundDark
+                    }
+                  />
+                </TouchableOpacity>
+                <OText
+                  size={12}
+                  lineHeight={18}
+                  style={{ minWidth: 29, textAlign: 'center' }}>
+                  {productCart.quantity}
+                </OText>
+                <TouchableOpacity
+                  onPress={increment}
+                  disabled={
                     maxProductQuantity <= 0 ||
-                      productCart.quantity >= maxProductQuantity ||
-                      isSoldOut
-                      ? theme.colors.backgroundGray
-                      : theme.colors.backgroundDark
-                  }
-                />
-              </TouchableOpacity>
-            </View>
+                    productCart.quantity >= maxProductQuantity ||
+                    isSoldOut
+                  }>
+                  <OIcon
+                    src={theme.images.general.plus}
+                    width={16}
+                    color={
+                      maxProductQuantity <= 0 ||
+                        productCart.quantity >= maxProductQuantity ||
+                        isSoldOut
+                        ? theme.colors.backgroundGray
+                        : theme.colors.backgroundDark
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
+            </>
           )}
           <View
-            style={{
-              width: isSoldOut || maxProductQuantity <= 0 ? '100%' : '40%',
-            }}>
+            style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : '40%'}}
+          >
             {productCart &&
               !isSoldOut &&
               maxProductQuantity > 0 &&
               auth &&
-              orderState.options?.address_id && (
-                <OButton
-                  onClick={() => handleSaveProduct()}
-                  imgRightSrc=""
-                  text={`${orderState.loading
-                    ? t('LOADING', 'Loading')
-                    : editMode
-                      ? t('UPDATE', 'Update')
-                      : t('ADD', 'Add')
-                    }`}
-                  textStyle={{
-                    color: saveErrors ? theme.colors.primary : theme.colors.white,
-                  }}
-                  style={{
-                    backgroundColor: saveErrors ? theme.colors.white : theme.colors.primary,
-                    borderColor: saveErrors ? theme.colors.white : theme.colors.primary,
-                    opacity: saveErrors ? 0.3 : 1,
-                    borderRadius: 7.6,
-                    height: 44,
-                    shadowOpacity: 0,
-                    borderWidth: 1,
-                  }}
-                />
-              )}
-            {auth &&
-              !orderState.options?.address_id &&
-              (orderState.loading ? (
+              orderState.options?.address_id &&
+            (
+              <OButton
+                onClick={() => handleSaveProduct()}
+                imgRightSrc=""
+                text={`${orderState.loading
+                  ? t('LOADING', 'Loading')
+                  : editMode
+                    ? t('UPDATE', 'Update')
+                    : t('ADD', 'Add')
+                  }`}
+                textStyle={{
+                  color: saveErrors ? theme.colors.primary : theme.colors.white,
+                }}
+                style={{
+                  backgroundColor: saveErrors ? theme.colors.white : theme.colors.primary,
+                  borderColor: saveErrors ? theme.colors.white : theme.colors.primary,
+                  opacity: saveErrors ? 0.3 : 1,
+                  borderRadius: 7.6,
+                  height: 44,
+                  shadowOpacity: 0,
+                  borderWidth: 1,
+                }}
+              />
+            )}
+            {auth && !orderState.options?.address_id &&(
+              orderState.loading ? (
                 <OButton
                   isDisabled
                   text={t('LOADING', 'Loading')}
@@ -654,7 +655,8 @@ export const ProductOptionsUI = (props: any) => {
                 />
               ) : (
                 <OButton onClick={navigation.navigate('AddressList')} />
-              ))}
+              ))
+            }
             {(!auth || isSoldOut || maxProductQuantity <= 0) && (
               <OButton
                 isDisabled={isSoldOut || maxProductQuantity <= 0}
@@ -669,6 +671,7 @@ export const ProductOptionsUI = (props: any) => {
                 style={{
                   borderColor: theme.colors.primary,
                   backgroundColor: theme.colors.white,
+                  borderRadius: 8
                 }}
               />
             )}
