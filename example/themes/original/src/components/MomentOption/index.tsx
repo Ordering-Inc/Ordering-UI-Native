@@ -48,8 +48,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		handleChangeTime,
 	} = props;
 
-	const countries = ["Egypt", "Canada", "Australia", "Ireland"]
-
 	const theme = useTheme();
 
 	const styles = StyleSheet.create({
