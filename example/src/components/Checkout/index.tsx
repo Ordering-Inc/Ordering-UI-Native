@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, StyleSheet, Platform, I18nManager, ScrollView } from 'react-native';
+import { View, StyleSheet, Platform, I18nManager, ScrollView, TouchableOpacity } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
+import Picker from 'react-native-country-picker-modal';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import {
   Checkout as CheckoutController,
@@ -40,7 +42,9 @@ import {
   ChErrors,
   ChBusinessDetails,
   ChUserDetails,
-  TextDetails
+  TextDetails,
+  DeliveryOptionsContainer,
+  DeliveryOptionItem
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
@@ -51,6 +55,7 @@ import { ActivityIndicator } from 'react-native-paper';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/Feather';
 import { OrderCreating } from '../OrderCreating';
+import { Item } from '../../../themes/uber-eats/src/components/UpsellingProducts/styles';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -84,7 +89,11 @@ const CheckoutUI = (props: any) => {
     businessLogo,
     businessName,
     cartTotal,
-    currency
+    currency,
+    deliveryOptionSelected,
+    instructionsOptions,
+    handleChangeDeliveryOption,
+
   } = props
 
   const theme = useTheme();
@@ -104,6 +113,12 @@ const CheckoutUI = (props: any) => {
     },
     paddSectionH: {
       paddingHorizontal: 20
+    },
+    icon: {
+      top: 15,
+      right: Platform.OS === 'ios' ? 5 : (I18nManager.isRTL ? 30 : 0),
+      position: 'absolute',
+      fontSize: 20
     }
   })
 
@@ -127,7 +142,7 @@ const CheckoutUI = (props: any) => {
   const [prog, setProg] = useState(true);
   const [openOrderCreating, setOpenOrderCreating] = useState(false)
   const [cardData, setCardData] = useState(null)
-
+  const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
@@ -135,6 +150,12 @@ const CheckoutUI = (props: any) => {
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
   const cartsWithProducts = carts && Object.values(carts).filter((cart: any) => cart.products.length) || null
+
+  const deliveryOptions = instructionsOptions?.result && instructionsOptions?.result?.filter((option: any) => option?.enabled)?.map(option => {
+    return {
+      value: option?.id, key: option?.id, label: option?.name
+    }
+  })
 
   const handlePlaceOrder = () => {
     if (!userErrors.length) {
@@ -219,6 +240,11 @@ const CheckoutUI = (props: any) => {
   const handleCloseWebview = () => {
     setProg(true);
     setShowGateway({ open: false, closedByUser: true })
+  }
+
+  const changeDeliveryOption = (option : any) => {
+    handleChangeDeliveryOption(option)
+    setIsDeliveryOptionModalVisible(false)
   }
 
   useEffect(() => {
@@ -427,6 +453,56 @@ const CheckoutUI = (props: any) => {
               )}
             </ChBusinessDetails>
           </ChSection>
+
+          {!cartState.loading && deliveryOptionSelected !== undefined && options?.type === 1 && (
+            <DeliveryOptionsContainer style={style.paddSection}>
+              <OText size={20}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
+              <View
+                style={{
+                  backgroundColor: theme.colors.inputDisabled,
+                  borderRadius: 7.5,
+                  marginBottom: 20,
+                  flex: 1
+                }}>
+                <Picker
+                  countryCode={undefined}
+                  visible={isDeliveryOptionModalVisible}
+                  onClose={() => setIsDeliveryOptionModalVisible(false)}
+                  withCountryNameButton
+                  renderFlagButton={() => (
+                    <TouchableOpacity onPress={() => setIsDeliveryOptionModalVisible(true)}>
+                      <DeliveryOptionItem backgroundColor={theme?.colors?.inputDisabled}>
+                        <OText
+                          size={16}
+                        >
+                          {deliveryOptions.find((option: any) => option.value === deliveryOptionSelected).label}
+                        </OText>
+                        <MaterialIcons name='keyboard-arrow-down' style={style.icon} />
+                      </DeliveryOptionItem>
+                    </TouchableOpacity>
+                  )}
+                  flatListProps={{
+                    keyExtractor: (item: any) => item.value,
+                    data: deliveryOptions || [],
+                    renderItem: ({ item }: any) => (
+                      <TouchableOpacity
+                        onPress={() => changeDeliveryOption(item.value)}
+                        disabled={
+                          deliveryOptionSelected === item.value
+                        }
+                      >
+                        <DeliveryOptionItem backgroundColor={deliveryOptionSelected === item.value ? theme.colors.inputDisabled : 'white'}>
+                          <OText>
+                            {item.label}
+                          </OText>
+                        </DeliveryOptionItem>
+                      </TouchableOpacity>
+                    )
+                  }}
+                />
+              </View>
+            </DeliveryOptionsContainer>
+          )}
 
           {!cartState.loading &&
             cart &&

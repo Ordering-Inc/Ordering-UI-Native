@@ -97,3 +97,16 @@ export const ChErrors = styled.View`
   align-items: center;
   margin-bottom: 20px;
 `
+
+export const DeliveryOptionsContainer = styled.View`
+  flex: 1;
+  margin-top: 10px;
+`
+
+export const DeliveryOptionItem = styled.View`
+  padding: 15px;
+  justify-content: ${(props : any) => props.center ? 'center' : 'space-between'};
+  align-items: center;
+  flex-direction: row;
+  background-color: ${(props : any) => props?.backgroundColor ?? '#fff'};
+`;
