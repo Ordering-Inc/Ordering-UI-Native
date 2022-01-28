@@ -149,6 +149,7 @@ const OrderMessageUI = (props: any) => {
 	} = props;
 	const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
 	const [openModalForDriver, setOpenModalForDriver] = useState(false);
+	const [openMessages, setOpenMessages] = useState({ business: false, driver: false });
 	const [unreadAlert, setUnreadAlert] = useState({
 		business: false,
 		driver: false,
@@ -161,6 +162,11 @@ const OrderMessageUI = (props: any) => {
 
 	const handleClose = () => {
 		setOpenMessges(false)
+	}
+
+	const handleOpenMessages = (data: any) => {
+		setOpenMessages(data)
+		readMessages && readMessages();
 	}
 
 	useEffect(() => {
@@ -184,19 +190,24 @@ const OrderMessageUI = (props: any) => {
 		};
 	}, []);
 
+	useEffect(() => {
+		handleOpenMessages({ driver: false, business: true })
+	}, [])
+
 	return (
 		<>
-			{(order?.business && !order?.driver) && (
-				<Messages
-					orderId={order?.id}
-					messages={messages}
-					order={order}
-					setMessages={setMessages}
-					readMessages={readMessages}
-					isMeesageListing
-					onClose={() => handleClose()}
-				/>
-			)}
+			<Messages
+				orderId={order?.id}
+				messages={messages}
+				order={order}
+				setMessages={setMessages}
+				readMessages={readMessages}
+				business={openMessages.business}
+				driver={openMessages.driver}
+				onMessages={setOpenMessages}
+				isMeesageListing
+				onClose={() => handleClose()}
+			/>
 		</>
 
 	)
@@ -212,7 +223,10 @@ export const OrderListing = (props: OrdersOptionParams) => {
 			initialPage: 1,
 			pageSize: 10,
 			controlType: 'infinity'
-		}
+		},
+		profileMessages: true,
+		orderBy: 'last_direct_message_at',
+		orderDirection: 'asc'
 	}
 	return <OrderList {...OrderListingProps} />
 }
@@ -257,10 +271,6 @@ export const MessageListing = (props: MessageListingParams) => {
 			setSeletedOrder(_seletedOrder)
 		}
 	}, [orderListStatus, selectedOrderId])
-
-	useEffect(() => {
-
-	}, [orderListStatus])
 
 	return (
 		<MessageListingWrapper>
