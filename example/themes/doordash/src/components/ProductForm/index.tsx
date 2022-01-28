@@ -8,7 +8,7 @@ import {
 } from 'ordering-components/native'
 import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
-import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager, TextStyle, Platform } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager, TextStyle, Platform, KeyboardAvoidingView } from 'react-native'
 import {
 	ProductHeader,
 	WrapHeader,
@@ -137,7 +137,11 @@ export const ProductOptionsUI = (props: any) => {
 	const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0
 
 	return (
-		<>
+		<KeyboardAvoidingView
+			style={{ flex: 1 }}
+			behavior={'height'}
+			enabled={Platform.OS === 'ios'}
+		>
 			<ScrollView style={styles.mainContainer}>
 				{!error && (
 					<View style={{ paddingBottom: 80 }}>
@@ -286,7 +290,7 @@ export const ProductOptionsUI = (props: any) => {
 										/>
 									</ProductComment>
 									{productCart && !isSoldOut && maxProductQuantity > 0 && (
-										<View style={{ paddingVertical: 4 }}>
+										<View style={{ paddingVertical: 4, marginBottom: 10 }}>
 											<SectionTitle>
 												<OText style={theme.labels.middle as TextStyle}>{t('PREFERENCES', 'Preferences')}</OText>
 											</SectionTitle>
@@ -335,6 +339,7 @@ export const ProductOptionsUI = (props: any) => {
 							textSub={`${orderState.loading ? '' : productCart.total ? parsePrice(productCart?.total) : ''}`}
 							textStyle={{ color: saveErrors ? theme.colors.textSecondary : theme.colors.white, fontSize: 14, fontWeight: Platform.OS === 'ios' ? '600' : 'bold' }}
 							style={{
+								bottom: 5,
 								backgroundColor: saveErrors ? theme.colors.backgroundGray300 : theme.colors.primary,
 								borderWidth: 1, shadowOpacity: 0, height: 40,
 								borderColor: saveErrors ? theme.colors.backgroundGray300 : theme.colors.primary,
@@ -361,13 +366,13 @@ export const ProductOptionsUI = (props: any) => {
 								text={isSoldOut || maxProductQuantity <= 0 ? t('SOLD_OUT', 'Sold out') : t('LOGIN_SIGNUP', 'Login / Sign Up')}
 								imgRightSrc=''
 								textStyle={{ color: theme.colors.primary, ...theme.labels.middle }}
-								style={{ height: 40, borderWidth: 1, borderColor: theme.colors.primary, backgroundColor: theme.colors.white }}
+								style={{ bottom: 5, marginTop: 2, height: 40, borderWidth: 1, borderColor: theme.colors.primary, backgroundColor: theme.colors.white }}
 							/>
 						)}
 					</View>
 				</ProductActions>
 			)}
-		</>
+		</KeyboardAvoidingView>
 	)
 }
 
