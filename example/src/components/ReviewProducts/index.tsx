@@ -67,7 +67,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
         <NavBar
           title={t('REVIEW_PRODUCT', 'Review product')}
           titleAlign={'center'}
-          onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+          onActionLeft={() => onNavigationRedirect('MyOrders')}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
           paddingTop={0}
