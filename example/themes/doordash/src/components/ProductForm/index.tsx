@@ -8,7 +8,7 @@ import {
 } from 'ordering-components/native'
 import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
-import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager, TextStyle, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager, TextStyle, Platform, KeyboardAvoidingView } from 'react-native'
 import {
 	ProductHeader,
 	WrapHeader,
