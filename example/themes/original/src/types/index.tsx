@@ -338,7 +338,11 @@ export interface MessagesParams {
 	setMessages?: () => {},
 	readMessages?: () => {},
 	onClose?: () => void,
-	isMeesageListing?: boolean
+	isMeesageListing?: boolean,
+	setCanRead?: any,
+	business: boolean,
+	driver: boolean,
+	onMessages?: any
 }
 export interface ViewInterface {
 	navigation?: any;

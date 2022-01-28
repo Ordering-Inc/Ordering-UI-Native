@@ -1,5 +1,6 @@
 
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
+
 
 export const Wrapper = styled.View`
   flex: 1;
@@ -24,4 +25,18 @@ export const ProfileMessageHeader = styled.View`
   align-items: center;
   padding-bottom: 0px;
   padding-horizontal: 20px;
+`
+export const MessageTypeItem = styled.View`
+  justify-content: center;
+  align-items: center;
+  padding-horizontal: 5px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  margin-right: 5px;
+  border-radius: 7.6px;
+  overflow: hidden;
+  
+  ${({ active }: any) => active && css`
+    background-color: ${(props: any) => props.theme.colors.whiteGray};
+  `}
 `
