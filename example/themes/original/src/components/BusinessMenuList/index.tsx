@@ -81,7 +81,7 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
                 dropdownStyle={{
                   borderRadius: 8,
                   borderColor: theme.colors.lightGray,
-                  marginTop: 5,
+                  marginTop: -15,
                   maxHeight: 160
                 }}
                 rowStyle={{
