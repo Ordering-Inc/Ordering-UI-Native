@@ -21,11 +21,15 @@ const MessagesUI = (props: MessagesParams) => {
 		message,
 		messagesToShow,
 		sendMessage,
+		setCanRead,
 		setMessage,
 		handleSend,
 		setImage,
 		readMessages,
 		onClose,
+		business,
+		driver,
+		onMessages,
 		isMeesageListing
 	} = props
 
@@ -161,18 +165,18 @@ const MessagesUI = (props: MessagesParams) => {
 
 	useEffect(() => {
 		let newMessages: Array<any> = []
-		const console = `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
+		const _console = `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
 		const firstMessage = {
 			_id: 0,
-			text: console,
+			text: _console,
 			createdAt: order?.created_at,
 			system: true
 		}
+		const newMessage: any = [];
 		messages.messages.map((message: any) => {
-			let newMessage
-			if (message.type !== 0 && (messagesToShow?.messages?.length || (message?.can_see?.includes('2')) || (message?.can_see?.includes('4') && type === USER_TYPE.DRIVER))) {
-				newMessage = {
-					_id: message.id,
+			if (business && message.type !== 0 && (messagesToShow?.messages?.length || message?.can_see?.includes('2'))) {
+				newMessage.push({
+					_id: message?.id,
 					text: message.type === 1 ? messageConsole(message) : message.comment,
 					createdAt: message.type !== 0 && message.created_at,
 					image: message.source,
@@ -182,15 +186,30 @@ const MessagesUI = (props: MessagesParams) => {
 						name: message.author.name,
 						avatar: message.author.id !== user.id && type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo
 					}
-				}
+				});
 			}
+
+			if (driver && message.type !== 0 && (messagesToShow?.messages?.length || message?.can_see?.includes('4'))) {
+				newMessage.push({
+					_id: message?.id,
+					text: message.type === 1 ? messageConsole(message) : message.comment,
+					createdAt: message.type !== 0 && message.created_at,
+					image: message.source,
+					system: message.type === 1,
+					user: {
+						_id: message.author.id,
+						name: message.author.name,
+						avatar: message.author.id !== user.id && type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo
+					}
+				});
+			}
+
 			if (message.type === 0) {
-				newMessage = firstMessage
+				newMessage.push(firstMessage);
 			}
-			newMessages = [...newMessages, newMessage]
 		})
-		setFormattedMessages([...newMessages.reverse()])
-	}, [messages.messages.length])
+		setFormattedMessages(newMessage.reverse())
+	}, [messages.messages.length, business, driver])
 
 	useEffect(() => {
 		const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -204,6 +223,11 @@ const MessagesUI = (props: MessagesParams) => {
 			keyboardDidHideListener.remove()
 		}
 	}, [])
+
+	useEffect(() => {
+		if (business) setCanRead({ business: true, administrator: true, customer: true, driver: false })
+		else if (driver) setCanRead({ business: false, administrator: true, customer: true, driver: true })
+	}, [business, driver])
 
 	const RenderActions = (props: any) => {
 		return (
@@ -422,23 +446,39 @@ const MessagesUI = (props: MessagesParams) => {
 							</TouchableOpacity>
 							<OText size={18}>{t('ORDER', theme?.defaultLanguages?.ORDER || 'Order')} #{order?.id}</OText>
 						</View>
-						<View>
+						<View style={{ ...styles.typeWraper }}>
 							{order.business && (
-								<OIcon
-									url={order?.business?.logo}
-									width={32}
-									height={32}
-									style={{ borderRadius: 7.6 }}
-								/>
+								<TouchableOpacity
+									onPress={() => onMessages({ business: true, driver: false })}
+								>
+									<MessageTypeItem
+										active={business}
+									>
+										<OIcon
+											url={order?.business?.logo}
+											width={32}
+											height={32}
+											style={{ borderRadius: 32 }}
+										/>
+									</MessageTypeItem>
+								</TouchableOpacity>
 							)}
 
 							{order?.driver && (
-								<OIcon
-									url={order?.driver?.photo}
-									width={32}
-									height={32}
-									style={{ borderRadius: 7.6 }}
-								/>
+								<TouchableOpacity
+									onPress={() => onMessages({ business: false, driver: true })}
+								>
+									<MessageTypeItem
+										active={driver}
+									>
+										<OIcon
+											url={order?.driver?.photo}
+											width={32}
+											height={32}
+											style={{ borderRadius: 32 }}
+										/>
+									</MessageTypeItem>
+								</TouchableOpacity>
 							)}
 						</View>
 					</ProfileMessageHeader>
@@ -509,6 +549,11 @@ const styles = StyleSheet.create({
 		overflow: 'hidden',
 		width: 35,
 		marginVertical: 18,
+	},
+	typeWraper: {
+		flexDirection: 'row',
+		height: 45,
+		alignItems: 'center'
 	}
 
 })

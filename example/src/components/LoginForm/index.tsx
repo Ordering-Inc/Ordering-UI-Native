@@ -418,6 +418,7 @@ const LoginFormUI = (props: LoginParams) => {
         open={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         entireModal
+        title={t('VERIFY_PHONE', 'Verify Phone')}
       >
         <VerifyPhone
           phone={phoneInputData.phone}
@@ -426,6 +427,7 @@ const LoginFormUI = (props: LoginParams) => {
           handleCheckPhoneCode={handleCheckPhoneCode}
           setCheckPhoneCodeState={setCheckPhoneCodeState}
           handleVerifyCodeClick={handleVerifyCodeClick}
+          onClose={() => setIsModalVisible(false)}
         />
       </OModal>
       <Spinner visible={isLoadingSocialButton} />
