@@ -139,7 +139,7 @@ export const ProductOptionsUI = (props: any) => {
 	return (
 		<KeyboardAvoidingView
 			style={{ flex: 1 }}
-			behavior={'height'}
+			behavior={Platform.OS ? 'padding' : 'height'}
 			enabled={Platform.OS === 'ios'}
 		>
 			<ScrollView style={styles.mainContainer}>
