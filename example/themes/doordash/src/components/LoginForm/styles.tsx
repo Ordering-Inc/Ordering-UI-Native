@@ -2,7 +2,6 @@ import styled, { css } from 'styled-components/native';
 
 export const Container = styled.View`
   padding-bottom: 40px;
-  padding-top: 24px;
 `
 
 export const FormSide = styled.View`
@@ -25,6 +24,7 @@ export const OTab = styled.View`
 
 export const LoginWith = styled.View`
   font-size: 14px;
+  padding-bottom: 10px;
 `;
 
 export const FormInput = styled.View`
@@ -56,7 +56,7 @@ export const OrSeparator = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `
 
 export const LineSeparator = styled.View`
@@ -69,10 +69,10 @@ export const SkeletonWrapper = styled.View`
   width: 90%;
 `
 export const InputWrapper = styled.View`
-	flex-direction: row;
-	align-items: flex-start;
-	height: 40px;
-	max-height: 40px;
-	margin-vertical: 6px;
   justify-content: space-between;
+  flex-direction: row;
+  align-items: flex-start;
+	min-height: 40px;
+  max-height: 40px;
+  margin-vertical: 6px;
 `;
