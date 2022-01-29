@@ -84,7 +84,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 	}, [userphoneNumber])
 
 	return (
-		<Wrapper>
+		<Wrapper style={props.wrapStyle}>
 			<PhoneInput
 				ref={phoneInput}
 				defaultValue={userphoneNumber || defaultValue}

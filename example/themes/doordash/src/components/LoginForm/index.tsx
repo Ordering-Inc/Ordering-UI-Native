@@ -14,7 +14,7 @@ import {
 } from 'ordering-components/native';
 
 import { FacebookLogin } from '../FacebookLogin';
-import { VerifyPhone } from '../VerifyPhone';
+import { VerifyPhone } from '../../../../../src/components/VerifyPhone';
 
 import {
 	Container,
@@ -65,8 +65,23 @@ const LoginFormUI = (props: LoginParams) => {
 
 	const loginStyle = StyleSheet.create({
 		btnOutline: {
-			backgroundColor: '#FFF',
-			color: theme.colors.primary
+			backgroundColor: 'red',
+			color: theme.colors.primary,
+      // backgroundColor: '#EFEFEF',
+      borderColor: '#EFEFEF',
+      borderRadius: 30,
+      fontSize: 16,
+      paddingVertical: 15,
+      paddingHorizontal: 30,
+      fontWeight: '400',
+      textAlign: 'center',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      height: 52,
 		},
 		inputStyle: {
 			marginBottom: 25,
@@ -246,7 +261,7 @@ const LoginFormUI = (props: LoginParams) => {
 							{useLoginByEmail && (
 								<Pressable onPress={() => handleChangeTab('email')}>
 									<OTab>
-										<OText size={18} color={loginTab === 'email' ? theme.colors.primary : theme.colors.disabled}>
+										<OText size={16} color={loginTab === 'email' ? theme.colors.primary : theme.colors.disabled}>
 											{t('LOGIN_BY_EMAIL', 'Login by Email')}
 										</OText>
 									</OTab>
@@ -255,7 +270,7 @@ const LoginFormUI = (props: LoginParams) => {
 							{useLoginByCellphone && (
 								<Pressable onPress={() => handleChangeTab('cellphone')}>
 									<OTab>
-										<OText size={18} color={loginTab === 'cellphone' ? theme.colors.primary : theme.colors.disabled}>
+										<OText size={16} color={loginTab === 'cellphone' ? theme.colors.primary : theme.colors.disabled}>
 											{t('LOGIN_BY_PHONE', 'Login by Phone')}
 										</OText>
 									</OTab>
@@ -264,15 +279,10 @@ const LoginFormUI = (props: LoginParams) => {
 						</OTabs>
 					</LoginWith>
 				)}
-				{/* Social login button group */}
-				{configs && Object.keys(configs).length > 0 && 
+				{configs && Object.keys(configs).length > 0 &&
 					(
 						<>
 							<ButtonsWrapper>
-								{/* <OText size={18} mBottom={10} color={theme.colors.disabled}>
-								{t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
-							</OText> */}
-
 								<SocialButtons>
 									<FacebookLogin
 										notificationState={notificationState}
@@ -301,8 +311,48 @@ const LoginFormUI = (props: LoginParams) => {
 										handleSuccessAppleLogin={handleSuccessApple}
 									/>
 								</SocialButtons>
-								<OText style={{ ...theme.labels.normal, textAlign: 'center', marginBottom: 8 } as TextStyle} color={theme.colors.textSecondary}>{t('OR_CONTINUE_WITH_EMAIL', 'or continue with email')}</OText>
+                {loginTab !== 'cellphone' && (
+                  <OText
+                    style={{ ...theme.labels.normal, textAlign: 'center', marginBottom: 8 } as TextStyle}
+                    color={theme.colors.textSecondary}
+                  >
+                    {t('OR_CONTINUE_WITH_EMAIL', 'or continue with email')}
+                  </OText>
+                )}
 							</ButtonsWrapper>
+
+              {useLoginByCellphone &&
+                loginTab === 'cellphone' &&
+                configs && Object.keys(configs).length > 0 &&
+                (configs?.twilio_service_enabled?.value === 'true' ||
+                  configs?.twilio_service_enabled?.value === '1') &&
+                configs?.twilio_module?.value &&
+                (
+                  <>
+                    <OrSeparator>
+                      <LineSeparator />
+                      <OText size={16} mRight={20} mLeft={20}>
+                        {t('OR', 'Or')}
+                      </OText>
+                      <LineSeparator />
+                    </OrSeparator>
+
+                    <ButtonsWrapper mBottom={20}>
+                      <OButton
+                        onClick={handleVerifyCodeClick}
+                        text={t('GET_VERIFY_CODE', 'Get Verify Code')}
+                        bgColor={theme.colors.primary}
+                        borderColor={theme.colors.primary}
+                        textStyle={{ color: 'white', ...theme.labels.middle } as TextStyle}
+                        imgRightSrc={null}
+                        isLoading={isLoadingVerifyModal}
+                        indicatorColor={theme.colors.white}
+                        style={{ marginTop: 0, height: 40, shadowOpacity: 0 }}
+                      />
+                    </ButtonsWrapper>
+                  </>
+                )
+              }
 							<View style={{ height: 1, backgroundColor: theme.colors.border, width: width }} />
 						</>
 					)
@@ -349,19 +399,26 @@ const LoginFormUI = (props: LoginParams) => {
 							</InputWrapper>
 						)}
 						{useLoginByCellphone && loginTab === 'cellphone' && (
-							<View style={{ marginBottom: 25 }}>
-								<PhoneInputNumber
-									data={phoneInputData}
-									handleData={(val: any) => setPhoneInputData(val)}
-									textInputProps={{
-										returnKeyType: 'next',
-										onSubmitEditing: () => inputRef?.current?.focus?.(),
-									}}
-								/>
-							</View>
+              <>
+                <InputWrapper style={{ marginVertical: 20 }}>
+                  <OText style={{ ...loginStyle.inputHead, ...theme.labels.middle, alignSelf: 'center' } as TextStyle}>{t('PHONE', 'Phone')}</OText>
+                  <PhoneInputNumber
+                    wrapStyle={{ marginTop: 0 }}
+                    data={phoneInputData}
+                    handleData={(val: any) => setPhoneInputData(val)}
+                    textInputProps={{
+                      returnKeyType: 'next',
+                      onSubmitEditing: () => inputRef?.current?.focus?.(),
+                      style: { borderWidth: 0, fontSize: 12 }
+                    }}
+                    textWrapStyle={{ borderColor: theme.colors.clear, borderWidth: 0, height: 40, paddingStart: 0 }}
+                  />
+                </InputWrapper>
+                <View style={{ height: 1, backgroundColor: theme.colors.border, marginHorizontal: -40 }} />
+              </>
 						)}
 						<View style={{ height: 1, backgroundColor: theme.colors.border, width: width, marginStart: -40 }} />
-						<InputWrapper>
+						<InputWrapper style={loginTab === 'cellphone' && { marginVertical: 20 }}>
 							<Pressable onPress={() => inputRef.current?.focus()} style={{...loginStyle.inputHead, justifyContent: 'center', minHeight: 40}}> 
 								<OText style={{ ...theme.labels.middle } as TextStyle}>{t('PASSWORD', 'Password')}</OText>
 							</Pressable>
@@ -400,7 +457,7 @@ const LoginFormUI = (props: LoginParams) => {
 							textStyle={{ color: 'white', ...theme.labels.middle } as TextStyle}
 							imgRightSrc={null}
 							isLoading={formState.loading}
-							style={{ marginTop: 48, height: 40, shadowOpacity: 0 }}
+							style={{ marginTop: 28, height: 40, shadowOpacity: 0 }}
 						/>
 					</FormInput>
 				)}
@@ -412,36 +469,6 @@ const LoginFormUI = (props: LoginParams) => {
 						</OText>
 					</Pressable>
 				)}
-
-				{useLoginByCellphone &&
-					loginTab === 'cellphone' &&
-					configs && Object.keys(configs).length > 0 &&
-					(configs?.twilio_service_enabled?.value === 'true' ||
-						configs?.twilio_service_enabled?.value === '1') &&
-					(
-						<>
-							<OrSeparator>
-								<LineSeparator />
-								<OText size={18} mRight={20} mLeft={20}>
-									{t('OR', 'Or')}
-								</OText>
-								<LineSeparator />
-							</OrSeparator>
-
-							<ButtonsWrapper mBottom={20}>
-								<OButton
-									onClick={handleVerifyCodeClick}
-									text={t('GET_VERIFY_CODE', 'Get Verify Code')}
-									borderColor={theme.colors.primary}
-									style={loginStyle.btnOutline}
-									imgRightSrc={null}
-									isLoading={isLoadingVerifyModal}
-									indicatorColor={theme.colors.primary}
-								/>
-							</ButtonsWrapper>
-						</>
-					)
-				}
 
 				{onNavigationRedirect && registerButtonText && (
 					<ButtonsWrapper>

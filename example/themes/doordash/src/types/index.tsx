@@ -107,6 +107,7 @@ export interface PhoneInputParams {
   countryButtonStyle?: ViewStyle;
   textWrapStyle?: ViewStyle;
   renderDropImage?: any;
+  wrapStyle?: any;
 }
 
 export interface LanguageSelectorParams {
