@@ -410,8 +410,7 @@ const LoginFormUI = (props: LoginParams) => {
                     textInputProps={{
                       returnKeyType: 'next',
                       onSubmitEditing: () => inputRef?.current?.focus?.(),
-                      style: { borderWidth: 0, fontSize: 12 },
-					  maxLength: 10
+                      style: { borderWidth: 0, fontSize: 12 }
                     }}
                     textWrapStyle={{ borderColor: theme.colors.clear, borderWidth: 0, height: 40, paddingStart: 0 }}
                   />
