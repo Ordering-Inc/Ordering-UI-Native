@@ -15,6 +15,7 @@ import {
 
 import { FacebookLogin } from '../FacebookLogin';
 import { VerifyPhone } from '../../../../../src/components/VerifyPhone';
+import { OModal } from '../../../../../src/components/shared';
 
 import {
 	Container,
@@ -33,7 +34,7 @@ import {
 import { _removeStoreData } from '../../providers/StoreUtil';
 import NavBar from '../NavBar'
 
-import { OText, OButton, OInput, OModal, OIcon } from '../shared';
+import { OText, OButton, OInput, OIcon } from '../shared';
 import { LoginParams } from '../../types';
 import { useTheme } from 'styled-components/native';
 import { useWindowDimensions } from 'react-native';
@@ -483,10 +484,11 @@ const LoginFormUI = (props: LoginParams) => {
 				)}
 			</FormSide>
 			<OModal
-				open={isModalVisible}
-				onClose={() => setIsModalVisible(false)}
-				overScreen
-			>
+        open={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        entireModal
+        title={t('VERIFY_PHONE', 'Verify Phone')}
+      >
 				<VerifyPhone
 					phone={phoneInputData.phone}
 					verifyPhoneState={verifyPhoneState}
@@ -494,6 +496,7 @@ const LoginFormUI = (props: LoginParams) => {
 					handleCheckPhoneCode={handleCheckPhoneCode}
 					setCheckPhoneCodeState={setCheckPhoneCodeState}
 					handleVerifyCodeClick={handleVerifyCodeClick}
+          onClose={() => setIsModalVisible(false)}
 				/>
 			</OModal>
 			<Spinner visible={isFBLoading} />
