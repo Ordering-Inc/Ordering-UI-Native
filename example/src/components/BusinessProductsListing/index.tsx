@@ -191,7 +191,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           <>
             {!(business?.categories?.length === 0) && (
               <BusinessProductsCategories
-                categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
+                categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories?.sort((a: any, b: any) => a.rank - b.rank)]}
                 categorySelected={categorySelected}
                 onClickCategory={handleChangeCategory}
                 featured={featuredProducts}
@@ -203,7 +203,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
                 categories={[
                   { id: null, name: t('ALL', 'All') },
                   { id: 'featured', name: t('FEATURED', 'Featured') },
-                  ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
+                  ...business?.categories?.sort((a: any, b: any) => a.rank - b.rank)
                 ]}
                 category={categorySelected}
                 categoryState={categoryState}
