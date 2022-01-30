@@ -14,7 +14,8 @@ import {
 } from 'ordering-components/native';
 
 import { FacebookLogin } from '../FacebookLogin';
-import { VerifyPhone } from '../VerifyPhone';
+import { VerifyPhone } from '../../../../../src/components/VerifyPhone';
+import { OModal } from '../../../../../src/components/shared';
 
 import {
 	Container,
@@ -33,7 +34,7 @@ import {
 import { _removeStoreData } from '../../providers/StoreUtil';
 import NavBar from '../NavBar'
 
-import { OText, OButton, OInput, OModal } from '../shared';
+import { OText, OButton, OInput } from '../shared';
 import { LoginParams } from '../../types';
 import { useTheme } from 'styled-components/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -362,24 +363,23 @@ const LoginFormUI = (props: LoginParams) => {
 				</OrSeparator>
 
 				{useLoginByCellphone &&
-					loginTab === 'cellphone' &&
-					configs && Object.keys(configs).length > 0 &&
-					(configs?.twilio_service_enabled?.value === 'true' ||
-						configs?.twilio_service_enabled?.value === '1') &&
+          loginTab === 'cellphone' &&
+          configs && Object.keys(configs).length > 0 &&
+          (configs?.twilio_service_enabled?.value === 'true' ||
+            configs?.twilio_service_enabled?.value === '1') &&
+          configs?.twilio_module?.value &&
 					(
-						<>
-							<ButtonsWrapper mBottom={20}>
-								<OButton
-									onClick={handleVerifyCodeClick}
-									text={t('GET_VERIFY_CODE', 'Get Verify Code')}
-									borderColor={theme.colors.primary}
-									style={loginStyle.btnOutline}
-									imgRightSrc={null}
-									isLoading={isLoadingVerifyModal}
-									indicatorColor={theme.colors.primary}
-								/>
-							</ButtonsWrapper>
-						</>
+            <ButtonsWrapper mBottom={20}>
+              <OButton
+                onClick={handleVerifyCodeClick}
+                text={t('GET_VERIFY_CODE', 'Get Verify Code')}
+                borderColor={theme.colors.primary}
+                style={loginStyle.btnOutline}
+                imgRightSrc={null}
+                isLoading={isLoadingVerifyModal}
+                indicatorColor={theme.colors.primary}
+              />
+            </ButtonsWrapper>
 					)
 				}
 
@@ -417,6 +417,8 @@ const LoginFormUI = (props: LoginParams) => {
 			<OModal
 				open={isModalVisible}
 				onClose={() => setIsModalVisible(false)}
+        entireModal
+        title={t('VERIFY_PHONE', 'Verify Phone')}
 			>
 				<VerifyPhone
 					phone={phoneInputData.phone}
@@ -425,6 +427,7 @@ const LoginFormUI = (props: LoginParams) => {
 					handleCheckPhoneCode={handleCheckPhoneCode}
 					setCheckPhoneCodeState={setCheckPhoneCodeState}
 					handleVerifyCodeClick={handleVerifyCodeClick}
+          onClose={() => setIsModalVisible(false)}
 				/>
 			</OModal>
 			<Spinner visible={isFBLoading} />
