@@ -44,7 +44,7 @@ const OCard = (props: Props): React.ReactElement => {
 			)}
 			<OImage
 				source={props.image}
-				height={Platform.OS === 'ios' ? 250 : 150}
+				height={120}
 				resizeMode="cover"
 				borderRadius={16}
 			/>
