@@ -56,9 +56,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
     clearTimeout(timerId.current);
     timerId.current = setTimeout(() => {
       setClearCart(true)
-      navigation.reset({
-        routes: [{ name: 'Intro' }],
-      })
+      navigation.navigate('Intro')
     }, 60000*2);
   }, []);
   

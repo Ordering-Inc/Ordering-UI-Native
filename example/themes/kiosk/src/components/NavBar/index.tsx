@@ -3,7 +3,7 @@ import styled from 'styled-components/native'
 import { OIcon, OButton, OText } from '../shared'
 import { ImageStyle, TextStyle, View, Platform } from 'react-native'
 import { OrderTypeSelector } from '../OrderTypeSelector'
-import { useConfig } from 'ordering-components/native'
+import { useConfig, useLanguage } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
 
 const Wrapper = styled.View`
@@ -60,6 +60,7 @@ interface Props {
 const NavBar = (props: Props) => {
   const theme = useTheme();
   const [{ configs }] = useConfig();
+  const [, t] = useLanguage();
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || [];
 
   return (
@@ -113,7 +114,13 @@ const NavBar = (props: Props) => {
       </TitleTopWrapper>
 
       {props?.includeOrderTypeSelector && (
-        <View style={{ paddingHorizontal: props.rightComponent ? 4 : 20 }}>
+        <View
+          style={{
+            paddingHorizontal: props.rightComponent ? 4 : 20,
+            flexDirection: 'row'
+          }}
+        >
+          <OText style={{ paddingRight: 5 }}>{t('THIS_ORDER_IS_TO', 'This order is to')}</OText>
           <OrderTypeSelector configTypes={configTypes} />
         </View>
       )}

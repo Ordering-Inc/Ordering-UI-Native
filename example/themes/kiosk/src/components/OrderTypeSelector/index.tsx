@@ -85,11 +85,11 @@ export const OrderTypeSelector = (props: any) => {
     orderTypes: props.orderType || [
       {
         value: 2,
-        content: `${t('THIS_ORDER_IS_TO', 'This order is to')} ${t('TAKE_OUT', 'Take out')}`
+        content: t('TAKE_OUT', 'Take out')
       },
       {
         value: 3,
-        content: `${t('THIS_ORDER_IS_TO', 'This order is to')} ${t('EAT_IN', 'Eat in')}`
+        content: t('EAT_IN', 'Eat in')
       },
     ]
   }
