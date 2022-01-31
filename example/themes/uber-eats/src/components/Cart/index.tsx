@@ -239,9 +239,9 @@ const CartUI = (props: any) => {
               </OSTotal>
               {cart?.status !== 2 && (
                 <OSTable>
-                  <View style={{ width: '100%', marginTop: 20 }}>
+                  <View style={{ flex: 1, marginTop: 20, paddingBottom: 20 }}>
                     <OText>{t('COMMENTS', 'Comments')}</OText>
-                    <View style={{ flex: 1, width: '100%' }}>
+                    <View style={{ flex: 1 }}>
                       <OInput
                         value={cart?.comment}
                         placeholder={t('SPECIAL_COMMENTS', 'Special Comments')}
