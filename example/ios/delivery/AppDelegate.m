@@ -39,6 +39,8 @@ static void InitializeFlipper(UIApplication *application) {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [GMSServices provideAPIKey:@"_GOOGLE_MAPS_API_KEY_"];
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+  didFinishLaunchingWithOptions:launchOptions];
   if ([FIRApp defaultApp] == nil) {
     [FIRApp configure]; 
   }
@@ -77,7 +79,15 @@ static void InitializeFlipper(UIApplication *application) {
    openURL:(NSURL *)url
    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  return [RCTLinkingManager application:application openURL:url options:options];
+  if ([[FBSDKApplicationDelegate sharedInstance] application:app openURL:url options:options]) {
+    return YES;
+  }
+
+  if ([RCTLinkingManager application:app openURL:url options:options]) {
+    return YES;
+  }
+
+  return NO;
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
