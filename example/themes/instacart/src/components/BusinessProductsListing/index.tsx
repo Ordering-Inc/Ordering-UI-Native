@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import React, { useEffect, useState } from 'react'
+import { View, StyleSheet, ScrollView, Animated, Dimensions } from 'react-native'
 import {
 	BusinessAndProductList,
 	useLanguage,
@@ -28,12 +27,13 @@ import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
 import { useTheme } from 'styled-components/native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { OrderSummary } from '../OrderSummary'
 import { Cart } from '../Cart'
 import { SingleProductCard } from '../SingleProductCard'
 import NavBar from '../NavBar'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+
+const { width, height } = Dimensions.get('screen')
 
 const PIXELS_TO_SCROLL = 1000
 
@@ -58,6 +58,43 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		updateProductModal
 	} = props
 
+	const styles = StyleSheet.create({
+		mainContainer: {
+			flex: 1,
+			display: categorySelected.id !== null ? 'none' : 'flex'
+		},
+		BackIcon: {
+			paddingRight: 20,
+		},
+		headerItem: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			marginHorizontal: 20,
+		},
+		btnBackArrow: {
+			borderWidth: 0,
+			color: '#FFF',
+			backgroundColor: 'rgba(0,0,0,0.3)',
+			borderRadius: 16,
+			paddingHorizontal: 15,
+			marginRight: 15,
+			marginTop: 20
+		},
+		searchIcon: {
+			borderWidth: 0,
+			color: '#FFF',
+			backgroundColor: 'rgba(0,0,0,0.3)',
+			borderRadius: 24,
+			padding: 15,
+			justifyContent: 'center'
+		},
+		productsWrapper: {
+			flexDirection: 'row',
+			flexWrap: 'wrap',
+			alignItems: 'flex-start'
+		}
+	})
+
 	const theme = useTheme()
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
@@ -71,7 +108,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [canOpenUpselling, setCanOpenUpselling] = useState(false)
 	const [openCart, setOpenCart] = useState(false)
 
-	const { top, bottom } = useSafeAreaInsets();
+  const [alignment] = useState(new Animated.Value(0))
+  const actionSheetIntropolate = alignment.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-height, 0]
+  })
 
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
@@ -117,6 +158,22 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		}
 	}
 
+	useEffect(() => {
+		if (categorySelected.id === null) {
+			Animated.timing(alignment, {
+				toValue: 0,
+				duration: 500,
+				useNativeDriver: false
+			}).start()
+		} else {
+			Animated.timing(alignment, {
+				toValue: 1,
+				duration: 500,
+				useNativeDriver: false
+			}).start()
+		}
+	}, [categorySelected.id])
+
 	return (
 		<>
 			<BusinessProductsListingContainer
@@ -129,7 +186,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				<WrapHeader>
 					{!loading && business?.id && (
 						<>
-							<TopHeader style={{ marginTop: top }}>
+							<TopHeader>
 								<View style={{ ...styles.headerItem, flex: 1 }}>
 									<OButton
 										imgLeftSrc={theme.images.general.arrow_left}
@@ -213,6 +270,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					handleClick={() => onRedirect('CartPage', { cart: currentCart })}
 				/>
 			)}
+
 			<OModal
 				open={!!curProduct || (!!productModal.product && !orderState.loading)}
 				onClose={handleCloseProductModal}
@@ -230,18 +288,16 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				/>
 			</OModal>
 
-			<OModal
-				open={categorySelected.id !== null}
-				onClose={() => handleChangeCategory({ id: null, name: 'All' })}
-				entireModal
-				customClose
-			>
-				<ScrollView
+			{categorySelected.id !== null && (
+				<Animated.ScrollView
 					contentContainerStyle={{
 						paddingHorizontal: 40,
 						paddingVertical: 20
 					}}
 					onScroll={(e: any) => handleScroll(e)}
+					style={{
+						bottom: actionSheetIntropolate
+					}}
 				>
 					<NavBar
 						title={categorySelected?.name}
@@ -266,7 +322,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					{
 						categoryState.loading && (
 							<Placeholder style={{ padding: 5, marginBottom: 20 }} Animation={Fade}>
-								<PlaceholderLine width={50} height={16} style={{ marginBottom: 20 }} />
 								{[...Array(categoryState?.pagination?.nextPageItems).keys()].map((item, i) => (
 								<View key={i} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 									<View style={{flexBasis: '47%'}}>
@@ -288,8 +343,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							</Placeholder>
 						)
 					}
-				</ScrollView>
-			</OModal>
+				</Animated.ScrollView>
+			)}
 
 			{openUpselling && (
 				<UpsellingProducts
@@ -305,42 +360,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		</>
 	)
 }
-
-const styles = StyleSheet.create({
-	mainContainer: {
-		flex: 1,
-	},
-	BackIcon: {
-		paddingRight: 20,
-	},
-	headerItem: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginHorizontal: 20,
-	},
-	btnBackArrow: {
-		borderWidth: 0,
-		color: '#FFF',
-		backgroundColor: 'rgba(0,0,0,0.3)',
-		borderRadius: 16,
-		paddingHorizontal: 15,
-		marginRight: 15,
-		marginTop: 20
-	},
-	searchIcon: {
-		borderWidth: 0,
-		color: '#FFF',
-		backgroundColor: 'rgba(0,0,0,0.3)',
-		borderRadius: 24,
-		padding: 15,
-		justifyContent: 'center'
-	},
-	productsWrapper: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		alignItems: 'flex-start'
-	}
-})
 
 export const BusinessProductsListing = (props: BusinessProductsListingParams) => {
 	const businessProductslistingProps = {
