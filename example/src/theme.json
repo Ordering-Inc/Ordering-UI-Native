@@ -9,84 +9,43 @@
       "weights": [400]
     }
   },
-  "labels": {
-		"small": {
-			"fontSize": 10,
-			"lineHeight": 15,
-			"fontWeight": "400"
-		},
-		"normal": {
-			"fontSize": 12,
-			"lineHeight": 18,
-			"fontWeight": "400"
-		},
-		"middle": {
-			"fontSize": 14,
-			"lineHeight": 24,
-			"fontWeight": "400"
-		},
-		"button": {
-			"fontSize": 14,
-			"lineHeight": 24,
-			"fontWeight": "600"
-		},
-		"title": {
-			"fontSize": 20,
-			"lineHeight": 30,
-			"fontWeight": "600"
-		},
-		"subtitle": {
-			"fontSize": 16,
-			"lineHeight": 24,
-			"fontWeight": "600"
-		}
-	},
-	"colors": {
-		"primary": "#4FAB34",
-		"primaryDark": "#499C31",
-		"primaryContrast": "#FFFFFF",
-		"secundary": "#EFEFEF",
-		"secundaryContrast": "#000",
-		"disabled": "#CBCBCB",
-		"disabledContrast": "#000",
-		"backgroundPage": "#FFFFFF",
-		"backgroundTab": "#FDFDFD",
-		"colorPage": "#333",
-		"red": "#D83520",
-		"skyBlue": "#1977F2",
-		"white": "#fff",
-		"whiteGray": "#f7f6f3",
-		"dusk": "rgb(65,77,107)",
-		"green": "#0CAD63",
-		"mediumGray": "rgb(134,154,183)",
-		"paleGray": "#FAFAFA",
-		"lightGray": "#D2D2D2",
-		"backgroundLight": "white",
-		"backgroundDark": "#484848",
-		"backgroundGray": "#EFEEEE",
-		"clear": "transparent",
-		"error": "#C90800",
-		"success": "#C2E791",
-		"btnFont": "black",
-		"inputDisabled": "#F7F7F7",
-		"textPrimary": "#474747",
-		"textSecondary": "#B4B4B4",
-		"textThird": "#B1BCCC",
-		"editColor": "#F2BB40",
-		"cancelColor": "#D81212",
-		"black": "#000000",
-		"border": "#E9ECEF",
-		"facebook": "#4062A1",
-		"google": "#4584E0",
-		"apple": "#474747",
-		"strength_1": "#b21c14",
-		"strength_2": "#f56230",
-		"strength_3": "#f9cb01",
-		"strength_4": "#3ecb09",
-		"strength_5": "#124d01",
+  "colors": {
+    "primary": "#D83520",
+    "primaryContrast": "#FFF",
+    "secundary": "#EFEFEF",
+    "secundaryContrast": "#000",
+    "disabled": "#CBCBCB",
+    "disabledContrast": "#000",
+    "backgroundPage": "#FFFFFF",
+    "colorPage": "#333",
+    "red": "#D83520",
+    "skyBlue": "#1977F2",
+    "white": "#fff",
+    "whiteGray": "#f7f6f3",
+    "dusk": "rgb(65,77,107)",
+    "green": "#0CAD63",
+    "mediumGray": "rgb(134,154,183)",
+    "paleGray": "#FAFAFA",
+    "lightGray": "#D2D2D2",
+    "backgroundLight": "white",
+    "backgroundDark": "#484848",
+    "backgroundGray": "#CCCCCC",
+    "clear": "transparent",
+    "error": "#D83520",
+    "success": "#90C68E",
+    "btnFont": "black",
+    "inputDisabled": "#F7F7F7",
+    "textSecondary": "#858585",
+    "editColor": "#F2BB40",
+    "cancelColor": "#D81212",
+    "black": "#000000",
+    "colorTextTutorial": "#000000",
+    "toastSuccess":"#90C68E",
+    "toastError":"#D83520",
+    "toastInfo":"#6BA4FF",
     "warning5": "#FFC700",
     "warning1": "#FFF4CC"
-	},
+  },
   "images": {
     "logos": {
       "logotype": "",
@@ -134,10 +93,7 @@
       "close": "",
       "orderCreating": "",
       "orderSuccess": "",
-      "newOrder": "",
-      "pencil": "",
-      "info": "",
-      "plus_circle": ""
+      "newOrder": ""
     },
     "order": {
       "status0": "",
