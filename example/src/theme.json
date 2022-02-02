@@ -83,7 +83,9 @@
 		"strength_2": "#f56230",
 		"strength_3": "#f9cb01",
 		"strength_4": "#3ecb09",
-		"strength_5": "#124d01"
+		"strength_5": "#124d01",
+    "warning5": "#FFC700",
+    "warning1": "#FFF4CC"
 	},
   "images": {
     "logos": {

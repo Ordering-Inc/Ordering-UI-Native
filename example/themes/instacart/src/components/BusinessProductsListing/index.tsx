@@ -31,7 +31,7 @@ import { useTheme } from 'styled-components/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { OrderSummary } from '../OrderSummary'
 import { Cart } from '../Cart'
-import { SingleProductCard } from '../../../../../src/components/SingleProductCard'
+import { SingleProductCard } from '../SingleProductCard'
 import NavBar from '../NavBar'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 
@@ -249,7 +249,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						showCall={false}
 						style={{ paddingHorizontal: 0, marginHorizontal: -7 }}
 					/>
-					<View>
+					<View style={styles.productsWrapper}>
 						{categorySelected.id && (
 							categoryState.products?.map((product: any, index: number) => (
 								<SingleProductCard
@@ -265,23 +265,27 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 					{
 						categoryState.loading && (
-						<>
-							{[...Array(10).keys()].map((item, i) => (
-							<Placeholder key={i} style={{ marginBottom: 10 }} Animation={Fade}>
-								<View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-									<View
-										style={{ width: 80, height: 80 }}
-									>
-										<PlaceholderLine width={80} height={70} />
-									</View>
+							<Placeholder style={{ padding: 5, marginBottom: 20 }} Animation={Fade}>
+								<PlaceholderLine width={50} height={16} style={{ marginBottom: 20 }} />
+								{[...Array(categoryState?.pagination?.nextPageItems).keys()].map((item, i) => (
+								<View key={i} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+									<View style={{flexBasis: '47%'}}>
+									<PlaceholderLine width={80} height={100} style={{ marginBottom: 10 }} />
 									<Placeholder>
-										<PlaceholderLine width={60} style={{marginBottom: 30}}/>
 										<PlaceholderLine width={20} />
+										<PlaceholderLine width={60} style={{marginBottom: 12}}/>
 									</Placeholder>
+									</View>
+									<View style={{flexBasis: '47%'}}>
+									<PlaceholderLine width={80} height={100} style={{ marginBottom: 10 }} />
+									<Placeholder>
+										<PlaceholderLine width={20} />
+										<PlaceholderLine width={60} style={{marginBottom: 25}}/>
+									</Placeholder>
+									</View>
 								</View>
+								))}
 							</Placeholder>
-							))}
-						</>
 						)
 					}
 				</ScrollView>
@@ -330,6 +334,11 @@ const styles = StyleSheet.create({
 		borderRadius: 24,
 		padding: 15,
 		justifyContent: 'center'
+	},
+	productsWrapper: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		alignItems: 'flex-start'
 	}
 })
 
