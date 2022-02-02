@@ -13,6 +13,7 @@ export const FacebookPixel = (props : any) => {
   const handleLoginUser = () => {
     AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CompletedRegistration, {
       [AppEventsLogger.AppEventParams.RegistrationMethod]: "login",
+      ["currency"]: "email"
     })
   }
   
@@ -34,6 +35,7 @@ export const FacebookPixel = (props : any) => {
   const handleSignupUser = () => {
     AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CompletedRegistration, {
       [AppEventsLogger.AppEventParams.RegistrationMethod]: "signup",
+      ["currency"]: "email"
     })
   }
 

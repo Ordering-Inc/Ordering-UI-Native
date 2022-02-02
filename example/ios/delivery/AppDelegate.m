@@ -79,11 +79,11 @@ static void InitializeFlipper(UIApplication *application) {
    openURL:(NSURL *)url
    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  if ([[FBSDKApplicationDelegate sharedInstance] application:app openURL:url options:options]) {
+  if ([[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options]) {
     return YES;
   }
 
-  if ([RCTLinkingManager application:app openURL:url options:options]) {
+  if ([RCTLinkingManager application:application openURL:url options:options]) {
     return YES;
   }
 
