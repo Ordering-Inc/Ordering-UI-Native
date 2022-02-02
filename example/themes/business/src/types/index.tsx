@@ -232,6 +232,7 @@ export interface NotFoundSourceParams {
   conditioned?: boolean;
   onClickButton?: any;
   children?: any;
+  textSize?: number;
 }
 export interface MessagesOptionParams {
   orders?: any;
@@ -370,7 +371,8 @@ export interface OrderDetailsParams {
   driverUpdateLocation?: any;
   setDriverUpdateLocation?: any;
   handleClickLogisticOrder?: (status: number, orderId: number) => void;
-  orderTitle?: any
+  orderTitle?: any;
+  forceUpdate?: number;
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean;
@@ -529,6 +531,8 @@ interface actions {
   pickupFailed: string;
   deliveryFailed: string;
   notReady: string;
+  forcePickUp: string;
+  forceDelivery: string;
 }
 
 interface textTranslate {

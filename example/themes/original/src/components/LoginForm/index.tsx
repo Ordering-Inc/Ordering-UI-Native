@@ -15,7 +15,9 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { FacebookLogin } from '../FacebookLogin';
-import { VerifyPhone } from '../VerifyPhone';
+import { VerifyPhone } from '../../../../../src/components/VerifyPhone';
+import { OModal } from '../../../../../src/components/shared';
+
 
 import {
 	Container,
@@ -34,7 +36,7 @@ import {
 
 import NavBar from '../NavBar';
 
-import { OText, OButton, OInput, OModal, OIcon } from '../shared';
+import { OText, OButton, OInput, OIcon } from '../shared';
 import { LoginParams } from '../../types';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { GoogleLogin } from '../GoogleLogin';
@@ -406,11 +408,11 @@ const LoginFormUI = (props: LoginParams) => {
 				)}
 
 				{useLoginByCellphone &&
-					loginTab === 'cellphone' &&
-					configs &&
-					Object.keys(configs).length > 0 &&
-					(configs?.twilio_service_enabled?.value === 'true' ||
-						configs?.twilio_service_enabled?.value === '1') && (
+          loginTab === 'cellphone' &&
+          configs && Object.keys(configs).length > 0 &&
+          (configs?.twilio_service_enabled?.value === 'true' ||
+            configs?.twilio_service_enabled?.value === '1') &&
+          configs?.twilio_module?.value && (
 						<>
 							<OrSeparator>
 								<LineSeparator />
@@ -515,7 +517,12 @@ const LoginFormUI = (props: LoginParams) => {
           </ButtonsWrapper>
         )} */}
 			</FormSide>
-			<OModal open={isModalVisible} onClose={() => setIsModalVisible(false)}>
+			<OModal
+				open={isModalVisible}
+				onClose={() => setIsModalVisible(false)}
+        entireModal
+        title={t('VERIFY_PHONE', 'Verify Phone')}
+			>
 				<VerifyPhone
 					phone={phoneInputData.phone}
 					verifyPhoneState={verifyPhoneState}
@@ -523,6 +530,7 @@ const LoginFormUI = (props: LoginParams) => {
 					handleCheckPhoneCode={handleCheckPhoneCode}
 					setCheckPhoneCodeState={setCheckPhoneCodeState}
 					handleVerifyCodeClick={handleVerifyCodeClick}
+          onClose={() => setIsModalVisible(false)}
 				/>
 			</OModal>
 			<Spinner visible={isFBLoading} />

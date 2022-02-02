@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, TextInput } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Pressable,
+} from 'react-native';
 import { useLanguage } from 'ordering-components/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { getTraduction } from '../../utils'
@@ -17,6 +24,7 @@ import {
 import { useTheme } from 'styled-components/native';
 
 const TIME_COUNTDOWN = 60 * 10 // 10 minutes
+const CODE_LENGTH = 4;
 
 export const VerifyPhone = (props: any) => {
   const {
@@ -26,36 +34,91 @@ export const VerifyPhone = (props: any) => {
     checkPhoneCodeState,
     setCheckPhoneCodeState,
     handleCheckPhoneCode,
-    handleVerifyCodeClick
+    handleVerifyCodeClick,
+    onClose
   } = props
 
   const theme = useTheme();
+  const [, t] = useLanguage()
+  const ref = useRef<TextInput>(null);
 
-  const styles = StyleSheet.create({
-    inputStyle: {
-      width: 80,
-      height: 80,
-      marginBottom: 25,
-      borderWidth: 1,
-      borderColor: theme.colors.disabled,
+  const style = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    inputsContainer: {
+      width: '80%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    inputContainer: {
+      borderWidth: 2,
       borderRadius: 20,
-      textAlign: 'center',
-      fontSize: 40
-    }
+      padding: 20,
+      borderColor: theme.colors.disabled,
+    },
+    inputContainerFocused: {
+      borderColor: theme.colors.primary,
+    },
+    inputText: {
+      fontSize: 24,
+    },
+    hiddenCodeInput: {
+      position: 'absolute',
+      height: 0,
+      width: 0,
+      opacity: 0,
+    },
   });
 
-  const [, t] = useLanguage()
-
   const [timer, setTimer] = useState(`${TIME_COUNTDOWN / 60}:00`)
-  const [verifyCode, setVerifyCode] = useState({ 0: '', 1: '', 2: '', 3: '' })
   const [isSendCodeAgain, setIsSendCodeAgain] = useState(false)
+  const [code, setCode] = useState('');
+  const [containerIsFocused, setContainerIsFocused] = useState(false);
 
-  const lastNumbers = phone?.cellphone &&
-    `${phone?.cellphone.charAt(phone?.cellphone.length-2)}${phone?.cellphone.charAt(phone?.cellphone.length-1)}`
+  const codeDigitsArray = new Array(CODE_LENGTH).fill(0);
+  const phoneLength = phone?.cellphone.split('').length
+  const lastNumbers = phone?.cellphone && phone?.cellphone.split('').fill('*', 0, phoneLength - 2).join('')
 
-  const handleChangeCode = (val: number, i: number) => {
-    setVerifyCode({ ...verifyCode, [i]: val })
-  }
+  const handleOnPress = () => {
+    setContainerIsFocused(true);
+    ref?.current?.focus();
+  };
+
+  const handleOnBlur = () => {
+    setContainerIsFocused(false);
+  };
+
+  const toDigitInput = (_value: number, idx: number) => {
+    const emptyInputChar = '0';
+    const digit = code[idx] || emptyInputChar;
+
+    const isCurrentDigit = idx === code.length;
+    const isLastDigit = idx === CODE_LENGTH - 1;
+    const isCodeFull = code.length === CODE_LENGTH;
+
+    const isFocused = isCurrentDigit || (isLastDigit && isCodeFull);
+
+    const containerStyle =
+      containerIsFocused && isFocused
+        ? {...style.inputContainer, ...style.inputContainerFocused}
+        : style.inputContainer;
+
+    return (
+      <View key={idx} style={containerStyle}>
+        <Text
+          style={{
+            ...style.inputText,
+            color: code[idx] ? theme.colors.black : theme.colors.disabled
+          }}
+        >
+          {digit}
+        </Text>
+      </View>
+    );
+  };
 
   const checkResult = (result: any) => {
     if (!result) return
@@ -106,27 +169,28 @@ export const VerifyPhone = (props: any) => {
   }, [isSendCodeAgain])
 
   useEffect(() => {
-    const codes = Object.keys(verifyCode).length
-    const isFullInputs = codes && Object.values(verifyCode).every(val => val)
-    if (codes === 4 && isFullInputs) {
+    if (code.length === CODE_LENGTH) {
       const values = {
         ...formValues,
         cellphone: phone.cellphone,
         country_phone_code: `+${phone.country_phone_code}`,
-        code: Object.values(verifyCode).join().replace(/,/g, '')
+        code
       }
       handleCheckPhoneCode && handleCheckPhoneCode(values)
     }
-  }, [verifyCode])
+  }, [code]);
+
+  useEffect(() => {
+    if (verifyPhoneState?.result?.error) {
+      onClose && onClose()
+    }
+  }, [verifyPhoneState]);
 
   return (
     <Container>
-      <OText size={30} style={{ textAlign: 'left' }}>
-        {t('VERIFY_PHONE', 'Verify Phone')}
-      </OText>
       {lastNumbers && (
-        <OText size={20} color={theme.colors.disabled}>
-          {`${t('MESSAGE_ENTER_VERIFY_CODE', 'Please, enter the verification code we sent to your mobile ending with')} **${lastNumbers}`}
+        <OText size={18} color={theme.colors.disabled}>
+          {`${t('MESSAGE_ENTER_VERIFY_CODE', 'Please, enter the verification code we sent to your mobile ending with')} ${lastNumbers}`}
         </OText>
       )}
       <WrappCountdown>
@@ -140,30 +204,34 @@ export const VerifyPhone = (props: any) => {
         </CountDownContainer>
       </WrappCountdown>
       <InputsSection>
-        {[...Array(4),].map((_: any, i: number) => (
+        <SafeAreaView style={style.container}>
+          <Pressable style={style.inputsContainer} onPress={handleOnPress} disabled={code.length === CODE_LENGTH}>
+            {codeDigitsArray.map(toDigitInput)}
+          </Pressable>
           <TextInput
-            key={i}
-            keyboardType='number-pad'
-            placeholder={'0'}
-            style={styles.inputStyle}
-            onChangeText={(val: any) => handleChangeCode(val, i)}
-            maxLength={1}
-            editable={timer !== '00:00'}
+            ref={ref}
+            value={code}
+            placeholder='0'
+            onChangeText={setCode}
+            onSubmitEditing={handleOnBlur}
+            keyboardType="number-pad"
+            returnKeyType="done"
+            textContentType="oneTimeCode"
+            maxLength={CODE_LENGTH}
+            style={style.hiddenCodeInput}
           />
-        ))}
+        </SafeAreaView>
       </InputsSection>
-      {(verifyPhoneState?.result?.error ? verifyPhoneState : checkPhoneCodeState) &&
-        !(verifyPhoneState?.result?.error ? verifyPhoneState : checkPhoneCodeState)?.loading &&
-        (verifyPhoneState?.result?.error ? verifyPhoneState : checkPhoneCodeState)?.result?.error &&
-        (verifyPhoneState?.result?.error ? verifyPhoneState : checkPhoneCodeState).result?.result &&
+      {checkPhoneCodeState &&
+        !checkPhoneCodeState?.loading &&
+        checkPhoneCodeState?.result?.error &&
+        checkPhoneCodeState?.result?.result &&
       (
         <ErrorSection>
-          {checkResult((
-            verifyPhoneState?.result?.error ? verifyPhoneState : checkPhoneCodeState
-          ).result?.result)?.map((e: any, i: number) => (
+          {checkResult((checkPhoneCodeState).result?.result)?.map((e: any, i: number) => (
             <OText
               key={i}
-              size={20}
+              size={16}
               color={theme.colors.error}
             >
               {`* ${getTraduction(e, t)}`}

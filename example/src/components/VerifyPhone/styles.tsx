@@ -2,9 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   width: 100%;
-  padding-top: 5px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 0 30px;
 `
 
 export const CountDownContainer = styled.View`
@@ -14,24 +12,26 @@ export const CountDownContainer = styled.View`
   margin: 0 auto;
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 80%;
 `
 
 export const ResendSection = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-bottom: 30px;
 `
 
 export const WrappCountdown = styled.View`
-  padding-top: 20px;
   padding-bottom: 20px;
+  padding-top: 20px;
 `
 
 export const InputsSection = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding-bottom: 20px;
 `
 
 export const ErrorSection = styled.View`

@@ -59,19 +59,19 @@ export const NewOrderNotification = (props: any) => {
     setModalOpen(false)
   }
 
-  const handleNotification = useCallback((order: any) => {
+  const handleNotification = (order: any) => {
+    setModalOpen(true)
     clearInterval(soundTimeout)
     handlePlayNotificationSound()
     setNewOrderId(order.id)
-    setModalOpen(true)
-  }, [newOrderId, notificationSound, soundTimeout])
+  }
 
   useEffect(() => {
     events.on('order_added', handleNotification)
     return () => {
       events.off('order_added', handleNotification)
     }
-  }, [handleNotification])
+  }, [])
 
   const handleUpdateOrder = useCallback(async (order: any) => {
     if (order?.driver) {

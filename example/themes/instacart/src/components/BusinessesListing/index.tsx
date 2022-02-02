@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
+import Geolocation from '@react-native-community/geolocation'
 import { View, StyleSheet, ScrollView, Platform, PanResponder, I18nManager } from 'react-native'
 import MaterialComIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import {
@@ -13,7 +14,7 @@ import {
 	useToast
 } from 'ordering-components/native'
 
-import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption } from './styles'
+import { WelcomeTitle, Search, OrderControlContainer, AddressInput, WrapMomentOption, FarAwayMessage } from './styles'
 
 import NavBar from '../NavBar'
 import { SearchBar } from '../SearchBar'
@@ -24,6 +25,8 @@ import { BusinessTypeFilter } from '../BusinessTypeFilter'
 import { BusinessController } from '../BusinessController'
 import { OrderTypeSelector } from '../OrderTypeSelector'
 import { useTheme } from 'styled-components/native'
+import { getDistance } from '../../utils'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const PIXELS_TO_SCROLL = 1200
 
@@ -60,12 +63,22 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			flexDirection: 'row',
 			alignItems: 'center',
 			marginBottom: 10,
+			marginTop: 10,
 			zIndex: 100
 		},
 		borderStyle: {
 			borderColor: theme.colors.backgroundGray,
 			borderWidth: 1,
 			borderRadius: 10,
+		},
+		iconStyle: {
+			fontSize: 18,
+			color: theme.colors.warning5,
+			marginRight: 8
+		},
+		farAwayMsg: {
+			paddingVertical: 6,
+			paddingHorizontal: 20
 		}
 	})
 
@@ -75,6 +88,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [{ configs }] = useConfig()
 	const [{ parseDate }] = useUtils()
 	const [, { showToast }] = useToast()
+	const [isFarAway, setIsFarAway] = useState(false)
 
 	const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
@@ -94,6 +108,19 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		const fBusiness = businessesList.businesses.find(({ featured }): any => featured === true);
 		return fBusiness !== undefined && fBusiness !== null;
 	}
+
+	useEffect(() => {
+		Geolocation.getCurrentPosition((pos) => {
+      const crd = pos.coords
+      const distance = getDistance(crd.latitude, crd.longitude, orderState?.options?.address?.location?.lat, orderState?.options?.address?.location?.lng)
+      if (distance > 20) setIsFarAway(true)
+			else setIsFarAway(false)
+    }, (err) => {
+      console.log(`ERROR(${err.code}): ${err.message}`)
+    }, {
+      enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
+    })
+  }, [orderState?.options?.address?.location])
 
 	return (
 		<ScrollView style={styles.container} contentContainerStyle={{ paddingHorizontal: 40 }} onScroll={(e: any) => handleScroll(e)}>
@@ -125,7 +152,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						{orderState?.options?.address?.address}
 					</OText>
 				</AddressInput>
-
+				{isFarAway && (
+					<FarAwayMessage style={styles.farAwayMsg}>
+						<Ionicons name='md-warning-outline' style={styles.iconStyle} />
+						<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textNormal}>{t('YOU_ARE_FAR_FROM_ADDRESS', 'Your are far from this address')}</OText>
+					</FarAwayMessage>
+				)}
 				<View style={styles.wrapperOrderOptions}>
 					<OrderTypeSelector configTypes={configTypes} />
 					<WrapMomentOption

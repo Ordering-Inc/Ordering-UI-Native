@@ -1,8 +1,8 @@
 import React from 'react'
-import { Modal, TouchableWithoutFeedback, Dimensions, StyleSheet, View, ScrollView, Text } from 'react-native'
+import { Modal, TouchableWithoutFeedback, Dimensions, StyleSheet, View, ScrollView, Text, Platform } from 'react-native'
 import { OText } from '../shared'
 import Icon from 'react-native-vector-icons/Feather'
-import { useTheme } from 'styled-components/native'
+import styled,{ useTheme } from 'styled-components/native'
 
 const deviceHeight = Dimensions.get('window').height
 
@@ -23,6 +23,11 @@ const OBottomPopup = (props: Props) => {
   } = props
 
   const theme = useTheme()
+
+  const KeyboardView = styled.KeyboardAvoidingView`
+    flex-grow: 1;
+    flex-shrink: 1;
+  `;
 
   const styles = StyleSheet.create({
     container: {
@@ -79,26 +84,31 @@ const OBottomPopup = (props: Props) => {
           <View style={styles.touchableOutsideStyle} />
         </TouchableWithoutFeedback>
         <View style={styles.bottomContainer}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {customHeaderShow ? (
-              <View style={styles.customHeaderStyle}>
-                <OText size={16} numberOfLines={1} style={styles.customTitleStyle}>
+          <KeyboardView
+            enabled
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          >
+            <ScrollView showsVerticalScrollIndicator={false} >
+              {customHeaderShow ? (
+                <View style={styles.customHeaderStyle}>
+                  <OText size={16} numberOfLines={1} style={styles.customTitleStyle}>
+                    {title}
+                  </OText>
+                  <Icon
+                    name='x'
+                    size={30}
+                    style={styles.closeBtnStyle}
+                    onPress={onClose}
+                  />
+                </View>
+              ) : (
+                <Text style={styles.titleStyle}>
                   {title}
-                </OText>
-                <Icon
-                  name='x'
-                  size={30}
-                  style={styles.closeBtnStyle}
-                  onPress={onClose}
-                />
-              </View>
-            ) : (
-              <Text style={styles.titleStyle}>
-                {title}
-              </Text>
-            )}
-            {children}
-          </ScrollView>
+                </Text>
+              )}
+              {children}
+            </ScrollView>
+          </KeyboardView>
         </View>
       </View>
     </Modal>

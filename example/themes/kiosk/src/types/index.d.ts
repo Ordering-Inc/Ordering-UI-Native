@@ -15,6 +15,8 @@ export interface BusinessProductsListingParams {
   resetInactivityTimeout: any;
   clearInactivityTimeout: any;
   bottomSheetVisibility: any;
+  titleStyle: any;
+  descriptionStyle: any;
 }
 
 export interface OrderDetailsParams {

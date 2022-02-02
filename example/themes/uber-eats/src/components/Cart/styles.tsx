@@ -6,7 +6,7 @@ export const CContainer = styled.View`
 
 export const CartContent = styled.View`
   ${((props: any) => props.isBusinessCart && css`
-    margin-bottom: 45px;
+    margin-bottom: 65px;
   `)}
 `
 

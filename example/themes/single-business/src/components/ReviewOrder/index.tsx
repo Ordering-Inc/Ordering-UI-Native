@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { OrderReview as ReviewOrderController, useLanguage, useToast, ToastType } from 'ordering-components/native'
 import { useForm, Controller } from 'react-hook-form'
 import LinearGradient from 'react-native-linear-gradient'
@@ -14,7 +14,7 @@ import {
   RatingTextContainer
 } from './styles'
 import { OButton, OIcon, OInput, OText } from '../shared'
-import { TouchableOpacity, StyleSheet, View, I18nManager } from 'react-native';
+import { TouchableOpacity, StyleSheet, View, I18nManager, Keyboard } from 'react-native';
 import NavBar from '../NavBar'
 import { FloatingBottomContainer } from '../../../../../src/layouts/FloatingBottomContainer'
 import Spinner from 'react-native-loading-spinner-overlay'
@@ -90,6 +90,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<any>, success?: boolean }>({ open: false, content: [], success: false })
   const [comments, setComments] = useState<Array<any>>([])
   const [extraComment, setExtraComment] = useState('')
+  const scrollViewRef = useRef<any>()
 
   const onSubmit = () => {
     if (Object.values(stars).some((value: any) => value === 0)) {
@@ -199,9 +200,23 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     setStars({ ...stars, comments: _comment })
   }, [comments, extraComment])
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        scrollViewRef?.current && scrollViewRef?.current?.scrollToEnd()
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+
   return (
     <>
-      <ReviewOrderContainer>
+      <ReviewOrderContainer ref={scrollViewRef}>
         <NavBar
           title={t('REVIEW_ORDER', 'Review Order')}
           titleAlign={'center'}

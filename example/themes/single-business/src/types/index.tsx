@@ -161,6 +161,7 @@ export interface BusinessProductsListingParams {
 	categorySelected: any;
 	handleSearchRedirect: any;
 	errorQuantityProducts?: boolean;
+	isSingleBusiness?: boolean;
 	isFranchiseApp?: boolean;
 	header?: any;
 	logo?: any;
@@ -207,6 +208,7 @@ export interface BusinessProductsListParams {
 	handleClearSearch?: (value: any) => {};
 	isBusinessLoading?: any,
 	errorQuantityProducts?: boolean,
+	isSingleBusiness?: boolean,
 	handleCancelSearch?: () => void
 	categoriesLayout?: any
 	setCategoriesLayout?: any
@@ -227,6 +229,7 @@ export interface BusinessInformationParams {
 export interface BusinessReviewsParams {
 	businessState: { business: any, loading: boolean, error: null };
 	reviewsList: { reviews: any, loading: boolean, error: null };
+  handleChangeSearch?: any;
 }
 export interface SearchBarParams {
 	searchValue?: any;

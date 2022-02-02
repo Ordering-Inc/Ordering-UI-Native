@@ -203,7 +203,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
 		useDefualtSessionManager: true,
 		paginationSettings: {
 			initialPage: 1,
-			pageSize: props.activeOrders || props.preOrders ? -1 : 10,
+			pageSize: 10,
 			controlType: 'infinity'
 		}
 	}

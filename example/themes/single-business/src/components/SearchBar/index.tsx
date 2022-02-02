@@ -4,7 +4,6 @@ import { OInput, OButton } from '../shared'
 import { useLanguage } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Feather'
-import { useEffect } from 'hoist-non-react-statics/node_modules/@types/react';
 
 export const SearchBar = (props: any) => {
 	const {
@@ -31,8 +30,6 @@ export const SearchBar = (props: any) => {
 			padding: 1,
 			maxHeight: 47,
 			height: 47,
-			borderBottomColor: theme.colors.border,
-			borderBottomWidth: 1,
 		},
 		borderStyle: {
 			borderColor: theme.colors.primary,
@@ -74,16 +71,15 @@ export const SearchBar = (props: any) => {
 	}
 
 	return (
-		<View style={[styles.container, { height: height }]}>
+		<View style={[styles.container]}>
 			<OInput
 				value={searchValue}
 				onChange={onChangeSearch}
-				style={styles.inputStyle}
+				style={{ ...styles.inputStyle, ...inputStyle }}
 				placeholder={placeholder}
 				icon={theme.images.general.search}
 				iconStyle={{ width: 17 }}
 				returnKeyType='done'
-				inputStyle={inputStyle}
 			/>
 			{isCancelButtonShow && (
 				<OButton

@@ -170,7 +170,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   ? t('SEARCH_REDIRECT', 'Go to Businesses')
                   : t('CLEAR_FILTERS', 'Clear filters')
               }
-              onClickButton={() =>
+              onClickButton={props.isSingleBusiness ? null : () =>
                 !searchValue
                   ? handleSearchRedirect && handleSearchRedirect()
                   : handleCancelSearch && handleCancelSearch()

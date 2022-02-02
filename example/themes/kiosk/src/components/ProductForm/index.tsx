@@ -365,9 +365,9 @@ export const ProductOptionsUI = (props: any) => {
           </Animated.View>
         </Animated.View>
 
-        {!isFromCheckout && (
+        {/* {!isFromCheckout && (
           <Spinner visible={loading} />
-        )}
+        )} */}
         {!loading && !error && product && (
           <View style={{ paddingTop: isDrawer ? 10 : 20, paddingBottom: 80 }}> 
             <WrapContent isDrawer={isDrawer}>

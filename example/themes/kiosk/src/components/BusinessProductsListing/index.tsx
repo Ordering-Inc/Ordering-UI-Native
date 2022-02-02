@@ -1,14 +1,12 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { BusinessAndProductList, useLanguage } from 'ordering-components/native'
-import Carousel from 'react-native-snap-carousel';
-import { BusinessProductsListingParams, Business, Product } from '../../types'
+import { BusinessProductsListingParams, Business } from '../../types'
 import { OCard, OText, OIcon } from '../shared'
 import GridContainer from '../../layouts/GridContainer'
-import PromoCard from '../PromoCard';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { LANDSCAPE, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
-import { useTheme } from 'styled-components/native';
+import styled, { useTheme } from 'styled-components/native';
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {navigation, businessState, resetInactivityTimeout, clearInactivityTimeout, bottomSheetVisibility } = props;
@@ -18,6 +16,27 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const theme = useTheme();
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
+  const WIDTH_SCREEN = orientationState?.dimensions?.width
+
+  const styles = StyleSheet.create({
+    logo: {
+      width: 500,
+      height: 400,
+      alignSelf: 'center',
+    },
+    soldOut: {
+      top: 0,
+      left: 0,
+      position: 'absolute',
+      width: WIDTH_SCREEN * 0.15,
+      height: 50,
+      justifyContent: 'center',
+      backgroundColor: theme.colors.white,
+      alignItems: 'center',
+      borderRadius: 15,
+      opacity: 0.8,
+    },
+  });
 
   const _categories: any = business?.original?.categories;
   let _promos: any = [];
@@ -39,13 +58,30 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     </View>
   );
 
-  const _renderItem = ({item, index}: {item: Product; index: number}) => {
+  const RenderCategories = ({ item, cardStyle, widthScreen }: any) => {
+    const Category = styled.ImageBackground`
+      position: relative;
+      height: 150px;
+      width: ${(props: any) => props.w * 0.45}px;
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    `
+    const WrapText = styled.View`
+      height: 90px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+    `
+
     return (
-      <PromoCard
-        title={item?.name}
-        {...(!!item?.description && {description: item?.description})}
-        image={{uri: item?.images}}
-        isOutOfStock={!item?.inventoried}
+      <TouchableOpacity
+        key={item.id}
+        activeOpacity={1}
         onPress={() => {
           resetInactivityTimeout()
           navigation.navigate('ProductDetails', {
@@ -54,37 +90,71 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
             product: item,
           });
         }}
-      />
-    );
-  };
-
-  let _carousel: Carousel<Product> | null;
+      >
+        <Category
+          style={cardStyle}
+          source={{uri: item.images}}
+          resizeMode="cover"
+          w={widthScreen}
+          borderRadius={16}
+        >
+          {item?.inventoried && (
+            <View style={styles.soldOut}>
+              <OText size={28} color={theme.colors.error}>
+                {t('SOLD_OUT', 'SOLD OUT')}
+              </OText>
+            </View>
+          )}
+          <WrapText>
+            <OText
+              color={theme.colors.white}
+              mLeft={0}
+              size={32}
+              numberOfLines={1}
+              // mBottom={8}
+              style={{...props?.titleStyle}}
+              weight="bold"
+            >
+              {item.name}
+            </OText>
+            {!!item?.description && (
+              <OText
+                color={theme.colors.white}
+                numberOfLines={1}
+                // mBottom={4}
+                size={18}
+                style={{...props?.descriptionStyle}}
+                weight="400"
+              >
+                {item.description}
+              </OText>
+            )}
+          </WrapText>
+        </Category>
+      </TouchableOpacity>
+    )
+  }
 
   const _renderPromos = (): React.ReactElement => (
     <>
       {_renderTitle(t('FEATURED', 'Featured'))}
-      <Carousel
-        keyExtractor={(item: any) => item.id}
-        ref={(c: any) => {
-          _carousel = c;
-        }}
-        data={_promos || []}
-        renderItem={_renderItem}
-        sliderWidth={orientationState?.dimensions?.width}
-        itemWidth={orientationState?.dimensions?.width * 0.4}
-        alwaysBounceHorizontal={false}
-        slideStyle={{
-          width: orientationState?.dimensions?.width * 0.45,
-          marginLeft: 20,
-        }}
-        inactiveSlideScale={1}
-        snapToAlignment="start"
-        activeSlideAlignment="start"
-        inactiveSlideOpacity={1}
-        initialScrollIndex={0}
-        onScrollToIndexFailed={(_: any) => {}}
-        enableMomentum={true}
-      />
+      <View style={{ paddingVertical: 20, marginLeft: 20, width: '100%' }}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          style={{ width: '100%' }}
+        >
+          {_promos.map((category: any) => (
+            <RenderCategories
+              key={category.id}
+              item={category}
+              widthScreen={WIDTH_SCREEN}
+              cardStyle={{ marginRight: 20 }}
+            />
+          ))}
+        </ScrollView>
+      </View>
     </>
   );
 
@@ -147,23 +217,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  logo: {
-    width: 500,
-    height: 400,
-    alignSelf: 'center',
-  },
-  wrapper: {
-    display: 'flex',
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    backgroundColor: 'yellow'
-  },
-});
 
 export const BusinessProductsListing = (props: any) => {
   const businessProductslistingProps = {

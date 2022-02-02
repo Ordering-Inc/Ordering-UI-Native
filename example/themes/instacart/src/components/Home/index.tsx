@@ -57,6 +57,7 @@ export const Home = (props: any) => {
 	const loginProps = {
 		navigation,
 		useLoginByCellphone: true,
+    useLoginByEmail: true,
 		loginButtonText: t('LOGIN', 'Login'),
 		loginButtonBackground: theme.colors.primary,
 		forgotButtonText: t('FORGOT_YOUR_PASSWORD', 'Forgot your password?'),

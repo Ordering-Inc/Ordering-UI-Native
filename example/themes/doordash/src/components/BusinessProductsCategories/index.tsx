@@ -26,7 +26,7 @@ const BusinessProductsCategoriesUI = (props: any) => {
 
   const [tabLayouts, setTabLayouts] = useState<any>({});
   const [scrollOffsetX, setScrollOffsetX] = useState<any>(0);
-	const tabsRef = useRef<any>(null);
+  const tabsRef = useRef<any>(null);
 
 
   const theme = useTheme();
@@ -56,47 +56,47 @@ const BusinessProductsCategoriesUI = (props: any) => {
   const handleCategoryScroll = (category: any) => {
     setCategoryClicked(true);
     setSelectedCategoryId(`cat_${category?.id}`);
-    
-		if (!lazyLoadProductsRecommended) {
-			if (category?.id) {
-				scrollViewRef.current.scrollTo({
-					y: categoriesLayout[`cat_${category?.id}`]?.y + productListLayout?.y + 270,
-					animated: true
-				})
-			} else {
-				scrollViewRef.current.scrollTo({
-					y: productListLayout?.y - 70,
-					animated: true
-				})
-			}
-		} else {
-			handlerClickCategory(category)
-		}
-	}
 
-  
-	const handleOnLayout = (event: any, categoryId: any) => {
+    if (!lazyLoadProductsRecommended) {
+      if (category?.id) {
+        scrollViewRef.current.scrollTo({
+          y: categoriesLayout[`cat_${category?.id}`]?.y + productListLayout?.y + 270,
+          animated: true
+        })
+      } else {
+        scrollViewRef.current.scrollTo({
+          y: productListLayout?.y - 70,
+          animated: true
+        })
+      }
+    } else {
+      handlerClickCategory(category)
+    }
+  }
+
+
+  const handleOnLayout = (event: any, categoryId: any) => {
     const _tabLayouts = { ...tabLayouts }
     const categoryKey = 'cat_' + categoryId
     _tabLayouts[categoryKey] = event.nativeEvent.layout
     setTabLayouts(_tabLayouts)
   }
 
-	useEffect(() => {
-		if (!selectedCategoryId || Object.keys(tabLayouts).length === 0) return
-		tabsRef.current.scrollTo({
-			x: tabLayouts[selectedCategoryId]?.x - 40,
-			animated: true
-		})
-	}, [selectedCategoryId, tabLayouts])
+  useEffect(() => {
+    if (!selectedCategoryId || Object.keys(tabLayouts).length === 0) return
+    tabsRef.current.scrollTo({
+      x: tabLayouts[selectedCategoryId]?.x - 40,
+      animated: true
+    })
+  }, [selectedCategoryId, tabLayouts])
 
 
   return (
-    <ScrollView ref={tabsRef} horizontal contentContainerStyle={contentStyle} 
+    <ScrollView ref={tabsRef} horizontal contentContainerStyle={contentStyle}
       style={{ ...styles.container, borderBottomWidth: loading ? 0 : 1 }} showsHorizontalScrollIndicator={false}
       onScroll={(e: any) => setScrollOffsetX(e.nativeEvent.contentOffset.x)}
-			scrollEventThrottle={16}
-      >
+      scrollEventThrottle={16}
+    >
       {loading && (
         <Placeholder Animation={Fade}>
           <View style={{ flexDirection: 'row' }}>

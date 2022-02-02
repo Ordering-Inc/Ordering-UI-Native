@@ -2,15 +2,17 @@ import styled from 'styled-components/native';
 
 export const FiltersTab = styled.View`
   margin-bottom: 20px;
+  min-height: 30px;
   max-height: 35px;
+  flex: 1;
 `;
 
 export const TabsContainer = styled.View`
-  width: ${({ width }: { width: number }) => `${width-42}px`};
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   border-bottom-width: 1px;
+  flex: 1;
   border-bottom-color: ${(props: any) => props.theme.colors.tabBar};
 `;
 
@@ -52,4 +54,11 @@ export const FilterBtnWrapper = styled.TouchableOpacity`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 24px;
+`
+
+export const TabPressable = styled.Pressable`
+  align-items: center;
+  border-color: ${(props: any) => props.theme.colors.textGray};
+  border-bottom-width: ${(props: any) => props.isSelected ? '1px' : '0px'};
+  padding-horizontal: 10px;
 `

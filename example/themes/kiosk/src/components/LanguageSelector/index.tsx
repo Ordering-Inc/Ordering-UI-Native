@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { TouchableOpacity, View, StyleSheet } from 'react-native'
-import { LanguageSelector as LanguageSelectorController, useLanguage } from 'ordering-components/native'
+import { LanguageSelector as LanguageSelectorController } from 'ordering-components/native'
 import CountryPicker, { Flag } from 'react-native-country-picker-modal'
 
 import { Container, LanguageItem } from './styles'
@@ -17,9 +17,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     handleChangeLanguage,
   } = props
 
-	const theme = useTheme()
-  const [{loading}] = useLanguage()
-  const [isLoading, setIsLoading] = useState(true)
+  const theme = useTheme()
   const styles = StyleSheet.create({
     closeIcon: {
       width: 48, marginLeft: 32
@@ -28,15 +26,6 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
       marginLeft: 40
     }
   })
-  useEffect(() => {
-    if (!isLoading) return
-    const loadingLanguage = setTimeout(() =>{
-      setIsLoading(false)
-    }, 1000);
-    return () => {
-      clearTimeout(loadingLanguage);
-    }
-  }, [])
 
   const _languages = languagesState?.languages?.map((language: any) => {
     return {
@@ -59,7 +48,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
 	return (
 		<>
-		{ isLoading ? 
+		{ languagesState.loading ? 
 		(<Container>
 			<Placeholder  style={{ width: 130, paddingTop: 10 }} Animation={Fade}>
 				<PlaceholderLine height={15}/>
@@ -78,7 +67,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 							renderFlagButton={() => (
 								<TouchableOpacity
 									onPress={() => setCountryModalVisible(true)}
-									disabled={loading}
+									disabled={languagesState.loading}
 								>
 									<LanguageItem>
 											<Flag
@@ -102,7 +91,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 											handleChangeLanguage(item.value);
 											setCountryModalVisible(false);
 										}}
-										disabled={loading}
+										disabled={languagesState.loading}
 									>
 										<LanguageItem>
 											<View style={styles.flagsContainer} />

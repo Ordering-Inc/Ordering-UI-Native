@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet, SafeAreaView, Platform } from 'react-native'
 import { useTheme } from 'styled-components/native';
 import {
@@ -27,6 +27,8 @@ import {
 import { FloatingButton } from '../FloatingButton'
 import { ProductForm } from '../ProductForm'
 import { UpsellingProducts } from '../UpsellingProducts'
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated from 'react-native-reanimated'
 
 const PIXELS_TO_SCROLL = 1000
 
@@ -53,7 +55,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [{ auth }] = useSession()
 	const [orderState] = useOrder()
 	const [{ parsePrice }] = useUtils()
-  const [ ,{showToast}] = useToast()
+	const [, { showToast }] = useToast()
+	const { top } = useSafeAreaInsets();
 
 	const styles = StyleSheet.create({
 		mainContainer: {
@@ -90,6 +93,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const scrollViewRef = useRef<any>(null)
 	const [categoriesLayout, setCategoriesLayout] = useState<any>({})
 	const [productListLayout, setProductListLayout] = useState<any>(null)
+	const [isCategoryClicked, setCategoryClicked] = useState(false)
 
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
@@ -131,7 +135,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	const [selectedCategoryId, setSelectedCategoryId] = useState<any>(null)
 
-	const handleScroll = ({ nativeEvent }: any) => {
+	const handlePageScroll = useCallback(({ nativeEvent }: any) => {
 		const scrollOffset = nativeEvent.contentOffset.y
 		if (businessState?.business?.lazy_load_products_recommended) {
 			const height = nativeEvent.contentSize.height
@@ -141,9 +145,14 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				showToast(ToastType.Info, t('LOADING_MORE_PRODUCTS', 'Loading more products'))
 			}
 		} else {
-			if (!scrollOffset || !categoriesLayout || !productListLayout) return
+			if (!scrollOffset || !categoriesLayout || !productListLayout || isCategoryClicked) return
+
 			for (const key in categoriesLayout) {
 				const categoryOffset = categoriesLayout[key].y + productListLayout?.y - 70
+				if (scrollOffset < 10) {
+					setSelectedCategoryId('cat_all');
+					return;
+				}
 				if (categoryOffset - 50 <= scrollOffset && scrollOffset <= categoryOffset + 50) {
 					if (selectedCategoryId !== key) {
 						setSelectedCategoryId(key)
@@ -151,7 +160,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				}
 			}
 		}
-	}
+	}, [isCategoryClicked, selectedCategoryId, productListLayout])
+
+	const handleTouchDrag = useCallback(() => {
+		setCategoryClicked(false);
+	  }, []);
+
 
 	useEffect(() => {
 		if (!orderState.loading) {
@@ -163,7 +177,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		<SafeAreaView
 			style={{ flex: 1 }}
 		>
-			<WrapHeader>
+			<Animated.View style={{ position: 'relative' }}>
 				<TopHeader>
 					{!isOpenSearchBar && (
 						<>
@@ -201,13 +215,14 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						</WrapSearchBar>
 					)}
 				</TopHeader>
-			</WrapHeader>
+			</Animated.View>
 			<BusinessProductsListingContainer
 				stickyHeaderIndices={[2]}
 				style={styles.mainContainer}
 				ref={scrollViewRef}
 				isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
-				onScroll={(e: any) => handleScroll(e)}
+				onScroll={handlePageScroll}
+				onScrollBeginDrag={handleTouchDrag}
 				scrollEventThrottle={16}
 			>
 				<BusinessBasicInformation
@@ -232,6 +247,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								categoriesLayout={categoriesLayout}
 								selectedCategoryId={selectedCategoryId}
 								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
+								setSelectedCategoryId={setSelectedCategoryId}
+              	setCategoryClicked={setCategoryClicked}
 							/>
 						)}
 					</>

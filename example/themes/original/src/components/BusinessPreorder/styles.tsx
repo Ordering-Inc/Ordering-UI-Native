@@ -1,8 +1,6 @@
 import styled, { css } from 'styled-components/native'
 
-export const PreOrderContainer = styled.ScrollView`
-  padding: 20px 40px 30px 40px;
-`
+export const PreOrderContainer = styled.ScrollView``
 
 export const BusinessInfoWrapper = styled.View`
   flex-direction: row;
@@ -43,18 +41,4 @@ export const TimeItem = styled.View`
   ${({ active }: any) => active && css`
     background: #F5F9FF;
   `}
-`
-
-export const PreorderTypeListWrapper = styled.ScrollView`
-  padding: 20px 40px 30px 40px;
-`
-
-export const DropOption = styled.View`
-  padding: 10px;
-  margin-bottom: 5px;
-  font-size: 16px;
-  border-bottom-width: 1px;
-  border-bottom-color: ${(props: any) => props.theme.colors.lightGray};
-  flex-direction: row;
-  align-items: center;
 `

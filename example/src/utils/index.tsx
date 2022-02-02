@@ -1,6 +1,7 @@
 import React from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {CODES} from 'ordering-components/native'
+import { useLanguage } from 'ordering-components/native'
 
 export const flatArray = (arr: any) => [].concat(...arr)
 
@@ -42,10 +43,11 @@ export const getTraduction = (key: string, t: any) => {
  * @param {string} time business delivery time
  */
 export const convertHoursToMinutes = (time: any) => {
+  const [, t] = useLanguage()
   if (!time) return '0min'
   const [hour, minute] = time.split(':')
   const result = (parseInt(hour, 10) * 60) + parseInt(minute, 10)
-  return `${result}min`
+  return `${result}${t('MIN', 'min')}`
 }
 
 export const getIconCard = (brand: string, size: number) => {
@@ -161,4 +163,31 @@ export const transformCountryCode = (countryCode : number) => {
   } else {
     return parser(value)
   }
+}
+
+/**
+ * Function to transform degree to radian
+ * @param {number} value for transform
+ *
+ */
+ export const convertToRadian = (value: number) => {
+  return value * Math.PI / 180
+}
+
+/**
+ * Function to distance between two locations
+ * @param lat1 Lat for first location
+ * @param lon1 Lon for first location
+ * @param lat2 Lat for second location
+ * @param lon2 Lon for second location
+ */
+ export const getDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
+  const R = 6371 // km
+  const dLat = convertToRadian(lat2 - lat1)
+  const dLon = convertToRadian(lon2 - lon1)
+  const curLat1 = convertToRadian(lat1)
+  const curLat2 = convertToRadian(lat2)
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(curLat1) * Math.cos(curLat2)
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+  return R * c
 }

@@ -18,7 +18,9 @@ const BusinessProductsCategoriesUI = (props: any) => {
 		categoriesLayout,
 		selectedCategoryId,
 		handlerClickCategory,
-		lazyLoadProductsRecommended
+		lazyLoadProductsRecommended,
+		setCategoryClicked,
+		setSelectedCategoryId
 	} = props;
 
 	const theme = useTheme();
@@ -36,9 +38,23 @@ const BusinessProductsCategoriesUI = (props: any) => {
 		featuredStyle: {
 			display: 'none',
 		},
+		tabStyle: {
+			marginTop: 10,
+			height: 4,
+			borderTopStartRadius: 4,
+			borderTopEndRadius: 4,
+			backgroundColor: theme.colors.textPrimary,
+		  },
+		  tabDeactived: {
+			marginTop: 10,
+			height: 4
+		  }
 	});
 
 	const handleCategoryScroll = (category: any) => {
+		setCategoryClicked(true);
+		setSelectedCategoryId(`cat_${category?.id}`);
+
 		if (!lazyLoadProductsRecommended) {
 			if (category?.id) {
 				scrollViewRef.current.scrollTo({
@@ -57,11 +73,11 @@ const BusinessProductsCategoriesUI = (props: any) => {
 	}
 
 	const handleOnLayout = (event: any, categoryId: any) => {
-    const _tabLayouts = { ...tabLayouts }
-    const categoryKey = 'cat_' + categoryId
-    _tabLayouts[categoryKey] = event.nativeEvent.layout
-    setTabLayouts(_tabLayouts)
-  }
+		const _tabLayouts = { ...tabLayouts }
+		const categoryKey = 'cat_' + categoryId
+		_tabLayouts[categoryKey] = event.nativeEvent.layout
+		setTabLayouts(_tabLayouts)
+	}
 
 	useEffect(() => {
 		if (!selectedCategoryId || Object.keys(tabLayouts).length === 0) return
@@ -102,39 +118,20 @@ const BusinessProductsCategoriesUI = (props: any) => {
 							{
 								borderColor:
 									(!lazyLoadProductsRecommended
-										?	(selectedCategoryId === (category.id ? `cat_${category.id}` : null))
-										:	(categorySelected?.id === category.id))
-											? theme.colors.textNormal
-											: theme.colors.border,
+										? (selectedCategoryId === (category.id ? `cat_${category.id}` : null))
+										: (categorySelected?.id === category.id))
+										? theme.colors.textNormal
+										: theme.colors.border,
 							},
 						]}
 						onLayout={(event: any) => handleOnLayout(event, category.id)}
 					>
 						<OText
-							size={
-								(!lazyLoadProductsRecommended
-									?	(selectedCategoryId === (category.id ? `cat_${category.id}` : null))
-									:	(categorySelected?.id === category.id))
-										? 14
-										: 12
-							}
-							weight={
-								(!lazyLoadProductsRecommended
-									?	(selectedCategoryId === (category.id ? `cat_${category.id}` : null))
-									:	(categorySelected?.id === category.id))
-										? '600'
-										: '400'
-							}
-							color={
-								(!lazyLoadProductsRecommended
-									?	(selectedCategoryId === (category.id ? `cat_${category.id}` : null))
-									:	(categorySelected?.id === category.id))
-										? theme.colors.textNormal
-										: theme.colors.textSecondary
-							}
-							style={{ alignSelf: 'center' }}>
+							color={selectedCategoryId === `cat_${category.id}` ? theme.colors.textPrimary : theme.colors.textSecondary}
+						>
 							{category.name}
 						</OText>
+						<View style={selectedCategoryId === `cat_${category.id}` ? styles.tabStyle : styles.tabDeactived} />
 					</Tab>
 				))}
 		</ScrollView>

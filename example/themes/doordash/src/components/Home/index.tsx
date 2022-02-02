@@ -52,8 +52,8 @@ export const Home = (props: any) => {
 			marginTop: 10
 		},
 		slogan: {
-			height: w - 80,
-			width: w - 80
+			height: w * 0.6,
+			width: w * 0.6
 		},
 		buttons: {
 			marginVertical: 8.5,
@@ -83,7 +83,8 @@ export const Home = (props: any) => {
 
 	const loginProps = {
 		navigation,
-		useLoginByCellphone: false,
+		useLoginByCellphone: true,
+    useLoginByEmail: true,
 		loginButtonText: t('SIGN_IN', 'Sign in'),
 		loginButtonBackground: theme.colors.primary,
 		forgotButtonText: t('FORGOT_YOUR_PASSWORD', 'Forgot your password?'),

@@ -16,11 +16,11 @@ import {
   IconWrapper,
   ModalContainer,
   ModalTitle,
-  FilterBtnWrapper
+  FilterBtnWrapper,
+  TabPressable
 } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
 import { OrdersOptionParams } from '../../types';
-import { NewOrderNotification } from '../NewOrderNotification';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import GestureRecognizer from 'react-native-swipe-gestures';
@@ -325,7 +325,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           horizontal
           nestedScrollEnabled={true}
         >
-          <TabsContainer width={WIDTH_SCREEN}>
+          <TabsContainer>
             {isLogisticActivated && (
               <Pressable
                 style={styles.pressable}
@@ -345,15 +345,16 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
               </Pressable>
             )}
             {tabs.map((tab: any) => (
-              <Pressable
+              <TabPressable
                 key={tab.key}
-                style={styles.pressable}
-                onPress={() => setCurrentTabSelected(tab?.title)}>
+                onPress={() => setCurrentTabSelected(tab?.title)}
+                isSelected={tab.title === currentTabSelected ? 1 : 0}
+              >
                 <OText
                   style={{
                     ...styles.tab,
                     fontSize: tab.title === currentTabSelected ? 16 : 14,
-                    borderBottomWidth: tab.title === currentTabSelected ? 1 : 0,
+                    borderBottomWidth: Platform.OS === 'ios' && tab.title === currentTabSelected ? 1 : 0,
                   }}
                   color={
                     tab.title === currentTabSelected
@@ -364,7 +365,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 >
                   {tab.text}
                 </OText>
-              </Pressable>
+              </TabPressable>
             ))}
           </TabsContainer>
         </ScrollView>
@@ -549,7 +550,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       </View>
       {/* </GestureRecognizer> */}
 
-      <NewOrderNotification />
       {openModal && (
         <OModal open={openModal} entireModal customClose>
           <ModalContainer

@@ -7,13 +7,12 @@ import { USER_TYPE } from '../../config/constants'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { OIcon, OIconButton, OText, OButton } from '../shared'
 import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard } from 'react-native'
-import { Header, TitleHeader, Wrapper, QuickMessageContainer } from './styles'
+import { Header, TitleHeader, Wrapper, QuickMessageContainer, ProfileMessageHeader, MessageTypeItem } from './styles'
 import { MessagesParams } from '../../types'
 import { useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const MessagesUI = (props: MessagesParams) => {
-
 	const {
 		type,
 		order,
@@ -22,11 +21,16 @@ const MessagesUI = (props: MessagesParams) => {
 		message,
 		messagesToShow,
 		sendMessage,
+		setCanRead,
 		setMessage,
 		handleSend,
 		setImage,
 		readMessages,
 		onClose,
+		business,
+		driver,
+		onMessages,
+		isMeesageListing
 	} = props
 
 	const [{ user }] = useSession()
@@ -37,22 +41,22 @@ const MessagesUI = (props: MessagesParams) => {
 	const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false)
 	const previousStatus = [1, 2, 5, 6, 10, 11, 12, 16, 17]
-  const chatDisabled = previousStatus.includes(order?.status)
+	const chatDisabled = previousStatus.includes(order?.status)
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
 
 	const theme = useTheme();
 
 	const quickMessageList = [
-    { key: 'customer_message_1', text: t('CUSTOMER_MESSAGE_1', 'Lorem ipsum 1') },
-    { key: 'customer_message_2', text: t('CUSTOMER_MESSAGE_2', 'Lorem ipsum 2') },
-    { key: 'customer_message_3', text: t('CUSTOMER_MESSAGE_3', 'Lorem ipsum 3') },
-    { key: 'customer_message_4', text: t('CUSTOMER_MESSAGE_4', 'Lorem ipsum 4') }
-  ]
+		{ key: 'customer_message_1', text: t('CUSTOMER_MESSAGE_1', 'Lorem ipsum 1') },
+		{ key: 'customer_message_2', text: t('CUSTOMER_MESSAGE_2', 'Lorem ipsum 2') },
+		{ key: 'customer_message_3', text: t('CUSTOMER_MESSAGE_3', 'Lorem ipsum 3') },
+		{ key: 'customer_message_4', text: t('CUSTOMER_MESSAGE_4', 'Lorem ipsum 4') }
+	]
 
-  const handleClickQuickMessage = (text: string) => {
-    setMessage && setMessage(`${message}${text}`)
-  }
+	const handleClickQuickMessage = (text: string) => {
+		setMessage && setMessage(`${message}${text}`)
+	}
 
 	const onChangeMessage = (val: string) => {
 		setMessage && setMessage(val)
@@ -161,18 +165,18 @@ const MessagesUI = (props: MessagesParams) => {
 
 	useEffect(() => {
 		let newMessages: Array<any> = []
-		const console = `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
+		const _console = `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
 		const firstMessage = {
 			_id: 0,
-			text: console,
+			text: _console,
 			createdAt: order?.created_at,
 			system: true
 		}
+		const newMessage: any = [];
 		messages.messages.map((message: any) => {
-			let newMessage
-			if (message.type !== 0 && (messagesToShow?.messages?.length || (message?.can_see?.includes('2')) || (message?.can_see?.includes('4') && type === USER_TYPE.DRIVER))) {
-				newMessage = {
-					_id: message.id,
+			if (business && message.type !== 0 && (messagesToShow?.messages?.length || message?.can_see?.includes('2'))) {
+				newMessage.push({
+					_id: message?.id,
 					text: message.type === 1 ? messageConsole(message) : message.comment,
 					createdAt: message.type !== 0 && message.created_at,
 					image: message.source,
@@ -182,15 +186,30 @@ const MessagesUI = (props: MessagesParams) => {
 						name: message.author.name,
 						avatar: message.author.id !== user.id && type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo
 					}
-				}
+				});
 			}
+
+			if (driver && message.type !== 0 && (messagesToShow?.messages?.length || message?.can_see?.includes('4'))) {
+				newMessage.push({
+					_id: message?.id,
+					text: message.type === 1 ? messageConsole(message) : message.comment,
+					createdAt: message.type !== 0 && message.created_at,
+					image: message.source,
+					system: message.type === 1,
+					user: {
+						_id: message.author.id,
+						name: message.author.name,
+						avatar: message.author.id !== user.id && type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo
+					}
+				});
+			}
+
 			if (message.type === 0) {
-				newMessage = firstMessage
+				newMessage.push(firstMessage);
 			}
-			newMessages = [...newMessages, newMessage]
 		})
-		setFormattedMessages([...newMessages.reverse()])
-	}, [messages.messages.length])
+		setFormattedMessages(newMessage.reverse())
+	}, [messages.messages.length, business, driver])
 
 	useEffect(() => {
 		const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -204,6 +223,11 @@ const MessagesUI = (props: MessagesParams) => {
 			keyboardDidHideListener.remove()
 		}
 	}, [])
+
+	useEffect(() => {
+		if (business) setCanRead({ business: true, administrator: true, customer: true, driver: false })
+		else if (driver) setCanRead({ business: false, administrator: true, customer: true, driver: true })
+	}, [business, driver])
 
 	const RenderActions = (props: any) => {
 		return (
@@ -239,37 +263,37 @@ const MessagesUI = (props: MessagesParams) => {
 	}
 
 	const renderAccessory = () => {
-    return (
-      <QuickMessageContainer
-        style={{
-          marginLeft: 10,
-          marginBottom: 10
-        }}
-        contentContainerStyle={{
-          alignItems: 'center',
-        }}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      >
-        {quickMessageList.map((quickMessage, i) => (
-          <OButton
-            key={i}
-            text={quickMessage.text}
-            bgColor='#E9ECEF'
-            borderColor='#E9ECEF'
-            imgRightSrc={null}
-            textStyle={{
-              fontSize: 11,
-              lineHeight: 16,
-              color: '#414954'
-            }}
-            style={{ ...styles.editButton }}
-            onClick={() => handleClickQuickMessage(quickMessage.text)}
-          />
-        ))}
-      </QuickMessageContainer>
-    )
-  }
+		return (
+			<QuickMessageContainer
+				style={{
+					marginLeft: 10,
+					marginBottom: 10
+				}}
+				contentContainerStyle={{
+					alignItems: 'center',
+				}}
+				horizontal
+				showsHorizontalScrollIndicator={false}
+			>
+				{quickMessageList.map((quickMessage, i) => (
+					<OButton
+						key={i}
+						text={quickMessage.text}
+						bgColor='#E9ECEF'
+						borderColor='#E9ECEF'
+						imgRightSrc={null}
+						textStyle={{
+							fontSize: 11,
+							lineHeight: 16,
+							color: '#414954'
+						}}
+						style={{ ...styles.editButton }}
+						onClick={() => handleClickQuickMessage(quickMessage.text)}
+					/>
+				))}
+			</QuickMessageContainer>
+		)
+	}
 
 	const renderInputToolbar = (props: typeof InputToolbarProps) => (
 		<InputToolbar
@@ -285,20 +309,20 @@ const MessagesUI = (props: MessagesParams) => {
 
 	const renderComposer = (props: typeof ComposerProps) => (
 		chatDisabled ? (
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}
-      >
-        <MaterialCommunityIcon
-          name='close-octagon-outline'
-          size={24}
-        />
-        <OText size={14}>{t('NOT_SEND_MESSAGES', 'You can\'t send messages because the order has ended')}</OText>
-      </View>
-    ) : (
+			<View
+				style={{
+					width: '100%',
+					flexDirection: 'column',
+					alignItems: 'center'
+				}}
+			>
+				<MaterialCommunityIcon
+					name='close-octagon-outline'
+					size={24}
+				/>
+				<OText size={14}>{t('NOT_SEND_MESSAGES', 'You can\'t send messages because the order has ended')}</OText>
+			</View>
+		) : (
 			<View style={{
 				flexDirection: 'row', width: '80%', alignItems: 'center', backgroundColor: theme.colors.backgroundGray100,
 				borderRadius: 7.6,
@@ -387,7 +411,7 @@ const MessagesUI = (props: MessagesParams) => {
 
 	const getViewHeight = () => {
 		if (Platform.OS === 'android') {
-			return height - top - bottom - (isKeyboardShow ? 270 : 24);
+			return height - top - bottom - (isKeyboardShow ? 300 : 24);
 		} else {
 			return height - top - bottom - 10;
 		}
@@ -396,21 +420,69 @@ const MessagesUI = (props: MessagesParams) => {
 	return (
 		<View style={{ height: getViewHeight(), width: '100%', paddingTop: 12, backgroundColor: 'white' }}>
 			<Wrapper>
-				<Header>
-					<OIconButton icon={theme.images.general.arrow_left} style={{ paddingStart: 10, borderColor: theme.colors.clear }} onClick={onClose} />
-					<View style={{ marginRight: 10, shadowColor: theme.colors.black, shadowOpacity: 0.1, shadowOffset: { width: 0, height: 1 }, shadowRadius: 2 }}>
-						<OIcon
-							url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
-							width={32}
-							height={32}
-							style={{ borderRadius: 7.6 }}
-						/>
-					</View>
-					<TitleHeader>
-						<OText size={14} lineHeight={21} weight={'600'}>{type === USER_TYPE.DRIVER ? order?.driver?.name : order?.business?.name}</OText>
-						<OText size={12} color={theme.colors.textSecondary}>{type === USER_TYPE.DRIVER ? t('DRIVER', 'Driver') : t('BUSINESS', 'Business')}</OText>
-					</TitleHeader>
-				</Header>
+				{!isMeesageListing ? (
+					<Header>
+						<OIconButton icon={theme.images.general.arrow_left} style={{ paddingStart: 10, borderColor: theme.colors.clear }} onClick={onClose} />
+						<View style={{ marginRight: 10, shadowColor: theme.colors.black, shadowOpacity: 0.1, shadowOffset: { width: 0, height: 1 }, shadowRadius: 2 }}>
+							<OIcon
+								url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
+								width={32}
+								height={32}
+								style={{ borderRadius: 7.6 }}
+							/>
+						</View>
+						<TitleHeader>
+							<OText size={14} lineHeight={21} weight={'600'}>{type === USER_TYPE.DRIVER ? order?.driver?.name : order?.business?.name}</OText>
+							<OText size={12} color={theme.colors.textSecondary}>{type === USER_TYPE.DRIVER ? t('DRIVER', 'Driver') : t('BUSINESS', 'Business')}</OText>
+						</TitleHeader>
+					</Header>
+				) : (
+					<ProfileMessageHeader>
+						<View style={{ ...styles.headerTitle }}>
+							<TouchableOpacity
+								style={styles.headerItem}
+								onPress={onClose}>
+								<OIcon src={theme.images.general.arrow_left} width={16} />
+							</TouchableOpacity>
+							<OText size={18}>{t('ORDER', theme?.defaultLanguages?.ORDER || 'Order')} #{order?.id}</OText>
+						</View>
+						<View style={{ ...styles.typeWraper }}>
+							{order.business && (
+								<TouchableOpacity
+									onPress={() => onMessages({ business: true, driver: false })}
+								>
+									<MessageTypeItem
+										active={business}
+									>
+										<OIcon
+											url={order?.business?.logo}
+											width={32}
+											height={32}
+											style={{ borderRadius: 32 }}
+										/>
+									</MessageTypeItem>
+								</TouchableOpacity>
+							)}
+
+							{order?.driver && (
+								<TouchableOpacity
+									onPress={() => onMessages({ business: false, driver: true })}
+								>
+									<MessageTypeItem
+										active={driver}
+									>
+										<OIcon
+											url={order?.driver?.photo}
+											width={32}
+											height={32}
+											style={{ borderRadius: 32 }}
+										/>
+									</MessageTypeItem>
+								</TouchableOpacity>
+							)}
+						</View>
+					</ProfileMessageHeader>
+				)}
 				<GiftedChat
 					messages={formattedMessages}
 					user={{
@@ -460,15 +532,30 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		marginHorizontal: 4
 	},
-  editButton : {
-    borderRadius: 50,
-    backgroundColor: '#E9ECEF',
-    marginRight: 10,
-    height: 24,
-    borderWidth: 1,
-    paddingLeft: 0,
-    paddingRight: 0
-  }
+	editButton: {
+		borderRadius: 50,
+		backgroundColor: '#E9ECEF',
+		marginRight: 10,
+		height: 24,
+		borderWidth: 1,
+		paddingLeft: 0,
+		paddingRight: 0
+	},
+	headerTitle: {
+		flexDirection: 'row',
+		alignItems: 'center'
+	},
+	headerItem: {
+		overflow: 'hidden',
+		width: 35,
+		marginVertical: 18,
+	},
+	typeWraper: {
+		flexDirection: 'row',
+		height: 45,
+		alignItems: 'center'
+	}
+
 })
 
 export const Messages = (props: MessagesParams) => {

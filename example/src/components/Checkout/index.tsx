@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { View, StyleSheet, Platform, I18nManager, ScrollView } from 'react-native';
+import { View, StyleSheet, Platform, I18nManager, ScrollView, TouchableOpacity } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
+import Picker from 'react-native-country-picker-modal';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import {
   Checkout as CheckoutController,
@@ -40,7 +42,9 @@ import {
   ChErrors,
   ChBusinessDetails,
   ChUserDetails,
-  TextDetails
+  TextDetails,
+  DeliveryOptionsContainer,
+  DeliveryOptionItem
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
@@ -51,6 +55,7 @@ import { ActivityIndicator } from 'react-native-paper';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/Feather';
 import { OrderCreating } from '../OrderCreating';
+import { Item } from '../../../themes/uber-eats/src/components/UpsellingProducts/styles';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -84,7 +89,11 @@ const CheckoutUI = (props: any) => {
     businessLogo,
     businessName,
     cartTotal,
-    currency
+    currency,
+    deliveryOptionSelected,
+    instructionsOptions,
+    handleChangeDeliveryOption,
+
   } = props
 
   const theme = useTheme();
@@ -104,6 +113,12 @@ const CheckoutUI = (props: any) => {
     },
     paddSectionH: {
       paddingHorizontal: 20
+    },
+    icon: {
+      top: 15,
+      right: Platform.OS === 'ios' ? 5 : (I18nManager.isRTL ? 30 : 0),
+      position: 'absolute',
+      fontSize: 20
     }
   })
 
@@ -116,18 +131,18 @@ const CheckoutUI = (props: any) => {
   const [validationFields] = useValidationFields();
   const [ordering] = useApi()
   const webviewRef = useRef<any>(null)
-
+  const webviewRefSquare = useRef<any>(null)
   const [errorCash, setErrorCash] = useState(false);
   const [userErrors, setUserErrors] = useState<any>([]);
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
   const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
-  const [paypalMethod, setPaypalMethod] = useState<any>(null)
+  const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
   const [progClr, setProgClr] = useState('#424242');
   const [prog, setProg] = useState(true);
   const [openOrderCreating, setOpenOrderCreating] = useState(false)
   const [cardData, setCardData] = useState(null)
-
+  const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
   const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
     ? JSON.parse(configs?.driver_tip_options?.value) || []
     : configs?.driver_tip_options?.value || []
@@ -135,6 +150,12 @@ const CheckoutUI = (props: any) => {
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
   const cartsWithProducts = carts && Object.values(carts).filter((cart: any) => cart.products.length) || null
+
+  const deliveryOptions = instructionsOptions?.result && instructionsOptions?.result?.filter((option: any) => option?.enabled)?.map(option => {
+    return {
+      value: option?.id, key: option?.id, label: option?.name
+    }
+  })
 
   const handlePlaceOrder = () => {
     if (!userErrors.length) {
@@ -183,7 +204,7 @@ const CheckoutUI = (props: any) => {
   }
 
   const onMessage = (e: any) => {
-    if (e?.nativeEvent?.data) {
+    if (e?.nativeEvent?.data && e?.nativeEvent?.data !== 'undefined') {
       let payment = JSON.parse(e.nativeEvent.data);
 
       if (payment === 'api error') {
@@ -213,12 +234,17 @@ const CheckoutUI = (props: any) => {
 
   const handlePaymentMethodClick = (paymethod: any) => {
     setShowGateway({ closedByUser: false, open: true })
-    setPaypalMethod(paymethod)
+    setWebviewPaymethod(paymethod)
   }
 
   const handleCloseWebview = () => {
     setProg(true);
     setShowGateway({ open: false, closedByUser: true })
+  }
+
+  const changeDeliveryOption = (option : any) => {
+    handleChangeDeliveryOption(option)
+    setIsDeliveryOptionModalVisible(false)
   }
 
   useEffect(() => {
@@ -428,6 +454,56 @@ const CheckoutUI = (props: any) => {
             </ChBusinessDetails>
           </ChSection>
 
+          {!cartState.loading && deliveryOptionSelected !== undefined && options?.type === 1 && (
+            <DeliveryOptionsContainer style={style.paddSection}>
+              <OText size={20}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
+              <View
+                style={{
+                  backgroundColor: theme.colors.inputDisabled,
+                  borderRadius: 7.5,
+                  marginBottom: 20,
+                  flex: 1
+                }}>
+                <Picker
+                  countryCode={undefined}
+                  visible={isDeliveryOptionModalVisible}
+                  onClose={() => setIsDeliveryOptionModalVisible(false)}
+                  withCountryNameButton
+                  renderFlagButton={() => (
+                    <TouchableOpacity onPress={() => setIsDeliveryOptionModalVisible(true)}>
+                      <DeliveryOptionItem backgroundColor={theme?.colors?.inputDisabled}>
+                        <OText
+                          size={16}
+                        >
+                          {deliveryOptions.find((option: any) => option.value === deliveryOptionSelected).label}
+                        </OText>
+                        <MaterialIcons name='keyboard-arrow-down' style={style.icon} />
+                      </DeliveryOptionItem>
+                    </TouchableOpacity>
+                  )}
+                  flatListProps={{
+                    keyExtractor: (item: any) => item.value,
+                    data: deliveryOptions || [],
+                    renderItem: ({ item }: any) => (
+                      <TouchableOpacity
+                        onPress={() => changeDeliveryOption(item.value)}
+                        disabled={
+                          deliveryOptionSelected === item.value
+                        }
+                      >
+                        <DeliveryOptionItem backgroundColor={deliveryOptionSelected === item.value ? theme.colors.inputDisabled : 'white'}>
+                          <OText>
+                            {item.label}
+                          </OText>
+                        </DeliveryOptionItem>
+                      </TouchableOpacity>
+                    )
+                  }}
+                />
+              </View>
+            </DeliveryOptionsContainer>
+          )}
+
           {!cartState.loading &&
             cart &&
             cart?.valid &&
@@ -570,7 +646,7 @@ const CheckoutUI = (props: any) => {
           </>
         </>
       )}
-      {paypalMethod && showGateway.open && (
+      {webviewPaymethod?.gateway === 'paypal' && showGateway.open && (
         <View style={{ zIndex: 9999, height: '100%', width: '100%', position: 'absolute', backgroundColor: 'white' }}>
           <Icon
             name="x"
@@ -620,22 +696,91 @@ const CheckoutUI = (props: any) => {
                   urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
                   urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
                   payData: {
-                    paymethod_id: paypalMethod?.id,
+                    paymethod_id: webviewPaymethod?.id,
                     amount: cart?.total,
                     delivery_zone_id: cart?.delivery_zone_id,
                     user_id: user?.id
                   },
                   currency: configs?.stripe_currency?.value || currency,
                   userToken: token,
-                  clientId: paypalMethod?.credentials?.client_id
+                  clientId: webviewPaymethod?.credentials?.client_id
                 }
               }
               setProg(false);
-              webviewRef.current.postMessage(JSON.stringify(message))
+              webviewRef?.current?.postMessage?.(JSON.stringify(message))
             }}
           />
         </View>
       )}
+      {webviewPaymethod?.gateway === 'square' && showGateway.open && (
+        <View style={{ zIndex: 9999, height: '100%', width: '100%', position: 'absolute', backgroundColor: 'white' }}>
+          <Icon
+            name="x"
+            size={35}
+            style={{ backgroundColor: 'white', paddingTop: 30, paddingLeft: 10 }}
+            onPress={handleCloseWebview}
+          />
+          <OText
+            style={{
+              textAlign: 'center',
+              fontSize: 16,
+              fontWeight: 'bold',
+              color: '#00457C',
+              marginBottom: 5,
+              marginTop: 10
+            }}>
+            {t('SQUARE_PAYMENT', 'Square payment')}
+          </OText>
+          <View style={{ padding: 20, opacity: prog ? 1 : 0, backgroundColor: 'white' }}>
+            <ActivityIndicator size={24} color={progClr} />
+          </View>
+          <WebView
+            source={{ uri: `https://test-square-f50f7.web.app` }}
+            onMessage={onMessage}
+            ref={webviewRefSquare}
+            javaScriptEnabled={true}
+            javaScriptEnabledAndroid={true}
+            cacheEnabled={false}
+            cacheMode='LOAD_NO_CACHE'
+            style={{ flex: 1 }}
+            onShouldStartLoadWithRequest={() => true}
+            onLoadStart={() => {
+              setProg(true);
+              setProgClr('#424242');
+            }}
+            onLoadProgress={() => {
+              setProg(true);
+              setProgClr('#00457C');
+            }}
+            onLoad={() => {
+              setProg(true);
+              setProgClr('#00457C');
+            }}
+            onLoadEnd={(e) => {
+              const message = {
+                action: 'init',
+                data: {
+                  urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
+                  urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
+                  payData: {
+                    paymethod_id: webviewPaymethod?.id,
+                    amount: cart?.total,
+                    delivery_zone_id: cart?.delivery_zone_id,
+                    user_id: user?.id,
+                  },
+                  currency: configs?.stripe_currency?.value || currency,
+                  userToken: token,
+                  clientId: 'sandbox-sq0idb-rMLAce87hOfpGvokZCygEw',
+                  locationId: 'L1NGAY5M6KJRX'
+                }
+              }
+              setProg(false);
+              webviewRefSquare?.current?.postMessage?.(JSON.stringify(message))
+            }}
+          />
+        </View>
+      )
+      }
       {openOrderCreating && (
         <View style={{ zIndex: 9999, height: '100%', width: '100%', position: 'absolute', backgroundColor: 'white' }}>
           <OrderCreating

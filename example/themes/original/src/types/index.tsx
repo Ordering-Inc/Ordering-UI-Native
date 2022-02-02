@@ -170,7 +170,7 @@ export interface BusinessProductsListingParams {
   getNextProducts?: () => {};
 	handleChangeCategory: (value: any) => {};
 	setProductLogin?: () => {};
-	updateProductModal?: (value: any) => {}
+	updateProductModal?: (value: any) => {};
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -193,6 +193,8 @@ export interface BusinessProductsCategoriesParams {
 	categoriesLayout?: any;
 	selectedCategoryId?: any;
 	lazyLoadProductsRecommended?: any;
+  setSelectedCategoryId?: any
+  setCategoryClicked?: any
 }
 export interface BusinessProductsListParams {
 	errors?: any;
@@ -259,7 +261,9 @@ export interface OrdersOptionParams {
 	setOrderList?: any,
 	preOrders?: boolean,
 	setOrdersLength?: ({ activeOrdersLength, previousOrdersLength }: { activeOrdersLength: number, previousOrdersLength: number }) => void,
-	ordersLength: { activeOrdersLength: number, previousOrdersLength: number }
+	ordersLength: { activeOrdersLength: number, previousOrdersLength: number },
+	setSelectedOrderId?: any,
+	setOpenMessges?: any
 }
 export interface ActiveOrdersParams {
 	orders?: any,
@@ -270,7 +274,9 @@ export interface ActiveOrdersParams {
 	setScreen?: any,
 	screen?: any,
 	loadMoreOrders?: () => {},
-	onNavigationRedirect?: (route: string, params?: any) => {}
+	onNavigationRedirect?: (route: string, params?: any) => {},
+	isMessageView?: boolean,
+	handleClickOrder?: any
 }
 export interface PreviousOrdersParams {
 	orders?: any,
@@ -332,6 +338,11 @@ export interface MessagesParams {
 	setMessages?: () => {},
 	readMessages?: () => {},
 	onClose?: () => void,
+	isMeesageListing?: boolean,
+	setCanRead?: any,
+	business: boolean,
+	driver: boolean,
+	onMessages?: any
 }
 export interface ViewInterface {
 	navigation?: any;
@@ -458,3 +469,6 @@ export interface HelpAccountAndPaymentParams {
 	navigation: any;
 }
   
+export interface MessageListingParams {
+	navigation: any;
+}
