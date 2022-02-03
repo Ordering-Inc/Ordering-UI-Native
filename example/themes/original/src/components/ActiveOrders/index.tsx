@@ -14,7 +14,6 @@ import {
 	LoadMore
 } from './styles';
 import { View, StyleSheet } from 'react-native';
-import { getGoogleMapImage } from '../../utils';
 
 import { ActiveOrdersParams } from '../../types';
 import moment from 'moment';
@@ -41,7 +40,7 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 	};
 
 	const handleClickCard = (uuid: string) => {
-		if (isMessageView ) {
+		if (isMessageView) {
 			handleClickOrder(uuid)
 			return
 		}
@@ -132,18 +131,8 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
 			<ActiveOrdersContainer isMiniCards={configs?.google_maps_api_key?.value}>
 				{orders.length > 0 &&
 					orders.map((order: any, index: any) => (
-						<Order key={order?.id || order?.uuid} order={order} index={index} />
+						<Order key={index} order={order} index={index} />
 					))}
-				{pagination?.totalPages && pagination?.currentPage < pagination?.totalPages && (
-					<LoadMore>
-						<OButton
-							textStyle={{ color: '#fff' }}
-							text={t('LOAD_MORE_ORDERS', 'Load more orders')}
-							onClick={loadMoreOrders}
-							style={styles.loadMoreButton}
-						/>
-					</LoadMore>
-				)}
 			</ActiveOrdersContainer>
 			<View
 				style={{
