@@ -104,6 +104,9 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 
 	const [toggleTime, setToggleTime] = useState(false);
 	const [selectedTime, setSelectedTime] = useState(timeSelected);
+	const [minDate, setMinDate] = useState(new Date())
+	const [maxDate, setMaxDate] = useState(new Date)
+	const [alert, setAlert] = useState<any>({ show: false })
 
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
@@ -173,6 +176,19 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			},
 		};
 	};
+
+	useEffect(() => {
+		if (datesList?.length > 0) {
+		  const _datesList = datesList.slice(0, Number(configs?.max_days_preorder?.value || 6))
+		  const minDateParts = _datesList[0].split('-')
+		  const maxDateParts = _datesList[_datesList.length - 1].split('-')
+		  const _minDate = new Date(minDateParts[0], minDateParts[1] - 1, minDateParts[2])
+		  const _maxDate = new Date(maxDateParts[0], maxDateParts[1] - 1, maxDateParts[2])
+		  setMinDate(_minDate)
+		  setMaxDate(_maxDate)
+		}
+	}, [datesList])
+
 	return (
 		<>
 		<Container style={{ paddingLeft: 40, paddingRight: 40 }}>
@@ -309,7 +325,8 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 									customDayHeaderStyles={customDayHeaderStylesCallback}
 									weekdays={weekDays}
 									selectedStartDate={momento}
-									minDate={moment()}
+									minDate={minDate}
+                					maxDate={maxDate}
 								/>
 							</View>
 						)}
