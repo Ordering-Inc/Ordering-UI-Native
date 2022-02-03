@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { AccessToken, LoginManager } from 'react-native-fbsdk';
+import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
 import { useLanguage, useSession, useApi } from 'ordering-components/native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -49,7 +49,7 @@ export const FacebookLogin = (props: any) => {
         handleErrors && handleErrors(response.content.result)
         logoutWithFacebook()
       }
-    } catch (err) {
+    } catch (err : any) {
       handleLoading && handleLoading(false)
       handleErrors && handleErrors(err.message)
     }
