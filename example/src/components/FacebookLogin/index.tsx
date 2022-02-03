@@ -38,7 +38,6 @@ export const FacebookLogin = (props: any) => {
         body.notification_token = notificationState.notification_token
         body.notification_app = notificationState.notification_app
       }
-      console.log(accessToken)
       const response = await ordering.users().authFacebook(body)
       if (!response.content.error) {
         if (handleSuccessFacebookLogin) {
