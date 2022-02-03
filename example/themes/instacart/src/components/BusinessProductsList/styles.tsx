@@ -12,3 +12,8 @@ export const ErrorMessage = styled.View`
 export const WrapperNotFound = styled.View`
   height: 500px;
 `
+export const ProductsWrapper = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+`

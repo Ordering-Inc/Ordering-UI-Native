@@ -9,8 +9,6 @@ PODS:
     - React
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
-  - FBAEMKit (12.2.1):
-    - FBSDKCoreKit_Basics (= 12.2.1)
   - FBLazyVector (0.64.3)
   - FBReactNativeSpec (0.64.3):
     - RCT-Folly (= 2020.01.13.00)
@@ -19,14 +17,20 @@ PODS:
     - React-Core (= 0.64.3)
     - React-jsi (= 0.64.3)
     - ReactCommon/turbomodule/core (= 0.64.3)
-  - FBSDKCoreKit (12.2.1):
-    - FBAEMKit (= 12.2.1)
-    - FBSDKCoreKit_Basics (= 12.2.1)
-  - FBSDKCoreKit_Basics (12.2.1)
-  - FBSDKLoginKit (12.2.1):
-    - FBSDKCoreKit (= 12.2.1)
-  - FBSDKShareKit (12.2.1):
-    - FBSDKCoreKit (= 12.2.1)
+  - FBSDKCoreKit (8.2.0):
+    - FBSDKCoreKit/Basics (= 8.2.0)
+    - FBSDKCoreKit/Core (= 8.2.0)
+  - FBSDKCoreKit/Basics (8.2.0)
+  - FBSDKCoreKit/Core (8.2.0):
+    - FBSDKCoreKit/Basics
+  - FBSDKLoginKit (8.2.0):
+    - FBSDKLoginKit/Login (= 8.2.0)
+  - FBSDKLoginKit/Login (8.2.0):
+    - FBSDKCoreKit (~> 8.2.0)
+  - FBSDKShareKit (8.2.0):
+    - FBSDKShareKit/Share (= 8.2.0)
+  - FBSDKShareKit/Share (8.2.0):
+    - FBSDKCoreKit (~> 8.2.0)
   - Firebase/Analytics (8.8.0):
     - Firebase/Core
   - Firebase/Core (8.8.0):
@@ -56,15 +60,15 @@ PODS:
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.4)
     - GoogleUtilities/Logger (~> 7.4)
-  - FirebaseCoreDiagnostics (8.10.0):
+  - FirebaseCoreDiagnostics (8.11.0):
     - GoogleDataTransport (~> 9.1)
-    - GoogleUtilities/Environment (~> 7.6)
-    - GoogleUtilities/Logger (~> 7.6)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Logger (~> 7.7)
     - nanopb (~> 2.30908.0)
-  - FirebaseInstallations (8.10.0):
+  - FirebaseInstallations (8.11.0):
     - FirebaseCore (~> 8.0)
-    - GoogleUtilities/Environment (~> 7.6)
-    - GoogleUtilities/UserDefaults (~> 7.6)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/UserDefaults (~> 7.7)
     - PromisesObjC (< 3.0, >= 1.2)
   - Flipper (0.75.1):
     - Flipper-Folly (~> 2.5)
@@ -425,13 +429,13 @@ PODS:
     - React-Core
   - react-native-html-to-pdf (0.10.0):
     - React-Core
-  - react-native-image-picker (4.7.3):
+  - react-native-image-picker (4.7.0):
     - React-Core
   - react-native-maps (0.28.1):
     - React-Core
   - react-native-netinfo (6.2.1):
     - React-Core
-  - react-native-onesignal (4.3.6):
+  - react-native-onesignal (4.3.4):
     - OneSignalXCFramework (= 3.10.0)
     - React (< 1.0.0, >= 0.13.0)
   - react-native-print (0.9.0):
@@ -440,7 +444,7 @@ PODS:
     - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
-  - react-native-webview (11.17.1):
+  - react-native-webview (11.16.0):
     - React-Core
   - React-perflogger (0.64.3)
   - React-RCTActionSheet (0.64.3):
@@ -510,7 +514,7 @@ PODS:
     - React-Core
   - RNBootSplash (3.2.7):
     - React-Core
-  - RNCAsyncStorage (1.15.17):
+  - RNCAsyncStorage (1.15.15):
     - React-Core
   - RNCCheckbox (0.5.9):
     - React-Core
@@ -850,18 +854,16 @@ SPEC CHECKSUMS:
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
-  FBAEMKit: 4cea610d0bc1680572f2aad7b25db7a2f2690d82
   FBLazyVector: c71c5917ec0ad2de41d5d06a5855f6d5eda06971
-  FBReactNativeSpec: 3f9fb502cd0b55315d52891719336faea29d057c
-  FBSDKCoreKit: 5b1992fe65802ca26be7e68bc4fac5f59fa39908
-  FBSDKCoreKit_Basics: a6a92ca628e05f86f458a4721574c5ddfb058ba3
-  FBSDKLoginKit: 7467b7f988ca4fdf48f12a839bcfce4264752429
-  FBSDKShareKit: 25fe0e2cd0811918e5b5b1603cb3fc580154cc48
+  FBReactNativeSpec: b16465286b625a749fd84b68a033ef4f3ef0ed44
+  FBSDKCoreKit: 4afd6ff53d8133a433dbcda44451c9498f8c6ce4
+  FBSDKLoginKit: 7181765f2524d7ebf82d9629066c8e6caafc99d0
+  FBSDKShareKit: 0c0d51b3af47075a85ed9bea0e28b2fc70e3594b
   Firebase: 629510f1a9ddb235f3a7c5c8ceb23ba887f0f814
   FirebaseAnalytics: 5506ea8b867d8423485a84b4cd612d279f7b0b8a
   FirebaseCore: 98b29e3828f0a53651c363937a7f7d92a19f1ba2
-  FirebaseCoreDiagnostics: 56fb7216d87e0e6ec2feddefa9d8a392fe8b2c18
-  FirebaseInstallations: 830327b45345ffc859eaa9c17bcd5ae893fd5425
+  FirebaseCoreDiagnostics: 64d9709d804a6c25bd77841371c1fcfd909d5601
+  FirebaseInstallations: 044eede8a049bce71c4541ee68d6e4364fcbe774
   Flipper: d3da1aa199aad94455ae725e9f3aa43f3ec17021
   Flipper-DoubleConversion: 38631e41ef4f9b12861c67d17cb5518d06badc41
   Flipper-Folly: 755929a4f851b2fb2c347d533a23f191b008554c
@@ -903,14 +905,14 @@ SPEC CHECKSUMS:
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-google-maps: 915cea64470a6e7581b782d8659bf8a7e2dee302
   react-native-html-to-pdf: 1214f9c795a587fe60a950d11a891cd05be29625
-  react-native-image-picker: 4e6008ad8c2321622affa2c85432a5ebd02d480c
+  react-native-image-picker: 4b090b73077c3a71b91fddc739a594feebd00184
   react-native-maps: 60a75aa547d576fdb91be1f95113665215b59461
   react-native-netinfo: 3d3769f0d65de15c83a9bf1346f8be71de5a24bf
-  react-native-onesignal: 3ca13c0004f12bff30f479f1a303286fd119dd56
+  react-native-onesignal: 9e10487bcba41ebcb4655b45d9bdd0b63f5e220f
   react-native-print: ae7982894bda8ef1492289e35b7a36b76a0d11ab
   react-native-restart: 733a51ad137f15b0f8dc34c4082e55af7da00979
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
-  react-native-webview: 162b6453d074e0b1c7025242bb7a939b6f72b9e7
+  react-native-webview: 28a8636d97ee641f2ee8f20492d7a6c269c1d703
   React-perflogger: cc76a4254d19640f1d8ad1c66fdee800414b805c
   React-RCTActionSheet: 7448f049318d8d7e8a9a1ebb742ada721757eea8
   React-RCTAnimation: fb9b3fa1a4a9f5e6ab01b3368693ce69860ba76a
@@ -925,7 +927,7 @@ SPEC CHECKSUMS:
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
   RNAppleAuthentication: 63c2127ace11985b94f852fc480eb84145653712
   RNBootSplash: f31eba8f6d496e2029859e06e5582cac4607256d
-  RNCAsyncStorage: 6bd5a7ba3dde1c3facba418aa273f449bdc5437a
+  RNCAsyncStorage: 0bef6a21517c0254bd6bd59a3672963abfa0d18e
   RNCCheckbox: 6369808337432cdbd5025d62ceced2480b4c51df
   RNCClipboard: cc054ad1e8a33d2a74cd13e565588b4ca928d8fd
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
