@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { useFocusEffect } from '@react-navigation/native'
@@ -15,7 +15,8 @@ import {
 	PlaceholderLine,
 	Fade
 } from "rn-placeholder";
-import { View } from 'react-native'
+
+import { View, ScrollView } from 'react-native'
 
 const OrdersOptionUI = (props: OrdersOptionParams) => {
 	const {
@@ -28,8 +29,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		customArray,
 		onNavigationRedirect,
 		orderStatus,
+		loadMoreStatus,
 		loadMoreOrders,
-		loadOrders
+		loadOrders,
 	} = props
 
 	const theme = useTheme();
@@ -98,10 +100,17 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 	}
 
 	useFocusEffect(
-	  React.useCallback(() => {
-	    loadOrders()
-	  }, [navigation])
-	)
+		React.useCallback(() => {
+		  loadOrders()
+		}, [navigation])
+	  )
+
+	useEffect(() => {
+		const hasMore = pagination?.totalPages && pagination?.currentPage !== pagination?.totalPages
+		if (loadMoreStatus && hasMore && !loading) {
+			loadMoreOrders()
+		}
+	}, [loadMoreStatus, loading, pagination])
 
 	return (
 		<>
@@ -127,7 +136,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			)}
 			{loading && (
 				<>
-					{activeOrders ? (
+					{!activeOrders ? (
 						<Placeholder style={{ marginTop: 30 }} Animation={Fade}>
 							<View style={{ width: '100%', flexDirection: 'row' }}>
 								<PlaceholderLine width={20} height={70} style={{ marginRight: 20, marginBottom: 35 }} />
@@ -171,7 +180,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 					<ActiveOrders
 						orders={orders.filter((order: any) => orderStatus.includes(order.status))}
 						pagination={pagination}
-						loadMoreOrders={loadMoreOrders}
 						reorderLoading={reorderLoading}
 						customArray={customArray}
 						getOrderStatus={getOrderStatus}
@@ -201,11 +209,6 @@ export const OrdersOption = (props: OrdersOptionParams) => {
 			? [0, 3, 4, 7, 8, 9, 14, 15, 18, 19, 20, 21]
 			: [1, 2, 5, 6, 10, 11, 12, 16, 17],
 		useDefualtSessionManager: true,
-		paginationSettings: {
-			initialPage: 1,
-			pageSize: 10,
-			controlType: 'infinity'
-		}
 	}
 
 	return <OrderList {...MyOrdersProps} />
