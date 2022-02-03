@@ -18,20 +18,22 @@ export const FacebookPixel = (props : any) => {
   }
   
   const handleProductAdded = (product : any) => {
-    AppEventsLogger.logEvent(AppEventsLogger.AppEvents.AddedToCart, product?.total , {
+    AppEventsLogger.logEvent(AppEventsLogger.AppEvents.AddedToCart, product?.total ?? product?.price , {
       [AppEventsLogger.AppEventParams.Description]: product?.name,
       [AppEventsLogger.AppEventParams.Currency]: configs?.stripe_currency?.value ?? 'USD',
       [AppEventsLogger.AppEventParams.ContentID]: product?.id,
       [AppEventsLogger.AppEventParams.ContentType]: "product",
+      ["fb_quantity"]: product?.quantity,
     })
   }
 
   const handleProductEdited = (product : any) => {
-    AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CustomizeProduct, product?.total , {
+    AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CustomizeProduct, product?.total ?? product?.price , {
       [AppEventsLogger.AppEventParams.Description]: product?.name,
       [AppEventsLogger.AppEventParams.Currency]: configs?.stripe_currency?.value ?? 'USD',
       [AppEventsLogger.AppEventParams.ContentID]: product?.id,
       [AppEventsLogger.AppEventParams.ContentType]: "product",
+      ["fb_quantity"]: product?.quantity,
     })
   }
 
