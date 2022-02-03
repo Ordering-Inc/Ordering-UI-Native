@@ -20,6 +20,7 @@ import { Checkout } from './components/Checkout';
 import { CouponControl } from './components/CouponControl';
 import { DriverTips } from './components/DriverTips';
 import { FacebookLogin } from './components/FacebookLogin';
+import { FacebookPixel } from './components/FacebookPixel';
 import { FloatingButton } from './components/FloatingButton';
 import { ForgotPasswordForm } from './components/ForgotPasswordForm';
 import { GoogleMap } from './components/GoogleMap';
@@ -118,6 +119,7 @@ export {
   CouponControl,
   DriverTips,
   FacebookLogin,
+  FacebookPixel,
   FloatingButton,
   ForgotPasswordForm,
   GoogleMap,
