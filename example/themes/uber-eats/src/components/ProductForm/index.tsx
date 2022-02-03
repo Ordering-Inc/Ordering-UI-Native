@@ -85,7 +85,7 @@ export const ProductOptionsUI = (props: any) => {
     comment: {
       borderBottomWidth: 1,
       borderRadius: 0,
-      borderBottomColor: '#DBDCDB',
+      borderColor: theme.colors.lightGray,
       height: 100,
       alignItems: 'flex-start',
       marginHorizontal: 20
