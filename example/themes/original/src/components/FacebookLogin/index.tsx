@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { AccessToken, LoginManager } from 'react-native-fbsdk';
+import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
 import { useLanguage, useSession, useApi } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
