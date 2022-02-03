@@ -372,12 +372,15 @@ const LoginFormUI = (props: LoginParams) => {
                 {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
               </OText>
               <SocialButtons>
-                    <FacebookLogin
-                      notificationState={notificationState}
-                      handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                      handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
-                      handleSuccessFacebookLogin={handleSuccessFacebook}
-                    />
+                {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
+                  configs?.facebook_id?.value && (
+                  <FacebookLogin
+                    notificationState={notificationState}
+                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                    handleSuccessFacebookLogin={handleSuccessFacebook}
+                  />
+                )}
                 {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
                   <GoogleLogin
                     notificationState={notificationState}
