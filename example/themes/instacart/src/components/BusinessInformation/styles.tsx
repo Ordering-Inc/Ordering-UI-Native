@@ -11,7 +11,6 @@ export const GrayBackground = styled.View`
 `
 export const WrapMainContent = styled.ScrollView`
   flex: 1;
-  margin-top: 40px;
 `
 export const InnerContent = styled.View`
   padding: 30px 20px;

@@ -4,14 +4,15 @@ import { SingleProductCard } from '../SingleProductCard'
 import { NotFoundSource } from '../NotFoundSource'
 import { BusinessProductsListParams } from '../../types'
 import { OText } from '../shared'
-import {
-  ProductsContainer,
-  ErrorMessage,
-  WrapperNotFound
-} from './styles'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { Platform, View, TouchableOpacity } from 'react-native'
 import { useTheme } from 'styled-components/native'
+import {
+  ProductsContainer,
+  ErrorMessage,
+  WrapperNotFound,
+  ProductsWrapper
+} from './styles'
 import { ScrollView } from 'react-native-gesture-handler'
 
 const BusinessProductsListUI = (props: BusinessProductsListParams) => {
@@ -42,8 +43,11 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
       if (categoryState?.products.length > allProducts.length) {
         setAllProducts(categoryState?.products.sort((a: any, b: any) => a.id - b.id))
       }
+      if (searchValue) {
+        setAllProducts(categoryState?.products.sort((a: any, b: any) => a.id - b.id))
+      }
     }
-  }, [category, categoryState])
+  }, [category, categoryState, searchValue])
 
   return (
     <ProductsContainer>
@@ -67,7 +71,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             >
               <OText style={{...theme.labels.subtitle, fontWeight: Platform.OS == 'ios' ? '600' : 'bold'}} mBottom={10}>{t('FEATURED', 'Featured')}</OText>
             </TouchableOpacity>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <ProductsWrapper>
               {allProducts?.map((product: any, index: number) => product.featured && (
                 <SingleProductCard
                   key={index}
@@ -77,7 +81,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   onProductClick={onProductClick}
                 />
               ))}
-            </ScrollView>
+            </ProductsWrapper>
           </>
         )
       }
@@ -95,7 +99,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                     >
                       <OText style={{...theme.labels.subtitle, fontWeight: Platform.OS === 'ios' ? '600' : 'bold'}} mBottom={10}>{category.name}</OText>
                     </TouchableOpacity>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    <ProductsWrapper>
                       {
                         products.map((product: any, index: number) => (
                           <SingleProductCard
@@ -107,7 +111,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                           />
                         ))
                       }
-                    </ScrollView>
+                    </ProductsWrapper>
                   </>
                 )
               }
@@ -118,29 +122,27 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
 
       {
         (categoryState.loading || isBusinessLoading) && (
-          <>
+          <Placeholder style={{ padding: 5, marginBottom: 20 }} Animation={Fade}>
+            <PlaceholderLine width={50} height={16} style={{ marginBottom: 20 }} />
             {[...Array(categoryState?.pagination?.nextPageItems).keys()].map((item, i) => (
-              <Placeholder key={i} style={{ padding: 5, marginBottom: 20 }} Animation={Fade}>
-                <PlaceholderLine width={50} height={20} style={{ marginBottom: 20 }} />
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <View style={{flexBasis: '47%'}}>
-                    <PlaceholderLine width={80} height={100} style={{ marginBottom: 10 }} />
-                    <Placeholder>
-                        <PlaceholderLine width={60} style={{marginBottom: 12}}/>
-                        <PlaceholderLine width={20} />
-                    </Placeholder>
-                  </View>
-                  <View style={{flexBasis: '47%'}}>
-                    <PlaceholderLine width={80} height={100} style={{ marginBottom: 10 }} />
-                    <Placeholder>
-                        <PlaceholderLine width={60} style={{marginBottom: 25}}/>
-                        <PlaceholderLine width={20} />
-                    </Placeholder>
-                  </View>
+              <View key={i} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={{flexBasis: '47%'}}>
+                  <PlaceholderLine width={80} height={100} style={{ marginBottom: 10 }} />
+                  <Placeholder>
+                      <PlaceholderLine width={20} />
+                      <PlaceholderLine width={60} style={{marginBottom: 12}}/>
+                  </Placeholder>
                 </View>
-              </Placeholder>
+                <View style={{flexBasis: '47%'}}>
+                  <PlaceholderLine width={80} height={100} style={{ marginBottom: 10 }} />
+                  <Placeholder>
+                      <PlaceholderLine width={20} />
+                      <PlaceholderLine width={60} style={{marginBottom: 25}}/>
+                  </Placeholder>
+                </View>
+              </View>
             ))}
-          </>
+          </Placeholder>
         )
       }
       {

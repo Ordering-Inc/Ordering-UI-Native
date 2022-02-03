@@ -253,7 +253,7 @@ export interface OrdersOptionParams {
 	pagination?: any,
 	titleContent?: string,
 	customArray?: Array<any>,
-	loadMoreOrders?: () => {},
+	loadMoreOrders?: any,
 	onNavigationRedirect?: any,
 	orderStatus?: any,
 	navigation?: any,
@@ -263,7 +263,8 @@ export interface OrdersOptionParams {
 	setOrdersLength?: ({ activeOrdersLength, previousOrdersLength }: { activeOrdersLength: number, previousOrdersLength: number }) => void,
 	ordersLength: { activeOrdersLength: number, previousOrdersLength: number },
 	setSelectedOrderId?: any,
-	setOpenMessges?: any
+	setOpenMessges?: any,
+	loadMoreStatus?: boolean
 }
 export interface ActiveOrdersParams {
 	orders?: any,

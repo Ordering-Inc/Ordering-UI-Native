@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import { useLanguage, useConfig, useOrder, useUtils } from 'ordering-components/native'
 import { SingleProductCardParams } from '../../types'
 import {
@@ -23,9 +23,8 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 
   const styles = StyleSheet.create({
     container: {
-      marginBottom: 15,
-      width: (windowWidth - 140) / 2,
-      minHeight: (windowWidth - 140) / 2 + 50
+      width: (windowWidth - 80) / 2,
+      height: (windowWidth - 80) / 2 + 40
     },
     textStyle: {
       flex: 1,
@@ -37,8 +36,8 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
       lineHeight: 18
     },
     productStyle: {
-      width: (windowWidth - 200) / 2,
-      height: (windowWidth - 200) / 2,
+      width: (windowWidth - 160) / 2,
+      height: (windowWidth - 160) / 2,
       borderRadius: 3,
 		  marginTop: 5
     },
@@ -69,10 +68,6 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
   maxCartProductInventory = !isNaN(maxCartProductInventory) ? maxCartProductInventory : maxCartProductConfig
 
   const maxProductQuantity = Math.min(maxCartProductConfig, maxCartProductInventory)
-
-  useEffect(() => {
-    
-  }, [product]);
 
   return (
     <CardContainer style={styles.container}
