@@ -18,18 +18,21 @@ export const FacebookPixel = (props : any) => {
   }
   
   const handleProductAdded = (product : any) => {
-    AppEventsLogger.logEvent(AppEventsLogger.AppEvents.AddedToCart, {
+    AppEventsLogger.logEvent(AppEventsLogger.AppEvents.AddedToCart, product?.total , {
       [AppEventsLogger.AppEventParams.Description]: product?.name,
       [AppEventsLogger.AppEventParams.Currency]: configs?.stripe_currency?.value ?? 'USD',
       [AppEventsLogger.AppEventParams.ContentID]: product?.id,
-      [AppEventsLogger.AppEventsParams.Content]: JSON.stringify(product?.options || {}),
-      [AppEventsLogger.AppEventParams.ContentType]: product?.category?.name,
-      ["fb_value"]: product?.total
+      [AppEventsLogger.AppEventParams.ContentType]: "product",
     })
   }
 
-  const handleProductEdited = () => {
-    AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CustomizeProduct)
+  const handleProductEdited = (product : any) => {
+    AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CustomizeProduct, product?.total , {
+      [AppEventsLogger.AppEventParams.Description]: product?.name,
+      [AppEventsLogger.AppEventParams.Currency]: configs?.stripe_currency?.value ?? 'USD',
+      [AppEventsLogger.AppEventParams.ContentID]: product?.id,
+      [AppEventsLogger.AppEventParams.ContentType]: "product",
+    })
   }
 
   const handleSignupUser = () => {
@@ -47,7 +50,7 @@ export const FacebookPixel = (props : any) => {
   }
 
   const handleOrderPlaced = (order : any) => {
-    AppEventsLogger.logPurchase(order.total, configs?.stripe_currency?.value ?? 'USD', { content_ids: [order.id], value: order.total });
+    AppEventsLogger.logPurchase(order.total, configs?.stripe_currency?.value ?? 'USD', { param: "value", id: order.id });
   }
 
   useEffect(() => {
