@@ -21,6 +21,7 @@ import { ThemeProvider } from './context/Theme';
 import settings from './config.json';
 import theme from './theme.json';
 import AppContainer from './AppContainer';
+import { FacebookPixel } from './components/FacebookPixel';
 
 Sentry.init({
   environment: Platform.OS === 'ios' ? 'ios' : 'android',
@@ -169,6 +170,7 @@ const DeliveryApp = () => {
   return (
     <ThemeProvider theme={theme}>
       <OrderingProvider settings={settings} Alert={Alert}>
+        <FacebookPixel />
         <AppContainer />
         <Toast />
         <Analytics />

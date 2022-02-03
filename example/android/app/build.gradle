@@ -198,8 +198,6 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-    implementation project(':react-native-fbsdk')
-
     implementation 'com.android.support:multidex:1.0.3'
 
     implementation 'com.android.support:design:27.1.0'
@@ -207,6 +205,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.7'
 
     implementation 'com.google.android.gms:play-services-maps:18.0.0'
+
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
