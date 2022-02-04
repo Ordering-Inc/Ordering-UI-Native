@@ -55,7 +55,6 @@ import { ActivityIndicator } from 'react-native-paper';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/Feather';
 import { OrderCreating } from '../OrderCreating';
-import { Item } from '../../../themes/uber-eats/src/components/UpsellingProducts/styles';
 
 const mapConfigs = {
   mapZoom: 16,

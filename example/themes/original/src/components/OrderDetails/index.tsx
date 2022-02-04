@@ -597,6 +597,22 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </OText>
                 </InfoBlock>
               </Customer>
+              {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
+                <View style={{ marginTop: 15 }}>
+                  <OText size={16} style={{ textAlign: 'left' }} color={theme.colors.textNormal}>
+                    {t('DELIVERY_PREFERENCE', 'Delivery Preference')}
+                  </OText>
+                  <OText size={12} style={{ textAlign: 'left' }} color={theme.colors.textNormal}>{order?.delivery_option?.name ?? t('EITHER_WAY', 'Either way')}</OText>
+                </View>
+              )}
+              {order?.comment && (
+                <View style={{ marginTop: 15 }}>
+                  <OText size={16} style={{ textAlign: 'left' }} color={theme.colors.textNormal}>
+                    {t('COMMENT', 'Comment')}
+                  </OText>
+                  <OText size={12} style={{ textAlign: 'left' }} color={theme.colors.textNormal}>{order?.comment}</OText>
+                </View>
+              )}
               {order?.driver && (
                 <>
                   {order?.driver?.location && parseInt(order?.status) === 9 && (
@@ -810,14 +826,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </OText>
                 </Table>
               </Total>
-              {order?.comment && (
-                <Table>
-                  <OText style={{ flex: 1 }}>{t('COMMENT', 'Comment')}</OText>
-                  <OText style={{ maxWidth: '70%' }}>
-                    {order?.comment}
-                  </OText>
-                </Table>
-              )}
             </OrderBill>
           </OrderContent>
         </>

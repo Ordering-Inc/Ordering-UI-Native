@@ -109,7 +109,7 @@ export const OrderBill = styled.View`
 export const Total = styled.View`
   border-top-width: 1px;
   border-top-color: ${(props: any) => props.theme.colors.border};
-  padding-vertical: 10px
+  padding-vertical: 10px;
 `
 
 export const Map = styled.View`
