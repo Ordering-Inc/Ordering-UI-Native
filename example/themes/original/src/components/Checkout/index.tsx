@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Platform, I18nManager } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
-
+import Picker from 'react-native-country-picker-modal';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import {
 	Checkout as CheckoutController,
 	useOrder,
@@ -22,7 +23,6 @@ import { PaymentOptions } from '../PaymentOptions';
 import { DriverTips } from '../DriverTips';
 import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
-import { OrderTypeSelector } from '../OrderTypeSelector'
 
 import {
 	ChContainer,
@@ -35,7 +35,9 @@ import {
 	ChErrors,
 	ChBusinessDetails,
 	ChUserDetails,
-	ChCart
+	ChCart,
+	DeliveryOptionsContainer,
+	DeliveryOptionItem
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
@@ -74,9 +76,9 @@ const CheckoutUI = (props: any) => {
 		handlePaymethodChange,
 		handlerClickPlaceOrder,
 		onNavigationRedirect,
-		businessLogo,
-		businessName,
-		cartTotal
+		deliveryOptionSelected,
+		instructionsOptions,
+		handleChangeDeliveryOption,
 	} = props
 
 	const theme = useTheme();
@@ -91,9 +93,18 @@ const CheckoutUI = (props: any) => {
 			justifyContent: 'flex-start',
 			paddingLeft: 0,
 		},
+		paddSection: {
+			padding: 20
+		},
 		pagePadding: {
 			paddingLeft: 40,
 			paddingRight: 40
+		},
+		icon: {
+			top: 15,
+			right: Platform.OS === 'ios' ? 5 : (I18nManager.isRTL ? 30 : 0),
+			position: 'absolute',
+			fontSize: 20
 		}
 	})
 
@@ -109,6 +120,7 @@ const CheckoutUI = (props: any) => {
 	const [userErrors, setUserErrors] = useState<any>([]);
 	const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
 	const [phoneUpdate, setPhoneUpdate] = useState(false);
+	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -117,6 +129,12 @@ const CheckoutUI = (props: any) => {
 	const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
 	const cartsWithProducts = carts && Object.values(carts).filter((cart: any) => cart.products.length) || null
+
+	const deliveryOptions = instructionsOptions?.result && instructionsOptions?.result?.filter((option: any) => option?.enabled)?.map((option: any) => {
+		return {
+			value: option?.id, key: option?.id, label: option?.name
+		}
+	})
 
 	const handlePlaceOrder = () => {
 		if (!userErrors.length) {
@@ -129,6 +147,11 @@ const CheckoutUI = (props: any) => {
 		})
 		showToast(ToastType.Error, stringError)
 		setIsUserDetailsEdit(true)
+	}
+
+	const changeDeliveryOption = (option: any) => {
+		handleChangeDeliveryOption(option)
+		setIsDeliveryOptionModalVisible(false)
 	}
 
 	const checkValidationFields = () => {
@@ -307,7 +330,56 @@ const CheckoutUI = (props: any) => {
 						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
 					</ChSection>
 
-
+					{!cartState.loading && deliveryOptionSelected !== undefined && options?.type === 1 && (
+						<DeliveryOptionsContainer>
+							<OText size={16}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
+							<View
+								style={{
+									backgroundColor: theme.colors.inputDisabled,
+									borderRadius: 7.5,
+									marginBottom: 20,
+									flex: 1
+								}}>
+								<Picker
+									countryCode={undefined}
+									visible={isDeliveryOptionModalVisible}
+									onClose={() => setIsDeliveryOptionModalVisible(false)}
+									withCountryNameButton
+									renderFlagButton={() => (
+										<TouchableOpacity onPress={() => setIsDeliveryOptionModalVisible(true)}>
+											<DeliveryOptionItem backgroundColor={theme?.colors?.inputDisabled}>
+												<OText
+													size={14}
+												>
+													{deliveryOptions.find((option: any) => option.value === deliveryOptionSelected).label}
+												</OText>
+												<MaterialIcons name='keyboard-arrow-down' style={styles.icon} />
+											</DeliveryOptionItem>
+										</TouchableOpacity>
+									)}
+									flatListProps={{
+										keyExtractor: (item: any) => item.value,
+										data: deliveryOptions || [],
+										renderItem: ({ item }: any) => (
+											<TouchableOpacity
+												onPress={() => changeDeliveryOption(item.value)}
+												disabled={
+													deliveryOptionSelected === item.value
+												}
+											>
+												<DeliveryOptionItem backgroundColor={deliveryOptionSelected === item.value ? theme.colors.inputDisabled : 'white'}>
+													<OText>
+														{item.label}
+													</OText>
+												</DeliveryOptionItem>
+											</TouchableOpacity>
+										)
+									}}
+								/>
+							</View>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
+						</DeliveryOptionsContainer>
+					)}
 
 					{!cartState.loading && (cart?.status === 2 || cart?.status === 4) && (
 						<ChSection style={{ paddingBottom: 20 }}>
@@ -429,27 +501,27 @@ const CheckoutUI = (props: any) => {
 					)}
 
 					{!cartState.loading && cart && (
-        <ChSection>
-          <ChCart>
-            {cartsWithProducts && cart?.products?.length === 0 ? (
-              <NotFoundSource
-                content={t('NOT_FOUND_CARTS', 'Sorry, You don\'t seem to have any carts.')}
-                btnTitle={t('SEARCH_REDIRECT', 'Go to Businesses')}
-              />
-            ) : (
-              <>
-                <OText size={16} lineHeight={24} color={theme.colors.textNormal}>
-                  {t('ORDER_SUMMARY', 'Order Summary')}
-                </OText>
-                <OrderSummary
-                  cart={cart}
-                  isCartPending={cart?.status === 2}
-                />
-              </>
-            )}
-          </ChCart>
-        </ChSection>
-      )}
+						<ChSection>
+							<ChCart>
+								{cartsWithProducts && cart?.products?.length === 0 ? (
+									<NotFoundSource
+										content={t('NOT_FOUND_CARTS', 'Sorry, You don\'t seem to have any carts.')}
+										btnTitle={t('SEARCH_REDIRECT', 'Go to Businesses')}
+									/>
+								) : (
+									<>
+										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
+											{t('ORDER_SUMMARY', 'Order Summary')}
+										</OText>
+										<OrderSummary
+											cart={cart}
+											isCartPending={cart?.status === 2}
+										/>
+									</>
+								)}
+							</ChCart>
+						</ChSection>
+					)}
 
 					{!cartState.loading && cart && (
 						<ChSection style={{ paddingTop: 0, paddingBottom: 20, paddingHorizontal: 20 }}>
