@@ -272,7 +272,8 @@ const MessagesUI = (props: MessagesParams) => {
       {...props}
       containerStyle={{
         padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
-        flexDirection: 'column-reverse'
+        flexDirection: 'column-reverse',
+        marginBottom: Platform.OS === 'ios' && isKeyboardShow ? 500 : 0
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}
       renderAccessory={() => renderAccessory()}
