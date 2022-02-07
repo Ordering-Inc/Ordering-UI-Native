@@ -23,6 +23,7 @@ import { verifyDecimals } from '../../utils';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
+import { CartStoresListing } from '../CartStoresListing';
 
 const CartUI = (props: any) => {
   const {
@@ -51,6 +52,7 @@ const CartUI = (props: any) => {
   const [openProduct, setModalIsOpen] = useState(false)
   const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
+  const [openChangeStore, setOpenChangeStore] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null })
 
@@ -116,6 +118,7 @@ const CartUI = (props: any) => {
         handleClearProducts={handleClearProducts}
         handleCartOpen={handleCartOpen}
         onNavigationRedirect={props.onNavigationRedirect}
+        handleChangeStore={() => setOpenChangeStore(true)}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any) => (
           <ProductItemAccordion
@@ -305,7 +308,18 @@ const CartUI = (props: any) => {
           onSave={handlerProductAction}
           onClose={() => setModalIsOpen(false)}
         />
+      </OModal>
 
+      <OModal
+        open={openChangeStore}
+        entireModal
+        customClose
+        onClose={() => setModalIsOpen(false)}
+      >
+        <CartStoresListing
+          cartuuid={cart?.uuid}
+          onClose={() => setOpenChangeStore(false)}
+        />
       </OModal>
 
       {openUpselling && (
