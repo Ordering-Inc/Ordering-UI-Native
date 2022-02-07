@@ -202,7 +202,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 			Keyboard.removeAllListeners('keyboardDidShow')
       Keyboard.removeAllListeners('keyboardDidHide')
 		}
-	}, [cartRef?.current])
+	}, [])
 
   return (
     <>
