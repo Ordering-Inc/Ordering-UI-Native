@@ -365,6 +365,7 @@ export interface FloatingButtonParams {
   btnLeftValueShow?: boolean;
   btnRightValueShow?: boolean;
   handleClick?: any;
+  style?: ViewStyle
 }
 export interface MomentOptionParams {
   navigation: any;

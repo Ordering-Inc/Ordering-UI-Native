@@ -1,5 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react'
-import { View, TouchableOpacity, StyleSheet, TextStyle, ScrollView, I18nManager, Platform } from 'react-native'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
+import { View, TouchableOpacity, StyleSheet, TextStyle, ScrollView, I18nManager, Platform, KeyboardAvoidingView, Keyboard } from 'react-native'
 import {
   BusinessAndProductList,
   useLanguage,
@@ -36,7 +36,7 @@ import { Cart } from '../Cart'
 import { OrderSummary } from '../OrderSummary'
 import NavBar from '../NavBar'
 import SocialShareFav from '../SocialShare'
-
+import { SafeAreaContainer } from '../../layouts/SafeAreaContainer'
 const PIXELS_TO_SCROLL = 1000
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
@@ -112,6 +112,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const [categoriesLayout, setCategoriesLayout] = useState<any>({})
   const [productListLayout, setProductListLayout] = useState<any>(null)
   const [selectedCategoryId, setSelectedCategoryId] = useState<any>('cat_all')
+  const [isKeyboardOpen, setIsKeyBoardOpen] = useState(false)
+  const cartRef = useRef<any>()
 
   const scrollViewRef = useRef<any>(null)
 
@@ -186,6 +188,21 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const handleTouchDrag = useCallback(() => {
     setCategoryClicked(false);
   }, []);
+
+  useEffect(() => {
+		Keyboard.addListener('keyboardDidShow', () => {
+        setIsKeyBoardOpen(true)
+		})
+
+    Keyboard.addListener('keyboardDidHide', () => [
+      setIsKeyBoardOpen(false)
+    ])
+
+		return () => {
+			Keyboard.removeAllListeners('keyboardDidShow')
+      Keyboard.removeAllListeners('keyboardDidHide')
+		}
+	}, [cartRef?.current])
 
   return (
     <>
@@ -358,18 +375,36 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         entireModal
         customClose
       >
-        <ScrollView stickyHeaderIndices={[0]} style={{ backgroundColor: 'white' }} contentContainerStyle={{ paddingBottom: 100 }}>
-          <NavBar title={t('CART', 'Cart')} onActionLeft={handleCloseCartModal} leftImg={theme.images.general.close} noBorder btnStyle={{ paddingLeft: 0 }} />
-          <OrderSummary
-            cart={currentCart}
-            isCartPending={currentCart?.status === 2}
-            hasUpSelling={true}
-            isFromCheckout
-            title={t('ITEMS', 'Items')}
-            paddingH={40}
-          />
-        </ScrollView>
-        <FloatingButton btnText={t('CHECKOUT', 'Checkout')} handleClick={() => handleUpsellingPage()} />
+        <SafeAreaContainer>
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'height' : 'padding'}
+            enabled={Platform.OS === 'ios'}
+          >
+            <ScrollView 
+              stickyHeaderIndices={[0]} 
+              style={{ backgroundColor: 'white' }} 
+              contentContainerStyle={{ paddingBottom: 100 }}
+              ref={(ref : any) => cartRef.current = ref}
+            >
+              <NavBar title={t('CART', 'Cart')} onActionLeft={handleCloseCartModal} leftImg={theme.images.general.close} noBorder btnStyle={{ paddingLeft: 0 }} />
+              <OrderSummary
+                cart={currentCart}
+                isCartPending={currentCart?.status === 2}
+                hasUpSelling={true}
+                isFromCheckout
+                title={t('ITEMS', 'Items')}
+                paddingH={40}
+                cartRef={cartRef}
+              />
+            </ScrollView>
+            <FloatingButton 
+              style={{bottom: isKeyboardOpen && Platform.OS === 'ios' ? 30 : 0}}
+              btnText={t('CHECKOUT', 'Checkout')} 
+              handleClick={() => handleUpsellingPage()} 
+            />
+          </KeyboardAvoidingView>
+        </SafeAreaContainer>
       </OModal>
     </>
   )

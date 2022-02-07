@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
 	ProductForm as ProductOptions,
 	useSession,
@@ -8,7 +8,7 @@ import {
 } from 'ordering-components/native'
 import { ProductIngredient } from '../ProductIngredient'
 import { ProductOption } from '../ProductOption'
-import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager, TextStyle, Platform, KeyboardAvoidingView } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, I18nManager, TextStyle, Platform, KeyboardAvoidingView, Keyboard } from 'react-native'
 import {
 	ProductHeader,
 	WrapHeader,
@@ -107,9 +107,9 @@ export const ProductOptionsUI = (props: any) => {
 	const [orderState] = useOrder()
 	const [{ auth }] = useSession()
 	const { product, loading, error } = productObject
-
 	const { bottom } = useSafeAreaInsets();
-
+	const [commentY, setCommentY] = useState(0)
+	const productFormRef = useRef<any>()
 	const isError = (id: number) => {
 		let bgColor = theme.colors.white
 		if (errors[`id:${id}`]) {
@@ -136,13 +136,25 @@ export const ProductOptionsUI = (props: any) => {
 
 	const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors).length > 0
 
+	useEffect(() => {
+		Keyboard.addListener('keyboardDidShow', () => {
+			if (commentY > 100) {
+				productFormRef?.current?.scrollTo?.({ x: 0, y: commentY + 300, animated: true })
+			}
+		})
+
+		return () => {
+			Keyboard.removeAllListeners('keyboardDidShow')
+		}
+	}, [productFormRef?.current, commentY])
+
 	return (
 		<KeyboardAvoidingView
 			style={{ flex: 1 }}
 			behavior={Platform.OS ? 'padding' : 'height'}
 			enabled={Platform.OS === 'ios'}
 		>
-			<ScrollView style={styles.mainContainer}>
+			<ScrollView style={styles.mainContainer} ref={(ref) => productFormRef.current = ref}>
 				{!error && (
 					<View style={{ paddingBottom: 80 }}>
 						<WrapHeader>
@@ -275,7 +287,7 @@ export const ProductOptionsUI = (props: any) => {
 											</React.Fragment>
 										)
 									}))}
-									<ProductComment>
+									<ProductComment onLayout={(e: any) => setCommentY(e.nativeEvent.layout.y + e.nativeEvent.layout.height)}>
 										<SectionTitle>
 											<OText style={theme.labels.middle as TextStyle}>{t('SPECIAL_COMMENT', 'Special comment')}</OText>
 										</SectionTitle>

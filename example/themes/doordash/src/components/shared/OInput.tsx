@@ -99,6 +99,7 @@ const OInput = (props: Props): React.ReactElement => {
         returnKeyType={props.returnKeyType}
         onSubmitEditing={props.onSubmitEditing}
         blurOnSubmit={props.blurOnSubmit}
+        onFocus={props.onFocus}
         ref={props.forwardRef}
         style={{padding: 0, ...props.inputStyle}}
       />
