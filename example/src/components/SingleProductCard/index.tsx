@@ -4,7 +4,8 @@ import { SingleProductCardParams } from '../../types'
 import {
   CardContainer,
   CardInfo,
-  SoldOut
+  SoldOut,
+  PricesContainer
 } from './styles'
 import { StyleSheet } from 'react-native'
 import { OText, OIcon } from '../shared'
@@ -40,6 +41,13 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
       width: 75,
       height: 75,
       borderRadius: 10,
+    },
+    regularPriceStyle: {
+      fontSize: 12,
+      color: '#808080',
+      textDecorationLine: 'line-through',
+      marginLeft: 7,
+      marginRight: 7
     }
   })
 
@@ -76,7 +84,12 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
       <CardInfo>
         <OText numberOfLines={1} ellipsizeMode='tail' style={styles.textStyle}>{product?.name}</OText>
         <OText size={12} numberOfLines={2} ellipsizeMode='tail' style={styles.textStyle}>{product?.description}</OText>
-        <OText color={theme.colors.primary}>{parsePrice(product?.price)}</OText>
+        <PricesContainer>
+          <OText color={theme.colors.primary}>{parsePrice(product?.price)}</OText>
+          {product?.offer_price && (
+            <OText style={styles.regularPriceStyle}>{parsePrice(product?.offer_price)}</OText>
+          )}
+        </PricesContainer>
       </CardInfo>
 
       {(isSoldOut || maxProductQuantity <= 0) && (
