@@ -59,6 +59,9 @@ const CartUI = (props: any) => {
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
 
+  const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
+  const businessId = business?.business_id ?? null
+
   const momentFormatted = !orderState?.option?.moment
     ? t('RIGHT_NOW', 'Right Now')
     : parseDate(orderState?.option?.moment, { outputFormat: 'YYYY-MM-DD HH:mm' })
@@ -220,7 +223,7 @@ const CartUI = (props: any) => {
               <OSTable>
                 <OSCoupon>
                   <CouponControl
-                    businessId={cart.business_id}
+                    businessId={businessId}
                     price={cart.total}
                   />
                 </OSCoupon>
@@ -302,7 +305,7 @@ const CartUI = (props: any) => {
           isCartProduct
           productCart={curProduct}
           businessSlug={cart?.business?.slug}
-          businessId={cart?.business_id}
+          businessId={businessId}
           categoryId={curProduct?.category_id}
           productId={curProduct?.id}
           onSave={handlerProductAction}
@@ -314,7 +317,7 @@ const CartUI = (props: any) => {
         open={openChangeStore}
         entireModal
         customClose
-        onClose={() => setModalIsOpen(false)}
+        onClose={() => setOpenChangeStore(false)}
       >
         <CartStoresListing
           cartuuid={cart?.uuid}
@@ -326,7 +329,7 @@ const CartUI = (props: any) => {
         <UpsellingProducts
           handleUpsellingPage={handleUpsellingPage}
           openUpselling={openUpselling}
-          businessId={cart?.business_id}
+          businessId={businessId}
           business={cart?.business}
           cartProducts={cart?.products}
           canOpenUpselling={canOpenUpselling}

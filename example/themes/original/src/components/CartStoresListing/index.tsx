@@ -7,7 +7,7 @@ import {
 } from 'ordering-components/native'
 
 import { NotFoundSource } from '../NotFoundSource'
-import { BusinessController } from '../BusinessController'
+import { BusinessCart } from '../BusinessCart'
 import { OIcon } from '../shared';
 
 import {
@@ -28,7 +28,8 @@ const CartStoresListingUI = (props: any) => {
   const [, t] = useLanguage()
   const theme = useTheme();
   const [orderState] = useOrder()
-  const businessId = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)?.business_id) ?? {}
+  const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
+  const businessId = business?.business_id ?? null
 
   return(
     <>
@@ -46,13 +47,11 @@ const CartStoresListingUI = (props: any) => {
                 horizontal={false}
               >
                 {storesState?.result.map((store: any) => (
-                  <BusinessController
+                  <BusinessCart
                     key={store.id}
-                    isCartStore
                     business={store}
-                    isSkeleton={changeStoreState.loading && businessIdSelect === store.id}
-                    orderType={orderState?.options?.type}
-                    disabledStoreBtn={(changeStoreState?.result?.business_id ?? businessId) === store.id}
+                    isLoading={changeStoreState.loading && businessIdSelect === store.id}
+                    isDisabled={(changeStoreState?.result?.business_id ?? businessId) === store.id}
                     handleCartStoreClick={handleCartStoreChange}
                   />
                 ))}
@@ -67,12 +66,11 @@ const CartStoresListingUI = (props: any) => {
 
         {storesState?.loading && (
           <ItemListing>
-            {[...Array(4).keys()].map(i => (
-              <BusinessController
+            {[...Array(8).keys()].map(i => (
+              <BusinessCart
                 key={i}
                 business={{}}
                 isSkeleton
-                orderType={orderState?.options?.type}
               />
             ))}
           </ItemListing>
