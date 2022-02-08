@@ -196,7 +196,7 @@ export const VerifyPhone = (props: any) => {
       <WrappCountdown>
         <CountDownContainer color={timer === '00:00' ? theme.colors.error: theme.colors.success}>
           <OText
-            size={28}
+            size={26}
             color={timer === '00:00' ? theme.colors.error: theme.colors.success}
           >
             {timer}
