@@ -23,6 +23,7 @@ import { verifyDecimals } from '../../utils';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
+import { CartStoresListing } from '../CartStoresListing';
 
 const CartUI = (props: any) => {
   const {
@@ -51,11 +52,15 @@ const CartUI = (props: any) => {
   const [openProduct, setModalIsOpen] = useState(false)
   const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
+  const [openChangeStore, setOpenChangeStore] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null })
 
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
+
+  const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
+  const businessId = business?.business_id ?? null
 
   const momentFormatted = !orderState?.option?.moment
     ? t('RIGHT_NOW', 'Right Now')
@@ -116,6 +121,7 @@ const CartUI = (props: any) => {
         handleClearProducts={handleClearProducts}
         handleCartOpen={handleCartOpen}
         onNavigationRedirect={props.onNavigationRedirect}
+        handleChangeStore={props.isFranchiseApp ? () => setOpenChangeStore(true) : null}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any) => (
           <ProductItemAccordion
@@ -217,7 +223,7 @@ const CartUI = (props: any) => {
               <OSTable>
                 <OSCoupon>
                   <CouponControl
-                    businessId={cart.business_id}
+                    businessId={businessId}
                     price={cart.total}
                   />
                 </OSCoupon>
@@ -299,20 +305,31 @@ const CartUI = (props: any) => {
           isCartProduct
           productCart={curProduct}
           businessSlug={cart?.business?.slug}
-          businessId={cart?.business_id}
+          businessId={businessId}
           categoryId={curProduct?.category_id}
           productId={curProduct?.id}
           onSave={handlerProductAction}
           onClose={() => setModalIsOpen(false)}
         />
+      </OModal>
 
+      <OModal
+        open={openChangeStore && props.isFranchiseApp}
+        entireModal
+        customClose
+        onClose={() => setOpenChangeStore(false)}
+      >
+        <CartStoresListing
+          cartuuid={cart?.uuid}
+          onClose={() => setOpenChangeStore(false)}
+        />
       </OModal>
 
       {openUpselling && (
         <UpsellingProducts
           handleUpsellingPage={handleUpsellingPage}
           openUpselling={openUpselling}
-          businessId={cart?.business_id}
+          businessId={businessId}
           business={cart?.business}
           cartProducts={cart?.products}
           canOpenUpselling={canOpenUpselling}

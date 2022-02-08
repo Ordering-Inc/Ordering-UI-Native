@@ -25,12 +25,14 @@ export const CartContent = (props: any) => {
 					<OText size={24} lineHeight={36} weight={'600'} style={{ marginBottom: 20 }}>
 						{carts.length > 1 ? t('MY_CARTS', 'My Carts') : t('CART', 'Cart')}
 					</OText>
-					{carts.map((cart: any) => (
-						<CCList key={cart.uuid} style={{ overflow: 'visible' }}>
+					{carts.map((cart: any, i: number) => (
+						<CCList key={i} style={{ overflow: 'visible' }}>
 							{cart.products.length > 0 && (
 								<>
 									<Cart
+                    isFranchiseApp={props.isFranchiseApp}
 										cart={cart}
+                    cartuuid={cart.uuid}
 										onNavigationRedirect={props.onNavigationRedirect}
 										isCartsLoading={isCartsLoading}
 										setIsCartsLoading={setIsCartsLoading}

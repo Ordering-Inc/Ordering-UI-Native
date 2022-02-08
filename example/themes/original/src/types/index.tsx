@@ -128,6 +128,7 @@ export interface BusinessesListingParams {
 	images?: any;
 	businessTypes?: any;
 	defaultBusinessType?: any;
+	franchiseId?: any;
 }
 export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
