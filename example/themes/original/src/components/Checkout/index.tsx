@@ -517,19 +517,21 @@ const CheckoutUI = (props: any) => {
 										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
 											{t('ORDER_SUMMARY', 'Order Summary')}
 										</OText>
-                    <TouchableOpacity
-                      onPress={() => setOpenChangeStore(true)}
-                      style={{alignSelf: 'flex-start'}}
-                    >
-                      <OText
-                        size={12}
-                        lineHeight={18}
-                        color={theme.colors.textSecondary}
-                        style={{ textDecorationLine: 'underline' }}
+                    {props.isFranchiseApp && (
+                      <TouchableOpacity
+                        onPress={() => setOpenChangeStore(true)}
+                        style={{alignSelf: 'flex-start'}}
                       >
-                        {t('CHANGE_STORE', 'Change store')}
-                      </OText>
-                    </TouchableOpacity>
+                        <OText
+                          size={12}
+                          lineHeight={18}
+                          color={theme.colors.textSecondary}
+                          style={{ textDecorationLine: 'underline' }}
+                        >
+                          {t('CHANGE_STORE', 'Change store')}
+                        </OText>
+                      </TouchableOpacity>
+                    )}
 										<OrderSummary
 											cart={cart}
 											isCartPending={cart?.status === 2}
@@ -573,7 +575,7 @@ const CheckoutUI = (props: any) => {
 						</ChSection>
 					)}
           <OModal
-            open={openChangeStore}
+            open={openChangeStore && props.isFranchiseApp}
             entireModal
             customClose
             onClose={() => setOpenChangeStore(false)}
@@ -760,7 +762,7 @@ export const Checkout = (props: any) => {
 		...props,
 		UIComponent: CheckoutUI,
 		cartState,
-		uuid: cartUuid
+    [props.isFranchiseApp ? 'uuid' : 'businessId']: props.isFranchiseApp ? cartUuid : cartState.cart?.business_id
 	}
 
 	return (

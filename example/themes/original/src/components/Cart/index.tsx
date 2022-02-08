@@ -121,7 +121,7 @@ const CartUI = (props: any) => {
         handleClearProducts={handleClearProducts}
         handleCartOpen={handleCartOpen}
         onNavigationRedirect={props.onNavigationRedirect}
-        handleChangeStore={() => setOpenChangeStore(true)}
+        handleChangeStore={props.isFranchiseApp ? () => setOpenChangeStore(true) : null}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any) => (
           <ProductItemAccordion
@@ -314,7 +314,7 @@ const CartUI = (props: any) => {
       </OModal>
 
       <OModal
-        open={openChangeStore}
+        open={openChangeStore && props.isFranchiseApp}
         entireModal
         customClose
         onClose={() => setOpenChangeStore(false)}
