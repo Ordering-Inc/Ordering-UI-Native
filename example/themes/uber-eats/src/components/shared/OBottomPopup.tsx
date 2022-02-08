@@ -76,18 +76,18 @@ const OBottomPopup = (props: Props) => {
       visible={open}
       onRequestClose={() => onClose()}
     >
-      <View style={styles.container}>
-        <TouchableWithoutFeedback
-          style={styles.touchableOutsideStyle}
-          onPress={() => onClose()}
-        >
-          <View style={styles.touchableOutsideStyle} />
-        </TouchableWithoutFeedback>
-        <View style={styles.bottomContainer}>
-          <KeyboardView
-            enabled
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      <KeyboardView
+        enabled
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <View style={styles.container}>
+          <TouchableWithoutFeedback
+            style={styles.touchableOutsideStyle}
+            onPress={() => onClose()}
           >
+            <View style={styles.touchableOutsideStyle} />
+          </TouchableWithoutFeedback>
+          <View style={styles.bottomContainer}>
             <ScrollView showsVerticalScrollIndicator={false} >
               {customHeaderShow ? (
                 <View style={styles.customHeaderStyle}>
@@ -108,9 +108,9 @@ const OBottomPopup = (props: Props) => {
               )}
               {children}
             </ScrollView>
-          </KeyboardView>
+          </View>
         </View>
-      </View>
+      </KeyboardView>
     </Modal>
   )
 }
