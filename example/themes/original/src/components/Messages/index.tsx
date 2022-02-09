@@ -218,9 +218,13 @@ const MessagesUI = (props: MessagesParams) => {
 		const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
 			setIsKeyboardShow(false)
 		})
+		const keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', () => {
+			setIsKeyboardShow(false)
+		})
 		return () => {
 			keyboardDidShowListener.remove()
 			keyboardDidHideListener.remove()
+			keyboardWillHideListener.remove()
 		}
 	}, [])
 
@@ -411,9 +415,9 @@ const MessagesUI = (props: MessagesParams) => {
 
 	const getViewHeight = () => {
 		if (Platform.OS === 'android') {
-			return height - top - bottom - (isKeyboardShow ? 300 : 24);
+			return '100%';
 		} else {
-			return height - top - bottom - 10;
+			return height - top - bottom - (isKeyboardShow ? 48 : 0);
 		}
 	}
 

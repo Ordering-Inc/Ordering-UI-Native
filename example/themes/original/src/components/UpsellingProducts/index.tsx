@@ -52,9 +52,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 			borderColor: theme.colors.primary,
 			backgroundColor: theme.colors.primary,
 			borderWidth: 1,
+			alignSelf: 'center',
 			height: 44,
-			marginBottom: 10,
-			shadowOpacity: 0
+			shadowOpacity: 0,
+			width: '80%',
 		},
 		cancelBtn: {
 			paddingHorizontal: 18,
@@ -165,7 +166,13 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 											<OText size={12} color={theme.colors.textSecondary}>{t('CANCEL', 'Cancel')}</OText>
 										</TopActions>
 									</TopBar>
-									<ScrollView style={{ marginBottom: bottom + (Platform.OS == 'ios' ? 46 : 70) }} showsVerticalScrollIndicator={false}>
+									<ScrollView style={{ marginBottom: bottom + (Platform.OS == 'ios' ? 96 : 130) }} showsVerticalScrollIndicator={false}>
+										{upsellingProducts?.products?.length > 0 &&
+											<View style={{ paddingHorizontal: 40, overflow: 'visible' }}>
+												<OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
+												<UpsellingLayout />
+											</View>
+										}
 										<View style={{ paddingHorizontal: 40 }}>
 											<OText size={20} lineHeight={30} weight={600} style={{ marginTop: 10, marginBottom: 17 }}>{t('YOUR_CART', 'Your cart')}</OText>
 											<OrderSummary
@@ -173,25 +180,16 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 												isCartPending={cart?.status === 2}
 											/>
 										</View>
-										<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40, marginBottom: 23 }} />
-										<View style={{ paddingHorizontal: 40, overflow: 'visible' }}>
-											{upsellingProducts?.products?.length > 0 && 
-												<>
-													<OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
-													<UpsellingLayout />
-												</>
-											}
-											<CloseUpselling>
-												<OButton
-													imgRightSrc=''
-													text={t('CHECKOUT', 'Checkout')}
-													style={styles.closeUpsellingButton}
-													textStyle={{ color: theme.colors.white, fontSize: 14 }}
-													onClick={() => handleUpsellingPage()}
-												/>
-											</CloseUpselling>
-										</View>
 									</ScrollView>
+									<View style={{alignItems: 'center', bottom: Platform.OS === 'ios' ? bottom  + 59 :  bottom + 125}}>
+										<OButton
+											imgRightSrc=''
+											text={t('CHECKOUT', 'Checkout')}
+											style={{...styles.closeUpsellingButton}}
+											textStyle={{ color: theme.colors.white, fontSize: 14 }}
+											onClick={() => handleUpsellingPage()}
+										/>
+									</View>
 								</OBottomPopup>
 							)}
 						</>

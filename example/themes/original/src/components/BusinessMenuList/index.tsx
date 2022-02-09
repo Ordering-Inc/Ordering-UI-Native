@@ -2,7 +2,7 @@ import React from 'react'
 import { useLanguage, BusinessMenuListing } from 'ordering-components/native'
 import { OText } from '../shared'
 import { BusinessMenuListParams } from '../../types'
-import { View, StyleSheet, Dimensions } from 'react-native'
+import { View, StyleSheet, Dimensions, Platform } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
@@ -81,7 +81,7 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
                 dropdownStyle={{
                   borderRadius: 8,
                   borderColor: theme.colors.lightGray,
-                  marginTop: -15,
+                  marginTop: Platform.OS === 'ios' ? 0 : -15,
                   maxHeight: 160
                 }}
                 rowStyle={{

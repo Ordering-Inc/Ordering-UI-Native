@@ -429,27 +429,27 @@ const CheckoutUI = (props: any) => {
 					)}
 
 					{!cartState.loading && cart && (
-        <ChSection>
-          <ChCart>
-            {cartsWithProducts && cart?.products?.length === 0 ? (
-              <NotFoundSource
-                content={t('NOT_FOUND_CARTS', 'Sorry, You don\'t seem to have any carts.')}
-                btnTitle={t('SEARCH_REDIRECT', 'Go to Businesses')}
-              />
-            ) : (
-              <>
-                <OText size={16} lineHeight={24} color={theme.colors.textNormal}>
-                  {t('ORDER_SUMMARY', 'Order Summary')}
-                </OText>
-                <OrderSummary
-                  cart={cart}
-                  isCartPending={cart?.status === 2}
-                />
-              </>
-            )}
-          </ChCart>
-        </ChSection>
-      )}
+						<ChSection>
+							<ChCart>
+								{cartsWithProducts && cart?.products?.length === 0 ? (
+									<NotFoundSource
+										content={t('NOT_FOUND_CARTS', 'Sorry, You don\'t seem to have any carts.')}
+										btnTitle={t('SEARCH_REDIRECT', 'Go to Businesses')}
+									/>
+								) : (
+									<>
+										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
+											{t('ORDER_SUMMARY', 'Order Summary')}
+										</OText>
+										<OrderSummary
+											cart={cart}
+											isCartPending={cart?.status === 2}
+										/>
+									</>
+								)}
+							</ChCart>
+						</ChSection>
+					)}
 
 					{!cartState.loading && cart && (
 						<ChSection style={{ paddingTop: 0, paddingBottom: 20, paddingHorizontal: 20 }}>
@@ -486,27 +486,24 @@ const CheckoutUI = (props: any) => {
 				</ChContainer>
 			</Container>
 			{!cartState.loading && cart && cart?.status !== 2 && (
-				<>
-					<>
-						<FloatingButton
-							handleClick={() => handlePlaceOrder()}
-							isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
-							disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
-							btnText={cart?.subtotal >= cart?.minimum
-								? (
-									placing
-										? t('PLACING', 'Placing')
-										: loading
-											? t('LOADING', 'Loading')
-											: t('PLACE_ORDER', 'Place Order')
-								)
-								: (`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`)
-							}
-							btnRightValueShow
-							btnRightValue={parsePrice(cart?.total)}
-						/>
-					</>
-				</>
+				<FloatingButton
+					handleClick={() => handlePlaceOrder()}
+					isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+					disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+					btnText={cart?.subtotal >= cart?.minimum
+						? (
+							placing
+								? t('PLACING', 'Placing')
+								: loading
+									? t('LOADING', 'Loading')
+									: t('PLACE_ORDER', 'Place Order')
+						)
+						: (`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`)
+					}
+					btnRightValueShow
+					btnRightValue={parsePrice(cart?.total)}
+					iosBottom={20}
+				/>
 			)}
 		</>
 	)

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TouchableOpacity, StyleSheet, View, Dimensions } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, Dimensions, Platform } from 'react-native'
 import { useLanguage, useUtils, useConfig, useOrder, MomentOption } from 'ordering-components/native'
 import { OButton, OText } from '../shared'
 import { useTheme } from 'styled-components/native'
@@ -335,7 +335,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             dropdownStyle={{
               borderRadius: 8,
               borderColor: theme.colors.lightGray,
-              marginTop: -15
+              marginTop: Platform.OS === 'ios' ? 0 : -15
             }}
             rowStyle={{
               borderBottomColor: theme.colors.backgroundGray100,

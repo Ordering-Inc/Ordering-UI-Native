@@ -110,6 +110,19 @@ const CartUI = (props: any) => {
 
   return (
     <CContainer>
+      {openUpselling && (
+        <UpsellingProducts
+          handleUpsellingPage={handleUpsellingPage}
+          openUpselling={openUpselling}
+          businessId={cart?.business_id}
+          business={cart?.business}
+          cartProducts={cart?.products}
+          canOpenUpselling={canOpenUpselling}
+          setCanOpenUpselling={setCanOpenUpselling}
+          handleCloseUpsellingPage={() => { }}
+          isFromCart
+        />
+      )}
       <BusinessItemAccordion
         cart={cart}
         moment={momentFormatted}
@@ -237,7 +250,7 @@ const CartUI = (props: any) => {
             {cart?.status !== 2 && (
               <OSTable>
                 <View style={{ width: '100%', marginTop: 20 }}>
-                  <OText size={12} lineHeight={18}>{t('COMMENTS', 'Comments')}</OText>
+                  <OText size={16} lineHeight={18}>{t('COMMENTS', 'Comments')}</OText>
                   <View style={{ flex: 1, width: '100%' }}>
                     <OInput
                       value={cart?.comment}
@@ -249,7 +262,8 @@ const CartUI = (props: any) => {
                         height: 100,
                         borderColor: theme.colors.textSecondary,
                         paddingRight: 50,
-                        marginTop: 10
+                        marginTop: 10,
+                        borderRadius: 7.6
                       }}
                       multiline
                     />
@@ -307,20 +321,6 @@ const CartUI = (props: any) => {
         />
 
       </OModal>
-
-      {openUpselling && (
-        <UpsellingProducts
-          handleUpsellingPage={handleUpsellingPage}
-          openUpselling={openUpselling}
-          businessId={cart?.business_id}
-          business={cart?.business}
-          cartProducts={cart?.products}
-          canOpenUpselling={canOpenUpselling}
-          setCanOpenUpselling={setCanOpenUpselling}
-          handleCloseUpsellingPage={() => { }}
-          isFromCart
-        />
-      )}
       <OModal
         open={openTaxModal.open}
         onClose={() => setOpenTaxModal({ open: false, data: null })}

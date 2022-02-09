@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	BusinessReviews as BusinessReviewController,
 	useLanguage,
@@ -27,6 +27,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 	const { businessState, reviewsList } = props;
 	const [, t] = useLanguage();
 	const theme = useTheme();
+	const [searchReview, setSearchReview] = useState('')
 	const [orderState] = useOrder();
 
 	const styles = StyleSheet.create({
@@ -150,7 +151,9 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 								icon={theme.images.general.search}
 								inputStyle={{ fontSize: 14 }}
 								placeholder={t('SEARCH_REVIEWS', 'Search reviews')}
-								style={{ paddingStart: 0 }}></OInput>
+								style={{ paddingStart: 0 }}
+								onChange={(txt: string) => setSearchReview(txt)}
+							/>
 						</ReviewSearchView>
 						<ReviewProgressView>
 							<OText style={{ marginBottom: 6 }}>
@@ -223,13 +226,15 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 							/>
 						</PrincipalWrapView>
 
-						{reviewsList?.reviews.map((review: any) => (
-							<ReviewItem
-								key={`review_key_${review.id}`}
-								comment={review?.comment}
-								created_at={review?.created_at}
-							/>
-						))}
+						{reviewsList?.reviews
+							.filter((review: any) => searchReview !== '' ? review.comment?.toLowerCase()?.includes(searchReview) : true)
+							.map((review: any) => (
+								<ReviewItem
+									key={`review_key_${review.id}`}
+									comment={review?.comment}
+									created_at={review?.created_at}
+								/>
+							))}
 					</>
 				)}
 				{!reviewsList.loading && reviewsList?.reviews.length === 0 && (

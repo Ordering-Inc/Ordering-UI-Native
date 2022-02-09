@@ -21,3 +21,7 @@ export const SoldOut = styled.View`
   top: 37px;
   end: 10px;
 `
+
+export const QuantityContainer = styled.View`
+  background: ${({ theme } : any) => theme.colors.primary};
+`

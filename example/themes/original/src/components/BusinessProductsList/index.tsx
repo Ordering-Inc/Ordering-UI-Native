@@ -25,7 +25,8 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     errorQuantityProducts,
     handleCancelSearch,
     categoriesLayout,
-    setCategoriesLayout
+    setCategoriesLayout,
+    currentCart
   } = props;
 
   const [, t] = useLanguage();
@@ -48,6 +49,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             product={product}
             businessId={businessId}
             onProductClick={() => onProductClick(product)}
+            productAddedToCart={currentCart?.products?.find((Cproduct: any) => Cproduct.id === product.id)}
           />
         ))}
 
@@ -70,6 +72,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       product={product}
                       businessId={businessId}
                       onProductClick={onProductClick}
+                      productAddedToCart={currentCart?.products?.find((Cproduct: any) => Cproduct.id === product.id)}
                     />
                   ),
               )}
@@ -92,7 +95,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   <>
                     <View
                       style={bpStyles.catWrap}
-        							onLayout={(event: any) => handleOnLayout(event, category.id)}
+                      onLayout={(event: any) => handleOnLayout(event, category.id)}
                     >
                       <View style={bpStyles.catIcon}>
                         <OIcon
@@ -114,6 +117,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                           businessId={businessId}
                           product={product}
                           onProductClick={onProductClick}
+                          productAddedToCart={currentCart?.products?.find((Cproduct: any) => Cproduct.id === product.id)}
                         />
                       ))}
                     </>
@@ -157,13 +161,13 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               content={
                 !searchValue
                   ? t(
-                      'ERROR_NOT_FOUND_PRODUCTS_TIME',
-                      'No products found at this time',
-                    )
+                    'ERROR_NOT_FOUND_PRODUCTS_TIME',
+                    'No products found at this time',
+                  )
                   : t(
-                      'ERROR_NOT_FOUND_PRODUCTS',
-                      'No products found, please change filters.',
-                    )
+                    'ERROR_NOT_FOUND_PRODUCTS',
+                    'No products found, please change filters.',
+                  )
               }
               btnTitle={
                 !searchValue

@@ -22,6 +22,7 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
 		disabled,
 		isSecondaryBtn,
 		handleEmpty,
+		iosBottom
 	} = props;
 
 	const [, t] = useLanguage();
@@ -61,7 +62,7 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
 	return (
 		<Container
 			style={{
-				paddingBottom: Platform.OS === 'ios' ? 0 : bottom + 16
+				paddingBottom: Platform.OS === 'ios' ? iosBottom ?? 0 : bottom + 16
 			}}>
 
 			<View style={styles.infoCont}>

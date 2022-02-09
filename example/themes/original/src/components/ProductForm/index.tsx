@@ -173,7 +173,7 @@ export const ProductOptionsUI = (props: any) => {
 		const sel = option[0]?.suboptions?.filter(
 			({ id }: any) => id === respect_id,
 		);
-		return sel[0]?.id !== undefined;
+		return sel?.[0]?.id !== undefined;
 	};
 
 	const handleChangeMainIndex = (index: number) => {
@@ -523,6 +523,7 @@ export const ProductOptionsUI = (props: any) => {
 																		<WrapperSubOption
 																			style={{
 																				backgroundColor: isError(option.id),
+																				borderRadius: 7.6
 																			}}>
 																			{option.suboptions.map(
 																				(suboption: any) => {

@@ -150,7 +150,7 @@ export const BusinessBasicInformation = (
 				<WrapReviews>
 					{!isBusinessInfoShow && (
 						<>
-							<TouchableOpacity onPress={() => navigation.navigate('MomentOption')}>
+							<TouchableOpacity onPress={() => navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })}>
 								<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
 									{t('PRE_ORDER', 'Preorder')}
 								</OText>
