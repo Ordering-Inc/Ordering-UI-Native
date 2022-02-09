@@ -2,13 +2,13 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   width: 100%;
-  padding: 0 30px;
+  padding: 0 43px;
 `
 
 export const CountDownContainer = styled.View`
   background-color: ${(props: any) => `${props.color}4D`};
   border-radius: 30px;
-  padding: 5px 80px 0px;
+  padding: 5px 0px 0px;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -20,6 +20,7 @@ export const ResendSection = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  flex-wrap: wrap;
 `
 
 export const WrappCountdown = styled.View`

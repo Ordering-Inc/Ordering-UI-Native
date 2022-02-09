@@ -34,7 +34,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   return (
     <ProductsContainer>
       {category.id && (
-        categoryState.products?.map((product: any) => (
+        categoryState.products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any) => (
           <SingleProductCard
             key={product.id}
             isSoldOut={(product.inventoried && !product.quantity)}
@@ -51,7 +51,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             <>
               <OText size={18} weight='bold' mBottom={10}>{t('FEATURED', 'Featured')}</OText>
               <>
-                {categoryState.products?.map((product: any) => product.featured && (
+                {categoryState.products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any) => product.featured && (
                   <SingleProductCard
                     key={product.id}
                     isSoldOut={(product.inventoried && !product.quantity)}
@@ -77,7 +77,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                     <OText size={18} weight='bold' mBottom={10}>{category.name}</OText>
                     <>
                       {
-                        products.map((product: any) => (
+                        products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any) => (
                           <SingleProductCard
                             key={product.id}
                             isSoldOut={product.inventoried && !product.quantity}

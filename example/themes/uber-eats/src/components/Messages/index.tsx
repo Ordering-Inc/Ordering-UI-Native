@@ -90,8 +90,9 @@ const MessagesUI = (props: MessagesParams) => {
         console.log('ImagePicker Error: ', response.errorMessage);
         showToast(ToastType.Error, response.errorMessage);
       } else {
-        if (response.uri) {
-          const url = `data:${response.type};base64,${response.base64}`
+        if (response?.assets?.length > 0) {
+          const image = response?.assets[0]
+          const url = `data:${image.type};base64,${image.base64}`
           setImage && setImage(url);
         } else {
           showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
@@ -109,7 +110,7 @@ const MessagesUI = (props: MessagesParams) => {
   const messageConsole = (message: any) => {
     return message.change?.attribute !== 'driver_id'
       ?
-      `${t('ORDER', 'Order')} ${message.change.attribute} ${t('CHANGED_FROM', 'Changed from')} ${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
+      `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
       : message.change.new
         ?
         `${message.driver?.name} ${message.driver?.lastname !== null ? message.driver.lastname : ''} ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${message.comment ? message.comment.length : ''}`
@@ -233,11 +234,11 @@ const MessagesUI = (props: MessagesParams) => {
     <InputToolbar
       {...props}
       containerStyle={{
-        padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
-        flexDirection: 'column-reverse'
+        marginBottom: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
+        flexDirection: Platform.OS === 'ios' && isKeyboardShow ? 'column' : 'column-reverse'
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}
-      renderAccessory={() => renderAccessory()}
+      renderAccessory={() => !isKeyboardShow && renderAccessory()}
     />
   )
 
