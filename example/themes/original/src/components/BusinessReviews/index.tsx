@@ -210,7 +210,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 							</View>
 						</ReviewProgressView>
 						<PrincipalWrapView>
-							<OText style={{ marginBottom: 6 }}>
+							{/* <OText style={{ marginBottom: 6 }}>
 								{t('PRINCIPAL_COMMENTS', 'Principal comments')}
 							</OText>
 							<PrincipalComments
@@ -220,7 +220,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 									'Too slow',
 									'It isn’t worth what it costs',
 								]}
-							/>
+							/> */}
 						</PrincipalWrapView>
 
 						{reviewsList?.reviews.map((review: any) => (
