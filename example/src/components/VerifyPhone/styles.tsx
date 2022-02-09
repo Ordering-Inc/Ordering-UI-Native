@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   width: 100%;
-  padding: 0 30px;
+  padding: 0 43px;
 `
 
 export const CountDownContainer = styled.View`
@@ -20,6 +20,7 @@ export const ResendSection = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  flex-wrap: wrap;
 `
 
 export const WrappCountdown = styled.View`
