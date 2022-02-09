@@ -47,6 +47,11 @@ const ProfileUI = (props: ProfileParams) => {
 		pagePadding: {
 			paddingLeft: 40,
 			paddingRight: 40
+		},
+		navBarStyle: {
+			paddingLeft: 40,
+			paddingRight: 40,
+			paddingTop: 15
 		}
 	});
 
@@ -216,7 +221,7 @@ const ProfileUI = (props: ProfileParams) => {
 					btnStyle={{ paddingStart: 0 }}
 					title={t('ACCOUNT', 'Account')}
 					isVertical
-					style={styles.pagePadding}
+					style={styles.navBarStyle}
 				/>
 				<CenterView style={styles.pagePadding}>
 					<View style={styles.photo}>
