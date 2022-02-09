@@ -22,7 +22,6 @@ export const AppleLogin = (props: AppleLoginParams) => {
   const [ordering] = useApi()
   const [, t] = useLanguage()
   const theme = useTheme()
-  const [errors, setError] = useState<any>({type: '', message: ''})
   const buttonText = t('LOGIN_WITH_APPLE', 'Login with Apple');
 
   const onAppleButtonPress = async () => {
@@ -47,14 +46,12 @@ export const AppleLogin = (props: AppleLoginParams) => {
         } = appleAuthRequestResponse
         if (identityToken) {
           console.log('auth code: ', authorizationCode)
-          handleLoginApple(identityToken)
-          console.warn(`Apple Authentication Completed, ${user}, ${email}`);
+          handleLoginApple(authorizationCode)
         } else {
           handleErrors && handleErrors(t('ERROR_LOGIN_APPLE', 'Error login with apple'))
         }
 
       } catch (error: any) {
-        setError({ type: 'FROM_APPLE', message: error?.message })
         handleErrors && handleErrors(error.message)
       }
     } else {
@@ -74,7 +71,7 @@ export const AppleLogin = (props: AppleLoginParams) => {
       }
     }
   }
-  const handleLoginApple = async (code: string) => {
+  const handleLoginApple = async (code: string | null) => {
     let body: any
     if (Platform.OS === 'ios') {
       body = {
@@ -106,7 +103,6 @@ export const AppleLogin = (props: AppleLoginParams) => {
         handleErrors && handleErrors(result || t('ERROR_LOGIN_AUTH_APPLE', 'Error login auth with apple'))
       }
     } catch (error: any) {
-      setError({ type: 'FROM_API', message: error?.message })
       handleLoading && handleLoading(false)
       handleErrors && handleErrors(error?.message)
     }
@@ -121,11 +117,6 @@ export const AppleLogin = (props: AppleLoginParams) => {
 
   return (
     <Container>
-      {!!errors?.message && !!errors?.type && (
-        <OText>
-          {errors?.type} {errors?.message}
-        </OText>
-      )}
       <AppleButton
         onPress={onAppleButtonPress}
       >
