@@ -326,7 +326,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           nestedScrollEnabled={true}
         >
           <TabsContainer>
-            {isLogisticActivated && (
+            {(isLogisticActivated && !isBusinessApp) && (
               <Pressable
                 style={styles.pressable}
                 onPress={() => setCurrentTabSelected('logisticOrders')}>
