@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Platform, I18nManager } from 'react-native';
 import { initStripe, useConfirmPayment } from '@stripe/stripe-react-native';
-
+import Picker from 'react-native-country-picker-modal';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import {
 	Checkout as CheckoutController,
 	useOrder,
@@ -15,14 +16,13 @@ import {
 	ToastType,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { OText, OIcon } from '../shared';
+import { OText, OIcon, OModal } from '../shared';
 
 import { AddressDetails } from '../AddressDetails';
 import { PaymentOptions } from '../PaymentOptions';
 import { DriverTips } from '../DriverTips';
 import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
-import { OrderTypeSelector } from '../OrderTypeSelector'
 
 import {
 	ChContainer,
@@ -35,7 +35,9 @@ import {
 	ChErrors,
 	ChBusinessDetails,
 	ChUserDetails,
-	ChCart
+	ChCart,
+	DeliveryOptionsContainer,
+	DeliveryOptionItem
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
@@ -44,6 +46,7 @@ import { Container } from '../../layouts/Container';
 import NavBar from '../NavBar';
 import { OrderSummary } from '../OrderSummary';
 import { getTypesText } from '../../utils';
+import { CartStoresListing } from '../CartStoresListing';
 
 const mapConfigs = {
 	mapZoom: 16,
@@ -69,14 +72,15 @@ const CheckoutUI = (props: any) => {
 		errors,
 		placing,
 		cartState,
+		cartUuid,
 		businessDetails,
 		paymethodSelected,
 		handlePaymethodChange,
 		handlerClickPlaceOrder,
 		onNavigationRedirect,
-		businessLogo,
-		businessName,
-		cartTotal
+		deliveryOptionSelected,
+		instructionsOptions,
+		handleChangeDeliveryOption,
 	} = props
 
 	const theme = useTheme();
@@ -91,9 +95,18 @@ const CheckoutUI = (props: any) => {
 			justifyContent: 'flex-start',
 			paddingLeft: 0,
 		},
+		paddSection: {
+			padding: 20
+		},
 		pagePadding: {
 			paddingLeft: 40,
 			paddingRight: 40
+		},
+		icon: {
+			top: 15,
+			right: Platform.OS === 'ios' ? 5 : (I18nManager.isRTL ? 30 : 0),
+			position: 'absolute',
+			fontSize: 20
 		}
 	})
 
@@ -109,6 +122,8 @@ const CheckoutUI = (props: any) => {
 	const [userErrors, setUserErrors] = useState<any>([]);
 	const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
 	const [phoneUpdate, setPhoneUpdate] = useState(false);
+	const [openChangeStore, setOpenChangeStore] = useState(false)
+	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -117,6 +132,12 @@ const CheckoutUI = (props: any) => {
 	const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 
 	const cartsWithProducts = carts && Object.values(carts).filter((cart: any) => cart.products.length) || null
+
+	const deliveryOptions = instructionsOptions?.result && instructionsOptions?.result?.filter((option: any) => option?.enabled)?.map((option: any) => {
+		return {
+			value: option?.id, key: option?.id, label: option?.name
+		}
+	})
 
 	const handlePlaceOrder = () => {
 		if (!userErrors.length) {
@@ -129,6 +150,11 @@ const CheckoutUI = (props: any) => {
 		})
 		showToast(ToastType.Error, stringError)
 		setIsUserDetailsEdit(true)
+	}
+
+	const changeDeliveryOption = (option: any) => {
+		handleChangeDeliveryOption(option)
+		setIsDeliveryOptionModalVisible(false)
 	}
 
 	const checkValidationFields = () => {
@@ -307,7 +333,56 @@ const CheckoutUI = (props: any) => {
 						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
 					</ChSection>
 
-
+					{!cartState.loading && deliveryOptionSelected !== undefined && options?.type === 1 && (
+						<DeliveryOptionsContainer>
+							<OText size={16}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
+							<View
+								style={{
+									backgroundColor: theme.colors.inputDisabled,
+									borderRadius: 7.5,
+									marginBottom: 20,
+									flex: 1
+								}}>
+								<Picker
+									countryCode={undefined}
+									visible={isDeliveryOptionModalVisible}
+									onClose={() => setIsDeliveryOptionModalVisible(false)}
+									withCountryNameButton
+									renderFlagButton={() => (
+										<TouchableOpacity onPress={() => setIsDeliveryOptionModalVisible(true)}>
+											<DeliveryOptionItem backgroundColor={theme?.colors?.inputDisabled}>
+												<OText
+													size={14}
+												>
+													{deliveryOptions.find((option: any) => option.value === deliveryOptionSelected).label}
+												</OText>
+												<MaterialIcons name='keyboard-arrow-down' style={styles.icon} />
+											</DeliveryOptionItem>
+										</TouchableOpacity>
+									)}
+									flatListProps={{
+										keyExtractor: (item: any) => item.value,
+										data: deliveryOptions || [],
+										renderItem: ({ item }: any) => (
+											<TouchableOpacity
+												onPress={() => changeDeliveryOption(item.value)}
+												disabled={
+													deliveryOptionSelected === item.value
+												}
+											>
+												<DeliveryOptionItem backgroundColor={deliveryOptionSelected === item.value ? theme.colors.inputDisabled : 'white'}>
+													<OText>
+														{item.label}
+													</OText>
+												</DeliveryOptionItem>
+											</TouchableOpacity>
+										)
+									}}
+								/>
+							</View>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
+						</DeliveryOptionsContainer>
+					)}
 
 					{!cartState.loading && (cart?.status === 2 || cart?.status === 4) && (
 						<ChSection style={{ paddingBottom: 20 }}>
@@ -361,7 +436,7 @@ const CheckoutUI = (props: any) => {
 									location={businessDetails?.business?.location}
 									businessLogo={businessDetails?.business?.logo}
 									isCartPending={cart?.status === 2}
-									businessId={cart?.business_id}
+									uuid={cartUuid}
 									apiKey={configs?.google_maps_api_key?.value}
 									mapConfigs={mapConfigs}
 								/>
@@ -384,6 +459,7 @@ const CheckoutUI = (props: any) => {
 										{t('DRIVER_TIPS', 'Driver Tips')}
 									</OText>
 									<DriverTips
+										uuid={cartUuid}
 										businessId={cart?.business_id}
 										driverTipsOptions={driverTipsOptions}
 										isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)}
@@ -441,6 +517,21 @@ const CheckoutUI = (props: any) => {
 										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
 											{t('ORDER_SUMMARY', 'Order Summary')}
 										</OText>
+										{props.isFranchiseApp && (
+											<TouchableOpacity
+												onPress={() => setOpenChangeStore(true)}
+												style={{ alignSelf: 'flex-start' }}
+											>
+												<OText
+													size={12}
+													lineHeight={18}
+													color={theme.colors.textSecondary}
+													style={{ textDecorationLine: 'underline' }}
+												>
+													{t('CHANGE_STORE', 'Change store')}
+												</OText>
+											</TouchableOpacity>
+										)}
 										<OrderSummary
 											cart={cart}
 											isCartPending={cart?.status === 2}
@@ -483,6 +574,17 @@ const CheckoutUI = (props: any) => {
 							</ChErrors>
 						</ChSection>
 					)}
+					<OModal
+						open={openChangeStore && props.isFranchiseApp}
+						entireModal
+						customClose
+						onClose={() => setOpenChangeStore(false)}
+					>
+						<CartStoresListing
+							cartuuid={cart?.uuid}
+							onClose={() => setOpenChangeStore(false)}
+						/>
+					</OModal>
 				</ChContainer>
 			</Container>
 			{!cartState.loading && cart && cart?.status !== 2 && (
@@ -657,7 +759,7 @@ export const Checkout = (props: any) => {
 		...props,
 		UIComponent: CheckoutUI,
 		cartState,
-		businessId: cartState.cart?.business_id
+		[props.isFranchiseApp ? 'uuid' : 'businessId']: props.isFranchiseApp ? cartUuid : cartState.cart?.business_id
 	}
 
 	return (

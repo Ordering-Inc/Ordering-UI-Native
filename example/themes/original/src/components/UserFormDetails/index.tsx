@@ -224,7 +224,7 @@ export const UserFormDetailsUI = (props: any) => {
 												render={() => (
 													<>
 														<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
-															{field?.code}
+															{t(field?.code?.toUpperCase(), field?.name)}
 														</OText>
 														<OInput
 															name={field.code}

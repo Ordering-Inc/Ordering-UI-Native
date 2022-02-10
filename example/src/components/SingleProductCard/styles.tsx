@@ -22,3 +22,7 @@ export const SoldOut = styled.View`
   bottom: 5px;
   right: 5px;
 `
+export const PricesContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+`

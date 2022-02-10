@@ -84,6 +84,23 @@ export const BusinessItemAccordion = (props: any) => {
 									<OText size={12} lineHeight={18} color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>{t('CLEAR_CART', 'Clear cart')}</OText>
 								</OAlert>
 							)}
+              {props.handleChangeStore && (
+                <>
+                  <OText color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+                  <TouchableOpacity
+                    onPress={props.handleChangeStore}
+                  >
+                    <OText
+                      size={12}
+                      lineHeight={18}
+                      color={theme.colors.textSecondary}
+                      style={{ textDecorationLine: 'underline' }}
+                    >
+                      {t('CHANGE_STORE', 'Change store')}
+                    </OText>
+                  </TouchableOpacity>
+                </>
+              )}
 						</View>
 					</BIContentInfo>
 				</BIInfo>

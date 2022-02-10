@@ -9,6 +9,7 @@ import { AppleLogin } from './src/components/AppleLogin';
 import { BusinessesListing } from './src/components/BusinessesListing';
 import { BusinessProductsListing } from './src/components/BusinessProductsListing';
 import { CartContent } from './src/components/CartContent';
+import { BusinessCart } from './src/components/BusinessCart';
 import { Checkout } from './src/components/Checkout';
 import { ForgotPasswordForm } from './src/components/ForgotPasswordForm';
 import { MomentOption } from './src/components/MomentOption';
@@ -66,6 +67,7 @@ export {
 	BusinessesListing,
 	BusinessProductsListing,
 	CartContent,
+  BusinessCart,
 	Checkout,
 	ForgotPasswordForm,
 	MomentOption,

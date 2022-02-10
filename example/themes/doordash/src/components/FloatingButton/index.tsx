@@ -19,7 +19,8 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
     btnText,
     handleButtonClick,
     disabled,
-    isSecondaryBtn
+    isSecondaryBtn,
+    style
   } = props
 
   const theme = useTheme();
@@ -39,7 +40,7 @@ const FloatingButtonUI = (props: FloatingButtonParams) => {
   const { bottom } = useSafeAreaInsets();
 
   return (
-    <Container isIos={Platform.OS === 'ios'} style={{ paddingBottom: bottom + 10 }}>
+    <Container isIos={Platform.OS === 'ios'} style={{ ...style, paddingBottom: bottom + 10 }}>
       <Button
         style={[isSecondaryBtn ? styles.secodaryBtn : styles.primaryBtn]}
         onPress={handleButtonClick}

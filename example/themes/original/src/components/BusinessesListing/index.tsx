@@ -277,7 +277,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					/>
 				</OrderProgressWrapper>
 			)}
-			{featuredBusiness && featuredBusiness.length > 0 && (
+			{!props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
 				<FeaturedWrapper>
 					<OText size={16} style={{ marginLeft: 40 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('FEATURED_BUSINESS', 'Featured business')}</OText>
 					<ScrollView
@@ -306,7 +306,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				</FeaturedWrapper>
 			)}
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-			<HighestRatedBusinesses onBusinessClick={handleBusinessClick} navigation={navigation} />
+      {!props.franchiseId && (
+        <HighestRatedBusinesses onBusinessClick={handleBusinessClick} navigation={navigation} />
+      )}
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 			<ListWrapper>
 				<BusinessTypeFilter

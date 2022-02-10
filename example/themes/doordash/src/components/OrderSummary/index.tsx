@@ -41,7 +41,8 @@ const OrderSummaryUI = (props: any) => {
     paddingH,
     isMini,
     commentState,
-    handleChangeComment
+    handleChangeComment,
+    cartRef
   } = props;
 
   const theme = useTheme();
@@ -256,6 +257,7 @@ const OrderSummaryUI = (props: any) => {
                         }}
                         multiline
                         inputStyle={{color: theme.colors.textPrimary}}
+                        onFocus={() => cartRef?.current?.scrollToEnd?.()}
                       />
                       {commentState?.loading && (
                         <View style={{ position: 'absolute', right: 20 }}>

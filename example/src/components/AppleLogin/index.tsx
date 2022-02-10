@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { appleAuthAndroid, appleAuth } from '@invertase/react-native-apple-authentication';
 import { useConfig, useApi, useLanguage } from 'ordering-components/native'
@@ -22,7 +22,6 @@ export const AppleLogin = (props: AppleLoginParams) => {
   const [ordering] = useApi()
   const [, t] = useLanguage()
   const theme = useTheme()
-
   const buttonText = t('LOGIN_WITH_APPLE', 'Login with Apple');
 
   const onAppleButtonPress = async () => {
@@ -45,11 +44,9 @@ export const AppleLogin = (props: AppleLoginParams) => {
           identityToken,
           authorizationCode,
         } = appleAuthRequestResponse
-
-        if (identityToken && authorizationCode) {
+        if (identityToken) {
           console.log('auth code: ', authorizationCode)
           handleLoginApple(authorizationCode)
-          console.warn(`Apple Authentication Completed, ${user}, ${email}`);
         } else {
           handleErrors && handleErrors(t('ERROR_LOGIN_APPLE', 'Error login with apple'))
         }
@@ -74,7 +71,7 @@ export const AppleLogin = (props: AppleLoginParams) => {
       }
     }
   }
-  const handleLoginApple = async (code: string) => {
+  const handleLoginApple = async (code: string | null) => {
     let body: any
     if (Platform.OS === 'ios') {
       body = {
