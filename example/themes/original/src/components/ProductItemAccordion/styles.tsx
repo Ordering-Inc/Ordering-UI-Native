@@ -11,7 +11,7 @@ export const Accordion = styled.TouchableOpacity`
   align-items: center;
 
   ${(props: any) => !props.isValid && css`
-    background-color: rgba(0, 0, 0, 0.1);
+    opacity: 0.7;
   `}
 `
 

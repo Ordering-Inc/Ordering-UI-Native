@@ -62,36 +62,33 @@ const DriverTipsUI = (props: any) => {
 
 	return (
 		<DTContainer>
-			{!isDriverTipUseCustom ? (
-				<>
-					<DTWrapperTips>
-						{driverTipsOptions.map((option: any, i: number) => (
-							<TouchableOpacity
-								key={i}
-								onPress={() => handlerChangeOption(option)}
-							>
-								<DTCard
-									style={style.circle}
-									isActive={option === optionSelected}
-								>
-									<OText size={13} color={option === optionSelected ? '#FFF' : theme.colors.textSecondary}>
-										{`${isFixedPrice ? parsePrice(option) : `${option}%`}`}
-									</OText>
-								</DTCard>
-							</TouchableOpacity>
-						))}
-					</DTWrapperTips>
-					{!driverTipsOptions.includes(driverTip) && driverTip > 0 && (
-						<OText
-							color={theme.colors.error}
-							size={20}
-							style={{ marginTop: 10, textAlign: 'center' }}
+			<DTWrapperTips>
+				{driverTipsOptions.map((option: any, i: number) => (
+					<TouchableOpacity
+						key={i}
+						onPress={() => handlerChangeOption(option)}
+					>
+						<DTCard
+							style={style.circle}
+							isActive={option === optionSelected}
 						>
-							{t('CUSTOM_DRIVER_TIP_AMOUNT', 'The driver\'s current tip comes from a custom option')}
-						</OText>
-					)}
-				</>
-			) : (
+							<OText size={13} color={option === optionSelected ? '#FFF' : theme.colors.textSecondary}>
+								{`${isFixedPrice ? parsePrice(option) : `${option}%`}`}
+							</OText>
+						</DTCard>
+					</TouchableOpacity>
+				))}
+			</DTWrapperTips>
+			{!driverTipsOptions.includes(driverTip) && driverTip > 0 && (
+				<OText
+					color={theme.colors.error}
+					size={16}
+					style={{ marginTop: 10, textAlign: 'center' }}
+				>
+					{t('CUSTOM_DRIVER_TIP_AMOUNT', 'The driver\'s current tip comes from a custom option')}
+				</OText>
+			)}
+			{isDriverTipUseCustom && (
 				<DTForm>
 					<DTLabel>
 						{t('CUSTOM_DRIVER_TIP_MESSAGE', '100% of these tips go directly to your driver')}
@@ -110,7 +107,7 @@ const DriverTipsUI = (props: any) => {
 							borderColor={theme.colors.primary}
 							textStyle={{ color: 'white', fontSize: 14 }}
 							imgRightSrc={null}
-							style={{borderRadius: 5, height: 44}}
+							style={{ borderRadius: 5, height: 44 }}
 							isDisabled={!(value > 0 && value !== driverTip) || !value}
 							onClick={() => {
 								handlerChangeOption(value)
@@ -121,7 +118,7 @@ const DriverTipsUI = (props: any) => {
 					{parseFloat(driverTip || 0) > 0 && (
 						<OText
 							color={theme.colors.error}
-							size={20}
+							size={16}
 							style={{ marginTop: 10, textAlign: 'center' }}
 						>
 							{t('CURRENT_DRIVER_TIP_AMOUNT', 'Current driver tip amount')}: {parsePrice(driverTip)}

@@ -72,7 +72,7 @@ const CheckoutUI = (props: any) => {
 		errors,
 		placing,
 		cartState,
-    cartUuid,
+		cartUuid,
 		businessDetails,
 		paymethodSelected,
 		handlePaymethodChange,
@@ -122,7 +122,7 @@ const CheckoutUI = (props: any) => {
 	const [userErrors, setUserErrors] = useState<any>([]);
 	const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
 	const [phoneUpdate, setPhoneUpdate] = useState(false);
-  const [openChangeStore, setOpenChangeStore] = useState(false)
+	const [openChangeStore, setOpenChangeStore] = useState(false)
 	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
@@ -459,7 +459,7 @@ const CheckoutUI = (props: any) => {
 										{t('DRIVER_TIPS', 'Driver Tips')}
 									</OText>
 									<DriverTips
-                    uuid={cartUuid}
+										uuid={cartUuid}
 										businessId={cart?.business_id}
 										driverTipsOptions={driverTipsOptions}
 										isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)}
@@ -517,21 +517,21 @@ const CheckoutUI = (props: any) => {
 										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
 											{t('ORDER_SUMMARY', 'Order Summary')}
 										</OText>
-                    {props.isFranchiseApp && (
-                      <TouchableOpacity
-                        onPress={() => setOpenChangeStore(true)}
-                        style={{alignSelf: 'flex-start'}}
-                      >
-                        <OText
-                          size={12}
-                          lineHeight={18}
-                          color={theme.colors.textSecondary}
-                          style={{ textDecorationLine: 'underline' }}
-                        >
-                          {t('CHANGE_STORE', 'Change store')}
-                        </OText>
-                      </TouchableOpacity>
-                    )}
+										{props.isFranchiseApp && (
+											<TouchableOpacity
+												onPress={() => setOpenChangeStore(true)}
+												style={{ alignSelf: 'flex-start' }}
+											>
+												<OText
+													size={12}
+													lineHeight={18}
+													color={theme.colors.textSecondary}
+													style={{ textDecorationLine: 'underline' }}
+												>
+													{t('CHANGE_STORE', 'Change store')}
+												</OText>
+											</TouchableOpacity>
+										)}
 										<OrderSummary
 											cart={cart}
 											isCartPending={cart?.status === 2}
@@ -574,41 +574,38 @@ const CheckoutUI = (props: any) => {
 							</ChErrors>
 						</ChSection>
 					)}
-          <OModal
-            open={openChangeStore && props.isFranchiseApp}
-            entireModal
-            customClose
-            onClose={() => setOpenChangeStore(false)}
-          >
-            <CartStoresListing
-              cartuuid={cart?.uuid}
-              onClose={() => setOpenChangeStore(false)}
-            />
-          </OModal>
+					<OModal
+						open={openChangeStore && props.isFranchiseApp}
+						entireModal
+						customClose
+						onClose={() => setOpenChangeStore(false)}
+					>
+						<CartStoresListing
+							cartuuid={cart?.uuid}
+							onClose={() => setOpenChangeStore(false)}
+						/>
+					</OModal>
 				</ChContainer>
 			</Container>
 			{!cartState.loading && cart && cart?.status !== 2 && (
-				<>
-					<>
-						<FloatingButton
-							handleClick={() => handlePlaceOrder()}
-							isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
-							disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
-							btnText={cart?.subtotal >= cart?.minimum
-								? (
-									placing
-										? t('PLACING', 'Placing')
-										: loading
-											? t('LOADING', 'Loading')
-											: t('PLACE_ORDER', 'Place Order')
-								)
-								: (`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`)
-							}
-							btnRightValueShow
-							btnRightValue={parsePrice(cart?.total)}
-						/>
-					</>
-				</>
+				<FloatingButton
+					handleClick={() => handlePlaceOrder()}
+					isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+					disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+					btnText={cart?.subtotal >= cart?.minimum
+						? (
+							placing
+								? t('PLACING', 'Placing')
+								: loading
+									? t('LOADING', 'Loading')
+									: t('PLACE_ORDER', 'Place Order')
+						)
+						: (`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`)
+					}
+					btnRightValueShow
+					btnRightValue={parsePrice(cart?.total)}
+					iosBottom={20}
+				/>
 			)}
 		</>
 	)
@@ -762,7 +759,7 @@ export const Checkout = (props: any) => {
 		...props,
 		UIComponent: CheckoutUI,
 		cartState,
-    [props.isFranchiseApp ? 'uuid' : 'businessId']: props.isFranchiseApp ? cartUuid : cartState.cart?.business_id
+		[props.isFranchiseApp ? 'uuid' : 'businessId']: props.isFranchiseApp ? cartUuid : cartState.cart?.business_id
 	}
 
 	return (

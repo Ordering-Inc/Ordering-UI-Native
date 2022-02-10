@@ -212,13 +212,15 @@ export interface BusinessProductsListParams {
 	errorQuantityProducts?: boolean,
 	handleCancelSearch?: () => void,
 	categoriesLayout?: any,
-	setCategoriesLayout?: any
+	setCategoriesLayout?: any,
+	currentCart?: any
 }
 export interface SingleProductCardParams {
 	businessId: any,
 	product: any;
 	isSoldOut: boolean;
 	onProductClick: any;
+	productAddedToCart?: any
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -381,6 +383,7 @@ export interface FloatingButtonParams {
 	btnRightValueShow?: boolean;
 	handleClick?: any;
 	handleEmpty?: any;
+	iosBottom?: number
 }
 export interface MomentOptionParams {
 	navigation: any;

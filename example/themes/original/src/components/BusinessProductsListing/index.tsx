@@ -277,6 +277,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								handleCancelSearch={handleCancel}
 								categoriesLayout={categoriesLayout}
 								setCategoriesLayout={setCategoriesLayout}
+								currentCart={currentCart}
 							/>
 						</WrapContent>
 					</>

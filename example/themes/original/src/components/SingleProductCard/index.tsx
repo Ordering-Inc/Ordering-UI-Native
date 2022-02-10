@@ -7,13 +7,13 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
-import { CardContainer, CardInfo, SoldOut } from './styles';
+import { CardContainer, CardInfo, SoldOut, QuantityContainer } from './styles';
 import { StyleSheet } from 'react-native';
 import { OText, OIcon } from '../shared';
 import FastImage from 'react-native-fast-image'
 
 export const SingleProductCard = (props: SingleProductCardParams) => {
-	const { businessId, product, isSoldOut, onProductClick } = props;
+	const { businessId, product, isSoldOut, onProductClick, productAddedToCart } = props;
 
 	const theme = useTheme();
 
@@ -42,6 +42,16 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 			borderRadius: 7.6,
 			marginStart: 12
 		},
+		quantityContainer: {
+			position: 'absolute',
+			left: '100%',
+			bottom: '100%',
+			width: 25,
+			height: 25,
+			textAlign: 'center',
+			borderRadius: 25,
+			alignItems: 'center'
+		}
 	});
 
 
@@ -88,6 +98,13 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 				(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
 			]}
 			onPress={() => onProductClick?.(product)}>
+				{productAddedToCart && productAddedToCart?.quantity > 0 && (
+					<QuantityContainer style={[styles.quantityContainer, {
+						transform: [{ translateX: 10 }, { translateY: -10 }],
+					}]}>
+						<OText color={theme.colors.white}>{productAddedToCart?.quantity}</OText>
+					</QuantityContainer>
+				)}
 			<CardInfo>
 				<OText
 					size={12}
