@@ -1,40 +1,40 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { useTheme } from '../context/Theme';
-import {
-  OrdersOption,
-  SafeAreaContainerLayout,
-} from '../../themes/business';
+import React, {useState} from 'react'
+import { useLanguage } from 'ordering-components/native'
+import { OrdersOption } from '../components/OrdersOption'
+import { OText } from '../components/shared'
+import { Container } from '../layouts/Container'
 
-const MyOrders = (props: any) => {
-  const [theme] = useTheme();
-  const { navigation } = props;
+const MyOrders = ({ navigation }: any) => {
 
-  const MyOrderProps = {
+  const [, t] = useLanguage()
+  const [ordersLength,setOrdersLength] = useState({activeOrdersLength: 0, previousOrdersLength: 0})
+  const myOrderProps = {
     navigation,
     onNavigationRedirect: (page: string, params: any) => {
-      if (!page) return;
+      if (!page) return
       navigation.navigate(page, params);
-    },
-    paginationSettings: {
-      initialPage: 1,
-      pageSize: 50,
-      controlType: 'infinity'
-    },
-    isBusinessApp: true
-  };
+    }
+  }
 
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor: theme.colors.backgroundLight,
-    },
-  });
 
   return (
-    <SafeAreaContainerLayout style={styles.container}>
-      <OrdersOption {...MyOrderProps} />
-    </SafeAreaContainerLayout>
-  );
-};
+    <Container>
+      <OText size={24} mBottom={20}>
+        {t('MY_ORDERS', 'My Orders')}
+      </OText>
+      <OrdersOption
+        {...myOrderProps}
+        activeOrders
+        ordersLength={ordersLength}
+        setOrdersLength={setOrdersLength}
+      />
+      <OrdersOption
+        {...myOrderProps}
+        ordersLength={ordersLength}
+        setOrdersLength={setOrdersLength}
+      />
+    </Container>
+  )
+}
 
 export default MyOrders;
