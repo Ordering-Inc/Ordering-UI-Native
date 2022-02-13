@@ -2,13 +2,12 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { useTheme } from '../context/Theme';
 import {
-  OrdersOption,
+  MessagesOption,
   SafeAreaContainerLayout,
 } from '../../themes/business';
 
-const MyOrders = (props: any) => {
+const Messages = ({ navigation }: any) => {
   const [theme] = useTheme();
-  const { navigation } = props;
 
   const MyOrderProps = {
     navigation,
@@ -16,25 +15,30 @@ const MyOrders = (props: any) => {
       if (!page) return;
       navigation.navigate(page, params);
     },
-    paginationSettings: {
-      initialPage: 1,
-      pageSize: 50,
-      controlType: 'infinity'
+    firstFetch: 'orders',
+    sortParams: {
+      param: 'last_direct_message_at',
+      direction: 'asc',
     },
-    isBusinessApp: true
+    paginationSettings: {
+      page: 1,
+      pageSize: 45,
+      controlType: 'infinity',
+    },
   };
 
   const styles = StyleSheet.create({
     container: {
       backgroundColor: theme.colors.backgroundLight,
+      padding: 20,
     },
   });
 
   return (
     <SafeAreaContainerLayout style={styles.container}>
-      <OrdersOption {...MyOrderProps} />
+      <MessagesOption {...MyOrderProps} />
     </SafeAreaContainerLayout>
   );
 };
 
-export default MyOrders;
+export default Messages;

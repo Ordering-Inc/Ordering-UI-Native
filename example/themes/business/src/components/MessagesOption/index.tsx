@@ -6,13 +6,13 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
-import { Contacts, useLanguage } from 'ordering-components/native';
+import { useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OButton } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { PreviousMessages } from '../PreviousMessages';
-// import { Contacts } from '../Contacts';
+import { Contacts } from './naked';
 import { FiltersTab, TabsContainer, TagsContainer, Tag } from './styles';
 import { MessagesOptionParams } from '../../types';
 import { useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
