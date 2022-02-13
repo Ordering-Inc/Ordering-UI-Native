@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Linking, Platform } from 'react-native';
-import { useLanguage, useUtils } from 'ordering-components/native';
-import { OrderListGroups } from './naked'
+import { useLanguage, useUtils, OrderListGroups } from 'ordering-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontistoIcon from 'react-native-vector-icons/Fontisto'

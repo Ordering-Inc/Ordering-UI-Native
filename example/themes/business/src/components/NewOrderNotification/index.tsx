@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useEvent, useLanguage, useUtils, useSession, useApi } from 'ordering-components/native'
+import { useEvent, useLanguage, useUtils, useSession, useApi, NewOrderNotification as NewOrderNotificationController } from 'ordering-components/native'
 import { View, Modal, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
@@ -9,7 +9,6 @@ import Sound from 'react-native-sound'
 import moment from 'moment'
 import { useLocation } from '../../hooks/useLocation'
 import { useFocusEffect } from '@react-navigation/core'
-import { NewOrderNotification as NewOrderNotificationController } from './naked'
 Sound.setCategory('Playback')
 
 const windowWidth = Dimensions.get('screen').width
@@ -110,9 +109,9 @@ const NewOrderNotificationUI = (props: any) => {
 
   useEffect(() => {
     if (user?.level !== 4) return
-    events.on('order_updated', handleUpdateOrder)
+    events.on('order_updated_noification', handleUpdateOrder)
     return () => {
-      events.off('order_updated', handleUpdateOrder)
+      events.off('order_updated_noification', handleUpdateOrder)
     }
   }, [handleUpdateOrder, user])
 

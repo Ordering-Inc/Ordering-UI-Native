@@ -12,7 +12,6 @@ import MyOrders from '../pages/MyOrders'
 import CartList from '../pages/CartList'
 import Profile from '../pages/Profile'
 import { useTheme } from 'styled-components/native'
-import Messages from '../pages/Messages'
 
 const CartsLenght = styled.View`
   width: 25px;
@@ -72,17 +71,32 @@ const BottomNavigator = () => {
           }}
       />
       <Tab.Screen
-        name="Messages"
-        component={Messages}
-        options={
-          {
-            tabBarIcon:
-              ({ color }: any) => (
-                <View style={{ width: 50, height: 50, justifyContent: !isIos ? 'flex-start' : 'space-evenly', position: 'relative', bottom: !isIos ? 10 : 0 }}>
-                  <MaterialIcon name='format-list-bulleted' size={46} color={color} />
-                </View>
-              ),
-          }}
+        name="Cart"
+        component={CartList}
+        options={{
+          tabBarIcon:
+            ({ color }: any) => (
+              <View style={{
+                  width: 50,
+                  height: 50,
+                  justifyContent: !isIos ? 'flex-start' : 'space-evenly',
+                  position: 'relative',
+                  bottom: !isIos ? 10 : 0
+                }}
+              >
+                <MaterialIcon name='shopping-basket' size={46} color={color} />
+                {cartsList.length > 0 && (
+                  <CartsLenght style={{ borderRadius: 100 / 2 }}>
+                    <OText
+                      color={theme.colors.white}
+                    >
+                      {cartsList.length}
+                    </OText>
+                  </CartsLenght>
+                )}
+              </View>
+            )
+        }}
       />
       <Tab.Screen
         name="Profile"
