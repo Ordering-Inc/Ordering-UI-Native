@@ -6,7 +6,7 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
-import { useLanguage, Contacts } from 'ordering-components/native';
+import { Contacts, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OButton } from '../shared';
