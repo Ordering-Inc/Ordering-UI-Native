@@ -204,6 +204,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		}
 	}, [])
 
+  useEffect(() => {
+    isKeyboardOpen && Platform.OS === 'android' && cartRef?.current?.scrollToEnd()
+  }, [isKeyboardOpen, cartRef?.current])
+
   return (
     <>
       <Animated.View style={{ flex: 1, backgroundColor: theme.colors.white, position: 'absolute', width: '100%', top: top, zIndex: 1 }}>
