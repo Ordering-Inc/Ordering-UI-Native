@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useEvent, useLanguage, useUtils, useSession, useApi } from 'ordering-components/native'
+import { useEvent, useLanguage, useUtils, useSession, useApi, NewOrderNotification as NewOrderNotificationController } from 'ordering-components/native'
 import { View, Modal, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
@@ -13,7 +13,7 @@ Sound.setCategory('Playback')
 
 const windowWidth = Dimensions.get('screen').width
 
-export const NewOrderNotification = (props: any) => {
+const NewOrderNotificationUI = (props: any) => {
   const [events] = useEvent()
   const theme = useTheme()
   const [, t] = useLanguage()
@@ -23,6 +23,7 @@ export const NewOrderNotification = (props: any) => {
   const { getCurrentLocation } = useLocation();
   const [modalOpen, setModalOpen] = useState(false)
   const [newOrderId, setNewOrderId] = useState(null)
+  const [messageOrderId, setMessageOrderId] = useState(null)
   const [soundTimeout, setSoundTimeout] = useState<any>(null)
   const [isFocused, setIsFocused] = useState(false)
 
@@ -33,7 +34,6 @@ export const NewOrderNotification = (props: any) => {
     }
     console.log('loaded successfully');
   });
-
 
   const handlePlayNotificationSound = () => {
     let times = 0
@@ -57,6 +57,8 @@ export const NewOrderNotification = (props: any) => {
   const handleCloseModal = () => {
     clearInterval(soundTimeout)
     setModalOpen(false)
+    setNewOrderId(null)
+    setMessageOrderId(null)
   }
 
   const handleNotification = (order: any) => {
@@ -66,10 +68,20 @@ export const NewOrderNotification = (props: any) => {
     setNewOrderId(order.id)
   }
 
+  const handleMessageNotification = (message: any) => {
+    const { order_id: orderId } = message;
+    if (!modalOpen) setModalOpen(true)
+    clearInterval(soundTimeout)
+    handlePlayNotificationSound()
+    setMessageOrderId(orderId)
+  }
+
   useEffect(() => {
-    events.on('order_added', handleNotification)
+    events.on('order_added_noification', handleNotification)
+    events.on('message_added_noification', handleMessageNotification)
     return () => {
-      events.off('order_added', handleNotification)
+      events.off('order_added_noification', handleNotification)
+      events.off('message_added_noification', handleMessageNotification)
     }
   }, [])
 
@@ -97,9 +109,9 @@ export const NewOrderNotification = (props: any) => {
 
   useEffect(() => {
     if (user?.level !== 4) return
-    events.on('order_updated', handleUpdateOrder)
+    events.on('order_updated_noification', handleUpdateOrder)
     return () => {
-      events.off('order_updated', handleUpdateOrder)
+      events.off('order_updated_noification', handleUpdateOrder)
     }
   }, [handleUpdateOrder, user])
 
@@ -149,12 +161,23 @@ export const NewOrderNotification = (props: any) => {
               width={250}
               height={200}
             />
-            <OText
-              color={theme.colors.textGray}
-              mBottom={15}
-            >
-              {t('ORDER_N_ORDERED', 'Order #_order_id_ has been ordered.').replace('_order_id_', newOrderId)}
-            </OText>
+            {newOrderId && (
+              <OText
+                color={theme.colors.textGray}
+                mBottom={15}
+              >
+                {t('ORDER_N_ORDERED', 'Order #_order_id_ has been ordered.').replace('_order_id_', newOrderId)}
+              </OText>
+            )}
+
+            {messageOrderId && (
+              <OText
+                color={theme.colors.textGray}
+                mBottom={15}
+              >
+                {t('ORDER_N_UNREAD_MESSAGES', 'Order #_order_id_ has unread messages.').replace('_order_id_', messageOrderId)}
+              </OText>
+            )}
           </View>
         </NotificationContainer>
       </Modal>
@@ -178,3 +201,12 @@ const styles = StyleSheet.create({
     top: 20
   }
 })
+
+export const NewOrderNotification = (props: any) => {
+  const newOrderNotificationProps = {
+    ...props,
+    UIComponent: NewOrderNotificationUI
+  };
+
+  return <NewOrderNotificationController {...newOrderNotificationProps} />;
+};

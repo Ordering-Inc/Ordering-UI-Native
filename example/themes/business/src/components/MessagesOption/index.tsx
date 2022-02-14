@@ -12,7 +12,6 @@ import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { OText, OButton } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { PreviousMessages } from '../PreviousMessages';
-// import { Contacts } from '../Contacts';
 import { FiltersTab, TabsContainer, TagsContainer, Tag } from './styles';
 import { MessagesOptionParams } from '../../types';
 import { useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';

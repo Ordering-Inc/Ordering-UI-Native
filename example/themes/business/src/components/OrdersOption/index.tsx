@@ -6,6 +6,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontistoIcon from 'react-native-vector-icons/Fontisto'
 import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+import { NewOrderNotification } from '../NewOrderNotification';
 
 import { OText, OButton, OModal, OIconButton, OInput, OIcon } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
@@ -550,6 +551,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       </View>
       {/* </GestureRecognizer> */}
 
+      <NewOrderNotification />
       {openModal && (
         <OModal open={openModal} entireModal customClose>
           <ModalContainer
