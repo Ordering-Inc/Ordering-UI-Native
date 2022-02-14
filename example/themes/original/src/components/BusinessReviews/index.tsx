@@ -227,7 +227,7 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 						</PrincipalWrapView>
 
 						{reviewsList?.reviews
-							.filter((review: any) => searchReview !== '' ? review.comment?.toLowerCase()?.includes(searchReview) : true)
+							.filter((review: any) => searchReview !== '' ? review.comment?.toLowerCase()?.includes(searchReview?.toLowerCase()) : true)
 							.map((review: any) => (
 								<ReviewItem
 									key={`review_key_${review.id}`}
