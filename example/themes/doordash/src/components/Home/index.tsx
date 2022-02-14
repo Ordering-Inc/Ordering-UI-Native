@@ -182,7 +182,7 @@ export const Home = (props: any) => {
 				</TouchableOpacity>
 			</View>
 
-			<OModal entireModal customClose transition={'pageSheet'} open={isAuth} onClose={() => setAuthState(false)} style={{borderRadius: 7.6}}>
+			<OModal overScreen={Platform.OS === 'ios'} entireModal customClose transition={'pageSheet'} open={isAuth} onClose={() => setAuthState(false)} style={{borderRadius: 7.6}}>
 				<View style={styles.authHeader}>
 					<TouchableOpacity onPress={() => setAuthState(false)} style={{}}>
 						<OIcon src={theme.images.general.close} width={16} />

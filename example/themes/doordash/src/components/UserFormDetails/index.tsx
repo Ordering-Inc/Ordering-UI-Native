@@ -226,7 +226,8 @@ export const UserFormDetailsUI = (props: any) => {
 										defaultValue={phoneUpdate ? '' : user?.cellphone}
 										defaultCode={user?.country_phone_code || null}
 										textInputProps={{
-											style: { borderWidth: 0, fontSize: 12 }
+											style: { borderWidth: 0, fontSize: 12 },
+											maxLength: 10
 										}}
 										textWrapStyle={{ borderColor: theme.colors.clear, borderWidth: 0, height: 40, paddingStart: 0 }}
 										countryButtonStyle={{ marginStart: -2, justifyContent: 'flex-start', flexBasis: '36%'}}

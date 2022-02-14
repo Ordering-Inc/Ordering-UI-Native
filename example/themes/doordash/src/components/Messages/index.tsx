@@ -9,6 +9,8 @@ import { OIcon, OIconButton, OText, OButton } from '../shared'
 import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard, I18nManager } from 'react-native'
 import { Header, TitleHeader, Wrapper, QuickMessageContainer } from './styles'
 import { MessagesParams } from '../../types'
+import { useWindowDimensions } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const MessagesUI = (props: MessagesParams) => {
 
@@ -42,6 +44,9 @@ const MessagesUI = (props: MessagesParams) => {
 
   const [formattedMessages, setFormattedMessages] = useState<Array<any>>([])
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+	const { height } = useWindowDimensions();
+	const { top, bottom } = useSafeAreaInsets();
 
   const handleClickQuickMessage = (text: string) => {
     setMessage && setMessage(`${message}${text}`)
@@ -186,15 +191,22 @@ const MessagesUI = (props: MessagesParams) => {
   }, [messages.messages.length])
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
       setIsKeyboardShow(true)
+      setKeyboardHeight(e.endCoordinates.height)
     })
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
       setIsKeyboardShow(false)
+      setKeyboardHeight(0)
     })
+    const keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', (e) => {
+			setIsKeyboardShow(false)
+      setKeyboardHeight(0)
+		})
     return () => {
       keyboardDidShowListener.remove()
       keyboardDidHideListener.remove()
+      keyboardWillHideListener.remove()
     }
   }, [])
 
@@ -273,7 +285,6 @@ const MessagesUI = (props: MessagesParams) => {
       containerStyle={{
         padding: Platform.OS === 'ios' && isKeyboardShow ? 0 : 10,
         flexDirection: 'column-reverse',
-        marginBottom: Platform.OS === 'ios' && isKeyboardShow ? 500 : 0
       }}
       primaryStyle={{ alignItems: 'center', justifyContent: 'flex-start' }}
       renderAccessory={() => renderAccessory()}
@@ -362,8 +373,16 @@ const MessagesUI = (props: MessagesParams) => {
     <MaterialCommunityIcon name='chevron-double-down' size={32} />
   )
 
+  const getViewHeight = () => {
+		if (Platform.OS === 'android') {
+			return '100%'
+		} else {
+			return height - top - bottom - (isKeyboardShow ? keyboardHeight - 240 : 48)
+		}
+	}
+
   return (
-    <>
+    <View style={{ height: getViewHeight(), width: '100%', paddingTop: 12, backgroundColor: 'white' }}>
       <Wrapper>
         <Header>
           <OIcon
@@ -396,15 +415,13 @@ const MessagesUI = (props: MessagesParams) => {
           renderBubble={renderBubble}
           renderMessageImage={renderMessageImage}
           scrollToBottomComponent={() => renderScrollToBottomComponent()}
-          messagesContainerStyle={{
-            paddingBottom: 55
-          }}
+
           isLoadingEarlier={messages.loading}
           renderLoading={() => <ActivityIndicator size="small" color="#000" />}
           keyboardShouldPersistTaps='handled'
         />
       </Wrapper>
-    </>
+    </View>
   )
 }
 
