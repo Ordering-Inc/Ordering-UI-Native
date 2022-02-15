@@ -26,6 +26,7 @@ const NewOrderNotificationUI = (props: any) => {
   const [messageOrderId, setMessageOrderId] = useState(null)
   const [soundTimeout, setSoundTimeout] = useState<any>(null)
   const [isFocused, setIsFocused] = useState(false)
+  const [currentChange, setCurrentChange] = useState(1)
 
   const notificationSound = new Sound(theme.sounds.notification, error => {
     if (error) {
@@ -64,6 +65,7 @@ const NewOrderNotificationUI = (props: any) => {
   const handleNotification = (order: any) => {
     setModalOpen(true)
     clearInterval(soundTimeout)
+    setCurrentChange(1)
     handlePlayNotificationSound()
     setNewOrderId(order.id)
   }
@@ -72,6 +74,7 @@ const NewOrderNotificationUI = (props: any) => {
     const { order_id: orderId } = message;
     if (!modalOpen) setModalOpen(true)
     clearInterval(soundTimeout)
+    setCurrentChange(2)
     handlePlayNotificationSound()
     setMessageOrderId(orderId)
   }
@@ -154,14 +157,14 @@ const NewOrderNotificationUI = (props: any) => {
               color={theme.colors.textGray}
               weight={600}
             >
-              {t('NEW_ORDRES_RECEIVED', 'New orders have been received!')}
+              {currentChange === 1 ? t('NEW_ORDRES_RECEIVED', 'New orders have been received!') : t('NEW_MESSAGES_RECEIVED', 'New messages have been received!')}
             </OText>
             <OIcon
               src={theme.images.general.newOrder}
               width={250}
               height={200}
             />
-            {newOrderId && (
+            {newOrderId !== null && (
               <OText
                 color={theme.colors.textGray}
                 mBottom={15}
@@ -170,7 +173,7 @@ const NewOrderNotificationUI = (props: any) => {
               </OText>
             )}
 
-            {messageOrderId && (
+            {messageOrderId  !== null && (
               <OText
                 color={theme.colors.textGray}
                 mBottom={15}
