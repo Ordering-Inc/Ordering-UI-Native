@@ -335,7 +335,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             dropdownStyle={{
               borderRadius: 8,
               borderColor: theme.colors.lightGray,
-              marginTop: Platform.OS === 'ios' ? 0 : -25
+              marginTop: Platform.OS === 'ios' ? 12 : -15
             }}
             rowStyle={{
               borderBottomColor: theme.colors.backgroundGray100,
