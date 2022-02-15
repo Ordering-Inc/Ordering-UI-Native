@@ -380,13 +380,30 @@ export const ProductOptionsUI = (props: any) => {
 									</Placeholder>
 								) : (
 									<>
-										<OText
-											size={20}
-											lineHeight={30}
-											weight={'600'}
-											style={{ flex: 1, marginBottom: 5 }}>
-											{product?.name || productCart.name}
-										</OText>
+										<View style={{ flexDirection: 'row' }}>
+											<OText
+												size={20}
+												lineHeight={30}
+												weight={'600'}
+												style={{ flex: 1, marginBottom: 10 }}>
+												{product?.name || productCart.name}
+											</OText>
+											{product?.calories && (
+												<OText size={16} style={{ color: '#808080' }}>{product?.calories} cal
+												</OText>
+											)}
+										</View>
+										<View style={{ flexDirection: 'row', marginBottom: 10 }}>
+											<OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+											{product?.offer_price && (
+												<OText style={{    fontSize: 14,
+													color: '#808080',
+													textDecorationLine: 'line-through',
+													marginLeft: 7,
+													marginRight: 7
+												}}>{parsePrice(product?.offer_price)}</OText>
+											)}
+										</View>
 										{((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (product?.estimated_person)) && (
 											<OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'} mBottom={7}>
 												{
@@ -401,9 +418,6 @@ export const ProductOptionsUI = (props: any) => {
 												}
 											</OText>
 										)}
-										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
-											{productCart.price ? parsePrice(productCart.price) : ''}
-										</OText>
 									</>
 								)}
 							</ProductTitle>

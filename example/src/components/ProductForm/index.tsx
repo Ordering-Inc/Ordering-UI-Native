@@ -132,7 +132,18 @@ export const ProductOptionsUI = (props: any) => {
                 ) : (
                   <>
                     <View style={{ flexDirection: 'column', width: '100%' }}>
-                      <OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1, marginBottom: 10 }}>{product?.name || productCart.name}</OText>
+                      <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                        <OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1, marginBottom: 10 }}>{product?.name || productCart.name}{' '}</OText>
+                        {product?.calories && (
+                          <OText size={16} style={styles.caloriesStyle}>{product?.calories} cal</OText>
+                        )}
+                      </View>
+                      <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                        <OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+                        {product?.offer_price && (
+                          <OText style={styles.regularPriceStyle}>{parsePrice(product?.offer_price)}</OText>
+                        )}
+                      </View>
                       {(product?.estimated_person || (product?.sku && product?.sku !== '-1' && product?.sku !== '1')) && (
                         <OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0, marginBottom: 10 }} color={'#909BA9'}>
                           {
@@ -147,12 +158,6 @@ export const ProductOptionsUI = (props: any) => {
                           }
                         </OText>
                       )}
-                      <View style={{ flexDirection: 'row', marginBottom: 10}}>
-                        <OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
-                        {product?.offer_price && (
-                          <OText style={styles.regularPriceStyle}>{parsePrice(product?.offer_price)}</OText>
-                        )}
-                      </View>
                     </View>
                   </>
                 )}
@@ -162,17 +167,17 @@ export const ProductOptionsUI = (props: any) => {
               </ProductDescription>
               {loading && !product ? (
                 <>
-                  {[...Array(2)].map((item,i) => (
-                  <Placeholder key={i} style={{marginBottom: 20}} Animation={Fade}>
-                    <PlaceholderLine height={40} style={{ flex: 1, marginTop: 10 }} />
-                    {[...Array(3)].map((item,i) => (
-                      <View key={i} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <PlaceholderLine height={30} width={10} style={{marginBottom: 20}} />
-                        <PlaceholderLine height={30} width={50} style={{marginBottom: 20}} />
-                        <PlaceholderLine height={30} width={30} style={{marginBottom: 20}} />
-                      </View>
-                    ))}
-                  </Placeholder>
+                  {[...Array(2)].map((item, i) => (
+                    <Placeholder key={i} style={{ marginBottom: 20 }} Animation={Fade}>
+                      <PlaceholderLine height={40} style={{ flex: 1, marginTop: 10 }} />
+                      {[...Array(3)].map((item, i) => (
+                        <View key={i} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                          <PlaceholderLine height={30} width={10} style={{ marginBottom: 20 }} />
+                          <PlaceholderLine height={30} width={50} style={{ marginBottom: 20 }} />
+                          <PlaceholderLine height={30} width={30} style={{ marginBottom: 20 }} />
+                        </View>
+                      ))}
+                    </Placeholder>
                   ))}
                 </>
               ) : (
@@ -221,7 +226,7 @@ export const ProductOptionsUI = (props: any) => {
                                           state={currentState}
                                           disabled={isSoldOut || maxProductQuantity <= 0}
                                         />
-                                      ): null
+                                      ) : null
                                     })
                                   }
                                 </WrapperSubOption>
@@ -381,6 +386,9 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
     marginLeft: 7,
     marginRight: 7
+  },
+  caloriesStyle: {
+    color: '#808080'
   }
 })
 
