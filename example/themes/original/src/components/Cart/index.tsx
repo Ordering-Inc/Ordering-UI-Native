@@ -266,7 +266,7 @@ const CartUI = (props: any) => {
                         alignItems: 'flex-start',
                         width: '100%',
                         height: 100,
-                        borderColor: theme.colors.textSecondary,
+                        borderColor: theme.colors.border,
                         paddingRight: 50,
                         marginTop: 10,
                         borderRadius: 7.6
