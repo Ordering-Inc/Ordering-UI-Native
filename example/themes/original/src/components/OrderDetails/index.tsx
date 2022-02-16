@@ -104,6 +104,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const { order, businessData } = props.order;
 
+  const walletName: any = {
+    cash: {
+      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
+    },
+    credit_point: {
+      name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
+    }
+  }
+
   const getOrderStatus = (s: string) => {
     const status = parseInt(s);
     const orderStatus = [
@@ -826,6 +835,51 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </OText>
                 </Table>
               </Total>
+              {order?.payment_events?.length > 0 && (
+                <View style={{marginTop: 10}}>
+                  <OText size={20} weight='bold' color={theme.colors.textNormal}>{t('PAYMENTS', 'Payments')}</OText>
+                  <View
+                    style={{
+                      width: '100%',
+                      marginTop: 10
+                    }}
+                  >
+                    {order?.payment_events?.map((event: any) => (
+                      <View
+                        key={event.id}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: 10
+                        }}
+                      >
+                        <View
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                          }}
+                        >
+                          <OText>
+                            {event?.wallet_event
+                              ? walletName[event?.wallet_event?.wallet?.type]?.name
+                              : event?.paymethod?.name}
+                          </OText>
+                          {event?.data?.charge_id && (
+                            <OText>
+                              {`${t('CODE', 'Code')}: ${event?.data?.charge_id}`}
+                            </OText>
+                          )}
+                        </View>
+                        <OText>
+                          -{parsePrice(event.amount)}
+                        </OText>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              )}
             </OrderBill>
           </OrderContent>
         </>
