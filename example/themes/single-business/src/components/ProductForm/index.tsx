@@ -527,34 +527,35 @@ export const ProductOptionsUI = (props: any) => {
                     );
                   }))}
                 </View>
-
-                <ProductComment>
-                  <SectionTitle>
-                    <OText size={16} weight={'600'} lineHeight={24}>
-                      {t('SPECIAL_COMMENT', 'Special comment')}
-                    </OText>
-                  </SectionTitle>
-                  <OInput
-                    multiline={true}
-                    numberOfLines={10}
-                    placeholder={t('SPECIAL_COMMENT', 'Special comment')}
-                    value={productCart.comment}
-                    onChange={(val: string) =>
-                      handleChangeCommentState({ target: { value: val } })
-                    }
-                    isDisabled={
-                      !(productCart && !isSoldOut && maxProductQuantity)
-                    }
-                    style={{
-                      height: 100,
-                      justifyContent: "flex-end",
-                      alignItems: 'flex-start',
-                      borderWidth: 1,
-                      borderRadius: 8,
-                      borderColor: theme.colors.border,
-                    }}
-                  />
-                </ProductComment>
+                {!product?.hide_special_instructions && (
+                  <ProductComment>
+                    <SectionTitle>
+                      <OText size={16} weight={'600'} lineHeight={24}>
+                        {t('SPECIAL_COMMENT', 'Special comment')}
+                      </OText>
+                    </SectionTitle>
+                    <OInput
+                      multiline={true}
+                      numberOfLines={10}
+                      placeholder={t('SPECIAL_COMMENT', 'Special comment')}
+                      value={productCart.comment}
+                      onChange={(val: string) =>
+                        handleChangeCommentState({ target: { value: val } })
+                      }
+                      isDisabled={
+                        !(productCart && !isSoldOut && maxProductQuantity)
+                      }
+                      style={{
+                        height: 100,
+                        justifyContent: "flex-end",
+                        alignItems: 'flex-start',
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        borderColor: theme.colors.border,
+                      }}
+                    />
+                  </ProductComment>
+                )}  
               </ProductEditions>
             )}
           </WrapContent>
