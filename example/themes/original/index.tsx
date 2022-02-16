@@ -28,7 +28,8 @@ import { HelpGuide } from './src/components/HelpGuide';
 import { HelpOrder } from './src/components/HelpOrder';
 import { NotFoundSource } from './src/components/NotFoundSource';
 import { OrderTypeSelector } from './src/components/OrderTypeSelector';
-import { Wallets } from './src/components/Wallets/';
+import { Wallets } from './src/components/Wallets';
+import { PaymentOptionWallet } from './src/components/PaymentOptionWallet';
 
 import { Toast } from './src/components/shared/OToast';
 import {
@@ -88,6 +89,7 @@ export {
 	NotFoundSource,
 	OrderTypeSelector,
   Wallets,
+  PaymentOptionWallet,
 
 	// OComponents
 	Toast,
