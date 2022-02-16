@@ -25,7 +25,7 @@ export const Toast = () => {
       duration: fadeDuration,
       useNativeDriver: true,
     }).start(() => {
-      hideToast();
+      hideToast && hideToast();
     });
   }, [opacity, hideToast]);
 
