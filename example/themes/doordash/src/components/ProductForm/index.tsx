@@ -287,20 +287,22 @@ export const ProductOptionsUI = (props: any) => {
 											</React.Fragment>
 										)
 									}))}
-									<ProductComment onLayout={(e: any) => setCommentY(e.nativeEvent.layout.y + e.nativeEvent.layout.height)}>
-										<SectionTitle>
-											<OText style={theme.labels.middle as TextStyle}>{t('SPECIAL_COMMENT', 'Special comment')}</OText>
-										</SectionTitle>
-										<OInput
-											multiline
-											placeholder={t('SPECIAL_COMMENT', 'Special comment')}
-											value={productCart.comment}
-											onChange={(val: string) => handleChangeCommentState({ target: { value: val } })}
-											isDisabled={!(productCart && !isSoldOut && maxProductQuantity)}
-											style={styles.comment}
-											inputStyle={{ fontSize: 12, paddingBottom: 7, paddingTop: 17 }}
-										/>
-									</ProductComment>
+									{!product?.hide_special_instructions && (
+										<ProductComment onLayout={(e: any) => setCommentY(e.nativeEvent.layout.y + e.nativeEvent.layout.height)}>
+											<SectionTitle>
+												<OText style={theme.labels.middle as TextStyle}>{t('SPECIAL_COMMENT', 'Special comment')}</OText>
+											</SectionTitle>
+											<OInput
+												multiline
+												placeholder={t('SPECIAL_COMMENT', 'Special comment')}
+												value={productCart.comment}
+												onChange={(val: string) => handleChangeCommentState({ target: { value: val } })}
+												isDisabled={!(productCart && !isSoldOut && maxProductQuantity)}
+												style={styles.comment}
+												inputStyle={{ fontSize: 12, paddingBottom: 7, paddingTop: 17 }}
+											/>
+										</ProductComment>
+									)}
 									{productCart && !isSoldOut && maxProductQuantity > 0 && (
 										<View style={{ paddingVertical: 4, marginBottom: 10 }}>
 											<SectionTitle>
