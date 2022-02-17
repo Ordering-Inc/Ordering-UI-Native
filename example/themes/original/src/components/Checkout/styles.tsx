@@ -74,10 +74,6 @@ export const ChDriverTips = styled(ChPaymethods)``
 
 export const ChCart = styled(ChPaymethods)``
 
-export const WalletPaymentOptionContainer = styled(ChPaymethods)`
-  padding-bottom: 0;
-`
-
 export const ChPlaceOrderBtn = styled.View`
   width: 100%;
   display: flex;
@@ -103,4 +99,4 @@ export const DeliveryOptionItem = styled.View`
   align-items: center;
   flex-direction: row;
   background-color: ${(props : any) => props?.backgroundColor ?? '#fff'};
-`;
+`; 

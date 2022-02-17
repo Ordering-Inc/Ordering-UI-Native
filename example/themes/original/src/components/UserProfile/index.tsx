@@ -14,7 +14,6 @@ import { ProfileParams } from '../../types';
 import { LogoutButton } from '../LogoutButton'
 import { LanguageSelector } from '../LanguageSelector'
 import MessageCircle from 'react-native-vector-icons/AntDesign'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import {
 	OIcon,
@@ -160,10 +159,6 @@ const ProfileListUI = (props: ProfileParams) => {
 					<ListItem onPress={() => onRedirect('Messages', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
 						<MessageCircle name='message1' style={styles.messageIconStyle} color={theme.colors.textNormal} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MESSAGES', 'Messages')}</OText>
-					</ListItem>
-					<ListItem onPress={() => onRedirect('Wallets', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
-						<Ionicons name='wallet-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
-						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('WALLETS', 'Wallets')}</OText>
 					</ListItem>
 					<ListItem onPress={() => navigation.navigate('Help', {})} activeOpacity={0.7}>
 						<OIcon src={theme.images.general.ic_help} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />

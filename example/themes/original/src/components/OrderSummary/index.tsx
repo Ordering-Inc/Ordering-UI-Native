@@ -28,6 +28,7 @@ import { TouchableOpacity } from 'react-native';
 
 const OrderSummaryUI = (props: any) => {
   const {
+    cart,
     changeQuantity,
     getProductMax,
     offsetDisabled,
@@ -75,16 +76,6 @@ const OrderSummaryUI = (props: any) => {
     }
   }
 
-  const cart = orderState?.carts?.[`businessId:${props.cart.business_id}`]
-
-  const walletName: any = {
-    cash: {
-      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
-    },
-    credit_point: {
-      name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
-    }
-  }
 
   return (
     <OSContainer>
@@ -214,8 +205,7 @@ const OrderSummaryUI = (props: any) => {
                           height: 100,
                           borderColor: theme.colors.border,
                           paddingRight: 50,
-                          marginTop: 10,
-                          borderRadius: 8
+                          marginTop: 10
                         }}
                         multiline
                       />
@@ -231,52 +221,6 @@ const OrderSummaryUI = (props: any) => {
                     </View>
                   </View>
                 </OSTable>
-              )}
-              {cart?.payment_events?.length > 0 && (
-                <View
-                  style={{
-                    width: '100%',
-                    marginTop: 20
-                  }}
-                >
-                  {cart?.payment_events?.map((event: any) => (
-                    <View
-                      key={event.id}
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginBottom: 10
-                      }}
-                    >
-                      <OText>
-                        {walletName[cart?.wallets?.find((wallet: any) => wallet.id === event.wallet_id)?.type]?.name}
-                      </OText>
-                      <OText>
-                        -{parsePrice(event.amount)}
-                      </OText>
-                    </View>
-                  ))}
-                    <View
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginBottom: 10
-                    }}
-                  >
-                    <OText
-                      weight={'bold'}
-                    >
-                      {t('TOTAL_TO_PAY', 'Total to pay')}
-                    </OText>
-                    <OText
-                      weight={'bold'}
-                    >
-                      {parsePrice(cart?.balance)}
-                    </OText>
-                  </View>
-                </View>
               )}
             </OSBill>
           )}
