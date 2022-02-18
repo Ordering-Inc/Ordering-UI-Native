@@ -135,7 +135,7 @@ const CheckoutUI = (props: any) => {
 
 	const deliveryOptions = instructionsOptions?.result && instructionsOptions?.result?.filter((option: any) => option?.enabled)?.map((option: any) => {
 		return {
-			value: option?.id, key: option?.id, label: option?.name
+			value: option?.id, key: option?.id, label: t(option?.name.toUpperCase().replace(/\s/g, '_'), option?.name) 
 		}
 	})
 
