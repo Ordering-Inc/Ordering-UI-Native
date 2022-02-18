@@ -17,6 +17,7 @@ export const BusinessItemAccordion = (props: any) => {
 	const {
 		cart,
 		moment,
+    singleBusiness,
 		handleClearProducts
 	} = props
 
@@ -29,7 +30,7 @@ export const BusinessItemAccordion = (props: any) => {
 	const isClosed = !cart?.valid_schedule
 	const isProducts = cart?.products?.length
 
-	const [isActive, setActiveState] = useState(false)
+	const [isActive, setActiveState] = useState(!!singleBusiness)
 
 	useEffect(() => {
 		const cartsArray = Object.values(orderState?.carts)
