@@ -177,6 +177,14 @@ const OrderSummaryUI = (props: any) => {
                   <OText size={12}>{parsePrice(cart?.driver_tip)}</OText>
                 </OSTable>
               )}
+              {cart?.payment_events?.length > 0 && cart?.payment_events?.map((event: any) => (
+                <OSTable key={event.id}>
+                  <OText size={12} numberOfLines={1}>
+                    {walletName[cart?.wallets?.find((wallet: any) => wallet.id === event.wallet_id)?.type]?.name}
+                  </OText>
+                  <OText size={12}>-{parsePrice(event.amount)}</OText>
+                </OSTable>
+              ))}
               {isCouponEnabled && !isCartPending && (
                 <View>
                   <View style={{ paddingVertical: 5 }}>
@@ -194,7 +202,7 @@ const OrderSummaryUI = (props: any) => {
                       {t('TOTAL', 'Total')}
                     </OText>
                     <OText size={14} style={{ fontWeight: 'bold' }} >
-                      {parsePrice(cart?.total)}
+                      {parsePrice(cart?.balance ?? cart?.total)}
                     </OText>
                   </OSTable>
                 </View>
@@ -231,52 +239,6 @@ const OrderSummaryUI = (props: any) => {
                     </View>
                   </View>
                 </OSTable>
-              )}
-              {cart?.payment_events?.length > 0 && (
-                <View
-                  style={{
-                    width: '100%',
-                    marginTop: 20
-                  }}
-                >
-                  {cart?.payment_events?.map((event: any) => (
-                    <View
-                      key={event.id}
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginBottom: 10
-                      }}
-                    >
-                      <OText>
-                        {walletName[cart?.wallets?.find((wallet: any) => wallet.id === event.wallet_id)?.type]?.name}
-                      </OText>
-                      <OText>
-                        -{parsePrice(event.amount)}
-                      </OText>
-                    </View>
-                  ))}
-                    <View
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginBottom: 10
-                    }}
-                  >
-                    <OText
-                      weight={'bold'}
-                    >
-                      {t('TOTAL_TO_PAY', 'Total to pay')}
-                    </OText>
-                    <OText
-                      weight={'bold'}
-                    >
-                      {parsePrice(cart?.balance)}
-                    </OText>
-                  </View>
-                </View>
               )}
             </OSBill>
           )}

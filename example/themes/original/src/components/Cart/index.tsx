@@ -113,6 +113,15 @@ const CartUI = (props: any) => {
     }
   }
 
+  const walletName: any = {
+    cash: {
+      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
+    },
+    credit_point: {
+      name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
+    }
+  }
+
   return (
     <CContainer>
       {openUpselling && (
@@ -130,6 +139,7 @@ const CartUI = (props: any) => {
       )}
       <BusinessItemAccordion
         cart={cart}
+        singleBusiness={props.singleBusiness}
         moment={momentFormatted}
         handleClearProducts={handleClearProducts}
         handleCartOpen={handleCartOpen}
@@ -191,7 +201,7 @@ const CartUI = (props: any) => {
               cart?.fees?.length > 0 && cart?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0)).map((fee: any) => (
                 <OSTable key={fee?.id}>
                   <OSRow>
-                    <OText numberOfLines={1}>
+                    <OText numberOfLines={1} size={12} lineHeight={18}>
                       {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
                       ({parsePrice(fee?.fixed)} + {fee?.percentage}%){' '}
                     </OText>
@@ -203,6 +213,15 @@ const CartUI = (props: any) => {
                 </OSTable>
               ))
             }
+            {cart?.service_fee > 0 && !cart?.fees?.length && (
+              <OSTable>
+                <OText size={12} lineHeight={18}>
+                  {t('SERVICE_FEE', 'Service Fee')}
+                  {`(${verifyDecimals(cart?.business?.service_fee, parseNumber)}%)`}
+                </OText>
+                <OText size={12} lineHeight={18}>{parsePrice(cart?.service_fee)}</OText>
+              </OSTable>
+            )}
             {orderState?.options?.type === 1 && cart?.delivery_price > 0 && (
               <OSTable>
                 <OText size={12} lineHeight={18}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
@@ -223,15 +242,14 @@ const CartUI = (props: any) => {
                 <OText size={12} lineHeight={18}>{parsePrice(cart?.driver_tip)}</OText>
               </OSTable>
             )}
-            {cart?.service_fee > 0 && (
-              <OSTable>
-                <OText size={12} lineHeight={18}>
-                  {t('SERVICE_FEE', 'Service Fee')}
-                  {`(${verifyDecimals(cart?.business?.service_fee, parseNumber)}%)`}
+            {cart?.payment_events?.length > 0 && cart?.payment_events?.map((event: any) => (
+              <OSTable key={event.id}>
+                <OText size={12} numberOfLines={1}>
+                  {walletName[cart?.wallets?.find((wallet: any) => wallet.id === event.wallet_id)?.type]?.name}
                 </OText>
-                <OText size={12} lineHeight={18}>{parsePrice(cart?.service_fee)}</OText>
+                <OText size={12}>-{parsePrice(event.amount)}</OText>
               </OSTable>
-            )}
+            ))}
             {isCouponEnabled && !isCartPending && (
               <OSTable>
                 <OSCoupon>
@@ -249,7 +267,7 @@ const CartUI = (props: any) => {
                   {t('TOTAL', 'Total')}
                 </OText>
                 <OText size={14} lineHeight={21} weight={'600'}>
-                  {cart?.total >= 1 && parsePrice(cart?.total)}
+                  {parsePrice(cart?.balance ?? cart?.total)}
                 </OText>
               </OSTable>
             </OSTotal>
