@@ -894,6 +894,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           orderId={order?.id}
           messages={messages}
           order={order}
+          business={openModalForBusiness}
+          driver={openModalForDriver}
           setMessages={setMessages}
           onClose={handleCloseModal}
         />
