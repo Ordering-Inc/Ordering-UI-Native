@@ -193,13 +193,13 @@ const OrderProgressUI = (props: any) => {
           </View>
         </View>
       )}
-      {!orderList?.loading && orderList?.orders?.length === 0 && (
+      {/* {!orderList?.loading && orderList?.orders?.length === 0 && (
         <NotFoundSource
           image={imageFails}
           content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
           conditioned
         />
-      )}
+      )} */}
 		</>
 	)
 }
