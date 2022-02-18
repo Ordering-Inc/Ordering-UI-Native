@@ -57,6 +57,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		handleBusinessClick,
 		paginationProps,
 		handleChangeSearch,
+    businessId
 	} = props;
 
 	const theme = useTheme();
@@ -256,17 +257,20 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							/>
 						</WrapMomentOption>
 
-						<SearchBar
-							onSearch={handleChangeSearch}
-							searchValue={searchValue}
-							lazyLoad
-							isCancelXButtonShow={!!searchValue}
-							borderStyle={styles.borderStyle}
-							onCancel={() => handleChangeSearch('')}
-							placeholder={t('SEARCH', 'Search')}
-							height={26}
-							inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
-						/>
+            {!businessId && (
+              <SearchBar
+                onSearch={handleChangeSearch}
+                searchValue={searchValue}
+                lazyLoad
+                isCancelXButtonShow={!!searchValue}
+                borderStyle={styles.borderStyle}
+                onCancel={() => handleChangeSearch('')}
+                placeholder={t('SEARCH', 'Search')}
+                height={26}
+                inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
+              />
+            )}
+
 					</View>
 				</OrderControlContainer>
 			</HeaderWrapper>
@@ -277,7 +281,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					/>
 				</OrderProgressWrapper>
 			)}
-			{!props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
+			{!businessId && !props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
 				<FeaturedWrapper>
 					<OText size={16} style={{ marginLeft: 40 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('FEATURED_BUSINESS', 'Featured business')}</OText>
 					<ScrollView
@@ -306,17 +310,19 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				</FeaturedWrapper>
 			)}
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-      {!props.franchiseId && (
+      {!businessId && !props.franchiseId && (
         <HighestRatedBusinesses onBusinessClick={handleBusinessClick} navigation={navigation} />
       )}
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 			<ListWrapper>
-				<BusinessTypeFilter
-					images={props.images}
-					businessTypes={props.businessTypes}
-					defaultBusinessType={props.defaultBusinessType}
-					handleChangeBusinessType={handleChangeBusinessType}
-				/>
+        {!businessId && (
+          <BusinessTypeFilter
+            images={props.images}
+            businessTypes={props.businessTypes}
+            defaultBusinessType={props.defaultBusinessType}
+            handleChangeBusinessType={handleChangeBusinessType}
+          />
+        )}
 				{!businessesList.loading && businessesList.businesses.length === 0 && (
 					<NotFoundSource
 						content={t(
