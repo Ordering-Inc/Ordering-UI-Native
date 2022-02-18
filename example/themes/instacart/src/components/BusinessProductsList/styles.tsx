@@ -15,5 +15,5 @@ export const WrapperNotFound = styled.View`
 export const ProductsWrapper = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: flex-start;
+  margin-bottom: 20px;
 `
