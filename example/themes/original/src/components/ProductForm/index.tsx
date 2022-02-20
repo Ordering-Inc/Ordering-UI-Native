@@ -12,6 +12,9 @@ import { ProductOption } from '../ProductOption';
 import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import {
+	Grayscale
+} from 'react-native-color-matrix-image-filters'
 
 import { View, TouchableOpacity, StyleSheet, Dimensions, Platform, AppRegistry, I18nManager } from 'react-native';
 
@@ -149,8 +152,11 @@ export const ProductOptionsUI = (props: any) => {
 		if (errors[`id:${id}`]) {
 			bgColor = 'rgba(255, 0, 0, 0.05)';
 		}
-		if (isSoldOut || maxProductQuantity <= 0) {
+		if (maxProductQuantity <= 0) {
 			bgColor = 'hsl(0, 0%, 72%)';
+		}
+		if (isSoldOut) {
+			bgColor = theme.colors.white;
 		}
 		return bgColor;
 	};
@@ -316,13 +322,15 @@ export const ProductOptionsUI = (props: any) => {
 												style={styles.slide1}
 												key={i}
 											>
-												<FastImage
-													style={{ height: '100%' }}
-													source={{
-														uri: optimizeImage(img, 'h_258,c_limit'),
-														priority: FastImage.priority.normal,
-													}}
-												/>
+												<Grayscale amount={isSoldOut ? 1 : 0}>
+													<FastImage
+														style={{ height: '100%' }}
+														source={{
+															uri: optimizeImage(img, 'h_258,c_limit'),
+															priority: FastImage.priority.normal,
+														}}
+													/>
+												</Grayscale>
 											</View>
 										))}
 									</Swiper>
@@ -346,17 +354,19 @@ export const ProductOptionsUI = (props: any) => {
 														opacity: index === thumbsSwiper ? 1 : 0.8
 													}}
 												>
-													<OIcon
-														url={img}
-														style={{
-															borderColor: theme.colors.lightGray,
-															borderRadius: 8,
-															minHeight: '100%'
-														}}
-														width={56}
-														height={56}
-														cover
-													/>
+													<Grayscale amount={isSoldOut ? 1 : 0}>
+														<OIcon
+															url={img}
+															style={{
+																borderColor: theme.colors.lightGray,
+																borderRadius: 8,
+																minHeight: '100%'
+															}}
+															width={56}
+															height={56}
+															cover
+														/>
+													</Grayscale>
 												</View>
 											</TouchableOpacity>
 
@@ -488,13 +498,7 @@ export const ProductOptionsUI = (props: any) => {
 															{t('INGREDIENTS', 'Ingredients')}
 														</OText>
 													</SectionTitle>
-													<WrapperIngredients
-														style={{
-															backgroundColor:
-																isSoldOut || maxProductQuantity <= 0
-																	? 'hsl(0, 0%, 72%)'
-																	: theme.colors.white,
-														}}>
+													<WrapperIngredients>
 														{product?.ingredients.map((ingredient: any) => (
 															<ProductIngredient
 																key={ingredient.id}
@@ -503,6 +507,7 @@ export const ProductOptionsUI = (props: any) => {
 																	productCart.ingredients[`id:${ingredient.id}`]
 																}
 																onChange={handleChangeIngredientState}
+																isSoldOut={isSoldOut}
 															/>
 														))}
 													</WrapperIngredients>
@@ -540,6 +545,7 @@ export const ProductOptionsUI = (props: any) => {
 																					return (
 																						<ProductOptionSubOption
 																							key={suboption.id}
+																							isSoldOut={isSoldOut}
 																							onChange={
 																								handleChangeSuboptionState
 																							}
@@ -573,13 +579,7 @@ export const ProductOptionsUI = (props: any) => {
 															{t('INGREDIENTS', 'Ingredients')}
 														</OText>
 													</SectionTitle>
-													<WrapperIngredients
-														style={{
-															backgroundColor:
-																isSoldOut || maxProductQuantity <= 0
-																	? 'hsl(0, 0%, 72%)'
-																	: theme.colors.white,
-														}}>
+													<WrapperIngredients>
 														{product?.ingredients.map((ingredient: any) => (
 															<ProductIngredient
 																key={ingredient.id}
@@ -588,6 +588,7 @@ export const ProductOptionsUI = (props: any) => {
 																	productCart.ingredients[`id:${ingredient.id}`]
 																}
 																onChange={handleChangeIngredientState}
+																isSoldOut={isSoldOut}
 															/>
 														))}
 													</WrapperIngredients>

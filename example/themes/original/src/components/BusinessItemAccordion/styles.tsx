@@ -52,3 +52,10 @@ export const BIActions = styled.View`
   align-items: center;
   justify-content: flex-end;
 `
+
+export const PriceContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1
+`
