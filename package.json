@@ -26,5 +26,8 @@
   "homepage": "https://github.com/sergioaok/Ordering-UI-Native#readme",
   "devDependencies": {
     "react-native": "^0.64.1"
+  },
+  "dependencies": {
+    "react-native-color-matrix-image-filters": "^5.2.10"
   }
 }
