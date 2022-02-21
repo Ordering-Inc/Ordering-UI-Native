@@ -145,6 +145,8 @@ const CartUI = (props: any) => {
         handleCartOpen={handleCartOpen}
         onNavigationRedirect={props.onNavigationRedirect}
         handleChangeStore={props.isFranchiseApp ? () => setOpenChangeStore(true) : null}
+        handleClickCheckout={() => setOpenUpselling(true)}
+        checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any) => (
           <ProductItemAccordion
