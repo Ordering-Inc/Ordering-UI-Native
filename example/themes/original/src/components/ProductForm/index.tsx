@@ -31,7 +31,9 @@ import {
 	WrapperSubOption,
 	ProductComment,
 	ProductActions,
-	ExtraOptionWrap
+	ExtraOptionWrap,
+	WeightUnitSwitch,
+	WeightUnitItem
 } from './styles';
 import { OButton, OIcon, OInput, OText } from '../shared';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -130,6 +132,9 @@ export const ProductOptionsUI = (props: any) => {
 			height: 32,
 			borderRadius: 16,
 			backgroundColor: 'rgba(208,208,208,0.5)'
+		},
+		unitItem: {
+			fontSize: 12
 		}
 	});
 
@@ -144,6 +149,12 @@ export const ProductOptionsUI = (props: any) => {
 	const { top, bottom } = useSafeAreaInsets();
 	const { height } = useWindowDimensions();
 	const [selOpt, setSelectedOpt] = useState(0);
+	const [isHaveWeight, setIsHaveWeight] = useState(false)
+	const [qtyBy, setQtyBy] = useState({
+		weight_unit: false,
+		pieces: true
+	})
+	const [pricePerWeightUnit, setPricePerWeightUnit] = useState(null)
 
 	const swiperRef: any = useRef(null)
 
@@ -199,6 +210,10 @@ export const ProductOptionsUI = (props: any) => {
 		navigation.navigate('Login');
 	};
 
+	const handleSwitchQtyUnit = (val: string) => {
+		setQtyBy({ [val]: true, [!val]: false })
+	}
+
 	useEffect(() => {
 		const productImgList: any = []
 		product?.images && productImgList.push(product.images)
@@ -208,6 +223,11 @@ export const ProductOptionsUI = (props: any) => {
 			}
 		}
 		setGallery(productImgList)
+
+		if (product?.weight && product?.weight_unit) {
+			setIsHaveWeight(true)
+			setPricePerWeightUnit(product?.price / product?.weight)
+		}
 	}, [product])
 
 	const saveErrors =
@@ -411,9 +431,13 @@ export const ProductOptionsUI = (props: any) => {
 												}
 											</OText>
 										)}
-										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
-											{productCart.price ? parsePrice(productCart.price) : ''}
-										</OText>
+										{isHaveWeight ? (
+											<OText size={16} lineHeight={24} color={theme.colors.textNormal}>{parsePrice(pricePerWeightUnit)} / {product?.weight_unit}</OText>
+										) : (
+											<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
+												{productCart.price ? parsePrice(productCart.price) : ''}
+											</OText>
+										)}
 									</>
 								)}
 							</ProductTitle>
@@ -721,8 +745,10 @@ export const ProductOptionsUI = (props: any) => {
 							<OText
 								size={12}
 								lineHeight={18}
-								style={{ minWidth: 29, textAlign: 'center' }}>
-								{productCart.quantity}
+								style={{ minWidth: 29, textAlign: 'center' }}
+							>
+								{qtyBy?.pieces && productCart.quantity}
+								{qtyBy?.weight_unit && productCart.quantity * product?.weight}
 							</OText>
 							<TouchableOpacity
 								onPress={increment}
@@ -743,6 +769,36 @@ export const ProductOptionsUI = (props: any) => {
 									}
 								/>
 							</TouchableOpacity>
+							<WeightUnitSwitch>
+								<TouchableOpacity
+									onPress={() => handleSwitchQtyUnit('pieces')}
+								>
+									<WeightUnitItem active={qtyBy?.pieces}>
+										<OText
+											size={12}
+											lineHeight={18}
+											color={qtyBy?.pieces ? theme.colors.primary : theme.colors.textNormal}
+										>
+											{t('PIECES', 'pieces')}
+										</OText>
+									</WeightUnitItem>
+								</TouchableOpacity>
+								<View style={{ alignItems: 'flex-start' }}>
+									<TouchableOpacity
+										onPress={() => handleSwitchQtyUnit('weight_unit')}
+									>
+										<WeightUnitItem active={qtyBy?.weight_unit}>
+											<OText
+												size={12}
+												lineHeight={18}
+												color={qtyBy?.weight_unit ? theme.colors.primary : theme.colors.textNormal}
+											>
+												{product?.weight_unit}
+											</OText>
+										</WeightUnitItem>
+									</TouchableOpacity>
+								</View>
+							</WeightUnitSwitch>
 						</View>
 					)}
 					<View
