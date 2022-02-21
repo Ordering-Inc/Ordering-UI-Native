@@ -28,7 +28,6 @@ import { TouchableOpacity } from 'react-native';
 
 const OrderSummaryUI = (props: any) => {
   const {
-    cart,
     changeQuantity,
     getProductMax,
     offsetDisabled,
@@ -76,6 +75,16 @@ const OrderSummaryUI = (props: any) => {
     }
   }
 
+  const cart = orderState?.carts?.[`businessId:${props.cart.business_id}`]
+
+  const walletName: any = {
+    cash: {
+      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
+    },
+    credit_point: {
+      name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
+    }
+  }
 
   return (
     <OSContainer>
@@ -168,6 +177,14 @@ const OrderSummaryUI = (props: any) => {
                   <OText size={12}>{parsePrice(cart?.driver_tip)}</OText>
                 </OSTable>
               )}
+              {cart?.payment_events?.length > 0 && cart?.payment_events?.map((event: any) => (
+                <OSTable key={event.id}>
+                  <OText size={12} numberOfLines={1}>
+                    {walletName[cart?.wallets?.find((wallet: any) => wallet.id === event.wallet_id)?.type]?.name}
+                  </OText>
+                  <OText size={12}>-{parsePrice(event.amount)}</OText>
+                </OSTable>
+              ))}
               {isCouponEnabled && !isCartPending && (
                 <View>
                   <View style={{ paddingVertical: 5 }}>
@@ -185,7 +202,7 @@ const OrderSummaryUI = (props: any) => {
                       {t('TOTAL', 'Total')}
                     </OText>
                     <OText size={14} style={{ fontWeight: 'bold' }} >
-                      {parsePrice(cart?.total)}
+                      {parsePrice(cart?.balance ?? cart?.total)}
                     </OText>
                   </OSTable>
                 </View>
@@ -205,7 +222,8 @@ const OrderSummaryUI = (props: any) => {
                           height: 100,
                           borderColor: theme.colors.border,
                           paddingRight: 50,
-                          marginTop: 10
+                          marginTop: 10,
+                          borderRadius: 8
                         }}
                         multiline
                       />

@@ -12,6 +12,9 @@ import { ProductOption } from '../ProductOption';
 import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import {
+	Grayscale
+} from 'react-native-color-matrix-image-filters'
 
 import { View, TouchableOpacity, StyleSheet, Dimensions, Platform, AppRegistry, I18nManager } from 'react-native';
 
@@ -28,7 +31,9 @@ import {
 	WrapperSubOption,
 	ProductComment,
 	ProductActions,
-	ExtraOptionWrap
+	ExtraOptionWrap,
+	WeightUnitSwitch,
+	WeightUnitItem
 } from './styles';
 import { OButton, OIcon, OInput, OText } from '../shared';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -127,6 +132,9 @@ export const ProductOptionsUI = (props: any) => {
 			height: 32,
 			borderRadius: 16,
 			backgroundColor: 'rgba(208,208,208,0.5)'
+		},
+		unitItem: {
+			fontSize: 12
 		}
 	});
 
@@ -141,6 +149,12 @@ export const ProductOptionsUI = (props: any) => {
 	const { top, bottom } = useSafeAreaInsets();
 	const { height } = useWindowDimensions();
 	const [selOpt, setSelectedOpt] = useState(0);
+	const [isHaveWeight, setIsHaveWeight] = useState(false)
+	const [qtyBy, setQtyBy] = useState({
+		weight_unit: false,
+		pieces: true
+	})
+	const [pricePerWeightUnit, setPricePerWeightUnit] = useState(null)
 
 	const swiperRef: any = useRef(null)
 
@@ -149,8 +163,11 @@ export const ProductOptionsUI = (props: any) => {
 		if (errors[`id:${id}`]) {
 			bgColor = 'rgba(255, 0, 0, 0.05)';
 		}
-		if (isSoldOut || maxProductQuantity <= 0) {
+		if (maxProductQuantity <= 0) {
 			bgColor = 'hsl(0, 0%, 72%)';
+		}
+		if (isSoldOut) {
+			bgColor = theme.colors.white;
 		}
 		return bgColor;
 	};
@@ -193,6 +210,10 @@ export const ProductOptionsUI = (props: any) => {
 		navigation.navigate('Login');
 	};
 
+	const handleSwitchQtyUnit = (val: string) => {
+		setQtyBy({ [val]: true, [!val]: false })
+	}
+
 	useEffect(() => {
 		const productImgList: any = []
 		product?.images && productImgList.push(product.images)
@@ -202,6 +223,11 @@ export const ProductOptionsUI = (props: any) => {
 			}
 		}
 		setGallery(productImgList)
+
+		if (product?.weight && product?.weight_unit) {
+			setIsHaveWeight(true)
+			setPricePerWeightUnit(product?.price / product?.weight)
+		}
 	}, [product])
 
 	const saveErrors =
@@ -316,13 +342,15 @@ export const ProductOptionsUI = (props: any) => {
 												style={styles.slide1}
 												key={i}
 											>
-												<FastImage
-													style={{ height: '100%' }}
-													source={{
-														uri: optimizeImage(img, 'h_258,c_limit'),
-														priority: FastImage.priority.normal,
-													}}
-												/>
+												<Grayscale amount={isSoldOut ? 1 : 0}>
+													<FastImage
+														style={{ height: '100%' }}
+														source={{
+															uri: optimizeImage(img, 'h_258,c_limit'),
+															priority: FastImage.priority.normal,
+														}}
+													/>
+												</Grayscale>
 											</View>
 										))}
 									</Swiper>
@@ -346,17 +374,19 @@ export const ProductOptionsUI = (props: any) => {
 														opacity: index === thumbsSwiper ? 1 : 0.8
 													}}
 												>
-													<OIcon
-														url={img}
-														style={{
-															borderColor: theme.colors.lightGray,
-															borderRadius: 8,
-															minHeight: '100%'
-														}}
-														width={56}
-														height={56}
-														cover
-													/>
+													<Grayscale amount={isSoldOut ? 1 : 0}>
+														<OIcon
+															url={img}
+															style={{
+																borderColor: theme.colors.lightGray,
+																borderRadius: 8,
+																minHeight: '100%'
+															}}
+															width={56}
+															height={56}
+															cover
+														/>
+													</Grayscale>
 												</View>
 											</TouchableOpacity>
 
@@ -416,6 +446,13 @@ export const ProductOptionsUI = (props: any) => {
 												{product?.estimated_person
 													&& <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
 												}
+											</OText>
+										)}
+										{isHaveWeight ? (
+											<OText size={16} lineHeight={24} color={theme.colors.textNormal}>{parsePrice(pricePerWeightUnit)} / {product?.weight_unit}</OText>
+										) : (
+											<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
+												{productCart.price ? parsePrice(productCart.price) : ''}
 											</OText>
 										)}
 									</>
@@ -502,13 +539,7 @@ export const ProductOptionsUI = (props: any) => {
 															{t('INGREDIENTS', 'Ingredients')}
 														</OText>
 													</SectionTitle>
-													<WrapperIngredients
-														style={{
-															backgroundColor:
-																isSoldOut || maxProductQuantity <= 0
-																	? 'hsl(0, 0%, 72%)'
-																	: theme.colors.white,
-														}}>
+													<WrapperIngredients>
 														{product?.ingredients.map((ingredient: any) => (
 															<ProductIngredient
 																key={ingredient.id}
@@ -517,6 +548,7 @@ export const ProductOptionsUI = (props: any) => {
 																	productCart.ingredients[`id:${ingredient.id}`]
 																}
 																onChange={handleChangeIngredientState}
+																isSoldOut={isSoldOut}
 															/>
 														))}
 													</WrapperIngredients>
@@ -554,6 +586,7 @@ export const ProductOptionsUI = (props: any) => {
 																					return (
 																						<ProductOptionSubOption
 																							key={suboption.id}
+																							isSoldOut={isSoldOut}
 																							onChange={
 																								handleChangeSuboptionState
 																							}
@@ -587,13 +620,7 @@ export const ProductOptionsUI = (props: any) => {
 															{t('INGREDIENTS', 'Ingredients')}
 														</OText>
 													</SectionTitle>
-													<WrapperIngredients
-														style={{
-															backgroundColor:
-																isSoldOut || maxProductQuantity <= 0
-																	? 'hsl(0, 0%, 72%)'
-																	: theme.colors.white,
-														}}>
+													<WrapperIngredients>
 														{product?.ingredients.map((ingredient: any) => (
 															<ProductIngredient
 																key={ingredient.id}
@@ -602,6 +629,7 @@ export const ProductOptionsUI = (props: any) => {
 																	productCart.ingredients[`id:${ingredient.id}`]
 																}
 																onChange={handleChangeIngredientState}
+																isSoldOut={isSoldOut}
 															/>
 														))}
 													</WrapperIngredients>
@@ -677,25 +705,27 @@ export const ProductOptionsUI = (props: any) => {
 											)}
 										</>
 									)}
-									<ProductComment>
-										<SectionTitle>
-											<OText size={16} weight={'600'} lineHeight={24}>
-												{t('SPECIAL_COMMENT', 'Special comment')}
-											</OText>
-										</SectionTitle>
-										<OInput
-											multiline
-											placeholder={t('SPECIAL_COMMENT', 'Special comment')}
-											value={productCart.comment}
-											onChange={(val: string) =>
-												handleChangeCommentState({ target: { value: val } })
-											}
-											isDisabled={
-												!(productCart && !isSoldOut && maxProductQuantity)
-											}
-											style={styles.comment}
-										/>
-									</ProductComment>
+									{!product?.hide_special_instructions && (
+										<ProductComment>
+											<SectionTitle>
+												<OText size={16} weight={'600'} lineHeight={24}>
+													{t('SPECIAL_COMMENT', 'Special comment')}
+												</OText>
+											</SectionTitle>
+											<OInput
+												multiline
+												placeholder={t('SPECIAL_COMMENT', 'Special comment')}
+												value={productCart.comment}
+												onChange={(val: string) =>
+													handleChangeCommentState({ target: { value: val } })
+												}
+												isDisabled={
+													!(productCart && !isSoldOut && maxProductQuantity)
+												}
+												style={styles.comment}
+											/>
+										</ProductComment>
+									)}
 								</ProductEditions>
 							)}
 						</WrapContent>
@@ -732,8 +762,10 @@ export const ProductOptionsUI = (props: any) => {
 							<OText
 								size={12}
 								lineHeight={18}
-								style={{ minWidth: 29, textAlign: 'center' }}>
-								{productCart.quantity}
+								style={{ minWidth: 29, textAlign: 'center' }}
+							>
+								{qtyBy?.pieces && productCart.quantity}
+								{qtyBy?.weight_unit && productCart.quantity * product?.weight}
 							</OText>
 							<TouchableOpacity
 								onPress={increment}
@@ -754,6 +786,36 @@ export const ProductOptionsUI = (props: any) => {
 									}
 								/>
 							</TouchableOpacity>
+							<WeightUnitSwitch>
+								<TouchableOpacity
+									onPress={() => handleSwitchQtyUnit('pieces')}
+								>
+									<WeightUnitItem active={qtyBy?.pieces}>
+										<OText
+											size={12}
+											lineHeight={18}
+											color={qtyBy?.pieces ? theme.colors.primary : theme.colors.textNormal}
+										>
+											{t('PIECES', 'pieces')}
+										</OText>
+									</WeightUnitItem>
+								</TouchableOpacity>
+								<View style={{ alignItems: 'flex-start' }}>
+									<TouchableOpacity
+										onPress={() => handleSwitchQtyUnit('weight_unit')}
+									>
+										<WeightUnitItem active={qtyBy?.weight_unit}>
+											<OText
+												size={12}
+												lineHeight={18}
+												color={qtyBy?.weight_unit ? theme.colors.primary : theme.colors.textNormal}
+											>
+												{product?.weight_unit}
+											</OText>
+										</WeightUnitItem>
+									</TouchableOpacity>
+								</View>
+							</WeightUnitSwitch>
 						</View>
 					)}
 					<View

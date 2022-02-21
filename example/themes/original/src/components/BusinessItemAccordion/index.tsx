@@ -9,15 +9,19 @@ import {
 	BIInfo,
 	BIContentInfo,
 	BITotal,
-	BIActions
+	BIActions,
+	PriceContainer
 } from './styles';
-import { OAlert, OIcon, OText } from '../shared';
+import { OAlert, OButton, OIcon, OText } from '../shared';
 
 export const BusinessItemAccordion = (props: any) => {
 	const {
 		cart,
 		moment,
-		handleClearProducts
+		singleBusiness,
+		handleClearProducts,
+		handleClickCheckout,
+		checkoutButtonDisabled
 	} = props
 
 	const [orderState] = useOrder();
@@ -29,7 +33,7 @@ export const BusinessItemAccordion = (props: any) => {
 	const isClosed = !cart?.valid_schedule
 	const isProducts = cart?.products?.length
 
-	const [isActive, setActiveState] = useState(false)
+	const [isActive, setActiveState] = useState(!!singleBusiness)
 
 	useEffect(() => {
 		const cartsArray = Object.values(orderState?.carts)
@@ -40,7 +44,7 @@ export const BusinessItemAccordion = (props: any) => {
 	}, [orderState?.carts])
 
 	return (
-		<BIContainer isClosed={isClosed}>
+		<BIContainer isClosed={isClosed} checkoutVisible={!isActive && !isClosed && !!isProducts && !checkoutButtonDisabled}>
 			<BIHeader
 				isClosed={isClosed}
 				onPress={() => !isClosed ? setActiveState(!isActive) : isClosed}
@@ -70,37 +74,39 @@ export const BusinessItemAccordion = (props: any) => {
 							{props.onNavigationRedirect && !isClosed && (
 								<>
 									<TouchableOpacity onPress={() => props.onNavigationRedirect('Business', { store: cart?.business?.slug })}>
-										<OText color={theme.colors.textSecondary} size={12} lineHeight={18} style={{ textDecorationLine: 'underline' }}>{t('GO_TO_STORE', 'Go to store')}</OText>
+										<OText color={theme.colors.primary} size={12} lineHeight={18} style={{ textDecorationLine: 'underline' }}>{t('GO_TO_STORE', 'Go to store')}</OText>
 									</TouchableOpacity>
-									<OText color={theme.colors.textSecondary}>{' \u2022 '}</OText>
 								</>
 							)}
 							{!isCartPending && !isClosed && (
-								<OAlert
-									title={t('DELETE_CART', 'Delete Cart')}
-									message={t('QUESTION_DELETE_CART', 'Are you sure to you wants delete the selected cart')}
-									onAccept={() => handleClearProducts()}
-								>
-									<OText size={12} lineHeight={18} color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>{t('CLEAR_CART', 'Clear cart')}</OText>
-								</OAlert>
+								<>
+									<OText color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+									<OAlert
+										title={t('DELETE_CART', 'Delete Cart')}
+										message={t('QUESTION_DELETE_CART', 'Are you sure to you wants delete the selected cart')}
+										onAccept={() => handleClearProducts()}
+									>
+										<OText size={12} lineHeight={18} color={theme.colors.primary} style={{ textDecorationLine: 'underline' }}>{t('CLEAR_CART', 'Clear cart')}</OText>
+									</OAlert>
+								</>
 							)}
-              {props.handleChangeStore && (
-                <>
-                  <OText color={theme.colors.textSecondary}>{' \u2022 '}</OText>
-                  <TouchableOpacity
-                    onPress={props.handleChangeStore}
-                  >
-                    <OText
-                      size={12}
-                      lineHeight={18}
-                      color={theme.colors.textSecondary}
-                      style={{ textDecorationLine: 'underline' }}
-                    >
-                      {t('CHANGE_STORE', 'Change store')}
-                    </OText>
-                  </TouchableOpacity>
-                </>
-              )}
+							{props.handleChangeStore && (
+								<>
+									<OText color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+									<TouchableOpacity
+										onPress={props.handleChangeStore}
+									>
+										<OText
+											size={12}
+											lineHeight={18}
+											color={theme.colors.textSecondary}
+											style={{ textDecorationLine: 'underline' }}
+										>
+											{t('CHANGE_STORE', 'Change store')}
+										</OText>
+									</TouchableOpacity>
+								</>
+							)}
 						</View>
 					</BIContentInfo>
 				</BIInfo>
@@ -133,6 +139,19 @@ export const BusinessItemAccordion = (props: any) => {
 					)}
 				</BIActions>
 			</BIHeader>
+			{!isActive && !isClosed && !!isProducts && !checkoutButtonDisabled && (
+				<PriceContainer>
+					<OText>{parsePrice(cart?.total)}</OText>
+					<OButton
+						onClick={handleClickCheckout}
+						textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+						style={{ width: 160, flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
+						text={t('CHECKOUT', 'Checkout')}
+						bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
+						borderColor={theme.colors.primary}
+					/>
+				</PriceContainer>
+			)}
 
 			<BIContent style={{ display: isActive ? 'flex' : 'none' }}>
 				{props.children}

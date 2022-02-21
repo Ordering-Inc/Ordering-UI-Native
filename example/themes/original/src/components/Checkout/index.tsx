@@ -23,6 +23,7 @@ import { PaymentOptions } from '../PaymentOptions';
 import { DriverTips } from '../DriverTips';
 import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
+import { PaymentOptionWallet } from '../PaymentOptionWallet';
 
 import {
 	ChContainer,
@@ -37,7 +38,8 @@ import {
 	ChUserDetails,
 	ChCart,
 	DeliveryOptionsContainer,
-	DeliveryOptionItem
+	DeliveryOptionItem,
+  WalletPaymentOptionContainer
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
@@ -135,7 +137,7 @@ const CheckoutUI = (props: any) => {
 
 	const deliveryOptions = instructionsOptions?.result && instructionsOptions?.result?.filter((option: any) => option?.enabled)?.map((option: any) => {
 		return {
-			value: option?.id, key: option?.id, label: option?.name
+			value: option?.id, key: option?.id, label: t(option?.name.toUpperCase().replace(/\s/g, '_'), option?.name) 
 		}
 	})
 
@@ -504,6 +506,15 @@ const CheckoutUI = (props: any) => {
 						</ChSection>
 					)}
 
+          {!cartState.loading && cart && (
+            <WalletPaymentOptionContainer>
+              <PaymentOptionWallet
+                cart={cart}
+              />
+            </WalletPaymentOptionContainer>
+          )}
+
+
 					{!cartState.loading && cart && (
 						<ChSection>
 							<ChCart>
@@ -543,8 +554,8 @@ const CheckoutUI = (props: any) => {
 					)}
 
 					{!cartState.loading && cart && (
-						<ChSection style={{ paddingTop: 0, paddingBottom: 20, paddingHorizontal: 20 }}>
-							<ChErrors>
+            <View>
+							<ChErrors style={{ marginBottom: 0 }}>
 								{!cart?.valid_address && cart?.status !== 2 && (
 									<OText
 										color={theme.colors.error}
@@ -572,7 +583,7 @@ const CheckoutUI = (props: any) => {
 									</OText>
 								)}
 							</ChErrors>
-						</ChSection>
+						</View>
 					)}
 					<OModal
 						open={openChangeStore && props.isFranchiseApp}

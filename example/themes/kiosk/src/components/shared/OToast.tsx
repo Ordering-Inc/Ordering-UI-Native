@@ -27,7 +27,7 @@ export const Toast: React.FC = () => {
       duration: fadeDuration,
       useNativeDriver: true,
     }).start(() => {
-      hideToast();
+      hideToast && hideToast();
     });
   }, [opacity, hideToast]);
 

@@ -235,19 +235,21 @@ export const ProductOptionsUI = (props: any) => {
 											</React.Fragment>
 										)
 									}))}
-									<ProductComment>
-										<SectionTitle>
-											<OText style={theme.labels.middle}>{t('SPECIAL_COMMENT', 'Special comment')}</OText>
-										</SectionTitle>
-										<OInput
-											multiline
-											placeholder={t('SPECIAL_COMMENT', 'Special comment')}
-											value={productCart.comment}
-											onChange={(val: string) => handleChangeCommentState({ target: { value: val } })}
-											isDisabled={!(productCart && !isSoldOut && maxProductQuantity)}
-											style={{ ...styles.comment, borderColor: theme.colors.border }}
-										/>
-									</ProductComment>
+									{!product?.hide_special_instructions && (
+										<ProductComment>
+											<SectionTitle>
+												<OText style={theme.labels.middle}>{t('SPECIAL_COMMENT', 'Special comment')}</OText>
+											</SectionTitle>
+											<OInput
+												multiline
+												placeholder={t('SPECIAL_COMMENT', 'Special comment')}
+												value={productCart.comment}
+												onChange={(val: string) => handleChangeCommentState({ target: { value: val } })}
+												isDisabled={!(productCart && !isSoldOut && maxProductQuantity)}
+												style={{ ...styles.comment, borderColor: theme.colors.border }}
+											/>
+										</ProductComment>
+									)}
 								</ProductEditions>
 							)}
 						</WrapContent>

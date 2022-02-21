@@ -30,6 +30,7 @@ export const CartContent = (props: any) => {
 							{cart.products.length > 0 && (
 								<>
 									<Cart
+                    singleBusiness={props.singleBusiness}
                     isFranchiseApp={props.isFranchiseApp}
 										cart={cart}
                     cartuuid={cart.uuid}

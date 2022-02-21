@@ -129,6 +129,7 @@ export interface BusinessesListingParams {
 	businessTypes?: any;
 	defaultBusinessType?: any;
 	franchiseId?: any;
+	businessId?: any;
 }
 export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
@@ -344,8 +345,8 @@ export interface MessagesParams {
 	onClose?: () => void,
 	isMeesageListing?: boolean,
 	setCanRead?: any,
-	business: boolean,
-	driver: boolean,
+	business?: boolean,
+	driver?: boolean,
 	onMessages?: any
 }
 export interface ViewInterface {
@@ -455,6 +456,7 @@ export interface GoogleMapsParams {
 
 export interface HelpParams {
 	navigation: any;
+	businessId?: any;
 }
 
 export interface LastOrdersParams {
