@@ -78,3 +78,15 @@ export const ProductActions = styled.View`
 export const ExtraOptionWrap = styled.ScrollView`
 	margin-horizontal: -40px;
 `;
+
+export const WeightUnitSwitch = styled.View`
+  margin-left: 10px;
+`
+export const WeightUnitItem = styled.View`
+  padding: 1px 5px;
+  border-radius: 4px;
+  
+  ${({ active }: any) => active && css`
+    background-color: ${(props: any) => props.theme.colors.primary}20;
+  `}
+`
