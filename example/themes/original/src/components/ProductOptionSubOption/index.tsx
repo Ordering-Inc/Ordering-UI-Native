@@ -73,7 +73,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 				</OText>
 			</IconControl>
 			{showMessage && <OText size={10} mLeft={4} mRight={4} style={{ flex: 1, textAlign: 'center' }} color={theme.colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
-			{option?.allow_suboption_quantity && (
+			{option?.allow_suboption_quantity && state?.selected && (
 				<QuantityControl>
 					<Checkbox disabled={disabled || state.quantity === 0} onPress={decrement}>
 						<OIcon
@@ -94,7 +94,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 					</Checkbox>
 				</QuantityControl>
 			)}
-			{option?.with_half_option && (
+			{option?.with_half_option && state?.selected && (
 				<PositionControl>
 					<Circle disabled={disabled} onPress={() => changePosition('left')}>
 						<OIcon
