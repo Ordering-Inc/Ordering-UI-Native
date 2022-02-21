@@ -351,17 +351,17 @@ export const ProductOptionsUI = (props: any) => {
 									>
 										{gallery.length > 0 && gallery.map((img, i) => (
 											<View
-												style={styles.slide1}
-												key={i}
-											>
-												<FastImage
-													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
-													source={{
-														uri: optimizeImage(img, 'h_258,c_limit'),
-														priority: FastImage.priority.normal,
-													}}
-												/>
-											</View>
+                        style={styles.slide1}
+                        key={i}
+                      >
+                        <FastImage
+                          style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
+                          source={{
+                            uri: optimizeImage(img, 'h_258,c_limit'),
+                            priority: FastImage.priority.normal,
+                          }}
+                        />
+                      </View>
 										))}
 									</Swiper>
 									<ScrollView
