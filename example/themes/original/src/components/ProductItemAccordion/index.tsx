@@ -212,8 +212,8 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 				</View>
 				{((isCartProduct && !isCartPending && product?.valid_menu && !product?.valid_quantity) ||
 					(!product?.valid_menu && isCartProduct && !isCartPending)) && (
-						<View style={{ alignItems: 'flex-end', width: '100%' }}>
-							<OText size={14} color={theme.colors.red} style={{ textAlign: 'right', bottom: 20 }}>
+						<View style={{ alignItems: 'flex-end', width: '100%', }}>
+							<OText size={14} color={theme.colors.red} style={{ textAlign: 'right', marginTop: 5 }}>
 								{t('NOT_AVAILABLE', 'Not available')}
 							</OText>
 						</View>

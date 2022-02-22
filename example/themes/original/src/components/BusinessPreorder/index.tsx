@@ -82,7 +82,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
       paddingBottom: 15,
       borderBottomWidth: 1,
       borderColor: theme.colors.backgroundGray200,
-      height: 90
+      height: 100
     },
     calendarHeaderContainer: {
       flex: 1,
@@ -400,6 +400,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
                 iconStyle={{borderWidth: 1}}
                 selectedDate={selectDate}
                 datesWhitelist={datesWhitelist}
+                dayContainerStyle={{height: 40}}
                 disabledDateNameStyle={styles.disabledDateName}
                 disabledDateNumberStyle={styles.disabledDateNumber}
                 disabledDateOpacity={0.6}

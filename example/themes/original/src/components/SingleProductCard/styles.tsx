@@ -24,4 +24,6 @@ export const SoldOut = styled.View`
 
 export const QuantityContainer = styled.View`
   background: ${({ theme } : any) => theme.colors.primary};
+  align-items: center;
+  justify-content: center;
 `
