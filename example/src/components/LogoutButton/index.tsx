@@ -5,6 +5,7 @@ import { _retrieveStoreData, _clearStoreData } from '../../providers/StoreUtil';
 
 import { OIcon, OText } from '../shared';
 import { useTheme } from 'styled-components/native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const LogoutButtonUI = (props: any) => {
   const { handleLogoutClick, formState } = props
@@ -18,6 +19,19 @@ const LogoutButtonUI = (props: any) => {
     const res = await handleLogoutClick(data);
     if (res) {
       _clearStoreData({ excludedKeys: ['isTutorial'] })
+    }
+    logoutWithGoogle()
+  }
+
+  const logoutWithGoogle = async () => {
+    const isSignedIn = await GoogleSignin.isSignedIn()
+    if (isSignedIn) {
+      try {
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+      } catch (error: any) {
+        showToast(ToastType.Error, error.message)
+      }
     }
   }
 
