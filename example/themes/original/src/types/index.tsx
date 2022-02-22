@@ -221,7 +221,7 @@ export interface SingleProductCardParams {
 	product: any;
 	isSoldOut: boolean;
 	onProductClick: any;
-	productAddedToCart?: any
+	productAddedToCartLength: number
 }
 export interface BusinessInformationParams {
 	navigation?: any,

@@ -44,7 +44,7 @@ const DriverTipsUI = (props: any) => {
 			borderWidth: 1,
 			borderColor: theme.colors.inputDisabled,
 			marginRight: 10,
-			height: 44
+			height: 50
 		}
 	})
 
@@ -63,7 +63,7 @@ const DriverTipsUI = (props: any) => {
 	return (
 		<DTContainer>
 			<DTWrapperTips>
-				{driverTipsOptions.map((option: any, i: number) => (
+				{driverTipsOptions.map((option: any, i: number) => (					
 					<TouchableOpacity
 						key={i}
 						onPress={() => handlerChangeOption(option)}
@@ -72,7 +72,7 @@ const DriverTipsUI = (props: any) => {
 							style={style.circle}
 							isActive={option === optionSelected}
 						>
-							<OText size={13} color={option === optionSelected ? '#FFF' : theme.colors.textSecondary}>
+							<OText size={12} numberOfLines={1} color={option === optionSelected ? '#FFF' : theme.colors.textSecondary}>
 								{`${isFixedPrice ? parsePrice(option) : `${option}%`}`}
 							</OText>
 						</DTCard>
