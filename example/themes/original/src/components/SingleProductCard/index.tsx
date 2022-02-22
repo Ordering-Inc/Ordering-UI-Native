@@ -90,7 +90,6 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 		maxCartProductConfig,
 		maxCartProductInventory,
 	);
-		console.log(productAddedToCartLength)
 	return (
 		<CardContainer
 			style={[

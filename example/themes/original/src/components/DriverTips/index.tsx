@@ -63,7 +63,7 @@ const DriverTipsUI = (props: any) => {
 	return (
 		<DTContainer>
 			<DTWrapperTips>
-				{driverTipsOptions.map((option: any, i: number) => (					
+				{driverTipsOptions.map((option: any, i: number) => (				
 					<TouchableOpacity
 						key={i}
 						onPress={() => handlerChangeOption(option)}
