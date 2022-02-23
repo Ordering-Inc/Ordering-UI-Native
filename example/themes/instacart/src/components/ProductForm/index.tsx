@@ -59,7 +59,7 @@ export const ProductOptionsUI = (props: any) => {
 
 	const theme = useTheme();
 
-	const [{ parsePrice }] = useUtils()
+	const [{ optimizeImage, parsePrice }] = useUtils()
 	const [, t] = useLanguage()
 	const [orderState] = useOrder()
 	const [{ auth }] = useSession()
@@ -162,6 +162,31 @@ export const ProductOptionsUI = (props: any) => {
 									<OText mBottom={7} style={{ ...theme.labels.small }} color={theme.colors.textSecondary}>{product?.description?.trim() || productCart?.description?.trim()}</OText>
 								</ProductDescription>
 							)}
+							<ScrollView
+								horizontal
+								showsHorizontalScrollIndicator={false}
+								contentContainerStyle={{ paddingBottom: 20 }}
+							>
+								{product?.tags?.map((tag: any) => (
+									<View
+										key={tag.id}
+										style={styles.productTagWrapper}
+									>
+										{tag?.image ? (
+											<OIcon
+												url={optimizeImage(tag?.image, 'h_40,c_limit')}
+												style={styles.productTagImageStyle}
+											/>
+										) : (
+											<OIcon
+												src={theme.images?.dummies?.product}
+												style={styles.productTagImageStyle}
+											/>
+										)}
+										<OText color={theme.colors.textSecondary} style={{ ...styles.productTagNameStyle, ...theme.labels.small}}>{tag.name}</OText>
+									</View>
+								))}
+							</ScrollView>
 							<View style={{ height: 16, backgroundColor: theme.colors.secundary, marginHorizontal: -40, marginBottom: 20 }} />
 							{loading && !product ? (
 								<>
@@ -392,6 +417,20 @@ const styles = StyleSheet.create({
 		paddingStart: 4,
 		paddingEnd: 4,
 		borderWidth: 1
+	},
+	productTagWrapper: {
+		flexDirection: 'row',
+		alignItems: 'center'
+	  },
+	productTagImageStyle: {
+		width: 32,
+		height: 32,
+		borderRadius: 8,
+		resizeMode: 'cover'
+	},
+	productTagNameStyle: {
+		paddingHorizontal: 6,
+		marginRight: 5
 	}
 })
 
