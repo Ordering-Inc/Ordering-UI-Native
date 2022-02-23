@@ -11,7 +11,8 @@ export const FacebookLogin = (props: any) => {
 	const {
 		handleErrors,
 		handleLoading,
-		handleSuccessFacebookLogin
+		handleSuccessFacebookLogin,
+		notificationState
 	} = props
 
 	const [, t] = useLanguage()
@@ -30,7 +31,14 @@ export const FacebookLogin = (props: any) => {
 
 	const handleLoginClick = async (accessToken: string) => {
 		try {
-			const response = await ordering.users().authFacebook({ access_token: accessToken })
+			const body: any = {
+				access_token: accessToken
+			  }
+			  if (notificationState?.notification_token) {
+				body.notification_token = notificationState.notification_token
+				body.notification_app = notificationState.notification_app
+			  }
+			const response = await ordering.users().authFacebook(body)
 			if (!response.content.error) {
 				if (handleSuccessFacebookLogin) {
 					handleSuccessFacebookLogin(response.content.result)
@@ -38,9 +46,10 @@ export const FacebookLogin = (props: any) => {
 				}
 			} else {
 				handleLoading && handleLoading(false)
+				handleErrors && handleErrors(response.content.result)
 				logoutWithFacebook()
 			}
-		} catch (err) {
+		} catch (err: any) {
 			handleLoading && handleLoading(false)
 			handleErrors && handleErrors(err.message)
 		}
@@ -48,7 +57,7 @@ export const FacebookLogin = (props: any) => {
 
 	const loginWithFacebook = () => {
 		handleLoading && handleLoading(true)
-		LoginManager && LoginManager.logInWithPermissions(['public_profile']).then(
+		LoginManager && LoginManager.logInWithPermissions(['public_profile', 'email']).then(
 			(login: any) => {
 				if (login.isCancelled) {
 					const err = t('LOGIN_WITH_FACEBOOK_CANCELLED', 'Login cancelled')
@@ -58,6 +67,9 @@ export const FacebookLogin = (props: any) => {
 					AccessToken.getCurrentAccessToken().then((data: any) => {
 						const accessToken = data.accessToken.toString();
 						handleLoginClick(accessToken)
+					}).catch((err : any) => {
+						handleErrors && handleErrors(err.message)
+						handleLoading && handleLoading(false)
 					});
 				}
 			},
@@ -68,7 +80,10 @@ export const FacebookLogin = (props: any) => {
 				handleLoading && handleLoading(false)
 				handleErrors && handleErrors(err)
 			},
-		);
+		).catch((err : any) => {
+			handleErrors && handleErrors(err.message)
+			handleLoading && handleLoading(false)
+		});
 	};
 
 	const onPressButton = auth
