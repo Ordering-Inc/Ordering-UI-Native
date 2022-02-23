@@ -40,7 +40,7 @@ export const ProductTitle = styled.View`
 
 export const ProductDescription = styled.View`
   margin-top: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 `
 
 export const ProductEditions = styled.View`

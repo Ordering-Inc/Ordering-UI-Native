@@ -65,9 +65,9 @@ const PaymentOptionWalletUI = (props: any) => {
   };
 
   useEffect(() => {
-    if (!walletsState.loading) {
+    if (!walletsState.loading && walletsState.result?.length) {
       setCheckedState(
-        walletsState.result.map((wallet: any) => {
+        walletsState.result?.map((wallet: any) => {
           return !!cart?.wallets?.find((w: any) => w.id === wallet.id)
         })
       )
@@ -101,7 +101,7 @@ const PaymentOptionWalletUI = (props: any) => {
                   onTintColor={theme.colors.primary}
                   style={Platform.OS === 'ios' && styles.checkBoxStyle}
                 />
-                <View style={{ alignItems: 'baseline' }}>
+                <View style={{ alignItems: 'baseline', marginLeft: 5 }}>
                   <View>
                     <OText
                       style={((cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0) ?{
@@ -114,7 +114,7 @@ const PaymentOptionWalletUI = (props: any) => {
               </View>
               </SectionLeft>
 
-              <View style={{maxWidth: '40%', alignItems: 'flex-end' }}>
+              <View style={{maxWidth: '35%', alignItems: 'flex-end' }}>
                 {wallet.type === 'cash' && (
                   <OText>
                     {parsePrice(wallet?.balance)}

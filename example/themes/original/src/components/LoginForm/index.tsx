@@ -436,59 +436,60 @@ const LoginFormUI = (props: LoginParams) => {
 						</>
 					)}
 
-				<View
-					style={{
-						flexDirection: 'row',
-						width: '100%',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						marginVertical: 15
-					}}>
-					<View style={loginStyle.line} />
-					<OText
-						size={14}
-						mBottom={10}
-						style={{ paddingHorizontal: 19 }}
-						color={theme.colors.disabled}>
-						{t('OR', 'or')}
-					</OText>
-					<View style={loginStyle.line} />
-				</View>
-
 				{configs && Object.keys(configs).length > 0 ? (
           (((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
           (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
           (
-						<ButtonsWrapper>
-							<SocialButtons>
-								{(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
-                  configs?.facebook_id?.value && (
-									<FacebookLogin
-										notificationState={notificationState}
-										handleErrors={(err: any) => showToast(ToastType.Error, err)}
-										handleLoading={(val: boolean) => setIsFBLoading(val)}
-										handleSuccessFacebookLogin={handleSuccessFacebook}
-									/>
-								)}
-                {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
-									<GoogleLogin
-										notificationState={notificationState}
-										webClientId={configs?.google_login_client_id?.value}
-										handleErrors={(err: any) => showToast(ToastType.Error, err)}
-										handleLoading={(val: boolean) => setIsFBLoading(val)}
-										handleSuccessGoogleLogin={handleSuccessFacebook}
-									/>
-								)}
-                {(configs?.apple_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
-									<AppleLogin
-										notificationState={notificationState}
-										handleErrors={(err: any) => showToast(ToastType.Error, err)}
-										handleLoading={(val: boolean) => setIsFBLoading(val)}
-										handleSuccessAppleLogin={handleSuccessFacebook}
-									/>
-								)}
-							</SocialButtons>
-						</ButtonsWrapper>
+            <>
+            	<View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginVertical: 15
+                }}>
+                <View style={loginStyle.line} />
+                <OText
+                  size={14}
+                  mBottom={10}
+                  style={{ paddingHorizontal: 19 }}
+                  color={theme.colors.disabled}>
+                  {t('OR', 'or')}
+                </OText>
+                <View style={loginStyle.line} />
+              </View>
+              <ButtonsWrapper>
+                <SocialButtons>
+                  {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
+                    configs?.facebook_id?.value && (
+                    <FacebookLogin
+                      notificationState={notificationState}
+                      handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                      handleLoading={(val: boolean) => setIsFBLoading(val)}
+                      handleSuccessFacebookLogin={handleSuccessFacebook}
+                    />
+                  )}
+                  {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+                    <GoogleLogin
+                      notificationState={notificationState}
+                      webClientId={configs?.google_login_client_id?.value}
+                      handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                      handleLoading={(val: boolean) => setIsFBLoading(val)}
+                      handleSuccessGoogleLogin={handleSuccessFacebook}
+                    />
+                  )}
+                  {(configs?.apple_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+                    <AppleLogin
+                      notificationState={notificationState}
+                      handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                      handleLoading={(val: boolean) => setIsFBLoading(val)}
+                      handleSuccessAppleLogin={handleSuccessFacebook}
+                    />
+                  )}
+                </SocialButtons>
+              </ButtonsWrapper>
+            </>
 					)
 				) : (
 					<SkeletonWrapper>

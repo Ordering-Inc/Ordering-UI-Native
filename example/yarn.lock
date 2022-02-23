@@ -832,7 +832,7 @@
     xcode "^3.0.1"
     xml2js "^0.4.23"
 
-"@expo/config-plugins@^4.0.3":
+"@expo/config-plugins@^4.0.3", "@expo/config-plugins@^4.0.4":
   version "4.0.18"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-4.0.18.tgz#80cf6a3aed83e78f714ad097d80e5a7cca48591a"
   integrity sha512-tW4bnrnKhn+PPHF8wf1KAoubICAVUHW8CcagvyFqaRIzeh6yavMIOsQShxOVTbgx7LzSyymZ1nEs45yCGAiMfA==
@@ -7567,10 +7567,13 @@ react-native-fast-image@^8.3.3:
   resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.5.11.tgz#e3dc969d0e4e8df026646bf18194465aa55cbc2b"
   integrity sha512-cNW4bIJg3nvKaheG8vGMfqCt5LMWX9MS5+wMudgKIHbGO51spRr4sgnlhVgwHLcZ5aeNOVJ8CPRxDIWKRq/0QA==
 
-react-native-fbsdk-next@^7.0.1:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-fbsdk-next/-/react-native-fbsdk-next-7.0.1.tgz#ebd5b540e9003831c332d9f718c3b0dee31e3313"
-  integrity sha512-pMOIP0HTgz2EjliGQB15SH87I3PaCXRUCWf4XAv4qb+8h/t6fRaZMf4WEEgPAWjzfYQh0eO1qZZu2qjlZKi8ag==
+react-native-fbsdk-next@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk-next/-/react-native-fbsdk-next-7.3.0.tgz#7a7ed5695d7ccd25e89a7869731eb3792ea99c9f"
+  integrity sha512-su795gh3opQv67uLQWOTIwZumgjfMe11mQbH/jSJl8Oid3+mec8Zn/z2hBhZyWub+NJ50GGTm8xSJnxjKnp0qA==
+  dependencies:
+    "@expo/config-plugins" "^4.0.4"
+    xml2js "^0.4.23"
 
 react-native-flip-card@^3.4.1:
   version "3.5.6"

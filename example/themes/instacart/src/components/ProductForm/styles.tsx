@@ -38,7 +38,7 @@ export const ProductTitle = styled.View`
 `
 
 export const ProductDescription = styled.View`
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 `
 
 export const ProductEditions = styled.View`
