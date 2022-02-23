@@ -27,7 +27,7 @@ import {
   ProductComment,
   ProductActions
 } from './styles'
-import { OButton, OInput, OText } from '../shared'
+import { OButton, OIcon, OInput, OText } from '../shared'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
 import { Placeholder,PlaceholderLine,Fade } from 'rn-placeholder'
@@ -58,7 +58,7 @@ export const ProductOptionsUI = (props: any) => {
 
   const theme = useTheme();
 
-  const [{ parsePrice }] = useUtils()
+  const [{ optimizeImage, parsePrice }] = useUtils()
   const [, t] = useLanguage()
   const [orderState] = useOrder()
   const [{ auth }] = useSession()
@@ -165,6 +165,31 @@ export const ProductOptionsUI = (props: any) => {
               <ProductDescription>
                 <OText>{product?.description || productCart?.description}</OText>
               </ProductDescription>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 20 }}
+              >
+                {product?.tags?.map((tag: any) => (
+                  <View
+                    key={tag.id}
+                    style={styles.productTagWrapper}
+                  >
+                    {tag?.image ? (
+                      <OIcon
+                        url={optimizeImage(tag?.image, 'h_40,c_limit')}
+                        style={styles.productTagImageStyle}
+                      />
+                    ) : (
+                      <OIcon
+                        src={theme.images?.dummies?.product}
+                        style={styles.productTagImageStyle}
+                      />
+                    )}
+                    <OText size={14} style={styles.productTagNameStyle}>{tag.name}</OText>
+                  </View>
+                ))}
+              </ScrollView>
               {loading && !product ? (
                 <>
                   {[...Array(2)].map((item, i) => (
@@ -391,6 +416,20 @@ const styles = StyleSheet.create({
   },
   caloriesStyle: {
     color: '#808080'
+  },
+  productTagWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  productTagImageStyle: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    resizeMode: 'cover'
+  },
+  productTagNameStyle: {
+    paddingHorizontal: 6,
+    marginRight: 5
   }
 })
 
