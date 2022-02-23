@@ -76,6 +76,7 @@ export const ChCart = styled(ChPaymethods)``
 
 export const WalletPaymentOptionContainer = styled(ChPaymethods)`
   padding-bottom: 0;
+  margin-left: -20px;
 `
 
 export const ChPlaceOrderBtn = styled.View`

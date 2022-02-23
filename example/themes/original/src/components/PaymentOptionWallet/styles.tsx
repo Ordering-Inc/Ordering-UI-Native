@@ -17,6 +17,7 @@ export const Container = styled.View`
 `
 
 export const SectionLeft = styled.View`
+  margin-left: 20px;
   max-width: 55%;
   display: flex;
   flex-direction: row;
