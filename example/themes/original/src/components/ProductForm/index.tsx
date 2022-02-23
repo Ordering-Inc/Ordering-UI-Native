@@ -135,6 +135,20 @@ export const ProductOptionsUI = (props: any) => {
 		},
 		unitItem: {
 			fontSize: 12
+		},
+		productTagWrapper: {
+			flexDirection: 'row',
+			alignItems: 'center'
+		},
+		productTagImageStyle: {
+			width: 32,
+			height: 32,
+			borderRadius: 8,
+			resizeMode: 'cover'
+		},
+		productTagNameStyle: {
+			paddingHorizontal: 6,
+			marginRight: 5
 		}
 	});
 
@@ -461,6 +475,31 @@ export const ProductOptionsUI = (props: any) => {
 									{product?.description || productCart?.description}
 								</OText>
 							</ProductDescription>
+							<ScrollView
+								horizontal
+								showsHorizontalScrollIndicator={false}
+								contentContainerStyle={{ paddingBottom: 30 }}
+							>
+								{product?.tags?.map((tag: any) => (
+									<View
+										key={tag.id}
+										style={styles.productTagWrapper}
+									>
+										{tag?.image ? (
+											<OIcon
+												url={optimizeImage(tag?.image, 'h_40,c_limit')}
+												style={styles.productTagImageStyle}
+											/>
+										) : (
+											<OIcon
+												src={theme.images?.dummies?.product}
+												style={styles.productTagImageStyle}
+											/>
+										)}
+										<OText color={theme.colors.textSecondary} size={12} style={styles.productTagNameStyle}>{tag.name}</OText>
+									</View>
+								))}
+							</ScrollView>
 							{loading && !product ? (
 								<>
 									{[...Array(2)].map((item, i) => (
