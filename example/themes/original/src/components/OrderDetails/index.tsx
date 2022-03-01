@@ -602,7 +602,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText size={16} style={{ textAlign: 'left' }} color={theme.colors.textNormal}>
                     {t('DELIVERY_PREFERENCE', 'Delivery Preference')}
                   </OText>
-                  <OText size={12} style={{ textAlign: 'left' }} color={theme.colors.textNormal}>{order?.delivery_option?.name ?? t('EITHER_WAY', 'Either way')}</OText>
+                  <OText size={12} style={{ textAlign: 'left' }} color={theme.colors.textNormal}>
+                    {order?.delivery_option?.name ? t(order?.delivery_option?.name.toUpperCase().replace(/\s/g, '_')) : t('EITHER_WAY', 'Either way')}
+                  </OText>
                 </View>
               )}
               {order?.comment && (
