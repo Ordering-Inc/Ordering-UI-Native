@@ -580,6 +580,7 @@ const CheckoutUI = (props: any) => {
                       cart={cart}
                       isCartPending={cart?.status === 2}
                       isFromCheckout
+                      onNavigationRedirect={onNavigationRedirect}
                     />
                   </>
                 )}
