@@ -546,6 +546,7 @@ const CheckoutUI = (props: any) => {
 										<OrderSummary
 											cart={cart}
 											isCartPending={cart?.status === 2}
+                      onNavigationRedirect={onNavigationRedirect}
 										/>
 									</>
 								)}

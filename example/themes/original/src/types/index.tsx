@@ -438,6 +438,10 @@ export interface UpsellingProductsParams {
 	cart?: any;
 	handleCloseUpsellingPage: () => void;
 	isFromCart?: boolean;
+	isPage?: boolean;
+	products?: any;
+	onNavigationRedirect?: any;
+	onGoBack?: any;
 }
 
 export interface GoogleMapsParams {
