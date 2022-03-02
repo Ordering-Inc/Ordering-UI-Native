@@ -152,8 +152,8 @@ const CheckoutUI = (props: any) => {
 
   const deliveryOptions = instructionsOptions?.result && instructionsOptions?.result?.filter((option: any) => option?.enabled)?.map((option: any) => {
     return {
-			value: option?.id, key: option?.id, label: t(option?.name.toUpperCase().replace(/\s/g, '_'), option?.name) 
-		}
+      value: option?.id, key: option?.id, label: t(option?.name.toUpperCase().replace(/\s/g, '_'), option?.name)
+    }
   })
 
   const handlePlaceOrder = () => {
@@ -241,7 +241,7 @@ const CheckoutUI = (props: any) => {
     setShowGateway({ open: false, closedByUser: true })
   }
 
-  const changeDeliveryOption = (option : any) => {
+  const changeDeliveryOption = (option: any) => {
     handleChangeDeliveryOption(option)
     setIsDeliveryOptionModalVisible(false)
   }
@@ -766,6 +766,7 @@ const CheckoutUI = (props: any) => {
                     amount: cart?.total,
                     delivery_zone_id: cart?.delivery_zone_id,
                     user_id: user?.id,
+                    user_name: user?.name
                   },
                   currency: configs?.stripe_currency?.value || currency,
                   userToken: token,
