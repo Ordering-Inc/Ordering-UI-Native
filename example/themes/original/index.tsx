@@ -30,6 +30,8 @@ import { NotFoundSource } from './src/components/NotFoundSource';
 import { OrderTypeSelector } from './src/components/OrderTypeSelector';
 import { Wallets } from './src/components/Wallets';
 import { PaymentOptionWallet } from './src/components/PaymentOptionWallet';
+import { ProductForm } from './src/components/ProductForm';
+import { UpsellingProducts } from './src/components/UpsellingProducts';
 
 import { Toast } from './src/components/shared/OToast';
 import {
@@ -90,6 +92,8 @@ export {
 	OrderTypeSelector,
   Wallets,
   PaymentOptionWallet,
+  ProductForm,
+  UpsellingProducts,
 
 	// OComponents
 	Toast,

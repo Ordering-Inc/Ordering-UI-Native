@@ -17,7 +17,6 @@ import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
 import { OButton, OInput, OModal, OText } from '../shared';
-import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
@@ -35,10 +34,9 @@ const CartUI = (props: any) => {
     removeProduct,
     handleCartOpen,
     setIsCartsLoading,
-    hideUpselling,
     handleChangeComment,
-    commentState
-    // isFromCart
+    commentState,
+    onNavigationRedirect
   } = props
 
   const theme = useTheme();
@@ -49,8 +47,6 @@ const CartUI = (props: any) => {
   const [{ parsePrice, parseNumber, parseDate }] = useUtils()
   const [validationFields] = useValidationFields()
 
-  const [openProduct, setModalIsOpen] = useState(false)
-  const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [openChangeStore, setOpenChangeStore] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
@@ -71,14 +67,14 @@ const CartUI = (props: any) => {
   }
 
   const handleEditProduct = (product: any) => {
-    setCurProduct(product)
-    setModalIsOpen(true)
-  }
-
-  const handlerProductAction = (product: any) => {
-    if (Object.keys(product).length) {
-      setModalIsOpen(false)
-    }
+    onNavigationRedirect('ProductDetails', {
+      businessId,
+			isCartProduct: true,
+      productCart: product,
+      businessSlug: cart?.business?.slug,
+      categoryId: product?.category_id,
+      productId: product?.id,
+		})
   }
 
   const handleClearProducts = async () => {
@@ -329,23 +325,6 @@ const CartUI = (props: any) => {
           </CheckoutAction>
         )}
       </BusinessItemAccordion>
-      <OModal
-        open={openProduct}
-        entireModal
-        customClose
-        onClose={() => setModalIsOpen(false)}
-      >
-        <ProductForm
-          isCartProduct
-          productCart={curProduct}
-          businessSlug={cart?.business?.slug}
-          businessId={businessId}
-          categoryId={curProduct?.category_id}
-          productId={curProduct?.id}
-          onSave={handlerProductAction}
-          onClose={() => setModalIsOpen(false)}
-        />
-      </OModal>
 
       <OModal
         open={openChangeStore && props.isFranchiseApp}
