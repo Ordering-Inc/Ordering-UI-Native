@@ -11,7 +11,8 @@ export const TopHeader = styled.View`
   align-items: center;
   justify-content: space-between;
   z-index: 1;
-  padding-horizontal: 40px;
+  height: 60px;
+  min-height: 60px;
 `
 
 export const ProductHeader = styled.ImageBackground`

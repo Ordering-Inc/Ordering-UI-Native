@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Platform } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -17,17 +17,13 @@ import { BusinessProductsCategories } from '../BusinessProductsCategories'
 import { BusinessProductsList } from '../BusinessProductsList'
 import { BusinessProductsListingParams } from '../../types'
 import {
-	WrapHeader,
 	TopHeader,
-	AddressInput,
 	WrapSearchBar,
 	WrapContent,
 	BusinessProductsListingContainer
 } from './styles'
 import { FloatingButton } from '../FloatingButton'
-import { ProductForm } from '../ProductForm'
-import { UpsellingProducts } from '../UpsellingProducts'
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { UpsellingRedirect } from './UpsellingRedirect'
 import Animated from 'react-native-reanimated'
 
 const PIXELS_TO_SCROLL = 1000
@@ -47,7 +43,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		errorQuantityProducts,
 		header,
 		logo,
-		getNextProducts
+		getNextProducts,
 	} = props
 
 	const theme = useTheme();
@@ -56,7 +52,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [orderState] = useOrder()
 	const [{ parsePrice }] = useUtils()
 	const [, { showToast }] = useToast()
-	const { top } = useSafeAreaInsets();
 
 	const styles = StyleSheet.create({
 		mainContainer: {
@@ -87,7 +82,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const { business, loading, error } = businessState
 	const [openBusinessInformation, setOpenBusinessInformation] = useState(false)
 	const [isOpenSearchBar, setIsOpenSearchBar] = useState(false)
-	const [curProduct, setCurProduct] = useState(null)
 	const [openUpselling, setOpenUpselling] = useState(false)
 	const [canOpenUpselling, setCanOpenUpselling] = useState(false)
 	const scrollViewRef = useRef<any>(null)
@@ -102,20 +96,16 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const onProductClick = (product: any) => {
-		setCurProduct(product)
+    onRedirect('ProductDetails', {
+			product: product,
+      businessSlug: business.slug,
+      businessId: business.id,
+		})
 	}
 
 	const handleCancel = () => {
 		setIsOpenSearchBar(false)
 		handleChangeSearch('')
-	}
-
-	const handleCloseProductModal = () => {
-		setCurProduct(null)
-	}
-
-	const handlerProductAction = () => {
-		handleCloseProductModal()
 	}
 
 	const handleUpsellingPage = () => {
@@ -165,13 +155,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const handleTouchDrag = useCallback(() => {
 		setCategoryClicked(false);
 	  }, []);
-
-
-	useEffect(() => {
-		if (!orderState.loading) {
-			handleCloseProductModal()
-		}
-	}, [orderState.loading])
 
 	return (
 		<SafeAreaView
@@ -304,49 +287,35 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					</>
 				)}
 			</BusinessProductsListingContainer>
-			{!loading && auth && !openUpselling && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
+			{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
 				<FloatingButton
 					btnText={
 						currentCart?.subtotal >= currentCart?.minimum
-							? !openUpselling ? t('VIEW_ORDER', 'View Order') : t('LOADING', 'Loading')
+							? t('VIEW_ORDER', 'View Order')
 							: `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
 					}
 					isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum}
-					btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && !openUpselling && currentCart?.products?.length > 0}
-					btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && !openUpselling && currentCart?.products?.length > 0}
+					btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
+					btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
 					btnLeftValue={currentCart?.products?.length}
 					btnRightValue={parsePrice(currentCart?.total)}
-					disabled={openUpselling || currentCart?.subtotal < currentCart?.minimum}
+					disabled={currentCart?.subtotal < currentCart?.minimum}
 					handleClick={() => setOpenUpselling(true)}
 				/>
 			)}
-			<OModal
-				open={!!curProduct}
-				onClose={handleCloseProductModal}
-				entireModal
-				customClose
-				isAvoidKeyBoardView
-			>
-				<ProductForm
-					product={curProduct}
-					businessSlug={business.slug}
-					businessId={business.id}
-					onClose={handleCloseProductModal}
-					navigation={navigation}
-					onSave={handlerProductAction}
-				/>
-			</OModal>
 			{openUpselling && (
-				<UpsellingProducts
+				<UpsellingRedirect
 					businessId={currentCart?.business_id}
 					business={currentCart?.business}
 					cartProducts={currentCart?.products}
 					cart={currentCart}
+          setOpenUpselling={setOpenUpselling}
 					handleUpsellingPage={handleUpsellingPage}
 					handleCloseUpsellingPage={handleCloseUpsellingPage}
 					openUpselling={openUpselling}
 					canOpenUpselling={canOpenUpselling}
 					setCanOpenUpselling={setCanOpenUpselling}
+          onRedirect={onRedirect}
 				/>
 			)}
 		</SafeAreaView>

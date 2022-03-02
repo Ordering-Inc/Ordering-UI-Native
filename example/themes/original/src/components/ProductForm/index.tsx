@@ -16,10 +16,9 @@ import {
 	Grayscale
 } from 'react-native-color-matrix-image-filters'
 
-import { View, TouchableOpacity, StyleSheet, Dimensions, Platform, AppRegistry, I18nManager } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, I18nManager, SafeAreaView } from 'react-native';
 
 import {
-	ProductHeader,
 	WrapHeader,
 	TopHeader,
 	WrapContent,
@@ -40,9 +39,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { ProductOptionSubOption } from '../ProductOptionSubOption';
 import { NotFoundSource } from '../NotFoundSource';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState } from 'react';
-import { useWindowDimensions } from 'react-native';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -63,8 +60,6 @@ export const ProductOptionsUI = (props: any) => {
 		handleChangeSuboptionState,
 		handleChangeCommentState,
 		productObject,
-		onClose,
-		isFromCheckout,
 	} = props;
 
 	const theme = useTheme();
@@ -97,7 +92,7 @@ export const ProductOptionsUI = (props: any) => {
 		},
 		btnBackArrow: {
 			borderWidth: 0,
-			backgroundColor: 'rgba(0,0,0,0.3)',
+			backgroundColor: '#FFF',
 			borderRadius: 24,
 			marginRight: 15,
 		},
@@ -160,15 +155,13 @@ export const ProductOptionsUI = (props: any) => {
 	const [gallery, setGallery] = useState([])
 	const [thumbsSwiper, setThumbsSwiper] = useState(0)
 
-	const { top, bottom } = useSafeAreaInsets();
-	const { height } = useWindowDimensions();
 	const [selOpt, setSelectedOpt] = useState(0);
 	const [isHaveWeight, setIsHaveWeight] = useState(false)
 	const [qtyBy, setQtyBy] = useState({
 		weight_unit: false,
 		pieces: true
 	})
-	const [pricePerWeightUnit, setPricePerWeightUnit] = useState(null)
+	const [pricePerWeightUnit, setPricePerWeightUnit] = useState<any>(null)
 
 	const swiperRef: any = useRef(null)
 
@@ -187,10 +180,8 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleSaveProduct = () => {
-		console.log('----- click handle ------')
 		const isErrors = Object.values(errors).length > 0;
 		if (!isErrors) {
-			console.log('----- save handle ------')
 			handleSave && handleSave();
 			return;
 		}
@@ -220,7 +211,6 @@ export const ProductOptionsUI = (props: any) => {
 	}
 
 	const handleRedirectLogin = () => {
-		onClose();
 		navigation.navigate('Login');
 	};
 
@@ -298,14 +288,20 @@ export const ProductOptionsUI = (props: any) => {
 		</>
 	);
 
+  const handleGoBack = navigation?.canGoBack()
+    ? () => navigation.goBack()
+    : () => navigation.navigate('Business', { store: props.businessSlug })
+
 	return (
-		<>
-			<TopHeader>
-				<TouchableOpacity
-					style={styles.headerItem}
-					onPress={onClose}>
-					<OIcon src={theme.images.general.close} width={16} />
-				</TouchableOpacity>
+    <SafeAreaView style={{ flex: 1 }}>
+      <TopHeader>
+        <OButton
+          imgLeftSrc={theme.images.general.arrow_left}
+          imgRightSrc={null}
+          style={styles.btnBackArrow}
+          onClick={() => handleGoBack()}
+          imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
+        />
 			</TopHeader>
 			<ScrollView>
 				{!error && (
@@ -773,11 +769,7 @@ export const ProductOptionsUI = (props: any) => {
 				)}
 			</ScrollView>
 			{!loading && !error && product && (
-				<ProductActions
-					style={{
-						paddingBottom: Platform.OS === 'ios' ? bottom + 30 : bottom + 80
-					}}
-				>
+				<ProductActions>
 					<OText size={16} lineHeight={24} weight={'600'}>
 						{productCart.total ? parsePrice(productCart?.total) : ''}
 					</OText>
@@ -921,7 +913,7 @@ export const ProductOptionsUI = (props: any) => {
 					</View>
 				</ProductActions>
 			)}
-		</>
+    </SafeAreaView>
 	);
 };
 
