@@ -5,11 +5,11 @@ import { StyleSheet, View } from 'react-native';
 import { OButton, OIcon, OText } from '../shared';
 import { LanguageSelector } from '../LanguageSelector';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useWindowDimensions } from 'react-native';
+import { useWindowDimensions, Platform } from 'react-native';
 
 export const Home = (props: any) => {
 	const { onNavigationRedirect } = props;
-	const { width } = useWindowDimensions();
+	const { width, height } = useWindowDimensions();
 	const [, t] = useLanguage();
 	const [orderState] = useOrder();
 
@@ -18,7 +18,9 @@ export const Home = (props: any) => {
 	return (
 		<View style={styles.container}>
 			<View>
-				<LanguageSelector />
+				<View style={{paddingTop: (height <= 756 && Platform.OS !== 'ios') ? (height * 0.05) : 0 }}>
+					<LanguageSelector />
+				</View>
 				<OIcon
 					src={theme.images.logos.logotypeInvert}
 					style={{

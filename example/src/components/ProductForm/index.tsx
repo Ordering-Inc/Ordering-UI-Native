@@ -52,7 +52,6 @@ export const ProductOptionsUI = (props: any) => {
     handleChangeSuboptionState,
     handleChangeCommentState,
     productObject,
-    onClose,
     businessSlug
   } = props
 
@@ -84,7 +83,6 @@ export const ProductOptionsUI = (props: any) => {
   }
 
   const handleRedirectLogin = (product : any) => {
-    onClose()
     navigation.navigate('Login', {product: {businessId: product?.businessId, id: product?.id, categoryId: product?.categoryId, slug: businessSlug} })
   }
 
@@ -110,7 +108,7 @@ export const ProductOptionsUI = (props: any) => {
                         name="x"
                         size={35}
                         style={{ color: theme.colors.white, backgroundColor: 'rgba(0,0,0,0.3)' }}
-                        onPress={onClose}
+                        onPress={props.handleGoBack}
                       />
                     </View>
                   </TopHeader>

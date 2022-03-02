@@ -5,6 +5,12 @@ export const WrapHeader = styled.View`
   z-index: 1;
 `
 
+export const TopActions = styled.TouchableOpacity`
+	height: 44px;
+	justify-content: center;
+  padding-horizontal: 30px;
+`;
+
 export const TopHeader = styled.View`
   width: 100%;
   flex-direction: row;

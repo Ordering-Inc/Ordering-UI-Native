@@ -10,7 +10,7 @@ import {
   useToast,
   ToastType
 } from 'ordering-components/native'
-import { OButton, OModal, OText } from '../shared'
+import { OButton, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { SearchBar } from '../SearchBar'
 import { BusinessProductsCategories } from '../BusinessProductsCategories'
@@ -45,7 +45,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     errorQuantityProducts,
     header,
     logo,
-    productModal,
     businessId,
     categoryId,
     productId,
@@ -75,7 +74,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   }
 
   const onProductClick = (product: any) => {
-    setCurProduct(product)
+    onRedirect('ProductDetails', {
+			product: product,
+      businessSlug: business.slug,
+      businessId: business.id,
+      categoryId: categoryId,
+      productId: productId,
+		})
   }
 
   const handleCancel = () => {
@@ -87,10 +92,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     setCurProduct(null)
     setOpenModalProduct(false)
     updateProductModal && updateProductModal(null)
-  }
-
-  const handlerProductAction = () => {
-    handleCloseProductModal()
   }
 
   const handleUpsellingPage = () => {
@@ -258,27 +259,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           handleClick={() => setOpenUpselling(true)}
         />
       )}
-      <OModal
-        open={openModalProduct || !!curProduct || (!!productModal.product && !orderState.loading)}
-        onClose={handleCloseProductModal}
-        entireModal
-        customClose
-        isAvoidKeyBoardView
-      >
-        <ProductForm
-          product={curProduct || productModal.product}
-          businessSlug={business?.slug}
-          businessId={businessId || business?.id || productModal?.product?.category?.business_id}
-          onClose={handleCloseProductModal}
-          navigation={navigation}
-          onSave={handlerProductAction}
-          setProductLogin={setProductLogin}
-          categoryId={categoryId}
-          productId={productId}
-        />
-      </OModal>
       {openUpselling && (
         <UpsellingProducts
+          setOpenUpselling={setOpenUpselling}
           businessId={currentCart?.business_id}
           business={currentCart?.business}
           cartProducts={currentCart?.products}
@@ -286,6 +269,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           openUpselling={openUpselling}
           canOpenUpselling={canOpenUpselling}
           setCanOpenUpselling={setCanOpenUpselling}
+          onRedirect={onRedirect}
         />
       )}
     </>

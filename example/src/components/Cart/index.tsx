@@ -17,7 +17,6 @@ import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
 import { OButton, OModal, OText, OInput } from '../shared';
-import { ProductForm } from '../ProductForm';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
 import { useTheme } from 'styled-components/native';
@@ -46,8 +45,6 @@ const CartUI = (props: any) => {
   const [{ parsePrice, parseNumber, parseDate }] = useUtils()
   const [validationFields] = useValidationFields()
 
-  const [openProduct, setModalIsOpen] = useState(false)
-  const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null })
@@ -64,14 +61,15 @@ const CartUI = (props: any) => {
   }
 
   const handleEditProduct = (product: any) => {
-    setCurProduct(product)
-    setModalIsOpen(true)
-  }
-
-  const handlerProductAction = (product: any) => {
-    if (Object.keys(product).length) {
-      setModalIsOpen(false)
-    }
+    props?.onNavigationRedirect &&
+    props?.onNavigationRedirect('ProductDetails', {
+      businessId: cart?.business_id,
+			isCartProduct: true,
+      productCart: product,
+      businessSlug: cart?.business?.slug,
+      categoryId: product?.category_id,
+      productId: product?.id,
+		})
   }
 
   const handleClearProducts = async () => {
@@ -292,25 +290,6 @@ const CartUI = (props: any) => {
           </CheckoutAction>
         )}
       </BusinessItemAccordion>
-      <OModal
-        open={openProduct}
-        entireModal
-        customClose
-        onClose={() => setModalIsOpen(false)}
-        isAvoidKeyBoardView
-      >
-        <ProductForm
-          isCartProduct
-          productCart={curProduct}
-          businessSlug={cart?.business?.slug}
-          businessId={cart?.business_id}
-          categoryId={curProduct?.category_id}
-          productId={curProduct?.id}
-          onSave={handlerProductAction}
-          onClose={() => setModalIsOpen(false)}
-        />
-
-      </OModal>
 
       {openUpselling && (
         <UpsellingProducts
@@ -321,6 +300,8 @@ const CartUI = (props: any) => {
           cartProducts={cart?.products}
           canOpenUpselling={canOpenUpselling}
           setCanOpenUpselling={setCanOpenUpselling}
+          setOpenUpselling={setOpenUpselling}
+          onRedirect={props.onNavigationRedirect}
         />
       )}
       <OModal
