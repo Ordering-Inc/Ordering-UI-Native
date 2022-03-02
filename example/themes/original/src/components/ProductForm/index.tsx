@@ -32,7 +32,8 @@ import {
 	ProductActions,
 	ExtraOptionWrap,
 	WeightUnitSwitch,
-	WeightUnitItem
+	WeightUnitItem,
+	TopActions
 } from './styles';
 import { OButton, OIcon, OInput, OText } from '../shared';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -295,13 +296,9 @@ export const ProductOptionsUI = (props: any) => {
 	return (
     <SafeAreaView style={{ flex: 1 }}>
       <TopHeader>
-        <OButton
-          imgLeftSrc={theme.images.general.arrow_left}
-          imgRightSrc={null}
-          style={styles.btnBackArrow}
-          onClick={() => handleGoBack()}
-          imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
-        />
+	  	<TopActions onPress={() => handleGoBack()}>
+            <OIcon src={theme.images.general.arrow_left} width={15} />
+          </TopActions>
 			</TopHeader>
 			<ScrollView>
 				{!error && (

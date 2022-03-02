@@ -16,7 +16,6 @@ import {
   AddButton,
   CloseUpselling
 } from './styles'
-import { ProductForm } from '../ProductForm';
 import { useTheme } from 'styled-components/native'
 
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
@@ -27,7 +26,9 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     handleUpsellingPage,
     openUpselling,
     canOpenUpselling,
-    setCanOpenUpselling
+    setCanOpenUpselling,
+    onRedirect,
+    setOpenUpselling
   } = props
 
   const theme = useTheme();
@@ -53,8 +54,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     }
   })
 
-  const [actualProduct, setActualProduct] = useState<any>(null)
-  const [modalIsOpen, setModalIsOpen] = useState(false)
   const [{ parsePrice }] = useUtils()
   const [, t] = useLanguage()
 
@@ -71,13 +70,15 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   }, [upsellingProducts.loading, upsellingProducts?.products.length])
 
   const handleFormProduct = (product: any) => {
-    setActualProduct(product)
-    setModalIsOpen(true)
-  }
-
-  const handleSaveProduct = () => {
-    setActualProduct(null)
-    setModalIsOpen(false)
+    setOpenUpselling && setOpenUpselling(false)
+    onRedirect && onRedirect('ProductDetails', {
+      product: product,
+      businessId: product?.api?.businessId,
+      businessSlug: business.slug,
+      onAction: () => {
+        setOpenUpselling && setOpenUpselling(true)
+      }
+		})
   }
 
   const UpsellingLayout = () => {
@@ -132,13 +133,12 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
         <>
           {!canOpenUpselling || upsellingProducts?.products?.length === 0 ? null : (
             <>
-            {!modalIsOpen && (
               <OBottomPopup
                 title={t('WANT_SOMETHING_ELSE', 'Do you want something else?')}
                 open={openUpselling}
                 onClose={() => handleUpsellingPage()}
               >
-               <UpsellingLayout />
+                <UpsellingLayout />
                 <CloseUpselling>
                   <OButton
                     imgRightSrc=''
@@ -148,28 +148,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                   />
                 </CloseUpselling>
               </OBottomPopup>
-            )}
             </>
           )}
         </>
       )}
-      <OModal
-        open={modalIsOpen}
-        onClose={() => setModalIsOpen(false)}
-        entireModal
-        customClose
-        isAvoidKeyBoardView
-      >
-        {actualProduct && (
-         <ProductForm
-          product={actualProduct}
-          businessId={actualProduct?.api?.businessId}
-          businessSlug={business.slug}
-          onSave={() => handleSaveProduct()}
-          onClose={() => setModalIsOpen(false)}
-        />
-        )}
-      </OModal>
     </>
   )
 }

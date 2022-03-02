@@ -408,6 +408,8 @@ export interface UpsellingProductsParams {
   isCustomMode?: boolean;
   upsellingProducts?: any;
   business?: any;
+  setOpenUpselling?: any;
+  onRedirect?: any;
   businessId?: number;
   cartProducts?: Array<any>; 
   handleUpsellingPage: () => void;

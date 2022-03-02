@@ -20,7 +20,6 @@ import {
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { CouponControl } from '../CouponControl';
 import { OInput, OModal, OText } from '../shared';
-import { ProductForm } from '../ProductForm';
 import { verifyDecimals } from '../../utils';
 import { useTheme } from 'styled-components/native';
 import { TaxInformation } from '../TaxInformation';
@@ -36,7 +35,8 @@ const OrderSummaryUI = (props: any) => {
     isCartPending,
     isFromCheckout,
     commentState,
-    handleChangeComment
+    handleChangeComment,
+    onNavigationRedirect
   } = props;
 
   const theme = useTheme();
@@ -45,8 +45,6 @@ const OrderSummaryUI = (props: any) => {
   const [orderState] = useOrder();
   const [{ parsePrice, parseNumber }] = useUtils();
   const [validationFields] = useValidationFields();
-  const [openProduct, setModalIsOpen] = useState(false)
-  const [curProduct, setCurProduct] = useState<any>(null)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null })
 
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
@@ -56,14 +54,16 @@ const OrderSummaryUI = (props: any) => {
   }
 
   const handleEditProduct = (product: any) => {
-    setCurProduct(product)
-    setModalIsOpen(true)
-  }
-
-  const handlerProductAction = (product: any) => {
-    if (Object.keys(product).length) {
-      setModalIsOpen(false)
-    }
+    onNavigationRedirect &&
+    onNavigationRedirect('ProductDetails', {
+      isCartProduct: true,
+      productCart: product,
+      businessSlug: cart?.business?.slug,
+      businessId: cart?.business_id,
+      categoryId: product?.category_id,
+      productId: product?.id,
+      isFromCheckout: isFromCheckout,
+		})
   }
 
   const getIncludedTaxes = () => {
@@ -223,25 +223,6 @@ const OrderSummaryUI = (props: any) => {
               )}
             </OSBill>
           )}
-          <OModal
-            open={openProduct}
-            entireModal
-            customClose
-            onClose={() => setModalIsOpen(false)}
-            isAvoidKeyBoardView
-          >
-            <ProductForm
-              isCartProduct
-              productCart={curProduct}
-              businessSlug={cart?.business?.slug}
-              businessId={cart?.business_id}
-              categoryId={curProduct?.category_id}
-              productId={curProduct?.id}
-              onSave={handlerProductAction}
-              onClose={() => setModalIsOpen(false)}
-              isFromCheckout={isFromCheckout}
-            />
-          </OModal>
           <OModal
             open={openTaxModal.open}
             onClose={() => setOpenTaxModal({ open: false, data: null })}
