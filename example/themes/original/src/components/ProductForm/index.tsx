@@ -349,15 +349,13 @@ export const ProductOptionsUI = (props: any) => {
 												style={styles.slide1}
 												key={i}
 											>
-												<Grayscale amount={isSoldOut ? 1 : 0}>
-													<FastImage
-														style={{ height: '100%' }}
-														source={{
-															uri: optimizeImage(img, 'h_258,c_limit'),
-															priority: FastImage.priority.normal,
-														}}
-													/>
-												</Grayscale>
+                        <FastImage
+                          style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
+                          source={{
+                            uri: optimizeImage(img, 'h_258,c_limit'),
+                            priority: FastImage.priority.normal,
+                          }}
+                        />
 											</View>
 										))}
 									</Swiper>
@@ -381,19 +379,18 @@ export const ProductOptionsUI = (props: any) => {
 														opacity: index === thumbsSwiper ? 1 : 0.8
 													}}
 												>
-													<Grayscale amount={isSoldOut ? 1 : 0}>
-														<OIcon
-															url={img}
-															style={{
-																borderColor: theme.colors.lightGray,
-																borderRadius: 8,
-																minHeight: '100%'
-															}}
-															width={56}
-															height={56}
-															cover
-														/>
-													</Grayscale>
+                          <OIcon
+                            url={img}
+                            style={{
+                              borderColor: theme.colors.lightGray,
+                              borderRadius: 8,
+                              minHeight: '100%',
+                              opacity: isSoldOut ? 0.5 : 1
+                            }}
+                            width={56}
+                            height={56}
+                            cover
+                          />
 												</View>
 											</TouchableOpacity>
 
@@ -425,12 +422,12 @@ export const ProductOptionsUI = (props: any) => {
 												style={{ flex: 1, marginBottom: 10 }}>
 												{product?.name || productCart.name}
 											</OText>
-											{product?.calories && (
+											{!!product?.calories && (
 												<OText size={16} style={{ color: '#808080' }}>{product?.calories} cal
 												</OText>
 											)}
 										</View>
-										{((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (product?.estimated_person)) && (
+										{((!!product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (!!product?.estimated_person)) && (
 											<OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'} mBottom={7}>
 												{
 													((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
@@ -449,7 +446,7 @@ export const ProductOptionsUI = (props: any) => {
 										) : (
 											<View style={{ flexDirection: 'row', marginBottom: 10 }}>
 												<OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
-												{product?.offer_price && (
+												{!!product?.offer_price && (
 													<OText style={{
 														fontSize: 14,
 														color: '#808080',
@@ -463,7 +460,7 @@ export const ProductOptionsUI = (props: any) => {
 									</>
 								)}
 							</ProductTitle>
-							<ProductDescription>
+						  <ProductDescription>
 								<OText color={theme.colors.textSecondary} size={12} lineHeight={18}>
 									{product?.description || productCart?.description}
 								</OText>
@@ -478,7 +475,7 @@ export const ProductOptionsUI = (props: any) => {
 										key={tag.id}
 										style={styles.productTagWrapper}
 									>
-										{tag?.image ? (
+										{!!tag?.image ? (
 											<OIcon
 												url={optimizeImage(tag?.image, 'h_40,c_limit')}
 												style={styles.productTagImageStyle}
@@ -761,7 +758,7 @@ export const ProductOptionsUI = (props: any) => {
 						</WrapContent>
 					</View>
 				)}
-				{error && error.length > 0 && (
+				{!!error && error.length > 0 && (
 					<NotFoundSource content={error[0]?.message || error[0]} />
 				)}
 			</ScrollView>
