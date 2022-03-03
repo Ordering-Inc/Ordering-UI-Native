@@ -510,6 +510,7 @@ const CheckoutUI = (props: any) => {
             <WalletPaymentOptionContainer>
               <PaymentOptionWallet
                 cart={cart}
+                businessId={cart?.business_id}
               />
             </WalletPaymentOptionContainer>
           )}
