@@ -253,6 +253,7 @@ export interface NotFoundSourceParams {
 }
 export interface OrdersOptionParams {
 	orderList?: any,
+	franchiseId?: any,
 	activeOrders?: boolean,
 	pagination?: any,
 	titleContent?: string,
@@ -482,4 +483,5 @@ export interface HelpAccountAndPaymentParams {
   
 export interface MessageListingParams {
 	navigation: any;
+	franchiseId?: any;
 }

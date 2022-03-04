@@ -289,6 +289,7 @@ export const MessageListing = (props: MessageListingParams) => {
 				setSelectedOrderId={setSelectedOrderId}
 				setOrderList={setOrderListStatus}
 				setOpenMessges={setOpenMessges}
+        franchiseId={props.franchiseId}
 			/>
 			{openMessages && seletedOrder && (
 				<OModal
@@ -306,4 +307,3 @@ export const MessageListing = (props: MessageListingParams) => {
 		</MessageListingWrapper>
 	)
 }
-
