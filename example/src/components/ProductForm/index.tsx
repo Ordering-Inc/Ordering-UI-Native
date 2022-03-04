@@ -132,26 +132,26 @@ export const ProductOptionsUI = (props: any) => {
                     <View style={{ flexDirection: 'column', width: '100%' }}>
                       <View style={{ flexDirection: 'row', marginTop: 15 }}>
                         <OText size={20} style={{ flex: I18nManager.isRTL ? 0 : 1, marginBottom: 10 }}>{product?.name || productCart.name}{' '}</OText>
-                        {product?.calories && (
+                        {!!product?.calories && (
                           <OText size={16} style={styles.caloriesStyle}>{product?.calories} cal</OText>
                         )}
                       </View>
                       <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                         <OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
-                        {product?.offer_price && (
+                        {!!product?.offer_price && (
                           <OText style={styles.regularPriceStyle}>{parsePrice(product?.offer_price)}</OText>
                         )}
                       </View>
-                      {(product?.estimated_person || (product?.sku && product?.sku !== '-1' && product?.sku !== '1')) && (
+                      {(!!product?.estimated_person || (!!product?.sku && product?.sku !== '-1' && product?.sku !== '1')) && (
                         <OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0, marginBottom: 10 }} color={'#909BA9'}>
                           {
                             ((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
                             && <>{t('SKU', 'Sku')}{' '}{product?.sku || productCart?.sku}</>
                           }
-                          {product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
+                          {!!product?.sku && product?.sku !== '-1' && product?.sku !== '1' && !!product?.estimated_person && (
                             <>&nbsp;&#183;&nbsp;</>
                           )}
-                          {product?.estimated_person
+                          {!!product?.estimated_person
                             && <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
                           }
                         </OText>
