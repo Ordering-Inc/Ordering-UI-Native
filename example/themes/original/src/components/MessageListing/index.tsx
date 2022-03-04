@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useLanguage, useOrder, ToastType, useToast, OrderList, OrderDetails as OrderDetailsConTableoller } from 'ordering-components/native'
+import { useLanguage, useOrder, ToastType, useToast, OrderList, OrderDetails as OrderDetailsConTableoller, useBusiness } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { useFocusEffect } from '@react-navigation/native'
 import { OText, OModal } from '../shared'
@@ -214,6 +214,7 @@ const OrderMessageUI = (props: any) => {
 }
 
 export const OrderListing = (props: OrdersOptionParams) => {
+  const [businessState] = useBusiness();
 	const OrderListingProps = {
 		...props,
 		UIComponent: OrdersOptionUI,
@@ -224,6 +225,7 @@ export const OrderListing = (props: OrdersOptionParams) => {
 			pageSize: 10,
 			controlType: 'infinity'
 		},
+    businessId: businessState?.business?.id,
 		profileMessages: true,
 		orderBy: 'last_direct_message_at',
 		orderDirection: 'asc'
