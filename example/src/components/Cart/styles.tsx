@@ -26,3 +26,10 @@ export const CheckoutAction = styled.View`
   margin-top: 10px;
   margin-bottom: 10px;
 `
+
+export const Divider = styled.View`
+  border-color: #EAEAEA;
+  border-width: 1px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+`
