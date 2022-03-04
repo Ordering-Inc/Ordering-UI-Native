@@ -138,7 +138,7 @@ export const ProductOptionsUI = (props: any) => {
                       </View>
                       <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                         <OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
-                        {!!product?.offer_price !== null && product?.in_offer && (
+                        {product?.offer_price !== null && product?.in_offer && (
                           <OText style={styles.regularPriceStyle}>{parsePrice(product?.offer_price)}</OText>
                         )}
                       </View>
