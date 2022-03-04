@@ -33,5 +33,13 @@ export const OSCoupon = styled.View`
 export const OSRow = styled.View`
   flex-direction: row;
   overflow: hidden;
-  width: 80%;
+  width: 70%;
+  flex-wrap: wrap;
+`
+
+export const Divider = styled.View`
+  border-color: #EAEAEA;
+  border-width: 1px;
+  margin-top: 5px;
+  margin-bottom: 10px;
 `

@@ -309,9 +309,11 @@ const CheckoutUI = (props: any) => {
                 <OText size={22} numberOfLines={2} ellipsizeMode='tail' >
                   {businessName || businessDetails?.business?.name}
                 </OText>
-                <OText size={22}>
-                  {cart?.total >= 1 && parsePrice(cart?.total) || cartTotal >= 1 && parsePrice(cartTotal)}
-                </OText>
+                {!cartState.loading && (
+                  <OText size={22}>
+                    {parsePrice(cart?.total >= 0 ? cart?.total : 0) || parsePrice(cartTotal >= 0 ? cartTotal : 0)}
+                  </OText>
+                )}
               </View>
             </ChTotal>
           </ChSection>
