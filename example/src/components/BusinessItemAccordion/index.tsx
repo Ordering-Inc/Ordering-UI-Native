@@ -80,9 +80,9 @@ export const BusinessItemAccordion = (props: any) => {
           </BIContentInfo>
         </BIInfo>
 
-        {!isClosed && !!isProducts && cart?.valid_products && cart?.total > 0 && (
+        {!isClosed && !!isProducts && cart?.valid_products && (
           <BITotal>
-            <OText color='#000'>{parsePrice(cart?.total)}</OText>
+            <OText color='#000'>{parsePrice(cart?.total >= 0 ? cart?.total : 0)}</OText>
             <OText>{t('CART_TOTAL', 'Total')}</OText>
           </BITotal>
         )}

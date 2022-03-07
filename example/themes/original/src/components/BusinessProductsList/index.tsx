@@ -42,14 +42,14 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   return (
     <ProductsContainer>
       {category.id &&
-        categoryState.products?.map((product: any) => (
+        categoryState.products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any) => (
           <SingleProductCard
             key={'prod_' + product.id}
             isSoldOut={product.inventoried && !product.quantity}
             product={product}
             businessId={businessId}
             onProductClick={() => onProductClick(product)}
-            productAddedToCart={currentCart?.products?.find((Cproduct: any) => Cproduct.id === product.id)}
+            productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
           />
         ))}
 
@@ -63,7 +63,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               {t('FEATURED', 'Featured')}
             </OText>
             <>
-              {categoryState.products?.map(
+              {categoryState.products?.sort((a: any, b: any) => a.rank - b.rank).map(
                 (product: any, i: any) =>
                   product.featured && (
                     <SingleProductCard
@@ -72,7 +72,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       product={product}
                       businessId={businessId}
                       onProductClick={onProductClick}
-                      productAddedToCart={currentCart?.products?.find((Cproduct: any) => Cproduct.id === product.id)}
+                      productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
                     />
                   ),
               )}
@@ -110,14 +110,14 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       </OText>
                     </View>
                     <>
-                      {products.map((product: any, i: any) => (
+                      {products.sort((a: any, b: any) => a.rank - b.rank).map((product: any, i: any) => (
                         <SingleProductCard
                           key={i}
                           isSoldOut={product.inventoried && !product.quantity}
                           businessId={businessId}
                           product={product}
                           onProductClick={onProductClick}
-                          productAddedToCart={currentCart?.products?.find((Cproduct: any) => Cproduct.id === product.id)}
+                          productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
                         />
                       ))}
                     </>

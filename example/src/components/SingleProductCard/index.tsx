@@ -86,7 +86,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
         <OText size={12} numberOfLines={2} ellipsizeMode='tail' style={styles.textStyle}>{product?.description}</OText>
         <PricesContainer>
           <OText color={theme.colors.primary}>{parsePrice(product?.price)}</OText>
-          {product?.offer_price && (
+          {product?.offer_price !== null && product?.in_offer && (
             <OText style={styles.regularPriceStyle}>{parsePrice(product?.offer_price)}</OText>
           )}
         </PricesContainer>

@@ -53,8 +53,8 @@ export const ProductOptionSubOptionUI = (props: any) => {
 	const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
 
 	return (
-		<Container disabled={disabled}>
-			<IconControl onPress={() => handleSuboptionClick()}>
+		<Container>
+			<IconControl disabled={disabled} onPress={() => handleSuboptionClick()}>
 				{((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
 					state?.selected ? (
 						<OIcon src={theme.images.general.check_act} color={theme.colors.primary} width={16} />
@@ -75,28 +75,28 @@ export const ProductOptionSubOptionUI = (props: any) => {
 			{showMessage && <OText size={10} mLeft={4} mRight={4} style={{ flex: 1, textAlign: 'center' }} color={theme.colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
 			{option?.allow_suboption_quantity && state?.selected && (
 				<QuantityControl>
-					<Checkbox disabled={state.quantity === 0} onPress={decrement}>
+					<Checkbox disabled={disabled || state.quantity === 0} onPress={decrement}>
 						<OIcon
 							src={theme.images.general.minus}
 							width={16}
-							color={state.quantity === 0 ? theme.colors.disabled : theme.colors.primary}
+							color={state.quantity === 0 || disabled ? theme.colors.disabled : theme.colors.primary}
 						/>
 					</Checkbox>
 					<OText mLeft={5} mRight={5}>
 						{state.quantity}
 					</OText>
-					<Checkbox disabled={disableIncrement} onPress={increment}>
+					<Checkbox disabled={disabled || disableIncrement} onPress={increment}>
 						<OIcon
 							src={theme.images.general.plus}
 							width={16}
-							color={disableIncrement ? theme.colors.disabled : theme.colors.primary}
+							color={disableIncrement || disabled ? theme.colors.disabled : theme.colors.primary}
 						/>
 					</Checkbox>
 				</QuantityControl>
 			)}
 			{option?.with_half_option && state?.selected && (
 				<PositionControl>
-					<Circle onPress={() => changePosition('left')}>
+					<Circle disabled={disabled} onPress={() => changePosition('left')}>
 						<OIcon
 							src={theme.images.general.half_l}
 							color={state.selected && state.position === 'left' ? theme.colors.primary : '#cbcbcb'}
@@ -104,14 +104,14 @@ export const ProductOptionSubOptionUI = (props: any) => {
 							style={styles.inverse}
 						/>
 					</Circle>
-					<Circle onPress={() => changePosition('whole')}>
+					<Circle disabled={disabled} onPress={() => changePosition('whole')}>
 						<OIcon
 							src={theme.images.general.half_f}
 							color={state.selected && state.position === 'whole' ? theme.colors.primary : '#cbcbcb'}
 							width={16}
 						/>
 					</Circle>
-					<Circle onPress={() => changePosition('right')}>
+					<Circle disabled={disabled} onPress={() => changePosition('right')}>
 						<OIcon
 							src={theme.images.general.half_r}
 							color={state.selected && state.position === 'right' ? theme.colors.primary : '#cbcbcb'}

@@ -152,8 +152,8 @@ const CheckoutUI = (props: any) => {
 
   const deliveryOptions = instructionsOptions?.result && instructionsOptions?.result?.filter((option: any) => option?.enabled)?.map((option: any) => {
     return {
-			value: option?.id, key: option?.id, label: t(option?.name.toUpperCase().replace(/\s/g, '_'), option?.name) 
-		}
+      value: option?.id, key: option?.id, label: t(option?.name.toUpperCase().replace(/\s/g, '_'), option?.name)
+    }
   })
 
   const handlePlaceOrder = () => {
@@ -241,7 +241,7 @@ const CheckoutUI = (props: any) => {
     setShowGateway({ open: false, closedByUser: true })
   }
 
-  const changeDeliveryOption = (option : any) => {
+  const changeDeliveryOption = (option: any) => {
     handleChangeDeliveryOption(option)
     setIsDeliveryOptionModalVisible(false)
   }
@@ -309,9 +309,11 @@ const CheckoutUI = (props: any) => {
                 <OText size={22} numberOfLines={2} ellipsizeMode='tail' >
                   {businessName || businessDetails?.business?.name}
                 </OText>
-                <OText size={22}>
-                  {cart?.total >= 1 && parsePrice(cart?.total) || cartTotal >= 1 && parsePrice(cartTotal)}
-                </OText>
+                {!cartState.loading && (
+                  <OText size={22}>
+                    {parsePrice(cart?.total >= 0 ? cart?.total : 0) || parsePrice(cartTotal >= 0 ? cartTotal : 0)}
+                  </OText>
+                )}
               </View>
             </ChTotal>
           </ChSection>
@@ -580,6 +582,7 @@ const CheckoutUI = (props: any) => {
                       cart={cart}
                       isCartPending={cart?.status === 2}
                       isFromCheckout
+                      onNavigationRedirect={onNavigationRedirect}
                     />
                   </>
                 )}
@@ -766,6 +769,7 @@ const CheckoutUI = (props: any) => {
                     amount: cart?.total,
                     delivery_zone_id: cart?.delivery_zone_id,
                     user_id: user?.id,
+                    user_name: user?.name
                   },
                   currency: configs?.stripe_currency?.value || currency,
                   userToken: token,

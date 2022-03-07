@@ -4,9 +4,10 @@ import {
 	UpsellingPage as UpsellingPageController,
 	useUtils,
 	useLanguage,
+  useOrder
 } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
-import { OText, OIcon, OModal, OBottomPopup, OButton } from '../shared'
+import { OText, OIcon, OBottomPopup, OButton } from '../shared'
 import { UpsellingProductsParams } from '../../types'
 import {
 	Container,
@@ -14,11 +15,9 @@ import {
 	Item,
 	Details,
 	AddButton,
-	CloseUpselling,
 	TopBar,
 	TopActions
 } from './styles'
-import { ProductForm } from '../ProductForm';
 import { OrderSummary } from '../OrderSummary';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -28,17 +27,17 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		isCustomMode,
 		upsellingProducts,
 		business,
-		cart,
 		handleUpsellingPage,
 		handleCloseUpsellingPage,
 		openUpselling,
 		canOpenUpselling,
 		setCanOpenUpselling,
-		isFromCart
+		isFromCart,
+    onNavigationRedirect,
+    onGoBack
 	} = props
 
 	const theme = useTheme();
-
 
 	const styles = StyleSheet.create({
 		imageStyle: {
@@ -66,14 +65,25 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		}
 	})
 
-	const [actualProduct, setActualProduct] = useState<any>(null)
 	const [modalIsOpen, setModalIsOpen] = useState(false)
+	const [{ carts }] = useOrder()
 	const [{ parsePrice }] = useUtils()
 	const [, t] = useLanguage()
 	const { bottom } = useSafeAreaInsets()
 
+  const cart = carts?.[`businessId:${props.businessId}`] ?? {}
+  const cartProducts = cart?.products?.length
+    ? cart?.products.map((product: any) => product.id)
+    : []
+
+  const productsList = !upsellingProducts.loading && !upsellingProducts.error
+    ? upsellingProducts?.products?.length
+      ? upsellingProducts?.products.filter((product: any) => !cartProducts.includes(product.id))
+      : (props?.products ?? []).filter((product: any) => !cartProducts.includes(product.id)) ?? []
+    : []
+
 	useEffect(() => {
-		if (!isCustomMode) {
+		if (!isCustomMode && !props.products) {
 			if (!upsellingProducts.loading) {
 				if (upsellingProducts?.products?.length && !isFromCart) {
 					setCanOpenUpselling && setCanOpenUpselling(true)
@@ -81,25 +91,15 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 					handleUpsellingPage && handleUpsellingPage()
 				}
 			}
-			// if ((!upsellingProducts?.products?.length && !upsellingProducts.loading && !canOpenUpselling && openUpselling) ||
-			// 	(!upsellingProducts?.products?.length && !upsellingProducts.loading && openUpselling)) {
-			// 	handleUpsellingPage && handleUpsellingPage()
-			// }
 		}
 	}, [upsellingProducts.loading, upsellingProducts?.products.length])
 
-	useEffect(() => {
-		if (!cart?.validate && cart?.products?.length == 0) handleCloseUpsellingPage()
-	}, [cart])
-
 	const handleFormProduct = (product: any) => {
-		setActualProduct(product)
-		setModalIsOpen(true)
-	}
-
-	const handleSaveProduct = () => {
-		setActualProduct(null)
-		setModalIsOpen(false)
+    onNavigationRedirect && onNavigationRedirect('ProductDetails', {
+      product: product,
+      businessId: product?.api?.businessId,
+      businessSlug: business.slug,
+		})
 	}
 
 	const UpsellingLayout = () => {
@@ -114,7 +114,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 						!upsellingProducts.loading && (
 							<>
 								{
-									!upsellingProducts.error ? upsellingProducts.products.map((product: any) => (
+									!upsellingProducts.error ? productsList.map((product: any) => (
 										<Item key={product.id}>
 											<View style={{ flexBasis: '57%' }}>
 												<Details>
@@ -125,7 +125,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 													<OText size={10} color={theme.colors.primary}>{t('ADD', 'Add')}</OText>
 												</AddButton>
 											</View>
-											<View style={{}}>
+											<View>
 												<OIcon url={product.images} style={styles.imageStyle} />
 											</View>
 										</Item>
@@ -143,75 +143,73 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		)
 	}
 
+  const UpsellingContent = () => {
+    return (
+      <>
+        <TopBar style={{ paddingTop: Platform.OS == 'ios' ? 10 : 30 }}>
+          <TopActions onPress={() => onGoBack()}>
+            <OIcon src={theme.images.general.arrow_left} width={15} />
+          </TopActions>
+          <TopActions style={styles.cancelBtn} onPress={() => handleUpsellingPage()}>
+            <OText size={12} color={theme.colors.textSecondary}>{t('CANCEL', 'Cancel')}</OText>
+          </TopActions>
+        </TopBar>
+        <ScrollView style={{ marginBottom: props.isPage ? 40 : bottom + (Platform.OS == 'ios' ? 96 : 130) }} showsVerticalScrollIndicator={false}>
+          {productsList.length > 0 &&
+            <View style={{ paddingHorizontal: 40, overflow: 'visible' }}>
+              <OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
+              <UpsellingLayout />
+            </View>
+          }
+          <View style={{ paddingHorizontal: 40 }}>
+            <OText size={20} lineHeight={30} weight={600} style={{ marginTop: 10, marginBottom: 17 }}>{t('YOUR_CART', 'Your cart')}</OText>
+            <OrderSummary
+              cart={cart}
+              isCartPending={cart?.status === 2}
+              onNavigationRedirect={onNavigationRedirect}
+            />
+          </View>
+        </ScrollView>
+        <View
+          style={{
+            alignItems: 'center',
+            bottom: props.isPage ? 20 : Platform.OS === 'ios' ? bottom  + 59 :  bottom + 125
+          }}
+        >
+          <OButton
+            imgRightSrc=''
+            text={t('CHECKOUT', 'Checkout')}
+            style={{...styles.closeUpsellingButton}}
+            textStyle={{ color: theme.colors.white, fontSize: 14 }}
+            onClick={() => handleUpsellingPage()}
+          />
+        </View>
+      </>
+    )
+  }
+
 	return (
 		<>
 			{isCustomMode ? (
 				<UpsellingLayout />
 			) : (
 				<>
-					{!canOpenUpselling ? null : (
-						<>
-							{!modalIsOpen && (
-								<OBottomPopup
-									title={''}
-									open={openUpselling}
-									onClose={() => handleUpsellingPage()}
-									isStatusBar
-								>
-									<TopBar style={{ paddingTop: Platform.OS == 'ios' ? 10 : 30 }}>
-										<TopActions onPress={() => handleCloseUpsellingPage()}>
-											<OIcon src={theme.images.general.arrow_left} width={15} />
-										</TopActions>
-										<TopActions style={styles.cancelBtn} onPress={() => handleCloseUpsellingPage()}>
-											<OText size={12} color={theme.colors.textSecondary}>{t('CANCEL', 'Cancel')}</OText>
-										</TopActions>
-									</TopBar>
-									<ScrollView style={{ marginBottom: bottom + (Platform.OS == 'ios' ? 96 : 130) }} showsVerticalScrollIndicator={false}>
-										{upsellingProducts?.products?.length > 0 &&
-											<View style={{ paddingHorizontal: 40, overflow: 'visible' }}>
-												<OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
-												<UpsellingLayout />
-											</View>
-										}
-										<View style={{ paddingHorizontal: 40 }}>
-											<OText size={20} lineHeight={30} weight={600} style={{ marginTop: 10, marginBottom: 17 }}>{t('YOUR_CART', 'Your cart')}</OText>
-											<OrderSummary
-												cart={cart}
-												isCartPending={cart?.status === 2}
-											/>
-										</View>
-									</ScrollView>
-									<View style={{alignItems: 'center', bottom: Platform.OS === 'ios' ? bottom  + 59 :  bottom + 125}}>
-										<OButton
-											imgRightSrc=''
-											text={t('CHECKOUT', 'Checkout')}
-											style={{...styles.closeUpsellingButton}}
-											textStyle={{ color: theme.colors.white, fontSize: 14 }}
-											onClick={() => handleUpsellingPage()}
-										/>
-									</View>
-								</OBottomPopup>
-							)}
-						</>
-					)}
+          {props.isPage ? (
+            <UpsellingContent />
+          ) : (
+            canOpenUpselling && !modalIsOpen && (
+              <OBottomPopup
+                title={''}
+                open={openUpselling}
+                onClose={() => handleUpsellingPage()}
+                isStatusBar
+              >
+                <UpsellingContent />
+              </OBottomPopup>
+            )
+          )}
 				</>
 			)}
-			<OModal
-				open={modalIsOpen}
-				onClose={() => setModalIsOpen(false)}
-				entireModal
-				customClose
-			>
-				{actualProduct && (
-					<ProductForm
-						product={actualProduct}
-						businessId={actualProduct?.api?.businessId}
-						businessSlug={business.slug}
-						onSave={() => handleSaveProduct()}
-						onClose={() => setModalIsOpen(false)}
-					/>
-				)}
-			</OModal>
 		</>
 	)
 }

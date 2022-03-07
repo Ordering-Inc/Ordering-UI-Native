@@ -221,7 +221,7 @@ export interface SingleProductCardParams {
 	product: any;
 	isSoldOut: boolean;
 	onProductClick: any;
-	productAddedToCart?: any
+	productAddedToCartLength: number
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -253,6 +253,7 @@ export interface NotFoundSourceParams {
 }
 export interface OrdersOptionParams {
 	orderList?: any,
+	franchiseId?: any,
 	activeOrders?: boolean,
 	pagination?: any,
 	titleContent?: string,
@@ -438,6 +439,10 @@ export interface UpsellingProductsParams {
 	cart?: any;
 	handleCloseUpsellingPage: () => void;
 	isFromCart?: boolean;
+	isPage?: boolean;
+	products?: any;
+	onNavigationRedirect?: any;
+	onGoBack?: any;
 }
 
 export interface GoogleMapsParams {
@@ -478,4 +483,5 @@ export interface HelpAccountAndPaymentParams {
   
 export interface MessageListingParams {
 	navigation: any;
+	franchiseId?: any;
 }

@@ -510,6 +510,7 @@ const CheckoutUI = (props: any) => {
             <WalletPaymentOptionContainer>
               <PaymentOptionWallet
                 cart={cart}
+                businessId={cart?.business_id}
               />
             </WalletPaymentOptionContainer>
           )}
@@ -546,6 +547,7 @@ const CheckoutUI = (props: any) => {
 										<OrderSummary
 											cart={cart}
 											isCartPending={cart?.status === 2}
+                      onNavigationRedirect={onNavigationRedirect}
 										/>
 									</>
 								)}

@@ -46,7 +46,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   const [menu, setMenu] = useState({})
   const [timeList, setTimeList] = useState<any>([])
   const [selectDate, setSelectedDate] = useState<any>(null)
-  const [datesWhitelist, setDateWhitelist] = useState<any>([{start: null, end: null}])
+  const [datesWhitelist, setDateWhitelist] = useState<any>([{ start: null, end: null }])
 
   const styles = StyleSheet.create({
     container: {
@@ -54,19 +54,19 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
       paddingVertical: 30,
       paddingHorizontal: 40
     },
-		businessLogo: {
-			backgroundColor: 'white',
-			width: 60,
-			height: 60,
-			borderRadius: 7.6,
-			justifyContent: 'center',
-			alignItems: 'center',
-			shadowColor: '#000000',
-			shadowOffset: { width: 0, height: 1 },
-			shadowOpacity: 0.1,
-			shadowRadius: 1,
-			elevation: 2
-		},
+    businessLogo: {
+      backgroundColor: 'white',
+      width: 60,
+      height: 60,
+      borderRadius: 7.6,
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 1,
+      elevation: 2
+    },
     selectOption: {
       backgroundColor: theme.colors.backgroundGray100,
       borderRadius: 7.6,
@@ -82,7 +82,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
       paddingBottom: 15,
       borderBottomWidth: 1,
       borderColor: theme.colors.backgroundGray200,
-      height: 90
+      height: 100,
     },
     calendarHeaderContainer: {
       flex: 1,
@@ -101,35 +101,36 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
     dateNumber: {
       color: '#B1BCCC',
       fontSize: 16,
-      fontWeight: '500'
+      fontWeight: '500',
     },
     dateName: {
       color: '#B1BCCC',
       fontSize: 12,
-      textTransform: 'capitalize'
+      textTransform: 'capitalize',
     },
     highlightDateName: {
       color: '#344050',
       fontSize: 12,
-      textTransform: 'capitalize'
+      textTransform: 'capitalize',
     },
     highlightDateNumber: {
       color: '#344050',
       fontSize: 16,
-      textTransform: 'capitalize'
+      textTransform: 'capitalize',
     },
     disabledDateName: {
       color: '#B1BCCC',
       fontSize: 10,
       textTransform: 'capitalize',
-      opacity: 1
+      opacity: 1,
     },
     disabledDateNumber: {
       color: '#B1BCCC',
       fontSize: 14,
-      fontWeight: '500'
+      fontWeight: '500',
+
     }
-	})
+  })
 
   const preorderTypeList = [
     { key: 'business_hours', name: t('BUSINESS_HOURS', 'Business hours') },
@@ -191,7 +192,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
 
   const LeftSelector = () => {
     return (
-      <View style={{height: '100%', justifyContent: 'flex-end'}}>
+      <View style={{ height: '100%', justifyContent: 'flex-end' }}>
         <IconAntDesign
           name='caretleft'
           color={theme.colors.textNormal}
@@ -203,7 +204,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
 
   const RightSelector = () => {
     return (
-      <View style={{height: '100%', justifyContent: 'flex-end'}}>
+      <View style={{ height: '100%', justifyContent: 'flex-end' }}>
         <IconAntDesign
           name='caretright'
           color={theme.colors.textNormal}
@@ -280,7 +281,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             name='close'
             color={theme.colors.textThird}
             size={24}
-            style={{ marginLeft: -4}}
+            style={{ marginLeft: -4 }}
           />
         </TouchableOpacity>
         <BusinessInfoWrapper>
@@ -294,8 +295,8 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             <FastImage
               style={{ width: 59, height: 59 }}
               source={{
-                  uri: optimizeImage(business?.logo, 'h_60,c_limit'),
-                  priority: FastImage.priority.normal,
+                uri: optimizeImage(business?.logo, 'h_60,c_limit'),
+                priority: FastImage.priority.normal,
               }}
               resizeMode={FastImage.resizeMode.cover}
             />
@@ -372,7 +373,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
               setMenu={setMenu}
               menu={menu}
             />
-          </MenuWrapper> 
+          </MenuWrapper>
         )}
         <OrderTimeWrapper>
           <OText
@@ -393,11 +394,13 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
                 calendarHeaderStyle={styles.calendarHeader}
                 dateNumberStyle={styles.dateNumber}
                 dateNameStyle={styles.dateName}
-                iconContainer={{flex: 0.1}}
+                iconContainer={{ flex: 0.1 }}
                 highlightDateNameStyle={styles.highlightDateName}
                 highlightDateNumberStyle={styles.highlightDateNumber}
+                dayContainerStyle={{ height: '100%' }}
+                highlightDateContainerStyle={{ height: '100%' }}
                 calendarHeaderFormat='MMMM, YYYY'
-                iconStyle={{borderWidth: 1}}
+                iconStyle={{ borderWidth: 1 }}
                 selectedDate={selectDate}
                 datesWhitelist={datesWhitelist}
                 disabledDateNameStyle={styles.disabledDateName}
@@ -416,7 +419,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
                   <TimeItem active={timeSelected === time.value}>
                     <OText
                       size={14}
-                      color={timeSelected === time.value ? theme.colors.primary: theme.colors.textNormal}
+                      color={timeSelected === time.value ? theme.colors.primary : theme.colors.textNormal}
                       style={{
                         lineHeight: 24
                       }}
@@ -425,15 +428,15 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
                 </TouchableOpacity>
               ))}
               {timeList.length % 3 === 2 && (
-                <TimeItem style={{backgroundColor: 'transparent'}}/>
+                <TimeItem style={{ backgroundColor: 'transparent' }} />
               )}
             </TimeContentWrapper>
           </TimeListWrapper>
         </OrderTimeWrapper>
         <OButton
           text={t('GO_TO_MENU', 'Go to menu')}
-          textStyle={{color: 'white'}}
-          style={{borderRadius: 7.6, marginBottom: 20, marginTop: 30}}
+          textStyle={{ color: 'white' }}
+          style={{ borderRadius: 7.6, marginBottom: 20, marginTop: 30 }}
           onClick={() => handleClickBusiness()}
         />
       </PreOrderContainer>

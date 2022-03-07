@@ -12,11 +12,13 @@ import { ProductOption } from '../ProductOption';
 import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import {
+	Grayscale
+} from 'react-native-color-matrix-image-filters'
 
-import { View, TouchableOpacity, StyleSheet, Dimensions, Platform, AppRegistry, I18nManager } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, I18nManager, SafeAreaView } from 'react-native';
 
 import {
-	ProductHeader,
 	WrapHeader,
 	TopHeader,
 	WrapContent,
@@ -28,16 +30,17 @@ import {
 	WrapperSubOption,
 	ProductComment,
 	ProductActions,
-	ExtraOptionWrap
+	ExtraOptionWrap,
+	WeightUnitSwitch,
+	WeightUnitItem,
+	TopActions
 } from './styles';
 import { OButton, OIcon, OInput, OText } from '../shared';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ProductOptionSubOption } from '../ProductOptionSubOption';
 import { NotFoundSource } from '../NotFoundSource';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState } from 'react';
-import { useWindowDimensions } from 'react-native';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -58,8 +61,6 @@ export const ProductOptionsUI = (props: any) => {
 		handleChangeSuboptionState,
 		handleChangeCommentState,
 		productObject,
-		onClose,
-		isFromCheckout,
 	} = props;
 
 	const theme = useTheme();
@@ -92,7 +93,7 @@ export const ProductOptionsUI = (props: any) => {
 		},
 		btnBackArrow: {
 			borderWidth: 0,
-			backgroundColor: 'rgba(0,0,0,0.3)',
+			backgroundColor: '#FFF',
 			borderRadius: 24,
 			marginRight: 15,
 		},
@@ -155,9 +156,13 @@ export const ProductOptionsUI = (props: any) => {
 	const [gallery, setGallery] = useState([])
 	const [thumbsSwiper, setThumbsSwiper] = useState(0)
 
-	const { top, bottom } = useSafeAreaInsets();
-	const { height } = useWindowDimensions();
 	const [selOpt, setSelectedOpt] = useState(0);
+	const [isHaveWeight, setIsHaveWeight] = useState(false)
+	const [qtyBy, setQtyBy] = useState({
+		weight_unit: false,
+		pieces: true
+	})
+	const [pricePerWeightUnit, setPricePerWeightUnit] = useState<any>(null)
 
 	const swiperRef: any = useRef(null)
 
@@ -166,17 +171,18 @@ export const ProductOptionsUI = (props: any) => {
 		if (errors[`id:${id}`]) {
 			bgColor = 'rgba(255, 0, 0, 0.05)';
 		}
-		if (isSoldOut || maxProductQuantity <= 0) {
+		if (maxProductQuantity <= 0) {
 			bgColor = 'hsl(0, 0%, 72%)';
+		}
+		if (isSoldOut) {
+			bgColor = theme.colors.white;
 		}
 		return bgColor;
 	};
 
 	const handleSaveProduct = () => {
-		console.log('----- click handle ------')
 		const isErrors = Object.values(errors).length > 0;
 		if (!isErrors) {
-			console.log('----- save handle ------')
 			handleSave && handleSave();
 			return;
 		}
@@ -206,9 +212,12 @@ export const ProductOptionsUI = (props: any) => {
 	}
 
 	const handleRedirectLogin = () => {
-		onClose();
 		navigation.navigate('Login');
 	};
+
+	const handleSwitchQtyUnit = (val: string) => {
+		setQtyBy({ [val]: true, [!val]: false })
+	}
 
 	useEffect(() => {
 		const productImgList: any = []
@@ -219,6 +228,11 @@ export const ProductOptionsUI = (props: any) => {
 			}
 		}
 		setGallery(productImgList)
+
+		if (product?.weight && product?.weight_unit) {
+			setIsHaveWeight(true)
+			setPricePerWeightUnit(product?.price / product?.weight)
+		}
 	}, [product])
 
 	const saveErrors =
@@ -275,14 +289,16 @@ export const ProductOptionsUI = (props: any) => {
 		</>
 	);
 
+	const handleGoBack = navigation?.canGoBack()
+		? () => navigation.goBack()
+		: () => navigation.navigate('Business', { store: props.businessSlug })
+
 	return (
-		<>
+		<SafeAreaView style={{ flex: 1 }}>
 			<TopHeader>
-				<TouchableOpacity
-					style={styles.headerItem}
-					onPress={onClose}>
-					<OIcon src={theme.images.general.close} width={16} />
-				</TouchableOpacity>
+				<TopActions onPress={() => handleGoBack()}>
+					<OIcon src={theme.images.general.arrow_left} width={15} />
+				</TopActions>
 			</TopHeader>
 			<ScrollView>
 				{!error && (
@@ -334,7 +350,7 @@ export const ProductOptionsUI = (props: any) => {
 												key={i}
 											>
 												<FastImage
-													style={{ height: '100%' }}
+													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
 													source={{
 														uri: optimizeImage(img, 'h_258,c_limit'),
 														priority: FastImage.priority.normal,
@@ -368,7 +384,8 @@ export const ProductOptionsUI = (props: any) => {
 														style={{
 															borderColor: theme.colors.lightGray,
 															borderRadius: 8,
-															minHeight: '100%'
+															minHeight: '100%',
+															opacity: isSoldOut ? 0.5 : 1
 														}}
 														width={56}
 														height={56}
@@ -405,23 +422,12 @@ export const ProductOptionsUI = (props: any) => {
 												style={{ flex: 1, marginBottom: 10 }}>
 												{product?.name || productCart.name}
 											</OText>
-											{product?.calories && (
+											{!!product?.calories && (
 												<OText size={16} style={{ color: '#808080' }}>{product?.calories} cal
 												</OText>
 											)}
 										</View>
-										<View style={{ flexDirection: 'row', marginBottom: 10 }}>
-											<OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
-											{product?.offer_price && (
-												<OText style={{    fontSize: 14,
-													color: '#808080',
-													textDecorationLine: 'line-through',
-													marginLeft: 7,
-													marginRight: 7
-												}}>{parsePrice(product?.offer_price)}</OText>
-											)}
-										</View>
-										{((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (product?.estimated_person)) && (
+										{((!!product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (!!product?.estimated_person)) && (
 											<OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'} mBottom={7}>
 												{
 													((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
@@ -435,9 +441,22 @@ export const ProductOptionsUI = (props: any) => {
 												}
 											</OText>
 										)}
-										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
-											{productCart.price ? parsePrice(productCart.price) : ''}
-										</OText>
+										{isHaveWeight ? (
+											<OText size={16} lineHeight={24} color={theme.colors.primary}>{parsePrice(pricePerWeightUnit)} / {product?.weight_unit}</OText>
+										) : (
+											<View style={{ flexDirection: 'row', marginBottom: 10 }}>
+												<OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+												{product?.offer_price !== null && product?.in_offer && (
+													<OText style={{
+														fontSize: 14,
+														color: '#808080',
+														textDecorationLine: 'line-through',
+														marginLeft: 7,
+														marginRight: 7
+													}}>{parsePrice(product?.offer_price)}</OText>
+												)}
+											</View>
+										)}
 									</>
 								)}
 							</ProductTitle>
@@ -456,7 +475,7 @@ export const ProductOptionsUI = (props: any) => {
 										key={tag.id}
 										style={styles.productTagWrapper}
 									>
-										{tag?.image ? (
+										{!!tag?.image ? (
 											<OIcon
 												url={optimizeImage(tag?.image, 'h_40,c_limit')}
 												style={styles.productTagImageStyle}
@@ -547,13 +566,7 @@ export const ProductOptionsUI = (props: any) => {
 															{t('INGREDIENTS', 'Ingredients')}
 														</OText>
 													</SectionTitle>
-													<WrapperIngredients
-														style={{
-															backgroundColor:
-																isSoldOut || maxProductQuantity <= 0
-																	? 'hsl(0, 0%, 72%)'
-																	: theme.colors.white,
-														}}>
+													<WrapperIngredients>
 														{product?.ingredients.map((ingredient: any) => (
 															<ProductIngredient
 																key={ingredient.id}
@@ -562,6 +575,7 @@ export const ProductOptionsUI = (props: any) => {
 																	productCart.ingredients[`id:${ingredient.id}`]
 																}
 																onChange={handleChangeIngredientState}
+																isSoldOut={isSoldOut}
 															/>
 														))}
 													</WrapperIngredients>
@@ -599,6 +613,7 @@ export const ProductOptionsUI = (props: any) => {
 																					return (
 																						<ProductOptionSubOption
 																							key={suboption.id}
+																							isSoldOut={isSoldOut}
 																							onChange={
 																								handleChangeSuboptionState
 																							}
@@ -632,13 +647,7 @@ export const ProductOptionsUI = (props: any) => {
 															{t('INGREDIENTS', 'Ingredients')}
 														</OText>
 													</SectionTitle>
-													<WrapperIngredients
-														style={{
-															backgroundColor:
-																isSoldOut || maxProductQuantity <= 0
-																	? 'hsl(0, 0%, 72%)'
-																	: theme.colors.white,
-														}}>
+													<WrapperIngredients>
 														{product?.ingredients.map((ingredient: any) => (
 															<ProductIngredient
 																key={ingredient.id}
@@ -647,6 +656,7 @@ export const ProductOptionsUI = (props: any) => {
 																	productCart.ingredients[`id:${ingredient.id}`]
 																}
 																onChange={handleChangeIngredientState}
+																isSoldOut={isSoldOut}
 															/>
 														))}
 													</WrapperIngredients>
@@ -748,16 +758,12 @@ export const ProductOptionsUI = (props: any) => {
 						</WrapContent>
 					</View>
 				)}
-				{error && error.length > 0 && (
+				{!!error && error.length > 0 && (
 					<NotFoundSource content={error[0]?.message || error[0]} />
 				)}
 			</ScrollView>
 			{!loading && !error && product && (
-				<ProductActions
-					style={{
-						paddingBottom: Platform.OS === 'ios' ? bottom + 30 : bottom + 80
-					}}
-				>
+				<ProductActions>
 					<OText size={16} lineHeight={24} weight={'600'}>
 						{productCart.total ? parsePrice(productCart?.total) : ''}
 					</OText>
@@ -779,8 +785,10 @@ export const ProductOptionsUI = (props: any) => {
 							<OText
 								size={12}
 								lineHeight={18}
-								style={{ minWidth: 29, textAlign: 'center' }}>
-								{productCart.quantity}
+								style={{ minWidth: 40, textAlign: 'center' }}
+							>
+								{qtyBy?.pieces && productCart.quantity}
+								{qtyBy?.weight_unit && productCart.quantity * product?.weight}
 							</OText>
 							<TouchableOpacity
 								onPress={increment}
@@ -801,6 +809,38 @@ export const ProductOptionsUI = (props: any) => {
 									}
 								/>
 							</TouchableOpacity>
+							{isHaveWeight && (
+								<WeightUnitSwitch>
+									<TouchableOpacity
+										onPress={() => handleSwitchQtyUnit('pieces')}
+									>
+										<WeightUnitItem active={qtyBy?.pieces}>
+											<OText
+												size={12}
+												lineHeight={18}
+												color={qtyBy?.pieces ? theme.colors.primary : theme.colors.textNormal}
+											>
+												{t('PIECES', 'pcs')}
+											</OText>
+										</WeightUnitItem>
+									</TouchableOpacity>
+									<View style={{ alignItems: 'flex-start' }}>
+										<TouchableOpacity
+											onPress={() => handleSwitchQtyUnit('weight_unit')}
+										>
+											<WeightUnitItem active={qtyBy?.weight_unit}>
+												<OText
+													size={12}
+													lineHeight={18}
+													color={qtyBy?.weight_unit ? theme.colors.primary : theme.colors.textNormal}
+												>
+													{product?.weight_unit}
+												</OText>
+											</WeightUnitItem>
+										</TouchableOpacity>
+									</View>
+								</WeightUnitSwitch>
+							)}
 						</View>
 					)}
 					<View
@@ -869,7 +909,7 @@ export const ProductOptionsUI = (props: any) => {
 					</View>
 				</ProductActions>
 			)}
-		</>
+		</SafeAreaView>
 	);
 };
 

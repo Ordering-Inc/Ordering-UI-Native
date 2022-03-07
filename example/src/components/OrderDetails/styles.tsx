@@ -119,3 +119,10 @@ export const LoadingWrapper = styled.View`
   justify-content: flex-start;
   align-content: flex-start;
 `
+
+export const Divider = styled.View`
+  border-color: #EAEAEA;
+  border-width: 1px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+`

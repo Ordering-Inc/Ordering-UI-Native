@@ -8,7 +8,7 @@ import {
   useValidationFields,
 } from 'ordering-components/native';
 
-import { CContainer, CheckoutAction, } from './styles';
+import { CContainer, CheckoutAction, Divider } from './styles';
 
 import { OSBill, OSTable, OSCoupon, OSTotal, OSRow } from '../OrderSummary/styles';
 
@@ -16,8 +16,7 @@ import { ProductItemAccordion } from '../ProductItemAccordion';
 import { BusinessItemAccordion } from '../BusinessItemAccordion';
 import { CouponControl } from '../CouponControl';
 
-import { OButton, OModal, OText, OInput } from '../shared';
-import { ProductForm } from '../ProductForm';
+import { OButton, OModal, OText, OInput, OAlert } from '../shared';
 import { UpsellingProducts } from '../UpsellingProducts';
 import { verifyDecimals } from '../../utils';
 import { useTheme } from 'styled-components/native';
@@ -36,7 +35,8 @@ const CartUI = (props: any) => {
     handleCartOpen,
     setIsCartsLoading,
     handleChangeComment,
-    commentState
+    commentState,
+    handleRemoveOfferClick
   } = props
 
   const theme = useTheme()
@@ -46,11 +46,10 @@ const CartUI = (props: any) => {
   const [{ parsePrice, parseNumber, parseDate }] = useUtils()
   const [validationFields] = useValidationFields()
 
-  const [openProduct, setModalIsOpen] = useState(false)
-  const [curProduct, setCurProduct] = useState<any>(null)
   const [openUpselling, setOpenUpselling] = useState(false)
   const [canOpenUpselling, setCanOpenUpselling] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null })
+  const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
 
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
@@ -64,14 +63,15 @@ const CartUI = (props: any) => {
   }
 
   const handleEditProduct = (product: any) => {
-    setCurProduct(product)
-    setModalIsOpen(true)
-  }
-
-  const handlerProductAction = (product: any) => {
-    if (Object.keys(product).length) {
-      setModalIsOpen(false)
-    }
+    props?.onNavigationRedirect &&
+      props?.onNavigationRedirect('ProductDetails', {
+        businessId: cart?.business_id,
+        isCartProduct: true,
+        productCart: product,
+        businessSlug: cart?.business?.slug,
+        categoryId: product?.category_id,
+        productId: product?.id,
+      })
   }
 
   const handleClearProducts = async () => {
@@ -106,6 +106,22 @@ const CartUI = (props: any) => {
     }
   }
 
+  const getIncludedTaxesDiscounts = () => {
+    return cart?.taxes?.filter((tax : any) => tax?.type === 1)?.reduce((carry : number, tax : any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
+  }
+
+  const onRemoveOffer = (id: number) => {
+    setConfirm({
+      open: true,
+      content: [t('QUESTION_DELETE_OFFER', 'Are you sure that you want to delete the offer?')],
+      title: t('OFFER', 'Offer'),
+      handleOnAccept: () => {
+        setConfirm({ ...confirm, open: false })
+        handleRemoveOfferClick(id)
+      }
+    })
+  }
+
   return (
     <CContainer>
       <BusinessItemAccordion
@@ -137,11 +153,11 @@ const CartUI = (props: any) => {
                 {parsePrice(cart?.subtotal + getIncludedTaxes())}
               </OText>
             </OSTable>
-            {cart?.discount > 0 && cart?.total >= 0 && (
+            {cart?.discount > 0 && cart?.total >= 0 && cart?.offers?.length === 0 && (
               <OSTable>
                 {cart?.discount_type === 1 ? (
                   <OText>
-                    {t('DISCOUNT', 'Discount')}
+                    {t('DISCOUNT', 'Discount')}{' '}
                     <OText>{`(${verifyDecimals(cart?.discount_rate, parsePrice)}%)`}</OText>
                   </OText>
                 ) : (
@@ -150,18 +166,35 @@ const CartUI = (props: any) => {
                 <OText>- {parsePrice(cart?.discount || 0)}</OText>
               </OSTable>
             )}
+            {
+              cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any) => (
+                <OSTable key={offer.id}>
+                  <OSRow>
+                    <OText>{offer.name}</OText>
+                    {offer.rate_type === 1 && (
+                      <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                    )}
+                    <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_1' })}>
+                      <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => onRemoveOffer(offer?.id)}>
+                      <AntIcon name='closecircle' size={18} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                  </OSRow>
+                  <OText>
+                    - {parsePrice(offer?.summary?.discount)}
+                  </OText>
+                </OSTable>
+              ))
+            }
+            <Divider />
             {cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
               <OSTable>
-                {cart?.discount_type === 1 ? (
-                  <>
-                    <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
-                    <OText>{parsePrice(cart?.subtotal_with_discount + cart?.tax || 0)}</OText>
-                  </>
+                <OText numberOfLines={1}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                {cart?.business?.tax_type === 1 ? (
+                  <OText>{parsePrice(cart?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0)}</OText>
                 ) : (
-                  <>
-                    <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
-                    <OText>{parsePrice(cart?.subtotal_with_discount || 0)}</OText>
-                  </>
+                  <OText>{parsePrice(cart?.subtotal_with_discount ?? 0)}</OText>
                 )}
               </OSTable>
             )}
@@ -173,11 +206,11 @@ const CartUI = (props: any) => {
                       {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
                       {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
                     </OText>
-                    <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: tax })} >
+                    <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: tax, type: 'tax' })} >
                       <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
                     </TouchableOpacity>
                   </OSRow>
-                  <OText>{parsePrice(tax?.summary?.tax || 0)}</OText>
+                  <OText>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
                 </OSTable>
               ))
             }
@@ -189,11 +222,32 @@ const CartUI = (props: any) => {
                       {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
                       ({parsePrice(fee?.fixed)} + {fee?.percentage}%){' '}
                     </OText>
-                    <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee })} >
+                    <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee, type: 'fee' })} >
                       <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
                     </TouchableOpacity>
                   </OSRow>
-                  <OText>{parsePrice(fee?.summary?.fixed + fee?.summary?.percentage || 0)}</OText>
+                  <OText>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0)}</OText>
+                </OSTable>
+              ))
+            }
+            {
+              cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 3)?.map((offer: any) => (
+                <OSTable key={offer.id}>
+                  <OSRow>
+                    <OText>{offer.name}</OText>
+                    {offer.rate_type === 1 && (
+                      <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                    )}
+                    <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_3' })}>
+                      <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => onRemoveOffer(offer?.id)}>
+                      <AntIcon name='closecircle' size={18} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                  </OSRow>
+                  <OText>
+                    - {parsePrice(offer?.summary?.discount)}
+                  </OText>
                 </OSTable>
               ))
             }
@@ -203,6 +257,27 @@ const CartUI = (props: any) => {
                 <OText>{parsePrice(cart?.delivery_price)}</OText>
               </OSTable>
             )}
+            {
+              cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
+                <OSTable key={offer.id}>
+                  <OSRow>
+                    <OText>{offer.name}</OText>
+                    {offer.rate_type === 1 && (
+                      <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                    )}
+                    <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_2' })}>
+                      <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => onRemoveOffer(offer?.id)}>
+                      <AntIcon name='closecircle' size={18} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                  </OSRow>
+                  <OText>
+                    - {parsePrice(offer?.summary?.discount)}
+                  </OText>
+                </OSTable>
+              ))
+            }
             {cart?.driver_tip > 0 && (
               <OSTable>
                 <OText>
@@ -233,7 +308,7 @@ const CartUI = (props: any) => {
                   {t('TOTAL', 'Total')}
                 </OText>
                 <OText style={{ fontWeight: 'bold' }} color={theme.colors.primary}>
-                  {cart?.total >= 1 && parsePrice(cart?.total)}
+                  {parsePrice(cart?.total >= 0 ? cart?.total : 0)}
                 </OText>
               </OSTable>
             </OSTotal>
@@ -292,45 +367,44 @@ const CartUI = (props: any) => {
           </CheckoutAction>
         )}
       </BusinessItemAccordion>
-      <OModal
-        open={openProduct}
-        entireModal
-        customClose
-        onClose={() => setModalIsOpen(false)}
-        isAvoidKeyBoardView
-      >
-        <ProductForm
-          isCartProduct
-          productCart={curProduct}
-          businessSlug={cart?.business?.slug}
-          businessId={cart?.business_id}
-          categoryId={curProduct?.category_id}
-          productId={curProduct?.id}
-          onSave={handlerProductAction}
-          onClose={() => setModalIsOpen(false)}
-        />
 
-      </OModal>
-
-      {openUpselling && (
-        <UpsellingProducts
-          handleUpsellingPage={handleUpsellingPage}
-          openUpselling={openUpselling}
-          businessId={cart?.business_id}
-          business={cart?.business}
-          cartProducts={cart?.products}
-          canOpenUpselling={canOpenUpselling}
-          setCanOpenUpselling={setCanOpenUpselling}
-        />
-      )}
+      {
+        openUpselling && (
+          <UpsellingProducts
+            handleUpsellingPage={handleUpsellingPage}
+            openUpselling={openUpselling}
+            businessId={cart?.business_id}
+            business={cart?.business}
+            cartProducts={cart?.products}
+            canOpenUpselling={canOpenUpselling}
+            setCanOpenUpselling={setCanOpenUpselling}
+            setOpenUpselling={setOpenUpselling}
+            onRedirect={props.onNavigationRedirect}
+          />
+        )
+      }
       <OModal
         open={openTaxModal.open}
         onClose={() => setOpenTaxModal({ open: false, data: null })}
         entireModal
+        title={`${openTaxModal.data?.name ||
+          t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ${openTaxModal.data?.rate_type !== 2 ? `(${typeof openTaxModal.data?.rate === 'number' ? `${openTaxModal.data?.rate}%` : `${parsePrice(openTaxModal.data?.fixed ?? 0)} + ${openTaxModal.data?.percentage}%`})` : ''}  `}
       >
-        <TaxInformation data={openTaxModal.data} products={cart?.products} />
+        <TaxInformation
+          type={openTaxModal.type}
+          data={openTaxModal.data}
+          products={cart?.products}
+        />
       </OModal>
-    </CContainer>
+      <OAlert
+        open={confirm.open}
+        title={confirm.title}
+        content={confirm.content}
+        onAccept={confirm.handleOnAccept}
+        onCancel={() => setConfirm({ ...confirm, open: false, title: null })}
+        onClose={() => setConfirm({ ...confirm, open: false, title: null })}
+      />
+    </CContainer >
   )
 }
 

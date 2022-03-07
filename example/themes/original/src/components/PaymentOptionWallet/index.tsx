@@ -7,6 +7,7 @@ import {
   PaymentOptionWallet as PaymentOptionWalletController,
   useLanguage,
   useUtils,
+  useOrder
 } from 'ordering-components/native'
 
 import {
@@ -18,7 +19,7 @@ import { OText } from '../shared'
 
 const PaymentOptionWalletUI = (props: any) => {
   const {
-    cart,
+    businessId,
     walletsState,
     selectWallet,
     deletetWalletSelected
@@ -26,7 +27,10 @@ const PaymentOptionWalletUI = (props: any) => {
 
   const theme = useTheme()
   const [, t] = useLanguage()
+  const [{ carts }] = useOrder()
   const [{ parsePrice }] = useUtils()
+
+  const cart = carts?.[`businessId:${businessId}`] ?? {}
 
   const styles = StyleSheet.create({
     checkBoxStyle: {
@@ -68,7 +72,7 @@ const PaymentOptionWalletUI = (props: any) => {
     if (!walletsState.loading && walletsState.result?.length) {
       setCheckedState(
         walletsState.result?.map((wallet: any) => {
-          return !!cart?.wallets?.find((w: any) => w.id === wallet.id)
+          return !!cart?.payment_events?.find((w: any) => w.wallet_id === wallet.id)
         })
       )
     }

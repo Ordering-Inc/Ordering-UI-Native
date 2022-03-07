@@ -10,18 +10,19 @@ const ProductIngredientUI = (props: any) => {
 	const {
 		state,
 		ingredient,
-		toggleSelect
+		toggleSelect,
+		isSoldOut
 	} = props
 
 	const theme = useTheme();
 
 	return (
-		<Container onPress={() => toggleSelect()}>
+		<Container disabled={isSoldOut} onPress={() => toggleSelect()}>
 			<View>
-				{state?.selected ? (
+				{state?.selected && !isSoldOut ? (
 					<MaterialCommunityIcon name='checkbox-marked' color={theme.colors.primary} size={24} />
 				) : (
-					<MaterialCommunityIcon name='checkbox-blank-outline' color={theme.colors.backgroundDark} size={24} />
+					<MaterialCommunityIcon name='checkbox-blank-outline' color='#cbcbcb' size={24} />
 				)}
 			</View>
 			<OText mLeft={10}>

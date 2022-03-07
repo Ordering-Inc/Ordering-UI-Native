@@ -7,9 +7,10 @@ export const BIContainer = styled.View`
   opacity: 1;
   border-radius: 7.6px;
   overflow: hidden;
-
+  min-height: 120px;
   ${(props: any) => props.isClosed && css`
-	 opacity: 0.5;
+	  opacity: 0.5;
+    min-height: 60px;
   `}
 `
 
@@ -51,4 +52,11 @@ export const BIActions = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+`
+
+export const PriceContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1
 `
