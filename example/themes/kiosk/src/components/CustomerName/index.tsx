@@ -72,12 +72,13 @@ const CustomerName = (props: Props): React.ReactElement => {
       <OButton
         text={t('SKIP', 'Skip')}
         onClick={onProceedToPay}
-        textStyle={{color: theme.colors.primaryContrast, fontSize: 20}}
+        textStyle={{color: theme.colors.primary, fontSize: 20}}
         parentStyle={{
           height: orientationState?.orientation === PORTRAIT
             ? 50 : 100
         }}
         style={{
+          backgroundColor: theme.colors.white,
           width: orientationState?.orientation === PORTRAIT
             ? orientationState?.dimensions.width - 40
             : orientationState?.dimensions.width * 0.1,
