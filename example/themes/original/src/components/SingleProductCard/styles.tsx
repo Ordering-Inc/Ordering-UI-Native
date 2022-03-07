@@ -27,3 +27,7 @@ export const QuantityContainer = styled.View`
   align-items: center;
   justify-content: center;
 `
+export const PricesContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+`

@@ -289,16 +289,16 @@ export const ProductOptionsUI = (props: any) => {
 		</>
 	);
 
-  const handleGoBack = navigation?.canGoBack()
-    ? () => navigation.goBack()
-    : () => navigation.navigate('Business', { store: props.businessSlug })
+	const handleGoBack = navigation?.canGoBack()
+		? () => navigation.goBack()
+		: () => navigation.navigate('Business', { store: props.businessSlug })
 
 	return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <TopHeader>
-	  	<TopActions onPress={() => handleGoBack()}>
-            <OIcon src={theme.images.general.arrow_left} width={15} />
-          </TopActions>
+		<SafeAreaView style={{ flex: 1 }}>
+			<TopHeader>
+				<TopActions onPress={() => handleGoBack()}>
+					<OIcon src={theme.images.general.arrow_left} width={15} />
+				</TopActions>
 			</TopHeader>
 			<ScrollView>
 				{!error && (
@@ -349,13 +349,13 @@ export const ProductOptionsUI = (props: any) => {
 												style={styles.slide1}
 												key={i}
 											>
-                        <FastImage
-                          style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
-                          source={{
-                            uri: optimizeImage(img, 'h_258,c_limit'),
-                            priority: FastImage.priority.normal,
-                          }}
-                        />
+												<FastImage
+													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
+													source={{
+														uri: optimizeImage(img, 'h_258,c_limit'),
+														priority: FastImage.priority.normal,
+													}}
+												/>
 											</View>
 										))}
 									</Swiper>
@@ -379,18 +379,18 @@ export const ProductOptionsUI = (props: any) => {
 														opacity: index === thumbsSwiper ? 1 : 0.8
 													}}
 												>
-                          <OIcon
-                            url={img}
-                            style={{
-                              borderColor: theme.colors.lightGray,
-                              borderRadius: 8,
-                              minHeight: '100%',
-                              opacity: isSoldOut ? 0.5 : 1
-                            }}
-                            width={56}
-                            height={56}
-                            cover
-                          />
+													<OIcon
+														url={img}
+														style={{
+															borderColor: theme.colors.lightGray,
+															borderRadius: 8,
+															minHeight: '100%',
+															opacity: isSoldOut ? 0.5 : 1
+														}}
+														width={56}
+														height={56}
+														cover
+													/>
 												</View>
 											</TouchableOpacity>
 
@@ -446,7 +446,7 @@ export const ProductOptionsUI = (props: any) => {
 										) : (
 											<View style={{ flexDirection: 'row', marginBottom: 10 }}>
 												<OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
-												{!!product?.offer_price && (
+												{product?.offer_price !== null && product?.in_offer && (
 													<OText style={{
 														fontSize: 14,
 														color: '#808080',
@@ -460,7 +460,7 @@ export const ProductOptionsUI = (props: any) => {
 									</>
 								)}
 							</ProductTitle>
-						  <ProductDescription>
+							<ProductDescription>
 								<OText color={theme.colors.textSecondary} size={12} lineHeight={18}>
 									{product?.description || productCart?.description}
 								</OText>
@@ -785,7 +785,7 @@ export const ProductOptionsUI = (props: any) => {
 							<OText
 								size={12}
 								lineHeight={18}
-								style={{ minWidth: 29, textAlign: 'center' }}
+								style={{ minWidth: 40, textAlign: 'center' }}
 							>
 								{qtyBy?.pieces && productCart.quantity}
 								{qtyBy?.weight_unit && productCart.quantity * product?.weight}
@@ -809,36 +809,38 @@ export const ProductOptionsUI = (props: any) => {
 									}
 								/>
 							</TouchableOpacity>
-							<WeightUnitSwitch>
-								<TouchableOpacity
-									onPress={() => handleSwitchQtyUnit('pieces')}
-								>
-									<WeightUnitItem active={qtyBy?.pieces}>
-										<OText
-											size={12}
-											lineHeight={18}
-											color={qtyBy?.pieces ? theme.colors.primary : theme.colors.textNormal}
-										>
-											{t('PIECES', 'pieces')}
-										</OText>
-									</WeightUnitItem>
-								</TouchableOpacity>
-								<View style={{ alignItems: 'flex-start' }}>
+							{isHaveWeight && (
+								<WeightUnitSwitch>
 									<TouchableOpacity
-										onPress={() => handleSwitchQtyUnit('weight_unit')}
+										onPress={() => handleSwitchQtyUnit('pieces')}
 									>
-										<WeightUnitItem active={qtyBy?.weight_unit}>
+										<WeightUnitItem active={qtyBy?.pieces}>
 											<OText
 												size={12}
 												lineHeight={18}
-												color={qtyBy?.weight_unit ? theme.colors.primary : theme.colors.textNormal}
+												color={qtyBy?.pieces ? theme.colors.primary : theme.colors.textNormal}
 											>
-												{product?.weight_unit}
+												{t('PIECES', 'pcs')}
 											</OText>
 										</WeightUnitItem>
 									</TouchableOpacity>
-								</View>
-							</WeightUnitSwitch>
+									<View style={{ alignItems: 'flex-start' }}>
+										<TouchableOpacity
+											onPress={() => handleSwitchQtyUnit('weight_unit')}
+										>
+											<WeightUnitItem active={qtyBy?.weight_unit}>
+												<OText
+													size={12}
+													lineHeight={18}
+													color={qtyBy?.weight_unit ? theme.colors.primary : theme.colors.textNormal}
+												>
+													{product?.weight_unit}
+												</OText>
+											</WeightUnitItem>
+										</TouchableOpacity>
+									</View>
+								</WeightUnitSwitch>
+							)}
 						</View>
 					)}
 					<View
@@ -907,7 +909,7 @@ export const ProductOptionsUI = (props: any) => {
 					</View>
 				</ProductActions>
 			)}
-    </SafeAreaView>
+		</SafeAreaView>
 	);
 };
 
