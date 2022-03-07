@@ -8,7 +8,7 @@ import OImage from '../../components/shared/OImage';
 import OButton from '../../components/shared/OButton';
 import { LanguageSelector } from '../../components/LanguageSelector';
 import { LogoutPopup } from '../../components/LogoutPopup';
-import {PORTRAIT, LANDSCAPE, useDeviceOrientation} from "../../../../../src/hooks/DeviceOrientation";
+import { PORTRAIT, LANDSCAPE, useDeviceOrientation } from "../../../../../src/hooks/DeviceOrientation";
 
 const Intro = (props: any): React.ReactElement => {
   const { navigation } = props;
@@ -87,7 +87,7 @@ const Intro = (props: any): React.ReactElement => {
               source={theme.images.general.homeHeroLandscape}
               width={orientationState?.dimensions?.width * 0.40}
               height={orientationState?.dimensions?.height * 1.1}
-              style={{bottom: 100, right: 100}}
+              style={{ bottom: 100, right: 100 }}
               resizeMode='cover'
             />
 
@@ -114,7 +114,7 @@ const Intro = (props: any): React.ReactElement => {
 
                 <OButton
                   style={styles.buttonLandStyle}
-                  text={t('TOUCH_TO_ORDER', 'Touch to order')}
+                  text={t('TOUCH_ANYWHERE_TO_ORDER', 'Touch anywhere to order')}
                   parentStyle={{
                     alignItems: 'center',
                     width: orientationState?.dimensions?.width - _offset
@@ -138,7 +138,7 @@ const Intro = (props: any): React.ReactElement => {
 
 const styles = StyleSheet.create({
   buttonLandStyle: {
-    width: 260,
+    width: 290,
     marginBottom: 16
   }
 });
