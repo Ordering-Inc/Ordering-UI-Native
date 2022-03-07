@@ -16,6 +16,7 @@ import { Product } from '../../types';
 import QuantityControl from '../QuantityControl';
 import { LANDSCAPE, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
 import { useTheme } from 'styled-components/native';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 const CartItem = (props: CartItemProps) => {
   const theme = useTheme()
@@ -97,7 +98,6 @@ const CartItem = (props: CartItemProps) => {
                 <OButton
                   bgColor="transparent"
                   borderColor="transparent"
-                  imgLeftSrc={theme.images.general.edit}
                   text={t('EDIT', 'Edit')}
                   style={{ justifyContent: 'flex-start', paddingLeft: 0, maxWidth: 80 }}
                   textStyle={{
@@ -105,16 +105,18 @@ const CartItem = (props: CartItemProps) => {
                     marginLeft: 6,
                   }}
                   onClick={() => { onEditProduct ? onEditProduct(product) : null }}
+                  iconProps={{ name: 'edit' }}
+                  IconCustom={() => <FontAwesomeIcon name='edit' size={24} color={theme.colors.primary} />}
                 />
                 <OIconButton
                   bgColor="transparent"
                   borderColor="transparent"
-                  RenderIcon={isProductIngredients && (() => 
-                      <EvilIcons
-                        name={isActive ? 'chevron-up': 'chevron-down'}
-                        size={40}
-                        color={theme.colors.primary}
-                      />
+                  RenderIcon={isProductIngredients && (() =>
+                    <EvilIcons
+                      name={isActive ? 'chevron-up' : 'chevron-down'}
+                      size={40}
+                      color={theme.colors.primary}
+                    />
                   )}
                   style={{ justifyContent: 'flex-start', right: 40 }}
                   onClick={() => (!product?.valid_menu && isCartProduct)

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { ImageSourcePropType, ImageStyle, TextStyle, ViewStyle, ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'styled-components/native';
@@ -28,11 +28,15 @@ const OptionCard = (props: Props) => {
               <ActivityIndicator size='large' color='#ffffff' />
             </ActivityIndicatorContainer>
           )}
-          <OIcon
-            src={props.icon}
-            style={{ marginBottom: 10, ...props?.iconStyle }}
-          />
-
+          {props.icon && (
+            <OIcon
+              src={props.icon}
+              style={{ marginBottom: 10, ...props?.iconStyle }}
+            />
+          )}
+          {props.VectorIcon && (
+            <props.VectorIcon />
+          )}
           <OText
             weight="700"
             color="white"
@@ -97,6 +101,7 @@ interface Props {
   callToActionTextStyle?: TextStyle;
   callToActionIcon?: ImageSourcePropType;
   callToActionIconStyle?: ImageStyle;
+  VectorIcon?: FunctionComponent;
 }
 
 export default OptionCard;
