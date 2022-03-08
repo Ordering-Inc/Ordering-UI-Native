@@ -7,7 +7,7 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
-import { CardContainer, CardInfo, SoldOut, QuantityContainer } from './styles';
+import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer } from './styles';
 import { StyleSheet } from 'react-native';
 import { OText, OIcon } from '../shared';
 import FastImage from 'react-native-fast-image'
@@ -51,6 +51,13 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 			textAlign: 'center',
 			borderRadius: 25,
 			alignItems: 'center'
+		},
+		regularPriceStyle: {
+			fontSize: 12,
+			color: '#808080',
+			textDecorationLine: 'line-through',
+			marginLeft: 7,
+			marginRight: 7
 		}
 	});
 
@@ -97,13 +104,13 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 				(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
 			]}
 			onPress={() => onProductClick?.(product)}>
-				{productAddedToCartLength > 0 && (
-					<QuantityContainer style={[styles.quantityContainer, {
-						transform: [{ translateX: 10 }, { translateY: -10 }],
-					}]}>
-						<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>
-					</QuantityContainer>
-				)}
+			{productAddedToCartLength > 0 && (
+				<QuantityContainer style={[styles.quantityContainer, {
+					transform: [{ translateX: 10 }, { translateY: -10 }],
+				}]}>
+					<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>
+				</QuantityContainer>
+			)}
 			<CardInfo>
 				<OText
 					size={12}
@@ -113,9 +120,12 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 					style={styles.line18}>
 					{product?.name}
 				</OText>
-				<OText size={12} weight={'400'} style={styles.line18} color={theme.colors.textNormal}>
-					{parsePrice(product?.price)}
-				</OText>
+				<PricesContainer>
+					<OText color={theme.colors.primary}>{parsePrice(product?.price)}</OText>
+					{product?.offer_price !== null && product?.in_offer && (
+						<OText style={styles.regularPriceStyle}>{parsePrice(product?.offer_price)}</OText>
+					)}
+				</PricesContainer>
 				<OText
 					size={10}
 					numberOfLines={2}
