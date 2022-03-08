@@ -7,6 +7,7 @@ import {
 	ScrollView,
 	Platform,
 	TouchableOpacity,
+	RefreshControl
 } from 'react-native';
 import {
 	BusinessList as BusinessesListingController,
@@ -57,11 +58,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		handleBusinessClick,
 		paginationProps,
 		handleChangeSearch,
-    businessId
+		businessId
 	} = props;
 
 	const theme = useTheme();
 	const isFocused = useIsFocused();
+	const [refreshing] = useState(false);
 
 	const styles = StyleSheet.create({
 		container: {
@@ -142,15 +144,15 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	};
 
 	const getDistance = (lat1: any, lon1: any, lat2: any, lon2: any) => {
-    const R = 6371 // km
-    const dLat = convertToRadian(lat2 - lat1)
-    const dLon = convertToRadian(lon2 - lon1)
-    const curLat1 = convertToRadian(lat1)
-    const curLat2 = convertToRadian(lat2)
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(curLat1) * Math.cos(curLat2)
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-    return R * c
-  }
+		const R = 6371 // km
+		const dLat = convertToRadian(lat2 - lat1)
+		const dLon = convertToRadian(lon2 - lon1)
+		const curLat1 = convertToRadian(lat1)
+		const curLat2 = convertToRadian(lat2)
+		const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(curLat1) * Math.cos(curLat2)
+		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+		return R * c
+	}
 
 	useEffect(() => {
 		if (businessesList.businesses.length > 0) {
@@ -162,6 +164,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			setFeaturedBusinesses(ary);
 		}
 	}, [businessesList.businesses]);
+
 	// const resetInactivityTimeout = () => {
 	//   clearTimeout(timerId.current)
 	//   timerId.current = setInterval(() => {
@@ -173,23 +176,39 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	//   resetInactivityTimeout()
 	// }, [])
 
+	const handleOnRefresh = () => {
+		const hasMore = !(
+			paginationProps.totalPages === paginationProps.currentPage
+		);
+		if (!businessesList.loading && hasMore) {
+			getBusinesses();
+		}
+	}
+
 	useEffect(() => {
 		Geolocation.getCurrentPosition((pos) => {
-      const crd = pos.coords
-      const distance = getDistance(crd.latitude, crd.longitude, orderState?.options?.address?.location?.lat, orderState?.options?.address?.location?.lng)
-      if (distance > 20) setIsFarAway(true)
+			const crd = pos.coords
+			const distance = getDistance(crd.latitude, crd.longitude, orderState?.options?.address?.location?.lat, orderState?.options?.address?.location?.lng)
+			if (distance > 20) setIsFarAway(true)
 			else setIsFarAway(false)
-    }, (err) => {
-      console.log(`ERROR(${err.code}): ${err.message}`)
-    }, {
-      enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
-    })
-  }, [orderState?.options?.address?.location])
+		}, (err) => {
+			console.log(`ERROR(${err.code}): ${err.message}`)
+		}, {
+			enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
+		})
+	}, [orderState?.options?.address?.location])
 
 	return (
-		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}>
+		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}
+			refreshControl={
+				<RefreshControl
+					refreshing={refreshing}
+					onRefresh={() => handleOnRefresh()}
+				/>
+			}
+		>
 			<HeaderWrapper
-				source={theme.images.backgrounds.business_list_header}
+				// source={theme.images.backgrounds.business_list_header}
 				style={{ paddingTop: top + 20 }}>
 				{!auth && (
 					<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
@@ -257,72 +276,78 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							/>
 						</WrapMomentOption>
 
-            {!businessId && (
-              <SearchBar
-                onSearch={handleChangeSearch}
-                searchValue={searchValue}
-                lazyLoad
-                isCancelXButtonShow={!!searchValue}
-                borderStyle={styles.borderStyle}
-                onCancel={() => handleChangeSearch('')}
-                placeholder={t('SEARCH', 'Search')}
-                height={26}
-                inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
-              />
-            )}
+						{!businessId && (
+							<SearchBar
+								onSearch={handleChangeSearch}
+								searchValue={searchValue}
+								lazyLoad
+								isCancelXButtonShow={!!searchValue}
+								borderStyle={styles.borderStyle}
+								onCancel={() => handleChangeSearch('')}
+								placeholder={t('SEARCH', 'Search')}
+								height={26}
+								inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
+							/>
+						)}
 
 					</View>
 				</OrderControlContainer>
 			</HeaderWrapper>
-			{isFocused && (
-				<OrderProgressWrapper>
-					<OrderProgress
-						{...props}
-					/>
-				</OrderProgressWrapper>
-			)}
-			{!businessId && !props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
-				<FeaturedWrapper>
-					<OText size={16} style={{ marginLeft: 40 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('FEATURED_BUSINESS', 'Featured business')}</OText>
-					<ScrollView
-						showsHorizontalScrollIndicator={false}
-						nestedScrollEnabled
-						horizontal contentContainerStyle={{ paddingHorizontal: 40 }}>
-						{featuredBusiness.map((bAry: any, idx) => (
-							<View key={'f-listing_' + idx}>
-								<BusinessFeaturedController
-									key={bAry[0].id}
-									business={bAry[0]}
-									handleCustomClick={handleBusinessClick}
-									orderType={orderState?.options?.type}
-								/>
-								{bAry.length > 1 && (
+			{
+				isFocused && (
+					<OrderProgressWrapper>
+						<OrderProgress
+							{...props}
+						/>
+					</OrderProgressWrapper>
+				)
+			}
+			{
+				!businessId && !props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
+					<FeaturedWrapper>
+						<OText size={16} style={{ marginLeft: 40 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('FEATURED_BUSINESS', 'Featured business')}</OText>
+						<ScrollView
+							showsHorizontalScrollIndicator={false}
+							nestedScrollEnabled
+							horizontal contentContainerStyle={{ paddingHorizontal: 40 }}>
+							{featuredBusiness.map((bAry: any, idx) => (
+								<View key={'f-listing_' + idx}>
 									<BusinessFeaturedController
-										key={bAry[1].id}
-										business={bAry[1]}
+										key={bAry[0].id}
+										business={bAry[0]}
 										handleCustomClick={handleBusinessClick}
 										orderType={orderState?.options?.type}
 									/>
-								)}
-							</View>
-						))}
-					</ScrollView>
-				</FeaturedWrapper>
-			)}
+									{bAry.length > 1 && (
+										<BusinessFeaturedController
+											key={bAry[1].id}
+											business={bAry[1]}
+											handleCustomClick={handleBusinessClick}
+											orderType={orderState?.options?.type}
+										/>
+									)}
+								</View>
+							))}
+						</ScrollView>
+					</FeaturedWrapper>
+				)
+			}
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-      {!businessId && !props.franchiseId && (
-        <HighestRatedBusinesses onBusinessClick={handleBusinessClick} navigation={navigation} />
-      )}
+			{
+				!businessId && !props.franchiseId && (
+					<HighestRatedBusinesses onBusinessClick={handleBusinessClick} navigation={navigation} />
+				)
+			}
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 			<ListWrapper>
-        {!businessId && (
-          <BusinessTypeFilter
-            images={props.images}
-            businessTypes={props.businessTypes}
-            defaultBusinessType={props.defaultBusinessType}
-            handleChangeBusinessType={handleChangeBusinessType}
-          />
-        )}
+				{!businessId && (
+					<BusinessTypeFilter
+						images={props.images}
+						businessTypes={props.businessTypes}
+						defaultBusinessType={props.defaultBusinessType}
+						handleChangeBusinessType={handleChangeBusinessType}
+					/>
+				)}
 				{!businessesList.loading && businessesList.businesses.length === 0 && (
 					<NotFoundSource
 						content={t(
