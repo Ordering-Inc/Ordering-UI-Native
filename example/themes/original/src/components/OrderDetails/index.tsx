@@ -35,6 +35,7 @@ import {
   Icons,
   OrderDriver,
   Map,
+  Divider,
 } from './styles';
 import { OButton, OIcon, OModal, OText } from '../shared';
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -100,7 +101,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     business: false,
     driver: false,
   });
-  const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null })
+  const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
 
   const { order, businessData } = props.order;
 
@@ -349,6 +350,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }
 
+  const getIncludedTaxesDiscounts = () => {
+    return order?.taxes?.filter((tax: any) => tax?.type === 1)?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
+  }
+
   const handleClickOrderReview = (order: any) => {
     navigation.navigate(
       'ReviewOrder',
@@ -527,7 +532,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       onPress={() => order?.business?.cellphone &&
                         Linking.openURL(`tel:${order?.business?.cellphone}`)
                       }
-                      style={{ paddingEnd: 5 }}>
+                      style={{ paddingEnd: 5 }}
+                    >
                       <OIcon
                         src={theme.images.general.phone}
                         width={16}
@@ -730,10 +736,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <Table>
                 <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{t('SUBTOTAL', 'Subtotal')}</OText>
                 <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-                  {parsePrice(((order?.summary?.subtotal || order?.subtotal) + getIncludedTaxes()))}
+                  {parsePrice(((order?.summary?.subtotal ?? order?.subtotal) + getIncludedTaxes()))}
                 </OText>
               </Table>
-              {(order?.summary?.discount > 0 || order?.discount > 0) && (
+              {(order?.summary?.discount > 0 ?? order?.discount > 0) && order?.offers?.length === 0 && (
                 <Table>
                   {order?.offer_type === 1 ? (
                     <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
@@ -752,23 +758,52 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </Table>
               )}
               {
+                order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any) => (
+                  <Table key={offer.id}>
+                    <OSRow>
+                      <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal} numberOfLines={1}>
+                        {offer.name}
+                        {offer.rate_type === 1 && (
+                          <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                        )}
+                      </OText>
+                      <TouchableOpacity style={{ marginLeft: 5 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_1' })}>
+                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    </OSRow>
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>- {parsePrice(offer?.summary?.discount)}</OText>
+                  </Table>
+                ))
+              }
+              <Divider />
+              {order?.summary?.subtotal_with_discount > 0 && order?.summary?.discount > 0 && order?.summary?.total >= 0 && (
+                <Table>
+                  <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                  {order?.tax_type === 1 ? (
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice((order?.summary?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0))}</OText>
+                  ) : (
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(order?.summary?.subtotal_with_discount ?? 0)}</OText>
+                  )}
+                </Table>
+              )}
+              {
                 order?.taxes?.length === 0 && order?.tax_type === 2 && (
                   <Table>
-                    <OText size={12}>
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
                       {t('TAX', 'Tax')} {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
                     </OText>
-                    <OText size={12}>{parsePrice(order?.summary?.tax || 0)}</OText>
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(order?.summary?.tax || 0)}</OText>
                   </Table>
                 )
               }
               {
                 order?.fees?.length === 0 && (
                   <Table>
-                    <OText size={12}>
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
                       {t('SERVICE_FEE', 'Service fee')}
                       {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
                     </OText>
-                    <OText size={12}>{parsePrice(order?.summary?.service_fee || 0)}</OText>
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(order?.summary?.service_fee || 0)}</OText>
                   </Table>
                 )
               }
@@ -776,15 +811,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0).map((tax: any) => (
                   <Table key={tax.id}>
                     <OSRow>
-                      <OText size={12} numberOfLines={1}>
+                      <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal} numberOfLines={1}>
                         {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
                         {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
                       </OText>
-                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: tax })}>
+                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: tax, type: 'tax' })}>
                         <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
-                    <OText size={12}>{parsePrice(tax?.summary?.tax || 0)}</OText>
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
                   </Table>
                 ))
               }
@@ -792,53 +827,84 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 order?.fees?.length > 0 && order?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0))?.map((fee: any) => (
                   <Table key={fee.id}>
                     <OSRow>
-                      <OText size={12} numberOfLines={1}>
+                      <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal} numberOfLines={1}>
                         {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
                         ({parsePrice(fee?.fixed)} + {fee.percentage}%){' '}
                       </OText>
-                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee })}>
+                      <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee, type: 'fee' })}>
                         <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
-                    <OText size={12}>{parsePrice(fee?.fixed + fee?.summary?.percentage || 0)}</OText>
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0)}</OText>
                   </Table>
                 ))
               }
-              {(order?.summary?.delivery_price > 0 ||
-                order?.deliveryFee > 0) && (
-                  <Table>
-                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
-                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-                      {parsePrice(
-                        order?.summary?.delivery_price || order?.deliveryFee,
-                      )}
-                    </OText>
+              {
+                order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 3)?.map((offer: any) => (
+                  <Table key={offer.id}>
+                    <OSRow>
+                      <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal} numberOfLines={1}>
+                        {offer.name}
+                        {offer.rate_type === 1 && (
+                          <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                        )}
+                      </OText>
+                      <TouchableOpacity style={{ marginLeft: 5 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_3' })}>
+                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    </OSRow>
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>- {parsePrice(offer?.summary?.discount)}</OText>
                   </Table>
-                )}
-              <Table>
-                <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-                  {t('DRIVER_TIP', 'Driver tip')}
-                  {(order?.summary?.driver_tip > 0 || order?.driver_tip > 0) &&
-                    parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
-                    !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                    `(${verifyDecimals(order?.driver_tip, parseNumber)}%)`}
-                </OText>
-                <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-                  {parsePrice(
-                    order?.summary?.driver_tip || order?.totalDriverTip,
-                  )}
-                </OText>
-              </Table>
+                ))
+              }
+              {order?.summary?.delivery_price > 0 && (
+                <Table>
+                  <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
+                  <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(order?.summary?.delivery_price)}</OText>
+                </Table>
+              )}
+              {
+                order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
+                  <Table key={offer.id}>
+                    <OSRow>
+                      <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal} numberOfLines={1}>
+                        {offer.name}
+                        {offer.rate_type === 1 && (
+                          <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                        )}
+                      </OText>
+                      <TouchableOpacity style={{ marginLeft: 5 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_2' })}>
+                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    </OSRow>
+                    <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>- {parsePrice(offer?.summary?.discount)}</OText>
+                  </Table>
+                ))
+              }
+              {order?.summary?.driver_tip > 0 && (
+                <Table>
+                  <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
+                    {t('DRIVER_TIP', 'Driver tip')}
+                    {order?.summary?.driver_tip > 0 &&
+                      parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
+                      !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
+                      (
+                        `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`
+                      )}
+                  </OText>
+                  <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip)}</OText>
+                </Table>
+              )}
               <Total>
                 <Table>
                   <OText size={20} lineHeight={30} weight={'600'} color={theme.colors.textNormal}>{t('TOTAL', 'Total')}</OText>
                   <OText size={20} lineHeight={30} weight={'600'} color={theme.colors.textNormal}>
-                    {parsePrice(order?.summary?.total || order?.total)}
+                    {parsePrice(order?.summary?.total ?? order?.total)}
                   </OText>
                 </Table>
               </Total>
               {order?.payment_events?.length > 0 && (
-                <View style={{marginTop: 10}}>
+                <View style={{ marginTop: 10 }}>
                   <OText size={20} weight='bold' color={theme.colors.textNormal}>{t('PAYMENTS', 'Payments')}</OText>
                   <View
                     style={{
@@ -904,10 +970,16 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       </OModal>
       <OModal
         open={openTaxModal.open}
-        onClose={() => setOpenTaxModal({ open: false, data: null })}
+        onClose={() => setOpenTaxModal({ open: false, data: null, type: '' })}
         entireModal
+        title={`${openTaxModal.data?.name ||
+          t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ${openTaxModal.data?.rate_type !== 2 ? `(${typeof openTaxModal.data?.rate === 'number' ? `${openTaxModal.data?.rate}%` : `${parsePrice(openTaxModal.data?.fixed ?? 0)} + ${openTaxModal.data?.percentage}%`})` : ''}  `}
       >
-        <TaxInformation data={openTaxModal.data} products={order?.products} />
+        <TaxInformation
+          type={openTaxModal.type}
+          data={openTaxModal.data}
+          products={order?.products}
+        />
       </OModal>
     </OrderDetailsContainer>
   );
