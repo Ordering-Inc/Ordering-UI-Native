@@ -33,8 +33,8 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		canOpenUpselling,
 		setCanOpenUpselling,
 		isFromCart,
-    onNavigationRedirect,
-    onGoBack
+		onNavigationRedirect,
+		onGoBack
 	} = props
 
 	const theme = useTheme();
@@ -71,16 +71,16 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 	const [, t] = useLanguage()
 	const { bottom } = useSafeAreaInsets()
 
-  const cart = carts?.[`businessId:${props.businessId}`] ?? {}
-  const cartProducts = cart?.products?.length
-    ? cart?.products.map((product: any) => product.id)
-    : []
+	const cart = carts?.[`businessId:${props.businessId}`] ?? {}
+	const cartProducts = cart?.products?.length
+		? cart?.products.map((product: any) => product.id)
+		: []
 
-  const productsList = !upsellingProducts.loading && !upsellingProducts.error
-    ? upsellingProducts?.products?.length
-      ? upsellingProducts?.products.filter((product: any) => !cartProducts.includes(product.id))
-      : (props?.products ?? []).filter((product: any) => !cartProducts.includes(product.id)) ?? []
-    : []
+  	const productsList = !upsellingProducts.loading && !upsellingProducts.error
+      ? upsellingProducts?.products?.length
+      	? upsellingProducts?.products.filter((product: any) => !cartProducts.includes(product.id))
+      	: (props?.products ?? []).filter((product: any) => !cartProducts.includes(product.id)) ?? []
+      : []
 
 	useEffect(() => {
 		if (!isCustomMode && !props.products) {
@@ -93,6 +93,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 			}
 		}
 	}, [upsellingProducts.loading, upsellingProducts?.products.length])
+
+	useEffect(() => {
+		Object.keys(cart).length === 0 && onNavigationRedirect && onNavigationRedirect('MyOrders')
+	}, [cart])
 
 	const handleFormProduct = (product: any) => {
     onNavigationRedirect && onNavigationRedirect('ProductDetails', {
