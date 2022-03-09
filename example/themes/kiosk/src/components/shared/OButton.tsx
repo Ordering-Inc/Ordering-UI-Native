@@ -10,6 +10,8 @@ import {
 
 import * as React from 'react';
 import styled from 'styled-components/native';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { Icon, IconProps } from 'react-native-vector-icons/Icon';
 
 const StyledButton = styled.View<Props>`
   background-color: ${(props: any) => props.theme.colors.primary};
@@ -77,17 +79,19 @@ interface Props {
   isCircle?: boolean;
   bgColor?: string;
   borderColor?: string;
+  iconProps?: IconProps;
+  IconCustom?: React.FunctionComponent
 }
 
 const OButton = (props: Props): React.ReactElement => {
   if (props.isDisabled) {
     return (
       <View style={props.parentStyle}>
-      <StyledButtonDisabled style={props.style}>
-        <StyledTextDisabled style={props.disabledTextStyle ? props.disabledTextStyle : props.textStyle}>
-          {props.text}
-        </StyledTextDisabled>
-      </StyledButtonDisabled>
+        <StyledButtonDisabled style={props.style}>
+          <StyledTextDisabled style={props.disabledTextStyle ? props.disabledTextStyle : props.textStyle}>
+            {props.text}
+          </StyledTextDisabled>
+        </StyledButtonDisabled>
       </View>
     );
   }
@@ -110,6 +114,15 @@ const OButton = (props: Props): React.ReactElement => {
       <StyledButton style={props.bgColor ? { ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor } : props.style}>
         {props.imgLeftSrc ? (
           <StyledImage style={props.imgLeftStyle} source={props.imgLeftSrc} />
+        ) : null}
+        {props.iconProps ? (
+          <>
+            {props?.IconCustom ? (
+              <props.IconCustom {...props.iconProps} />
+            ) : (
+              <AntDesignIcon {...props.iconProps} />
+            )}
+          </>
         ) : null}
         {props.text ? (
           <StyledText style={props.textStyle}>{props.text}</StyledText>
