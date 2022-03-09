@@ -21,10 +21,10 @@ import { Cart as TypeCart } from '../../types';
 import CartItem from '../CartItem';
 import NavBar from '../NavBar';
 import { CouponControl } from '../CouponControl';
-import { LANDSCAPE, PORTRAIT, useDeviceOrientation} from "../../../../../src/hooks/DeviceOrientation";
+import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from "../../../../../src/hooks/DeviceOrientation";
 import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
 import { Container } from '../../../../../src/layouts/Container';
-
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 const CartUI = (props: any) => {
   const {
     cart,
@@ -35,7 +35,7 @@ const CartUI = (props: any) => {
     removeProduct,
     setIsCartsLoading,
     navigation,
-  } : CartUIProps = props
+  }: CartUIProps = props
 
   const theme = useTheme()
   const [, t] = useLanguage()
@@ -83,8 +83,8 @@ const CartUI = (props: any) => {
 
   const handleChangeOrderType = () => {
     navigation.push('DeliveryType', {
-      callback : () => {navigation.pop(1)},
-      goBack: () => {navigation.pop(1)},
+      callback: () => { navigation.pop(1) },
+      goBack: () => { navigation.pop(1) },
     });
   }
 
@@ -97,7 +97,7 @@ const CartUI = (props: any) => {
           title={t('CONFIRM_YOUR_ORDER', 'Confirm your order')}
           onActionLeft={goToBack}
           style={{ height: orientationState?.dimensions?.height * 0.08 }}
-          btnStyle={{paddingLeft: 0}}
+          btnStyle={{ paddingLeft: 0 }}
           rightComponent={(
             <OButton
               text={t('CANCEL_ORDER', 'Cancel order')}
@@ -183,6 +183,7 @@ const CartUI = (props: any) => {
                 </OText>
               </OSTable>
               {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == PORTRAIT && (
+
                 <OSTable
                   style={{
                     backgroundColor: theme.colors.success,
@@ -197,10 +198,7 @@ const CartUI = (props: any) => {
                       flexDirection: 'row',
                     }}
                   >
-                    <OIcon
-                      src={theme.images.general.check_decagram}
-                    />
-
+                    <AntDesignIcon name='checkcircle' size={24} color='#00D27A' />
                     {cart?.discount_type === 1 ? (
                       <OText
                         mLeft={15}
@@ -219,8 +217,6 @@ const CartUI = (props: any) => {
                       </OText>
                     )}
                   </View>
-
-
                   <OText
                     size={16}
                     color={theme.colors.green}
@@ -252,9 +248,9 @@ const CartUI = (props: any) => {
                     {cart?.driver_tip_rate > 0 &&
                       parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
                       !!!parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-                    (
-                      `(${parseNumber(cart?.driver_tip_rate)}%)`
-                    )}
+                      (
+                        `(${parseNumber(cart?.driver_tip_rate)}%)`
+                      )}
                   </OText>
                   <OText>{parsePrice(cart?.driver_tip)}</OText>
                 </OSTable>
@@ -294,7 +290,7 @@ const CartUI = (props: any) => {
       <>
         <FloatingLayout isIos={Platform.OS === 'ios'}>
           <CheckoutAction>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
+            <View style={{ display: 'flex', flexDirection: 'row' }}>
               {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == LANDSCAPE && (
                 <OSTable
                   style={{
@@ -311,10 +307,7 @@ const CartUI = (props: any) => {
                       flexDirection: 'row',
                     }}
                   >
-                    <OIcon
-                      src={theme.images.general.check_decagram}
-                    />
-
+                    <AntDesignIcon name='checkcircle' size={24} color='#00D27A' />
                     {cart?.discount_type === 1 ? (
                       <OText
                         mLeft={15}
@@ -369,7 +362,7 @@ const CartUI = (props: any) => {
                   imgRightSrc={null}
                   textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
                   onClick={() => { navigation?.navigate('CustomerName', { cartUuid: cart?.uuid }) }}
-                  style={{width: '100%', marginTop: 4}}
+                  style={{ width: '100%', marginTop: 4 }}
                 />
               </View>
             </View>

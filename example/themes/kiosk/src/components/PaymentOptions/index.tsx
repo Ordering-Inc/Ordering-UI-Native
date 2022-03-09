@@ -19,6 +19,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
 import GridContainer from '../../layouts/GridContainer';
 import { OModal, PaymentOptionStripe } from '../../../../../src';
+import AntIconDesign from 'react-native-vector-icons/AntDesign'
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const PaymentOptionsUI = (props: any) => {
   const {
@@ -41,7 +43,7 @@ const PaymentOptionsUI = (props: any) => {
   } = props;
 
   const theme = useTheme();
-  const [, {showToast}] = useToast();
+  const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
   const [userErrors, setUserErrors] = useState<any>([]);
@@ -134,52 +136,52 @@ const PaymentOptionsUI = (props: any) => {
     CASH_ID:
       cashIndex !== -1
         ? {
-            style: cardStyle,
-            title: t('CASH', 'Cash'),
-            description: t(
-              'GO_FOR_YOR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER',
-              'Pay with cash in the front counter',
-            ),
-            bgImage: theme.images.general.cash,
-            icon: theme.images.general.shoppingCart,
-            callToActionText: t('LETS_GO', 'LETS_GO'),
-            onClick: () =>
-              onSelectPaymethod(supportedMethods[cashIndex], false),
-            ...supportedMethods[cashIndex],
-          }
+          style: cardStyle,
+          title: t('CASH', 'Cash'),
+          description: t(
+            'GO_FOR_YOR_RECEIPT_AND_GO_TO_THE_FRONT_COUNTER',
+            'Pay with cash in the front counter',
+          ),
+          bgImage: theme.images.general.cash,
+          callToActionText: t('LETS_GO', 'LETS_GO'),
+          VectorIcon: () => <AntIconDesign name='shoppingcart' size={28} color='white' style={{ marginBottom: 10 }} />,
+          onClick: () =>
+            onSelectPaymethod(supportedMethods[cashIndex], false),
+          ...supportedMethods[cashIndex],
+        }
         : null,
 
     CARD_ON_DELIVERY_ID:
       cardOnDeliveryIndex !== -1
         ? {
-            style: cardStyle,
-            title: t('CARD', supportedMethods[cardOnDeliveryIndex]?.name),
-            description: t(
-              'WE_ACCEPT_EVERY_DEBIT_OR_CREDIT_CARD',
-              'We accept every debit or credit card',
-            ),
-            bgImage: theme.images.general.carddelivery,
-            icon: theme.images.general.pushPin,
-            callToActionText: t("LETS_GO", "Let's go"),
-            onClick: () => onSelectPaymethod(supportedMethods[cardOnDeliveryIndex], false),
-            ...supportedMethods[cardOnDeliveryIndex],
-          }
+          style: cardStyle,
+          title: t('CARD', supportedMethods[cardOnDeliveryIndex]?.name),
+          description: t(
+            'WE_ACCEPT_EVERY_DEBIT_OR_CREDIT_CARD',
+            'We accept every debit or credit card',
+          ),
+          bgImage: theme.images.general.carddelivery,
+          callToActionText: t("LETS_GO", "Let's go"),
+          VectorIcon: () => <MaterialIcon name='pin-outline' size={28} color='white' style={{ marginBottom: 10 }} />,
+          onClick: () => onSelectPaymethod(supportedMethods[cardOnDeliveryIndex], false),
+          ...supportedMethods[cardOnDeliveryIndex],
+        }
         : null,
     STRIPE:
       stripeIndex !== -1
         ? {
-            style: cardStyle,
-            title: t('STRIPE', supportedMethods[stripeIndex]?.name),
-            description: t('STRIPE', 'Stripe'),
-            bgImage: theme.images.general.carddelivery,
-            icon: theme.images.general.pushPin,
-            callToActionText: t('INSERT_INFO', 'Test info'),
-            onClick: () => {
-              onSelectPaymethod(supportedMethods[stripeIndex], false);
-              setIsOpenModal(true)
-            },
-            ...supportedMethods[stripeIndex],
-          }
+          style: cardStyle,
+          title: t('STRIPE', supportedMethods[stripeIndex]?.name),
+          description: t('STRIPE', 'Stripe'),
+          bgImage: theme.images.general.carddelivery,
+          callToActionText: t('INSERT_INFO', 'Test info'),
+          VectorIcon: () => <MaterialIcon name='pin-outline' size={28} color='white' style={{ marginBottom: 10 }} />,
+          onClick: () => {
+            onSelectPaymethod(supportedMethods[stripeIndex], false);
+            setIsOpenModal(true)
+          },
+          ...supportedMethods[stripeIndex],
+        }
         : null,
   };
 
@@ -193,11 +195,11 @@ const PaymentOptionsUI = (props: any) => {
         <NavBar
           title={t('PAYMENT_METHODS', 'Payment methods')}
           onActionLeft={goToBack}
-          btnStyle={{paddingLeft: 0}}
+          btnStyle={{ paddingLeft: 0 }}
         />
 
         <View
-          style={{marginVertical: orientationState?.dimensions?.height * 0.03}}>
+          style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
           <OText size={orientationState?.dimensions?.width * 0.048}>
             {t('HOW_WOULD_YOU', 'How would you')} {'\n'}
             <OText
@@ -209,10 +211,10 @@ const PaymentOptionsUI = (props: any) => {
         </View>
 
         {supportedMethods?.length > 0 && (
-          <GridContainer style={{justifyContent: 'space-between'}}>
+          <GridContainer style={{ justifyContent: 'space-between' }}>
             {propsOfItems.CARD_ON_DELIVERY_ID && (
-              <View style={{marginBottom: orientationState?.orientation === LANDSCAPE ? 20 : 0}}>
-                <OptionCard {...propsOfItems?.CARD_ON_DELIVERY_ID} styke/>
+              <View style={{ marginBottom: orientationState?.orientation === LANDSCAPE ? 20 : 0 }}>
+                <OptionCard {...propsOfItems?.CARD_ON_DELIVERY_ID} styke />
               </View>
             )}
 
@@ -249,7 +251,7 @@ const PaymentOptionsUI = (props: any) => {
             )}
           </GridContainer>
         )}
-        <View style={{height: orientationState?.dimensions?.height * 0.05}} />
+        <View style={{ height: orientationState?.dimensions?.height * 0.05 }} />
         <OModal
           open={isOpenModal}
           onClose={() => setIsOpenModal(false)}
