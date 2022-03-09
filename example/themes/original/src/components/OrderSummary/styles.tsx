@@ -39,3 +39,10 @@ export const OSRow = styled.View`
   overflow: hidden;
   width: 80%;
 `
+
+export const Divider = styled.View`
+  border-color: #EAEAEA;
+  border-width: 1px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+`

@@ -116,5 +116,12 @@ export const Map = styled.View`
   width: 100%;
   height: 250px;
   margin-top: 20px;
-  border-radius: 20px
+  border-radius: 20px;
+`
+
+export const Divider = styled.View`
+  border-color: #EAEAEA;
+  border-width: 1px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 `
