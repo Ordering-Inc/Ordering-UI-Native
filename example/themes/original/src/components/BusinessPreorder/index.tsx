@@ -142,7 +142,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
 
   const validateSelectedDate = (curdate: any, menu: any) => {
     const day = moment(curdate).format('d')
-    setIsEnabled(menu.schedule[day].enabled || false)
+    setIsEnabled(menu?.schedule[day]?.enabled || false)
   }
 
   const getTimes = (curdate: any, menu: any) => {
