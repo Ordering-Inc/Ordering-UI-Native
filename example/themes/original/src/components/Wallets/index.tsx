@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Pressable, View } from 'react-native';
 import { useTheme } from 'styled-components/native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
@@ -59,6 +59,14 @@ const WalletsUI = (props: any) => {
   const goToBack = () => {
     navigation?.canGoBack() && navigation.goBack()
   }
+
+  useEffect(() => {
+    if (configs?.wallet_enabled?.value === '0') {
+      navigation.navigate('BottomTab', {
+        screen: 'Profile'
+      })
+    }
+  }, [configs])
 
   return (
     <Container>

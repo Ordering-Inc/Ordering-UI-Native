@@ -127,6 +127,8 @@ const CheckoutUI = (props: any) => {
 	const [openChangeStore, setOpenChangeStore] = useState(false)
 	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
 
+  const isWalletEnabled = configs?.wallet_enabled?.value === '1'
+
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
 		: configs?.driver_tip_options?.value || []
@@ -506,7 +508,7 @@ const CheckoutUI = (props: any) => {
 						</ChSection>
 					)}
 
-          {!cartState.loading && cart && (
+          {!cartState.loading && cart && isWalletEnabled && (
             <WalletPaymentOptionContainer>
               <PaymentOptionWallet
                 cart={cart}
