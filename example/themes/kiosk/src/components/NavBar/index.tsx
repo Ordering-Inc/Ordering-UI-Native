@@ -5,7 +5,6 @@ import { ImageStyle, TextStyle, View, Platform } from 'react-native'
 import { OrderTypeSelector } from '../OrderTypeSelector'
 import { useConfig, useLanguage } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
-
 const Wrapper = styled.View`
   background-color: ${(props: any) => props.theme.colors.white};
   padding: 10px 0px 20px 0px;
@@ -65,27 +64,28 @@ const NavBar = (props: Props) => {
 
   return (
     <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
-      {(props?.onActionLeft || props?.leftImg) && (
+      {(props?.onActionLeft) && (
         <OButton
-          imgLeftSrc={props.leftImg || theme.images.general.arrow_left}
+          imgLeftSrc={props.leftImg}
           imgRightSrc={null}
           style={{ ...btnBackArrow, ...props.btnStyle }}
           onClick={props.onActionLeft}
-          imgLeftStyle= {props.imgLeftStyle}
+          imgLeftStyle={props.imgLeftStyle}
+          {...(!props.leftImg && { iconProps: { name: 'arrowleft', size: 28, color: props.btnStyle?.color } })}
         />)
       }
       <TitleTopWrapper>
         {props.withIcon
           ? (
-              <OIcon
-                url={props.icon}
-                style={{
-                  borderColor: theme.colors.lightGray,
-                  borderRadius: 20,
-                }}
-                width={60}
-                height={60}
-              />
+            <OIcon
+              url={props.icon}
+              style={{
+                borderColor: theme.colors.lightGray,
+                borderRadius: 20,
+              }}
+              width={60}
+              height={60}
+            />
           )
           : null
         }
@@ -125,7 +125,7 @@ const NavBar = (props: Props) => {
         </View>
       )}
 
-      { props.rightComponent }
+      {props.rightComponent}
     </Wrapper>
   )
 }

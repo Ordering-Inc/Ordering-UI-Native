@@ -69,7 +69,7 @@ export const ProductOptionsUI = (props: any) => {
 
   const { product, loading, error } = productObject;
 
-  const HEADER_EXPANDED_HEIGHT =  Platform.OS === 'ios' ? orientationState?.dimensions?.height * 0.65 : orientationState?.dimensions?.height * 0.4;
+  const HEADER_EXPANDED_HEIGHT = Platform.OS === 'ios' ? orientationState?.dimensions?.height * 0.65 : orientationState?.dimensions?.height * 0.4;
   const HEADER_COLLAPSED_HEIGHT = orientationState?.dimensions?.height * 0.2;
 
   const isError = (id: number) => {
@@ -100,35 +100,35 @@ export const ProductOptionsUI = (props: any) => {
   const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors)?.length > 0
 
   const [scrollY] = useState(new Animated.Value(0));
-  
+
   const headerHeight = scrollY.interpolate({
-    inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
     outputRange: [HEADER_EXPANDED_HEIGHT, HEADER_COLLAPSED_HEIGHT],
     extrapolate: 'clamp'
   });
   const heroContainerOpacity = scrollY.interpolate({
-    inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
     outputRange: [1, 0],
     extrapolate: 'clamp'
   });
   const heroTranslateY = scrollY.interpolate({
-    inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
-    outputRange: [0, -(HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT)],
+    inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
+    outputRange: [0, -(HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT)],
     extrapolate: 'clamp'
   });
   const navBar1ContainerOpacity = scrollY.interpolate({
-    inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
     outputRange: [1, 0],
     extrapolate: 'clamp'
   });
   const navBar2ContainerOpacity = scrollY.interpolate({
-    inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
     outputRange: [0, 1],
     extrapolate: 'clamp'
   });
 
   const collapsedBarContainerOpacity = scrollY.interpolate({
-    inputRange: [HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT - ((HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT) * 0.08), HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    inputRange: [HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT - ((HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT) * 0.08), HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
     outputRange: [0, 1],
     extrapolate: 'clamp'
   });
@@ -223,7 +223,7 @@ export const ProductOptionsUI = (props: any) => {
     shadow: {
       shadowColor: '#000',
       shadowOffset: { width: 1, height: 1 },
-      shadowOpacity:  0.4,
+      shadowOpacity: 0.4,
       shadowRadius: 3,
       elevation: 5,
     }
@@ -235,33 +235,31 @@ export const ProductOptionsUI = (props: any) => {
         style={styles.mainContainer}
         contentContainerStyle={styles.scrollContainer}
         onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY }} }],
-          {useNativeDriver: false})
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false })
         }
         scrollEventThrottle={16}
       >
         <Animated.View style={[styles.header, { height: headerHeight }]}>
           {!isDrawer && (<Animated.View style={{ opacity: navBar1ContainerOpacity }}>
-              <NavBar
-                {...navBarProps}
-                titleColor={theme.colors.white}
-                {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left_white })}
-                btnStyle={{
-                  width: 55,
-                  height: 55,
-                  backgroundColor: 'black',
-                  borderRadius: 100,
-                  opacity: 0.8,
-                  left: 20,
-                }}
-                imgLeftStyle={{ width: 27, height: 27 }}
-              />
-            </Animated.View>
+            <NavBar
+              {...navBarProps}
+              titleColor={theme.colors.white}
+              btnStyle={{
+                width: 66,
+                height: 66,
+                backgroundColor: 'black',
+                borderRadius: 100,
+                color: 'white',
+                opacity: 0.8,
+                left: 20,
+              }}
+            />
+          </Animated.View>
           )}
           <Animated.View style={{ opacity: navBar2ContainerOpacity, position: 'absolute' }}>
             <NavBar
               {...navBarProps}
-              {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left })}
               btnStyle={{
                 width: 55,
                 height: 55,
@@ -269,7 +267,6 @@ export const ProductOptionsUI = (props: any) => {
                 borderRadius: 100,
                 left: 20,
               }}
-              imgLeftStyle={{ width: 27, height: 27 }}
             />
           </Animated.View>
 
@@ -288,7 +285,7 @@ export const ProductOptionsUI = (props: any) => {
               }}
             >
               <OImage
-                source={{uri: product?.images}}
+                source={{ uri: product?.images }}
                 width={70}
                 height={70}
                 resizeMode="cover"
@@ -319,7 +316,7 @@ export const ProductOptionsUI = (props: any) => {
             opacity: heroContainerOpacity,
             position: 'absolute',
             zIndex: -100,
-            transform: [{translateY: heroTranslateY }],
+            transform: [{ translateY: heroTranslateY }],
           }}>
             <View
               style={{
@@ -330,13 +327,13 @@ export const ProductOptionsUI = (props: any) => {
                 backgroundColor: 'rgba(24, 28, 50, 0.4)',
               }}
             >
-              <ImageBackground source={{ uri: product?.images }} resizeMode='cover' style={{ flex:1, justifyContent: 'center' }} />
+              <ImageBackground source={{ uri: product?.images }} resizeMode='cover' style={{ flex: 1, justifyContent: 'center' }} />
 
             </View>
 
             <Animated.View
               style={{
-                transform: [{translateY: heroTranslateY }],
+                transform: [{ translateY: heroTranslateY }],
                 width: orientationState?.dimensions?.width * 0.75,
                 height: HEADER_EXPANDED_HEIGHT / 2,
                 position: 'relative',
@@ -347,7 +344,7 @@ export const ProductOptionsUI = (props: any) => {
             >
               <OText
                 color={theme.colors.white}
-                size={orientationState?.dimensions?.width * 0.048}
+                size={orientationState?.dimensions?.width * 0.038}
                 weight="bold"
                 mBottom={10}
                 numberOfLines={2}
@@ -369,18 +366,18 @@ export const ProductOptionsUI = (props: any) => {
           <Spinner visible={loading} />
         )} */}
         {!loading && !error && product && (
-          <View style={{ paddingTop: isDrawer ? 10 : 20, paddingBottom: 80 }}> 
+          <View style={{ paddingTop: isDrawer ? 10 : 20, paddingBottom: 80 }}>
             <WrapContent isDrawer={isDrawer}>
               <ProductDescription>
                 {(
                   (product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
                   (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1')
-                ) &&(
-                  <>
-                    <OText size={20}>{t('SKU', 'Sku')}</OText>
-                    <OText>{product?.sku || productCart?.sku}</OText>
-                  </>
-                )}
+                ) && (
+                    <>
+                      <OText size={20}>{t('SKU', 'Sku')}</OText>
+                      <OText>{product?.sku || productCart?.sku}</OText>
+                    </>
+                  )}
               </ProductDescription>
               <ProductEditions>
                 {product?.ingredients.length > 0 && (
@@ -504,7 +501,7 @@ export const ProductOptionsUI = (props: any) => {
               </TouchableOpacity>
             </View>
           )}
-          <View style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : isDrawer ? '70%':'80%' }}>
+          <View style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : isDrawer ? '70%' : '80%' }}>
             {productCart && !isSoldOut && maxProductQuantity > 0 && auth && orderState.options?.address_id && (
               <OButton
                 onClick={() => handleSaveProduct()}
