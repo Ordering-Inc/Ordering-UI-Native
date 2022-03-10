@@ -5,6 +5,7 @@ import {
 	useLanguage,
 	ToastType,
 	useToast,
+  useConfig
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { useForm } from 'react-hook-form';
@@ -91,11 +92,14 @@ const ProfileListUI = (props: ProfileParams) => {
 
 	const [{ user }] = useSession();
 	const [, t] = useLanguage();
+	const [{ configs }] = useConfig();
 	const [, { showToast }] = useToast();
 	const { errors } = useForm();
 
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
+
+  const isWalletEnabled = configs?.wallet_enabled?.value === '1'
 
 	const onRedirect = (route: string, params?: any) => {
 		navigation.navigate(route, params)
@@ -161,10 +165,12 @@ const ProfileListUI = (props: ProfileParams) => {
 						<MessageCircle name='message1' style={styles.messageIconStyle} color={theme.colors.textNormal} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MESSAGES', 'Messages')}</OText>
 					</ListItem>
-					<ListItem onPress={() => onRedirect('Wallets', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
-						<Ionicons name='wallet-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
-						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('WALLETS', 'Wallets')}</OText>
-					</ListItem>
+          {!isWalletEnabled && (
+            <ListItem onPress={() => onRedirect('Wallets', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
+              <Ionicons name='wallet-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+              <OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('WALLETS', 'Wallets')}</OText>
+            </ListItem>
+          )}
 					<ListItem onPress={() => navigation.navigate('Help', {})} activeOpacity={0.7}>
 						<OIcon src={theme.images.general.ic_help} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('HELP', 'Help')}</OText>
