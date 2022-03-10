@@ -34,7 +34,9 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
     timeSelected,
     handleBusinessClick,
     handleChangeDate,
-    handleChangeTime
+    handleChangeTime,
+    handleAsap,
+    isAsap
   } = props
 
   const theme = useTheme()
@@ -43,10 +45,11 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   const [{ configs }] = useConfig()
   const [orderState] = useOrder()
   const [selectedPreorderType, setSelectedPreorderType] = useState(0)
-  const [menu, setMenu] = useState({})
+  const [menu, setMenu] = useState<any>({})
   const [timeList, setTimeList] = useState<any>([])
   const [selectDate, setSelectedDate] = useState<any>(null)
   const [datesWhitelist, setDateWhitelist] = useState<any>([{ start: null, end: null }])
+  const [isEnabled, setIsEnabled] = useState(false)
 
   const styles = StyleSheet.create({
     container: {
@@ -137,7 +140,13 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
     { key: 'business_menu', name: t('BUSINESS_MENU', 'Business menu') }
   ]
 
+  const validateSelectedDate = (curdate: any, menu: any) => {
+    const day = moment(curdate).format('d')
+    setIsEnabled(menu.schedule[day].enabled || false)
+  }
+
   const getTimes = (curdate: any, menu: any) => {
+    validateSelectedDate(curdate, menu)
     const date = new Date()
     var dateSeleted = new Date(curdate)
     var times = []
@@ -240,26 +249,11 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   }
 
   useEffect(() => {
-    if (hoursList.length === 0) return
-    if (Object.keys(menu).length > 0) {
-      const _times: any = getTimes(selectDate, menu)
-      setTimeList(_times)
-    } else {
-      const _timeLists = hoursList.map((hour: any) => {
-        return {
-          value: hour.startTime,
-          text: configs?.format_time?.value === '12' ? (
-            hour.startTime.includes('12')
-              ? `${hour.startTime}PM`
-              : parseTime(moment(hour.startTime, 'HH:mm'), { outputFormat: 'hh:mma' })
-          ) : (
-            parseTime(moment(hour.startTime, 'HH:mm'), { outputFormat: 'HH:mm' })
-          )
-        }
-      })
-      setTimeList(_timeLists)
-    }
-  }, [selectDate, hoursList, menu])
+    if (selectDate === null) return
+    const selectedMenu = Object.keys(menu).length > 0 ? (menu?.use_business_schedule ? business : menu) : business
+    const _times = getTimes(selectDate, selectedMenu)
+    setTimeList(_times)
+  }, [selectDate, menu])
 
   useEffect(() => {
     if (selectedPreorderType === 0 && Object.keys(menu).length > 0) setMenu({})
@@ -272,6 +266,10 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
       setSelectedDate(_dateSelected)
     }
   }, [dateSelected])
+
+  useEffect(() => {
+    handleAsap && handleAsap()
+  }, [])
 
   return (
     <>
@@ -413,24 +411,38 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             )}
           </View>
           <TimeListWrapper nestedScrollEnabled={true}>
-            <TimeContentWrapper>
-              {timeList.map((time: any, i: number) => (
-                <TouchableOpacity key={i} onPress={() => handleChangeTime(time.value)}>
-                  <TimeItem active={timeSelected === time.value}>
-                    <OText
-                      size={14}
-                      color={timeSelected === time.value ? theme.colors.primary : theme.colors.textNormal}
-                      style={{
-                        lineHeight: 24
-                      }}
-                    >{time.text}</OText>
-                  </TimeItem>
-                </TouchableOpacity>
-              ))}
-              {timeList.length % 3 === 2 && (
-                <TimeItem style={{ backgroundColor: 'transparent' }} />
-              )}
-            </TimeContentWrapper>
+            {(isEnabled && timeList?.length > 0) ? (
+              <TimeContentWrapper>
+                {timeList.map((time: any, i: number) => (
+                  <TouchableOpacity key={i} onPress={() => handleChangeTime(time.value)}>
+                    <TimeItem active={timeSelected === time.value}>
+                      <OText
+                        size={14}
+                        color={timeSelected === time.value ? theme.colors.primary : theme.colors.textNormal}
+                        style={{
+                          lineHeight: 24
+                        }}
+                      >{time.text}</OText>
+                    </TimeItem>
+                  </TouchableOpacity>
+                ))}
+                {timeList.length % 3 === 2 && (
+                  <TimeItem style={{ backgroundColor: 'transparent' }} />
+                )}
+              </TimeContentWrapper>
+            ) : (
+              <OText
+                size={16}
+                style={{
+                  fontWeight: '600',
+                  lineHeight: 24,
+                  marginBottom: 12,
+                  textAlign: 'center'
+                }}
+              >
+                {t('ERROR_ADD_PRODUCT_BUSINESS_CLOSED', 'The business is closed at the moment')}
+              </OText>
+            )}
           </TimeListWrapper>
         </OrderTimeWrapper>
         <OButton
@@ -438,6 +450,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
           textStyle={{ color: 'white' }}
           style={{ borderRadius: 7.6, marginBottom: 20, marginTop: 30 }}
           onClick={() => handleClickBusiness()}
+          isDisabled={isAsap || !(dateSelected && timeSelected)}
         />
       </PreOrderContainer>
       <Spinner visible={orderState.loading} />
