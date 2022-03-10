@@ -55,7 +55,7 @@ const PaymentOptionWalletUI = (props: any) => {
   }
 
   const handleOnChange = (position: any, wallet: any) => {
-    const updatedCheckedState = checkedState.map((item, index) =>
+    const updatedCheckedState = checkedState.map((item: any, index: any) =>
       index === position ? !item : item
     );
 
@@ -85,7 +85,7 @@ const PaymentOptionWalletUI = (props: any) => {
         walletsState.result?.length > 0 &&
       (
         <>
-          {walletsState.result?.map((wallet: any, idx: any) => wallet.valid && (
+          {walletsState.result?.map((wallet: any, idx: any) => wallet.valid && wallet.balance >= 0 && (
             <Container
               key={wallet.id}
               isBottomBorder={idx === walletsState.result?.filter((wallet: any) => wallet.valid)?.length - 1}
