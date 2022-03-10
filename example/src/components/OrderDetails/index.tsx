@@ -453,7 +453,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   {order?.offer_type === 1 ? (
                     <OText>
                       {t('DISCOUNT', theme?.defaultLanguages?.DISCOUNT || 'Discount')}{' '}
-                      <span>{`(${verifyDecimals(order?.offer_rate, parsePrice)}%)`}</span>
+                      <OText>{`(${verifyDecimals(order?.offer_rate, parsePrice)}%)`}</OText>
                     </OText>
                   ) : (
                     <OText>{t('DISCOUNT', theme?.defaultLanguages?.DISCOUNT || 'Discount')}</OText>
