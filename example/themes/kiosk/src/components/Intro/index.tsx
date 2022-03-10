@@ -65,7 +65,7 @@ const Intro = (props: any): React.ReactElement => {
               />
 
               <OButton
-                text={t('TOUCH_TO_ORDER', 'Touch to order')}
+                text={t('TOUCH_ANYWHERE_TO_ORDER', 'Touch anywhere to order')}
                 parentStyle={{
                   alignItems: 'center',
                   width: orientationState?.dimensions?.width - _offset
