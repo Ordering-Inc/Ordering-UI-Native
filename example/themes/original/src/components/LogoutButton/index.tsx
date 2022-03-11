@@ -5,7 +5,7 @@ import { useTheme } from 'styled-components/native';
 import { OIcon, OText } from '../shared';
 
 const LogoutButtonUI = (props: any) => {
-	const { handleLogoutClick, text, color } = props
+	const { handleLogoutClick, text, color, iconSize } = props
 	const theme = useTheme();
 
 	return (
@@ -15,7 +15,7 @@ const LogoutButtonUI = (props: any) => {
 		>
 			<OIcon
 				src={theme.images.general.logout}
-				width={17}
+				width={iconSize ?? 17}
 				color={color ? color : theme.colors.textNormal}
 				style={{ marginEnd: 14 }}
 			/>
