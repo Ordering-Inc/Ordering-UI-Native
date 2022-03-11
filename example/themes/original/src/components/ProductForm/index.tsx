@@ -212,7 +212,9 @@ export const ProductOptionsUI = (props: any) => {
 	}
 
 	const handleRedirectLogin = () => {
-		navigation.navigate('Login');
+		navigation.navigate('Login', {
+			store_slug:  props.businessSlug
+		});
 	};
 
 	const handleSwitchQtyUnit = (val: string) => {
