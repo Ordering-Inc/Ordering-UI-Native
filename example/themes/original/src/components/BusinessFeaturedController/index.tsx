@@ -23,7 +23,7 @@ import {
 } from './styles';
 
 export const BusinessFeaturedCtrlUI = (props: BusinessControllerParams) => {
-	const { business, handleClick } = props;
+	const { business, handleClick, isBusinessOpen } = props;
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] =
 		useUtils();
 	const [orderState] = useOrder();
@@ -128,7 +128,7 @@ export const BusinessFeaturedCtrlUI = (props: BusinessControllerParams) => {
             <OText>{getBusinessType()}</OText>
           </BusinessCategory> */}
 					<Metadata>
-						{!business?.open ? (
+						{!isBusinessOpen ? (
 							<View style={styles.closed}>
 								<OText size={10} color={theme.colors.red}>
 									{t('CLOSED', 'Closed')}

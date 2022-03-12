@@ -20,19 +20,11 @@ import NavBar from '../NavBar';
 import { OButton, OIcon, OText } from '../shared';
 import { Container } from '../../layouts/Container';
 import {
-	HeaderTitle,
 	WrapSelectOption,
-	Days,
-	Day,
-	WrapHours,
-	Hours,
-	Hour,
 	WrapDelveryTime,
 } from './styles';
 import CalendarPicker from 'react-native-calendar-picker';
-import { TouchableRipple } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import SelectDropdown from 'react-native-select-dropdown';
 
 const MomentOptionUI = (props: MomentOptionParams) => {
@@ -179,165 +171,165 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 
 	useEffect(() => {
 		if (datesList?.length > 0) {
-		  const _datesList = datesList.slice(0, Number(configs?.max_days_preorder?.value || 6))
-		  const minDateParts = _datesList[0].split('-')
-		  const maxDateParts = _datesList[_datesList.length - 1].split('-')
-		  const _minDate = new Date(minDateParts[0], minDateParts[1] - 1, minDateParts[2])
-		  const _maxDate = new Date(maxDateParts[0], maxDateParts[1] - 1, maxDateParts[2])
-		  setMinDate(_minDate)
-		  setMaxDate(_maxDate)
+			const _datesList = datesList.slice(0, Number(configs?.max_days_preorder?.value || 6))
+			const minDateParts = _datesList[0].split('-')
+			const maxDateParts = _datesList[_datesList.length - 1].split('-')
+			const _minDate = new Date(minDateParts[0], minDateParts[1] - 1, minDateParts[2])
+			const _maxDate = new Date(maxDateParts[0], maxDateParts[1] - 1, maxDateParts[2])
+			setMinDate(_minDate)
+			setMaxDate(_maxDate)
 		}
 	}, [datesList])
 
 	return (
 		<>
-		<Container style={{ paddingLeft: 40, paddingRight: 40 }}>
-			<View style={{ paddingBottom: 90 }}>
-				<NavBar
-					onActionLeft={() => goToBack()}
-					btnStyle={{ paddingLeft: 0 }}
-					paddingTop={0}
-					style={{ paddingBottom: 0, flexDirection: 'column', alignItems: 'flex-start' }}
-					title={t('QUESTION_WHEN_ORDER', 'When do you want your order?')}
-					titleAlign={'center'}
-					titleStyle={{ fontSize: 14, marginRight: 0, marginLeft: 0 }}
-					titleWrapStyle={{ paddingHorizontal: 0 }}
-				/>
+			<Container style={{ paddingLeft: 40, paddingRight: 40 }}>
+				<View style={{ paddingBottom: 90 }}>
+					<NavBar
+						onActionLeft={() => goToBack()}
+						btnStyle={{ paddingLeft: 0 }}
+						paddingTop={0}
+						style={{ paddingBottom: 0, flexDirection: 'column', alignItems: 'flex-start' }}
+						title={t('QUESTION_WHEN_ORDER', 'When do you want your order?')}
+						titleAlign={'center'}
+						titleStyle={{ fontSize: 14, marginRight: 0, marginLeft: 0 }}
+						titleWrapStyle={{ paddingHorizontal: 0 }}
+					/>
 
-				<WrapSelectOption
-					onPress={() => _handleAsap()}
-					disabled={orderState.loading} style={{ alignItems: 'flex-start' }}>
-					{optionSelected.isAsap ? (
-						<OIcon
-							src={theme.images.general.option_checked}
-							width={16}
-							style={{ marginEnd: 24 }}
-						/>
-					) : (
-						<OIcon
-							src={theme.images.general.option_normal}
-							width={16}
-							style={{ marginEnd: 24 }}
-						/>
-					)}
-					<OText color={optionSelected.isAsap ? theme.colors.textNormal : theme.colors.disabled}>{t('ASAP_ABBREVIATION', 'ASAP') + ` (${moment().format('dddd, MMM d, yyyy h:mm A')} + delivery time)`}</OText>
-				</WrapSelectOption>
-				<WrapSelectOption
-					onPress={() => setOptionSelected({ isAsap: false, isSchedule: true })}
-					disabled={orderState.loading}>
-					{optionSelected.isSchedule ? (
-						<OIcon
-							src={theme.images.general.option_checked}
-							width={16}
-							style={{ marginEnd: 24 }}
-						/>
-					) : (
-						<OIcon
-							src={theme.images.general.option_normal}
-							width={16}
-							style={{ marginEnd: 24 }}
-						/>
-					)}
-					<OText color={optionSelected.isSchedule ? theme.colors.textNormal : theme.colors.disabled}>{t('SCHEDULE_FOR_LATER', 'Schedule for later')}</OText>
-				</WrapSelectOption>
-
-				{optionSelected.isSchedule && (
-					<WrapDelveryTime>
-						{datesList.length > 0 && (
-							<View style={styles.dateWrap}>
-								<View style={styles.dateLabel}>
-									<OText size={12} color={theme.colors.textNormal}>{dateSelected}</OText>
-								</View>
-								<SelectDropdown
-									defaultButtonText={timeSelected ? timeSelected : t('DELIVERY_TIME', 'Delivery Time')}
-									defaultValue={74}
-									data={hoursList}
-									disabled={orderState.loading}
-									onSelect={(selectedItem, index) => {
-										setSelectedTime(selectedItem.startTime)
-									}}
-									buttonTextAfterSelection={(selectedItem, index) => {
-										return `${selectedItem.startTime} - ${selectedItem.endTime}`
-									}}
-									rowTextForSelection={(item, index) => {
-										return `${item.startTime} - ${item.endTime}`
-									}}
-									buttonStyle={{
-										backgroundColor: theme.colors.white,
-										borderColor: theme.colors.border,
-										borderWidth: 1,
-										borderRadius: 8,
-										height: 40,
-										width: '100%',
-										flexDirection: 'column',
-										alignItems: 'flex-start',
-										marginBottom: 20
-									}}
-									buttonTextStyle={{
-										color: theme.colors.textNormal,
-										fontSize: 12,
-										paddingTop: 10
-									}}
-									dropdownStyle={{
-										borderRadius: 8,
-										borderColor: theme.colors.lightGray,
-									}}
-									rowStyle={{
-										borderBottomColor: theme.colors.white,
-										backgroundColor: theme.colors.white,
-										height: 40,
-										flexDirection: 'column',
-										alignItems: 'flex-start',
-										paddingTop: 8,
-										paddingLeft: 22
-									}}
-									rowTextStyle={{
-										color: theme.colors.textNormal,
-										fontSize: 14,
-									}}
-								/>							
-								<CalendarPicker
-									nextTitle=">"
-									width={width - 80}
-									previousTitle="<"
-									nextComponent={
-										<OIcon
-											src={theme.images.general.chevron_right}
-											color={theme.colors.disabled}
-											width={12}
-											style={{ marginHorizontal: 4 }}
-										/>
-									}
-									previousComponent={
-										<OIcon
-											src={theme.images.general.chevron_left}
-											color={theme.colors.disabled}
-											width={12}
-											style={{ marginHorizontal: 4 }}
-										/>
-									}
-									onDateChange={(date: moment.Moment) =>
-										handleChangeDate(date.format('YYYY-MM-DD'))
-									}
-									selectedDayColor={theme.colors.primaryContrast}
-									todayBackgroundColor={theme.colors.border}
-									dayLabelsWrapper={{ borderColor: theme.colors.clear }}
-									customDayHeaderStyles={customDayHeaderStylesCallback}
-									weekdays={weekDays}
-									selectedStartDate={momento}
-									minDate={minDate}
-                					maxDate={maxDate}
-								/>
-							</View>
+					<WrapSelectOption
+						onPress={() => _handleAsap()}
+						disabled={orderState.loading} style={{ alignItems: 'flex-start' }}>
+						{optionSelected.isAsap ? (
+							<OIcon
+								src={theme.images.general.option_checked}
+								width={16}
+								style={{ marginEnd: 24 }}
+							/>
+						) : (
+							<OIcon
+								src={theme.images.general.option_normal}
+								width={16}
+								style={{ marginEnd: 24 }}
+							/>
 						)}
-					</WrapDelveryTime>
-				)}
+						<OText color={optionSelected.isAsap ? theme.colors.textNormal : theme.colors.disabled}>{t('ASAP_ABBREVIATION', 'ASAP') + ` (${moment().format('dddd, MMM D, yyyy h:mm A')} + delivery time)`}</OText>
+					</WrapSelectOption>
+					<WrapSelectOption
+						onPress={() => setOptionSelected({ isAsap: false, isSchedule: true })}
+						disabled={orderState.loading}>
+						{optionSelected.isSchedule ? (
+							<OIcon
+								src={theme.images.general.option_checked}
+								width={16}
+								style={{ marginEnd: 24 }}
+							/>
+						) : (
+							<OIcon
+								src={theme.images.general.option_normal}
+								width={16}
+								style={{ marginEnd: 24 }}
+							/>
+						)}
+						<OText color={optionSelected.isSchedule ? theme.colors.textNormal : theme.colors.disabled}>{t('SCHEDULE_FOR_LATER', 'Schedule for later')}</OText>
+					</WrapSelectOption>
+
+					{optionSelected.isSchedule && (
+						<WrapDelveryTime>
+							{datesList.length > 0 && (
+								<View style={styles.dateWrap}>
+									<View style={styles.dateLabel}>
+										<OText size={12} color={theme.colors.textNormal}>{dateSelected}</OText>
+									</View>
+									<SelectDropdown
+										defaultButtonText={timeSelected ? timeSelected : t('DELIVERY_TIME', 'Delivery Time')}
+										defaultValue={74}
+										data={hoursList}
+										disabled={orderState.loading}
+										onSelect={(selectedItem, index) => {
+											setSelectedTime(selectedItem.startTime)
+										}}
+										buttonTextAfterSelection={(selectedItem, index) => {
+											return `${selectedItem.startTime} - ${selectedItem.endTime}`
+										}}
+										rowTextForSelection={(item, index) => {
+											return `${item.startTime} - ${item.endTime}`
+										}}
+										buttonStyle={{
+											backgroundColor: theme.colors.white,
+											borderColor: theme.colors.border,
+											borderWidth: 1,
+											borderRadius: 8,
+											height: 40,
+											width: '100%',
+											flexDirection: 'column',
+											alignItems: 'flex-start',
+											marginBottom: 20
+										}}
+										buttonTextStyle={{
+											color: theme.colors.textNormal,
+											fontSize: 12,
+											paddingTop: 10
+										}}
+										dropdownStyle={{
+											borderRadius: 8,
+											borderColor: theme.colors.lightGray,
+										}}
+										rowStyle={{
+											borderBottomColor: theme.colors.white,
+											backgroundColor: theme.colors.white,
+											height: 40,
+											flexDirection: 'column',
+											alignItems: 'flex-start',
+											paddingTop: 8,
+											paddingLeft: 22
+										}}
+										rowTextStyle={{
+											color: theme.colors.textNormal,
+											fontSize: 14,
+										}}
+									/>
+									<CalendarPicker
+										nextTitle=">"
+										width={width - 80}
+										previousTitle="<"
+										nextComponent={
+											<OIcon
+												src={theme.images.general.chevron_right}
+												color={theme.colors.disabled}
+												width={12}
+												style={{ marginHorizontal: 4 }}
+											/>
+										}
+										previousComponent={
+											<OIcon
+												src={theme.images.general.chevron_left}
+												color={theme.colors.disabled}
+												width={12}
+												style={{ marginHorizontal: 4 }}
+											/>
+										}
+										onDateChange={(date: moment.Moment) =>
+											handleChangeDate(date.format('YYYY-MM-DD'))
+										}
+										selectedDayColor={theme.colors.primaryContrast}
+										todayBackgroundColor={theme.colors.border}
+										dayLabelsWrapper={{ borderColor: theme.colors.clear }}
+										customDayHeaderStyles={customDayHeaderStylesCallback}
+										weekdays={weekDays}
+										selectedStartDate={momento}
+										minDate={minDate}
+										maxDate={maxDate}
+									/>
+								</View>
+							)}
+						</WrapDelveryTime>
+					)}
+				</View>
+				<Spinner visible={momentState.isLoading === 1} />
+			</Container>
+			<View style={{ position: 'absolute', bottom: bottom, paddingBottom: 20, paddingHorizontal: 40, backgroundColor: 'white', width: '100%' }}>
+				<OButton onClick={handleChangeMoment} isDisabled={!selectedTime} text={t('CONTINUE', 'Continue')} style={{ borderRadius: 7.6, height: 44, shadowOpacity: 0 }} textStyle={{ color: 'white', fontSize: 14 }} showNextIcon />
 			</View>
-			<Spinner visible={momentState.isLoading === 1} />
-		</Container>
-		<View style={{position: 'absolute', bottom: bottom, paddingBottom: 20, paddingHorizontal: 40, backgroundColor: 'white', width: '100%'}}>
-			<OButton onClick={handleChangeMoment} isDisabled={!selectedTime} text={t('CONTINUE', 'Continue')} style={{borderRadius: 7.6, height: 44, shadowOpacity: 0}} textStyle={{color: 'white', fontSize: 14}} showNextIcon />
-		</View>
 		</>
 	);
 };
