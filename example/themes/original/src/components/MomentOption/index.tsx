@@ -350,7 +350,11 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 						</OrderTimeWrapper>
 					)}
 				</View>
+				<Spinner visible={momentState.isLoading === 1} />
 			</Container>
+			<View style={{ position: 'absolute', bottom: bottom, paddingBottom: 20, paddingHorizontal: 40, backgroundColor: 'white', width: '100%' }}>
+				<OButton onClick={handleChangeMoment} isDisabled={!selectedTime} text={t('CONTINUE', 'Continue')} style={{ borderRadius: 7.6, height: 44, shadowOpacity: 0 }} textStyle={{ color: 'white', fontSize: 14 }} showNextIcon />
+			</View>
 		</>
 	);
 };
