@@ -458,7 +458,7 @@ export const ProductOptionsUI = (props: any) => {
 														textDecorationLine: 'line-through',
 														marginLeft: 7,
 														marginRight: 7
-													}}>{parsePrice(product?.offer_price)}</OText>
+													}}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
 												)}
 											</View>
 										)}

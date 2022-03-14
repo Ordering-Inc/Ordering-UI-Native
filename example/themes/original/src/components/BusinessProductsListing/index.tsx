@@ -155,6 +155,10 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const handleTouchDrag = useCallback(() => {
 		setCategoryClicked(false);
 	  }, []);
+	
+	const handleBackNavigation = () => {
+		navigation?.canGoBack() ? navigation.goBack() : navigation.navigate('BottomTab')
+	}
 
 	return (
 		<SafeAreaView
@@ -169,7 +173,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 									imgLeftSrc={theme.images.general.arrow_left}
 									imgRightSrc={null}
 									style={styles.btnBackArrow}
-									onClick={() => navigation?.canGoBack() && navigation.goBack()}
+									onClick={() => handleBackNavigation()}
 									imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
 								/>
 							</View>
@@ -231,7 +235,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								selectedCategoryId={selectedCategoryId}
 								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
 								setSelectedCategoryId={setSelectedCategoryId}
-              	setCategoryClicked={setCategoryClicked}
+              					setCategoryClicked={setCategoryClicked}
 							/>
 						)}
 					</>
@@ -309,13 +313,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					business={currentCart?.business}
 					cartProducts={currentCart?.products}
 					cart={currentCart}
-          setOpenUpselling={setOpenUpselling}
+          			setOpenUpselling={setOpenUpselling}
 					handleUpsellingPage={handleUpsellingPage}
 					handleCloseUpsellingPage={handleCloseUpsellingPage}
 					openUpselling={openUpselling}
 					canOpenUpselling={canOpenUpselling}
 					setCanOpenUpselling={setCanOpenUpselling}
-          onRedirect={onRedirect}
+          			onRedirect={onRedirect}
 				/>
 			)}
 		</SafeAreaView>
