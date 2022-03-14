@@ -155,7 +155,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				{isFarAway && (
 					<FarAwayMessage style={styles.farAwayMsg}>
 						<Ionicons name='md-warning-outline' style={styles.iconStyle} />
-						<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textNormal}>{t('YOU_ARE_FAR_FROM_ADDRESS', 'Your are far from this address')}</OText>
+						<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textNormal}>{t('YOU_ARE_FAR_FROM_ADDRESS', 'You are far from this address')}</OText>
 					</FarAwayMessage>
 				)}
 				<View style={styles.wrapperOrderOptions}>

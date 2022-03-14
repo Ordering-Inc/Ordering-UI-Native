@@ -36,7 +36,7 @@ export const TaxInformation = (props: taxInformationParams) => {
         ? (product.tax?.id ? product.tax?.id === data?.id : product.tax?.id === null && data?.id === null)
         : type === 'fee'
           ? (product.fee?.id ? product.fee?.id === data?.id : (product.fee?.id === null && data?.id === null))
-          : Object.keys(data?.discounts ?? {}).map(code => code.includes(product?.code))
+          : Object.keys(data?.discounts ?? {}).map(code => code.includes(product?.code)) && product?.offers?.find((offer : any) => offer?.name === data?.name)
     )
   }
 

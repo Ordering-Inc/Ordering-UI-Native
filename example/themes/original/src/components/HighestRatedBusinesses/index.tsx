@@ -103,6 +103,7 @@ const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
                     >
                       <BusinessController
                         business={business}
+                        isBusinessOpen={business?.open}
                         handleCustomClick={onBusinessClick}
                         orderType={orderState?.options?.type}
                         navigation={navigation}
