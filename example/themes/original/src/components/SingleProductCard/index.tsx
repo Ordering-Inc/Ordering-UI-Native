@@ -121,9 +121,9 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 					{product?.name}
 				</OText>
 				<PricesContainer>
-					<OText color={theme.colors.primary}>{parsePrice(product?.price)}</OText>
+					<OText color={theme.colors.primary}>{product?.price ? parsePrice(product?.price) : ''}</OText>
 					{product?.offer_price !== null && product?.in_offer && (
-						<OText style={styles.regularPriceStyle}>{parsePrice(product?.offer_price)}</OText>
+						<OText style={styles.regularPriceStyle}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
 					)}
 				</PricesContainer>
 				<OText
