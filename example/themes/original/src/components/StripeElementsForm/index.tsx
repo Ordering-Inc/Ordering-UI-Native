@@ -37,19 +37,33 @@ const StripeElementsFormUI = (props: any) => {
 	const { top, bottom } = useSafeAreaInsets();
 	const [isKeyboardShow, setIsKeyboardShow] = useState(false);
 
-	const billingDetails = {
-		name: `${user.name} ${user.lastname}`,
-		email: user.email,
-		addressLine1: user.address
-	};
+  let billingDetails: any = {}
+
+  if (user?.name || user?.lastname) {
+    if (user?.name) {
+      billingDetails.name = user?.name
+    }
+    if (user?.lastname) {
+      billingDetails.name = `${billingDetails?.name} ${user?.lastname}`
+    }
+  }
+
+  if (user?.email) {
+    billingDetails.email = user?.email
+  }
+
+  if (user?.address) {
+    billingDetails.addressLine1 = user?.address
+  }
 
 	const createPayMethod = async () => {
+    const params: any = { type: 'Card' }
+    if (Object.keys(billingDetails).length > 0) {
+      params.billingDetails = billingDetails
+    }
 		try {
 			setCreatePmLoading(true)
-			const { paymentMethod } = await createPaymentMethod({
-				type: 'Card',
-				billingDetails,
-			});
+			const { paymentMethod } = await createPaymentMethod(params);
 
 			setCreatePmLoading(false)
 			handleSource && handleSource({
@@ -79,11 +93,12 @@ const StripeElementsFormUI = (props: any) => {
 			createPayMethod();
 			return
 		}
+    const params: any = { type: 'Card' }
+    if (Object.keys(billingDetails).length > 0) {
+      params.billingDetails = billingDetails
+    }
 		try {
-			const { setupIntent, error } = await confirmSetupIntent(requirements, {
-				type: 'Card',
-				billingDetails,
-			});
+			const { setupIntent, error } = await confirmSetupIntent(requirements, params);
 
 			if (setupIntent?.status === 'Succeeded') {
 				stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId);
