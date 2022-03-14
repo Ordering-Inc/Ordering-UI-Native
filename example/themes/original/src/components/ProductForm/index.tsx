@@ -155,7 +155,7 @@ export const ProductOptionsUI = (props: any) => {
 	const { product, loading, error } = productObject;
 	const [gallery, setGallery] = useState([])
 	const [thumbsSwiper, setThumbsSwiper] = useState(0)
-
+	const [indexGallery, setIndexGallery] = useState(0)
 	const [selOpt, setSelectedOpt] = useState(0);
 	const [isHaveWeight, setIsHaveWeight] = useState(false)
 	const [qtyBy, setQtyBy] = useState({
@@ -208,7 +208,10 @@ export const ProductOptionsUI = (props: any) => {
 	}
 
 	const handleClickThumb = (index: number) => {
-		swiperRef?.current.scrollBy(index - thumbsSwiper, true);
+		if (index !== indexGallery) {
+			swiperRef?.current.scrollBy(index - thumbsSwiper, true);
+			setIndexGallery(index)
+		}
 	}
 
 	const handleRedirectLogin = () => {
