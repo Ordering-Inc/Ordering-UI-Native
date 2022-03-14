@@ -177,11 +177,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	// }, [])
 
 	const handleOnRefresh = () => {
-		const hasMore = !(
-			paginationProps.totalPages === paginationProps.currentPage
-		);
-		if (!businessesList.loading && hasMore) {
-			getBusinesses();
+		if (!businessesList.loading) {
+			getBusinesses(true);
 		}
 	}
 
@@ -315,6 +312,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 									<BusinessFeaturedController
 										key={bAry[0].id}
 										business={bAry[0]}
+										isBusinessOpen={bAry[0]?.open}
 										handleCustomClick={handleBusinessClick}
 										orderType={orderState?.options?.type}
 									/>
@@ -322,6 +320,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 										<BusinessFeaturedController
 											key={bAry[1].id}
 											business={bAry[1]}
+											isBusinessOpen={bAry[1]?.open}
 											handleCustomClick={handleBusinessClick}
 											orderType={orderState?.options?.type}
 										/>
@@ -361,6 +360,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						<BusinessController
 							key={business.id}
 							business={business}
+							isBusinessOpen={business.open}
 							handleCustomClick={handleBusinessClick}
 							orderType={orderState?.options?.type}
 							navigation={navigation}

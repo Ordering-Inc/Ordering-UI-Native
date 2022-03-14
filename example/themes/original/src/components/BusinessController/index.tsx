@@ -25,7 +25,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import FastImage from 'react-native-fast-image'
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-	const { business, handleClick, navigation } = props;
+	const { business, handleClick, navigation, isBusinessOpen } = props;
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] =
 		useUtils();
 	const [orderState] = useOrder();
@@ -122,7 +122,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 					</View>
 				)}
 				<BusinessState>
-					{!business?.open && (
+					{!isBusinessOpen && (
 						<View style={styles.businessStateView}>
 							<OText
 								color={theme.colors.textThird}
@@ -168,7 +168,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
           <OText>{getBusinessType()}</OText>
         </BusinessCategory> */}
 				<Metadata>
-					{!business?.open ? (
+					{!isBusinessOpen ? (
 						<View style={styles.closed}>
 							<OText size={10} color={theme.colors.red}>
 								{t('CLOSED', 'Closed')}
