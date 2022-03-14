@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'styled-components/native';
+import moment from 'moment'
 import { useLanguage, useUtils } from 'ordering-components/native';
 import { OButton, OIcon, OText } from '../shared';
-import { Card, Logo, Information, MyOrderOptions, NotificationIcon, AcceptOrRejectOrder } from './styles';
+import {
+  Card, Logo, Information, MyOrderOptions, NotificationIcon, AcceptOrRejectOrder, Timestatus
+} from './styles';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 export const PreviousOrders = (props: any) => {
@@ -18,6 +21,7 @@ export const PreviousOrders = (props: any) => {
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
   const theme = useTheme();
+  const [currentTime, setCurrentTime] = useState()
 
   const handlePressOrder = (order: any) => {
     if (order?.locked && isLogisticOrder) return
@@ -39,17 +43,15 @@ export const PreviousOrders = (props: any) => {
       height: 75,
     },
     logo: {
-      width: 78,
-      height: 78,
-      borderRadius: 25,
-      shadowColor: 'rgba(0.0, 0.0, 0.0, 0.5)',
+      borderRadius: 10,
+      shadowColor: "#000",
       shadowOffset: {
         width: 0,
-        height: 1.5,
+        height: 1,
       },
-      shadowOpacity: 0.21,
-      shadowRadius: 5,
-      elevation: 7,
+      shadowOpacity: 0.20,
+      shadowRadius: 1.41,
+      elevation: 2,
       justifyContent: 'center',
       alignItems: 'center',
       marginLeft: 3,
@@ -67,17 +69,42 @@ export const PreviousOrders = (props: any) => {
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
-      fontSize: 15,
-      color: theme.colors.unselectText,
+      fontSize: 12,
     },
     orderType: {
-      fontSize: 15,
+      fontSize: 12,
       fontFamily: 'Poppins',
       fontStyle: 'normal',
       fontWeight: 'normal',
       color: theme.colors.orderTypeColor,
     },
   });
+
+  const getDelayTime = (order: any) => {
+    // targetMin = delivery_datetime  + eta_time - now()
+    const _delivery = order?.delivery_datetime_utc
+    const _eta = order?.eta_time
+    const tagetedMin = moment(_delivery).add(_eta, 'minutes').diff(moment().utc(), 'minutes')
+    let day = Math.floor(tagetedMin / 1440)
+    const restMinOfTargetedMin = tagetedMin - 1440 * day
+    let restHours: any = Math.floor(restMinOfTargetedMin / 60)
+    let restMins: any = restMinOfTargetedMin - 60 * restHours
+
+    if (order?.time_status === 'in_time' || order?.time_status === 'at_risk') day = Math.abs(day)
+    if (restHours < 10) restHours = ('0' + restHours)
+    if (restMins < 10) restMins = ('0' + restMins)
+    const finalTaget = day + 'day  ' + restHours + ':' + restMins
+    return finalTaget
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const date:any = Date.now()
+      setCurrentTime(date)
+    }, 60000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   let hash: any = {};
 
@@ -103,6 +130,7 @@ export const PreviousOrders = (props: any) => {
                   activeOpacity={1}
                 >
                   <Card key={order.id}>
+                    <Timestatus style={{backgroundColor: order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : '' }}/>
                     {
                       order.business?.logo && (
                         <Logo style={styles.logo}>
@@ -135,16 +163,20 @@ export const PreviousOrders = (props: any) => {
                           />
                         </NotificationIcon>
                       )}
-                      <OText
-                        style={styles.date}
-                        numberOfLines={1}
-                        adjustsFontSizeToFit
-                        size={20}>
-                        {(order?.order_group_id && order?.order_group && isLogisticOrder ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}` : (t('INVOICE_ORDER_NO', 'Order No.') + order.id)) + ' · '}
-                        {order?.delivery_datetime_utc
-                          ? parseDate(order?.delivery_datetime_utc)
-                          : parseDate(order?.delivery_datetime, { utc: false })}
-                      </OText>
+                      <View style={{flexDirection: 'row'}}>
+                        <OText
+                          style={styles.date}
+                          color={theme.colors.unselectText}
+                          numberOfLines={1}
+                          adjustsFontSizeToFit
+                        >
+                          {(order?.order_group_id && order?.order_group && isLogisticOrder ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}` : (t('NO', 'Order No.') + order.id)) + ' · '}
+                          {order?.delivery_datetime_utc
+                            ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY · HH:mm a' })
+                            : parseDate(order?.delivery_datetime, { utc: false })}{' · '}
+                        </OText>
+                        <OText style={styles.date} color={order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : '' } >{getDelayTime(order)}</OText>
+                      </View>
                       {!isLogisticOrder && (
                         <MyOrderOptions>
                           <OText
