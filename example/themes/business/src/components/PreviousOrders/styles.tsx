@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 export const Card = styled.View`
   flex: 1;
@@ -35,4 +35,16 @@ export const AcceptOrRejectOrder = styled.View`
   justify-content: space-between;
   flex: 1;
   margin: 10px;
+`
+export const Timestatus = styled.View`
+  position: relative;;
+  width: 4px;
+  height: 65px;
+  border-radius: 20px;
+  top: 5px;
+  margin-right: 5px; 
+  ${(props: any) => props.theme?.rtl && css`
+    left: unset;
+    right: -5px;
+ `}
 `
