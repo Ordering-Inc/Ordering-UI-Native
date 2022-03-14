@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import moment, { Moment } from 'moment';
+import React, { useState, useEffect } from 'react';
+import moment from 'moment';
+import CalendarStrip from 'react-native-calendar-strip'
 import {
 	useLanguage,
 	useConfig,
-	useUtils,
 	useOrder,
 	MomentOption as MomentOptionController,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
+import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import {
-	ImageStore,
 	StyleSheet,
-	useWindowDimensions,
 	View,
+	TouchableOpacity
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { MomentOptionParams } from '../../types';
@@ -20,25 +20,17 @@ import NavBar from '../NavBar';
 import { OButton, OIcon, OText } from '../shared';
 import { Container } from '../../layouts/Container';
 import {
-	HeaderTitle,
 	WrapSelectOption,
-	Days,
-	Day,
-	WrapHours,
-	Hours,
-	Hour,
-	WrapDelveryTime,
+	OrderTimeWrapper,
+	TimeListWrapper,
+	TimeContentWrapper,
+	TimeItem
 } from './styles';
-import CalendarPicker from 'react-native-calendar-picker';
-import { TouchableRipple } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import SelectDropdown from 'react-native-select-dropdown';
 
 const MomentOptionUI = (props: MomentOptionParams) => {
 	const {
 		navigation,
-		nopadding,
 		datesList,
 		hoursList,
 		dateSelected,
@@ -84,12 +76,62 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 			paddingHorizontal: 16,
 			flexDirection: 'row',
 			alignItems: 'center'
+		},
+		calendar: {
+			paddingBottom: 15,
+			borderBottomWidth: 1,
+			borderColor: theme.colors.backgroundGray200,
+			height: 100
+		},
+		calendarHeaderContainer: {
+			flex: 1,
+			justifyContent: 'flex-start',
+			textAlign: 'left',
+			marginBottom: 17,
+			borderBottomWidth: 1,
+			borderColor: theme.colors.backgroundGray200
+		},
+		calendarHeader: {
+			color: '#344050',
+			alignSelf: 'flex-start',
+			fontSize: 14,
+			fontWeight: '400'
+		},
+		dateNumber: {
+			color: '#B1BCCC',
+			fontSize: 16,
+			fontWeight: '500',
+		},
+		dateName: {
+			color: '#B1BCCC',
+			fontSize: 12,
+			textTransform: 'capitalize',
+		},
+		highlightDateName: {
+			color: '#344050',
+			fontSize: 12,
+			textTransform: 'capitalize',
+		},
+		highlightDateNumber: {
+			color: '#344050',
+			fontSize: 16,
+			textTransform: 'capitalize',
+		},
+		disabledDateName: {
+			color: '#B1BCCC',
+			fontSize: 10,
+			textTransform: 'capitalize',
+			opacity: 1,
+		},
+		disabledDateNumber: {
+			color: '#B1BCCC',
+			fontSize: 14,
+			fontWeight: '500'
 		}
 	});
 
 	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
-	const [{ parseTime }] = useUtils();
 	const [orderState] = useOrder();
 	const [optionSelected, setOptionSelected] = useState({
 		isAsap: false,
@@ -99,14 +141,11 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		isLoading: 0,
 		isEditing: false,
 	});
-	const { width } = useWindowDimensions();
 	const { bottom } = useSafeAreaInsets();
 
-	const [toggleTime, setToggleTime] = useState(false);
-	const [selectedTime, setSelectedTime] = useState(timeSelected);
-	const [minDate, setMinDate] = useState(new Date())
-	const [maxDate, setMaxDate] = useState(new Date)
-	const [alert, setAlert] = useState<any>({ show: false })
+	const [selectedTime, setSelectedTime] = useState(null);
+	const [datesWhitelist, setDateWhitelist] = useState<any>([{ start: null, end: null }])
+	const [selectDate, setSelectedDate] = useState<any>(null)
 
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
@@ -134,19 +173,6 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		.utc()
 		.format('YYYY-MM-DD HH:mm:ss');
 
-	const getTwoChar = (ori: string) => {
-		return ori.substring(0, 2);
-	};
-	const weekDays = [
-		getTwoChar(t('SUNDAY_ABBREVIATION', 'Su')),
-		getTwoChar(t('MONDAY_ABBREVIATION', 'Mo')),
-		getTwoChar(t('TUESDAY_ABBREVIATION', 'Tu')),
-		getTwoChar(t('WEDNESDAY_ABBREVIATION', 'We')),
-		getTwoChar(t('THURSDAY_ABBREVIATION', 'Th')),
-		getTwoChar(t('FRIDAY_ABBREVIATION', 'Fr')),
-		getTwoChar(t('SATURDAY_ABBREVIATION', 'Sa')),
-	];
-
 	useEffect(() => {
 		if (orderState.options?.moment) {
 			setOptionSelected({ isAsap: false, isSchedule: true });
@@ -168,14 +194,34 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		}
 	}, [momentState.isLoading]);
 
-	const customDayHeaderStylesCallback = () => {
-		return {
-			textStyle: {
-				color: theme.colors.disabled,
-				fontSize: 12,
-			},
-		};
-	};
+	const onSelectDate = (val: any) => {
+		setSelectedDate(val)
+		if (handleChangeDate) handleChangeDate(moment(val).format('YYYY-MM-DD'))
+	}
+
+	const LeftSelector = () => {
+		return (
+		  <View style={{ height: '100%', justifyContent: 'flex-end' }}>
+			<IconAntDesign
+			  name='caretleft'
+			  color={theme.colors.textNormal}
+			  size={16}
+			/>
+		  </View>
+		)
+	  }
+	
+	  const RightSelector = () => {
+		return (
+		  <View style={{ height: '100%', justifyContent: 'flex-end' }}>
+			<IconAntDesign
+			  name='caretright'
+			  color={theme.colors.textNormal}
+			  size={16}
+			/>
+		  </View>
+		)
+	  }
 
 	useEffect(() => {
 		if (datesList?.length > 0) {
@@ -184,10 +230,23 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		  const maxDateParts = _datesList[_datesList.length - 1].split('-')
 		  const _minDate = new Date(minDateParts[0], minDateParts[1] - 1, minDateParts[2])
 		  const _maxDate = new Date(maxDateParts[0], maxDateParts[1] - 1, maxDateParts[2])
-		  setMinDate(_minDate)
-		  setMaxDate(_maxDate)
+		  setDateWhitelist([{ start: _minDate, end: _maxDate }])
 		}
 	}, [datesList])
+
+	useEffect(() => {
+		if (dateSelected) {
+		  const dateParts = dateSelected.split('-')
+		  const _dateSelected = new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
+		  setSelectedDate(_dateSelected)
+		}
+	}, [dateSelected])
+
+	useEffect(() => {
+		setSelectedTime(timeSelected)
+	}, [timeSelected])
+
+	console.log(selectDate, datesWhitelist[0]?.start)
 
 	return (
 		<>
@@ -242,95 +301,55 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 				</WrapSelectOption>
 
 				{optionSelected.isSchedule && (
-					<WrapDelveryTime>
-						{datesList.length > 0 && (
-							<View style={styles.dateWrap}>
-								<View style={styles.dateLabel}>
-									<OText size={12} color={theme.colors.textNormal}>{dateSelected}</OText>
-								</View>
-								<SelectDropdown
-									defaultButtonText={timeSelected ? timeSelected : t('DELIVERY_TIME', 'Delivery Time')}
-									defaultValue={74}
-									data={hoursList}
-									disabled={orderState.loading}
-									onSelect={(selectedItem, index) => {
-										setSelectedTime(selectedItem.startTime)
-									}}
-									buttonTextAfterSelection={(selectedItem, index) => {
-										return `${selectedItem.startTime} - ${selectedItem.endTime}`
-									}}
-									rowTextForSelection={(item, index) => {
-										return `${item.startTime} - ${item.endTime}`
-									}}
-									buttonStyle={{
-										backgroundColor: theme.colors.white,
-										borderColor: theme.colors.border,
-										borderWidth: 1,
-										borderRadius: 8,
-										height: 40,
-										width: '100%',
-										flexDirection: 'column',
-										alignItems: 'flex-start',
-										marginBottom: 20
-									}}
-									buttonTextStyle={{
-										color: theme.colors.textNormal,
-										fontSize: 12,
-										paddingTop: 10
-									}}
-									dropdownStyle={{
-										borderRadius: 8,
-										borderColor: theme.colors.lightGray,
-									}}
-									rowStyle={{
-										borderBottomColor: theme.colors.white,
-										backgroundColor: theme.colors.white,
-										height: 40,
-										flexDirection: 'column',
-										alignItems: 'flex-start',
-										paddingTop: 8,
-										paddingLeft: 22
-									}}
-									rowTextStyle={{
-										color: theme.colors.textNormal,
-										fontSize: 14,
-									}}
-								/>							
-								<CalendarPicker
-									nextTitle=">"
-									width={width - 80}
-									previousTitle="<"
-									nextComponent={
-										<OIcon
-											src={theme.images.general.chevron_right}
-											color={theme.colors.disabled}
-											width={12}
-											style={{ marginHorizontal: 4 }}
-										/>
-									}
-									previousComponent={
-										<OIcon
-											src={theme.images.general.chevron_left}
-											color={theme.colors.disabled}
-											width={12}
-											style={{ marginHorizontal: 4 }}
-										/>
-									}
-									onDateChange={(date: moment.Moment) =>
-										handleChangeDate(date.format('YYYY-MM-DD'))
-									}
-									selectedDayColor={theme.colors.primaryContrast}
-									todayBackgroundColor={theme.colors.border}
-									dayLabelsWrapper={{ borderColor: theme.colors.clear }}
-									customDayHeaderStyles={customDayHeaderStylesCallback}
-									weekdays={weekDays}
-									selectedStartDate={momento}
-									minDate={minDate}
-                					maxDate={maxDate}
+					<OrderTimeWrapper>
+						<View style={{ flex: 1 }}>
+							{selectDate && datesWhitelist[0]?.start !== null && (
+								<CalendarStrip
+									scrollable
+									style={styles.calendar}
+									calendarHeaderContainerStyle={styles.calendarHeaderContainer}
+									calendarHeaderStyle={styles.calendarHeader}
+									dateNumberStyle={styles.dateNumber}
+									dateNameStyle={styles.dateName}
+									iconContainer={{ flex: 0.1 }}
+									highlightDateNameStyle={styles.highlightDateName}
+									highlightDateNumberStyle={styles.highlightDateNumber}
+									dayContainerStyle={{ height: '100%' }}
+									highlightDateContainerStyle={{ height: '100%' }}
+									calendarHeaderFormat='MMMM, YYYY'
+									iconStyle={{ borderWidth: 1 }}
+									selectedDate={selectDate}
+									datesWhitelist={datesWhitelist}
+									disabledDateNameStyle={styles.disabledDateName}
+									disabledDateNumberStyle={styles.disabledDateNumber}
+									disabledDateOpacity={0.6}
+									onDateSelected={(date) => onSelectDate(date)}
+									leftSelector={<LeftSelector />}
+									rightSelector={<RightSelector />}
 								/>
-							</View>
-						)}
-					</WrapDelveryTime>
+							)}
+						</View>
+						<TimeListWrapper nestedScrollEnabled={true}>
+							<TimeContentWrapper>
+								{hoursList.map((time: any, i: number) => (
+								<TouchableOpacity key={i} onPress={() => setSelectedTime(time.startTime)}>
+									<TimeItem active={selectedTime === time.startTime}>
+									<OText
+										size={14}
+										color={selectedTime === time.startTime ? theme.colors.primary : theme.colors.textNormal}
+										style={{
+											lineHeight: 24
+										}}
+									>{time.startTime}</OText>
+									</TimeItem>
+								</TouchableOpacity>
+								))}
+								{hoursList.length % 3 === 2 && (
+								<TimeItem style={{ backgroundColor: 'transparent' }} />
+								)}
+							</TimeContentWrapper>
+						</TimeListWrapper>
+					</OrderTimeWrapper>
 				)}
 			</View>
 			<Spinner visible={momentState.isLoading === 1} />
