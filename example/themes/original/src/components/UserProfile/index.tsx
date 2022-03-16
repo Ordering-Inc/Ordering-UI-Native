@@ -99,7 +99,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
 
-  const isWalletEnabled = configs?.wallet_enabled?.value === '1'
+  const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
 
 	const onRedirect = (route: string, params?: any) => {
 		navigation.navigate(route, params)
