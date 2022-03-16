@@ -55,6 +55,7 @@ import { ActivityIndicator } from 'react-native-paper';
 import WebView from 'react-native-webview';
 import Icon from 'react-native-vector-icons/Feather';
 import { OrderCreating } from '../OrderCreating';
+import { PaymentOptionsWebView } from '../PaymentOptionsWebView';
 
 const mapConfigs = {
   mapZoom: 16,
@@ -649,141 +650,34 @@ const CheckoutUI = (props: any) => {
         </>
       )}
       {webviewPaymethod?.gateway === 'paypal' && showGateway.open && (
-        <View style={{ zIndex: 9999, height: '100%', width: '100%', position: 'absolute', backgroundColor: 'white' }}>
-          <Icon
-            name="x"
-            size={35}
-            style={{ backgroundColor: 'white', paddingTop: 30, paddingLeft: 10 }}
-            onPress={handleCloseWebview}
+          <PaymentOptionsWebView
+            handleCloseWebview={handleCloseWebview}
+            onNavigationRedirect={onNavigationRedirect}
+            uri={`${ordering.root}/html/paypal_react_native`}
+            user={user}
+            token={token}
+            cart={cart}
+            currency={currency}
+            webviewPaymethod={webviewPaymethod}
+            setShowGateway={setShowGateway}
+            setOpenOrderCreating={setOpenOrderCreating}
           />
-          <OText
-            style={{
-              textAlign: 'center',
-              fontSize: 16,
-              fontWeight: 'bold',
-              color: '#00457C',
-              marginBottom: 5,
-              marginTop: 10
-            }}>
-            {t('PAYPAL_GATEWAY', 'PayPal GateWay')}
-          </OText>
-          <View style={{ padding: 20, opacity: prog ? 1 : 0, backgroundColor: 'white' }}>
-            <ActivityIndicator size={24} color={progClr} />
-          </View>
-          <WebView
-            source={{ uri: `${ordering.root}/html/paypal_react_native` }}
-            onMessage={onMessage}
-            ref={webviewRef}
-            javaScriptEnabled={true}
-            javaScriptEnabledAndroid={true}
-            cacheEnabled={false}
-            cacheMode='LOAD_NO_CACHE'
-            style={{ flex: 1 }}
-            onLoadStart={() => {
-              setProg(true);
-              setProgClr('#424242');
-            }}
-            onLoadProgress={() => {
-              setProg(true);
-              setProgClr('#00457C');
-            }}
-            onLoad={() => {
-              setProg(true);
-              setProgClr('#00457C');
-            }}
-            onLoadEnd={(e) => {
-              const message = {
-                action: 'init',
-                data: {
-                  urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
-                  urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
-                  payData: {
-                    paymethod_id: webviewPaymethod?.id,
-                    amount: cart?.total,
-                    delivery_zone_id: cart?.delivery_zone_id,
-                    user_id: user?.id
-                  },
-                  currency: configs?.stripe_currency?.value || currency,
-                  userToken: token,
-                  clientId: webviewPaymethod?.credentials?.client_id
-                }
-              }
-              setProg(false);
-              webviewRef?.current?.postMessage?.(JSON.stringify(message))
-            }}
-          />
-        </View>
       )}
       {webviewPaymethod?.gateway === 'square' && showGateway.open && (
-        <View style={{ zIndex: 9999, height: '100%', width: '100%', position: 'absolute', backgroundColor: 'white' }}>
-          <Icon
-            name="x"
-            size={35}
-            style={{ backgroundColor: 'white', paddingTop: 30, paddingLeft: 10 }}
-            onPress={handleCloseWebview}
+          <PaymentOptionsWebView
+            handleCloseWebview={handleCloseWebview}
+            onNavigationRedirect={onNavigationRedirect}
+            uri={`https://test-square-f50f7.web.app`}
+            user={user}
+            token={token}
+            cart={cart}
+            currency={currency}
+            webviewPaymethod={webviewPaymethod}
+            setShowGateway={setShowGateway}
+            setOpenOrderCreating={setOpenOrderCreating}
+            locationId={'L1NGAY5M6KJRX'}
           />
-          <OText
-            style={{
-              textAlign: 'center',
-              fontSize: 16,
-              fontWeight: 'bold',
-              color: '#00457C',
-              marginBottom: 5,
-              marginTop: 10
-            }}>
-            {t('SQUARE_PAYMENT', 'Square payment')}
-          </OText>
-          <View style={{ padding: 20, opacity: prog ? 1 : 0, backgroundColor: 'white' }}>
-            <ActivityIndicator size={24} color={progClr} />
-          </View>
-          <WebView
-            source={{ uri: `https://test-square-f50f7.web.app` }}
-            onMessage={onMessage}
-            ref={webviewRefSquare}
-            javaScriptEnabled={true}
-            javaScriptEnabledAndroid={true}
-            cacheEnabled={false}
-            cacheMode='LOAD_NO_CACHE'
-            style={{ flex: 1 }}
-            onShouldStartLoadWithRequest={() => true}
-            onLoadStart={() => {
-              setProg(true);
-              setProgClr('#424242');
-            }}
-            onLoadProgress={() => {
-              setProg(true);
-              setProgClr('#00457C');
-            }}
-            onLoad={() => {
-              setProg(true);
-              setProgClr('#00457C');
-            }}
-            onLoadEnd={(e) => {
-              const message = {
-                action: 'init',
-                data: {
-                  urlPlace: `${ordering.root}/carts/${cart?.uuid}/place`,
-                  urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
-                  payData: {
-                    paymethod_id: webviewPaymethod?.id,
-                    amount: cart?.total,
-                    delivery_zone_id: cart?.delivery_zone_id,
-                    user_id: user?.id,
-                    user_name: user?.name
-                  },
-                  currency: configs?.stripe_currency?.value || currency,
-                  userToken: token,
-                  clientId: 'sandbox-sq0idb-rMLAce87hOfpGvokZCygEw',
-                  locationId: 'L1NGAY5M6KJRX'
-                }
-              }
-              setProg(false);
-              webviewRefSquare?.current?.postMessage?.(JSON.stringify(message))
-            }}
-          />
-        </View>
-      )
-      }
+      )}
       {openOrderCreating && (
         <View style={{ zIndex: 9999, height: '100%', width: '100%', position: 'absolute', backgroundColor: 'white' }}>
           <OrderCreating
