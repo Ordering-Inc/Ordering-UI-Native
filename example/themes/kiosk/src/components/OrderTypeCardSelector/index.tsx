@@ -15,6 +15,8 @@ import { Container } from '../../layouts/Container'
 import NavBar from '../NavBar'
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation'
 import GridContainer from '../../layouts/GridContainer'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
   const {
@@ -27,7 +29,7 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
     callback
   } = props
 
-	const theme = useTheme();
+  const theme = useTheme();
   const [, t] = useLanguage();
   const [orientationState] = useDeviceOrientation();
   const [orderState] = useOrder()
@@ -45,7 +47,7 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
   }
 
   useEffect(() => {
-    if(isCardCliked){
+    if (isCardCliked) {
       callback?.()
       setIsCardClicked(false)
       setIsLoadingCard(null)
@@ -57,8 +59,8 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
       <Container>
         <NavBar
           title={t('ORDER_TYPE_X_ID', 'Order type')}
-          {...(goBack && { onActionLeft: goBack } )}
-          btnStyle={{paddingLeft: 0}}
+          {...(goBack && { onActionLeft: goBack })}
+          btnStyle={{ paddingLeft: 0 }}
         />
 
         <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
@@ -83,13 +85,13 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
             style={cardStyle}
             isDisabled={isCardCliked}
             isLoading={isLoadingCard === 'Eat In'}
-            title={t('EAT_IN','Eat In')}
+            title={t('EAT_IN', 'Eat In')}
             description={t('EAT_IN_DESCRIPTION', 'We are very glad to have you here. Bon appetit!')}
             bgImage={theme.images.general.eatIn}
-            icon={theme.images.general.pushPin}
+            VectorIcon={() => <MaterialIcon name='pin-outline' size={28} color='white' style={{ marginBottom: 10 }} />}
             callToActionText={t('START_MY_ORDER', 'Start my order')}
             onClick={() => {
-              if(_eatIn?.value !== orderState?.options?.type){
+              if (_eatIn?.value !== orderState?.options?.type) {
                 handleChangeOrderType(_eatIn?.value);
                 setIsCardClicked(true)
                 setIsLoadingCard('Eat In')
@@ -106,15 +108,15 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
 
           <OptionCard
             style={cardStyle}
-            title={t('TAKE_OUT','Take out')}
+            title={t('TAKE_OUT', 'Take out')}
             isDisabled={isCardCliked}
             isLoading={isLoadingCard === 'Take out'}
             description={t('TAKE_OUT_DESCRIPTION', 'You are very welcome anytime you visit us!')}
             bgImage={theme.images.general.takeOut}
-            icon={theme.images.general.shoppingCart}
+            VectorIcon={() => <AntDesignIcon name='shoppingcart' size={28} color='white' style={{ marginBottom: 10 }} />}
             callToActionText={t('START_MY_ORDER', 'Start my order')}
             onClick={() => {
-              if(_takeOut?.value !== orderState?.options?.type){
+              if (_takeOut?.value !== orderState?.options?.type) {
                 handleChangeOrderType(_takeOut?.value);
                 setIsCardClicked(true)
                 setIsLoadingCard('Take out')
