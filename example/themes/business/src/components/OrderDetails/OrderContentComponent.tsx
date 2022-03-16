@@ -45,6 +45,15 @@ export const OrderContentComponent = (props: OrderContent) => {
 
   const pastOrderStatuses = [1, 2, 5, 6, 10, 11, 12, 16, 17]
 
+  const walletName: any = {
+    cash: {
+      name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
+    },
+    credit_point: {
+      name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
+    }
+  }
+
   const styles = StyleSheet.create({
     linkWithIcons: {
       flexDirection: 'row',
@@ -441,7 +450,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           )
         }
 
-        <Total>
+        <Total style={{ paddingBottom: 10 }}>
           <Table>
             <OText mBottom={4} style={styles.textBold}>
               {t('TOTAL', 'Total')}
@@ -455,6 +464,52 @@ export const OrderContentComponent = (props: OrderContent) => {
             </OText>
           </Table>
         </Total>
+
+        {order?.payment_events?.length > 0 && (
+          <View>
+            <OText size={14} color={theme.colors.textNormal}>{t('PAYMENTS', 'Payments')}</OText>
+            <View
+              style={{
+                width: '100%',
+                marginTop: 5
+              }}
+            >
+              {order?.payment_events?.map((event: any) => (
+                <View
+                  key={event.id}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: 10
+                  }}
+                >
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <OText>
+                      {event?.wallet_event
+                        ? walletName[event?.wallet_event?.wallet?.type]?.name
+                        : event?.paymethod?.name}
+                    </OText>
+                    {event?.data?.charge_id && (
+                      <OText>
+                        {`${t('CODE', 'Code')}: ${event?.data?.charge_id}`}
+                      </OText>
+                    )}
+                  </View>
+                  <OText>
+                    -{parsePrice(event.amount)}
+                  </OText>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
       </OrderBill >
       <OModal
         open={openReviewModal}
