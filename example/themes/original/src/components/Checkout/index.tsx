@@ -134,7 +134,7 @@ const CheckoutUI = (props: any) => {
 
   const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
 
-  const isWalletEnabled = configs?.wallet_enabled?.value === '1'
+  const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -591,7 +591,7 @@ const CheckoutUI = (props: any) => {
 									</OText>
 								)}
 
-								{!paymethodSelected && cart?.status !== 2 && cart?.valid && (
+								{(!paymethodSelected && cart?.balance > 0) && cart?.status !== 2 && cart?.valid && (
 									<OText
 										color={theme.colors.error}
 										size={12}
@@ -627,8 +627,8 @@ const CheckoutUI = (props: any) => {
 			{!cartState.loading && cart && cart?.status !== 2 && (
 				<FloatingButton
 					handleClick={() => handlePlaceOrder()}
-					isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
-					disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal < cart?.minimum}
+					isSecondaryBtn={loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash || cart?.subtotal < cart?.minimum}
+					disabled={loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash || cart?.subtotal < cart?.minimum}
 					btnText={cart?.subtotal >= cart?.minimum
 						? (
 							placing
