@@ -131,7 +131,7 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
                   urlConfirm: `${ordering.root}/carts/${cart?.uuid}/confirm`,
                   payData: {
                     paymethod_id: webviewPaymethod?.id,
-                    amount: cart?.total,
+                    amount: cart?.balance ?? cart?.total,
                     delivery_zone_id: cart?.delivery_zone_id,
                     user_id: user?.id,
                     user_name: user?.name
