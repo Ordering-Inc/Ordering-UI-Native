@@ -246,8 +246,9 @@ export const ProductOptionsUI = (props: any) => {
               {...navBarProps}
               titleColor={theme.colors.white}
               btnStyle={{
-                width: 66,
-                height: 66,
+                width: 55,
+                height: 55,
+                overflow: 'scroll',
                 backgroundColor: 'black',
                 borderRadius: 100,
                 color: 'white',
