@@ -49,7 +49,8 @@ const PaymentOptionsUI = (props: any) => {
 		onNavigationRedirect,
 		handlePaymethodClick,
 		handlePaymethodDataChange,
-		isOpenMethod
+		isOpenMethod,
+		handlePaymentMethodClickCustom
 	} = props
 
 	const theme = useTheme();
@@ -90,6 +91,9 @@ const PaymentOptionsUI = (props: any) => {
 
 	const handlePaymentMethodClick = (paymethod: any) => {
 		const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
+		if(paymethod?.gateway === 'paypal' || paymethod?.gateway === 'square') {
+			handlePaymentMethodClickCustom(paymethod)
+		}
 		handlePaymethodClick(paymethod, isPopupMethod)
 	}
 
@@ -139,7 +143,7 @@ const PaymentOptionsUI = (props: any) => {
 		)
 	}
 
-	const excludeIds: any = [3, 32, 66]; //exclude paypal & connect & redirect
+	const excludeIds: any = [32, 66]; //exclude paypal & connect & redirect
 
 	return (
 		<PMContainer>

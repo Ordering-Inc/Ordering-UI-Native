@@ -130,16 +130,12 @@ const CheckoutUI = (props: any) => {
   const [{ options, carts, loading }, { confirmCart }] = useOrder();
   const [validationFields] = useValidationFields();
   const [ordering] = useApi()
-  const webviewRef = useRef<any>(null)
-  const webviewRefSquare = useRef<any>(null)
   const [errorCash, setErrorCash] = useState(false);
   const [userErrors, setUserErrors] = useState<any>([]);
   const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
   const [phoneUpdate, setPhoneUpdate] = useState(false);
   const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
   const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
-  const [progClr, setProgClr] = useState('#424242');
-  const [prog, setProg] = useState(true);
   const [openOrderCreating, setOpenOrderCreating] = useState(false)
   const [cardData, setCardData] = useState(null)
   const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
@@ -203,29 +199,6 @@ const CheckoutUI = (props: any) => {
     setPhoneUpdate(val)
   }
 
-  const onMessage = (e: any) => {
-    if (e?.nativeEvent?.data && e?.nativeEvent?.data !== 'undefined') {
-      let payment = JSON.parse(e.nativeEvent.data);
-      setOpenOrderCreating(true)
-      if (payment === 'api error') {
-        setShowGateway({ closedByUser: true, open: false })
-        setProg(true);
-      }
-
-      if (payment) {
-        if (payment.error) {
-          showToast(ToastType.Error, payment.result)
-          setOpenOrderCreating(false)
-        } else if (payment?.result?.order?.uuid) {
-          showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfully'))
-          onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment?.result?.order?.uuid, goToBusinessList: true })
-        }
-        setProg(true);
-        setShowGateway({ closedByUser: false, open: false })
-      }
-    }
-  }
-
   const onFailPaypal = async () => {
     if (showGateway.closedByUser === true) {
       await confirmCart(cart.uuid)
@@ -235,11 +208,6 @@ const CheckoutUI = (props: any) => {
   const handlePaymentMethodClick = (paymethod: any) => {
     setShowGateway({ closedByUser: false, open: true })
     setWebviewPaymethod(paymethod)
-  }
-
-  const handleCloseWebview = () => {
-    setProg(true);
-    setShowGateway({ open: false, closedByUser: true })
   }
 
   const changeDeliveryOption = (option: any) => {
@@ -651,7 +619,6 @@ const CheckoutUI = (props: any) => {
       )}
       {webviewPaymethod?.gateway === 'paypal' && showGateway.open && (
           <PaymentOptionsWebView
-            handleCloseWebview={handleCloseWebview}
             onNavigationRedirect={onNavigationRedirect}
             uri={`${ordering.root}/html/paypal_react_native`}
             user={user}
@@ -665,7 +632,6 @@ const CheckoutUI = (props: any) => {
       )}
       {webviewPaymethod?.gateway === 'square' && showGateway.open && (
           <PaymentOptionsWebView
-            handleCloseWebview={handleCloseWebview}
             onNavigationRedirect={onNavigationRedirect}
             uri={`https://test-square-f50f7.web.app`}
             user={user}

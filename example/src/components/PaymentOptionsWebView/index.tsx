@@ -15,7 +15,6 @@ import {
 import { OText } from '../shared';
 
 interface PaymentOptionsWebViewParams {
-    handleCloseWebview?: Function,
     onNavigationRedirect?: Function,
     uri?: any,
     user?: any,
@@ -29,7 +28,6 @@ interface PaymentOptionsWebViewParams {
 }
 export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
     const { 
-        handleCloseWebview,
         onNavigationRedirect,
         uri,
         user,
@@ -52,6 +50,11 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
    const [progClr, setProgClr] = useState('#424242');
    const [prog, setProg] = useState(true);
 
+   const handleCloseWebview = () => {
+    setProg(true);
+    setShowGateway({ open: false, closedByUser: true })
+  }
+
    const onMessage = (e: any) => {
         if (e?.nativeEvent?.data && e?.nativeEvent?.data !== 'undefined') {
             let payment = JSON.parse(e.nativeEvent.data);
@@ -64,7 +67,7 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
             if (payment) {
                 if (payment.error) {
                 showToast(ToastType.Error, payment.result)
-                setOpenOrderCreating(false)
+                setOpenOrderCreating && setOpenOrderCreating(false)
                 } else if (payment?.result?.order?.uuid) {
                 showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfully'))
                 onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment?.result?.order?.uuid, goToBusinessList: true })
