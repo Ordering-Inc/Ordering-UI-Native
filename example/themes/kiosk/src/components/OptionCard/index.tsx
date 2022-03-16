@@ -95,7 +95,7 @@ interface Props {
   style?: ViewStyle;
   bgImage: ImageSourcePropType;
   innerStyle?: ViewStyle;
-  icon: ImageSourcePropType;
+  icon?: ImageSourcePropType;
   iconStyle?: ImageStyle;
   callToActionText: string;
   callToActionTextStyle?: TextStyle;

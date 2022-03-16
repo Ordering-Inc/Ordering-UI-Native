@@ -125,7 +125,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                           {product.name}
                         </OText>
 
-                        {product?.price && (
+                        {!!product?.price && (
                           <OText>
                             <OText
                               color={theme.colors.primary}
@@ -200,7 +200,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                                   {product.name}
                                 </OText>
 
-                                {product?.price && (
+                                {!!product?.price && (
                                   <OText>
                                     <OText
                                       color={theme.colors.primary}
