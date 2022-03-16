@@ -14,7 +14,7 @@ import {
 } from '../shared'
 
 import { useTheme } from 'styled-components/native';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import {
   useLanguage,
@@ -83,6 +83,25 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
     16: theme.colors.statusOrderRed,
     17: theme.colors.statusOrderRed,
   };
+
+  const walletName: any = {
+    cash: {
+      name: t('CASH_WALLET', 'Cash Wallet'),
+    },
+    credit_point: {
+      name: t('CREDITS_POINTS_WALLET', 'Credit Points Wallet'),
+    }
+  }
+
+  const orderTypes = (type: number) => type === 1
+    ? t('DELIVERY', 'Delivery')
+    : order.delivery_type === 2
+      ? t('PICKUP', 'Pickup')
+      : order.delivery_type === 3
+        ? t('EAT_IN', 'Eat in')
+        : order.delivery_type === 4
+          ? t('CURBSIDE', 'Curbside')
+          : t('DRIVER_THRU', 'Driver thru')
 
   return (
     <>
@@ -176,18 +195,30 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
           </>
         </OText>
         {!order?.isLogistic && order?.delivery_type && (!order?.order_group_id || !logisticOrderStatus?.includes(order?.status)) && (
-          <OText size={13}>
-            {`${order?.paymethod?.name} - ${order.delivery_type === 1
-              ? t('DELIVERY', 'Delivery')
-              : order.delivery_type === 2
-                ? t('PICKUP', 'Pickup')
-                : order.delivery_type === 3
-                  ? t('EAT_IN', 'Eat in')
-                  : order.delivery_type === 4
-                    ? t('CURBSIDE', 'Curbside')
-                    : t('DRIVER_THRU', 'Driver thru')
-              }`}
-          </OText>
+          <>
+            <OText size={13}>
+              <OText size={13} weight='bold'>{`${t('ORDER_TYPE', 'Order Type')}: `}</OText>
+              {orderTypes(order.delivery_type)}
+            </OText>
+            {order?.payment_events?.length > 0 && (
+              <View>
+                <OText size={13}>
+                  <OText size={13} weight='bold'>
+                    {`${t('PAYMENT_METHODS', 'Payment methods')}: `}
+                  </OText>
+                  {order?.payment_events?.map((event: any, idx: number) => {
+                    return event?.wallet_event
+                      ? idx < order?.payment_events?.length - 1
+                        ? `${walletName[event?.wallet_event?.wallet?.type]?.name} - `
+                        : walletName[event?.wallet_event?.wallet?.type]?.name
+                      : idx < order?.payment_events?.length - 1
+                        ? `${event?.paymethod?.name} - `
+                        : event?.paymethod?.name
+                  })}
+                </OText>
+              </View>
+            )}
+          </>
         )}
       </OrderHeader>
     </>
