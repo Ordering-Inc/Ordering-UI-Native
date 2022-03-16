@@ -35,19 +35,25 @@ const WalletsUI = (props: any) => {
   const theme = useTheme()
   const [{ parsePrice, parseDate }] = useUtils()
   const [{ configs }] = useConfig()
+  const isWalletCashEnabled = configs?.wallet_cash_enabled?.value === '1'
+  const isWalletPointsEnabled = configs?.wallet_credit_point_enabled?.value === '1'
 
-  const [tabSelected, setTabSelected] = useState('cash')
+  const [tabSelected, setTabSelected] = useState(isWalletCashEnabled ? 'cash' : 'credit_point')
+
+  const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletPointsEnabled)
 
   const currentWalletSelected = (walletList.wallets?.length > 0 && walletList.wallets?.find((w: any) => w.type === tabSelected)) ?? null
 
   const walletName: any = {
     cash: {
       name: t('CASH_WALLET', 'Cash Wallet'),
-      value: 0
+      value: 0,
+      isActive: isWalletCashEnabled
     },
     credit_point: {
       name: t('CREDITS_POINTS_WALLET', 'Credit Points Wallet'),
-      value: 1
+      value: 1,
+      isActive: isWalletPointsEnabled
     }
   }
 
@@ -61,7 +67,7 @@ const WalletsUI = (props: any) => {
   }
 
   useEffect(() => {
-    if (configs?.wallet_enabled?.value === '0') {
+    if (!isWalletEnabled) {
       navigation.navigate('BottomTab', {
         screen: 'Profile'
       })
@@ -85,7 +91,7 @@ const WalletsUI = (props: any) => {
       (
         <>
           <OTabs>
-            {walletList.wallets?.map((wallet: any) =>(
+            {walletList.wallets?.map((wallet: any) => walletName[wallet.type]?.isActive && (
               <Pressable
                 key={wallet.id}
                 onPress={() => handleChangeTab(wallet)}
