@@ -62,7 +62,8 @@ const SignupFormUI = (props: SignupParams) => {
 		setCheckPhoneCodeState,
 		handleSendVerifyCode,
 		handleCheckPhoneCode,
-		notificationState
+		notificationState,
+		handleChangePromotions
 	} = props;
 
 	const theme = useTheme();
@@ -92,9 +93,9 @@ const SignupFormUI = (props: SignupParams) => {
 			marginBottom: 7,
 		},
 		checkBoxStyle: {
-      width: 25,
-      height: 25,
-    }
+			width: 25,
+			height: 25,
+		}
 	});
 
 	const showInputPhoneNumber =
@@ -281,9 +282,9 @@ const SignupFormUI = (props: SignupParams) => {
 		const supported = await Linking.canOpenURL(url);
 
 		if (supported) {
-		  	await Linking.openURL(url);
+			await Linking.openURL(url);
 		} else {
-		  	showToast(ToastType.Error, t('VALIDATION_ERROR_ACTIVE_URL', 'The _attribute_ is not a valid URL.').replace('_attribute_', t('URL', 'URL')))
+			showToast(ToastType.Error, t('VALIDATION_ERROR_ACTIVE_URL', 'The _attribute_ is not a valid URL.').replace('_attribute_', t('URL', 'URL')))
 		}
 	}
 
@@ -469,6 +470,33 @@ const SignupFormUI = (props: SignupParams) => {
 								</View>
 							)}
 
+							<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+								<Controller
+									control={control}
+									render={({ onChange, value }: any) => (
+										<CheckBox
+											value={value}
+											onValueChange={newValue => {
+												onChange(newValue)
+												handleChangePromotions()
+											}}
+											boxType={'square'}
+											tintColors={{
+												true: theme.colors.primary,
+												false: theme.colors.disabled
+											}}
+											tintColor={theme.colors.disabled}
+											onCheckColor={theme.colors.primary}
+											onTintColor={theme.colors.primary}
+											style={Platform.OS === 'ios' && style.checkBoxStyle}
+										/>
+									)}
+									name='promotions'
+									defaultValue={false}
+								/>
+								<OText style={{ fontSize: 14, paddingHorizontal: 5 }}>{t('RECEIVE_NEWS_EXCLUSIVE_PROMOTIONS', 'Receive newsletters and exclusive promotions')}</OText>
+							</View>
+
 							{configs?.terms_and_conditions?.value === 'true' && (
 								<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
 									<Controller
@@ -591,25 +619,25 @@ const SignupFormUI = (props: SignupParams) => {
 							textStyle={{ color: 'white' }}
 							imgRightSrc={null}
 							isDisabled={formState.loading || validationFields.loading}
-							style={{ borderRadius: 7.6, marginTop: 6,shadowOpacity: 0 }}
+							style={{ borderRadius: 7.6, marginTop: 6, shadowOpacity: 0 }}
 						/>
 					)}
 				</FormInput>
 
 				{
-          onNavigationRedirect && loginButtonText && (
-            <View style={style.wrappText}>
-              <OText size={14} style={{ marginRight: 5 }}>
-                {t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
-              </OText>
-              <Pressable onPress={() => onNavigationRedirect('Login')}>
-                <OText size={14} color={theme.colors.primary}>
-                  {loginButtonText}
-                </OText>
-              </Pressable>
-            </View>
-          )
-        }
+					onNavigationRedirect && loginButtonText && (
+						<View style={style.wrappText}>
+							<OText size={14} style={{ marginRight: 5 }}>
+								{t('MOBILE_FRONT_ALREADY_HAVE_AN_ACCOUNT', 'Already have an account?')}
+							</OText>
+							<Pressable onPress={() => onNavigationRedirect('Login')}>
+								<OText size={14} color={theme.colors.primary}>
+									{loginButtonText}
+								</OText>
+							</Pressable>
+						</View>
+					)
+				}
 				<View
 					style={{
 						flexDirection: 'row',
@@ -631,23 +659,23 @@ const SignupFormUI = (props: SignupParams) => {
 
 				{configs && Object.keys(configs).length > 0 && (
 					(((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
-					(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
+						(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
 					(
 						<ButtonsWrapper>
 							<SocialButtons>
 								{(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
-								configs?.facebook_id?.value && (
-									<FacebookLogin
-										notificationState={notificationState}
-										handleErrors={(err: any) => showToast(ToastType.Error, err)}
-										handleLoading={(val: boolean) => setIsFBLoading(val)}
-										handleSuccessFacebookLogin={handleSuccessFacebook}
-									/>
-								)}
+									configs?.facebook_id?.value && (
+										<FacebookLogin
+											notificationState={notificationState}
+											handleErrors={(err: any) => showToast(ToastType.Error, err)}
+											handleLoading={(val: boolean) => setIsFBLoading(val)}
+											handleSuccessFacebookLogin={handleSuccessFacebook}
+										/>
+									)}
 								{(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
 									<GoogleLogin
 										notificationState={notificationState}
-                    					webClientId={configs?.google_login_client_id?.value}
+										webClientId={configs?.google_login_client_id?.value}
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
 										handleLoading={(val: boolean) => setIsFBLoading(val)}
 										handleSuccessGoogleLogin={handleSuccessFacebook}
