@@ -70,7 +70,7 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
                 setOpenOrderCreating && setOpenOrderCreating(false)
                 } else if (payment?.result?.order?.uuid) {
                 showToast(ToastType.Success, t('ORDER_PLACED_SUCCESSfULLY', 'The order was placed successfully'))
-                onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment?.result?.order?.uuid, goToBusinessList: true })
+                onNavigationRedirect && onNavigationRedirect('OrderDetails', { orderId: payment?.result?.order?.uuid, isFromCheckout: true})
                 }
                 setProg(true);
                 setShowGateway({ closedByUser: false, open: false })
