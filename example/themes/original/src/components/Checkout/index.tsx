@@ -49,6 +49,7 @@ import NavBar from '../NavBar';
 import { OrderSummary } from '../OrderSummary';
 import { getTypesText } from '../../utils';
 import { CartStoresListing } from '../CartStoresListing';
+import { PaymentOptionsWebView } from '../../../../../src/components/PaymentOptionsWebView';
 
 const mapConfigs = {
 	mapZoom: 16,
@@ -83,6 +84,7 @@ const CheckoutUI = (props: any) => {
 		deliveryOptionSelected,
 		instructionsOptions,
 		handleChangeDeliveryOption,
+		currency
 	} = props
 
 	const theme = useTheme();
@@ -114,10 +116,11 @@ const CheckoutUI = (props: any) => {
 
 	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
-	const [{ user }] = useSession();
+	const [{ user, token }] = useSession();
+	const [ordering] = useApi()
 	const [{ configs }] = useConfig();
 	const [{ parsePrice, parseDate }] = useUtils();
-	const [{ options, carts, loading }] = useOrder();
+	const [{ options, carts, loading }, { confirmCart }] = useOrder();
 	const [validationFields] = useValidationFields();
 
 	const [errorCash, setErrorCash] = useState(false);
@@ -126,8 +129,11 @@ const CheckoutUI = (props: any) => {
 	const [phoneUpdate, setPhoneUpdate] = useState(false);
 	const [openChangeStore, setOpenChangeStore] = useState(false)
 	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
+	const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
+	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
 
-  const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
+
+  	const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -156,6 +162,16 @@ const CheckoutUI = (props: any) => {
 		setIsUserDetailsEdit(true)
 	}
 
+	const handlePaymentMethodClick = (paymethod: any) => {
+		setShowGateway({ closedByUser: false, open: true })
+		setWebviewPaymethod(paymethod)
+	}
+
+	const onFailPaypal = async () => {
+		if (showGateway.closedByUser === true) {
+		  await confirmCart(cart.uuid)
+		}
+	}
 	const changeDeliveryOption = (option: any) => {
 		handleChangeDeliveryOption(option)
 		setIsDeliveryOptionModalVisible(false)
@@ -215,6 +231,10 @@ const CheckoutUI = (props: any) => {
 			navigation?.canGoBack() && navigation.goBack();
 		}
 	}, [cart?.products])
+
+	useEffect(() => {
+		onFailPaypal()
+	}, [showGateway.closedByUser])
 
 	return (
 		<>
@@ -503,6 +523,7 @@ const CheckoutUI = (props: any) => {
 									setErrorCash={setErrorCash}
 									onNavigationRedirect={onNavigationRedirect}
 									paySelected={paymethodSelected}
+									handlePaymentMethodClickCustom={handlePaymentMethodClick}
 								/>
 							</ChPaymethods>
 						</ChSection>
@@ -549,7 +570,7 @@ const CheckoutUI = (props: any) => {
 										<OrderSummary
 											cart={cart}
 											isCartPending={cart?.status === 2}
-                      onNavigationRedirect={onNavigationRedirect}
+                      						onNavigationRedirect={onNavigationRedirect}
 										/>
 									</>
 								)}
@@ -620,6 +641,18 @@ const CheckoutUI = (props: any) => {
 					btnRightValueShow
 					btnRightValue={parsePrice(cart?.total)}
 					iosBottom={20}
+				/>
+			)}
+			{webviewPaymethod?.gateway === 'paypal' && showGateway.open && (
+				<PaymentOptionsWebView
+					onNavigationRedirect={onNavigationRedirect}
+					uri={`${ordering.root}/html/paypal_react_native`}
+					user={user}
+					token={token}
+					cart={cart}
+					currency={currency}
+					webviewPaymethod={webviewPaymethod}
+					setShowGateway={setShowGateway}
 				/>
 			)}
 		</>
