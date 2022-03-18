@@ -277,7 +277,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 								style={{ marginEnd: 24 }}
 							/>
 						)}
-						<OText color={optionSelected.isAsap ? theme.colors.textNormal : theme.colors.disabled}>{t('ASAP_ABBREVIATION', 'ASAP') + ` (${moment().format('dddd, MMM d, yyyy h:mm A')} + delivery time)`}</OText>
+						<OText color={optionSelected.isAsap ? theme.colors.textNormal : theme.colors.disabled}>{t('ASAP_ABBREVIATION', 'ASAP') + ` (${moment().format('dddd, MMM D, yyyy h:mm A')} + delivery time)`}</OText>
 					</WrapSelectOption>
 					<WrapSelectOption
 						onPress={() => setOptionSelected({ isAsap: false, isSchedule: true })}
