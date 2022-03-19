@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import Geolocation from '@react-native-community/geolocation'
 import {
@@ -44,7 +44,7 @@ import { BusinessFeaturedController } from '../BusinessFeaturedController';
 import { HighestRatedBusinesses } from '../HighestRatedBusinesses';
 import { getTypesText, convertToRadian } from '../../utils';
 import { OrderProgress } from '../OrderProgress';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 
 const PIXELS_TO_SCROLL = 1000;
 
@@ -115,15 +115,15 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [featuredBusiness, setFeaturedBusinesses] = useState(Array);
 	const [isFarAway, setIsFarAway] = useState(false)
 
-	// const timerId = useRef<any>(false)
+	const timerId = useRef<any>(false)
 	// const panResponder = useRef(
-	//   PanResponder.create({
-	//     onMoveShouldSetPanResponder: (e, gestureState) => {
-	//       const {dx, dy} = gestureState;
-	//       resetInactivityTimeout()
-	//       return (Math.abs(dx) > 20) || (Math.abs(dy) > 20);
-	//     },
-	//   })
+	// 	PanResponder.create({
+	// 		onMoveShouldSetPanResponder: (e, gestureState) => {
+	// 			const { dx, dy } = gestureState;
+	// 			resetInactivityTimeout()
+	// 			return (Math.abs(dx) > 20) || (Math.abs(dy) > 20);
+	// 		},
+	// 	})
 	// ).current
 
 	const configTypes =
@@ -165,16 +165,18 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		}
 	}, [businessesList.businesses]);
 
-	// const resetInactivityTimeout = () => {
-	//   clearTimeout(timerId.current)
-	//   timerId.current = setInterval(() => {
-	//     getBusinesses(true)
-	//   }, 600000)
-	// }
+	const resetInactivityTimeout = () => {
+		clearTimeout(timerId.current)
+		timerId.current = setInterval(() => {
+			if (!businessesList.loading) {
+				getBusinesses(true)
+			}
+		}, 300000)
+	}
 
-	// useEffect(() => {
-	//   resetInactivityTimeout()
-	// }, [])
+	useEffect(() => {
+		resetInactivityTimeout()
+	}, [])
 
 	const handleOnRefresh = () => {
 		if (!businessesList.loading) {
@@ -194,6 +196,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
 		})
 	}, [orderState?.options?.address?.location])
+
+	useFocusEffect(
+		useCallback(() => {
+			getBusinesses(true)
+			resetInactivityTimeout()
+			return () => clearTimeout(timerId.current)
+		}, [navigation])
+	)
 
 	return (
 		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}
