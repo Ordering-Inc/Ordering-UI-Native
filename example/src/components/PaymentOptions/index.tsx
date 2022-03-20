@@ -45,6 +45,8 @@ const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 //   { name: 'iDEAL', value: 'ideal' }
 // ]
 
+const webViewPaymentGateway: any = ['paypal', 'square']
+
 const PaymentOptionsUI = (props: any) => {
   const {
     cart,
@@ -92,7 +94,7 @@ const PaymentOptionsUI = (props: any) => {
   const handlePaymentMethodClick = (paymethod: any) => {
     const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal', 'square'].includes(paymethod?.gateway)
     handlePaymethodClick(paymethod, isPopupMethod)
-    if(paymethod?.gateway === 'paypal' || paymethod?.gateway === 'square') {
+		if (webViewPaymentGateway.includes(paymethod?.gateway)) {
       handlePaymentMethodClickCustom(paymethod)
     }
     setCardData(paymethodData)
