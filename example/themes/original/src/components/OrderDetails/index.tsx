@@ -768,7 +768,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         )}
                       </OText>
                       <TouchableOpacity style={{ marginLeft: 5 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_1' })}>
-                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                        <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
                     <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>- {parsePrice(offer?.summary?.discount)}</OText>
@@ -816,7 +816,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
                       </OText>
                       <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: tax, type: 'tax' })}>
-                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                        <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
                     <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
@@ -832,7 +832,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         ({parsePrice(fee?.fixed)} + {fee.percentage}%){' '}
                       </OText>
                       <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee, type: 'fee' })}>
-                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                        <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
                     <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0)}</OText>
@@ -850,7 +850,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         )}
                       </OText>
                       <TouchableOpacity style={{ marginLeft: 5 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_3' })}>
-                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                        <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
                     <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>- {parsePrice(offer?.summary?.discount)}</OText>
@@ -874,7 +874,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         )}
                       </OText>
                       <TouchableOpacity style={{ marginLeft: 5 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_2' })}>
-                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                        <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
                     <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>- {parsePrice(offer?.summary?.discount)}</OText>

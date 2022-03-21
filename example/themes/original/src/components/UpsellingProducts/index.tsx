@@ -155,9 +155,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
           <TopActions onPress={() => onGoBack()}>
             <OIcon src={theme.images.general.arrow_left} width={15} />
           </TopActions>
-          <TopActions style={styles.cancelBtn} onPress={() => handleUpsellingPage()}>
-            <OText size={12} color={theme.colors.textSecondary}>{t('CANCEL', 'Cancel')}</OText>
-          </TopActions>
         </TopBar>
         <ScrollView style={{ marginBottom: props.isPage ? 40 : bottom + (Platform.OS == 'ios' ? 96 : 130) }} showsVerticalScrollIndicator={false}>
           <View style={{ paddingHorizontal: 40 }}>
