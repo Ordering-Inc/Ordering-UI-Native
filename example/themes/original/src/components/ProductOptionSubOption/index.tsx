@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {
 	useUtils,
 	useLanguage,
-	ProductOptionSuboption as ProductSubOptionController,
+	ProductOptionSuboption as ProductSubOptionController
 } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { StyleSheet } from 'react-native'
@@ -139,7 +139,8 @@ const styles = StyleSheet.create({
 export const ProductOptionSubOption = (props: any) => {
 	const productOptionSubOptionProps = {
 		...props,
-		UIComponent: ProductOptionSubOptionUI
+		UIComponent: ProductOptionSubOptionUI,
+		isOrigin: true
 	}
 
 	return (
