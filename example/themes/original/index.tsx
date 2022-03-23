@@ -32,7 +32,7 @@ import { Wallets } from './src/components/Wallets';
 import { PaymentOptionWallet } from './src/components/PaymentOptionWallet';
 import { ProductForm } from './src/components/ProductForm';
 import { UpsellingProducts } from './src/components/UpsellingProducts';
-import { VerifyEmail } from './src/components/VerifyEmail';
+import { UserVerification } from './src/components/UserVerification';
 
 import { Toast } from './src/components/shared/OToast';
 import {
@@ -95,7 +95,7 @@ export {
   PaymentOptionWallet,
   ProductForm,
   UpsellingProducts,
-  VerifyEmail,
+  UserVerification,
 
 	// OComponents
 	Toast,
