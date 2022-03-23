@@ -21,7 +21,8 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 		inputStyle,
 		textStyle,
 		flagStyle,
-		noDropIcon
+		noDropIcon,
+    isDisabled
 	} = props
 
 	const theme = useTheme();
@@ -98,6 +99,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 		<Wrapper>
 			<PhoneInput
 				ref={phoneInput}
+        disabled={isDisabled}
 				defaultValue={userphoneNumber || defaultValue}
 				defaultCode={defaultCode ? transformCountryCode(defaultCode) : configs?.default_country_code?.value}
 				onChangeFormattedText={(text: string) => handleChangeNumber(text)}

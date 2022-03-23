@@ -5,6 +5,7 @@ import {
 	useLanguage,
 	ToastType,
 	useToast,
+  useConfig
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { useForm } from 'react-hook-form';
@@ -56,6 +57,7 @@ const ProfileUI = (props: ProfileParams) => {
 	});
 
 	const [{ user }] = useSession();
+	const [{ configs }] = useConfig();
 	const [, t] = useLanguage();
 	const [, { showToast }] = useToast();
 	const { handleSubmit, errors, setValue, control } = useForm();
@@ -76,8 +78,9 @@ const ProfileUI = (props: ProfileParams) => {
 		}
 		if (
 			formState.changes.cellphone === '' &&
-			validationFields?.fields?.checkout?.cellphone?.enabled &&
-			validationFields?.fields?.checkout?.cellphone?.required
+			((validationFields?.fields?.checkout?.cellphone?.enabled &&
+        validationFields?.fields?.checkout?.cellphone?.required) ||
+        configs?.verification_phone_required?.value === '1')
 		) {
 			showToast(
 				ToastType.Error,
