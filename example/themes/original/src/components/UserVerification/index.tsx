@@ -126,11 +126,11 @@ const UserVerificationUI = (props: any) => {
     },
     phoneInputStyle: {
       height: 30,
-      borderWidth: 0,
+      borderWidth: 1,
       fontSize: 12,
-      paddingStart: 0,
       paddingBottom: 0,
       marginBottom: -0,
+      paddingHorizontal: 10
     }
   });
 
@@ -475,7 +475,7 @@ const UserVerificationUI = (props: any) => {
           <OButton
             onClick={(verificationState.email || verificationState.phone)
               ? () => setVerificationState({ email: false, phone: false })
-              : () => handleSendOtp(verificationState.phone ? 'phone' : '')
+              : () => handleSendOtp(isPhoneVerifyRequired && !isEmailVerifyRequired ? 'phone' : '')
             }
             text={(verificationState.email || verificationState.phone) ? t('CANCEL', 'Cancel') : t('SEND_CODE', 'Send code')}
             bgColor={(verificationState.email || verificationState.phone) ? theme.colors.secundary : theme.colors.primary}
