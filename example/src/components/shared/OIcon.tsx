@@ -2,6 +2,7 @@
 import * as React from 'react'
 import { ImageStyle } from 'react-native'
 import styled from 'styled-components/native'
+import { useTheme } from 'styled-components/native'
 
 const Wrapper = styled.View``
 
@@ -23,10 +24,12 @@ interface Props {
 }
 
 const OImage = (props: Props): React.ReactElement => {
+  const theme = useTheme();
+  
   return (
     <Wrapper style={{ borderRadius: props.style?.borderRadius, overflow: 'hidden', marginHorizontal: props.style?.marginHorizontal }}>
       <SImage
-        source={props.src ? props.src : props.url ? { uri: props.url } : props.dummy ? props.dummy : require('../../assets/icons/lunch.png')}
+        source={props.src ? props.src : props.url ? { uri: props.url } : props.dummy ? props.dummy : theme.images.general.lunch || require('../../assets/icons/lunch.png')}
         style={{
           tintColor: props.color,
           flex: props.isWrap ? 1 : 0,
