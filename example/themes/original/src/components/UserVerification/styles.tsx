@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 export const Container = styled.View`
   padding: 20px;
@@ -11,7 +11,13 @@ export const WrapperText = styled.View`
   align-items: center;
 `
 
-export const InputWrapper = styled.View``
+export const InputWrapper = styled.View`
+  ${(props: any) => props.phone && css`
+    width: 60%;
+    align-self: center;
+    padding-top: 20px;
+  `}
+`
 
 export const WrapperActions = styled.View`
   position: relative;
