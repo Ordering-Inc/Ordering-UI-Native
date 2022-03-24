@@ -652,7 +652,7 @@ const CheckoutUI = (props: any) => {
 					}
 					btnRightValueShow
 					btnRightValue={parsePrice(cart?.total)}
-					iosBottom={20}
+					iosBottom={30}
 				/>
 			)}
 			{webviewPaymethod?.gateway === 'paypal' && showGateway.open && (

@@ -16,7 +16,7 @@ import {
 	Grayscale
 } from 'react-native-color-matrix-image-filters'
 
-import { View, TouchableOpacity, StyleSheet, Dimensions, I18nManager, SafeAreaView } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, I18nManager, SafeAreaView, Platform } from 'react-native';
 
 import {
 	WrapHeader,
@@ -216,7 +216,7 @@ export const ProductOptionsUI = (props: any) => {
 
 	const handleRedirectLogin = () => {
 		navigation.navigate('Login', {
-			store_slug:  props.businessSlug
+			store_slug: props.businessSlug
 		});
 	};
 
@@ -768,7 +768,7 @@ export const ProductOptionsUI = (props: any) => {
 				)}
 			</ScrollView>
 			{!loading && !error && product && (
-				<ProductActions>
+				<ProductActions ios={Platform?.OS === 'ios'}>
 					<OText size={16} lineHeight={24} weight={'600'}>
 						{productCart.total ? parsePrice(productCart?.total) : ''}
 					</OText>

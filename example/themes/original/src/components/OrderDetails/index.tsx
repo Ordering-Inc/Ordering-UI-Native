@@ -47,6 +47,7 @@ import { verifyDecimals } from '../../utils';
 import { OSRow } from '../OrderSummary/styles';
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
+import { Placeholder, PlaceholderLine } from 'rn-placeholder';
 
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
@@ -421,7 +422,58 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   return (
     <OrderDetailsContainer keyboardShouldPersistTaps="handled">
-      <Spinner visible={!order || Object.keys(order).length === 0} />
+      {(!order || Object.keys(order).length === 0) && (
+        <Placeholder style={{ marginTop: 30 }}>
+          <Header>
+            <OrderInfo>
+              <OrderData>
+                <PlaceholderLine width={60} height={15} />
+                <PlaceholderLine width={60} height={10} />
+                <StaturBar>
+                  <PlaceholderLine height={15} />
+                  <PlaceholderLine width={40} height={20} />
+                </StaturBar>
+              </OrderData>
+              <View
+                style={{
+                  height: 8,
+                  backgroundColor: theme.colors.backgroundGray100,
+                  marginTop: 18,
+                  marginHorizontal: -40,
+                }}
+              />
+            </OrderInfo>
+          </Header>
+          <OrderContent>
+            <OrderBusiness>
+              <PlaceholderLine width={30} height={20} />
+              <PlaceholderLine width={60} height={15} />
+              <PlaceholderLine width={75} height={10} />
+              <PlaceholderLine width={40} height={10} />
+              <PlaceholderLine width={95} height={10} />
+            </OrderBusiness>
+          </OrderContent>
+          <View
+            style={{
+              height: 8,
+              backgroundColor: theme.colors.backgroundGray100,
+              marginTop: 18,
+              marginHorizontal: -40,
+            }}
+          />
+          <OrderCustomer>
+            <PlaceholderLine width={20} height={20} />
+            <PlaceholderLine width={70} height={15} />
+            <PlaceholderLine width={65} height={10} />
+            <PlaceholderLine width={80} height={10} />
+            <PlaceholderLine width={70} height={10} />
+            <View style={{marginTop: 10}}>
+              <PlaceholderLine width={60} height={20} />
+              <PlaceholderLine width={40} height={10} />
+            </View>
+          </OrderCustomer>
+        </Placeholder>
+      )}
       {order && Object.keys(order).length > 0 && (
         <>
           <Header>

@@ -175,7 +175,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
         <View
           style={{
             alignItems: 'center',
-            bottom: props.isPage ? 20 : Platform.OS === 'ios' ? bottom  + 59 :  bottom + 125
+            bottom: props.isPage ? Platform.OS === 'ios' ? 0 : 20 : Platform.OS === 'ios' ? bottom  + 59 :  bottom + 125
           }}
         >
           <OButton
