@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProductsList, useLanguage, useUtils } from 'ordering-components/native';
+import { ProductsList, useLanguage, useUtils, useConfig } from 'ordering-components/native';
 import { SingleProductCard } from '../SingleProductCard';
 import { NotFoundSource } from '../NotFoundSource';
 import { BusinessProductsListParams } from '../../types';
@@ -31,6 +31,8 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
 
   const [, t] = useLanguage();
   const [{ optimizeImage }] = useUtils()
+  const [{ configs }] = useConfig()
+  const isUseParentCategory = configs?.use_parent_category?.value === 'true' || configs?.use_parent_category?.value === '1'
 
   const handleOnLayout = (event: any, categoryId: any) => {
     const _categoriesLayout = { ...categoriesLayout }
@@ -80,52 +82,47 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
           </View>
         )}
 
-      {!category.id &&
-        categories &&
-        categories
-          .filter((category) => category.id !== null)
-          .map((category, i, _categories) => {
-            const products =
-              categoryState.products?.filter(
-                (product: any) => product.category_id === category.id,
-              ) || [];
-            return (
-              <React.Fragment key={'cat_' + category.id}>
-                {products.length > 0 && (
-                  <>
-                    <View
-                      style={bpStyles.catWrap}
-                      onLayout={(event: any) => handleOnLayout(event, category.id)}
-                    >
-                      <View style={bpStyles.catIcon}>
-                        <OIcon
-                          url={optimizeImage(category.image, 'h_100,c_limit')}
-                          width={41}
-                          height={41}
-                          style={{ borderRadius: 7.6 }}
-                        />
-                      </View>
-                      <OText size={16} weight="600">
-                        {category.name}
-                      </OText>
-                    </View>
-                    <>
-                      {products.sort((a: any, b: any) => a.rank - b.rank).map((product: any, i: any) => (
-                        <SingleProductCard
-                          key={i}
-                          isSoldOut={product.inventoried && !product.quantity}
-                          businessId={businessId}
-                          product={product}
-                          onProductClick={onProductClick}
-                          productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
-                        />
-                      ))}
-                    </>
-                  </>
-                )}
-              </React.Fragment>
-            );
-          })}
+      {!category?.id && categories.filter(category => category?.id !== null).map((category, i, _categories) => {
+        const products = !isUseParentCategory
+          ? categoryState?.products?.filter((product : any) => product?.category_id === category?.id) ?? []
+          : categoryState?.products?.filter((product : any) => category?.children?.some((cat : any) => cat.category_id === product?.category_id)) ?? []
+        return (
+          <React.Fragment key={'cat_' + category.id}>
+            {products.length > 0 && (
+              <>
+                <View
+                  style={bpStyles.catWrap}
+                  onLayout={(event: any) => handleOnLayout(event, category.id)}
+                >
+                  <View style={bpStyles.catIcon}>
+                    <OIcon
+                      url={optimizeImage(category.image, 'h_100,c_limit')}
+                      width={41}
+                      height={41}
+                      style={{ borderRadius: 7.6 }}
+                    />
+                  </View>
+                  <OText size={16} weight="600">
+                    {category.name}
+                  </OText>
+                </View>
+                <>
+                  {products.sort((a: any, b: any) => a.rank - b.rank).map((product: any, i: any) => (
+                    <SingleProductCard
+                      key={i}
+                      isSoldOut={product.inventoried && !product.quantity}
+                      businessId={businessId}
+                      product={product}
+                      onProductClick={onProductClick}
+                      productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
+                    />
+                  ))}
+                </>
+              </>
+            )}
+          </React.Fragment>
+        );
+      })}
 
       {(categoryState.loading || isBusinessLoading) && (
         <>
