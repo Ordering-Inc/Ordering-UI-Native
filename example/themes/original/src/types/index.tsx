@@ -203,7 +203,7 @@ export interface BusinessProductsListParams {
 	errors?: any;
 	businessId?: number;
 	category?: any;
-	categories?: Array<any>;
+	categories: Array<any>;
 	categoryState?: any;
 	onProductClick?: any;
 	handleSearchRedirect?: () => {};
