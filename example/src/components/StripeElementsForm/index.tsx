@@ -11,6 +11,7 @@ import {
 import { ErrorMessage } from './styles';
 
 import { StripeElementsForm as StripeFormController } from './naked';
+import { StripeMethodForm } from '../StripeMethodForm';
 import { OButton, OText } from '../shared';
 import { useTheme } from 'styled-components/native';
 
@@ -22,6 +23,8 @@ const StripeElementsFormUI = (props: any) => {
     businessId,
     requirements,
     stripeTokenHandler,
+    methodsPay,
+    paymethod
   } = props;
 
   const theme = useTheme();
@@ -121,21 +124,28 @@ const StripeElementsFormUI = (props: any) => {
     <View style={styles.container}>
       {publicKey ? (
         <View style={{ flex: 1 }}>
-          <StripeProvider publishableKey={publicKey}>
-            <CardField
-              postalCodeEnabled={true}
-              cardStyle={{
-                backgroundColor: '#FFFFFF',
-                textColor: '#000000',
-              }}
-              style={{
-                width: '100%',
-                height: 50,
-                marginVertical: 30,
-                zIndex: 9999,
-              }}
-              onCardChange={(cardDetails: any) => setCard(cardDetails)}
-            />
+          <StripeProvider 
+            publishableKey={publicKey}
+            merchantIdentifier='merchant.com.ordering.app1'
+          >
+            {methodsPay.includes(paymethod) ? (
+              <StripeMethodForm />
+            ) : (
+              <CardField
+                postalCodeEnabled={true}
+                cardStyle={{
+                  backgroundColor: '#FFFFFF',
+                  textColor: '#000000',
+                }}
+                style={{
+                  width: '100%',
+                  height: 50,
+                  marginVertical: 30,
+                  zIndex: 9999,
+                }}
+                onCardChange={(cardDetails: any) => setCard(cardDetails)}
+              />
+            )}
           </StripeProvider>
           <OButton
             text={t('SAVE_CARD', 'Save card')}
