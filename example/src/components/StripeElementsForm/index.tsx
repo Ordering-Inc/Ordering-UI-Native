@@ -24,7 +24,9 @@ const StripeElementsFormUI = (props: any) => {
     requirements,
     stripeTokenHandler,
     methodsPay,
-    paymethod
+    paymethod,
+    onCancel,
+    cart
   } = props;
 
   const theme = useTheme();
@@ -129,7 +131,12 @@ const StripeElementsFormUI = (props: any) => {
             merchantIdentifier='merchant.com.ordering.app1'
           >
             {methodsPay.includes(paymethod) ? (
-              <StripeMethodForm />
+              <StripeMethodForm 
+                handleSource={handleSource}
+                onCancel={onCancel}
+                cart={cart}
+                setErrors={setErrors}
+              />
             ) : (
               <CardField
                 postalCodeEnabled={true}
@@ -147,17 +154,19 @@ const StripeElementsFormUI = (props: any) => {
               />
             )}
           </StripeProvider>
-          <OButton
-            text={t('SAVE_CARD', 'Save card')}
-            bgColor={isCompleted ? theme.colors.primary : theme.colors.backgroundGray}
-            borderColor={isCompleted ? theme.colors.primary :theme.colors.backgroundGray}
-            style={styles.btnAddStyle}
-            textStyle={{color: 'white'}}
-            imgRightSrc={null}
-            onClick={() => handleSaveCard()}
-            isDisabled={!isCompleted}
-            isLoading={confirmSetupLoading || values.loadingAdd || createPmLoading}
-          />
+          {!methodsPay?.includes(paymethod) && (
+            <OButton
+              text={t('SAVE_CARD', 'Save card')}
+              bgColor={isCompleted ? theme.colors.primary : theme.colors.backgroundGray}
+              borderColor={isCompleted ? theme.colors.primary :theme.colors.backgroundGray}
+              style={styles.btnAddStyle}
+              textStyle={{color: 'white'}}
+              imgRightSrc={null}
+              onClick={() => handleSaveCard()}
+              isDisabled={!isCompleted}
+              isLoading={confirmSetupLoading || values.loadingAdd || createPmLoading}
+            />
+          )}
           {!!errors && (
             <ErrorMessage>
               <OText
