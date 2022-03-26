@@ -12,6 +12,7 @@ import { ProductOption } from '../ProductOption';
 import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import { TextInput } from 'react-native'
 import {
 	Grayscale
 } from 'react-native-color-matrix-image-filters'
@@ -787,14 +788,31 @@ export const ProductOptionsUI = (props: any) => {
 									}
 								/>
 							</TouchableOpacity>
-							<OText
-								size={12}
-								lineHeight={18}
-								style={{ minWidth: 40, textAlign: 'center' }}
-							>
-								{qtyBy?.pieces && productCart.quantity}
-								{qtyBy?.weight_unit && productCart.quantity * product?.weight}
-							</OText>
+							{qtyBy?.pieces && (
+								<TextInput
+									keyboardType='numeric'
+									value={`${productCart.quantity}` || ''}
+									onChangeText={(val: any) => {}}
+									editable={!orderState.loading}
+									style={{
+										borderWidth: 1,
+										textAlign: 'center',
+										minWidth: 40,
+										borderRadius: 8,
+										borderColor: theme.colors.inputBorderColor,
+										height: 44
+									}}
+								/>
+							)}
+							{qtyBy?.weight_unit && (
+								<OText
+									size={12}
+									lineHeight={18}
+									style={{ minWidth: 40, textAlign: 'center' }}
+								>
+									{productCart.quantity * product?.weight}
+								</OText>
+							)}
 							<TouchableOpacity
 								onPress={increment}
 								disabled={
