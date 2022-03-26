@@ -136,6 +136,7 @@ const StripeElementsFormUI = (props: any) => {
                 onCancel={onCancel}
                 cart={cart}
                 setErrors={setErrors}
+                paymethod={paymethod}
               />
             ) : (
               <CardField

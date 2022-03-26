@@ -473,3 +473,11 @@ export interface HelpGuideParams {
 export interface HelpAccountAndPaymentParams {
   navigation: any;
 }
+
+export interface StripeMethodFormParams {
+  cart: any;
+  handleSource: ({id, card} : {id : string, card : any}) => void;
+  onCancel: () => void;
+  setErrors: (error: string) => void;
+  paymethod: string;
+}
