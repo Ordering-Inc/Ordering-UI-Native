@@ -11,13 +11,14 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     handleSource,
     onCancel,
     setErrors,
-    paymethod
+    paymethod,
+    devMode
   } = props
   const { initGooglePay, createGooglePayPaymentMethod, loading } = useGooglePay();
   const { presentApplePay, isApplePaySupported } = useApplePay();
   const [initialized, setInitialized] = useState(false);
   const [, t] = useLanguage()
-
+ 
   useEffect(() => {
     if (paymethod !== 'google_pay') return
     if (Platform.OS === 'ios') {
@@ -27,7 +28,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     const initialize = async () => {
       try {
         const { error } = await initGooglePay({
-          testEnv: true,
+          testEnv: devMode,
           merchantName: 'Widget Store',
           countryCode: 'US',
           billingAddressConfig: {

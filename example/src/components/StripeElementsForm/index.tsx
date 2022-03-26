@@ -7,7 +7,7 @@ import {
   useConfirmSetupIntent,
   createPaymentMethod
 } from '@stripe/stripe-react-native';
-
+import configs from '../../config.json'
 import { ErrorMessage } from './styles';
 
 import { StripeElementsForm as StripeFormController } from './naked';
@@ -128,7 +128,7 @@ const StripeElementsFormUI = (props: any) => {
         <View style={{ flex: 1 }}>
           <StripeProvider 
             publishableKey={publicKey}
-            merchantIdentifier='merchant.com.ordering.app1'
+            merchantIdentifier={`merchant.${configs.apple_app_id}`}
           >
             {methodsPay.includes(paymethod) ? (
               <StripeMethodForm 
@@ -137,6 +137,7 @@ const StripeElementsFormUI = (props: any) => {
                 cart={cart}
                 setErrors={setErrors}
                 paymethod={paymethod}
+                devMode={publicKey?.includes('test')}
               />
             ) : (
               <CardField

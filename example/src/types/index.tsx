@@ -480,4 +480,5 @@ export interface StripeMethodFormParams {
   onCancel: () => void;
   setErrors: (error: string) => void;
   paymethod: string;
+  devMode?: boolean;
 }
