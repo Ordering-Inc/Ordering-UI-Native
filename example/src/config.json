@@ -3,6 +3,8 @@
   "notification_app": "orderingapp",
   "app_name": "Ordering",
   "project": "reactdemo",
+  "apple_app_id": "com.delivery",
+  "android_app_id": "com.delivery",
   "api": {
     "url": "https://apiv4.ordering.co",
     "language": "en",
