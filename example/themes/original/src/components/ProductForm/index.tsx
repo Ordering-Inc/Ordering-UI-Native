@@ -4,7 +4,9 @@ import {
 	useSession,
 	useLanguage,
 	useOrder,
-	useUtils
+	useUtils,
+	ToastType,
+	useToast
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { ProductIngredient } from '../ProductIngredient';
@@ -54,6 +56,7 @@ export const ProductOptionsUI = (props: any) => {
 		productCart,
 		increment,
 		decrement,
+		handleChangeProductCartQuantity,
 		showOption,
 		maxProductQuantity,
 		errors,
@@ -65,6 +68,7 @@ export const ProductOptionsUI = (props: any) => {
 	} = props;
 
 	const theme = useTheme();
+	const [, { showToast }] = useToast()
 
 	const styles = StyleSheet.create({
 		mainContainer: {
@@ -223,6 +227,14 @@ export const ProductOptionsUI = (props: any) => {
 
 	const handleSwitchQtyUnit = (val: string) => {
 		setQtyBy({ [val]: true, [!val]: false })
+	}
+
+	const onChangeProductCartQuantity = (quantity: number) => {
+		if (quantity >= maxProductQuantity) {
+			showToast(ToastType.Error, t('MAX_QUANTITY', 'The max quantity is _number_').replace('_number_', maxProductQuantity))
+			return
+		}
+		handleChangeProductCartQuantity(quantity)
 	}
 
 	useEffect(() => {
@@ -792,15 +804,16 @@ export const ProductOptionsUI = (props: any) => {
 								<TextInput
 									keyboardType='numeric'
 									value={`${productCart.quantity}` || ''}
-									onChangeText={(val: any) => {}}
+									onChangeText={(val: any) => onChangeProductCartQuantity(parseInt(val))}
 									editable={!orderState.loading}
 									style={{
 										borderWidth: 1,
 										textAlign: 'center',
-										minWidth: 40,
+										minWidth: 60,
 										borderRadius: 8,
 										borderColor: theme.colors.inputBorderColor,
-										height: 44
+										height: 44,
+										marginHorizontal: 10
 									}}
 								/>
 							)}
