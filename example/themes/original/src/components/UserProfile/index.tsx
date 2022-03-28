@@ -5,7 +5,7 @@ import {
 	useLanguage,
 	ToastType,
 	useToast,
-  useConfig
+	useConfig
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { useForm } from 'react-hook-form';
@@ -85,7 +85,7 @@ const ProfileListUI = (props: ProfileParams) => {
 		messageIconStyle: {
 			fontSize: 18,
 			fontWeight: 'bold',
-            marginEnd: 14
+			marginEnd: 14
 		}
 	});
 
@@ -99,7 +99,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
 
-  const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
+	const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
 
 	const onRedirect = (route: string, params?: any) => {
 		navigation.navigate(route, params)
@@ -136,7 +136,9 @@ const ProfileListUI = (props: ProfileParams) => {
 
 	return (
 		<View style={{ flex: 1, height: height - top - bottom - 62 }}>
-			<OText size={24} color={theme.colors.textNormal} lineHeight={36} weight={Platform.OS === 'ios' ? '600' : 'bold'} style={{ marginTop: 14, marginBottom: 24, ...styles.pagePadding }}>{t('PROFILE', 'Profile')}</OText>
+			<OText size={24} style={{ marginTop: 15, paddingHorizontal: 40 }}>
+				{t('PROFILE', 'Profile')}
+			</OText>
 			<CenterView style={styles.pagePadding}>
 				<View style={styles.photo}>
 					<OIcon
@@ -147,7 +149,7 @@ const ProfileListUI = (props: ProfileParams) => {
 					/>
 				</View>
 				<View style={{ flexBasis: '70%' }}>
-					<OText size={20} lineHeight={30} weight={Platform.OS === 'ios' ? '500' : 'bold'} color={theme.colors.textNormal}>{`${user?.name} ${user?.lastname}`}</OText>
+					<OText size={20} lineHeight={30} weight={Platform.OS === 'ios' ? '500' : 'bold'} color={theme.colors.textNormal}>{user?.name} {user?.lastname}</OText>
 					<TouchableOpacity onPress={() => navigation.navigate('ProfileForm', { ...detailProps })}>
 						<OText size={12} lineHeight={18} color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>{t('VIEW_ACCOUNT', 'View account')}</OText>
 					</TouchableOpacity>
