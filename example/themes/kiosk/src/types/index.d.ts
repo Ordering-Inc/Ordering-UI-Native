@@ -80,6 +80,7 @@ export interface LoginParams {
   handleButtonLoginClick?: any;
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
+  useRootPoint?: any;
 }
 
 export interface ProductItemAccordionParams {
