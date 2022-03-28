@@ -529,6 +529,7 @@ const CheckoutUI = (props: any) => {
                   paySelected={paymethodSelected}
                   handlePaymentMethodClickCustom={handlePaymentMethodClick}
                   setCardData={setCardData}
+                  handlePlaceOrder={handlePlaceOrder}
                 />
               </ChPaymethods>
             </ChSection>
