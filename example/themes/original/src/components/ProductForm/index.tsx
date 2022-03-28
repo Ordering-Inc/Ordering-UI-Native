@@ -4,7 +4,9 @@ import {
 	useSession,
 	useLanguage,
 	useOrder,
-	useUtils
+	useUtils,
+	ToastType,
+	useToast
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { ProductIngredient } from '../ProductIngredient';
@@ -13,6 +15,7 @@ import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import YoutubePlayer from "react-native-youtube-iframe"
+import { TextInput } from 'react-native'
 import {
 	Grayscale
 } from 'react-native-color-matrix-image-filters'
@@ -54,6 +57,7 @@ export const ProductOptionsUI = (props: any) => {
 		productCart,
 		increment,
 		decrement,
+		handleChangeProductCartQuantity,
 		showOption,
 		maxProductQuantity,
 		errors,
@@ -65,6 +69,7 @@ export const ProductOptionsUI = (props: any) => {
 	} = props;
 
 	const theme = useTheme();
+	const [, { showToast }] = useToast()
 
 	const styles = StyleSheet.create({
 		mainContainer: {
@@ -235,6 +240,14 @@ export const ProductOptionsUI = (props: any) => {
 	const togglePlaying = useCallback(() => {
 		setPlaying((prev) => !prev);
 	}, []);
+
+	const onChangeProductCartQuantity = (quantity: number) => {
+		if (quantity >= maxProductQuantity) {
+			showToast(ToastType.Error, t('MAX_QUANTITY', 'The max quantity is _number_').replace('_number_', maxProductQuantity))
+			return
+		}
+		handleChangeProductCartQuantity(quantity)
+	}
 
 	useEffect(() => {
 		const imageList: any = []
@@ -835,14 +848,32 @@ export const ProductOptionsUI = (props: any) => {
 									}
 								/>
 							</TouchableOpacity>
-							<OText
-								size={12}
-								lineHeight={18}
-								style={{ minWidth: 40, textAlign: 'center' }}
-							>
-								{qtyBy?.pieces && productCart.quantity}
-								{qtyBy?.weight_unit && productCart.quantity * product?.weight}
-							</OText>
+							{qtyBy?.pieces && (
+								<TextInput
+									keyboardType='numeric'
+									value={`${productCart.quantity}` || ''}
+									onChangeText={(val: any) => onChangeProductCartQuantity(parseInt(val))}
+									editable={!orderState.loading}
+									style={{
+										borderWidth: 1,
+										textAlign: 'center',
+										minWidth: 60,
+										borderRadius: 8,
+										borderColor: theme.colors.inputBorderColor,
+										height: 44,
+										marginHorizontal: 10
+									}}
+								/>
+							)}
+							{qtyBy?.weight_unit && (
+								<OText
+									size={12}
+									lineHeight={18}
+									style={{ minWidth: 40, textAlign: 'center' }}
+								>
+									{productCart.quantity * product?.weight}
+								</OText>
+							)}
 							<TouchableOpacity
 								onPress={increment}
 								disabled={

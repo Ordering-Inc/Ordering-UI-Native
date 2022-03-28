@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { useFocusEffect } from '@react-navigation/native'
-import { OText } from '../shared'
+import { OText, OButton } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
 
-import { OptionTitle } from './styles'
+import { OptionTitle, NoOrdersWrapper } from './styles'
 import { OrdersOptionParams } from '../../types'
 
 import {
@@ -32,6 +32,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		loadMoreStatus,
 		loadMoreOrders,
 		loadOrders,
+		setOrdersLength,
+		ordersLength
 	} = props
 
 	const theme = useTheme();
@@ -112,27 +114,49 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		}
 	}, [loadMoreStatus, loading, pagination])
 
+	useEffect(() => {
+		if (loading) return
+
+		const updateOrders = orders.filter((order: any) => orderStatus.includes(order.status))
+
+		if (activeOrders) {
+			setOrdersLength && setOrdersLength({ ...ordersLength, activeOrdersLength: updateOrders?.length })
+		} else if (!preOrders) {
+			setOrdersLength && setOrdersLength({ ...ordersLength, previousOrdersLength: updateOrders?.length })
+		}
+	}, [orders?.length])
+
 	return (
 		<>
-			{(orders.length > 0) && (
-				<>
-					<OptionTitle>
-						<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10} >
-							{titleContent || (activeOrders
-								? t('ACTIVE', 'Active')
-								: preOrders
-									? t('PREORDERS', 'Preorders')
-									: t('PAST', 'Past'))}
-						</OText>
-					</OptionTitle>
-				</>
-			)}
-			{!loading && orders.length === 0 && (
+			<OptionTitle>
+				<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10} >
+					{titleContent || (activeOrders
+						? t('ACTIVE', 'Active')
+						: preOrders
+							? t('PREORDERS', 'Preorders')
+							: t('PAST', 'Past'))}
+				</OText>
+			</OptionTitle>
+			{!(activeOrders && ordersLength.activeOrdersLength === 0 && ordersLength.previousOrdersLength === 0) && !loading && orders.length === 0 && (
 				<NotFoundSource
 					content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
 					image={imageFails}
 					conditioned
 				/>
+			)}
+			{!loading && ordersLength.activeOrdersLength === 0 && ordersLength.previousOrdersLength === 0 && activeOrders && (
+				<NoOrdersWrapper>
+					<OText size={14} numberOfLines={1}>
+						{t('YOU_DONT_HAVE_ORDERS', 'You don\'t have any orders')}
+					</OText>
+					<OButton
+						text={t('ORDER_NOW', 'Order now')}
+						onClick={() => onNavigationRedirect && onNavigationRedirect('BusinessList')}
+						textStyle={{ color: 'white', fontSize: 14 }}
+						style={{ borderRadius: 7.6, marginBottom: 10, marginTop: 10, height: 44, paddingLeft: 10, paddingRight: 10 }}
+					/>
+					
+				</NoOrdersWrapper>
 			)}
 			{loading && (
 				<>
