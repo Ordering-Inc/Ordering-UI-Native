@@ -335,7 +335,7 @@ export const ProductOptionsUI = (props: any) => {
                 />
               ) : (
                 <OButton
-                  onClick={navigation.navigate('AddressList')}
+                  onClick={() => navigation.navigate('AddressList')}
                 />
               )
             )}
