@@ -135,14 +135,21 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 					{product?.description}
 				</OText>
 			</CardInfo>
-			<FastImage
-				style={styles.productStyle}
-				source={{
-					uri: optimizeImage(product?.images, 'h_75,c_limit'),
-					priority: FastImage.priority.normal,
-				}}
-				resizeMode={FastImage.resizeMode.cover}
-			/>
+			{product?.images ? (
+				<FastImage
+					style={styles.productStyle}
+					source={{
+						uri: optimizeImage(product?.images, 'h_75,c_limit'),
+						priority: FastImage.priority.normal,
+					}}
+					resizeMode={FastImage.resizeMode.cover}
+				/>
+			) : (
+				<OIcon
+					src={theme?.images?.dummies?.product}
+					style={styles.productStyle}
+				/>
+			)}
 			{(isSoldOut || maxProductQuantity <= 0) && (
 				<SoldOut>
 					<OText size={12} weight="bold" color={theme.colors.textSecondary} style={styles.soldOutTextStyle}>
