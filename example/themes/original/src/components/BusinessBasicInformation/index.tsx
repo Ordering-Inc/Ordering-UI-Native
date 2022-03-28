@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -7,6 +7,12 @@ import { BusinessBasicInformationParams } from '../../types';
 import { convertHoursToMinutes } from '../../utils';
 import { BusinessInformation } from '../BusinessInformation';
 import { BusinessReviews } from '../BusinessReviews';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import isBetween from 'dayjs/plugin/isBetween';
+
+dayjs.extend(timezone);
+dayjs.extend(isBetween);
 
 import {
 	BusinessContainer,
@@ -44,6 +50,31 @@ export const BusinessBasicInformation = (
 		);
 		return _types.join(', ');
 	};
+
+	
+	useEffect(() => {
+		if (businessState?.loading) return
+		let timeout: any = null
+		const currentDate = dayjs().tz(businessState?.business?.timezone)
+		let lapse = null
+		if (businessState?.business?.today?.enabled) {
+			lapse = businessState?.business?.today?.lapses?.find((lapse: any) => {
+				const from = currentDate.hour(lapse.open.hour).minute(lapse.open.minute)
+				const to = currentDate.hour(lapse.close.hour).minute(lapse.close.minute)
+				return currentDate.unix() >= from.unix() && currentDate.unix() <= to.unix()
+			})
+		}
+		if (lapse) {
+		  const to = currentDate.hour(lapse.close.hour).minute(lapse.close.minute)
+		  const timeToClose = (to.unix() - currentDate.unix()) * 1000
+		  timeout = setTimeout(() => {
+			navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })
+		  }, timeToClose)
+		}
+		return () => {
+		  timeout && clearTimeout(timeout)
+		}
+	  }, [businessState?.business])
 
 	return (
 		<BusinessContainer>
