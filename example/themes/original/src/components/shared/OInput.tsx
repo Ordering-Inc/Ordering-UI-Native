@@ -37,9 +37,10 @@ interface Props extends TextInputProps {
 	vectorIconColor?: string;
 	forwardRef?: any;
 	inputStyle?: TextStyle;
+	wrapperRef?: any;
 }
 
-const Wrapper = styled.View`
+const Wrapper = styled.Pressable`
 	background-color: ${(props: any) => props.theme.colors.backgroundLight};
 	border-radius: 25px;
 	border-width: 1px;
@@ -54,6 +55,7 @@ const Wrapper = styled.View`
 const OInput = (props: Props): React.ReactElement => {
 	return (
 		<Wrapper
+			onPress={() => props.forwardRef?.current?.focus?.()}
 			style={{
 				backgroundColor: props.bgColor,
 				borderColor: props.borderColor,
@@ -87,7 +89,9 @@ const OInput = (props: Props): React.ReactElement => {
 				returnKeyType={props.returnKeyType}
 				onSubmitEditing={props.onSubmitEditing}
 				blurOnSubmit={props.blurOnSubmit}
-				ref={props.forwardRef}
+				ref={(e : any) => {
+					props.forwardRef.current = e
+				}}
 				style={props?.inputStyle}
 			/>
 			{props.iconRight && (

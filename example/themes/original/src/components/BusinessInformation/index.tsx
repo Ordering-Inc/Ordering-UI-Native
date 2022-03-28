@@ -20,7 +20,7 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { BusinessInformationParams } from '../../types';
 import { GoogleMap } from '../GoogleMap';
 import { WebView } from 'react-native-webview';
-
+import { formatUrlVideo } from '../../utils'
 const BusinessInformationUI = (props: BusinessInformationParams) => {
 	const { businessState, businessSchedule, businessLocation } = props;
 
@@ -152,7 +152,12 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
 											style={{ width: 210, height: 127, borderRadius: 7.6 }}
 											javaScriptEnabled={true}
 											domStorageEnabled={true}
-											source={{ uri: v.video }}
+											source={{ 
+												html: `
+													<iframe width='80%' height='80%' src="${formatUrlVideo(v.video)}" frameBorder='0' allow='autoplay; encrypted-media' allowFullScreen />
+												`, 
+											}}
+											mediaPlaybackRequiresUserAction={true}
 										/>
 									))}
 								</MediaWrapper>

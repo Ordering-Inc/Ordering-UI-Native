@@ -154,10 +154,10 @@ const OrderSummaryUI = (props: any) => {
                         <OText size={12}>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                       )}
                       <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_1' })}>
-                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                        <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                       <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => onRemoveOffer(offer?.id)}>
-                        <AntIcon name='closecircle' size={18} color={theme.colors.primary} />
+                        <AntIcon name='closecircle' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
                     <OText size={12}>
@@ -186,7 +186,7 @@ const OrderSummaryUI = (props: any) => {
                         {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
                       </OText>
                       <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: tax, type: 'tax' })} >
-                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                        <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
                     <OText size={12}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
@@ -202,7 +202,7 @@ const OrderSummaryUI = (props: any) => {
                         ({parsePrice(fee?.fixed)} + {fee?.percentage}%){' '}
                       </OText>
                       <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee, type: 'fee' })} >
-                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                        <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
                     <OText size={12}>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0)}</OText>
@@ -218,10 +218,10 @@ const OrderSummaryUI = (props: any) => {
                         <OText size={12}>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                       )}
                       <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_3' })}>
-                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                        <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                       <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => onRemoveOffer(offer?.id)}>
-                        <AntIcon name='closecircle' size={18} color={theme.colors.primary} />
+                        <AntIcon name='closecircle' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
                     <OText size={12}>
@@ -245,10 +245,10 @@ const OrderSummaryUI = (props: any) => {
                         <OText size={12}>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
                       )}
                       <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => setOpenTaxModal({ open: true, data: offer, type: 'offer_target_2' })}>
-                        <AntIcon name='exclamationcircleo' size={18} color={theme.colors.primary} />
+                        <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                       <TouchableOpacity style={{ marginLeft: 3 }} onPress={() => onRemoveOffer(offer?.id)}>
-                        <AntIcon name='closecircle' size={18} color={theme.colors.primary} />
+                        <AntIcon name='closecircle' size={16} color={theme.colors.primary} />
                       </TouchableOpacity>
                     </OSRow>
                     <OText size={12}>

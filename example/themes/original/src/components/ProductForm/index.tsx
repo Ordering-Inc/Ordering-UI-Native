@@ -20,7 +20,7 @@ import {
 	Grayscale
 } from 'react-native-color-matrix-image-filters'
 
-import { View, TouchableOpacity, StyleSheet, Dimensions, I18nManager, SafeAreaView, Button, Alert } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, I18nManager, SafeAreaView, Platform, Button } from 'react-native';
 
 import {
 	WrapHeader,
@@ -829,7 +829,7 @@ export const ProductOptionsUI = (props: any) => {
 				)}
 			</ScrollView>
 			{!loading && !error && product && (
-				<ProductActions>
+				<ProductActions ios={Platform?.OS === 'ios'}>
 					<OText size={16} lineHeight={24} weight={'600'}>
 						{productCart.total ? parsePrice(productCart?.total) : ''}
 					</OText>

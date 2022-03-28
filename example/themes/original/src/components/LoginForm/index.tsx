@@ -102,7 +102,8 @@ const LoginFormUI = (props: LoginParams) => {
 		},
 	});
 
-	const inputRef = useRef<any>({});
+	const emailRef = useRef<any>({});
+	const passwordRef = useRef<any>({});
 
 	const handleChangeTab = (val: string) => {
 		props.handleChangeTab(val);
@@ -299,8 +300,9 @@ const LoginFormUI = (props: LoginParams) => {
 										type="email-address"
 										autoCompleteType="email"
 										returnKeyType="next"
-										onSubmitEditing={() => inputRef.current?.focus()}
+										onSubmitEditing={() => passwordRef.current?.focus()}
 										blurOnSubmit={false}
+										forwardRef={emailRef}
 									/>
 								)}
 								name="email"
@@ -327,7 +329,7 @@ const LoginFormUI = (props: LoginParams) => {
 									handleData={(val: any) => setPhoneInputData(val)}
 									textInputProps={{
 										returnKeyType: 'next',
-										onSubmitEditing: () => inputRef?.current?.focus?.(),
+										onSubmitEditing: () => passwordRef?.current?.focus?.(),
 									}}
 								/>
 							</View>
@@ -359,7 +361,7 @@ const LoginFormUI = (props: LoginParams) => {
 										)
 									}
 									value={value}
-									forwardRef={inputRef}
+									forwardRef={passwordRef}
 									onChange={(val: any) => onChange(val)}
 									returnKeyType="done"
 									onSubmitEditing={handleSubmit(onSubmit)}

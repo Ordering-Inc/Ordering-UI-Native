@@ -300,15 +300,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</View>
 				</OrderControlContainer>
 			</HeaderWrapper>
-			{
-				isFocused && (
-					<OrderProgressWrapper>
-						<OrderProgress
-							{...props}
-						/>
-					</OrderProgressWrapper>
-				)
-			}
+
+			<OrderProgressWrapper>
+				<OrderProgress
+					{...props}
+					isFocused={isFocused}
+				/>
+			</OrderProgressWrapper>
+
 			{
 				!businessId && !props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
 					<FeaturedWrapper>
