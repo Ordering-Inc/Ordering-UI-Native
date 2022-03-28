@@ -96,7 +96,7 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 	}, [userphoneNumber])
 
 	return (
-		<Wrapper>
+		<Wrapper onPress={() => forwardRef?.current?.focus?.()}>
 			<PhoneInput
 				ref={phoneInput}
         disabled={isDisabled}

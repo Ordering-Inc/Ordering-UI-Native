@@ -22,10 +22,10 @@ export const WalletTransactionItem = (props: any) => {
   const [{ parsePrice, parseDate }] = useUtils()
   const [, t] = useLanguage()
 
-  const LANG_EVENT_KEY = `WALLET_${type.toUpperCase()}_${item?.event.toUpperCase()}_${item?.event_type.toUpperCase()}_${item?.amount >= 0 ? 'POSITIVE': 'NEGATIVE'}`
+  const LANG_EVENT_KEY = `WALLET_${type.toUpperCase()}_${item?.event.toUpperCase()}_${item?.event_type.toUpperCase()}_${item?.amount >= 0 ? 'POSITIVE' : 'NEGATIVE'}`
   const lang_event_text = !!item?.event?.order_id
-    ? `:author ${item?.amount >= 0 ? 'add' : 'reduce'} money in Order No. :order_id`
-    : `:author ${item?.amount >= 0 ? 'add' : 'reduce'} money`
+    ? `:author${item?.amount >= 0 ? 'Add' : 'Reduce'} money in Order No. :order_id`
+    : `:author${item?.amount >= 0 ? 'Add' : 'Reduce'} money`
 
   return (
     <Container>
@@ -44,8 +44,8 @@ export const WalletTransactionItem = (props: any) => {
       <MessageBlock>
         <OText>
           {t(LANG_EVENT_KEY, lang_event_text)
-            .replace(':author', item?.event?.author?.name ?? '')
-            .replace(':order_id', item?.event?.order_id ?? '')}
+            .replace(':author', item?.event?.author?.name ? item?.event?.author?.name + ' ' : '')
+            .replace(':order_id', item?.event?.order_id ? item?.event?.order_id + ' ' : '')}
         </OText>
       </MessageBlock>
       {!!item?.description && (

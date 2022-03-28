@@ -52,7 +52,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 	const disableIncrement = option?.limit_suboptions_by_max ? balance === option?.max : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
 	const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
 	return (
-		<Container>
+		<Container onPress={() => handleSuboptionClick()}>
 			<IconControl disabled={disabled} onPress={() => handleSuboptionClick()}>
 				{((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
 					state?.selected ? (
