@@ -7,10 +7,11 @@ import {
   useConfirmSetupIntent,
   createPaymentMethod
 } from '@stripe/stripe-react-native';
-
+import configs from '../../config.json'
 import { ErrorMessage } from './styles';
 
 import { StripeElementsForm as StripeFormController } from './naked';
+import { StripeMethodForm } from '../StripeMethodForm';
 import { OButton, OText } from '../shared';
 import { useTheme } from 'styled-components/native';
 
@@ -22,6 +23,10 @@ const StripeElementsFormUI = (props: any) => {
     businessId,
     requirements,
     stripeTokenHandler,
+    methodsPay,
+    paymethod,
+    onCancel,
+    cart
   } = props;
 
   const theme = useTheme();
@@ -121,33 +126,49 @@ const StripeElementsFormUI = (props: any) => {
     <View style={styles.container}>
       {publicKey ? (
         <View style={{ flex: 1 }}>
-          <StripeProvider publishableKey={publicKey}>
-            <CardField
-              postalCodeEnabled={true}
-              cardStyle={{
-                backgroundColor: '#FFFFFF',
-                textColor: '#000000',
-              }}
-              style={{
-                width: '100%',
-                height: 50,
-                marginVertical: 30,
-                zIndex: 9999,
-              }}
-              onCardChange={(cardDetails: any) => setCard(cardDetails)}
-            />
+          <StripeProvider 
+            publishableKey={publicKey}
+            merchantIdentifier={`merchant.${configs.apple_app_id}`}
+          >
+            {methodsPay.includes(paymethod) ? (
+              <StripeMethodForm 
+                handleSource={handleSource}
+                onCancel={onCancel}
+                cart={cart}
+                setErrors={setErrors}
+                paymethod={paymethod}
+                devMode={publicKey?.includes('test')}
+              />
+            ) : (
+              <CardField
+                postalCodeEnabled={true}
+                cardStyle={{
+                  backgroundColor: '#FFFFFF',
+                  textColor: '#000000',
+                }}
+                style={{
+                  width: '100%',
+                  height: 50,
+                  marginVertical: 30,
+                  zIndex: 9999,
+                }}
+                onCardChange={(cardDetails: any) => setCard(cardDetails)}
+              />
+            )}
           </StripeProvider>
-          <OButton
-            text={t('SAVE_CARD', 'Save card')}
-            bgColor={isCompleted ? theme.colors.primary : theme.colors.backgroundGray}
-            borderColor={isCompleted ? theme.colors.primary :theme.colors.backgroundGray}
-            style={styles.btnAddStyle}
-            textStyle={{color: 'white'}}
-            imgRightSrc={null}
-            onClick={() => handleSaveCard()}
-            isDisabled={!isCompleted}
-            isLoading={confirmSetupLoading || values.loadingAdd || createPmLoading}
-          />
+          {!methodsPay?.includes(paymethod) && (
+            <OButton
+              text={t('SAVE_CARD', 'Save card')}
+              bgColor={isCompleted ? theme.colors.primary : theme.colors.backgroundGray}
+              borderColor={isCompleted ? theme.colors.primary :theme.colors.backgroundGray}
+              style={styles.btnAddStyle}
+              textStyle={{color: 'white'}}
+              imgRightSrc={null}
+              onClick={() => handleSaveCard()}
+              isDisabled={!isCompleted}
+              isLoading={confirmSetupLoading || values.loadingAdd || createPmLoading}
+            />
+          )}
           {!!errors && (
             <ErrorMessage>
               <OText
