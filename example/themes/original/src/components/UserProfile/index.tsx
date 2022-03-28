@@ -167,7 +167,7 @@ const ProfileListUI = (props: ProfileParams) => {
 						<MessageCircle name='message1' style={styles.messageIconStyle} color={theme.colors.textNormal} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MESSAGES', 'Messages')}</OText>
 					</ListItem>
-					{!isWalletEnabled && (
+					{isWalletEnabled && (
 						<ListItem onPress={() => onRedirect('Wallets', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
 							<Ionicons name='wallet-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
 							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('WALLETS', 'Wallets')}</OText>
