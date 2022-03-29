@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-native';
-import { useLanguage, LogoutAction, useApi, useSession } from 'ordering-components/native';
-
+import { useLanguage, LogoutAction, useApi, useSession, useBusiness, useOrder } from 'ordering-components/native';
 import { useForm, Controller } from 'react-hook-form';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { useTheme } from 'styled-components/native';
 
 import NavBar from '../NavBar';
 import { OSBody, OSContainer, OSContent } from './styles';
 import { OButton, OInput, OText } from '../shared';
 import { useDeviceOrientation, PORTRAIT } from '../../../../../src/hooks/DeviceOrientation';
-import { useTheme } from 'styled-components/native';
+import { _clearStoreData, _retrieveStoreData } from '../../../../../src/providers/StoreUtil'
 
 const LogoutPopupUI = (props: Props) => {
   const {
@@ -19,13 +19,15 @@ const LogoutPopupUI = (props: Props) => {
   } = props;
 
   const theme = useTheme();
+  const [, { setStateValues }] = useOrder();
   const [ordering] = useApi();
   const [{ token }] = useSession();
   const [, t] = useLanguage();
+  const [, { setBusiness }] = useBusiness();
   const [orientationState] = useDeviceOrientation();
   const { control, handleSubmit, errors } = useForm();
   const [passwordSee, setPasswordSee] = useState(false);
-  const [logoutState, setLogoutState] = useState({ loading: false, error: false, result: [] })
+  const [logoutState, setLogoutState] = useState<any>({ loading: false, error: false, result: [] })
 
   const fetchPassword = async (body: any) => {
     try {
@@ -43,12 +45,12 @@ const LogoutPopupUI = (props: Props) => {
         result
       })
       return { error, result }
-    } catch (e) {
+    } catch (e: any) {
       setLogoutState({
         ...logoutState,
         loading: false,
         error: true,
-        result: e
+        result: [e?.message]
       })
     }
   }
@@ -56,7 +58,17 @@ const LogoutPopupUI = (props: Props) => {
   const onSubmit = async (values: any) => {
     const result = await fetchPassword(values)
     if (result?.result === 'OK') {
-      handleLogoutClick();
+      const res: any = await handleLogoutClick();
+      if (res) {
+        _clearStoreData({ excludedKeys: ['isTutorial'] })
+        setBusiness({})
+        setStateValues({
+          options: {
+            moment: null
+          },
+          carts: {},
+        })
+      }
       onClose();
     }
   }
