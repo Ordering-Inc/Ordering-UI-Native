@@ -9,7 +9,7 @@ import { _clearStoreData, _retrieveStoreData } from '../../../../../src/provider
 const LogoutButtonUI = (props: any) => {
   const { handleLogoutClick, formState, ButtonUI } = props
 
-  const [theme] = useTheme();
+  const theme = useTheme();
   const [, { setStateValues }] = useOrder();
   const [, { showToast }] = useToast();
   const [, t] = useLanguage();

@@ -45,7 +45,7 @@ const BusinessesListingUI = (props: any) => {
             </OText>
             <OText
               size={WIDTH_SCREEN * 0.014}
-              color={theme.colors.paleGray}
+              color={theme.colors.letterGray}
               style={{
                 paddingHorizontal: 15,
                 paddingBottom: 40
