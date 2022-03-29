@@ -90,7 +90,7 @@ const OInput = (props: Props): React.ReactElement => {
 				onSubmitEditing={props.onSubmitEditing}
 				blurOnSubmit={props.blurOnSubmit}
 				ref={(e : any) => {
-					props.forwardRef.current = e
+					props.forwardRef && (props.forwardRef.current = e)
 				}}
 				style={props?.inputStyle}
 			/>
