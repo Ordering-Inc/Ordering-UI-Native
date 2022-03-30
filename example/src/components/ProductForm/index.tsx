@@ -316,6 +316,7 @@ export const ProductOptionsUI = (props: any) => {
           <View style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : '70%' }}>
             {productCart && !isSoldOut && maxProductQuantity > 0 && auth && orderState.options?.address_id && (
               <OButton
+                isDisabled={orderState.loading}
                 onClick={() => handleSaveProduct()}
                 imgRightSrc=''
                 text={`${orderState.loading ? t('LOADING', 'Loading') : editMode ? t('UPDATE', 'Update') : t('ADD_TO_CART', 'Add to Cart')} ${productCart.total ? parsePrice(productCart?.total) : ''}`}
