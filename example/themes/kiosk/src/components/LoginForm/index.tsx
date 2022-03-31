@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { useTheme } from 'styled-components/native';
@@ -7,7 +7,8 @@ import {
   LoginForm as LoginFormController,
   useLanguage,
   ToastType,
-  useToast
+  useToast,
+  useApi
 } from 'ordering-components/native';
 
 import {
@@ -18,21 +19,40 @@ import {
 import { OText, OButton, OInput, OIcon } from '../shared';
 import { LoginParams } from '../../types';
 import { LANDSCAPE, PORTRAIT, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
+import { _setStoreData } from '../../../../../src/providers/StoreUtil'
 
 const LoginFormUI = (props: LoginParams) => {
   const {
     loginButtonText,
     formState,
     handleButtonLoginClick,
+    useRootPoint
   } = props;
 
   const theme = useTheme()
+  const [ordering, { setOrdering }] = useApi();
   const [, { showToast }] = useToast();
   const [, t] = useLanguage();
   const {control, handleSubmit, formState: {errors}} = useForm();
   const [orientationState] = useDeviceOrientation();
 
+  const [formsStateValues, setFormsStateValues] = useState<any>({ isSubmitted: false })
+
   const onSubmit = (values: any) => {
+    if (values?.project_name) {
+      setOrdering({
+        ...ordering,
+        project: values?.project_name
+      })
+      _setStoreData('project_name', values?.project_name)
+      setFormsStateValues({
+        ...formsStateValues,
+        isSubmitted: true,
+        values
+      })
+      return
+    }
+
     handleButtonLoginClick(values);
   };
 
@@ -73,8 +93,21 @@ const LoginFormUI = (props: LoginParams) => {
           ? formState.result?.result
           : formState.result?.result[0]
       )
+      setFormsStateValues({
+        ...formsStateValues,
+        isSubmitted: false,
+      })
     }
   }, [formState]);
+
+  useEffect(() => {
+    if (ordering.project === null || !formsStateValues.isSubmitted || !useRootPoint) return
+    const values: any = formsStateValues.values
+    if (values?.project_name) {
+      delete values.project_name
+    }
+    handleButtonLoginClick({ ...values })
+  }, [ordering, formsStateValues.isSubmitted])
 
 
   useEffect(() => {
@@ -97,6 +130,33 @@ const LoginFormUI = (props: LoginParams) => {
 
   const InputControllers = (
     <>
+      {useRootPoint && (
+        <Controller
+          control={control}
+          name='project_name'
+          rules={{ required: t(`VALIDATION_ERROR_PROJECT_NAME_REQUIRED`, 'The field project name is required') }}
+          defaultValue=""
+          render={({ onChange, value }: any) => (
+            <OInput
+              name='project_name'
+              placeholder={t('PROJECT_NAME', 'Project Name')}
+              style={styles.inputStyle}
+              value={value}
+              autoCapitalize='none'
+              autoCorrect={false}
+              inputStyle={{textAlign: 'center'}}
+              onChange={(e: any) => {
+                onChange(e?.target?.value);
+                setFormsStateValues({
+                  ...formsStateValues,
+                  isSubmitted: false,
+                })
+              }}
+            />
+          )}
+        />
+      )}
+
       <Controller
         control={control}
         render={({ onChange, value }: any) => (

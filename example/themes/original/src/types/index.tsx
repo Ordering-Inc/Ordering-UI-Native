@@ -108,6 +108,7 @@ export interface PhoneInputParams {
 	textStyle?: any;
 	noDropIcon?: boolean;
 	flagStyle?: any;
+	isDisabled?: any;
 }
 
 export interface LanguageSelectorParams {
@@ -203,7 +204,7 @@ export interface BusinessProductsListParams {
 	errors?: any;
 	businessId?: number;
 	category?: any;
-	categories?: Array<any>;
+	categories: Array<any>;
 	categoryState?: any;
 	onProductClick?: any;
 	handleSearchRedirect?: () => {};

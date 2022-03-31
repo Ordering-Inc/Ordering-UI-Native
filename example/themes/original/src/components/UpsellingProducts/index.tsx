@@ -70,6 +70,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 	const [{ parsePrice }] = useUtils()
 	const [, t] = useLanguage()
 	const { bottom } = useSafeAreaInsets()
+	const [isCheckout, setIsCheckout] = useState(false)
 
 	const cart = carts?.[`businessId:${props.businessId}`] ?? {}
 	const cartProducts = cart?.products?.length
@@ -95,8 +96,8 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 	}, [upsellingProducts.loading, upsellingProducts?.products.length])
 
 	useEffect(() => {
-		Object.keys(cart).length === 0 && onNavigationRedirect && onNavigationRedirect('MyOrders')
-	}, [cart])
+		isCheckout && Object.keys(cart).length === 0 && onNavigationRedirect && onNavigationRedirect('MyOrders')
+	}, [cart, isCheckout])
 
 	const handleFormProduct = (product: any) => {
     onNavigationRedirect && onNavigationRedirect('ProductDetails', {
@@ -154,9 +155,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
           <TopActions onPress={() => onGoBack()}>
             <OIcon src={theme.images.general.arrow_left} width={15} />
           </TopActions>
-          <TopActions style={styles.cancelBtn} onPress={() => handleUpsellingPage()}>
-            <OText size={12} color={theme.colors.textSecondary}>{t('CANCEL', 'Cancel')}</OText>
-          </TopActions>
         </TopBar>
         <ScrollView style={{ marginBottom: props.isPage ? 40 : bottom + (Platform.OS == 'ios' ? 96 : 130) }} showsVerticalScrollIndicator={false}>
           <View style={{ paddingHorizontal: 40 }}>
@@ -177,7 +175,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
         <View
           style={{
             alignItems: 'center',
-            bottom: props.isPage ? 20 : Platform.OS === 'ios' ? bottom  + 59 :  bottom + 125
+            bottom: props.isPage ? Platform.OS === 'ios' ? 0 : 20 : Platform.OS === 'ios' ? bottom  + 59 :  bottom + 125
           }}
         >
           <OButton
@@ -185,7 +183,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
             text={t('CHECKOUT', 'Checkout')}
             style={{...styles.closeUpsellingButton}}
             textStyle={{ color: theme.colors.white, fontSize: 14 }}
-            onClick={() => handleUpsellingPage()}
+            onClick={() => {
+				handleUpsellingPage()
+				setIsCheckout(true)
+			}}
           />
         </View>
       </>

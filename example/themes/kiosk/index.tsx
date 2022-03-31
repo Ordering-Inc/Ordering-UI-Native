@@ -30,6 +30,9 @@ import { ProductOptionSubOption } from './src/components/ProductOptionSubOption'
 import PromoCard from './src/components/PromoCard'
 import QuantityControl from './src/components/QuantityControl'
 import { UpsellingProducts } from './src/components/UpsellingProducts'
+import { BusinessController } from './src/components/BusinessController'
+import { BusinessesListing } from './src/components/BusinessesListing'
+import { LogoutButton } from './src/components/LogoutButton'
 
 import {
   OAlert,
@@ -95,6 +98,9 @@ export {
   PromoCard,
   QuantityControl,
   UpsellingProducts,
+  BusinessController,
+  BusinessesListing,
+  LogoutButton,
   OAlert,
   OBottomPopup,
   OButton,

@@ -21,14 +21,16 @@ import {
 } from './styles'
 
 const OrderProgressUI = (props: any) => {
-	const {
-		orderList,
-    navigation
-	} = props
+  const {
+    orderList,
+    navigation,
+    loadOrders,
+    isFocused
+  } = props
 
-	const theme = useTheme();
+  const theme = useTheme();
 
-	const [, t] = useLanguage()
+  const [, t] = useLanguage()
   const [{ optimizeImage, parseDate, parseTime }] = useUtils()
   const [lastOrder, setLastOrder] = useState<any>(null)
   const imageFails = theme.images.general.emptyActiveOrders
@@ -53,11 +55,11 @@ const OrderProgressUI = (props: any) => {
       overflow: 'hidden',
       backgroundColor: 'white',
       borderRadius: 8,
-			shadowColor: '#000000',
-			shadowOffset: { width: 1, height: 1 },
-			shadowOpacity: 0.1,
-			shadowRadius: 1,
-			elevation: 3
+      shadowColor: '#000000',
+      shadowOffset: { width: 1, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 1,
+      elevation: 3
     },
     logo: {
       width: 50,
@@ -69,10 +71,10 @@ const OrderProgressUI = (props: any) => {
       flexDirection: 'row',
       alignItems: 'center'
     }
-	});
+  });
 
-	const getOrderStatus = (s: any) => {
-		const status = parseInt(s)
+  const getOrderStatus = (s: any) => {
+    const status = parseInt(s)
     const orderStatus = [
       { key: 0, value: t('PENDING', theme?.defaultLanguages?.PENDING || 'Pending'), slug: 'PENDING', percentage: 25 },
       { key: 1, value: t('COMPLETED', theme?.defaultLanguages?.COMPLETED || 'Completed'), slug: 'COMPLETED', percentage: 100 },
@@ -98,17 +100,18 @@ const OrderProgressUI = (props: any) => {
       { key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', theme?.defaultLanguages?.ORDER_CUSTOMER_ARRIVED_BUSINESS || 'Customer arrived to business'), slug: 'ORDER_CUSTOMER_ARRIVED_BUSINESS', percentage: 95 }
     ]
 
-		const objectStatus = orderStatus.find((o) => o.key === status)
+    const objectStatus = orderStatus.find((o) => o.key === status)
 
-		return objectStatus && objectStatus
-	}
+    return objectStatus && objectStatus
+  }
 
   const convertDiffToHours = (order: any) => {
     const time = order.delivery_type === 1 ? order?.business?.delivery_time : order?.business?.pickup_time
     const deliveryTime = order?.delivery_datetime_utc
       ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'YYYY-MM-DD HH:mm' })
       : parseDate(order?.delivery_datetime, { utc: false, outputFormat: 'YYYY-MM-DD HH:mm' })
-    const [hour, minute] = time.split(':')
+    const hour = time?.split(':')?.[0]
+    const minute = time?.split(':')?.[1]
     const result = time ? (parseInt(hour, 10) * 60) + parseInt(minute, 10) : 0
     const returnedDate = moment(deliveryTime).add(result, 'minutes').format('hh:mm A')
     return returnedDate
@@ -120,18 +123,24 @@ const OrderProgressUI = (props: any) => {
 
   useEffect(() => {
     if (orderList?.orders.length > 0) {
-      const sortedOrders = orderList.orders.sort((a: any, b:any) => a.id > b.id ? -1 : 1)
+      const sortedOrders = orderList.orders.sort((a: any, b: any) => a.id > b.id ? -1 : 1)
       setLastOrder(sortedOrders[0])
     }
   }, [orderList?.orders])
 
-	return (
-		<>
+  useEffect(() => {
+    if (isFocused) {
+      loadOrders()
+    }
+  }, [isFocused])
+
+  return (
+    <>
       {orderList?.loading && (
-        <Placeholder Animation={Fade} height={130}>
-          <PlaceholderLine height={50} style={{ borderRadius: 8, marginBottom: 10 }} />
-          <PlaceholderLine height={15} style={{ marginBottom: 10 }} />
-          <PlaceholderLine height={30} style={{ borderRadius: 8, marginBottom: 10 }} />
+        <Placeholder Animation={Fade} height={160}>
+          <PlaceholderLine height={60} style={{ borderRadius: 8, marginBottom: 10 }} />
+          <PlaceholderLine height={20} style={{ marginBottom: 10 }} />
+          <PlaceholderLine height={40} style={{ borderRadius: 8, marginBottom: 10 }} />
         </Placeholder>
       )}
       {!orderList?.loading && orderList?.orders?.length > 0 && lastOrder && (
@@ -141,8 +150,8 @@ const OrderProgressUI = (props: any) => {
               <FastImage
                 style={{ width: 50, height: 50 }}
                 source={{
-                    uri: optimizeImage(lastOrder?.business?.logo, 'h_50,c_limit'),
-                    priority: FastImage.priority.normal,
+                  uri: optimizeImage(lastOrder?.business?.logo, 'h_50,c_limit'),
+                  priority: FastImage.priority.normal,
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />
@@ -150,7 +159,7 @@ const OrderProgressUI = (props: any) => {
             <View style={{
               paddingHorizontal: 10,
               flex: 1
-              }}
+            }}
             >
               <OText
                 size={13}
@@ -185,7 +194,7 @@ const OrderProgressUI = (props: any) => {
                   {lastOrder?.delivery_datetime_utc
                     ? parseTime(lastOrder?.delivery_datetime_utc, { outputFormat: 'hh:mm A' })
                     : parseTime(lastOrder?.delivery_datetime, { utc: false })}
-                    &nbsp;-&nbsp;
+                  &nbsp;-&nbsp;
                   {convertDiffToHours(lastOrder)}
                 </OText>
               </TimeWrapper>
@@ -200,8 +209,8 @@ const OrderProgressUI = (props: any) => {
           conditioned
         />
       )} */}
-		</>
-	)
+    </>
+  )
 }
 
 export const OrderProgress = (props: any) => {
@@ -217,6 +226,6 @@ export const OrderProgress = (props: any) => {
     }
   }
 
-	return <OrderList {...orderProgressProps} />
+  return <OrderList {...orderProgressProps} />
 
 }

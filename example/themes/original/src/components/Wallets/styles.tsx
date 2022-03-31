@@ -27,7 +27,7 @@ export const BalanceElement = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   background-color: ${(props: any) => props.theme.colors.backgroundGray100};
   border-radius: 8px;
 `

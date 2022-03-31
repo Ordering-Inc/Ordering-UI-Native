@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {
 	useUtils,
 	useLanguage,
-	ProductOptionSuboption as ProductSubOptionController,
+	ProductOptionSuboption as ProductSubOptionController
 } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { StyleSheet } from 'react-native'
@@ -52,7 +52,7 @@ export const ProductOptionSubOptionUI = (props: any) => {
 	const disableIncrement = option?.limit_suboptions_by_max ? balance === option?.max : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
 	const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
 	return (
-		<Container>
+		<Container onPress={() => handleSuboptionClick()}>
 			<IconControl disabled={disabled} onPress={() => handleSuboptionClick()}>
 				{((option?.min === 0 && option?.max === 1) || option?.max > 1) ? (
 					state?.selected ? (
@@ -139,7 +139,8 @@ const styles = StyleSheet.create({
 export const ProductOptionSubOption = (props: any) => {
 	const productOptionSubOptionProps = {
 		...props,
-		UIComponent: ProductOptionSubOptionUI
+		UIComponent: ProductOptionSubOptionUI,
+		isOrigin: true
 	}
 
 	return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
-import { useSession, useLanguage, ToastType, useToast } from 'ordering-components/native';
+import { useSession, useLanguage, ToastType, useToast, useConfig } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -68,6 +68,7 @@ export const UserFormDetailsUI = (props: any) => {
 	});
 
 	const [, t] = useLanguage();
+	const [{ configs }] = useConfig();
 	const [, { showToast }] = useToast();
 	const { handleSubmit, control, errors, setValue } = useForm();
 
@@ -81,8 +82,7 @@ export const UserFormDetailsUI = (props: any) => {
 		},
 	});
 
-	const showInputPhoneNumber =
-		validationFields?.fields?.checkout?.cellphone?.enabled ?? false;
+	const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
 
 	const getInputRules = (field: any) => {
 		const rules: any = {
@@ -138,8 +138,9 @@ export const UserFormDetailsUI = (props: any) => {
 		if (Object.keys(formState.changes).length > 0) {
 			if (
 				formState.changes?.cellphone === null &&
-				validationFields?.fields?.checkout?.cellphone?.enabled &&
-				validationFields?.fields?.checkout?.cellphone?.required
+				((validationFields?.fields?.checkout?.cellphone?.enabled &&
+          validationFields?.fields?.checkout?.cellphone?.required) ||
+          configs?.verification_phone_required?.value === '1')
 			) {
 				showToast(
 					ToastType.Error,

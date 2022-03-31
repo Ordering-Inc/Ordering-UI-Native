@@ -39,7 +39,7 @@ import {
 	ChCart,
 	DeliveryOptionsContainer,
 	DeliveryOptionItem,
-  WalletPaymentOptionContainer
+	WalletPaymentOptionContainer
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
@@ -49,6 +49,7 @@ import NavBar from '../NavBar';
 import { OrderSummary } from '../OrderSummary';
 import { getTypesText } from '../../utils';
 import { CartStoresListing } from '../CartStoresListing';
+import { PaymentOptionsWebView } from '../../../../../src/components/PaymentOptionsWebView';
 
 const mapConfigs = {
 	mapZoom: 16,
@@ -83,6 +84,7 @@ const CheckoutUI = (props: any) => {
 		deliveryOptionSelected,
 		instructionsOptions,
 		handleChangeDeliveryOption,
+		currency
 	} = props
 
 	const theme = useTheme();
@@ -114,10 +116,11 @@ const CheckoutUI = (props: any) => {
 
 	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
-	const [{ user }] = useSession();
+	const [{ user, token }] = useSession();
+	const [ordering] = useApi()
 	const [{ configs }] = useConfig();
 	const [{ parsePrice, parseDate }] = useUtils();
-	const [{ options, carts, loading }] = useOrder();
+	const [{ options, carts, loading }, { confirmCart }] = useOrder();
 	const [validationFields] = useValidationFields();
 
 	const [errorCash, setErrorCash] = useState(false);
@@ -126,8 +129,11 @@ const CheckoutUI = (props: any) => {
 	const [phoneUpdate, setPhoneUpdate] = useState(false);
 	const [openChangeStore, setOpenChangeStore] = useState(false)
 	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
+	const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
+	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
 
-  const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
+
+	const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -139,7 +145,7 @@ const CheckoutUI = (props: any) => {
 
 	const deliveryOptions = instructionsOptions?.result && instructionsOptions?.result?.filter((option: any) => option?.enabled)?.map((option: any) => {
 		return {
-			value: option?.id, key: option?.id, label: t(option?.name.toUpperCase().replace(/\s/g, '_'), option?.name) 
+			value: option?.id, key: option?.id, label: t(option?.name.toUpperCase().replace(/\s/g, '_'), option?.name)
 		}
 	})
 
@@ -156,6 +162,16 @@ const CheckoutUI = (props: any) => {
 		setIsUserDetailsEdit(true)
 	}
 
+	const handlePaymentMethodClick = (paymethod: any) => {
+		setShowGateway({ closedByUser: false, open: true })
+		setWebviewPaymethod(paymethod)
+	}
+
+	const onFailPaypal = async () => {
+		if (showGateway.closedByUser === true) {
+			await confirmCart(cart.uuid)
+		}
+	}
 	const changeDeliveryOption = (option: any) => {
 		handleChangeDeliveryOption(option)
 		setIsDeliveryOptionModalVisible(false)
@@ -176,8 +192,9 @@ const CheckoutUI = (props: any) => {
 
 		if (
 			!user?.cellphone &&
-			validationFields?.fields?.checkout?.cellphone?.enabled &&
-			validationFields?.fields?.checkout?.cellphone?.required
+			((validationFields?.fields?.checkout?.cellphone?.enabled &&
+        validationFields?.fields?.checkout?.cellphone?.required) ||
+        configs?.verification_phone_required?.value === '1')
 		) {
 			errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is required'))
 		}
@@ -215,6 +232,10 @@ const CheckoutUI = (props: any) => {
 			navigation?.canGoBack() && navigation.goBack();
 		}
 	}, [cart?.products])
+
+	useEffect(() => {
+		onFailPaypal()
+	}, [showGateway.closedByUser])
 
 	return (
 		<>
@@ -262,14 +283,14 @@ const CheckoutUI = (props: any) => {
 					<ChSection>
 						<ChBusinessDetails>
 							{
-								(businessDetails?.loading || cartState.loading) &&
+								(businessDetails?.loading || cartState.loading || !businessDetails?.business || Object.values(businessDetails?.business).length === 0) &&
 								!businessDetails?.error &&
 								(
 									<Placeholder Animation={Fade}>
 										<PlaceholderLine height={20} width={70} />
-										<PlaceholderLine height={15} width={60} />
-										<PlaceholderLine height={15} width={60} />
-										<PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+										<PlaceholderLine height={10} width={60} />
+										<PlaceholderLine height={10} width={60} />
+										<PlaceholderLine height={10} width={80} style={{ marginBottom: 20 }} />
 									</Placeholder>
 								)}
 							{
@@ -316,9 +337,9 @@ const CheckoutUI = (props: any) => {
 							{cartState.loading ? (
 								<Placeholder Animation={Fade}>
 									<PlaceholderLine height={20} width={70} />
-									<PlaceholderLine height={15} width={60} />
-									<PlaceholderLine height={15} width={60} />
-									<PlaceholderLine height={15} width={80} style={{ marginBottom: 20 }} />
+									<PlaceholderLine height={10} width={60} />
+									<PlaceholderLine height={10} width={60} />
+									<PlaceholderLine height={10} width={80} style={{ marginBottom: 20 }} />
 								</Placeholder>
 							) : (
 								<UserDetails
@@ -337,54 +358,66 @@ const CheckoutUI = (props: any) => {
 						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
 					</ChSection>
 
-					{!cartState.loading && deliveryOptionSelected !== undefined && options?.type === 1 && (
+					{options?.type === 1 && (
 						<DeliveryOptionsContainer>
-							<OText size={16}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
-							<View
-								style={{
-									backgroundColor: theme.colors.inputDisabled,
-									borderRadius: 7.5,
-									marginBottom: 20,
-									flex: 1
-								}}>
-								<Picker
-									countryCode={undefined}
-									visible={isDeliveryOptionModalVisible}
-									onClose={() => setIsDeliveryOptionModalVisible(false)}
-									withCountryNameButton
-									renderFlagButton={() => (
-										<TouchableOpacity onPress={() => setIsDeliveryOptionModalVisible(true)}>
-											<DeliveryOptionItem backgroundColor={theme?.colors?.inputDisabled}>
-												<OText
-													size={14}
-												>
-													{deliveryOptions.find((option: any) => option.value === deliveryOptionSelected).label}
-												</OText>
-												<MaterialIcons name='keyboard-arrow-down' style={styles.icon} />
-											</DeliveryOptionItem>
-										</TouchableOpacity>
-									)}
-									flatListProps={{
-										keyExtractor: (item: any) => item.value,
-										data: deliveryOptions || [],
-										renderItem: ({ item }: any) => (
-											<TouchableOpacity
-												onPress={() => changeDeliveryOption(item.value)}
-												disabled={
-													deliveryOptionSelected === item.value
-												}
-											>
-												<DeliveryOptionItem backgroundColor={deliveryOptionSelected === item.value ? theme.colors.inputDisabled : 'white'}>
-													<OText>
-														{item.label}
-													</OText>
-												</DeliveryOptionItem>
-											</TouchableOpacity>
-										)
-									}}
-								/>
-							</View>
-							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
+							{cartState.loading || deliveryOptionSelected === undefined ? (
+								<View style={{ height: 110 }}>
+									<Placeholder Animation={Fade}>
+										<PlaceholderLine height={20} width={70} />
+										<PlaceholderLine height={40} width={100} />
+									</Placeholder>
+								</View>
+							) : (
+								<>
+									<OText size={16}>{t('DELIVERY_OPTIONS', 'Delivery options')}</OText>
+									<View
+										style={{
+											backgroundColor: theme.colors.inputDisabled,
+											borderRadius: 7.5,
+											marginBottom: 20,
+											flex: 1
+										}}>
+										<Picker
+											countryCode={undefined}
+											visible={isDeliveryOptionModalVisible}
+											onClose={() => setIsDeliveryOptionModalVisible(false)}
+											withCountryNameButton
+											renderFlagButton={() => (
+												<TouchableOpacity onPress={() => setIsDeliveryOptionModalVisible(true)}>
+													<DeliveryOptionItem backgroundColor={theme?.colors?.inputDisabled}>
+														<OText
+															size={14}
+														>
+															{deliveryOptions.find((option: any) => option.value === deliveryOptionSelected).label}
+														</OText>
+														<MaterialIcons name='keyboard-arrow-down' style={styles.icon} />
+													</DeliveryOptionItem>
+												</TouchableOpacity>
+											)}
+											flatListProps={{
+												keyExtractor: (item: any) => item.value,
+												data: deliveryOptions || [],
+												renderItem: ({ item }: any) => (
+													<TouchableOpacity
+														onPress={() => changeDeliveryOption(item.value)}
+														disabled={
+															deliveryOptionSelected === item.value
+														}
+													>
+														<DeliveryOptionItem backgroundColor={deliveryOptionSelected === item.value ? theme.colors.inputDisabled : 'white'}>
+															<OText>
+																{item.label}
+															</OText>
+														</DeliveryOptionItem>
+													</TouchableOpacity>
+												)
+											}}
+										/>
+									</View>
+									<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
+								</>
+							)}
+
 						</DeliveryOptionsContainer>
 					)}
 
@@ -415,7 +448,7 @@ const CheckoutUI = (props: any) => {
                   height={80}
                   borderRadius={80}
                 />
-                <View style={{ marginLeft: 15, width: '85%' }}>
+                <View style={{ marginLeft: 10, width: '85%' }}>
                   <OText size={22} numberOfLines={2} ellipsizeMode='tail' style={{ width: '85%' }}>
                     {businessName || businessDetails?.business?.name}
                   </OText>
@@ -503,19 +536,20 @@ const CheckoutUI = (props: any) => {
 									setErrorCash={setErrorCash}
 									onNavigationRedirect={onNavigationRedirect}
 									paySelected={paymethodSelected}
+									handlePaymentMethodClickCustom={handlePaymentMethodClick}
 								/>
 							</ChPaymethods>
 						</ChSection>
 					)}
 
-          {!cartState.loading && cart && isWalletEnabled && (
-            <WalletPaymentOptionContainer>
-              <PaymentOptionWallet
-                cart={cart}
-                businessId={cart?.business_id}
-              />
-            </WalletPaymentOptionContainer>
-          )}
+					{!cartState.loading && cart && isWalletEnabled && (
+						<WalletPaymentOptionContainer>
+							<PaymentOptionWallet
+								cart={cart}
+								businessId={cart?.business_id}
+							/>
+						</WalletPaymentOptionContainer>
+					)}
 
 
 					{!cartState.loading && cart && (
@@ -549,7 +583,7 @@ const CheckoutUI = (props: any) => {
 										<OrderSummary
 											cart={cart}
 											isCartPending={cart?.status === 2}
-                      onNavigationRedirect={onNavigationRedirect}
+											onNavigationRedirect={onNavigationRedirect}
 										/>
 									</>
 								)}
@@ -558,7 +592,7 @@ const CheckoutUI = (props: any) => {
 					)}
 
 					{!cartState.loading && cart && (
-            <View>
+						<View>
 							<ChErrors style={{ marginBottom: 0 }}>
 								{!cart?.valid_address && cart?.status !== 2 && (
 									<OText
@@ -619,7 +653,19 @@ const CheckoutUI = (props: any) => {
 					}
 					btnRightValueShow
 					btnRightValue={parsePrice(cart?.total)}
-					iosBottom={20}
+					iosBottom={30}
+				/>
+			)}
+			{webviewPaymethod?.gateway === 'paypal' && showGateway.open && (
+				<PaymentOptionsWebView
+					onNavigationRedirect={onNavigationRedirect}
+					uri={`${ordering.root}/html/paypal_react_native`}
+					user={user}
+					token={token}
+					cart={cart}
+					currency={currency}
+					webviewPaymethod={webviewPaymethod}
+					setShowGateway={setShowGateway}
 				/>
 			)}
 		</>

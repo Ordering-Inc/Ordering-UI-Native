@@ -98,9 +98,6 @@ const SignupFormUI = (props: SignupParams) => {
 		}
 	});
 
-	const showInputPhoneNumber =
-		validationFields?.fields?.checkout?.cellphone?.enabled ?? false;
-
 	const [, { showToast }] = useToast();
 	const [, t] = useLanguage();
 	const [, { login }] = useSession();
@@ -130,6 +127,8 @@ const SignupFormUI = (props: SignupParams) => {
 	const emailRef = useRef<any>(null);
 	const phoneRef = useRef<any>(null);
 	const passwordRef = useRef<any>(null);
+
+  const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
 
 	const handleRefs = (ref: any, code: string) => {
 		switch (code) {
@@ -211,8 +210,9 @@ const SignupFormUI = (props: SignupParams) => {
 		if (
 			!phoneInputData.phone.country_phone_code &&
 			!phoneInputData.phone.cellphone &&
-			validationFields?.fields?.checkout?.cellphone?.enabled &&
-			validationFields?.fields?.checkout?.cellphone?.required
+			((validationFields?.fields?.checkout?.cellphone?.enabled &&
+        validationFields?.fields?.checkout?.cellphone?.required) ||
+        configs?.verification_phone_required?.value === '1')
 		) {
 			showToast(
 				ToastType.Error,
@@ -307,8 +307,9 @@ const SignupFormUI = (props: SignupParams) => {
 				!phoneInputData.error &&
 				!phoneInputData.phone.country_phone_code &&
 				!phoneInputData.phone.cellphone &&
-				validationFields?.fields?.checkout?.cellphone?.enabled &&
-				validationFields?.fields?.checkout?.cellphone?.required
+				((validationFields?.fields?.checkout?.cellphone?.enabled &&
+          validationFields?.fields?.checkout?.cellphone?.required) ||
+          configs?.verification_phone_required?.value === '1')
 			) {
 				list.push({
 					message: t(

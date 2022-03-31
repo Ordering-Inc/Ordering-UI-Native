@@ -45,6 +45,7 @@ import { OrdersOption } from './components/OrdersOption';
 import { PaymentOptionCash } from './components/PaymentOptionCash';
 import { PaymentOptionStripe } from './components/PaymentOptionStripe';
 import { PaymentOptions } from './components/PaymentOptions';
+import { PaymentOptionsWebView } from './components/PaymentOptionsWebView';
 import { PhoneInputNumber } from './components/PhoneInputNumber';
 import { PreviousOrders } from './components/PreviousOrders';
 import { ProductForm } from './components/ProductForm';
@@ -144,6 +145,7 @@ export {
   PaymentOptionCash,
   PaymentOptionStripe,
   PaymentOptions,
+  PaymentOptionsWebView,
   PhoneInputNumber,
   PreviousOrders,
   ProductForm,
