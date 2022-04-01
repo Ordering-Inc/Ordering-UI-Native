@@ -37,8 +37,8 @@ export const VerifyPhone = (props: any) => {
 			height: 75,
 			marginBottom: 25,
 			borderWidth: 1,
-			borderColor: theme.colors.disabled,
-			borderRadius: 20,
+			borderColor: '#DEE2E6',
+			borderRadius: 8,
 			textAlign: 'center',
 			fontSize: 40
 		}
@@ -131,11 +131,11 @@ export const VerifyPhone = (props: any) => {
 
 	return (
 		<Container>
-			<OText size={30} style={{ textAlign: 'left' }}>
-				{t('VERIFY_PHONE', 'Verify Phone')}
+			<OText size={26} style={{ textAlign: 'left', fontWeight: '600', marginTop: 10, marginBottom: 30 }}>
+				{t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
 			</OText>
 			{lastNumbers && (
-				<OText size={20} color={theme.colors.disabled}>
+				<OText size={16} color={theme.colors.disabled}>
 					{`${t('MESSAGE_ENTER_VERIFY_CODE', 'Please, enter the verification code we sent to your mobile ending with')} **${lastNumbers}`}
 				</OText>
 			)}
@@ -174,7 +174,7 @@ export const VerifyPhone = (props: any) => {
 						).result?.result)?.map((e: any, i: number) => (
 							<OText
 								key={i}
-								size={20}
+								size={16}
 								color={theme.colors.error}
 							>
 								{`* ${t(getTraduction(e))}`}
@@ -183,12 +183,9 @@ export const VerifyPhone = (props: any) => {
 					</ErrorSection>
 				)}
 			<ResendSection>
-				<OText size={16} style={{ marginRight: 5 }}>
-					{t('ARE_YOU_NOT_SEEING_THE_CODE', 'Are you not seeing the code?')}
-				</OText>
 				<Pressable onPress={() => handleSendCodeAgain()}>
 					<OText size={16} color={theme.colors.primary}>
-						{t('SEND_AGAIN', 'Send Again')}
+						{t('RESEND_CODE', 'Resend code')}
 					</OText>
 				</Pressable>
 			</ResendSection>

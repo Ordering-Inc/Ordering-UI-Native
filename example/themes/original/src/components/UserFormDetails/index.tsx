@@ -24,6 +24,8 @@ export const UserFormDetailsUI = (props: any) => {
 		handleButtonUpdateClick,
 		phoneUpdate,
 		hideUpdateButton,
+		setWillVerifyOtpState,
+		isVerifiedPhone
 	} = props;
 
 	const theme = useTheme();
@@ -133,8 +135,8 @@ export const UserFormDetailsUI = (props: any) => {
 			if (
 				formState.changes?.cellphone === null &&
 				((validationFields?.fields?.checkout?.cellphone?.enabled &&
-          validationFields?.fields?.checkout?.cellphone?.required) ||
-          configs?.verification_phone_required?.value === '1')
+					validationFields?.fields?.checkout?.cellphone?.required) ||
+					configs?.verification_phone_required?.value === '1')
 			) {
 				showToast(
 					ToastType.Error,
@@ -144,6 +146,9 @@ export const UserFormDetailsUI = (props: any) => {
 					),
 				);
 				return;
+			}
+			if (formState?.changes?.cellphone && !isVerifiedPhone) {
+				showToast(ToastType.Error, t('VERIFY_ERROR_PHONE_NUMBER', 'The Phone Number field is not verified'))
 			}
 			let changes = null;
 			if (user?.cellphone && !userPhoneNumber) {
@@ -205,6 +210,13 @@ export const UserFormDetailsUI = (props: any) => {
 			}
 		}
 	}, [user, isEdit]);
+
+	useEffect(() => {
+		if (!phoneInputData.error && phoneInputData?.phone?.country_phone_code && phoneInputData?.phone?.cellphone) {
+			setWillVerifyOtpState(true)
+		}
+	}, [phoneInputData])
+
 	return (
 		<>
 			<UDForm>
@@ -320,7 +332,7 @@ export const UserFormDetailsUI = (props: any) => {
 								render={() => (
 									<>
 										<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
-										{t('PASSWORD', 'Password')}
+											{t('PASSWORD', 'Password')}
 										</OText>
 										<OInput
 											name='password'
@@ -347,7 +359,7 @@ export const UserFormDetailsUI = (props: any) => {
 									</>
 								)}
 								name='password'
-								rules={getInputRules({name: 'password', code: 'password'})}
+								rules={getInputRules({ name: 'password', code: 'password' })}
 								defaultValue=''
 							/>
 						</UDWrapper>

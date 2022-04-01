@@ -5,7 +5,7 @@ import {
 	useLanguage,
 	ToastType,
 	useToast,
-  useConfig
+	useConfig
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { useForm } from 'react-hook-form';
@@ -15,10 +15,11 @@ import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { ProfileParams } from '../../types';
 import { UserFormDetailsUI } from '../UserFormDetails';
 
-import { OIcon, OIconButton } from '../shared';
+import { OIcon, OIconButton, OModal } from '../shared';
 import { CenterView } from './styles';
 import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
+import { VerifyPhone } from '../VerifyPhone'
 
 const ProfileUI = (props: ProfileParams) => {
 	const {
@@ -32,6 +33,12 @@ const ProfileUI = (props: ProfileParams) => {
 		cleanFormState,
 		handleChangeInput,
 		handleButtonUpdateClick,
+		checkPhoneCodeState,
+		handleSendVerifyCode,
+		handleCheckPhoneCode,
+		verifyPhoneState,
+		isVerifiedPhone,
+		setCheckPhoneCodeState
 	} = props;
 
 	const theme = useTheme();
@@ -61,6 +68,8 @@ const ProfileUI = (props: ProfileParams) => {
 	const [, t] = useLanguage();
 	const [, { showToast }] = useToast();
 	const { handleSubmit, errors, setValue, control } = useForm();
+	const [isModalVisible, setIsModalVisible] = useState(false);
+	const [willVerifyOtpState, setWillVerifyOtpState] = useState(false);
 
 	const [phoneInputData, setPhoneInputData] = useState({
 		error: '',
@@ -79,8 +88,8 @@ const ProfileUI = (props: ProfileParams) => {
 		if (
 			formState.changes.cellphone === '' &&
 			((validationFields?.fields?.checkout?.cellphone?.enabled &&
-        validationFields?.fields?.checkout?.cellphone?.required) ||
-        configs?.verification_phone_required?.value === '1')
+				validationFields?.fields?.checkout?.cellphone?.required) ||
+				configs?.verification_phone_required?.value === '1')
 		) {
 			showToast(
 				ToastType.Error,
@@ -182,6 +191,24 @@ const ProfileUI = (props: ProfileParams) => {
 		return rules;
 	};
 
+	const handleVerifyCodeClick = () => {
+		if (formState?.changes?.cellphone && formState?.changes?.country_phone_code) {
+			const { cellphone, country_phone_code: countryPhoneCode } = formState?.changes
+
+			setPhoneInputData({
+				error: '',
+				phone: {
+					country_phone_code: countryPhoneCode,
+					cellphone: cellphone,
+				},
+			});
+			handleSendVerifyCode({
+			  cellphone: cellphone,
+			  country_phone_code: countryPhoneCode
+			})
+		}
+	}
+
 	useEffect(() => {
 		if (formState.result.result && !formState.loading) {
 			if (formState.result?.error) {
@@ -216,43 +243,94 @@ const ProfileUI = (props: ProfileParams) => {
 		}
 	}, [user?.country_phone_code]);
 
+	useEffect(() => {
+		if (willVerifyOtpState) handleVerifyCodeClick()
+	}, [willVerifyOtpState])
+
+	useEffect(() => {
+		if (verifyPhoneState && !verifyPhoneState?.loading) {
+			if (verifyPhoneState.result?.error) {
+				const message = typeof verifyPhoneState?.result?.result === 'string'
+					? verifyPhoneState?.result?.result
+					: verifyPhoneState?.result?.result[0]
+				verifyPhoneState.result?.result && showToast(
+					ToastType.Error,
+					message
+				)
+				setWillVerifyOtpState(false)
+				return
+			}
+
+			const okResult = verifyPhoneState.result?.result === 'OK'
+			if (okResult) {
+				!isModalVisible && setIsModalVisible(true)
+				setWillVerifyOtpState(false)
+			}
+		}
+	}, [verifyPhoneState])
+
+	useEffect(() => {
+		if (isVerifiedPhone) setIsModalVisible(false)
+	}, [isVerifiedPhone])
+
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column',justifyContent: 'center'}}>
-			<Container noPadding>
-				<NavBar
-					onActionLeft={() => navigation.goBack()}
-					btnStyle={{ paddingStart: 0 }}
-					title={t('ACCOUNT', 'Account')}
-					isVertical
-					style={styles.navBarStyle}
-				/>
-				<CenterView style={styles.pagePadding}>
-					<View style={styles.photo}>
-						<OIcon
-							url={user?.photo}
-							src={!user?.photo && theme.images.general.user}
-							width={79}
-							height={79}
+		<>
+			<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+				<Container noPadding>
+					<NavBar
+						onActionLeft={() => navigation.goBack()}
+						btnStyle={{ paddingStart: 0 }}
+						title={t('ACCOUNT', 'Account')}
+						isVertical
+						style={styles.navBarStyle}
+					/>
+					<CenterView style={styles.pagePadding}>
+						<View style={styles.photo}>
+							<OIcon
+								url={user?.photo}
+								src={!user?.photo && theme.images.general.user}
+								width={79}
+								height={79}
+							/>
+						</View>
+						<OIconButton
+							icon={theme.images.general.camera}
+							borderColor={theme.colors.clear}
+							iconStyle={{ width: 16, height: 16 }}
+							style={{ maxWidth: 40, position: 'absolute', bottom: -2, alignSelf: 'center' }}
+							onClick={() => handleImagePicker()}
+						/>
+					</CenterView>
+					<View style={{ height: 8, marginLeft: -40, marginRight: -40, backgroundColor: theme.colors.backgroundGray100, marginVertical: 32, zIndex: 10 }} />
+					<Spinner visible={formState?.loading || verifyPhoneState?.loading} />
+					<View style={styles.pagePadding}>
+						<UserFormDetailsUI
+							{...props}
+							isEdit
+							setWillVerifyOtpState={setWillVerifyOtpState}
 						/>
 					</View>
-					<OIconButton
-						icon={theme.images.general.camera}
-						borderColor={theme.colors.clear}
-						iconStyle={{ width: 16, height: 16 }}
-						style={{ maxWidth: 40, position: 'absolute', bottom: -2, alignSelf: 'center' }}
-						onClick={() => handleImagePicker()}
-					/>
-				</CenterView>
-				<View style={{ height: 8, marginLeft: -40, marginRight: -40, backgroundColor: theme.colors.backgroundGray100, marginVertical: 32, zIndex: 10 }} />
-				<Spinner visible={formState?.loading} />
-				<View style={styles.pagePadding}>
-					<UserFormDetailsUI {...props} isEdit />
-				</View>
-			</Container>
-		</KeyboardAvoidingView>
+				</Container>
+			</KeyboardAvoidingView>
+			<OModal
+				open={isModalVisible}
+				onClose={() => setIsModalVisible(false)}
+				entireModal
+			>
+				<VerifyPhone
+				phone={phoneInputData.phone}
+				verifyPhoneState={verifyPhoneState}
+				checkPhoneCodeState={checkPhoneCodeState}
+				handleCheckPhoneCode={handleCheckPhoneCode}
+				setCheckPhoneCodeState={setCheckPhoneCodeState}
+				handleVerifyCodeClick={handleVerifyCodeClick}
+				onClose={() => setIsModalVisible(false)}
+				/>
+			</OModal>
+		</>
+
 	);
 };
-
 
 export const UserProfileForm = (props: any) => {
 	const profileProps = {
