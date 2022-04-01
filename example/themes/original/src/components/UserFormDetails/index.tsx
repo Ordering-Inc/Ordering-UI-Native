@@ -29,7 +29,6 @@ export const UserFormDetailsUI = (props: any) => {
 		phoneUpdate,
 		hideUpdateButton,
 		setWillVerifyOtpState,
-		isVerifiedPhone,
 		handleChangePromotions,
 	} = props;
 
@@ -146,8 +145,8 @@ export const UserFormDetailsUI = (props: any) => {
 			if (
 				formState.changes?.cellphone === null &&
 				((validationFields?.fields?.checkout?.cellphone?.enabled &&
-          validationFields?.fields?.checkout?.cellphone?.required) ||
-          configs?.verification_phone_required?.value === '1')
+					validationFields?.fields?.checkout?.cellphone?.required) ||
+					configs?.verification_phone_required?.value === '1')
 			) {
 				showToast(
 					ToastType.Error,
@@ -172,6 +171,7 @@ export const UserFormDetailsUI = (props: any) => {
 
 	const handleChangePhoneNumber = (number: any) => {
 		setPhoneInputData(number);
+		setIsChanged(true)
 		let phoneNumber = {
 			country_phone_code: {
 				name: 'country_phone_code',
@@ -231,7 +231,12 @@ export const UserFormDetailsUI = (props: any) => {
 	}, [user, isEdit]);
 
 	useEffect(() => {
-		if (!phoneInputData.error && phoneInputData?.phone?.country_phone_code && phoneInputData?.phone?.cellphone) {
+		if (!phoneInputData.error &&
+			phoneInputData?.phone?.country_phone_code &&
+			phoneInputData?.phone?.cellphone &&
+			configs?.verification_phone_required?.value === '1' &&
+			formState?.changes?.cellphone &&
+			isChanged) {
 			setWillVerifyOtpState?.(true)
 		}
 	}, [phoneInputData, configs?.verification_phone_required?.value, isChanged])
@@ -336,7 +341,7 @@ export const UserFormDetailsUI = (props: any) => {
 										handleData={(val: any) => handleChangePhoneNumber(val)}
 										changeCountry={(val: any) => changeCountry(val)}
 										defaultValue={phoneUpdate ? '' : user?.cellphone}
-										defaultCode={user?.country_phone_code || null}
+										defaultCode={user?.country_code ?? user?.country_phone_code ?? null}
 										boxStyle={styles.phoneSelect}
 										inputStyle={styles.phoneInputStyle}
 										textStyle={{ color: theme.colors.textNormal, fontSize: 12, padding: 0 }}
@@ -473,4 +478,3 @@ export const UserFormDetailsUI = (props: any) => {
 		</>
 	);
 };
-

@@ -19,13 +19,12 @@ export const CountDownContainer = styled.View`
 export const ResendSection = styled.View`
   display: flex;
   flex-direction: row;
-  justify-content: center;
   margin-bottom: 30px;
 `
 
 export const WrappCountdown = styled.View`
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 50px;
 `
 
 export const InputsSection = styled.View`
