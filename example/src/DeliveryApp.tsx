@@ -25,7 +25,7 @@ import { FacebookPixel } from './components/FacebookPixel';
 
 Sentry.init({
   environment: Platform.OS === 'ios' ? 'ios' : 'android',
-  dsn: 'https://90197fffe6a1431b8c3eb79e1e36f0ee@o460529.ingest.sentry.io/5722123',
+  dsn: 'https://e5e1115dc93b49109f4ab65f2098bef9@o460529.ingest.sentry.io/5722123',
   release: process.env.npm_package_version ? 'ordering-ui-native@' + process.env.npm_package_version : 'ordering-ui-native@' + '0.0.4',
   ignoreErrors: [
     'is not defined',
