@@ -7,7 +7,8 @@ import {
 	ScrollView,
 	Platform,
 	TouchableOpacity,
-	RefreshControl
+	RefreshControl,
+	AppState
 } from 'react-native';
 import {
 	BusinessList as BusinessesListingController,
@@ -63,8 +64,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
 	const theme = useTheme();
 	const isFocused = useIsFocused();
+	const appState = useRef(AppState.currentState)
+	const [appStateVisible, setAppStateVisible] = useState(appState.current);
 	const [refreshing] = useState(false);
-
 	const styles = StyleSheet.create({
 		container: {
 			marginBottom: 0,
@@ -168,15 +170,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const resetInactivityTimeout = () => {
 		clearTimeout(timerId.current)
 		timerId.current = setInterval(() => {
-			if (!businessesList.loading) {
-				getBusinesses(true)
-			}
+			getBusinesses(true)
 		}, 300000)
 	}
 
 	useEffect(() => {
 		resetInactivityTimeout()
-	}, [])
+	}, [businessesList.loading])
 
 	const handleOnRefresh = () => {
 		if (!businessesList.loading) {
@@ -196,6 +196,26 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
 		})
 	}, [orderState?.options?.address?.location])
+
+	useEffect(() => {
+		const onFocusApp = (nextAppState : any) => {
+			if (
+				appState.current.match(/inactive|background/) &&
+				nextAppState === "active"
+			) {
+				if (!businessesList.loading) {
+					getBusinesses(true);
+				}
+			}
+			appState.current = nextAppState;
+			setAppStateVisible(appState.current);
+		}
+
+		AppState.addEventListener("change", onFocusApp);
+		return () => {
+			AppState.removeEventListener('change', onFocusApp);
+		};
+	}, [])
 
 	useFocusEffect(
 		useCallback(() => {
