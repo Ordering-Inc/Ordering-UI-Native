@@ -48,7 +48,7 @@ const PaymentOptionWalletUI = (props: any) => {
     new Array(walletsState.result?.length).fill(false)
   );
 
-  const creditBalance: any = (wallet: any) => ` = ${parsePrice(wallet.balance / wallet.redemption_rate)}`
+  const creditBalance: any = (wallet: any) => ` = ${parsePrice((wallet.balance * wallet.redemption_rate) / 100)}`
 
   const walletName: any = {
     cash: {
@@ -137,7 +137,9 @@ const PaymentOptionWalletUI = (props: any) => {
                     {`${wallet?.balance} ${t('POINTS', 'Points')}`}
                     </OText>
                     <OText>
-                      {`${wallet.balance > 0 && creditBalance(wallet)}`}
+                      {wallet?.balance > 0
+                        ? creditBalance(wallet)
+                        : null}
                     </OText>
                   </OText>
                 )}
