@@ -3,14 +3,17 @@ import { TouchableOpacity, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { UDContainer, UDHeader, UDForm, UDInfo, EditBtn } from './styles';
-
 import {
 	UserFormDetails as UserFormController,
 	useLanguage,
 	useSession,
+	ToastType,
+	useToast
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { OIcon, OText } from '../shared';
+import { OIcon, OText, OModal } from '../shared';
+import { VerifyPhone } from '../VerifyPhone';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import { UserFormDetailsUI } from '../UserFormDetails';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
@@ -26,14 +29,32 @@ const UserDetailsUI = (props: any) => {
 		isUserDetailsEdit,
 		phoneUpdate,
 		togglePhoneUpdate,
-		isCheckout
+		isCheckout,
+		checkPhoneCodeState,
+		handleSendVerifyCode,
+		handleCheckPhoneCode,
+		verifyPhoneState,
+		isVerifiedPhone,
+		setCheckPhoneCodeState
 	} = props
 
 	const theme = useTheme();
 
 	const [, t] = useLanguage()
 	const [{ user }] = useSession()
+	const [, { showToast }] = useToast();
+
 	const userData = props.userData || (!formState.result.error && formState.result?.result) || user
+
+	const [isModalVisible, setIsModalVisible] = useState(false);
+	const [willVerifyOtpState, setWillVerifyOtpState] = useState(false);
+	const [phoneInputData, setPhoneInputData] = useState({
+		error: '',
+		phone: {
+			country_phone_code: null,
+			cellphone: null,
+		},
+	});
 
 
 	useEffect(() => {
@@ -54,6 +75,54 @@ const UserDetailsUI = (props: any) => {
 			togglePhoneUpdate(false)
 		}
 	}, [user?.country_phone_code])
+
+	const handleVerifyCodeClick = () => {
+		if (formState?.changes?.cellphone && formState?.changes?.country_phone_code) {
+			const { cellphone, country_phone_code: countryPhoneCode } = formState?.changes
+
+			setPhoneInputData({
+				error: '',
+				phone: {
+					country_phone_code: countryPhoneCode,
+					cellphone: cellphone,
+				},
+			});
+			handleSendVerifyCode({
+			  cellphone: cellphone,
+			  country_phone_code: countryPhoneCode
+			})
+		}
+	}
+
+	useEffect(() => {
+		if (willVerifyOtpState) handleVerifyCodeClick()
+	}, [willVerifyOtpState])
+
+	useEffect(() => {
+		if (verifyPhoneState && !verifyPhoneState?.loading) {
+			if (verifyPhoneState.result?.error) {
+				const message = typeof verifyPhoneState?.result?.result === 'string'
+					? verifyPhoneState?.result?.result
+					: verifyPhoneState?.result?.result[0]
+				verifyPhoneState.result?.result && showToast(
+					ToastType.Error,
+					message
+				)
+				setWillVerifyOtpState(false)
+				return
+			}
+
+			const okResult = verifyPhoneState.result?.result === 'OK'
+			if (okResult) {
+				!isModalVisible && setIsModalVisible(true)
+				setWillVerifyOtpState(false)
+			}
+		}
+	}, [verifyPhoneState])
+
+	useEffect(() => {
+		if (isVerifiedPhone) setIsModalVisible(false)
+	}, [isVerifiedPhone])
 
 	return (
 		<>
@@ -117,10 +186,32 @@ const UserDetailsUI = (props: any) => {
 							)}
 						</UDInfo>
 					) : (
-						<UserFormDetailsUI {...props} phoneUpdate={phoneUpdate} togglePhoneUpdate={togglePhoneUpdate} isCheckout={isCheckout} />
+						<UserFormDetailsUI
+							{...props}
+							phoneUpdate={phoneUpdate}
+							togglePhoneUpdate={togglePhoneUpdate}
+							isCheckout={isCheckout}
+							setWillVerifyOtpState={setWillVerifyOtpState}
+						/>
 					)}
 				</UDContainer>
 			)}
+			<OModal
+				open={isModalVisible}
+				onClose={() => setIsModalVisible(false)}
+				entireModal
+			>
+				<VerifyPhone
+				phone={phoneInputData.phone}
+				verifyPhoneState={verifyPhoneState}
+				checkPhoneCodeState={checkPhoneCodeState}
+				handleCheckPhoneCode={handleCheckPhoneCode}
+				setCheckPhoneCodeState={setCheckPhoneCodeState}
+				handleVerifyCodeClick={handleVerifyCodeClick}
+				onClose={() => setIsModalVisible(false)}
+				/>
+			</OModal>
+			<Spinner visible={verifyPhoneState?.loading} />
 		</>
 	)
 }

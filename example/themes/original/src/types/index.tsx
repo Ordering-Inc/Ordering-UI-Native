@@ -31,6 +31,12 @@ export interface ProfileParams {
 	validationFields?: any;
 	showField?: any;
 	isRequiredField?: any;
+	handleSendVerifyCode?: any;
+	handleCheckPhoneCode?: any;
+	checkPhoneCodeState?: any;
+	verifyPhoneState?: any;
+	setCheckPhoneCodeState?: any;
+	isVerifiedPhone?: any;
 }
 
 export interface AddressListParams {
