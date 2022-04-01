@@ -26,7 +26,7 @@ export const UserFormDetailsUI = (props: any) => {
 		phoneUpdate,
 		hideUpdateButton,
 		setWillVerifyOtpState,
-		isVerifiedPhone
+		isVerifiedPhone,
 		handleChangePromotions
 	} = props;
 
