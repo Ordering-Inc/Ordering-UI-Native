@@ -37,7 +37,7 @@ export const VerifyPhone = (props: any) => {
 			height: 75,
 			marginBottom: 25,
 			borderWidth: 1,
-			borderColor: '#DEE2E6',
+			borderColor: theme.colors.inputBorderColor,
 			borderRadius: 8,
 			textAlign: 'center',
 			fontSize: 40
