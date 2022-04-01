@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { useSession, useLanguage, ToastType, useToast, useConfig } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { useForm, Controller } from 'react-hook-form';
@@ -10,6 +10,7 @@ import { OText, OButton, OInput } from '../shared';
 
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { sortInputFields } from '../../utils';
+import CheckBox from '@react-native-community/checkbox';
 
 export const UserFormDetailsUI = (props: any) => {
 	const {
@@ -26,6 +27,7 @@ export const UserFormDetailsUI = (props: any) => {
 		hideUpdateButton,
 		setWillVerifyOtpState,
 		isVerifiedPhone
+		handleChangePromotions
 	} = props;
 
 	const theme = useTheme();
@@ -60,6 +62,10 @@ export const UserFormDetailsUI = (props: any) => {
 			paddingStart: 0,
 			paddingBottom: 0,
 			marginBottom: -0,
+		},
+		checkBoxStyle: {
+			width: 25,
+			height: 25,
 		}
 	});
 
@@ -362,6 +368,34 @@ export const UserFormDetailsUI = (props: any) => {
 								rules={getInputRules({ name: 'password', code: 'password' })}
 								defaultValue=''
 							/>
+							<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, width: '100%' }}>
+								<Controller
+									control={control}
+									render={({ onChange, value }: any) => (
+										<CheckBox
+											value={value}
+											onValueChange={newValue => {
+												onChange(newValue)
+												handleChangePromotions(newValue)
+											}}
+											boxType={'square'}
+											tintColors={{
+												true: theme.colors.primary,
+												false: theme.colors.disabled
+											}}
+											tintColor={theme.colors.disabled}
+											onCheckColor={theme.colors.primary}
+											onTintColor={theme.colors.primary}
+											style={Platform.OS === 'ios' && styles.checkBoxStyle}
+										/>
+									)}
+									name='promotions'
+									defaultValue={formState?.result?.result
+										? !!formState?.result?.result?.settings?.notification?.newsletter
+										: !!(formState?.changes?.settings?.notification?.newsletter ?? (user && user?.settings?.notification?.newsletter))}
+								/>
+								<OText style={{ fontSize: 14, paddingHorizontal: 5 }}>{t('RECEIVE_NEWS_EXCLUSIVE_PROMOTIONS', 'Receive newsletters and exclusive promotions')}</OText>
+							</View>
 						</UDWrapper>
 					)}
 				{validationFields?.loading && (

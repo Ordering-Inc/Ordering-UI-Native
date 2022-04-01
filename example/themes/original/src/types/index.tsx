@@ -99,6 +99,7 @@ export interface SignupParams {
 	handleSendVerifyCode?: any;
 	handleCheckPhoneCode?: any;
 	notificationState?: any;
+	handleChangePromotions: () => void;
 }
 
 export interface PhoneInputParams {
