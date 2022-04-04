@@ -285,7 +285,7 @@ const PaymentOptionsUI = (props: any) => {
         </KeyboardAvoidingView>
       </OModal>
 
-      {/* Stripe direct */}
+      {/* Stripe direct, Google pay, Apple pay */}
       <OModal
         entireModal
         title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}

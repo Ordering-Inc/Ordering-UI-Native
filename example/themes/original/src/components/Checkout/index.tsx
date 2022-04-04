@@ -564,6 +564,7 @@ const CheckoutUI = (props: any) => {
 									onNavigationRedirect={onNavigationRedirect}
 									paySelected={paymethodSelected}
 									handlePaymentMethodClickCustom={handlePaymentMethodClick}
+									handlePlaceOrder={handlePlaceOrder}
 								/>
 							</ChPaymethods>
 						</ChSection>

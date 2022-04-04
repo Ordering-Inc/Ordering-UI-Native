@@ -32,6 +32,8 @@ import {
 import { getIconCard, flatArray } from '../../utils';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
+const methodsPay = ['google_pay', 'apple_pay']
+const stripeDirectMethods = ['stripe_direct', ...methodsPay]
 // const stripeRedirectOptions = [
 //   { name: 'Bancontact', value: 'bancontact' },
 //   { name: 'Alipay', value: 'alipay' },
@@ -54,7 +56,8 @@ const PaymentOptionsUI = (props: any) => {
 		handlePaymethodClick,
 		handlePaymethodDataChange,
 		isOpenMethod,
-		handlePaymentMethodClickCustom
+		handlePaymentMethodClickCustom,
+		handlePlaceOrder
 	} = props
 
 	const theme = useTheme();
@@ -127,6 +130,12 @@ const PaymentOptionsUI = (props: any) => {
 			})
 		}
 	}, [props.paySelected])
+
+	useEffect(() => {
+		if (methodsPay.includes(paymethodSelected?.gateway) && paymethodData?.id && paymethodSelected?.data?.card) {
+		  handlePlaceOrder()
+		}
+	}, [paymethodData, paymethodSelected])
 
 	const renderPaymethods = ({ item }: any) => {
 		return (
@@ -289,11 +298,11 @@ const PaymentOptionsUI = (props: any) => {
 				</KeyboardAvoidingView>
 			</OModal>
 
-			{/* Stripe direct */}
+			{/* Stripe direct, Google pay, Apple pay */}
 			<OModal
 				entireModal
 				title={t('ADD_CREDIT_OR_DEBIT_CARD', 'Add credit or debit card')}
-				open={isOpenMethod?.paymethod?.gateway === 'stripe_direct' && !paymethodData?.id}
+				open={stripeDirectMethods?.includes(isOpenMethod?.paymethod?.gateway) && !paymethodData.id}
 				onClose={() => handlePaymethodClick(null)}
 			>
 				<KeyboardAvoidingView
@@ -302,10 +311,13 @@ const PaymentOptionsUI = (props: any) => {
 					enabled={Platform.OS === 'ios' ? true : false}
 				>
 					<StripeElementsForm
+						cart={cart}
+						paymethod={isOpenMethod?.paymethod?.gateway}
+						methodsPay={methodsPay}
 						businessId={props.businessId}
-						publicKey={isOpenMethod?.paymethod?.credentials?.publishable}
+						publicKey={isOpenMethod?.paymethod?.credentials?.publishable || isOpenMethod?.paymethod?.credentials?.publishable_key}
 						handleSource={handlePaymethodDataChange}
-						onCancel={() => handlePaymethodClick(false)}
+						onCancel={() => handlePaymethodClick(null)}
 					/>
 				</KeyboardAvoidingView>
 			</OModal>
