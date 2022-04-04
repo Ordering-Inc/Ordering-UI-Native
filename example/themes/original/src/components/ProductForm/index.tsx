@@ -939,30 +939,30 @@ export const ProductOptionsUI = (props: any) => {
 							auth &&
 							orderState.options?.address_id) || (isSoldOut || maxProductQuantity <= 0)) && (
 								<OButton
-									onClick={() => handleSaveProduct()}
-									imgRightSrc=""
-									text={`${orderState.loading
-										? t('LOADING', 'Loading')
-										: (isSoldOut || maxProductQuantity <= 0)
-											? t('SOLD_OUT', 'Sold out')
-											: editMode
-												? t('UPDATE', 'Update')
-												: t('ADD', 'Add')
-										}`}
-									isDisabled={isSoldOut || maxProductQuantity <= 0}
-									textStyle={{
-										color: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.primary : theme.colors.white,
-										fontSize: orderState.loading || editMode ? 10 : 14
-									}}
-									style={{
-										backgroundColor: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.lightGray : theme.colors.primary,
-										borderColor: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.white : theme.colors.primary,
-										opacity: saveErrors || isSoldOut || maxProductQuantity <= 0 ? 0.3 : 1,
-										borderRadius: 7.6,
-										height: 44,
-										shadowOpacity: 0,
-										borderWidth: 1,
-									}}
+                  onClick={() => handleSaveProduct()}
+                  imgRightSrc=""
+                  text={`${orderState.loading
+                    ? t('LOADING', 'Loading')
+                    : (isSoldOut || maxProductQuantity <= 0)
+                      ? t('SOLD_OUT', 'Sold out')
+                      : editMode
+                        ? t('UPDATE', 'Update')
+                        : t('ADD', 'Add')
+                    }`}
+                  isDisabled={isSoldOut || maxProductQuantity <= 0}
+                  textStyle={{
+                    color: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.primary : theme.colors.white,
+                    fontSize: orderState.loading || editMode ? 10 : 14
+                  }}
+                  style={{
+                    backgroundColor: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.lightGray : theme.colors.primary,
+                    borderColor: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.white : theme.colors.primary,
+                    opacity: saveErrors || isSoldOut || maxProductQuantity <= 0 ? 0.3 : 1,
+                    borderRadius: 7.6,
+                    height: 44,
+                    shadowOpacity: 0,
+                    borderWidth: 1,
+                  }}
 								/>
 							)}
 						{auth &&
