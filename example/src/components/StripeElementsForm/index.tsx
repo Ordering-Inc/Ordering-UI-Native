@@ -130,7 +130,7 @@ const StripeElementsFormUI = (props: any) => {
             publishableKey={publicKey}
             merchantIdentifier={`merchant.${configs.apple_app_id}`}
           >
-            {methodsPay.includes(paymethod) ? (
+            {methodsPay?.includes(paymethod) ? (
               <StripeMethodForm 
                 handleSource={handleSource}
                 onCancel={onCancel}
