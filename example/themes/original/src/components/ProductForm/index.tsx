@@ -188,6 +188,10 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleSaveProduct = () => {
+		if (!productCart.quantity) {
+			showToast(ToastType.Error, t('VALIDATION_ERROR_REQUIRED', 'The quantity field is required').replace('_attribute_', t('PRODUCT_POTIONS_QUANTITY', 'Quantity')))
+			return
+		}
 		const isErrors = Object.values(errors).length > 0;
 		if (!isErrors) {
 			handleSave && handleSave();
@@ -242,7 +246,7 @@ export const ProductOptionsUI = (props: any) => {
 	}, []);
 
 	const onChangeProductCartQuantity = (quantity: number) => {
-		if (quantity >= maxProductQuantity) {
+		if (quantity > maxProductQuantity) {
 			showToast(ToastType.Error, t('MAX_QUANTITY', 'The max quantity is _number_').replace('_number_', maxProductQuantity))
 			return
 		}
@@ -851,7 +855,7 @@ export const ProductOptionsUI = (props: any) => {
 							{qtyBy?.pieces && (
 								<TextInput
 									keyboardType='numeric'
-									value={`${productCart.quantity}` || ''}
+									value={`${productCart?.quantity > 0 ? productCart?.quantity: ''}`}
 									onChangeText={(val: any) => onChangeProductCartQuantity(parseInt(val))}
 									editable={!orderState.loading}
 									style={{
@@ -946,13 +950,13 @@ export const ProductOptionsUI = (props: any) => {
 											: t('ADD', 'Add')
 										}`}
 									textStyle={{
-										color: saveErrors ? theme.colors.primary : theme.colors.white,
+										color: (saveErrors || !productCart.quantity) ? theme.colors.primary : theme.colors.white,
 										fontSize: orderState.loading || editMode ? 10 : 14
 									}}
 									style={{
-										backgroundColor: saveErrors ? theme.colors.lightGray : theme.colors.primary,
-										borderColor: saveErrors ? theme.colors.white : theme.colors.primary,
-										opacity: saveErrors ? 0.3 : 1,
+										backgroundColor: (saveErrors || !productCart.quantity) ? theme.colors.lightGray : theme.colors.primary,
+										borderColor: (saveErrors || !productCart.quantity) ? theme.colors.white : theme.colors.primary,
+										opacity: (saveErrors || !productCart.quantity) ? 0.3 : 1,
 										borderRadius: 7.6,
 										height: 44,
 										shadowOpacity: 0,

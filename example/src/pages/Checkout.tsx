@@ -7,7 +7,7 @@ import styled from 'styled-components/native';
 
 import { useOrder, useLanguage, ToastType, useToast } from 'ordering-components/native';
 
-const stripePaymentOptions = ['stripe', 'stripe_direct', 'stripe_connect'];
+const stripePaymentOptions = ['stripe', 'stripe_direct', 'stripe_connect', 'google_pay', 'apple_pay'];
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;
