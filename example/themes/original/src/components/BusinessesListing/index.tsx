@@ -198,14 +198,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}, [orderState?.options?.address?.location])
 
 	useEffect(() => {
-		const onFocusApp = (nextAppState : any) => {
+		const onFocusApp = (nextAppState: any) => {
 			if (
 				appState.current.match(/inactive|background/) &&
 				nextAppState === "active"
 			) {
-				if (!businessesList.loading) {
-					getBusinesses(true);
-				}
+				getBusinesses(true);
 			}
 			appState.current = nextAppState;
 			setAppStateVisible(appState.current);
