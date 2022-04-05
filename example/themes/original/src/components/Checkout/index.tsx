@@ -265,9 +265,7 @@ const CheckoutUI = (props: any) => {
 							>
 								<OText size={12} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.textSecondary}>
 									{options?.moment
-										? parseDate(options?.moment, {
-											outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm'
-										})
+										? parseDate(options?.moment, { outputFormat: configs?.dates_moment_format?.value })
 										: t('ASAP_ABBREVIATION', 'ASAP')}
 								</OText>
 								<OIcon

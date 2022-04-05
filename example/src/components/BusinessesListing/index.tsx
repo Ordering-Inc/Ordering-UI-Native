@@ -167,7 +167,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
           >
             <OText size={14} numberOfLines={1} ellipsizeMode='tail'>
               {orderState.options?.moment
-                ? parseDate(orderState.options?.moment, { outputFormat: configs?.format_time?.value === '12' ? 'MM/DD hh:mma' : 'MM/DD HH:mm' })
+                ? parseDate(orderState?.options?.moment, { outputFormat: configs?.dates_moment_format?.value })
                 : t('ASAP_ABBREVIATION', 'ASAP')}
             </OText>
           </WrapMomentOption>

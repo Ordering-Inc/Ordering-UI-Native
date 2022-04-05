@@ -19,7 +19,7 @@ import {
 } from './styles'
 
 import NavBar from '../NavBar'
-import { OIcon, OText } from '../shared';
+import { OText } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
 import { WalletTransactionItem } from '../WalletTransactionItem'
 
@@ -28,15 +28,15 @@ const WalletsUI = (props: any) => {
     navigation,
     walletList,
     transactionsList,
-    setWalletSelected
+    setWalletSelected,
+    isWalletCashEnabled,
+    isWalletPointsEnabled
   } = props
 
   const [, t] = useLanguage()
   const theme = useTheme()
-  const [{ parsePrice, parseDate }] = useUtils()
+  const [{ parsePrice }] = useUtils()
   const [{ configs }] = useConfig()
-  const isWalletCashEnabled = configs?.wallet_cash_enabled?.value === '1'
-  const isWalletPointsEnabled = configs?.wallet_credit_point_enabled?.value === '1'
 
   const [tabSelected, setTabSelected] = useState(isWalletCashEnabled ? 'cash' : 'credit_point')
 
@@ -119,7 +119,6 @@ const WalletsUI = (props: any) => {
                   : t('POINTS', 'Points')}
               </OText>
             </BalanceElement>
-            {console.log(transactionsList)}
 
             <View style={{ marginTop: 20, width: '100%', paddingHorizontal: 1, paddingBottom: 40 }}>
               {!transactionsList?.loading &&
@@ -137,6 +136,7 @@ const WalletsUI = (props: any) => {
                         type={currentWalletSelected?.type}
                         key={transaction.id}
                         item={transaction}
+                        withFormatPrice={currentWalletSelected?.type === 'cash'}
                       />
                     ))}
                   </TransactionsWrapper>
@@ -155,7 +155,8 @@ const WalletsUI = (props: any) => {
                 </View>
               )}
 
-              {!(transactionsList?.loading && transactionsList.list?.[`wallet:${currentWalletSelected?.id}`]) &&
+              {!transactionsList?.loading &&
+                !(transactionsList?.loading && transactionsList.list?.[`wallet:${currentWalletSelected?.id}`]) &&
                 (transactionsList?.error ||
                   !transactionsList.list?.[`wallet:${currentWalletSelected?.id}`]?.length) &&
               (
@@ -208,9 +209,16 @@ const WalletsUI = (props: any) => {
 }
 
 export const Wallets = (props: any) => {
+  const [{ configs }] = useConfig()
+
+  const isWalletCashEnabled = configs?.wallet_cash_enabled?.value === '1'
+  const isWalletPointsEnabled = configs?.wallet_credit_point_enabled?.value === '1'
+
   const walletsProps = {
     ...props,
-    UIComponent: WalletsUI
+    UIComponent: WalletsUI,
+    isWalletCashEnabled,
+    isWalletPointsEnabled
   }
   return (
     <WalletList {...walletsProps} />
