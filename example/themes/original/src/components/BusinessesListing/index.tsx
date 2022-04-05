@@ -117,6 +117,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [featuredBusiness, setFeaturedBusinesses] = useState(Array);
 	const [isFarAway, setIsFarAway] = useState(false)
 
+  const isPreorderEnabled = (configs?.preorder_status_enabled?.value === '1' || configs?.preorder_status_enabled?.value === 'true') &&
+		Number(configs?.max_days_preorder?.value) > 0
+
 	const timerId = useRef<any>(false)
 	// const panResponder = useRef(
 	// 	PanResponder.create({
@@ -127,6 +130,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	// 		},
 	// 	})
 	// ).current
+
+  const handleMomentClick = () => {
+		if (isPreorderEnabled) {
+			navigation.navigate('MomentOption')
+		}
+	}
 
 	const configTypes =
 		configs?.order_types_allowed?.value
@@ -198,14 +207,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}, [orderState?.options?.address?.location])
 
 	useEffect(() => {
-		const onFocusApp = (nextAppState : any) => {
+		const onFocusApp = (nextAppState: any) => {
 			if (
 				appState.current.match(/inactive|background/) &&
 				nextAppState === "active"
 			) {
-				if (!businessesList.loading) {
-					getBusinesses(true);
-				}
+				getBusinesses(true);
 			}
 			appState.current = nextAppState;
 			setAppStateVisible(appState.current);
@@ -281,7 +288,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							/>
 						</WrapMomentOption>
 						<WrapMomentOption
-							onPress={() => navigation.navigate('MomentOption')}>
+							onPress={() => handleMomentClick()}>
 							<OText
 								size={12}
 								numberOfLines={1}
@@ -291,11 +298,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 									? parseDate(orderState.options?.moment, { outputFormat: configs?.dates_moment_format?.value })
 									: t('ASAP_ABBREVIATION', 'ASAP')}
 							</OText>
-							<OIcon
-								src={theme.images.general.arrow_down}
-								width={10}
-								style={{ marginStart: 8 }}
-							/>
+							{isPreorderEnabled && (
+								<OIcon
+									src={theme.images.general.arrow_down}
+									width={10}
+									style={{ marginStart: 8 }}
+								/>
+							)}
 						</WrapMomentOption>
 
 						{!businessId && (
