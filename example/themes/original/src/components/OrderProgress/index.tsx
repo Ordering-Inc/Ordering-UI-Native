@@ -137,7 +137,7 @@ const OrderProgressUI = (props: any) => {
   return (
     <>
       {orderList?.loading && (
-        <Placeholder Animation={Fade} height={160}>
+        <Placeholder Animation={Fade} height={158}>
           <PlaceholderLine height={60} style={{ borderRadius: 8, marginBottom: 10 }} />
           <PlaceholderLine height={20} style={{ marginBottom: 10 }} />
           <PlaceholderLine height={40} style={{ borderRadius: 8, marginBottom: 10 }} />
