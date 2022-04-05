@@ -293,6 +293,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         percentage: 95,
         image: theme.images.order.status7,
       },
+      { 
+        key: 22, 
+        value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver'), 
+        slug: 'ORDER_LOOKING_FOR_DRIVER', 
+        percentage: 35, 
+        image: theme.images.order.status22 
+      },
+      { 
+        key: 23, 
+        value: t('ORDER_DRIVER_ON_WAY', 'Driver on way'), 
+        slug: 'ORDER_DRIVER_ON_WAY', 
+        percentage: 45, 
+        image: theme.images.order.status23 
+      }
     ];
 
     const objectStatus = orderStatus.find((o) => o.key === status);
