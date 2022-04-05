@@ -15,7 +15,8 @@ export const WalletTransactionItem = (props: any) => {
   const {
     item,
     idx,
-    type
+    type,
+    withFormatPrice
   } = props
 
   const theme = useTheme()
@@ -38,7 +39,7 @@ export const WalletTransactionItem = (props: any) => {
             fontWeight: 'bold'
           }}
         >
-          {item?.amount > 0 && '+ '}{parsePrice(item?.amount)}
+          {item?.amount > 0 && '+ '}{withFormatPrice ? parsePrice(item?.amount) : item?.amount}
         </OText>
       </DateBlock>
       <MessageBlock>
