@@ -216,6 +216,10 @@ export const getOrderStatus = (status: number) => {
       return 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS'
     case 21:
       return 'ORDER_CUSTOMER_ARRIVED_BUSINESS'
+    case 22:
+      return 'ORDER_LOOKING_FOR_DRIVER'
+    case 23:
+      return 'ORDER_DRIVER_ON_WAY'
     default:
       return status
   }
@@ -245,7 +249,9 @@ export const getTextOrderStatus = (s: string, t: any) => {
     { key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business') },
     { key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer') },
     { key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business') },
-    { key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business') }
+    { key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business') },
+    { key: 22, value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver') },
+    { key: 23, value: t('ORDER_DRIVER_ON_WAY', 'Driver on way') }
   ]
 
   const objectStatus = orderStatus.find((o) => o.key === status)

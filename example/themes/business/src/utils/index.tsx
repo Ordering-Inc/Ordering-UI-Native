@@ -325,6 +325,18 @@ export const getOrderStatus = (s: string, t: any) => {
       slug: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
       percentage: 95,
     },
+    {
+      key: 22,
+      value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver'),
+      slug: 'ORDER_LOOKING_FOR_DRIVER',
+      percentage: 35
+    },
+    {
+      key: 23,
+      value: t('ORDER_DRIVER_ON_WAY', 'Driver on way'),
+      slug: 'ORDER_DRIVER_ON_WAY',
+      percentage: 45
+    }
   ];
 
   const objectStatus = orderStatus.find(o => o.key === status);
