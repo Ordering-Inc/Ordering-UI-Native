@@ -73,7 +73,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			{ key: 18, value: t('DRIVER_ALMOST_ARRIVED_TO_BUSINESS', 'Driver almost arrived to business') },
 			{ key: 19, value: t('DRIVER_ALMOST_ARRIVED_TO_CUSTOMER', 'Driver almost arrived to customer') },
 			{ key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business') },
-			{ key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business') }
+			{ key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business') },
+			{ key: 22, value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver') },
+      		{ key: 23, value: t('ORDER_DRIVER_ON_WAY', 'Driver on way') }
 		]
 
 		const objectStatus = orderStatus.find((o) => o.key === status)
@@ -218,7 +220,7 @@ export const OrderListing = (props: OrdersOptionParams) => {
 	const OrderListingProps = {
 		...props,
 		UIComponent: OrdersOptionUI,
-		orderStatus: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+		orderStatus: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
 		useDefualtSessionManager: true,
 		paginationSettings: {
 			initialPage: 1,
