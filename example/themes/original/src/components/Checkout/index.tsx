@@ -667,6 +667,19 @@ const CheckoutUI = (props: any) => {
 					setShowGateway={setShowGateway}
 				/>
 			)}
+			{webviewPaymethod?.gateway === 'square' && showGateway.open && (
+				<PaymentOptionsWebView
+					onNavigationRedirect={onNavigationRedirect}
+					uri={`https://test-square-f50f7.web.app`}
+					user={user}
+					token={token}
+					cart={cart}
+					currency={currency}
+					webviewPaymethod={webviewPaymethod}
+					setShowGateway={setShowGateway}
+					locationId={'L1NGAY5M6KJRX'}
+				/>
+			)}
 		</>
 	)
 }
