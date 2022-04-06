@@ -887,28 +887,29 @@ export const ProductOptionsUI = (props: any) => {
 						style={{
 							width: isSoldOut || maxProductQuantity <= 0 ? '60%' : '40%',
 						}}>
-						{productCart &&
-							!isSoldOut &&
-							maxProductQuantity > 0 &&
+						{((productCart &&
 							auth &&
-							orderState.options?.address_id && (
+							orderState.options?.address_id) || (isSoldOut || maxProductQuantity <= 0)) && (
 								<OButton
 									onClick={() => handleSaveProduct()}
 									imgRightSrc=""
 									text={`${orderState.loading
 										? t('LOADING', 'Loading')
-										: editMode
-											? t('UPDATE', 'Update')
-											: t('ADD', 'Add')
+										: (isSoldOut || maxProductQuantity <= 0)
+											? t('SOLD_OUT', 'Sold out')
+											: editMode
+												? t('UPDATE', 'Update')
+												: t('ADD', 'Add')
 										}`}
+									isDisabled={isSoldOut || maxProductQuantity <= 0}
 									textStyle={{
-										color: (saveErrors || !productCart.quantity) ? theme.colors.primary : theme.colors.white,
+										color: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.primary : theme.colors.white,
 										fontSize: orderState.loading || editMode ? 10 : 14
 									}}
 									style={{
-										backgroundColor: (saveErrors || !productCart.quantity) ? theme.colors.lightGray : theme.colors.primary,
-										borderColor: (saveErrors || !productCart.quantity) ? theme.colors.white : theme.colors.primary,
-										opacity: (saveErrors || !productCart.quantity) ? 0.3 : 1,
+										backgroundColor: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.lightGray : theme.colors.primary,
+										borderColor: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.white : theme.colors.primary,
+										opacity: saveErrors || isSoldOut || maxProductQuantity <= 0 ? 0.3 : 1,
 										borderRadius: 7.6,
 										height: 44,
 										shadowOpacity: 0,
@@ -928,7 +929,7 @@ export const ProductOptionsUI = (props: any) => {
 							) : (
 								<OButton onClick={navigation.navigate('AddressList')} />
 							))}
-						{(!auth || isSoldOut || maxProductQuantity <= 0) && (
+						{!auth && (
 							<OButton
 								isDisabled={isSoldOut || maxProductQuantity <= 0}
 								onClick={() => handleRedirectLogin()}
