@@ -191,3 +191,71 @@ export const transformCountryCode = (countryCode : number) => {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
   return R * c
 }
+
+/**
+ * function to manage review comment list
+ * @param {number} param0 type of reviews to return
+ * @returns object with reviews dictionary
+ */
+ export const reviewCommentList = (type: string) => {
+  const [, t] = useLanguage()
+
+  const reviews: any = {
+    customer: {
+      1: {
+        title: t('CUSTOMER_QUICK_COMMENT_TITLE_1', "What went wrong?"),
+        list: [
+          { key: 0, content: t('CUSTOMER_QUICK_COMMENT_1_0', "Poor communication") },
+          { key: 1, content: t('CUSTOMER_QUICK_COMMENT_1_1', "Wrong address") },
+          { key: 2, content: t('CUSTOMER_QUICK_COMMENT_1_2', "COVID-19 issue") },
+          { key: 3, content: t('CUSTOMER_QUICK_COMMENT_1_3', "Didn't follow instructions") },
+          { key: 4, content: t('CUSTOMER_QUICK_COMMENT_1_4', "Rude") },
+          { key: 5, content: t('CUSTOMER_QUICK_COMMENT_1_5', "Not on-time") },
+        ]
+      },
+      2: {
+        title: t('CUSTOMER_QUICK_COMMENT_TITLE_2', "What went wrong?"),
+        list: [
+          { key: 0, content: t('CUSTOMER_QUICK_COMMENT_2_0', "Poor communication") },
+          { key: 1, content: t('CUSTOMER_QUICK_COMMENT_2_1', "Wrong address") },
+          { key: 2, content: t('CUSTOMER_QUICK_COMMENT_2_2', "COVID-19 issue") },
+          { key: 3, content: t('CUSTOMER_QUICK_COMMENT_2_3', "Didn't follow instructions") },
+          { key: 4, content: t('CUSTOMER_QUICK_COMMENT_2_4', "Rude") },
+          { key: 5, content: t('CUSTOMER_QUICK_COMMENT_2_5', "Not on-time") },
+        ]
+      },
+      3: {
+        title: t('CUSTOMER_QUICK_COMMENT_TITLE_3', "What could have been better?"),
+        list: [
+          { key: 0, content: t('CUSTOMER_QUICK_COMMENT_3_0', "Poor communication") },
+          { key: 1, content: t('CUSTOMER_QUICK_COMMENT_3_1', "Wrong address") },
+          { key: 2, content: t('CUSTOMER_QUICK_COMMENT_3_2', "COVID-19 issue") },
+          { key: 3, content: t('CUSTOMER_QUICK_COMMENT_3_3', "Didn't follow instructions") },
+          { key: 4, content: t('CUSTOMER_QUICK_COMMENT_3_4', "Rude") },
+          { key: 5, content: t('CUSTOMER_QUICK_COMMENT_3_5', "Not on-time") },
+        ]
+      },
+      4: {
+        title: t('CUSTOMER_QUICK_COMMENT_TITLE_4', " Tell us more"),
+        list: [
+          { key: 0, content: t('CUSTOMER_QUICK_COMMENT_4_0', "Poor communication") },
+          { key: 1, content: t('CUSTOMER_QUICK_COMMENT_4_1', "Wrong address") },
+          { key: 2, content: t('CUSTOMER_QUICK_COMMENT_4_2', "COVID-19 issue") },
+          { key: 3, content: t('CUSTOMER_QUICK_COMMENT_4_3', "Didn't follow instructions") },
+          { key: 4, content: t('CUSTOMER_QUICK_COMMENT_4_4', "Rude") },
+          { key: 5, content: t('CUSTOMER_QUICK_COMMENT_4_5', "Not on-time") },
+        ]
+      },
+      5: {
+        title: t('CUSTOMER_QUICK_COMMENT_TITLE_5', "What went well?"),
+        list: [
+          { key: 0, content: t('CUSTOMER_QUICK_COMMENT_5_0', "Good communication") },
+          { key: 1, content: t('CUSTOMER_QUICK_COMMENT_5_1', "Friendly") },
+          { key: 2, content: t('CUSTOMER_QUICK_COMMENT_5_2', "Above and beyond") },
+        ]
+      },
+    }
+  }
+
+  return reviews[type]
+}
