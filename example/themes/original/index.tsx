@@ -20,6 +20,8 @@ import { BusinessPreorder } from './src/components/BusinessPreorder';
 import { BusinessMenuList } from './src/components/BusinessMenuList';
 import { UserProfileForm } from './src/components/UserProfileForm';
 import { ReviewOrder } from './src/components/ReviewOrder';
+import { ReviewProducts } from './src/components/ReviewProducts';
+import { ReviewDriver } from './src/components/ReviewDriver';
 import { UserProfile } from './src/components/UserProfile';
 import { MessageListing } from './src/components/MessageListing';
 import { Help } from './src/components/Help';
@@ -82,6 +84,8 @@ export {
 	BusinessPreorder,
 	UserProfileForm,
 	ReviewOrder,
+	ReviewProducts,
+	ReviewDriver,
 	BusinessMenuList,
 	UserProfile,
 	MessageListing,
