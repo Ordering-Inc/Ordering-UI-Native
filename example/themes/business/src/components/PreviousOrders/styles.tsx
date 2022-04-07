@@ -8,16 +8,16 @@ export const Card = styled.View`
 `;
 
 export const Logo = styled.View`
-  height: 75px;
-  width: 75px;
+  height: 65px;
+  width: 65px;
 `;
 
 export const Information = styled.View`
   position: relative;
   justify-content: flex-start;
-  margin-horizontal: 10px;
+  margin-horizontal: 5px;
   flex: 1;
-  max-height: 70px;
+  max-height: 60px;
 `;
 
 export const MyOrderOptions = styled.View`
@@ -39,12 +39,7 @@ export const AcceptOrRejectOrder = styled.View`
 export const Timestatus = styled.View`
   position: relative;;
   width: 4px;
-  height: 65px;
+  height: 55px;
   border-radius: 20px;
   top: 5px;
-  margin-right: 5px; 
-  ${(props: any) => props.theme?.rtl && css`
-    left: unset;
-    right: -5px;
- `}
 `
