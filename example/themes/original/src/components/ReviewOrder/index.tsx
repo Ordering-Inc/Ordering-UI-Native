@@ -236,7 +236,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
         ) : (
           <View style={{flex: 1, justifyContent: 'flex-end'}}>
             <FormReviews>
-              <OText mBottom={13}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText>
+              <OText mBottom={13} color={theme.colors.textNormal}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText>
               <RatingBarContainer>
                 <LinearGradient
                   start={{ x: 0.0, y: 0.0 }}
@@ -261,14 +261,14 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
                             backgroundColor: (qualification.pointerColor && !(stars.quality >= qualification.key)) ? theme.colors.dusk : 'transparent'
                           }}
                         />
-                        <OText size={12} color={stars.quality === qualification.key ? theme.colors.black : theme.colors.lightGray}>{qualification.text}</OText>
+                        <OText size={12} color={stars.quality === qualification.key ? theme.colors.black : theme.colors.backgroundGray200}>{qualification.text}</OText>
                       </TouchableOpacity>
                     </View>
                   ))}
                 </RatingTextContainer>
               </RatingBarContainer>
 
-              <OText style={{ marginTop: 30 }}>{t('COMMENTS', 'Comments')}</OText>
+              <OText style={{ marginTop: 30 }} color={theme.colors.textNormal}>{t('COMMENTS', 'Comments')}</OText>
               <CommentsButtonGroup>
                 {commentsList.map(commentItem => (
                   <OButton
@@ -289,7 +289,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
                 ))}
               </CommentsButtonGroup>
 
-              <OText style={{ marginTop: 30 }}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText>
+              <OText style={{ marginTop: 30 }} color={theme.colors.textNormal}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText>
               <Controller
                 control={control}
                 defaultValue=''
@@ -316,7 +316,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
           <SkipButton
             onPress={() => onNavigationRedirect('ReviewProducts', { order: order })}
           >
-            <OText weight={700} size={18}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
+            <OText weight={700} size={18} color={theme.colors.textNormal}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
           </SkipButton>
           <OButton
             textStyle={{ color: theme.colors.white, paddingRight: 10 }}

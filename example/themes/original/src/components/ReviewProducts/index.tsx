@@ -89,7 +89,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
           <SkipButton
             onPress={() => (order?.driver && !order?.user_review) ? onNavigationRedirect('ReviewDriver', { order: order }) : onNavigationRedirect('MyOrders')}
           >
-            <OText weight={700} size={18}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
+            <OText weight={700} size={18} color={theme.colors.textNormal}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
           </SkipButton>
           <OButton
             textStyle={{ color: theme.colors.white, paddingRight: 10 }}

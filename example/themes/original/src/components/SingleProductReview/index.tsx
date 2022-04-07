@@ -101,7 +101,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
     <>
       <ProductContainer>
         <ProductHeader>
-          <OText numberOfLines={1} style={{ flex: 1 }}>{product?.name}</OText>
+          <OText numberOfLines={1} style={{ flex: 1 }} color={theme.colors.textNormal}>{product?.name}</OText>
           <LikeHandsActionContainer>
             <LikeHandsButton
               isLike
@@ -122,7 +122,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
               bgColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.backgroundGray200}
               borderColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.backgroundGray200}
               textStyle={{
-                color: isSelectedComment(commentItem.key) ? theme.colors.white : theme.colors.black,
+                color: isSelectedComment(commentItem.key) ? theme.colors.white : theme.colors.textNormal,
                 fontSize: 13,
                 paddingRight: isSelectedComment(commentItem.key) ? 15 : 0
               }}
@@ -149,7 +149,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
         </TouchableOpacity>
         {isShowTextArea && (
           <View>
-            <OText style={{ marginTop: 10 }}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText>
+            <OText style={{ marginTop: 10 }} color={theme.colors.textNormal}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText>
             <OInput
               name='comments'
               onChange={(val: any) => {
