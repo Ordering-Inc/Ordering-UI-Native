@@ -20,6 +20,8 @@ import { FloatingButton } from '../FloatingButton'
 import LinearGradient from 'react-native-linear-gradient'
 import Alert from '../../providers/AlertProvider'
 
+import { reviewCommentList } from '../../../../../src/utils'
+
 import {
   Content,
   ActionButtonWrapper,
@@ -101,11 +103,8 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
     { key: 5, text: t('GREAT', 'Great'), percent: 1, parentStyle: { right: '0%' }, isInnerStyle: false,  pointerColor: false }
   ]
 
-  const commentsList = [
-    { key: 0, content: t('RESPECTFUL', 'Respectful') },
-    { key: 1, content: t('EXCELLENT_COMMUNICATION', "Excellent communication") },
-    { key: 2, content: t('CORDIAL_SERVICE', 'Cordial service') }
-  ]
+  const commentsList = reviewCommentList('customer')
+
   const isSelectedComment = (commentKey: number) => {
     const found = comments.find((comment: any) => comment?.key === commentKey)
     return found
@@ -251,10 +250,10 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
           size={12}
           style={{ marginTop: 30 }}
         >
-          {t('COMMENTS', 'Comments')}
+          {commentsList[reviewState?.qualification || 1]?.title}
         </OText>
         <CommentsButtonGroup>
-          {commentsList.map(commentItem => (
+          {commentsList[reviewState?.qualification || 1]?.list?.map(commentItem => (
             <OButton
               key={commentItem.key}
               text={commentItem.content}
