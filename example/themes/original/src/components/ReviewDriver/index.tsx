@@ -10,6 +10,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import { FloatingBottomContainer } from '../../layouts/FloatingBottomContainer'
 import Spinner from 'react-native-loading-spinner-overlay'
 
+import { reviewCommentList } from '../../../../../src/utils'
+
 import {
   ReviewDriverContainer,
   DriverPhotoContainer,
@@ -91,12 +93,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
     { key: 5, text: t('GREAT', 'Great'), percent: 1, parentStyle: { right: '0%' }, isInnerStyle: false,  pointerColor: false }
   ]
 
-  const commentsList = [
-    { key: 0, content: t('FAST_AND_EFFICIENT', "Fast and efficient") },
-    { key: 1, content: t('DELIVERY_PERFECT', "Delivery perfect") },
-    { key: 2, content: t('EXCELLENT_COMMUNICATION', "Excellent communication") },
-    { key: 3, content: t('CORDIAL_SERVICE', 'Cordial service') }
-  ]
+  const commentsList = reviewCommentList('driver')
 
   const onSubmit = () => {
     if (dirverReviews?.qualification === 0) {
@@ -248,9 +245,11 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
               </RatingTextContainer>
             </RatingBarContainer>
 
-            <OText style={{ marginTop: 30 }} color={theme.colors.textNormal}>{t('COMMENTS', 'Comments')}</OText>
+            <OText style={{ marginTop: 30 }} color={theme.colors.textNormal}>
+              {commentsList[dirverReviews?.qualification || 1]?.title}
+            </OText>
             <CommentsButtonGroup>
-              {commentsList.map(commentItem => (
+              {commentsList[dirverReviews?.qualification || 1]?.list?.map(commentItem => (
                 <OButton
                   key={commentItem.key}
                   text={commentItem.content}
