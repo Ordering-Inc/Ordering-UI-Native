@@ -16,7 +16,7 @@ import {
 import { OButton, OIcon, OInput, OText } from '../shared'
 import { TouchableOpacity, StyleSheet, View, I18nManager } from 'react-native';
 import NavBar from '../NavBar'
-import { FloatingBottomContainer } from '../../../../../src/layouts/FloatingBottomContainer'
+import { FloatingBottomContainer } from '../../layouts/FloatingBottomContainer'
 import Spinner from 'react-native-loading-spinner-overlay'
 
 import { ReviewOrderParams } from '../../types'
@@ -210,16 +210,16 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   return (
     <>
       <ReviewOrderContainer>
-		<NavBar
-			title={t('REVIEW_ORDER', 'Review your Order')}
-			titleAlign={'center'}
-			onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-			showCall={false}
-			btnStyle={{ paddingLeft: 0 }}
-			style={{ flexDirection: 'column', alignItems: 'flex-start' }}
-			titleWrapStyle={{ paddingHorizontal: 0 }}
-			titleStyle={{ marginRight: 0, marginLeft: 0 }}
-		/>
+        <NavBar
+          title={t('REVIEW_ORDER', 'Review your Order')}
+          titleAlign={'center'}
+          onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+          showCall={false}
+          btnStyle={{ paddingLeft: 0 }}
+          style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+          titleWrapStyle={{ paddingHorizontal: 0 }}
+          titleStyle={{ marginRight: 0, marginLeft: 0 }}
+        />
         <BusinessLogo>
           <View style={styles.logoWrapper}>
             <OIcon
@@ -322,7 +322,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             textStyle={{ color: theme.colors.white, paddingRight: 10 }}
             text={t('CONTINUE', 'Continue')}
             style={{ borderRadius: 8 }}
-			imgRightSrc={theme.images.general.arrow_right}
+			      imgRightSrc={theme.images.general.arrow_right}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
             onClick={handleSubmit(handleContinueClick)}
           />

@@ -329,13 +329,30 @@ export interface ProductItemAccordionParams {
 	isFromCheckout?: any
 }
 export interface ReviewOrderParams {
-	order?: { orderId: number, businessId: number, logo: string },
+	order?: { id: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
 	stars?: any,
 	handleChangeInput?: any,
 	handleChangeRating?: any,
 	handleSendReview?: any,
 	formState?: any,
-	navigation?: any
+	navigation?: any,
+	setIsReviewed?: (isReviewed: boolean) => {},
+	handleReviewState?: any,
+	setStars?: any,
+	onNavigationRedirect?: any
+}
+export interface ReviewProductParams {
+	navigation?: any,
+	onNavigationRedirect?: any,
+	order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
+	formState?: any,
+	handleChangeFormState?: any,
+	handleSendProductReview?: any
+  }
+export interface SingleProductReviewParams {
+	product: any,
+	formState?: any,
+	handleChangeFormState?: any,
 }
 export interface MessagesParams {
 	type?: string,

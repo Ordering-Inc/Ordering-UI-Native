@@ -20,6 +20,7 @@ import { BusinessPreorder } from './src/components/BusinessPreorder';
 import { BusinessMenuList } from './src/components/BusinessMenuList';
 import { UserProfileForm } from './src/components/UserProfileForm';
 import { ReviewOrder } from './src/components/ReviewOrder';
+import { ReviewProducts } from './src/components/ReviewProducts';
 import { UserProfile } from './src/components/UserProfile';
 import { MessageListing } from './src/components/MessageListing';
 import { Help } from './src/components/Help';
@@ -82,6 +83,7 @@ export {
 	BusinessPreorder,
 	UserProfileForm,
 	ReviewOrder,
+	ReviewProducts,
 	BusinessMenuList,
 	UserProfile,
 	MessageListing,
