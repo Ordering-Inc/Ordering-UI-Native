@@ -354,6 +354,16 @@ export interface SingleProductReviewParams {
 	formState?: any,
 	handleChangeFormState?: any,
 }
+export interface ReviewDriverParams {
+	navigation?: any,
+	onNavigationRedirect?: any,
+	order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
+	formState?: any,
+	setIsDriverReviewed?: (isReviewed: boolean) => {},
+	dirverReviews?: any,
+	setDriverReviews?: any,
+	handleSendDriverReview?: any
+}
 export interface MessagesParams {
 	type?: string,
 	order?: any,
