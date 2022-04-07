@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Linking, Platform } from 'react-native';
-import { useLanguage, useUtils, OrderListGroups } from 'ordering-components/native';
+import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Linking, Platform, TextInput } from 'react-native';
+import { useLanguage, useUtils, useToast, ToastType, OrderListGroups } from 'ordering-components/native';
+import SelectDropdown from 'react-native-select-dropdown'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontistoIcon from 'react-native-vector-icons/Fontisto'
@@ -18,7 +19,20 @@ import {
   ModalContainer,
   ModalTitle,
   FilterBtnWrapper,
-  TabPressable
+  TabPressable,
+  OrderStatus,
+  SlaOption,
+  SearchModalContent,
+  SlaSettingModalContent,
+  DeliveryStatusWrapper,
+  VerticalLine,
+  StatusItems,
+  ItemHeader,
+  ItemStatus,
+  ItemContent,
+  TimerInputWrapper,
+  OverLine,
+  Actions
 } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
 import { OrdersOptionParams } from '../../types';
@@ -85,6 +99,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     delivery_type: '',
     paymethod: '',
     driver: '',
+    timeStatus: '',
     date: {
       from: '',
       to: '',
@@ -96,11 +111,58 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
   const [{ parseDate }] = useUtils()
   const [orientationState] = useDeviceOrientation();
-  const [openModal, setOpenModal] = useState(false)
+  const [, { showToast }] = useToast();
+  const [openSearchModal, setOpenSearchModal] = useState(false)
+  const [openSLASettingModal, setOpenSLASettingModal] = useState(false)
+  const [slaSettingTime, setSlaSettingTime] = useState(6000)
+  const [currentDeliveryType, setCurrentDeliveryType] = useState('Delivery')
   const [search, setSearch] = useState(defaultSearchList)
+  const [selectedTabStatus, setSelectedTabStatus] = useState([])
+  const [hour, setHour] = useState(0)
+  const [minute, setMinute] = useState(0)
+
   const WIDTH_SCREEN = orientationState?.dimensions?.width
   const HEIGHT_SCREEN = orientationState?.dimensions?.height
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
+
+  const preorderTypeList = [
+    { key: null, name: t('SLA', 'SLA\'s') },
+    { key: 'in_time', name: t('OK', 'Ok') },
+    { key: 'at_risk', name: t('AT_RISK', 'At Risk') },
+    { key: 'delayed', name: t('DELAYED', 'Delayed') }
+  ]
+
+  const defaultOrderTypes = [
+    { key: 1, name: t('DELIVERY', 'Delivery') },
+    { key: 2, name: t('PICKUP', 'Pickup') },
+    { key: 3, name: t('EAT_IN', 'Eat in') },
+    { key: 4, name: t('CURBSIDE', 'Curbside') },
+    { key: 5, name: t('DRIVE_THRU', 'Drive thru') }
+  ]
+
+  const deliveryStatus = [
+    {
+      key: t('OK', 'Ok'),
+      des: t('DELIVERY_OK_STATUS_DESC', 'Get delivery time from the businesses.'),
+      timmer: false,
+      icon: theme.images.general?.clock1,
+      backColor: '#00D27A'
+    },
+    {
+      key: t('AT_RISK', 'At risk'),
+      des: t('DELIVERY_ATRISK_STATUS_DESC', 'Is the time between delivery time of busines and the delayed time.'),
+      timmer: false,
+      icon: theme.images.general?.clockRisk,
+      backColor: '#FFC700'
+    },
+    {
+      key: t('DELAYED', 'Delayed'),
+      des: t('DELIVERY_DELAYED_STATUS_DESC', 'If this time is exceeded, the order will be delayed.'),
+      timmer: true,
+      icon: theme.images.general?.clockDelayed,
+      backColor: '#E63757'
+    }
+  ]
 
   const styles = StyleSheet.create({
     header: {
@@ -127,6 +189,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       marginBottom: -1,
       zIndex: 100,
       borderColor: theme.colors.textGray,
+      textTransform: 'capitalize'
     },
     icon: {
       paddingBottom: 10,
@@ -165,6 +228,51 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       borderColor: '#DEE2E6',
       borderRadius: 7.6,
       marginBottom: 24
+    },
+    SLAwrapper: {
+      flexDirection: 'row',
+      marginBottom: 15
+    },
+    selectOption: {
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      minHeight: 40,
+      width: '100%',
+      paddingHorizontal: 15,
+      backgroundColor: theme.colors.inputChat,
+      borderRadius: 7.6,
+    },
+    buttonTextStyle: {
+      textAlign: 'left',
+      marginHorizontal: 0,
+      fontSize: 16,
+      lineHeight: 24,
+      color: '#748194'
+    },
+    dropdownStyle: {
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingTop: 5,
+      backgroundColor: '#fff',
+      borderColor: theme.colors.lightGray,
+      overflow: 'hidden',
+      minHeight: 155
+    },
+    rowStyle: {
+      display: 'flex',
+      borderBottomWidth: 0,
+      height: 36,
+      alignItems: 'center',
+      paddingHorizontal: 10
+    },
+    acceptButtonStyle: {
+      borderRadius: 7.6,
+      width: 130,
+      height: 42,
+    },
+    errorMessage: {
+      marginBottom: 10,
+      color: theme.colors.error,
     }
   });
 
@@ -201,7 +309,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     })
     const dateRange = calculateDate(search.date.type, search.date.from, search.date.to)
     onFiltered && onFiltered({ ...search, date: { ...dateRange } })
-    setOpenModal(false)
+    setOpenSearchModal(false)
   }
 
   const handleTagSelected = (tag: any) => {
@@ -283,6 +391,29 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     }
   }
 
+  const onClickSetting = () => {
+    setOpenSLASettingModal(true)
+  }
+
+  const handleClose = () => {
+    setOpenSearchModal(false)
+    setOpenSLASettingModal(false)
+  }
+
+  const [settingTimeErrorMessage, setSettingTimeErrorMessage] = useState('')
+
+  const handlSLASettingTime = () => {
+    if (!hour || !minute) {
+      setSettingTimeErrorMessage(t('SLA_SETTING_ERROR', 'Time value is invalid'))
+      return
+    }
+    const _settingTimeSecond = hour * 3600 + minute * 60
+    setSlaSettingTime(_settingTimeSecond)
+    handleClose()
+    showToast(ToastType.Success, t('SLA_SETTING_UPDATED', 'SLAs setting updated'))
+  }
+
+
   useEffect(() => {
     setCurrentFilters(null)
     onFiltered && onFiltered(null)
@@ -291,6 +422,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     scrollListRef.current?.scrollTo({ animated: true });
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   }, [currentTabSelected])
+
+  useEffect(() => {
+    setSelectedTabStatus(deliveryStatus)
+  }, [])
 
   return (
     // <GestureRecognizer
@@ -314,9 +449,58 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             name='search'
             color={theme.colors.backgroundDark}
             size={24}
-            onPress={() => setOpenModal(true)}
+            onPress={() => setOpenSearchModal(true)}
           />
         </IconWrapper>
+      </View>
+      <View style={styles.SLAwrapper}>
+        <View style={{ flex: 0.5 }}>
+          <OButton
+            text={t('SLA_SETTING', 'SLA’s Settings')}
+            textStyle={{ color: theme.colors.backArrow }}
+            imgRightSrc={null}
+            style={{
+              backgroundColor: theme.colors.inputChat,
+              borderRadius: 7.6,
+              zIndex: 10,
+              borderWidth: 0,
+              minHeight: 40
+            }}
+            onClick={onClickSetting}
+          />
+        </View>
+        <View style={{ width: 10, height: '100%' }} />
+        <View style={{ flex: 0.5, justifyContent: 'center' }}>
+          <SelectDropdown
+            defaultButtonText={t('SLA', 'SLA\'s')}
+            data={preorderTypeList}
+            onSelect={(selectedItem, index) => {
+              onFiltered && onFiltered({ ...search, timeStatus: selectedItem?.key })
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem.name
+            }}
+            rowTextForSelection={(item, index) => {
+              return item.key
+            }}
+            buttonStyle={styles.selectOption}
+            buttonTextStyle={styles.buttonTextStyle}
+            renderDropdownIcon={isOpened => {
+              return <FeatherIcon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+            }}
+            dropdownStyle={styles.dropdownStyle}
+            dropdownOverlayColor='transparent'
+            rowStyle={styles.rowStyle}
+            renderCustomizedRowChild={(item, index) => {
+              return (
+                <SlaOption>
+                  {index !== 0 && <OrderStatus timeState={item?.key} />}
+                  <View><OText size={14} color={'#748194'} >{item?.name}</OText></View>
+                </SlaOption>
+              );
+            }}
+          />
+        </View>
       </View>
       <FiltersTab>
         <ScrollView
@@ -460,6 +644,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 onNavigationRedirect={onNavigationRedirect}
                 getOrderStatus={getOrderStatus}
                 handleClickOrder={handleClickOrder}
+                slaSettingTime={slaSettingTime}
               />
             )}
           {!logisticOrders?.error?.length &&
@@ -552,8 +737,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       {/* </GestureRecognizer> */}
 
       <NewOrderNotification />
-      {openModal && (
-        <OModal open={openModal} entireModal customClose>
+      {(openSearchModal || openSLASettingModal) && (
+        <OModal open={openSearchModal || openSLASettingModal} entireModal customClose>
           <ModalContainer
             nestedScrollEnabled={true}
           >
@@ -569,68 +754,225 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 marginBottom: 30,
                 marginTop: 30
               }}
-              onClick={() => setOpenModal(false)}
+              onClick={() => handleClose()}
             />
-            <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
-            <OInput
-              value={search.id}
-              onChange={(value: any) => setSearch({ ...search, id: value })}
-              style={styles.inputStyle}
-              placeholder={t('ORDER_NUMBER', 'Order number')}
-              autoCorrect={false}
-            />
-            <OrdersOptionDate
-              {...props}
-              search={search}
-              onSearch={setSearch}
-            />
-            <OrdersOptionCity
-              {...props}
-              search={search}
-              onSearch={setSearch}
-            />
-            {isBusinessApp && (
-              <>
-                <OrdersOptionBusiness
+            {openSearchModal && (
+              <SearchModalContent>
+                <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
+                <OInput
+                  value={search.id}
+                  onChange={(value: any) => setSearch({ ...search, id: value })}
+                  style={styles.inputStyle}
+                  placeholder={t('ORDER_NUMBER', 'Order number')}
+                  autoCorrect={false}
+                />
+                <OrdersOptionDate
                   {...props}
                   search={search}
                   onSearch={setSearch}
                 />
-                <OrdersOptionDelivery
+                <OrdersOptionCity
                   {...props}
                   search={search}
                   onSearch={setSearch}
                 />
-                <OrdersOptionDriver
-                  {...props}
-                  search={search}
-                  onSearch={setSearch}
+                {isBusinessApp && (
+                  <>
+                    <OrdersOptionBusiness
+                      {...props}
+                      search={search}
+                      onSearch={setSearch}
+                    />
+                    <OrdersOptionDelivery
+                      {...props}
+                      search={search}
+                      onSearch={setSearch}
+                    />
+                    <OrdersOptionDriver
+                      {...props}
+                      search={search}
+                      onSearch={setSearch}
+                    />
+                    <OrdersOptionPaymethod
+                      {...props}
+                      search={search}
+                      onSearch={setSearch}
+                    />
+                  </>
+                )}
+                <OButton
+                  text={t('SEARCH', 'Search')}
+                  textStyle={{ color: theme.colors.white }}
+                  imgRightSrc={null}
+                  style={{
+                    borderRadius: 7.6,
+                    marginBottom: 70,
+                    marginTop: 60,
+                    zIndex: 12
+                  }}
+                  onClick={applyFilters}
                 />
-                <OrdersOptionPaymethod
-                  {...props}
-                  search={search}
-                  onSearch={setSearch}
-                />
-              </>
+
+              </SearchModalContent>
             )}
-            <OButton
-              text={t('SEARCH', 'Search')}
-              textStyle={{ color: theme.colors.white }}
-              imgRightSrc={null}
-              style={{
-                borderRadius: 7.6,
-                marginBottom: 70,
-                marginTop: 60,
-                zIndex: 12
-              }}
-              onClick={applyFilters}
-            />
+            {openSLASettingModal && (
+              <SlaSettingModalContent>
+                <ModalTitle>{t('SLA_SETTINGS', 'SLA’s Settings')}</ModalTitle>
+                <FiltersTab>
+                  <ScrollView
+                    ref={scrollRefTab}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    nestedScrollEnabled={true}
+                  >
+                    <TabsContainer>
+                      {defaultOrderTypes && defaultOrderTypes.map(tab => (
+                        <TabPressable
+                          key={tab.key}
+                          onPress={() => setCurrentDeliveryType(tab?.name)}
+                          isSelected={tab.name.toUpperCase() === currentDeliveryType.toUpperCase() ? 1 : 0}
+                        >
+                          <OText
+                            style={{
+                              ...styles.tab,
+                              fontSize: tab.name.toUpperCase() === currentDeliveryType.toUpperCase() ? 14 : 12,
+                              borderBottomWidth: Platform.OS === 'ios' && tab.name.toUpperCase() === currentDeliveryType.toUpperCase() ? 1 : 0,
+                            }}
+                            color={
+                              tab.name.toUpperCase() === currentDeliveryType.toUpperCase()
+                                ? theme.colors.textGray
+                                : theme.colors.unselectText
+                            }
+                            weight={tab.name.toUpperCase() === currentDeliveryType ? '600' : 'normal'}
+                          >
+                            {tab.name}
+                          </OText>
+                        </TabPressable>
+                      ))}
+                    </TabsContainer>
+                  </ScrollView>
+                </FiltersTab>
+                <DeliveryStatusWrapper>
+                  {selectedTabStatus && selectedTabStatus.length > 0 && selectedTabStatus.map((item, i) => (
+                    <StatusBlock
+                      key={i}
+                      item={item}
+                      last={i + 1 === selectedTabStatus.length}
+                      setHour={setHour}
+                      setMinute={setMinute}
+                      setSettingTimeErrorMessage={setSettingTimeErrorMessage}
+                    />
+                  ))}
+                  <VerticalLine />
+                </DeliveryStatusWrapper>
+                {settingTimeErrorMessage !== '' && (
+                  <OText style={styles.errorMessage}>{settingTimeErrorMessage}</OText>
+                )}
+                <Actions>
+                  <OButton
+                    text={t('ACCEPT', 'Accept')}
+                    textStyle={{ color: 'white', fontSize: 14 }}
+                    onClick={handlSLASettingTime}
+                    style={styles.acceptButtonStyle}
+                  />
+                </Actions>
+              </SlaSettingModalContent>
+            )}
           </ModalContainer>
         </OModal>
       )}
     </>
   );
 };
+
+export const StatusBlock = (props: any) => {
+  const { item, last, setHour, setMinute, setSettingTimeErrorMessage } = props
+  const [showTime, setShowTime] = useState(false)
+
+  useEffect(() => {
+    if (last) {
+      setShowTime(true)
+    }
+  }, [last])
+
+  return (
+    <StatusItems>
+      <Pressable onPress={() => setShowTime(!showTime)} style={{ marginBottom: 5 }}>
+        <ItemHeader>
+          <IconWrapper>
+            <OIcon
+              src={item?.icon}
+              width={16}
+              height={16}
+              color={item?.backColor}
+            />
+          </IconWrapper>
+          <ItemStatus backColor={item?.backColor} />
+          <OText>{item?.key}</OText>
+        </ItemHeader>
+      </Pressable>
+      <ItemContent>
+        <OText>{item?.des}</OText>
+      </ItemContent>
+      {showTime && (
+        <Timer
+          setHour={setHour}
+          setMinute={setMinute}
+          setSettingTimeErrorMessage={setSettingTimeErrorMessage}
+        />
+      )}
+      {last && (
+        <OverLine />
+      )}
+    </StatusItems>
+  )
+}
+
+export const Timer = (props: any) => {
+  const { setHour, setMinute, setSettingTimeErrorMessage } = props
+  const [, t] = useLanguage()
+  const theme = useTheme()
+
+  const styles = StyleSheet.create({
+    inputStyle: {
+      paddingHorizontal: 7,
+      paddingVertical: 2,
+      borderRadius: 0,
+      fontSize: 14,
+    }
+  })
+
+  const handleChangeInput = (val: any, type: string) => {
+    setSettingTimeErrorMessage('')
+    if (type === 'hour') {
+      setHour(val)
+    }
+    if (type === 'minute') {
+      setMinute(val)
+    }
+  }
+
+  return (
+    <TimerInputWrapper>
+      <TextInput
+        placeholder='HH'
+        keyboardType='number-pad'
+        maxLength={2}
+        style={{ ...styles.inputStyle, width: 36 }}
+        onChangeText={hour => handleChangeInput(hour, 'hour')}
+      />
+      <OText color={theme.colors.disabled}>:</OText>
+      <TextInput
+        placeholder='MM'
+        keyboardType='number-pad'
+        maxLength={2}
+        style={{ ...styles.inputStyle, width: 40 }}
+        onChangeText={minute => handleChangeInput(minute, 'minute')}
+      />
+    </TimerInputWrapper>
+  )
+}
 
 export const OrdersOption = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
@@ -712,13 +1054,13 @@ export const OrdersOption = (props: OrdersOptionParams) => {
           'Customer arrived to business',
         ),
       },
-      { 
-        key: 22, 
-        text: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver') 
+      {
+        key: 22,
+        text: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver')
       },
-      { 
-        key: 23, 
-        text: t('ORDER_DRIVER_ON_WAY', 'Driver on way') 
+      {
+        key: 23,
+        text: t('ORDER_DRIVER_ON_WAY', 'Driver on way')
       }
     ],
     tabs: [
