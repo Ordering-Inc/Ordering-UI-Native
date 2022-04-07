@@ -22,6 +22,8 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import { ReviewOrderParams } from '../../types'
 import { useTheme } from 'styled-components/native'
 
+import { reviewCommentList } from '../../../../../src/utils'
+
 export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const {
     order,
@@ -113,14 +115,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     { key: 5, text: t('GREAT', 'Great'), percent: 1, parentStyle: { right: '0%' }, isInnerStyle: false,  pointerColor: false }
   ]
 
-  const commentsList = [
-    { key: 0, content: t('IT_WASNT_TASTY', "It wasn't tasty") },
-    { key: 1, content: t('IT_DOESNT_PACK_WELL', "It doesn't pack well") },
-    { key: 2, content: t('IT_ISNT_WORTH_WHAT_IT_COSTS', "It isn't worth what it costs") },
-    { key: 3, content: t('TOO_SLOW', 'Too slow') },
-    { key: 4, content: t('SUSTAINABLE_PACKAGING_WASNT_USED', "Sustainable packaging wasn't used") },
-    { key: 5, content: t('THEY_DID_NOT_FOLLOW_THE_ORDER_NOTES', 'They did not follow the order notes') }
-  ]
+  const commentsList = reviewCommentList('order')
 
   const handleChangeStars = (index: number) => {
     switch (index) {
@@ -268,9 +263,11 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
                 </RatingTextContainer>
               </RatingBarContainer>
 
-              <OText style={{ marginTop: 30 }} color={theme.colors.textNormal}>{t('COMMENTS', 'Comments')}</OText>
+              <OText style={{ marginTop: 30 }} color={theme.colors.textNormal}>
+                {commentsList[stars?.quality || 1]?.title}
+              </OText>
               <CommentsButtonGroup>
-                {commentsList.map(commentItem => (
+                {commentsList[stars?.quality || 1]?.list?.map(commentItem => (
                   <OButton
                     key={commentItem.key}
                     text={commentItem.content}

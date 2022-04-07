@@ -6,6 +6,8 @@ import AntDesignIcons from 'react-native-vector-icons/AntDesign'
 import { useTheme } from 'styled-components/native'
 import { SingleProductReviewParams } from '../../types'
 
+import { reviewCommentList } from '../../../../../src/utils'
+
 import {
   ProductContainer,
   ProductHeader,
@@ -45,13 +47,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
   const [isShowTextArea, setIsShowTextArea] = useState(false)
   const [qualification, setQualification] = useState(5)
 
-  const commentsList = [
-    { key: 0, content: t('IT_WASNT_TASTY', "It wasn't tasty") },
-    { key: 1, content: t('SMALL_PORTION', 'Small portion') },
-    { key: 2, content: t('WET_OR_LEAKY', 'Wet or leaky') },
-    { key: 3, content: t('SLOPPY_PRESENTATION', 'Sloppy presentation') },
-    { key: 4, content: t('COLD_OR_MELTED', 'Cold or melted') }
-  ]
+  const commentsList = reviewCommentList('product')
 
   const isSelectedComment = (commentKey: number) => {
     const found = comments.find((comment: any) => comment?.key === commentKey)
@@ -115,7 +111,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
           </LikeHandsActionContainer>
         </ProductHeader>
         <CommentsButtonGroup>
-          {commentsList.map(commentItem => (
+          {commentsList[qualification === 5 ? 'like' : 'dislike']?.map(commentItem => (
             <OButton
               key={commentItem.key}
               text={commentItem.content}
