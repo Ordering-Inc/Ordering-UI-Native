@@ -118,23 +118,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const commentsList = reviewCommentList('order')
 
   const handleChangeStars = (index: number) => {
-    switch (index) {
-      case 1:
-        setStars({ ...stars, quality: 1, punctiality: 1, service: 1, packaging: 1 })
-        break
-      case 2:
-        setStars({ ...stars, quality: 2, punctiality: 2, service: 2, packaging: 2 })
-        break
-      case 3:
-        setStars({ ...stars, quality: 3, punctiality: 3, service: 3, packaging: 3 })
-        break
-      case 4:
-        setStars({ ...stars, quality: 4, punctiality: 4, service: 4, packaging: 4 })
-        break
-      case 5:
-        setStars({ ...stars, quality: 5, punctiality: 5, service: 5, packaging: 5 })
-        break
-    }
+    if (index) setStars({ ...stars, quality: index, punctiality: index, service: index, packaging: index, comments: '' })
+    setComments([])
   }
 
   const handleChangeComment = (commentItem: any) => {
