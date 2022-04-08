@@ -48,7 +48,7 @@ const PaymentOptionWalletUI = (props: any) => {
     new Array(walletsState.result?.length).fill(false)
   );
 
-  const creditBalance: any = (wallet: any) => ` = ${parsePrice((wallet.balance * wallet.redemption_rate) / 100)}`
+  const creditBalance: any = (wallet: any) => ` = ${parsePrice(wallet.balance / wallet.redemption_rate)}`
 
   const walletName: any = {
     cash: {

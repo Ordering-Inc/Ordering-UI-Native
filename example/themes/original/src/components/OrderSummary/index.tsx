@@ -276,7 +276,7 @@ const OrderSummaryUI = (props: any) => {
                   <OText size={12} numberOfLines={1}>
                     {walletName[cart?.wallets?.find((wallet: any) => wallet.id === event.wallet_id)?.type]?.name}
                   </OText>
-                  <OText size={12}>-{parsePrice(event.amount)}</OText>
+                  <OText size={12}>-{parsePrice(event.amount, { isTruncable: true })}</OText>
                 </OSTable>
               ))}
               {isCouponEnabled && !isCartPending && (
