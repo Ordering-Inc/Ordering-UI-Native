@@ -123,7 +123,8 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
   }
 
   const handleChangeQualification = (qualification: number) => {
-    if (qualification) setDriverReviews({ ...dirverReviews, qualification: qualification })
+    if (qualification) setDriverReviews({ ...dirverReviews, qualification: qualification, comment: '' })
+    setComments([])
   }
 
   const handleSendReviewClick = () => {

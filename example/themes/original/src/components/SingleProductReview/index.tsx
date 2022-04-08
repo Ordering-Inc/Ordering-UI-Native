@@ -46,6 +46,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
   const [extraComment, setExtraComment] = useState('')
   const [isShowTextArea, setIsShowTextArea] = useState(false)
   const [qualification, setQualification] = useState(5)
+  const [currentValue, setCurrentValue] = useState(5)
 
   const commentsList = reviewCommentList('product')
 
@@ -65,6 +66,9 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
   }
 
   useEffect(() => {
+    const value = qualification ? 5 : 1
+    setCurrentValue(value)
+    if (value !== currentValue) setComments([])
     if (comments?.length === 0 && !extraComment && formState.changes?.length === 0 && qualification === 5) return
     let _comments = ''
     if (comments.length > 0) {
