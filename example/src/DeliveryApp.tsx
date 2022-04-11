@@ -119,7 +119,8 @@ theme.images = {
     close: require('./assets/icons/close.png'),
     orderCreating: require('./assets/images/order-creating.png'),
     orderSuccess: require('./assets/images/order-success.png'),
-    newOrder: require('./assets/images/new-order.png')
+    newOrder: require('./assets/images/new-order.png'),
+    noNetwork: require('./assets/images/no-network.png')
   },
   order: {
     status0: require('./assets/images/status-0.png'),

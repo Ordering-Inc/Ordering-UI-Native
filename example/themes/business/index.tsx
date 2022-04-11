@@ -10,6 +10,7 @@ import { LanguageSelector } from './src/components/LanguageSelector';
 import { LoginForm } from './src/components/LoginForm';
 import { LogoutButton } from './src/components/LogoutButton';
 import { MessagesOption } from './src/components/MessagesOption';
+import { NetworkError } from './src/components/NetworkError';
 import { NotFoundSource } from './src/components/NotFoundSource';
 import { OrderMessage } from './src/components/OrderMessage';
 import { OrderDetailsBusiness } from './src/components/OrderDetails/Business';
@@ -77,6 +78,7 @@ export {
   MessagesOption,
   MapView,
   NewOrderNotification,
+  NetworkError,
   NotFoundSource,
   OrderDetailsBusiness,
   OrderDetailsDelivery,

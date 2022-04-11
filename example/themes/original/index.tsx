@@ -29,6 +29,7 @@ import { Help } from './src/components/Help';
 import { HelpAccountAndPayment } from './src/components/HelpAccountAndPayment';
 import { HelpGuide } from './src/components/HelpGuide';
 import { HelpOrder } from './src/components/HelpOrder';
+import { NetworkError } from './src/components/NetworkError';
 import { NotFoundSource } from './src/components/NotFoundSource';
 import { OrderTypeSelector } from './src/components/OrderTypeSelector';
 import { Wallets } from './src/components/Wallets';
@@ -95,6 +96,7 @@ export {
 	HelpAccountAndPayment,
 	HelpGuide,
 	HelpOrder,
+	NetworkError,
 	NotFoundSource,
 	OrderTypeSelector,
   Wallets,

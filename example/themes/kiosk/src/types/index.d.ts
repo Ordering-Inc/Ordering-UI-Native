@@ -473,3 +473,7 @@ export interface Cart {
   total: number;
   clearInactivityTimeout: any;
 }
+
+export interface NoNetworkParams {
+  image?: any;
+}
