@@ -14,6 +14,7 @@ import { LanguageSelector } from './src/components/LanguageSelector'
 import { LoginForm } from './src/components/LoginForm'
 import { LogoutPopup } from './src/components/LogoutPopup'
 import Navbar from './src/components/NavBar'
+import { NetworkError } from './src/components/NetworkError'
 import { NotFoundSource } from './src/components/NotFoundSource'
 import OptionCard from './src/components/OptionCard'
 import { OrderDetails } from './src/components/OrderDetails'
@@ -82,6 +83,7 @@ export {
   LoginForm,
   LogoutPopup,
   Navbar,
+  NetworkError,
   NotFoundSource,
   OptionCard,
   OrderDetails,
