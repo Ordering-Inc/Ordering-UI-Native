@@ -38,7 +38,6 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
     reviewState,
     setReviewState,
     actionState,
-    handleChangeQualification,
     handleSendCustomerReview
   } = props
 
@@ -104,6 +103,11 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
   ]
 
   const commentsList = reviewCommentList('customer')
+
+  const handleChangeQualification = (index: any) => {
+    if (index) setReviewState({ ...reviewState, qualification: index, comment: '' })
+    setComments([])
+  }
 
   const isSelectedComment = (commentKey: number) => {
     const found = comments.find((comment: any) => comment?.key === commentKey)
