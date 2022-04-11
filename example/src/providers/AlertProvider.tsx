@@ -28,7 +28,10 @@ const Alert = (props: Props) => {
       show={open}
       showProgress={false}
       title={title}
-      message={getTraduction(content?.[0], t)}
+      message={typeof content === 'string'
+        ? content
+        : getTraduction(content?.[0], t)
+      }
       closeOnTouchOutside={true}
       closeOnHardwareBackPress={false}
       showConfirmButton={true}
