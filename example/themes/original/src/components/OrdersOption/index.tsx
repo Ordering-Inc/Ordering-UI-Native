@@ -95,7 +95,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			{ key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business') },
 			{ key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business') },
 			{ key: 22, value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver') },
-      		{ key: 23, value: t('ORDER_DRIVER_ON_WAY', 'Driver on way') }
+			{ key: 23, value: t('ORDER_DRIVER_ON_WAY', 'Driver on way') }
 		]
 
 		const objectStatus = orderStatus.find((o) => o.key === status)
@@ -105,9 +105,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	useFocusEffect(
 		React.useCallback(() => {
-		  loadOrders()
+			loadOrders()
 		}, [navigation])
-	  )
+	)
 
 	useEffect(() => {
 		const hasMore = pagination?.totalPages && pagination?.currentPage !== pagination?.totalPages
@@ -126,27 +126,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		} else if (!preOrders) {
 			setOrdersLength && setOrdersLength({ ...ordersLength, previousOrdersLength: updateOrders?.length })
 		}
-	}, [orders?.length])
+	}, [orders, activeOrders])
 
 	return (
 		<>
-			<OptionTitle>
-				<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10} >
-					{titleContent || (activeOrders
-						? t('ACTIVE', 'Active')
-						: preOrders
-							? t('PREORDERS', 'Preorders')
-							: t('PAST', 'Past'))}
-				</OText>
-			</OptionTitle>
-			{!(activeOrders && ordersLength.activeOrdersLength === 0 && ordersLength.previousOrdersLength === 0) && !loading && orders.length === 0 && (
-				<NotFoundSource
-					content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
-					image={imageFails}
-					conditioned
-				/>
-			)}
-			{!loading && ordersLength.activeOrdersLength === 0 && ordersLength.previousOrdersLength === 0 && activeOrders && (
+			{!loading && ordersLength.activeOrdersLength === 0 && ordersLength.previousOrdersLength === 0 && !activeOrders && (
 				<NoOrdersWrapper>
 					<OText size={14} numberOfLines={1}>
 						{t('YOU_DONT_HAVE_ORDERS', 'You don\'t have any orders')}
@@ -157,8 +141,31 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 						textStyle={{ color: 'white', fontSize: 14 }}
 						style={{ borderRadius: 7.6, marginBottom: 10, marginTop: 10, height: 44, paddingLeft: 10, paddingRight: 10 }}
 					/>
-					
+
 				</NoOrdersWrapper>
+			)}
+			{(ordersLength.activeOrdersLength > 0 || ordersLength.previousOrdersLength > 0) && (
+				<>
+					<OptionTitle>
+						<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10} >
+							{titleContent || (activeOrders
+								? t('ACTIVE', 'Active')
+								: preOrders
+									? t('PREORDERS', 'Preorders')
+									: t('PAST', 'Past'))}
+						</OText>
+					</OptionTitle>
+					{!(ordersLength.activeOrdersLength === 0 && ordersLength.previousOrdersLength === 0) &&
+						!loading &&
+						orders.filter((order: any) => orderStatus.includes(order.status)).length === 0 &&
+						(
+							<NotFoundSource
+								content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
+								image={imageFails}
+								conditioned
+							/>
+						)}
+				</>
 			)}
 			{loading && (
 				<>
