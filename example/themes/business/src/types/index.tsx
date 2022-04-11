@@ -575,3 +575,7 @@ export interface ReviewCustomerParams {
   handleChangeQualification?: any,
   handleSendCustomerReview?: any,
 }
+
+export interface NoNetworkParams {
+  image?: any;
+}

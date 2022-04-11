@@ -520,3 +520,6 @@ export interface MessageListingParams {
 	navigation: any;
 	franchiseId?: any;
 }
+export interface NoNetworkParams {
+	image?: any,
+}
