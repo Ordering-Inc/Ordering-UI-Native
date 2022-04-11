@@ -151,6 +151,7 @@ export interface BusinessTypeFilterParams {
 	defaultBusinessType?: string | null;
 	images?: any
 	typesState?: any
+	setBusinessTypes?: any
 }
 export interface BusinessControllerParams {
 	key?: number;
@@ -161,7 +162,8 @@ export interface BusinessControllerParams {
 	isBusinessOpen?: boolean;
 	businessWillCloseSoonMinutes?: number
 	isBusinessClose?: number,
-	navigation?: any
+	navigation?: any,
+	style?: ViewStyle
 }
 export interface BusinessProductsListingParams {
 	navigation?: any;
@@ -229,7 +231,8 @@ export interface SingleProductCardParams {
 	product: any;
 	isSoldOut: boolean;
 	onProductClick: any;
-	productAddedToCartLength: number
+	productAddedToCartLength: number;
+	style?: ViewStyle
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -519,4 +522,19 @@ export interface HelpAccountAndPaymentParams {
 export interface MessageListingParams {
 	navigation: any;
 	franchiseId?: any;
+}
+
+export interface BusinessSearchParams { 
+	navigation: any,
+    businessesSearchList: any,
+    onBusinessClick: any,
+    handleChangeTermValue: (term: string) => void,
+    termValue: string,
+    paginationProps: any,
+    handleSearchbusinessAndProducts: (newFetch?: boolean) => void,
+    handleChangeFilters: (prop : string, value : any) => void,
+    filters: any,
+    businessTypes: Array<number>,
+    setFilters: (filters: any) => void,
+	lazySearch?: boolean
 }

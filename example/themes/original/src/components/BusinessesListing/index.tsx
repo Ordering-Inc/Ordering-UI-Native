@@ -116,8 +116,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
 	const [featuredBusiness, setFeaturedBusinesses] = useState(Array);
 	const [isFarAway, setIsFarAway] = useState(false)
+	const [businessTypes, setBusinessTypes] = useState(null)
 
-  const isPreorderEnabled = (configs?.preorder_status_enabled?.value === '1' || configs?.preorder_status_enabled?.value === 'true') &&
+	const isPreorderEnabled = (configs?.preorder_status_enabled?.value === '1' || configs?.preorder_status_enabled?.value === 'true') &&
 		Number(configs?.max_days_preorder?.value) > 0
 
 	const timerId = useRef<any>(false)
@@ -131,7 +132,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	// 	})
 	// ).current
 
-  const handleMomentClick = () => {
+	const handleMomentClick = () => {
 		if (isPreorderEnabled) {
 			navigation.navigate('MomentOption')
 		}
@@ -317,7 +318,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 								onCancel={() => handleChangeSearch('')}
 								placeholder={t('SEARCH', 'Search')}
 								height={26}
+								isDisabled={configs?.advanced_business_search_enabled?.value === '1' || !businessTypes}
 								inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
+								onPress={() => { configs?.advanced_business_search_enabled?.value === '1' && navigation.navigate('BusinessSearch', { businessTypes }) }}
 							/>
 						)}
 
@@ -378,6 +381,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						businessTypes={props.businessTypes}
 						defaultBusinessType={props.defaultBusinessType}
 						handleChangeBusinessType={handleChangeBusinessType}
+						setBusinessTypes={setBusinessTypes}
 					/>
 				)}
 				{!businessesList.loading && businessesList.businesses.length === 0 && (

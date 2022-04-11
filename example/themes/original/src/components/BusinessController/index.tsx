@@ -25,9 +25,14 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import FastImage from 'react-native-fast-image'
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-	const { business, handleClick, navigation, isBusinessOpen } = props;
-	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] =
-		useUtils();
+	const { 
+		business, 
+		handleClick, 
+		navigation, 
+		isBusinessOpen, 
+		style
+	} = props;
+	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
 	const theme = useTheme()
@@ -106,7 +111,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	}
 
 	return (
-		<Card activeOpacity={1} onPress={() => handleBusinessClick(business)}>
+		<Card activeOpacity={1} onPress={() => handleBusinessClick(business)} style={style}>
 			<BusinessHero>
 				<FastImage
 					style={{ height: 120 }}
