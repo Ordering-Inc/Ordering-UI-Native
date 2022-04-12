@@ -436,7 +436,7 @@ export const ProductOptionsUI = (props: any) => {
 												>
 													{img.includes('image') ? (
 														<OIcon
-															url={img}
+															url={optimizeImage(img, 'h_250,c_limit')}
 															style={{
 																borderColor: theme.colors.lightGray,
 																borderRadius: 8,
