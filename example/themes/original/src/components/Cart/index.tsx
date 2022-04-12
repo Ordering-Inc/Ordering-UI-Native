@@ -219,7 +219,7 @@ const CartUI = (props: any) => {
                 </OSTable>
               ))
             }
-            <Divider />
+            {/* <Divider /> */}
             {cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
               <OSTable>
                 <OText size={12} lineHeight={18} numberOfLines={1}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
