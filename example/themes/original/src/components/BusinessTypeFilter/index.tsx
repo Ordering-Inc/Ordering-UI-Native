@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	StyleSheet,
 	FlatList,
@@ -24,12 +24,23 @@ import { BusinessTypeFilterParams } from '../../types';
 const windowWidth = Dimensions.get('window').width;
 
 export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
-	const { typesState, currentTypeSelected, handleChangeBusinessType } = props;
+	const { 
+		typesState, 
+		currentTypeSelected, 
+		handleChangeBusinessType,
+		setBusinessTypes
+	} = props;
 
 	const [, t] = useLanguage();
 
 	const theme = useTheme();
 	const [isOpenAllCategories, setIsOpenAllCategories] = useState(false)
+
+	useEffect(() => {
+		if(typesState?.types?.length > 0){
+		  setBusinessTypes && setBusinessTypes(typesState?.types)
+		}
+	  }, [typesState])
 
 	const renderTypes = ({ item }: any) => {
 		return (

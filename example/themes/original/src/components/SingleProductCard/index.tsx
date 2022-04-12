@@ -13,7 +13,14 @@ import { OText, OIcon } from '../shared';
 import FastImage from 'react-native-fast-image'
 
 export const SingleProductCard = (props: SingleProductCardParams) => {
-	const { businessId, product, isSoldOut, onProductClick, productAddedToCartLength } = props;
+	const {
+		businessId,
+		product,
+		isSoldOut,
+		onProductClick,
+		productAddedToCartLength,
+		style
+	} = props;
 
 	const theme = useTheme();
 
@@ -95,6 +102,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 			style={[
 				styles.container,
 				(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
+				(style && { ...style }),
 			]}
 			onPress={() => onProductClick?.(product)}>
 			{productAddedToCartLength > 0 && (
