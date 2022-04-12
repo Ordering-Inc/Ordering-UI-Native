@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import {
 	ProductForm as ProductOptions,
 	useSession,
@@ -14,12 +14,13 @@ import { ProductOption } from '../ProductOption';
 import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import { TextInput } from 'react-native'
+import YoutubePlayer from "react-native-youtube-iframe"
+import { ImageBackground, TextInput } from 'react-native'
 import {
 	Grayscale
 } from 'react-native-color-matrix-image-filters'
 
-import { View, TouchableOpacity, StyleSheet, Dimensions, I18nManager, SafeAreaView, Platform } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, I18nManager, SafeAreaView, Platform, Button } from 'react-native';
 
 import {
 	WrapHeader,
@@ -163,6 +164,7 @@ export const ProductOptionsUI = (props: any) => {
 	const [indexGallery, setIndexGallery] = useState(0)
 	const [selOpt, setSelectedOpt] = useState(0);
 	const [isHaveWeight, setIsHaveWeight] = useState(false)
+	const [playing, setPlaying] = useState(false);
 	const [qtyBy, setQtyBy] = useState({
 		weight_unit: false,
 		pieces: true
@@ -233,6 +235,16 @@ export const ProductOptionsUI = (props: any) => {
 		setQtyBy({ [val]: true, [!val]: false })
 	}
 
+	const onStateChange = useCallback((state) => {
+		if (state === "ended") {
+			setPlaying(false);
+		}
+	}, []);
+
+	const togglePlaying = useCallback(() => {
+		setPlaying((prev) => !prev);
+	}, []);
+
 	const onChangeProductCartQuantity = (quantity: number) => {
 		if (quantity > maxProductQuantity) {
 			showToast(ToastType.Error, t('MAX_QUANTITY', 'The max quantity is _number_').replace('_number_', maxProductQuantity))
@@ -242,14 +254,23 @@ export const ProductOptionsUI = (props: any) => {
 	}
 
 	useEffect(() => {
-		const productImgList: any = []
-		product?.images && productImgList.push(product.images)
+		const imageList: any = []
+		const videoList: any = []
+		product?.images && imageList.push(product.images)
 		if (product?.gallery && product?.gallery.length > 0) {
 			for (const img of product?.gallery) {
-				productImgList.push(img.file)
+				if (img?.file) {
+					imageList.push(img?.file)
+				}
+				if (img?.video) {
+					const keys = img?.video.split('/')
+					const _videoId = keys[keys.length - 1]
+					videoList.push(_videoId)
+				}
 			}
 		}
-		setGallery(productImgList)
+		const gallery = imageList.concat(videoList)
+		setGallery(gallery)
 
 		if (product?.weight && product?.weight_unit) {
 			setIsHaveWeight(true)
@@ -366,18 +387,30 @@ export const ProductOptionsUI = (props: any) => {
 											</View>
 										}
 									>
-										{gallery.length > 0 && gallery.map((img, i) => (
+										{gallery && gallery.length > 0 && gallery.map((img, i) => (
 											<View
 												style={styles.slide1}
 												key={i}
 											>
-												<FastImage
-													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
-													source={{
-														uri: optimizeImage(img, 'h_258,c_limit'),
-														priority: FastImage.priority.normal,
-													}}
-												/>
+												{img.includes('image') ? (
+													<FastImage
+														style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
+														source={{
+															uri: optimizeImage(img, 'h_1024,c_limit'),
+															priority: FastImage.priority.normal,
+														}}
+													/>
+												) : (
+													<>
+														<YoutubePlayer
+															height={300}
+															play={playing}
+															videoId={img}
+															onChangeState={onStateChange}
+														/>
+														<Button title={playing ? "pause" : "play"} onPress={togglePlaying} />
+													</>
+												)}
 											</View>
 										))}
 									</Swiper>
@@ -401,18 +434,33 @@ export const ProductOptionsUI = (props: any) => {
 														opacity: index === thumbsSwiper ? 1 : 0.8
 													}}
 												>
-													<OIcon
-														url={img}
-														style={{
-															borderColor: theme.colors.lightGray,
-															borderRadius: 8,
-															minHeight: '100%',
-															opacity: isSoldOut ? 0.5 : 1
-														}}
-														width={56}
-														height={56}
-														cover
-													/>
+													{img.includes('image') ? (
+														<OIcon
+															url={optimizeImage(img, 'h_250,c_limit')}
+															style={{
+																borderColor: theme.colors.lightGray,
+																borderRadius: 8,
+																minHeight: '100%',
+																opacity: isSoldOut ? 0.5 : 1
+															}}
+															width={56}
+															height={56}
+															cover
+														/>
+													) : (
+														<OIcon
+															url={'http://img.youtube.com/vi/' + img + '/0.jpg'}
+															style={{
+																borderColor: theme.colors.lightGray,
+																borderRadius: 8,
+																minHeight: '100%',
+																opacity: isSoldOut ? 0.5 : 1
+															}}
+															width={56}
+															height={56}
+															cover
+														/>
+													)}
 												</View>
 											</TouchableOpacity>
 

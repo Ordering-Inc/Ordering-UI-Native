@@ -538,3 +538,7 @@ export interface BusinessSearchParams {
     setFilters: (filters: any) => void,
 	lazySearch?: boolean
 }
+  
+export interface NoNetworkParams {
+	image?: any,
+}

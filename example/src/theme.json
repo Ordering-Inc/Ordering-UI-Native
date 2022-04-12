@@ -93,7 +93,8 @@
       "close": "",
       "orderCreating": "",
       "orderSuccess": "",
-      "newOrder": ""
+      "newOrder": "",
+      "noNetwork": ""
     },
     "order": {
       "status0": "",
