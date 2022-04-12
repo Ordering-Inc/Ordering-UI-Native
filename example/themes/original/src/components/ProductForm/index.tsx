@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import {
 	ProductForm as ProductOptions,
 	useSession,
 	useLanguage,
 	useOrder,
-	useUtils
+	useUtils,
+	ToastType,
+	useToast
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { ProductIngredient } from '../ProductIngredient';
@@ -12,11 +14,13 @@ import { ProductOption } from '../ProductOption';
 import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import YoutubePlayer from "react-native-youtube-iframe"
+import { TextInput } from 'react-native'
 import {
 	Grayscale
 } from 'react-native-color-matrix-image-filters'
 
-import { View, TouchableOpacity, StyleSheet, Dimensions, I18nManager, SafeAreaView } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, I18nManager, SafeAreaView, Platform, Button } from 'react-native';
 
 import {
 	WrapHeader,
@@ -53,6 +57,7 @@ export const ProductOptionsUI = (props: any) => {
 		productCart,
 		increment,
 		decrement,
+		handleChangeProductCartQuantity,
 		showOption,
 		maxProductQuantity,
 		errors,
@@ -64,6 +69,7 @@ export const ProductOptionsUI = (props: any) => {
 	} = props;
 
 	const theme = useTheme();
+	const [, { showToast }] = useToast()
 
 	const styles = StyleSheet.create({
 		mainContainer: {
@@ -158,6 +164,7 @@ export const ProductOptionsUI = (props: any) => {
 	const [indexGallery, setIndexGallery] = useState(0)
 	const [selOpt, setSelectedOpt] = useState(0);
 	const [isHaveWeight, setIsHaveWeight] = useState(false)
+	const [playing, setPlaying] = useState(false);
 	const [qtyBy, setQtyBy] = useState({
 		weight_unit: false,
 		pieces: true
@@ -181,6 +188,10 @@ export const ProductOptionsUI = (props: any) => {
 	};
 
 	const handleSaveProduct = () => {
+		if (!productCart.quantity) {
+			showToast(ToastType.Error, t('VALIDATION_ERROR_REQUIRED', 'The quantity field is required').replace('_attribute_', t('PRODUCT_POTIONS_QUANTITY', 'Quantity')))
+			return
+		}
 		const isErrors = Object.values(errors).length > 0;
 		if (!isErrors) {
 			handleSave && handleSave();
@@ -216,7 +227,7 @@ export const ProductOptionsUI = (props: any) => {
 
 	const handleRedirectLogin = () => {
 		navigation.navigate('Login', {
-			store_slug:  props.businessSlug
+			store_slug: props.businessSlug
 		});
 	};
 
@@ -224,15 +235,42 @@ export const ProductOptionsUI = (props: any) => {
 		setQtyBy({ [val]: true, [!val]: false })
 	}
 
+	const onStateChange = useCallback((state) => {
+		if (state === "ended") {
+			setPlaying(false);
+		}
+	}, []);
+
+	const togglePlaying = useCallback(() => {
+		setPlaying((prev) => !prev);
+	}, []);
+
+	const onChangeProductCartQuantity = (quantity: number) => {
+		if (quantity > maxProductQuantity) {
+			showToast(ToastType.Error, t('MAX_QUANTITY', 'The max quantity is _number_').replace('_number_', maxProductQuantity))
+			return
+		}
+		handleChangeProductCartQuantity(quantity)
+	}
+
 	useEffect(() => {
-		const productImgList: any = []
-		product?.images && productImgList.push(product.images)
+		const imageList: any = []
+		const videoList: any = []
+		product?.images && imageList.push(product.images)
 		if (product?.gallery && product?.gallery.length > 0) {
 			for (const img of product?.gallery) {
-				productImgList.push(img.file)
+				if (img?.file) {
+					imageList.push(img?.file)
+				}
+				if (img?.video) {
+					const keys = img?.video.split('/')
+					const _videoId = keys[keys.length - 1]
+					videoList.push(_videoId)
+				}
 			}
 		}
-		setGallery(productImgList)
+		const gallery = imageList.concat(videoList)
+		setGallery(gallery)
 
 		if (product?.weight && product?.weight_unit) {
 			setIsHaveWeight(true)
@@ -349,19 +387,31 @@ export const ProductOptionsUI = (props: any) => {
 											</View>
 										}
 									>
-										{gallery.length > 0 && gallery.map((img, i) => (
+										{gallery && gallery.length > 0 && gallery.map((img, i) => (
 											<View
-                        style={styles.slide1}
-                        key={i}
-                      >
-                        <FastImage
-                          style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
-                          source={{
-                            uri: optimizeImage(img, 'h_258,c_limit'),
-                            priority: FastImage.priority.normal,
-                          }}
-                        />
-                      </View>
+												style={styles.slide1}
+												key={i}
+											>
+												{img.includes('image') ? (
+													<FastImage
+														style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
+														source={{
+															uri: optimizeImage(img, 'h_1024,c_limit'),
+															priority: FastImage.priority.normal,
+														}}
+													/>
+												) : (
+													<>
+														<YoutubePlayer
+															height={300}
+															play={playing}
+															videoId={img}
+															onChangeState={onStateChange}
+														/>
+														<Button title={playing ? "pause" : "play"} onPress={togglePlaying} />
+													</>
+												)}
+											</View>
 										))}
 									</Swiper>
 									<ScrollView
@@ -384,18 +434,33 @@ export const ProductOptionsUI = (props: any) => {
 														opacity: index === thumbsSwiper ? 1 : 0.8
 													}}
 												>
-													<OIcon
-														url={img}
-														style={{
-															borderColor: theme.colors.lightGray,
-															borderRadius: 8,
-															minHeight: '100%',
-															opacity: isSoldOut ? 0.5 : 1
-														}}
-														width={56}
-														height={56}
-														cover
-													/>
+													{img.includes('image') ? (
+														<OIcon
+															url={img}
+															style={{
+																borderColor: theme.colors.lightGray,
+																borderRadius: 8,
+																minHeight: '100%',
+																opacity: isSoldOut ? 0.5 : 1
+															}}
+															width={56}
+															height={56}
+															cover
+														/>
+													) : (
+														<OIcon
+															url={'http://img.youtube.com/vi/' + img + '/0.jpg'}
+															style={{
+																borderColor: theme.colors.lightGray,
+																borderRadius: 8,
+																minHeight: '100%',
+																opacity: isSoldOut ? 0.5 : 1
+															}}
+															width={56}
+															height={56}
+															cover
+														/>
+													)}
 												</View>
 											</TouchableOpacity>
 
@@ -768,7 +833,7 @@ export const ProductOptionsUI = (props: any) => {
 				)}
 			</ScrollView>
 			{!loading && !error && product && (
-				<ProductActions>
+				<ProductActions ios={Platform?.OS === 'ios'}>
 					<OText size={16} lineHeight={24} weight={'600'}>
 						{productCart.total ? parsePrice(productCart?.total) : ''}
 					</OText>
@@ -787,14 +852,32 @@ export const ProductOptionsUI = (props: any) => {
 									}
 								/>
 							</TouchableOpacity>
-							<OText
-								size={12}
-								lineHeight={18}
-								style={{ minWidth: 40, textAlign: 'center' }}
-							>
-								{qtyBy?.pieces && productCart.quantity}
-								{qtyBy?.weight_unit && productCart.quantity * product?.weight}
-							</OText>
+							{qtyBy?.pieces && (
+								<TextInput
+									keyboardType='numeric'
+									value={`${productCart?.quantity > 0 ? productCart?.quantity: ''}`}
+									onChangeText={(val: any) => onChangeProductCartQuantity(parseInt(val))}
+									editable={!orderState.loading}
+									style={{
+										borderWidth: 1,
+										textAlign: 'center',
+										minWidth: 60,
+										borderRadius: 8,
+										borderColor: theme.colors.inputBorderColor,
+										height: 44,
+										marginHorizontal: 10
+									}}
+								/>
+							)}
+							{qtyBy?.weight_unit && (
+								<OText
+									size={12}
+									lineHeight={18}
+									style={{ minWidth: 40, textAlign: 'center' }}
+								>
+									{productCart.quantity * product?.weight}
+								</OText>
+							)}
 							<TouchableOpacity
 								onPress={increment}
 								disabled={
@@ -852,28 +935,29 @@ export const ProductOptionsUI = (props: any) => {
 						style={{
 							width: isSoldOut || maxProductQuantity <= 0 ? '60%' : '40%',
 						}}>
-						{productCart &&
-							!isSoldOut &&
-							maxProductQuantity > 0 &&
+						{((productCart &&
 							auth &&
-							orderState.options?.address_id && (
+							orderState.options?.address_id) || (isSoldOut || maxProductQuantity <= 0)) && (
 								<OButton
 									onClick={() => handleSaveProduct()}
 									imgRightSrc=""
 									text={`${orderState.loading
 										? t('LOADING', 'Loading')
-										: editMode
-											? t('UPDATE', 'Update')
-											: t('ADD', 'Add')
+										: (isSoldOut || maxProductQuantity <= 0)
+											? t('SOLD_OUT', 'Sold out')
+											: editMode
+												? t('UPDATE', 'Update')
+												: t('ADD', 'Add')
 										}`}
+									isDisabled={isSoldOut || maxProductQuantity <= 0}
 									textStyle={{
-										color: saveErrors ? theme.colors.primary : theme.colors.white,
+										color: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.primary : theme.colors.white,
 										fontSize: orderState.loading || editMode ? 10 : 14
 									}}
 									style={{
-										backgroundColor: saveErrors ? theme.colors.lightGray : theme.colors.primary,
-										borderColor: saveErrors ? theme.colors.white : theme.colors.primary,
-										opacity: saveErrors ? 0.3 : 1,
+										backgroundColor: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.lightGray : theme.colors.primary,
+										borderColor: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.white : theme.colors.primary,
+										opacity: saveErrors || isSoldOut || maxProductQuantity <= 0 ? 0.3 : 1,
 										borderRadius: 7.6,
 										height: 44,
 										shadowOpacity: 0,
@@ -893,7 +977,7 @@ export const ProductOptionsUI = (props: any) => {
 							) : (
 								<OButton onClick={navigation.navigate('AddressList')} />
 							))}
-						{(!auth || isSoldOut || maxProductQuantity <= 0) && (
+						{!auth && (
 							<OButton
 								isDisabled={isSoldOut || maxProductQuantity <= 0}
 								onClick={() => handleRedirectLogin()}
