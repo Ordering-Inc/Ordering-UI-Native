@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, TouchableOpacity, ImageStore, Platform, TextInput } from 'react-native'
+import { StyleSheet, View, TouchableOpacity, ImageStore, Platform, TextInput, Pressable } from 'react-native'
 import { OInput, OButton } from '../shared'
 import { useLanguage } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
@@ -17,7 +17,10 @@ export const SearchBar = (props: any) => {
 		noBorderShow,
 		borderStyle,
 		height,
-		inputStyle
+		inputStyle,
+		onPress,
+		isDisabled,
+		iconCustomRight
 	} = props
 
 	const theme = useTheme();
@@ -72,16 +75,19 @@ export const SearchBar = (props: any) => {
 	}
 
 	return (
-		<View style={[styles.container, { height: height }]}>
+		<Pressable style={[styles.container, { height: height }]}>
 			<OInput
 				value={searchValue}
 				onChange={onChangeSearch}
 				style={styles.inputStyle}
 				placeholder={placeholder}
 				icon={theme.images.general.search}
+				isDisabled={isDisabled}
 				iconStyle={{ width: 12 }}
 				returnKeyType='done'
 				inputStyle={{padding: 0, paddingTop: Platform.OS == 'android' ? 2 : 0, ...inputStyle}}
+				onPress={() => onPress && onPress()}
+				iconCustomRight={iconCustomRight}
 			/>
 			{isCancelButtonShow && (
 				<OButton
@@ -105,6 +111,6 @@ export const SearchBar = (props: any) => {
 					/>
 				</TouchableOpacity>
 			)}
-		</View>
+		</Pressable>
 	)
 }

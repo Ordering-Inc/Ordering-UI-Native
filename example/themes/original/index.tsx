@@ -36,6 +36,7 @@ import { PaymentOptionWallet } from './src/components/PaymentOptionWallet';
 import { ProductForm } from './src/components/ProductForm';
 import { UpsellingProducts } from './src/components/UpsellingProducts';
 import { UserVerification } from './src/components/UserVerification';
+import { BusinessListingSearch } from './src/components/BusinessListingSearch';
 
 import { Toast } from './src/components/shared/OToast';
 import {
@@ -75,7 +76,7 @@ export {
 	BusinessesListing,
 	BusinessProductsListing,
 	CartContent,
-  BusinessCart,
+	BusinessCart,
 	Checkout,
 	ForgotPasswordForm,
 	MomentOption,
@@ -97,11 +98,12 @@ export {
 	NetworkError,
 	NotFoundSource,
 	OrderTypeSelector,
-  Wallets,
-  PaymentOptionWallet,
-  ProductForm,
-  UpsellingProducts,
-  UserVerification,
+	Wallets,
+	PaymentOptionWallet,
+	ProductForm,
+	UpsellingProducts,
+	UserVerification,
+	BusinessListingSearch,
 
 	// OComponents
 	Toast,
