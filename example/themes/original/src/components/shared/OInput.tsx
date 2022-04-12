@@ -38,6 +38,7 @@ interface Props extends TextInputProps {
 	forwardRef?: any;
 	inputStyle?: TextStyle;
 	wrapperRef?: any;
+	onPress?: any;
 }
 
 const Wrapper = styled.Pressable`
@@ -55,7 +56,7 @@ const Wrapper = styled.Pressable`
 const OInput = (props: Props): React.ReactElement => {
 	return (
 		<Wrapper
-			onPress={() => props.forwardRef?.current?.focus?.()}
+			onPress={() => {props.forwardRef?.current?.focus?.(); props.onPress && props.onPress()}}
 			style={{
 				backgroundColor: props.bgColor,
 				borderColor: props.borderColor,

@@ -396,7 +396,7 @@ export const ProductOptionsUI = (props: any) => {
 													<FastImage
 														style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
 														source={{
-															uri: optimizeImage(img, 'h_258,c_limit'),
+															uri: optimizeImage(img, 'h_1024,c_limit'),
 															priority: FastImage.priority.normal,
 														}}
 													/>
