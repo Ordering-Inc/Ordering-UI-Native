@@ -1,6 +1,6 @@
 {
   "name": "ordering-ui-react-native",
-  "version": "0.14.53-release",
+  "version": "0.14.54-release",
   "description": "Reusable components made in react native",
   "main": "src/index.tsx",
   "author": "ordering.inc",
@@ -108,6 +108,7 @@
     "react-native-uuid": "^2.0.1",
     "react-native-vector-icons": "^7.1.0",
     "react-native-webview": "^11.6.4",
+    "react-native-youtube-iframe": "^2.2.2",
     "rn-placeholder": "^3.0.3",
     "styled-components": "^5.1.1",
     "styled-system": "^5.1.5",
