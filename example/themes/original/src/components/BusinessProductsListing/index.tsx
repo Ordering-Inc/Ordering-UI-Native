@@ -96,11 +96,24 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const onProductClick = (product: any) => {
-    onRedirect('ProductDetails', {
-			product: product,
-      businessSlug: business.slug,
-      businessId: business.id,
-		})
+		const cartProduct = currentCart?.products?.find((cproduct: any) => cproduct?.id === product?.id)
+		if (cartProduct) {
+			onRedirect('ProductDetails', {
+				businessId:  business.id,
+				isCartProduct: true,
+				productCart: cartProduct,
+				businessSlug: business?.slug,
+				categoryId: cartProduct?.category_id,
+				productId: cartProduct?.id,
+			})
+		} else {
+			onRedirect('ProductDetails', {
+				product: product,
+				businessSlug: business.slug,
+				businessId: business.id,
+			})
+		}
+
 	}
 
 	const handleCancel = () => {
