@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useLanguage } from 'ordering-components/native'
-import { GooglePayButton, useGooglePay, ApplePayButton, useApplePay } from '@stripe/stripe-react-native'
+import { useGooglePay, ApplePayButton, useApplePay } from '@stripe/stripe-react-native'
 import { OButton } from '../shared';
 import { Platform, View } from 'react-native';
 import { StripeMethodFormParams } from '../../types';
-
+import Spinner from 'react-native-loading-spinner-overlay';
+import { android_app_id } from '../../config.json'
 export const StripeMethodForm = (props: StripeMethodFormParams) => {
   const {
     cart,
@@ -17,10 +18,11 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
   const { initGooglePay, createGooglePayPaymentMethod, loading } = useGooglePay();
   const { presentApplePay, isApplePaySupported } = useApplePay();
   const [initialized, setInitialized] = useState(false);
+  const [loadingGooglePayment, setLoadingGooglePayment] = useState(false)
   const [, t] = useLanguage()
- 
+
   useEffect(() => {
-    if (paymethod !== 'google_pay') return
+    if (paymethod !== 'google_pay' || !initGooglePay) return
     if (Platform.OS === 'ios') {
       setErrors(t('GOOGLE_PAY_NOT_SUPPORTED', 'Google pay not supported'))
       return
@@ -29,7 +31,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
       try {
         const { error } = await initGooglePay({
           testEnv: devMode,
-          merchantName: 'Widget Store',
+          merchantName: android_app_id,
           countryCode: 'US',
           billingAddressConfig: {
             format: 'FULL',
@@ -61,14 +63,14 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
   }, [])
 
   const createPaymentMethod = async () => {
-
+    setLoadingGooglePayment(true)
     const { error, paymentMethod } = await createGooglePayPaymentMethod({
       amount: cart?.balance ?? cart?.total,
       currencyCode: 'USD',
     });
-
     if (error) {
       setErrors(error.code + ' - ' + error.message);
+      setLoadingGooglePayment(false)
       return;
     } else if (paymentMethod) {
       handleSource({
@@ -82,8 +84,8 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
         }
       })
       onCancel()
+      setLoadingGooglePayment(false)
     }
-    setInitialized(false);
   };
 
   const pay = async () => {
@@ -130,17 +132,17 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     <>
       {paymethod === 'google_pay' ? (
         <View>
-          {!loading && initialized && (
-            <OButton
-              textStyle={{
-                color: '#fff'
-              }}
-              imgRightSrc={null}
-              onClick={createPaymentMethod}
-              isDisabled={!initialized}
-              text={t('PAY_WITH_GOOGLE_PAY', 'Pay with Google Pay')}
-            />
-          )}
+          <OButton
+            textStyle={{
+              color: '#fff'
+            }}
+            imgRightSrc={null}
+            onClick={createPaymentMethod}
+            isDisabled={loading || !initialized}
+            text={t('PAY_WITH_GOOGLE_PAY', 'Pay with Google Pay')}
+            isLoading={loading || !initialized}
+            style={{ marginTop: 20 }}
+          />
         </View>
       ) : (
         <View>
@@ -158,6 +160,9 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
           )}
         </View>
       )}
+      <Spinner
+        visible={loadingGooglePayment}
+      />
     </>
   )
 }
