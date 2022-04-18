@@ -7,6 +7,7 @@ import { useTheme } from 'styled-components/native'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import SelectDropdown from 'react-native-select-dropdown'
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -18,6 +19,7 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
 
   const [, t] = useLanguage()
   const theme = useTheme()
+  const {top} = useSafeAreaInsets()
 
   const styles = StyleSheet.create({
     container: {
@@ -81,7 +83,7 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
                 dropdownStyle={{
                   borderRadius: 8,
                   borderColor: theme.colors.lightGray,
-                  marginTop: Platform.OS === 'ios' ? 12 : -15,
+                  marginTop: Platform.OS === 'ios' ? 12 : -top,
                   maxHeight: 160
                 }}
                 rowStyle={{

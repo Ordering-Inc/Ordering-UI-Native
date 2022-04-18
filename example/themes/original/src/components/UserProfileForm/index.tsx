@@ -20,6 +20,7 @@ import { CenterView } from './styles';
 import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
 import { VerifyPhone } from '../VerifyPhone'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const ProfileUI = (props: ProfileParams) => {
 	const {
@@ -286,18 +287,23 @@ const ProfileUI = (props: ProfileParams) => {
 					/>
 					<CenterView style={styles.pagePadding}>
 						<View style={styles.photo}>
-							<OIcon
-								url={user?.photo}
-								src={!user?.photo && theme.images.general.user}
-								width={79}
-								height={79}
-							/>
+							{user?.photo ? (
+								<OIcon
+									url={user?.photo}
+									cover
+									width={60}
+									height={60}
+									borderRadius={8}
+								/>
+							) : (
+								<Ionicons name='person-outline' size={50} />
+							)}
 						</View>
 						<OIconButton
 							icon={theme.images.general.camera}
 							borderColor={theme.colors.clear}
-							iconStyle={{ width: 16, height: 16 }}
-							style={{ maxWidth: 40, position: 'absolute', bottom: -2, alignSelf: 'center' }}
+							iconStyle={{ width: 20, height: 20 }}
+							style={{ maxWidth: 40, position: 'absolute', bottom: -2, alignSelf: 'center', backgroundColor: '#000', opacity: 0.5 }}
 							onClick={() => handleImagePicker()}
 						/>
 					</CenterView>
