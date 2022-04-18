@@ -21,6 +21,7 @@ import {
   TimeContentWrapper,
   TimeItem
 } from './styles'
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -47,7 +48,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   const [timeList, setTimeList] = useState<any>([])
   const [selectDate, setSelectedDate] = useState<any>(null)
   const [datesWhitelist, setDateWhitelist] = useState<any>([{ start: null, end: null }])
-
+  const {top} = useSafeAreaInsets()
   const styles = StyleSheet.create({
     container: {
       height: windowHeight,
@@ -336,7 +337,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             dropdownStyle={{
               borderRadius: 8,
               borderColor: theme.colors.lightGray,
-              marginTop: Platform.OS === 'ios' ? 12 : -15
+              marginTop: Platform.OS === 'ios' ? 12 : -top
             }}
             rowStyle={{
               borderBottomColor: theme.colors.backgroundGray100,

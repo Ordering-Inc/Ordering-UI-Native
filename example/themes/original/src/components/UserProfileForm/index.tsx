@@ -19,6 +19,7 @@ import { OIcon, OIconButton } from '../shared';
 import { CenterView } from './styles';
 import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const ProfileUI = (props: ProfileParams) => {
 	const {
@@ -217,39 +218,44 @@ const ProfileUI = (props: ProfileParams) => {
 	}, [user?.country_phone_code]);
 
 	return (
-		<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column',justifyContent: 'center'}}>
-			<Container noPadding>
-				<NavBar
-					onActionLeft={() => navigation.goBack()}
-					btnStyle={{ paddingStart: 0 }}
-					title={t('ACCOUNT', 'Account')}
-					isVertical
-					style={styles.navBarStyle}
-				/>
-				<CenterView style={styles.pagePadding}>
-					<View style={styles.photo}>
-						<OIcon
-							url={user?.photo}
-							src={!user?.photo && theme.images.general.user}
-							width={79}
-							height={79}
-						/>
-					</View>
-					<OIconButton
-						icon={theme.images.general.camera}
-						borderColor={theme.colors.clear}
-						iconStyle={{ width: 16, height: 16 }}
-						style={{ maxWidth: 40, position: 'absolute', bottom: -2, alignSelf: 'center' }}
-						onClick={() => handleImagePicker()}
-					/>
-				</CenterView>
-				<View style={{ height: 8, marginLeft: -40, marginRight: -40, backgroundColor: theme.colors.backgroundGray100, marginVertical: 32, zIndex: 10 }} />
-				<Spinner visible={formState?.loading} />
-				<View style={styles.pagePadding}>
-					<UserFormDetailsUI {...props} isEdit />
-				</View>
-			</Container>
-		</KeyboardAvoidingView>
+    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+      <Container noPadding>
+        <NavBar
+          onActionLeft={() => navigation.goBack()}
+          btnStyle={{ paddingStart: 0 }}
+          title={t('ACCOUNT', 'Account')}
+          isVertical
+          style={styles.navBarStyle}
+        />
+        <CenterView style={styles.pagePadding}>
+          <View style={styles.photo}>
+            {user?.photo ? (
+              <OIcon
+                url={user?.photo}
+                cover
+                width={60}
+                height={60}
+                borderRadius={8}
+              />
+            ) : (
+              <Ionicons name='person-outline' size={50} />
+            )}
+          </View>
+          <OIconButton
+            icon={theme.images.general.camera}
+            borderColor={theme.colors.clear}
+            iconStyle={{ width: 20, height: 20 }}
+            style={{ maxWidth: 40, position: 'absolute', bottom: -2, alignSelf: 'center', backgroundColor: '#000', opacity: 0.5 }}
+            onClick={() => handleImagePicker()}
+          />
+        </CenterView>
+        <View style={{ height: 8, marginLeft: -40, marginRight: -40, backgroundColor: theme.colors.backgroundGray100, marginVertical: 32, zIndex: 10 }} />
+        <Spinner visible={formState?.loading} />
+      <View style={styles.pagePadding}>
+        <UserFormDetailsUI {...props} isEdit />
+      </View>
+    </Container>
+  </KeyboardAvoidingView>
 	);
 };
 
