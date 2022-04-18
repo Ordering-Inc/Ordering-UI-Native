@@ -237,9 +237,10 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 							))}
 					</>
 				)}
-				{!reviewsList.loading && reviewsList?.reviews.length === 0 && (
-					<OText>{t('REVIEWS_NOT_FOUND', 'Reviews Not Found')}</OText>
-				)}
+				{reviewsList?.reviews
+					.filter((review: any) => searchReview !== '' ? review.comment?.toLowerCase()?.includes(searchReview?.toLowerCase()) : true).length === 0 && (
+						<OText>{t('REVIEWS_NOT_FOUND', 'Reviews Not Found')}</OText>
+					)}
 			</BusinessReviewContent>
 		</BusinessReviewsContainer>
 	);
