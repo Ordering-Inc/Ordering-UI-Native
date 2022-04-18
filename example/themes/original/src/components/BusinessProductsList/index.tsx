@@ -1,13 +1,14 @@
-import React from 'react';
-import { ProductsList, useLanguage, useUtils } from 'ordering-components/native';
+import React, { useState } from 'react';
+import { ProductsList, useLanguage, useUtils, useConfig } from 'ordering-components/native';
 import { SingleProductCard } from '../SingleProductCard';
 import { NotFoundSource } from '../NotFoundSource';
 import { BusinessProductsListParams } from '../../types';
-import { OIcon, OText } from '../shared';
+import { OButton, OIcon, OModal, OText } from '../shared';
 import { ProductsContainer, ErrorMessage, WrapperNotFound } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { View } from 'react-native';
 import { StyleSheet } from 'react-native';
+import { useTheme } from 'styled-components/native';
 
 const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   const {
@@ -31,7 +32,10 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
 
   const [, t] = useLanguage();
   const [{ optimizeImage }] = useUtils()
-
+  const [{ configs }] = useConfig()
+  const theme = useTheme()
+  const isUseParentCategory = configs?.use_parent_category?.value === 'true' || configs?.use_parent_category?.value === '1'
+  const [openDescription, setOpenDescription] = useState<any>(null)
   const handleOnLayout = (event: any, categoryId: any) => {
     const _categoriesLayout = { ...categoriesLayout }
     const categoryKey = 'cat_' + categoryId
@@ -80,52 +84,72 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
           </View>
         )}
 
-      {!category.id &&
-        categories &&
-        categories
-          .filter((category) => category.id !== null)
-          .map((category, i, _categories) => {
-            const products =
-              categoryState.products?.filter(
-                (product: any) => product.category_id === category.id,
-              ) || [];
-            return (
-              <React.Fragment key={'cat_' + category.id}>
-                {products.length > 0 && (
-                  <>
-                    <View
-                      style={bpStyles.catWrap}
-                      onLayout={(event: any) => handleOnLayout(event, category.id)}
-                    >
-                      <View style={bpStyles.catIcon}>
-                        <OIcon
-                          url={optimizeImage(category.image, 'h_100,c_limit')}
-                          width={41}
-                          height={41}
-                          style={{ borderRadius: 7.6 }}
+      {!category?.id && categories.filter(category => category?.id !== null).map((category, i, _categories) => {
+        const products = !isUseParentCategory
+          ? categoryState?.products?.filter((product: any) => product?.category_id === category?.id) ?? []
+          : categoryState?.products?.filter((product: any) => category?.children?.some((cat: any) => cat.category_id === product?.category_id)) ?? []
+
+        const shortCategoryDescription = category?.description?.length > 80 ? `${category?.description?.substring(0, 80)}...` : category?.description
+
+        return (
+          <React.Fragment key={'cat_' + category.id}>
+            {products.length > 0 && (
+              <>
+                <View
+                  style={bpStyles.catWrap}
+                  onLayout={(event: any) => handleOnLayout(event, category.id)}
+                >
+                  <View style={bpStyles.catIcon}>
+                    <OIcon
+                      url={optimizeImage(category.image, 'h_250,c_limit')}
+                      width={41}
+                      height={41}
+                      style={{ borderRadius: 7.6 }}
+                    />
+                  </View>
+                  <OText size={16} weight="600">
+                    {category.name}
+                  </OText>
+                </View>
+                {!!category?.description && (
+                  <View style={{ position: 'relative' }}>
+                    <OText size={12} weight={'500'} mBottom={5}>
+                      {shortCategoryDescription}
+                      {category?.description?.length > 80 && (
+                        <OButton
+                          style={{ height: 15, paddingRight: 0, paddingLeft: 0, borderWidth: 0 }}
+                          text={t('SEE_MORE', 'See more')}
+                          parentStyle={{ padding: 0 }}
+                          onClick={() => setOpenDescription(category)}
+                          bgColor='transparent'
+                          textStyle={{
+                            fontSize: 12,
+                            borderBottomWidth: 1,
+                            borderBottomColor: theme.colors.primary,
+                            color: theme.colors.primary
+                          }}
                         />
-                      </View>
-                      <OText size={16} weight="600">
-                        {category.name}
-                      </OText>
-                    </View>
-                    <>
-                      {products.sort((a: any, b: any) => a.rank - b.rank).map((product: any, i: any) => (
-                        <SingleProductCard
-                          key={i}
-                          isSoldOut={product.inventoried && !product.quantity}
-                          businessId={businessId}
-                          product={product}
-                          onProductClick={onProductClick}
-                          productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
-                        />
-                      ))}
-                    </>
-                  </>
+                      )}
+                    </OText>
+                  </View>
                 )}
-              </React.Fragment>
-            );
-          })}
+                <>
+                  {products.sort((a: any, b: any) => a.rank - b.rank).map((product: any, i: any) => (
+                    <SingleProductCard
+                      key={i}
+                      isSoldOut={product.inventoried && !product.quantity}
+                      businessId={businessId}
+                      product={product}
+                      onProductClick={onProductClick}
+                      productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
+                    />
+                  ))}
+                </>
+              </>
+            )}
+          </React.Fragment>
+        );
+      })}
 
       {(categoryState.loading || isBusinessLoading) && (
         <>
@@ -191,6 +215,23 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             <OText>{e}</OText>
           </ErrorMessage>
         ))}
+      <OModal
+        open={!!openDescription}
+        title={openDescription?.name}
+        onClose={() => setOpenDescription(null)}
+      >
+        <View style={{ padding: 20 }}>
+          {!!openDescription?.image && (
+            <OIcon
+              url={optimizeImage(openDescription?.image, 'h_100,c_limit')}
+              width={240}
+              height={240}
+              style={{ borderRadius: 7.6 }}
+            />
+          )}
+          <OText>{openDescription?.description}</OText>
+        </View>
+      </OModal>
     </ProductsContainer>
   );
 };
