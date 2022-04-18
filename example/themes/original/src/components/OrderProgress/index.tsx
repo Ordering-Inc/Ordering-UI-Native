@@ -9,7 +9,7 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import moment from 'moment';
 import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Platform } from 'react-native'
 import { Placeholder, Fade, PlaceholderLine } from "rn-placeholder";
 import FastImage from 'react-native-fast-image'
 import {
@@ -19,7 +19,6 @@ import {
   ProgressTextWrapper,
   OrderInfoWrapper
 } from './styles'
-
 const OrderProgressUI = (props: any) => {
   const {
     orderList,
@@ -139,7 +138,7 @@ const OrderProgressUI = (props: any) => {
   return (
     <>
       {orderList?.loading && (
-        <Placeholder Animation={Fade} height={158}>
+        <Placeholder Animation={Fade} height={Platform.OS === 'ios' ? 147.5 : 158}>
           <PlaceholderLine height={60} style={{ borderRadius: 8, marginBottom: 10 }} />
           <PlaceholderLine height={20} style={{ marginBottom: 10 }} />
           <PlaceholderLine height={40} style={{ borderRadius: 8, marginBottom: 10 }} />

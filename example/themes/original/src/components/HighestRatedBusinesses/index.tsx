@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	BusinessList as BusinessesListingController,
   useLanguage,
@@ -18,13 +18,20 @@ const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
   const {
     businessesList,
     onBusinessClick,
-    navigation
+    navigation,
+    isLoading,
+    getBusinesses
   } = props;
 
   const [, t] = useLanguage()
 	const [orderState] = useOrder();
 
   const windowWidth = Dimensions.get('window').width;
+
+  useEffect(() => {
+    if (businessesList?.loading || !isLoading) return 
+    getBusinesses(true)
+  }, [isLoading])
 
   return (
     <>
