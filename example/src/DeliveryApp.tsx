@@ -21,7 +21,6 @@ import settings from './config.json';
 import theme from './theme.json';
 import AppContainer from './AppContainer';
 import { FacebookPixel } from './components/FacebookPixel';
-import { AnalyticsSegment as SegmentProvider } from '../themes/original'
 
 LogBox.ignoreLogs([
   'Sending \`onAnimatedValueUpdate` with no listeners registered.',
@@ -141,12 +140,10 @@ const DeliveryApp = () => {
   return (
     <ThemeProvider theme={theme}>
       <OrderingProvider settings={settings} Alert={Alert}>
-        <SegmentProvider>
-          <FacebookPixel />
-          <AppContainer />
-          <Toast />
-          <Analytics />
-        </SegmentProvider>
+        <FacebookPixel />
+        <AppContainer />
+        <Toast />
+        <Analytics />
       </OrderingProvider>
     </ThemeProvider>
   );
