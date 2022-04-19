@@ -184,6 +184,7 @@ export interface BusinessBasicInformationParams {
 	isBusinessInfoShow?: boolean;
 	header?: any;
 	logo?: any;
+	isPreOrder?: boolean;
 }
 export interface BusinessProductsCategoriesParams {
 	categories: Array<any>;
