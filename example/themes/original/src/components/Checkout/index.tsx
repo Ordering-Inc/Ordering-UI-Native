@@ -150,6 +150,12 @@ const CheckoutUI = (props: any) => {
 		}
 	})
 
+	const handleMomentClick = () => {
+		if (isPreOrder) {
+			navigation.navigate('MomentOption')
+		}
+	}
+	
 	const handlePlaceOrder = () => {
 		if (!userErrors.length) {
 			handlerClickPlaceOrder && handlerClickPlaceOrder()
@@ -260,23 +266,23 @@ const CheckoutUI = (props: any) => {
 									style={{ marginStart: 8 }}
 								/>
 							</CHMomentWrapper>
-							{ isPreOrder && (
-								<CHMomentWrapper
-									onPress={() => navigation.navigate('MomentOption')}
+							<CHMomentWrapper
+									onPress={() => handleMomentClick()}
 									disabled={loading}
-								>
-									<OText size={12} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.textSecondary}>
-										{options?.moment
-											? parseDate(options?.moment, { outputFormat: configs?.dates_moment_format?.value })
-											: t('ASAP_ABBREVIATION', 'ASAP')}
-									</OText>
+							>
+								<OText size={12} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.textSecondary}>
+									{options?.moment
+										? parseDate(options?.moment, { outputFormat: configs?.dates_moment_format?.value })
+										: t('ASAP_ABBREVIATION', 'ASAP')}
+								</OText>
+								{ isPreOrder && (
 									<OIcon
 										src={theme.images.general.arrow_down}
 										width={10}
 										style={{ marginStart: 8 }}
 									/>
-								</CHMomentWrapper>
-							)}
+								)}
+							</CHMomentWrapper>
 						</ChHeader>
 						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 18, marginHorizontal: -40 }} />
 					</ChSection>
