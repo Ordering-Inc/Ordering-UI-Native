@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLanguage, useOrder } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Platform, useWindowDimensions } from 'react-native';
 import { OButton, OIcon, OText } from '../shared';
 import { LogoWrapper, Slogan } from './styles';
 import { LanguageSelector } from '../LanguageSelector'
@@ -11,6 +11,7 @@ import { _setStoreData } from '../../providers/StoreUtil';
 const windowHeight = Dimensions.get('window').height
 
 export const Home = (props: any) => {
+  const { width, height } = useWindowDimensions();
   const { onNavigationRedirect } = props;
 
   const theme = useTheme();
@@ -25,7 +26,7 @@ export const Home = (props: any) => {
   return (
     <View style={styles.container}>
       <View style={styles.wrapperContent}>
-        <View style={styles.languageSelector}>
+        <View style={{ paddingTop: (height <= 756 && Platform.OS !== 'ios') ? (height * 0.05) : 0, marginLeft: 10 }}>
           <LanguageSelector />
         </View>
         <LogoWrapper>
@@ -74,9 +75,6 @@ export const Home = (props: any) => {
 };
 
 const styles = StyleSheet.create({
-  languageSelector: {
-    marginRight: 10
-  },
   textLink: {
     flexDirection: 'row',
     textAlign: 'center',
