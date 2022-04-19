@@ -8,7 +8,8 @@ import {
 	useSession,
 	useUtils,
 	ToastType,
-	useToast
+	useToast,
+	useConfig
 } from 'ordering-components/native'
 import { OButton, OIcon, OModal, OText } from '../shared'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -52,7 +53,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [orderState] = useOrder()
 	const [{ parsePrice }] = useUtils()
 	const [, { showToast }] = useToast()
-
+	const [{ configs }] = useConfig()
+	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const styles = StyleSheet.create({
 		mainContainer: {
 			flex: 1,
@@ -231,6 +233,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					openBusinessInformation={openBusinessInformation}
 					header={header}
 					logo={logo}
+					isPreOrder={isPreOrder}
 				/>
 				<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 				{!loading && business?.id && (
