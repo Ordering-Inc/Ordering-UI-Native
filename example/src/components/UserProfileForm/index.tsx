@@ -47,6 +47,40 @@ export const UserProfileForm = (props: ProfileParams) => {
     }
   });
 
+  const _pickerStyle = StyleSheet.create({
+    inputAndroid: {
+      color: '#000',
+      borderWidth: 1,
+      borderColor: theme.colors.clear,
+      padding: 10,
+      height: 40,
+      backgroundColor: theme.colors.disabled,
+      borderRadius: 8
+    },
+    inputIOS: {
+      color: '#000',
+      padding: 10,
+      height: 40,
+      borderWidth: 1,
+      borderColor: theme.colors.clear,
+      backgroundColor: theme.colors.clear,
+    },
+    icon: {
+      width: 10,
+      marginTop: 9,
+      marginEnd: 10
+    },
+    placeholder: {
+      color: theme.colors.secundaryContrast
+    },
+    chevronDown: {
+      display: 'none'
+    },
+    chevronUp: {
+      display: 'none'
+    }
+  })
+
   const onRedirect = (route: string, params?: any) => {
     navigation.navigate(route, params)
   }
@@ -97,7 +131,7 @@ export const UserProfileForm = (props: ProfileParams) => {
       <View>
         <LanguageContainer>
           <Ionicons name='globe-outline' style={styles.iconStyle} />
-          <LanguageSelector isFromProfile />
+          <LanguageSelector pickerStyle={_pickerStyle} />
         </LanguageContainer>
         <LogoutButton />
       </View>

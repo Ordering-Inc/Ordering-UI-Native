@@ -113,6 +113,7 @@ export interface LanguageSelectorParams {
   currentLanguage?: string;
   handleChangeLanguage?: any;
   isFromProfile?: boolean,
+  pickerStyle?: any
 }
 export interface BusinessesListingParams {
   navigation?: any;
