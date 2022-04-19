@@ -71,7 +71,7 @@ export const ProductActions = styled.View`
   position: absolute;
   bottom: 0px;
 	min-height: 70px;
-  padding-top: ${(props : any) => props.ios ? '20px' : '0'};
+  padding-top: ${(props: any) => props.ios ? '20px' : '0'};
   padding-horizontal: 40px;
   width: 100%;
   flex-direction: row;
@@ -96,4 +96,6 @@ export const WeightUnitItem = styled.View`
   ${({ active }: any) => active && css`
     background-color: ${(props: any) => props.theme.colors.primary}20;
   `}
+`
+export const ProductSummary = styled.View`
 `

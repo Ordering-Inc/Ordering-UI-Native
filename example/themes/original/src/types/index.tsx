@@ -143,6 +143,8 @@ export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
 	onBusinessClick?: void;
 	navigation? :any;
+	isLoading?: boolean;
+	getBusinesses: (newFetch : boolean) => void
 }
 export interface BusinessTypeFilterParams {
 	businessTypes?: Array<any>;
@@ -191,6 +193,7 @@ export interface BusinessBasicInformationParams {
 	isBusinessInfoShow?: boolean;
 	header?: any;
 	logo?: any;
+	isPreOrder?: boolean;
 }
 export interface BusinessProductsCategoriesParams {
 	categories: Array<any>;

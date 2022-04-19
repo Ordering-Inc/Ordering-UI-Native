@@ -29,7 +29,7 @@ const types = ['food', 'laundry', 'alcohol', 'groceries'];
 export const BusinessBasicInformation = (
 	props: BusinessBasicInformationParams,
 ) => {
-	const { navigation, businessState, isBusinessInfoShow, logo, header } = props;
+	const { navigation, businessState, isBusinessInfoShow, logo, header, isPreOrder } = props;
 	const { business, loading } = businessState;
 
 	const theme = useTheme();
@@ -181,12 +181,16 @@ export const BusinessBasicInformation = (
 				<WrapReviews>
 					{!isBusinessInfoShow && (
 						<>
-							<TouchableOpacity onPress={() => navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })}>
-								<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
-									{t('PRE_ORDER', 'Preorder')}
-								</OText>
-							</TouchableOpacity>
-							<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+							{ isPreOrder && (
+								<>
+								<TouchableOpacity onPress={() => navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })}>
+									<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
+										{t('PRE_ORDER', 'Preorder')}
+									</OText>
+								</TouchableOpacity>
+								<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+								</>
+							)}
 							<TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
 								<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
 									{t('REVIEWS', 'Reviews')}

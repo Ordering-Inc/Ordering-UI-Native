@@ -134,6 +134,7 @@ const CheckoutUI = (props: any) => {
 
 
 	const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
+	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -149,6 +150,12 @@ const CheckoutUI = (props: any) => {
 		}
 	})
 
+	const handleMomentClick = () => {
+		if (isPreOrder) {
+			navigation.navigate('MomentOption')
+		}
+	}
+	
 	const handlePlaceOrder = () => {
 		if (!userErrors.length) {
 			handlerClickPlaceOrder && handlerClickPlaceOrder()
@@ -260,19 +267,21 @@ const CheckoutUI = (props: any) => {
 								/>
 							</CHMomentWrapper>
 							<CHMomentWrapper
-								onPress={() => navigation.navigate('MomentOption')}
-								disabled={loading}
+									onPress={() => handleMomentClick()}
+									disabled={loading}
 							>
 								<OText size={12} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.textSecondary}>
 									{options?.moment
 										? parseDate(options?.moment, { outputFormat: configs?.dates_moment_format?.value })
 										: t('ASAP_ABBREVIATION', 'ASAP')}
 								</OText>
-								<OIcon
-									src={theme.images.general.arrow_down}
-									width={10}
-									style={{ marginStart: 8 }}
-								/>
+								{ isPreOrder && (
+									<OIcon
+										src={theme.images.general.arrow_down}
+										width={10}
+										style={{ marginStart: 8 }}
+									/>
+								)}
 							</CHMomentWrapper>
 						</ChHeader>
 						<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 18, marginHorizontal: -40 }} />

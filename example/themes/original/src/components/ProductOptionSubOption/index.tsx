@@ -27,7 +27,9 @@ export const ProductOptionSubOptionUI = (props: any) => {
 		suboption,
 		toggleSelect,
 		changePosition,
-		disabled
+		disabled,
+		error,
+		scrollDown
 	} = props
 
 	const theme = useTheme();
@@ -38,6 +40,9 @@ export const ProductOptionSubOptionUI = (props: any) => {
 
 	const handleSuboptionClick = () => {
 		toggleSelect()
+		if (error) {
+			scrollDown(option?.id)
+		}
 		if (balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1)) {
 			setShowMessage(true)
 		}
