@@ -16,7 +16,8 @@ export const PreviousOrders = (props: any) => {
     getOrderStatus,
     handleClickOrder,
     isLogisticOrder,
-    handleClickLogisticOrder
+    handleClickLogisticOrder,
+    slaSettingTime
   } = props;
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
@@ -39,19 +40,14 @@ export const PreviousOrders = (props: any) => {
     },
     icon: {
       borderRadius: 7.6,
-      width: 75,
-      height: 75,
+      width: 60,
+      height: 60
     },
     logo: {
       borderRadius: 10,
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 0.20,
-      shadowRadius: 1.41,
-      elevation: 2,
+      shadowColor: "#0000006e",
+      shadowRadius: 10,
+      elevation: 15,
       justifyContent: 'center',
       alignItems: 'center',
       marginLeft: 3,
@@ -99,9 +95,9 @@ export const PreviousOrders = (props: any) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const date:any = Date.now()
+      const date: any = Date.now()
       setCurrentTime(date)
-    }, 60000)
+    }, slaSettingTime)
 
     return () => clearInterval(interval)
   }, [])
@@ -130,7 +126,7 @@ export const PreviousOrders = (props: any) => {
                   activeOpacity={1}
                 >
                   <Card key={order.id}>
-                    <Timestatus style={{backgroundColor: order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : '' }}/>
+                    <Timestatus style={{ backgroundColor: order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : '' }} />
                     {
                       order.business?.logo && (
                         <Logo style={styles.logo}>
@@ -163,7 +159,7 @@ export const PreviousOrders = (props: any) => {
                           />
                         </NotificationIcon>
                       )}
-                      <View style={{flexDirection: 'row'}}>
+                      <View style={{ flexDirection: 'row' }}>
                         <OText
                           style={styles.date}
                           color={theme.colors.unselectText}
@@ -175,7 +171,7 @@ export const PreviousOrders = (props: any) => {
                             ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY · HH:mm a' })
                             : parseDate(order?.delivery_datetime, { utc: false })}{' · '}
                         </OText>
-                        <OText style={styles.date} color={order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : '' } >{getDelayTime(order)}</OText>
+                        <OText style={styles.date} color={order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : ''} >{getDelayTime(order)}</OText>
                       </View>
                       {!isLogisticOrder && (
                         <MyOrderOptions>
@@ -215,28 +211,28 @@ export const PreviousOrders = (props: any) => {
                         textStyle={{ color: theme.colors.primary }}
                       />
                     ) : (
-                    <>
-                      <OButton
-                        text={t('REJECT', 'Reject')}
-                        onClick={() => handleClickLogisticOrder(2, _order?.id)}
-                        bgColor={theme.colors.danger}
-                        borderColor={theme.colors.danger}
-                        imgRightSrc={null}
-                        style={{ borderRadius: 7, height: 40 }}
-                        parentStyle={{ width: '45%' }}
-                        textStyle={{ color: theme.colors.dangerText }}
-                      />
-                      <OButton
-                        text={t('ACCEPT', 'Accept')}
-                        onClick={() => handleClickLogisticOrder(1, _order?.id)}
-                        bgColor={theme.colors.successOrder}
-                        borderColor={theme.colors.successOrder}
-                        imgRightSrc={null}
-                        style={{ borderRadius: 7, height: 40 }}
-                        parentStyle={{ width: '45%' }}
-                        textStyle={{ color: theme.colors.successText }}
-                      />
-                    </>
+                      <>
+                        <OButton
+                          text={t('REJECT', 'Reject')}
+                          onClick={() => handleClickLogisticOrder(2, _order?.id)}
+                          bgColor={theme.colors.danger}
+                          borderColor={theme.colors.danger}
+                          imgRightSrc={null}
+                          style={{ borderRadius: 7, height: 40 }}
+                          parentStyle={{ width: '45%' }}
+                          textStyle={{ color: theme.colors.dangerText }}
+                        />
+                        <OButton
+                          text={t('ACCEPT', 'Accept')}
+                          onClick={() => handleClickLogisticOrder(1, _order?.id)}
+                          bgColor={theme.colors.successOrder}
+                          borderColor={theme.colors.successOrder}
+                          imgRightSrc={null}
+                          style={{ borderRadius: 7, height: 40 }}
+                          parentStyle={{ width: '45%' }}
+                          textStyle={{ color: theme.colors.successText }}
+                        />
+                      </>
                     )}
                   </AcceptOrRejectOrder>
                 )}

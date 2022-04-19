@@ -116,7 +116,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 				<FastImage
 					style={{ height: 120 }}
 					source={{
-							uri: optimizeImage(business?.header, 'h_120,c_limit'),
+							uri: optimizeImage(business?.header, 'h_500,c_limit'),
 							priority: FastImage.priority.normal,
 					}}
 					resizeMode={FastImage.resizeMode.cover}
@@ -145,7 +145,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						<FastImage
 							style={{ width: 56, height: 56 }}
 							source={{
-									uri: optimizeImage(business?.logo, 'h_60,c_limit'),
+									uri: optimizeImage(business?.logo, 'h_150,c_limit'),
 									priority: FastImage.priority.normal,
 							}}
 							resizeMode={FastImage.resizeMode.cover}

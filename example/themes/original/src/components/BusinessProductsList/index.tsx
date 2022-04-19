@@ -101,7 +101,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                 >
                   <View style={bpStyles.catIcon}>
                     <OIcon
-                      url={optimizeImage(category.image, 'h_100,c_limit')}
+                      url={optimizeImage(category.image, 'h_250,c_limit')}
                       width={41}
                       height={41}
                       style={{ borderRadius: 7.6 }}

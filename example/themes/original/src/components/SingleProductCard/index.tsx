@@ -140,7 +140,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 				<FastImage
 					style={styles.productStyle}
 					source={{
-						uri: optimizeImage(product?.images, 'h_75,c_limit'),
+						uri: optimizeImage(product?.images, 'h_250,c_limit'),
 						priority: FastImage.priority.normal,
 					}}
 					resizeMode={FastImage.resizeMode.cover}
