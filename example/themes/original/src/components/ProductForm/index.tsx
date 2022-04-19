@@ -290,7 +290,15 @@ export const ProductOptionsUI = (props: any) => {
 				}
 				if (img?.video) {
 					const keys = img?.video.split('/')
-					const _videoId = keys[keys.length - 1]
+					let _videoId = keys[keys.length - 1]
+					if (_videoId.includes('watch')) {
+						const __url = _videoId.split('=')[1]
+						_videoId = __url
+					}
+					if (_videoId.includes('?')) {
+						const __url = _videoId.split('?')[0]
+						_videoId = __url
+					}
 					videoList.push(_videoId)
 				}
 			}
