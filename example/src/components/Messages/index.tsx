@@ -6,7 +6,7 @@ import { GiftedChat, Actions, InputToolbar, Composer, Send, Bubble, MessageImage
 import { USER_TYPE } from '../../config/constants'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { OIcon, OIconButton, OText, OButton } from '../shared'
-import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard,I18nManager } from 'react-native'
+import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard, I18nManager } from 'react-native'
 import { Header, TitleHeader, Wrapper, QuickMessageContainer } from './styles'
 import { MessagesParams } from '../../types'
 
@@ -93,7 +93,7 @@ const MessagesUI = (props: MessagesParams) => {
   }
 
   const handleImagePicker = () => {
-    launchImageLibrary(imgOptions, (response : any) => {
+    launchImageLibrary(imgOptions, (response: any) => {
       if (response.didCancel) {
         // showToast(ToastType.Error, response.errorMessage);
       } else if (response.errorMessage) {
@@ -119,10 +119,10 @@ const MessagesUI = (props: MessagesParams) => {
   const messageConsole = (message: any) => {
     return message.change?.attribute !== 'driver_id'
       ?
-      `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${
-        filterSpecialStatus.includes(message.change.attribute) ? 
-        `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}` : 
-        `${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
+      `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute) ?
+        `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new || ''} ${t('MINUTES', 'Minutes')}` :
+        message.change.attribute === 'status' ? `${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
+          : `${message.change.old} ${t('TO', 'to')} ${message.change.new || t('EMPTY', 'Empty')}`
       }`
       : message.change.new
         ?
@@ -133,13 +133,17 @@ const MessagesUI = (props: MessagesParams) => {
 
   useEffect(() => {
     let newMessages: Array<any> = []
-    const console = `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
+    const consoleText = `${t('ORDER_PLACED_FOR', 'Order placed for')} ${parseDate(order?.created_at)} ${t('VIA', 'Via')} ${order?.app_id ? t(order?.app_id.toUpperCase(), order?.app_id) : t('OTHER', 'Other')}`
     const firstMessage = {
       _id: 0,
-      text: console,
+      text: consoleText,
       createdAt: order?.created_at,
-      system: true
+      system: true,
+      user: {
+        _id: 0
+      }
     }
+
     messages.messages.map((message: any) => {
       let newMessage
       if (message.type !== 0 && (messagesToShow?.messages?.length || (message?.can_see?.includes('2')) || (message?.can_see?.includes('4') && type === USER_TYPE.DRIVER))) {
@@ -159,7 +163,9 @@ const MessagesUI = (props: MessagesParams) => {
       if (message.type === 0) {
         newMessage = firstMessage
       }
-      newMessages = [...newMessages, newMessage]
+      if (newMessage) {
+        newMessages = [...newMessages, newMessage]
+      }
     })
     setFormattedMessages([...newMessages.reverse()])
   }, [messages.messages.length])
@@ -177,7 +183,7 @@ const MessagesUI = (props: MessagesParams) => {
     }
   }, [])
 
-  const RenderActions = (props : any) => {
+  const RenderActions = (props: any) => {
     return (
       <Actions
         {...props}
@@ -210,7 +216,7 @@ const MessagesUI = (props: MessagesParams) => {
     )
   }
 
-  const renderInputToolbar = (props : any) => (
+  const renderInputToolbar = (props: any) => (
     <InputToolbar
       {...props}
       containerStyle={{
@@ -271,7 +277,7 @@ const MessagesUI = (props: MessagesParams) => {
         <OText size={14}>{t('NOT_SEND_MESSAGES', 'You can\'t send messages because the order has ended')}</OText>
       </View>
     ) : (
-      <View style={{flexDirection: 'row', width: '80%'}}>
+      <View style={{ flexDirection: 'row', width: '80%' }}>
         <Composer
           {...props}
           textInputStyle={{
@@ -308,20 +314,20 @@ const MessagesUI = (props: MessagesParams) => {
       alwaysShowSend
       containerStyle={styles.containerSend}
     >
-        <OIconButton
-          onClick={onSubmit}
-          style={{
-            height: 32,
-            borderRadius: 25,
-            opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
-            borderColor: theme.colors.primary,
-          }}
-          iconStyle={{ marginTop: 3, marginRight: 2 }}
-          icon={!sendMessage?.loading ? paperIcon : undefined}
-          RenderIcon={sendMessage?.loading ? () => <ActivityIndicator size='small' color={theme.colors.primary} /> : undefined}
-          disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
-          disabledColor={theme.colors.white}
-        />
+      <OIconButton
+        onClick={onSubmit}
+        style={{
+          height: 32,
+          borderRadius: 25,
+          opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
+          borderColor: theme.colors.primary,
+        }}
+        iconStyle={{ marginTop: 3, marginRight: 2 }}
+        icon={!sendMessage?.loading ? paperIcon : undefined}
+        RenderIcon={sendMessage?.loading ? () => <ActivityIndicator size='small' color={theme.colors.primary} /> : undefined}
+        disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
+        disabledColor={theme.colors.white}
+      />
     </Send>
   )
 
@@ -338,7 +344,7 @@ const MessagesUI = (props: MessagesParams) => {
       }}
       wrapperStyle={{
         left: { backgroundColor: '#f7f7f7', padding: 5, borderBottomLeftRadius: 0 },
-        right: { backgroundColor: theme.colors.primary, padding: 5, borderBottomRightRadius: 0}
+        right: { backgroundColor: theme.colors.primary, padding: 5, borderBottomRightRadius: 0 }
       }}
     />
   )
@@ -357,7 +363,7 @@ const MessagesUI = (props: MessagesParams) => {
     <>
       <Wrapper>
         <Header>
-         <OIcon
+          <OIcon
             url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
             width={60}
             height={60}
@@ -415,7 +421,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 4
   },
-  editButton : {
+  editButton: {
     borderRadius: 50,
     backgroundColor: '#E9ECEF',
     marginRight: 10,
