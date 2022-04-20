@@ -387,7 +387,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   <OText style={{ textAlign: 'left' }}>{order?.delivery_option?.name}</OText>
                 </View>
               )}
-              {order?.comment && (
+              {!!order?.comment && (
                 <View>
                   <OText size={18} style={{ textAlign: 'left' }} >{t('COMMENT', 'Comment')}</OText>
                   <OText style={{ textAlign: 'left' }}>{order?.comment}</OText>
