@@ -119,10 +119,10 @@ const MessagesUI = (props: MessagesParams) => {
   const messageConsole = (message: any) => {
     return message.change?.attribute !== 'driver_id'
       ?
-      `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute) ? 
+      `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute) ?
         `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new || ''} ${t('MINUTES', 'Minutes')}` :
         message.change.attribute === 'status' ? `${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
-        : `${message.change.old} ${t('TO', 'to')} ${message.change.new || t('EMPTY', 'Empty')}`
+          : `${message.change.old} ${t('TO', 'to')} ${message.change.new || t('EMPTY', 'Empty')}`
       }`
       : message.change.new
         ?
@@ -314,20 +314,20 @@ const MessagesUI = (props: MessagesParams) => {
       alwaysShowSend
       containerStyle={styles.containerSend}
     >
-        <OIconButton
-          onClick={onSubmit}
-          style={{
-            height: 32,
-            borderRadius: 25,
-            opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
-            borderColor: theme.colors.primary,
-          }}
-          iconStyle={{ marginTop: 3, marginRight: 2 }}
-          icon={!sendMessage?.loading ? paperIcon : undefined}
-          RenderIcon={sendMessage?.loading ? () => <ActivityIndicator size='small' color={theme.colors.primary} /> : undefined}
-          disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
-          disabledColor={theme.colors.white}
-        />
+      <OIconButton
+        onClick={onSubmit}
+        style={{
+          height: 32,
+          borderRadius: 25,
+          opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
+          borderColor: theme.colors.primary,
+        }}
+        iconStyle={{ marginTop: 3, marginRight: 2 }}
+        icon={!sendMessage?.loading ? paperIcon : undefined}
+        RenderIcon={sendMessage?.loading ? () => <ActivityIndicator size='small' color={theme.colors.primary} /> : undefined}
+        disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
+        disabledColor={theme.colors.white}
+      />
     </Send>
   )
 
