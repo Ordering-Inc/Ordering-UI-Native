@@ -94,8 +94,8 @@ const ChatUI = (props: MessagesParams) => {
     Dimensions.get('window').width < Dimensions.get('window').height
       ? parseInt(parseFloat(String(Dimensions.get('window').width)).toFixed(0))
       : parseInt(
-          parseFloat(String(Dimensions.get('window').height)).toFixed(0),
-        );
+        parseFloat(String(Dimensions.get('window').height)).toFixed(0),
+      );
 
   const [orientation, setOrientation] = useState<string>(
     Dimensions.get('window').width < Dimensions.get('window').height
@@ -218,7 +218,7 @@ const ChatUI = (props: MessagesParams) => {
       paddingLeft: 12,
       paddingRight: 5,
     },
-    editButton : {
+    editButton: {
       borderRadius: 50,
       backgroundColor: '#E9ECEF',
       marginRight: 10,
@@ -366,15 +366,18 @@ const ChatUI = (props: MessagesParams) => {
           return 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS';
         case 21:
           return 'ORDER_CUSTOMER_ARRIVED_BUSINESS';
+        case 22:
+          return 'ORDER_LOOKING_FOR_DRIVER'
+        case 23:
+          return 'ORDER_DRIVER_ON_WAY'
         default:
           return ``;
       }
     }
 
     if (attribute === 'prepared_in' || attribute === 'delivered_in') {
-      return `${hour < 10 ? '0' + hour : hour}:${min < 10 ? '0' + min : min} ${
-        status > 60 ? 'hours' : 'minutes'
-      }`;
+      return `${hour < 10 ? '0' + hour : hour}:${min < 10 ? '0' + min : min} ${status > 60 ? 'hours' : 'minutes'
+        }`;
     }
   };
 
@@ -400,30 +403,27 @@ const ChatUI = (props: MessagesParams) => {
           style={{ ...styles.firstMessageText, textAlign: 'center' }}>
           {message.change?.attribute !== 'driver_id'
             ? `${t('ORDER', 'Order')} ${t(
-                message.change.attribute.toUpperCase(),
-                message.change.attribute,
-              )} ${t('CHANGED_FROM', 'Changed from')} ${
-                message.change.old !== null
-                  ? t(
-                      getStatus(
-                        parseInt(message.change.old, 10),
-                        message.change?.attribute,
-                      ),
-                    )
-                  : '0'
-              } ${t('TO', 'to')} ${t(
+              message.change.attribute.toUpperCase(),
+              message.change.attribute,
+            )} ${t('CHANGED_FROM', 'Changed from')} ${message.change.old !== null
+              ? t(
                 getStatus(
-                  parseInt(message.change.new, 10),
+                  parseInt(message.change.old, 10),
                   message.change?.attribute,
                 ),
-              )}`
+              )
+              : '0'
+            } ${t('TO', 'to')} ${t(
+              getStatus(
+                parseInt(message.change.new, 10),
+                message.change?.attribute,
+              ),
+            )}`
             : message.change.new
-            ? `${message.driver?.name} ${
-                message.driver?.lastname !== null ? message.driver.lastname : ''
-              } ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${
-                message.comment ? message.comment.length : ''
+              ? `${message.driver?.name} ${message.driver?.lastname !== null ? message.driver.lastname : ''
+              } ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${message.comment ? message.comment.length : ''
               }`
-            : `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`}
+              : `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`}
         </OText>
         <OText size={10} color={'#aaa'} style={{ alignSelf: 'flex-start' }}>
           {parseTime(message?.created_at, { outputFormat: 'hh:mma' })}
@@ -928,8 +928,8 @@ const ChatUI = (props: MessagesParams) => {
           borderWidth: 0,
           opacity:
             sendMessage?.loading ||
-            (message === '' && !image) ||
-            messages?.loading
+              (message === '' && !image) ||
+              messages?.loading
               ? 0.6
               : 1,
           borderColor: theme.colors.transparent,
@@ -1034,7 +1034,7 @@ const ChatUI = (props: MessagesParams) => {
               <OIcon
                 url={optimizeImage(
                   order?.customer?.photo ||
-                    theme?.images?.dummies?.customerPhoto,
+                  theme?.images?.dummies?.customerPhoto,
                   'h_300,c_limit',
                 )}
                 style={styles.avatarIcon}
@@ -1141,7 +1141,7 @@ const ChatUI = (props: MessagesParams) => {
           backgroundColor={theme.colors.composerView}
           onEnd={handleEnd}
         />
-         <TouchableOpacity
+        <TouchableOpacity
           style={{
             position: 'absolute',
             right: 35,
