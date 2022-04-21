@@ -87,7 +87,6 @@ export const ProductOptionsUI = (props: any) => {
     const isErrors = Object.values(errors).length > 0
     if (!isErrors) {
       handleSave && handleSave()
-      showCartBottomSheet()
       return
     }
   }

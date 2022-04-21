@@ -38,7 +38,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     },
   });
 
-  const _categories: any = business?.original?.categories;
+  const _categories: any = business?.categories;
   let _promos: any = [];
   _categories?.forEach((categ: any) => {
     const _featuredProds = categ?.products?.filter(
@@ -183,8 +183,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               resetInactivityTimeout()
               navigation.navigate('Category', {
                 category,
-                categories: business.original.categories,
-                businessId: business?.api?.businessId,
+                categories: business?.categories,
+                businessId: business?.id,
                 businessSlug: business?.slug,
                 clearInactivityTimeout,
                 resetInactivityTimeout,
