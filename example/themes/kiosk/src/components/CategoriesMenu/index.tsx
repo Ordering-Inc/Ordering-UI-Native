@@ -212,6 +212,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
             businessId={parseInt(businessId, 10)}
             businessSlug={businessSlug}
             onSave={() => {
+              showCartBottomSheet()
               setDrawerValues({ isOpen: !drawerState.isOpen, data: null })
             }}
             navigation={navigation}

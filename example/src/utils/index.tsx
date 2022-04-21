@@ -32,7 +32,8 @@ export const getTraduction = (key: string, t: any) => {
     ERROR_PLACE_PAY_WITH_CARD1: 'An error occurred while trying to pay by card',
     ERROR_PLACE_PAY_WITH_PAYPAL_CAPTURE: 'An error occurred while trying to pay by PayPal',
     ERROR_ADD_PRODUCT_VERY_FAR_FOR_DELIVERY: 'Error adding product, very far for delivery',
-    ERROR_PRODUCT_NOT_FOUND: 'Error with the product'
+    ERROR_PRODUCT_NOT_FOUND: 'Error with the product',
+    ERROR_ADD_BUSINESS_INVALID: 'An error occurred with the business',
   }
 
   return keyList[key] ? t(key, keyList[key]) : t(key)
