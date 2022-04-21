@@ -58,9 +58,9 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
   const maxDistanceOptions = [1000, 2000, 5000, 'default']
   const maxTimeOptions = [5, 15, 30, 'default']
   const sortItems = [
-    { text: t('PICKED_FOR_YOU', 'Picked for you (default)'), value: 'default' },
+    { text: t('PICKED_FOR_YOU', 'Picked for you (default)'), value: 'distance' },
     { text: t('DELIVERY_TIME', 'Delivery time'), value: 'delivery_time' },
-    { text: t('PICKUP_TIME', 'Pickup time'), value: 'pickup_type' }
+    { text: t('PICKUP_TIME', 'Pickup time'), value: 'pickup_time' }
   ]
 
   const styles = StyleSheet.create({
@@ -396,7 +396,7 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
             <OText weight='bold' mBottom={7} size={16}>
               {t('SORT', 'Sort')}
             </OText>
-            {sortItems?.map(item => (
+            {sortItems?.filter(item => !(orderState?.options?.type === 1 && item?.value === 'pickup_time') && !(orderState?.options?.type === 2 && item?.value === 'delivery_time'))?.map(item => (
               <TouchableOpacity
                 key={item?.value}
                 onPress={() => handleChangeFilters('orderBy', item?.value)}
