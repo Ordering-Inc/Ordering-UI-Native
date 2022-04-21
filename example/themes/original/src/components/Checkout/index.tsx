@@ -39,7 +39,8 @@ import {
 	ChCart,
 	DeliveryOptionsContainer,
 	DeliveryOptionItem,
-	WalletPaymentOptionContainer
+	WalletPaymentOptionContainer,
+	CartHeader
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
@@ -570,9 +571,28 @@ const CheckoutUI = (props: any) => {
 									/>
 								) : (
 									<>
-										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
-											{t('ORDER_SUMMARY', 'Order Summary')}
-										</OText>
+										<CartHeader>
+											<OText
+												size={16}
+												lineHeight={24}
+												color={theme.colors.textNormal}
+												style={{ fontWeight: '500' }}
+											>
+												{t('MOBILE_FRONT_YOUR_ORDER', 'Your order')}
+											</OText>
+											<TouchableOpacity
+												onPress={() => onNavigationRedirect('Business', { store: cart?.business?.slug })}
+											>
+												<OText
+													size={10}
+													lineHeight={15}
+													color={theme.colors.primary}
+													style={{ textDecorationLine: 'underline' }}
+												>
+													{t('ADD_PRODUCTS', 'Add products')}
+												</OText>
+											</TouchableOpacity>
+										</CartHeader>
 										{props.isFranchiseApp && (
 											<TouchableOpacity
 												onPress={() => setOpenChangeStore(true)}
