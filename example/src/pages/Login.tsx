@@ -1,20 +1,20 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import styled from 'styled-components/native';
-import { LoginForm } from '../components/LoginForm';
-import { Container } from '../layouts/Container';
-
+import styled, { useTheme } from 'styled-components/native';
+import {
+  LoginForm,
+  Container,
+  _setStoreData,
+} from '../../themes/original';
 import { useLanguage } from 'ordering-components/native';
-import { _setStoreData } from '../providers/StoreUtil';
-import { useTheme } from 'styled-components/native';
 
 const KeyboardView = styled.KeyboardAvoidingView`
   flex: 1;
 `;
 
 export const Login = ({ navigation, route }: any) => {
-  const [, t] = useLanguage()
-  const theme = useTheme()
+  const [, t] = useLanguage();
+  const theme = useTheme();
 
   const loginProps = {
     navigation,
@@ -24,19 +24,20 @@ export const Login = ({ navigation, route }: any) => {
     forgotButtonText: t('FORGOT_YOUR_PASSWORD', 'Forgot your password?'),
     registerButtonText: t('SIGNUP', 'Signup'),
     onNavigationRedirect: (page: string) => {
-      if (!page) return
+      if (!page) {
+        return;
+      }
       navigation.navigate(page);
     },
-    notificationState: route?.params?.notification_state
-  }
+    notificationState: route?.params?.notification_state,
+  };
 
   _setStoreData('notification_state', route?.params?.notification_state);
 
   return (
     <KeyboardView
       enabled
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Container>
         <LoginForm {...loginProps} />
       </Container>
