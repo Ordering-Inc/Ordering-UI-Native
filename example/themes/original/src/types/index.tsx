@@ -109,6 +109,7 @@ export interface PhoneInputParams {
 	noDropIcon?: boolean;
 	flagStyle?: any;
 	isDisabled?: any;
+	isStartValidation?: any;
 }
 
 export interface LanguageSelectorParams {

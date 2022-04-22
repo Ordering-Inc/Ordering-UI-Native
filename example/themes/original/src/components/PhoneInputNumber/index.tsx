@@ -22,18 +22,23 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 		textStyle,
 		flagStyle,
 		noDropIcon,
-    isDisabled
+    isDisabled,
+		isStartValidation
 	} = props
 
 	const theme = useTheme();
 
+	const [, t] = useLanguage()
+	const [{ configs }] = useConfig()
+	const phoneInput = useRef<PhoneInput>(null);
+	const [userphoneNumber, setUserphoneNumber] = useState('');
 
 	const style = StyleSheet.create({
 		input: {
 			backgroundColor: theme.colors.white,
 			borderRadius: 7.6,
 			borderWidth: 1,
-			borderColor: theme.colors.border,
+			borderColor: (isStartValidation && userphoneNumber === '') ? theme.colors.danger5 : theme.colors.border,
 			paddingBottom: 0,
 			paddingTop: 0,
 			flexGrow: 1,
@@ -47,12 +52,6 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 			marginEnd: 9,
 		}
 	})
-
-
-	const [, t] = useLanguage()
-	const [{ configs }] = useConfig()
-	const phoneInput = useRef<PhoneInput>(null);
-	const [userphoneNumber, setUserphoneNumber] = useState('');
 
 	const handleChangeNumber = (number: any) => {
 		setUserphoneNumber(number)
@@ -97,6 +96,14 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 
 	return (
 		<Wrapper onPress={() => forwardRef?.current?.focus?.()}>
+			{(isStartValidation && userphoneNumber === '') && (
+				<OText
+					size={14}
+					color={theme.colors.danger5}
+				>
+					{t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone'))}*
+				</OText>
+			)}
 			<PhoneInput
 				ref={phoneInput}
         disabled={isDisabled}
