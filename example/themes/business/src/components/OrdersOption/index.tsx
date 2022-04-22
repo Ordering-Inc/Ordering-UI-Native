@@ -918,7 +918,7 @@ export const Timer = () => {
   return (
     <TimerInputWrapper>
       <OText style={styles.settingTime} color={theme.colors.disabled}>{configs?.order_deadlines_delayed_time?.value}</OText>
-      <OText>min</OText>
+      <OText>{t('MIN', 'min')}</OText>
     </TimerInputWrapper>
   )
 }
