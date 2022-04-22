@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Pressable, StyleSheet, ScrollView, RefreshControl, Linking, Platform, TextInput } from 'react-native';
-import { useLanguage, useUtils, useToast, ToastType, OrderListGroups } from 'ordering-components/native';
+import { useLanguage, useUtils, useToast, ToastType, OrderListGroups, useConfig } from 'ordering-components/native';
 import SelectDropdown from 'react-native-select-dropdown'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -399,20 +399,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     setOpenSearchModal(false)
     setOpenSLASettingModal(false)
   }
-
-  const [settingTimeErrorMessage, setSettingTimeErrorMessage] = useState('')
-
-  const handlSLASettingTime = () => {
-    if (!hour || !minute) {
-      setSettingTimeErrorMessage(t('SLA_SETTING_ERROR', 'Time value is invalid'))
-      return
-    }
-    const _settingTimeSecond = hour * 3600 + minute * 60
-    setSlaSettingTime(_settingTimeSecond)
-    handleClose()
-    showToast(ToastType.Success, t('SLA_SETTING_UPDATED', 'SLAs setting updated'))
-  }
-
 
   useEffect(() => {
     setCurrentFilters(null)
@@ -859,24 +845,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                       key={i}
                       item={item}
                       last={i + 1 === selectedTabStatus.length}
-                      setHour={setHour}
-                      setMinute={setMinute}
-                      setSettingTimeErrorMessage={setSettingTimeErrorMessage}
                     />
                   ))}
                   <VerticalLine />
                 </DeliveryStatusWrapper>
-                {settingTimeErrorMessage !== '' && (
-                  <OText style={styles.errorMessage}>{settingTimeErrorMessage}</OText>
-                )}
-                <Actions>
-                  <OButton
-                    text={t('ACCEPT', 'Accept')}
-                    textStyle={{ color: 'white', fontSize: 14 }}
-                    onClick={handlSLASettingTime}
-                    style={styles.acceptButtonStyle}
-                  />
-                </Actions>
               </SlaSettingModalContent>
             )}
           </ModalContainer>
@@ -887,7 +859,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 };
 
 export const StatusBlock = (props: any) => {
-  const { item, last, setHour, setMinute, setSettingTimeErrorMessage } = props
+  const { item, last } = props
   const [showTime, setShowTime] = useState(false)
 
   useEffect(() => {
@@ -898,7 +870,7 @@ export const StatusBlock = (props: any) => {
 
   return (
     <StatusItems>
-      <Pressable onPress={() => setShowTime(!showTime)} style={{ marginBottom: 5 }}>
+      <Pressable style={{ marginBottom: 10 }}>
         <ItemHeader>
           <IconWrapper>
             <OIcon
@@ -916,11 +888,7 @@ export const StatusBlock = (props: any) => {
         <OText>{item?.des}</OText>
       </ItemContent>
       {showTime && (
-        <Timer
-          setHour={setHour}
-          setMinute={setMinute}
-          setSettingTimeErrorMessage={setSettingTimeErrorMessage}
-        />
+        <Timer />
       )}
       {last && (
         <OverLine />
@@ -929,47 +897,28 @@ export const StatusBlock = (props: any) => {
   )
 }
 
-export const Timer = (props: any) => {
-  const { setHour, setMinute, setSettingTimeErrorMessage } = props
+export const Timer = () => {
   const [, t] = useLanguage()
   const theme = useTheme()
+  const [{ configs }] = useConfig();
 
   const styles = StyleSheet.create({
-    inputStyle: {
-      paddingHorizontal: 7,
-      paddingVertical: 2,
-      borderRadius: 0,
+    settingTime: {
       fontSize: 14,
+      borderWidth: 1,
+      borderRadius: 7.6,
+      margin: 0,
+      marginRight: 10,
+      paddingHorizontal: 10,
+      paddingTop: 5,
+      borderColor: theme.colors.disabled
     }
   })
 
-  const handleChangeInput = (val: any, type: string) => {
-    setSettingTimeErrorMessage('')
-    if (type === 'hour') {
-      setHour(val)
-    }
-    if (type === 'minute') {
-      setMinute(val)
-    }
-  }
-
   return (
     <TimerInputWrapper>
-      <TextInput
-        placeholder='HH'
-        keyboardType='number-pad'
-        maxLength={2}
-        style={{ ...styles.inputStyle, width: 36 }}
-        onChangeText={hour => handleChangeInput(hour, 'hour')}
-      />
-      <OText color={theme.colors.disabled}>:</OText>
-      <TextInput
-        placeholder='MM'
-        keyboardType='number-pad'
-        maxLength={2}
-        style={{ ...styles.inputStyle, width: 40 }}
-        onChangeText={minute => handleChangeInput(minute, 'minute')}
-      />
+      <OText style={styles.settingTime} color={theme.colors.disabled}>{configs?.order_deadlines_delayed_time?.value}</OText>
+      <OText>min</OText>
     </TimerInputWrapper>
   )
 }
