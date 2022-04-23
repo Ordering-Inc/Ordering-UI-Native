@@ -93,7 +93,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       >
         <Category
           style={cardStyle}
-          source={{uri: item.images}}
+          source={item.images ? {uri: item.images} : theme.images.categories.all}
           resizeMode="cover"
           w={widthScreen}
           borderRadius={16}
@@ -172,7 +172,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
           <OCard
             key={category.id}
             title={category?.name || ''}
-            image={{uri: category?.image}}
+            image={category.images ? {uri: category.images} : theme.images.categories.all}
             style={{
               width:
                 orientationState?.orientation === LANDSCAPE
