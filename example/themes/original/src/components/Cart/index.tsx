@@ -62,6 +62,7 @@ const CartUI = (props: any) => {
 
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
   const businessId = business?.business_id ?? null
+  const placeSpotTypes = [3, 4]
 
   const momentFormatted = !orderState?.option?.moment
     ? t('RIGHT_NOW', 'Right Now')
@@ -355,7 +356,7 @@ const CartUI = (props: any) => {
                 </OText>
               </OSTable>
             </OSTotal>
-            {[3, 4].includes(orderState?.options?.type) && (
+            {placeSpotTypes.includes(orderState?.options?.type) && (
               <OSTable style={{ marginTop: 15 }}>
                 <OText size={14} lineHeight={21} weight={'600'}>
                   {t('SPOT', 'Spot')}: {cart?.place?.name || t('NO_SELECTED', 'No selected')}

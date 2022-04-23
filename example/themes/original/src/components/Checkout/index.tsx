@@ -131,11 +131,11 @@ const CheckoutUI = (props: any) => {
 	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
 	const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
-
-
+	
+	const placeSpotTypes = [3, 4]
 	const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
-	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash || cart?.subtotal < cart?.minimum || ([3, 4].includes(options?.type) && !cart?.place)
+	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash || cart?.subtotal < cart?.minimum || (placeSpotTypes.includes(options?.type) && !cart?.place)
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -629,7 +629,7 @@ const CheckoutUI = (props: any) => {
 										{t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
 									</OText>
 								)}
-								{[3, 4].includes(options?.type) && !cart?.place && (
+								{placeSpotTypes.includes(options?.type) && !cart?.place && (
 									<OText
 										color={theme.colors.error}
 										size={12}
