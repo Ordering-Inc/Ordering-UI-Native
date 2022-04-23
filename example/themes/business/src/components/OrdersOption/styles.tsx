@@ -130,15 +130,12 @@ export const ItemContent = styled.View`
 `
 
 export const TimerInputWrapper = styled.View`
-  border-width: 1px;
-  border-radius: 7.6px;
   color: ${(props: any) => props.theme.colors.disabled};
-  border-color: ${(props: any) => props.theme.colors.disabled};
+  margin-top: 15px;
   margin-left: 30px;
   margin-right: 30px;
   flex-direction: row;
-  align-items: center;
-  width: 80px;
+  align-items: flex-end;
 `
 export const OverLine = styled.View`
   position: absolute;
