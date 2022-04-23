@@ -594,18 +594,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     {order?.business?.name}
                   </OText>
                   <Icons>
-                    <TouchableOpacity
-                      onPress={() => order?.business?.cellphone &&
-                        Linking.openURL(`tel:${order?.business?.cellphone}`)
-                      }
-                      style={{ paddingEnd: 5 }}
-                    >
-                      <OIcon
-                        src={theme.images.general.phone}
-                        width={16}
-                        color={theme.colors.disabled}
-                      />
-                    </TouchableOpacity>
+                    {!!order?.business?.cellphone && (
+                      <TouchableOpacity
+                        onPress={() => order?.business?.cellphone &&
+                          Linking.openURL(`tel:${order?.business?.cellphone}`)
+                        }
+                        style={{ paddingEnd: 5 }}
+                      >
+                        <OIcon
+                          src={theme.images.general.phone}
+                          width={16}
+                          color={theme.colors.disabled}
+                        />
+                      </TouchableOpacity>
+                    )}
                     <TouchableOpacity
                       style={{ paddingStart: 5 }}
                       onPress={() => handleOpenMessagesForBusiness()}>
@@ -624,13 +626,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   mBottom={2}>
                   {order?.business?.email}
                 </OText>
-                <OText
-                  size={12}
-                  lineHeight={18}
-                  color={theme.colors.textNormal}
-                  mBottom={2}>
-                  {order?.business?.cellphone}
-                </OText>
+                {!!order?.business?.cellphone && (
+                  <OText
+                    size={12}
+                    lineHeight={18}
+                    color={theme.colors.textNormal}
+                    mBottom={2}>
+                    {order?.business?.cellphone}
+                  </OText>
+                )}
                 <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
                   {order?.business?.address}
                 </OText>
@@ -978,7 +982,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       marginTop: 10
                     }}
                   >
-                    {order?.payment_events?.map((event: any) => (
+                    {order?.payment_events?.map((event: any) => event.amount > 0 && (
                       <View
                         key={event.id}
                         style={{
