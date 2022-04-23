@@ -26,6 +26,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
 import { TouchableOpacity } from 'react-native';
 import { OAlert } from '../../../../../src/components/shared'
+import { PlaceSpot } from '../PlaceSpot'
 
 const OrderSummaryUI = (props: any) => {
   const {
@@ -49,6 +50,7 @@ const OrderSummaryUI = (props: any) => {
   const [validationFields] = useValidationFields();
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, data: null, type: '' })
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
+  const [openPlaceModal, setOpenPlaceModal] = useState(false)
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
 
   const handleDeleteClick = (product: any) => {
@@ -301,6 +303,24 @@ const OrderSummaryUI = (props: any) => {
                   </OSTable>
                 </View>
               )}
+              {[3, 4].includes(orderState?.options?.type) && (
+                <OSTable style={{ marginTop: 15 }}>
+                  <OText size={14} lineHeight={21} weight={'600'}>
+                    {t('SPOT', 'Spot')}: {cart?.place?.name || t('NO_SELECTED', 'No selected')}
+                  </OText>
+                  <TouchableOpacity onPress={() => setOpenPlaceModal(true)}>
+                    <OText
+                      size={14}
+                      lineHeight={21}
+                      weight={'600'}
+                      color={theme.colors.primary}
+                      style={{ textDecorationLine: 'underline' }}
+                    >
+                      {t('EDIT', 'Edit')}
+                    </OText>
+                  </TouchableOpacity>
+                </OSTable>
+              )}
               {cart?.status !== 2 && (
                 <OSTable>
                   <View style={{ width: '100%', marginTop: 20 }}>
@@ -347,6 +367,18 @@ const OrderSummaryUI = (props: any) => {
               type={openTaxModal.type}
               data={openTaxModal.data}
               products={cart?.products}
+            />
+          </OModal>
+          <OModal
+            open={openPlaceModal}
+            title={t('CHOOSE_YOUR_SPOT', 'Choose your spot')}
+            onClose={() => setOpenPlaceModal(false)}
+            entireModal
+          >
+            <PlaceSpot
+              cart={cart}
+              isOpenPlaceSpot={openPlaceModal}
+              setOpenPlaceModal={setOpenPlaceModal}
             />
           </OModal>
           <OAlert
