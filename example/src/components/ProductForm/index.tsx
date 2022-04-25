@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     borderColor: '#DBDCDB',
-    height: 100,
+    height: 160,
     alignItems: 'flex-start',
   },
   quantityControl: {
