@@ -293,18 +293,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         percentage: 95,
         image: theme.images.order.status7,
       },
-      { 
-        key: 22, 
-        value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver'), 
-        slug: 'ORDER_LOOKING_FOR_DRIVER', 
-        percentage: 35, 
-        image: theme.images.order.status8 
+      {
+        key: 22,
+        value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver'),
+        slug: 'ORDER_LOOKING_FOR_DRIVER',
+        percentage: 35,
+        image: theme.images.order.status8
       },
-      { 
-        key: 23, 
-        value: t('ORDER_DRIVER_ON_WAY', 'Driver on way'), 
-        slug: 'ORDER_DRIVER_ON_WAY', 
-        percentage: 45, 
+      {
+        key: 23,
+        value: t('ORDER_DRIVER_ON_WAY', 'Driver on way'),
+        slug: 'ORDER_DRIVER_ON_WAY',
+        percentage: 45,
         image: theme.images.order.status8
       }
     ];
@@ -430,10 +430,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
   }, [driverLocation]);
 
-  useEffect(() => {
-    console.log('order: ', order)
-  }, [order]);
-
   return (
     <OrderDetailsContainer keyboardShouldPersistTaps="handled">
       {(!order || Object.keys(order).length === 0) && (
@@ -481,7 +477,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <PlaceholderLine width={65} height={10} />
             <PlaceholderLine width={80} height={10} />
             <PlaceholderLine width={70} height={10} />
-            <View style={{marginTop: 10}}>
+            <View style={{ marginTop: 10 }}>
               <PlaceholderLine width={60} height={20} />
               <PlaceholderLine width={40} height={10} />
             </View>

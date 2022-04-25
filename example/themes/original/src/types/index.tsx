@@ -546,3 +546,12 @@ export interface BusinessSearchParams {
 export interface NoNetworkParams {
 	image?: any,
 }
+
+export interface PlaceSpotParams {
+	isOpenPlaceSpot?: boolean,
+	cart?: any ,
+	placesState?: any,
+	handleChangePlace?: any,
+	getPlacesList?: any,
+	setOpenPlaceModal?: any
+}

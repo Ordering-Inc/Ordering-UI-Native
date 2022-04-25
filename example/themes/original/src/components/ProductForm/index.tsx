@@ -887,7 +887,6 @@ export const ProductOptionsUI = (props: any) => {
 								<OIcon
 									src={theme.images.general.minus}
 									width={16}
-									style={{ borderWidth: 1, borderColor: 'red' }}
 									color={
 										productCart.quantity === 1 || isSoldOut
 											? theme.colors.backgroundGray
@@ -931,7 +930,6 @@ export const ProductOptionsUI = (props: any) => {
 								<OIcon
 									src={theme.images.general.plus}
 									width={16}
-									style={{ borderWidth: 1, borderColor: 'red' }}
 									color={
 										maxProductQuantity <= 0 ||
 											productCart.quantity >= maxProductQuantity ||
