@@ -167,7 +167,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
 	useEffect(() => {
 		if (businessesList.businesses.length > 0) {
-			const fb = businessesList.businesses.filter((b) => b.featured == true);
+			const fb = businessesList.businesses.filter((b) => b.featured === true && b?.open);
 			const ary = [];
 			while (fb.length > 0) {
 				ary.push(fb.splice(0, 2));
