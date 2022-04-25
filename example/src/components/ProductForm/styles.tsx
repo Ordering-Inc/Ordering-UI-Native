@@ -66,6 +66,7 @@ export const WrapperSubOption = styled.View`
 `
 
 export const ProductComment = styled.View`
+  height: 160px;
 `
 
 export const ProductActions = styled.View`
