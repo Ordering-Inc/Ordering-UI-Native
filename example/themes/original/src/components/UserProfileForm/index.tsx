@@ -20,6 +20,7 @@ import { CenterView } from './styles';
 import NavBar from '../NavBar';
 import { Container } from '../../layouts/Container';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import FastImage from 'react-native-fast-image'
 
 const ProfileUI = (props: ProfileParams) => {
 	const {
@@ -230,12 +231,13 @@ const ProfileUI = (props: ProfileParams) => {
         <CenterView style={styles.pagePadding}>
           <View style={styles.photo}>
             {user?.photo ? (
-              <OIcon
-                url={user?.photo}
-                cover
-                width={60}
-                height={60}
-                borderRadius={8}
+              <FastImage
+                style={{ height: 60, width: 80, borderRadius: 8 }}
+                source={{
+                  uri: user?.photo,
+                  priority: FastImage.priority.normal,
+                }}
+                resizeMode={FastImage.resizeMode.cover}
               />
             ) : (
               <Ionicons name='person-outline' size={50} />

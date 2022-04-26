@@ -98,27 +98,17 @@ const MessagesUI = (props: MessagesParams) => {
 
 	const handleImagePicker = () => {
 		launchImageLibrary({ mediaType: 'photo', maxHeight: 2048, maxWidth: 2048, includeBase64: true }, (response: any) => {
-			if (response.didCancel) {
-				console.log('User cancelled image picker');
-			} else if (response.errorMessage) {
-				console.log('ImagePicker Error: ', response.errorMessage);
+			if (response?.didCancel) {
+				showToast(ToastType.Error, t('IMAGE_CANCELLED', 'User cancelled image picker'));
+			} else if (response?.errorMessage) {
 				showToast(ToastType.Error, response.errorMessage);
 			} else {
-				if (Platform.OS === 'ios') {
-					if (response.uri) {
-						const url = `data:${response.type};base64,${response.base64}`
-						setImage && setImage(url);
-					} else {
-						showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
-					}
+				if (response?.assets?.length > 0) {
+					const image = response?.assets[0]
+					const url = `data:${image.type};base64,${image.base64}`
+					setImage && setImage(url);
 				} else {
-					if (response?.assets?.length > 0) {
-						const image = response?.assets[0]
-						const url = `data:${image.type};base64,${image.base64}`
-						setImage && setImage(url);
-					} else {
-						showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
-					}
+					showToast(ToastType.Error, t('IMAGE_NOT_FOUND', 'Image not found'));
 				}
 			}
 		});
@@ -237,7 +227,7 @@ const MessagesUI = (props: MessagesParams) => {
 						{image && (
 							<TouchableOpacity
 								style={{ position: 'absolute', top: -5, right: -5, borderColor: theme.colors.backgroundDark, backgroundColor: theme.colors.white, borderRadius: 25 }}
-								onPress={() => removeImage()}
+								onPress={removeImage}
 							>
 								<MaterialCommunityIcon name='close-circle-outline' color={theme.colors.backgroundDark} size={24} />
 							</TouchableOpacity>
@@ -545,9 +535,15 @@ const styles = StyleSheet.create({
 })
 
 export const Messages = (props: MessagesParams) => {
+	const [allMessages, setAllMessages] = useState(props.messages)
 	const MessagesProps = {
 		...props,
-		UIComponent: MessagesUI
+		UIComponent: MessagesUI,
+		messages: allMessages,
+		setMessages: (values: any) => {
+			props.setMessages && props.setMessages(values)
+			setAllMessages(values)
+		}
 	}
 	return <MessagesController {...MessagesProps} />
 }
