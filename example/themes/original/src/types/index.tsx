@@ -383,7 +383,7 @@ export interface MessagesParams {
 	handleSend?: () => {},
 	setImage?: (image: string | null) => {},
 	setMessage?: (comment: string) => {},
-	setMessages?: () => {},
+	setMessages?: (image: any | null) => {},
 	readMessages?: () => {},
 	onClose?: () => void,
 	isMeesageListing?: boolean,

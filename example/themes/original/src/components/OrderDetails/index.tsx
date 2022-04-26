@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, BackHandler, KeyboardAvoidingView, Platform, Linking } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
+import { View, StyleSheet, BackHandler, Platform, Linking } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Messages } from '../Messages';
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
   useUtils,
   useConfig,
-  useSession,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
@@ -16,14 +13,10 @@ import {
   Header,
   OrderContent,
   OrderBusiness,
-  Logo,
   OrderData,
   OrderInfo,
-  OrderStatus,
   StaturBar,
-  StatusImage,
   OrderCustomer,
-  CustomerPhoto,
   InfoBlock,
   HeaderInfo,
   Customer,
@@ -31,7 +24,6 @@ import {
   Table,
   OrderBill,
   Total,
-  NavBack,
   Icons,
   OrderDriver,
   Map,
@@ -41,7 +33,6 @@ import { OButton, OIcon, OModal, OText } from '../shared';
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { OrderDetailsParams } from '../../types';
-import { USER_TYPE } from '../../config/constants';
 import { GoogleMap } from '../GoogleMap';
 import { verifyDecimals } from '../../utils';
 import { OSRow } from '../OrderSummary/styles';
@@ -55,7 +46,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     messages,
     setMessages,
     readMessages,
-    messagesReadList,
     isFromCheckout,
     driverLocation,
   } = props;
@@ -92,19 +82,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const [, t] = useLanguage();
   const [{ parsePrice, parseNumber, parseDate }] = useUtils();
-  const [{ user }] = useSession();
   const [{ configs }] = useConfig();
 
-  const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
-  const [openModalForDriver, setOpenModalForDriver] = useState(false);
   const [isReviewed, setIsReviewed] = useState(false)
-  const [unreadAlert, setUnreadAlert] = useState({
-    business: false,
-    driver: false,
-  });
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
 
-  const { order, businessData } = props.order;
+  const { order } = props.order;
 
   const walletName: any = {
     cash: {
@@ -314,38 +297,24 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     return objectStatus && objectStatus;
   };
 
-  const handleOpenMessagesForBusiness = () => {
-    setOpenModalForBusiness(true);
+  const handleGoToMessages = (type: string) => {
     readMessages && readMessages();
-    setUnreadAlert({ ...unreadAlert, business: false });
-  };
-
-  const handleOpenMessagesForDriver = () => {
-    setOpenModalForDriver(true);
-    readMessages && readMessages();
-    setUnreadAlert({ ...unreadAlert, driver: false });
-  };
-
-  const unreadMessages = () => {
-    const length = messages?.messages.length;
-    const unreadLength = order?.unread_count;
-    const unreadedMessages = messages.messages.slice(
-      length - unreadLength,
-      length,
-    );
-    const business = unreadedMessages.some((message: any) =>
-      message?.can_see?.includes(2),
-    );
-    const driver = unreadedMessages.some((message: any) =>
-      message?.can_see?.includes(4),
-    );
-    setUnreadAlert({ business, driver });
-  };
-
-  const handleCloseModal = () => {
-    setOpenModalForBusiness(false);
-    setOpenModalForDriver(false);
-  };
+    navigation.navigate(
+      'MessageDetails',
+      {
+        type,
+        order,
+        messages,
+        setMessages,
+        orderId: order?.id,
+        business: type === 'business',
+        driver: type === 'driver',
+        onClose: () => navigation?.canGoBack()
+        ? navigation.goBack()
+        : navigation.navigate('BottomTab', { screen: 'MyOrders' }),
+      }
+    )
+  }
 
   const handleArrowBack: any = () => {
     if (!isFromCheckout) {
@@ -393,14 +362,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       BackHandler.removeEventListener('hardwareBackPress', handleArrowBack);
     };
   }, []);
-
-  useEffect(() => {
-    if (messagesReadList?.length) {
-      openModalForBusiness
-        ? setUnreadAlert({ ...unreadAlert, business: false })
-        : setUnreadAlert({ ...unreadAlert, driver: false });
-    }
-  }, [messagesReadList]);
 
   const locations = [
     {
@@ -606,7 +567,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     )}
                     <TouchableOpacity
                       style={{ paddingStart: 5 }}
-                      onPress={() => handleOpenMessagesForBusiness()}>
+                      onPress={() => handleGoToMessages('business')}>
                       <OIcon
                         src={theme.images.general.chat}
                         width={16}
@@ -735,7 +696,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         </OText>
                         <Icons>
                           <TouchableOpacity
-                            onPress={() => handleOpenMessagesForDriver()}>
+                            onPress={() => handleGoToMessages('driver')}>
                             <OIcon
                               src={theme.images.general.chat}
                               width={16}
@@ -1018,22 +979,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </OrderContent>
         </>
       )}
-      <OModal
-        open={openModalForBusiness || openModalForDriver}
-        entireModal
-        customClose
-        onClose={() => handleCloseModal()}>
-        <Messages
-          type={openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER}
-          orderId={order?.id}
-          messages={messages}
-          order={order}
-          business={openModalForBusiness}
-          driver={openModalForDriver}
-          setMessages={setMessages}
-          onClose={handleCloseModal}
-        />
-      </OModal>
       <OModal
         open={openTaxModal.open}
         onClose={() => setOpenTaxModal({ open: false, data: null, type: '' })}
