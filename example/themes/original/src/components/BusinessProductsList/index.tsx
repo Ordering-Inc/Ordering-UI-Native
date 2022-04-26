@@ -6,7 +6,7 @@ import { BusinessProductsListParams } from '../../types';
 import { OButton, OIcon, OModal, OText } from '../shared';
 import { ProductsContainer, ErrorMessage, WrapperNotFound } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { useTheme } from 'styled-components/native';
 
@@ -220,7 +220,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         title={openDescription?.name}
         onClose={() => setOpenDescription(null)}
       >
-        <View style={{ padding: 20 }}>
+        <ScrollView style={{ padding: 20 }}>
           {!!openDescription?.image && (
             <OIcon
               url={optimizeImage(openDescription?.image, 'h_100,c_limit')}
@@ -230,7 +230,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             />
           )}
           <OText>{openDescription?.description}</OText>
-        </View>
+        </ScrollView>
       </OModal>
     </ProductsContainer>
   );
