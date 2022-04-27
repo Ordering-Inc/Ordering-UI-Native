@@ -29,7 +29,8 @@ export const TaxInformation = (props: taxInformationParams) => {
   const [, t] = useLanguage()
 
   const includedOnPriceString = data?.type === 1 ? `(${t('INCLUDED_ON_PRICE', 'Included on price')})` : `(${t('NOT_INCLUDED_ON_PRICE', 'Not included on price')})`
-  const hideProductsSectionOffers = ['offer_target_2', 'offer_target_3'].includes(type)
+  const offersHideArray = ['offer_target_2', 'offer_target_3']
+  const hideProductsSectionOffers = offersHideArray.includes(type)
   const dataHideArray : Array<string | number> = ['platform', 'business']
   const hideProductsSectionData = dataHideArray.includes(data.type)
 
