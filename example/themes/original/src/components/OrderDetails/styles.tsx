@@ -125,3 +125,6 @@ export const Divider = styled.View`
   margin-top: 5px;
   margin-bottom: 5px;
 `
+export const OrderAction = styled.View`
+  flex-direction: row;
+`

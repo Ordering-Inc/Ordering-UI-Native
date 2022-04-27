@@ -6,6 +6,9 @@ import {
   OrderDetails as OrderDetailsConTableoller,
   useUtils,
   useConfig,
+  ToastType,
+  useToast,
+  useOrder
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
@@ -28,6 +31,7 @@ import {
   OrderDriver,
   Map,
   Divider,
+  OrderAction
 } from './styles';
 import { OButton, OIcon, OModal, OText } from '../shared';
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -48,6 +52,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     readMessages,
     isFromCheckout,
     driverLocation,
+    onNavigationRedirect
   } = props;
 
   const theme = useTheme();
@@ -83,9 +88,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [, t] = useLanguage();
   const [{ parsePrice, parseNumber, parseDate }] = useUtils();
   const [{ configs }] = useConfig();
+  const [, { reorder }] = useOrder();
+  const [, { showToast }] = useToast();
 
   const [isReviewed, setIsReviewed] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
+  const [reorderSelected, setReorderSelected] = useState<number | null>(null)
+  const [reorderLoading, setReorderLoading] = useState(false)
 
   const { order } = props.order;
 
@@ -310,8 +319,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         business: type === 'business',
         driver: type === 'driver',
         onClose: () => navigation?.canGoBack()
-        ? navigation.goBack()
-        : navigation.navigate('BottomTab', { screen: 'MyOrders' }),
+          ? navigation.goBack()
+          : navigation.navigate('BottomTab', { screen: 'MyOrders' }),
       }
     )
   }
@@ -355,6 +364,25 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       }
     )
   }
+
+  const handleReorder = async (orderId: number) => {
+    setReorderSelected(orderId)
+    setReorderLoading(true)
+    try {
+      const { error, result } = await reorder(orderId)
+      if (!error) {
+        onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: result.uuid })
+        setReorderLoading(false)
+        return
+      }
+      navigation.navigate('Business', { store: businessData?.slug })
+      setReorderLoading(false)
+    } catch (err: any) {
+      showToast(ToastType.Error, t('ERROR', err.message))
+      setReorderLoading(false)
+    }
+  }
+
 
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleArrowBack);
@@ -737,16 +765,37 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   'Once business accepts your order, we will send you an email, thank you!',
                 )}
               </OText>
-              <OButton
-                text={t('YOUR_ORDERS', 'Your Orders')}
-                textStyle={{ fontSize: 14, color: theme.colors.primary }}
-                imgRightSrc={null}
-                borderColor={theme.colors.primary}
-                bgColor={theme.colors.clear}
-                style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0 }}
-                parentStyle={{ marginTop: 29, width: '50%' }}
-                onClick={() => navigation.navigate('BottomTab', { screen: 'MyOrders' })}
-              />
+              <OrderAction>
+                <OButton
+                  text={t('YOUR_ORDERS', 'Your Orders')}
+                  textStyle={{ fontSize: 14, color: theme.colors.primary }}
+                  imgRightSrc={null}
+                  borderColor={theme.colors.primary}
+                  bgColor={theme.colors.clear}
+                  style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0 }}
+                  parentStyle={{ marginTop: 29, marginEnd: 15 }}
+                  onClick={() => navigation.navigate('BottomTab', { screen: 'MyOrders' })}
+                />
+                {(
+                  parseInt(order?.status) === 1 ||
+                  parseInt(order?.status) === 2 ||
+                  parseInt(order?.status) === 5 ||
+                  parseInt(order?.status) === 6 ||
+                  parseInt(order?.status) === 10 ||
+                  parseInt(order?.status) === 11 ||
+                  parseInt(order?.status) === 12
+                ) && (
+                    <OButton
+                      text={order.id === reorderSelected ? t('LOADING', 'Loading..') : t('REORDER', 'Reorder')}
+                      textStyle={{ fontSize: 14, color: theme.colors.primary }}
+                      imgRightSrc={null}
+                      borderColor='transparent'
+                      bgColor={theme.colors.primary + 10}
+                      style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0, marginTop: 29 }}
+                      onClick={() => handleReorder(order.id)}
+                    />
+                  )}
+              </OrderAction>
             </HeaderInfo>
             <OrderProducts>
               {order?.products?.length &&
