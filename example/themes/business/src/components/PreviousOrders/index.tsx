@@ -17,7 +17,8 @@ export const PreviousOrders = (props: any) => {
     handleClickOrder,
     isLogisticOrder,
     handleClickLogisticOrder,
-    slaSettingTime
+    slaSettingTime,
+    currentTabSelected
   } = props;
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
@@ -159,7 +160,7 @@ export const PreviousOrders = (props: any) => {
                           />
                         </NotificationIcon>
                       )}
-                      <View style={{ flexDirection: 'row' }}>
+                      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                         <OText
                           style={styles.date}
                           color={theme.colors.unselectText}
@@ -169,9 +170,14 @@ export const PreviousOrders = (props: any) => {
                           {(order?.order_group_id && order?.order_group && isLogisticOrder ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}` : (t('NO', 'Order No.') + order.id)) + ' · '}
                           {order?.delivery_datetime_utc
                             ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY · HH:mm a' })
-                            : parseDate(order?.delivery_datetime, { utc: false })}{' · '}
+                            : parseDate(order?.delivery_datetime, { utc: false })}
                         </OText>
-                        <OText style={styles.date} color={order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : ''} >{getDelayTime(order)}</OText>
+                        {(currentTabSelected === 'pending' || currentTabSelected === 'inProgress') && (
+                          <>
+                            <OText> · </OText>
+                            <OText style={styles.date} color={order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : ''} >{getDelayTime(order)}</OText>
+                          </>
+                        )}
                       </View>
                       {!isLogisticOrder && (
                         <MyOrderOptions>
