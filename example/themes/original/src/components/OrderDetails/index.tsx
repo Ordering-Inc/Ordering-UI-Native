@@ -5,12 +5,8 @@ import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
   useUtils,
-  useConfig,
-  ToastType,
-  useToast,
-  useOrder
+  useConfig
 } from 'ordering-components/native';
-// import { OrderDetails as OrderDetailsConTableoller } from './nest.js'
 import { useTheme } from 'styled-components/native';
 import {
   OrderDetailsContainer,
