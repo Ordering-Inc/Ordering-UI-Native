@@ -631,6 +631,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                 getOrderStatus={getOrderStatus}
                 handleClickOrder={handleClickOrder}
                 slaSettingTime={slaSettingTime}
+                currentTabSelected={currentTabSelected}
               />
             )}
           {!logisticOrders?.error?.length &&
