@@ -143,9 +143,9 @@ export interface BusinessesListingParams {
 export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
 	onBusinessClick?: void;
-	navigation? :any;
+	navigation?: any;
 	isLoading?: boolean;
-	getBusinesses: (newFetch : boolean) => void
+	getBusinesses: (newFetch: boolean) => void
 }
 export interface BusinessTypeFilterParams {
 	businessTypes?: Array<any>;
@@ -182,7 +182,7 @@ export interface BusinessProductsListingParams {
 	header?: any;
 	logo?: any;
 	productModal?: any;
-  getNextProducts?: () => {};
+	getNextProducts?: () => {};
 	handleChangeCategory: (value: any) => {};
 	setProductLogin?: () => {};
 	updateProductModal?: (value: any) => {};
@@ -209,8 +209,8 @@ export interface BusinessProductsCategoriesParams {
 	categoriesLayout?: any;
 	selectedCategoryId?: any;
 	lazyLoadProductsRecommended?: any;
-  setSelectedCategoryId?: any
-  setCategoryClicked?: any
+	setSelectedCategoryId?: any
+	setCategoryClicked?: any
 }
 export interface BusinessProductsListParams {
 	errors?: any;
@@ -321,7 +321,10 @@ export interface OrderDetailsParams {
 	isFromCheckout?: boolean,
 	driverLocation?: any,
 	isFromRoot?: any,
-	goToBusinessList?: boolean
+	goToBusinessList?: boolean,
+	onNavigationRedirect?: any,
+	reorderState?: any,
+	handleReorder?: any,
 }
 export interface ProductItemAccordionParams {
 	key?: any;
@@ -355,7 +358,7 @@ export interface ReviewProductParams {
 	formState?: any,
 	handleChangeFormState?: any,
 	handleSendProductReview?: any
-  }
+}
 export interface SingleProductReviewParams {
 	product: any,
 	formState?: any,
@@ -522,34 +525,34 @@ export interface HelpGuideParams {
 export interface HelpAccountAndPaymentParams {
 	navigation: any;
 }
-  
+
 export interface MessageListingParams {
 	navigation: any;
 	franchiseId?: any;
 }
 
-export interface BusinessSearchParams { 
+export interface BusinessSearchParams {
 	navigation: any,
-    businessesSearchList: any,
-    onBusinessClick: any,
-    handleChangeTermValue: (term: string) => void,
-    termValue: string,
-    paginationProps: any,
-    handleSearchbusinessAndProducts: (newFetch?: boolean) => void,
-    handleChangeFilters: (prop : string, value : any) => void,
-    filters: any,
-    businessTypes: Array<number>,
-    setFilters: (filters: any) => void,
+	businessesSearchList: any,
+	onBusinessClick: any,
+	handleChangeTermValue: (term: string) => void,
+	termValue: string,
+	paginationProps: any,
+	handleSearchbusinessAndProducts: (newFetch?: boolean) => void,
+	handleChangeFilters: (prop: string, value: any) => void,
+	filters: any,
+	businessTypes: Array<number>,
+	setFilters: (filters: any) => void,
 	lazySearch?: boolean
 }
-  
+
 export interface NoNetworkParams {
 	image?: any,
 }
 
 export interface PlaceSpotParams {
 	isOpenPlaceSpot?: boolean,
-	cart?: any ,
+	cart?: any,
 	placesState?: any,
 	handleChangePlace?: any,
 	getPlacesList?: any,

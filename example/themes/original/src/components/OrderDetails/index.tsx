@@ -10,6 +10,7 @@ import {
   useToast,
   useOrder
 } from 'ordering-components/native';
+// import { OrderDetails as OrderDetailsConTableoller } from './nest.js'
 import { useTheme } from 'styled-components/native';
 import {
   OrderDetailsContainer,
@@ -52,7 +53,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     readMessages,
     isFromCheckout,
     driverLocation,
-    onNavigationRedirect
+    onNavigationRedirect,
+    reorderState,
+    handleReorder
   } = props;
 
   const theme = useTheme();
@@ -88,15 +91,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [, t] = useLanguage();
   const [{ parsePrice, parseNumber, parseDate }] = useUtils();
   const [{ configs }] = useConfig();
-  const [, { reorder }] = useOrder();
-  const [, { showToast }] = useToast();
-
   const [isReviewed, setIsReviewed] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
-  const [reorderSelected, setReorderSelected] = useState<number | null>(null)
-  const [reorderLoading, setReorderLoading] = useState(false)
 
-  const { order } = props.order;
+  const { order, businessData } = props.order;
 
   const walletName: any = {
     cash: {
@@ -365,24 +363,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     )
   }
 
-  const handleReorder = async (orderId: number) => {
-    setReorderSelected(orderId)
-    setReorderLoading(true)
-    try {
-      const { error, result } = await reorder(orderId)
-      if (!error) {
-        onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: result.uuid })
-        setReorderLoading(false)
-        return
-      }
-      navigation.navigate('Business', { store: businessData?.slug })
-      setReorderLoading(false)
-    } catch (err: any) {
-      showToast(ToastType.Error, t('ERROR', err.message))
-      setReorderLoading(false)
-    }
-  }
 
+  useEffect(() => {
+    if (reorderState?.error) {
+      navigation.navigate('Business', { store: businessData?.slug })
+    }
+    if (!reorderState?.error && reorderState?.result?.uuid) {
+      onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
+    }
+  }, [reorderState])
 
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleArrowBack);
@@ -786,13 +775,13 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   parseInt(order?.status) === 12
                 ) && (
                     <OButton
-                      text={order.id === reorderSelected ? t('LOADING', 'Loading..') : t('REORDER', 'Reorder')}
+                      text={order.id === reorderState?.loading ? t('LOADING', 'Loading..') : t('REORDER', 'Reorder')}
                       textStyle={{ fontSize: 14, color: theme.colors.primary }}
                       imgRightSrc={null}
                       borderColor='transparent'
                       bgColor={theme.colors.primary + 10}
                       style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0, marginTop: 29 }}
-                      onClick={() => handleReorder(order.id)}
+                      onClick={() => handleReorder && handleReorder(order.id)}
                     />
                   )}
               </OrderAction>
