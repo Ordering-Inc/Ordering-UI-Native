@@ -1,4 +1,4 @@
-import React, { Mixin } from 'react'
+import React from 'react'
 import { useLanguage } from 'ordering-components/native'
 import { SingleProductCard } from '../SingleProductCard'
 import { TaxInformationContainer, ProductContainer } from './styles'
@@ -9,7 +9,7 @@ interface taxInformationParams {
     name: string,
     description?: string,
     rate: string | number,
-    type: number,
+    type: string | number,
     fixed?: number,
     percentage?: number,
     id: number,
@@ -29,6 +29,10 @@ export const TaxInformation = (props: taxInformationParams) => {
   const [, t] = useLanguage()
 
   const includedOnPriceString = data?.type === 1 ? `(${t('INCLUDED_ON_PRICE', 'Included on price')})` : `(${t('NOT_INCLUDED_ON_PRICE', 'Not included on price')})`
+  const offersHideArray = ['offer_target_2', 'offer_target_3']
+  const hideProductsSectionOffers = offersHideArray.includes(type)
+  const dataHideArray : Array<string | number> = ['platform', 'business']
+  const hideProductsSectionData = dataHideArray.includes(data.type)
 
   const getFilterValidation = (product: any) => {
     return (
@@ -61,7 +65,7 @@ export const TaxInformation = (props: taxInformationParams) => {
           {t('WITHOUT_DESCRIPTION', 'Without description')}
         </OText>
       )}
-      {!(type === 'offer_target_2' || type === 'offer_target_3') && (
+      {!hideProductsSectionOffers && !hideProductsSectionData && (
         <>
           <OText>{t('OTHER_PRODUCTS_WITH_THIS', 'Other products with this')} {getTypeString()}:</OText>
           <ProductContainer>
