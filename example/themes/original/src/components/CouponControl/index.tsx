@@ -87,6 +87,7 @@ const CouponControlUI = (props: any) => {
 			) : (
 				<CCWrapper>
 					<OInput
+						value={couponInput}
 						placeholder={t('DISCOUNT_COUPON', 'Discount coupon')}
 						onChange={(e: any) => onChangeInputCoupon(e)}
 						style={styles.inputsStyle}
