@@ -287,6 +287,7 @@ export interface OrderDetailsParams {
   isFromRoot?: any;
   goToBusinessList?: any;
   onNavigationRedirect?: any;
+  getOrder?: () => {}
 }
 export interface ProductItemAccordionParams {
   key?: any;
