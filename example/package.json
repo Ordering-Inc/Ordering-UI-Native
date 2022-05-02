@@ -71,7 +71,7 @@
     "react-native-background-timer": "^2.4.1",
     "react-native-bootsplash": "^3.2.3",
     "react-native-calendar-picker": "^7.1.2",
-    "react-native-calendar-strip": "^2.2.5",
+		"react-native-calendar-strip": "^2.2.1",
     "react-native-color-matrix-image-filters": "^5.2.10",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-credit-card-input": "^0.4.1",
