@@ -991,14 +991,14 @@ export const ProductOptionsUI = (props: any) => {
 												? t('UPDATE', 'Update')
 												: t('ADD', 'Add')
 										}`}
-									isDisabled={isSoldOut || maxProductQuantity <= 0 || productCart?.quantity < product?.minimum_per_order || productCart?.quantity > product?.maximum_per_order}
+									isDisabled={isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order))}
 									textStyle={{
 										color: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.primary : theme.colors.white,
 										fontSize: orderState.loading || editMode ? 10 : 14
 									}}
 									style={{
-										backgroundColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || productCart?.quantity < product?.minimum_per_order || productCart?.quantity > product?.maximum_per_order ? theme.colors.lightGray : theme.colors.primary,
-										borderColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || productCart?.quantity < product?.minimum_per_order || productCart?.quantity > product?.maximum_per_order ? theme.colors.white : theme.colors.primary,
+										backgroundColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order)) ? theme.colors.lightGray : theme.colors.primary,
+										borderColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order)) ? theme.colors.white : theme.colors.primary,
 										opacity: saveErrors || isSoldOut || maxProductQuantity <= 0 ? 0.3 : 1,
 										borderRadius: 7.6,
 										height: 44,
