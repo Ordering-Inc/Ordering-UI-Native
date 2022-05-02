@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import CalendarStrip from 'react-native-calendar-strip-fixed'
+import CalendarStrip from 'react-native-calendar-strip'
 import {
 	useLanguage,
 	useConfig,
