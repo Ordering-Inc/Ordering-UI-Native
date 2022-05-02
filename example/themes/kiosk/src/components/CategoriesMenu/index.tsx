@@ -156,13 +156,17 @@ const CategoriesMenu = (props: any): React.ReactElement => {
                 <OCard
                   key={product.id}
                   title={product?.name}
-                  image={{ uri: product?.images }}
+                  isUri={!!product.images}
+                  image={product.images ? {uri: product.images} : theme.images.dummies.product}
+                  price={parsePrice(product?.price)}
+                  description={product?.description}
+                  prevPrice={product?.offer_price > 0 && parsePrice(product?.offer_price)}
                   style={{
+                    borderRadius: 10,
                     width: orientationState?.orientation === LANDSCAPE
                       ? bottomSheetVisibility ? orientationState?.dimensions?.width * 0.145 :orientationState?.dimensions?.width * 0.16
                       : orientationState?.dimensions?.width * 0.20
                   }}
-                  titleStyle={{marginTop: Platform.OS === 'ios' ? orientationState?.orientation === LANDSCAPE ? orientationState?.dimensions.height * 0.05 : orientationState?.dimensions.width * 0.05 : 0}}
                   onPress={() => {
                     resetInactivityTimeout()
                     if (isDrawer) {
@@ -176,9 +180,6 @@ const CategoriesMenu = (props: any): React.ReactElement => {
                       });
                     }
                   }}
-                  {...(!!product?.description && { description: product?.description } )}
-                  {...(!!product?.price && { price: parsePrice(product?.price) } )}
-                  {...(product?.in_offer && { prevPrice: `$${product?.offer_price}` } )}
                 />
               ))}
             </GridContainer>

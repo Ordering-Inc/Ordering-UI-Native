@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { TouchableOpacity, View, StyleSheet } from 'react-native'
-import { LanguageSelector as LanguageSelectorController } from 'ordering-components/native'
+import { TouchableOpacity, View, StyleSheet, ActivityIndicator } from 'react-native'
+import { LanguageSelector as LanguageSelectorController, useOrder } from 'ordering-components/native'
 import CountryPicker, { Flag } from 'react-native-country-picker-modal'
 
 import { Container, LanguageItem } from './styles'
@@ -40,6 +40,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     (a.content > b.content) ? 1 : ((b.content > a.content) ? -1 : 0)
 	)
 
+	const [orderState] = useOrder()
 	const [isCountryModalVisible, setCountryModalVisible] = useState(false);
 
 	const countryCodes = _languages?.map((item:any) => item.countryCode);
@@ -48,7 +49,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
 	return (
 		<>
-		{ languagesState.loading ? 
+		{ languagesState.loading ?
 		(<Container>
 			<Placeholder  style={{ width: 130, paddingTop: 10 }} Animation={Fade}>
 				<PlaceholderLine height={15}/>
@@ -66,8 +67,8 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 							closeButtonStyle={styles.closeIcon}
 							renderFlagButton={() => (
 								<TouchableOpacity
-									onPress={() => setCountryModalVisible(true)}
-									disabled={languagesState.loading}
+									onPress={() => orderState.loading ? {} : setCountryModalVisible(true)}
+									// disabled={orderState.loading}
 								>
 									<LanguageItem>
 											<Flag
@@ -76,7 +77,11 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 												countryCode={currentLanguageData?.countryCode}
 											/>
 										<OText color={theme.colors.primary}>{currentLanguageData?.label}</OText>
-										<MatarialIcon name='keyboard-arrow-down' size={24}/>
+										{orderState.loading ? (
+											<ActivityIndicator size="small" color={theme.colors.primary} style={{ marginLeft: 5 }} />
+										) : (
+											<MatarialIcon name='keyboard-arrow-down' size={24}/>
+										)}
 									</LanguageItem>
 								</TouchableOpacity>
 							)}
@@ -87,11 +92,10 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 								renderItem: ({item} : any) => (
 									<TouchableOpacity
 										onPress={() => {
-											/* @ts-ignore */
 											handleChangeLanguage(item.value);
 											setCountryModalVisible(false);
 										}}
-										disabled={languagesState.loading}
+										disabled={orderState.loading}
 									>
 										<LanguageItem>
 											<View style={styles.flagsContainer} />

@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components/native';
 export const Card = styled.TouchableOpacity`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin: 0 15px 20px;
   width: 120px;
