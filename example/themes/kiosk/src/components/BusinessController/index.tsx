@@ -6,6 +6,7 @@ import {
   BusinessController as BusinessSingleCard,
   useUtils,
 } from 'ordering-components/native';
+import FastImage from 'react-native-fast-image'
 
 import { Card, BusinessLogo } from './styles';
 
@@ -26,6 +27,16 @@ export const BusinessControllerUI = (props: any) => {
       alignItems: 'center',
       textAlign: 'center',
       marginTop: 10
+    },
+    logoStyle: {
+      width: 120,
+      height: 120,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
     }
   });
 
@@ -39,12 +50,22 @@ export const BusinessControllerUI = (props: any) => {
       activeOpacity={1}
       onPress={() => handleBusinessClick(business)}
     >
-      <BusinessLogo
-        source={business?.logo ? {
-          uri: optimizeImage(business?.logo, 'h_120,c_limit'),
-        } : theme.images.dummies.businessLogo}
-        resizeMode='contain'
-      />
+      {business?.logo ? (
+        <FastImage
+          style={styles.logoStyle}
+          source={{
+            uri: business?.logo,
+            priority: FastImage.priority.high,
+            cache:FastImage.cacheControl.web
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        />
+      ) : (
+        <BusinessLogo
+          source={theme.images.dummies.businessLogo}
+          resizeMode='contain'
+        />
+      )}
       <OText
         size={WIDTH_SCREEN * 0.012}
         numberOfLines={2}
