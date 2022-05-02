@@ -40,9 +40,11 @@ export const ProductOptionSubOptionUI = (props: any) => {
 
 	const handleSuboptionClick = () => {
 		toggleSelect()
-		if (error) {
+
+		if (balance === option?.max - 1 && !state.selected) {
 			scrollDown(option?.id)
 		}
+
 		if (balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1)) {
 			setShowMessage(true)
 		}
