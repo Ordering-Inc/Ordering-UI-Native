@@ -18,7 +18,7 @@ export const BusinessCategories = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 10px 0px;
+  margin: ${(props: any) => props.mt ?? 10}px 0px 10px;
   width: 100%;
 `
 export const Category = styled.View`

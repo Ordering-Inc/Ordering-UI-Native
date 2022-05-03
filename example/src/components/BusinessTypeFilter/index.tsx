@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, ScrollView, TouchableOpacity, Dimensions } from 'react-native'
+import { StyleSheet, View, ScrollView, TouchableOpacity, Dimensions, Platform, PlatformIOSStatic } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 'ordering-components/native'
 
@@ -8,6 +8,7 @@ import { OIcon, OText, OModal } from '../shared'
 import { BusinessTypeFilterParams } from '../../types'
 import { useTheme } from 'styled-components/native'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import DeviceInfo from 'react-native-device-info';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -17,6 +18,10 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
     currentTypeSelected,
     handleChangeBusinessType,
   } = props;
+
+  const platformIOS = Platform as PlatformIOSStatic
+  const isIpad = platformIOS.isPad
+  const isTablet = DeviceInfo.isTablet();
 
   const theme = useTheme();
   const [, t] = useLanguage();
@@ -122,7 +127,9 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
                 {t('BUSINESS_CATEGORIES', 'Business Categories')}
               </OText>
             </BusinessCategoriesTitle>
-            <BusinessCategories>
+            <BusinessCategories
+              mt={isIpad ? 65 : isTablet ? 35 : 0}
+            >
               {typesState?.types.slice(0, 3).map((type: any) => (
                 <RenderTypes
                   key={type.id}
