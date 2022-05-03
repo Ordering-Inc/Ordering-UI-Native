@@ -7911,7 +7911,6 @@ ora@^3.4.0:
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@react-native-async-storage/async-storage" "^1.13.1"
-    "@segment/analytics-next" "^1.35.1"
     "@sentry/react" "^5.27.1"
     "@sentry/tracing" "^5.27.1"
     "@stripe/react-stripe-js" "^1.1.2"
@@ -8434,7 +8433,7 @@ react-native-calendar-picker@^7.1.2:
     prop-types "^15.6.0"
     recyclerlistview "^3.0.0"
 
-react-native-calendar-strip@^2.2.5:
+react-native-calendar-strip@^2.2.1:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/react-native-calendar-strip/-/react-native-calendar-strip-2.2.5.tgz#544d41784d93b455a886311de25c0d69935f369a"
   integrity sha512-3DmHIJX+Uu9Nv2wNTViPOGBY7rvODaHl7xaaxuqDFTN4sCxeM+1ref8k5RE1PgyZ3Wqs4Z8XJoEyORQIc++VMA==
@@ -8491,6 +8490,11 @@ react-native-credit-card-input@^0.4.1:
     lodash.values "^4.3.0"
     prop-types "^15.6.0"
     react-native-flip-card "^3.4.1"
+
+react-native-device-info@^8.7.1:
+  version "8.7.1"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.7.1.tgz#fbb06f87dbbc4423abe713874699fb2e6e99fd15"
+  integrity sha512-cVMZztFa2Qn6qpQa601W61CtUwZQ1KXfqCOeltejAWEXmgIWivC692WGSdtGudj4upSi1UgMSaGcvKjfcpdGjg==
 
 react-native-document-picker@^5.2.0:
   version "5.3.0"
