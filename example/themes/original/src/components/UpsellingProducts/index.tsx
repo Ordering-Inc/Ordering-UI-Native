@@ -157,6 +157,12 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
           </TopActions>
         </TopBar>
         <ScrollView style={{ marginBottom: props.isPage ? 40 : bottom + (Platform.OS == 'ios' ? 96 : 130) }} showsVerticalScrollIndicator={false}>
+					{productsList.length > 0 &&
+            <View style={{ paddingHorizontal: 40, overflow: 'visible' }}>
+              <OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
+              <UpsellingLayout />
+            </View>
+          }
           <View style={{ paddingHorizontal: 40 }}>
             <OText size={20} lineHeight={30} weight={600} style={{ marginTop: 10, marginBottom: 17 }}>{t('YOUR_CART', 'Your cart')}</OText>
             <OrderSummary
@@ -165,12 +171,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
               onNavigationRedirect={onNavigationRedirect}
             />
           </View>
-		  {productsList.length > 0 &&
-            <View style={{ paddingHorizontal: 40, overflow: 'visible' }}>
-              <OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
-              <UpsellingLayout />
-            </View>
-          }
         </ScrollView>
         <View
           style={{
