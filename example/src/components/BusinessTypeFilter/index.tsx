@@ -128,7 +128,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
               </OText>
             </BusinessCategoriesTitle>
             <BusinessCategories
-              mt={(isIpad || isTablet) && 65}
+              mt={(isIpad || isTablet) ? 65 : null}
             >
               {typesState?.types.slice(0, 3).map((type: any) => (
                 <RenderTypes
