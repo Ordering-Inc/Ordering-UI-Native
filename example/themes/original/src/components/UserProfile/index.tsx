@@ -16,6 +16,7 @@ import { LogoutButton } from '../LogoutButton'
 import { LanguageSelector } from '../LanguageSelector'
 import MessageCircle from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import FastImage from 'react-native-fast-image'
 
 import {
 	OIcon,
@@ -142,12 +143,13 @@ const ProfileListUI = (props: ProfileParams) => {
 			<CenterView style={styles.pagePadding}>
 				<View style={styles.photo}>
 					{user?.photo ? (
-						<OIcon
-							url={user?.photo}
-							cover
-							width={60}
-							height={60}
-							borderRadius={8}
+						<FastImage
+							style={{ height: 60, width: 60, borderRadius: 8 }}
+							source={{
+								uri: user?.photo,
+								priority: FastImage.priority.normal,
+							}}
+							resizeMode={FastImage.resizeMode.cover}
 						/>
 					) : (
 						<Ionicons name='person-outline' size={50} style={{ marginRight: 10 }} />

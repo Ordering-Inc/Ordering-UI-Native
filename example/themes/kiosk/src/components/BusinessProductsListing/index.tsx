@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, ScrollView, TouchableOpacity, ImageBackground } from 'react-native'
 import { BusinessAndProductList, useLanguage } from 'ordering-components/native'
 import { BusinessProductsListingParams, Business } from '../../types'
 import { OCard, OText, OIcon } from '../shared'
@@ -7,6 +7,7 @@ import GridContainer from '../../layouts/GridContainer'
 import Spinner from 'react-native-loading-spinner-overlay';
 import { LANDSCAPE, useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
 import styled, { useTheme } from 'styled-components/native';
+import FastImage from 'react-native-fast-image'
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const {navigation, businessState, resetInactivityTimeout, clearInactivityTimeout, bottomSheetVisibility } = props;
@@ -38,7 +39,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
     },
   });
 
-  const _categories: any = business?.original?.categories;
+  const _categories: any = business?.categories;
   let _promos: any = [];
   _categories?.forEach((categ: any) => {
     const _featuredProds = categ?.products?.filter(
@@ -59,17 +60,17 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   );
 
   const RenderCategories = ({ item, cardStyle, widthScreen }: any) => {
-    const Category = styled.ImageBackground`
-      position: relative;
-      height: 150px;
-      width: ${(props: any) => props.w * 0.45}px;
-      border-radius: 10px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    `
+    const stylesCat = StyleSheet.create({
+      categoryStyle: {
+        height: 150,
+        borderRadius: 10,
+        padding: 10,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }
+    })
+
     const WrapText = styled.View`
       height: 90px;
       display: flex;
@@ -77,6 +78,25 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
       align-items: center;
       border-radius: 10px;
     `
+
+    const Category = (props: any) => {
+      const imageProps = {
+        style: props.style,
+        source: props.source,
+        resizeMode: props.resizeMode,
+      }
+      return (
+        props.uri ? (
+          <FastImage {...imageProps}>
+            {props.children}
+          </FastImage>
+        ) : (
+          <ImageBackground {...imageProps}>
+            {props.children}
+          </ImageBackground>
+        )
+      )
+    }
 
     return (
       <TouchableOpacity
@@ -92,11 +112,17 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         }}
       >
         <Category
-          style={cardStyle}
-          source={{uri: item.images}}
-          resizeMode="cover"
-          w={widthScreen}
-          borderRadius={16}
+          style={{ ...cardStyle, ...stylesCat.categoryStyle, width: widthScreen * 0.45 }}
+          uri={!!item.images}
+          source={!!item.images
+            ? {
+              uri: item.images,
+              priority: FastImage.priority.high,
+              cache:FastImage.cacheControl.web
+            }
+            : theme.images.categories.all
+          }
+          resizeMode={FastImage.resizeMode.cover}
         >
           {item?.inventoried && (
             <View style={styles.soldOut}>
@@ -111,7 +137,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               mLeft={0}
               size={32}
               numberOfLines={1}
-              // mBottom={8}
               style={{...props?.titleStyle}}
               weight="bold"
             >
@@ -121,7 +146,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               <OText
                 color={theme.colors.white}
                 numberOfLines={1}
-                // mBottom={4}
                 size={18}
                 style={{...props?.descriptionStyle}}
                 weight="400"
@@ -161,7 +185,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
   const _renderCategories = (): React.ReactElement => (
     <>
       {_renderTitle(t('CATEGORIES', 'Categories'))}
-      <GridContainer 
+      <GridContainer
         style={{
           paddingLeft: orientationState?.orientation === LANDSCAPE
           ? bottomSheetVisibility ? orientationState?.dimensions?.width * 0.004 :orientationState?.dimensions?.width * 0.008
@@ -171,9 +195,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
         {_categories && _categories.map((category: any) => (
           <OCard
             key={category.id}
+            isCentered
+            isUri={!!category.image}
             title={category?.name || ''}
-            image={{uri: category?.image}}
+            image={category.image ? {uri: category.image} : theme.images.categories.all}
             style={{
+              borderRadius: 10,
               width:
                 orientationState?.orientation === LANDSCAPE
                   ? bottomSheetVisibility ? orientationState?.dimensions?.width * 0.145 :orientationState?.dimensions?.width * 0.16
@@ -183,8 +210,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
               resetInactivityTimeout()
               navigation.navigate('Category', {
                 category,
-                categories: business.original.categories,
-                businessId: business?.api?.businessId,
+                categories: business?.categories,
+                businessId: business?.id,
                 businessSlug: business?.slug,
                 clearInactivityTimeout,
                 resetInactivityTimeout,

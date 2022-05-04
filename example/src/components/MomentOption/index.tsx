@@ -47,6 +47,8 @@ const MomentOptionUI = (props: MomentOptionParams) => {
   const [optionSelected, setOptionSelected] = useState({ isAsap: false, isSchedule: false })
   const [momentState, setMomentState] = useState({ isLoading: 0, isEditing: false })
 
+  const is12hours = configs?.dates_moment_format?.value?.includes('hh:mm')
+  
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 
   const _handleAsap = () => {
@@ -192,7 +194,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
                           disabled={orderState.loading}
                         >
                           <OText color={timeSelected === hour.startTime ? theme.colors.primary : theme.colors.textSecondary}>
-                            {configs?.format_time?.value === '12' ? (
+                            {is12hours ? (
                               hour.startTime.includes('12')
                                 ? `${hour.startTime}PM`
                                 : parseTime(moment(hour.startTime, 'HH:mm'), { outputFormat: 'hh:mma' })

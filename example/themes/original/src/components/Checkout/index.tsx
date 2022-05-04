@@ -39,7 +39,8 @@ import {
 	ChCart,
 	DeliveryOptionsContainer,
 	DeliveryOptionItem,
-	WalletPaymentOptionContainer
+	WalletPaymentOptionContainer,
+	CartHeader
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 
@@ -84,7 +85,8 @@ const CheckoutUI = (props: any) => {
 		deliveryOptionSelected,
 		instructionsOptions,
 		handleChangeDeliveryOption,
-		currency
+		currency,
+		merchantId
 	} = props
 
 	const theme = useTheme();
@@ -131,10 +133,11 @@ const CheckoutUI = (props: any) => {
 	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
 	const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
-
-
+	
+	const placeSpotTypes = [3, 4]
 	const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
+	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash || cart?.subtotal < cart?.minimum || (placeSpotTypes.includes(options?.type) && !cart?.place)
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -155,7 +158,7 @@ const CheckoutUI = (props: any) => {
 			navigation.navigate('MomentOption')
 		}
 	}
-	
+
 	const handlePlaceOrder = () => {
 		if (!userErrors.length) {
 			handlerClickPlaceOrder && handlerClickPlaceOrder()
@@ -200,8 +203,8 @@ const CheckoutUI = (props: any) => {
 		if (
 			!user?.cellphone &&
 			((validationFields?.fields?.checkout?.cellphone?.enabled &&
-        validationFields?.fields?.checkout?.cellphone?.required) ||
-        configs?.verification_phone_required?.value === '1')
+				validationFields?.fields?.checkout?.cellphone?.required) ||
+				configs?.verification_phone_required?.value === '1')
 		) {
 			errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is required'))
 		}
@@ -267,15 +270,15 @@ const CheckoutUI = (props: any) => {
 								/>
 							</CHMomentWrapper>
 							<CHMomentWrapper
-									onPress={() => handleMomentClick()}
-									disabled={loading}
+								onPress={() => handleMomentClick()}
+								disabled={loading}
 							>
 								<OText size={12} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.textSecondary}>
 									{options?.moment
 										? parseDate(options?.moment, { outputFormat: configs?.dates_moment_format?.value })
 										: t('ASAP_ABBREVIATION', 'ASAP')}
 								</OText>
-								{ isPreOrder && (
+								{isPreOrder && (
 									<OIcon
 										src={theme.images.general.arrow_down}
 										width={10}
@@ -545,6 +548,7 @@ const CheckoutUI = (props: any) => {
 									paySelected={paymethodSelected}
 									handlePaymentMethodClickCustom={handlePaymentMethodClick}
 									handlePlaceOrder={handlePlaceOrder}
+									merchantId={merchantId}
 								/>
 							</ChPaymethods>
 						</ChSection>
@@ -570,9 +574,28 @@ const CheckoutUI = (props: any) => {
 									/>
 								) : (
 									<>
-										<OText size={16} lineHeight={24} color={theme.colors.textNormal}>
-											{t('ORDER_SUMMARY', 'Order Summary')}
-										</OText>
+										<CartHeader>
+											<OText
+												size={16}
+												lineHeight={24}
+												color={theme.colors.textNormal}
+												style={{ fontWeight: '500' }}
+											>
+												{t('MOBILE_FRONT_YOUR_ORDER', 'Your order')}
+											</OText>
+											<TouchableOpacity
+												onPress={() => onNavigationRedirect('Business', { store: cart?.business?.slug })}
+											>
+												<OText
+													size={10}
+													lineHeight={15}
+													color={theme.colors.primary}
+													style={{ textDecorationLine: 'underline' }}
+												>
+													{t('ADD_PRODUCTS', 'Add products')}
+												</OText>
+											</TouchableOpacity>
+										</CartHeader>
 										{props.isFranchiseApp && (
 											<TouchableOpacity
 												onPress={() => setOpenChangeStore(true)}
@@ -628,6 +651,14 @@ const CheckoutUI = (props: any) => {
 										{t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
 									</OText>
 								)}
+								{placeSpotTypes.includes(options?.type) && !cart?.place && (
+									<OText
+										color={theme.colors.error}
+										size={12}
+									>
+										{t('WARNING_PLACE_SPOT', 'Please, select your spot to place order.')}
+									</OText>
+								)}
 							</ChErrors>
 						</View>
 					)}
@@ -647,8 +678,8 @@ const CheckoutUI = (props: any) => {
 			{!cartState.loading && cart && cart?.status !== 2 && (
 				<FloatingButton
 					handleClick={() => handlePlaceOrder()}
-					isSecondaryBtn={loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash || cart?.subtotal < cart?.minimum}
-					disabled={loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash || cart?.subtotal < cart?.minimum}
+					isSecondaryBtn={isDisabledButtonPlace}
+					disabled={isDisabledButtonPlace}
 					btnText={cart?.subtotal >= cart?.minimum
 						? (
 							placing

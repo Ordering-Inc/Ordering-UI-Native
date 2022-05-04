@@ -105,3 +105,10 @@ export const DeliveryOptionItem = styled.View`
   flex-direction: row;
   background-color: ${(props : any) => props?.backgroundColor ?? '#fff'};
 `;
+
+export const CartHeader = styled.View`
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`
