@@ -1,110 +1,144 @@
 import React from 'react';
-import { TextStyle, ViewStyle, Platform } from 'react-native';
+import { TextStyle, ImageBackground, StyleSheet } from 'react-native';
 import { useTheme } from 'styled-components/native';
+import FastImage from 'react-native-fast-image'
 
-import styled from 'styled-components/native';
-import OImage from './OImage';
+import styled, { css } from 'styled-components/native';
 import OText from './OText';
 
 const CardContainer = styled.TouchableOpacity`
-	width: 21%;
-	margin: 10px 20px;
-	overflow: hidden;
+	position: relative;
+  flex-direction: column;
+  border-radius: 10px;
+  position: relative;
+  margin: 0 30px 30px 0;
+  align-self: flex-start;
 `
 
-const CardBody = styled.View`
-	padding: 4%;
+const WrapPrice = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10px;
 `
 
-const CardBadge = styled.Text`
-	padding: 2% 4%;
-	position: absolute;
-	background-color: ${(props: any) => props.theme.theme.colors.primary};
-	z-index: 100;
-	border-radius: 5px;
-	color: #fff;
-	font-weight: bold;
-	margin: 10px 0;
+const WrapImage = styled.View`
+  width: 100%;
+  height: 120px;
+`
+
+const WrapContent = styled.View`
+  display: flex;
+  flex-direction: column;
+	${(props: any) => props.isCentered && css`
+		align-items: center;
+	`}
 `
 
 const OCard = (props: Props): React.ReactElement => {
 	const theme = useTheme()
 
+	const styles = StyleSheet.create({
+    textStyle: {
+      marginTop: 10
+    },
+    image: {
+      width: '100%',
+      height: '100%',
+			borderBottomLeftRadius: 0,
+			borderBottomRightRadius: 0,
+    }
+  })
+
 	return (
 		<CardContainer
-		 style={{...props.style}}
-		 onPress={props?.onPress}
-		 disabled={!props?.onPress}
-     activeOpacity={1}
-		>
-			{props?.badgeText && (
-				<CardBadge>
-					{props?.badgeText}
-				</CardBadge>
-			)}
-			<OImage
-				source={props.image}
-				height={120}
-				resizeMode="cover"
-				borderRadius={16}
-			/>
-			<CardBody>
-				<OText
-					mLeft={0}
-					size={18}
-					numberOfLines={2}
-					mBottom={8}
-					style={{...props?.titleStyle}}
-				>
-					{props.title}
-				</OText>
-
-				{props?.description && (
-					<OText
-						color={theme.colors.mediumGray}
-						numberOfLines={3}
-						mBottom={8}
-						style={{...props?.descriptionStyle}}
-					>
-						{props.description}
-					</OText>
+			activeOpacity={1}
+      style={props.style}
+      onPress={props?.onPress}
+			disabled={!props?.onPress}
+    >
+      <WrapImage>
+				{props.isUri ? (
+					<FastImage
+						style={[styles.image, props.style]}
+						source={{
+							uri: props.image?.uri,
+							priority: FastImage.priority.normal,
+							// cache:FastImage.cacheControl.web
+						}}
+						resizeMode={FastImage.resizeMode.cover}
+					/>
+				) : (
+					<ImageBackground
+						style={[styles.image, props.style]}
+						source={props.image}
+						imageStyle={{
+							borderBottomLeftRadius: 0,
+							borderBottomRightRadius: 0,
+							borderRadius: 10
+						}}
+						resizeMode='cover'
+					/>
 				)}
-				
-				{props?.price && (
-					<OText>
-						<OText
-							color={theme.colors.primary}
-							weight="bold"
-						>
-							{props.price}
-						</OText>
-
-						<OText
-							color={theme.colors.mediumGray}
-							size={12}
-							style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
-						>
-							{props?.prevPrice ? `  ${props?.prevPrice}  ` : ''}
-						</OText>
-					</OText>
-				)}
-
-			</CardBody>
-		</CardContainer>
-	);
+      </WrapImage>
+      <WrapContent isCentered={props.isCentered}>
+        <OText
+          size={18}
+          numberOfLines={1}
+          ellipsizeMode='tail'
+          style={styles.textStyle}
+        >
+          {props.title}
+        </OText>
+        {!!props?.description && (
+          <OText
+            color={theme.colors.mediumGray}
+            size={18}
+            numberOfLines={3}
+            ellipsizeMode='tail'
+            style={styles.textStyle}
+          >
+            {props?.description}
+          </OText>
+        )}
+        <WrapPrice>
+          <OText
+            size={18}
+          >
+            {props.price}
+          </OText>
+          {props?.prevPrice && (
+            <OText
+              size={18}
+              color={theme.colors.mediumGray}
+              style={{
+                textDecorationLine: 'line-through',
+                textDecorationStyle: 'solid',
+                marginLeft: 20,
+              }}
+            >
+              {props?.prevPrice}
+            </OText>
+          )}
+        </WrapPrice>
+      </WrapContent>
+    </CardContainer>
+	)
 }
 
 interface Props {
 	badgeText?: string;
+	isUri?: boolean;
 	onPress?(): void;
-	image: string | { uri: string };
+	image: any;
+	isCentered?: any;
 	title: string;
 	titleStyle?: TextStyle;
 	description?: string;
 	descriptionStyle?: TextStyle;
 	price?: string;
 	prevPrice?: string;
-	style?: ViewStyle;
+	style?: any;
 }
 
 export default OCard;

@@ -68,7 +68,6 @@ const SignupFormUI = (props: SignupParams) => {
 
 	const theme = useTheme();
 
-
 	const style = StyleSheet.create({
 		btnOutline: {
 			backgroundColor: '#FFF',
@@ -77,7 +76,6 @@ const SignupFormUI = (props: SignupParams) => {
 		inputStyle: {
 			marginBottom: 20,
 			borderWidth: 1,
-			borderColor: theme.colors.border,
 			borderRadius: 7.6,
 		},
 		wrappText: {
@@ -102,7 +100,7 @@ const SignupFormUI = (props: SignupParams) => {
 	const [, t] = useLanguage();
 	const [, { login }] = useSession();
 	const [{ configs }] = useConfig();
-	const { control, handleSubmit, errors } = useForm();
+	const { control, handleSubmit, errors, register, setValue } = useForm();
 
 	const [passwordSee, setPasswordSee] = useState(false);
 	const [formValues, setFormValues] = useState(null);
@@ -227,7 +225,7 @@ const SignupFormUI = (props: SignupParams) => {
 			handleButtonSignupClick &&
 				handleButtonSignupClick({
 					...values,
-					...phoneInputData.phone,
+					...((phoneInputData.phone.cellphone !== null && phoneInputData.phone.country_phone_code !== null) && {...phoneInputData.phone}),
 				});
 			if (
 				!formState.loading &&
@@ -298,35 +296,22 @@ const SignupFormUI = (props: SignupParams) => {
 
 	useEffect(() => {
 		if (Object.keys(errors).length > 0) {
-			// Convert all errors in one string to show in toast provider
-			const list = Object.values(errors);
-			if (phoneInputData.error) {
-				list.push({ message: phoneInputData.error });
-			}
-			if (
-				!phoneInputData.error &&
-				!phoneInputData.phone.country_phone_code &&
-				!phoneInputData.phone.cellphone &&
-				((validationFields?.fields?.checkout?.cellphone?.enabled &&
-          validationFields?.fields?.checkout?.cellphone?.required) ||
-          configs?.verification_phone_required?.value === '1')
-			) {
-				list.push({
-					message: t(
-						'VALIDATION_ERROR_MOBILE_PHONE_REQUIRED',
-						'The field Mobile phone is required.',
-					),
-				});
-			}
-			let stringError = '';
-			list.map((item: any, i: number) => {
-				stringError +=
-					i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
-			});
-			showToast(ToastType.Error, stringError);
 			setIsLoadingVerifyModal(false);
 		}
 	}, [errors]);
+
+	useEffect(() => {
+    register('cellphone', {
+      required: isRequiredField('cellphone')
+        ? t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone'))
+        : null
+    })
+  }, [register])
+
+	useEffect(() => {
+		if (phoneInputData?.phone?.cellphone) setValue('cellphone', phoneInputData?.phone?.cellphone, '')
+		else setValue('cellphone', '')
+	}, [phoneInputData?.phone?.cellphone])
 
 	useEffect(() => {
 		if (verifyPhoneState && !verifyPhoneState?.loading) {
@@ -412,48 +397,58 @@ const SignupFormUI = (props: SignupParams) => {
 									!notValidationFields.includes(field.code) &&
 									showField &&
 									showField(field.code) && (
-										<Controller
-											key={field.id}
-											control={control}
-											render={({ onChange, value }: any) => (
-												<OInput
-													placeholder={t(field.name)}
-													style={style.inputStyle}
-													icon={
-														field.code === 'email'
-															? theme.images.general.email
-															: theme.images.general.user
-													}
-													value={value}
-													onChange={(val: any) =>
-														field.code !== 'email'
-															? onChange(val)
-															: handleChangeInputEmail(val, onChange)
-													}
-													autoCapitalize={
-														field.code === 'email' ? 'none' : 'sentences'
-													}
-													autoCorrect={field.code === 'email' && false}
-													type={
-														field.code === 'email' ? 'email-address' : 'default'
-													}
-													autoCompleteType={
-														field.code === 'email' ? 'email' : 'off'
-													}
-													returnKeyType="next"
-													blurOnSubmit={false}
-													forwardRef={(ref: any) => handleRefs(ref, field.code)}
-													onSubmitEditing={() =>
-														field.code === 'email'
-															? phoneRef?.current?.focus?.()
-															: handleFocusRef(getNextFieldCode(i))
-													}
-												/>
+										<React.Fragment key={field.id}>
+											{errors?.[`${field.code}`] && (
+												<OText
+													size={14}
+													color={theme.colors.danger5}
+													weight={'normal'}>
+													{errors?.[`${field.code}`]?.message} {errors?.[`${field.code}`]?.type === 'required' && '*'}
+												</OText>
 											)}
-											name={field.code}
-											rules={getInputRules(field)}
-											defaultValue=""
-										/>
+											<Controller
+												control={control}
+												render={({ onChange, value }: any) => (
+													<OInput
+														placeholder={t(field.name)}
+														style={style.inputStyle}
+														icon={
+															field.code === 'email'
+																? theme.images.general.email
+																: theme.images.general.user
+														}
+														value={value}
+														onChange={(val: any) =>
+															field.code !== 'email'
+																? onChange(val)
+																: handleChangeInputEmail(val, onChange)
+														}
+														autoCapitalize={
+															field.code === 'email' ? 'none' : 'sentences'
+														}
+														autoCorrect={field.code === 'email' && false}
+														type={
+															field.code === 'email' ? 'email-address' : 'default'
+														}
+														autoCompleteType={
+															field.code === 'email' ? 'email' : 'off'
+														}
+														returnKeyType="next"
+														blurOnSubmit={false}
+														forwardRef={(ref: any) => handleRefs(ref, field.code)}
+														onSubmitEditing={() =>
+															field.code === 'email'
+																? phoneRef?.current?.focus?.()
+																: handleFocusRef(getNextFieldCode(i))
+														}
+														borderColor={errors?.[`${field.code}`] ? theme.colors.danger5 : theme.colors.border}
+													/>
+												)}
+												name={field.code}
+												rules={getInputRules(field)}
+												defaultValue=""
+											/>
+										</React.Fragment>
 									),
 							)}
 
@@ -467,6 +462,7 @@ const SignupFormUI = (props: SignupParams) => {
 											returnKeyType: 'next',
 											onSubmitEditing: () => passwordRef?.current?.focus?.(),
 										}}
+										isStartValidation={errors?.cellphone}
 									/>
 								</View>
 							)}
@@ -499,99 +495,122 @@ const SignupFormUI = (props: SignupParams) => {
 							</View>
 
 							{configs?.terms_and_conditions?.value === 'true' && (
-								<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-									<Controller
-										control={control}
-										render={({ onChange, value }: any) => (
-											<CheckBox
-												value={value}
-												onValueChange={newValue => {
-													onChange(newValue)
-												}}
-												boxType={'square'}
-												tintColors={{
-													true: theme.colors.primary,
-													false: theme.colors.disabled
-												}}
-												tintColor={theme.colors.disabled}
-												onCheckColor={theme.colors.primary}
-												onTintColor={theme.colors.primary}
-												style={Platform.OS === 'ios' && style.checkBoxStyle}
-											/>
-										)}
-										name='termsAccept'
-										rules={{
-											required: t('VALIDATION_ERROR_ACCEPTED', 'The _attribute_ must be accepted.').replace('_attribute_', t('TERMS_AND_CONDITIONS', 'Terms & Conditions'))
-										}}
-										defaultValue={false}
-									/>
-									<OText style={{ fontSize: 14, paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I agree with')}</OText>
-									<OButton
-										imgRightSrc={null}
-										text={t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
-										bgColor='#FFF'
-										borderColor='#FFF'
-										style={{ paddingLeft: 0, paddingRight: 0, height: 30, shadowColor: '#FFF' }}
-										textStyle={{ color: theme.colors.primary, marginLeft: 0, marginRight: 0 }}
-										onClick={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}
-									/>
-								</View>
+								<>
+									{errors?.termsAccept && (
+										<OText
+											size={14}
+											color={theme.colors.danger5}
+											weight={'normal'}>
+											{errors?.termsAccept?.message}*
+										</OText>
+									)}
+									<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+										<Controller
+											control={control}
+											render={({ onChange, value }: any) => (
+												<CheckBox
+													value={value}
+													onValueChange={newValue => {
+														onChange(newValue)
+													}}
+													boxType={'square'}
+													tintColors={{
+														true: theme.colors.primary,
+														false: theme.colors.disabled
+													}}
+													tintColor={theme.colors.disabled}
+													onCheckColor={theme.colors.primary}
+													onTintColor={theme.colors.primary}
+													style={Platform.OS === 'ios' && style.checkBoxStyle}
+												/>
+											)}
+											name='termsAccept'
+											rules={{
+												required: t('VALIDATION_ERROR_ACCEPTED', 'The _attribute_ must be accepted.').replace('_attribute_', t('TERMS_AND_CONDITIONS', 'Terms & Conditions'))
+											}}
+											defaultValue={false}
+										/>
+										<OText style={{ fontSize: 14, paddingHorizontal: 5 }}>{t('TERMS_AND_CONDITIONS_TEXT', 'I agree with')}</OText>
+										<OButton
+											imgRightSrc={null}
+											text={t('TERMS_AND_CONDITIONS', 'Terms & Conditions')}
+											bgColor='#FFF'
+											borderColor='#FFF'
+											style={{ paddingLeft: 0, paddingRight: 0, height: 30, shadowColor: '#FFF' }}
+											textStyle={{ color: theme.colors.primary, marginLeft: 0, marginRight: 0 }}
+											onClick={() => handleOpenTermsUrl(configs?.terms_and_conditions_url?.value)}
+										/>
+									</View>
+								</>
+
 							)}
 
 							{signupTab !== 'cellphone' && (
-								<Controller
-									control={control}
-									render={({ onChange, value }: any) => (
-										<OInput
-											isSecured={!passwordSee ? true : false}
-											placeholder={t('PASSWORD', 'Password')}
-											style={style.inputStyle}
-											icon={theme.images.general.lock}
-											iconCustomRight={
-												!passwordSee ? (
-													<MaterialCommunityIcons
-														name="eye-outline"
-														color={theme.colors.disabled}
-														size={24}
-														onPress={() => setPasswordSee(!passwordSee)}
-													/>
-												) : (
-													<MaterialCommunityIcons
-														name="eye-off-outline"
-														color={theme.colors.disabled}
-														size={24}
-														onPress={() => setPasswordSee(!passwordSee)}
-													/>
-												)
-											}
-											value={value}
-											onChange={(val: any) => onChange(val)}
-											returnKeyType="done"
-											onSubmitEditing={handleSubmit(onSubmit)}
-											blurOnSubmit
-											forwardRef={passwordRef}
-										/>
+								<>
+									{errors?.password && (
+										<OText
+											size={14}
+											color={theme.colors.danger5}
+											weight={'normal'}>
+											{errors?.password?.message} {errors?.password?.type === 'required' && '*'}
+										</OText>
 									)}
-									name="password"
-									rules={{
-										required: isRequiredField('password')
-											? t(
-												'VALIDATION_ERROR_PASSWORD_REQUIRED',
-												'The field Password is required',
-											).replace('_attribute_', t('PASSWORD', 'password'))
-											: null,
-										minLength: {
-											value: 8,
-											message: t(
-												'VALIDATION_ERROR_PASSWORD_MIN_STRING',
-												'The Password must be at least 8 characters.',
-											)
-												.replace('_attribute_', t('PASSWORD', 'Password'))
-												.replace('_min_', 8),
-										},
-									}}
-									defaultValue=""
-								/>
+									<Controller
+										control={control}
+										render={({ onChange, value }: any) => (
+											<OInput
+												isSecured={!passwordSee ? true : false}
+												placeholder={t('PASSWORD', 'Password')}
+												style={style.inputStyle}
+												icon={theme.images.general.lock}
+												iconCustomRight={
+													!passwordSee ? (
+														<MaterialCommunityIcons
+															name="eye-outline"
+															color={theme.colors.disabled}
+															size={24}
+															onPress={() => setPasswordSee(!passwordSee)}
+														/>
+													) : (
+														<MaterialCommunityIcons
+															name="eye-off-outline"
+															color={theme.colors.disabled}
+															size={24}
+															onPress={() => setPasswordSee(!passwordSee)}
+														/>
+													)
+												}
+												value={value}
+												onChange={(val: any) => onChange(val)}
+												returnKeyType="done"
+												onSubmitEditing={handleSubmit(onSubmit)}
+												blurOnSubmit
+												forwardRef={passwordRef}
+												borderColor={errors?.password ? theme.colors.danger5 : theme.colors.border}
+											/>
+										)}
+										name="password"
+										rules={{
+											required: isRequiredField('password')
+												? t(
+													'VALIDATION_ERROR_PASSWORD_REQUIRED',
+													'The field Password is required',
+												).replace('_attribute_', t('PASSWORD', 'password'))
+												: null,
+											minLength: {
+												value: 8,
+												message: t(
+													'VALIDATION_ERROR_PASSWORD_MIN_STRING',
+													'The Password must be at least 8 characters.',
+												)
+													.replace('_attribute_', t('PASSWORD', 'Password'))
+													.replace('_min_', 8),
+											},
+										}}
+										defaultValue=""
+									/>
+								</>
+
 							)}
 						</>
 					) : (

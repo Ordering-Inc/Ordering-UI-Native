@@ -25,6 +25,7 @@ import { ReviewProducts } from './src/components/ReviewProducts';
 import { ReviewDriver } from './src/components/ReviewDriver';
 import { UserProfile } from './src/components/UserProfile';
 import { MessageListing } from './src/components/MessageListing';
+import { Messages } from './src/components/Messages';
 import { Help } from './src/components/Help';
 import { HelpAccountAndPayment } from './src/components/HelpAccountAndPayment';
 import { HelpGuide } from './src/components/HelpGuide';
@@ -93,6 +94,7 @@ export {
 	BusinessMenuList,
 	UserProfile,
 	MessageListing,
+  Messages,
 	Help,
 	HelpAccountAndPayment,
 	HelpGuide,
