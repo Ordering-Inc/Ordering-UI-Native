@@ -55,7 +55,8 @@ const PaymentOptionsUI = (props: any) => {
 		handlePaymethodDataChange,
 		isOpenMethod,
 		handlePaymentMethodClickCustom,
-		handlePlaceOrder
+		handlePlaceOrder,
+		merchantId
 	} = props
 
 	const theme = useTheme();
@@ -307,6 +308,7 @@ const PaymentOptionsUI = (props: any) => {
 						publicKey={isOpenMethod?.paymethod?.credentials?.publishable || isOpenMethod?.paymethod?.credentials?.publishable_key}
 						handleSource={handlePaymethodDataChange}
 						onCancel={() => handlePaymethodClick(null)}
+						merchantId={merchantId}
 					/>
 				</KeyboardAvoidingView>
 			</OModal>
