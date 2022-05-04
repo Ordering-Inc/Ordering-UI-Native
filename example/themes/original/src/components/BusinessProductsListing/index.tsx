@@ -98,24 +98,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const onProductClick = (product: any) => {
-		const cartProduct = currentCart?.products?.find((cproduct: any) => cproduct?.id === product?.id)
-		if (cartProduct) {
-			onRedirect('ProductDetails', {
-				businessId:  business.id,
-				isCartProduct: true,
-				productCart: cartProduct,
-				businessSlug: business?.slug,
-				categoryId: cartProduct?.category_id,
-				productId: cartProduct?.id,
-			})
-		} else {
-			onRedirect('ProductDetails', {
-				product: product,
-				businessSlug: business.slug,
-				businessId: business.id,
-			})
-		}
-
+		onRedirect('ProductDetails', {
+			product: product,
+			businessSlug: business.slug,
+			businessId: business.id,
+		})
 	}
 
 	const handleCancel = () => {
@@ -169,8 +156,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	const handleTouchDrag = useCallback(() => {
 		setCategoryClicked(false);
-	  }, []);
-	
+	}, []);
+
 	const handleBackNavigation = () => {
 		navigation?.canGoBack() ? navigation.goBack() : navigation.navigate('BottomTab')
 	}
@@ -251,7 +238,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								selectedCategoryId={selectedCategoryId}
 								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
 								setSelectedCategoryId={setSelectedCategoryId}
-              					setCategoryClicked={setCategoryClicked}
+								setCategoryClicked={setCategoryClicked}
 							/>
 						)}
 					</>
@@ -329,13 +316,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					business={currentCart?.business}
 					cartProducts={currentCart?.products}
 					cart={currentCart}
-          			setOpenUpselling={setOpenUpselling}
+					setOpenUpselling={setOpenUpselling}
 					handleUpsellingPage={handleUpsellingPage}
 					handleCloseUpsellingPage={handleCloseUpsellingPage}
 					openUpselling={openUpselling}
 					canOpenUpselling={canOpenUpselling}
 					setCanOpenUpselling={setCanOpenUpselling}
-          			onRedirect={onRedirect}
+					onRedirect={onRedirect}
 				/>
 			)}
 		</SafeAreaView>
