@@ -166,17 +166,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		return R * c
 	}
 
-	useEffect(() => {
-		if (businessesList.businesses.length > 0) {
-			const fb = businessesList.businesses.filter((b) => b.featured == true);
-			const ary = [];
-			while (fb.length > 0) {
-				ary.push(fb.splice(0, 2));
-			}
-			setFeaturedBusinesses(ary);
-		}
-	}, [businessesList.businesses]);
-
 	const resetInactivityTimeout = () => {
 		clearTimeout(timerId.current)
 		timerId.current = setInterval(() => {
@@ -185,6 +174,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}
 
 	useEffect(() => {
+		if (!businessesList?.loading) {
+			const fb = businessesList.businesses.filter((b) => b.featured === true && b?.open);
+			const ary = [];
+			while (fb.length > 0) {
+				ary.push(fb.splice(0, 2));
+			}
+			setFeaturedBusinesses(ary);
+		}
 		resetInactivityTimeout()
 	}, [businessesList.loading])
 
