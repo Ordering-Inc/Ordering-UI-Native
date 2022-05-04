@@ -342,30 +342,34 @@ const MessagesUI = (props: MessagesParams) => {
 		)
 	)
 
-	const renderSend = (props: any) => (
-		<Send
-			{...props}
-			disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
-			alwaysShowSend
-			containerStyle={styles.containerSend}
-		>
-			<OIconButton
-				onClick={onSubmit}
-				style={{
-					height: 44,
-					width: 44,
-					borderRadius: 7.6,
-					opacity: (sendMessage?.loading || (message === '' && !image) || messages?.loading) ? 0.4 : 1,
-					borderColor: theme.colors.primary,
-					backgroundColor: theme.colors.primary,
-				}}
-				iconStyle={{ marginTop: 3, marginRight: 2 }}
-				icon={theme.images.general.enter}
-				disabled={(sendMessage?.loading || (message === '' && !image) || messages?.loading)}
-				disabledColor={theme.colors.white}
-			/>
-		</Send>
-	)
+	const renderSend = (props: any) => {
+		const isDisabled = (sendMessage?.loading || (message === '' && !image) || messages?.loading)
+		return (
+			<Send
+				{...props}
+				disabled={isDisabled}
+				alwaysShowSend
+				containerStyle={styles.containerSend}
+			>
+				<OIconButton
+					onClick={onSubmit}
+					style={{
+						height: 44,
+						width: 44,
+						borderRadius: 7.6,
+						opacity: isDisabled ? 0.2 : 1,
+						borderColor: isDisabled ? theme.colors.secondary : theme.colors.primary,
+						backgroundColor: isDisabled ? theme.colors.secondary : theme.colors.primary,
+					}}
+					iconStyle={{ marginTop: 3, marginRight: 2 }}
+					icon={theme.images.general.enter}
+					iconColor={isDisabled ? '#000' : '#fff'}
+					disabled={isDisabled}
+					disabledColor={theme.colors.secondary}
+				/>
+			</Send>
+		)
+	}
 
 	const renderBubble = (props: any) => (
 		<Bubble

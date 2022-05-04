@@ -25,11 +25,11 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import FastImage from 'react-native-fast-image'
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
-	const { 
-		business, 
-		handleClick, 
-		navigation, 
-		isBusinessOpen, 
+	const {
+		business,
+		handleClick,
+		navigation,
+		isBusinessOpen,
 		style
 	} = props;
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
@@ -116,8 +116,8 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 				<FastImage
 					style={{ height: 120 }}
 					source={{
-							uri: optimizeImage(business?.header, 'h_500,c_limit'),
-							priority: FastImage.priority.normal,
+						uri: optimizeImage(business?.header, 'h_500,c_limit'),
+						priority: FastImage.priority.normal,
 					}}
 					resizeMode={FastImage.resizeMode.cover}
 				/>
@@ -145,8 +145,8 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						<FastImage
 							style={{ width: 56, height: 56 }}
 							source={{
-									uri: optimizeImage(business?.logo, 'h_150,c_limit'),
-									priority: FastImage.priority.normal,
+								uri: optimizeImage(business?.logo, 'h_150,c_limit'),
+								priority: FastImage.priority.normal,
 							}}
 							resizeMode={FastImage.resizeMode.cover}
 						/>
@@ -181,9 +181,11 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						</View>
 					) : (
 						<View style={styles.bullet}>
-							<OText size={10} color={theme.colors.textSecondary}>
-								{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(business?.delivery_price) + ' \u2022 '}`}
-							</OText>
+							{orderState?.options?.type === 1 && (
+								<OText size={10} color={theme.colors.textSecondary}>
+									{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(business?.delivery_price) + ' \u2022 '}`}
+								</OText>
+							)}
 							<OText size={10} color={theme.colors.textSecondary}>{`${convertHoursToMinutes(
 								orderState?.options?.type === 1
 									? business?.delivery_time
