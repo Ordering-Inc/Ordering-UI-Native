@@ -8,6 +8,9 @@ import {
   Card, Logo, Information, MyOrderOptions, NotificationIcon, AcceptOrRejectOrder, Timestatus
 } from './styles';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
+import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+
+const { useDeviceOrientation, PORTRAIT } = DeviceOrientationMethods
 
 export const PreviousOrders = (props: any) => {
   const {
@@ -18,25 +21,33 @@ export const PreviousOrders = (props: any) => {
     isLogisticOrder,
     handleClickLogisticOrder,
     slaSettingTime,
-    currentTabSelected
+    currentTabSelected,
+    currentOrdenSelected
   } = props;
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
   const theme = useTheme();
   const [currentTime, setCurrentTime] = useState()
+  const [orientationState] = useDeviceOrientation();
+
+  const IS_PORTRAIT = orientationState.orientation === PORTRAIT
 
   const handlePressOrder = (order: any) => {
     if (order?.locked && isLogisticOrder) return
     handleClickOrder && handleClickOrder(order)
-    onNavigationRedirect &&
-      onNavigationRedirect('OrderDetails', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
+    if (props.handleClickEvent) {
+      props.handleClickEvent({ ...order, isLogistic: isLogisticOrder })
+    } else {
+      onNavigationRedirect &&
+        onNavigationRedirect('OrderDetails', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
+    }
   };
 
   const styles = StyleSheet.create({
     cardButton: {
       flex: 1,
-      minHeight: isLogisticOrder ? 50 : 64,
-      marginBottom: isLogisticOrder ? 0 : 30,
+      paddingVertical: 20,
+      marginBottom: IS_PORTRAIT ? 20 : 0,
       marginLeft: 3,
     },
     icon: {
@@ -115,8 +126,9 @@ export const PreviousOrders = (props: any) => {
             return (
               <View
                 style={{
-                  backgroundColor: order?.locked && isLogisticOrder ? '#ccc' : '#fff',
-                  marginBottom: isLogisticOrder ? 10 : 0
+                  backgroundColor: currentOrdenSelected === order?.id ? theme.colors.gray100 : order?.locked && isLogisticOrder ? '#ccc' : '#fff',
+                  marginBottom: isLogisticOrder ? 10 : 0,
+                  // justifyContent: 'center'
                 }}
                 key={order.id}
               >
