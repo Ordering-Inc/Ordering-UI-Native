@@ -541,7 +541,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           </TabsContainer>
         </ScrollView>
       </FiltersTab>
-      <View style={{ flex: 1, minHeight: HEIGHT_SCREEN - 250 }}>
+      <View style={{ flex: 1, minHeight: HEIGHT_SCREEN - 450 }}>
         {currentTabSelected !== 'logisticOrders' && (
           <View
             style={{
