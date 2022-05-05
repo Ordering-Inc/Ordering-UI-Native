@@ -431,6 +431,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             handleViewSummaryOrder={handleViewSummaryOrder}
             handleCopyClipboard={handleCopyClipboard}
             handleArrowBack={handleArrowBack}
+            isCustomView={props.isCustomView}
           />
           <OrderDetailsContainer
             keyboardShouldPersistTaps="handled"

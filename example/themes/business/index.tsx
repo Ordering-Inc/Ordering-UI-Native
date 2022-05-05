@@ -16,6 +16,7 @@ import { OrderMessage } from './src/components/OrderMessage';
 import { OrderDetailsBusiness } from './src/components/OrderDetails/Business';
 import { OrderDetailsDelivery } from './src/components/OrderDetails/Delivery';
 import { OrdersOption } from './src/components/OrdersOption';
+import { OrdersListManager } from './src/components/OrdersListManager';
 import { OrdersOptionStatus } from './src/components/OrdersOptionStatus';
 import { OrdersOptionBusiness } from './src/components/OrdersOptionBusiness';
 import { OrdersOptionCity } from './src/components/OrdersOptionCity';
@@ -84,6 +85,7 @@ export {
   OrderDetailsDelivery,
   OrderMessage,
   OrdersOption,
+  OrdersListManager,
   OrdersOptionStatus,
   OrdersOptionBusiness,
   OrdersOptionCity,
