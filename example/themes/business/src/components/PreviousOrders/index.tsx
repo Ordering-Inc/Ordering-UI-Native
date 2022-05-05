@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Platform, PlatformIOSStatic } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import moment from 'moment'
 import { useLanguage, useUtils } from 'ordering-components/native';
@@ -9,6 +9,7 @@ import {
 } from './styles';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+import DeviceInfo from 'react-native-device-info';
 
 const { useDeviceOrientation, PORTRAIT } = DeviceOrientationMethods
 
@@ -32,6 +33,10 @@ export const PreviousOrders = (props: any) => {
 
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
 
+  const platformIOS = Platform as PlatformIOSStatic
+  const isIpad = platformIOS.isPad
+  const isTablet = DeviceInfo.isTablet();
+
   const handlePressOrder = (order: any) => {
     if (order?.locked && isLogisticOrder) return
     handleClickOrder && handleClickOrder(order)
@@ -46,8 +51,8 @@ export const PreviousOrders = (props: any) => {
   const styles = StyleSheet.create({
     cardButton: {
       flex: 1,
-      paddingVertical: 20,
-      marginBottom: IS_PORTRAIT ? 20 : 0,
+      paddingVertical: (isIpad || isTablet) ? 20 : 0,
+      marginBottom: IS_PORTRAIT ? 25 : 0,
       marginLeft: 3,
     },
     icon: {
