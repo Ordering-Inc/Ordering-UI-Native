@@ -166,8 +166,15 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		return R * c
 	}
 
+	const resetInactivityTimeout = () => {
+		clearTimeout(timerId.current)
+		timerId.current = setInterval(() => {
+			getBusinesses(true)
+		}, 120000)
+	}
+
 	useEffect(() => {
-		if (businessesList.businesses.length > 0) {
+		if (!businessesList?.loading) {
 			const fb = businessesList.businesses.filter((b) => b.featured === true && b?.open);
 			const ary = [];
 			while (fb.length > 0) {
@@ -175,16 +182,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			}
 			setFeaturedBusinesses(ary);
 		}
-	}, [businessesList.businesses]);
-
-	const resetInactivityTimeout = () => {
-		clearTimeout(timerId.current)
-		timerId.current = setInterval(() => {
-			getBusinesses(true)
-		}, 300000)
-	}
-
-	useEffect(() => {
 		resetInactivityTimeout()
 	}, [businessesList.loading])
 
@@ -207,27 +204,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		})
 	}, [orderState?.options?.address?.location])
 
-	useEffect(() => {
-		const onFocusApp = (nextAppState: any) => {
-			if (
-				appState.current.match(/inactive|background/) &&
-				nextAppState === "active"
-			) {
-				getBusinesses(true);
-			}
-			appState.current = nextAppState;
-			setAppStateVisible(appState.current);
-		}
-
-		AppState.addEventListener("change", onFocusApp);
-		return () => {
-			AppState.removeEventListener('change', onFocusApp);
-		};
-	}, [])
-
 	useFocusEffect(
 		useCallback(() => {
-			getBusinesses(true)
 			resetInactivityTimeout()
 			return () => clearTimeout(timerId.current)
 		}, [navigation])
@@ -401,6 +379,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							handleCustomClick={handleBusinessClick}
 							orderType={orderState?.options?.type}
 							navigation={navigation}
+							businessHeader={business?.header}
+							businessFeatured={business?.featured}
+							businessLogo={business?.logo}
+							businessReviews={business?.reviews}
+							businessDeliveryPrice={business?.delivery_price}
+							businessDeliveryTime={business?.delivery_time}
+							businessPickupTime={business?.pickup_time}
+							businessDistance={business?.distance}
 						/>
 					)
 				)}

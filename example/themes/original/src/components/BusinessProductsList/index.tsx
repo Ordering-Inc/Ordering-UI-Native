@@ -237,7 +237,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
 };
 
 const bpStyles = StyleSheet.create({
-  catWrap: { flexDirection: 'row', alignItems: 'center', height: 41, marginBottom: 19 },
+  catWrap: { flexDirection: 'row', alignItems: 'center', marginBottom: 19 },
   catIcon: {
     borderRadius: 7.6,
     shadowColor: '#000000',

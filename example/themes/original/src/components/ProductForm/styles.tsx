@@ -6,9 +6,10 @@ export const WrapHeader = styled.View`
 `
 
 export const TopActions = styled.TouchableOpacity`
-	height: 44px;
+	height: 60px;
 	justify-content: center;
   padding-horizontal: 30px;
+  width: 80px;
 `;
 
 export const TopHeader = styled.View`

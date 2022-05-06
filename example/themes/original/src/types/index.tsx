@@ -166,7 +166,15 @@ export interface BusinessControllerParams {
 	businessWillCloseSoonMinutes?: number
 	isBusinessClose?: number,
 	navigation?: any,
-	style?: ViewStyle
+	style?: ViewStyle,
+	businessHeader?: string,
+	businessFeatured?: boolean,
+	businessLogo?: string,
+	businessReviews?: any,
+	businessDeliveryPrice?: number,
+	businessDeliveryTime?: string,
+	businessPickupTime?: string,
+	businessDistance?: number
 }
 export interface BusinessProductsListingParams {
 	navigation?: any;
