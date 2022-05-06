@@ -254,8 +254,8 @@ const CheckoutUI = (props: any) => {
 					isVertical
 					onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
 					title={t('CHECKOUT', 'Checkout')}
-					style={styles.pagePadding}
-					titleStyle={{ marginLeft: 0, marginRight: 0 }}
+					titleStyle={{ marginLeft: 0, marginRight: 0, paddingLeft: 40 }}
+					btnStyle={{ marginLeft: 40, padding: 40 }}
 				/>
 				<ChContainer style={styles.pagePadding}>
 					<ChSection style={{ paddingTop: 0 }}>
