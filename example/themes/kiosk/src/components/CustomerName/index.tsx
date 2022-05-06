@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLanguage, ToastType, useToast } from 'ordering-components/native';
-import { _setStoreData } from '../../../../../src/providers/StoreUtil';
+import { _setStoreData, _removeStoreData } from '../../../../../src/providers/StoreUtil';
 
 import { OButton, OInput, OText } from '../shared';
 import { useForm, Controller } from 'react-hook-form';
@@ -27,6 +27,11 @@ const CustomerName = (props: Props): React.ReactElement => {
     _setStoreData('customer_name', { customerName: values.name });
     onProceedToPay()
   };
+
+  const onSkip = () => {
+    _removeStoreData('customer_name')
+    onProceedToPay()
+  }
 
   const styles = StyleSheet.create({
     inputStyle: {
@@ -75,7 +80,7 @@ const CustomerName = (props: Props): React.ReactElement => {
     <View style={{ flex: 1, alignItems: 'center' }}>
       <OButton
         text={t('SKIP', 'Skip')}
-        onClick={onProceedToPay}
+        onClick={onSkip}
         textStyle={{ color: theme.colors.primary, fontSize: 20 }}
         parentStyle={{
           height: orientationState?.orientation === PORTRAIT
