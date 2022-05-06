@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, BackHandler, KeyboardAvoidingView, Platform, Linking } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
+import { View, StyleSheet, BackHandler, Platform, Linking } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { Messages } from '../Messages';
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
   useUtils,
-  useConfig,
-  useSession,
+  useConfig
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
@@ -16,14 +13,10 @@ import {
   Header,
   OrderContent,
   OrderBusiness,
-  Logo,
   OrderData,
   OrderInfo,
-  OrderStatus,
   StaturBar,
-  StatusImage,
   OrderCustomer,
-  CustomerPhoto,
   InfoBlock,
   HeaderInfo,
   Customer,
@@ -31,17 +24,16 @@ import {
   Table,
   OrderBill,
   Total,
-  NavBack,
   Icons,
   OrderDriver,
   Map,
   Divider,
+  OrderAction
 } from './styles';
 import { OButton, OIcon, OModal, OText } from '../shared';
 import { ProductItemAccordion } from '../ProductItemAccordion';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { OrderDetailsParams } from '../../types';
-import { USER_TYPE } from '../../config/constants';
 import { GoogleMap } from '../GoogleMap';
 import { verifyDecimals } from '../../utils';
 import { OSRow } from '../OrderSummary/styles';
@@ -55,9 +47,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     messages,
     setMessages,
     readMessages,
-    messagesReadList,
     isFromCheckout,
     driverLocation,
+    onNavigationRedirect,
+    reorderState,
+    handleReorder
   } = props;
 
   const theme = useTheme();
@@ -92,16 +86,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const [, t] = useLanguage();
   const [{ parsePrice, parseNumber, parseDate }] = useUtils();
-  const [{ user }] = useSession();
   const [{ configs }] = useConfig();
-
-  const [openModalForBusiness, setOpenModalForBusiness] = useState(false);
-  const [openModalForDriver, setOpenModalForDriver] = useState(false);
   const [isReviewed, setIsReviewed] = useState(false)
-  const [unreadAlert, setUnreadAlert] = useState({
-    business: false,
-    driver: false,
-  });
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
 
   const { order, businessData } = props.order;
@@ -293,18 +279,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         percentage: 95,
         image: theme.images.order.status7,
       },
-      { 
-        key: 22, 
-        value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver'), 
-        slug: 'ORDER_LOOKING_FOR_DRIVER', 
-        percentage: 35, 
-        image: theme.images.order.status8 
+      {
+        key: 22,
+        value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver'),
+        slug: 'ORDER_LOOKING_FOR_DRIVER',
+        percentage: 35,
+        image: theme.images.order.status8
       },
-      { 
-        key: 23, 
-        value: t('ORDER_DRIVER_ON_WAY', 'Driver on way'), 
-        slug: 'ORDER_DRIVER_ON_WAY', 
-        percentage: 45, 
+      {
+        key: 23,
+        value: t('ORDER_DRIVER_ON_WAY', 'Driver on way'),
+        slug: 'ORDER_DRIVER_ON_WAY',
+        percentage: 45,
         image: theme.images.order.status8
       }
     ];
@@ -314,38 +300,24 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     return objectStatus && objectStatus;
   };
 
-  const handleOpenMessagesForBusiness = () => {
-    setOpenModalForBusiness(true);
+  const handleGoToMessages = (type: string) => {
     readMessages && readMessages();
-    setUnreadAlert({ ...unreadAlert, business: false });
-  };
-
-  const handleOpenMessagesForDriver = () => {
-    setOpenModalForDriver(true);
-    readMessages && readMessages();
-    setUnreadAlert({ ...unreadAlert, driver: false });
-  };
-
-  const unreadMessages = () => {
-    const length = messages?.messages.length;
-    const unreadLength = order?.unread_count;
-    const unreadedMessages = messages.messages.slice(
-      length - unreadLength,
-      length,
-    );
-    const business = unreadedMessages.some((message: any) =>
-      message?.can_see?.includes(2),
-    );
-    const driver = unreadedMessages.some((message: any) =>
-      message?.can_see?.includes(4),
-    );
-    setUnreadAlert({ business, driver });
-  };
-
-  const handleCloseModal = () => {
-    setOpenModalForBusiness(false);
-    setOpenModalForDriver(false);
-  };
+    navigation.navigate(
+      'MessageDetails',
+      {
+        type,
+        order,
+        messages,
+        setMessages,
+        orderId: order?.id,
+        business: type === 'business',
+        driver: type === 'driver',
+        onClose: () => navigation?.canGoBack()
+          ? navigation.goBack()
+          : navigation.navigate('BottomTab', { screen: 'MyOrders' }),
+      }
+    )
+  }
 
   const handleArrowBack: any = () => {
     if (!isFromCheckout) {
@@ -387,20 +359,22 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     )
   }
 
+
+  useEffect(() => {
+    if (reorderState?.error) {
+      navigation.navigate('Business', { store: businessData?.slug })
+    }
+    if (!reorderState?.error && reorderState?.result?.uuid) {
+      onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
+    }
+  }, [reorderState])
+
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleArrowBack);
     return () => {
       BackHandler.removeEventListener('hardwareBackPress', handleArrowBack);
     };
   }, []);
-
-  useEffect(() => {
-    if (messagesReadList?.length) {
-      openModalForBusiness
-        ? setUnreadAlert({ ...unreadAlert, business: false })
-        : setUnreadAlert({ ...unreadAlert, driver: false });
-    }
-  }, [messagesReadList]);
 
   const locations = [
     {
@@ -429,10 +403,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       locations[0] = driverLocation;
     }
   }, [driverLocation]);
-
-  useEffect(() => {
-    console.log('order: ', order)
-  }, [order]);
 
   return (
     <OrderDetailsContainer keyboardShouldPersistTaps="handled">
@@ -481,7 +451,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <PlaceholderLine width={65} height={10} />
             <PlaceholderLine width={80} height={10} />
             <PlaceholderLine width={70} height={10} />
-            <View style={{marginTop: 10}}>
+            <View style={{ marginTop: 10 }}>
               <PlaceholderLine width={60} height={20} />
               <PlaceholderLine width={40} height={10} />
             </View>
@@ -594,21 +564,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     {order?.business?.name}
                   </OText>
                   <Icons>
-                    <TouchableOpacity
-                      onPress={() => order?.business?.cellphone &&
-                        Linking.openURL(`tel:${order?.business?.cellphone}`)
-                      }
-                      style={{ paddingEnd: 5 }}
-                    >
-                      <OIcon
-                        src={theme.images.general.phone}
-                        width={16}
-                        color={theme.colors.disabled}
-                      />
-                    </TouchableOpacity>
+                    {!!order?.business?.cellphone && (
+                      <TouchableOpacity
+                        onPress={() => order?.business?.cellphone &&
+                          Linking.openURL(`tel:${order?.business?.cellphone}`)
+                        }
+                        style={{ paddingEnd: 5 }}
+                      >
+                        <OIcon
+                          src={theme.images.general.phone}
+                          width={16}
+                          color={theme.colors.disabled}
+                        />
+                      </TouchableOpacity>
+                    )}
                     <TouchableOpacity
                       style={{ paddingStart: 5 }}
-                      onPress={() => handleOpenMessagesForBusiness()}>
+                      onPress={() => handleGoToMessages('business')}>
                       <OIcon
                         src={theme.images.general.chat}
                         width={16}
@@ -624,13 +596,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   mBottom={2}>
                   {order?.business?.email}
                 </OText>
-                <OText
-                  size={12}
-                  lineHeight={18}
-                  color={theme.colors.textNormal}
-                  mBottom={2}>
-                  {order?.business?.cellphone}
-                </OText>
+                {!!order?.business?.cellphone && (
+                  <OText
+                    size={12}
+                    lineHeight={18}
+                    color={theme.colors.textNormal}
+                    mBottom={2}>
+                    {order?.business?.cellphone}
+                  </OText>
+                )}
                 <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
                   {order?.business?.address}
                 </OText>
@@ -735,7 +709,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                         </OText>
                         <Icons>
                           <TouchableOpacity
-                            onPress={() => handleOpenMessagesForDriver()}>
+                            onPress={() => handleGoToMessages('driver')}>
                             <OIcon
                               src={theme.images.general.chat}
                               width={16}
@@ -776,16 +750,37 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   'Once business accepts your order, we will send you an email, thank you!',
                 )}
               </OText>
-              <OButton
-                text={t('YOUR_ORDERS', 'Your Orders')}
-                textStyle={{ fontSize: 14, color: theme.colors.primary }}
-                imgRightSrc={null}
-                borderColor={theme.colors.primary}
-                bgColor={theme.colors.clear}
-                style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0 }}
-                parentStyle={{ marginTop: 29, width: '50%' }}
-                onClick={() => navigation.navigate('BottomTab', { screen: 'MyOrders' })}
-              />
+              <OrderAction>
+                <OButton
+                  text={t('YOUR_ORDERS', 'Your Orders')}
+                  textStyle={{ fontSize: 14, color: theme.colors.primary }}
+                  imgRightSrc={null}
+                  borderColor={theme.colors.primary}
+                  bgColor={theme.colors.clear}
+                  style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0 }}
+                  parentStyle={{ marginTop: 29, marginEnd: 15 }}
+                  onClick={() => navigation.navigate('BottomTab', { screen: 'MyOrders' })}
+                />
+                {(
+                  parseInt(order?.status) === 1 ||
+                  parseInt(order?.status) === 2 ||
+                  parseInt(order?.status) === 5 ||
+                  parseInt(order?.status) === 6 ||
+                  parseInt(order?.status) === 10 ||
+                  parseInt(order?.status) === 11 ||
+                  parseInt(order?.status) === 12
+                ) && (
+                    <OButton
+                      text={order.id === reorderState?.loading ? t('LOADING', 'Loading..') : t('REORDER', 'Reorder')}
+                      textStyle={{ fontSize: 14, color: theme.colors.primary }}
+                      imgRightSrc={null}
+                      borderColor='transparent'
+                      bgColor={theme.colors.primary + 10}
+                      style={{ borderRadius: 7.6, borderWidth: 1, height: 44, shadowOpacity: 0, marginTop: 29 }}
+                      onClick={() => handleReorder && handleReorder(order.id)}
+                    />
+                  )}
+              </OrderAction>
             </HeaderInfo>
             <OrderProducts>
               {order?.products?.length &&
@@ -978,7 +973,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       marginTop: 10
                     }}
                   >
-                    {order?.payment_events?.map((event: any) => (
+                    {order?.payment_events?.map((event: any) => event.amount > 0 && (
                       <View
                         key={event.id}
                         style={{
@@ -1018,22 +1013,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           </OrderContent>
         </>
       )}
-      <OModal
-        open={openModalForBusiness || openModalForDriver}
-        entireModal
-        customClose
-        onClose={() => handleCloseModal()}>
-        <Messages
-          type={openModalForBusiness ? USER_TYPE.BUSINESS : USER_TYPE.DRIVER}
-          orderId={order?.id}
-          messages={messages}
-          order={order}
-          business={openModalForBusiness}
-          driver={openModalForDriver}
-          setMessages={setMessages}
-          onClose={handleCloseModal}
-        />
-      </OModal>
       <OModal
         open={openTaxModal.open}
         onClose={() => setOpenTaxModal({ open: false, data: null, type: '' })}

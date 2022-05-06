@@ -115,6 +115,7 @@ export interface PhoneInputParams {
 	noDropIcon?: boolean;
 	flagStyle?: any;
 	isDisabled?: any;
+	isStartValidation?: any;
 }
 
 export interface LanguageSelectorParams {
@@ -328,7 +329,10 @@ export interface OrderDetailsParams {
 	isFromCheckout?: boolean,
 	driverLocation?: any,
 	isFromRoot?: any,
-	goToBusinessList?: boolean
+	goToBusinessList?: boolean,
+	onNavigationRedirect?: any,
+	reorderState?: any,
+	handleReorder?: any,
 }
 export interface ProductItemAccordionParams {
 	key?: any;
@@ -390,7 +394,7 @@ export interface MessagesParams {
 	handleSend?: () => {},
 	setImage?: (image: string | null) => {},
 	setMessage?: (comment: string) => {},
-	setMessages?: () => {},
+	setMessages?: (image: any | null) => {},
 	readMessages?: () => {},
 	onClose?: () => void,
 	isMeesageListing?: boolean,
@@ -552,4 +556,13 @@ export interface BusinessSearchParams {
 
 export interface NoNetworkParams {
 	image?: any,
+}
+
+export interface PlaceSpotParams {
+	isOpenPlaceSpot?: boolean,
+	cart?: any,
+	placesState?: any,
+	handleChangePlace?: any,
+	getPlacesList?: any,
+	setOpenPlaceModal?: any
 }

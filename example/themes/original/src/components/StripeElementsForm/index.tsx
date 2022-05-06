@@ -27,6 +27,7 @@ const StripeElementsFormUI = (props: any) => {
 		paymethod,
 		onCancel,
 		cart,
+		merchantId
 	} = props;
 
 	const theme = useTheme();
@@ -160,7 +161,8 @@ const StripeElementsFormUI = (props: any) => {
 				<View style={{ flex: 1 }}>
 					<StripeProvider
 						publishableKey={publicKey}
-						merchantIdentifier={`merchant.${configs.apple_app_id}`}
+						merchantIdentifier={`merchant.${merchantId}`}
+						urlScheme={merchantId}
 					>
 						{methodsPay?.includes(paymethod) ? (
 							<StripeMethodForm

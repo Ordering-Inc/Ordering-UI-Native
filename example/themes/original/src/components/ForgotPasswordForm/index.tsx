@@ -65,18 +65,6 @@ const ForgotPasswordUI = (props: any) => {
 		}
 	}, [formState])
 
-	useEffect(() => {
-		if (Object.keys(errors).length > 0) {
-			// Convert all errors in one string to show in toast provider
-			const list = Object.values(errors)
-			let stringError = ''
-			list.map((item: any, i: number) => {
-				stringError += (i + 1) === list.length ? `- ${item.message}` : `- ${item.message}\n`
-			})
-			showToast(ToastType.Error, stringError)
-		}
-	}, [errors])
-
 	return (
 		<Container>
 			<NavBar
@@ -100,6 +88,14 @@ const ForgotPasswordUI = (props: any) => {
 					{t('FORGOT_PASSWORD_TEXT_MESSAGE', "Enter your email address and we'll sent a link to reset your password.")}
 				</OText>
 				<FormInput>
+					{errors?.email && (
+						<OText
+							size={14}
+							color={theme.colors.danger5}
+							weight={'normal'}>
+							{errors?.email?.message}{errors?.email?.type === 'required' && '*'}
+						</OText>
+					)}
 					<Controller
 						control={control}
 						render={({ onChange, value }: any) => (

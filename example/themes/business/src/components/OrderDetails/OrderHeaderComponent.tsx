@@ -30,6 +30,7 @@ interface OrderHeader {
   logisticOrderStatus?: Array<number>,
   handleViewSummaryOrder?: any;
   handleCopyClipboard?: any
+  isCustomView?: any
 }
 
 export const OrderHeaderComponent = (props: OrderHeader) => {
@@ -105,17 +106,17 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
 
   return (
     <>
-      <Header>
-        <OIconButton
-          icon={theme.images.general.arrow_left}
-          iconStyle={{ width: 20, height: 20 }}
-          borderColor={theme.colors.clear}
-          style={{ ...styles.icons, justifyContent: 'flex-end' }}
-          onClick={() => handleArrowBack()}
-        />
+      {!props.isCustomView && (
+        <Header>
+          <OIconButton
+            icon={theme.images.general.arrow_left}
+            iconStyle={{ width: 20, height: 20 }}
+            borderColor={theme.colors.clear}
+            style={{ ...styles.icons, justifyContent: 'flex-end' }}
+            onClick={() => handleArrowBack()}
+          />
 
-        {
-          (!order?.isLogistic || (!logisticOrderStatus?.includes(order?.status) && !order?.order_group)) && (
+          {(!order?.isLogistic || (!logisticOrderStatus?.includes(order?.status) && !order?.order_group)) && (
             <Actions>
               {getOrderStatus(order?.status, t)?.value !==
                 t('PENDING', 'Pending') && (
@@ -170,13 +171,80 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
               />
             </Actions>
           )}
-      </Header>
+        </Header>
+      )}
       <OrderHeader>
-        <OText size={13} style={{ marginBottom: 5 }}>
-          {order?.delivery_datetime_utc
-            ? parseDate(order?.delivery_datetime_utc)
-            : parseDate(order?.delivery_datetime, { utc: false })}
-        </OText>
+        {!props.isCustomView ? (
+          <OText size={13} style={{ marginBottom: 5 }}>
+            {order?.delivery_datetime_utc
+              ? parseDate(order?.delivery_datetime_utc)
+              : parseDate(order?.delivery_datetime, { utc: false })}
+          </OText>
+        ) : (
+          <Header style={{ alignItems: 'center' }}>
+            <OText size={13} style={{ marginBottom: 5 }}>
+              {order?.delivery_datetime_utc
+                ? parseDate(order?.delivery_datetime_utc)
+                : parseDate(order?.delivery_datetime, { utc: false })}
+            </OText>
+
+            {(!order?.isLogistic || (!logisticOrderStatus?.includes(order?.status) && !order?.order_group)) && (
+              <Actions>
+                {getOrderStatus(order?.status, t)?.value !==
+                  t('PENDING', 'Pending') && (
+                    <>
+                      <OIconButton
+                        icon={theme.images.general.copy}
+                        iconStyle={{
+                          width: 20,
+                          height: 25,
+                          top: 2,
+                          tintColor: theme.colors.backArrow,
+                        }}
+                        borderColor={theme.colors.clear}
+                        style={styles.icons}
+                        onClick={() => handleCopyClipboard?.()}
+                      />
+                      <OIconButton
+                        icon={theme.images.general.print}
+                        iconStyle={{
+                          width: 25,
+                          height: 22,
+                          tintColor: theme.colors.backArrow,
+                        }}
+                        borderColor={theme.colors.clear}
+                        style={styles.icons}
+                        onClick={() => handleViewSummaryOrder?.()}
+                      />
+                    </>
+                  )}
+                <OIconButton
+                  icon={theme.images.general.map}
+                  iconStyle={{
+                    width: 20,
+                    height: 20,
+                    tintColor: theme.colors.backArrow,
+                  }}
+                  borderColor={theme.colors.clear}
+                  style={styles.icons}
+                  onClick={() => handleOpenMapView()}
+                />
+
+                <OIconButton
+                  icon={theme.images.general.messages}
+                  iconStyle={{
+                    width: 20,
+                    height: 20,
+                    tintColor: theme.colors.backArrow,
+                  }}
+                  borderColor={theme.colors.clear}
+                  style={styles.icons}
+                  onClick={() => handleOpenMessagesForBusiness()}
+                />
+              </Actions>
+            )}
+          </Header>
+        )}
 
         <OText numberOfLines={2} size={20} weight="600">
           <>

@@ -272,9 +272,10 @@ const ChatUI = (props: MessagesParams) => {
     launchImageLibrary(
       {
         mediaType: 'photo',
-        maxHeight: 300,
-        maxWidth: 300,
+        maxHeight: 2048,
+        maxWidth: 2048,
         includeBase64: true,
+        quality: 1
       },
       (response: any) => {
         if (response.didCancel) {

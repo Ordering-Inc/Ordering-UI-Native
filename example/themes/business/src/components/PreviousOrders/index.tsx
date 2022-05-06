@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Platform, PlatformIOSStatic } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import moment from 'moment'
 import { useLanguage, useUtils } from 'ordering-components/native';
@@ -8,6 +8,10 @@ import {
   Card, Logo, Information, MyOrderOptions, NotificationIcon, AcceptOrRejectOrder, Timestatus
 } from './styles';
 import EntypoIcon from 'react-native-vector-icons/Entypo'
+import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+import DeviceInfo from 'react-native-device-info';
+
+const { useDeviceOrientation, PORTRAIT } = DeviceOrientationMethods
 
 export const PreviousOrders = (props: any) => {
   const {
@@ -17,25 +21,38 @@ export const PreviousOrders = (props: any) => {
     handleClickOrder,
     isLogisticOrder,
     handleClickLogisticOrder,
-    slaSettingTime
+    slaSettingTime,
+    currentTabSelected,
+    currentOrdenSelected
   } = props;
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
   const theme = useTheme();
   const [currentTime, setCurrentTime] = useState()
+  const [orientationState] = useDeviceOrientation();
+
+  const IS_PORTRAIT = orientationState.orientation === PORTRAIT
+
+  const platformIOS = Platform as PlatformIOSStatic
+  const isIpad = platformIOS.isPad
+  const isTablet = DeviceInfo.isTablet();
 
   const handlePressOrder = (order: any) => {
     if (order?.locked && isLogisticOrder) return
     handleClickOrder && handleClickOrder(order)
-    onNavigationRedirect &&
-      onNavigationRedirect('OrderDetails', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
+    if (props.handleClickEvent) {
+      props.handleClickEvent({ ...order, isLogistic: isLogisticOrder })
+    } else {
+      onNavigationRedirect &&
+        onNavigationRedirect('OrderDetails', { order: { ...order, isLogistic: isLogisticOrder }, handleClickLogisticOrder });
+    }
   };
 
   const styles = StyleSheet.create({
     cardButton: {
       flex: 1,
-      minHeight: isLogisticOrder ? 50 : 64,
-      marginBottom: isLogisticOrder ? 0 : 30,
+      paddingVertical: (isIpad || isTablet) ? 20 : 0,
+      marginBottom: IS_PORTRAIT ? 25 : 0,
       marginLeft: 3,
     },
     icon: {
@@ -114,8 +131,9 @@ export const PreviousOrders = (props: any) => {
             return (
               <View
                 style={{
-                  backgroundColor: order?.locked && isLogisticOrder ? '#ccc' : '#fff',
-                  marginBottom: isLogisticOrder ? 10 : 0
+                  backgroundColor: currentOrdenSelected === order?.id ? theme.colors.gray100 : order?.locked && isLogisticOrder ? '#ccc' : '#fff',
+                  marginBottom: isLogisticOrder ? 10 : 0,
+                  // justifyContent: 'center'
                 }}
                 key={order.id}
               >
@@ -159,7 +177,7 @@ export const PreviousOrders = (props: any) => {
                           />
                         </NotificationIcon>
                       )}
-                      <View style={{ flexDirection: 'row' }}>
+                      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                         <OText
                           style={styles.date}
                           color={theme.colors.unselectText}
@@ -169,9 +187,14 @@ export const PreviousOrders = (props: any) => {
                           {(order?.order_group_id && order?.order_group && isLogisticOrder ? `${order?.order_group?.orders?.length} ${t('ORDERS', 'Orders')}` : (t('NO', 'Order No.') + order.id)) + ' · '}
                           {order?.delivery_datetime_utc
                             ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY · HH:mm a' })
-                            : parseDate(order?.delivery_datetime, { utc: false })}{' · '}
+                            : parseDate(order?.delivery_datetime, { utc: false })}
                         </OText>
-                        <OText style={styles.date} color={order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : ''} >{getDelayTime(order)}</OText>
+                        {(currentTabSelected === 'pending' || currentTabSelected === 'inProgress') && (
+                          <>
+                            <OText> · </OText>
+                            <OText style={styles.date} color={order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : ''} >{getDelayTime(order)}</OText>
+                          </>
+                        )}
                       </View>
                       {!isLogisticOrder && (
                         <MyOrderOptions>

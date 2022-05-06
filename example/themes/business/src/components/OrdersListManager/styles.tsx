@@ -88,13 +88,9 @@ export const SlaOption = styled.View`
   align-items: center;
 `
 
-export const SearchModalContent = styled.View`
+export const SearchModalContent = styled.View``
 
-`
-
-export const SlaSettingModalContent = styled.View`
-
-`
+export const SlaSettingModalContent = styled.View``
 
 export const DeliveryStatusWrapper = styled.View`
   position: relative;
@@ -108,45 +104,20 @@ export const VerticalLine = styled.View`
   top: 7px;
   left: 7px;
 `
-export const StatusItems = styled.View`
-  position: relative;
-  margin-bottom: 20px;
-  z-index: 2;
-`
-export const ItemHeader = styled.View`
-  flex-direction: row;
-  margin-bottom: 5px;
-`
-export const ItemStatus = styled.View`
-  width: 4px;
-  height: 22px;
-  margin: 0 15px;
-  border-radius: 4px;
-  background: ${(props: any) => props.backColor};
-`
-export const ItemContent = styled.View`
-  display: flex;
-  padding: 0 30px;
-`
 
-export const TimerInputWrapper = styled.View`
-  color: ${(props: any) => props.theme.colors.disabled};
-  margin-top: 15px;
-  margin-left: 30px;
-  margin-right: 30px;
+export const Actions = styled.View``
+
+export const Sides = styled.View`
   flex-direction: row;
-  align-items: flex-end;
-`
-export const OverLine = styled.View`
-  position: absolute;
   height: 100%;
-  width: 15px;
-  top: 20px;
-  left: 0;
-  /* border-width: 1px; */
-  background-color: #fff;
-  z-index: 2;
 `
-export const Actions = styled.View`
 
+export const LeftSide = styled.View`
+  width: 30%;
+`
+
+export const RightSide = styled.View`
+  width: 70%;
+  border-width: 2px;
+  border-color: ${(props: any) => props.theme.colors.gray100};
 `

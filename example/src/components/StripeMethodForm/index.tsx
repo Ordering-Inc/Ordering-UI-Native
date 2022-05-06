@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { useLanguage } from 'ordering-components/native'
+import { useLanguage, useConfig } from 'ordering-components/native'
 import { useGooglePay, ApplePayButton, useApplePay } from '@stripe/stripe-react-native'
-import { OButton } from '../shared';
+import { OButton, OText } from '../shared';
 import { Platform, View } from 'react-native';
 import { StripeMethodFormParams } from '../../types';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -20,6 +20,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
   const [initialized, setInitialized] = useState(false);
   const [loadingGooglePayment, setLoadingGooglePayment] = useState(false)
   const [, t] = useLanguage()
+  const [configs] = useConfig()
 
   useEffect(() => {
     if (paymethod !== 'google_pay' || !initGooglePay) return
@@ -66,7 +67,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     setLoadingGooglePayment(true)
     const { error, paymentMethod } = await createGooglePayPaymentMethod({
       amount: cart?.balance ?? cart?.total,
-      currencyCode: 'USD',
+      currencyCode: configs?.stripe_currency?.value ?? 'USD',
     });
     if (error) {
       setErrors(error.code + ' - ' + error.message);
@@ -97,7 +98,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
     const { error, paymentMethod } = await presentApplePay({
       cartItems: cart?.products?.map((product: any) => ({ label: product?.name, amount: product?.price?.toString?.() })),
       country: 'US',
-      currency: 'USD',
+      currency: configs?.stripe_currency?.value ?? 'USD',
       shippingMethods: [
         {
           amount: cart?.balance?.toString() ?? cart?.total?.toString?.(),
@@ -146,17 +147,22 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
         </View>
       ) : (
         <View>
-          {isApplePaySupported && (
-            <ApplePayButton
-              onPress={pay}
-              type="plain"
-              buttonStyle="black"
-              borderRadius={4}
-              style={{
-                width: '100%',
-                height: 50,
-              }}
-            />
+          {isApplePaySupported ? (
+            <>
+              <OText>{t('APPLE_PAY_PAYMENT', 'Apple pay payment')}</OText>
+              <ApplePayButton
+                onPress={pay}
+                type="plain"
+                buttonStyle="black"
+                borderRadius={4}
+                style={{
+                  width: '100%',
+                  height: 50,
+                }}
+              />
+            </>
+          ) : (
+            <OText>{t('APPLE_PAY_NOT_SUPPORTED', 'Apple pay not supported')}</OText>
           )}
         </View>
       )}

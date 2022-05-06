@@ -67,7 +67,7 @@ const LoginFormUI = (props: LoginParams) => {
 	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
 	const [, { login }] = useSession();
-	const { control, handleSubmit, errors } = useForm();
+	const { control, handleSubmit, errors, reset, register, setValue } = useForm();
 	const [passwordSee, setPasswordSee] = useState(false);
 	const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
 	const [isModalVisible, setIsModalVisible] = useState(false);
@@ -91,7 +91,7 @@ const LoginFormUI = (props: LoginParams) => {
 		inputStyle: {
 			marginBottom: 28,
 			borderWidth: 1,
-			borderColor: theme.colors.border,
+			// borderColor: theme.colors.border,
 			borderRadius: 7.6,
 		},
 		line: {
@@ -189,33 +189,21 @@ const LoginFormUI = (props: LoginParams) => {
 	}, [verifyPhoneState]);
 
 	useEffect(() => {
-		if (Object.keys(errors).length > 0) {
-			// Convert all errors in one string to show in toast provider
-			const list = Object.values(errors);
-			let stringError = '';
-			if (phoneInputData.error) {
-				list.unshift({ message: phoneInputData.error });
-			}
-			if (
-				loginTab === 'cellphone' &&
-				!phoneInputData.error &&
-				!phoneInputData.phone.country_phone_code &&
-				!phoneInputData.phone.cellphone
-			) {
-				list.unshift({
-					message: t(
-						'VALIDATION_ERROR_MOBILE_PHONE_REQUIRED',
-						'The field Mobile phone is required.',
-					),
-				});
-			}
-			list.map((item: any, i: number) => {
-				stringError +=
-					i + 1 === list.length ? `- ${item.message}` : `- ${item.message}\n`;
-			});
-			showToast(ToastType.Error, stringError);
-		}
-	}, [errors]);
+		if (phoneInputData?.phone?.cellphone) setValue('cellphone', phoneInputData?.phone?.cellphone, '')
+		else setValue('cellphone', '')
+	}, [phoneInputData?.phone?.cellphone])
+
+	useEffect(() => {
+    register('cellphone', {
+      required: loginTab === 'cellphone'
+        ? t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone'))
+        : null
+    })
+  }, [register])
+
+	useEffect(() => {
+    reset()
+  }, [loginTab])
 
 	return (
 		<Container>
@@ -284,43 +272,58 @@ const LoginFormUI = (props: LoginParams) => {
 				{(useLoginByCellphone || useLoginByEmail) && (
 					<FormInput>
 						{useLoginByEmail && loginTab === 'email' && (
-							<Controller
-								control={control}
-								render={({ onChange, value }: any) => (
-									<OInput
-										placeholder={t('EMAIL', 'Email')}
-										style={loginStyle.inputStyle}
-										icon={theme.images.general.email}
-										onChange={(e: any) => {
-											handleChangeInputEmail(e, onChange);
-										}}
-										value={value}
-										autoCapitalize="none"
-										autoCorrect={false}
-										type="email-address"
-										autoCompleteType="email"
-										returnKeyType="next"
-										onSubmitEditing={() => passwordRef.current?.focus()}
-										blurOnSubmit={false}
-										forwardRef={emailRef}
-									/>
+							<>
+								{errors?.email && (
+									<OText
+										size={14}
+										color={theme.colors.danger5}
+										weight={'normal'}>
+										{errors?.email?.message}{errors?.email?.type === 'required' && '*'}
+									</OText>
 								)}
-								name="email"
-								rules={{
-									required: t(
-										'VALIDATION_ERROR_EMAIL_REQUIRED',
-										'The field Email is required',
-									).replace('_attribute_', t('EMAIL', 'Email')),
-									pattern: {
-										value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-										message: t(
-											'INVALID_ERROR_EMAIL',
-											'Invalid email address',
-										).replace('_attribute_', t('EMAIL', 'Email')),
-									},
-								}}
-								defaultValue=""
-							/>
+								<Controller
+									control={control}
+									render={({ onChange, value }: any) => (
+										<OInput
+											placeholder={t('EMAIL', 'Email')}
+											style={loginStyle.inputStyle}
+											icon={theme.images.general.email}
+											onChange={(e: any) => {
+												handleChangeInputEmail(e, onChange);
+											}}
+											value={value}
+											autoCapitalize="none"
+											autoCorrect={false}
+											type="email-address"
+											autoCompleteType="email"
+											returnKeyType="next"
+											onSubmitEditing={() => passwordRef.current?.focus()}
+											blurOnSubmit={false}
+											forwardRef={emailRef}
+											borderColor={errors?.email ? theme.colors.danger5 : theme.colors.border}
+										/>
+									)}
+									name="email"
+									rules={{
+										required: {
+											value: true,
+											message: 	t(
+											'VALIDATION_ERROR_EMAIL_REQUIRED',
+											'The field Email is required',
+										).replace('_attribute_', t('EMAIL', 'Email'))
+										},
+										pattern: {
+											value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+											message: t(
+												'INVALID_ERROR_EMAIL',
+												'Invalid email address',
+											).replace('_attribute_', t('EMAIL', 'Email')),
+										}
+									}}
+									defaultValue=""
+								/>
+							</>
+
 						)}
 						{useLoginByCellphone && loginTab === 'cellphone' && (
 							<View style={{ marginBottom: 28 }}>
@@ -331,10 +334,18 @@ const LoginFormUI = (props: LoginParams) => {
 										returnKeyType: 'next',
 										onSubmitEditing: () => passwordRef?.current?.focus?.(),
 									}}
+									isStartValidation={errors?.cellphone}
 								/>
 							</View>
 						)}
-
+						{errors?.password && (
+							<OText
+								size={14}
+								color={theme.colors.danger5}
+								weight={'normal'}>
+								{errors?.password?.message}{errors?.password?.type === 'required' && '*'}
+							</OText>
+						)}
 						<Controller
 							control={control}
 							render={({ onChange, value }: any) => (
@@ -366,14 +377,18 @@ const LoginFormUI = (props: LoginParams) => {
 									returnKeyType="done"
 									onSubmitEditing={handleSubmit(onSubmit)}
 									blurOnSubmit
+									borderColor={errors?.password ? theme.colors.danger5 : theme.colors.border}
 								/>
 							)}
 							name="password"
 							rules={{
-								required: t(
+								required: {
+									value: true,
+									message: t(
 									'VALIDATION_ERROR_PASSWORD_REQUIRED',
 									'The field Password is required',
-								).replace('_attribute_', t('PASSWORD', 'Password')),
+								).replace('_attribute_', t('PASSWORD', 'Password'))
+								}
 							}}
 							defaultValue=""
 						/>

@@ -1,4 +1,6 @@
 rootProject.name = 'delivery'
+include ':react-native-device-info'
+project(':react-native-device-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-device-info/android')
 include ':react-native-fbsdk-next'
 project(':react-native-fbsdk-next').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fbsdk-next/android')
 include ':react-native-background-timer'

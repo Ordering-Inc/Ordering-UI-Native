@@ -9,6 +9,8 @@ import {
 import {
 	PaymentOptions as PaymentOptionsController,
 	useLanguage,
+  ToastType,
+	useToast,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { PaymentOptionCash } from '../PaymentOptionCash';
@@ -60,7 +62,7 @@ const PaymentOptionsUI = (props: any) => {
 	} = props
 
 	const theme = useTheme();
-
+  const [, { showToast }] = useToast();
 
 	const getPayIcon = (method: string) => {
 		switch (method) {
@@ -96,11 +98,18 @@ const PaymentOptionsUI = (props: any) => {
 	// ]
 
 	const handlePaymentMethodClick = (paymethod: any) => {
-		const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
-		if (webViewPaymentGateway.includes(paymethod?.gateway)) {
-			handlePaymentMethodClickCustom(paymethod)
-		}
-		handlePaymethodClick(paymethod, isPopupMethod)
+    if (cart?.balance > 0) {
+      const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
+      if (webViewPaymentGateway.includes(paymethod?.gateway)) {
+        handlePaymentMethodClickCustom(paymethod)
+      }
+      handlePaymethodClick(paymethod, isPopupMethod)
+      return
+    }
+    showToast(
+			ToastType.Error,
+			t('CART_BALANCE_ZERO', 'Sorry, the amount to pay is equal to zero and it is not necessary to select a payment method'))
+		;
 	}
 
 	useEffect(() => {
