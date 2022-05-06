@@ -141,8 +141,8 @@ const ProfileListUI = (props: ProfileParams) => {
 				{t('PROFILE', 'Profile')}
 			</OText> */}
 			<CenterView style={styles.pagePadding}>
-				<View style={styles.photo}>
-					{user?.photo ? (
+				{user?.photo && (
+					<View style={styles.photo}>
 						<FastImage
 							style={{ height: 60, width: 60, borderRadius: 8 }}
 							source={{
@@ -151,10 +151,8 @@ const ProfileListUI = (props: ProfileParams) => {
 							}}
 							resizeMode={FastImage.resizeMode.cover}
 						/>
-					) : (
-						<Ionicons name='person-outline' size={50} style={{ marginRight: 10 }} />
-					)}
-				</View>
+					</View>
+				)}
 				<View style={{ flexBasis: '70%' }}>
 					<OText size={20} lineHeight={30} weight={Platform.OS === 'ios' ? '500' : 'bold'} color={theme.colors.textNormal}>{user?.name} {user?.lastname}</OText>
 					<TouchableOpacity onPress={() => navigation.navigate('ProfileForm', { ...detailProps })}>
