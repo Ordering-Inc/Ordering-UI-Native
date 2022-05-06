@@ -43,7 +43,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     logoWrapper: {
       shadowColor: theme.colors.black,
       shadowRadius: 3,
-      shadowOffset: {width: 1, height: 4},
+      shadowOffset: { width: 1, height: 4 },
       elevation: 3,
       borderRadius: 8,
       shadowOpacity: 0.1,
@@ -108,11 +108,11 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   }
 
   const qualificationList = [
-    { key: 1, text: t('TERRIBLE', 'Terrible'), percent: 0,  parentStyle: { left: '0%' }, isInnerStyle: false, pointerColor: false },
+    { key: 1, text: t('TERRIBLE', 'Terrible'), percent: 0, parentStyle: { left: '0%' }, isInnerStyle: false, pointerColor: false },
     { key: 2, text: t('BAD', 'Bad'), percent: 0.25, parentStyle: { left: '25%' }, isInnerStyle: true, pointerColor: true },
     { key: 3, text: t('OKAY', 'Okay'), percent: 0.5, parentStyle: { left: '50%' }, isInnerStyle: true, pointerColor: true },
     { key: 4, text: t('GOOD', 'Good'), percent: 0.75, parentStyle: { left: '75%' }, isInnerStyle: true, pointerColor: true },
-    { key: 5, text: t('GREAT', 'Great'), percent: 1, parentStyle: { right: '0%' }, isInnerStyle: false,  pointerColor: false }
+    { key: 5, text: t('GREAT', 'Great'), percent: 1, parentStyle: { right: '0%' }, isInnerStyle: false, pointerColor: false }
   ]
 
   const commentsList = reviewCommentList('order')
@@ -137,7 +137,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     return found
   }
 
-  const handleContinueClick  = () => {
+  const handleContinueClick = () => {
     if (!order?.review) {
       onSubmit()
     } else {
@@ -183,7 +183,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       comments.map(comment => _comments += comment.content + '. ')
     }
     let _comment
-    _comment = _comments  + extraComment
+    _comment = _comments + extraComment
     setStars({ ...stars, comments: _comment })
   }, [comments, extraComment])
 
@@ -214,7 +214,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             <OText color={theme.colors.primary}>{t('ORDER_REVIEWED', 'This order has been already reviewed')}</OText>
           </View>
         ) : (
-          <View style={{flex: 1, justifyContent: 'flex-end'}}>
+          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <FormReviews>
               <OText mBottom={13} color={theme.colors.textNormal}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText>
               <RatingBarContainer>
@@ -266,7 +266,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
                     style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
                     imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
                     imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-                    onClick={() => handleChangeComment(commentItem) }
+                    onClick={() => handleChangeComment(commentItem)}
                   />
                 ))}
               </CommentsButtonGroup>
@@ -304,7 +304,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             textStyle={{ color: theme.colors.white, paddingRight: 10 }}
             text={t('CONTINUE', 'Continue')}
             style={{ borderRadius: 8 }}
-			      imgRightSrc={theme.images.general.arrow_right}
+            imgRightSrc={theme.images.general.arrow_right}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
             onClick={handleSubmit(handleContinueClick)}
           />
@@ -317,7 +317,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
 export const ReviewOrder = (props: ReviewOrderParams) => {
   const reviewOrderProps = {
     ...props,
-    UIComponent: ReviewOrderUI
+    UIComponent: ReviewOrderUI,
+    defaultStar: 5
   }
   return <ReviewOrderController {...reviewOrderProps} />
 }

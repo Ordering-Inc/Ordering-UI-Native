@@ -72,6 +72,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 			borderWidth: 0,
 			backgroundColor: theme.colors.clear,
 			shadowColor: theme.colors.clear,
+			padding: 40,
 		},
 		searchIcon: {
 			borderWidth: 0,

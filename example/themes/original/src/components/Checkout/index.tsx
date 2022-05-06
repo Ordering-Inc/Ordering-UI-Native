@@ -156,7 +156,7 @@ const CheckoutUI = (props: any) => {
 			navigation.navigate('MomentOption')
 		}
 	}
-	
+
 	const handlePlaceOrder = () => {
 		if (!userErrors.length) {
 			handlerClickPlaceOrder && handlerClickPlaceOrder()
@@ -201,8 +201,8 @@ const CheckoutUI = (props: any) => {
 		if (
 			!user?.cellphone &&
 			((validationFields?.fields?.checkout?.cellphone?.enabled &&
-        validationFields?.fields?.checkout?.cellphone?.required) ||
-        configs?.verification_phone_required?.value === '1')
+				validationFields?.fields?.checkout?.cellphone?.required) ||
+				configs?.verification_phone_required?.value === '1')
 		) {
 			errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is required'))
 		}
@@ -252,8 +252,8 @@ const CheckoutUI = (props: any) => {
 					isVertical
 					onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
 					title={t('CHECKOUT', 'Checkout')}
-					style={styles.pagePadding}
-					titleStyle={{ marginLeft: 0, marginRight: 0 }}
+					titleStyle={{ marginLeft: 0, marginRight: 0, paddingLeft: 40 }}
+					btnStyle={{ marginLeft: 40, padding: 40 }}
 				/>
 				<ChContainer style={styles.pagePadding}>
 					<ChSection style={{ paddingTop: 0 }}>
@@ -268,15 +268,15 @@ const CheckoutUI = (props: any) => {
 								/>
 							</CHMomentWrapper>
 							<CHMomentWrapper
-									onPress={() => handleMomentClick()}
-									disabled={loading}
+								onPress={() => handleMomentClick()}
+								disabled={loading}
 							>
 								<OText size={12} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.textSecondary}>
 									{options?.moment
 										? parseDate(options?.moment, { outputFormat: configs?.dates_moment_format?.value })
 										: t('ASAP_ABBREVIATION', 'ASAP')}
 								</OText>
-								{ isPreOrder && (
+								{isPreOrder && (
 									<OIcon
 										src={theme.images.general.arrow_down}
 										width={10}
