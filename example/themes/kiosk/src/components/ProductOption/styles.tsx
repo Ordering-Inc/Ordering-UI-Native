@@ -12,4 +12,5 @@ export const WrapHeader = styled.View`
   background-color: ${(props: any) => props.theme.colors.paleGray};
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  width: 100%;
 `
