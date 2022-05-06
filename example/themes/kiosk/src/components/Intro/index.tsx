@@ -138,7 +138,7 @@ const Intro = (props: any): React.ReactElement => {
 
 const styles = StyleSheet.create({
   buttonLandStyle: {
-    width: 290,
+    minWidth: 130,
     marginBottom: 16
   }
 });

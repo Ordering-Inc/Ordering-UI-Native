@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import FastImage from 'react-native-fast-image'
 import {
   View,
   TouchableOpacity,
@@ -69,7 +70,7 @@ export const ProductOptionsUI = (props: any) => {
 
   const { product, loading, error } = productObject;
 
-  const HEADER_EXPANDED_HEIGHT =  Platform.OS === 'ios' ? orientationState?.dimensions?.height * 0.65 : orientationState?.dimensions?.height * 0.4;
+  const HEADER_EXPANDED_HEIGHT = orientationState?.dimensions?.height * 0.4;
   const HEADER_COLLAPSED_HEIGHT = orientationState?.dimensions?.height * 0.2;
 
   const isError = (id: number) => {
@@ -99,35 +100,35 @@ export const ProductOptionsUI = (props: any) => {
   const saveErrors = orderState.loading || maxProductQuantity === 0 || Object.keys(errors)?.length > 0
 
   const [scrollY] = useState(new Animated.Value(0));
-  
+
   const headerHeight = scrollY.interpolate({
-    inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
     outputRange: [HEADER_EXPANDED_HEIGHT, HEADER_COLLAPSED_HEIGHT],
     extrapolate: 'clamp'
   });
   const heroContainerOpacity = scrollY.interpolate({
-    inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
     outputRange: [1, 0],
     extrapolate: 'clamp'
   });
   const heroTranslateY = scrollY.interpolate({
-    inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
-    outputRange: [0, -(HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT)],
+    inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
+    outputRange: [0, -(HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT)],
     extrapolate: 'clamp'
   });
   const navBar1ContainerOpacity = scrollY.interpolate({
-    inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
     outputRange: [1, 0],
     extrapolate: 'clamp'
   });
   const navBar2ContainerOpacity = scrollY.interpolate({
-    inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
     outputRange: [0, 1],
     extrapolate: 'clamp'
   });
 
   const collapsedBarContainerOpacity = scrollY.interpolate({
-    inputRange: [HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT - ((HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT) * 0.08), HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
+    inputRange: [HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT - ((HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT) * 0.08), HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT],
     outputRange: [0, 1],
     extrapolate: 'clamp'
   });
@@ -203,7 +204,6 @@ export const ProductOptionsUI = (props: any) => {
     },
     scrollContainer: {
       padding: 16,
-      paddingTop: HEADER_EXPANDED_HEIGHT
     },
     header: {
       backgroundColor: '#fff',
@@ -222,9 +222,13 @@ export const ProductOptionsUI = (props: any) => {
     shadow: {
       shadowColor: '#000',
       shadowOffset: { width: 1, height: 1 },
-      shadowOpacity:  0.4,
+      shadowOpacity: 0.4,
       shadowRadius: 3,
       elevation: 5,
+    },
+    imageStyle: {
+      width: '100%',
+      height: HEADER_EXPANDED_HEIGHT,
     }
   });
 
@@ -232,121 +236,174 @@ export const ProductOptionsUI = (props: any) => {
     <>
       <ScrollView
         style={styles.mainContainer}
-        contentContainerStyle={styles.scrollContainer}
         onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY }} }],
-          {useNativeDriver: false})
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false })
         }
         scrollEventThrottle={16}
       >
-        <Animated.View style={[styles.header, { height: headerHeight }]}>
-          {!isDrawer && (<Animated.View style={{ opacity: navBar1ContainerOpacity }}>
+        {!isDrawer ? (
+          <Animated.View style={[styles.header, { height: headerHeight }]}>
+            {!isDrawer && (
+              <Animated.View style={{ opacity: navBar1ContainerOpacity }}>
+                <NavBar
+                  {...navBarProps}
+                  titleColor={theme.colors.white}
+                  btnStyle={{
+                    width: 55,
+                    height: 55,
+                    overflow: 'scroll',
+                    backgroundColor: 'black',
+                    borderRadius: 100,
+                    color: 'white',
+                    opacity: 0.8,
+                    left: 20,
+                  }}
+                />
+              </Animated.View>
+            )}
+            <Animated.View style={{ opacity: navBar2ContainerOpacity, position: 'absolute' }}>
               <NavBar
                 {...navBarProps}
-                titleColor={theme.colors.white}
-                {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left_white })}
                 btnStyle={{
                   width: 55,
                   height: 55,
-                  backgroundColor: 'black',
+                  backgroundColor: 'transparent',
                   borderRadius: 100,
-                  opacity: 0.8,
                   left: 20,
                 }}
-                imgLeftStyle={{ width: 27, height: 27 }}
               />
             </Animated.View>
-          )}
-          <Animated.View style={{ opacity: navBar2ContainerOpacity, position: 'absolute' }}>
-            <NavBar
-              {...navBarProps}
-              {...((navigation || onClose) && { leftImg: theme.images.general.arrow_left })}
-              btnStyle={{
-                width: 55,
-                height: 55,
-                backgroundColor: 'transparent',
-                borderRadius: 100,
-                left: 20,
-              }}
-              imgLeftStyle={{ width: 27, height: 27 }}
-            />
-          </Animated.View>
 
-          <Animated.View style={{
-            backgroundColor: 'white',
-            width: orientationState?.dimensions?.width,
-            opacity: collapsedBarContainerOpacity,
-          }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                padding: 20,
-                paddingTop: 0,
-                paddingBottom: 10
-              }}
-            >
-              <OImage
-                source={{uri: product?.images}}
-                width={70}
-                height={70}
-                resizeMode="cover"
-                borderRadius={6}
-              />
-              <OText
-                size={orientationState?.dimensions?.width * 0.025}
-                weight="bold"
-                mLeft={20}
-                numberOfLines={2}
+            <Animated.View style={{
+              backgroundColor: 'white',
+              width: orientationState?.dimensions?.width,
+              opacity: collapsedBarContainerOpacity,
+            }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  padding: 20,
+                  paddingTop: 0,
+                  paddingBottom: 10
+                }}
               >
-                {product?.name}
-              </OText>
-            </View>
-            <View
-              style={{
-                position: 'absolute',
-                bottom: -2,
-                height: 1,
-                backgroundColor: 'white',
-                width: orientationState?.dimensions?.width,
-                ...styles.shadow,
-              }}
-            />
+                {product?.images ? (
+                  <FastImage
+                    style={{ height: 70, width: 70, borderRadius: 6 }}
+                    source={{
+                      uri: product?.images,
+                      priority: FastImage.priority.normal,
+                      // cache:FastImage.cacheControl.web
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                ) : (
+                  <ImageBackground
+                    style={{ height: 70, width: 70, borderRadius: 6 }}
+                    source={theme.images.dummies.product}
+                    imageStyle={{ borderRadius: 6 }}
+                    resizeMode='cover'
+                  />
+                )}
+                <OText
+                  size={orientationState?.dimensions?.width * 0.025}
+                  weight="bold"
+                  mLeft={20}
+                  numberOfLines={2}
+                >
+                  {product?.name}
+                </OText>
+              </View>
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: -2,
+                  height: 1,
+                  backgroundColor: 'white',
+                  width: orientationState?.dimensions?.width,
+                  ...styles.shadow,
+                }}
+              />
+            </Animated.View>
+
+            <Animated.View style={{
+              opacity: heroContainerOpacity,
+              position: 'absolute',
+              zIndex: -100,
+              transform: [{ translateY: heroTranslateY }],
+            }}>
+              <View
+                style={{
+                  width: orientationState?.dimensions?.width,
+                  height: HEADER_EXPANDED_HEIGHT,
+                  position: 'absolute',
+                  zIndex: 1,
+                  backgroundColor: 'rgba(24, 28, 50, 0.4)',
+                }}
+              >
+                {product?.images ? (
+                  <FastImage
+                    style={{ flex: 1, justifyContent: 'center' }}
+                    source={{
+                      uri: product?.images,
+                      priority: FastImage.priority.normal,
+                      // cache:FastImage.cacheControl.web
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                ) : (
+                  <ImageBackground
+                    style={{ flex: 1, justifyContent: 'center' }}
+                    source={theme.images.dummies.product}
+                    resizeMode='cover'
+                  />
+                )}
+              </View>
+            </Animated.View>
           </Animated.View>
-
-          <Animated.View style={{
-            opacity: heroContainerOpacity,
-            position: 'absolute',
-            zIndex: -100,
-            transform: [{translateY: heroTranslateY }],
-          }}>
-            <View
-              style={{
-                width: orientationState?.dimensions?.width,
-                height: HEADER_EXPANDED_HEIGHT,
-                position: 'absolute',
-                zIndex: 1,
-                backgroundColor: 'rgba(24, 28, 50, 0.4)',
-              }}
-            >
-              <ImageBackground source={{ uri: product?.images }} resizeMode='cover' style={{ flex:1, justifyContent: 'center' }} />
-
-            </View>
-
+        ) : (
+          <View style={{...styles.imageStyle}}>
             <Animated.View
               style={{
-                transform: [{translateY: heroTranslateY }],
-                width: orientationState?.dimensions?.width * 0.75,
-                height: HEADER_EXPANDED_HEIGHT / 2,
-                position: 'relative',
-                top: HEADER_EXPANDED_HEIGHT / 3,
-                zIndex: 100,
-                padding: 20,
+                ...styles.imageStyle,
+                opacity: heroContainerOpacity,
+                position: 'absolute',
+                zIndex: -100,
+                transform: [{ translateY: heroTranslateY }],
               }}
             >
+              <View style={styles.imageStyle}>
+                {product?.images ? (
+                  <FastImage
+                    style={{ flex: 1 }}
+                    source={{
+                      uri: product?.images,
+                      priority: FastImage.priority.normal,
+                      // cache:FastImage.cacheControl.web
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                  />
+                ) : (
+                  <ImageBackground
+                    style={{ flex: 1, justifyContent: 'center' }}
+                    source={theme.images.dummies.product}
+                    resizeMode='cover'
+                  />
+                )}
+              </View>
+            </Animated.View>
+          </View>
+        )}
+
+
+        {!loading && !error && product && (
+          <View style={{ paddingTop: isDrawer ? 20 : HEADER_EXPANDED_HEIGHT, paddingBottom: 80, paddingHorizontal: 16 }}>
+            <WrapContent isDrawer={isDrawer}>
               <OText
-                color={theme.colors.white}
-                size={orientationState?.dimensions?.width * 0.048}
+                style={{ marginTop: 20 }}
+                size={orientationState?.dimensions?.width * 0.038}
                 weight="bold"
                 mBottom={10}
                 numberOfLines={2}
@@ -354,33 +411,23 @@ export const ProductOptionsUI = (props: any) => {
                 {product?.name || productCart?.name}
               </OText>
 
-              <OText
-                color={theme.colors.white}
-                numberOfLines={4}
-              >
-                {product?.description || productCart?.description}
-              </OText>
-            </Animated.View>
-          </Animated.View>
-        </Animated.View>
+              {(product?.description || productCart?.description) && (
+                <OText
+                  numberOfLines={4}
+                >
+                  {product?.description || productCart?.description}
+                </OText>
+              )}
 
-        {/* {!isFromCheckout && (
-          <Spinner visible={loading} />
-        )} */}
-        {!loading && !error && product && (
-          <View style={{ paddingTop: isDrawer ? 10 : 20, paddingBottom: 80 }}> 
-            <WrapContent isDrawer={isDrawer}>
-              <ProductDescription>
-                {(
-                  (product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
-                  (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1')
-                ) &&(
-                  <>
-                    <OText size={20}>{t('SKU', 'Sku')}</OText>
-                    <OText>{product?.sku || productCart?.sku}</OText>
-                  </>
-                )}
-              </ProductDescription>
+              {((product?.sku && product?.sku !== '-1' && product?.sku !== '1') ||
+                (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1')
+              ) && (
+                <ProductDescription>
+                  <OText size={20}>{t('SKU', 'Sku')}</OText>
+                  <OText>{product?.sku || productCart?.sku}</OText>
+                </ProductDescription>
+              )}
+
               <ProductEditions>
                 {product?.ingredients.length > 0 && (
                   <View style={styles.optionContainer}>
@@ -503,7 +550,7 @@ export const ProductOptionsUI = (props: any) => {
               </TouchableOpacity>
             </View>
           )}
-          <View style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : isDrawer ? '70%':'80%' }}>
+          <View style={{ width: isSoldOut || maxProductQuantity <= 0 ? '100%' : isDrawer ? '70%' : '80%' }}>
             {productCart && !isSoldOut && maxProductQuantity > 0 && auth && orderState.options?.address_id && (
               <OButton
                 onClick={() => handleSaveProduct()}

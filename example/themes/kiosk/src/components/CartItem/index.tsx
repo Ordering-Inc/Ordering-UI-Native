@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Animated, TouchableOpacity } from 'react-native';
+import { View, Animated, TouchableOpacity, ImageBackground } from 'react-native';
 import { useLanguage, useUtils } from 'ordering-components/native';
+import FastImage from 'react-native-fast-image'
 
 import {
   StyledCartItem,
@@ -70,13 +71,24 @@ const CartItem = (props: CartItemProps) => {
       >
         <StyledCartItem>
           <View style={{ flexDirection: 'row' }}>
-            <OImage
-              source={{ uri: product?.images || '' }}
-              height={60}
-              width={60}
-              resizeMode="cover"
-              borderRadius={6}
-            />
+            {product?.images ? (
+              <FastImage
+                style={{ height: 60, width: 80, borderRadius: 6 }}
+                source={{
+                  uri: product?.images,
+                  priority: FastImage.priority.normal,
+                  // cache:FastImage.cacheControl.web
+                }}
+                resizeMode={FastImage.resizeMode.cover}
+              />
+            ) : (
+              <ImageBackground
+                style={{ height: 60, width: 80, borderRadius: 6 }}
+                source={theme.images.dummies.product}
+                imageStyle={{ borderRadius: 6 }}
+                resizeMode='cover'
+              />
+            )}
 
             <View style={{ flexDirection: 'column', justifyContent: 'space-evenly', marginHorizontal: 15, marginTop: 10 }}>
               <View>

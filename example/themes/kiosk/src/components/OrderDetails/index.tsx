@@ -212,7 +212,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           setCustomerName(name)
       } catch (e) {
         if (e) {
-          setCustomerName('')
+          setCustomerName(null)
         }
       }
     }
@@ -553,7 +553,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       size={orientationState?.dimensions?.width * 0.048}
                       weight="700"
                     >
-                      {`${t('HUNGRY', 'hungry')}, ${customerName}`}
+                      {t('HUNGRY', 'hungry')}{!!customerName && `, ${customerName}`}
                     </OText>
                   </OText>
 
