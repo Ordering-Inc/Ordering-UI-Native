@@ -379,7 +379,7 @@ const CartUI = (props: any) => {
         <ProductForm
           productCart={curProduct}
           businessSlug={cart?.business?.slug}
-          businessId={curProduct?.business_id}
+          businessId={cart?.business_id}
           categoryId={curProduct?.category_id}
           productId={curProduct?.id}
           onSave={handlerProductAction}

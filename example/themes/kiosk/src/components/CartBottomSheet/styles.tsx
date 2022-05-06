@@ -5,7 +5,7 @@ export const StyledContainer = styled.ScrollView`
 	zIndex: 1000;
 	width: 100%;
 	background-color: #fff;
-	padding: 20px 20px 20px 0px;
+	padding: 20px 0 0;
 	bottom: 0;
 	shadow-color: #000;
 	shadow-opacity:  0.4;

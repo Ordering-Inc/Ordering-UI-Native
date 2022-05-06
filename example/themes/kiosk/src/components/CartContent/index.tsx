@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLanguage } from 'ordering-components/native';
-
+import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
 import { CCNotCarts } from './styles';
 
 import { Cart } from '../Cart';
@@ -22,6 +22,7 @@ export const CartContent = (props: any) => {
 
   const [, t] = useLanguage()
   const [isCartsLoading, setIsCartsLoading] = useState(false)
+  const [, { hideCartBottomSheet }] = useCartBottomSheet();
 
   const cartProps = {
     navigation,
@@ -32,6 +33,15 @@ export const CartContent = (props: any) => {
     clearInactivityTimeout,
     resetInactivityTimeout,
   }
+
+  useEffect(() => {
+    if (!cart && showNotFound) {
+      navigation?.canGoBack()
+        ? navigation.goBack()
+        : props.onNavigationRedirect && props.onNavigationRedirect('Business')
+      hideCartBottomSheet()
+    }
+  }, [cart])
 
   const content = (
     <>
@@ -46,13 +56,13 @@ export const CartContent = (props: any) => {
           }
         </>
       )}
-      {(!cart && showNotFound) && (
+      {/* {(!cart && showNotFound) && (
         <CCNotCarts>
           <OText size={24} style={{ textAlign: 'center' }}>
             {t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
           </OText>
         </CCNotCarts>
-      )}
+      )} */}
       <Spinner visible={isCartsLoading} />
     </>
   )
