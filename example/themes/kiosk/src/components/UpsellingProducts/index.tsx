@@ -1,6 +1,6 @@
 import React,{ useState, useEffect } from 'react'
 import Spinner from 'react-native-loading-spinner-overlay';
-import { StyleSheet, View, Platform } from 'react-native'
+import { StyleSheet, View, Platform, ImageBackground } from 'react-native'
 import {
   UpsellingPage as UpsellingPageController,
   useUtils,
@@ -20,6 +20,7 @@ import { Container } from '../../layouts/Container';
 import GridContainer from '../../layouts/GridContainer';
 import { PORTRAIT, useDeviceOrientation } from "../../../../../src/hooks/DeviceOrientation";
 import { useTheme } from 'styled-components/native';
+import FastImage from 'react-native-fast-image';
 
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   const {
@@ -114,7 +115,24 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                 {
                   !upsellingProducts.error ? upsellingProducts.products.map((product: any) => (
                     <Item key={product.id}>
-                      <OImage source={{ uri: product.images }} style={styles.imageStyle} />
+                      {product?.images ? (
+                        <FastImage
+                          style={styles.imageStyle}
+                          source={{
+                            uri: product?.images,
+                            priority: FastImage.priority.normal,
+                            // cache:FastImage.cacheControl.web
+                          }}
+                          resizeMode={FastImage.resizeMode.cover}
+                        />
+                      ) : (
+                        <ImageBackground
+                          style={styles.imageStyle}
+                          source={theme.images.dummies.product}
+                          imageStyle={{ borderRadius: 10 }}
+                          resizeMode='cover'
+                        />
+                      )}
                       <Details>
                         <OText
                           weight="500"
@@ -125,24 +143,22 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                           {product.name}
                         </OText>
 
-                        {product?.price && (
-                          <OText>
-                            <OText
-                              color={theme.colors.primary}
-                              weight="500"
-                            >
-                              {parsePrice(product.price)}
-                            </OText>
-
-                            <OText
-                              color={theme.colors.mediumGray}
-                              size={12}
-                              style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
-                            >
-                              {product?.offer_price ? `  ${parsePrice(product?.offer_price)}  ` : ''}
-                            </OText>
+                        <OText>
+                          <OText
+                            color={theme.colors.primary}
+                            weight="500"
+                          >
+                            {parsePrice(product.price)}
                           </OText>
-                        )}
+
+                          <OText
+                            color={theme.colors.mediumGray}
+                            size={12}
+                            style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
+                          >
+                            {product?.offer_price ? `  ${parsePrice(product?.offer_price)}  ` : ''}
+                          </OText>
+                        </OText>
                       </Details>
 
                       <OButton
@@ -200,24 +216,22 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                                   {product.name}
                                 </OText>
 
-                                {product?.price && (
-                                  <OText>
-                                    <OText
-                                      color={theme.colors.primary}
-                                      weight="500"
-                                      >
-                                      {parsePrice(product.price)}
-                                    </OText>
-
-                                    <OText
-                                      color={theme.colors.mediumGray}
-                                      size={12}
-                                      style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
-                                      >
-                                      {product?.offer_price ? parsePrice(product?.offer_price) : ''}
-                                    </OText>
+                                <OText>
+                                  <OText
+                                    color={theme.colors.primary}
+                                    weight="500"
+                                    >
+                                    {parsePrice(product.price)}
                                   </OText>
-                                )}
+
+                                  <OText
+                                    color={theme.colors.mediumGray}
+                                    size={12}
+                                    style={{textDecorationLine: 'line-through', textDecorationStyle: 'solid'}}
+                                    >
+                                    {product?.offer_price ? parsePrice(product?.offer_price) : ''}
+                                  </OText>
+                                </OText>
                               </Details>
                               <OButton
                                 text={t('ADD_PRODUCT', 'add product')}
