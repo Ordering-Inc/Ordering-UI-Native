@@ -32,17 +32,17 @@ const Intro = (props: any): React.ReactElement => {
   };
 
   return (
-    <ScrollView
-      scrollEnabled={false}
-      refreshControl={
-        <RefreshControl
-          refreshing={showLogoutPopup ? false : refreshing}
-          onRefresh={() => setShowLogoutPopup(true)}
-        />
-      }
-    >
+    // <ScrollView
+    //   scrollEnabled={false}
+    //   refreshControl={
+    //     <RefreshControl
+    //       refreshing={showLogoutPopup ? false : refreshing}
+    //       onRefresh={() => setShowLogoutPopup(true)}
+    //     />
+    //   }
+    // >
       <Pressable onPress={goBusiness}>
-        <Container nopadding={orientationState.orientation === LANDSCAPE}>
+        <View style={{ height: orientationState?.dimensions?.height }}>
           {orientationState.orientation === PORTRAIT ? (
             <View
               style={{
@@ -132,9 +132,9 @@ const Intro = (props: any): React.ReactElement => {
             open={showLogoutPopup}
             onClose={() => setShowLogoutPopup(false)}
           />
-        </Container>
+        </View>
       </Pressable>
-    </ScrollView>
+    // </ScrollView>
   );
 };
 
