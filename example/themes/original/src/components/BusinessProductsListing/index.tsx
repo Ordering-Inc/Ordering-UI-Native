@@ -17,6 +17,7 @@ import { SearchBar } from '../SearchBar'
 import { BusinessProductsCategories } from '../BusinessProductsCategories'
 import { BusinessProductsList } from '../BusinessProductsList'
 import { BusinessProductsListingParams } from '../../types'
+import { _retrieveStoreData, _removeStoreData } from '../../providers/StoreUtil';
 import {
 	TopHeader,
 	WrapSearchBar,
@@ -50,7 +51,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const theme = useTheme();
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
-	const [orderState] = useOrder()
+	const [orderState, { clearCart }] = useOrder()
 	const [{ parsePrice }] = useUtils()
 	const [, { showToast }] = useToast()
 	const [{ configs }] = useConfig()
@@ -162,6 +163,19 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const handleBackNavigation = () => {
 		navigation?.canGoBack() ? navigation.goBack() : navigation.navigate('BottomTab')
 	}
+
+	const removeCartByReOrder = async () => {
+		const removeCardId = await _retrieveStoreData('remove-cartId')
+		if (currentCart && removeCardId) {
+			clearCart(removeCardId)
+			_removeStoreData('remove-cartId')
+			showToast(ToastType.Info, t('PRODUCT_REMOVED', 'Products removed from cart'))
+		}
+	}
+
+	useEffect(() => {
+		removeCartByReOrder()
+	}, [])
 
 	return (
 		<SafeAreaView
