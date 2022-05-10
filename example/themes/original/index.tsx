@@ -7,11 +7,15 @@ import { SignupForm } from './src/components/SignupForm';
 import { ActiveOrders } from './src/components/ActiveOrders';
 import { AddressList } from './src/components/AddressList';
 import { AppleLogin } from './src/components/AppleLogin';
+import { BusinessBasicInformation } from './src/components/BusinessBasicInformation';
+import { BusinessProductsCategories } from './src/components/BusinessProductsCategories';
+import { BusinessProductsList } from './src/components/BusinessProductsList';
 import { BusinessesListing } from './src/components/BusinessesListing';
 import { BusinessProductsListing } from './src/components/BusinessProductsListing';
 import { CartContent } from './src/components/CartContent';
 import { BusinessCart } from './src/components/BusinessCart';
 import { Checkout } from './src/components/Checkout';
+import { FloatingButton } from './src/components/FloatingButton';
 import { ForgotPasswordForm } from './src/components/ForgotPasswordForm';
 import { MomentOption } from './src/components/MomentOption';
 import { OrdersOption } from './src/components/OrdersOption';
@@ -33,6 +37,7 @@ import { HelpOrder } from './src/components/HelpOrder';
 import { NetworkError } from './src/components/NetworkError';
 import { NotFoundSource } from './src/components/NotFoundSource';
 import { OrderTypeSelector } from './src/components/OrderTypeSelector';
+import { SearchBar } from './src/components/SearchBar';
 import { Wallets } from './src/components/Wallets';
 import { PaymentOptionWallet } from './src/components/PaymentOptionWallet';
 import { ProductForm } from './src/components/ProductForm';
@@ -94,7 +99,7 @@ export {
 	BusinessMenuList,
 	UserProfile,
 	MessageListing,
-  Messages,
+  	Messages,
 	Help,
 	HelpAccountAndPayment,
 	HelpGuide,
@@ -108,6 +113,11 @@ export {
 	UpsellingProducts,
 	UserVerification,
 	BusinessListingSearch,
+	BusinessBasicInformation,
+	BusinessProductsCategories,
+	BusinessProductsList,
+	FloatingButton,
+	SearchBar,
 
 	// OComponents
 	Toast,
