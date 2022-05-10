@@ -312,9 +312,9 @@ export const ProductOptionsUI = (props: any) => {
 					</OText>
 				</TouchableOpacity>
 			)}
-			{options.map(({ id, name, respect_to }: any) => (
+			{options.map(({ id, name, respect_to, suboptions }: any) => (
 				<React.Fragment key={`cont_key_${id}`}>
-					{respect_to == null && (
+					{respect_to == null && suboptions?.length > 0 && (
 						<TouchableOpacity
 							key={`eopt_key_${id}`}
 							onPress={() => setSelectedOpt(id)}
