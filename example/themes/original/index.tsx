@@ -1,16 +1,21 @@
 import { AddressForm } from './src/components/AddressForm';
 import { AddressDetails } from './src/components/AddressDetails';
+import { AnalyticsSegment } from './src/components/AnalyticsSegment';
 import { Home } from './src/components/Home';
 import { LoginForm } from './src/components/LoginForm';
 import { SignupForm } from './src/components/SignupForm';
 import { ActiveOrders } from './src/components/ActiveOrders';
 import { AddressList } from './src/components/AddressList';
 import { AppleLogin } from './src/components/AppleLogin';
+import { BusinessBasicInformation } from './src/components/BusinessBasicInformation';
+import { BusinessProductsCategories } from './src/components/BusinessProductsCategories';
+import { BusinessProductsList } from './src/components/BusinessProductsList';
 import { BusinessesListing } from './src/components/BusinessesListing';
 import { BusinessProductsListing } from './src/components/BusinessProductsListing';
 import { CartContent } from './src/components/CartContent';
 import { BusinessCart } from './src/components/BusinessCart';
 import { Checkout } from './src/components/Checkout';
+import { FloatingButton } from './src/components/FloatingButton';
 import { ForgotPasswordForm } from './src/components/ForgotPasswordForm';
 import { MomentOption } from './src/components/MomentOption';
 import { OrdersOption } from './src/components/OrdersOption';
@@ -32,11 +37,13 @@ import { HelpOrder } from './src/components/HelpOrder';
 import { NetworkError } from './src/components/NetworkError';
 import { NotFoundSource } from './src/components/NotFoundSource';
 import { OrderTypeSelector } from './src/components/OrderTypeSelector';
+import { SearchBar } from './src/components/SearchBar';
 import { Wallets } from './src/components/Wallets';
 import { PaymentOptionWallet } from './src/components/PaymentOptionWallet';
 import { ProductForm } from './src/components/ProductForm';
 import { UpsellingProducts } from './src/components/UpsellingProducts';
 import { UserVerification } from './src/components/UserVerification';
+import { BusinessListingSearch } from './src/components/BusinessListingSearch';
 
 import { Toast } from './src/components/shared/OToast';
 import {
@@ -67,6 +74,7 @@ import {
 export {
 	AddressForm,
 	AddressDetails,
+	AnalyticsSegment,
 	Home as HomeView,
 	SignupForm,
 	LoginForm,
@@ -76,7 +84,7 @@ export {
 	BusinessesListing,
 	BusinessProductsListing,
 	CartContent,
-  BusinessCart,
+	BusinessCart,
 	Checkout,
 	ForgotPasswordForm,
 	MomentOption,
@@ -91,7 +99,7 @@ export {
 	BusinessMenuList,
 	UserProfile,
 	MessageListing,
-  Messages,
+  	Messages,
 	Help,
 	HelpAccountAndPayment,
 	HelpGuide,
@@ -99,11 +107,17 @@ export {
 	NetworkError,
 	NotFoundSource,
 	OrderTypeSelector,
-  Wallets,
-  PaymentOptionWallet,
-  ProductForm,
-  UpsellingProducts,
-  UserVerification,
+	Wallets,
+	PaymentOptionWallet,
+	ProductForm,
+	UpsellingProducts,
+	UserVerification,
+	BusinessListingSearch,
+	BusinessBasicInformation,
+	BusinessProductsCategories,
+	BusinessProductsList,
+	FloatingButton,
+	SearchBar,
 
 	// OComponents
 	Toast,
