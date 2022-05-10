@@ -4,6 +4,7 @@ import {
 	useUtils,
 	useOrder,
 	useLanguage,
+	useConfig
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
 import { StyleSheet, View } from 'react-native';
@@ -31,6 +32,8 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
 	const theme = useTheme()
+	const [{ configs }] = useConfig();
+	const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
 
 	const styles = StyleSheet.create({
 		headerStyle: {
@@ -99,7 +102,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	};
 
 	const handleBusinessClick = (selectedBusiness: any) => {
-		if (business?.open) handleClick && handleClick(selectedBusiness)
+		if (business?.open || !isPreOrderSetting) handleClick && handleClick(selectedBusiness)
 		else {
 			navigation.navigate('BusinessPreorder', { business: selectedBusiness, handleBusinessClick: handleClick })
 		}

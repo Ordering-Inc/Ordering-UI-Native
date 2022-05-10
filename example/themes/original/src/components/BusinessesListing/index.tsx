@@ -61,7 +61,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		handleChangeSearch,
 		businessId
 	} = props;
-
+	
 	const theme = useTheme();
 	const isFocused = useIsFocused();
 	const appState = useRef(AppState.currentState)
@@ -119,7 +119,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
   const isPreorderEnabled = (configs?.preorder_status_enabled?.value === '1' || configs?.preorder_status_enabled?.value === 'true') &&
 		Number(configs?.max_days_preorder?.value) > 0
-
+	const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
 	const timerId = useRef<any>(false)
 	// const panResponder = useRef(
 	// 	PanResponder.create({
@@ -287,25 +287,27 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 								style={{ marginStart: 8 }}
 							/>
 						</WrapMomentOption>
-						<WrapMomentOption
-							onPress={() => handleMomentClick()}>
-							<OText
-								size={12}
-								numberOfLines={1}
-								ellipsizeMode="tail"
-								color={theme.colors.textSecondary}>
-								{orderState.options?.momentß
-									? parseDate(orderState.options?.moment, { outputFormat: configs?.dates_moment_format?.value })
-									: t('ASAP_ABBREVIATION', 'ASAP')}
-							</OText>
-							{isPreorderEnabled && (
-								<OIcon
-									src={theme.images.general.arrow_down}
-									width={10}
-									style={{ marginStart: 8 }}
-								/>
-							)}
-						</WrapMomentOption>
+						{isPreOrderSetting && (
+							<WrapMomentOption
+								onPress={() => handleMomentClick()}>
+								<OText
+									size={12}
+									numberOfLines={1}
+									ellipsizeMode="tail"
+									color={theme.colors.textSecondary}>
+									{orderState.options?.momentß
+										? parseDate(orderState.options?.moment, { outputFormat: configs?.dates_moment_format?.value })
+										: t('ASAP_ABBREVIATION', 'ASAP')}
+								</OText>
+								{isPreorderEnabled && (
+									<OIcon
+										src={theme.images.general.arrow_down}
+										width={10}
+										style={{ marginStart: 8 }}
+									/>
+								)}
+							</WrapMomentOption>
+						)}
 
 						{!businessId && (
 							<SearchBar
