@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, BackHandler, Platform, Linking } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { _setStoreData } from '../../providers/StoreUtil';
 import {
   useLanguage,
   OrderDetails as OrderDetailsConTableoller,
   useUtils,
+  useOrder,
   useConfig
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -88,9 +90,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [, t] = useLanguage();
   const [{ parsePrice, parseNumber, parseDate }] = useUtils();
   const [{ configs }] = useConfig();
+  const [{ carts }] = useOrder()
+
   const [isReviewed, setIsReviewed] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
-
   const { order, businessData } = props.order;
   const mapValidStatuses = [9, 19, 23]
 
@@ -364,7 +367,12 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   useEffect(() => {
     if (reorderState?.error) {
-      navigation.navigate('Business', { store: businessData?.slug })
+      const _businessId = 'businessId:' + businessData?.id
+      const _uuid = carts[_businessId]?.uuid
+      if (_uuid) {
+        _setStoreData('remove-cartId', JSON.stringify(_uuid))
+        navigation.navigate('Business', { store: businessData?.slug })
+      }
     }
     if (!reorderState?.error && reorderState?.result?.uuid) {
       onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
