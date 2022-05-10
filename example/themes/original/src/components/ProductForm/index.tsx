@@ -46,7 +46,6 @@ import { ProductOptionSubOption } from '../ProductOptionSubOption';
 import { NotFoundSource } from '../NotFoundSource';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useState } from 'react';
-
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
@@ -291,15 +290,23 @@ export const ProductOptionsUI = (props: any) => {
 				if (img?.video) {
 					const keys = img?.video.split('/')
 					let _videoId = keys[keys.length - 1]
+
 					if (_videoId.includes('watch')) {
-						const __url = _videoId.split('=')[1]
-						_videoId = __url
+					  const __url = _videoId.split('=')[1]
+					  _videoId = __url
+					} else if (_videoId.includes('?')) {
+					  const __url = _videoId.split('?')[0]
+					  _videoId = __url
 					}
-					if (_videoId.includes('?')) {
-						const __url = _videoId.split('?')[0]
-						_videoId = __url
+
+					if (_videoId.search(/&/i) >= 0) {
+					  _videoId = _videoId.split('&')[0]
+					} else if (_videoId.search(/\?/i) >= 0) {
+					  _videoId = _videoId.split('?')[0]
 					}
-					videoList.push(_videoId)
+					if ((_videoId.length === 11)) {
+					  videoList.push(_videoId)
+					}
 				}
 			}
 		}
