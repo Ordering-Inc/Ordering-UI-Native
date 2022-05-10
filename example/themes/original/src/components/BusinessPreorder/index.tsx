@@ -51,7 +51,8 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   const [selectDate, setSelectedDate] = useState<any>(null)
   const [datesWhitelist, setDateWhitelist] = useState<any>([{ start: null, end: null }])
   const [isEnabled, setIsEnabled] = useState(false)
-  const {top} = useSafeAreaInsets()
+  const { top } = useSafeAreaInsets()
+  const showOrderTime = (selectedPreorderType === 1 && Object.keys(menu)?.length > 0) || selectedPreorderType === 0
   const styles = StyleSheet.create({
     container: {
       height: windowHeight,
@@ -373,78 +374,80 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             />
           </MenuWrapper>
         )}
-        <OrderTimeWrapper>
-          <OText
-            size={16}
-            style={{
-              fontWeight: '600',
-              lineHeight: 24
-            }}
-          >
-            {t('ORDER_TIME', 'Order time')}
-          </OText>
-          <View style={{ flex: 1 }}>
-            {selectDate && datesWhitelist[0]?.start !== null && (
-              <CalendarStrip
-                scrollable
-                style={styles.calendar}
-                calendarHeaderContainerStyle={styles.calendarHeaderContainer}
-                calendarHeaderStyle={styles.calendarHeader}
-                dateNumberStyle={styles.dateNumber}
-                dateNameStyle={styles.dateName}
-                iconContainer={{ flex: 0.1 }}
-                highlightDateNameStyle={styles.highlightDateName}
-                highlightDateNumberStyle={styles.highlightDateNumber}
-                dayContainerStyle={{ height: '100%' }}
-                highlightDateContainerStyle={{ height: '100%' }}
-                calendarHeaderFormat='MMMM, YYYY'
-                iconStyle={{ borderWidth: 1 }}
-                selectedDate={selectDate}
-                datesWhitelist={datesWhitelist}
-                disabledDateNameStyle={styles.disabledDateName}
-                disabledDateNumberStyle={styles.disabledDateNumber}
-                disabledDateOpacity={0.6}
-                onDateSelected={(date) => onSelectDate(date)}
-                leftSelector={<LeftSelector />}
-                rightSelector={<RightSelector />}
-              />
-            )}
-          </View>
-          <TimeListWrapper nestedScrollEnabled={true}>
-            {(isEnabled && timeList?.length > 0) ? (
-              <TimeContentWrapper>
-                {timeList.map((time: any, i: number) => (
-                  <TouchableOpacity key={i} onPress={() => handleChangeTime(time.value)}>
-                    <TimeItem active={timeSelected === time.value}>
-                      <OText
-                        size={14}
-                        color={timeSelected === time.value ? theme.colors.primary : theme.colors.textNormal}
-                        style={{
-                          lineHeight: 24
-                        }}
-                      >{time.text}</OText>
-                    </TimeItem>
-                  </TouchableOpacity>
-                ))}
-                {timeList.length % 3 === 2 && (
-                  <TimeItem style={{ backgroundColor: 'transparent' }} />
-                )}
-              </TimeContentWrapper>
-            ) : (
-              <OText
-                size={16}
-                style={{
-                  fontWeight: '600',
-                  lineHeight: 24,
-                  marginBottom: 12,
-                  textAlign: 'center'
-                }}
-              >
-                {t('ERROR_ADD_PRODUCT_BUSINESS_CLOSED', 'The business is closed at the moment')}
-              </OText>
-            )}
-          </TimeListWrapper>
-        </OrderTimeWrapper>
+        {showOrderTime && (
+          <OrderTimeWrapper>
+            <OText
+              size={16}
+              style={{
+                fontWeight: '600',
+                lineHeight: 24
+              }}
+            >
+              {t('ORDER_TIME', 'Order time')}
+            </OText>
+            <View style={{ flex: 1 }}>
+              {selectDate && datesWhitelist[0]?.start !== null && (
+                <CalendarStrip
+                  scrollable
+                  style={styles.calendar}
+                  calendarHeaderContainerStyle={styles.calendarHeaderContainer}
+                  calendarHeaderStyle={styles.calendarHeader}
+                  dateNumberStyle={styles.dateNumber}
+                  dateNameStyle={styles.dateName}
+                  iconContainer={{ flex: 0.1 }}
+                  highlightDateNameStyle={styles.highlightDateName}
+                  highlightDateNumberStyle={styles.highlightDateNumber}
+                  dayContainerStyle={{ height: '100%' }}
+                  highlightDateContainerStyle={{ height: '100%' }}
+                  calendarHeaderFormat='MMMM, YYYY'
+                  iconStyle={{ borderWidth: 1 }}
+                  selectedDate={selectDate}
+                  datesWhitelist={datesWhitelist}
+                  disabledDateNameStyle={styles.disabledDateName}
+                  disabledDateNumberStyle={styles.disabledDateNumber}
+                  disabledDateOpacity={0.6}
+                  onDateSelected={(date) => onSelectDate(date)}
+                  leftSelector={<LeftSelector />}
+                  rightSelector={<RightSelector />}
+                />
+              )}
+            </View>
+            <TimeListWrapper nestedScrollEnabled={true}>
+              {(isEnabled && timeList?.length > 0) ? (
+                <TimeContentWrapper>
+                  {timeList.map((time: any, i: number) => (
+                    <TouchableOpacity key={i} onPress={() => handleChangeTime(time.value)}>
+                      <TimeItem active={timeSelected === time.value}>
+                        <OText
+                          size={14}
+                          color={timeSelected === time.value ? theme.colors.primary : theme.colors.textNormal}
+                          style={{
+                            lineHeight: 24
+                          }}
+                        >{time.text}</OText>
+                      </TimeItem>
+                    </TouchableOpacity>
+                  ))}
+                  {timeList.length % 3 === 2 && (
+                    <TimeItem style={{ backgroundColor: 'transparent' }} />
+                  )}
+                </TimeContentWrapper>
+              ) : (
+                <OText
+                  size={16}
+                  style={{
+                    fontWeight: '600',
+                    lineHeight: 24,
+                    marginBottom: 12,
+                    textAlign: 'center'
+                  }}
+                >
+                  {t('ERROR_ADD_PRODUCT_BUSINESS_CLOSED', 'The business is closed at the moment')}
+                </OText>
+              )}
+            </TimeListWrapper>
+          </OrderTimeWrapper>
+        )}
         <OButton
           text={t('GO_TO_MENU', 'Go to menu')}
           textStyle={{ color: 'white' }}
