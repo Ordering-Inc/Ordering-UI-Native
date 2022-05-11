@@ -137,6 +137,10 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
     }
   }, [filters, openFilters])
 
+  useEffect(() => {
+    handleSearchbusinessAndProducts(true)
+  }, [])
+
   const MaxSectionItem = ({ title, options, filter }: any) => {
     const parseValue = (option: number) => {
       return filter === 'max_distance'
