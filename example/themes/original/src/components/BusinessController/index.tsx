@@ -45,9 +45,6 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
 	const theme = useTheme()
-	const [{ configs }] = useConfig();
-	const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
-
 	const styles = StyleSheet.create({
 		headerStyle: {
 			borderTopLeftRadius: 7.6,
@@ -115,7 +112,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	};
 
 	const handleBusinessClick = (selectedBusiness: any) => {
-		if (business?.open || !isPreOrderSetting) handleClick && handleClick(selectedBusiness)
+		if (business?.open) handleClick && handleClick(selectedBusiness)
 		else {
 			navigation.navigate('BusinessPreorder', { business: selectedBusiness, handleBusinessClick: handleClick })
 		}
