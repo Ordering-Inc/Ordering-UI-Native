@@ -377,7 +377,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             />
           </MenuWrapper>
         )}
-        {isPreOrderSetting && (
+        {isPreOrderSetting && showOrderTime && (
           <OrderTimeWrapper>
             <OText
               size={16}
