@@ -53,6 +53,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
   const [isEnabled, setIsEnabled] = useState(false)
   const { top } = useSafeAreaInsets()
   const showOrderTime = (selectedPreorderType === 1 && Object.keys(menu)?.length > 0) || selectedPreorderType === 0
+  const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
   const styles = StyleSheet.create({
     container: {
       height: windowHeight,
@@ -301,60 +302,62 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             />
           </View>
         </BusinessInfoWrapper>
-        <PreorderTypeWrapper>
-          <OText
-            size={16}
-            style={{
-              fontWeight: '600',
-              lineHeight: 24,
-              marginBottom: 12
-            }}
-          >
-            {t('PREORDER_TYPE', 'Preorder type')}
-          </OText>
-          <SelectDropdown
-            defaultValueByIndex={selectedPreorderType}
-            data={preorderTypeList}
-            // disabled={orderState.loading}
-            onSelect={(selectedItem, index) => {
-              setSelectedPreorderType(index)
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              return selectedItem.name
-            }}
-            rowTextForSelection={(item, index) => {
-              return item.name
-            }}
-            buttonStyle={styles.selectOption}
-            buttonTextStyle={{
-              color: theme.colors.disabled,
-              fontSize: 14,
-              textAlign: 'left',
-              marginHorizontal: 0
-            }}
-            dropdownStyle={{
-              borderRadius: 8,
-              borderColor: theme.colors.lightGray,
-              marginTop: Platform.OS === 'ios' ? 12 : -top
-            }}
-            rowStyle={{
-              borderBottomColor: theme.colors.backgroundGray100,
-              backgroundColor: theme.colors.backgroundGray100,
-              height: 40,
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              paddingTop: 8,
-              paddingHorizontal: 14
-            }}
-            rowTextStyle={{
-              color: theme.colors.disabled,
-              fontSize: 14,
-              marginHorizontal: 0
-            }}
-            renderDropdownIcon={() => dropDownIcon()}
-            dropdownOverlayColor='transparent'
-          />
-        </PreorderTypeWrapper>
+        {isPreOrderSetting && (
+          <PreorderTypeWrapper>
+            <OText
+              size={16}
+              style={{
+                fontWeight: '600',
+                lineHeight: 24,
+                marginBottom: 12
+              }}
+            >
+              {t('PREORDER_TYPE', 'Preorder type')}
+            </OText>
+            <SelectDropdown
+              defaultValueByIndex={selectedPreorderType}
+              data={preorderTypeList}
+              // disabled={orderState.loading}
+              onSelect={(selectedItem, index) => {
+                setSelectedPreorderType(index)
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem.name
+              }}
+              rowTextForSelection={(item, index) => {
+                return item.name
+              }}
+              buttonStyle={styles.selectOption}
+              buttonTextStyle={{
+                color: theme.colors.disabled,
+                fontSize: 14,
+                textAlign: 'left',
+                marginHorizontal: 0
+              }}
+              dropdownStyle={{
+                borderRadius: 8,
+                borderColor: theme.colors.lightGray,
+                marginTop: Platform.OS === 'ios' ? 12 : -top
+              }}
+              rowStyle={{
+                borderBottomColor: theme.colors.backgroundGray100,
+                backgroundColor: theme.colors.backgroundGray100,
+                height: 40,
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                paddingTop: 8,
+                paddingHorizontal: 14
+              }}
+              rowTextStyle={{
+                color: theme.colors.disabled,
+                fontSize: 14,
+                marginHorizontal: 0
+              }}
+              renderDropdownIcon={() => dropDownIcon()}
+              dropdownOverlayColor='transparent'
+            />
+          </PreorderTypeWrapper>
+        )}
         {selectedPreorderType === 1 && (
           <MenuWrapper>
             <OText
@@ -374,7 +377,7 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
             />
           </MenuWrapper>
         )}
-        {showOrderTime && (
+        {isPreOrderSetting && (
           <OrderTimeWrapper>
             <OText
               size={16}
@@ -447,6 +450,20 @@ const BusinessPreorderUI = (props: BusinessPreorderParams) => {
               )}
             </TimeListWrapper>
           </OrderTimeWrapper>
+        )}
+        {!isPreOrderSetting && (
+          <OText
+            size={16}
+            style={{
+              fontWeight: '600',
+              lineHeight: 24,
+              marginTop: 30,
+              marginBottom: 12,
+              textAlign: 'center'
+            }}
+            >
+            {t('ERROR_ADD_PRODUCT_BUSINESS_CLOSED', 'The business is closed at the moment')}
+          </OText>
         )}
         <OButton
           text={t('GO_TO_MENU', 'Go to menu')}
