@@ -43,7 +43,6 @@ import { PaymentOptionWallet } from './src/components/PaymentOptionWallet';
 import { ProductForm } from './src/components/ProductForm';
 import { UpsellingProducts } from './src/components/UpsellingProducts';
 import { UserVerification } from './src/components/UserVerification';
-import { BusinessListingSearch } from './src/components/BusinessListingSearch';
 
 import { Toast } from './src/components/shared/OToast';
 import {
@@ -112,7 +111,6 @@ export {
 	ProductForm,
 	UpsellingProducts,
 	UserVerification,
-	BusinessListingSearch,
 	BusinessBasicInformation,
 	BusinessProductsCategories,
 	BusinessProductsList,
