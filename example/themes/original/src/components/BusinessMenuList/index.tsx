@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useLanguage, BusinessMenuListing } from 'ordering-components/native'
 import { OText } from '../shared'
 import { BusinessMenuListParams } from '../../types'
@@ -19,7 +19,7 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
 
   const [, t] = useLanguage()
   const theme = useTheme()
-  const {top} = useSafeAreaInsets()
+  const { top } = useSafeAreaInsets()
 
   const styles = StyleSheet.create({
     container: {
@@ -36,7 +36,7 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
       height: 44,
       width: '100%'
     }
-	})
+  })
 
   const dropDownIcon = () => {
     return (
@@ -48,12 +48,18 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
     )
   }
 
+  useEffect(() => {
+    if (!businessMenuList?.loading && businessMenuList?.menus?.length === 1){
+      setMenu(businessMenuList?.menus[0])
+    }
+  }, [businessMenuList?.menus])
+
   return (
     <>
       {businessMenuList.loading ? (
         <Placeholder Animation={Fade}>
           <View>
-            <PlaceholderLine height={44}/>
+            <PlaceholderLine height={44} />
           </View>
         </Placeholder>
       ) : (
@@ -67,6 +73,7 @@ const BusinessMenuListUI = (props: BusinessMenuListParams) => {
                 onSelect={(selectedItem, index) => {
                   setMenu(selectedItem)
                 }}
+                defaultValue={businessMenuList?.menus?.length === 1 && businessMenuList?.menus[0]}
                 buttonTextAfterSelection={(selectedItem, index) => {
                   return selectedItem.name
                 }}
