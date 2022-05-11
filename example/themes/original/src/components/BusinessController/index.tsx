@@ -192,9 +192,11 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						</View>
 					) : (
 						<View style={styles.bullet}>
-							<OText size={10} color={theme.colors.textSecondary}>
-								{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(businessDeliveryPrice ?? business?.delivery_price) + ' \u2022 '}`}
-							</OText>
+							{orderState?.options?.type === 1 && (
+								<OText size={10} color={theme.colors.textSecondary}>
+									{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(businessDeliveryPrice ?? business?.delivery_price) + ' \u2022 '}`}
+								</OText>
+							)}
 							<OText size={10} color={theme.colors.textSecondary}>{`${convertHoursToMinutes(
 								orderState?.options?.type === 1
 									? (businessDeliveryTime ?? business?.delivery_time)
