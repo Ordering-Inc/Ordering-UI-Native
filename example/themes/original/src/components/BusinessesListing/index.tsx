@@ -61,7 +61,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		handleChangeSearch,
 		businessId
 	} = props;
-
+ 
 	const theme = useTheme();
 	const isFocused = useIsFocused();
 	const appState = useRef(AppState.currentState)
