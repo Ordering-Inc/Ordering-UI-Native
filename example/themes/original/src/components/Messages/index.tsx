@@ -536,6 +536,11 @@ const styles = StyleSheet.create({
 
 export const Messages = (props: MessagesParams) => {
 	const [allMessages, setAllMessages] = useState(props.messages)
+
+	useEffect(() => {
+		setAllMessages(props.messages)
+	}, [props.messages])
+
 	const MessagesProps = {
 		...props,
 		UIComponent: MessagesUI,

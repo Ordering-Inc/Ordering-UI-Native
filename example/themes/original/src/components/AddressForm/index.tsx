@@ -108,6 +108,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 			top: 12,
 			zIndex: 1002,
 		},
+		wrapperNavbar: Platform.OS === 'ios'
+			? {  paddingVertical: 0, paddingHorizontal: 40 }
+			: {  paddingVertical: 20, paddingHorizontal: 40 }
 	});
 
 	const [, t] = useLanguage();
@@ -500,16 +503,18 @@ const AddressFormUI = (props: AddressFormParams) => {
 			keyboardShouldPersistTaps='always'
 			listViewDisplayed={false}
 		>
-			<NavBar
-				title={t('WHERE_DO_WE_DELIVERY', 'Where do we delivery?')}
-				titleAlign={'center'}
-				onActionLeft={goToBack}
-				showCall={false}
-				paddingTop={20}
-				btnStyle={{ paddingLeft: 40 }}
-				titleStyle={{ fontSize: 14 }}
-				titleWrapStyle={{ paddingHorizontal: 0 }}
-			/>
+			<View style={styles.wrapperNavbar}>
+				<NavBar
+					title={t('WHERE_DO_WE_DELIVERY', 'Where do we delivery?')}
+					titleAlign={'center'}
+					onActionLeft={goToBack}
+					showCall={false}
+					btnStyle={{ paddingLeft: 0 }}
+					style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+					titleWrapStyle={{ paddingHorizontal: 0 }}
+					titleStyle={{ marginRight: 0, marginLeft: 0 }}
+				/>
+			</View>
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 				<AddressFormContainer style={{ height: 600, overflow: 'scroll' }}>
 					<View>

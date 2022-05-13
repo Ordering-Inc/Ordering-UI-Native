@@ -11,6 +11,7 @@ import OKeyButton from './OKeyButton'
 import OModal from './OModal'
 import OAlert from './OAlert'
 import OBottomPopup from './OBottomPopup'
+import HeaderTitle from './HeaderTitle'
 
 export {
 	OText,
@@ -26,4 +27,5 @@ export {
 	OAlert,
   	OModal,
 	OBottomPopup,
+  HeaderTitle
 }

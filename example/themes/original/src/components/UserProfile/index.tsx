@@ -136,10 +136,10 @@ const ProfileListUI = (props: ProfileParams) => {
 	}
 
 	return (
-		<View style={{ flex: 1, height: height - top - bottom - 62 }}>
-			<OText size={24} style={{ marginTop: 15, paddingHorizontal: 40 }}>
+		<View style={{ flex: 1, height: height - top - bottom - 62, paddingTop: 20 }}>
+			{/* <OText size={24} style={{ marginTop: 15, paddingHorizontal: 40 }}>
 				{t('PROFILE', 'Profile')}
-			</OText>
+			</OText> */}
 			<CenterView style={styles.pagePadding}>
 				<View style={styles.photo}>
 					{user?.photo ? (

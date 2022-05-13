@@ -22,9 +22,9 @@ export const CartContent = (props: any) => {
 		<CCContainer>
 			{isOrderStateCarts && carts?.length > 0 && (
 				<>
-					<OText size={24} lineHeight={36} weight={'600'} style={{ marginBottom: 20 }}>
+					{/* <OText size={24} lineHeight={36} weight={'600'} style={{ marginBottom: 20 }}>
 						{carts.length > 1 ? t('MY_CARTS', 'My Carts') : t('CART', 'Cart')}
-					</OText>
+					</OText> */}
 					{carts.map((cart: any, i: number) => (
 						<CCList key={i} style={{ overflow: 'visible' }}>
 							{cart.products.length > 0 && (
