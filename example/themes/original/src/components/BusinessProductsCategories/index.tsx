@@ -111,7 +111,7 @@ const BusinessProductsCategoriesUI = (props: any) => {
 				categories.length &&
 				categories.map((category: any) => (
 					<Tab
-						key={category.name}
+						key={category.id}
 						onPress={() => handleCategoryScroll(category)}
 						style={[
 							category.id === 'featured' && !featured && styles.featuredStyle,

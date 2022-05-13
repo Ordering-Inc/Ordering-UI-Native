@@ -60,6 +60,7 @@ import {
 	OAlert,
 	OModal,
 	OBottomPopup,
+  HeaderTitle
 } from './src/components/shared';
 
 import { Container } from './src/layouts/Container';
@@ -134,6 +135,7 @@ export {
 	OAlert,
 	OModal,
 	OBottomPopup,
+  HeaderTitle,
 
 	// layout
 	Container,

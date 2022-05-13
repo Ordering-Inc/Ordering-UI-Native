@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder, useSession } from 'ordering-components/native'
 import { AddressListContainer, AddressItem } from './styles'
-import { StyleSheet, View } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 import { OButton, OText, OAlert, OModal, OIcon } from '../shared'
 import { Container } from '../../layouts/Container'
 import { AddressListParams } from '../../types'
@@ -261,6 +261,32 @@ const AddressListUI = (props: AddressListParams) => {
 					)}
 					{!addressList.loading && !addressList.error && (
 						<>
+							{addressList?.addresses?.length === 0 && (
+								<View
+									style={{
+										flexDirection: 'column',
+										paddingHorizontal: 10,
+										paddingTop: 20
+									}}
+								>
+									<OText
+										size={24}
+										lineHeight={36}
+										weight={Platform.OS === 'ios' ? '600' : 'bold'}
+										style={{
+											textAlign: 'center',
+											marginRight: 40,
+											color: theme.colors.textNormal,
+											paddingHorizontal: 0,
+											width: '100%',
+											marginLeft: 0
+										}}
+									>
+										{t('ADDRESS_LIST', 'Address List')}
+									</OText>
+								</View>
+							)}
+
 							<OButton
 								text={t('ADD_NEW_ADDRESS', 'Add new Address')}
 								imgRightSrc=''
