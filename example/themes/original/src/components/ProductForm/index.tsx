@@ -37,7 +37,8 @@ import {
 	ExtraOptionWrap,
 	WeightUnitSwitch,
 	WeightUnitItem,
-	TopActions
+	TopActions,
+	ProductSummary
 } from './styles';
 import { OButton, OIcon, OInput, OText } from '../shared';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -45,7 +46,6 @@ import { ProductOptionSubOption } from '../ProductOptionSubOption';
 import { NotFoundSource } from '../NotFoundSource';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { useState } from 'react';
-
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
@@ -170,8 +170,11 @@ export const ProductOptionsUI = (props: any) => {
 		pieces: true
 	})
 	const [pricePerWeightUnit, setPricePerWeightUnit] = useState<any>(null)
-
+	const scrollViewRef = useRef<any>(null);
 	const swiperRef: any = useRef(null)
+	const [optionLayout, setOptionLayout] = useState<any>({})
+	const [headerRefHeight, setHeaderRefHeight] = useState(0)
+	const [summaryRefHeight, setSummaryRefHeight] = useState(0)
 
 	const isError = (id: number) => {
 		let bgColor = theme.colors.white;
@@ -253,6 +256,28 @@ export const ProductOptionsUI = (props: any) => {
 		handleChangeProductCartQuantity(quantity)
 	}
 
+	const scrollDown = (id: any) => {
+		const isErrors = Object.values(errors).length > 0
+		if (!isErrors) {
+			return
+		}
+		const targetOptionId = Object.getOwnPropertyNames(errors).filter(item => !item.includes(id))[0]
+		const targetY = optionLayout[targetOptionId]?.y
+		if (targetY) {
+			scrollViewRef.current.scrollTo({
+				y: targetY + headerRefHeight + summaryRefHeight,
+				animated: true
+			})
+		}
+	}
+
+	const handleOnLayout = (event: any, optionId: any) => {
+		const _optionLayout = { ...optionLayout }
+		const optionKey = 'id:' + optionId
+		_optionLayout[optionKey] = { y: event.nativeEvent.layout?.y }
+		setOptionLayout(_optionLayout)
+	}
+
 	useEffect(() => {
 		const imageList: any = []
 		const videoList: any = []
@@ -265,15 +290,23 @@ export const ProductOptionsUI = (props: any) => {
 				if (img?.video) {
 					const keys = img?.video.split('/')
 					let _videoId = keys[keys.length - 1]
+
 					if (_videoId.includes('watch')) {
-						const __url = _videoId.split('=')[1]
-						_videoId = __url
+					  const __url = _videoId.split('=')[1]
+					  _videoId = __url
+					} else if (_videoId.includes('?')) {
+					  const __url = _videoId.split('?')[0]
+					  _videoId = __url
 					}
-					if (_videoId.includes('?')) {
-						const __url = _videoId.split('?')[0]
-						_videoId = __url
+
+					if (_videoId.search(/&/i) >= 0) {
+					  _videoId = _videoId.split('&')[0]
+					} else if (_videoId.search(/\?/i) >= 0) {
+					  _videoId = _videoId.split('?')[0]
 					}
-					videoList.push(_videoId)
+					if ((_videoId.length === 11)) {
+					  videoList.push(_videoId)
+					}
 				}
 			}
 		}
@@ -351,10 +384,10 @@ export const ProductOptionsUI = (props: any) => {
 					<OIcon src={theme.images.general.arrow_left} width={15} />
 				</TopActions>
 			</TopHeader>
-			<ScrollView>
+			<ScrollView ref={scrollViewRef}>
 				{!error && (
 					<View style={{ paddingBottom: 80 }}>
-						<WrapHeader>
+						<WrapHeader onLayout={(event: any) => setHeaderRefHeight(event.nativeEvent.layout?.height)}>
 							{loading && !product ? (
 								<View style={styles.productHeaderSkeleton}>
 									<Placeholder Animation={Fade}>
@@ -444,7 +477,7 @@ export const ProductOptionsUI = (props: any) => {
 												>
 													{img.includes('image') ? (
 														<OIcon
-															url={optimizeImage(img, 'h_250,c_limit')}
+															url={img}
 															style={{
 																borderColor: theme.colors.lightGray,
 																borderRadius: 8,
@@ -478,96 +511,98 @@ export const ProductOptionsUI = (props: any) => {
 							)}
 						</WrapHeader>
 						<WrapContent>
-							<ProductTitle>
-								{loading && !product ? (
-									<Placeholder Animation={Fade}>
-										<View
-											style={{
-												flexDirection: 'row',
-												justifyContent: 'space-between',
-											}}>
-											<PlaceholderLine width={40} height={20} />
-											<PlaceholderLine width={30} height={20} />
-										</View>
-									</Placeholder>
-								) : (
-									<>
-										<View style={{ flexDirection: 'row' }}>
-											<OText
-												size={20}
-												lineHeight={30}
-												weight={'600'}
-												style={{ flex: 1, marginBottom: 10 }}>
-												{product?.name || productCart.name}
-											</OText>
-											{!!product?.calories && (
-												<OText size={16} style={{ color: '#808080' }}>{product?.calories} cal
+							<ProductSummary onLayout={(event: any) => setSummaryRefHeight(event.nativeEvent.layout?.height)}>
+								<ProductTitle>
+									{loading && !product ? (
+										<Placeholder Animation={Fade}>
+											<View
+												style={{
+													flexDirection: 'row',
+													justifyContent: 'space-between',
+												}}>
+												<PlaceholderLine width={40} height={20} />
+												<PlaceholderLine width={30} height={20} />
+											</View>
+										</Placeholder>
+									) : (
+										<>
+											<View style={{ flexDirection: 'row' }}>
+												<OText
+													size={20}
+													lineHeight={30}
+													weight={'600'}
+													style={{ flex: 1, marginBottom: 10 }}>
+													{product?.name || productCart.name}
 												</OText>
-											)}
-										</View>
-										{((!!product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (!!product?.estimated_person)) && (
-											<OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'} mBottom={7}>
-												{
-													((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
-													&& <>{t('SKU', 'Sku')}{' '}{product?.sku || productCart?.sku}</>
-												}
-												{product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
-													<>&nbsp;&#183;&nbsp;</>
-												)}
-												{product?.estimated_person
-													&& <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
-												}
-											</OText>
-										)}
-										{isHaveWeight ? (
-											<OText size={16} lineHeight={24} color={theme.colors.primary}>{parsePrice(pricePerWeightUnit)} / {product?.weight_unit}</OText>
-										) : (
-											<View style={{ flexDirection: 'row', marginBottom: 10 }}>
-												<OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
-												{product?.offer_price !== null && product?.in_offer && (
-													<OText style={{
-														fontSize: 14,
-														color: '#808080',
-														textDecorationLine: 'line-through',
-														marginLeft: 7,
-														marginRight: 7
-													}}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
+												{!!product?.calories && (
+													<OText size={16} style={{ color: '#808080' }}>{product?.calories} cal
+													</OText>
 												)}
 											</View>
-										)}
-									</>
-								)}
-							</ProductTitle>
-							<ProductDescription>
-								<OText color={theme.colors.textSecondary} size={12} lineHeight={18}>
-									{product?.description || productCart?.description}
-								</OText>
-							</ProductDescription>
-							<ScrollView
-								horizontal
-								showsHorizontalScrollIndicator={false}
-								contentContainerStyle={{ paddingBottom: 30 }}
-							>
-								{product?.tags?.map((tag: any) => (
-									<View
-										key={tag.id}
-										style={styles.productTagWrapper}
-									>
-										{!!tag?.image ? (
-											<OIcon
-												url={optimizeImage(tag?.image, 'h_40,c_limit')}
-												style={styles.productTagImageStyle}
-											/>
-										) : (
-											<OIcon
-												src={theme.images?.dummies?.product}
-												style={styles.productTagImageStyle}
-											/>
-										)}
-										<OText color={theme.colors.textSecondary} size={12} style={styles.productTagNameStyle}>{tag.name}</OText>
-									</View>
-								))}
-							</ScrollView>
+											{((!!product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (!!product?.estimated_person)) && (
+												<OText size={14} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={'#909BA9'} mBottom={7}>
+													{
+														((product?.sku && product?.sku !== '-1' && product?.sku !== '1') || (productCart?.sku && productCart?.sku !== '-1' && productCart?.sku !== '1'))
+														&& <>{t('SKU', 'Sku')}{' '}{product?.sku || productCart?.sku}</>
+													}
+													{product?.sku && product?.sku !== '-1' && product?.sku !== '1' && product?.estimated_person && (
+														<>&nbsp;&#183;&nbsp;</>
+													)}
+													{product?.estimated_person
+														&& <>{product?.estimated_person}{' '}{t('ESTIMATED_PERSONS', 'persons')}</>
+													}
+												</OText>
+											)}
+											{isHaveWeight ? (
+												<OText size={16} lineHeight={24} color={theme.colors.primary}>{parsePrice(pricePerWeightUnit)} / {product?.weight_unit}</OText>
+											) : (
+												<View style={{ flexDirection: 'row', marginBottom: 10 }}>
+													<OText size={16} style={{ flex: I18nManager.isRTL ? 1 : 0 }} color={theme.colors.primary}>{productCart.price ? parsePrice(productCart.price) : ''}</OText>
+													{product?.offer_price !== null && product?.in_offer && (
+														<OText style={{
+															fontSize: 14,
+															color: '#808080',
+															textDecorationLine: 'line-through',
+															marginLeft: 7,
+															marginRight: 7
+														}}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
+													)}
+												</View>
+											)}
+										</>
+									)}
+								</ProductTitle>
+								<ProductDescription>
+									<OText color={theme.colors.textSecondary} size={12} lineHeight={18}>
+										{product?.description || productCart?.description}
+									</OText>
+								</ProductDescription>
+								<ScrollView
+									horizontal
+									showsHorizontalScrollIndicator={false}
+									contentContainerStyle={{ paddingBottom: 30 }}
+								>
+									{product?.tags?.map((tag: any) => (
+										<View
+											key={tag.id}
+											style={styles.productTagWrapper}
+										>
+											{!!tag?.image ? (
+												<OIcon
+													url={optimizeImage(tag?.image, 'h_40,c_limit')}
+													style={styles.productTagImageStyle}
+												/>
+											) : (
+												<OIcon
+													src={theme.images?.dummies?.product}
+													style={styles.productTagImageStyle}
+												/>
+											)}
+											<OText color={theme.colors.textSecondary} size={12} style={styles.productTagNameStyle}>{tag.name}</OText>
+										</View>
+									))}
+								</ScrollView>
+							</ProductSummary>
 							{loading && !product ? (
 								<>
 									{[...Array(2)].map((item, i) => (
@@ -666,7 +701,7 @@ export const ProductOptionsUI = (props: any) => {
 													return (
 														<React.Fragment key={`popt_${option.id}`}>
 															{showOption(option) && (
-																<View style={styles.optionContainer}>
+																<View style={styles.optionContainer} onLayout={(event: any) => handleOnLayout(event, option?.id)}>
 																	<ProductOption
 																		option={option}
 																		currentState={currentState}
@@ -703,6 +738,8 @@ export const ProductOptionsUI = (props: any) => {
 																								isSoldOut ||
 																								maxProductQuantity <= 0
 																							}
+																							scrollDown={scrollDown}
+																							error={errors[`id:${option.id}`]}
 																						/>
 																					);
 																				},
@@ -857,7 +894,6 @@ export const ProductOptionsUI = (props: any) => {
 								<OIcon
 									src={theme.images.general.minus}
 									width={16}
-									style={{ borderWidth: 1, borderColor: 'red' }}
 									color={
 										productCart.quantity === 1 || isSoldOut
 											? theme.colors.backgroundGray
@@ -868,7 +904,7 @@ export const ProductOptionsUI = (props: any) => {
 							{qtyBy?.pieces && (
 								<TextInput
 									keyboardType='numeric'
-									value={`${productCart?.quantity > 0 ? productCart?.quantity: ''}`}
+									value={`${productCart?.quantity > 0 ? productCart?.quantity : ''}`}
 									onChangeText={(val: any) => onChangeProductCartQuantity(parseInt(val))}
 									editable={!orderState.loading}
 									style={{
@@ -901,7 +937,6 @@ export const ProductOptionsUI = (props: any) => {
 								<OIcon
 									src={theme.images.general.plus}
 									width={16}
-									style={{ borderWidth: 1, borderColor: 'red' }}
 									color={
 										maxProductQuantity <= 0 ||
 											productCart.quantity >= maxProductQuantity ||

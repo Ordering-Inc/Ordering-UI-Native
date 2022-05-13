@@ -6,9 +6,10 @@ export const WrapHeader = styled.View`
 `
 
 export const TopActions = styled.TouchableOpacity`
-	height: 44px;
+	height: 60px;
 	justify-content: center;
   padding-horizontal: 30px;
+  width: 80px;
 `;
 
 export const TopHeader = styled.View`
@@ -70,7 +71,7 @@ export const ProductActions = styled.View`
   position: absolute;
   bottom: 0px;
 	min-height: 70px;
-  padding-top: ${(props : any) => props.ios ? '20px' : '0'};
+  padding-top: ${(props: any) => props.ios ? '20px' : '0'};
   padding-horizontal: 40px;
   width: 100%;
   flex-direction: row;
@@ -95,4 +96,6 @@ export const WeightUnitItem = styled.View`
   ${({ active }: any) => active && css`
     background-color: ${(props: any) => props.theme.colors.primary}20;
   `}
+`
+export const ProductSummary = styled.View`
 `
