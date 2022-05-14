@@ -1,4 +1,4 @@
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 
 export const CardContainer = styled.TouchableOpacity`
   flex: 1;
@@ -30,4 +30,31 @@ export const QuantityContainer = styled.View`
 export const PricesContainer = styled.View`
   flex-direction: row;
   align-items: center;
+`
+
+export const LogoWrapper = styled.View`
+  position: relative;
+  margin-left: 12px;
+`
+
+export const RibbonBox = styled.View`
+  position: absolute;
+  z-index: 1;
+  top: -4px;
+  right: -4px;
+  background-color: ${(props: any) => props.theme.colors.primary};
+  padding: 1px 8px;
+  max-width: 60px;
+
+  ${(props: any) => props.bgColor && css`
+    background-color: ${props.bgColor};
+  `}
+
+  ${(props: any) => props.isRoundRect && css`
+    border-radius: 7.6px;
+  `}
+
+  ${(props: any) => props.isCapsule && css`
+    border-radius: 50px;
+  `}
 `

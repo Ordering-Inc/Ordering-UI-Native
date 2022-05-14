@@ -4,11 +4,12 @@ import { SingleProductCard } from '../SingleProductCard';
 import { NotFoundSource } from '../NotFoundSource';
 import { BusinessProductsListParams } from '../../types';
 import { OButton, OIcon, OModal, OText } from '../shared';
-import { ProductsContainer, ErrorMessage, WrapperNotFound } from './styles';
+import { ProductsContainer, ErrorMessage, WrapperNotFound, RibbonBox } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { View, ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { useTheme } from 'styled-components/native';
+import { shape } from '../../utils'
 
 const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   const {
@@ -110,6 +111,24 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   <OText size={16} weight="600">
                     {category.name}
                   </OText>
+                  {category?.ribbon?.enabled && (
+                    <RibbonBox
+                      bgColor={category?.ribbon?.color}
+                      isRoundRect={category?.ribbon?.shape === shape?.rectangleRound}
+                      isCapsule={category?.ribbon?.shape === shape?.capsuleShape}
+                    >
+                      <OText
+                        size={10}
+                        weight={'400'}
+                        color={theme.colors.white}
+                        numberOfLines={2}
+                        ellipsizeMode='tail'
+                        lineHeight={13}
+                      >
+                        {category?.ribbon?.text}
+                      </OText>
+                    </RibbonBox>
+                  )}
                 </View>
                 {!!category?.description && (
                   <View style={{ position: 'relative' }}>

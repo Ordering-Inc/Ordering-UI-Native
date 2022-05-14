@@ -4,7 +4,7 @@ import { useUtils, useOrder, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OModal } from '../shared';
 import { BusinessBasicInformationParams } from '../../types';
-import { convertHoursToMinutes } from '../../utils';
+import { convertHoursToMinutes, shape } from '../../utils';
 import { BusinessInformation } from '../BusinessInformation';
 import { BusinessReviews } from '../BusinessReviews';
 import dayjs from 'dayjs';
@@ -22,6 +22,8 @@ import {
 	BusinessInfoItem,
 	WrapReviews,
 	WrapBusinessInfo,
+	TitleWrapper,
+	RibbonBox
 } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 const types = ['food', 'laundry', 'alcohol', 'groceries'];
@@ -121,9 +123,29 @@ export const BusinessBasicInformation = (
 							<PlaceholderLine height={30} width={20} />
 						</Placeholder>
 					) : (
-						<OText size={24} weight={'600'}>
-							{business?.name}
-						</OText>
+						<TitleWrapper>
+							<OText size={24} weight={'600'}>
+								{business?.name}
+							</OText>
+							{business?.ribbon?.enabled && (
+								<RibbonBox
+									bgColor={business?.ribbon?.color}
+									isRoundRect={business?.ribbon?.shape === shape?.rectangleRound}
+									isCapsule={business?.ribbon?.shape === shape?.capsuleShape}
+								>
+									<OText
+										size={10}
+										weight={'400'}
+										color={theme.colors.white}
+										numberOfLines={2}
+										ellipsizeMode='tail'
+										lineHeight={13}
+									>
+										{business?.ribbon?.text}
+									</OText>
+								</RibbonBox>
+							)}
+						</TitleWrapper>
 					)}
 				</BusinessInfoItem>
 				{loading ? (
