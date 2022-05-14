@@ -171,6 +171,15 @@ export const getTypesText = (value: number) => {
 }
 
 /**
+ * List shape for ribbon
+ */
+ export const shape = {
+  rectangle: 'rectangle',
+  rectangleRound: 'rectangle_round',
+  capsuleShape: 'capsule_shape'
+}
+
+/**
  * Function to transform degree to radian
  * @param {number} value for transform
  *

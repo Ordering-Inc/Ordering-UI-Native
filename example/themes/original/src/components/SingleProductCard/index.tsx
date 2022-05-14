@@ -7,10 +7,11 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
-import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer } from './styles';
+import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
 import { StyleSheet } from 'react-native';
 import { OText, OIcon } from '../shared';
 import FastImage from 'react-native-fast-image'
+import { shape } from '../../utils';
 
 export const SingleProductCard = (props: SingleProductCardParams) => {
 	const {
@@ -46,8 +47,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 		productStyle: {
 			width: 75,
 			height: 75,
-			borderRadius: 7.6,
-			marginStart: 12
+			borderRadius: 7.6
 		},
 		quantityContainer: {
 			position: 'absolute',
@@ -136,21 +136,42 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 					{product?.description}
 				</OText>
 			</CardInfo>
-			{product?.images ? (
-				<FastImage
-					style={styles.productStyle}
-					source={{
-						uri: optimizeImage(product?.images, 'h_250,c_limit'),
-						priority: FastImage.priority.normal,
-					}}
-					resizeMode={FastImage.resizeMode.cover}
-				/>
-			) : (
-				<OIcon
-					src={theme?.images?.dummies?.product}
-					style={styles.productStyle}
-				/>
-			)}
+			<LogoWrapper>
+				{product?.ribbon?.enabled && (
+					<RibbonBox
+						bgColor={product?.ribbon?.color}
+						isRoundRect={product?.ribbon?.shape === shape?.rectangleRound}
+						isCapsule={product?.ribbon?.shape === shape?.capsuleShape}
+					>
+						<OText
+							size={10}
+							weight={'400'}
+							color={theme.colors.white}
+							numberOfLines={2}
+              ellipsizeMode='tail'
+							lineHeight={13}
+						>
+							{product?.ribbon?.text}
+						</OText>
+					</RibbonBox>
+				)}
+				{product?.images ? (
+					<FastImage
+						style={styles.productStyle}
+						source={{
+							uri: optimizeImage(product?.images, 'h_250,c_limit'),
+							priority: FastImage.priority.normal,
+						}}
+						resizeMode={FastImage.resizeMode.cover}
+					/>
+				) : (
+					<OIcon
+						src={theme?.images?.dummies?.product}
+						style={styles.productStyle}
+					/>
+				)}
+			</LogoWrapper>
+
 			{(isSoldOut || maxProductQuantity <= 0) && (
 				<SoldOut>
 					<OText size={12} weight="bold" color={theme.colors.textSecondary} style={styles.soldOutTextStyle}>
