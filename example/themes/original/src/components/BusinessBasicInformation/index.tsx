@@ -4,7 +4,7 @@ import { useUtils, useOrder, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OModal } from '../shared';
 import { BusinessBasicInformationParams } from '../../types';
-import { convertHoursToMinutes } from '../../utils';
+import { convertHoursToMinutes, shape } from '../../utils';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import isBetween from 'dayjs/plugin/isBetween';

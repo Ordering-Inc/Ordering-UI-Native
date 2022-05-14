@@ -18,15 +18,12 @@ export const RibbonBox = styled.View`
   background-color: ${(props: any) => props.theme.colors.primary};
   padding: 2px 8px;
   max-width: 180px;
-
   ${(props: any) => props.bgColor && css`
     background-color: ${props.bgColor};
   `}
-
   ${(props: any) => props.isRoundRect && css`
     border-radius: 7.6px;
   `}
-
   ${(props: any) => props.isCapsule && css`
     border-radius: 50px;
   `}
