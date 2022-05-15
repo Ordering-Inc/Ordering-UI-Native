@@ -114,7 +114,6 @@ const PaymentOptionsUI = (props: any) => {
 
 	useEffect(() => {
 		if (paymethodsList.paymethods.length === 1) {
-			console.log('a')
 			handlePaymethodClick && handlePaymethodClick(paymethodsList.paymethods[0])
 		}
 	}, [paymethodsList.paymethods])
