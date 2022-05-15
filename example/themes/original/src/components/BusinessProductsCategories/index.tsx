@@ -44,11 +44,11 @@ const BusinessProductsCategoriesUI = (props: any) => {
 			borderTopStartRadius: 4,
 			borderTopEndRadius: 4,
 			backgroundColor: theme.colors.textPrimary,
-		  },
-		  tabDeactived: {
+		},
+		tabDeactived: {
 			marginTop: 10,
 			height: 4
-		  }
+		}
 	});
 
 	const handleCategoryScroll = (category: any) => {
@@ -111,8 +111,10 @@ const BusinessProductsCategoriesUI = (props: any) => {
 				categories.length &&
 				categories.map((category: any) => (
 					<Tab
-						key={category.name}
-						onPress={() => handleCategoryScroll(category)}
+						key={category.id}
+						onPress={() => requestAnimationFrame(() => {
+							handleCategoryScroll(category)
+						})}
 						style={[
 							category.id === 'featured' && !featured && styles.featuredStyle,
 							{

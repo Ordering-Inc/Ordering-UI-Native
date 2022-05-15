@@ -44,7 +44,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   }
 
   return (
-    <ProductsContainer>
+    <ProductsContainer renderToHardwareTextureAndroid={categoryState.loading || isBusinessLoading}>
       {category.id &&
         categoryState.products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any) => (
           <SingleProductCard
