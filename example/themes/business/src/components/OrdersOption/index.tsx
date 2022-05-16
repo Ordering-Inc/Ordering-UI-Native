@@ -110,6 +110,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const theme = useTheme();
   const [, t] = useLanguage();
   const [{ parseDate }] = useUtils()
+  const [configState] = useConfig()
   const [orientationState] = useDeviceOrientation();
   const [, { showToast }] = useToast();
   const [openSearchModal, setOpenSearchModal] = useState(false)
@@ -439,55 +440,57 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
           />
         </IconWrapper>
       </View>
-      <View style={styles.SLAwrapper}>
-        <View style={{ flex: 0.5 }}>
-          <OButton
-            text={t('SLA_SETTING', 'SLA’s Settings')}
-            textStyle={{ color: theme.colors.backArrow }}
-            imgRightSrc={null}
-            style={{
-              backgroundColor: theme.colors.inputChat,
-              borderRadius: 7.6,
-              zIndex: 10,
-              borderWidth: 0,
-              minHeight: 40
-            }}
-            onClick={onClickSetting}
-          />
+      {configState?.configs?.order_deadlines_enabled?.value === '1' && (
+        <View style={styles.SLAwrapper}>
+          <View style={{ flex: 0.5 }}>
+            <OButton
+              text={t('SLA_SETTING', 'SLA’s Settings')}
+              textStyle={{ color: theme.colors.backArrow }}
+              imgRightSrc={null}
+              style={{
+                backgroundColor: theme.colors.inputChat,
+                borderRadius: 7.6,
+                zIndex: 10,
+                borderWidth: 0,
+                minHeight: 40
+              }}
+              onClick={onClickSetting}
+            />
+          </View>
+          <View style={{ width: 10, height: '100%' }} />
+          <View style={{ flex: 0.5, justifyContent: 'center' }}>
+            <SelectDropdown
+              defaultButtonText={t('SLA', 'SLA\'s')}
+              data={preorderTypeList}
+              onSelect={(selectedItem, index) => {
+                onFiltered && onFiltered({ ...search, timeStatus: selectedItem?.key })
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem.name
+              }}
+              rowTextForSelection={(item, index) => {
+                return item.key
+              }}
+              buttonStyle={styles.selectOption}
+              buttonTextStyle={styles.buttonTextStyle}
+              renderDropdownIcon={isOpened => {
+                return <FeatherIcon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+              }}
+              dropdownStyle={styles.dropdownStyle}
+              dropdownOverlayColor='transparent'
+              rowStyle={styles.rowStyle}
+              renderCustomizedRowChild={(item, index) => {
+                return (
+                  <SlaOption>
+                    {index !== 0 && <OrderStatus timeState={item?.key} />}
+                    <View><OText size={14} color={'#748194'} >{item?.name}</OText></View>
+                  </SlaOption>
+                );
+              }}
+            />
+          </View>
         </View>
-        <View style={{ width: 10, height: '100%' }} />
-        <View style={{ flex: 0.5, justifyContent: 'center' }}>
-          <SelectDropdown
-            defaultButtonText={t('SLA', 'SLA\'s')}
-            data={preorderTypeList}
-            onSelect={(selectedItem, index) => {
-              onFiltered && onFiltered({ ...search, timeStatus: selectedItem?.key })
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              return selectedItem.name
-            }}
-            rowTextForSelection={(item, index) => {
-              return item.key
-            }}
-            buttonStyle={styles.selectOption}
-            buttonTextStyle={styles.buttonTextStyle}
-            renderDropdownIcon={isOpened => {
-              return <FeatherIcon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
-            }}
-            dropdownStyle={styles.dropdownStyle}
-            dropdownOverlayColor='transparent'
-            rowStyle={styles.rowStyle}
-            renderCustomizedRowChild={(item, index) => {
-              return (
-                <SlaOption>
-                  {index !== 0 && <OrderStatus timeState={item?.key} />}
-                  <View><OText size={14} color={'#748194'} >{item?.name}</OText></View>
-                </SlaOption>
-              );
-            }}
-          />
-        </View>
-      </View>
+      )}
       <FiltersTab>
         <ScrollView
           ref={scrollRefTab}
@@ -926,6 +929,7 @@ export const Timer = () => {
 
 export const OrdersOption = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
+  const [configState] = useConfig()
   const theme = useTheme()
   const ordersProps = {
     ...props,

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, View, Platform, PlatformIOSStatic } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import moment from 'moment'
-import { useLanguage, useUtils } from 'ordering-components/native';
+import { useLanguage, useUtils, useConfig } from 'ordering-components/native';
 import { OButton, OIcon, OText } from '../shared';
 import {
   Card, Logo, Information, MyOrderOptions, NotificationIcon, AcceptOrRejectOrder, Timestatus
@@ -27,8 +27,14 @@ export const PreviousOrders = (props: any) => {
   } = props;
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
+  const [configState] = useConfig()
   const theme = useTheme();
-  const [currentTime, setCurrentTime] = useState()
+  const [, setCurrentTime] = useState()
+  const [allowColumns, setAllowColumns] = useState({
+    timer: true,
+    slaBar: true,
+  })
+
   const [orientationState] = useDeviceOrientation();
 
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
@@ -137,6 +143,15 @@ export const PreviousOrders = (props: any) => {
     return () => clearInterval(interval)
   }, [])
 
+  useEffect(() => {
+    const slaSettings = configState?.configs?.order_deadlines_enabled?.value === '1'
+    setAllowColumns({
+      ...allowColumns,
+      timer: slaSettings,
+      slaBar: slaSettings
+    })
+  }, [configState.loading])
+
   let hash: any = {};
 
   return (
@@ -162,7 +177,9 @@ export const PreviousOrders = (props: any) => {
                   activeOpacity={1}
                 >
                   <Card key={order.id}>
+                  {allowColumns?.slaBar && (
                     <Timestatus style={{ backgroundColor: getStatusClassName(getDelayMinutes(order)) === 'in_time' ? '#00D27A' : getStatusClassName(getDelayMinutes(order)) === 'at_risk' ? '#FFC700' : getStatusClassName(getDelayMinutes(order)) === 'delayed' ? '#E63757' : '' }} />
+                  )}
                     {
                       order.business?.logo && (
                         <Logo style={styles.logo}>
@@ -207,7 +224,7 @@ export const PreviousOrders = (props: any) => {
                             ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY · HH:mm a' })
                             : parseDate(order?.delivery_datetime, { utc: false })}
                         </OText>
-                        {(currentTabSelected === 'pending' || currentTabSelected === 'inProgress') && (
+                        {((currentTabSelected === 'pending' || currentTabSelected === 'inProgress') && allowColumns?.timer) && (
                           <>
                             <OText> · </OText>
                             <OText style={styles.date} color={getStatusClassName(getDelayMinutes(order)) === 'in_time' ? '#00D27A' : getStatusClassName(getDelayMinutes(order)) === 'at_risk' ? '#FFC700' : getStatusClassName(getDelayMinutes(order)) === 'delayed' ? '#E63757' : ''} >{displayDelayedTime(order)}</OText>
