@@ -31,6 +31,7 @@ const BusinessProductsList = (props: any) => {
       'open',
       'about',
       'description',
+      'ribbon',
       'address',
       'location',
       'schedule',

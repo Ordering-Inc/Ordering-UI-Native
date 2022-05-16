@@ -43,11 +43,9 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	} = props;
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
 	const [orderState] = useOrder();
+	const [configState] = useConfig();
 	const [, t] = useLanguage();
 	const theme = useTheme()
-	const [{ configs }] = useConfig();
-	const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
-
 	const styles = StyleSheet.create({
 		headerStyle: {
 			borderTopLeftRadius: 7.6,
@@ -115,7 +113,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	};
 
 	const handleBusinessClick = (selectedBusiness: any) => {
-		if (business?.open || !isPreOrderSetting) handleClick && handleClick(selectedBusiness)
+		if (business?.open) handleClick && handleClick(selectedBusiness)
 		else {
 			navigation.navigate('BusinessPreorder', { business: selectedBusiness, handleBusinessClick: handleClick })
 		}
@@ -138,7 +136,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 					</View>
 				)}
 				<BusinessState>
-					{!isBusinessOpen && (
+					{!isBusinessOpen && (configState?.configs?.preorder_status_enabled?.value === '1') && (
 						<View style={styles.businessStateView}>
 							<OText
 								color={theme.colors.textThird}
@@ -192,9 +190,11 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						</View>
 					) : (
 						<View style={styles.bullet}>
-							<OText size={10} color={theme.colors.textSecondary}>
-								{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(businessDeliveryPrice ?? business?.delivery_price) + ' \u2022 '}`}
-							</OText>
+							{orderState?.options?.type === 1 && (
+								<OText size={10} color={theme.colors.textSecondary}>
+									{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(businessDeliveryPrice ?? business?.delivery_price) + ' \u2022 '}`}
+								</OText>
+							)}
 							<OText size={10} color={theme.colors.textSecondary}>{`${convertHoursToMinutes(
 								orderState?.options?.type === 1
 									? (businessDeliveryTime ?? business?.delivery_time)

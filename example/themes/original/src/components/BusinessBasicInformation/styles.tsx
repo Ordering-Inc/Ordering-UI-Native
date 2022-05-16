@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { Platform } from 'react-native';
 
 export const BusinessContainer = styled.View`
@@ -41,3 +41,30 @@ export const WrapBusinessInfo = styled.TouchableOpacity`
   top: 16px;
   end: 39px;
 `;
+
+export const TitleWrapper = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`
+
+export const RibbonBox = styled.View`
+  margin-left: 5px;
+  background-color: ${(props: any) => props.theme.colors.primary};
+  padding: 2px 8px;
+  max-width: 180px;
+  align-self: flex-start;
+
+  ${(props: any) => props.bgColor && css`
+    background-color: ${props.bgColor};
+  `}
+
+  ${(props: any) => props.isRoundRect && css`
+    border-radius: 7.6px;
+  `}
+
+  ${(props: any) => props.isCapsule && css`
+    border-radius: 50px;
+  `}
+`

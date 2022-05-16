@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, View, Platform, PlatformIOSStatic } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import moment from 'moment'
-import { useLanguage, useUtils } from 'ordering-components/native';
+import { useLanguage, useUtils, useConfig } from 'ordering-components/native';
 import { OButton, OIcon, OText } from '../shared';
 import {
   Card, Logo, Information, MyOrderOptions, NotificationIcon, AcceptOrRejectOrder, Timestatus
@@ -27,8 +27,14 @@ export const PreviousOrders = (props: any) => {
   } = props;
   const [, t] = useLanguage();
   const [{ parseDate, optimizeImage }] = useUtils();
+  const [configState] = useConfig()
   const theme = useTheme();
-  const [currentTime, setCurrentTime] = useState()
+  const [, setCurrentTime] = useState()
+  const [allowColumns, setAllowColumns] = useState({
+    timer: true,
+    slaBar: true,
+  })
+
   const [orientationState] = useDeviceOrientation();
 
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
@@ -93,21 +99,39 @@ export const PreviousOrders = (props: any) => {
     },
   });
 
-  const getDelayTime = (order: any) => {
+
+  const getDelayMinutes = (order: any) => {
     // targetMin = delivery_datetime  + eta_time - now()
+    const offset = 300
+    const cdtToutc = parseDate(moment(order?.delivery_datetime).add(offset, 'minutes'))
     const _delivery = order?.delivery_datetime_utc
+      ? parseDate(order?.delivery_datetime_utc)
+      : parseDate(cdtToutc)
     const _eta = order?.eta_time
-    const tagetedMin = moment(_delivery).add(_eta, 'minutes').diff(moment().utc(), 'minutes')
+    return moment(_delivery.replace('AM', '')).add(_eta, 'minutes').diff(moment().utc(), 'minutes')
+  }
+
+  const displayDelayedTime = (order: any) => {
+    let tagetedMin = getDelayMinutes(order)
+    // get day, hour and minutes
+    const sign = tagetedMin >= 0 ? '' : '- '
+    tagetedMin = Math.abs(tagetedMin)
     let day = Math.floor(tagetedMin / 1440)
     const restMinOfTargetedMin = tagetedMin - 1440 * day
-    let restHours: any = Math.floor(restMinOfTargetedMin / 60)
-    let restMins: any = restMinOfTargetedMin - 60 * restHours
+    let restHours = Math.floor(restMinOfTargetedMin / 60)
+    let restMins = restMinOfTargetedMin - 60 * restHours
+    // make standard time format
+    day = day === 0 ? '' : day + 'day  '
+    restHours = restHours < 10 ? '0' + restHours : restHours
+    restMins = restMins < 10 ? '0' + restMins : restMins
 
-    if (order?.time_status === 'in_time' || order?.time_status === 'at_risk') day = Math.abs(day)
-    if (restHours < 10) restHours = ('0' + restHours)
-    if (restMins < 10) restMins = ('0' + restMins)
-    const finalTaget = day + 'day  ' + restHours + ':' + restMins
+    const finalTaget = sign + day + restHours + ':' + restMins
     return finalTaget
+  }
+
+  const getStatusClassName = (minutes: any) => {
+    if (isNaN(Number(minutes))) return 0
+    return minutes > 0 ? 'in_time' : minutes === 0 ? 'at_risk' : 'delayed'
   }
 
   useEffect(() => {
@@ -118,6 +142,15 @@ export const PreviousOrders = (props: any) => {
 
     return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    const slaSettings = configState?.configs?.order_deadlines_enabled?.value === '1'
+    setAllowColumns({
+      ...allowColumns,
+      timer: slaSettings,
+      slaBar: slaSettings
+    })
+  }, [configState.loading])
 
   let hash: any = {};
 
@@ -144,7 +177,9 @@ export const PreviousOrders = (props: any) => {
                   activeOpacity={1}
                 >
                   <Card key={order.id}>
-                    <Timestatus style={{ backgroundColor: order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : '' }} />
+                  {allowColumns?.slaBar && (
+                    <Timestatus style={{ backgroundColor: getStatusClassName(getDelayMinutes(order)) === 'in_time' ? '#00D27A' : getStatusClassName(getDelayMinutes(order)) === 'at_risk' ? '#FFC700' : getStatusClassName(getDelayMinutes(order)) === 'delayed' ? '#E63757' : '' }} />
+                  )}
                     {
                       order.business?.logo && (
                         <Logo style={styles.logo}>
@@ -189,10 +224,10 @@ export const PreviousOrders = (props: any) => {
                             ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'MM/DD/YY · HH:mm a' })
                             : parseDate(order?.delivery_datetime, { utc: false })}
                         </OText>
-                        {(currentTabSelected === 'pending' || currentTabSelected === 'inProgress') && (
+                        {((currentTabSelected === 'pending' || currentTabSelected === 'inProgress') && allowColumns?.timer) && (
                           <>
                             <OText> · </OText>
-                            <OText style={styles.date} color={order?.time_status === 'in_time' ? '#00D27A' : order?.time_status === 'at_risk' ? '#FFC700' : order?.time_status === 'delayed' ? '#E63757' : ''} >{getDelayTime(order)}</OText>
+                            <OText style={styles.date} color={getStatusClassName(getDelayMinutes(order)) === 'in_time' ? '#00D27A' : getStatusClassName(getDelayMinutes(order)) === 'at_risk' ? '#FFC700' : getStatusClassName(getDelayMinutes(order)) === 'delayed' ? '#E63757' : ''} >{displayDelayedTime(order)}</OText>
                           </>
                         )}
                       </View>
