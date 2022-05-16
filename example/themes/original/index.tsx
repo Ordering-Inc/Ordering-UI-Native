@@ -44,6 +44,10 @@ import { ProductForm } from './src/components/ProductForm';
 import { UpsellingProducts } from './src/components/UpsellingProducts';
 import { UserVerification } from './src/components/UserVerification';
 import { BusinessListingSearch } from './src/components/BusinessListingSearch';
+import { BusinessTypeFilter } from './src/components/BusinessTypeFilter';
+import { BusinessController } from './src/components/BusinessController';
+import { BusinessFeaturedController } from './src/components/BusinessFeaturedController';
+import { HighestRatedBusinesses } from './src/components/HighestRatedBusinesses';
 
 import { Toast } from './src/components/shared/OToast';
 import {
@@ -119,6 +123,10 @@ export {
 	BusinessProductsList,
 	FloatingButton,
 	SearchBar,
+	BusinessTypeFilter,
+	BusinessController,
+	BusinessFeaturedController,
+	HighestRatedBusinesses,
 
 	// OComponents
 	Toast,
