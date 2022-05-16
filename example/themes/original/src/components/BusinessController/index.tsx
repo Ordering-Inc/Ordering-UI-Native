@@ -43,6 +43,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	} = props;
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
 	const [orderState] = useOrder();
+	const [configState] = useConfig();
 	const [, t] = useLanguage();
 	const theme = useTheme()
 	const styles = StyleSheet.create({
@@ -135,7 +136,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 					</View>
 				)}
 				<BusinessState>
-					{!isBusinessOpen && (
+					{!isBusinessOpen && (configState?.configs?.preorder_status_enabled?.value === '1') && (
 						<View style={styles.businessStateView}>
 							<OText
 								color={theme.colors.textThird}
