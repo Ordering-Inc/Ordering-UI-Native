@@ -1,5 +1,6 @@
 import React from 'react'
-import { useLanguage } from 'ordering-components/native'
+import { useLanguage,   useUtils,
+} from 'ordering-components/native'
 import { SingleProductCard } from '../SingleProductCard'
 import { TaxInformationContainer, ProductContainer } from './styles'
 import { OText } from '../shared'
@@ -13,8 +14,9 @@ interface taxInformationParams {
     fixed?: number,
     percentage?: number,
     id: number,
-    discounts?: any
-  } | null,
+    discounts?: any,
+    rate_type?: number
+  },
   products: Array<any>,
   type: string
 }
@@ -27,6 +29,7 @@ export const TaxInformation = (props: taxInformationParams) => {
   } = props
 
   const [, t] = useLanguage()
+  const [{ parsePrice }] = useUtils()
 
   const includedOnPriceString = data?.type === 1 ? `(${t('INCLUDED_ON_PRICE', 'Included on price')})` : `(${t('NOT_INCLUDED_ON_PRICE', 'Not included on price')})`
   const offersHideArray = ['offer_target_2', 'offer_target_3']
@@ -56,8 +59,12 @@ export const TaxInformation = (props: taxInformationParams) => {
 
   return (
     <TaxInformationContainer>
+      <OText size={24} style={{ alignSelf: 'center', textAlign: 'center' }} mBottom={10}>
+      {`${data?.name ||
+              t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ${data?.rate_type !== 2 ? `(${typeof data?.rate === 'number' ? `${data?.rate}%` : `${parsePrice(data?.fixed ?? 0)} + ${data?.percentage}%`})` : ''}  `}
+      </OText>
       {!!data?.description ? (
-        <OText size={24} style={{ alignSelf: 'center', textAlign: 'center' }} mBottom={10}>
+        <OText size={20} style={{ alignSelf: 'center', textAlign: 'center' }} mBottom={10}>
           {t('DESCRIPTION', 'Description')}: {data?.description} {data?.type && !type?.includes('offer') && includedOnPriceString}
         </OText>
       ) : (
