@@ -20,6 +20,7 @@ import { OText } from '../shared'
 
 const PaymentOptionWalletUI = (props: any) => {
   const {
+    businessConfigs,
     businessId,
     walletsState,
     selectWallet,
@@ -37,6 +38,9 @@ const PaymentOptionWalletUI = (props: any) => {
   const isWalletCashEnabled = configs?.wallet_cash_enabled?.value === '1'
   const isWalletPointsEnabled = configs?.wallet_credit_point_enabled?.value === '1'
 
+  const isBusinessWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
+  const isBusinessWalletPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
+
   const styles = StyleSheet.create({
     checkBoxStyle: {
       width: 25,
@@ -53,11 +57,11 @@ const PaymentOptionWalletUI = (props: any) => {
   const walletName: any = {
     cash: {
       name: t('PAY_WITH_CASH_WALLET', 'Pay with Cash Wallet'),
-      isActive: isWalletCashEnabled
+      isActive: isWalletCashEnabled && isBusinessWalletCashEnabled
     },
     credit_point: {
       name: t('PAY_WITH_CREDITS_POINTS_WALLET', 'Pay with Credit Points Wallet'),
-      isActive: isWalletPointsEnabled
+      isActive: isWalletPointsEnabled && isBusinessWalletPointsEnabled
     }
   }
 
