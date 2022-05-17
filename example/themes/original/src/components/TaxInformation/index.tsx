@@ -1,6 +1,5 @@
 import React from 'react'
-import { useLanguage,   useUtils,
-} from 'ordering-components/native'
+import { useLanguage, useUtils } from 'ordering-components/native'
 import { SingleProductCard } from '../SingleProductCard'
 import { TaxInformationContainer, ProductContainer } from './styles'
 import { OText } from '../shared'
