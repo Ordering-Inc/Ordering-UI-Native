@@ -143,18 +143,20 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 							</OText>
 						</Information>
 						<Status>
-							<OButton
-								text={t('REORDER', 'Reorder')}
-								imgRightSrc={''}
-								textStyle={styles.buttonText}
-								style={
-									reorderLoading && order.id === reorderSelected
-										? styles.reorderLoading
-										: styles.reorderbutton
-								}
-								onClick={() => handleReorderClick(order.id)}
-								isLoading={reorderLoading && order.id === reorderSelected}
-							/>
+							{order.cart && (
+								<OButton
+									text={t('REORDER', 'Reorder')}
+									imgRightSrc={''}
+									textStyle={styles.buttonText}
+									style={
+										reorderLoading && order.id === reorderSelected
+											? styles.reorderLoading
+											: styles.reorderbutton
+									}
+									onClick={() => handleReorderClick(order.id)}
+									isLoading={reorderLoading && order.id === reorderSelected}
+								/>
+							)}
 							{allowedOrderStatus.includes(parseInt(order?.status)) &&
 								!order.review && (
 									<TouchableOpacity

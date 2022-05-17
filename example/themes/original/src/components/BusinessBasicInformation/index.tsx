@@ -4,9 +4,7 @@ import { useUtils, useOrder, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OModal } from '../shared';
 import { BusinessBasicInformationParams } from '../../types';
-import { convertHoursToMinutes, shape } from '../../utils';
-import { BusinessInformation } from '../BusinessInformation';
-import { BusinessReviews } from '../BusinessReviews';
+import { convertHoursToMinutes } from '../../utils';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -28,6 +26,9 @@ import {
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 const types = ['food', 'laundry', 'alcohol', 'groceries'];
 
+let BusinessInformation: null | React.ElementType = null
+let BusinessReviews: null | React.ElementType = null
+
 export const BusinessBasicInformation = (
 	props: BusinessBasicInformationParams,
 ) => {
@@ -40,6 +41,25 @@ export const BusinessBasicInformation = (
 	const [{ parsePrice, parseDistance, optimizeImage }] = useUtils();
 	const [openBusinessInformation, setOpenBusinessInformation] = useState(false);
 	const [openBusinessReviews, setOpenBusinessReviews] = useState(false);
+	const [businessInformationObtained, setBusinessInformationObtained] = useState(false)
+	const [businessReviewsObtained, setBusinessReviewsObtainedbtained] = useState(false)
+
+	const handleClickBusinessInformation = () => {
+		if (!businessInformationObtained) {
+			BusinessInformation = require('../BusinessInformation').BusinessInformation
+			setBusinessInformationObtained(true)
+		}
+		setOpenBusinessInformation(true)
+	}
+
+	const handleClickBusinessReviews = () => {
+		if (!businessReviewsObtained) {
+			BusinessReviews = require('../BusinessReviews').BusinessReviews
+			setBusinessReviewsObtainedbtained(true)
+		}
+		setOpenBusinessReviews(true)
+	}
+
 	const getBusinessType = () => {
 		if (Object.keys(business).length <= 0) return t('GENERAL', 'General');
 		const _types: any = [];
@@ -53,7 +73,7 @@ export const BusinessBasicInformation = (
 		return _types.join(', ');
 	};
 
-	
+
 	useEffect(() => {
 		if (businessState?.loading) return
 		let timeout: any = null
@@ -67,16 +87,16 @@ export const BusinessBasicInformation = (
 			})
 		}
 		if (lapse) {
-		  const to = currentDate.hour(lapse.close.hour).minute(lapse.close.minute)
-		  const timeToClose = (to.unix() - currentDate.unix()) * 1000
-		  timeout = setTimeout(() => {
-			navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })
-		  }, timeToClose)
+			const to = currentDate.hour(lapse.close.hour).minute(lapse.close.minute)
+			const timeToClose = (to.unix() - currentDate.unix()) * 1000
+			timeout = setTimeout(() => {
+				navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })
+			}, timeToClose)
 		}
 		return () => {
-		  timeout && clearTimeout(timeout)
+			timeout && clearTimeout(timeout)
 		}
-	  }, [businessState?.business])
+	}, [businessState?.business])
 
 	return (
 		<BusinessContainer>
@@ -92,7 +112,7 @@ export const BusinessBasicInformation = (
 						optimizeImage(businessState?.business?.header, 'h_250,c_limit'),
 				}}>
 				{!isBusinessInfoShow && (
-					<WrapBusinessInfo onPress={() => setOpenBusinessInformation(true)}>
+					<WrapBusinessInfo onPress={() => handleClickBusinessInformation()}>
 						<OIcon src={theme.images.general.info} width={24} />
 					</WrapBusinessInfo>
 				)}
@@ -203,17 +223,17 @@ export const BusinessBasicInformation = (
 				<WrapReviews>
 					{!isBusinessInfoShow && (
 						<>
-							{ isPreOrder && (
+							{isPreOrder && (
 								<>
-								<TouchableOpacity onPress={() => navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })}>
-									<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
-										{t('PRE_ORDER', 'Preorder')}
-									</OText>
-								</TouchableOpacity>
-								<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+									<TouchableOpacity onPress={() => navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })}>
+										<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
+											{t('PRE_ORDER', 'Preorder')}
+										</OText>
+									</TouchableOpacity>
+									<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
 								</>
 							)}
-							<TouchableOpacity onPress={() => setOpenBusinessReviews(true)}>
+							<TouchableOpacity onPress={() => handleClickBusinessReviews()}>
 								<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
 									{t('REVIEWS', 'Reviews')}
 								</OText>
@@ -222,28 +242,37 @@ export const BusinessBasicInformation = (
 					)}
 				</WrapReviews>
 			</BusinessInfo>
-			<OModal
-				titleSectionStyle={styles.modalTitleSectionStyle}
-				open={openBusinessInformation}
-				onClose={() => setOpenBusinessInformation(false)}
-				isNotDecoration>
-				<BusinessInformation
-					businessState={businessState}
-					business={business}
-				/>
-			</OModal>
-			<OModal
-				entireModal
-				titleSectionStyle={styles.modalTitleSectionStyle}
-				open={openBusinessReviews}
-				onClose={() => setOpenBusinessReviews(false)}
-				isNotDecoration>
-				<BusinessReviews
-					businessState={businessState}
-					businessId={business.id}
-					reviews={business.reviews?.reviews}
-				/>
-			</OModal>
+			{businessInformationObtained ? (
+				<OModal
+					titleSectionStyle={styles.modalTitleSectionStyle}
+					open={openBusinessInformation}
+					onClose={() => setOpenBusinessInformation(false)}
+					isNotDecoration>
+					{BusinessInformation && (
+						<BusinessInformation
+							businessState={businessState}
+							business={business}
+						/>
+					)}
+				</OModal>
+			) : null}
+			{businessReviewsObtained ? (
+				<OModal
+					entireModal
+					titleSectionStyle={styles.modalTitleSectionStyle}
+					open={openBusinessReviews}
+					onClose={() => setOpenBusinessReviews(false)}
+					isNotDecoration
+				>
+					{BusinessReviews && (
+						<BusinessReviews
+							businessState={businessState}
+							businessId={business.id}
+							reviews={business.reviews?.reviews}
+						/>
+					)}
+				</OModal>
+			) : null}
 		</BusinessContainer>
 	);
 };

@@ -44,6 +44,12 @@ import { ProductForm } from './src/components/ProductForm';
 import { UpsellingProducts } from './src/components/UpsellingProducts';
 import { UserVerification } from './src/components/UserVerification';
 import { BusinessListingSearch } from './src/components/BusinessListingSearch';
+import { LastOrders } from './src/components/LastOrders';
+import  NavBar from './src/components/NavBar';
+import { BusinessTypeFilter } from './src/components/BusinessTypeFilter';
+import { BusinessController } from './src/components/BusinessController';
+import { BusinessFeaturedController } from './src/components/BusinessFeaturedController';
+import { HighestRatedBusinesses } from './src/components/HighestRatedBusinesses';
 
 import { Toast } from './src/components/shared/OToast';
 import {
@@ -60,7 +66,7 @@ import {
 	OAlert,
 	OModal,
 	OBottomPopup,
-  HeaderTitle
+  	HeaderTitle
 } from './src/components/shared';
 
 import { Container } from './src/layouts/Container';
@@ -119,6 +125,11 @@ export {
 	BusinessProductsList,
 	FloatingButton,
 	SearchBar,
+	LastOrders,
+	BusinessTypeFilter,
+	BusinessController,
+	BusinessFeaturedController,
+	HighestRatedBusinesses,
 
 	// OComponents
 	Toast,
@@ -135,11 +146,12 @@ export {
 	OAlert,
 	OModal,
 	OBottomPopup,
-  HeaderTitle,
+ 	HeaderTitle,
 
 	// layout
 	Container,
 	SafeAreaContainer,
+	NavBar,
 
 	// utils
 	_retrieveStoreData,
