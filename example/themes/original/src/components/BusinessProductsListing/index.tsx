@@ -312,16 +312,18 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 			{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
 				<FloatingButton
 					btnText={
-						currentCart?.subtotal >= currentCart?.minimum
-							? t('VIEW_ORDER', 'View Order')
-							: `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
+						openUpselling
+							? t('LOADING', 'Loading')
+							: currentCart?.subtotal >= currentCart?.minimum
+								? t('VIEW_ORDER', 'View Order')
+								: `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
 					}
-					isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum}
+					isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum || openUpselling}
 					btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
 					btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
 					btnLeftValue={currentCart?.products?.length}
 					btnRightValue={parsePrice(currentCart?.total)}
-					disabled={currentCart?.subtotal < currentCart?.minimum}
+					disabled={currentCart?.subtotal < currentCart?.minimum || openUpselling}
 					handleClick={() => setOpenUpselling(true)}
 				/>
 			)}
