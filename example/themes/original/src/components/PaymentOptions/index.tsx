@@ -126,7 +126,9 @@ const PaymentOptionsUI = (props: any) => {
 
 	useEffect(() => {
 		if (props.paySelected && props.paySelected?.data) {
-			setPaymethodData && setPaymethodData(props.paySelected?.data)
+			requestAnimationFrame(() => {
+				setPaymethodData && setPaymethodData(props.paySelected?.data)
+			})
 		}
 	}, [props.paySelected])
 
