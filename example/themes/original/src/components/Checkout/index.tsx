@@ -554,11 +554,12 @@ const CheckoutUI = (props: any) => {
 						</ChSection>
 					)}
 
-					{!cartState.loading && cart && isWalletEnabled && (
+					{!cartState.loading && cart && isWalletEnabled && businessDetails?.business?.configs && (
 						<WalletPaymentOptionContainer>
 							<PaymentOptionWallet
 								cart={cart}
 								businessId={cart?.business_id}
+								businessConfigs={businessDetails?.business?.configs}
 							/>
 						</WalletPaymentOptionContainer>
 					)}
