@@ -99,7 +99,6 @@ export const PreviousOrders = (props: any) => {
     },
   });
 
-
   const getDelayMinutes = (order: any) => {
     // targetMin = delivery_datetime  + eta_time - now()
     const offset = 300
@@ -108,7 +107,7 @@ export const PreviousOrders = (props: any) => {
       ? parseDate(order?.delivery_datetime_utc)
       : parseDate(cdtToutc)
     const _eta = order?.eta_time
-    return moment(_delivery.replace('AM', '')).add(_eta, 'minutes').diff(moment().utc(), 'minutes')
+    return moment(_delivery, 'YYYY-MM-DD hh:mm A').add(_eta, 'minutes').diff(moment().utc(), 'minutes')
   }
 
   const displayDelayedTime = (order: any) => {
@@ -116,10 +115,10 @@ export const PreviousOrders = (props: any) => {
     // get day, hour and minutes
     const sign = tagetedMin >= 0 ? '' : '- '
     tagetedMin = Math.abs(tagetedMin)
-    let day = Math.floor(tagetedMin / 1440)
+    let day: string | number = Math.floor(tagetedMin / 1440)
     const restMinOfTargetedMin = tagetedMin - 1440 * day
-    let restHours = Math.floor(restMinOfTargetedMin / 60)
-    let restMins = restMinOfTargetedMin - 60 * restHours
+    let restHours: string | number = Math.floor(restMinOfTargetedMin / 60)
+    let restMins: string | number = restMinOfTargetedMin - 60 * restHours
     // make standard time format
     day = day === 0 ? '' : day + 'day  '
     restHours = restHours < 10 ? '0' + restHours : restHours
