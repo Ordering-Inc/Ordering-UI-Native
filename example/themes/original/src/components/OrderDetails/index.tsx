@@ -1017,8 +1017,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         open={openTaxModal.open}
         onClose={() => setOpenTaxModal({ open: false, data: null, type: '' })}
         entireModal
-        title={`${openTaxModal.data?.name ||
-          t('INHERIT_FROM_BUSINESS', 'Inherit from business')} ${openTaxModal.data?.rate_type !== 2 ? `(${typeof openTaxModal.data?.rate === 'number' ? `${openTaxModal.data?.rate}%` : `${parsePrice(openTaxModal.data?.fixed ?? 0)} + ${openTaxModal.data?.percentage}%`})` : ''}  `}
       >
         <TaxInformation
           type={openTaxModal.type}
