@@ -695,7 +695,7 @@ export const ProductOptionsUI = (props: any) => {
 												</View>
 											)}
 											{product?.extras.map((extra: any) =>
-												extra.options.map((option: any) => {
+												extra.options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => {
 													const currentState =
 														productCart.options[`id:${option.id}`] || {};
 													return (
@@ -711,7 +711,7 @@ export const ProductOptionsUI = (props: any) => {
 																				backgroundColor: isError(option.id),
 																				borderRadius: 7.6
 																			}}>
-																			{option.suboptions.map(
+																			{option.suboptions.sort((a: any, b: any) => a.rank - b.rank).map(
 																				(suboption: any) => {
 																					const currentState =
 																						productCart.options[
@@ -779,7 +779,7 @@ export const ProductOptionsUI = (props: any) => {
 											) : (
 												<>
 													{product?.extras.map((extra: any) =>
-														extra.options.map((option: any) => {
+														extra.options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => {
 															if (
 																option.id == selOpt ||
 																(hasRespected(
@@ -804,7 +804,7 @@ export const ProductOptionsUI = (props: any) => {
 																								option.id,
 																							),
 																						}}>
-																						{option.suboptions.map(
+																						{option.suboptions.sort((a: any, b: any) => a.rank - b.rank).map(
 																							(suboption: any) => {
 																								const currentState =
 																									productCart.options[
