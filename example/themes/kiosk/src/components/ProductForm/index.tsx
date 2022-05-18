@@ -446,7 +446,7 @@ export const ProductOptionsUI = (props: any) => {
                     </WrapperIngredients>
                   </View>
                 )}
-                {product?.extras.map((extra: any) => extra.options.map((option: any) => {
+                {product?.extras.map((extra: any) => extra.options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => {
                   const currentState = productCart.options[`id:${option.id}`] || {}
                   return (
                     <React.Fragment key={option.id}>
@@ -460,7 +460,7 @@ export const ProductOptionsUI = (props: any) => {
                             >
                               <WrapperSubOption style={{ backgroundColor: isError(option.id) }}>
                                 {
-                                  option.suboptions.map((suboption: any) => {
+                                  option.suboptions.sort((a: any, b: any) => a.rank - b.rank).map((suboption: any) => {
                                     const currentState = productCart.options[`id:${option.id}`]?.suboptions[`id:${suboption.id}`] || {}
                                     const balance = productCart.options[`id:${option.id}`]?.balance || 0
                                     return (
