@@ -20,6 +20,7 @@ export const ProgressTextWrapper = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 `
 
 export const OrderInfoWrapper = styled.View`

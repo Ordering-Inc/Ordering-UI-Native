@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import OText from './OText';
 
 const HeaderTitle = (props: any) => {
@@ -7,7 +8,7 @@ const HeaderTitle = (props: any) => {
     <OText
       size={24}
       style={style ?? {
-        marginTop: 30,
+        marginTop: Platform.OS === 'android' ? 50 : 30,
         paddingHorizontal: 40,
         textTransform: 'capitalize'
       }}
