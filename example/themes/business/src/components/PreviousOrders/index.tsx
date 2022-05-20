@@ -102,12 +102,13 @@ export const PreviousOrders = (props: any) => {
   const getDelayMinutes = (order: any) => {
     // targetMin = delivery_datetime  + eta_time - now()
     const offset = 300
-    const cdtToutc = parseDate(moment(order?.delivery_datetime).add(offset, 'minutes'))
+    const cdtToutc = moment(order?.delivery_datetime).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss')
     const _delivery = order?.delivery_datetime_utc
       ? parseDate(order?.delivery_datetime_utc)
       : parseDate(cdtToutc)
     const _eta = order?.eta_time
-    return moment(_delivery, 'YYYY-MM-DD hh:mm A').add(_eta, 'minutes').diff(moment().utc(), 'minutes')
+    const diffTimeAsSeconds = moment(_delivery, 'YYYY-MM-DD hh:mm A').add(_eta, 'minutes').diff(moment().utc(), 'seconds')
+    return Math.ceil(diffTimeAsSeconds / 60)
   }
 
   const displayDelayedTime = (order: any) => {
@@ -128,9 +129,10 @@ export const PreviousOrders = (props: any) => {
     return finalTaget
   }
 
-  const getStatusClassName = (minutes: any) => {
-    if (isNaN(Number(minutes))) return 0
-    return minutes > 0 ? 'in_time' : minutes === 0 ? 'at_risk' : 'delayed'
+  const getStatusClassName = (minutes: number) => {
+    if (isNaN(Number(minutes))) return 'in_time'
+    const delayTime = configState?.configs?.order_deadlines_delayed_time?.value
+    return minutes > 0 ? 'in_time' : Math.abs(minutes) <= delayTime ? 'at_risk' : 'delayed'
   }
 
   useEffect(() => {
