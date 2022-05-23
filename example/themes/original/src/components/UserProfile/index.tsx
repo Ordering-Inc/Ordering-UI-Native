@@ -16,6 +16,7 @@ import { LogoutButton } from '../LogoutButton'
 import { LanguageSelector } from '../LanguageSelector'
 import MessageCircle from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FastImage from 'react-native-fast-image'
 
 import {
@@ -101,7 +102,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	const { top, bottom } = useSafeAreaInsets();
 
 	const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
-
+	const IsPromotionsEnabled = configs?.advanced_offers_module === '1' || configs?.advanced_offers_module === 'true'
 	const onRedirect = (route: string, params?: any) => {
 		navigation.navigate(route, params)
 	}
@@ -176,6 +177,12 @@ const ProfileListUI = (props: ProfileParams) => {
 						<ListItem onPress={() => onRedirect('Wallets', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
 							<Ionicons name='wallet-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
 							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('WALLETS', 'Wallets')}</OText>
+						</ListItem>
+					)}
+					{IsPromotionsEnabled && (
+						<ListItem onPress={() => onRedirect('Promotions', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
+							<MaterialIcons name='local-offer' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+							<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('PROMOTIONS', 'Promotions')}</OText>
 						</ListItem>
 					)}
 					<ListItem onPress={() => navigation.navigate('Help', {})} activeOpacity={0.7}>
