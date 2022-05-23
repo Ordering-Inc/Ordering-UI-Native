@@ -5,12 +5,12 @@ import { useTheme } from 'styled-components/native';
 import { OIcon, OText } from '../shared';
 
 const LogoutButtonUI = (props: any) => {
-	const { handleLogoutClick, text, color, iconSize } = props
+	const { handleLogoutClick, text, color, iconSize, notification_state } = props
 	const theme = useTheme();
 
 	return (
 		<TouchableOpacity
-			onPress={() => handleLogoutClick()}
+			onPress={() => handleLogoutClick({ notification_token: notification_state?.notification_token })}
 			style={{ flexDirection: 'row', alignItems: 'center' }}
 		>
 			<OIcon
