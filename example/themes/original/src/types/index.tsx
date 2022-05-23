@@ -17,6 +17,8 @@ export interface LoginParams {
 	handleSendVerifyCode?: any;
 	handleCheckPhoneCode?: any;
 	notificationState?: any;
+	handleReCaptcha?: any;
+    enableReCaptcha?: any;
 }
 export interface ProfileParams {
 	navigation?: any;
