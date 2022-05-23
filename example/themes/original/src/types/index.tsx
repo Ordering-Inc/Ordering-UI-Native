@@ -17,6 +17,8 @@ export interface LoginParams {
 	handleSendVerifyCode?: any;
 	handleCheckPhoneCode?: any;
 	notificationState?: any;
+	handleReCaptcha?: any;
+    enableReCaptcha?: any;
 }
 export interface ProfileParams {
 	navigation?: any;
@@ -565,4 +567,13 @@ export interface PlaceSpotParams {
 	handleChangePlace?: any,
 	getPlacesList?: any,
 	setOpenPlaceModal?: any
+}
+
+export interface PromotionParams {
+	navigation: any,
+    offersState: any,
+    handleSearchValue: any,
+    searchValue: string,
+    offerSelected: any,
+    setOfferSelected: any,
 }

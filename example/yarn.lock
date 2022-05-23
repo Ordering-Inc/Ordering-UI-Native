@@ -691,7 +691,14 @@
     pirates "^4.0.5"
     source-map-support "^0.5.16"
 
-"@babel/runtime@^7.10.4", "@babel/runtime@^7.11.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.10.4":
+  version "7.18.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.0.tgz#6d77142a19cb6088f0af662af1ada37a604d34ae"
+  integrity sha512-YMQvx/6nKEaucl0MY56mwIG483xk8SDNdlUwb2Ts6FUpr7fm85DxEmsY18LXBNhcTz6tO6JwZV8w1W06v8UKeg==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
+"@babel/runtime@^7.11.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4":
   version "7.17.9"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.9.tgz#d19fbf802d01a8cb6cf053a64e472d42c434ba72"
   integrity sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==
@@ -1472,7 +1479,14 @@
   dependencies:
     "@lukeed/csprng" "^1.0.0"
 
-"@react-native-async-storage/async-storage@^1.13.1", "@react-native-async-storage/async-storage@^1.15.15", "@react-native-async-storage/async-storage@^1.15.17", "@react-native-async-storage/async-storage@^1.15.5":
+"@react-native-async-storage/async-storage@^1.13.1":
+  version "1.17.5"
+  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.17.5.tgz#8cc3edd305d09a3c252d88921f0d2846a0444f25"
+  integrity sha512-0XT5zZa3mh8XfAFYytq9hPyI6w0FJEBED4pjeLc17pkNF9tND86fsTX2pQFr15uV0nvfYeHisbd/mM7bpGrWKA==
+  dependencies:
+    merge-options "^3.0.4"
+
+"@react-native-async-storage/async-storage@^1.15.15", "@react-native-async-storage/async-storage@^1.15.17", "@react-native-async-storage/async-storage@^1.15.5":
   version "1.17.4"
   resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.17.4.tgz#f03837565f085c487bc9e8a9f1862c3e4e3f8fb6"
   integrity sha512-c6GglKBRaWkjNyYd0FM8f0/neQEcwQom4MjZNqYSsIz55LcddJb7W8GM/n2dkzZ0JnaMylMX3+Vo+fpmkFEGTQ==
@@ -1750,14 +1764,14 @@
     react-native-iphone-x-helper "^1.3.0"
 
 "@segment/analytics-next@^1.35.1":
-  version "1.36.0"
-  resolved "https://registry.yarnpkg.com/@segment/analytics-next/-/analytics-next-1.36.0.tgz#61de2e82f697686e460b482f285ee710a785d75e"
-  integrity sha512-4sBn8D/abcUZrocgTVdmy7kbxvRR9VhbCE95uLe55uD5NXysByPQO4T4RMyTiCSRYJKB2wZdikDh6SkItSKNsw==
+  version "1.37.0"
+  resolved "https://registry.yarnpkg.com/@segment/analytics-next/-/analytics-next-1.37.0.tgz#28a774da26917418219f50985babfe0b765211d9"
+  integrity sha512-gFrHAVHgRGO7CA/byXOwiATck0C+dzvRrBot70PU8gTqHXOtJmmV10d2mrM84yp0jH3qq9Z+qUOh5CYDeAXqPQ==
   dependencies:
     "@lukeed/uuid" "^2.0.0"
     "@segment/analytics.js-video-plugins" "^0.2.1"
     "@segment/facade" "^3.4.9"
-    "@segment/tsub" "^0.1.10"
+    "@segment/tsub" "^0.1.12"
     dset "^3.0.0"
     js-cookie "^2.2.1"
     node-fetch "^2.6.7"
@@ -6868,9 +6882,9 @@ levn@~0.3.0:
     type-check "~0.3.2"
 
 libphonenumber-js@^1.9.17:
-  version "1.9.53"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.9.53.tgz#f4f3321f8fb0ee62952c2a8df4711236d2626088"
-  integrity sha512-3cuMrA2CY3TbKVC0wKye5dXYgxmVVi4g13gzotprQSguFHMqf0pIrMM2Z6ZtMsSWqvtIqi5TuQhGjMhxz0O9Mw==
+  version "1.10.4"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.4.tgz#90397f0ed620262570a32244c9fbc389cc417ce4"
+  integrity sha512-9QWxEk4GW5RDnFzt8UtyRENfFpAN8u7Sbf9wf32tcXY9tdtnz1dKHIBwW2Wnfx8ypXJb9zUnTpK9aQJ/B8AlnA==
 
 lie@3.1.1:
   version "3.1.1"
@@ -7942,9 +7956,6 @@ ora@^3.4.0:
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@react-native-async-storage/async-storage" "^1.13.1"
-    "@segment/analytics-next" "^1.35.1"
-    "@sentry/react" "^5.27.1"
-    "@sentry/tracing" "^5.27.1"
     "@stripe/react-stripe-js" "^1.1.2"
     "@stripe/stripe-js" "^1.9.0"
     dayjs "^1.9.3"
@@ -8735,6 +8746,11 @@ react-native-reanimated@^1.13.1:
   integrity sha512-sFbZFh0WanKTa0Fz7GXCZUjWpk/u04ytprcIs4Kb+ijfQHChXva3m3yQZfvbrhRbABJNHrdeuyDgJxDM2mcBgw==
   dependencies:
     fbjs "^1.0.0"
+
+react-native-recaptcha-that-works@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-recaptcha-that-works/-/react-native-recaptcha-that-works-1.2.0.tgz#3dae4d94338ad68b19e62068eb315735f9d05e80"
+  integrity sha512-ZlQYem11Lq3U/UEGEIUYkS18tQRPs5bCpjDo3DYU9ET/1H05wuRcDCgzm+jbnu9dUKSO+7xj4InW3y4Vj7urdg==
 
 react-native-restart@^0.0.22:
   version "0.0.22"

@@ -4,6 +4,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Recaptcha from 'react-native-recaptcha-that-works'
 
 import {
 	LoginForm as LoginFormController,
@@ -18,7 +19,6 @@ import { FacebookLogin } from '../FacebookLogin';
 import { VerifyPhone } from '../../../../../src/components/VerifyPhone';
 import { OModal } from '../../../../../src/components/shared';
 
-
 import {
 	Container,
 	ButtonsWrapper,
@@ -32,6 +32,7 @@ import {
 	LineSeparator,
 	SkeletonWrapper,
 	TabBtn,
+  RecaptchaButton
 } from './styles';
 
 import NavBar from '../NavBar';
@@ -60,7 +61,9 @@ const LoginFormUI = (props: LoginParams) => {
 		handleSendVerifyCode,
 		handleCheckPhoneCode,
 		onNavigationRedirect,
-		notificationState
+		notificationState,
+		handleReCaptcha,
+		enableReCaptcha
 	} = props;
 
 	const [, { showToast }] = useToast();
@@ -79,6 +82,8 @@ const LoginFormUI = (props: LoginParams) => {
 			cellphone: null,
 		},
 	});
+	const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
+	const [recaptchaVerified, setRecaptchaVerified] = useState(false)
 
 	const theme = useTheme();
 
@@ -100,10 +105,15 @@ const LoginFormUI = (props: LoginParams) => {
 			flexGrow: 1,
 			marginBottom: 7,
 		},
+		recaptchaIcon: {
+		width: 100,
+		height: 100,
+		}
 	});
 
 	const emailRef = useRef<any>({});
 	const passwordRef = useRef<any>({});
+  	const recaptchaRef = useRef<any>({});
 
 	const handleChangeTab = (val: string) => {
 		props.handleChangeTab(val);
@@ -155,6 +165,33 @@ const LoginFormUI = (props: LoginParams) => {
 	const handleChangeInputEmail = (value: string, onChange: any) => {
 		onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
 	};
+
+  	const handleOpenRecaptcha = () => {
+		setRecaptchaVerified(false)
+	  	if (!recaptchaConfig?.siteKey) {
+			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
+			return
+		}
+		if (!recaptchaConfig?.baseUrl) {
+			showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
+			return
+		}
+		recaptchaRef.current.open()
+  	}
+
+	const onRecaptchaVerify = (token: any) => {
+		setRecaptchaVerified(true)
+		handleReCaptcha(token)
+	}
+
+	useEffect(() => {
+		if (configs && Object.keys(configs).length > 0 && enableReCaptcha) {
+			setRecaptchaConfig({
+				siteKey: configs?.security_recaptcha_site_key?.value || null,
+				baseUrl: configs?.security_recaptcha_base_url?.value || null
+			})
+		}
+	}, [configs, enableReCaptcha])
 
 	useEffect(() => {
 		if (!formState.loading && formState.result?.error) {
@@ -399,6 +436,39 @@ const LoginFormUI = (props: LoginParams) => {
 								</OText>
 							</TouchableOpacity>
 						)}
+
+						{enableReCaptcha && (
+							<>
+								<TouchableOpacity
+									onPress={handleOpenRecaptcha}
+								>
+									<RecaptchaButton>
+										{recaptchaVerified ? (
+											<MaterialCommunityIcons
+												name="checkbox-marked"
+												size={26}
+												color={theme.colors.primary}
+											/>
+										) : (
+											<MaterialCommunityIcons
+												name="checkbox-blank-outline"
+												size={26}
+												color={theme.colors.mediumGray}
+											/>
+										)}
+										<OText size={14} mLeft={8}>{t('VERIFY_ReCAPTCHA', 'Verify reCAPTCHA')}</OText>
+									</RecaptchaButton>
+								</TouchableOpacity>
+								<Recaptcha
+									ref={recaptchaRef}
+									siteKey={recaptchaConfig?.siteKey}
+									baseUrl={recaptchaConfig?.baseUrl}
+									onVerify={onRecaptchaVerify}
+									onExpire={() => setRecaptchaVerified(false)}
+								/>
+							</>
+						)}
+
 						<OButton
 							onClick={handleSubmit(onSubmit)}
 							text={loginButtonText}
@@ -559,6 +629,7 @@ const LoginFormUI = (props: LoginParams) => {
 export const LoginForm = (props: any) => {
 	const loginProps = {
 		...props,
+    isRecaptchaEnable: true,
 		UIComponent: LoginFormUI,
 	};
 	return <LoginFormController {...loginProps} />;
