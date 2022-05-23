@@ -568,3 +568,12 @@ export interface PlaceSpotParams {
 	getPlacesList?: any,
 	setOpenPlaceModal?: any
 }
+
+export interface PromotionParams {
+	navigation: any,
+    offersState: any,
+    handleSearchValue: any,
+    searchValue: string,
+    offerSelected: any,
+    setOfferSelected: any,
+}
