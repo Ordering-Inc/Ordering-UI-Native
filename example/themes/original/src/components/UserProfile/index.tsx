@@ -187,7 +187,7 @@ const ProfileListUI = (props: ProfileParams) => {
 				<Actions>
 					<LanguageSelector iconColor={theme.colors.textNormal} pickerStyle={langPickerStyle} />
 					<View style={{ height: 17 }} />
-					<LogoutButton color={theme.colors.textNormal} text={t('LOGOUT', 'Logout')} notification_state={props.route?.params?.notification_state}/>
+					<LogoutButton color={theme.colors.textNormal} text={t('LOGOUT', 'Logout')} />
 				</Actions>
 			</ListWrap>
 		</View>

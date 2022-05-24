@@ -3,14 +3,20 @@ import { TouchableOpacity } from 'react-native';
 import { LogoutAction } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText } from '../shared';
+import { _retrieveStoreData } from '../../providers/StoreUtil';
 
 const LogoutButtonUI = (props: any) => {
-	const { handleLogoutClick, text, color, iconSize, notification_state } = props
+	const { handleLogoutClick, text, color, iconSize } = props
 	const theme = useTheme();
 
+	const handleClick = async () => {
+		const data = await _retrieveStoreData('notification_state');
+		handleLogoutClick(data)
+	  };
+	
 	return (
 		<TouchableOpacity
-			onPress={() => handleLogoutClick({ notification_token: notification_state?.notification_token })}
+			onPress={() => handleClick()}
 			style={{ flexDirection: 'row', alignItems: 'center' }}
 		>
 			<OIcon
