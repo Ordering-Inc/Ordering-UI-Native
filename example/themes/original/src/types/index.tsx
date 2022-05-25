@@ -102,6 +102,8 @@ export interface SignupParams {
 	handleCheckPhoneCode?: any;
 	notificationState?: any;
 	handleChangePromotions: () => void;
+	enableReCaptcha?: boolean;
+	handleReCaptcha?: () => void;
 }
 
 export interface PhoneInputParams {

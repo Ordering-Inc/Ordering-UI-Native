@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Pressable, StyleSheet, Linking, Platform } from 'react-native';
+import { View, Pressable, StyleSheet, Linking, Platform, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CheckBox from '@react-native-community/checkbox';
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import { FacebookLogin } from '../FacebookLogin';
+import Recaptcha from 'react-native-recaptcha-that-works'
 
 import {
 	SignupForm as SignUpController,
@@ -23,6 +24,7 @@ import {
 	LoginWith as SignupWith,
 	OTab,
 	OTabs,
+	RecaptchaButton
 } from '../LoginForm/styles';
 
 import NavBar from '../NavBar';
@@ -63,7 +65,9 @@ const SignupFormUI = (props: SignupParams) => {
 		handleSendVerifyCode,
 		handleCheckPhoneCode,
 		notificationState,
-		handleChangePromotions
+		handleChangePromotions,
+		enableReCaptcha,
+		handleReCaptcha
 	} = props;
 
 	const theme = useTheme();
@@ -117,6 +121,8 @@ const SignupFormUI = (props: SignupParams) => {
 			cellphone: null,
 		},
 	});
+	const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
+	const [recaptchaVerified, setRecaptchaVerified] = useState(false)
 
 	const nameRef = useRef<any>(null);
 	const lastnameRef = useRef<any>(null);
@@ -125,6 +131,7 @@ const SignupFormUI = (props: SignupParams) => {
 	const emailRef = useRef<any>(null);
 	const phoneRef = useRef<any>(null);
 	const passwordRef = useRef<any>(null);
+	const recaptchaRef = useRef<any>({});
 
   const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
 
@@ -285,6 +292,33 @@ const SignupFormUI = (props: SignupParams) => {
 			showToast(ToastType.Error, t('VALIDATION_ERROR_ACTIVE_URL', 'The _attribute_ is not a valid URL.').replace('_attribute_', t('URL', 'URL')))
 		}
 	}
+
+	const handleOpenRecaptcha = () => {
+		setRecaptchaVerified(false)
+	  	if (!recaptchaConfig?.siteKey) {
+			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
+			return
+		}
+		if (!recaptchaConfig?.baseUrl) {
+			showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
+			return
+		}
+		recaptchaRef.current.open()
+  	}
+
+	const onRecaptchaVerify = (token: any) => {
+		setRecaptchaVerified(true)
+		handleReCaptcha(token)
+	}
+
+	useEffect(() => {
+		if (configs && Object.keys(configs).length > 0 && enableReCaptcha) {
+			setRecaptchaConfig({
+				siteKey: configs?.security_recaptcha_site_key?.value || null,
+				baseUrl: configs?.security_recaptcha_base_url?.value || null
+			})
+		}
+	}, [configs, enableReCaptcha])
 
 	useEffect(() => {
 		if (!formState.loading && formState.result?.error) {
@@ -465,6 +499,39 @@ const SignupFormUI = (props: SignupParams) => {
 										isStartValidation={errors?.cellphone}
 									/>
 								</View>
+							)}
+
+							{enableReCaptcha && (
+								<>
+									<TouchableOpacity
+										onPress={handleOpenRecaptcha}
+										style={{ marginHorizontal: 4, marginBottom: 10 }}
+									>
+										<RecaptchaButton>
+											{recaptchaVerified ? (
+												<MaterialCommunityIcons
+													name="checkbox-marked"
+													size={23}
+													color={theme.colors.primary}
+												/>
+											) : (
+												<MaterialCommunityIcons
+													name="checkbox-blank-outline"
+													size={23}
+													color={theme.colors.disabled}
+												/>
+											)}
+											<OText size={14} mLeft={8}>{t('VERIFY_ReCAPTCHA', 'Verify reCAPTCHA')}</OText>
+										</RecaptchaButton>
+									</TouchableOpacity>
+									<Recaptcha
+										ref={recaptchaRef}
+										siteKey={recaptchaConfig?.siteKey}
+										baseUrl={recaptchaConfig?.baseUrl}
+										onVerify={onRecaptchaVerify}
+										onExpire={() => setRecaptchaVerified(false)}
+									/>
+								</>
 							)}
 
 							<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
@@ -736,6 +803,7 @@ const SignupFormUI = (props: SignupParams) => {
 export const SignupForm = (props: any) => {
 	const signupProps = {
 		...props,
+		isRecaptchaEnable: true,
 		UIComponent: SignupFormUI,
 	};
 	return <SignUpController {...signupProps} />;
