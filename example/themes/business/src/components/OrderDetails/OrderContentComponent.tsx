@@ -11,6 +11,7 @@ import {
   Table,
   OrderBill,
   Total,
+  OSRow,
 } from './styles';
 
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -74,6 +75,20 @@ export const OrderContentComponent = (props: OrderContent) => {
       borderRadius: 8,
     }
   })
+
+  const getIncludedTaxes = () => {
+    if (order?.taxes?.length === 0) {
+      return order.tax_type === 1 ? order?.summary?.tax ?? 0 : 0
+    } else {
+      return order?.taxes.reduce((taxIncluded: number, tax: any) => {
+        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+      }, 0)
+    }
+  }
+
+  const getIncludedTaxesDiscounts = () => {
+    return order?.taxes?.filter((tax: any) => tax?.type === 1)?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
+  }
 
   return (
     <OrderContent isOrderGroup={isOrderGroup} lastOrder={lastOrder}>
@@ -281,14 +296,14 @@ export const OrderContentComponent = (props: OrderContent) => {
           </OText>
         )}
         {((order?.delivery_option !== undefined && order?.delivery_type === 1) || !!order?.comment) && (
-          <View style={{marginTop: 10}}>
+          <View style={{ marginTop: 10 }}>
             {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
               <OText>
                 {order?.delivery_option?.name}
               </OText>
             )}
             {!!order?.comment && (
-              <OText style={{fontStyle: 'italic', opacity: 0.6, marginBottom: 5}}>
+              <OText style={{ fontStyle: 'italic', opacity: 0.6, marginBottom: 5 }}>
                 {order?.comment}
               </OText>
             )}
@@ -323,84 +338,109 @@ export const OrderContentComponent = (props: OrderContent) => {
         <Table>
           <OText mBottom={4}>{t('SUBTOTAL', 'Subtotal')}</OText>
           <OText mBottom={4}>
-            {parsePrice(
-              order.tax_type === 1
-                ? order?.summary?.subtotal + order?.summary?.tax ?? 0
-                : order?.summary?.subtotal ?? 0,
-            )}
+            {parsePrice(((order?.summary?.subtotal ?? order?.subtotal) + getIncludedTaxes()))}
           </OText>
         </Table>
-
-        {order?.tax_type !== 1 && (
+        {(order?.summary?.discount > 0 ?? order?.discount > 0) && order?.offers?.length === 0 && (
+          <Table>
+            {order?.offer_type === 1 ? (
+              <OText mBottom={4}>
+                {t('DISCOUNT', theme?.defaultLanguages?.DISCOUNT || 'Discount')}{' '}
+                <OText>{`(${verifyDecimals(order?.offer_rate, parsePrice)}%)`}</OText>
+              </OText>
+            ) : (
+              <OText mBottom={4}>{t('DISCOUNT', theme?.defaultLanguages?.DISCOUNT || 'Discount')}</OText>
+            )}
+            <OText>- {parsePrice(order?.summary?.discount ?? order?.discount)}</OText>
+          </Table>
+        )}
+        {
+          order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any) => (
+            <Table key={offer.id}>
+              <OSRow>
+                <OText numberOfLines={1} mBottom={4}>
+                  {offer.name}
+                  {offer.rate_type === 1 && (
+                    <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                  )}
+                </OText>
+              </OSRow>
+              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount)}</OText>
+            </Table>
+          ))
+        }
+        {order?.summary?.subtotal_with_discount > 0 && order?.summary?.discount > 0 && order?.summary?.total >= 0 && (
+          <Table>
+            <OText mBottom={4}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+            {order?.tax_type === 1 ? (
+              <OText mBottom={4}>{parsePrice((order?.summary?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0))}</OText>
+            ) : (
+              <OText mBottom={4}>{parsePrice(order?.summary?.subtotal_with_discount ?? 0)}</OText>
+            )}
+          </Table>
+        )}
+        {order?.taxes?.length === 0 && order?.tax_type === 2 && order?.summary?.tax > 0 && (
           <Table>
             <OText mBottom={4}>
-              {t('TAX', 'Tax')}
-              {`(${verifyDecimals(
-                order?.summary?.tax_rate,
-                parseNumber,
-              )}%)`}
+              {t('TAX', 'Tax')} {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
             </OText>
-
             <OText mBottom={4}>
               {parsePrice(order?.summary?.tax ?? 0)}
             </OText>
-          </Table >
+          </Table>
         )}
-
         {
-          order?.summary?.discount > 0 && (
+          order?.fees?.length === 0 && order?.summary?.service_fee > 0 && (
             <Table>
-              {order?.offer_type === 1 ? (
-                <OText mBottom={4}>
-                  <OText>{t('DISCOUNT', 'Discount')}</OText>
-
-                  <OText>
-                    {`(${verifyDecimals(
-                      order?.offer_rate,
-                      parsePrice,
-                    )}%)`}
-                  </OText>
-                </OText>
-              ) : (
-                <OText mBottom={4}>{t('DISCOUNT', 'Discount')}</OText>
-              )}
-
               <OText mBottom={4}>
-                - {parsePrice(order?.summary?.discount)}
+                {t('SERVICE_FEE', 'Service fee')}
+                {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
               </OText>
+              <OText mBottom={4}>{parsePrice(order?.summary?.service_fee ?? 0)}</OText>
             </Table>
           )
         }
-
         {
-          order?.summary?.subtotal_with_discount > 0 &&
-          order?.summary?.discount > 0 &&
-          order?.summary?.total >= 0 && (
-            <Table>
-              <OText mBottom={4}>
-                {t(
-                  'SUBTOTAL_WITH_DISCOUNT',
-                  'Subtotal with discount',
-                )}
-              </OText>
-              {order?.tax_type === 1 ? (
-                <OText mBottom={4}>
-                  {parsePrice(
-                    order?.summary?.subtotal_with_discount +
-                    order?.summary?.tax ?? 0,
-                  )}
+          order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0).map((tax: any) => (
+            <Table key={tax.id}>
+              <OSRow>
+                <OText numberOfLines={1} mBottom={4}>
+                  {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
                 </OText>
-              ) : (
-                <OText mBottom={4}>
-                  {parsePrice(
-                    order?.summary?.subtotal_with_discount ?? 0,
-                  )}
-                </OText>
-              )}
+              </OSRow>
+              <OText mBottom={4}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
             </Table>
-          )
+          ))
         }
-
+        {
+          order?.fees?.length > 0 && order?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0))?.map((fee: any) => (
+            <Table key={fee.id}>
+              <OSRow>
+                <OText numberOfLines={1} mBottom={4}>
+                  {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  ({fee?.fixed > 0 && `${parsePrice(fee?.fixed)} + `}{fee.percentage}%){' '}
+                </OText>
+              </OSRow>
+              <OText mBottom={4}>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0)}</OText>
+            </Table>
+          ))
+        }
+        {
+          order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 3)?.map((offer: any) => (
+            <Table key={offer.id}>
+              <OSRow>
+                <OText numberOfLines={1} mBottom={4}>
+                  {offer.name}
+                  {offer.rate_type === 1 && (
+                    <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                  )}
+                </OText>
+              </OSRow>
+              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount)}</OText>
+            </Table>
+          ))
+        }
         {
           order?.summary?.delivery_price > 0 && (
             <Table>
@@ -414,41 +454,35 @@ export const OrderContentComponent = (props: OrderContent) => {
             </Table>
           )
         }
-
-        <Table>
-          <OText mBottom={4}>
-            {t('DRIVER_TIP', 'Driver tip')}{' '}
-            {order?.summary?.driver_tip > 0 &&
-              parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
-              !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
-              `(${verifyDecimals(
-                order?.summary?.driver_tip,
-                parseNumber,
-              )}%)`}
-          </OText>
-
-          <OText mBottom={4}>
-            {parsePrice(order?.summary?.driver_tip ?? 0)}
-          </OText>
-        </Table>
-
         {
-          order?.summary?.service_fee > 0 && (
-            <Table>
-              <OText mBottom={4}>
-                {t('SERVICE_FEE', 'Service Fee')}{' '}
-                {`(${verifyDecimals(
-                  order?.summary?.service_fee,
-                  parseNumber,
-                )}%)`}
-              </OText>
-
-              <OText mBottom={4}>
-                {parsePrice(order?.summary?.service_fee)}
-              </OText>
+          order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
+            <Table key={offer.id}>
+              <OSRow>
+                <OText numberOfLines={1} mBottom={4}>
+                  {offer.name}
+                  {offer.rate_type === 1 && (
+                    <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                  )}
+                </OText>
+              </OSRow>
+              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount)}</OText>
             </Table>
-          )
+          ))
         }
+        {order?.summary?.driver_tip > 0 && (
+          <Table>
+            <OText mBottom={4}>
+              {t('DRIVER_TIP', 'Driver tip')}
+              {order?.summary?.driver_tip > 0 &&
+                parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
+                !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
+                (
+                  `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`
+                )}
+            </OText>
+            <OText mBottom={4}>{parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip)}</OText>
+          </Table>
+        )}
 
         <Total style={{ paddingBottom: 10 }}>
           <Table>
@@ -460,7 +494,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               mBottom={4}
               style={styles.textBold}
               color={theme.colors.primary}>
-              {parsePrice(order?.summary?.total ?? 0)}
+              {parsePrice(order?.summary?.total ?? order?.total)}
             </OText>
           </Table>
         </Total>
