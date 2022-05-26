@@ -112,7 +112,7 @@ const OrderSummaryUI = (props: any) => {
       {cart?.products?.length > 0 && (
         <>
           <OSProductList>
-            {cart?.products.map((product: any) => (
+            {cart?.products?.map((product: any) => (
               <ProductItemAccordion
                 key={product.code}
                 product={product}
