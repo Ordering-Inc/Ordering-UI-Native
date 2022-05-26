@@ -101,9 +101,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleOpenMapView = async () => {
-    if (permissions.locationStatus === 'granted') {
+    if (permissions?.locationStatus === 'granted') {
       setOpenModalForMapView(!openModalForMapView);
-    } else if (permissions.locationStatus === 'blocked') {
+    } else if (permissions?.locationStatus === 'blocked') {
       // redirectToSettings();
       showToast(
         ToastType.Error,
@@ -141,9 +141,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     handleArrowBack()
   }
 
-  const handleAcceptLogisticOrder = (order : any) => {
+  const handleAcceptLogisticOrder = (order: any) => {
     handleClickLogisticOrder?.(1, order?.logistic_order_id)
-    if(order?.order_group){
+    if (order?.order_group) {
       handleArrowBack()
     }
   }
@@ -166,10 +166,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   ];
 
   useEffect(() => {
-    if (permissions.locationStatus !== 'granted' && openModalForMapView) {
+    if (permissions?.locationStatus !== 'granted' && openModalForMapView) {
       setOpenModalForMapView(false);
     }
-  }, [permissions.locationStatus]);
+  }, [permissions?.locationStatus]);
 
   useEffect(() => {
     if (openModalForAccept) {
@@ -215,8 +215,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }, [messagesReadList]);
 
   useEffect(() => {
-    forceUpdate && handleViewActionOrder && handleViewActionOrder(forceUpdate === 9 ? 'forcePickUp': 'forceDelivery')
-  },[forceUpdate])
+    forceUpdate && handleViewActionOrder && handleViewActionOrder(forceUpdate === 9 ? 'forcePickUp' : 'forceDelivery')
+  }, [forceUpdate])
 
   const styles = StyleSheet.create({
     btnPickUp: {
@@ -254,7 +254,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     );
   }
 
-  const OrderDetailsInformation = (props : {order: any, isOrderGroup?: boolean, lastOrder?: boolean}) => {
+  const OrderDetailsInformation = (props: { order: any, isOrderGroup?: boolean, lastOrder?: boolean }) => {
     const {
       order,
       isOrderGroup,
