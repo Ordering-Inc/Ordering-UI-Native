@@ -90,33 +90,12 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 		</View>
 	);
 
-	const ReviewItem = ({ comment, created_at, total, customer }: any) => (
+	const ReviewItem = ({ comment, created_at, total }: any) => (
 		<View style={{ marginBottom: 30 }}>
-			<View
-				style={{ flexDirection: 'row', marginBottom: 19, alignItems: 'center' }}>
-				<OIcon
-					url={theme.images.dummies.customerPhoto}
-					width={38}
-					height={38}
-					style={{
-						borderRadius: 7.6,
-						borderWidth: 1,
-						borderColor: theme.colors.border,
-						marginEnd: 9,
-					}}
-				/>
-				<View>
-					<OText size={12} color={theme.colors.textNormal} weight={'500'}>
-						{customer?.name || 'Jane Cooper'}
-					</OText>
-					<OText size={10} color={theme.colors.textSecondary}>
-						{moment(created_at).format('MMMM d, yyyy • hh:mm')}
-					</OText>
-				</View>
-			</View>
-			<OText size={10} color={theme.colors.textNormal}>
-				{comment}
+			<OText size={12} color={theme.colors.textSecondary}>
+				{moment(created_at).format('MMMM d, yyyy • hh:mm')}
 			</OText>
+			<OText size={12} color={theme.colors.textNormal}>{comment}</OText>
 		</View>
 	);
 
