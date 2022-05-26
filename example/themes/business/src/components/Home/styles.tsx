@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 export const Container = styled.View`
   width: 100%;
@@ -24,4 +24,11 @@ export const BackgroundImage = styled.ImageBackground`
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
+`;
+
+export const FormInput = styled.View`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 50px;
 `;
