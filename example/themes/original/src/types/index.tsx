@@ -240,7 +240,11 @@ export interface BusinessProductsListParams {
 	handleCancelSearch?: () => void,
 	categoriesLayout?: any,
 	setCategoriesLayout?: any,
-	currentCart?: any
+	currentCart?: any,
+	setSubcategoriesSelected?: any,
+    subcategoriesSelected?: any,
+    onClickCategory?: any,
+    lazyLoadProductsRecommended?: boolean
 }
 export interface SingleProductCardParams {
 	businessId: any,
