@@ -49,7 +49,6 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   }
 
   const onClickSubcategory = (subCategory : any, parentCategory : any) => {
-    console.log('press')
     if (parentCategory && lazyLoadProductsRecommended) {
       onClickCategory(parentCategory)
     }
