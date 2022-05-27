@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Platform, Text, StyleSheet } from 'react-native';
-import { useApi, useSession, useLanguage, useConfig } from 'ordering-components/native';
+import { useApi, useSession, useLanguage, useConfig, useToast, ToastType } from 'ordering-components/native';
 import { appleAuthAndroid, appleAuth } from '@invertase/react-native-apple-authentication';
 import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -18,7 +18,12 @@ export const AppleLogin = (props: any) => {
   const [ordering] = useApi();
   const [{ auth }] = useSession();
   const [, t] = useLanguage();
-  const [{ configs }] = useConfig()
+  const [{ configs }] = useConfig();
+  const [, {showToast}] = useToast()
+  const [credentialStateForUser, updateCredentialStateForUser] = useState<any>(-1);
+
+  let user : any= null
+
   const buttonText = auth
     ? t('CONTINUE_WITH_APPLE', 'Logout with Apple')
     : t('CONTINUE_WITH_FACEBOOK', 'Continue with Apple');
@@ -39,8 +44,8 @@ export const AppleLogin = (props: any) => {
           handleLoading && handleLoading(false)
         }
       } else {
+        showToast(ToastType.Error, `Error login on apple from api Code: ${code}`, 10000)
         handleLoading && handleLoading(false)
-        logoutFromApple()
       }
     } catch (err: any) {
       handleLoading && handleLoading(false)
@@ -48,33 +53,52 @@ export const AppleLogin = (props: any) => {
     }
   }
 
-  const logoutFromApple = () => {
-
+  const fetchAndUpdateCredentialState = async (updateCredentialStateForUser : any) => {
+    if (user === null) {
+      updateCredentialStateForUser('N/A');
+    } else {
+      const credentialState = await appleAuth.getCredentialStateForUser(user);
+      if (credentialState === appleAuth.State.AUTHORIZED) {
+        updateCredentialStateForUser('AUTHORIZED');
+      } else {
+        updateCredentialStateForUser(credentialState);
+      }
+    }
   }
 
-  const onIOSButtonPress = async () => {
+  const onIOSButtonPress = async (updateCredentialStateForUser : any) => {
     try {
       const appleAuthRequestResponse = await appleAuth.performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
         requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
       });
 
-      // get current authentication state for user
-      // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
-      const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+      const {
+        user: newUser,
+        email,
+        identityToken,
+        authorizationCode
+      } = appleAuthRequestResponse;
+  
+      user = newUser;
 
-      // use credentialState response to ensure the user is authenticated
-      if (credentialState === appleAuth.State.AUTHORIZED) {
-        // user is authenticated
-        if (appleAuthRequestResponse.authorizationCode) {
-          performAppleLogin(appleAuthRequestResponse.authorizationCode)
-        }
+      fetchAndUpdateCredentialState(updateCredentialStateForUser).catch(error =>
+        updateCredentialStateForUser(`Error: ${error.code}`),
+      );
+
+      if (identityToken && authorizationCode) {
+        showToast(ToastType.Success, `Apple Authentication Completed, ${email}`)
+        performAppleLogin(authorizationCode)
+      } else {
+        handleErrors && handleErrors('UNABLE_LOGIN_TOKEN', 'Unable to login, no token found')
       }
+
     } catch (err: any) {
       handleLoading && handleLoading(false)
       handleErrors && handleErrors(err.message)
     }
   }
+
   const onAndroidButtonPress = async () => {
     try {
       // Generate secure, random values for state and nonce
@@ -108,10 +132,20 @@ export const AppleLogin = (props: any) => {
   }
 
   useEffect(() => {
-    if (Platform.OS == 'android') return;
-    // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
+    if (!appleAuth.isSupported || Platform.OS === 'android') return;
+
+    fetchAndUpdateCredentialState(updateCredentialStateForUser).catch(error =>
+      updateCredentialStateForUser(`Error: ${error.code}`),
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!appleAuth.isSupported || Platform.OS === 'android') return;
+
     return appleAuth.onCredentialRevoked(async () => {
-      console.warn('If this function executes, User Credentials have been Revoked');
+      fetchAndUpdateCredentialState(updateCredentialStateForUser).catch(error =>
+        updateCredentialStateForUser(`Error: ${error.code}`),
+      );
     });
   }, []);
 
@@ -123,9 +157,12 @@ export const AppleLogin = (props: any) => {
 
   return (
     <Container>
+      {credentialStateForUser !== -1 && (
+        <Text>{credentialStateForUser}</Text>
+      )}
       {canShowButton() &&
         <AppleButton
-          onPress={() => Platform.OS == 'android' ? onAndroidButtonPress() : onIOSButtonPress()}
+          onPress={() => Platform.OS == 'android' ? onAndroidButtonPress() : onIOSButtonPress(updateCredentialStateForUser)}
         >
           <Icon
             name="apple"
