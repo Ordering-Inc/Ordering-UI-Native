@@ -23,6 +23,7 @@ import {
   Table,
   OrderBill,
   Total,
+  OSRow,
 } from './styles'
 import { OrderDetailsParams, Product } from '../../types'
 import { Container } from '../../layouts/Container';
@@ -178,6 +179,20 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     setIsLoading(false)
   }
 
+  const getIncludedTaxes = () => {
+    if (order?.taxes?.length === 0) {
+      return order.tax_type === 1 ? order?.summary?.tax ?? 0 : 0
+    } else {
+      return order?.taxes.reduce((taxIncluded: number, tax: any) => {
+        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+      }, 0)
+    }
+  }
+
+  const getIncludedTaxesDiscounts = () => {
+    return order?.taxes?.filter((tax: any) => tax?.type === 1)?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
+  }
+
   useEffect(() => {
     const backAction = () => {
       Alert.alert(`${t('HOLD_ON', 'Hold on')}!`, `${t('ARE_YOU_SURE_YOU_WANT_TO_GO_BACK', 'Are you sure you want to go back')}?`, [
@@ -209,7 +224,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     const getCustomerName = async () => {
       try {
         const { customerName: name } = await _retrieveStoreData('customer_name')
-          setCustomerName(name)
+        setCustomerName(name)
       } catch (e) {
         if (e) {
           setCustomerName(null)
@@ -217,8 +232,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       }
     }
     getCustomerName()
-    const redirectHome = setTimeout(() =>{
-      _setStoreData('customer_name', {customerName: ''});
+    const redirectHome = setTimeout(() => {
+      _setStoreData('customer_name', { customerName: '' });
       navigation.reset({
         routes: [{ name: 'Intro' }],
       });
@@ -345,7 +360,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       <OButton
         text={`${t('YOU_ARE_DONE', 'You are done! Click to close')}!`}
         onClick={() => {
-          _setStoreData('customer_name', {customerName: ''});
+          _setStoreData('customer_name', { customerName: '' });
           navigation.reset({
             routes: [{ name: 'Intro' }],
           });
@@ -419,46 +434,135 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         <Table>
           <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
           <OText>
-            {parsePrice(isTaxIncluded
-              ? (order?.summary?.subtotal + order?.summary?.tax) ?? 0
-              : order?.summary?.subtotal ?? 0
-            )}
+            {parsePrice(((order?.summary?.subtotal ?? order?.subtotal) + getIncludedTaxes()))}
           </OText>
         </Table>
-        {order?.summary?.discount > 0 && (
+        {(order?.summary?.discount > 0 ?? order?.discount > 0) && order?.offers?.length === 0 && (
           <Table>
             {order?.offer_type === 1 ? (
               <OText>
                 {t('DISCOUNT', 'Discount')}
-                <OText>{`(${verifyDecimals(order?.offer_rate, parsePrice)}%)`}</OText>
+                <OText>{`(${verifyDecimals(
+                  order?.offer_rate,
+                  parsePrice,
+                )}%)`}</OText>
               </OText>
             ) : (
               <OText>{t('DISCOUNT', 'Discount')}</OText>
             )}
-            <OText>- {parsePrice(order?.summary?.discount)}</OText>
+            <OText>
+              - {parsePrice(order?.summary?.discount || order?.discount)}
+            </OText>
           </Table>
         )}
+        {
+          order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any) => (
+            <Table key={offer.id}>
+              <OSRow>
+                <OText>
+                  {offer.name}
+                  {offer.rate_type === 1 && (
+                    <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                  )}
+                </OText>
+              </OSRow>
+              <OText>- {parsePrice(offer?.summary?.discount)}</OText>
+            </Table>
+          ))
+        }
         {order?.summary?.subtotal_with_discount > 0 && order?.summary?.discount > 0 && order?.summary?.total >= 0 && (
           <Table>
             <OText>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
-            <OText>{parsePrice(order?.summary?.subtotal_with_discount ?? 0)}</OText>
+            {order?.tax_type === 1 ? (
+              <OText>{parsePrice((order?.summary?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0))}</OText>
+            ) : (
+              <OText>{parsePrice(order?.summary?.subtotal_with_discount ?? 0)}</OText>
+            )}
           </Table>
         )}
-        {order?.tax_type !== 1 && (
-          <Table>
-            <OText>
-              {t('TAX', 'Tax')}
-              {`(${verifyDecimals(order?.summary?.tax_rate, parseNumber)}%)`}
-            </OText>
-            <OText>{parsePrice(order?.summary?.tax)}</OText>
-          </Table>
-        )}
+        {
+          order?.taxes?.length === 0 && order?.tax_type === 2 && (
+            <Table>
+              <OText>
+                {t('TAX', 'Tax')} {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
+              </OText>
+              <OText>{parsePrice(order?.summary?.tax || 0)}</OText>
+            </Table>
+          )
+        }
+        {
+          order?.fees?.length === 0 && (
+            <Table>
+              <OText>
+                {t('SERVICE_FEE', 'Service fee')}
+                {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
+              </OText>
+              <OText>{parsePrice(order?.summary?.service_fee || 0)}</OText>
+            </Table>
+          )
+        }
+        {
+          order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0).map((tax: any) => (
+            <Table key={tax.id}>
+              <OSRow>
+                <OText>
+                  {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
+                </OText>
+              </OSRow>
+              <OText>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
+            </Table>
+          ))
+        }
+        {
+          order?.fees?.length > 0 && order?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0))?.map((fee: any) => (
+            <Table key={fee.id}>
+              <OSRow>
+                <OText>
+                  {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
+                  ({fee?.fixed > 0 && `${parsePrice(fee?.fixed)} + `}{fee.percentage}%){' '}
+                </OText>
+              </OSRow>
+              <OText>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0)}</OText>
+            </Table>
+          ))
+        }
+        {
+          order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 3)?.map((offer: any) => (
+            <Table key={offer.id}>
+              <OSRow>
+                <OText>
+                  {offer.name}
+                  {offer.rate_type === 1 && (
+                    <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                  )}
+                </OText>
+              </OSRow>
+              <OText>- {parsePrice(offer?.summary?.discount)}</OText>
+            </Table>
+          ))
+        }
         {order?.summary?.delivery_price > 0 && (
           <Table>
             <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
             <OText>{parsePrice(order?.summary?.delivery_price)}</OText>
           </Table>
         )}
+        {
+          order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
+            <Table key={offer.id}>
+              <OSRow>
+                <OText>
+                  {offer.name}
+                  {offer.rate_type === 1 && (
+                    <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                  )}
+                </OText>
+              </OSRow>
+              <OText>- {parsePrice(offer?.summary?.discount)}</OText>
+            </Table>
+          ))
+        }
         {order?.summary?.driver_tip > 0 && (
           <Table>
             <OText>
@@ -470,23 +574,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`
                 )}
             </OText>
-            <OText>{parsePrice(order?.summary?.driver_tip ?? 0)}</OText>
-          </Table>
-        )}
-        {order?.summary?.service_fee > 0 && (
-          <Table>
-            <OText>
-              {t('SERVICE_FEE', 'Service Fee')}
-              {`(${verifyDecimals(order?.summary?.service_fee, parseNumber)}%)`}
-            </OText>
-            <OText>{parsePrice(order?.summary?.service_fee)}</OText>
+            <OText>{parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip)}</OText>
           </Table>
         )}
         <Total>
           <Table>
             <OText style={styles.textBold}>{t('TOTAL', 'Total')}</OText>
             <OText style={styles.textBold} color={theme.colors.primary}>
-              {parsePrice(order?.summary?.total ?? 0)}
+              {parsePrice(order?.summary?.total ?? order?.total)}
             </OText>
           </Table>
         </Total>
@@ -508,14 +603,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <OIconButton
                   bgColor="transparent"
                   borderColor="transparent"
-                  RenderIcon={() => 
-                      <EvilIcons
-                        name={'close'}
-                        size={40}
-                        color={theme.colors.primary}
-                      />
+                  RenderIcon={() =>
+                    <EvilIcons
+                      name={'close'}
+                      size={40}
+                      color={theme.colors.primary}
+                    />
                   }
-                  style={{ flex:1, justifyContent: 'flex-end', left: 30 }}
+                  style={{ flex: 1, justifyContent: 'flex-end', left: 30 }}
                   onClick={() => {
                     navigation.reset({
                       routes: [{ name: 'Intro' }],

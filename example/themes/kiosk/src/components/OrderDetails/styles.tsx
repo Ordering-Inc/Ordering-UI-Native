@@ -51,3 +51,8 @@ export const Total = styled.View`
   padding-vertical: 10px;
 `
 
+export const OSRow = styled.View`
+  flex-direction: row;
+  overflow: hidden;
+  width: 80%;
+`
