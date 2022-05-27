@@ -68,3 +68,9 @@ export const FloatingLayout = styled.View`
     padding-bottom: 20px;
   `)}
 `
+
+export const OSRow = styled.View`
+  flex-direction: row;
+  overflow: hidden;
+  width: 80%;
+`

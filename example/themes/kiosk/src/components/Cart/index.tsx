@@ -10,7 +10,7 @@ import {
   useValidationFields,
 } from 'ordering-components/native';
 
-import { CheckoutAction, OrderTypeWrapper, FloatingLayout } from './styles';
+import { CheckoutAction, OrderTypeWrapper, FloatingLayout, OSRow } from './styles';
 
 import { OSBill, OSCoupon, OSTable } from '../OrderSummary/styles';
 
@@ -89,6 +89,20 @@ const CartUI = (props: any) => {
   }
 
   const goToBack = () => navigation.goBack();
+
+  const getIncludedTaxes = () => {
+    if (cart?.taxes === null) {
+      return cart.business.tax_type === 1 ? cart?.tax : 0
+    } else {
+      return cart?.taxes.reduce((taxIncluded: number, tax: any) => {
+        return taxIncluded + (tax.type === 1 ? tax.summary?.tax : 0)
+      }, 0)
+    }
+  }
+
+  const getIncludedTaxesDiscounts = () => {
+    return cart?.taxes?.filter((tax: any) => tax?.type === 1)?.reduce((carry: number, tax: any) => carry + (tax?.summary?.tax_after_discount ?? tax?.summary?.tax), 0)
+  }
 
   return (
     <>
@@ -177,13 +191,10 @@ const CartUI = (props: any) => {
               <OSTable>
                 <OText>{t('SUBTOTAL', 'Subtotal')}</OText>
                 <OText>
-                  {cart.business.tax_type === 1
-                    ? parsePrice((cart?.subtotal + cart?.tax) || 0)
-                    : parsePrice(cart?.subtotal || 0)}
+                  {parsePrice(cart?.subtotal + getIncludedTaxes())}
                 </OText>
               </OSTable>
-              {cart?.discount > 0 && cart?.total >= 0 && orientationState?.orientation == PORTRAIT && (
-
+              {cart?.discount > 0 && cart?.total >= 0 && cart?.offers?.length === 0 && orientationState?.orientation == PORTRAIT && (
                 <OSTable
                   style={{
                     backgroundColor: theme.colors.success,
@@ -226,42 +237,105 @@ const CartUI = (props: any) => {
                   </OText>
                 </OSTable>
               )}
-              {cart.business.tax_type !== 1 && (
+              {
+                cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any) => (
+                  <OSTable key={offer.id}>
+                    <OSRow>
+                      <OText>{offer.name}</OText>
+                      {offer.rate_type === 1 && (
+                        <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                      )}
+                    </OSRow>
+                    <OText>
+                      - {parsePrice(offer?.summary?.discount)}
+                    </OText>
+                  </OSTable>
+                ))
+              }
+              {cart?.subtotal_with_discount > 0 && cart?.discount > 0 && cart?.total >= 0 && (
                 <OSTable>
-                  <OText>
-                    {t('TAX', 'Tax')}
-                    {`(${verifyDecimals(cart?.business?.tax, parseNumber)}%)`}
-                  </OText>
-                  <OText>{parsePrice(cart?.tax || 0)}</OText>
+                  <OText numberOfLines={1}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
+                  {cart?.business?.tax_type === 1 ? (
+                    <OText>{parsePrice(cart?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0)}</OText>
+                  ) : (
+                    <OText>{parsePrice(cart?.subtotal_with_discount ?? 0)}</OText>
+                  )}
                 </OSTable>
               )}
+              {
+                cart.taxes?.length > 0 && cart.taxes.filter((tax: any) => tax.type === 2 && tax?.rate !== 0).map((tax: any) => (
+                  <OSTable key={tax.id}>
+                    <OSRow>
+                      <OText>
+                        {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
+                        {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
+                      </OText>
+                    </OSRow>
+                    <OText>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
+                  </OSTable>
+                ))
+              }
+              {
+                cart?.fees?.length > 0 && cart?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0)).map((fee: any) => (
+                  <OSTable key={fee?.id}>
+                    <OSRow>
+                      <OText>
+                        {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
+                        ({fee?.fixed > 0 && `${parsePrice(fee?.fixed)} + `}{fee.percentage}%){' '}
+                      </OText>
+                    </OSRow>
+                    <OText>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0)}</OText>
+                  </OSTable>
+                ))
+              }
+              {
+                cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 3)?.map((offer: any) => (
+                  <OSTable key={offer.id}>
+                    <OSRow>
+                      <OText>{offer.name}</OText>
+                      {offer.rate_type === 1 && (
+                        <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                      )}
+                    </OSRow>
+                    <OText>
+                      - {parsePrice(offer?.summary?.discount)}
+                    </OText>
+                  </OSTable>
+                ))
+              }
               {selectedOrderType === 1 && cart?.delivery_price > 0 && (
                 <OSTable>
                   <OText>{t('DELIVERY_FEE', 'Delivery Fee')}</OText>
                   <OText>{parsePrice(cart?.delivery_price)}</OText>
                 </OSTable>
               )}
+              {
+                cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
+                  <OSTable key={offer.id}>
+                    <OSRow>
+                      <OText>{offer.name}</OText>
+                      {offer.rate_type === 1 && (
+                        <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
+                      )}
+                    </OSRow>
+                    <OText>
+                      - {parsePrice(offer?.summary?.discount)}
+                    </OText>
+                  </OSTable>
+                ))
+              }
               {cart?.driver_tip > 0 && (
                 <OSTable>
                   <OText>
                     {t('DRIVER_TIP', 'Driver tip')}
                     {cart?.driver_tip_rate > 0 &&
                       parseInt(configs?.driver_tip_type?.value, 10) === 2 &&
-                      !!!parseInt(configs?.driver_tip_use_custom?.value, 10) &&
+                      !parseInt(configs?.driver_tip_use_custom?.value, 10) &&
                       (
-                        `(${parseNumber(cart?.driver_tip_rate)}%)`
+                        `(${verifyDecimals(cart?.driver_tip_rate, parseNumber)}%)`
                       )}
                   </OText>
                   <OText>{parsePrice(cart?.driver_tip)}</OText>
-                </OSTable>
-              )}
-              {cart?.service_fee > 0 && (
-                <OSTable>
-                  <OText>
-                    {t('SERVICE_FEE', 'Service Fee')}
-                    {`(${verifyDecimals(cart?.business?.service_fee, parseNumber)}%)`}
-                  </OText>
-                  <OText>{parsePrice(cart?.service_fee)}</OText>
                 </OSTable>
               )}
               {!cart?.discount_type && isCouponEnabled && !isCartPending && orientationState?.orientation == PORTRAIT && (
@@ -279,7 +353,7 @@ const CartUI = (props: any) => {
                   {t('TOTAL', 'Total')}
                 </OText>
                 <OText weight='bold' color={theme.colors.primary}>
-                  {cart?.total >= 1 && parsePrice(cart?.total)}
+                  {parsePrice(cart?.total >= 0 ? cart?.total : 0)}
                 </OText>
               </OSTable>
             </OSBill>
@@ -379,7 +453,7 @@ const CartUI = (props: any) => {
         <ProductForm
           productCart={curProduct}
           businessSlug={cart?.business?.slug}
-          businessId={cart?.business_id}
+          businessId={curProduct?.business_id}
           categoryId={curProduct?.category_id}
           productId={curProduct?.id}
           onSave={handlerProductAction}

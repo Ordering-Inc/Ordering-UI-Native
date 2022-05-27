@@ -514,7 +514,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </Table>
               )}
               {
-                order?.taxes?.length === 0 && order?.tax_type === 2 && (
+                order?.taxes?.length === 0 && order?.tax_type === 2 && order?.summary?.tax > 0 && (
                   <Table>
                     <OText>
                       {t('TAX', 'Tax')} {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
@@ -524,7 +524,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 )
               }
               {
-                order?.fees?.length === 0 && (
+                order?.fees?.length === 0 && order?.summary?.service_fee > 0 && (
                   <Table>
                     <OText>
                       {t('SERVICE_FEE', 'Service fee')}
