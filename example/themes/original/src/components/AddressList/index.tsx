@@ -140,7 +140,7 @@ const AddressListUI = (props: AddressListParams) => {
 				<AddressListContainer>
 					{isProfile && (
 						<NavBar
-							title={t('MY_SAVED_PLACES', 'My saved places')}
+							title={t('SAVED_PLACES', 'My saved places')}
 							titleAlign={'center'}
 							onActionLeft={() => goToBack()}
 							showCall={false}
