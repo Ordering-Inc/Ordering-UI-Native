@@ -472,6 +472,8 @@ export interface Cart {
   delivery_price_with_discount: number;
   total: number;
   clearInactivityTimeout: any;
+  taxes: Array<any>;
+  fees: Array<any>;
 }
 
 export interface NoNetworkParams {

@@ -91,3 +91,10 @@ export const AssignDriver = styled.View`
   padding-vertical: 10px;
   margin-bottom: 10px;
 `;
+
+export const OSRow = styled.View`
+  flex-direction: row;
+  overflow: hidden;
+  width: 70%;
+  flex-wrap: wrap;
+`
