@@ -31,3 +31,14 @@ export const RibbonBox = styled.View`
     border-radius: 50px;
   `}
 `
+
+export const SubCategoriesContainer = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+`
+
+export const ContainerButton = styled.View`
+`
+
+export const HeaderWrapper = styled.View``

@@ -119,6 +119,7 @@ const SignupFormUI = (props: SignupParams) => {
 		phone: {
 			country_phone_code: null,
 			cellphone: null,
+			country_code: null
 		},
 	});
 	const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
@@ -133,7 +134,7 @@ const SignupFormUI = (props: SignupParams) => {
 	const passwordRef = useRef<any>(null);
 	const recaptchaRef = useRef<any>({});
 
-  const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
+	const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
 
 	const handleRefs = (ref: any, code: string) => {
 		switch (code) {
@@ -216,8 +217,8 @@ const SignupFormUI = (props: SignupParams) => {
 			!phoneInputData.phone.country_phone_code &&
 			!phoneInputData.phone.cellphone &&
 			((validationFields?.fields?.checkout?.cellphone?.enabled &&
-        validationFields?.fields?.checkout?.cellphone?.required) ||
-        configs?.verification_phone_required?.value === '1')
+				validationFields?.fields?.checkout?.cellphone?.required) ||
+				configs?.verification_phone_required?.value === '1')
 		) {
 			showToast(
 				ToastType.Error,
@@ -232,7 +233,8 @@ const SignupFormUI = (props: SignupParams) => {
 			handleButtonSignupClick &&
 				handleButtonSignupClick({
 					...values,
-					...((phoneInputData.phone.cellphone !== null && phoneInputData.phone.country_phone_code !== null) && {...phoneInputData.phone}),
+					...((phoneInputData.phone.cellphone !== null && phoneInputData.phone.country_phone_code !== null) && { ...phoneInputData.phone }),
+					country_code: phoneInputData.phone.country_code
 				});
 			if (
 				!formState.loading &&
@@ -295,7 +297,7 @@ const SignupFormUI = (props: SignupParams) => {
 
 	const handleOpenRecaptcha = () => {
 		setRecaptchaVerified(false)
-	  	if (!recaptchaConfig?.siteKey) {
+		if (!recaptchaConfig?.siteKey) {
 			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
 			return
 		}
@@ -304,7 +306,7 @@ const SignupFormUI = (props: SignupParams) => {
 			return
 		}
 		recaptchaRef.current.open()
-  	}
+	}
 
 	const onRecaptchaVerify = (token: any) => {
 		setRecaptchaVerified(true)
@@ -335,12 +337,12 @@ const SignupFormUI = (props: SignupParams) => {
 	}, [errors]);
 
 	useEffect(() => {
-    register('cellphone', {
-      required: isRequiredField('cellphone')
-        ? t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone'))
-        : null
-    })
-  }, [register])
+		register('cellphone', {
+			required: isRequiredField('cellphone')
+				? t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone'))
+				: null
+		})
+	}, [register])
 
 	useEffect(() => {
 		if (phoneInputData?.phone?.cellphone) setValue('cellphone', phoneInputData?.phone?.cellphone, '')
@@ -366,6 +368,16 @@ const SignupFormUI = (props: SignupParams) => {
 			}
 		}
 	}, [verifyPhoneState]);
+
+	useEffect(() => {
+		setPhoneInputData({
+			...phoneInputData,
+			phone: {
+				...phoneInputData.phone,
+				country_code: configs?.default_country_code?.value
+			}
+		})
+	}, [configs])
 
 	return (
 		<View>
@@ -490,8 +502,24 @@ const SignupFormUI = (props: SignupParams) => {
 								<View style={{ marginBottom: 25 }}>
 									<PhoneInputNumber
 										data={phoneInputData}
-										handleData={(val: any) => setPhoneInputData(val)}
+										handleData={(val: any) => setPhoneInputData({
+											...phoneInputData,
+											...val,
+											phone: {
+												...phoneInputData.phone,
+												...val.phone,
+												country_code: phoneInputData.phone.country_code
+											}
+										})}
 										forwardRef={phoneRef}
+										defaultCode={formState?.country_code ?? formState?.country_phone_code ?? null}
+										changeCountry={(val: any) => setPhoneInputData({
+											...phoneInputData,
+											phone: {
+												...phoneInputData.phone,
+												country_code: val.cca2
+											}
+										})}
 										textInputProps={{
 											returnKeyType: 'next',
 											onSubmitEditing: () => passwordRef?.current?.focus?.(),

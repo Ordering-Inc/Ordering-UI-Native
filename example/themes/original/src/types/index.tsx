@@ -120,6 +120,7 @@ export interface PhoneInputParams {
 	flagStyle?: any;
 	isDisabled?: any;
 	isStartValidation?: any;
+	changeCountry?: any;
 }
 
 export interface LanguageSelectorParams {
@@ -240,7 +241,11 @@ export interface BusinessProductsListParams {
 	handleCancelSearch?: () => void,
 	categoriesLayout?: any,
 	setCategoriesLayout?: any,
-	currentCart?: any
+	currentCart?: any,
+	setSubcategoriesSelected?: any,
+    subcategoriesSelected?: any,
+    onClickCategory?: any,
+    lazyLoadProductsRecommended?: boolean
 }
 export interface SingleProductCardParams {
 	businessId: any,

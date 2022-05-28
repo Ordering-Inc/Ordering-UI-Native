@@ -8,26 +8,26 @@ export const ORDER_TYPES = [
 	{
 		value: 1,
 		content: 'DELIVERY',
-		description: 'DELIVERY_DESCRIPTION'
+		description: 'ORDERTYPE_DESCRIPTION_DELIVERY'
 	},
 	{
 		value: 2,
 		content: 'PICKUP',
-		description: 'PICKUP_DESCRIPTION',
+		description: 'ORDERTYPE_DESCRIPTION_PICKUP',
 	},
 	{
 		value: 3,
 		content: 'EAT_IN',
-		description: 'EAT_IN_DESCRIPTION',
+		description: 'ORDERTYPE_DESCRIPTION_EATIN',
 	},
 	{
 		value: 4,
 		content: 'CURBSIDE',
-		description: 'CURBSIDE_DESCRIPTION',
+		description: 'ORDERTYPE_DESCRIPTION_CURBSIDE',
 	},
 	{
 		value: 5,
 		content: 'DRIVE_THRU',
-		description: 'DRIVE_THRU_DESCRIPTION',
+		description: 'ORDERTYPE_DESCRIPTION_DRIVETHRU',
 	}
 ]

@@ -27,7 +27,7 @@ export const UserFormDetailsUI = (props: any) => {
 		hideUpdateButton,
 		setWillVerifyOtpState,
 		isVerifiedPhone,
-		handleChangePromotions
+		handleChangePromotions,
 	} = props;
 
 	const theme = useTheme();
@@ -182,6 +182,16 @@ export const UserFormDetailsUI = (props: any) => {
 		handleChangeInput(phoneNumber, true);
 	};
 
+	const changeCountry = (country : any) => {
+		let countryCode = {
+			country_code: {
+				name: 'country_code',
+				value: country.cca2
+			}
+		}
+		handleChangeInput(countryCode, true);
+	}
+
 	useEffect(() => {
 		if (Object.keys(errors).length > 0) {
 			const list = Object.values(errors);
@@ -315,8 +325,9 @@ export const UserFormDetailsUI = (props: any) => {
 									<PhoneInputNumber
 										data={phoneInputData}
 										handleData={(val: any) => handleChangePhoneNumber(val)}
+										changeCountry={(val : any) => changeCountry(val)}
 										defaultValue={phoneUpdate ? '' : user?.cellphone}
-										defaultCode={user?.country_phone_code || null}
+										defaultCode={user?.country_code ?? user?.country_phone_code ?? null}
 										boxStyle={styles.phoneSelect}
 										inputStyle={styles.phoneInputStyle}
 										textStyle={{ color: theme.colors.textNormal, fontSize: 12, padding: 0 }}

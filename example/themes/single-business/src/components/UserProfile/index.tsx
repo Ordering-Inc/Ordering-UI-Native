@@ -154,7 +154,7 @@ const ProfileListUI = (props: ProfileParams) => {
 				<Actions>
 					<ListItem onPress={() => onRedirect('AddressList', { isFromProfile: true, isGoBack: true })} activeOpacity={0.7}>
 						<OIcon src={theme.images.general.pin} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
-						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('MY_SAVED_PLACES', 'My saved places')}</OText>
+						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('SAVED_PLACES', 'My saved places')}</OText>
 					</ListItem>
 					<ListItem onPress={() => navigation.navigate('Help', {})} activeOpacity={0.7}>
 						<OIcon src={theme.images.general.help} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />

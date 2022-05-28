@@ -36,7 +36,7 @@ export const Home = (props: any) => {
 					{t('WELCOME', 'Welcome!')}
 				</OText>
 				<OText color={theme.colors.white} size={14} style={{ marginBottom: 46 }}>
-					{t('LETS_START_ORDER', "Let's start to order now")}
+					{t('SUBTITLE_HOME', "Let's start to order now")}
 				</OText>
 				<OButton
 					text={t('LOGIN_NOW', 'Login now')}

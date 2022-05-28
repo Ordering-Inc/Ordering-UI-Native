@@ -92,6 +92,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [categoriesLayout, setCategoriesLayout] = useState<any>({})
 	const [productListLayout, setProductListLayout] = useState<any>(null)
 	const [isCategoryClicked, setCategoryClicked] = useState(false)
+	const [subcategoriesSelected, setSubcategoriesSelected] = useState([])
 
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 
@@ -254,6 +255,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
 								setSelectedCategoryId={setSelectedCategoryId}
 								setCategoryClicked={setCategoryClicked}
+								
 							/>
 						)}
 					</>
@@ -281,8 +283,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								errorQuantityProducts={errorQuantityProducts}
 								handleCancelSearch={handleCancel}
 								categoriesLayout={categoriesLayout}
+								subcategoriesSelected={subcategoriesSelected}
+								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
 								setCategoriesLayout={setCategoriesLayout}
 								currentCart={currentCart}
+								setSubcategoriesSelected={setSubcategoriesSelected}
 							/>
 						</WrapContent>
 					</>
