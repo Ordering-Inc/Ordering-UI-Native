@@ -49,6 +49,74 @@ import { BusinessTypeFilter } from './src/components/BusinessTypeFilter';
 import { BusinessController } from './src/components/BusinessController';
 import { BusinessFeaturedController } from './src/components/BusinessFeaturedController';
 import { HighestRatedBusinesses } from './src/components/HighestRatedBusinesses';
+import { PaymentOptions } from './src/components/PaymentOptions';
+import { DriverTips } from './src/components/DriverTips';
+import { UserDetails } from './src/components/UserDetails';
+import { OrderSummary } from './src/components/OrderSummary';
+import { CartStoresListing } from './src/components/CartStoresListing';
+import { PaymentOptionsWebView } from '../../src/components/PaymentOptionsWebView';
+import { GoogleMap } from './src/components/GoogleMap';
+import { SingleProductCard } from './src/components/SingleProductCard';
+import { UpsellingRedirect } from './src/components/BusinessProductsListing/UpsellingRedirect';
+import { ProductItemAccordion } from './src/components/ProductItemAccordion';
+import { BusinessItemAccordion } from './src/components/BusinessItemAccordion';
+import { CouponControl } from './src/components/CouponControl';
+import { TaxInformation } from './src/components/TaxInformation';
+import { PlaceSpot } from './src/components/PlaceSpot';
+import { Cart } from './src/components/Cart';
+import { LanguageSelector } from './src/components/LanguageSelector';
+import { PhoneInputNumber } from './src/components/PhoneInputNumber'
+import { FacebookLogin } from './src/components/FacebookLogin';
+import { VerifyPhone } from './src/components/VerifyPhone';
+import { GoogleLogin } from './src/components/GoogleLogin';
+import { PreviousOrders } from './src/components/PreviousOrders';
+import { PaymentOptionCash } from './src/components/PaymentOptionCash';
+import { StripeElementsForm } from './src/components/StripeElementsForm';
+import { StripeCardsList } from './src/components/StripeCardsList';
+import { ProductIngredient } from './src/components/ProductIngredient';
+import { ProductOption } from './src/components/ProductOption';
+import { ProductOptionSubOption } from './src/components/ProductOptionSubOption';
+import { SingleProductReview } from './src/components/SingleProductReview';
+import { LogoutButton } from './src/components/LogoutButton';
+import { UserFormDetailsUI } from './src/components/UserFormDetails';
+import { WalletTransactionItem } from './src/components/WalletTransactionItem';
+
+import { USER_TYPE, ORDER_TYPES } from './src/config/constants'
+
+import { OSBill, OSTable, OSCoupon, OSTotal, OSRow } from './src/components/OrderSummary/styles';
+
+import { FormInput, FormSide, ButtonsWrapper, LoginWith, OTab, OTabs } from './src/components/LoginForm/styles';
+import { OSItem, OSItemContent, OSItemActions} from './src/components/PaymentOptionStripe/styles';
+
+import Alert from './src/providers/AlertProvider'
+
+import { 
+	LoginParams,
+	ProfileParams,
+	AddressListParams,
+	AddressFormParams,
+	SignupParams,
+	PhoneInputParams,
+	LanguageSelectorParams,
+	BusinessesListingParams,
+	HighestRatedBusinessesParams,
+	BusinessTypeFilterParams,
+	BusinessControllerParams,
+	BusinessProductsListingParams,
+	BusinessBasicInformationParams,
+	BusinessProductsCategoriesParams,
+	BusinessProductsListParams,
+	SingleProductCardParams,
+	BusinessInformationParams,
+	BusinessReviewsParams,
+	SearchBarParams,
+	NotFoundSourceParams,
+	OrdersOptionParams,
+	ActiveOrdersParams,
+	PreviousOrdersParams,
+	OrderDetailsParams,
+	ReviewDriverParams
+} from './src/types';
 
 import { Toast } from './src/components/shared/OToast';
 import {
@@ -70,6 +138,8 @@ import {
 
 import { Container } from './src/layouts/Container';
 import { SafeAreaContainer } from './src/layouts/SafeAreaContainer';
+import { FloatingBottomContainer } from './src/layouts/FloatingBottomContainer';
+
 import {
 	_retrieveStoreData,
 	_setStoreData,
@@ -128,6 +198,86 @@ export {
 	BusinessController,
 	BusinessFeaturedController,
 	HighestRatedBusinesses,
+	PaymentOptions,
+	DriverTips,
+	UserDetails,
+	OrderSummary,
+	CartStoresListing,
+	PaymentOptionsWebView,
+	GoogleMap,
+	SingleProductCard,
+	UpsellingRedirect,
+	ProductItemAccordion,
+	BusinessItemAccordion,
+	CouponControl,
+	TaxInformation,
+	PlaceSpot,
+	Cart,
+	LanguageSelector,
+	PhoneInputNumber,
+	FacebookLogin,
+	VerifyPhone,
+	GoogleLogin,
+	PreviousOrders,
+	PaymentOptionCash,
+	StripeElementsForm,
+	StripeCardsList,
+	ProductIngredient,
+	ProductOption,
+	ProductOptionSubOption,
+	SingleProductReview,
+	LogoutButton,
+	UserFormDetailsUI,
+	WalletTransactionItem,
+
+	ORDER_TYPES,
+	USER_TYPE,
+
+	OSBill,
+	OSTable,
+	OSCoupon,
+	OSTotal,
+	OSRow,
+
+	FormInput,
+	FormSide,
+	ButtonsWrapper,
+	LoginWith,
+	OTab,
+	OTabs,
+
+	OSItem,
+	OSItemContent,
+	OSItemActions,
+
+	Alert,
+
+	//Types
+	LoginParams,
+	ProfileParams,
+	AddressListParams,
+	AddressFormParams,
+	SignupParams,
+	PhoneInputParams,
+	LanguageSelectorParams,
+	BusinessesListingParams,
+	HighestRatedBusinessesParams,
+	BusinessTypeFilterParams,
+	BusinessControllerParams,
+	BusinessProductsListingParams,
+	BusinessBasicInformationParams,
+	BusinessProductsCategoriesParams,
+	BusinessProductsListParams,
+	SingleProductCardParams,
+	BusinessInformationParams,
+	BusinessReviewsParams,
+	SearchBarParams,
+	NotFoundSourceParams,
+	OrdersOptionParams,
+	ActiveOrdersParams,
+	PreviousOrdersParams,
+	OrderDetailsParams,
+	ReviewDriverParams,
 
 	// OComponents
 	Toast,
@@ -149,6 +299,7 @@ export {
 	// layout
 	Container,
 	SafeAreaContainer,
+	FloatingBottomContainer,
 	NavBar,
 
 	// utils
