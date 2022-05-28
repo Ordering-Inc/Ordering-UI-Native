@@ -4,7 +4,7 @@ import { SingleProductCard } from '../SingleProductCard';
 import { NotFoundSource } from '../NotFoundSource';
 import { BusinessProductsListParams } from '../../types';
 import { OButton, OIcon, OModal, OText } from '../shared';
-import { ProductsContainer, ErrorMessage, WrapperNotFound, RibbonBox } from './styles';
+import { ProductsContainer, ErrorMessage, WrapperNotFound, RibbonBox, SubCategoriesContainer, ContainerButton, HeaderWrapper } from './styles';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { View, ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
@@ -28,7 +28,11 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     handleCancelSearch,
     categoriesLayout,
     setCategoriesLayout,
-    currentCart
+    currentCart,
+    setSubcategoriesSelected,
+    subcategoriesSelected,
+    onClickCategory,
+    lazyLoadProductsRecommended
   } = props;
 
   const [, t] = useLanguage();
@@ -44,20 +48,85 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     setCategoriesLayout(_categoriesLayout)
   }
 
+  const onClickSubcategory = (subCategory : any, parentCategory : any) => {
+    if (parentCategory && lazyLoadProductsRecommended) {
+      onClickCategory(parentCategory)
+    }
+    if (!subCategory) {
+      setSubcategoriesSelected?.(subcategoriesSelected.filter((_subcategory : any) => _subcategory?.parent_category_id !== parentCategory?.id))
+      return
+    }
+    const categoryFounded = subcategoriesSelected.find((_subcategory : any) => subCategory?.id === _subcategory?.id)
+    if (categoryFounded) {
+      setSubcategoriesSelected?.(subcategoriesSelected.filter((_subcategory : any) => subCategory?.id !== _subcategory?.id))
+    } else {
+      setSubcategoriesSelected?.([...subcategoriesSelected, subCategory])
+    }
+  }
+
+  const SubcategoriesComponent = ({ category } : any) => {
+    const allsubcategorySelected = !subcategoriesSelected?.some((subcategory : any) => category?.id === subcategory?.parent_category_id)
+
+    return (
+      <SubCategoriesContainer>
+        <ContainerButton
+          isSelected={allsubcategorySelected}
+        >
+          <OButton
+            onClick={() => onClickSubcategory(null, category)}
+            bgColor={allsubcategorySelected ? theme.colors.primary : theme.colors.backgroundGray}
+            text={`${t('ALL', 'All')} ${allsubcategorySelected ? 'X' : ''}`}
+            style={bpStyles.categoryButtonStyle}
+            textStyle={{ color: allsubcategorySelected ? theme.colors.white : theme.colors.textNormal, fontSize: 12 }}
+          />
+        </ContainerButton>
+        {category?.subcategories?.map((subcategory : any) => {
+          const isSubcategorySelected = subcategoriesSelected?.find((_subcategory : any) => _subcategory?.id === subcategory?.id)
+          return (
+            <ContainerButton
+              key={subcategory?.id}
+              isSelected={isSubcategorySelected}
+            >
+              <OButton
+                onClick={() => onClickSubcategory(subcategory, category)}
+                bgColor={isSubcategorySelected ? theme.colors.primary : theme.colors.backgroundGray}
+                text={`${subcategory?.name} ${isSubcategorySelected ? 'X' : ''}`}
+                style={bpStyles.categoryButtonStyle}
+                textStyle={{ color: isSubcategorySelected ? theme.colors.white : theme.colors.textNormal, fontSize: 12 }}
+              />
+            </ContainerButton>
+          )
+        }
+        )}
+      </SubCategoriesContainer>
+    )
+  }
+
+
   return (
     <ProductsContainer renderToHardwareTextureAndroid={categoryState.loading || isBusinessLoading}>
+      <HeaderWrapper>
+        {category?.subcategories?.length > 0 && (
+          <SubcategoriesComponent category={category} />
+        )}
+      </HeaderWrapper>
       {category.id &&
-        categoryState.products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any) => (
-          <SingleProductCard
-            key={'prod_' + product.id}
-            isSoldOut={product.inventoried && !product.quantity}
-            product={product}
-            businessId={businessId}
-            onProductClick={() => onProductClick(product)}
-            productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
-          />
-        ))}
-
+        categoryState.products
+          ?.filter((product : any) =>
+            !subcategoriesSelected.find((subcategory : any) => subcategory?.parent_category_id === category?.id) ||
+            subcategoriesSelected?.some((subcategory : any) => subcategory.id === product?.category_id)
+              ?.sort((a: any, b: any) => a.rank - b.rank)
+              ?.map((product: any) => (
+                <SingleProductCard
+                  key={'prod_' + product.id}
+                  isSoldOut={product.inventoried && !product.quantity}
+                  product={product}
+                  businessId={businessId}
+                  onProductClick={() => onProductClick(product)}
+                  productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
+                />
+              ))
+          )}
       {!category.id &&
         featured &&
         categoryState?.products?.find((product: any) => product.featured) && (
@@ -72,7 +141,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                 (product: any, i: any) =>
                   product.featured && (
                     <SingleProductCard
-                      key={i}
+                      key={'feat_' + product.id}
                       isSoldOut={product.inventoried && !product.quantity}
                       product={product}
                       businessId={businessId}
@@ -86,9 +155,14 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         )}
 
       {!category?.id && categories.filter(category => category?.id !== null).map((category, i, _categories) => {
-        const products = !isUseParentCategory
-          ? categoryState?.products?.filter((product: any) => product?.category_id === category?.id) ?? []
-          : categoryState?.products?.filter((product: any) => category?.children?.some((cat: any) => cat.category_id === product?.category_id)) ?? []
+        const _products = !isUseParentCategory
+          ? categoryState?.products?.filter((product : any) => product?.category_id === category?.id) ?? []
+          : categoryState?.products?.filter((product : any) => category?.children?.some((cat : any) => cat.category_id === product?.category_id)) ?? []
+        const products = subcategoriesSelected?.length > 0
+          ? _products?.filter((product : any) =>
+            !subcategoriesSelected.find((subcategory : any) => subcategory?.parent_category_id === category?.id) ||
+            subcategoriesSelected?.some((subcategory : any) => subcategory.id === product?.category_id))
+          : _products
 
         const shortCategoryDescription = category?.description?.length > 80 ? `${category?.description?.substring(0, 80)}...` : category?.description
 
@@ -132,7 +206,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                 </View>
                 {!!category?.description && (
                   <View style={{ position: 'relative' }}>
-                    <OText size={12} weight={'500'} mBottom={5}>
+                    <OText size={12} weight={'500'} mBottom={10} color='#909BA9'>
                       {shortCategoryDescription}
                       {category?.description?.length > 80 && (
                         <OButton
@@ -150,6 +224,9 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                         />
                       )}
                     </OText>
+                    {category?.subcategories?.length > 0 && (
+                      <SubcategoriesComponent category={category} />
+                    )}
                   </View>
                 )}
                 <>
@@ -265,6 +342,15 @@ const bpStyles = StyleSheet.create({
     shadowRadius: 1,
     marginEnd: 13,
   },
+  categoryButtonStyle: {
+    borderWidth: 0,
+    marginLeft: 5,
+    marginRight: 5,
+    marginBottom: 10,
+    height: 35,
+    paddingLeft: 3,
+    paddingRight: 3,
+  }
 });
 
 export const BusinessProductsList = (props: BusinessProductsListParams) => {
