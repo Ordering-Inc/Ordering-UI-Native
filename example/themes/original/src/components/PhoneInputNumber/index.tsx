@@ -22,8 +22,9 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 		textStyle,
 		flagStyle,
 		noDropIcon,
-    isDisabled,
-		isStartValidation
+		isDisabled,
+		isStartValidation,
+		changeCountry
 	} = props
 
 	const theme = useTheme();
@@ -106,11 +107,16 @@ export const PhoneInputNumber = (props: PhoneInputParams) => {
 			)}
 			<PhoneInput
 				ref={phoneInput}
-        disabled={isDisabled}
+				disabled={isDisabled}
 				defaultValue={userphoneNumber || defaultValue}
-				defaultCode={defaultCode ? transformCountryCode(defaultCode) : configs?.default_country_code?.value}
+				defaultCode={defaultCode ?
+					!isNaN(defaultCode)
+						? transformCountryCode(defaultCode)
+						: defaultCode
+					: configs?.default_country_code?.value}
 				onChangeFormattedText={(text: string) => handleChangeNumber(text)}
 				withDarkTheme
+				onChangeCountry={(country) => changeCountry?.(country)}
 				countryPickerProps={{ withAlphaFilter: true }}
 				textContainerStyle={{ ...style.input, ...inputStyle ? inputStyle : {} }}
 				textInputStyle={textStyle}
