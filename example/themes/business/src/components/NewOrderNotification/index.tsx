@@ -1,50 +1,55 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { useEvent, useLanguage, useUtils, useSession, useApi, NewOrderNotification as NewOrderNotificationController } from 'ordering-components/native'
-import { View, Modal, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
-import { OText, OIcon } from '../shared'
-import { useTheme } from 'styled-components/native'
-import Icon from 'react-native-vector-icons/Feather'
-import { NotificationContainer } from './styles'
-import Sound from 'react-native-sound'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
+import { View, Modal, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
+import Sound from 'react-native-sound'
+import Icon from 'react-native-vector-icons/Feather'
+import { useTheme } from 'styled-components/native'
+import { useEvent, useLanguage, useSession, useApi, NewOrderNotification as NewOrderNotificationController } from 'ordering-components/native'
+
+import { OText, OIcon } from '../shared'
+import { NotificationContainer } from './styles'
 import { useLocation } from '../../hooks/useLocation'
-import { useFocusEffect } from '@react-navigation/core'
+
 Sound.setCategory('Playback')
 
 const windowWidth = Dimensions.get('screen').width
 
-const NewOrderNotificationUI = (props: any) => {
+const NewOrderNotificationUI = () => {
   const [events] = useEvent()
   const theme = useTheme()
   const [, t] = useLanguage()
   const [{ user, token }] = useSession()
   const [ordering] = useApi()
-  const [{ getTimeAgo }] = useUtils()
   const { getCurrentLocation } = useLocation();
-  const [modalOpen, setModalOpen] = useState(false)
-  const [newOrderId, setNewOrderId] = useState(null)
-  const [messageOrderId, setMessageOrderId] = useState(null)
   const [soundTimeout, setSoundTimeout] = useState<any>(null)
-  const [isFocused, setIsFocused] = useState(false)
-  const [currentChange, setCurrentChange] = useState(1)
+  const [currentEvent, setCurrentEvent] = useState<any>(null)
 
-  const notificationSound = new Sound(theme.sounds.notification, error => {
-    if (error) {
-      console.log('failed to load the sound', error);
-      return
-    }
-    console.log('loaded successfully');
-  });
+  const evtList: any = {
+    1: {
+      event: 'messages',
+      message: t('NEW_MESSAGES_RECEIVED', 'New messages have been received!'),
+      message2: t('ORDER_N_UNREAD_MESSAGES', 'Order #_order_id_ has unread messages.').replace('_order_id_', currentEvent?.orderId),
+    },
+    2: {
+      event: 'order_added',
+      message: t('NEW_ORDERS_RECEIVED', 'New orders have been received!'),
+      message2: t('ORDER_N_ORDERED', 'Order #_order_id_ has been ordered.').replace('_order_id_', currentEvent?.orderId),
+    },
+    3: {
+      event: 'order_updated',
+      message: t('NEW_ORDERS_UPDATED', 'New orders have been updated!'),
+      message2: t('ORDER_N_UPDATED', 'Order #_order_id_ has been updated.').replace('_order_id_', currentEvent?.orderId),
+    },
+  }
+
+  const notificationSound = new Sound(theme.sounds.notification, (e) => { console.log(e) });
 
   const handlePlayNotificationSound = () => {
     let times = 0
     const _timeout = setInterval(function () {
       notificationSound.play(success => {
         if (success) {
-          console.log('successfully finished playing');
           times = times + 1
-        } else {
-          console.log('playback failed due to audio decoding errors');
         }
       })
       setSoundTimeout(_timeout)
@@ -57,39 +62,11 @@ const NewOrderNotificationUI = (props: any) => {
 
   const handleCloseModal = () => {
     clearInterval(soundTimeout)
-    setModalOpen(false)
-    setNewOrderId(null)
-    setMessageOrderId(null)
+    setCurrentEvent({ evt: null })
   }
 
-  const handleNotification = (order: any) => {
-    setModalOpen(true)
-    clearInterval(soundTimeout)
-    setCurrentChange(1)
-    handlePlayNotificationSound()
-    setNewOrderId(order.id)
-  }
-
-  const handleMessageNotification = (message: any) => {
-    const { order_id: orderId } = message;
-    if (!modalOpen) setModalOpen(true)
-    clearInterval(soundTimeout)
-    setCurrentChange(2)
-    handlePlayNotificationSound()
-    setMessageOrderId(orderId)
-  }
-
-  useEffect(() => {
-    events.on('order_added_noification', handleNotification)
-    events.on('message_added_noification', handleMessageNotification)
-    return () => {
-      events.off('order_added_noification', handleNotification)
-      events.off('message_added_noification', handleMessageNotification)
-    }
-  }, [])
-
-  const handleUpdateOrder = useCallback(async (order: any) => {
-    if (order?.driver) {
+  const handleEventNotification = async (evtType: number, value: any) => {
+    if (value?.driver) {
       const location = await getCurrentLocation()
       await fetch(`${ordering.root}/users/${user.id}/locations`, {
         method: 'POST',
@@ -98,25 +75,32 @@ const NewOrderNotificationUI = (props: any) => {
         }),
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
       })
-      const assignedTimeDiff = moment.utc(order?.driver?.last_order_assigned_at).local().fromNow()
+      const assignedTimeDiff = moment.utc(value?.driver?.last_order_assigned_at).local().fromNow()
       if (assignedTimeDiff === 'a few seconds ago') {
-        clearInterval(soundTimeout)
         handlePlayNotificationSound()
-        setNewOrderId(order.id)
-        if(isFocused){
-          setModalOpen(true)
-        }
+        clearInterval(soundTimeout)
+        setCurrentEvent({ evt: 2, orderId: value?.id })
       }
+      return
     }
-  }, [newOrderId, notificationSound, soundTimeout])
+    handlePlayNotificationSound()
+    clearInterval(soundTimeout)
+    setCurrentEvent({
+      evt: evtType,
+      orderId: evtList[evtType].event === 'messages' ? value?.order_id : value?.id
+    })
+  }
 
   useEffect(() => {
-    if (user?.level !== 4) return
-    events.on('order_updated_noification', handleUpdateOrder)
+    events.on('message_added_notification', (o: any) => handleEventNotification(1, o))
+    events.on('order_added_notification', (o: any) => handleEventNotification(2, o))
+    events.on('order_updated_notification', (o: any) => handleEventNotification(3, o))
     return () => {
-      events.off('order_updated_noification', handleUpdateOrder)
+      events.off('message_added_notification', (o: any) => handleEventNotification(1, o))
+      events.off('order_added_notification', (o: any) => handleEventNotification(2, o))
+      events.off('order_updated_notification', (o: any) => handleEventNotification(3, o))
     }
-  }, [handleUpdateOrder, user])
+  }, [])
 
   useEffect(() => {
     notificationSound.setVolume(1);
@@ -125,21 +109,12 @@ const NewOrderNotificationUI = (props: any) => {
     }
   }, [])
 
-  useFocusEffect(
-    useCallback(() => {
-      setIsFocused(true)
-      return () => {
-        setIsFocused(false)
-      }
-    }, [])
-  )
-
   return (
     <>
       <Modal
         animationType='slide'
         transparent={true}
-        visible={modalOpen}
+        visible={!!currentEvent?.orderId}
       >
         <NotificationContainer>
           <View style={styles.modalView}>
@@ -147,40 +122,26 @@ const NewOrderNotificationUI = (props: any) => {
               style={styles.wrapperIcon}
               onPress={() => handleCloseModal()}
             >
-              <Icon
-                name="x"
-                size={30}
-              />
+              <Icon name="x" size={30} />
             </TouchableOpacity>
             <OText
               size={18}
               color={theme.colors.textGray}
               weight={600}
             >
-              {currentChange === 1 ? t('NEW_ORDRES_RECEIVED', 'New orders have been received!') : t('NEW_MESSAGES_RECEIVED', 'New messages have been received!')}
+              {evtList[currentEvent?.evt]?.message}
             </OText>
             <OIcon
               src={theme.images.general.newOrder}
               width={250}
               height={200}
             />
-            {newOrderId !== null && (
-              <OText
-                color={theme.colors.textGray}
-                mBottom={15}
-              >
-                {t('ORDER_N_ORDERED', 'Order #_order_id_ has been ordered.').replace('_order_id_', newOrderId)}
-              </OText>
-            )}
-
-            {messageOrderId  !== null && (
-              <OText
-                color={theme.colors.textGray}
-                mBottom={15}
-              >
-                {t('ORDER_N_UNREAD_MESSAGES', 'Order #_order_id_ has unread messages.').replace('_order_id_', messageOrderId)}
-              </OText>
-            )}
+            <OText
+              color={theme.colors.textGray}
+              mBottom={15}
+            >
+              {evtList[currentEvent?.evt]?.message2}
+            </OText>
           </View>
         </NotificationContainer>
       </Modal>
