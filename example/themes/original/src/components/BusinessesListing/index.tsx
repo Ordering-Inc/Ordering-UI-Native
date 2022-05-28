@@ -317,7 +317,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			{
 				!businessId && !props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
 					<FeaturedWrapper>
-						<OText size={16} style={{ marginLeft: 40 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('FEATURED_BUSINESS', 'Featured business')}</OText>
+						<OText size={16} style={{ marginLeft: 40 }} weight={Platform.OS === 'ios' ? '600' : 'bold'}>{t('BUSINESS_FEATURE', 'Featured business')}</OText>
 						<ScrollView
 							showsHorizontalScrollIndicator={false}
 							nestedScrollEnabled
