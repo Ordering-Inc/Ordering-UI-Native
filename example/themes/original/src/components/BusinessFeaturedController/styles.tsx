@@ -4,6 +4,7 @@ export const Card = styled.TouchableOpacity`
   margin-vertical: 4px;
   height: 60px;
   overflow: hidden;
+  position: relative;
 `;
 
 export const BusinessHero = styled.View`
@@ -47,4 +48,26 @@ export const BusinessLogo = styled.View`
 
 export const Reviews = styled.View`
   flex-direction: row;
+`
+
+export const RibbonBox = styled.View`
+  position: absolute;
+  z-index: 1;
+  top: 0px;
+  right: 5px;
+  background-color: ${(props: any) => props.theme.colors.primary};
+  padding: 1px 8px;
+  max-width: 160px;
+
+  ${(props: any) => props.bgColor && css`
+    background-color: ${props.bgColor};
+  `}
+
+  ${(props: any) => props.isRoundRect && css`
+    border-radius: 7.6px;
+  `}
+
+  ${(props: any) => props.isCapsule && css`
+    border-radius: 50px;
+  `}
 `
