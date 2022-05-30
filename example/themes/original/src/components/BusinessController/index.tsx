@@ -9,7 +9,7 @@ import {
 import { OIcon, OText } from '../shared';
 import { StyleSheet, View } from 'react-native';
 import { BusinessControllerParams } from '../../types';
-import { convertHoursToMinutes } from '../../utils';
+import { convertHoursToMinutes, shape } from '../../utils';
 import {
 	Card,
 	BusinessHero,
@@ -20,6 +20,7 @@ import {
 	BusinessState,
 	BusinessLogo,
 	Reviews,
+	RibbonBox
 } from './styles';
 import { useTheme } from 'styled-components/native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
@@ -121,6 +122,24 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 
 	return (
 		<Card activeOpacity={1} onPress={() => handleBusinessClick(business)} style={style}>
+			{business?.ribbon?.enabled && (
+				<RibbonBox
+					bgColor={business?.ribbon?.color}
+					isRoundRect={business?.ribbon?.shape === shape?.rectangleRound}
+					isCapsule={business?.ribbon?.shape === shape?.capsuleShape}
+				>
+					<OText
+						size={10}
+						weight={'400'}
+						color={theme.colors.white}
+						numberOfLines={2}
+						ellipsizeMode='tail'
+						lineHeight={13}
+					>
+						{business?.ribbon?.text}
+					</OText>
+				</RibbonBox>
+			)}
 			<BusinessHero>
 				<FastImage
 					style={{ height: 120 }}
