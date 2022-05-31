@@ -95,6 +95,33 @@ export const OrderContentComponent = (props: OrderContent) => {
       {isOrderGroup && (
         <OText size={18}>{t('ORDER', 'Order')} #{isOrderGroup ? order?.order_group_id : order?.id}</OText>
       )}
+
+      {order?.metafields?.length > 0 && (
+        <OrderBusiness>
+          <OText style={{ marginBottom: 5 }} size={16} weight="600">
+            {t('CUSTOM_FIELDS', 'Custom fields')}
+          </OText>
+
+          {order.metafields.map((field: any) => (
+            <View
+              key={field.id}
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                marginBottom: 5
+              }}
+            >
+              <OText style={{ width: '50%' }}>
+                {field.key}
+              </OText>
+              <OText style={{ width: '45%', textAlign: 'right' }}>
+                {field.value}
+              </OText>
+            </View>
+          ))}
+        </OrderBusiness>
+      )}
+
       <OrderBusiness>
         <OText style={{ marginBottom: 5 }} size={16} weight="600">
           {t('BUSINESS_DETAILS', 'Business details')}
