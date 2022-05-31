@@ -90,7 +90,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
           : categoryState?.products?.filter((product: any) => category?.children?.some((cat: any) => cat.category_id === product?.category_id)) ?? []
 
         const shortCategoryDescription = category?.description?.length > 80 ? `${category?.description?.substring(0, 80)}...` : category?.description
-
+        
         return (
           <React.Fragment key={'cat_' + category.id}>
             {products.length > 0 && (
@@ -132,6 +132,9 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       )}
                     </OText>
                   </View>
+                )}
+                {category?.subcategories?.length > 0 && (
+                  <SubcategoriesComponent category={category} />
                 )}
                 <>
                   {products.sort((a: any, b: any) => a.rank - b.rank).map((product: any, i: any) => (
