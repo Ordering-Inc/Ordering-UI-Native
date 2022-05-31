@@ -39,6 +39,8 @@ export interface ProfileParams {
 	verifyPhoneState?: any;
 	setCheckPhoneCodeState?: any;
 	isVerifiedPhone?: any;
+	handleRemoveAccount?: any;
+	removeAccountState?: any;
 }
 
 export interface AddressListParams {
