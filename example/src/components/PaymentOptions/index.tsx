@@ -66,6 +66,8 @@ const PaymentOptionsUI = (props: any) => {
 
   const theme = useTheme();
   const [, t] = useLanguage();
+  const methodsPay = ['google_pay']
+  const stripeDirectMethods = ['stripe_direct', ...methodsPay]
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false });
   let paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
@@ -150,7 +152,7 @@ const PaymentOptionsUI = (props: any) => {
     )
   }
 
-  const excludeGateway: any = ['stripe_connect', 'stripe_redirect']; //exclude connect & redirect
+  const excludeGateway: any = ['stripe_connect', 'stripe_redirect', 'apple_pay']; //exclude connect & redirect & apple pay
 
   return (
     <PMContainer>
