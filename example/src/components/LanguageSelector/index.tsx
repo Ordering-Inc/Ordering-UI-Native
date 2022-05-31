@@ -101,6 +101,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
           disabled={orderState.loading}
           onClose={() => Platform.OS === 'ios' ? handlerChangeLanguage() : {}}
           onDonePress={() => handlerChangeLanguage()}
+          fixAndroidTouchableBug={true}
         />
       ) : <DummyContainer />}
     </Container>
