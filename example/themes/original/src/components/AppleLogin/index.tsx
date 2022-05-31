@@ -34,7 +34,8 @@ export const AppleLogin = (props: any) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          code: code
+          code: code,
+          platform: Platform.OS === 'ios' ? 'ios' : 'other'
         })
       })
       const { result, error } = await response.json()
@@ -44,7 +45,7 @@ export const AppleLogin = (props: any) => {
           handleLoading && handleLoading(false)
         }
       } else {
-        showToast(ToastType.Error, `Error login on apple from api Code: ${code}`, 10000)
+        showToast(ToastType.Error, `Error login on apple from api Code: ${code} ${Platform.OS}`, 10000)
         handleLoading && handleLoading(false)
       }
     } catch (err: any) {
