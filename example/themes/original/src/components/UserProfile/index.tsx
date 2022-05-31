@@ -95,7 +95,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	});
 
 
-	const [{ user }] = useSession();
+	const [{ user }, { logout }] = useSession();
 	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
 	const [, { showToast }] = useToast();
@@ -149,6 +149,7 @@ const ProfileListUI = (props: ProfileParams) => {
       handleOnAccept: () => {
         setConfirm({ ...confirm, open: false })
         handleRemoveAccount && handleRemoveAccount(user?.id)
+				logout()
       }
     })
 	}
