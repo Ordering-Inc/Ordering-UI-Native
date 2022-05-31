@@ -101,6 +101,8 @@ const ProfileListUI = (props: ProfileParams) => {
 	const [, { showToast }] = useToast();
 	const { errors } = useForm();
 
+	const isAdmin = user?.level === 0
+
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
 
@@ -149,10 +151,15 @@ const ProfileListUI = (props: ProfileParams) => {
       handleOnAccept: () => {
         setConfirm({ ...confirm, open: false })
         handleRemoveAccount && handleRemoveAccount(user?.id)
-				logout()
       }
     })
 	}
+
+	useEffect(() => {
+		if (removeAccountState?.result === 'OK') {
+			logout()
+		}
+	}, [removeAccountState])
 
 	return (
 		<View style={{ flex: 1, height: height - top - bottom - 62, paddingTop: 20 }}>
@@ -214,9 +221,9 @@ const ProfileListUI = (props: ProfileParams) => {
 					<View style={{ height: 17 }} />
 					<LogoutButton color={theme.colors.textNormal} text={t('LOGOUT', 'Logout')} />
 					<View style={{ height: 17 }} />
-					<ListItem onPress={() => onRemoveAccount()} activeOpacity={0.7}>
+					<ListItem disabled={isAdmin} onPress={() => onRemoveAccount()} activeOpacity={0.7}>
 						<OIcon src={theme.images.general.user} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
-						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.danger5}>{t('REMOVE_ACCOUNT', 'Remove account')}</OText>
+						<OText size={14} lineHeight={24} weight={'400'} style={{ opacity: isAdmin ? 0.5 : 1 }} color={theme.colors.danger5}>{t('REMOVE_ACCOUNT', 'Remove account')}</OText>
 					</ListItem>
 				</Actions>
 			</ListWrap>
