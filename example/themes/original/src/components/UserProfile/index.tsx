@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	UserFormDetails as UserProfileController,
 	useSession,
@@ -19,6 +19,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FastImage from 'react-native-fast-image'
+import { OAlert } from '../../../../../src/components/shared'
 
 import {
 	OIcon,
@@ -36,7 +37,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const ProfileListUI = (props: ProfileParams) => {
 	const {
 		navigation,
-		formState
+		formState,
+		handleRemoveAccount,
+		removeAccountState
 	} = props;
 
 	const theme = useTheme();
@@ -93,14 +96,18 @@ const ProfileListUI = (props: ProfileParams) => {
 	});
 
 
-	const [{ user }] = useSession();
+	const [{ user }, { logout }] = useSession();
 	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
 	const [, { showToast }] = useToast();
 	const { errors } = useForm();
 
+	const isAdmin = user?.level === 0
+
 	const { height } = useWindowDimensions();
 	const { top, bottom } = useSafeAreaInsets();
+
+	const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
 
 	const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
 	const IsPromotionsEnabled = configs?.advanced_offers_module?.value === '1' || configs?.advanced_offers_module?.value === true
@@ -136,6 +143,24 @@ const ProfileListUI = (props: ProfileParams) => {
 		goToBack: () => props.navigation?.canGoBack() && props.navigation.goBack(),
 		onNavigationRedirect: (route: string, params: any) => props.navigation.navigate(route, params)
 	}
+
+	const onRemoveAccount = () => {
+		setConfirm({
+      open: true,
+      content: [t('QUESTION_REMOVE_ACCOUNT', 'Are you sure that you want to remove your account?')],
+      title: t('ACCOUNT_ALERT', 'Account alert'),
+      handleOnAccept: () => {
+        setConfirm({ ...confirm, open: false })
+        handleRemoveAccount && handleRemoveAccount(user?.id)
+      }
+    })
+	}
+
+	useEffect(() => {
+		if (removeAccountState?.result === 'OK') {
+			logout()
+		}
+	}, [removeAccountState])
 
 	return (
 		<View style={{ flex: 1, height: height - top - bottom - 62, paddingTop: 20 }}>
@@ -200,8 +225,21 @@ const ProfileListUI = (props: ProfileParams) => {
 					<LanguageSelector iconColor={theme.colors.textNormal} pickerStyle={langPickerStyle} />
 					<View style={{ height: 17 }} />
 					<LogoutButton color={theme.colors.textNormal} text={t('LOGOUT', 'Logout')} />
+					<View style={{ height: 17 }} />
+					<ListItem disabled={isAdmin} onPress={() => onRemoveAccount()} activeOpacity={0.7}>
+						<OIcon src={theme.images.general.user} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
+						<OText size={14} lineHeight={24} weight={'400'} style={{ opacity: isAdmin ? 0.5 : 1 }} color={theme.colors.danger5}>{t('REMOVE_ACCOUNT', 'Remove account')}</OText>
+					</ListItem>
 				</Actions>
 			</ListWrap>
+			<OAlert
+        open={confirm.open}
+        title={confirm.title}
+        content={confirm.content}
+        onAccept={confirm.handleOnAccept}
+        onCancel={() => setConfirm({ ...confirm, open: false, title: null })}
+        onClose={() => setConfirm({ ...confirm, open: false, title: null })}
+      />
 		</View>
 	);
 };
