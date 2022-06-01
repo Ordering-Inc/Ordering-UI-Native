@@ -45,7 +45,7 @@ export const AppleLogin = (props: any) => {
           handleLoading && handleLoading(false)
         }
       } else {
-        showToast(ToastType.Error, `Error login on apple from api Code: ${code} ${Platform.OS}`, 10000)
+        handleErrors && handleErrors(result)
         handleLoading && handleLoading(false)
       }
     } catch (err: any) {
@@ -158,9 +158,6 @@ export const AppleLogin = (props: any) => {
 
   return (
     <Container>
-      {credentialStateForUser !== -1 && (
-        <Text>{credentialStateForUser}</Text>
-      )}
       {canShowButton() &&
         <AppleButton
           onPress={() => Platform.OS == 'android' ? onAndroidButtonPress() : onIOSButtonPress(updateCredentialStateForUser)}
