@@ -255,7 +255,7 @@ const CartUI = (props: any) => {
                   <OSRow>
                     <OText size={12} lineHeight={18} numberOfLines={1}>
                       {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
-                      ({fee?.fixed > 0 && `${parsePrice(fee?.fixed)} + `}{fee.percentage}%){' '}
+                      ({fee?.fixed > 0 && `${parsePrice(fee?.fixed)}${fee.percentage > 0 ? ' + ' : ''}`}{fee.percentage > 0 && `${fee.percentage}%`}){' '}
                     </OText>
                     <TouchableOpacity onPress={() => setOpenTaxModal({ open: true, data: fee, type: 'fee' })} >
                       <AntIcon name='infocirlceo' size={16} color={theme.colors.primary} />
