@@ -4,6 +4,7 @@ import CalendarStrip from 'react-native-calendar-strip'
 import {
 	useLanguage,
 	useConfig,
+	useUtils,
 	useOrder,
 	MomentOption as MomentOptionController,
 } from 'ordering-components/native';
@@ -132,6 +133,7 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 
 	const [, t] = useLanguage();
 	const [{ configs }] = useConfig();
+	const [{ parseTime }] = useUtils()
 	const [orderState] = useOrder();
 	const [optionSelected, setOptionSelected] = useState({
 		isAsap: false,
@@ -142,6 +144,8 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 		isEditing: false,
 	});
 	const { bottom } = useSafeAreaInsets();
+
+	const is12hours = configs?.dates_moment_format?.value?.includes('hh:mm')
 
 	const [selectedTime, setSelectedTime] = useState(null);
 	const [datesWhitelist, setDateWhitelist] = useState<any>([{ start: null, end: null }])
@@ -338,7 +342,12 @@ const MomentOptionUI = (props: MomentOptionParams) => {
 													style={{
 														lineHeight: 24
 													}}
-												>{time.startTime}</OText>
+												>{is12hours ? ( 
+													time.startTime.includes('12') 
+														? `${time.startTime}PM`
+														: parseTime(moment(time.startTime, 'HH:mm'), { outputFormat: 'hh:mma' })
+													) : time.startTime
+												}</OText>
 											</TimeItem>
 										</TouchableOpacity>
 									))}

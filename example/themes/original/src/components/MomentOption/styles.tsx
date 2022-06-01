@@ -18,7 +18,7 @@ export const OrderTimeWrapper = styled.View`
 
 export const TimeListWrapper = styled.ScrollView`
   margin-top: 30px;
-  max-height: 160px;
+  max-height: 210px;
 `
 
 export const TimeContentWrapper = styled.View`
