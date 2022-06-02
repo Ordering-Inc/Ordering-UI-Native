@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Dimensions, StyleSheet, View, Platform } from 'react-native';
-import MapView, { PROVIDER_DEFAULT, PROVIDER_GOOGLE, Marker, Region, } from 'react-native-maps'
+import MapView, { PROVIDER_DEFAULT, PROVIDER_GOOGLE, Marker, Region, enableLatestRenderer} from 'react-native-maps'
 import Geocoder from 'react-native-geocoding';
 import { useLanguage, useConfig } from 'ordering-components/native'
 import { GoogleMapsParams } from '../../types';
@@ -152,11 +152,26 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       animated: true,
     });
   }
+  
+  const handleEnableLatestRenderer = async () => {
+    try {
+      const result = await enableLatestRenderer()
+      if (result == 'LATEST') {
+        setMapErrors && setMapErrors('Latest')
+      }else {
+        setMapErrors && setMapErrors('Legacy')
+      }
+     
+    } catch (error: any) {
+      setMapErrors && setMapErrors(error)
+    }
+  }
 
   useEffect(() => {
+    handleEnableLatestRenderer()
     Geocoder.init(googleMapsApiKey)
   }, [])
-
+  
 
   useEffect(() => {
     if (saveLocation) {
