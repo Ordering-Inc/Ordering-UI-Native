@@ -41,3 +41,24 @@ export const OTabs = styled.View`
 export const OTab = styled.View`
   padding-horizontal: 10px;
 `;
+
+export const LoyaltyContent = styled.View`
+  width: 100%;
+  margin-bottom: 20px;
+`
+
+export const LoyaltyWrapp = styled.View`
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
+
+export const LoyaltyImg = styled.ImageBackground`
+  position: relative;
+  height: 150px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
