@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useTheme } from 'styled-components/native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
+import FastImage from 'react-native-fast-image'
 import {
   WalletList,
   useLanguage,
   useUtils,
-  useConfig
+  useConfig,
+  useSession
 } from 'ordering-components/native'
 
 import {
@@ -15,7 +17,10 @@ import {
   TransactionsWrapper,
   OTabs,
   OTab,
-  SectionContent
+  SectionContent,
+  LoyaltyContent,
+  LoyaltyWrapp,
+  LoyaltyImg
 } from './styles'
 
 import NavBar from '../NavBar'
@@ -34,15 +39,31 @@ const WalletsUI = (props: any) => {
   } = props
 
   const [, t] = useLanguage()
+  const [{ user }] = useSession()
   const theme = useTheme()
   const [{ parsePrice }] = useUtils()
   const [{ configs }] = useConfig()
+
+  const styles = StyleSheet.create({
+    logoStyle: {
+      width: 120,
+      height: 120,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }
+  });
 
   const [tabSelected, setTabSelected] = useState(isWalletCashEnabled ? 'cash' : 'credit_point')
 
   const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletPointsEnabled)
 
   const currentWalletSelected = (walletList.wallets?.length > 0 && walletList.wallets?.find((w: any) => w.type === tabSelected)) ?? null
+
+  const loyaltyLevel = Object.keys(user?.loyalty_level).length > 0 && user?.loyalty_level
 
   const walletName: any = {
     cash: {
@@ -106,6 +127,39 @@ const WalletsUI = (props: any) => {
           </OTabs>
 
           <SectionContent>
+            {!!loyaltyLevel && (
+              <LoyaltyContent>
+                <LoyaltyWrapp>
+                  <OText size={20}>
+                    {`${t('LOYALTY_LEVEL_TITLE', 'Your level is')}:`}
+                  </OText>
+                  {loyaltyLevel.image ? (
+                    <FastImage
+                      style={styles.logoStyle}
+                      source={{
+                        uri: loyaltyLevel.image,
+                        priority: FastImage.priority.high,
+                        cache:FastImage.cacheControl.web
+                      }}
+                      resizeMode={FastImage.resizeMode.contain}
+                    />
+                  ) : (
+                    <LoyaltyImg
+                      source={theme.images.dummies.loyaltyLevel}
+                      resizeMode='contain'
+                    />
+                  )}
+                  <OText
+                    size={22}
+                    weight='bold'
+                    style={{ textTransform: 'uppercase' }}
+                    color={theme.colors.primary}
+                  >
+                    {loyaltyLevel.name}
+                  </OText>
+                </LoyaltyWrapp>
+              </LoyaltyContent>
+            )}
             <BalanceElement>
               <OText size={20} style={{fontWeight: '600'}}>
                 {currentWalletSelected?.type === 'cash'
