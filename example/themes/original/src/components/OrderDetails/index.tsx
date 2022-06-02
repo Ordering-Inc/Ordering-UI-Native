@@ -94,6 +94,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [isReviewed, setIsReviewed] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
   const { order, businessData } = props.order;
+  const mapValidStatuses = [9, 19, 23]
 
   const walletName: any = {
     cash: {
@@ -680,7 +681,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               )}
               {order?.driver && (
                 <>
-                  {order?.driver?.location && parseInt(order?.status) === 9 && (
+                  {order?.driver?.location && mapValidStatuses.includes(parseInt(order?.status)) && (
                     <Map>
                       <GoogleMap
                         location={order?.driver?.location}
