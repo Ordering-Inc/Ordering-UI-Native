@@ -26,7 +26,7 @@ import { FacebookPixel } from './components/FacebookPixel';
 Sentry.init({
   environment: Platform.OS === 'ios' ? 'ios' : 'android',
   dsn: 'https://e5e1115dc93b49109f4ab65f2098bef9@o460529.ingest.sentry.io/5722123',
-  release: process.env.npm_package_version ? 'ordering-ui-native@' + process.env.npm_package_version : 'ordering-ui-native@' + '0.0.4',
+  release: 'ordering-ui-native@' + process.env.npm_package_version,
   ignoreErrors: [
     'is not defined',
     'is not a function',
@@ -51,6 +51,17 @@ Sentry.init({
     'React.Children.only expected to receive a single React element child.',
     'unrecognized selector sent to instance'
   ],
+  tracesSampleRate: 0.2,
+  // Release health
+  enableAutoSessionTracking: true,
+  // Sessions close after app is 10 seconds in the background.
+  sessionTrackingIntervalMillis: 10000,
+
+  integrations: [
+    new Sentry.ReactNativeTracing({
+      routingInstrumentation: reactNavigationV5Instrumentation,
+    })
+  ]
 });
 
 LogBox.ignoreLogs([
