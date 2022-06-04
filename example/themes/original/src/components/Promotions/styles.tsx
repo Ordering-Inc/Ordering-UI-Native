@@ -24,15 +24,6 @@ export const SearchBarContainer = styled.View`
   width: 100%;
   justify-content: flex-start;
   margin-bottom: 20px;
-  .search-bar {
-    justify-content: flex-start;
-    input {
-      width: 100%;
-    }
-  }
-  .clear {
-    right: 0;
-  }
 `
 
 export const SingleBusinessOffer = styled.View`
@@ -48,11 +39,6 @@ export const OfferData = styled.View`
   display: flex;
   align-items: center;
   flex-direction: column;
-  p{
-    color: #909BA9;
-    margin: 3px;
-    font-size: 14px;
-  }
 `
 
 export const Code = styled.View`
@@ -62,14 +48,7 @@ export const Code = styled.View`
   margin-bottom: 10px;
 `
 
-export const ValueOfOffer = styled.View`
-  p{
-    font-size: 16px;
-  }
-  span{
-    font-size: 20px;
-  }
-`
+export const ValueOfOffer = styled.View``
 
 export const BusinessInfo = styled.View`
   flex: 1;
