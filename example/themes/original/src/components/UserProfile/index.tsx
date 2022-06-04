@@ -109,7 +109,7 @@ const ProfileListUI = (props: ProfileParams) => {
 	const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
 
 	const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
-	const IsPromotionsEnabled = configs?.advanced_offers_module === '1' || configs?.advanced_offers_module === 'true'
+	const IsPromotionsEnabled = configs?.advanced_offers_module?.value === '1' || configs?.advanced_offers_module?.value === true
 	const onRedirect = (route: string, params?: any) => {
 		navigation.navigate(route, params)
 	}
