@@ -51,7 +51,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 				btnStyle={{ paddingLeft: 0 }}
 				paddingTop={0}
 				style={{ paddingBottom: 0 }}
-				title={t('HOW_WILL_YOUR_ORDER_TYPE', 'How will your order type?')}
+				title={t('HOW_WILL_YOU_DELIVERY_TYPE', 'How will your order type?')}
 				titleAlign={'center'}
 				titleStyle={{ fontSize: 14 }}
 			/>
