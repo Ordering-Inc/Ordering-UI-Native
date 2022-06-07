@@ -335,7 +335,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         addressName: order?.business?.address,
         zipcode: order?.business?.zipcode
       },
-      icon: order?.business?.logo || theme.images.dummies.businessLogo,
+      icon: order?.business?.logo || 'https://res.cloudinary.com/demo/image/fetch/c_thumb,g_face,r_max/https://res.cloudinary.com/ordering2/image/upload/v1654619525/hzegwosnplvrbtjkpfi6.png',
       level: 2,
     },
     {
