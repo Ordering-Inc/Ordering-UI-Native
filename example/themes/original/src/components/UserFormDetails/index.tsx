@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSession, useLanguage, ToastType, useToast, useConfig } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { useForm, Controller } from 'react-hook-form';
@@ -182,7 +182,7 @@ export const UserFormDetailsUI = (props: any) => {
 		handleChangeInput(phoneNumber, true);
 	};
 
-	const changeCountry = (country : any) => {
+	const changeCountry = (country: any) => {
 		let countryCode = {
 			country_code: {
 				name: 'country_code',
@@ -325,7 +325,7 @@ export const UserFormDetailsUI = (props: any) => {
 									<PhoneInputNumber
 										data={phoneInputData}
 										handleData={(val: any) => handleChangePhoneNumber(val)}
-										changeCountry={(val : any) => changeCountry(val)}
+										changeCountry={(val: any) => changeCountry(val)}
 										defaultValue={phoneUpdate ? '' : user?.cellphone}
 										defaultCode={user?.country_code ?? user?.country_phone_code ?? null}
 										boxStyle={styles.phoneSelect}
@@ -379,16 +379,18 @@ export const UserFormDetailsUI = (props: any) => {
 								rules={getInputRules({ name: 'password', code: 'password' })}
 								defaultValue=''
 							/>
-							<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, width: '100%' }}>
-								<Controller
-									control={control}
-									render={({ onChange, value }: any) => (
+							<Controller
+								control={control}
+								render={({ onChange, value }: any) => (
+									<TouchableOpacity
+										style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, width: '100%' }}
+										onPress={() => {
+											onChange(!value)
+											handleChangePromotions(!value)
+										}}
+									>
 										<CheckBox
 											value={value}
-											onValueChange={newValue => {
-												onChange(newValue)
-												handleChangePromotions(newValue)
-											}}
 											boxType={'square'}
 											tintColors={{
 												true: theme.colors.primary,
@@ -399,14 +401,14 @@ export const UserFormDetailsUI = (props: any) => {
 											onTintColor={theme.colors.primary}
 											style={Platform.OS === 'ios' && styles.checkBoxStyle}
 										/>
-									)}
-									name='promotions'
-									defaultValue={formState?.result?.result
-										? !!formState?.result?.result?.settings?.notification?.newsletter
-										: !!(formState?.changes?.settings?.notification?.newsletter ?? (user && user?.settings?.notification?.newsletter))}
-								/>
-								<OText style={{ fontSize: 14, paddingHorizontal: 5 }}>{t('RECEIVE_NEWS_EXCLUSIVE_PROMOTIONS', 'Receive newsletters and exclusive promotions')}</OText>
-							</View>
+										<OText style={{ fontSize: 14, paddingHorizontal: 5, paddingLeft: 10 }}>{t('RECEIVE_NEWS_EXCLUSIVE_PROMOTIONS', 'Receive newsletters and exclusive promotions')}</OText>
+									</TouchableOpacity>
+								)}
+								name='promotions'
+								defaultValue={formState?.result?.result
+									? !!formState?.result?.result?.settings?.notification?.newsletter
+									: !!(formState?.changes?.settings?.notification?.newsletter ?? (user && user?.settings?.notification?.newsletter))}
+							/>
 						</UDWrapper>
 					)}
 				{validationFields?.loading && (

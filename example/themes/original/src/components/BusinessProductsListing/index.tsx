@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { View, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView } from 'react-native'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -22,13 +22,16 @@ import {
 	TopHeader,
 	WrapSearchBar,
 	WrapContent,
-	BusinessProductsListingContainer
+	BusinessProductsListingContainer,
+	FiltProductsContainer,
+	ContainerSafeAreaView,
+	BackgroundGray
 } from './styles'
 import { FloatingButton } from '../FloatingButton'
 import { UpsellingRedirect } from './UpsellingRedirect'
 import Animated from 'react-native-reanimated'
 
-const PIXELS_TO_SCROLL = 1000
+const PIXELS_TO_SCROLL = 2000
 
 const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const {
@@ -95,7 +98,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [subcategoriesSelected, setSubcategoriesSelected] = useState([])
 
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
-
+	const isOpenFiltProducts = isOpenSearchBar && !!searchValue
+	const filtProductsHeight = Platform.OS === 'ios' ? 0 : 35
 	const onRedirect = (route: string, params?: any) => {
 		navigation.navigate(route, params)
 	}
@@ -179,11 +183,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}, [])
 
 	return (
-		<SafeAreaView
+		<ContainerSafeAreaView
 			style={{ flex: 1 }}
+			isOpenFiltProducts={isOpenFiltProducts}
 		>
 			<Animated.View style={{ position: 'relative' }}>
-				<TopHeader>
+				<TopHeader isIos={Platform.OS === 'ios'}>
 					{!isOpenSearchBar && (
 						<>
 							<View style={{ ...styles.headerItem, flex: 1 }}>
@@ -221,6 +226,46 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					)}
 				</TopHeader>
 			</Animated.View>
+
+			{business?.categories?.length > 0 && isOpenFiltProducts && (
+					<FiltProductsContainer
+						style={{
+							height: Dimensions.get('window').height - filtProductsHeight
+						}}
+					>
+						<View style={{ padding: 20, backgroundColor: theme.colors.white }}>
+							<BusinessProductsList
+								categories={[
+									{ id: null, name: t('ALL', 'All') },
+									{ id: 'featured', name: t('FEATURED', 'Featured') },
+									...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
+								]}
+								category={categorySelected}
+								categoryState={categoryState}
+								businessId={business.id}
+								errors={errors}
+								onProductClick={onProductClick}
+								handleSearchRedirect={handleSearchRedirect}
+								featured={featuredProducts}
+								searchValue={searchValue}
+								handleClearSearch={handleChangeSearch}
+								errorQuantityProducts={errorQuantityProducts}
+								handleCancelSearch={handleCancel}
+								categoriesLayout={categoriesLayout}
+								subcategoriesSelected={subcategoriesSelected}
+								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
+								setCategoriesLayout={setCategoriesLayout}
+								currentCart={currentCart}
+								setSubcategoriesSelected={setSubcategoriesSelected}
+								onClickCategory={handleChangeCategory}
+								isFiltMode
+							/>
+						</View>
+					</FiltProductsContainer>
+			)}
+			{isOpenFiltProducts && (
+				<BackgroundGray />
+			)}
 			<BusinessProductsListingContainer
 				stickyHeaderIndices={[2]}
 				style={styles.mainContainer}
@@ -255,7 +300,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
 								setSelectedCategoryId={setSelectedCategoryId}
 								setCategoryClicked={setCategoryClicked}
-								
+
 							/>
 						)}
 					</>
@@ -288,6 +333,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								setCategoriesLayout={setCategoriesLayout}
 								currentCart={currentCart}
 								setSubcategoriesSelected={setSubcategoriesSelected}
+								onClickCategory={handleChangeCategory}
 							/>
 						</WrapContent>
 					</>
@@ -326,7 +372,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum || openUpselling}
 					btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
 					btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
-					btnLeftValue={currentCart?.products?.length}
+					btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
 					btnRightValue={parsePrice(currentCart?.total)}
 					disabled={currentCart?.subtotal < currentCart?.minimum || openUpselling}
 					handleClick={() => setOpenUpselling(true)}
@@ -347,7 +393,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					onRedirect={onRedirect}
 				/>
 			)}
-		</SafeAreaView>
+		</ContainerSafeAreaView>
 	)
 }
 

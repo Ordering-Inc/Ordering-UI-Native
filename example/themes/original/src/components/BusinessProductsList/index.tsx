@@ -32,7 +32,8 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     setSubcategoriesSelected,
     subcategoriesSelected,
     onClickCategory,
-    lazyLoadProductsRecommended
+    lazyLoadProductsRecommended,
+    isFiltMode
   } = props;
 
   const [, t] = useLanguage();
@@ -48,24 +49,24 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     setCategoriesLayout(_categoriesLayout)
   }
 
-  const onClickSubcategory = (subCategory : any, parentCategory : any) => {
+  const onClickSubcategory = (subCategory: any, parentCategory: any) => {
     if (parentCategory && lazyLoadProductsRecommended) {
       onClickCategory(parentCategory)
     }
     if (!subCategory) {
-      setSubcategoriesSelected?.(subcategoriesSelected.filter((_subcategory : any) => _subcategory?.parent_category_id !== parentCategory?.id))
+      setSubcategoriesSelected?.(subcategoriesSelected.filter((_subcategory: any) => _subcategory?.parent_category_id !== parentCategory?.id))
       return
     }
-    const categoryFounded = subcategoriesSelected.find((_subcategory : any) => subCategory?.id === _subcategory?.id)
+    const categoryFounded = subcategoriesSelected.find((_subcategory: any) => subCategory?.id === _subcategory?.id)
     if (categoryFounded) {
-      setSubcategoriesSelected?.(subcategoriesSelected.filter((_subcategory : any) => subCategory?.id !== _subcategory?.id))
+      setSubcategoriesSelected?.(subcategoriesSelected.filter((_subcategory: any) => subCategory?.id !== _subcategory?.id))
     } else {
       setSubcategoriesSelected?.([...subcategoriesSelected, subCategory])
     }
   }
 
-  const SubcategoriesComponent = ({ category } : any) => {
-    const allsubcategorySelected = !subcategoriesSelected?.some((subcategory : any) => category?.id === subcategory?.parent_category_id)
+  const SubcategoriesComponent = ({ category }: any) => {
+    const allsubcategorySelected = !subcategoriesSelected?.some((subcategory: any) => category?.id === subcategory?.parent_category_id)
 
     return (
       <SubCategoriesContainer>
@@ -80,8 +81,8 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             textStyle={{ color: allsubcategorySelected ? theme.colors.white : theme.colors.textNormal, fontSize: 12 }}
           />
         </ContainerButton>
-        {category?.subcategories?.map((subcategory : any) => {
-          const isSubcategorySelected = subcategoriesSelected?.find((_subcategory : any) => _subcategory?.id === subcategory?.id)
+        {category?.subcategories?.map((subcategory: any) => {
+          const isSubcategorySelected = subcategoriesSelected?.find((_subcategory: any) => _subcategory?.id === subcategory?.id)
           return (
             <ContainerButton
               key={subcategory?.id}
@@ -112,21 +113,21 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
       </HeaderWrapper>
       {category.id &&
         categoryState.products
-          ?.filter((product : any) =>
-            !subcategoriesSelected.find((subcategory : any) => subcategory?.parent_category_id === category?.id) ||
-            subcategoriesSelected?.some((subcategory : any) => subcategory.id === product?.category_id)
-              ?.sort((a: any, b: any) => a.rank - b.rank)
-              ?.map((product: any) => (
-                <SingleProductCard
-                  key={'prod_' + product.id}
-                  isSoldOut={product.inventoried && !product.quantity}
-                  product={product}
-                  businessId={businessId}
-                  onProductClick={() => onProductClick(product)}
-                  productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
-                />
-              ))
-          )}
+          ?.filter((product: any) =>
+            !subcategoriesSelected.find((subcategory: any) => subcategory?.parent_category_id === category?.id) ||
+            subcategoriesSelected?.some((subcategory: any) => subcategory.id === product?.category_id))
+          ?.sort((a: any, b: any) => a.rank - b.rank)
+          ?.map((product: any, i : number) => (
+            <SingleProductCard
+              key={'prod_' + product.id + `_${i}`}
+              isSoldOut={product.inventoried && !product.quantity}
+              product={product}
+              businessId={businessId}
+              onProductClick={() => onProductClick(product)}
+              productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
+            />
+          ))
+      }
       {!category.id &&
         featured &&
         categoryState?.products?.find((product: any) => product.featured) && (
@@ -141,7 +142,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                 (product: any, i: any) =>
                   product.featured && (
                     <SingleProductCard
-                      key={'feat_' + product.id}
+                      key={'feat_' + product.id + `_${i}`}
                       isSoldOut={product.inventoried && !product.quantity}
                       product={product}
                       businessId={businessId}
@@ -156,16 +157,16 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
 
       {!category?.id && categories.filter(category => category?.id !== null).map((category, i, _categories) => {
         const _products = !isUseParentCategory
-          ? categoryState?.products?.filter((product : any) => product?.category_id === category?.id) ?? []
-          : categoryState?.products?.filter((product : any) => category?.children?.some((cat : any) => cat.category_id === product?.category_id)) ?? []
+          ? categoryState?.products?.filter((product: any) => product?.category_id === category?.id) ?? []
+          : categoryState?.products?.filter((product: any) => category?.children?.some((cat: any) => cat.category_id === product?.category_id)) ?? []
         const products = subcategoriesSelected?.length > 0
-          ? _products?.filter((product : any) =>
-            !subcategoriesSelected.find((subcategory : any) => subcategory?.parent_category_id === category?.id) ||
-            subcategoriesSelected?.some((subcategory : any) => subcategory.id === product?.category_id))
+          ? _products?.filter((product: any) =>
+            !subcategoriesSelected.find((subcategory: any) => subcategory?.parent_category_id === category?.id) ||
+            subcategoriesSelected?.some((subcategory: any) => subcategory.id === product?.category_id))
           : _products
 
         const shortCategoryDescription = category?.description?.length > 80 ? `${category?.description?.substring(0, 80)}...` : category?.description
-        
+
         return (
           <React.Fragment key={'cat_' + category.id}>
             {products.length > 0 && (
@@ -226,7 +227,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                     </OText>
                   </View>
                 )}
-                {category?.subcategories?.length > 0 && (
+                {category?.subcategories?.length > 0 && !isFiltMode && (
                   <SubcategoriesComponent category={category} />
                 )}
                 <>
@@ -272,6 +273,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         !isBusinessLoading &&
         categoryState.products.length === 0 &&
         !errors &&
+        !isFiltMode &&
         !(
           (searchValue && errorQuantityProducts) ||
           (!searchValue && !errorQuantityProducts)

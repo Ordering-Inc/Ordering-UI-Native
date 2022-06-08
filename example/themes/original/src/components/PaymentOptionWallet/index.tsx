@@ -100,12 +100,13 @@ const PaymentOptionWalletUI = (props: any) => {
             <Container
               key={wallet.id}
               isBottomBorder={idx === walletsState.result?.filter((wallet: any) => wallet.valid)?.length - 1}
+              onPress={() => handleOnChange(idx, wallet)}
+              disabled={(cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0}
             >
               <SectionLeft>
                 <CheckBox
                   value={checkedState[idx]}
-                  onValueChange={() => handleOnChange(idx, wallet)}
-                  disabled={(cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0 }
+                  disabled={(cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0}
                   boxType={'square'}
                   tintColors={{
                     true: theme.colors.primary,

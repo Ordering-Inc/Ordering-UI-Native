@@ -59,6 +59,7 @@ export interface AddressListParams {
 	isFromProductsList?: boolean;
 	afterSignup?: boolean;
 	isFromCheckout?: boolean
+	loadAddresses: () => void
 }
 
 export interface AddressFormParams {
@@ -164,7 +165,7 @@ export interface BusinessTypeFilterParams {
 	setBusinessTypes?: any
 }
 export interface BusinessControllerParams {
-	key?: number;
+	key?: string | number;
 	business?: any;
 	handleCustomClick?: any;
 	orderType?: any;
@@ -247,7 +248,8 @@ export interface BusinessProductsListParams {
 	setSubcategoriesSelected?: any,
     subcategoriesSelected?: any,
     onClickCategory?: any,
-    lazyLoadProductsRecommended?: boolean
+    lazyLoadProductsRecommended?: boolean,
+	isFiltMode?: boolean
 }
 export interface SingleProductCardParams {
 	businessId: any,
@@ -303,7 +305,9 @@ export interface OrdersOptionParams {
 	ordersLength: { activeOrdersLength: number, previousOrdersLength: number },
 	setSelectedOrderId?: any,
 	setOpenMessges?: any,
-	loadMoreStatus?: boolean
+	loadMoreStatus?: boolean,
+	refreshOrders?: boolean,
+	setRefreshOrders?: (value : boolean) => void
 }
 export interface ActiveOrdersParams {
 	orders?: any,
@@ -489,6 +493,7 @@ export interface OrderTypeSelectParams {
 	defaultValue?: number;
 	configTypes?: Array<any>;
 	orderTypes: Array<any>;
+	setOrderTypeValue?: (value : number) => any
 }
 export interface UpsellingProductsParams {
 	isCustomMode?: boolean;

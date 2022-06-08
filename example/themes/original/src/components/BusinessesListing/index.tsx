@@ -47,7 +47,7 @@ import { getTypesText, convertToRadian } from '../../utils';
 import { OrderProgress } from '../OrderProgress';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 
-const PIXELS_TO_SCROLL = 1000;
+const PIXELS_TO_SCROLL = 2000;
 
 const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const {
@@ -116,7 +116,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [featuredBusiness, setFeaturedBusinesses] = useState(Array);
 	const [isFarAway, setIsFarAway] = useState(false)
 	const [businessTypes, setBusinessTypes] = useState(null)
-
+	const [orderTypeValue, setOrderTypeValue] = useState(orderState?.options.value)
 	const isPreorderEnabled = (configs?.preorder_status_enabled?.value === '1' || configs?.preorder_status_enabled?.value === 'true') &&
 		Number(configs?.max_days_preorder?.value) > 0
 	const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
@@ -203,6 +203,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		})
 	}, [orderState?.options?.address?.location])
 
+	useEffect(() => {
+		if(!orderState?.loading){
+			setOrderTypeValue(orderState?.options?.type)
+		}
+	}, [orderState?.options?.type])
+
 	useFocusEffect(
 		useCallback(() => {
 			resetInactivityTimeout()
@@ -257,8 +263,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				)}
 				<OrderControlContainer>
 					<View style={styles.wrapperOrderOptions}>
-						<WrapMomentOption onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes })}>
-							<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(orderState?.options?.type || 1), 'Delivery')}</OText>
+						<WrapMomentOption onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes, setOrderTypeValue })}>
+							<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(orderTypeValue || orderState?.options?.type || 1), 'Delivery')}</OText>
 							<OIcon
 								src={theme.images.general.arrow_down}
 								width={10}
@@ -273,7 +279,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 									numberOfLines={1}
 									ellipsizeMode="tail"
 									color={theme.colors.textSecondary}>
-									{orderState.options?.momentß
+									{orderState.options?.moment
 										? parseDate(orderState.options?.moment, { outputFormat: configs?.dates_moment_format?.value })
 										: t('ASAP_ABBREVIATION', 'ASAP')}
 								</OText>
@@ -325,7 +331,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							{featuredBusiness.map((bAry: any, idx) => (
 								<View key={'f-listing_' + idx}>
 									<BusinessFeaturedController
-										key={bAry[0].id}
 										business={bAry[0]}
 										isBusinessOpen={bAry[0]?.open}
 										handleCustomClick={handleBusinessClick}
@@ -333,7 +338,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 									/>
 									{bAry.length > 1 && (
 										<BusinessFeaturedController
-											key={bAry[1].id}
 											business={bAry[1]}
 											isBusinessOpen={bAry[1]?.open}
 											handleCustomClick={handleBusinessClick}
@@ -372,9 +376,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					/>
 				)}
 				{businessesList.businesses?.map(
-					(business: any) => (
+					(business: any, i : number) => (
 						<BusinessController
-							key={business.id}
+							key={`${business.id}_` + i}
 							business={business}
 							isBusinessOpen={business.open}
 							handleCustomClick={handleBusinessClick}
