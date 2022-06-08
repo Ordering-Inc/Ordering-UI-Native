@@ -36,7 +36,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		loadOrders,
 		setSelectedOrderId,
 		setOrderList,
-		setOpenMessges
+		setOpenMessges,
+		setRefreshOrders,
+		refreshOrders
 	} = props
 
 	const theme = useTheme();
@@ -98,6 +100,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		if (loading) return
 		setOrderList(orderList)
 	}, [orderList, loading])
+
+	useEffect(() => {
+		if(refreshOrders){
+			loadOrders(false, false, false, true)
+			setRefreshOrders && setRefreshOrders(false)
+		}
+	}, [refreshOrders])
 
 	return (
 		<>

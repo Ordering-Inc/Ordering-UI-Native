@@ -292,20 +292,20 @@ export const ProductOptionsUI = (props: any) => {
 					let _videoId = keys[keys.length - 1]
 
 					if (_videoId.includes('watch')) {
-					  const __url = _videoId.split('=')[1]
-					  _videoId = __url
+						const __url = _videoId.split('=')[1]
+						_videoId = __url
 					} else if (_videoId.includes('?')) {
-					  const __url = _videoId.split('?')[0]
-					  _videoId = __url
+						const __url = _videoId.split('?')[0]
+						_videoId = __url
 					}
 
 					if (_videoId.search(/&/i) >= 0) {
-					  _videoId = _videoId.split('&')[0]
+						_videoId = _videoId.split('&')[0]
 					} else if (_videoId.search(/\?/i) >= 0) {
-					  _videoId = _videoId.split('?')[0]
+						_videoId = _videoId.split('?')[0]
 					}
 					if ((_videoId.length === 11)) {
-					  videoList.push(_videoId)
+						videoList.push(_videoId)
 					}
 				}
 			}
@@ -326,25 +326,6 @@ export const ProductOptionsUI = (props: any) => {
 
 	const ExtraOptions = ({ eID, options }: any) => (
 		<>
-			{product?.ingredients.length > 0 && (
-				<TouchableOpacity
-					key={`eopt_all_00`}
-					onPress={() => setSelectedOpt(-1)}
-					style={[
-						styles.extraItem,
-						{
-							borderBottomColor:
-								selOpt == -1 ? theme.colors.textNormal : theme.colors.border,
-						},
-					]}>
-					<OText
-						color={selOpt == -1 ? theme.colors.textNormal : theme.colors.textSecondary}
-						size={selOpt == -1 ? 14 : 12}
-						weight={selOpt == -1 ? '600' : 'normal'}>
-						{t('INGREDIENTS', 'Ingredients')}
-					</OText>
-				</TouchableOpacity>
-			)}
 			{options.map(({ id, name, respect_to, suboptions }: any) => (
 				<React.Fragment key={`cont_key_${id}`}>
 					{respect_to == null && suboptions?.length > 0 && (
@@ -665,6 +646,25 @@ export const ProductOptionsUI = (props: any) => {
 												{t('ALL', 'All')}
 											</OText>
 										</TouchableOpacity>
+										{product?.ingredients.length > 0 && (
+											<TouchableOpacity
+												key={`eopt_all_00`}
+												onPress={() => setSelectedOpt(-1)}
+												style={[
+													styles.extraItem,
+													{
+														borderBottomColor:
+															selOpt == -1 ? theme.colors.textNormal : theme.colors.border,
+													},
+												]}>
+												<OText
+													color={selOpt == -1 ? theme.colors.textNormal : theme.colors.textSecondary}
+													size={selOpt == -1 ? 14 : 12}
+													weight={selOpt == -1 ? '600' : 'normal'}>
+													{t('INGREDIENTS', 'Ingredients')}
+												</OText>
+											</TouchableOpacity>
+										)}
 										{product?.extras.map((extra: any) =>
 											<ExtraOptions key={extra.id} options={extra.options} />
 										)}

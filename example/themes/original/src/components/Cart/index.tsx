@@ -166,9 +166,9 @@ const CartUI = (props: any) => {
         handleClickCheckout={() => setOpenUpselling(true)}
         checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
       >
-        {cart?.products?.length > 0 && cart?.products.map((product: any) => (
+        {cart?.products?.length > 0 && cart?.products.map((product: any, i: number) => (
           <ProductItemAccordion
-            key={product.code}
+            key={`${product.code}_${i}`}
             isCartPending={isCartPending}
             isCartProduct
             product={product}
@@ -202,8 +202,8 @@ const CartUI = (props: any) => {
               </OSTable>
             )}
             {
-              cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any) => (
-                <OSTable key={offer.id}>
+              cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any, i: number) => (
+                <OSTable key={`${offer.id}_${i}`}>
                   <OSRow>
                     <OText size={12} lineHeight={18}>{offer.name}</OText>
                     {offer.rate_type === 1 && (
@@ -234,8 +234,8 @@ const CartUI = (props: any) => {
               </OSTable>
             )}
             {
-              cart.taxes?.length > 0 && cart.taxes.filter((tax: any) => tax.type === 2 && tax?.rate !== 0).map((tax: any) => (
-                <OSTable key={tax.id}>
+              cart.taxes?.length > 0 && cart.taxes.filter((tax: any) => tax.type === 2 && tax?.rate !== 0).map((tax: any, i: number) => (
+                <OSTable key={`${tax.id}_${i}`}>
                   <OSRow>
                     <OText size={12} lineHeight={18} numberOfLines={1} >
                       {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
@@ -250,8 +250,8 @@ const CartUI = (props: any) => {
               ))
             }
             {
-              cart?.fees?.length > 0 && cart?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0)).map((fee: any) => (
-                <OSTable key={fee?.id}>
+              cart?.fees?.length > 0 && cart?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0)).map((fee: any, i: number) => (
+                <OSTable key={`${fee.id}_${i}`}>
                   <OSRow>
                     <OText size={12} lineHeight={18} numberOfLines={1}>
                       {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
@@ -293,8 +293,8 @@ const CartUI = (props: any) => {
               </OSTable>
             )}
             {
-              cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
-                <OSTable key={offer.id}>
+              cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any, i: number) => (
+                <OSTable key={`${offer.id}_${i}`}>
                   <OSRow>
                     <OText size={12} lineHeight={18}>{offer.name}</OText>
                     {offer.rate_type === 1 && (
@@ -409,7 +409,7 @@ const CartUI = (props: any) => {
             )}
           </OSBill>
         )}
-        {cart?.valid_products && (
+        {cart?.valid_products ? (
           <CheckoutAction>
             <OButton
               text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
@@ -428,6 +428,12 @@ const CartUI = (props: any) => {
               style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
             />
           </CheckoutAction>
+        ) : (
+          <View style={{ alignItems: 'center', width: '100%' }}>
+            <OText size={12} color={theme.colors.red} style={{ textAlign: 'center', marginTop: 5 }}>
+              {t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
+            </OText>
+          </View>
         )}
       </BusinessItemAccordion>
 

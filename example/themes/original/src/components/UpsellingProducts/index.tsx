@@ -4,7 +4,7 @@ import {
 	UpsellingPage as UpsellingPageController,
 	useUtils,
 	useLanguage,
-  useOrder
+	useOrder
 } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { OText, OIcon, OBottomPopup, OButton } from '../shared'
@@ -62,7 +62,19 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 			borderRadius: 7.6,
 			borderColor: theme.colors.textSecondary,
 			height: 38
-		}
+		},
+		headerItem: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			marginVertical: 2,
+			marginHorizontal: 20,
+		},
+		btnBackArrow: {
+			borderWidth: 0,
+			backgroundColor: theme.colors.clear,
+			shadowColor: theme.colors.clear,
+			padding: 40,
+		},
 	})
 
 	const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -77,11 +89,11 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		? cart?.products.map((product: any) => product.id)
 		: []
 
-  	const productsList = !upsellingProducts.loading && !upsellingProducts.error
-      ? upsellingProducts?.products?.length
-      	? upsellingProducts?.products.filter((product: any) => !cartProducts.includes(product.id))
-      	: (props?.products ?? []).filter((product: any) => !cartProducts.includes(product.id)) ?? []
-      : []
+	const productsList = !upsellingProducts.loading && !upsellingProducts.error
+		? upsellingProducts?.products?.length
+			? upsellingProducts?.products.filter((product: any) => !cartProducts.includes(product.id))
+			: (props?.products ?? []).filter((product: any) => !cartProducts.includes(product.id)) ?? []
+		: []
 
 	useEffect(() => {
 		if (!isCustomMode && !props.products) {
@@ -100,10 +112,10 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 	}, [cart, isCheckout])
 
 	const handleFormProduct = (product: any) => {
-    onNavigationRedirect && onNavigationRedirect('ProductDetails', {
-      product: product,
-      businessId: product?.api?.businessId,
-      businessSlug: business.slug,
+		onNavigationRedirect && onNavigationRedirect('ProductDetails', {
+			product: product,
+			businessId: product?.api?.businessId,
+			businessSlug: business.slug,
 		})
 	}
 
@@ -119,8 +131,8 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 						!upsellingProducts.loading && (
 							<>
 								{
-									!upsellingProducts.error ? productsList.map((product: any) => (
-										<Item key={product.id}>
+									!upsellingProducts.error ? productsList.map((product: any, i: number) => (
+										<Item key={`${product.id}_${i}`}>
 											<View style={{ flexBasis: '57%' }}>
 												<Details>
 													<OText size={12} lineHeight={18} numberOfLines={1} ellipsizeMode='tail'>{product.name}</OText>
@@ -148,50 +160,54 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		)
 	}
 
-  const UpsellingContent = () => {
-    return (
-      <>
-        <TopBar style={{ paddingTop: Platform.OS == 'ios' ? 10 : 30 }}>
-          <TopActions onPress={() => onGoBack()}>
-            <OIcon src={theme.images.general.arrow_left} width={15} />
-          </TopActions>
-        </TopBar>
-        <ScrollView style={{ marginBottom: props.isPage ? 40 : bottom + (Platform.OS == 'ios' ? 96 : 130) }} showsVerticalScrollIndicator={false}>
+	const UpsellingContent = () => {
+		return (
+			<>
+				<View style={{ ...styles.headerItem, flex: 1 }}>
+					<OButton
+						imgLeftSrc={theme.images.general.arrow_left}
+						imgRightSrc={null}
+						style={styles.btnBackArrow}
+						onClick={() => onGoBack()}
+						imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
+					/>
+				</View>
+				<ScrollView style={{ marginBottom: props.isPage ? 40 : bottom + (Platform.OS == 'ios' ? 96 : 130) }} showsVerticalScrollIndicator={false}>
 					{productsList.length > 0 &&
-            <View style={{ paddingHorizontal: 40, overflow: 'visible' }}>
-              <OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
-              <UpsellingLayout />
-            </View>
-          }
-          <View style={{ paddingHorizontal: 40 }}>
-            <OText size={20} lineHeight={30} weight={600} style={{ marginTop: 10, marginBottom: 17 }}>{t('YOUR_CART', 'Your cart')}</OText>
-            <OrderSummary
-              cart={cart}
-              isCartPending={cart?.status === 2}
-              onNavigationRedirect={onNavigationRedirect}
-            />
-          </View>
-        </ScrollView>
-        <View
-          style={{
-            alignItems: 'center',
-            bottom: props.isPage ? Platform.OS === 'ios' ? 0 : 20 : Platform.OS === 'ios' ? bottom  + 59 :  bottom + 125
-          }}
-        >
-          <OButton
-            imgRightSrc=''
-            text={t('CHECKOUT', 'Checkout')}
-            style={{...styles.closeUpsellingButton}}
-            textStyle={{ color: theme.colors.white, fontSize: 14 }}
-            onClick={() => {
-				handleUpsellingPage()
-				setIsCheckout(true)
-			}}
-          />
-        </View>
-      </>
-    )
-  }
+						<View style={{ paddingHorizontal: 40, overflow: 'visible' }}>
+							<OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
+							<UpsellingLayout />
+						</View>
+					}
+					<View style={{ paddingHorizontal: 40 }}>
+						<OText size={20} lineHeight={30} weight={600} style={{ marginTop: 10, marginBottom: 17 }}>{t('YOUR_CART', 'Your cart')}</OText>
+						<OrderSummary
+							cart={cart}
+							isCartPending={cart?.status === 2}
+							onNavigationRedirect={onNavigationRedirect}
+						/>
+					</View>
+				</ScrollView>
+				<View
+					style={{
+						alignItems: 'center',
+						bottom: props.isPage ? Platform.OS === 'ios' ? 0 : 20 : Platform.OS === 'ios' ? bottom + 59 : bottom + 125
+					}}
+				>
+					<OButton
+						imgRightSrc=''
+						text={t('CHECKOUT', 'Checkout')}
+						style={{ ...styles.closeUpsellingButton }}
+						textStyle={{ color: theme.colors.white, fontSize: 14 }}
+						onClick={() => {
+							handleUpsellingPage()
+							setIsCheckout(true)
+						}}
+					/>
+				</View>
+			</>
+		)
+	}
 
 	return (
 		<>
@@ -199,20 +215,20 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 				<UpsellingLayout />
 			) : (
 				<>
-          {props.isPage ? (
-            <UpsellingContent />
-          ) : (
-            canOpenUpselling && !modalIsOpen && (
-              <OBottomPopup
-                title={''}
-                open={openUpselling}
-                onClose={() => handleUpsellingPage()}
-                isStatusBar
-              >
-                <UpsellingContent />
-              </OBottomPopup>
-            )
-          )}
+					{props.isPage ? (
+						<UpsellingContent />
+					) : (
+						canOpenUpselling && !modalIsOpen && (
+							<OBottomPopup
+								title={''}
+								open={openUpselling}
+								onClose={() => handleUpsellingPage()}
+								isStatusBar
+							>
+								<UpsellingContent />
+							</OBottomPopup>
+						)
+					)}
 				</>
 			)}
 		</>

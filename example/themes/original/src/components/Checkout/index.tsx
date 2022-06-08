@@ -649,7 +649,7 @@ const CheckoutUI = (props: any) => {
 										color={theme.colors.error}
 										size={12}
 									>
-										{t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
+										{t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
 									</OText>
 								)}
 								{placeSpotTypes.includes(options?.type) && !cart?.place && (
