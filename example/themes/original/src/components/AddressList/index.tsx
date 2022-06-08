@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { AddressList as AddressListController, useLanguage, useOrder, useSession } from 'ordering-components/native'
 import { AddressListContainer, AddressItem } from './styles'
-import { Platform, StyleSheet, View } from 'react-native'
+import { Platform, RefreshControl, StyleSheet, View } from 'react-native'
 import { OButton, OText, OAlert, OModal, OIcon } from '../shared'
 import { Container } from '../../layouts/Container'
 import { AddressListParams } from '../../types'
@@ -27,7 +27,8 @@ const AddressListUI = (props: AddressListParams) => {
 		actionStatus,
 		isFromBusinesses,
 		isFromProductsList,
-		afterSignup
+		afterSignup,
+		loadAddresses
 	} = props
 
 	const theme = useTheme();
@@ -35,6 +36,7 @@ const AddressListUI = (props: AddressListParams) => {
 	const [orderState] = useOrder()
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
+	const [refreshing] = useState(false);
 
 	const [isProfile, setIsProfile] = useState(isFromProfile || route?.params?.isFromProfile);
 
@@ -121,6 +123,12 @@ const AddressListUI = (props: AddressListParams) => {
 		})
 	}
 
+	const handleOnRefresh = () => {
+		if (!addressList.loading) {
+			loadAddresses();
+		}
+	}
+
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack()
 	const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
 
@@ -135,22 +143,26 @@ const AddressListUI = (props: AddressListParams) => {
 	}, [])
 
 	return (
-		<Container noPadding>
+		<Container 
+			noPadding
+			refreshControl={
+				<RefreshControl
+					refreshing={refreshing}
+					onRefresh={() => handleOnRefresh()}
+				/>
+			}
+		>
+			{isProfile && (
+				<NavBar
+					title={t('SAVED_PLACES', 'My saved places')}
+					titleAlign={'center'}
+					onActionLeft={goToBack}
+					showCall={false}
+					style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 20 }}
+				/>
+			)}
 			{(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile || isProfile)) && (
 				<AddressListContainer>
-					{isProfile && (
-						<NavBar
-							title={t('SAVED_PLACES', 'My saved places')}
-							titleAlign={'center'}
-							onActionLeft={() => goToBack()}
-							showCall={false}
-							btnStyle={{ paddingLeft: 0 }}
-							paddingTop={0}
-							isVertical
-							titleWrapStyle={{ paddingHorizontal: 0 }}
-							titleStyle={{ marginLeft: 0, marginRight: 0 }}
-						/>
-					)}
 					{
 						route &&
 						(
@@ -172,7 +184,7 @@ const AddressListUI = (props: AddressListParams) => {
 								titleStyle={{ marginLeft: 0, marginRight: 0 }}
 							/>
 						)}
-					{addressList.loading && (
+					{addressList.loading && addressList?.addresses?.length === 0 && (
 						<>
 							{[...Array(5)].map((item, i) => (
 								<Placeholder key={i} style={{ paddingVertical: 20 }} Animation={Fade}>

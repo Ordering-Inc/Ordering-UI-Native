@@ -19,7 +19,8 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 		typeSelected,
 		defaultValue,
 		configTypes,
-		orderTypes
+		orderTypes,
+		setOrderTypeValue
 	} = props
 
 	const theme = useTheme();
@@ -39,6 +40,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 
 	const handleChangeOrderTypeCallback = (orderType: number) => {
 		if (!orderState.loading) {
+			setOrderTypeValue && setOrderTypeValue(orderType)
 			handleChangeOrderType(orderType)
 			goToBack();
 		}

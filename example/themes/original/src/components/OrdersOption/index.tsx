@@ -32,6 +32,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		loadMoreStatus,
 		loadMoreOrders,
 		loadOrders,
+		setOrdersLength,
+		ordersLength,
+		refreshOrders,
+		setRefreshOrders
 	} = props
 
 	const theme = useTheme();
@@ -103,7 +107,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	useFocusEffect(
 		React.useCallback(() => {
-		  loadOrders()
+			loadOrders(false, false, false, true)
 		}, [navigation])
 	  )
 
@@ -113,6 +117,25 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			loadMoreOrders()
 		}
 	}, [loadMoreStatus, loading, pagination])
+
+	useEffect(() => {
+		if (loading) return
+
+		const updateOrders = orders.filter((order: any) => orderStatus.includes(order.status))
+
+		if (activeOrders) {
+			setOrdersLength && setOrdersLength({ ...ordersLength, activeOrdersLength: updateOrders?.length })
+		} else if (!preOrders) {
+			setOrdersLength && setOrdersLength({ ...ordersLength, previousOrdersLength: updateOrders?.length })
+		}
+	}, [orders, activeOrders])
+
+	useEffect(() => {
+		if(refreshOrders){
+			loadOrders(false, false, false, true)
+			setRefreshOrders && setRefreshOrders(false)
+		}
+	}, [refreshOrders])
 
 	return (
 		<>

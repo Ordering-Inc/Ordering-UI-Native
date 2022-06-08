@@ -56,7 +56,8 @@ const ProfileUI = (props: ProfileParams) => {
 		},
 		pagePadding: {
 			paddingLeft: 40,
-			paddingRight: 40
+			paddingRight: 40,
+			justifyContent: 'center',
 		},
 		navBarStyle: {
 			paddingLeft: 40,
@@ -205,8 +206,8 @@ const ProfileUI = (props: ProfileParams) => {
 				},
 			});
 			handleSendVerifyCode({
-			  cellphone: cellphone,
-			  country_phone_code: countryPhoneCode
+				cellphone: cellphone,
+				country_phone_code: countryPhoneCode
 			})
 		}
 	}
@@ -277,15 +278,16 @@ const ProfileUI = (props: ProfileParams) => {
 
 	return (
 		<>
+			<NavBar
+				title={t('ACCOUNT', 'Account')}
+				titleAlign={'center'}
+				onActionLeft={() => navigation.goBack()}
+				showCall={false}
+				style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 30 }}
+			/>
 			<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
 				<Container noPadding>
-					<NavBar
-						onActionLeft={() => navigation.goBack()}
-						btnStyle={{ paddingStart: 0 }}
-						title={t('ACCOUNT', 'Account')}
-						isVertical
-						style={styles.navBarStyle}
-					/>
+
 					<CenterView style={styles.pagePadding}>
 						<View style={styles.photo}>
 							{user?.photo ? (
@@ -305,7 +307,7 @@ const ProfileUI = (props: ProfileParams) => {
 							icon={theme.images.general.camera}
 							borderColor={theme.colors.clear}
 							iconStyle={{ width: 20, height: 20 }}
-							style={{ maxWidth: 40, position: 'absolute', bottom: -2, alignSelf: 'center', backgroundColor: '#000', opacity: 0.5 }}
+							style={{ maxWidth: 40, position: 'absolute', alignSelf: 'center', backgroundColor: '#000', opacity: 0.5 }}
 							onClick={() => handleImagePicker()}
 						/>
 					</CenterView>
@@ -326,13 +328,13 @@ const ProfileUI = (props: ProfileParams) => {
 				entireModal
 			>
 				<VerifyPhone
-				phone={phoneInputData.phone}
-				verifyPhoneState={verifyPhoneState}
-				checkPhoneCodeState={checkPhoneCodeState}
-				handleCheckPhoneCode={handleCheckPhoneCode}
-				setCheckPhoneCodeState={setCheckPhoneCodeState}
-				handleVerifyCodeClick={handleVerifyCodeClick}
-				onClose={() => setIsModalVisible(false)}
+					phone={phoneInputData.phone}
+					verifyPhoneState={verifyPhoneState}
+					checkPhoneCodeState={checkPhoneCodeState}
+					handleCheckPhoneCode={handleCheckPhoneCode}
+					setCheckPhoneCodeState={setCheckPhoneCodeState}
+					handleVerifyCodeClick={handleVerifyCodeClick}
+					onClose={() => setIsModalVisible(false)}
 				/>
 			</OModal>
 		</>

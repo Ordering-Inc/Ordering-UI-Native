@@ -128,9 +128,11 @@ export const ProductOptionSubOptionUI = (props: any) => {
 						</>
 					)}
 				</PositionControl>
-				<OText size={12} lineHeight={18} color={theme.colors.textSecondary}>
-					+ {parsePrice(price)}
-				</OText>
+				{price > 0 && (
+					<OText size={12} lineHeight={18} color={theme.colors.textSecondary}>
+						+ {parsePrice(price)}
+					</OText>
+				)}
 			</Container>
 			{showMessage && <OText size={10} mLeft={4} mRight={4} style={{ flex: 1, textAlign: 'center' }} color={theme.colors.primary}>{`${t('OPTIONS_MAX_LIMIT', 'Maximum options to choose')}: ${option?.max}`}</OText>}
 		</View>

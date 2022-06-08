@@ -35,7 +35,10 @@ const WalletsUI = (props: any) => {
     transactionsList,
     setWalletSelected,
     isWalletCashEnabled,
-    isWalletPointsEnabled
+    isWalletPointsEnabled,
+    getWallets,
+    refreshWallets,
+    setRefreshWallets
   } = props
 
   const [, t] = useLanguage()
@@ -94,6 +97,13 @@ const WalletsUI = (props: any) => {
     }
   }, [configs])
 
+  useEffect(() => {
+    if(refreshWallets){
+      getWallets()
+      setRefreshWallets && setRefreshWallets(false)
+    }
+  }, [refreshWallets])
+
   return (
     <Container>
       <NavBar
@@ -111,14 +121,17 @@ const WalletsUI = (props: any) => {
         walletList.wallets?.length > 0 &&
       (
         <>
-          <OTabs>
+          <OTabs
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
             {walletList.wallets?.map((wallet: any) => walletName[wallet.type]?.isActive && (
               <Pressable
                 key={wallet.id}
                 onPress={() => handleChangeTab(wallet)}
               >
-                <OTab>
-                  <OText size={18} color={tabSelected === wallet.type ? theme.colors.primary : theme.colors.disabled}>
+                <OTab isSelected={tabSelected === wallet.type}>
+                  <OText size={18}>
                     {walletName[wallet.type]?.name}
                   </OText>
                 </OTab>
