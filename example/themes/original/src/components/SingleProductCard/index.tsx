@@ -13,9 +13,14 @@ import { OText, OIcon } from '../shared';
 import FastImage from 'react-native-fast-image'
 import { shape } from '../../utils';
 
-export const SingleProductCard = (props: SingleProductCardParams) => {
+function SingleProductCardPropsAreEqual(prevProps : any, nextProps : any) {
+	return JSON.stringify(prevProps.product) === JSON.stringify(nextProps.product) && 
+	prevProps.isSoldOut === nextProps.isSoldOut && 
+	prevProps.productAddedToCartLength === nextProps.productAddedToCartLength
+}
+
+export const SingleProductCard = React.memo((props: SingleProductCardParams) => {
 	const {
-		businessId,
 		product,
 		isSoldOut,
 		onProductClick,
@@ -148,7 +153,7 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 							weight={'400'}
 							color={theme.colors.white}
 							numberOfLines={2}
-              ellipsizeMode='tail'
+							ellipsizeMode='tail'
 							lineHeight={13}
 						>
 							{product?.ribbon?.text}
@@ -181,4 +186,4 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
 			)}
 		</CardContainer>
 	);
-};
+}, SingleProductCardPropsAreEqual);

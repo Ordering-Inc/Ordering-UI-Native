@@ -33,7 +33,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		loadMoreOrders,
 		loadOrders,
 		setOrdersLength,
-		ordersLength
+		ordersLength,
+		refreshOrders,
+		setRefreshOrders
 	} = props
 
 	const theme = useTheme();
@@ -105,7 +107,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	useFocusEffect(
 		React.useCallback(() => {
-			loadOrders()
+			loadOrders(false, false, false, true)
 		}, [navigation])
 	)
 
@@ -127,6 +129,13 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			setOrdersLength && setOrdersLength({ ...ordersLength, previousOrdersLength: updateOrders?.length })
 		}
 	}, [orders, activeOrders])
+
+	useEffect(() => {
+		if(refreshOrders){
+			loadOrders(false, false, false, true)
+			setRefreshOrders && setRefreshOrders(false)
+		}
+	}, [refreshOrders])
 
 	return (
 		<>

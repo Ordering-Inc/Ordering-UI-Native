@@ -45,7 +45,6 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 	const renderTypes = ({ item }: any) => {
 		return (
 			<TouchableOpacity
-				key={item.id}
 				onPress={() => handleChangeBusinessType(item.id)}
 				style={{
 					height: 34,
@@ -103,7 +102,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 									showsHorizontalScrollIndicator={false}
 									data={typesState?.types}
 									renderItem={renderTypes}
-									keyExtractor={(type) => type.name}
+									keyExtractor={(type, index) => `${type.name}_${index}`}
 								/>
 								<TouchableOpacity
 									style={{ marginLeft: 15 }}
