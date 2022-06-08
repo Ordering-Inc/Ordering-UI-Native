@@ -227,7 +227,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                     </OText>
                   </View>
                 )}
-                {category?.subcategories?.length > 0 && (
+                {category?.subcategories?.length > 0 && !isFiltMode && (
                   <SubcategoriesComponent category={category} />
                 )}
                 <>
