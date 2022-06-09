@@ -446,7 +446,7 @@ export const ProductOptionsUI = (props: any) => {
                     </WrapperIngredients>
                   </View>
                 )}
-                {product?.extras.map((extra: any) => extra.options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => {
+                {product?.extras.sort((a: any, b: any) => a.rank - b.rank).map((extra: any) => extra.options.sort((a: any, b: any) => a.rank - b.rank).map((option: any) => {
                   const currentState = productCart.options[`id:${option.id}`] || {}
                   return (
                     <React.Fragment key={option.id}>
