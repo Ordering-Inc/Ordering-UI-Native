@@ -7,8 +7,7 @@ import {
   WalletList,
   useLanguage,
   useUtils,
-  useConfig,
-  useSession
+  useConfig
 } from 'ordering-components/native'
 
 import {
@@ -32,6 +31,7 @@ const WalletsUI = (props: any) => {
   const {
     navigation,
     walletList,
+    userLoyaltyLevel,
     transactionsList,
     setWalletSelected,
     isWalletCashEnabled,
@@ -42,7 +42,6 @@ const WalletsUI = (props: any) => {
   } = props
 
   const [, t] = useLanguage()
-  const [{ user }] = useSession()
   const theme = useTheme()
   const [{ parsePrice }] = useUtils()
   const [{ configs }] = useConfig()
@@ -66,7 +65,7 @@ const WalletsUI = (props: any) => {
 
   const currentWalletSelected = (walletList.wallets?.length > 0 && walletList.wallets?.find((w: any) => w.type === tabSelected)) ?? null
 
-  const loyaltyLevel = Object.keys(user?.loyalty_level ?? {}).length > 0 && user?.loyalty_level
+  const loyaltyLevel = Object.keys(userLoyaltyLevel.loyaltyLevel ?? {}).length > 0 && userLoyaltyLevel.loyaltyLevel
 
   const walletName: any = {
     cash: {
@@ -117,6 +116,7 @@ const WalletsUI = (props: any) => {
       />
 
       {!walletList.loading &&
+        !userLoyaltyLevel.loading &&
         !walletList.error &&
         walletList.wallets?.length > 0 &&
       (
@@ -239,7 +239,7 @@ const WalletsUI = (props: any) => {
         </>
       )}
 
-      {walletList?.loading && (
+      {(walletList?.loading || userLoyaltyLevel.loading) && (
         <>
           <View>
             <Placeholder Animation={Fade}>
@@ -263,7 +263,7 @@ const WalletsUI = (props: any) => {
         </>
       )}
 
-      {!walletList?.loading && (walletList?.error || !walletList?.wallets?.length) && (
+      {!walletList?.loading && !userLoyaltyLevel.loading && (walletList?.error || !walletList?.wallets?.length) && (
         <NotFoundSource
           content={walletList?.error
             ? t('ERROR_NOT_FOUND_WALLETS', 'Sorry, an error has occurred')
