@@ -385,7 +385,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any) => (
             <Table key={offer.id}>
               <OSRow>
-                <OText numberOfLines={1} mBottom={4}>
+                <OText mBottom={4}>
                   {offer.name}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
@@ -431,7 +431,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           order?.taxes?.length > 0 && order?.taxes?.filter((tax: any) => tax?.type === 2 && tax?.rate !== 0).map((tax: any) => (
             <Table key={tax.id}>
               <OSRow>
-                <OText numberOfLines={1} mBottom={4}>
+                <OText mBottom={4}>
                   {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
                   {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
                 </OText>
@@ -444,7 +444,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           order?.fees?.length > 0 && order?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0))?.map((fee: any) => (
             <Table key={fee.id}>
               <OSRow>
-                <OText numberOfLines={1} mBottom={4}>
+                <OText mBottom={4}>
                   {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
                   ({fee?.fixed > 0 && `${parsePrice(fee?.fixed)} + `}{fee.percentage}%){' '}
                 </OText>
@@ -457,7 +457,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 3)?.map((offer: any) => (
             <Table key={offer.id}>
               <OSRow>
-                <OText numberOfLines={1} mBottom={4}>
+                <OText mBottom={4}>
                   {offer.name}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
@@ -485,7 +485,7 @@ export const OrderContentComponent = (props: OrderContent) => {
           order?.offers?.length > 0 && order?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
             <Table key={offer.id}>
               <OSRow>
-                <OText numberOfLines={1} mBottom={4}>
+                <OText mBottom={4}>
                   {offer.name}
                   {offer.rate_type === 1 && (
                     <OText>{`(${verifyDecimals(offer?.rate, parsePrice)}%)`}</OText>
