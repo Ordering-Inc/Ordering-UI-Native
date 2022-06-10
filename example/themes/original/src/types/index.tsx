@@ -585,3 +585,10 @@ export interface PromotionParams {
     offerSelected: any,
     setOfferSelected: any,
 }
+export interface SessionsParams {
+	navigation: any,
+	sessionsList: any,
+    actionState: any,
+    handleDeleteSession: any,
+    handleDeleteAllSessions: any
+}

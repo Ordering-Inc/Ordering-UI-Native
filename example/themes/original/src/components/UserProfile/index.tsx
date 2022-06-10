@@ -17,6 +17,7 @@ import { LanguageSelector } from '../LanguageSelector'
 import MessageCircle from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import FastImage from 'react-native-fast-image'
 
 import {
@@ -188,6 +189,10 @@ const ProfileListUI = (props: ProfileParams) => {
 					<ListItem onPress={() => navigation.navigate('Help', {})} activeOpacity={0.7}>
 						<OIcon src={theme.images.general.ic_help} width={16} color={theme.colors.textNormal} style={{ marginEnd: 14 }} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('HELP', 'Help')}</OText>
+					</ListItem>
+					<ListItem onPress={() => navigation.navigate('Sessions')} activeOpacity={0.7}>
+						<Ionicons name='md-list-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('SESSIONS', 'Sessions')}</OText>
 					</ListItem>
 				</Actions>
 
