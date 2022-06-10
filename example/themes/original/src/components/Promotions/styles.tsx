@@ -7,7 +7,6 @@ export const PromotionsContainer = styled.View`
 export const SingleOfferContainer = styled.View`
   flex-direction: row;
   width: 100%;
-  height: 80px;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
