@@ -78,7 +78,6 @@ const PromotionsUI = (props: PromotionParams) => {
     }
 
     const filteredOffers = offersState?.offers?.filter((offer: any) => offer.name.toLowerCase().includes(searchValue.toLowerCase()))
-    console.log(offersState)
     const targetString = offerSelected?.target === 1
         ? t('SUBTOTAL', 'Subtotal')
         : offerSelected?.target === 2
