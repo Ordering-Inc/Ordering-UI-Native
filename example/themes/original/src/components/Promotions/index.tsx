@@ -20,7 +20,7 @@ import { NotFoundSource } from '../NotFoundSource'
 import { View, StyleSheet, ScrollView } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { PromotionParams } from '../../types'
-const PromotionsUI = (props : PromotionParams) => {
+const PromotionsUI = (props: PromotionParams) => {
     const {
         navigation,
         offersState,
@@ -65,20 +65,20 @@ const PromotionsUI = (props : PromotionParams) => {
 
     const [, t] = useLanguage()
     const [{ parseDate, parsePrice, optimizeImage }] = useUtils()
-    const [events] = useEvent()
     const [openModal, setOpenModal] = useState(false)
 
-    const handleClickOffer = (offer : any) => {
+    const handleClickOffer = (offer: any) => {
         setOpenModal(true)
         setOfferSelected(offer)
     }
 
-    const handleBusinessClick = (business : any) => {
-        events.emit('go_to_page', { page: 'business', params: { store: business.slug } })
+    const handleBusinessClick = (store: any) => {
+        setOpenModal(false)
+        navigation.navigate('Business', { store: store.slug })
     }
 
-    const filteredOffers = offersState?.offers?.filter((offer : any) => offer.name.toLowerCase().includes(searchValue.toLowerCase()))
-
+    const filteredOffers = offersState?.offers?.filter((offer: any) => offer.name.toLowerCase().includes(searchValue.toLowerCase()))
+    console.log(offersState)
     const targetString = offerSelected?.target === 1
         ? t('SUBTOTAL', 'Subtotal')
         : offerSelected?.target === 2
@@ -121,21 +121,23 @@ const PromotionsUI = (props : PromotionParams) => {
                 />
             )}
             <ScrollView>
-                {!offersState?.loading && offersState.offers?.length > 0 && filteredOffers?.map((offer : any) => (
+                {!offersState?.loading && offersState.offers?.length > 0 && filteredOffers?.map((offer: any) => (
                     <SingleOfferContainer key={offer.id}>
                         <OfferInformation>
-                            <OText style={styles.offerTitle}>{offer?.name}</OText>
+                            <OText style={styles.offerTitle} numberOfLines={2}>{offer?.name}</OText>
                             {offer?.description && (
-                                <OText style={styles.offerDescription}>{offer?.description}</OText>
+                                <OText style={styles.offerDescription} numberOfLines={2}>{offer?.description}</OText>
                             )}
                             <OText style={styles.offerExtraInfo}>
                                 {t('EXPIRES', 'Expires')} {parseDate(offer?.end, { outputFormat: 'MMM DD, YYYY' })}
                             </OText>
                             <AvailableBusinesses>
-                                <OText style={styles.offerExtraInfo}>{t('APPLY_FOR', 'Apply for')}:</OText>
-                                {offer.businesses.map((business: any, i: number) => (
-                                    <OText style={styles.offerExtraInfo} key={business?.id}>{' '}{business?.name}{i + 1 < offer.businesses?.length ? ',' : ''}</OText>
-                                ))}
+                                <OText style={styles.offerExtraInfo} numberOfLines={1}>
+                                    {t('APPLY_FOR', 'Apply for')}:
+                                    {offer.businesses.map((business: any, i: number) => (
+                                        <React.Fragment key={i}>{' '}{business?.name}{i + 1 < offer.businesses?.length ? ',' : ''}</React.Fragment>
+                                    ))}
+                                </OText>
                             </AvailableBusinesses>
                         </OfferInformation>
                         <OButton
@@ -170,7 +172,7 @@ const PromotionsUI = (props : PromotionParams) => {
                             <OText>{t('OFFER_AUTOMATIC', 'This offer applies automatic')}</OText>
                         )}
                         {offerSelected?.minimum && (
-                            <OText>{t('MINIMUM_PURCHASE_FOR_OFFER', 'Minimum purshase for use this offer')}: {parsePrice(offerSelected?.minimum)}</OText>
+                            <OText>{t('MINIMUM_PURCHASE_FOR_OFFER', 'Minimum purchase for use this offer')}: {parsePrice(offerSelected?.minimum)}</OText>
                         )}
                         {offerSelected?.max_discount && (
                             <OText>{t('MAX_DISCOUNT_ALLOWED', 'Max discount allowed')}: {parsePrice(offerSelected?.max_discount)}</OText>
@@ -182,8 +184,8 @@ const PromotionsUI = (props : PromotionParams) => {
                     <OText style={{ marginTop: 10, marginBottom: 10 }}>
                         {t('AVAILABLE_BUSINESSES_FOR_OFFER', 'Available businesses for this offer')}:
                     </OText>
-                    <ScrollView style={{height: '75%'}}>
-                        {offerSelected?.businesses?.map((business : any) => {
+                    <ScrollView style={{ height: '75%' }}>
+                        {offerSelected?.businesses?.map((business: any) => {
                             return (
                                 <SingleBusinessOffer key={business.id}>
                                     {business?.logo ? (
@@ -202,7 +204,7 @@ const PromotionsUI = (props : PromotionParams) => {
                                         />
                                     )}
                                     <BusinessInfo>
-                                        <OText>{business.name}</OText>
+                                        <OText style={{ maxWidth: '60%' }}>{business.name}</OText>
                                         <OButton
                                             onClick={() => handleBusinessClick(business)}
                                             text={t('GO_TO_BUSINESSS', 'Go to business')}
@@ -220,7 +222,7 @@ const PromotionsUI = (props : PromotionParams) => {
     )
 }
 
-export const Promotions = (props : PromotionParams) => {
+export const Promotions = (props: PromotionParams) => {
     const PromotionsProps = {
         ...props,
         UIComponent: PromotionsUI
