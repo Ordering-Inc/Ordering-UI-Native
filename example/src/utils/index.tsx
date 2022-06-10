@@ -201,7 +201,7 @@ export const transformCountryCode = (countryCode : number) => {
  */
  export const reviewCommentList = (type: string) => {
   const [, t] = useLanguage()
-
+  // TODO: improve this function
   const reviews: any = {
     order: {
       1: {
@@ -386,4 +386,71 @@ export const transformCountryCode = (countryCode : number) => {
   }
 
   return reviews[type]
+}
+
+/**
+ * function to manage order comment list
+ * @param {string} param0 type of orders to return
+ * @returns object with orders dictionary
+ */
+export const orderCommentList = (value: string) => {
+  const [, t] = useLanguage()
+  const dictionary: any = {
+    reject: 6,
+    forcePickUp: 9,
+    pickupFailed: 10,
+    forceDelivery: 11,
+    deliveryFailed: 12,
+    notReady: 14
+  }
+
+  const status = dictionary[value]
+
+  const messages: any = {
+    6: [// on reject order
+      'Very far away',
+      'Driver/ vehicle incident',
+      'Destination unreachable',
+      'Unavailable driver',
+      'Other'
+    ],
+    9: [// on force pickup status
+      'I forgot to complete it in the location',
+      'I didn\'t have internet connection',
+      'Other'
+    ],
+    10: [// on pickup failed by driver
+      'Very far away',
+      'Driver/ vehicle incident',
+      'Destination unreachable',
+      'Store closed',
+      'Unavailable driver',
+      'Other'
+    ],
+    11: [// on force delivery status
+      'I forgot to complete it in the location',
+      'I didn\'t have internet connection',
+      'Other'
+    ],
+    12: [// on delivery failed by driver
+      'Very far away',
+      'Driver/ vehicle incident',
+      'Destination unreachable',
+      'Recipient unavailable',
+      'Refused- incorrect/ missing items',
+      'Refused- damage',
+      'Other'
+    ],
+    14: [// on order not ready
+      'Store didn\'t receive the order on time',
+      'Store very busy',
+      'Other'
+    ]
+  }
+
+  if (!messages[status]) return null
+
+  const list = messages[status].map((val: any, i: number) => ({ key: i, content: t(`ORDER_STATUS_${status}_QUICK_COMMENT_${i}`, val) }))
+
+  return { list }
 }
