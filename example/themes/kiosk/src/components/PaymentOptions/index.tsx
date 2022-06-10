@@ -189,7 +189,7 @@ const PaymentOptionsUI = (props: any) => {
 
   return (
     <>
-      <Spinner visible={isLoading || placing} />
+      <Spinner visible={isLoading || placing || paymethodsList?.loading} />
 
       <Container nestedScrollEnabled>
         <NavBar

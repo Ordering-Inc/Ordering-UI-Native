@@ -32,7 +32,7 @@ const ProductOptionUI = (props: any) => {
         <OText
           size={26}
           weight="bold"
-          style={{ width: '80%' }}
+          style={{ maxWidth: '80%' }}
         >
           {option.name}
         </OText>
