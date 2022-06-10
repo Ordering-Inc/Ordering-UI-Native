@@ -9,11 +9,13 @@ import {
 } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { useLanguage } from 'ordering-components/native';
-import { Content, Timer, TimeField, Header, Action, Comments } from './styles';
+import { Content, Timer, TimeField, Header, Action, Comments, CommentsButtonGroup } from './styles';
 import { FloatingButton } from '../FloatingButton';
 import { OText, OButton, OTextarea, OIconButton } from '../shared';
 import { AcceptOrRejectOrderParams } from '../../types';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { orderCommentList } from '../../../../../src/utils'
 
 export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const {
@@ -39,14 +41,32 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const [min, setMin] = useState('00');
   const [time, setTime] = useState('');
   const [comments, setComments] = useState('');
+  const [commentList, setCommentList] = useState<any>([]);
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
   const { top, bottom } = useSafeAreaInsets()
+
+  const orderCommentsList = orderCommentList(action)
 
   let codeNumberPhone, numberPhone, numberToShow;
   const phoneNumber = customerCellphone;
   const titleOrder = t(orderTitle[action]?.key, orderTitle[action]?.text)
   const buttonText = t(orderTitle[action]?.btnKey, orderTitle[action]?.btnText)
   const showTextArea = ['reject', 'deliveryFailed', 'pickupFailed', 'notReady', 'forcePickUp', 'forceDelivery'].includes(action)
+
+  const isSelectedComment = (commentKey: number) => {
+    const found = commentList.find((comment: any) => comment?.key === commentKey)
+    return found
+  }
+
+  const handleChangeComments = (commentItem: any) => {
+    const found = commentList.find((comment: any) => comment?.key === commentItem.key)
+    if (found) {
+      const _comments = commentList.filter((comment: any) => comment?.key !== commentItem.key)
+      setCommentList(_comments)
+    } else {
+      setCommentList([...commentList, commentItem])
+    }
+  }
 
   const handleFocus = () => {
     viewRef?.current?.measure((x: any, y: any) => {
@@ -152,6 +172,12 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const handleAcceptOrReject = () => {
     handleFixTime();
 
+    let _comments = ''
+    if (commentList.length > 0) {
+      commentList.map((comment: any) => (_comments += comment.content + '. '))
+    }
+    const _comment = _comments + comments
+
     let minsToSend = min;
 
     if (min > '60') minsToSend = '59';
@@ -165,7 +191,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
         status: 7,
       },
       rejectByBusiness: {
-        comment: comments,
+        comment: _comment,
         status: 5,
       },
       acceptByDriver: {
@@ -173,27 +199,27 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
         status: 8,
       },
       rejectByDriver: {
-        comment: comments,
+        comment: _comment,
         status: 6,
       },
       pickupFailedByDriver: {
-        comment: comments,
+        comment: _comment,
         status: 10
       },
       deliveryFailedByDriver: {
-        comment: comments,
+        comment: _comment,
         status: 12
       },
       orderNotReady: {
-        comment: comments,
+        comment: _comment,
         status: 14
       },
       forcePickUp: {
-        reasons: comments,
+        reasons: _comment,
         status: 9
       },
       forceDelivery: {
-        reasons: comments,
+        reasons: _comment,
         status: 11
       }
     };
@@ -386,6 +412,28 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           onSubmitEditing={() => handleAcceptOrReject()}
           onBlur={() => actions && action === 'accept' && timerRef?.current?.focus?.()}
         />
+
+        {orderCommentsList && (
+          <CommentsButtonGroup>
+            {orderCommentsList?.list?.map((comment: any) => (
+              <OButton
+                key={comment.key}
+                text={comment.content}
+                bgColor={isSelectedComment(comment.key) ? theme.colors.primary : theme.colors.tabBar}
+                borderColor={isSelectedComment(comment.key) ? theme.colors.primary : theme.colors.tabBar}
+                textStyle={{
+                  color: isSelectedComment(comment.key) ? theme.colors.white : theme.colors.darkText,
+                  fontSize: 12,
+                  paddingRight: isSelectedComment(comment.key) ? 15 : 0
+                }}
+                style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
+                imgRightSrc={isSelectedComment(comment.key) ? theme.images.general.close : null}
+                imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
+                onClick={() => handleChangeComments(comment) }
+              />
+            ))}
+          </CommentsButtonGroup>
+        )}
 
         {showTextArea && (
           <Comments ref={viewRef}>
