@@ -268,6 +268,12 @@ export const OrderHeaderComponent = (props: OrderHeader) => {
               <OText size={13} weight='bold'>{`${t('ORDER_TYPE', 'Order Type')}: `}</OText>
               {orderTypes(order.delivery_type)}
             </OText>
+            {order?.delivery_option && (
+              <OText size={13}>
+                <OText size={13} weight='bold'>{`${t('DELIVERY_PREFERENCE', 'Delivery Preference')}: `}</OText>
+                {order?.delivery_option?.name}
+              </OText>
+            )}
             {order?.payment_events?.length > 0 && (
               <View>
                 <OText size={13}>
