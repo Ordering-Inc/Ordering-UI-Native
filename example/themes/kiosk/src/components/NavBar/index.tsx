@@ -1,9 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
 import { OIcon, OButton, OText } from '../shared'
-import { ImageStyle, TextStyle, View, Platform } from 'react-native'
-import { OrderTypeSelector } from '../OrderTypeSelector'
-import { useConfig, useLanguage } from 'ordering-components/native'
+import { ImageStyle, TextStyle, View, Platform, TouchableOpacity } from 'react-native'
+import { useConfig, useLanguage, useOrder } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
 const Wrapper = styled.View`
   background-color: ${(props: any) => props.theme.colors.white};
@@ -54,13 +53,15 @@ interface Props {
   paddingTop?: number,
   includeOrderTypeSelector?: boolean,
   imgLeftStyle?: ImageStyle
+  onClickTypes?: any
 }
 
 const NavBar = (props: Props) => {
   const theme = useTheme();
-  const [{ configs }] = useConfig();
+  const [orderState] = useOrder()
   const [, t] = useLanguage();
-  const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || [];
+
+  const selectedOrderType = orderState?.options?.type;
 
   return (
     <Wrapper style={{ paddingTop: props.paddingTop, ...props.style }}>
@@ -121,7 +122,15 @@ const NavBar = (props: Props) => {
           }}
         >
           <OText style={{ paddingRight: 5 }}>{t('THIS_ORDER_IS_TO', 'This order is to')}</OText>
-          <OrderTypeSelector configTypes={configTypes} />
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={props.onClickTypes}
+          >
+            <OText color={theme.colors.primary}>
+              {selectedOrderType === 2 && t('TAKE_OUT', 'Take out')}
+              {selectedOrderType === 3 && t('EAT_IN', 'Eat in')}
+            </OText>
+          </TouchableOpacity>
         </View>
       )}
 
