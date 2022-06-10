@@ -35,3 +35,8 @@ export const Comments = styled.View`
   margin-top: 20px;
   padding-bottom: 40px;
 `;
+
+export const CommentsButtonGroup = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+`
