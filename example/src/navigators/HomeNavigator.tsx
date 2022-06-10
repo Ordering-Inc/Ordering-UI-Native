@@ -20,6 +20,7 @@ import Help from '../pages/Help'
 import HelpOrder from '../pages/HelpOrder'
 import HelpGuide from '../pages/HelpGuide'
 import HelpAccountAndPayment from '../pages/HelpAccountAndPayment'
+import Sessions from '../pages/Sessions';
 import Splash from '../pages/Splash';
 import ProductDetails from '../pages/ProductDetails';
 const Stack = createStackNavigator();
@@ -162,6 +163,11 @@ const HomeNavigator = (e : any) => {
                    <Stack.Screen
                     name="HelpAccountAndPayment"
                     component={HelpAccountAndPayment}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="Sessions"
+                    component={Sessions}
                     options={{ headerShown: false }}
                   />
                 </>
