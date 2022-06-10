@@ -40,7 +40,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
   const clearCartWhenTimeOut = () => {
     if (cart?.uuid) clearCart(cart?.uuid)
   }
-  const timerId = useRef(false);
+  const timerId: any = useRef(false);
 
   const clearInactivityTimeout = () =>{ 
     clearTimeout(timerId.current);
@@ -93,6 +93,17 @@ const BusinessMenu = (props:any): React.ReactElement => {
     else showCartBottomSheet();
   }
 
+  const handleRedirect = () => {
+    navigation.navigate('DeliveryType', {
+      callback: () => {
+        navigation.navigate('Business');
+      },
+      goBack: () => {
+        navigation.goBack();
+      },
+    });
+  };
+
   return (
     <View style={{
       flex: 1,
@@ -114,6 +125,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
               title={t('MENU_V21', 'Menu')}
               onActionLeft={goToBack}
               includeOrderTypeSelector
+              onClickTypes={handleRedirect}
               rightComponent={cart && (
                 <TouchableOpacity
                   style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center' }}
@@ -144,7 +156,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
         </Container>
       </View>
 
-        <View
+        {/* <View
           style={{
             flex: bottomSheetVisibility && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
             display: bottomSheetVisibility ? 'flex' : 'none'
@@ -155,7 +167,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
             resetInactivityTimeout={resetInactivityTimeout}
             clearInactivityTimeout={clearInactivityTimeout}
           />
-        </View>
+        </View> */}
     </View>
   );
 };

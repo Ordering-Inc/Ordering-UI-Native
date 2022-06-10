@@ -103,7 +103,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
   const getFormattedSubOptionName = ({ quantity, name, position, price }: { quantity: number, name: string, position: string, price: number }) => {
     const pos = position ? `(${position})` : ''
-    return `${quantity} x ${name} ${pos} +${price}`
+    return `${quantity} x ${name} ${pos} ${price}`
   }
 
   /*useEffect(() => {
@@ -210,7 +210,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                             quantity: suboption.quantity,
                             name: suboption.name,
                             position: (suboption.position !== 'whole') ? t(suboption.position.toUpperCase(), suboption.position) : '',
-                            price: parsePrice(suboption.price)
+                            price: suboption.price > 0 ? `+${parsePrice(suboption.price)}` : parsePrice(suboption.price)
                           })}
                         </OText>
                       </ProductSubOption>
