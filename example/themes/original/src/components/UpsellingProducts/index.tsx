@@ -163,7 +163,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 	const UpsellingContent = () => {
 		return (
 			<>
-				<View style={{ ...styles.headerItem, flex: 1 }}>
+				<View style={{ ...styles.headerItem, flex: 1, marginTop: Platform.OS == 'ios' ? 35 : 70 }}>
 					<OButton
 						imgLeftSrc={theme.images.general.arrow_left}
 						imgRightSrc={null}
@@ -172,7 +172,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 						imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
 					/>
 				</View>
-				<ScrollView style={{ marginBottom: props.isPage ? 40 : bottom + (Platform.OS == 'ios' ? 96 : 130) }} showsVerticalScrollIndicator={false}>
+				<ScrollView style={{ marginTop: 10, marginBottom: props.isPage ? 40 : bottom + (Platform.OS == 'ios' ? 96 : 130) }} showsVerticalScrollIndicator={false}>
 					{productsList.length > 0 &&
 						<View style={{ paddingHorizontal: 40, overflow: 'visible' }}>
 							<OText size={16} lineHeight={24} weight={'500'}>{t('WANT_SOMETHING_ELSE', 'Do you want something else?')}</OText>
