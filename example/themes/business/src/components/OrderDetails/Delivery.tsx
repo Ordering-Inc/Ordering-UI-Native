@@ -102,7 +102,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
   const handleOpenMapView = async () => {
     const { locationStatus } = permissions
-    console.log(permissions)
     const androidGranted =
       locationStatus?.['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'granted' &&
       locationStatus?.['android.permission.ACTIVITY_RECOGNITION'] === 'granted' &&
@@ -122,7 +121,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
     if (androidGranted || iosGranted) {
       setOpenModalForMapView(!openModalForMapView);
-      console.log('b')
     } else if (androidBlocked || iosBlocked) {
       // redirectToSettings();
       showToast(
@@ -198,7 +196,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       setOpenModalForMapView(false);
     }
   }, [permissions?.locationStatus]);
-  console.log(openModalForMapView)
+
   useEffect(() => {
     if (openModalForAccept) {
       setOpenModalForAccept(false);
