@@ -101,21 +101,49 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleOpenMapView = async () => {
-    if (permissions?.locationStatus === 'granted') {
+    const { locationStatus } = permissions
+    console.log(permissions)
+    const androidGranted =
+      locationStatus?.['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'granted' &&
+      locationStatus?.['android.permission.ACTIVITY_RECOGNITION'] === 'granted' &&
+      Platform.OS === 'android'
+    const androidBlocked =
+      (locationStatus?.['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'blocked' ||
+        locationStatus?.['android.permission.ACTIVITY_RECOGNITION'] === 'blocked') &&
+      Platform.OS === 'android'
+    const iosGranted =
+      locationStatus?.['ios.permission.LOCATION_ALWAYS'] === 'granted' &&
+      locationStatus?.['ios.permission.LOCATION_WHEN_IN_USE'] === 'granted' &&
+      Platform.OS === 'ios'
+    const iosBlocked =
+      (locationStatus?.['ios.permission.LOCATION_ALWAYS'] === 'blocked' ||
+        locationStatus?.['ios.permission.LOCATION_WHEN_IN_USE'] === 'blocked') &&
+      Platform.OS === 'ios'
+
+    if (androidGranted || iosGranted) {
       setOpenModalForMapView(!openModalForMapView);
-    } else if (permissions?.locationStatus === 'blocked') {
+      console.log('b')
+    } else if (androidBlocked || iosBlocked) {
       // redirectToSettings();
       showToast(
         ToastType.Error,
         t(
           'GEOLOCATION_SERVICE_PERMISSION_BLOCKED',
-          'Geolocation service  permissions blocked.',
+          'Geolocation service permissions blocked.',
         ),
       );
     } else {
       const response = await askLocationPermission();
-      if (response === 'granted') {
-        setOpenModalForMapView(!openModalForMapView);
+      const androidGranted =
+        response?.locationStatus?.['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'granted' &&
+        response?.locationStatus?.['android.permission.ACTIVITY_RECOGNITION'] === 'granted' &&
+        Platform.OS === 'android'
+      const iosGranted =
+        response?.locationStatus?.['ios.permission.LOCATION_ALWAYS'] === 'granted' &&
+        response?.locationStatus?.['ios.permission.LOCATION_WHEN_IN_USE'] === 'granted' &&
+        Platform.OS === 'ios'
+      if (androidGranted || iosGranted) {
+        setOpenModalForMapView(true)
       }
     }
   };
@@ -170,7 +198,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       setOpenModalForMapView(false);
     }
   }, [permissions?.locationStatus]);
-
+  console.log(openModalForMapView)
   useEffect(() => {
     if (openModalForAccept) {
       setOpenModalForAccept(false);
