@@ -77,6 +77,7 @@ import { StripeCardsList } from './src/components/StripeCardsList';
 import { ProductIngredient } from './src/components/ProductIngredient';
 import { ProductOption } from './src/components/ProductOption';
 import { ProductOptionSubOption } from './src/components/ProductOptionSubOption';
+import { Sessions } from './src/components/Sessions';
 import { SingleProductReview } from './src/components/SingleProductReview';
 import { LogoutButton } from './src/components/LogoutButton';
 import { UserFormDetailsUI } from './src/components/UserFormDetails';
@@ -227,6 +228,7 @@ export {
 	ProductIngredient,
 	ProductOption,
 	ProductOptionSubOption,
+	Sessions,
 	SingleProductReview,
 	LogoutButton,
 	UserFormDetailsUI,
