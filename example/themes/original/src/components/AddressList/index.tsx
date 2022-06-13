@@ -158,7 +158,7 @@ const AddressListUI = (props: AddressListParams) => {
 					titleAlign={'center'}
 					onActionLeft={goToBack}
 					showCall={false}
-					style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 20 }}
+					style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 20, marginTop: Platform.OS === 'ios' ? 0 : 30 }}
 				/>
 			)}
 			{(!addressList.loading || (isFromProductsList || isFromBusinesses || isFromProfile || isProfile)) && (
@@ -179,7 +179,7 @@ const AddressListUI = (props: AddressListParams) => {
 								showCall={false}
 								btnStyle={{ paddingLeft: 0 }}
 								paddingTop={0}
-								style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+								style={{ flexDirection: 'column', alignItems: 'flex-start', marginTop: Platform.OS === 'ios' ? 0 : 40 }}
 								titleWrapStyle={{ paddingHorizontal: 0 }}
 								titleStyle={{ marginLeft: 0, marginRight: 0 }}
 							/>

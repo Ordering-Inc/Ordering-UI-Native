@@ -283,7 +283,7 @@ const ProfileUI = (props: ProfileParams) => {
 				titleAlign={'center'}
 				onActionLeft={() => navigation.goBack()}
 				showCall={false}
-				style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 30 }}
+				style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 30 , marginTop: Platform.OS === 'ios' ? 50 : 40 }}
 			/>
 			<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
 				<Container noPadding>
