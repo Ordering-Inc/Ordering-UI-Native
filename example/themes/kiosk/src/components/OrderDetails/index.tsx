@@ -520,7 +520,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <OSRow>
                 <OText>
                   {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
-                  ({fee?.fixed > 0 && `${parsePrice(fee?.fixed)} + `}{fee.percentage}%){' '}
+                  ({fee?.fixed > 0 && `${parsePrice(fee?.fixed)}${fee.percentage > 0 ? ' + ' : ''}`}{fee.percentage > 0 && `${fee.percentage}%`}){' '}
                 </OText>
               </OSRow>
               <OText>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0)}</OText>
