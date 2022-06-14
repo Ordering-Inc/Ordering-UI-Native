@@ -33,7 +33,8 @@ export const getTraduction = (key: string) => {
     ERROR_PLACE_PAY_WITH_CARD1: 'An error occurred while trying to pay by card',
     ERROR_PLACE_PAY_WITH_PAYPAL_CAPTURE: 'An error occurred while trying to pay by PayPal',
     ERROR_ADD_PRODUCT_VERY_FAR_FOR_DELIVERY: 'Error adding product, very far for delivery',
-    ERROR_PRODUCT_NOT_FOUND: 'Error with the product'
+    ERROR_PRODUCT_NOT_FOUND: 'Error with the product',
+    ERROR_INVALID_OFFER: 'The offer doesn\'t exist'
   }
 
   return keyList[key] ? t(key, keyList[key]) : t(key)
@@ -168,6 +169,15 @@ export const transformCountryCode = (countryCode : number) => {
 export const getTypesText = (value: number) => {
   const ret = ORDER_TYPES.find((type: any) => type.value == value);
   return ret?.content;
+}
+
+/**
+ * List shape for ribbon
+ */
+ export const shape = {
+  rectangle: 'rectangle',
+  rectangleRound: 'rectangle_round',
+  capsuleShape: 'capsule_shape'
 }
 
 /**

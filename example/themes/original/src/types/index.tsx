@@ -227,6 +227,7 @@ export interface BusinessProductsCategoriesParams {
 }
 export interface BusinessProductsListParams {
 	errors?: any;
+	isFiltMode?: any;
 	businessId?: number;
 	category?: any;
 	categories: Array<any>;
