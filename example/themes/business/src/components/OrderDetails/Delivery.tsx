@@ -51,7 +51,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     orderTitle,
     appTitle,
     handleClickLogisticOrder,
-    forceUpdate
+    forceUpdate,
+    getPermissions
   } = props;
   const [, { showToast }] = useToast();
   const { order } = props.order
@@ -101,46 +102,26 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleOpenMapView = async () => {
-    const { locationStatus } = permissions
-    const androidGranted =
-      locationStatus?.['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'granted' &&
-      locationStatus?.['android.permission.ACTIVITY_RECOGNITION'] === 'granted' &&
-      Platform.OS === 'android'
-    const androidBlocked =
-      (locationStatus?.['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'blocked' ||
-        locationStatus?.['android.permission.ACTIVITY_RECOGNITION'] === 'blocked') &&
-      Platform.OS === 'android'
-    const iosGranted =
-      locationStatus?.['ios.permission.LOCATION_ALWAYS'] === 'granted' &&
-      locationStatus?.['ios.permission.LOCATION_WHEN_IN_USE'] === 'granted' &&
-      Platform.OS === 'ios'
-    const iosBlocked =
-      (locationStatus?.['ios.permission.LOCATION_ALWAYS'] === 'blocked' ||
-        locationStatus?.['ios.permission.LOCATION_WHEN_IN_USE'] === 'blocked') &&
-      Platform.OS === 'ios'
+    const _permissions = await getPermissions()
 
-    if (androidGranted || iosGranted) {
+    const isBlocked = _permissions.some((_permission: string) => permissions?.locationStatus?.[_permission] === 'blocked')
+    const isGranted = _permissions.reduce((allPermissions: boolean, _permission: string) => allPermissions && permissions?.locationStatus?.[_permission] === 'granted', true)
+
+    if (isGranted) {
       setOpenModalForMapView(!openModalForMapView);
-    } else if (androidBlocked || iosBlocked) {
+    } else if (isBlocked) {
       // redirectToSettings();
       showToast(
         ToastType.Error,
         t(
           'GEOLOCATION_SERVICE_PERMISSION_BLOCKED',
-          'Geolocation service permissions blocked.',
+          'Geolocation service  permissions blocked.',
         ),
       );
     } else {
       const response = await askLocationPermission();
-      const androidGranted =
-        response?.locationStatus?.['android.permission.ACCESS_BACKGROUND_LOCATION'] === 'granted' &&
-        response?.locationStatus?.['android.permission.ACTIVITY_RECOGNITION'] === 'granted' &&
-        Platform.OS === 'android'
-      const iosGranted =
-        response?.locationStatus?.['ios.permission.LOCATION_ALWAYS'] === 'granted' &&
-        response?.locationStatus?.['ios.permission.LOCATION_WHEN_IN_USE'] === 'granted' &&
-        Platform.OS === 'ios'
-      if (androidGranted || iosGranted) {
+      const isGranted = _permissions.reduce((allPermissions: boolean, _permission: string) => allPermissions && response?.locationStatus?.[_permission] === 'granted', true)
+      if (isGranted) {
         setOpenModalForMapView(true)
       }
     }
