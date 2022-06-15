@@ -373,6 +373,7 @@ export interface OrderDetailsParams {
   handleClickLogisticOrder?: (status: number, orderId: number) => void;
   orderTitle?: any;
   forceUpdate?: number;
+  getPermissions?: any
 }
 export interface ProductItemAccordionParams {
   isCartPending?: boolean;

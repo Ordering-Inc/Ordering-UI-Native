@@ -2,6 +2,8 @@ import styled, { css } from 'styled-components/native'
 
 export const PromotionsContainer = styled.View`
   width: 100%;
+  padding-left: 40px;
+	padding-right: 40px;
 `
 
 export const SingleOfferContainer = styled.View`
