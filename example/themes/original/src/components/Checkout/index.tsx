@@ -597,21 +597,19 @@ const CheckoutUI = (props: any) => {
 												</OText>
 											</TouchableOpacity>
 										</CartHeader>
-										{props.isFranchiseApp && (
-											<TouchableOpacity
-												onPress={() => setOpenChangeStore(true)}
-												style={{ alignSelf: 'flex-start' }}
+										<TouchableOpacity
+											onPress={() => setOpenChangeStore(true)}
+											style={{ alignSelf: 'flex-start' }}
+										>
+											<OText
+												size={12}
+												lineHeight={18}
+												color={theme.colors.textSecondary}
+												style={{ textDecorationLine: 'underline' }}
 											>
-												<OText
-													size={12}
-													lineHeight={18}
-													color={theme.colors.textSecondary}
-													style={{ textDecorationLine: 'underline' }}
-												>
-													{t('CHANGE_STORE', 'Change store')}
-												</OText>
-											</TouchableOpacity>
-										)}
+												{t('CHANGE_STORE', 'Change store')}
+											</OText>
+										</TouchableOpacity>
 										<OrderSummary
 											cart={cart}
 											isCartPending={cart?.status === 2}
@@ -664,7 +662,7 @@ const CheckoutUI = (props: any) => {
 						</View>
 					)}
 					<OModal
-						open={openChangeStore && props.isFranchiseApp}
+						open={openChangeStore}
 						entireModal
 						customClose
 						onClose={() => setOpenChangeStore(false)}
@@ -873,7 +871,7 @@ export const Checkout = (props: any) => {
 		...props,
 		UIComponent: CheckoutUI,
 		cartState,
-		[props.isFranchiseApp ? 'uuid' : 'businessId']: props.isFranchiseApp ? cartUuid : cartState.cart?.business_id
+		uuid: cartUuid
 	}
 
 	return (
