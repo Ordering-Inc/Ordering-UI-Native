@@ -93,6 +93,7 @@ const PromotionsUI = (props: PromotionParams) => {
                 titleAlign={'center'}
                 onActionLeft={() => navigation.goBack()}
                 showCall={false}
+                style={{ paddingVertical: Platform.OS === 'ios' ? 0 : 20, marginLeft: 20 }}
             />
             <PromotionsContainer>
                 <SearchBarContainer>
