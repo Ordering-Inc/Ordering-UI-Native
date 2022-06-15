@@ -363,6 +363,27 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     )
   }
 
+  const RenderGoogleMap = () => {
+    const driverLocationString = typeof order?.driver?.location?.location === 'string' && order?.driver?.location?.location?.split(',').map((l : string) => l.replace(/[^-.0-9]/g, ''))
+    const parsedLocations = locations.map(location => typeof location?.location === 'string' ? {
+      ...location,
+      lat: parseFloat(location?.location?.split(',')[0].replace(/[^-.0-9]/g, '')),
+      lng: parseFloat(location?.location?.split(',')[1].replace(/[^-.0-9]/g, ''))
+    } : location)
+
+    return (
+      <GoogleMap
+        location={typeof order?.driver?.location?.location === 'string'
+          ? {
+            lat: parseFloat(driverLocationString[0]),
+            lng: parseFloat(driverLocationString[1]),
+          } : order?.driver?.location
+        }
+        locations={parsedLocations}
+        readOnly
+      />
+    )
+  }
 
   useEffect(() => {
     if (reorderState?.error) {
@@ -683,11 +704,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <>
                   {order?.driver?.location && mapValidStatuses.includes(parseInt(order?.status)) && (
                     <Map>
-                      <GoogleMap
-                        location={order?.driver?.location}
-                        locations={locations}
-                        readOnly
-                      />
+                      <RenderGoogleMap />
                     </Map>
                   )}
                 </>
