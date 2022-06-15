@@ -39,7 +39,7 @@ const ORDER_STATUS: any = {
   	23: 'ORDER_DRIVER_ON_WAY'
 }
 
-const filterSpecialStatus = ['prepared_in', 'delivered_in']
+const filterSpecialStatus = ['prepared_in', 'delivered_in', 'delivery_datetime']
 
 
 const MessagesUI = (props: MessagesParams) => {
