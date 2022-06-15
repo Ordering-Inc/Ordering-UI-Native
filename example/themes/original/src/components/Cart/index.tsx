@@ -162,7 +162,7 @@ const CartUI = (props: any) => {
         handleClearProducts={handleClearProducts}
         handleCartOpen={handleCartOpen}
         onNavigationRedirect={props.onNavigationRedirect}
-        handleChangeStore={props.isFranchiseApp ? () => setOpenChangeStore(true) : null}
+        handleChangeStore={() => setOpenChangeStore(true)}
         handleClickCheckout={() => setOpenUpselling(true)}
         checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
       >
