@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
+import Recaptcha from 'react-native-recaptcha-that-works'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
 	ForgotPasswordForm as ForgotPasswordController,
 	useLanguage,
 	useToast,
 	ToastType,
+	useConfig
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import NavBar from '../NavBar';
-import { FormInput, FormSide } from '../LoginForm/styles'
+import { FormInput, FormSide, RecaptchaButton } from '../LoginForm/styles'
 import { Container } from './styles'
 
 import { OButton, OInput, OText } from '../shared';
@@ -20,10 +24,15 @@ const ForgotPasswordUI = (props: any) => {
 		navigation,
 		formState,
 		handleButtonForgotPasswordClick,
+		handleReCaptcha,
+		enableReCaptcha
 	} = props;
 	const [, t] = useLanguage();
 	const [, { showToast }] = useToast();
+	const [{ configs }] = useConfig();
 	const { control, handleSubmit, errors } = useForm();
+	const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
+	const [recaptchaVerified, setRecaptchaVerified] = useState(false)
 
 	const theme = useTheme();
 
@@ -38,6 +47,7 @@ const ForgotPasswordUI = (props: any) => {
 	});
 
 	const [emailSent, setEmailSent] = useState(null);
+	const recaptchaRef = useRef<any>({});
 
 	const onSubmit = (values: any) => {
 		setEmailSent(values.email)
@@ -48,22 +58,51 @@ const ForgotPasswordUI = (props: any) => {
 		onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
 	}
 
+	  	const handleOpenRecaptcha = () => {
+		setRecaptchaVerified(false)
+	  	if (!recaptchaConfig?.siteKey) {
+			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
+			return
+		}
+		if (!recaptchaConfig?.baseUrl) {
+			showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
+			return
+		}
+		recaptchaRef.current.open()
+  	}
+
+	const onRecaptchaVerify = (token: any) => {
+		setRecaptchaVerified(true)
+		handleReCaptcha(token)
+	}
+
 	useEffect(() => {
 		if (!formState.loading && emailSent) {
 			if (formState.result?.error) {
 				setEmailSent(null)
 				formState.result?.result && showToast(
 					ToastType.Error,
-					formState.result?.result[0]
+					typeof formState.result?.result === 'string'
+          ? formState.result?.result
+          : formState.result?.result[0]
 				)
 				return
 			}
 			showToast(
 				ToastType.Success,
-				`${t('SUCCESS_SEND_FORGOT_PASSWORD', 'Your link has been sent to the email')}: ${emailSent}`
+				t('IF_ACCOUNT_EXIST_EMAIL_SEND_PASSWORD', 'If an account exists with this email a password will be sent')
 			)
 		}
 	}, [formState])
+
+	useEffect(() => {
+		if (configs && Object.keys(configs).length > 0 && enableReCaptcha) {
+			setRecaptchaConfig({
+				siteKey: configs?.security_recaptcha_site_key?.value || null,
+				baseUrl: configs?.security_recaptcha_base_url?.value || null
+			})
+		}
+	}, [configs, enableReCaptcha])
 
 	return (
 		<Container>
@@ -126,6 +165,37 @@ const ForgotPasswordUI = (props: any) => {
 						}}
 						defaultValue=""
 					/>
+					{enableReCaptcha && (
+						<>
+							<TouchableOpacity
+								onPress={handleOpenRecaptcha}
+							>
+								<RecaptchaButton>
+									{recaptchaVerified ? (
+										<MaterialCommunityIcons
+											name="checkbox-marked"
+											size={26}
+											color={theme.colors.primary}
+										/>
+									) : (
+										<MaterialCommunityIcons
+											name="checkbox-blank-outline"
+											size={26}
+											color={theme.colors.mediumGray}
+										/>
+									)}
+									<OText size={14} mLeft={8}>{t('VERIFY_ReCAPTCHA', 'Verify reCAPTCHA')}</OText>
+								</RecaptchaButton>
+							</TouchableOpacity>
+							<Recaptcha
+								ref={recaptchaRef}
+								siteKey={recaptchaConfig?.siteKey}
+								baseUrl={recaptchaConfig?.baseUrl}
+								onVerify={onRecaptchaVerify}
+								onExpire={() => setRecaptchaVerified(false)}
+							/>
+						</>
+					)}
 
 					<OButton
 						text={emailSent && !formState.result?.error ? t('LINK_SEND_FORGOT_PASSWORD', 'Link Sent') : t('FRONT_RECOVER_PASSWORD', 'Recover Password')}
@@ -146,6 +216,7 @@ const ForgotPasswordUI = (props: any) => {
 export const ForgotPasswordForm = (props: any) => {
 	const ForgotPasswordProps = {
 		...props,
+		isRecaptchaEnable: true,
 		UIComponent: ForgotPasswordUI
 	}
 	return <ForgotPasswordController {...ForgotPasswordProps} />
