@@ -51,7 +51,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     orderTitle,
     appTitle,
     handleClickLogisticOrder,
-    forceUpdate
+    forceUpdate,
+    getPermissions
   } = props;
   const [, { showToast }] = useToast();
   const { order } = props.order
@@ -101,9 +102,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleOpenMapView = async () => {
-    if (permissions?.locationStatus === 'granted') {
+    const _permissions = await getPermissions()
+
+    const isBlocked = _permissions.some((_permission: string) => permissions?.locationStatus?.[_permission] === 'blocked')
+    const isGranted = _permissions.reduce((allPermissions: boolean, _permission: string) => allPermissions && permissions?.locationStatus?.[_permission] === 'granted', true)
+
+    if (isGranted) {
       setOpenModalForMapView(!openModalForMapView);
-    } else if (permissions?.locationStatus === 'blocked') {
+    } else if (isBlocked) {
       // redirectToSettings();
       showToast(
         ToastType.Error,
@@ -114,8 +120,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       );
     } else {
       const response = await askLocationPermission();
-      if (response === 'granted') {
-        setOpenModalForMapView(!openModalForMapView);
+      const isGranted = _permissions.reduce((allPermissions: boolean, _permission: string) => allPermissions && response?.locationStatus?.[_permission] === 'granted', true)
+      if (isGranted) {
+        setOpenModalForMapView(true)
       }
     }
   };
