@@ -107,10 +107,6 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 		}
 	}, [upsellingProducts.loading, upsellingProducts?.products.length])
 
-	useEffect(() => {
-		isCheckout && Object.keys(cart).length === 0 && onNavigationRedirect && onNavigationRedirect('MyOrders')
-	}, [cart, isCheckout])
-
 	const handleFormProduct = (product: any) => {
 		onNavigationRedirect && onNavigationRedirect('ProductDetails', {
 			product: product,
