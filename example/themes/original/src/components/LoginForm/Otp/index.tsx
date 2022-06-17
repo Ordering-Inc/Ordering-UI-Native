@@ -7,9 +7,9 @@ import { OTPContainer } from './styles';
 import { OText, OButton } from '../../shared';
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 import { useTheme } from 'styled-components/native';
-import { otpParams } from  '../../../types'
+import { otpParams } from '../../../types'
 
-export const Otp = (props : otpParams) => {
+export const Otp = (props: otpParams) => {
     const {
         willVerifyOtpState,
         setWillVerifyOtpState,
@@ -20,7 +20,7 @@ export const Otp = (props : otpParams) => {
 
     const theme = useTheme();
     const [, t] = useLanguage();
-    const [otpLeftTime, _, resetOtpLeftTime] : any = useCountdownTimer(
+    const [otpLeftTime, _, resetOtpLeftTime]: any = useCountdownTimer(
         600, willVerifyOtpState)
 
 
@@ -69,7 +69,7 @@ export const Otp = (props : otpParams) => {
                     autoFocusOnLoad
                     codeInputFieldStyle={loginStyle.underlineStyleBase}
                     codeInputHighlightStyle={loginStyle.underlineStyleHighLighted}
-                    onCodeFilled={(code : string) => handleLoginOtp(code)}
+                    onCodeFilled={(code: string) => handleLoginOtp(code)}
                     selectionColor={theme.colors.primary}
                 />
                 <TouchableOpacity onPress={() => handleOnSubmit()} disabled={otpLeftTime > 520}>
@@ -86,7 +86,6 @@ export const Otp = (props : otpParams) => {
                     text={t('CANCEL', 'Cancel')}
                 />
             </OTPContainer>
-            
         </>
     )
 }

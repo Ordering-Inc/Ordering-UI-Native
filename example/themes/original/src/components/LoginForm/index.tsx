@@ -230,12 +230,12 @@ const LoginFormUI = (props: LoginParams) => {
 		handleReCaptcha(token)
 	}
 
-	const handleChangeOtpType = (type : string) => {
+	const handleChangeOtpType = (type: string) => {
 		handleChangeTab('otp')
 		setOtpType(type)
 	}
 
-	const handleLoginOtp = (code : string) => {
+	const handleLoginOtp = (code: string) => {
 		handleButtonLoginClick({ code })
 		setWillVerifyOtpState(false)
 	}
