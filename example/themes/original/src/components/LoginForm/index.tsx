@@ -18,7 +18,6 @@ import { useTheme } from 'styled-components/native';
 import { FacebookLogin } from '../FacebookLogin';
 import { VerifyPhone } from '../../../../../src/components/VerifyPhone';
 import { OModal } from '../../../../../src/components/shared';
-
 import {
 	Container,
 	ButtonsWrapper,
@@ -32,17 +31,19 @@ import {
 	LineSeparator,
 	SkeletonWrapper,
 	TabBtn,
-  RecaptchaButton
+	RecaptchaButton
 } from './styles';
 
 import NavBar from '../NavBar';
 
-import { OText, OButton, OInput, OIcon } from '../shared';
+import { OText, OButton, OInput } from '../shared';
 import { LoginParams } from '../../types';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import { GoogleLogin } from '../GoogleLogin';
 import { AppleLogin } from '../AppleLogin';
+import { Otp } from './Otp'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Alert from '../../../../../src/providers/AlertProvider'
 
 const LoginFormUI = (props: LoginParams) => {
 	const {
@@ -51,6 +52,7 @@ const LoginFormUI = (props: LoginParams) => {
 		navigation,
 		useLoginByEmail,
 		useLoginByCellphone,
+		useLoginOtp,
 		loginButtonText,
 		forgotButtonText,
 		verifyPhoneState,
@@ -63,7 +65,12 @@ const LoginFormUI = (props: LoginParams) => {
 		onNavigationRedirect,
 		notificationState,
 		handleReCaptcha,
-		enableReCaptcha
+		enableReCaptcha,
+		otpType,
+		setOtpType,
+		generateOtpCode,
+		useLoginOtpEmail,
+		useLoginOtpCellphone,
 	} = props;
 
 	const [, { showToast }] = useToast();
@@ -75,6 +82,7 @@ const LoginFormUI = (props: LoginParams) => {
 	const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [isFBLoading, setIsFBLoading] = useState(false);
+	const [willVerifyOtpState, setWillVerifyOtpState] = useState(false)
 	const [phoneInputData, setPhoneInputData] = useState({
 		error: '',
 		phone: {
@@ -84,9 +92,11 @@ const LoginFormUI = (props: LoginParams) => {
 	});
 	const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
 	const [recaptchaVerified, setRecaptchaVerified] = useState(false)
+	const [alertState, setAlertState] = useState({ open: false, title: '', content: [] })
 
 	const theme = useTheme();
-
+	const isOtpEmail = loginTab === 'otp' && otpType === 'email'
+	const isOtpCellphone = loginTab === 'otp' && otpType === 'cellphone'
 	const loginStyle = StyleSheet.create({
 		btnOutline: {
 			backgroundColor: '#FFF',
@@ -106,32 +116,67 @@ const LoginFormUI = (props: LoginParams) => {
 			marginBottom: 7,
 		},
 		recaptchaIcon: {
-		width: 100,
-		height: 100,
-		}
+			width: 100,
+			height: 100,
+		},
+		borderStyleBase: {
+			width: 30,
+			height: 45
+		},
+
+		borderStyleHighLighted: {
+			borderColor: "#03DAC6",
+		},
+
+		underlineStyleBase: {
+			width: 45,
+			height: 60,
+			borderWidth: 1,
+			fontSize: 16
+		},
+
+		underlineStyleHighLighted: {
+			borderColor: theme.colors.primary,
+			color: theme.colors.primary,
+			fontSize: 16
+		},
 	});
 
 	const emailRef = useRef<any>({});
 	const passwordRef = useRef<any>({});
-  	const recaptchaRef = useRef<any>({});
+	const recaptchaRef = useRef<any>({});
 
 	const handleChangeTab = (val: string) => {
 		props.handleChangeTab(val);
 		setPasswordSee(false);
 	};
 
-	const onSubmit = (values: any) => {
+	const onSubmit = (values?: any) => {
 		Keyboard.dismiss();
-		if (phoneInputData.error) {
-			showToast(ToastType.Error, phoneInputData.error);
-			return;
+		if (loginTab === 'otp') {
+			if (phoneInputData.error && (loginTab !== 'otp' || (otpType === 'cellphone' && loginTab === 'otp'))) {
+				showToast(ToastType.Error, t('INVALID_PHONE_NUMBER', 'Invalid phone number'));
+				return
+			}
+			if (loginTab === 'otp') {
+				generateOtpCode({
+					...values,
+					...phoneInputData.phone
+				})
+			}
+			setWillVerifyOtpState(true)
+		} else {
+			if (phoneInputData.error) {
+				showToast(ToastType.Error, phoneInputData.error);
+				return;
+			}
+			handleButtonLoginClick({
+				...values,
+				...phoneInputData.phone,
+			});
 		}
-		handleButtonLoginClick({
-			...values,
-			...phoneInputData.phone,
-		});
-	};
 
+	};
 	const handleVerifyCodeClick = () => {
 		if (phoneInputData.error) {
 			showToast(ToastType.Error, phoneInputData.error);
@@ -166,9 +211,9 @@ const LoginFormUI = (props: LoginParams) => {
 		onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
 	};
 
-  	const handleOpenRecaptcha = () => {
+	const handleOpenRecaptcha = () => {
 		setRecaptchaVerified(false)
-	  	if (!recaptchaConfig?.siteKey) {
+		if (!recaptchaConfig?.siteKey) {
 			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
 			return
 		}
@@ -176,12 +221,31 @@ const LoginFormUI = (props: LoginParams) => {
 			showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
 			return
 		}
+
 		recaptchaRef.current.open()
-  	}
+	}
 
 	const onRecaptchaVerify = (token: any) => {
 		setRecaptchaVerified(true)
 		handleReCaptcha(token)
+	}
+
+	const handleChangeOtpType = (type : string) => {
+		handleChangeTab('otp')
+		setOtpType(type)
+	}
+
+	const handleLoginOtp = (code : string) => {
+		handleButtonLoginClick({ code })
+		setWillVerifyOtpState(false)
+	}
+
+	const closeAlert = () => {
+		setAlertState({
+			open: false,
+			title: '',
+			content: []
+		})
 	}
 
 	useEffect(() => {
@@ -231,16 +295,26 @@ const LoginFormUI = (props: LoginParams) => {
 	}, [phoneInputData?.phone?.cellphone])
 
 	useEffect(() => {
-    register('cellphone', {
-      required: loginTab === 'cellphone'
-        ? t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone'))
-        : null
-    })
-  }, [register])
+		register('cellphone', {
+			required: loginTab === 'cellphone'
+				? t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone'))
+				: null
+		})
+	}, [register])
 
 	useEffect(() => {
-    reset()
-  }, [loginTab])
+		reset()
+	}, [loginTab])
+
+	useEffect(() => {
+		if (checkPhoneCodeState?.result?.error) {
+			setAlertState({
+				open: true,
+				content: t(checkPhoneCodeState?.result?.error, checkPhoneCodeState?.result?.error),
+				title: ''
+			})
+		}
+	}, [checkPhoneCodeState])
 
 	return (
 		<Container>
@@ -255,9 +329,9 @@ const LoginFormUI = (props: LoginParams) => {
 				titleStyle={{ marginRight: 0, marginLeft: 0 }}
 			/>
 			<FormSide>
-				{useLoginByEmail && useLoginByCellphone && (
+				{((useLoginByEmail && useLoginByCellphone) || useLoginOtp) && (
 					<LoginWith>
-						<OTabs>
+						<OTabs horizontal>
 							{useLoginByEmail && (
 								<TabBtn onPress={() => handleChangeTab('email')}>
 									<OTab
@@ -302,13 +376,57 @@ const LoginFormUI = (props: LoginParams) => {
 									</OTab>
 								</TabBtn>
 							)}
+							{useLoginOtpEmail && (
+								<TabBtn onPress={() => handleChangeOtpType('email')}>
+									<OTab
+										style={{
+											borderBottomColor:
+												isOtpEmail
+													? theme.colors.textNormal
+													: theme.colors.border,
+										}}>
+										<OText
+											size={14}
+											color={
+												isOtpEmail
+													? theme.colors.textNormal
+													: theme.colors.disabled
+											}
+											weight={isOtpEmail ? 'bold' : 'normal'}>
+											{t('LOGIN_BY_OTP_EMAIL', 'Login by Otp Email')}
+										</OText>
+									</OTab>
+								</TabBtn>
+							)}
+							{useLoginOtpCellphone && (
+								<TabBtn onPress={() => handleChangeOtpType('cellphone')}>
+									<OTab
+										style={{
+											borderBottomColor:
+												isOtpCellphone
+													? theme.colors.textNormal
+													: theme.colors.border,
+										}}>
+										<OText
+											size={14}
+											color={
+												isOtpCellphone
+													? theme.colors.textNormal
+													: theme.colors.disabled
+											}
+											weight={isOtpCellphone ? 'bold' : 'normal'}>
+											{t('LOGIN_BY_OTP_PHONE', 'Login by Otp Phone')}
+										</OText>
+									</OTab>
+								</TabBtn>
+							)}
 						</OTabs>
 					</LoginWith>
 				)}
 
-				{(useLoginByCellphone || useLoginByEmail) && (
+				{(useLoginByCellphone || useLoginByEmail || useLoginOtp) && (
 					<FormInput>
-						{useLoginByEmail && loginTab === 'email' && (
+						{((useLoginByEmail && loginTab === 'email') || (loginTab === 'otp' && otpType === 'email')) && (
 							<>
 								{errors?.email && (
 									<OText
@@ -344,10 +462,10 @@ const LoginFormUI = (props: LoginParams) => {
 									rules={{
 										required: {
 											value: true,
-											message: 	t(
-											'VALIDATION_ERROR_EMAIL_REQUIRED',
-											'The field Email is required',
-										).replace('_attribute_', t('EMAIL', 'Email'))
+											message: t(
+												'VALIDATION_ERROR_EMAIL_REQUIRED',
+												'The field Email is required',
+											).replace('_attribute_', t('EMAIL', 'Email'))
 										},
 										pattern: {
 											value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -362,7 +480,7 @@ const LoginFormUI = (props: LoginParams) => {
 							</>
 
 						)}
-						{useLoginByCellphone && loginTab === 'cellphone' && (
+						{((useLoginByCellphone && loginTab === 'cellphone') || (loginTab === 'otp' && otpType === 'cellphone')) && (
 							<View style={{ marginBottom: 28 }}>
 								<PhoneInputNumber
 									data={phoneInputData}
@@ -383,53 +501,56 @@ const LoginFormUI = (props: LoginParams) => {
 								{errors?.password?.message}{errors?.password?.type === 'required' && '*'}
 							</OText>
 						)}
-						<Controller
-							control={control}
-							render={({ onChange, value }: any) => (
-								<OInput
-									isSecured={!passwordSee ? true : false}
-									placeholder={t('PASSWORD', 'Password')}
-									style={{...loginStyle.inputStyle, marginBottom: 14}}
-									icon={theme.images.general.lock}
-									iconCustomRight={
-										!passwordSee ? (
-											<MaterialCommunityIcons
-												name="eye-outline"
-												size={24}
-												onPress={() => setPasswordSee(!passwordSee)}
-												color={theme.colors.disabled}
-											/>
-										) : (
-											<MaterialCommunityIcons
-												name="eye-off-outline"
-												size={24}
-												onPress={() => setPasswordSee(!passwordSee)}
-												color={theme.colors.disabled}
-											/>
-										)
+						{loginTab !== 'otp' && (
+
+							<Controller
+								control={control}
+								render={({ onChange, value }: any) => (
+									<OInput
+										isSecured={!passwordSee ? true : false}
+										placeholder={t('PASSWORD', 'Password')}
+										style={{ ...loginStyle.inputStyle, marginBottom: 14 }}
+										icon={theme.images.general.lock}
+										iconCustomRight={
+											!passwordSee ? (
+												<MaterialCommunityIcons
+													name="eye-outline"
+													size={24}
+													onPress={() => setPasswordSee(!passwordSee)}
+													color={theme.colors.disabled}
+												/>
+											) : (
+												<MaterialCommunityIcons
+													name="eye-off-outline"
+													size={24}
+													onPress={() => setPasswordSee(!passwordSee)}
+													color={theme.colors.disabled}
+												/>
+											)
+										}
+										value={value}
+										forwardRef={passwordRef}
+										onChange={(val: any) => onChange(val)}
+										returnKeyType="done"
+										onSubmitEditing={handleSubmit(onSubmit)}
+										blurOnSubmit
+										borderColor={errors?.password ? theme.colors.danger5 : theme.colors.border}
+									/>
+								)}
+								name="password"
+								rules={{
+									required: {
+										value: true,
+										message: t(
+											'VALIDATION_ERROR_PASSWORD_REQUIRED',
+											'The field Password is required',
+										).replace('_attribute_', t('PASSWORD', 'Password'))
 									}
-									value={value}
-									forwardRef={passwordRef}
-									onChange={(val: any) => onChange(val)}
-									returnKeyType="done"
-									onSubmitEditing={handleSubmit(onSubmit)}
-									blurOnSubmit
-									borderColor={errors?.password ? theme.colors.danger5 : theme.colors.border}
-								/>
-							)}
-							name="password"
-							rules={{
-								required: {
-									value: true,
-									message: t(
-									'VALIDATION_ERROR_PASSWORD_REQUIRED',
-									'The field Password is required',
-								).replace('_attribute_', t('PASSWORD', 'Password'))
-								}
-							}}
-							defaultValue=""
-						/>
-						{onNavigationRedirect && forgotButtonText && (
+								}}
+								defaultValue=""
+							/>
+						)}
+						{onNavigationRedirect && forgotButtonText && loginTab !== 'otp' && (
 							<TouchableOpacity onPress={() => onNavigationRedirect('Forgot')}>
 								<OText size={14} mBottom={18}>
 									{forgotButtonText}
@@ -468,10 +589,9 @@ const LoginFormUI = (props: LoginParams) => {
 								/>
 							</>
 						)}
-
 						<OButton
 							onClick={handleSubmit(onSubmit)}
-							text={loginButtonText}
+							text={loginTab !== 'otp' ? loginButtonText : t('GET_VERIFY_CODE', 'Get verify code')}
 							bgColor={theme.colors.primary}
 							borderColor={theme.colors.primary}
 							textStyle={{ color: 'white' }}
@@ -480,11 +600,11 @@ const LoginFormUI = (props: LoginParams) => {
 							style={{ borderRadius: 7.6, marginTop: 10, marginBottom: 25 }}
 						/>
 						{onNavigationRedirect && registerButtonText && (
-							<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
+							<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
 								<OText size={14}>
 									{t('NEW_ON_PLATFORM', 'New on Ordering?')}
 								</OText>
-							<TouchableOpacity onPress={() => onNavigationRedirect('Signup')}>
+								<TouchableOpacity onPress={() => onNavigationRedirect('Signup')}>
 									<OText size={14} mLeft={5} color={theme.colors.skyBlue}>
 										{t('CREATE_ACCOUNT', 'Create account')}
 									</OText>
@@ -495,11 +615,11 @@ const LoginFormUI = (props: LoginParams) => {
 				)}
 
 				{useLoginByCellphone &&
-          loginTab === 'cellphone' &&
-          configs && Object.keys(configs).length > 0 &&
-          (configs?.twilio_service_enabled?.value === 'true' ||
-            configs?.twilio_service_enabled?.value === '1') &&
-          configs?.twilio_module?.value && (
+					loginTab === 'cellphone' &&
+					configs && Object.keys(configs).length > 0 &&
+					(configs?.twilio_service_enabled?.value === 'true' ||
+						configs?.twilio_service_enabled?.value === '1') &&
+					configs?.twilio_module?.value && (
 						<>
 							<OrSeparator>
 								<LineSeparator />
@@ -524,59 +644,59 @@ const LoginFormUI = (props: LoginParams) => {
 					)}
 
 				{configs && Object.keys(configs).length > 0 ? (
-          (((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
-          (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
-          (
-            <>
-            	<View
-                style={{
-                  flexDirection: 'row',
-                  width: '100%',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginVertical: 15
-                }}>
-                <View style={loginStyle.line} />
-                <OText
-                  size={14}
-                  mBottom={10}
-                  style={{ paddingHorizontal: 19 }}
-                  color={theme.colors.disabled}>
-                  {t('OR', 'or')}
-                </OText>
-                <View style={loginStyle.line} />
-              </View>
-              <ButtonsWrapper>
-                <SocialButtons>
-                  {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
-                    configs?.facebook_id?.value && (
-                    <FacebookLogin
-                      notificationState={notificationState}
-                      handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                      handleLoading={(val: boolean) => setIsFBLoading(val)}
-                      handleSuccessFacebookLogin={handleSuccessFacebook}
-                    />
-                  )}
-                  {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
-                    <GoogleLogin
-                      notificationState={notificationState}
-                      webClientId={configs?.google_login_client_id?.value}
-                      handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                      handleLoading={(val: boolean) => setIsFBLoading(val)}
-                      handleSuccessGoogleLogin={handleSuccessFacebook}
-                    />
-                  )}
-                  {(configs?.apple_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
-                    <AppleLogin
-                      notificationState={notificationState}
-                      handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                      handleLoading={(val: boolean) => setIsFBLoading(val)}
-                      handleSuccessAppleLogin={handleSuccessFacebook}
-                    />
-                  )}
-                </SocialButtons>
-              </ButtonsWrapper>
-            </>
+					(((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
+						(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null)) &&
+					(
+						<>
+							<View
+								style={{
+									flexDirection: 'row',
+									width: '100%',
+									justifyContent: 'space-between',
+									alignItems: 'center',
+									marginVertical: 15
+								}}>
+								<View style={loginStyle.line} />
+								<OText
+									size={14}
+									mBottom={10}
+									style={{ paddingHorizontal: 19 }}
+									color={theme.colors.disabled}>
+									{t('OR', 'or')}
+								</OText>
+								<View style={loginStyle.line} />
+							</View>
+							<ButtonsWrapper>
+								<SocialButtons>
+									{(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
+										configs?.facebook_id?.value && (
+											<FacebookLogin
+												notificationState={notificationState}
+												handleErrors={(err: any) => showToast(ToastType.Error, err)}
+												handleLoading={(val: boolean) => setIsFBLoading(val)}
+												handleSuccessFacebookLogin={handleSuccessFacebook}
+											/>
+										)}
+									{(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+										<GoogleLogin
+											notificationState={notificationState}
+											webClientId={configs?.google_login_client_id?.value}
+											handleErrors={(err: any) => showToast(ToastType.Error, err)}
+											handleLoading={(val: boolean) => setIsFBLoading(val)}
+											handleSuccessGoogleLogin={handleSuccessFacebook}
+										/>
+									)}
+									{(configs?.apple_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+										<AppleLogin
+											notificationState={notificationState}
+											handleErrors={(err: any) => showToast(ToastType.Error, err)}
+											handleLoading={(val: boolean) => setIsFBLoading(val)}
+											handleSuccessAppleLogin={handleSuccessFacebook}
+										/>
+									)}
+								</SocialButtons>
+							</ButtonsWrapper>
+						</>
 					)
 				) : (
 					<SkeletonWrapper>
@@ -592,24 +712,12 @@ const LoginFormUI = (props: LoginParams) => {
 						</Placeholder>
 					</SkeletonWrapper>
 				)}
-
-				{/* {onNavigationRedirect && registerButtonText && (
-          <ButtonsWrapper>
-            <OButton
-              onClick={() => onNavigationRedirect('Signup')}
-              text={registerButtonText}
-              style={loginStyle.btnOutline}
-              borderColor={theme.colors.primary}
-              imgRightSrc={null}
-            />
-          </ButtonsWrapper>
-        )} */}
 			</FormSide>
 			<OModal
 				open={isModalVisible}
 				onClose={() => setIsModalVisible(false)}
-        entireModal
-        title={t('VERIFY_PHONE', 'Verify Phone')}
+				entireModal
+				title={t('VERIFY_PHONE', 'Verify Phone')}
 			>
 				<VerifyPhone
 					phone={phoneInputData.phone}
@@ -618,9 +726,30 @@ const LoginFormUI = (props: LoginParams) => {
 					handleCheckPhoneCode={handleCheckPhoneCode}
 					setCheckPhoneCodeState={setCheckPhoneCodeState}
 					handleVerifyCodeClick={handleVerifyCodeClick}
-          onClose={() => setIsModalVisible(false)}
+					onClose={() => setIsModalVisible(false)}
 				/>
 			</OModal>
+			<OModal
+				open={willVerifyOtpState}
+				onClose={() => setWillVerifyOtpState(false)}
+				entireModal
+				title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
+			>
+				<Otp
+					willVerifyOtpState={willVerifyOtpState}
+					setWillVerifyOtpState={setWillVerifyOtpState}
+					handleLoginOtp={handleLoginOtp}
+					onSubmit={onSubmit}
+					setAlertState={setAlertState}
+				/>
+			</OModal>
+			<Alert
+				open={alertState.open}
+				content={alertState.content}
+				title={alertState.title || ''}
+				onAccept={closeAlert}
+				onClose={closeAlert}
+			/>
 			<Spinner visible={isFBLoading} />
 		</Container>
 	);
@@ -629,7 +758,7 @@ const LoginFormUI = (props: LoginParams) => {
 export const LoginForm = (props: any) => {
 	const loginProps = {
 		...props,
-    isRecaptchaEnable: true,
+		isRecaptchaEnable: true,
 		UIComponent: LoginFormUI,
 	};
 	return <LoginFormController {...loginProps} />;
