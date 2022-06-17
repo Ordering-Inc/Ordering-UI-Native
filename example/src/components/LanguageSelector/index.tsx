@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LanguageSelector as LanguageSelectorController, useOrder } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { I18nManager, Platform, StyleSheet, View } from 'react-native'
@@ -87,7 +87,11 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     changeDirection(Platform.OS === 'ios' ? language : langCode)
     handleChangeLanguage(Platform.OS === 'ios' ? language : langCode)
   }
-
+  
+  useEffect(() => {
+    changeDirection(currentLanguage)
+  }, [])
+  
   return (
     <Container>
       {languagesState?.languages ? (
