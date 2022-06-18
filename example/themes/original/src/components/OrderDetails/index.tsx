@@ -366,16 +366,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
 
 
   useEffect(() => {
+    const _businessId = 'businessId:' + businessData?.id
     if (reorderState?.error) {
-      const _businessId = 'businessId:' + businessData?.id
-      const _uuid = carts[_businessId]?.uuid
-      if (_uuid) {
-        _setStoreData('remove-cartId', JSON.stringify(_uuid))
+      if (businessData?.id) {
+        _setStoreData('adjust-cart-products', JSON.stringify(_businessId))
         navigation.navigate('Business', { store: businessData?.slug })
       }
     }
-    if (!reorderState?.error && reorderState?.result?.uuid) {
-      onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
+    if (!reorderState?.error && reorderState.loading === false && businessData?.id) {
+      const products = carts?.[_businessId]?.products
+      const available = products.every((product: any) => product.valid === true)
+
+      if (available && reorderState?.result?.uuid) {
+        onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
+      } else {
+        _setStoreData('adjust-cart-products', JSON.stringify(_businessId))
+        navigation.navigate('Business', { store: businessData?.slug })
+      }
     }
   }, [reorderState])
 

@@ -12,6 +12,7 @@ import {
 	useConfig
 } from 'ordering-components/native'
 import { OButton, OIcon, OModal, OText } from '../shared'
+import Alert from '../../providers/AlertProvider'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
 import { SearchBar } from '../SearchBar'
 import { BusinessProductsCategories } from '../BusinessProductsCategories'
@@ -48,6 +49,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		errorQuantityProducts,
 		header,
 		logo,
+		alertState,
+		setAlertState,
+		multiRemoveProducts,
 		getNextProducts,
 	} = props
 
@@ -169,18 +173,24 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		navigation?.canGoBack() ? navigation.goBack() : navigation.navigate('BottomTab')
 	}
 
+	const adjustBusiness = async (adjustBusinessId: number) => {
+		const _carts = orderState?.carts?.[adjustBusinessId]
+		const products = _carts?.products
+		const unavailableProducts = products.filter((product: any) => product.valid !== true)
+		unavailableProducts.length > 0 && multiRemoveProducts && multiRemoveProducts(unavailableProducts, _carts)
+	}
+
 	const removeCartByReOrder = async () => {
-		const removeCardId = await _retrieveStoreData('remove-cartId')
-		if (currentCart && removeCardId) {
-			clearCart(removeCardId)
-			_removeStoreData('remove-cartId')
-			showToast(ToastType.Info, t('PRODUCT_REMOVED', 'Products removed from cart'))
+		const adjustBusinessId = await _retrieveStoreData('adjust-cart-products')
+		if (currentCart && adjustBusinessId) {
+			_removeStoreData('adjust-cart-products')
+			adjustBusiness(adjustBusinessId)
 		}
 	}
 
 	useEffect(() => {
 		removeCartByReOrder()
-	}, [])
+	}, [currentCart])
 
 	return (
 		<ContainerSafeAreaView
@@ -393,6 +403,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					onRedirect={onRedirect}
 				/>
 			)}
+			<Alert
+				open={alertState?.open || false}
+				title=''
+				content={[t('NOT_AVAILABLE_PRODUCTS', 'These products are not available.')]}
+				onAccept={() => setAlertState({ open: false, content: [] })}
+				onClose={() => setAlertState({ open: false, content: [] })}
+			/>
 		</ContainerSafeAreaView>
 	)
 }

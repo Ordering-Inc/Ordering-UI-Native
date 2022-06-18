@@ -205,6 +205,9 @@ export interface BusinessProductsListingParams {
 	header?: any;
 	logo?: any;
 	productModal?: any;
+	alertState?: { open: boolean, content: any[] };
+	setAlertState?: any;
+	multiRemoveProducts?: (in1: any, in2: any) => {};
 	getNextProducts?: () => {};
 	handleChangeCategory: (value: any) => {};
 	setProductLogin?: () => {};
