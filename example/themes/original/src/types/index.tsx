@@ -19,6 +19,12 @@ export interface LoginParams {
 	notificationState?: any;
 	handleReCaptcha?: any;
     enableReCaptcha?: any;
+	otpType?: string,
+	setOtpType: (type : string) => void,
+	generateOtpCode: (values ?: any) => void,
+	useLoginOtpEmail?: boolean,
+	useLoginOtpCellphone?: boolean,
+	useLoginOtp?: boolean
 }
 export interface ProfileParams {
 	navigation?: any;
@@ -198,6 +204,9 @@ export interface BusinessProductsListingParams {
 	header?: any;
 	logo?: any;
 	productModal?: any;
+	alertState?: { open: boolean, content: any[] };
+	setAlertState?: any;
+	multiRemoveProducts?: (in1: any, in2: any) => {};
 	getNextProducts?: () => {};
 	handleChangeCategory: (value: any) => {};
 	setProductLogin?: () => {};
@@ -597,4 +606,12 @@ export interface SessionsParams {
     actionState: any,
     handleDeleteSession: any,
     handleDeleteAllSessions: any
+}
+
+export interface otpParams {
+	willVerifyOtpState: boolean,
+	setWillVerifyOtpState: (val : boolean) => void,
+	onSubmit: () => void,
+	handleLoginOtp: (code : string) => void,
+	setAlertState: any
 }

@@ -213,3 +213,19 @@ export const formatUrlVideo = (url : string) => {
   const id = (match && match[7].length === 11) ? match[7] : false
   return `https://www.youtube-nocookie.com/embed/${id}`
 }
+
+export const formatSeconds = (seconds : number) => {
+  // Hours, minutes and seconds
+  var hrs = ~~(seconds / 3600)
+  var mins = ~~((seconds % 3600) / 60)
+  var secs = ~~seconds % 60
+
+  // Output like '1:01' or '4:03:59' or '123:03:59'
+  var ret = ''
+  if (hrs > 0) {
+    ret += '' + hrs + ':' + (mins < 10 ? '0' : '')
+  }
+  ret += '' + mins + ':' + (secs < 10 ? '0' : '')
+  ret += '' + secs
+  return ret
+}
