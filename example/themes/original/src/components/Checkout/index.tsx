@@ -239,7 +239,7 @@ const CheckoutUI = (props: any) => {
 
 	useEffect(() => {
 		if (cart?.products?.length === 0) {
-			navigation?.canGoBack() && navigation.goBack();
+			onNavigationRedirect('Business', { store: cart?.business?.slug })
 		}
 	}, [cart?.products])
 
