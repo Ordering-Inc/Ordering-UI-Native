@@ -137,10 +137,10 @@ const CheckoutUI = (props: any) => {
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
 
 	const placeSpotTypes = [3, 4]
-	const businessConfigs = businessDetails?.business?.configs ?? []
-	const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
-	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
-	const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletCreditPointsEnabled)
+  const businessConfigs = businessDetails?.business?.configs ?? []
+  const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
+  const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
+  const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletCreditPointsEnabled)
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash ||
