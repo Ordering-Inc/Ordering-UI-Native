@@ -25,7 +25,8 @@ const ForgotPasswordUI = (props: any) => {
 		formState,
 		handleButtonForgotPasswordClick,
 		handleReCaptcha,
-		enableReCaptcha
+		enableReCaptcha,
+		reCaptchaValue
 	} = props;
 	const [, t] = useLanguage();
 	const [, { showToast }] = useToast();
@@ -58,9 +59,12 @@ const ForgotPasswordUI = (props: any) => {
 		onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
 	}
 
-	  	const handleOpenRecaptcha = () => {
+	const handleOpenRecaptcha = () => {
 		setRecaptchaVerified(false)
-	  	if (!recaptchaConfig?.siteKey) {
+		handleReCaptcha(null)
+		if (reCaptchaValue) return
+
+	  if (!recaptchaConfig?.siteKey) {
 			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
 			return
 		}
@@ -74,6 +78,11 @@ const ForgotPasswordUI = (props: any) => {
 	const onRecaptchaVerify = (token: any) => {
 		setRecaptchaVerified(true)
 		handleReCaptcha(token)
+	}
+
+	const handleRecaptchaExpire = () => {
+		setRecaptchaVerified(false)
+		handleReCaptcha(null)
 	}
 
 	useEffect(() => {
@@ -192,7 +201,7 @@ const ForgotPasswordUI = (props: any) => {
 								siteKey={recaptchaConfig?.siteKey}
 								baseUrl={recaptchaConfig?.baseUrl}
 								onVerify={onRecaptchaVerify}
-								onExpire={() => setRecaptchaVerified(false)}
+								onExpire={handleRecaptchaExpire}
 							/>
 						</>
 					)}
