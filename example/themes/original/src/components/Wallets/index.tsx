@@ -61,7 +61,7 @@ const WalletsUI = (props: any) => {
 
   const [tabSelected, setTabSelected] = useState(isWalletCashEnabled ? 'cash' : 'credit_point')
 
-  const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletPointsEnabled)
+  const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletPointsEnabled)
 
   const currentWalletSelected = (walletList.wallets?.length > 0 && walletList.wallets?.find((w: any) => w.type === tabSelected)) ?? null
 
