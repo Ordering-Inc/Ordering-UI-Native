@@ -14,7 +14,8 @@ Sound.setCategory('Playback')
 
 const windowWidth = Dimensions.get('screen').width
 
-const NewOrderNotificationUI = () => {
+const NewOrderNotificationUI = (props: any) => {
+  const { isBusinessApp } = props
   const [events] = useEvent()
   const theme = useTheme()
   const [, t] = useLanguage()
@@ -76,13 +77,14 @@ const NewOrderNotificationUI = () => {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
       })
       const assignedTimeDiff = moment.utc(value?.driver?.last_order_assigned_at).local().fromNow()
-      if (assignedTimeDiff === 'a few seconds ago') {
+      if (assignedTimeDiff === 'a few seconds ago' && !isBusinessApp) {
         handlePlayNotificationSound()
         clearInterval(soundTimeout)
         setCurrentEvent({ evt: 2, orderId: value?.id })
       }
       return
     }
+    if (evtType === 3) return
     handlePlayNotificationSound()
     clearInterval(soundTimeout)
     setCurrentEvent({

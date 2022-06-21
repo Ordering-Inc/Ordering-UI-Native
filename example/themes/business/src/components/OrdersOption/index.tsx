@@ -726,7 +726,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
       </View>
       {/* </GestureRecognizer> */}
 
-      <NewOrderNotification />
+      <NewOrderNotification isBusinessApp={isBusinessApp} />
       {(openSearchModal || openSLASettingModal) && (
         <OModal open={openSearchModal || openSLASettingModal} entireModal customClose>
           <ModalContainer
