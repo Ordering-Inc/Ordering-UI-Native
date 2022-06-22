@@ -248,7 +248,7 @@ const CheckoutUI = (props: any) => {
 
 	useEffect(() => {
 		if (cart?.products?.length === 0) {
-			onNavigationRedirect('Business', { store: cart?.business?.slug })
+			onNavigationRedirect('Business', { store: cart?.business?.slug, header: null, logo: null })
 		}
 	}, [cart?.products])
 
