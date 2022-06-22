@@ -8,6 +8,8 @@ import {
   ScrollView,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
+import Recaptcha from 'react-native-recaptcha-that-works'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   ToastType,
@@ -25,6 +27,7 @@ import {
   TabsContainer,
   OrSeparator,
   LineSeparator,
+  RecaptchaButton
 } from './styles';
 import { _setStoreData } from '../../providers/StoreUtil'
 import { OText, OButton, OInput, OIconButton, OModal } from '../shared';
@@ -47,7 +50,10 @@ const LoginFormUI = (props: LoginParams) => {
     handleCheckPhoneCode,
     setCheckPhoneCodeState,
     allowedLevels,
-    useRootPoint
+    useRootPoint,
+    notificationState,
+		handleReCaptcha,
+		enableReCaptcha
   } = props;
 
   const [ordering, { setOrdering }] = useApi();
@@ -61,6 +67,7 @@ const LoginFormUI = (props: LoginParams) => {
   const inputRef = useRef<any>(null);
   const inputMailRef = useRef<any>(null);
 
+  const [projectName, setProjectName] = useState('');
   const [passwordSee, setPasswordSee] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -84,6 +91,49 @@ const LoginFormUI = (props: LoginParams) => {
   const [submitted, setSubmitted] = useState(false);
   const [formValues, setFormValues] = useState(null);
 
+  const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
+	const [recaptchaVerified, setRecaptchaVerified] = useState(false)
+
+  const recaptchaRef = useRef<any>({});
+
+  const handleOpenRecaptcha = () => {
+		setRecaptchaVerified(false)
+	  	if (!recaptchaConfig?.siteKey) {
+			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
+			return
+		}
+		if (!recaptchaConfig?.baseUrl) {
+			showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
+			return
+		}
+		recaptchaRef.current.open()
+  	}
+
+	const onRecaptchaVerify = (token: any) => {
+		setRecaptchaVerified(true)
+		handleReCaptcha(token)
+	}
+
+	useEffect(() => {
+		if (configs && Object.keys(configs).length > 0 && enableReCaptcha) {
+			setRecaptchaConfig({
+				siteKey: configs?.security_recaptcha_site_key?.value || null,
+				baseUrl: configs?.security_recaptcha_base_url?.value || null
+			})
+		}
+	}, [configs, enableReCaptcha])
+
+  useEffect(() => {
+    const projectInputInterval = setInterval(() => {
+      if (projectName && useRootPoint) {
+        setOrdering({
+          ...ordering,
+          project: projectName
+        })
+      }
+    }, 1500)
+    return () => clearInterval(projectInputInterval);
+  }, [projectName])
   const getTraduction = (key: string) => {
     const keyList: any = {
       // Add the key and traduction that you need below
@@ -465,6 +515,7 @@ const LoginFormUI = (props: LoginParams) => {
                   icon={theme.images.general.project}
                   iconColor={theme.colors.arrowColor}
                   onChange={(e: any) => {
+                    setProjectName(e?.target?.value)
                     onChange(e?.target?.value);
                     setSubmitted(false);
                   }}
@@ -590,13 +641,46 @@ const LoginFormUI = (props: LoginParams) => {
 
           {onNavigationRedirect && (
             <Pressable
-              style={{ marginRight: 'auto', marginBottom: 35 }}
+              style={{ marginRight: 'auto', marginBottom: 20 }}
               onPress={() => onNavigationRedirect('Forgot')}>
               <OText style={styles.textForgot}>
                 {t('FORGOT_YOUR_PASSWORD', 'Forgot your password?')}
               </OText>
             </Pressable>
           )}
+
+          {enableReCaptcha && (
+            <>
+              <TouchableOpacity
+                style={{ marginBottom: 15 }}
+                onPress={handleOpenRecaptcha}
+              >
+                <RecaptchaButton>
+                  {recaptchaVerified ? (
+                    <MaterialCommunityIcons
+                      name="checkbox-marked"
+                      size={26}
+                      color={theme.colors.primary}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="checkbox-blank-outline"
+                      size={26}
+                      color={theme.colors.mediumGray}
+                    />
+                  )}
+                  <OText size={14} mLeft={8}>{t('VERIFY_ReCAPTCHA', 'Verify reCAPTCHA')}</OText>
+                </RecaptchaButton>
+              </TouchableOpacity>
+              <Recaptcha
+                ref={recaptchaRef}
+                siteKey={recaptchaConfig?.siteKey}
+                baseUrl={recaptchaConfig?.baseUrl}
+                onVerify={onRecaptchaVerify}
+                onExpire={() => setRecaptchaVerified(false)}
+              />
+            </>
+					)}
 
           <OButton
             onClick={handleLogin}
@@ -657,6 +741,7 @@ const LoginFormUI = (props: LoginParams) => {
 export const LoginForm = (props: any) => {
   const loginProps = {
     ...props,
+    isRecaptchaEnable: true,
     UIComponent: LoginFormUI,
   };
 
