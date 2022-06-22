@@ -39,4 +39,5 @@ export const Comments = styled.View`
 export const CommentsButtonGroup = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
+  margin-top: 15px;
 `
