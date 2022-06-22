@@ -407,43 +407,43 @@ export const orderCommentList = (value: string) => {
 
   const messages: any = {
     6: [// on reject order
-      'Very far away',
-      'Driver/ vehicle incident',
-      'Destination unreachable',
-      'Unavailable driver',
-      'Other'
+      'very_far_away',
+      'driver_vehicle_incident',
+      'destination_unreacheable',
+      'unavailable_driver',
+      'other'
     ],
     9: [// on force pickup status
-      'I forgot to complete it in the location',
-      'I didn\'t have internet connection',
-      'Other'
+      'forgot_complete_location',
+      'not_internet_conection',
+      'other'
     ],
     10: [// on pickup failed by driver
-      'Very far away',
-      'Driver/ vehicle incident',
-      'Destination unreachable',
-      'Store closed',
-      'Unavailable driver',
-      'Other'
+      'very_far_away',
+      'driver_vehicle_incident',
+      'destination_unreacheable',
+      'store_closed',
+      'unavailable_driver',
+      'other'
     ],
     11: [// on force delivery status
-      'I forgot to complete it in the location',
-      'I didn\'t have internet connection',
-      'Other'
+      'forgot_complete_location',
+      'not_internet_conection',
+      'other'
     ],
     12: [// on delivery failed by driver
-      'Very far away',
-      'Driver/ vehicle incident',
-      'Destination unreachable',
-      'Recipient unavailable',
-      'Refused- incorrect/ missing items',
-      'Refused- damage',
-      'Other'
+      'very_far_away',
+      'driver_vehicle_incident',
+      'destination_unreacheable',
+      'recipient_unavailable',
+      'incorrect_missing_items',
+      'refused_damage',
+      'other'
     ],
     14: [// on order not ready
-      'Store didn\'t receive the order on time',
-      'Store very busy',
-      'Other'
+      'store_recieve_order_late',
+      'store_busy',
+      'other'
     ]
   }
 
