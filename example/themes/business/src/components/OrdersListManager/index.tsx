@@ -617,7 +617,7 @@ const OrdersListManagerUI = (props: OrdersOptionParams) => {
         </RightSide>
       </Sides>
 
-      <NewOrderNotification />
+      <NewOrderNotification isBusinessApp={isBusinessApp} />
       {(openSearchModal || openSLASettingModal) && (
         <OModal open={openSearchModal || openSLASettingModal} entireModal customClose>
           <ModalContainer
