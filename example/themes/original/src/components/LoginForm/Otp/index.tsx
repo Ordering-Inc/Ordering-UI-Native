@@ -66,7 +66,6 @@ export const Otp = (props: otpParams) => {
                 <OTPInputView
                     style={{ width: '100%', height: 150 }}
                     pinCount={6}
-                    autoFocusOnLoad
                     codeInputFieldStyle={loginStyle.underlineStyleBase}
                     codeInputHighlightStyle={loginStyle.underlineStyleHighLighted}
                     onCodeFilled={(code: string) => handleLoginOtp(code)}
