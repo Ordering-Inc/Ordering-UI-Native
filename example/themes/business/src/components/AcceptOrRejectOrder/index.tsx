@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 import {
   Linking,
   Keyboard,
   Platform,
   View,
   KeyboardAvoidingView,
-  TextInput
+  TextInput,
+  StyleSheet
 } from 'react-native';
 import { useTheme } from 'styled-components/native';
-import { useLanguage } from 'ordering-components/native';
+import SelectDropdown from 'react-native-select-dropdown'
+import { useLanguage, useSession } from 'ordering-components/native';
 import { Content, Timer, TimeField, Header, Action, Comments, CommentsButtonGroup } from './styles';
 import { FloatingButton } from '../FloatingButton';
 import { OText, OButton, OTextarea, OIconButton } from '../shared';
@@ -32,6 +35,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   } = props;
 
   const [, t] = useLanguage();
+  const [{ user }] = useSession();
   const theme = useTheme();
   const scrollViewRef = useRef<any>(null);
   const viewRef = useRef<any>(null);
@@ -41,9 +45,11 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const [min, setMin] = useState('00');
   const [time, setTime] = useState('');
   const [comments, setComments] = useState('');
-  const [commentList, setCommentList] = useState<any>([]);
+  const [rejectReason, setRejectReason] = useState(null);
   const [isKeyboardShow, setIsKeyboardShow] = useState(false);
   const { top, bottom } = useSafeAreaInsets()
+
+  const isDriverApp = appTitle?.key === 'DELIVERY_APP'
 
   const orderCommentsList = orderCommentList(action)
 
@@ -53,29 +59,44 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
   const buttonText = t(orderTitle[action]?.btnKey, orderTitle[action]?.btnText)
   const showTextArea = ['reject', 'deliveryFailed', 'pickupFailed', 'notReady', 'forcePickUp', 'forceDelivery'].includes(action)
 
-  const isSelectedComment = (commentKey: number) => {
-    const found = commentList.find((comment: any) => comment?.key === commentKey)
-    return found
-  }
-
-  const handleChangeComments = (commentItem: any) => {
-    const found = commentList.find((comment: any) => comment?.key === commentItem.key)
-    if (found) {
-      const _comments = commentList.filter((comment: any) => comment?.key !== commentItem.key)
-      setCommentList(_comments)
-    } else {
-      setCommentList([...commentList, commentItem])
-    }
-  }
+  const styles = StyleSheet.create({
+    selectOption: {
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      minHeight: 40,
+      width: '100%',
+      paddingHorizontal: 15,
+      backgroundColor: theme.colors.inputChat,
+      borderRadius: 7.6,
+    },
+    buttonTextStyle: {
+      textAlign: 'left',
+      marginHorizontal: 0,
+      fontSize: 16,
+      lineHeight: 24,
+      color: '#748194',
+      textTransform: 'capitalize'
+    },
+    dropdownStyle: {
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingTop: 5,
+      backgroundColor: '#fff',
+      borderColor: theme.colors.lightGray,
+      overflow: 'hidden',
+      minHeight: 155
+    },
+    rowStyle: {
+      display: 'flex',
+      borderBottomWidth: 0,
+      height: 36,
+      alignItems: 'center',
+      paddingHorizontal: 10
+    },
+  })
 
   const handleFocus = () => {
     viewRef?.current?.measure((x: any, y: any) => {
-      scrollViewRef?.current?.scrollTo({ x: 0, y });
-    });
-  };
-
-  const handleFocusTimer = () => {
-    timerRef?.current?.measure((x: any, y: any) => {
       scrollViewRef?.current?.scrollTo({ x: 0, y });
     });
   };
@@ -171,13 +192,6 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
 
   const handleAcceptOrReject = () => {
     handleFixTime();
-
-    let _comments = ''
-    if (commentList.length > 0) {
-      commentList.map((comment: any) => (_comments += comment.content + '. '))
-    }
-    const _comment = _comments + comments
-
     let minsToSend = min;
 
     if (min > '60') minsToSend = '59';
@@ -191,7 +205,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
         status: 7,
       },
       rejectByBusiness: {
-        comment: _comment,
+        comment: comments,
         status: 5,
       },
       acceptByDriver: {
@@ -199,28 +213,34 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
         status: 8,
       },
       rejectByDriver: {
-        comment: _comment,
+        comment: comments,
         status: 6,
+        reject_reason: rejectReason
       },
       pickupFailedByDriver: {
-        comment: _comment,
-        status: 10
+        comment: comments,
+        status: 10,
+        reject_reason: rejectReason
       },
       deliveryFailedByDriver: {
-        comment: _comment,
-        status: 12
+        comment: comments,
+        status: 12,
+        reject_reason: rejectReason
       },
       orderNotReady: {
-        comment: _comment,
-        status: 14
+        comment: comments,
+        status: 14,
+        reject_reason: rejectReason
       },
       forcePickUp: {
-        reasons: _comment,
-        status: 9
+        reasons: comments,
+        status: 9,
+        reject_reason: rejectReason
       },
       forceDelivery: {
-        reasons: _comment,
-        status: 11
+        reasons: comments,
+        status: 11,
+        reject_reason: rejectReason
       }
     };
 
@@ -413,25 +433,45 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
           onBlur={() => actions && action === 'accept' && timerRef?.current?.focus?.()}
         />
 
-        {orderCommentsList && (
+        {orderCommentsList && isDriverApp && (
           <CommentsButtonGroup>
-            {orderCommentsList?.list?.map((comment: any) => (
-              <OButton
-                key={comment.key}
-                text={comment.content}
-                bgColor={isSelectedComment(comment.key) ? theme.colors.primary : theme.colors.tabBar}
-                borderColor={isSelectedComment(comment.key) ? theme.colors.primary : theme.colors.tabBar}
-                textStyle={{
-                  color: isSelectedComment(comment.key) ? theme.colors.white : theme.colors.darkText,
-                  fontSize: 12,
-                  paddingRight: isSelectedComment(comment.key) ? 15 : 0
-                }}
-                style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
-                imgRightSrc={isSelectedComment(comment.key) ? theme.images.general.close : null}
-                imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-                onClick={() => handleChangeComments(comment) }
-              />
-            ))}
+            <SelectDropdown
+              defaultButtonText={t('REJECT_REASONS_OPTIONS', 'Reject reasons')}
+              data={orderCommentsList?.list}
+              onSelect={(selectedItem) => {
+                setRejectReason(selectedItem?.value)
+              }}
+              buttonTextAfterSelection={(selectedItem) => selectedItem.content}
+              rowTextForSelection={(item) => item.key}
+              buttonStyle={styles.selectOption}
+              buttonTextStyle={styles.buttonTextStyle}
+              renderDropdownIcon={isOpened => {
+                return <FeatherIcon name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#444'} size={18} />;
+              }}
+              dropdownStyle={styles.dropdownStyle}
+              dropdownOverlayColor='transparent'
+              rowStyle={styles.rowStyle}
+              renderCustomizedRowChild={(item) => {
+                return (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <View>
+                      <OText
+                        size={14}
+                        color={'#748194'}
+                        style={{ textTransform: 'capitalize' }}
+                      >
+                        {item?.content}
+                      </OText>
+                    </View>
+                  </View>
+                );
+              }}
+            />
           </CommentsButtonGroup>
         )}
 
