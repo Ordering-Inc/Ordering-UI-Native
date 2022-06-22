@@ -438,7 +438,7 @@ const CartUI = (props: any) => {
       </BusinessItemAccordion>
 
       <OModal
-        open={openChangeStore && props.isFranchiseApp}
+        open={openChangeStore}
         entireModal
         customClose
         onClose={() => setOpenChangeStore(false)}
