@@ -20,6 +20,9 @@ export interface LoginParams {
   passwordInputIcon?: any;
   allowedLevels?: any;
   useRootPoint?: any;
+  notificationState?: any;
+	handleReCaptcha?: any;
+	enableReCaptcha?: any;
 }
 export interface ProfileParams {
   navigation?: any;

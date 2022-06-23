@@ -46,3 +46,9 @@ export const LineSeparator = styled.View`
   height: 1px;
   background-color: ${(props: any) => props.theme.colors.disabled};
 `;
+
+export const RecaptchaButton = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+`
