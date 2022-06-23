@@ -576,7 +576,8 @@ export interface BusinessSearchParams {
 	filters: any,
 	businessTypes: Array<number>,
 	setFilters: (filters: any) => void,
-	lazySearch?: boolean
+	lazySearch?: boolean,
+	brandList?: any;
 }
 
 export interface NoNetworkParams {

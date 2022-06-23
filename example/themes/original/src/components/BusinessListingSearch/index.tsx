@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLanguage, BusinessSearchList, useOrder, useUtils } from 'ordering-components/native'
-import { ScrollView, StyleSheet, TouchableOpacity, Platform, View } from 'react-native'
+import { ScrollView, StyleSheet, TouchableOpacity, Platform, View, Dimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native'
 import { OButton, OIcon, OModal, OText } from '../shared'
@@ -22,15 +22,17 @@ import {
   ProgressContentWrapper,
   ProgressBar,
   TagsContainer,
-  SortContainer
+  SortContainer,
+  BrandContainer,
+  BrandItem
 } from './styles'
 import FastImage from 'react-native-fast-image'
 import { convertHoursToMinutes } from '../../utils'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { BusinessSearchParams } from '../../types'
 
-export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
 
+export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
   const {
     navigation,
     businessesSearchList,
@@ -42,9 +44,11 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
     handleChangeFilters,
     filters,
     businessTypes,
-    setFilters
+    setFilters,
+    brandList
   } = props
-
+  
+  const screenHeight = Dimensions.get('window').height;
   const theme = useTheme()
   const [orderState] = useOrder()
   const { top } = useSafeAreaInsets();
@@ -65,6 +69,11 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
 
   const styles = StyleSheet.create({
     container: {
+      paddingHorizontal: 40,
+      width: '100%'
+    },
+    filterContainer: {
+      maxHeight: screenHeight - 150,
       paddingHorizontal: 40,
       width: '100%'
     },
@@ -107,7 +116,7 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
   }
 
   const handleCloseFilters = () => {
-    setFilters({ business_types: [], orderBy: 'default' })
+    setFilters({ business_types: [], orderBy: 'default', franchise_ids: [] })
     setOpenFilters(false)
   }
 
@@ -124,6 +133,13 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
     } else {
       handleChangeFilters('business_types', [...filters?.business_types, type?.id])
     }
+  }
+
+  const handleChangeBrandFilter = (brandId: number) => {
+    let franchiseIds = [...filters?.franchise_ids]
+    if (filters?.franchise_ids?.includes(brandId)) franchiseIds = filters?.franchise_ids?.filter((item: any) => item !== brandId)
+    else franchiseIds.push(brandId)
+    handleChangeFilters && handleChangeFilters('franchise_ids', franchiseIds)
   }
 
   const handleApplyFilters = () => {
@@ -388,7 +404,7 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
         onCancel={() => handleCloseFilters()}
         onClose={() => handleCloseFilters()}
       >
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.filterContainer}>
           <OText
             size={20}
             mBottom={15}
@@ -415,6 +431,48 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
               </TouchableOpacity>
             ))}
           </SortContainer>
+          <BrandContainer>
+            <OText
+              size={16}
+              weight='bold'
+              lineHeight={24}
+              style={{ marginBottom: 10 }}
+            >
+              {t('BRANDS', 'Brands')}
+            </OText>
+            {!brandList?.loading && !brandList?.error && brandList?.brands?.length > 0 && (
+              <ScrollView
+                style={{ maxHeight: 300, marginBottom: 10 }}
+                showsVerticalScrollIndicator={true}
+                nestedScrollEnabled={true}
+              >
+                {brandList?.brands.map((brand: any, i: number) => brand?.enabled && (
+                  <BrandItem
+                    key={i}
+                    onPress={() => handleChangeBrandFilter(brand?.id)}
+                  >
+                    <OText
+                      size={14}
+                      weight={'400'}
+                      lineHeight={24}
+                    >
+                      {brand?.name}
+                    </OText>
+                    {filters?.franchise_ids?.includes(brand?.id) && (
+                      <AntDesignIcon
+                        name='check'
+                        color={theme.colors.success500}
+                        size={16}
+                      />
+                    )}
+                  </BrandItem>
+                ))}
+              </ScrollView>
+            )}
+            {!brandList?.loading && (brandList?.brands?.length === 0) && (
+              <OText size={14} weight='400'>{t('NO_RESULTS_FOUND', 'Sorry, no results found')}</OText>
+            )}
+          </BrandContainer>
           {orderState?.options?.type === 1 && (
             <MaxSectionItem
               title={t('MAX_DELIVERY_FEE', 'Max delivery fee')}

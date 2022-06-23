@@ -68,9 +68,18 @@ export const ProgressContentWrapper = styled.View`
 `
 
 export const TagsContainer = styled.View`
-
+  padding-bottom: 10px;
 `
 
 export const SortContainer = styled.View`
   margin-bottom: 10px;
+`
+
+export const BrandContainer = styled.View``
+
+export const BrandItem = styled.TouchableOpacity`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  align-items: center;
 `
