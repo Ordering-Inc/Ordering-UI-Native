@@ -44,6 +44,35 @@ import { USER_TYPE } from '../../config/constants';
 
 import SignatureScreen from 'react-native-signature-canvas';
 
+const ORDER_STATUS: any = {
+  0: 'ORDER_STATUS_PENDING',
+  1: 'ORDERS_COMPLETED',
+  2: 'ORDER_REJECTED',
+  3: 'ORDER_STATUS_IN_BUSINESS',
+  4: 'ORDER_READY',
+  5: 'ORDER_REJECTED_RESTAURANT',
+  6: 'ORDER_STATUS_CANCELLEDBYDRIVER',
+  7: 'ORDER_STATUS_ACCEPTEDBYRESTAURANT',
+  8: 'ORDER_CONFIRMED_ACCEPTED_BY_DRIVER',
+  9: 'ORDER_PICKUP_COMPLETED_BY_DRIVER',
+  10: 'ORDER_PICKUP_FAILED_BY_DRIVER',
+  11: 'ORDER_DELIVERY_COMPLETED_BY_DRIVER',
+  12: 'ORDER_DELIVERY_FAILED_BY_DRIVER',
+  13: 'PREORDER',
+  14: 'ORDER_NOT_READY',
+  15: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
+  16: 'ORDER_STATUS_CANCELLED_BY_CUSTOMER',
+  17: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
+  18: 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS',
+  19: 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER',
+  20: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
+  21: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
+  22: 'ORDER_LOOKING_FOR_DRIVER',
+  23: 'ORDER_DRIVER_ON_WAY'
+}
+
+const filterSpecialStatus = ['prepared_in', 'delivered_in', 'delivery_datetime']
+
 const ChatUI = (props: MessagesParams) => {
   const {
     type,
@@ -317,71 +346,6 @@ const ChatUI = (props: MessagesParams) => {
     }
   };
 
-  const getStatus = (status: number, attribute: any) => {
-    const hour = Math.trunc(status / 60);
-    const min = Math.round((status / 60 - hour) * 60);
-
-    if (attribute === 'status') {
-      switch (status) {
-        case 0:
-          return 'ORDER_STATUS_PENDING';
-        case 1:
-          return 'ORDERS_COMPLETED';
-        case 2:
-          return 'ORDER_REJECTED';
-        case 3:
-          return 'ORDER_STATUS_IN_BUSINESS';
-        case 4:
-          return 'ORDER_READY';
-        case 5:
-          return 'ORDER_REJECTED_RESTAURANT';
-        case 6:
-          return 'ORDER_STATUS_CANCELLEDBYDRIVER';
-        case 7:
-          return 'ORDER_STATUS_ACCEPTEDBYRESTAURANT';
-        case 8:
-          return 'ORDER_CONFIRMED_ACCEPTED_BY_DRIVER';
-        case 9:
-          return 'ORDER_PICKUP_COMPLETED_BY_DRIVER';
-        case 10:
-          return 'ORDER_PICKUP_FAILED_BY_DRIVER';
-        case 11:
-          return 'ORDER_DELIVERY_COMPLETED_BY_DRIVER';
-        case 12:
-          return 'ORDER_DELIVERY_FAILED_BY_DRIVER';
-        case 13:
-          return 'PREORDER';
-        case 14:
-          return 'ORDER_NOT_READY';
-        case 15:
-          return 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER';
-        case 16:
-          return 'ORDER_STATUS_CANCELLED_BY_CUSTOMER';
-        case 17:
-          return 'ORDER_NOT_PICKEDUP_BY_CUSTOMER';
-        case 18:
-          return 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS';
-        case 19:
-          return 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER';
-        case 20:
-          return 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS';
-        case 21:
-          return 'ORDER_CUSTOMER_ARRIVED_BUSINESS';
-        case 22:
-          return 'ORDER_LOOKING_FOR_DRIVER'
-        case 23:
-          return 'ORDER_DRIVER_ON_WAY'
-        default:
-          return ``;
-      }
-    }
-
-    if (attribute === 'prepared_in' || attribute === 'delivered_in') {
-      return `${hour < 10 ? '0' + hour : hour}:${min < 10 ? '0' + min : min} ${status > 60 ? 'hours' : 'minutes'
-        }`;
-    }
-  };
-
   const onSubmit = (values: any) => {
     handleSend && handleSend();
     setImage && setImage(null);
@@ -403,28 +367,16 @@ const ChatUI = (props: MessagesParams) => {
           numberOfLines={3}
           style={{ ...styles.firstMessageText, textAlign: 'center' }}>
           {message.change?.attribute !== 'driver_id'
-            ? `${t('ORDER', 'Order')} ${t(
-              message.change.attribute.toUpperCase(),
-              message.change.attribute,
-            )} ${t('CHANGED_FROM', 'Changed from')} ${message.change.old !== null
-              ? t(
-                getStatus(
-                  parseInt(message.change.old, 10),
-                  message.change?.attribute,
-                ),
-              )
-              : '0'
-            } ${t('TO', 'to')} ${t(
-              getStatus(
-                parseInt(message.change.new, 10),
-                message.change?.attribute,
-              ),
-            )}`
+            ?
+            `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute) ?
+              `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}` :
+              `${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
+            }`
             : message.change.new
-              ? `${message.driver?.name} ${message.driver?.lastname !== null ? message.driver.lastname : ''
-              } ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${message.comment ? message.comment.length : ''
-              }`
-              : `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`}
+              ?
+              `${message.driver?.name} ${message.driver?.lastname !== null ? message.driver.lastname : ''} ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${message.comment ? message.comment.length : ''}`
+              :
+              `${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`}
         </OText>
         <OText size={10} color={'#aaa'} style={{ alignSelf: 'flex-start' }}>
           {parseTime(message?.created_at, { outputFormat: 'hh:mma' })}

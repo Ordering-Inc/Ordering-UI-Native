@@ -393,7 +393,7 @@ const LoginFormUI = (props: LoginParams) => {
 													: theme.colors.disabled
 											}
 											weight={isOtpEmail ? 'bold' : 'normal'}>
-											{t('LOGIN_BY_OTP_EMAIL', 'Login by Otp Email')}
+											{t('BY_OTP_EMAIL', 'By Otp Email')}
 										</OText>
 									</OTab>
 								</TabBtn>
@@ -415,7 +415,7 @@ const LoginFormUI = (props: LoginParams) => {
 													: theme.colors.disabled
 											}
 											weight={isOtpCellphone ? 'bold' : 'normal'}>
-											{t('LOGIN_BY_OTP_PHONE', 'Login by Otp Phone')}
+											{t('BY_OTP_PHONE', 'By Otp Phone')}
 										</OText>
 									</OTab>
 								</TabBtn>
