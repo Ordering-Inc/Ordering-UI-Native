@@ -12,11 +12,9 @@ export const FormSide = styled.View`
   margin: auto;
 `;
 
-export const OTabs = styled.View`
+export const OTabs = styled.ScrollView`
   flex-direction: row;
   width: 100%;
-  flex-wrap: wrap;
-  justify-content: flex-start;
   margin-bottom: -1px;
 `;
 
