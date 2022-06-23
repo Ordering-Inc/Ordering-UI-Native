@@ -93,6 +93,8 @@ const LoginFormUI = (props: LoginParams) => {
 	const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
 	const [recaptchaVerified, setRecaptchaVerified] = useState(false)
 	const [alertState, setAlertState] = useState({ open: false, title: '', content: [] })
+	const [tabLayouts, setTabLayouts] = useState<any>({})
+	const tabsRef = useRef<any>(null)
 
 	const theme = useTheme();
 	const isOtpEmail = loginTab === 'otp' && otpType === 'email'
@@ -146,9 +148,10 @@ const LoginFormUI = (props: LoginParams) => {
 	const passwordRef = useRef<any>({});
 	const recaptchaRef = useRef<any>({});
 
-	const handleChangeTab = (val: string) => {
+	const handleChangeTab = (val: string, otpType?: string) => {
 		props.handleChangeTab(val);
 		setPasswordSee(false);
+		handleCategoryScroll(otpType ? `${val}_${otpType}` : val)
 	};
 
 	const onSubmit = (values?: any) => {
@@ -231,7 +234,7 @@ const LoginFormUI = (props: LoginParams) => {
 	}
 
 	const handleChangeOtpType = (type: string) => {
-		handleChangeTab('otp')
+		handleChangeTab('otp', type)
 		setOtpType(type)
 	}
 
@@ -246,6 +249,20 @@ const LoginFormUI = (props: LoginParams) => {
 			title: '',
 			content: []
 		})
+	}
+
+	const handleCategoryScroll = (opc : string) => {
+		tabsRef.current.scrollTo({
+			x: tabLayouts?.[opc]?.x - 40,
+			animated: true
+		})
+	}
+
+	const handleOnLayout = (event: any, opc: string) => {
+		const _tabLayouts = { ...tabLayouts }
+		const categoryKey = opc
+		_tabLayouts[categoryKey] = event.nativeEvent.layout
+		setTabLayouts(_tabLayouts)
 	}
 
 	useEffect(() => {
@@ -331,9 +348,16 @@ const LoginFormUI = (props: LoginParams) => {
 			<FormSide>
 				{((useLoginByEmail && useLoginByCellphone) || useLoginOtp) && (
 					<LoginWith>
-						<OTabs horizontal>
+						<OTabs
+							horizontal 
+							showsHorizontalScrollIndicator={false}
+							ref={tabsRef}
+						>
 							{useLoginByEmail && (
-								<TabBtn onPress={() => handleChangeTab('email')}>
+								<TabBtn 
+									onPress={() => handleChangeTab('email')}
+									onLayout={(event: any) => handleOnLayout(event, 'email')}
+								>
 									<OTab
 										style={{
 											borderBottomColor:
@@ -355,7 +379,10 @@ const LoginFormUI = (props: LoginParams) => {
 								</TabBtn>
 							)}
 							{useLoginByCellphone && (
-								<TabBtn onPress={() => handleChangeTab('cellphone')}>
+								<TabBtn 
+									onPress={() => handleChangeTab('cellphone')}
+									onLayout={(event: any) => handleOnLayout(event, 'cellphone')}
+								>
 									<OTab
 										style={{
 											borderBottomColor:
@@ -377,7 +404,10 @@ const LoginFormUI = (props: LoginParams) => {
 								</TabBtn>
 							)}
 							{useLoginOtpEmail && (
-								<TabBtn onPress={() => handleChangeOtpType('email')}>
+								<TabBtn 
+									onPress={() => handleChangeOtpType('email')}
+									onLayout={(event: any) => handleOnLayout(event, 'otp_email')}
+								>
 									<OTab
 										style={{
 											borderBottomColor:
@@ -399,7 +429,10 @@ const LoginFormUI = (props: LoginParams) => {
 								</TabBtn>
 							)}
 							{useLoginOtpCellphone && (
-								<TabBtn onPress={() => handleChangeOtpType('cellphone')}>
+								<TabBtn 
+									onPress={() => handleChangeOtpType('cellphone')}
+									onLayout={(event: any) => handleOnLayout(event, 'otp_cellphone')}
+								>
 									<OTab
 										style={{
 											borderBottomColor:
