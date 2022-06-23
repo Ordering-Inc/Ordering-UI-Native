@@ -28,22 +28,21 @@ export const ProductOptionSubOptionUI = (props: any) => {
 		toggleSelect,
 		changePosition,
 		disabled,
-		error,
-		scrollDown
+		setIsScrollAvailable
 	} = props
 
+	const disableIncrement = option?.limit_suboptions_by_max ? balance === option?.max : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
+	const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
+	
 	const theme = useTheme();
-
 	const [, t] = useLanguage()
 	const [{ parsePrice }] = useUtils()
 	const [showMessage, setShowMessage] = useState(false)
+	const [isDirty, setIsDirty] = useState(false)
 
 	const handleSuboptionClick = () => {
 		toggleSelect()
-
-		if (balance === option?.max - 1 && !state.selected) {
-			scrollDown(option?.id)
-		}
+		setIsDirty(true)
 
 		if (balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1)) {
 			setShowMessage(true)
@@ -51,13 +50,18 @@ export const ProductOptionSubOptionUI = (props: any) => {
 	}
 
 	useEffect(() => {
+		if (balance === option?.max && state?.selected && isDirty) {
+			setIsDirty(false)
+			setIsScrollAvailable(option?.id)
+		}
+	}, [state?.selected])
+
+	useEffect(() => {
 		if (!(balance === option?.max && option?.suboptions?.length > balance && !(option?.min === 1 && option?.max === 1))) {
 			setShowMessage(false)
 		}
 	}, [balance])
 
-	const disableIncrement = option?.limit_suboptions_by_max ? balance === option?.max : state.quantity === suboption?.max || (!state.selected && balance === option?.max)
-	const price = option?.with_half_option && suboption?.half_price && state.position !== 'whole' ? suboption?.half_price : suboption?.price
 	return (
 		<View>
 			<Container onPress={() => handleSuboptionClick()}>
