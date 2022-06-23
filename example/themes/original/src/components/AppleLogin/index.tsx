@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Platform, Text, StyleSheet } from 'react-native';
-import { useApi, useSession, useLanguage, useConfig, useToast, ToastType } from 'ordering-components/native';
+import { useApi, useSession, useLanguage, useConfig } from 'ordering-components/native';
 import { appleAuthAndroid, appleAuth } from '@invertase/react-native-apple-authentication';
 import uuid from 'react-native-uuid';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -19,14 +19,13 @@ export const AppleLogin = (props: any) => {
   const [{ auth }] = useSession();
   const [, t] = useLanguage();
   const [{ configs }] = useConfig();
-  const [, { showToast }] = useToast()
   const [credentialStateForUser, updateCredentialStateForUser] = useState<any>(-1);
 
   let user: any = null
 
   const buttonText = auth
     ? t('CONTINUE_WITH_APPLE', 'Logout with Apple')
-    : t('CONTINUE_WITH_FACEBOOK', 'Continue with Apple');
+    : t('CONTINUE_WITH_APPLE', 'Continue with Apple');
 
   const performAppleLogin = async (code: string) => {
     try {
@@ -88,7 +87,6 @@ export const AppleLogin = (props: any) => {
       );
 
       if (identityToken && authorizationCode) {
-        showToast(ToastType.Success, `Apple Authentication Completed, ${email}`)
         performAppleLogin(authorizationCode)
       } else {
         handleErrors && handleErrors('UNABLE_LOGIN_TOKEN', 'Unable to login, no token found')
