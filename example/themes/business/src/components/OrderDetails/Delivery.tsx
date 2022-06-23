@@ -1,6 +1,6 @@
 //React & React Native
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Platform, ScrollView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 // Thirds
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -29,7 +29,6 @@ import { NotFoundSource } from '../NotFoundSource';
 import { getOrderStatus } from '../../utils';
 import { OrderHeaderComponent } from './OrderHeaderComponent';
 import { OrderContentComponent } from './OrderContentComponent';
-
 //Styles
 import { OrderDetailsContainer, Pickup } from './styles';
 
@@ -52,7 +51,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     appTitle,
     handleClickLogisticOrder,
     forceUpdate,
-    getPermissions
+    getPermissions,
+    isGrantedPermissions
   } = props;
   const [, { showToast }] = useToast();
   const { order } = props.order
@@ -102,6 +102,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleOpenMapView = async () => {
+    if (!isGrantedPermissions) {
+      navigation.navigate('RequestPermissions')
+      return
+    }
     const _permissions = await getPermissions()
 
     const isBlocked = _permissions.some((_permission: string) => permissions?.locationStatus?.[_permission] === 'blocked')
@@ -128,6 +132,10 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const handleViewActionOrder = (action: string) => {
+    if (!isGrantedPermissions) {
+      navigation.navigate('RequestPermissions')
+      return
+    }
     if (openModalForMapView) {
       setOpenModalForMapView(false);
     }
