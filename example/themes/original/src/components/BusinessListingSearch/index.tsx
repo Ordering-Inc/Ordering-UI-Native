@@ -469,7 +469,7 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
                 ))}
               </ScrollView>
             )}
-            {!brandList?.loading && (brandList?.brands?.length === 0) && (
+            {!brandList?.loading && ((brandList?.brands?.filter((brand: any) => brand?.enabled))?.length === 0) && (
               <OText size={14} weight='400'>{t('NO_RESULTS_FOUND', 'Sorry, no results found')}</OText>
             )}
           </BrandContainer>
