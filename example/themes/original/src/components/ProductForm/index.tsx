@@ -175,6 +175,7 @@ export const ProductOptionsUI = (props: any) => {
 	const [optionLayout, setOptionLayout] = useState<any>({})
 	const [headerRefHeight, setHeaderRefHeight] = useState(0)
 	const [summaryRefHeight, setSummaryRefHeight] = useState(0)
+	const [isScrollAvailable, setIsScrollAvailable] = useState(null)
 
 	const isError = (id: number) => {
 		let bgColor = theme.colors.white;
@@ -278,6 +279,52 @@ export const ProductOptionsUI = (props: any) => {
 		setOptionLayout(_optionLayout)
 	}
 
+	const saveErrors =
+		orderState.loading ||
+		maxProductQuantity === 0 ||
+		Object.keys(errors).length > 0;
+
+	const ExtraOptions = ({ eID, options }: any) => (
+		<>
+			{options.map(({ id, name, respect_to, suboptions }: any) => (
+				<React.Fragment key={`cont_key_${id}`}>
+					{respect_to == null && suboptions?.length > 0 && (
+						<TouchableOpacity
+							key={`eopt_key_${id}`}
+							onPress={() => setSelectedOpt(id)}
+							style={[
+								styles.extraItem,
+								{
+									borderBottomColor:
+										selOpt == id ? theme.colors.textNormal : theme.colors.border,
+								},
+							]}>
+							<OText
+								color={
+									selOpt == id ? theme.colors.textNormal : theme.colors.textSecondary
+								}
+								size={selOpt == id ? 14 : 12}
+								weight={selOpt == id ? '600' : 'normal'}>
+								{name}
+							</OText>
+						</TouchableOpacity>
+					)}
+				</React.Fragment>
+			))}
+		</>
+	);
+
+	const handleGoBack = navigation?.canGoBack()
+		? () => navigation.goBack()
+		: () => navigation.navigate('Business', { store: props.businessSlug })
+
+	useEffect(() => {
+		if (isScrollAvailable) {
+			setIsScrollAvailable(null)
+			scrollDown(isScrollAvailable)
+		}
+	}, [errors])
+
 	useEffect(() => {
 		const imageList: any = []
 		const videoList: any = []
@@ -318,45 +365,6 @@ export const ProductOptionsUI = (props: any) => {
 			setPricePerWeightUnit(product?.price / product?.weight)
 		}
 	}, [product])
-
-	const saveErrors =
-		orderState.loading ||
-		maxProductQuantity === 0 ||
-		Object.keys(errors).length > 0;
-
-	const ExtraOptions = ({ eID, options }: any) => (
-		<>
-			{options.map(({ id, name, respect_to, suboptions }: any) => (
-				<React.Fragment key={`cont_key_${id}`}>
-					{respect_to == null && suboptions?.length > 0 && (
-						<TouchableOpacity
-							key={`eopt_key_${id}`}
-							onPress={() => setSelectedOpt(id)}
-							style={[
-								styles.extraItem,
-								{
-									borderBottomColor:
-										selOpt == id ? theme.colors.textNormal : theme.colors.border,
-								},
-							]}>
-							<OText
-								color={
-									selOpt == id ? theme.colors.textNormal : theme.colors.textSecondary
-								}
-								size={selOpt == id ? 14 : 12}
-								weight={selOpt == id ? '600' : 'normal'}>
-								{name}
-							</OText>
-						</TouchableOpacity>
-					)}
-				</React.Fragment>
-			))}
-		</>
-	);
-
-	const handleGoBack = navigation?.canGoBack()
-		? () => navigation.goBack()
-		: () => navigation.navigate('Business', { store: props.businessSlug })
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
@@ -738,7 +746,7 @@ export const ProductOptionsUI = (props: any) => {
 																								isSoldOut ||
 																								maxProductQuantity <= 0
 																							}
-																							scrollDown={scrollDown}
+																							setIsScrollAvailable={setIsScrollAvailable}
 																							error={errors[`id:${option.id}`]}
 																						/>
 																					);
