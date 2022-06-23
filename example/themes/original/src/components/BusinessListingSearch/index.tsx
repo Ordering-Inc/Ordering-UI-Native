@@ -24,7 +24,8 @@ import {
   TagsContainer,
   SortContainer,
   BrandContainer,
-  BrandItem
+  BrandItem,
+  PriceFilterWrapper
 } from './styles'
 import FastImage from 'react-native-fast-image'
 import { convertHoursToMinutes } from '../../utils'
@@ -67,6 +68,14 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
     { text: t('PICKUP_TIME', 'Pickup time'), value: 'pickup_time' }
   ]
 
+  const priceList = [
+    { level: '1', content: '$' },
+    { level: '2', content: '$$' },
+    { level: '3', content: '$$$' },
+    { level: '4', content: '$$$$' },
+    { level: '5', content: '$$$$$' }
+  ]
+
   const styles = StyleSheet.create({
     container: {
       paddingHorizontal: 40,
@@ -93,6 +102,12 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
       flexWrap: 'wrap',
       justifyContent: 'center'
     },
+    priceContainer: {
+      width: '100%',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between'
+    },
     categoryStyle: {
       marginRight: 10,
       marginTop: 10,
@@ -102,6 +117,16 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
       paddingLeft: 0,
       paddingRight: 0,
       height: 28,
+      borderWidth: 0
+    },
+    priceItem: {
+      marginRight: 10,
+      marginTop: 10,
+      borderRadius: 50,
+      paddingVertical: 4,
+      paddingLeft: 5,
+      paddingRight: 5,
+      height: 27,
       borderWidth: 0
     },
     applyButton: {
@@ -116,7 +141,7 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
   }
 
   const handleCloseFilters = () => {
-    setFilters({ business_types: [], orderBy: 'default', franchise_ids: [] })
+    setFilters({ business_types: [], orderBy: 'default', franchise_ids: [], price_level: null })
     setOpenFilters(false)
   }
 
@@ -140,6 +165,11 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
     if (filters?.franchise_ids?.includes(brandId)) franchiseIds = filters?.franchise_ids?.filter((item: any) => item !== brandId)
     else franchiseIds.push(brandId)
     handleChangeFilters && handleChangeFilters('franchise_ids', franchiseIds)
+  }
+
+  const handleChangePriceRange = (value: string) => {
+    if (value === filters?.price_level) handleChangeFilters('price_level', null)
+    else handleChangeFilters('price_level', value)
   }
 
   const handleApplyFilters = () => {
@@ -473,6 +503,28 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
               <OText size={14} weight='400'>{t('NO_RESULTS_FOUND', 'Sorry, no results found')}</OText>
             )}
           </BrandContainer>
+          <PriceFilterWrapper>
+            <OText
+              size={16}
+              weight='bold'
+              lineHeight={24}
+              style={{ marginBottom: 5 }}
+            >
+              {t('PRICE_RANGE', 'Price range')}
+            </OText>
+            <View style={styles.priceContainer}>
+              {priceList.map((price: any, i: number) => (
+                <OButton
+                  key={i}
+                  bgColor={(filters?.price_level === price?.level) ? theme.colors.primary : theme.colors.backgroundGray200}
+                  onClick={() => handleChangePriceRange(price?.level)}
+                  text={`${price.content} ${(filters?.price_level === price?.level) ? ' X' : ''}`}
+                  style={styles.priceItem}
+                  textStyle={{ fontSize: 10, color: (filters?.price_level === price?.level) ? theme.colors.backgroundLight : theme.colors.textNormal }}
+                />
+              ))}
+            </View>
+          </PriceFilterWrapper>
           {orderState?.options?.type === 1 && (
             <MaxSectionItem
               title={t('MAX_DELIVERY_FEE', 'Max delivery fee')}
