@@ -59,7 +59,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		handleBusinessClick,
 		paginationProps,
 		handleChangeSearch,
-		businessId
+		businessId,
+		isGuestUser
 	} = props;
 	const theme = useTheme();
 	const isFocused = useIsFocused();
@@ -242,6 +243,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 								: navigation.navigate('AddressForm', {
 									address: orderState.options?.address,
 									isFromBusinesses: true,
+									isGuestUser: isGuestUser
 								})
 						}>
 						<OIcon
