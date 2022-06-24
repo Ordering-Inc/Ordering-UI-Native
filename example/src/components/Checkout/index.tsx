@@ -592,6 +592,19 @@ const CheckoutUI = (props: any) => {
                     {t('WARNING_INVALID_PRODUCTS', 'Some products are invalid, please check them.')}
                   </OText>
                 )}
+
+                {options.type === 1 &&
+                  validationFields?.fields?.checkout?.driver_tip?.enabled &&
+                  validationFields?.fields?.checkout?.driver_tip?.required &&
+                  (Number(cart?.driver_tip) <= 0) && (
+                  <OText
+                    style={{ textAlign: 'center' }}
+                    color={theme.colors.error}
+                    size={14}
+                  >
+                    {t('WARNING_INVALID_DRIVER_TIP', 'Driver Tip is required.')}
+                  </OText>
+								)}
               </ChErrors>
             </ChSection>
           )}
@@ -602,8 +615,16 @@ const CheckoutUI = (props: any) => {
           <>
             <FloatingButton
               handleClick={() => handlePlaceOrder()}
-              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal_to_calculate < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
-              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal_to_calculate < cart?.minimum || paymethodSelected?.gateway === 'paypal'}
+              isSecondaryBtn={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal_to_calculate < cart?.minimum || paymethodSelected?.gateway === 'paypal' ||
+                              (options.type === 1 &&
+                                validationFields?.fields?.checkout?.driver_tip?.enabled &&
+                                validationFields?.fields?.checkout?.driver_tip?.required &&
+                                (Number(cart?.driver_tip) <= 0))}
+              disabled={loading || !cart?.valid || !paymethodSelected || placing || errorCash || cart?.subtotal_to_calculate < cart?.minimum || paymethodSelected?.gateway === 'paypal' ||
+                        (options.type === 1 &&
+                          validationFields?.fields?.checkout?.driver_tip?.enabled &&
+                          validationFields?.fields?.checkout?.driver_tip?.required &&
+                          (Number(cart?.driver_tip) <= 0))}
               btnText={cart?.subtotal_to_calculate >= cart?.minimum
                 ? (
                   placing
