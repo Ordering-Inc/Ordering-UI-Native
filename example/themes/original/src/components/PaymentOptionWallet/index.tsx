@@ -112,6 +112,7 @@ const PaymentOptionWalletUI = (props: any) => {
                     true: theme.colors.primary,
                     false: theme.colors.disabled
                   }}
+                  onChange={() => handleOnChange(idx, wallet)}
                   tintColor={theme.colors.disabled}
                   onCheckColor={theme.colors.primary}
                   onTintColor={theme.colors.primary}

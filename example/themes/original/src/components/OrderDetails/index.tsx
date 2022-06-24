@@ -42,7 +42,7 @@ import { OSRow } from '../OrderSummary/styles';
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
 import { Placeholder, PlaceholderLine } from 'rn-placeholder';
-
+import NavBar from '../NavBar'
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
     navigation,
@@ -82,7 +82,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       justifyContent: 'flex-start',
       paddingLeft: 0,
       height: 30,
-      width: 40,
+      width: 30,
+      marginTop: Platform.OS === 'ios' ? 0 : 30
     },
   });
 
@@ -364,7 +365,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }
 
   const RenderGoogleMap = () => {
-    const driverLocationString = typeof order?.driver?.location?.location === 'string' && order?.driver?.location?.location?.split(',').map((l : string) => l.replace(/[^-.0-9]/g, ''))
+    const driverLocationString = typeof order?.driver?.location?.location === 'string' && order?.driver?.location?.location?.split(',').map((l: string) => l.replace(/[^-.0-9]/g, ''))
     const parsedLocations = locations.map(location => typeof location?.location === 'string' ? {
       ...location,
       lat: parseFloat(location?.location?.split(',')[0].replace(/[^-.0-9]/g, '')),
@@ -498,27 +499,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       {order && Object.keys(order).length > 0 && (
         <>
           <Header>
-            <OButton
-              imgLeftSrc={theme.images.general.arrow_left}
-              imgRightSrc={null}
-              style={styles.btnBackArrow}
-              onClick={() => handleArrowBack()}
-              imgLeftStyle={{ tintColor: theme.colors.disabled }}
+            <NavBar
+              title={`${t('ORDER', 'Order')} #${order?.id}`}
+              titleAlign={'center'}
+              onActionLeft={handleArrowBack}
+              showCall={false}
+              btnStyle={{ paddingLeft: 0 }}
+              style={{ flexDirection: 'column', alignItems: 'flex-start', marginTop: Platform.OS === 'ios' ? 0 : 20 }}
+              titleWrapStyle={{ paddingHorizontal: 0 }}
+              titleStyle={{ marginRight: 0, marginLeft: 0 }}
+              subTitle={<OText size={12} lineHeight={18} color={theme.colors.textNormal}>
+                {order?.delivery_datetime_utc
+                  ? parseDate(order?.delivery_datetime_utc)
+                  : parseDate(order?.delivery_datetime, { utc: false })}
+              </OText>}
             />
             <OrderInfo>
               <OrderData>
-                <OText
-                  size={20}
-                  lineHeight={30}
-                  weight={'600'}
-                  color={theme.colors.textNormal}>
-                  {t('ORDER', 'Order')} #{order?.id}
-                </OText>
-                <OText size={12} lineHeight={18} color={theme.colors.textNormal}>
-                  {order?.delivery_datetime_utc
-                    ? parseDate(order?.delivery_datetime_utc)
-                    : parseDate(order?.delivery_datetime, { utc: false })}
-                </OText>
                 {
                   (
                     parseInt(order?.status) === 1 ||
