@@ -57,8 +57,8 @@ const OrderTypeSelectorCardUI = (props: OrderTypeSelectParams) => {
       <Container>
         <NavBar
           title={t('ORDER_TYPE_X_ID', 'Order type')}
-          {...(goBack && { onActionLeft: goBack } )}
-          btnStyle={{paddingLeft: 0}}
+          onActionLeft={goBack}
+          btnStyle={{ paddingLeft: 0 }}
         />
 
         <View style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>

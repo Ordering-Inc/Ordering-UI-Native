@@ -50,6 +50,12 @@ const CheckoutUI = (props: any) => {
     }
   }, [cart])
 
+  useEffect(() => {
+    if (!cartState.loading && cart && !cart?.valid && cart?.status === 2) {
+      navigation?.canGoBack() && navigation.goBack()
+    }
+  }, [cart])
+
   return (
     <>
       <PaymentOptions

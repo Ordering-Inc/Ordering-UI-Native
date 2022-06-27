@@ -192,64 +192,66 @@ const PaymentOptionsUI = (props: any) => {
       <Spinner visible={isLoading || placing || paymethodsList?.loading} />
 
       <Container nestedScrollEnabled>
-        <NavBar
-          title={t('PAYMENT_METHODS', 'Payment methods')}
-          onActionLeft={goToBack}
-          btnStyle={{ paddingLeft: 0 }}
-        />
-
-        <View
-          style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
-          <OText size={orientationState?.dimensions?.width * 0.048}>
-            {t('HOW_WOULD_YOU', 'How would you')} {'\n'}
-            <OText
-              size={orientationState?.dimensions?.width * 0.048}
-              weight={'700'}>
-              {`${t('LIKE_TO_PAY', 'like to pay')}?`}
-            </OText>
-          </OText>
-        </View>
-
         {supportedMethods?.length > 0 && (
-          <GridContainer style={{ justifyContent: 'space-between' }}>
-            {propsOfItems.CARD_ON_DELIVERY_ID && (
-              <View style={{ marginBottom: orientationState?.orientation === LANDSCAPE ? 20 : 0 }}>
-                <OptionCard {...propsOfItems?.CARD_ON_DELIVERY_ID} styke />
-              </View>
-            )}
-
-            <View
-              style={{
-                width:
-                  orientationState?.orientation === LANDSCAPE
-                    ? orientationState?.dimensions?.width * 0.0016
-                    : 1,
-                height:
-                  orientationState?.orientation === PORTRAIT
-                    ? orientationState?.dimensions?.height * 0.018
-                    : 1,
-              }}
+          <>
+            <NavBar
+              title={t('PAYMENT_METHODS', 'Payment methods')}
+              onActionLeft={goToBack}
+              btnStyle={{ paddingLeft: 0 }}
             />
 
-            {propsOfItems?.CASH_ID && <OptionCard {...propsOfItems?.CASH_ID} />}
-
             <View
-              style={{
-                width:
-                  orientationState?.orientation === LANDSCAPE
-                    ? orientationState?.dimensions?.width * 0.0016
-                    : 1,
-                height:
-                  orientationState?.orientation === PORTRAIT
-                    ? orientationState?.dimensions?.height * 0.018
-                    : 1,
-              }}
-            />
+              style={{ marginVertical: orientationState?.dimensions?.height * 0.03 }}>
+              <OText size={orientationState?.dimensions?.width * 0.048}>
+                {t('HOW_WOULD_YOU', 'How would you')} {'\n'}
+                <OText
+                  size={orientationState?.dimensions?.width * 0.048}
+                  weight={'700'}>
+                  {`${t('LIKE_TO_PAY', 'like to pay')}?`}
+                </OText>
+              </OText>
+            </View>
 
-            {propsOfItems.STRIPE && (
-              <OptionCard {...propsOfItems?.STRIPE} />
-            )}
-          </GridContainer>
+            <GridContainer style={{ justifyContent: 'space-between' }}>
+              {propsOfItems.CARD_ON_DELIVERY_ID && (
+                <View style={{ marginBottom: orientationState?.orientation === LANDSCAPE ? 20 : 0 }}>
+                  <OptionCard {...propsOfItems?.CARD_ON_DELIVERY_ID} styke />
+                </View>
+              )}
+
+              <View
+                style={{
+                  width:
+                    orientationState?.orientation === LANDSCAPE
+                      ? orientationState?.dimensions?.width * 0.0016
+                      : 1,
+                  height:
+                    orientationState?.orientation === PORTRAIT
+                      ? orientationState?.dimensions?.height * 0.018
+                      : 1,
+                }}
+              />
+
+              {propsOfItems?.CASH_ID && <OptionCard {...propsOfItems?.CASH_ID} />}
+
+              <View
+                style={{
+                  width:
+                    orientationState?.orientation === LANDSCAPE
+                      ? orientationState?.dimensions?.width * 0.0016
+                      : 1,
+                  height:
+                    orientationState?.orientation === PORTRAIT
+                      ? orientationState?.dimensions?.height * 0.018
+                      : 1,
+                }}
+              />
+
+              {propsOfItems.STRIPE && (
+                <OptionCard {...propsOfItems?.STRIPE} />
+              )}
+            </GridContainer>
+          </>
         )}
         <View style={{ height: orientationState?.dimensions?.height * 0.05 }} />
         <OModal
