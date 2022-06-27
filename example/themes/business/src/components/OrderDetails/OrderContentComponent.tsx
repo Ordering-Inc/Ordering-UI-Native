@@ -77,6 +77,7 @@ export const OrderContentComponent = (props: OrderContent) => {
   })
 
   const getIncludedTaxes = () => {
+    if (!order?.taxes) return 0
     if (order?.taxes?.length === 0) {
       return order.tax_type === 1 ? order?.summary?.tax ?? 0 : 0
     } else {
