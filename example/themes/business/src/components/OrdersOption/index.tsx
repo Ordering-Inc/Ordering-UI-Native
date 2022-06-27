@@ -725,8 +725,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </ScrollView>
       </View>
       {/* </GestureRecognizer> */}
-
-      <NewOrderNotification isBusinessApp={isBusinessApp} />
+                
+      {isBusinessApp && (
+        <NewOrderNotification isBusinessApp={isBusinessApp} />
+      )}
+      
       {(openSearchModal || openSLASettingModal) && (
         <OModal open={openSearchModal || openSLASettingModal} entireModal customClose>
           <ModalContainer
