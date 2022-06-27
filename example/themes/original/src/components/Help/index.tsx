@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { RefreshControl } from 'react-native'
 import { HelpParams } from '../../types'
 import { useLanguage } from 'ordering-components/native'
 import NavBar from '../NavBar'
 import { OText } from '../shared'
 import { LastOrders } from '../LastOrders'
+import { Container } from '../../layouts/Container'
 
 import {
   HelpSubItem,
@@ -15,13 +17,28 @@ export const Help = (props: HelpParams) => {
     navigation
   } = props
   const [, t] = useLanguage()
+  const [refreshing] = useState(false);
+  const [refresh, setRefresh] = useState(false)
 
   const goToBack = () => navigation?.canGoBack() && navigation.goBack()
   const onRedirect = (route: string, params?: any) => {
     navigation.navigate(route, params)
   }
+
+  const handleOnRefresh = () => {
+    setRefresh(true)
+  }
+
   return (
-    <>
+    <Container
+      noPadding
+      refreshControl={
+				<RefreshControl
+					refreshing={refreshing}
+					onRefresh={() => handleOnRefresh()}
+				/>
+			}
+    >
       <NavBar
         title={t('HELP', 'Help')}
         titleAlign={'center'}
@@ -48,8 +65,8 @@ export const Help = (props: HelpParams) => {
 
       <LastOrdersContainer>
         <OText size={18} weight={600}>{t('LAST_ORDERS', 'Last Orders')}</OText>
-        <LastOrders {...props} onRedirect={onRedirect} />
+        <LastOrders {...props} onRedirect={onRedirect} refresh={refresh} setRefresh={setRefresh} />
       </LastOrdersContainer>
-    </>
+    </Container>
   )
 }

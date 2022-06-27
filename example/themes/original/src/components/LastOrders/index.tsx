@@ -18,11 +18,15 @@ import {
   OrderContainer,
   OrderInfo
 } from './styles'
+import { useEffect } from 'react'
 
 const LastOrdersUI = (props: LastOrdersParams) => {
   const {
     orderList,
-    onRedirect
+    onRedirect,
+    loadOrders,
+    refresh,
+    setRefresh
   } = props
   const { loading, error, orders } = orderList
 
@@ -45,6 +49,13 @@ const LastOrdersUI = (props: LastOrdersParams) => {
   const handleClickViewOrder = (uuid: string) => {
     onRedirect && onRedirect('OrderDetails', { orderId: uuid })
   }
+
+  useEffect(() => {
+		if(refresh){
+			loadOrders(false, false, false, true)
+			setRefresh && setRefresh(false)
+		}
+	}, [refresh])
 
   return (
     <>
