@@ -67,7 +67,7 @@ const LoginFormUI = (props: LoginParams) => {
   const inputRef = useRef<any>(null);
   const inputMailRef = useRef<any>(null);
 
-  const [projectName, setProjectName] = useState('');
+  const [projectName, setProjectName] = useState({name: '', isFocued: false});
   const [passwordSee, setPasswordSee] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -125,15 +125,16 @@ const LoginFormUI = (props: LoginParams) => {
 
   useEffect(() => {
     const projectInputInterval = setInterval(() => {
-      if (projectName && useRootPoint) {
+      if (projectName.name && useRootPoint && projectName.isFocued) {
         setOrdering({
           ...ordering,
-          project: projectName
+          project: projectName.name
         })
       }
     }, 1500)
     return () => clearInterval(projectInputInterval);
   }, [projectName])
+
   const getTraduction = (key: string) => {
     const keyList: any = {
       // Add the key and traduction that you need below
@@ -515,7 +516,7 @@ const LoginFormUI = (props: LoginParams) => {
                   icon={theme.images.general.project}
                   iconColor={theme.colors.arrowColor}
                   onChange={(e: any) => {
-                    setProjectName(e?.target?.value)
+                    setProjectName({name: e?.target?.value, isFocued: true})
                     onChange(e?.target?.value);
                     setSubmitted(false);
                   }}
@@ -544,6 +545,7 @@ const LoginFormUI = (props: LoginParams) => {
                   icon={theme.images.logos.emailInputIcon}
                   iconColor={theme.colors.arrowColor}
                   onChange={(e: any) => {
+                    setProjectName({...projectName, isFocued: false})
                     handleChangeInputEmail(e, onChange);
                   }}
                   selectionColor={theme.colors.primary}
