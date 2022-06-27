@@ -393,7 +393,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     widthButton={'45%'}
                   />
                 )}
-                {(order?.status === 9 || order?.status === 19) && (
+                {(order?.status === 9 || order?.status === 19 || order?.status === 23) && (
                   <>
                     <FloatingButton
                       disabled={props.order?.loading}
