@@ -83,3 +83,7 @@ export const BrandItem = styled.TouchableOpacity`
   margin-bottom: 4px;
   align-items: center;
 `
+
+export const PriceFilterWrapper = styled.View`
+  margin-bottom: 20px;
+`
