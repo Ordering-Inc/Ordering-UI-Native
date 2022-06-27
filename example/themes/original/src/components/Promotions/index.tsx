@@ -17,7 +17,7 @@ import { useTheme } from 'styled-components/native';
 import { OButton, OIcon, OModal, OText } from '../shared'
 import { Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { NotFoundSource } from '../NotFoundSource'
-import { View, StyleSheet, ScrollView, Platform } from 'react-native'
+import { View, StyleSheet, ScrollView, Platform, RefreshControl } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { PromotionParams } from '../../types'
 import { Container } from '../../layouts/Container'
@@ -28,6 +28,7 @@ const PromotionsUI = (props: PromotionParams) => {
         offersState,
         handleSearchValue,
         searchValue,
+        loadOffers,
         offerSelected,
         setOfferSelected
     } = props
@@ -68,6 +69,7 @@ const PromotionsUI = (props: PromotionParams) => {
     const [, t] = useLanguage()
     const [{ parseDate, parsePrice, optimizeImage }] = useUtils()
     const [openModal, setOpenModal] = useState(false)
+    const [refreshing] = useState(false);
 
     const handleClickOffer = (offer: any) => {
         setOpenModal(true)
@@ -79,6 +81,12 @@ const PromotionsUI = (props: PromotionParams) => {
         navigation.navigate('Business', { store: store.slug })
     }
 
+    const handleOnRefresh = () => {
+        if (!offersState.loading) {
+            loadOffers();
+        }
+    }
+
     const filteredOffers = offersState?.offers?.filter((offer: any) => offer.name.toLowerCase().includes(searchValue.toLowerCase()))
     const targetString = offerSelected?.target === 1
         ? t('SUBTOTAL', 'Subtotal')
@@ -87,7 +95,15 @@ const PromotionsUI = (props: PromotionParams) => {
             : t('SERVICE_FEE', 'Service fee')
 
     return (
-        <Container noPadding>
+        <Container
+            noPadding
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={() => handleOnRefresh()}
+                />
+            }
+        >
             <NavBar
                 title={t('PROMOTIONS', 'Promotions')}
                 titleAlign={'center'}

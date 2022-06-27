@@ -112,7 +112,10 @@ const CheckoutUI = (props: any) => {
 			right: Platform.OS === 'ios' ? 5 : (I18nManager.isRTL ? 30 : 0),
 			position: 'absolute',
 			fontSize: 20
-		}
+		},
+		wrapperNavbar: Platform.OS === 'ios'
+			? { paddingVertical: 0, paddingHorizontal: 40 }
+			: { paddingVertical: 20, paddingHorizontal: 40 }
 	})
 
 	const [, { showToast }] = useToast();
@@ -132,11 +135,20 @@ const CheckoutUI = (props: any) => {
 	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
 	const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
-	
+
 	const placeSpotTypes = [3, 4]
-	const isWalletEnabled = configs?.wallet_enabled?.value === '1' && (configs?.wallet_cash_enabled?.value === '1' || configs?.wallet_credit_point_enabled?.value === '1')
+	const businessConfigs = businessDetails?.business?.configs ?? []
+	const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
+	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
+	const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletCreditPointsEnabled)
+
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
-	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash || cart?.subtotal < cart?.minimum || (placeSpotTypes.includes(options?.type) && !cart?.place)
+	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash ||
+		cart?.subtotal < cart?.minimum || (placeSpotTypes.includes(options?.type) && !cart?.place) ||
+		(options.type === 1 &&
+			validationFields?.fields?.checkout?.driver_tip?.enabled &&
+			validationFields?.fields?.checkout?.driver_tip?.required &&
+			(Number(cart?.driver_tip) <= 0))
 
 	const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
 		? JSON.parse(configs?.driver_tip_options?.value) || []
@@ -249,13 +261,18 @@ const CheckoutUI = (props: any) => {
 	return (
 		<>
 			<Container noPadding>
-				<NavBar
-					isVertical
-					onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-					title={t('CHECKOUT', 'Checkout')}
-					titleStyle={{ marginLeft: 0, marginRight: 0, paddingLeft: 40 }}
-					btnStyle={{ marginLeft: 40, padding: 40 }}
-				/>
+				<View style={styles.wrapperNavbar}>
+					<NavBar
+						title={t('CHECKOUT', 'Checkout')}
+						titleAlign={'center'}
+						onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
+						showCall={false}
+						btnStyle={{ paddingLeft: 0 }}
+						style={{ flexDirection: 'column', alignItems: 'flex-start', marginTop: Platform.OS === 'ios' ? 0 : 20 }}
+						titleWrapStyle={{ paddingHorizontal: 0 }}
+						titleStyle={{ marginRight: 0, marginLeft: 0 }}
+					/>
+				</View>
 				<ChContainer style={styles.pagePadding}>
 					<ChSection style={{ paddingTop: 0 }}>
 						<ChHeader>
@@ -657,6 +674,17 @@ const CheckoutUI = (props: any) => {
 										{t('WARNING_PLACE_SPOT', 'Please, select your spot to place order.')}
 									</OText>
 								)}
+								{options.type === 1 &&
+									validationFields?.fields?.checkout?.driver_tip?.enabled &&
+									validationFields?.fields?.checkout?.driver_tip?.required &&
+									(Number(cart?.driver_tip) <= 0) && (
+										<OText
+											color={theme.colors.error}
+											size={12}
+										>
+											{t('WARNING_INVALID_DRIVER_TIP', 'Driver Tip is required.')}
+										</OText>
+									)}
 							</ChErrors>
 						</View>
 					)}
