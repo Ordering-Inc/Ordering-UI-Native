@@ -120,32 +120,30 @@ const BusinessMenu = (props:any): React.ReactElement => {
         }}
       >
         <Container nopadding nestedScrollEnabled>
-          <View style={{ paddingTop: 20 }}>
-            <NavBar
-              title={t('MENU_V21', 'Menu')}
-              onActionLeft={goToBack}
-              includeOrderTypeSelector
-              onClickTypes={handleRedirect}
-              rightComponent={cart && (
-                <TouchableOpacity
-                  style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center' }}
-                  onPress={onToggleCart}
+          <NavBar
+            title={t('MENU_V21', 'Menu')}
+            onActionLeft={goToBack}
+            includeOrderTypeSelector
+            onClickTypes={handleRedirect}
+            rightComponent={cart && (
+              <TouchableOpacity
+                style={{ flexDirection: 'row', alignItems: 'center' }}
+                onPress={onToggleCart}
+              >
+                <OText
+                  color={theme.colors.mediumGray}
                 >
-                  <OText
-                    color={theme.colors.mediumGray}
-                  >
-                    {`${cart?.products?.length || 0} ${t('ITEMS', 'items')}`} {parsePrice(cart?.total || 0)} {' '}
-                  </OText>
+                  {`${cart?.products?.length || 0} ${t('ITEMS', 'items')}`} {parsePrice(cart?.total || 0)} {' '}
+                </OText>
 
-                  <MaterialIcon
-                    name={bottomSheetVisibility ? "cart-off" : "cart-outline"}
-                    color={theme.colors.primary}
-                    size={30}
-                  />
-                </TouchableOpacity>
-              )}
-            />
-          </View>
+                <MaterialIcon
+                  name={bottomSheetVisibility ? "cart-off" : "cart-outline"}
+                  color={theme.colors.primary}
+                  size={30}
+                />
+              </TouchableOpacity>
+            )}
+          />
 
           <BusinessProductsListing
             { ...businessProductsListingProps }

@@ -59,11 +59,14 @@ const DriverTipsUI = (props: any) => {
 		tip = isNaN(tip) ? 0 : tip
 		setvalue(tip)
 	}
-
+	
 	return (
 		<DTContainer>
+			<DTLabel>
+				{t('CUSTOM_DRIVER_TIP_MESSAGE', '100% of these tips go directly to your driver')}
+			</DTLabel>
 			<DTWrapperTips>
-				{driverTipsOptions.map((option: any, i: number) => (
+				{!isDriverTipUseCustom && driverTipsOptions.map((option: any, i: number) => (
 					<TouchableOpacity
 						key={i}
 						onPress={() => handlerChangeOption(option)}
@@ -79,7 +82,7 @@ const DriverTipsUI = (props: any) => {
 					</TouchableOpacity>
 				))}
 			</DTWrapperTips>
-			{!driverTipsOptions.includes(driverTip) && driverTip > 0 && (
+			{(!isDriverTipUseCustom && !driverTipsOptions.includes(driverTip) && driverTip > 0) && (
 				<OText
 					color={theme.colors.error}
 					size={16}
@@ -90,9 +93,6 @@ const DriverTipsUI = (props: any) => {
 			)}
 			{isDriverTipUseCustom && (
 				<DTForm>
-					<DTLabel>
-						{t('CUSTOM_DRIVER_TIP_MESSAGE', '100% of these tips go directly to your driver')}
-					</DTLabel>
 					<DTWrapperInput>
 						<OInput
 							placeholder={placeholderCurrency}

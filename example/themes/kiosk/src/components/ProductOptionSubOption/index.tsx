@@ -144,13 +144,15 @@ export const ProductOptionSubOptionUI = (props: any) => {
             </PositionControl>
           )
         }
+        {price > 0 && (
           <OText
             color="#909BA9"
             size={16}
             weight="bold"
           >
-          {price > 0 && '+'} {parsePrice(price)}
+          + {parsePrice(price)}
           </OText>
+        )}
       </RightSide>
     </Container>
   )

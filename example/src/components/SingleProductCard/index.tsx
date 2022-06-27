@@ -10,6 +10,7 @@ import {
 import { StyleSheet } from 'react-native'
 import { OText, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
+import FastImage from 'react-native-fast-image'
 
 export const SingleProductCard = (props: SingleProductCardParams) => {
   const {
@@ -77,10 +78,21 @@ export const SingleProductCard = (props: SingleProductCardParams) => {
       activeOpacity={1}
       onPress={() => onProductClick?.(product)}
     >
-      <OIcon
-        url={optimizeImage(product?.images, 'h_200,c_limit')}
-        style={styles.productStyle}
-      />
+      {product?.images ? (
+					<FastImage
+						style={styles.productStyle}
+						source={{
+							uri: optimizeImage(product?.images, 'h_250,c_limit'),
+							priority: FastImage.priority.normal,
+						}}
+						resizeMode={FastImage.resizeMode.cover}
+					/>
+				) : (
+					<OIcon
+						src={theme?.images?.dummies?.product}
+						style={styles.productStyle}
+					/>
+				)}
       <CardInfo>
         <OText numberOfLines={1} ellipsizeMode='tail' style={styles.textStyle}>{product?.name}</OText>
         <OText size={12} numberOfLines={2} ellipsizeMode='tail' style={styles.textStyle}>{product?.description}</OText>
