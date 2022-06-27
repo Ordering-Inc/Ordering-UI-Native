@@ -36,27 +36,30 @@ const CheckoutUI = (props: any) => {
 
   const [errorCash, setErrorCash] = useState(false);
 
+  useEffect(() => {
+    if (!cartState.loading && cart && !cart?.valid && cart?.status === 2) {
+      navigation?.canGoBack() && navigation.goBack()
+    }
+  }, [cart])
+
   return (
     <>
-      {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
-        <PaymentOptions
-          navigation={navigation}
-          cart={cart}
-          errors={errors}
-          onPaymentChange={handlePaymethodChange}
-          onNavigationRedirect={onNavigationRedirect}
-          paySelected={paymethodSelected}
-          handlerClickPlaceOrder={handlerClickPlaceOrder}
-          placing={placing}
-
-          errorCash={errorCash}
-          isDisabled={cart?.status === 2}
-          businessId={businessDetails?.business?.id}
-          isLoading={businessDetails.loading}
-          paymethods={businessDetails?.business?.paymethods}
-          setErrorCash={setErrorCash}
-        />
-      )}
+      <PaymentOptions
+        navigation={navigation}
+        cart={cart}
+        errors={errors}
+        onPaymentChange={handlePaymethodChange}
+        onNavigationRedirect={onNavigationRedirect}
+        paySelected={paymethodSelected}
+        handlerClickPlaceOrder={handlerClickPlaceOrder}
+        placing={placing}
+        errorCash={errorCash}
+        isDisabled={cart?.status === 2}
+        businessId={businessDetails?.business?.id}
+        isLoading={cartState.loading || businessDetails.loading}
+        paymethods={businessDetails?.business?.paymethods}
+        setErrorCash={setErrorCash}
+      />
     </>
   )
 }

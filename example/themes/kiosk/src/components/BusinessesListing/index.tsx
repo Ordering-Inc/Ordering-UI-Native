@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
+import React from 'react';
+import { PlaceholderLine } from 'rn-placeholder';
 import { View, ScrollView, Platform } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation';
@@ -21,7 +21,6 @@ const BusinessesListingUI = (props: any) => {
     navigation,
     businessesList,
     handleBusinessClick,
-    paginationProps,
   } = props;
 
   const theme = useTheme();
