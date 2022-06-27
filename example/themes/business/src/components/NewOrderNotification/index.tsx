@@ -23,7 +23,7 @@ const NewOrderNotificationUI = (props: any) => {
   const [ordering] = useApi()
   const { getCurrentLocation } = useLocation();
   const [soundTimeout, setSoundTimeout] = useState<any>(null)
-  const [currentEvent, setCurrentEvent] = useState<any>(null)
+  let [currentEvent, setCurrentEvent] = useState<any>(null)
 
   const evtList: any = {
     1: {
@@ -46,6 +46,7 @@ const NewOrderNotificationUI = (props: any) => {
   const notificationSound = new Sound(theme.sounds.notification, (e) => { console.log(e) });
 
   const handlePlayNotificationSound = () => {
+    if (currentEvent) return
     let times = 0
     const _timeout = setInterval(function () {
       notificationSound.play(success => {
@@ -63,30 +64,40 @@ const NewOrderNotificationUI = (props: any) => {
 
   const handleCloseModal = () => {
     clearInterval(soundTimeout)
+    currentEvent = null
     setCurrentEvent({ evt: null })
   }
 
   const handleEventNotification = async (evtType: number, value: any) => {
     if (value?.driver) {
-      const location = await getCurrentLocation()
-      await fetch(`${ordering.root}/users/${user.id}/locations`, {
-        method: 'POST',
-        body: JSON.stringify({
-          location: JSON.stringify({location: `{lat: ${location.latitude}, lng: ${location.longitude}}`})
-        }),
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
-      })
-      const assignedTimeDiff = moment.utc(value?.driver?.last_order_assigned_at).local().fromNow()
-      if (assignedTimeDiff === 'a few seconds ago' && !isBusinessApp) {
+      try {
+        const location = await getCurrentLocation()
+        await fetch(`${ordering.root}/users/${user.id}/locations`, {
+          method: 'POST',
+          body: JSON.stringify({
+            location: JSON.stringify({location: `{lat: ${location.latitude}, lng: ${location.longitude}}`})
+          }),
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+        })
+      } catch (error) {
+          console.log(error)
+      }
+      const duration = moment.duration(moment().diff(moment.utc(value?.last_driver_assigned_at)))
+      const assignedSecondsDiff = duration.asSeconds()
+      if (assignedSecondsDiff < 5 && !isBusinessApp) {
         handlePlayNotificationSound()
         clearInterval(soundTimeout)
+        currentEvent = { evt: 2, orderId: value?.id }
         setCurrentEvent({ evt: 2, orderId: value?.id })
       }
-      return
     }
-    if (evtType === 3) return
+    if (evtType === 3 || value.author_id === user.id) return
     handlePlayNotificationSound()
     clearInterval(soundTimeout)
+    currentEvent = {
+      evt: evtType,
+      orderId: evtList[evtType].event === 'messages' ? value?.order_id : value?.id
+    }
     setCurrentEvent({
       evt: evtType,
       orderId: evtList[evtType].event === 'messages' ? value?.order_id : value?.id
