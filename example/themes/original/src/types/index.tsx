@@ -153,6 +153,7 @@ export interface BusinessesListingParams {
 	defaultBusinessType?: any;
 	franchiseId?: any;
 	businessId?: any;
+	isGuestUser?: any;
 }
 export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
