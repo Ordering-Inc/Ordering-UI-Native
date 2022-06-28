@@ -140,7 +140,7 @@ const WalletsUI = (props: any) => {
           </OTabs>
 
           <SectionContent>
-            {!!loyaltyLevel && (
+            {!!loyaltyLevel && tabSelected === 'credit_point' && (
               <LoyaltyContent>
                 <LoyaltyWrapp>
                   <OText size={20}>
