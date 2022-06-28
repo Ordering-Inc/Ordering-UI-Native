@@ -186,13 +186,13 @@ const PromotionsUI = (props: PromotionParams) => {
                             {offerSelected?.auto && (
                                 <OText>{t('OFFER_AUTOMATIC', 'This offer applies automatic')}</OText>
                             )}
-                            {offerSelected?.minimum && (
+                            {!!offerSelected?.minimum && (
                                 <OText>{t('MINIMUM_PURCHASE_FOR_OFFER', 'Minimum purchase for use this offer')}: {parsePrice(offerSelected?.minimum)}</OText>
                             )}
-                            {offerSelected?.max_discount && (
+                            {!!offerSelected?.max_discount && (
                                 <OText>{t('MAX_DISCOUNT_ALLOWED', 'Max discount allowed')}: {parsePrice(offerSelected?.max_discount)}</OText>
                             )}
-                            {offerSelected?.description && (
+                            {!!offerSelected?.description && (
                                 <OText>{offerSelected?.description}</OText>
                             )}
                         </OfferData>
