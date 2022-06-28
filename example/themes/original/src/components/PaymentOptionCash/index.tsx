@@ -23,8 +23,8 @@ export const PaymentOptionCash = (props: any) => {
 			borderRadius: 7.6,
 			marginTop: 10,
 			width: '100%',
-			height: 44,
-			maxHeight: 44
+			height: 50,
+			maxHeight: 50
 		},
 		errorMsg: {
 			marginTop: 10,

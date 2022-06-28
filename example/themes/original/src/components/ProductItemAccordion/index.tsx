@@ -40,7 +40,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 
 	const pickerStyle = StyleSheet.create({
 		inputAndroid: {
-			width: 27,
+			width: 34,
 			textAlign: 'center',
 			overflow: 'visible',
 			fontSize: 12,
