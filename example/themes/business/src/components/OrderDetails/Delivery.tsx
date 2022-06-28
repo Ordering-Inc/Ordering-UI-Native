@@ -73,6 +73,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     key?: string | null;
   }>({ open: false, content: [], key: null });
 
+  const validStatusComplete = [9, 19, 23]
+
   const logisticOrderStatus = [4, 6, 7]
 
   const showFloatButtonsPickUp: any = {
@@ -385,7 +387,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     widthButton={'45%'}
                   />
                 )}
-                {(order?.status === 9 || order?.status === 19) && (
+                {(validStatusComplete.includes(order?.status)) && (
                   <>
                     <FloatingButton
                       disabled={props.order?.loading}
