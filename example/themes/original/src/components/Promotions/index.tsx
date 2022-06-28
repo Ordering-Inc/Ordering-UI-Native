@@ -140,7 +140,7 @@ const PromotionsUI = (props: PromotionParams) => {
                         <SingleOfferContainer key={offer.id}>
                             <OfferInformation>
                                 <OText style={styles.offerTitle} numberOfLines={2}>{offer?.name}</OText>
-                                {offer?.description && (
+                                {!!offer?.description && (
                                     <OText style={styles.offerDescription} numberOfLines={2}>{offer?.description}</OText>
                                 )}
                                 <OText style={styles.offerExtraInfo}>
