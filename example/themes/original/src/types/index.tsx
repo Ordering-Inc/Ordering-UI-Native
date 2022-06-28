@@ -591,6 +591,7 @@ export interface PromotionParams {
     searchValue: string,
     offerSelected: any,
     setOfferSelected: any,
+	loadOffers: any
 }
 export interface SessionsParams {
 	navigation: any,
