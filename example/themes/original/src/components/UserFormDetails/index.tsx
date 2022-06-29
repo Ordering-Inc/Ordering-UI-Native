@@ -229,7 +229,7 @@ export const UserFormDetailsUI = (props: any) => {
 
 	useEffect(() => {
 		if (!phoneInputData.error && phoneInputData?.phone?.country_phone_code && phoneInputData?.phone?.cellphone) {
-			setWillVerifyOtpState(true)
+			setWillVerifyOtpState?.(true)
 		}
 	}, [phoneInputData])
 

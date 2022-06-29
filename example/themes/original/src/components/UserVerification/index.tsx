@@ -7,6 +7,7 @@ import {
   TextInput,
   SafeAreaView,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {
   UserVerification as UserVerificationController,
@@ -81,7 +82,6 @@ const UserVerificationUI = (props: any) => {
   const [containerIsFocused, setContainerIsFocused] = useState(false);
 
   const [phoneState, setPhoneState] = useState<any>(null)
-  const [modalIsOpen, setModalIsOpen] = useState(false)
   const [verificationState, setVerificationState] = useState({ email: false, phone: false })
 
   const codeDigitsArray = new Array(CODE_LENGTH).fill(0);
@@ -155,7 +155,7 @@ const UserVerificationUI = (props: any) => {
 
     const containerStyle =
       containerIsFocused && isFocused
-        ? {...style.inputContainer, ...style.inputContainerFocused}
+        ? { ...style.inputContainer, ...style.inputContainerFocused }
         : style.inputContainer;
 
     return (
@@ -250,8 +250,8 @@ const UserVerificationUI = (props: any) => {
       showToast(
         ToastType.Error,
         verifyEmailState?.errorSendCode?.[0]
-          ?? verifyEmailState?.errorCheckCode?.[0]
-          ?? t('ERROR', 'Error'),
+        ?? verifyEmailState?.errorCheckCode?.[0]
+        ?? t('ERROR', 'Error'),
       );
       setTimeout(() => {
         cleanErrorsState();
@@ -264,8 +264,8 @@ const UserVerificationUI = (props: any) => {
       showToast(
         ToastType.Error,
         verifyPhoneState?.errorSendCode?.[0]
-          ?? verifyPhoneState?.errorCheckCode?.[0]
-          ?? t('ERROR', 'Error'),
+        ?? verifyPhoneState?.errorCheckCode?.[0]
+        ?? t('ERROR', 'Error'),
       );
       setTimeout(() => {
         cleanErrorsState();
@@ -296,209 +296,195 @@ const UserVerificationUI = (props: any) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Container>
-        <WrapperActions>
-          <WrapperText>
-            <OText size={22} weight='bold' style={{ marginBottom: 10 }}>
-              {t('VERIFICATION_CODE', 'Verification Code')}
-            </OText>
-            {isEmailVerifyRequired && (
-              <OText size={14} color={theme.colors.disabled} style={{ textAlign: 'center', paddingVertical: 20 }}>
-                {!verificationState.email ? (
-                  t('VERIFICATION_EMAIL_CODE_MESSAGE', 'In order to continue using our platform please verify your email')
-                ) : (
-                  t('VERIFICATION_EMAIL_CODE_SENT_MESSAGE', 'Please type the verification code sent to your email')
-                )}
+      <ScrollView>
+        <Container>
+          <WrapperActions>
+            <WrapperText>
+              <OText size={22} weight='bold' style={{ marginBottom: 10 }}>
+                {t('VERIFICATION_CODE', 'Verification Code')}
               </OText>
-            )}
+              {isEmailVerifyRequired && (
+                <OText size={14} color={theme.colors.disabled} style={{ textAlign: 'center', paddingVertical: 20 }}>
+                  {!verificationState.email ? (
+                    t('VERIFICATION_EMAIL_CODE_MESSAGE', 'In order to continue using our platform please verify your email')
+                  ) : (
+                    t('VERIFICATION_EMAIL_CODE_SENT_MESSAGE', 'Please type the verification code sent to your email')
+                  )}
+                </OText>
+              )}
 
-            {isPhoneVerifyRequired && !isEmailVerifyRequired && (
-              <OText size={14} color={theme.colors.disabled} style={{ textAlign: 'center', paddingVertical: 20 }}>
-                {!verificationState.phone ? (
-                  t('VERIFICATION_PHONE_CODE_MESSAGE', 'In order to continue using our platform please verify your phone number')
-                ) : (
-                  t('VERIFICATION_PHONE_CODE_SENT_MESSAGE', 'Please, enter the verification code we sent to your mobile ending with :number').replace(':number', lastNumbers)
-                )}
-              </OText>
-            )}
-          </WrapperText>
-          <View style={{ position: 'absolute', top: 0, right: 0 }}>
-            <LogoutButton iconSize={20} />
-          </View>
-        </WrapperActions>
+              {isPhoneVerifyRequired && !isEmailVerifyRequired && (
+                <OText size={14} color={theme.colors.disabled} style={{ textAlign: 'center', paddingVertical: 20 }}>
+                  {!verificationState.phone ? (
+                    t('VERIFICATION_PHONE_CODE_MESSAGE', 'In order to continue using our platform please verify your phone number')
+                  ) : (
+                    t('VERIFICATION_PHONE_CODE_SENT_MESSAGE', 'Please, enter the verification code we sent to your mobile ending with :number').replace(':number', lastNumbers)
+                  )}
+                </OText>
+              )}
+            </WrapperText>
+            <View style={{ position: 'absolute', top: 0, right: 0 }}>
+              <LogoutButton iconSize={20} />
+            </View>
+          </WrapperActions>
 
-        {isEmailVerifyRequired && (
-          !verificationState.email ? (
-            <InputWrapper>
-              <OInput
-                placeholder={user?.email}
-                style={style.inputStyle}
-                icon={theme.images.general.email}
-                isDisabled
-              />
-            </InputWrapper>
-          ) : (
-            <>
-              <WrappCountdown>
-                <CountDownContainer color={timer === '00:00' ? theme.colors.error: theme.colors.success}>
-                  <OText
-                    size={26}
-                    color={timer === '00:00' ? theme.colors.error: theme.colors.success}
-                  >
-                    {timer}
-                  </OText>
-                </CountDownContainer>
-              </WrappCountdown>
-
-              <InputsSection>
-                <OtpSection>
-                  <DigitInput
-                    disabled={otpState.length === CODE_LENGTH}
-                    onPress={handleOnPress}
-                  >
-                    {codeDigitsArray.map(toDigitInput)}
-                  </DigitInput>
-                  <TextInput
-                    ref={ref}
-                    value={otpState}
-                    placeholder='0'
-                    onChangeText={setOtpState}
-                    onSubmitEditing={handleOnBlur}
-                    keyboardType="number-pad"
-                    returnKeyType="done"
-                    textContentType="oneTimeCode"
-                    maxLength={CODE_LENGTH}
-                    style={style.hiddenCodeInput}
-                  />
-                </OtpSection>
-              </InputsSection>
-
-              <WrapperText>
-                <TouchableOpacity
-                  onPress={() => handleSendOtp()}
-                >
-                  <OText color={theme.colors.primary}>
-                    {t('RESEND_AGAIN', 'Resend again?')}
-                  </OText>
-                </TouchableOpacity>
-              </WrapperText>
-            </>
-          )
-        )}
-
-        {isPhoneVerifyRequired && !isEmailVerifyRequired && (
-          !verificationState.phone ? (
-            phoneState?.formatted ? (
-              <>
-                <InputWrapper phone>
-                  <PhoneInputNumber
-                    handleData={() => {}}
-                    defaultValue={phoneState?.cellphone}
-                    defaultCode={phoneState?.country_phone_code.replace('+', '')}
-                    boxStyle={style.phoneSelect}
-                    inputStyle={style.phoneInputStyle}
-                    textStyle={{ color: theme.colors.textNormal, fontSize: 12, padding: 0 }}
-                    noDropIcon
-                    isDisabled
-                  />
-                </InputWrapper>
-              </>
+          {isEmailVerifyRequired && (
+            !verificationState.email ? (
+              <InputWrapper>
+                <OInput
+                  placeholder={user?.email}
+                  style={style.inputStyle}
+                  icon={theme.images.general.email}
+                  isDisabled
+                />
+              </InputWrapper>
             ) : (
               <>
-                <OText size={14} color={theme.colors.disabled} style={{ textAlign: 'center', paddingVertical: 20 }}>
-                  {t('WARNING_PHONE_CODE_VALIDATION', 'Please update your phone number to continue')}
-                </OText>
+                <WrappCountdown>
+                  <CountDownContainer color={timer === '00:00' ? theme.colors.error : theme.colors.success}>
+                    <OText
+                      size={26}
+                      color={timer === '00:00' ? theme.colors.error : theme.colors.success}
+                    >
+                      {timer}
+                    </OText>
+                  </CountDownContainer>
+                </WrappCountdown>
+
+                <InputsSection>
+                  <OtpSection>
+                    <DigitInput
+                      disabled={otpState.length === CODE_LENGTH}
+                      onPress={handleOnPress}
+                    >
+                      {codeDigitsArray.map(toDigitInput)}
+                    </DigitInput>
+                    <TextInput
+                      ref={ref}
+                      value={otpState}
+                      placeholder='0'
+                      onChangeText={setOtpState}
+                      onSubmitEditing={handleOnBlur}
+                      keyboardType="number-pad"
+                      returnKeyType="done"
+                      textContentType="oneTimeCode"
+                      maxLength={CODE_LENGTH}
+                      style={style.hiddenCodeInput}
+                    />
+                  </OtpSection>
+                </InputsSection>
+
                 <WrapperText>
                   <TouchableOpacity
-                    onPress={() => setModalIsOpen(true)}
+                    onPress={() => handleSendOtp()}
                   >
                     <OText color={theme.colors.primary}>
-                      {t('UPDATE_PROFILE', 'Update profile')}
+                      {t('RESEND_AGAIN', 'Resend again?')}
                     </OText>
                   </TouchableOpacity>
                 </WrapperText>
               </>
             )
-          ) : (
-            <>
-              <WrappCountdown>
-                <CountDownContainer color={timer === '00:00' ? theme.colors.error: theme.colors.success}>
-                  <OText
-                    size={26}
-                    color={timer === '00:00' ? theme.colors.error: theme.colors.success}
+          )}
+
+          {isPhoneVerifyRequired && !isEmailVerifyRequired && (
+            !verificationState.phone ? (
+              phoneState?.formatted ? (
+                <>
+                  <InputWrapper phone>
+                    <PhoneInputNumber
+                      handleData={() => { }}
+                      defaultValue={phoneState?.cellphone}
+                      defaultCode={phoneState?.country_phone_code.replace('+', '')}
+                      boxStyle={style.phoneSelect}
+                      inputStyle={style.phoneInputStyle}
+                      textStyle={{ color: theme.colors.textNormal, fontSize: 12, padding: 0 }}
+                      noDropIcon
+                      isDisabled
+                    />
+                  </InputWrapper>
+                </>
+              ) : (
+                <OText size={14} color={theme.colors.disabled} style={{ textAlign: 'center', paddingVertical: 20 }}>
+                  {t('WARNING_PHONE_CODE_VALIDATION', 'Please update your phone number to continue')}
+                </OText>
+              )
+            ) : (
+              <>
+                <WrappCountdown>
+                  <CountDownContainer color={timer === '00:00' ? theme.colors.error : theme.colors.success}>
+                    <OText
+                      size={26}
+                      color={timer === '00:00' ? theme.colors.error : theme.colors.success}
+                    >
+                      {timer}
+                    </OText>
+                  </CountDownContainer>
+                </WrappCountdown>
+
+                <InputsSection>
+                  <OtpSection>
+                    <DigitInput
+                      disabled={otpState.length === CODE_LENGTH}
+                      onPress={handleOnPress}
+                    >
+                      {codeDigitsArray.map(toDigitInput)}
+                    </DigitInput>
+                    <TextInput
+                      ref={ref}
+                      value={otpState}
+                      placeholder='0'
+                      onChangeText={setOtpState}
+                      onSubmitEditing={handleOnBlur}
+                      keyboardType="number-pad"
+                      returnKeyType="done"
+                      textContentType="oneTimeCode"
+                      maxLength={CODE_LENGTH}
+                      style={style.hiddenCodeInput}
+                    />
+                  </OtpSection>
+                </InputsSection>
+
+                <WrapperText>
+                  <TouchableOpacity
+                    onPress={() => handleSendOtp('phone')}
+                    disabled={verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
                   >
-                    {timer}
-                  </OText>
-                </CountDownContainer>
-              </WrappCountdown>
+                    <OText color={theme.colors.primary}>
+                      {t('RESEND_AGAIN', 'Resend again?')}
+                    </OText>
+                  </TouchableOpacity>
+                </WrapperText>
+              </>
+            )
+          )}
 
-              <InputsSection>
-                <OtpSection>
-                  <DigitInput
-                    disabled={otpState.length === CODE_LENGTH}
-                    onPress={handleOnPress}
-                  >
-                    {codeDigitsArray.map(toDigitInput)}
-                  </DigitInput>
-                  <TextInput
-                    ref={ref}
-                    value={otpState}
-                    placeholder='0'
-                    onChangeText={setOtpState}
-                    onSubmitEditing={handleOnBlur}
-                    keyboardType="number-pad"
-                    returnKeyType="done"
-                    textContentType="oneTimeCode"
-                    maxLength={CODE_LENGTH}
-                    style={style.hiddenCodeInput}
-                  />
-                </OtpSection>
-              </InputsSection>
-
-              <WrapperText>
-                <TouchableOpacity
-                  onPress={() => handleSendOtp('phone')}
-                  disabled={verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
-                >
-                  <OText color={theme.colors.primary}>
-                    {t('RESEND_AGAIN', 'Resend again?')}
-                  </OText>
-                </TouchableOpacity>
-              </WrapperText>
-            </>
-          )
-        )}
-
-      </Container>
-      <ButtonsActions>
-        <View style={{ width: '100%' }}>
-          <OButton
-            onClick={(verificationState.email || verificationState.phone)
-              ? () => setVerificationState({ email: false, phone: false })
-              : () => handleSendOtp(isPhoneVerifyRequired && !isEmailVerifyRequired ? 'phone' : '')
-            }
-            text={(verificationState.email || verificationState.phone) ? t('CANCEL', 'Cancel') : t('SEND_CODE', 'Send code')}
-            bgColor={(verificationState.email || verificationState.phone) ? theme.colors.secundary : theme.colors.primary}
-            borderColor={(verificationState.email || verificationState.phone) ? theme.colors.secundary : theme.colors.primary}
-            textStyle={{ color: (verificationState.email || verificationState.phone) ? 'black' : 'white' }}
-            imgRightSrc={null}
-            isLoading={verifyEmailState?.loadingSendCode || verifyEmailState?.loadingCheckCode || verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
-            style={(verificationState.email || verificationState.phone) ? style.btnStyle : { borderRadius: 7.6 }}
+        </Container>
+        <ButtonsActions>
+          <View style={{ width: '100%' }}>
+            <OButton
+              onClick={(verificationState.email || verificationState.phone)
+                ? () => setVerificationState({ email: false, phone: false })
+                : () => handleSendOtp(isPhoneVerifyRequired && !isEmailVerifyRequired ? 'phone' : '')
+              }
+              text={(verificationState.email || verificationState.phone) ? t('CANCEL', 'Cancel') : t('SEND_CODE', 'Send code')}
+              bgColor={(verificationState.email || verificationState.phone) ? theme.colors.secundary : theme.colors.primary}
+              borderColor={(verificationState.email || verificationState.phone) ? theme.colors.secundary : theme.colors.primary}
+              textStyle={{ color: (verificationState.email || verificationState.phone) ? 'black' : 'white' }}
+              imgRightSrc={null}
+              isLoading={verifyEmailState?.loadingSendCode || verifyEmailState?.loadingCheckCode || verifyPhoneState?.loadingSendCode || verifyPhoneState?.loadingCheckCode}
+              style={(verificationState.email || verificationState.phone) ? style.btnStyle : { borderRadius: 7.6 }}
+            />
+          </View>
+        </ButtonsActions>
+        <View style={{ paddingHorizontal: 20, paddingBottom: 80 }}>
+          <UserDetails
+            user={user}
+            isEdit
+            isVerifiedPhone
           />
         </View>
-      </ButtonsActions>
-
-      <OModal
-        open={modalIsOpen}
-        entireModal
-        customClose
-        onClose={() => setModalIsOpen(false)}
-      >
-        <UserDetails
-          user={user}
-          handleSuccessUpdate={() => setModalIsOpen(false)}
-        />
-      </OModal>
+      </ScrollView>
     </SafeAreaView>
   )
 }
