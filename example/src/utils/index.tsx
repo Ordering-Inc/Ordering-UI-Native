@@ -449,7 +449,7 @@ export const orderCommentList = (value: string) => {
 
   if (!messages[status]) return null
 
-  const list = messages[status].map((val: any, i: number) => ({ key: i, content: t(`ORDER_STATUS_${status}_QUICK_COMMENT_${i}`, val) }))
+  const list = messages[status].map((val: any, i: number) => ({ key: i, value: val, content: t(`REJECT_REASON_${val.toUpperCase()}`, val.replace(/_/g, ' ')) }))
 
   return { list }
 }
