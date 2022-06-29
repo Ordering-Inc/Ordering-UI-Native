@@ -32,6 +32,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
     business,
     handleClick,
     isBusinessOpen,
+    getBusinessOffer,
     businessWillCloseSoonMinutes,
     isBusinessClose
   } = props;
@@ -145,9 +146,14 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
           />
         </BusinessLogo>
         <BusinessState>
-          {!isBusinessOpen && (
+          {(isBusinessOpen || !!getBusinessOffer(business?.offers)) && (
             <View style={styles.businessStateView}>
-              <OText color={theme.colors.white} size={20} style={styles.businessStateText}>
+              {getBusinessOffer(business?.offers) && (
+                <OText color={theme.colors.white} size={18} style={styles.businessStateText}>
+                  {getBusinessOffer(business?.offers) || parsePrice(0)}
+                </OText>
+              )}
+              <OText color={theme.colors.white} size={18} style={styles.businessStateText}>
                 {t('PREORDER', 'PREORDER')}
               </OText>
             </View>

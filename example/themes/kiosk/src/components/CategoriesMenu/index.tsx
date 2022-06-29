@@ -12,6 +12,7 @@ import {
   OText
 } from '../../components/shared';
 import { CartBottomSheet } from '../../components/CartBottomSheet';
+import { NotFoundSource } from '../NotFoundSource';
 import { Category } from '../../types';
 import { CartContent } from '../../components/CartContent';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -112,37 +113,36 @@ const CategoriesMenu = (props: any): React.ReactElement => {
           }}
         >
           <Container nopadding nestedScrollEnabled>
-            <View style={{ paddingTop: 20 }}>
-              <NavBar
-                title={categories[curIndexCateg].name}
-                onActionLeft={goToBack}
-                rightComponent={cart && (
-                  <TouchableOpacity
-                    style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center' }}
-                    onPress={onToggleCart}
+            <NavBar
+              title={categories[curIndexCateg].name}
+              onActionLeft={goToBack}
+              rightComponent={cart && (
+                <TouchableOpacity
+                  style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center' }}
+                  onPress={onToggleCart}
+                >
+                  <OText
+                    color={theme.colors.mediumGray}
                   >
-                    <OText
-                      color={theme.colors.mediumGray}
-                    >
-                      {`${cart?.products?.length || 0} ${t('ITEMS', 'items')}`} {parsePrice(cart?.total || 0)} {' '}
-                    </OText>
+                    {`${cart?.products?.length || 0} ${t('ITEMS', 'items')}`} {parsePrice(cart?.total || 0)} {' '}
+                  </OText>
 
-                    <MaterialIcon
-                      name={bottomSheetVisibility ? "cart-off" : "cart-outline"}
-                      color={theme.colors.primary}
-                      size={30}
-                    />
-                  </TouchableOpacity>
-                )}
-              />
-              <OSegment
-                items={categories.map((category) => ({
-                  text: category.name
-                }))}
-                selectedIdx={curIndexCateg}
-                onSelectItem={onChangeTabs}
-              />
-            </View>
+                  <MaterialIcon
+                    name={bottomSheetVisibility ? "cart-off" : "cart-outline"}
+                    color={theme.colors.primary}
+                    size={30}
+                  />
+                </TouchableOpacity>
+              )}
+            />
+
+            <OSegment
+              items={categories.map((category) => ({
+                text: category.name
+              }))}
+              selectedIdx={curIndexCateg}
+              onSelectItem={onChangeTabs}
+            />
 
             <GridContainer 
               style={{ 
@@ -182,6 +182,12 @@ const CategoriesMenu = (props: any): React.ReactElement => {
                   }}
                 />
               ))}
+
+              {categories[curIndexCateg].products.length === 0 && (
+                <NotFoundSource
+                  content={t('ERROR_NOT_FOUND_PRODUCTS_TIME', 'No products found at this time')}
+                />
+              )}
             </GridContainer>
           </Container>
         </View>

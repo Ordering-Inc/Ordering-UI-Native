@@ -110,7 +110,6 @@ const CartUI = (props: any) => {
         <NavBar
           title={t('CONFIRM_YOUR_ORDER', 'Confirm your order')}
           onActionLeft={goToBack}
-          style={{ height: orientationState?.dimensions?.height * 0.08 }}
           btnStyle={{ paddingLeft: 0 }}
           rightComponent={(
             <OButton
@@ -238,8 +237,8 @@ const CartUI = (props: any) => {
                 </OSTable>
               )}
               {
-                cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any) => (
-                  <OSTable key={offer.id}>
+                cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 1)?.map((offer: any, i: number) => (
+                  <OSTable key={`${offer?.id}_${i}`}>
                     <OSRow>
                       <OText>{offer.name}</OText>
                       {offer.rate_type === 1 && (
@@ -263,8 +262,8 @@ const CartUI = (props: any) => {
                 </OSTable>
               )}
               {
-                cart.taxes?.length > 0 && cart.taxes.filter((tax: any) => tax.type === 2 && tax?.rate !== 0).map((tax: any) => (
-                  <OSTable key={tax.id}>
+                cart.taxes?.length > 0 && cart.taxes.filter((tax: any) => tax.type === 2 && tax?.rate !== 0).map((tax: any, i: number) => (
+                  <OSTable key={`${tax?.id}_${i}`}>
                     <OSRow>
                       <OText>
                         {tax.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
@@ -276,8 +275,8 @@ const CartUI = (props: any) => {
                 ))
               }
               {
-                cart?.fees?.length > 0 && cart?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0)).map((fee: any) => (
-                  <OSTable key={fee?.id}>
+                cart?.fees?.length > 0 && cart?.fees?.filter((fee: any) => !(fee.fixed === 0 && fee.percentage === 0)).map((fee: any, i: number) => (
+                  <OSTable key={`${fee?.id}_${i}`}>
                     <OSRow>
                       <OText>
                         {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}{' '}
@@ -289,8 +288,8 @@ const CartUI = (props: any) => {
                 ))
               }
               {
-                cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 3)?.map((offer: any) => (
-                  <OSTable key={offer.id}>
+                cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 3)?.map((offer: any, i: number) => (
+                  <OSTable key={`${offer?.id}_${i}`}>
                     <OSRow>
                       <OText>{offer.name}</OText>
                       {offer.rate_type === 1 && (
@@ -310,8 +309,8 @@ const CartUI = (props: any) => {
                 </OSTable>
               )}
               {
-                cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any) => (
-                  <OSTable key={offer.id}>
+                cart?.offers?.length > 0 && cart?.offers?.filter((offer: any) => offer?.target === 2)?.map((offer: any, i: number) => (
+                  <OSTable key={`${offer?.id}_${i}`}>
                     <OSRow>
                       <OText>{offer.name}</OText>
                       {offer.rate_type === 1 && (
