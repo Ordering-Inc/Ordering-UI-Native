@@ -55,6 +55,7 @@ export interface UpsellingProductsParams {
   setCanOpenUpselling?: (value: any) => void;
   onClose?: () => void;
   resetInactivityTimeout: any;
+  onAddProduct: any;
 }
 
 export interface LanguageSelectorParams {

@@ -62,6 +62,10 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
   }
 
   const handleEditProduct = (product: any) => {
+    if (props.onEditProduct) {
+      props.onEditProduct(product)
+      return
+    }
     setCurProduct(product)
     setModalIsOpen(true)
   }
@@ -148,7 +152,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
       <StyledBottomContent
         style={{bottom:10}}
         minHeight={props.height * 0.01}
-      > 
+      >
         <OButton
           text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
             !openUpselling !== canOpenUpselling ? `${t('CHECKOUT', 'Checkout')} ${parsePrice(cart?.total)}`: t('LOADING', 'Loading')
@@ -198,6 +202,7 @@ const CartBottomSheetUI = (props: CartBottomSheetUIProps): React.ReactElement | 
           canOpenUpselling={canOpenUpselling}
           setCanOpenUpselling={setCanOpenUpselling}
           onClose={onCloseUpselling}
+          onAddProduct={props.onAddProduct}
           resetInactivityTimeout={resetInactivityTimeout}
         />
       )}
@@ -231,7 +236,7 @@ const TopBar = (props:any) => {
 			<OIconButton
         bgColor="transparent"
         borderColor="transparent"
-        RenderIcon={() => 
+        RenderIcon={() =>
             <EvilIcons
               name={'close'}
               size={40}
@@ -260,6 +265,8 @@ interface CartBottomSheetUIProps {
 	onNavigationRedirect: any,
   clearInactivityTimeout: any,
   resetInactivityTimeout: any,
+  onEditProduct: any,
+  onAddProduct: any,
 }
 
 export const CartBottomSheet = (props: any) => {
