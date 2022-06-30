@@ -505,7 +505,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               onActionLeft={handleArrowBack}
               showCall={false}
               btnStyle={{ paddingLeft: 0 }}
-              style={{ flexDirection: 'column', alignItems: 'flex-start', marginTop: Platform.OS === 'ios' ? 0 : 20 }}
+              style={{ marginTop: Platform.OS === 'ios' ? 0 : 20 }}
               titleWrapStyle={{ paddingHorizontal: 0 }}
               titleStyle={{ marginRight: 0, marginLeft: 0 }}
               subTitle={<OText size={12} lineHeight={18} color={theme.colors.textNormal}>
