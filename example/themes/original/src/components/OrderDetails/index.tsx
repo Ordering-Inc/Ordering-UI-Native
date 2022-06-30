@@ -377,10 +377,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       const products = carts?.[_businessId]?.products
       const available = products.every((product: any) => product.valid === true)
 
-      if (available && reorderState?.result?.uuid) {
+      if (available && reorderState?.result?.uuid && (products?.length === order?.products.length)) {
         onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
       } else {
         _setStoreData('adjust-cart-products', JSON.stringify(_businessId))
+        products?.length !== order?.products.length && _setStoreData('already-removed', JSON.stringify('removed'))
         navigation.navigate('Business', { store: businessData?.slug })
       }
     }
