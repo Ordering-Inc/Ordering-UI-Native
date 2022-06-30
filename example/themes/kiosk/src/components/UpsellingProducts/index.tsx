@@ -71,6 +71,11 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   }, [upsellingProducts.loading, upsellingProducts?.products.length])
 
   const handleFormProduct = (product: any) => {
+    if (props.onAddProduct) {
+      onClose && onClose()
+      props.onAddProduct(product)
+      return
+    }
     setActualProduct(product)
     setModalIsOpen(true)
   }
@@ -81,8 +86,17 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
   }
 
   const UpsellingLayout = () => {
-
     const theme = useTheme()
+
+    const onClickProduct = (product: any) => {
+      resetInactivityTimeout()
+      if (props.onAddProduct) {
+        onClose && onClose()
+        props.onAddProduct(product)
+        return
+      }
+      handleFormProduct(product)
+    }
 
     return (
       <Container>
@@ -167,10 +181,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
                         style={{ height: 40, width: '100%' }}
                         bgColor="#EAF2FE"
                         borderColor="#EAF2FE"
-                        onClick={() => {
-                          resetInactivityTimeout()
-                          handleFormProduct(product)
-                        }}
+                        onClick={() => onClickProduct(product)}
                       />
                     </Item>
                   )) : (

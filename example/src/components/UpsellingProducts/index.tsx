@@ -37,7 +37,7 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
     imageStyle: {
       width: 120,
       height: 90,
-      resizeMode: 'cover',
+      resizeMode: 'contain',
       borderRadius: 10
     },
     closeUpsellingButton: {
