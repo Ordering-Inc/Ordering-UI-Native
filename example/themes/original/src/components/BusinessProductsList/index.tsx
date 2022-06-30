@@ -315,9 +315,9 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         ))}
       <OModal
         open={!!openDescription}
-        title={openDescription?.name}
         onClose={() => setOpenDescription(null)}
       >
+        <OText size={20} style={{paddingLeft: 70, paddingRight: 20, bottom: 25}}>{openDescription?.name}</OText>
         <ScrollView style={{ padding: 20 }}>
           {!!openDescription?.image && (
             <OIcon
