@@ -25,7 +25,9 @@ export const UserFormDetailsUI = (props: any) => {
 		handleButtonUpdateClick,
 		phoneUpdate,
 		hideUpdateButton,
-		handleChangePromotions
+		setWillVerifyOtpState,
+		isVerifiedPhone,
+		handleChangePromotions,
 	} = props;
 
 	const theme = useTheme();
@@ -221,6 +223,13 @@ export const UserFormDetailsUI = (props: any) => {
 			}
 		}
 	}, [user, isEdit]);
+
+	useEffect(() => {
+		if (!phoneInputData.error && phoneInputData?.phone?.country_phone_code && phoneInputData?.phone?.cellphone) {
+			setWillVerifyOtpState?.(true)
+		}
+	}, [phoneInputData])
+
 	return (
 		<>
 			<UDForm>
