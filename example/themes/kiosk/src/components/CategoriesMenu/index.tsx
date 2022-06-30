@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Dimensions, Platform, View } from 'react-native';
 import { useLanguage, useOrder, useUtils } from 'ordering-components/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -41,20 +41,22 @@ const CategoriesMenu = (props: any): React.ReactElement => {
 
   const theme = useTheme()
   const [, t] = useLanguage();
-  const [curIndexCateg, setIndexCateg] = useState(categories.indexOf(category));
   const [{ parsePrice }] = useUtils();
   const [orientationState] = useDeviceOrientation();
   const [bottomSheetVisibility, { showCartBottomSheet, hideCartBottomSheet }] = useCartBottomSheet();
-  const [productSelected, setProductSelected] = useState({})
+
+  const [productState, setProductState] = useState<any>(null)
+  const [productSelected, setProductSelected] = useState<any>({})
+  const [curIndexCateg, setIndexCateg] = useState(categories.indexOf(category));
   const [drawerState, setDrawerState] = useState({ isOpen: false, data: { order: null } });
 
   const width_dimension = Dimensions.get('window').width;
   const height_dimension = Dimensions.get('window').height;
-  
+
   const KeyboardView = styled.KeyboardAvoidingView`
     flex: 1;
   `;
-  
+
   const onChangeTabs = (idx: number) => {
     resetInactivityTimeout();
     setIndexCateg(idx);
@@ -76,6 +78,16 @@ const CategoriesMenu = (props: any): React.ReactElement => {
     cart = cartsList?.find((item: any) => item.business_id == businessId);
   }
 
+  const onEditProduct = (product: any) => {
+    setProductSelected({ ...product, _isEditProduct: true })
+    setDrawerValues({ isOpen: true, data: null })
+  }
+
+  const onAddProduct = (product: any) => {
+    setProductSelected(product)
+    setDrawerValues({ isOpen: true, data: null })
+  }
+
   const cartProps = {
     ...props,
     cart,
@@ -88,15 +100,31 @@ const CategoriesMenu = (props: any): React.ReactElement => {
       visible: bottomSheetVisibility,
       clearInactivityTimeout,
       resetInactivityTimeout,
+      onEditProduct,
+      onAddProduct
     },
     showNotFound: false,
     showCartBottomSheet,
+  }
+
+  const onClickDrawer = () => {
+    setDrawerValues({ isOpen: !drawerState.isOpen, data: null })
+    setProductState(null)
+  }
+
+  const onSaveProductForm = () => {
+    showCartBottomSheet()
+    onClickDrawer()
   }
 
   const onToggleCart = () => {
     if (bottomSheetVisibility) hideCartBottomSheet();
     else showCartBottomSheet();
   }
+
+  const onProductStateChange = useCallback((val: any) => {
+    setProductState({ ...productState, ...val })
+  }, [setProductState])
 
   return (
     <>
@@ -144,12 +172,14 @@ const CategoriesMenu = (props: any): React.ReactElement => {
               onSelectItem={onChangeTabs}
             />
 
-            <GridContainer 
-              style={{ 
-                marginTop: 20, 
+            <GridContainer
+              style={{
+                marginTop: 20,
                 paddingLeft: orientationState?.orientation === LANDSCAPE
-                        ? bottomSheetVisibility ? orientationState?.dimensions?.width * 0.004 :orientationState?.dimensions?.width * 0.008
-                        : 0
+                  ? bottomSheetVisibility
+                    ? orientationState?.dimensions?.width * 0.004
+                    : orientationState?.dimensions?.width * 0.008
+                  : 0
               }}
             >
               {categories[curIndexCateg].products.map((product) => (
@@ -170,8 +200,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
                   onPress={() => {
                     resetInactivityTimeout()
                     if (isDrawer) {
-                      setProductSelected(product)
-                      setDrawerValues({ isOpen: true, data: null })
+                      onAddProduct && onAddProduct(product)
                     } else {
                       navigation.navigate('ProductDetails', {
                         businessId,
@@ -191,23 +220,22 @@ const CategoriesMenu = (props: any): React.ReactElement => {
             </GridContainer>
           </Container>
         </View>
-
-          <View
-            style={{
-              flex: bottomSheetVisibility && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
-              display: bottomSheetVisibility ? 'flex' : 'none'
-            }}
-          >
-            <CartContent
-              {...cartProps}
-            />
-          </View>
+        <View
+          style={{
+            flex: bottomSheetVisibility && orientationState?.orientation === PORTRAIT ? 0 : 0.8,
+            display: bottomSheetVisibility ? 'flex' : 'none'
+          }}
+        >
+          <CartContent
+            {...cartProps}
+          />
+        </View>
       </View>
       <DrawerView
         isOpen={drawerState.isOpen}
         width={width_dimension - (width_dimension * 0.4)}
         height={height_dimension}
-        onClickIcon={() => setDrawerValues({ isOpen: !drawerState.isOpen, data: null })}
+        onClickIcon={onClickDrawer}
       >
         <KeyboardView
           enabled
@@ -215,14 +243,24 @@ const CategoriesMenu = (props: any): React.ReactElement => {
         >
           <ProductForm
             isDrawer
-            product={productSelected}
-            businessId={parseInt(businessId, 10)}
-            businessSlug={businessSlug}
-            onSave={() => {
-              showCartBottomSheet()
-              setDrawerValues({ isOpen: !drawerState.isOpen, data: null })
-            }}
             navigation={navigation}
+            {...(productSelected?._isEditProduct ? {
+              isEdit: true,
+              productCart: productState?.productCart ?? productSelected,
+              product: productState?.product,
+              businessSlug: cart?.business?.slug,
+              businessId: cart?.business_id,
+              categoryId: productSelected?.category_id,
+              productId: productSelected?.id,
+            } : {
+              product: productSelected,
+              businessSlug: businessSlug,
+              businessId: parseInt(businessId, 10),
+              productState: productState,
+              productCart: productState,
+            })}
+            onSave={onSaveProductForm}
+            onProductStateChange={onProductStateChange}
           />
         </KeyboardView>
       </DrawerView>
