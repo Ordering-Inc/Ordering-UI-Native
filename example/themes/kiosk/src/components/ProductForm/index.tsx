@@ -6,8 +6,7 @@ import {
   StyleSheet,
   Animated,
   ScrollView,
-  Platform,
-  ImageBackground
+  ImageBackground,
 } from 'react-native'
 import {
   ProductForm as ProductOptions,
@@ -17,7 +16,6 @@ import {
   useUtils
 } from 'ordering-components/native'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import Spinner from 'react-native-loading-spinner-overlay'
 import { useTheme } from 'styled-components/native'
 
 import { ProductIngredient } from '../ProductIngredient'
@@ -32,12 +30,11 @@ import {
   ProductComment,
   ProductActions
 } from './styles'
-import { OButton, OImage, OInput, OText } from '../shared'
+import { OButton, OInput, OText } from '../shared'
 import { ProductOptionSubOption } from '../ProductOptionSubOption'
 import { NotFoundSource } from '../NotFoundSource'
 import NavBar from '../NavBar'
 import { useDeviceOrientation } from '../../../../../src/hooks/DeviceOrientation'
-import { useCartBottomSheet } from '../../providers/CartBottomSheetProvider';
 
 export const ProductOptionsUI = (props: any) => {
   const {
@@ -56,7 +53,6 @@ export const ProductOptionsUI = (props: any) => {
     handleChangeCommentState,
     productObject,
     onClose,
-    isFromCheckout,
     isDrawer
   } = props;
 
@@ -66,7 +62,6 @@ export const ProductOptionsUI = (props: any) => {
   const [orderState] = useOrder();
   const [{ auth }] = useSession();
   const [orientationState] = useDeviceOrientation();
-  const [, { showCartBottomSheet }] = useCartBottomSheet();
 
   const { product, loading, error } = productObject;
 
@@ -87,6 +82,8 @@ export const ProductOptionsUI = (props: any) => {
   const handleSaveProduct = () => {
     const isErrors = Object.values(errors).length > 0
     if (!isErrors) {
+      props.onProductStateChange &&
+      props.onProductStateChange(props.isEdit ? { product, productCart }: productCart)
       handleSave && handleSave()
       return
     }
@@ -503,12 +500,14 @@ export const ProductOptionsUI = (props: any) => {
             </WrapContent>
           </View>
         )}
+
         {error && error.length > 0 && (
           <NotFoundSource
             content={error[0]?.message || error[0]}
           />
         )}
       </ScrollView>
+
       {!loading && !error && product && (
         <ProductActions>
           {productCart && !isSoldOut && maxProductQuantity > 0 && (
