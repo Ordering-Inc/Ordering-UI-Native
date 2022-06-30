@@ -177,7 +177,16 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		const _carts = orderState?.carts?.[adjustBusinessId]
 		const products = _carts?.products
 		const unavailableProducts = products.filter((product: any) => product.valid !== true)
-		unavailableProducts.length > 0 && multiRemoveProducts && multiRemoveProducts(unavailableProducts, _carts)
+		const alreadyRemoved = await _retrieveStoreData('already-removed')
+		_removeStoreData('already-removed')
+		if (unavailableProducts.length > 0) {
+			multiRemoveProducts && await multiRemoveProducts(unavailableProducts, _carts)
+			return
+		}
+	
+		if (alreadyRemoved === 'removed') {
+			setAlertState({ open: true, content: [t('NOT_AVAILABLE_PRODUCT', 'This product is not available.')] })
+		}
 	}
 
 	const removeCartByReOrder = async () => {
