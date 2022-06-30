@@ -131,7 +131,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
 
   return (
     <>
-      {paymethod === 'google_pay' && (
+      {paymethod === 'google_pay' ? (
         <View>
           <OButton
             textStyle={{
@@ -145,27 +145,26 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
             style={{ marginTop: 20 }}
           />
         </View>
-        // ) : (
-        //   <View>
-        //     {isApplePaySupported ? (
-        //       <>
-        //         <OText>{t('APPLE_PAY_PAYMENT', 'Apple pay payment')}</OText>
-        //         <ApplePayButton
-        //           onPress={pay}
-        //           type="plain"
-        //           buttonStyle="black"
-        //           borderRadius={4}
-        //           style={{
-        //             width: '100%',
-        //             height: 50,
-        //           }}
-        //         />
-        //       </>
-        //     ) : (
-        //       <OText>{t('APPLE_PAY_NOT_SUPPORTED', 'Apple pay not supported')}</OText>
-        //     )}
-        //   </View>
-        // )}
+      ) : (
+        <View>
+          {isApplePaySupported ? (
+            <>
+              <OText>{t('APPLE_PAY_PAYMENT', 'Apple pay payment')}</OText>
+              <ApplePayButton
+                onPress={pay}
+                type="plain"
+                buttonStyle="black"
+                borderRadius={4}
+                style={{
+                  width: '100%',
+                  height: 50,
+                }}
+              />
+            </>
+          ) : (
+            <OText>{t('APPLE_PAY_NOT_SUPPORTED', 'Apple pay not supported')}</OText>
+          )}
+        </View>
       )}
       <Spinner
         visible={loadingGooglePayment}
