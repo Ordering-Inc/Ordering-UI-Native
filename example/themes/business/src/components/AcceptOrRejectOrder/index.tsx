@@ -84,7 +84,7 @@ export const AcceptOrRejectOrder = (props: AcceptOrRejectOrderParams) => {
       backgroundColor: '#fff',
       borderColor: theme.colors.lightGray,
       overflow: 'hidden',
-      minHeight: 155
+      minHeight: 120
     },
     rowStyle: {
       display: 'flex',
