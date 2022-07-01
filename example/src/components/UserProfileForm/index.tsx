@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  UserFormDetails as UserProfileController,
   useSession,
   useLanguage,
 } from 'ordering-components/native';
@@ -13,6 +14,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import {
+  OAlert,
   OIcon,
   OText
 } from '../shared';
@@ -20,17 +22,23 @@ import {
   Container,
   Names,
   UserInfoContainer,
-  LanguageContainer
+  LanguageContainer,
+  RemoveAccountContainer
 } from './styles';
 
-export const UserProfileForm = (props: ProfileParams) => {
+export const UserProfileFormUI = (props: ProfileParams) => {
   const {
-    navigation
+    navigation,
+    handleRemoveAccount,
+    removeAccountState
   } = props;
 
   const theme = useTheme();
-  const [{ user }] = useSession();
+  const [{ user }, { logout }] = useSession();
   const [, t] = useLanguage();
+
+  const isAdmin = user?.level === 0
+  const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
 
   const styles = StyleSheet.create({
     linkStyle: {
@@ -44,6 +52,9 @@ export const UserProfileForm = (props: ProfileParams) => {
     },
     iconStyle: {
       fontSize: 24
+    },
+    removeAccount: {
+      flexDirection: 'row'
     }
   });
 
@@ -78,12 +89,30 @@ export const UserProfileForm = (props: ProfileParams) => {
     },
     chevronUp: {
       display: 'none'
-    }
+    },
   })
 
   const onRedirect = (route: string, params?: any) => {
     navigation.navigate(route, params)
   }
+
+  const onRemoveAccount = () => {
+    setConfirm({
+      open: true,
+      content: [t('QUESTION_REMOVE_ACCOUNT', 'Are you sure that you want to remove your account?')],
+      title: t('ACCOUNT_ALERT', 'Account alert'),
+      handleOnAccept: () => {
+        setConfirm({ ...confirm, open: false })
+        handleRemoveAccount && handleRemoveAccount(user?.id)
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (removeAccountState?.result === 'OK') {
+      logout()
+    }
+  }, [removeAccountState])
 
   return (
     <Container>
@@ -134,7 +163,35 @@ export const UserProfileForm = (props: ProfileParams) => {
           <LanguageSelector pickerStyle={_pickerStyle} />
         </LanguageContainer>
         <LogoutButton />
+        <RemoveAccountContainer>
+          <TouchableOpacity
+            disabled={isAdmin}
+            style={styles.removeAccount}
+            onPress={() => onRemoveAccount()}
+            activeOpacity={0.7}
+          >
+            <OIcon src={theme.images.general.user} width={20} color={theme.colors.black} style={{ marginEnd: 14 }} />
+            <OText size={14} weight={'400'} style={{ opacity: isAdmin ? 0.5 : 1, top: 1 }} color={theme.colors.red}>{t('REMOVE_ACCOUNT', 'Remove account')}</OText>
+          </TouchableOpacity>
+        </RemoveAccountContainer>
       </View>
+      <OAlert
+        open={confirm.open}
+        title={confirm.title}
+        content={confirm.content}
+        onAccept={confirm.handleOnAccept}
+        onCancel={() => setConfirm({ ...confirm, open: false, title: null })}
+        onClose={() => setConfirm({ ...confirm, open: false, title: null })}
+      />
     </Container>
   );
+};
+
+export const UserProfileForm = (props: any) => {
+  const profileProps = {
+    ...props,
+    UIComponent: UserProfileFormUI,
+    useSessionUser: true
+  };
+  return <UserProfileController {...profileProps} />;
 };

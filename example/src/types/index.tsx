@@ -31,6 +31,8 @@ export interface ProfileParams {
   validationFields?: any;
   showField?: any;
   isRequiredField?: any;
+  handleRemoveAccount?: any,
+  removeAccountState?: any
 }
 
 export interface AddressListParams {
