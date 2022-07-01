@@ -35,3 +35,11 @@ export const LanguageContainer = styled.View`
   align-items: center;
   margin-bottom: 10px;
 `
+
+export const RemoveAccountContainer = styled.View`
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 10px;
+  margin-top: 15px;
+`
