@@ -193,6 +193,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
               <React.Fragment key={i}>
                 {
                   <Marker
+                    zIndex={i}
                     coordinate={location}
                     title={locations[i]?.title}
                   >

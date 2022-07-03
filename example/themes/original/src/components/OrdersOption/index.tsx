@@ -9,7 +9,7 @@ import { PreviousOrders } from '../PreviousOrders'
 
 import { OptionTitle, NoOrdersWrapper } from './styles'
 import { OrdersOptionParams } from '../../types'
-
+import { _setStoreData } from '../../providers/StoreUtil';
 import {
 	Placeholder,
 	PlaceholderLine,
@@ -35,13 +35,15 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		setOrdersLength,
 		ordersLength,
 		refreshOrders,
-		setRefreshOrders
+		setRefreshOrders,
+		reorderState,
+		handleReorder
 	} = props
 
 	const theme = useTheme();
 
 	const [, t] = useLanguage()
-	const [, { reorder }] = useOrder()
+	const [{ carts }] = useOrder()
 	const { showToast } = useToast()
 	const { loading, error, orders: values } = orderList
 
@@ -50,26 +52,6 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		: theme.images.general.emptyPastOrders
 
 	const orders = customArray || values || []
-
-	const [reorderLoading, setReorderLoading] = useState(false)
-
-
-	const handleReorder = async (orderId: number) => {
-		setReorderLoading(true)
-		try {
-			const { error, result } = await reorder(orderId)
-			if (!error) {
-				onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: result.uuid })
-				setReorderLoading(false)
-				return
-			}
-			setReorderLoading(false)
-
-		} catch (err: any) {
-			showToast(ToastType.Error, t('ERROR', err.message))
-			setReorderLoading(false)
-		}
-	}
 
 	const getOrderStatus = (s: string) => {
 		const status = parseInt(s)
@@ -104,6 +86,29 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 		return objectStatus && objectStatus
 	}
+
+	useEffect(() => {
+		const _businessId = 'businessId:' + reorderState?.result?.business_id
+		if (reorderState?.error) {
+		  if (reorderState?.result?.business_id) {
+			_setStoreData('adjust-cart-products', JSON.stringify(_businessId))
+			navigation.navigate('Business', { store: reorderState?.result?.business?.slug })
+		  }
+		}
+		if (!reorderState?.error && reorderState.loading === false && reorderState?.result?.business_id) {
+		  const cartProducts = carts?.[_businessId]?.products
+		  const available = cartProducts.every((product: any) => product.valid === true)
+		  const orderProducts = orders.find((order: any) => order?.id === reorderState?.result?.orderId)?.products
+
+		  if (available && reorderState?.result?.uuid && (cartProducts?.length === orderProducts?.length)) {
+			onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
+		  } else {
+			_setStoreData('adjust-cart-products', JSON.stringify(_businessId))
+			cartProducts?.length !== orderProducts?.length && _setStoreData('already-removed', JSON.stringify('removed'))
+			navigation.navigate('Business', { store: reorderState?.result?.business?.slug })
+		  }
+		}
+	  }, [reorderState])
 
 	useFocusEffect(
 		React.useCallback(() => {
@@ -213,7 +218,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 						orders={orders.filter((order: any) => orderStatus.includes(order.status))}
 						pagination={pagination}
 						loadMoreOrders={loadMoreOrders}
-						reorderLoading={reorderLoading}
+						reorderLoading={reorderState?.loading}
 						customArray={customArray}
 						getOrderStatus={getOrderStatus}
 						onNavigationRedirect={onNavigationRedirect}
@@ -222,14 +227,14 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 					<ActiveOrders
 						orders={orders.filter((order: any) => orderStatus.includes(order.status))}
 						pagination={pagination}
-						reorderLoading={reorderLoading}
+						reorderLoading={reorderState?.loading}
 						customArray={customArray}
 						getOrderStatus={getOrderStatus}
 						onNavigationRedirect={onNavigationRedirect}
 					/>
 				) : (
 					<PreviousOrders
-						reorderLoading={reorderLoading}
+						reorderLoading={reorderState?.loading}
 						orders={orders.filter((order: any) => orderStatus.includes(order.status)).sort((a: any, b: any) => a?.id < b?.id)}
 						pagination={pagination}
 						loadMoreOrders={loadMoreOrders}
