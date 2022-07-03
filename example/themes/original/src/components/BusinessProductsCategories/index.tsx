@@ -57,12 +57,12 @@ const BusinessProductsCategoriesUI = (props: any) => {
 
 		if (!lazyLoadProductsRecommended) {
 			if (category?.id) {
-				scrollViewRef.current.scrollTo({
+				scrollViewRef?.current?.scrollTo && scrollViewRef.current.scrollTo({
 					y: categoriesLayout[`cat_${category?.id}`]?.y + productListLayout?.y - 70,
 					animated: true
 				})
 			} else {
-				scrollViewRef.current.scrollTo({
+				scrollViewRef?.current?.scrollTo && scrollViewRef.current.scrollTo({
 					y: productListLayout?.y - 70,
 					animated: true
 				})

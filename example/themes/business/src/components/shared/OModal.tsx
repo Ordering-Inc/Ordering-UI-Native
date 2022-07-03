@@ -165,7 +165,7 @@ const OModal = (props: Props): React.ReactElement => {
         transparent={isTransparent}
         visible={open}
         onRequestClose={() => {
-          onClose();
+          onClose && onClose();
         }}
         style={{
           height: '100%',
