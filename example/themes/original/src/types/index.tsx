@@ -311,6 +311,8 @@ export interface OrdersOptionParams {
 	loadOrders?: any,
 	setOrderList?: any,
 	preOrders?: boolean,
+	reorderState?: any,
+	handleReorder?: (orderId: number) => {},
 	setOrdersLength?: ({ activeOrdersLength, previousOrdersLength }: { activeOrdersLength: number, previousOrdersLength: number }) => void,
 	ordersLength: { activeOrdersLength: number, previousOrdersLength: number },
 	setSelectedOrderId?: any,
@@ -339,7 +341,7 @@ export interface PreviousOrdersParams {
 	orderID?: number
 	reorderLoading?: boolean,
 	loadMoreOrders?: () => {},
-	handleReorder: (order: any) => {},
+	handleReorder?: (orderId: number) => {},
 	onNavigationRedirect?: (route: string, params?: any) => {}
 }
 export interface OrderDetailsParams {

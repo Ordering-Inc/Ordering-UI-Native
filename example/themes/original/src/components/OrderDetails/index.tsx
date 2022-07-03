@@ -682,7 +682,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   </OText>
                 </View>
               )}
-              {order?.comment && (
+              {!!order?.comment && (
                 <View style={{ marginTop: 15 }}>
                   <OText size={16} style={{ textAlign: 'left' }} color={theme.colors.textNormal}>
                     {t('COMMENT', 'Comment')}
