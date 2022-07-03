@@ -99,6 +99,8 @@ const LoginFormUI = (props: LoginParams) => {
 	const theme = useTheme();
 	const isOtpEmail = loginTab === 'otp' && otpType === 'email'
 	const isOtpCellphone = loginTab === 'otp' && otpType === 'cellphone'
+	const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
+
 	const loginStyle = StyleSheet.create({
 		btnOutline: {
 			backgroundColor: '#FFF',
@@ -710,7 +712,7 @@ const LoginFormUI = (props: LoginParams) => {
 												handleSuccessFacebookLogin={handleSuccessFacebook}
 											/>
 										)}
-									{(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+									{(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled && (
 										<GoogleLogin
 											notificationState={notificationState}
 											webClientId={configs?.google_login_client_id?.value}

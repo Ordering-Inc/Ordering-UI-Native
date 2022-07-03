@@ -135,6 +135,7 @@ const SignupFormUI = (props: SignupParams) => {
 	const recaptchaRef = useRef<any>({});
 
 	const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
+	const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
 
 	const handleRefs = (ref: any, code: string) => {
 		switch (code) {
@@ -787,7 +788,7 @@ const SignupFormUI = (props: SignupParams) => {
 											handleSuccessFacebookLogin={handleSuccessFacebook}
 										/>
 									)}
-								{(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+								{(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled && (
 									<GoogleLogin
 										notificationState={notificationState}
 										webClientId={configs?.google_login_client_id?.value}

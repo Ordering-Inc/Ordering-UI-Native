@@ -115,6 +115,8 @@ const SignupFormUI = (props: SignupParams) => {
   const phoneRef = useRef<any>(null)
   const passwordRef = useRef<any>(null)
 
+  const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
+
   const anySocialButtonActivated = ((configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') && configs?.facebook_id?.value) ||
     (configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) ||
     (configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null)
@@ -543,7 +545,7 @@ const SignupFormUI = (props: SignupParams) => {
                       handleSuccessFacebookLogin={handleSuccessFacebook}
                     />
                   )}
-                {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+                {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled && (
                   <GoogleLogin
                     notificationState={notificationState}
                     webClientId={configs?.google_login_client_id?.value}
