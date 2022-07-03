@@ -100,7 +100,7 @@ export const PreviousOrders = (props: PreviousOrdersParams) => {
 
 	const handleReorderClick = (id: number) => {
 		setReorderSelected(id);
-		handleReorder(id);
+		handleReorder && handleReorder(id);
 	};
 
 	return (
