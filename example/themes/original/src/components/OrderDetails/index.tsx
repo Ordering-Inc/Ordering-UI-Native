@@ -330,7 +330,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   };
 
   const getIncludedTaxes = () => {
-    if (order?.taxes?.length === 0) {
+    if (order?.taxes?.length === 0 || !order?.taxes) {
       return order.tax_type === 1 ? order?.summary?.tax ?? 0 : 0
     } else {
       return order?.taxes.reduce((taxIncluded: number, tax: any) => {

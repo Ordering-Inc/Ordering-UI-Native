@@ -78,7 +78,7 @@ const OModal = (props: Props): React.ReactElement => {
       animationType="slide"
       transparent={isTransparent}
       visible={open}
-      onRequestClose={() => { onClose() }}
+      onRequestClose={() => {  onClose && onClose() }}
       style={{ height: '100%', flex: 1, position: 'absolute', ...style, zIndex: 9999 }}
     >
      {isAvoidKeyBoardView ? (
