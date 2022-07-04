@@ -395,7 +395,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         </View>
       </OSTable>
 
-      {order?.products?.length && (
+      {order?.products?.length > 0 && (
         <>
           <View
             style={{
@@ -598,7 +598,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     <>
       <Spinner visible={!order || Object.keys(order).length === 0} />
 
-      {order && Object.keys(order).length > 0 && (
+      {!!order && Object.keys(order).length > 0 && (
         <>
           <Container>
             <NavBar
