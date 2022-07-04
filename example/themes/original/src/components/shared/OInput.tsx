@@ -21,6 +21,7 @@ interface Props extends TextInputProps {
 	isSecured?: boolean;
 	style?: ViewStyle;
 	placeholder?: string;
+	placeholderTextColor?:string;
 	icon?: ImageSourcePropType | string;
 	iconRight?: ImageSourcePropType;
 	iconColor?: string;
@@ -80,6 +81,7 @@ const OInput = (props: Props): React.ReactElement => {
 				onChangeText={(txt: any) => props.name ? props.onChange({ target: { name: props.name, value: txt } }) : props.onChange(txt)}
 				defaultValue={props.value}
 				placeholder={props.placeholder ? props.placeholder : ''}
+				placeholderTextColor={props?.placeholderTextColor ? props?.placeholderTextColor : 'initial'}
 				keyboardType={props.type || 'default'}
 				multiline={props.multiline}
 				scrollEnabled={props.multiline}
