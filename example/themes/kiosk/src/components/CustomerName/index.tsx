@@ -113,12 +113,6 @@ const CustomerName = (props: Props): React.ReactElement => {
             style={{ bottom: 20 }}
           >
             {t('WHATS_YOUR_NAME', "What's your name?")}
-            {/* <OText
-                  size={orientationState?.dimensions?.width * 0.05}
-                  weight={'700'}
-                >
-                  {`${t('ORDER_BE_FOR', 'order be for?')}`}
-                </OText> */}
           </OText>
           <Controller
             control={control}
