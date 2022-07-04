@@ -107,7 +107,7 @@ const PaymentOptionsUI = (props: any) => {
 
   const handlePlaceOrder = () => {
     if (!userErrors.length) {
-      handlerClickPlaceOrder && handlerClickPlaceOrder();
+      handlerClickPlaceOrder && handlerClickPlaceOrder(null, { on_behalf_of: props.customerName });
       return;
     }
     let stringError = '';

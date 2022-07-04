@@ -323,6 +323,12 @@ export const OrderContentComponent = (props: OrderContent) => {
             {order?.customer?.zipcode}
           </OText>
         )}
+
+        {!!order?.on_behalf_of && (
+          <OText numberOfLines={1} mBottom={4} ellipsizeMode="tail">
+            {t('ON_BEHALF_OF', 'On behalf of')}{': '} {order?.on_behalf_of}
+          </OText>
+        )}
         {((order?.delivery_option !== undefined && order?.delivery_type === 1) || !!order?.comment) && (
           <View style={{ marginTop: 10 }}>
             {order?.delivery_option !== undefined && order?.delivery_type === 1 && (

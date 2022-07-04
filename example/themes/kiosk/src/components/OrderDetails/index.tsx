@@ -395,9 +395,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
         </View>
       </OSTable>
 
-      {order?.products?.length && (
-        <OSTable>
-          <View>
+      {order?.products?.length > 0 && (
+        <>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
+          >
             <OText
               weight="bold"
               mBottom={15}
@@ -593,7 +598,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     <>
       <Spinner visible={!order || Object.keys(order).length === 0} />
 
-      {order && Object.keys(order).length > 0 && (
+      {!!order && Object.keys(order).length > 0 && (
         <>
           <Container>
             <NavBar

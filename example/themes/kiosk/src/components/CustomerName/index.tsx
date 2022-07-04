@@ -24,7 +24,7 @@ const CustomerName = (props: Props): React.ReactElement => {
   const [orientationState] = useDeviceOrientation();
 
   const onSubmit = (values: any) => {
-    _setStoreData('customer_name', {customerName: values.name});
+    _setStoreData('customer_name', { customerName: values.name });
     onProceedToPay()
   };
 
@@ -57,23 +57,27 @@ const CustomerName = (props: Props): React.ReactElement => {
 
   const goToBack = () => navigation?.goBack();
 
-  const submitButton  = (<OButton
-    text={t('PROCEED_TO_PAY', 'Proceed to Pay')}
-    onClick={handleSubmit(onSubmit)}
-    textStyle={{color: theme.colors.primaryContrast, fontSize: 20}}
-    parentStyle={{
-      height: orientationState?.orientation === PORTRAIT
-         ? 50 : 100
-    }}
-    style={{
-      width: orientationState?.orientation === PORTRAIT
-        ? orientationState?.dimensions.width - 40
-        : orientationState?.dimensions.width * 0.5,
-    }}
-  />);
+  const submitButton = (
+    <View style={{ flex: 1, alignItems: 'center' }}>
+      <OButton
+        text={t('PROCEED_TO_PAY', 'Proceed to Pay')}
+        onClick={handleSubmit(onSubmit)}
+        textStyle={{ color: theme.colors.primaryContrast, fontSize: 20 }}
+        parentStyle={{
+          height: orientationState?.orientation === PORTRAIT
+            ? 50 : 100
+        }}
+        style={{
+          width: orientationState?.orientation === PORTRAIT
+            ? orientationState?.dimensions.width * 0.5
+            : orientationState?.dimensions.width * 0.5
+        }}
+      />
+    </View>
+  );
 
-  const skipButton  = (
-    <View style={{flex:1, left: orientationState?.dimensions.width * 0.2,}}>
+  const skipButton = (
+    <View style={{ flex: 1, alignItems: 'center' }}>
       <OButton
         text={t('SKIP', 'Skip')}
         onClick={onSkip}
@@ -85,7 +89,7 @@ const CustomerName = (props: Props): React.ReactElement => {
         style={{
           backgroundColor: theme.colors.white,
           width: orientationState?.orientation === PORTRAIT
-            ? orientationState?.dimensions.width - 40
+            ? orientationState?.dimensions.width * 0.2
             : orientationState?.dimensions.width * 0.1,
         }}
       />
@@ -94,78 +98,72 @@ const CustomerName = (props: Props): React.ReactElement => {
 
   return (
     <>
-        <Container>
-          <NavBar
-                title={t('YOUR_NAME', 'Your name')}
-                onActionLeft={goToBack}
-                btnStyle={{paddingLeft: 0}}
-          />
-          <View style={{ 
-            marginVertical: orientationState?.dimensions?.height * 0.08,
-            paddingLeft: orientationState?.dimensions?.width * 0.25
-          }}>
-              <OText
-                size={orientationState?.dimensions?.width * 0.05}
-                style={{bottom: 20}}
-              >
-                {t('WHATS_YOUR_NAME', "What's your name?")}
-                {/* <OText
-                  size={orientationState?.dimensions?.width * 0.05}
-                  weight={'700'}
-                >
-                  {`${t('ORDER_BE_FOR', 'order be for?')}`}
-                </OText> */}
-              </OText>
-              <Controller
-                control={control}
-                render={({ onChange, value }: any) => (
-                  <OInput
-                    placeholder={t('WRITE_YOUR_NAME', 'Write your name')}
-                    style={{
-                      ...styles.inputStyle,
-                      width: orientationState?.orientation === PORTRAIT
-                        ? orientationState?.dimensions.width - 40
-                        : orientationState?.dimensions.width * 0.5,
-                    }}
-                    value={value}
-                    autoCapitalize="words"
-                    autoCorrect={false}
-                    onChange={(val: any) => onChange(val)}
-                    onSubmitEditing={handleSubmit(onSubmit)}
-                  />
-                )}
-                name="name"
-                rules={{
-                  required: t(
-                    'VALIDATION_ERROR_REQUIRED',
-                    'The field Customer Name is required',
-                  ).replace('_attribute_', t('REQUEST_COLLECTION_CUSTOMER_NAME', 'Customer Name')),
-                  pattern: {
-                    value: /^[a-zA-Z áéíóúüñçÁÉÍÓÚÜÑÇ]+$/i,
-                    message: t(
-                      'INVALID_ERROR',
-                      'Invalid name',
-                    ).replace('_attribute_', t('NAME', 'Name')),
-                  }
+      <Container>
+        <NavBar
+          title={t('YOUR_NAME', 'Your name')}
+          onActionLeft={goToBack}
+          btnStyle={{ paddingLeft: 0 }}
+        />
+        <View style={{
+          marginVertical: orientationState?.dimensions?.height * 0.08,
+          alignItems: 'center'
+        }}>
+          <OText
+            size={orientationState?.dimensions?.width * 0.05}
+            style={{ bottom: 20 }}
+          >
+            {t('WHATS_YOUR_NAME', "What's your name?")}
+          </OText>
+          <Controller
+            control={control}
+            render={({ onChange, value }: any) => (
+              <OInput
+                placeholder={t('WRITE_YOUR_NAME', 'Write your name')}
+                style={{
+                  ...styles.inputStyle,
+                  width: orientationState?.orientation === PORTRAIT
+                    ? orientationState?.dimensions.width * 0.5
+                    : orientationState?.dimensions.width * 0.5,
                 }}
-                defaultValue=""
+                value={value}
+                autoCapitalize="words"
+                autoCorrect={false}
+                onChange={(val: any) => onChange(val)}
+                onSubmitEditing={handleSubmit(onSubmit)}
               />
+            )}
+            name="name"
+            rules={{
+              required: t(
+                'VALIDATION_ERROR_REQUIRED',
+                'The field Customer Name is required',
+              ).replace('_attribute_', t('REQUEST_COLLECTION_CUSTOMER_NAME', 'Customer Name')),
+              pattern: {
+                value: /^[a-zA-Z áéíóúüñçÁÉÍÓÚÜÑÇ]+$/i,
+                message: t(
+                  'INVALID_ERROR',
+                  'Invalid name',
+                ).replace('_attribute_', t('NAME', 'Name')),
+              }
+            }}
+            defaultValue=""
+          />
 
-              {orientationState?.orientation === LANDSCAPE && submitButton}
-              {orientationState?.orientation === LANDSCAPE && skipButton}
-              {(orientationState?.orientation === PORTRAIT) && (
-                <OSActions>
-                  {submitButton}
-                </OSActions>
-              )}
-              {(orientationState?.orientation === PORTRAIT) && (
-                <OSActions>
-                  {skipButton}
-                </OSActions>
-              )}
-            </View>
-        </Container>
-      </>
+          {orientationState?.orientation === LANDSCAPE && submitButton}
+          {orientationState?.orientation === LANDSCAPE && skipButton}
+          {(orientationState?.orientation === PORTRAIT) && (
+            <OSActions>
+              {submitButton}
+            </OSActions>
+          )}
+          {(orientationState?.orientation === PORTRAIT) && (
+            <OSActions>
+              {skipButton}
+            </OSActions>
+          )}
+        </View>
+      </Container>
+    </>
   );
 };
 

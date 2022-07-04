@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { _retrieveStoreData } from '../../../../../src/providers/StoreUtil';
 import {
   Checkout as CheckoutController,
   useOrder,
@@ -35,28 +35,40 @@ const CheckoutUI = (props: any) => {
   } = props
 
   const [errorCash, setErrorCash] = useState(false);
+  const [customerName, setCustomerName] = useState(null);
+
+  const getCustomerName = async () => {
+    const data = await _retrieveStoreData('customer_name');
+    setCustomerName(data?.customerName)
+  }
+
+  useEffect(() => {
+    if (!cartState.loading && cart && !cart?.valid && cart?.status === 2) {
+      navigation?.canGoBack() && navigation.goBack()
+    } else {
+      getCustomerName()
+    }
+  }, [cart])
 
   return (
     <>
-      {!cartState.loading && cart && cart?.status !== 2 && cart?.valid && (
-        <PaymentOptions
-          navigation={navigation}
-          cart={cart}
-          errors={errors}
-          onPaymentChange={handlePaymethodChange}
-          onNavigationRedirect={onNavigationRedirect}
-          paySelected={paymethodSelected}
-          handlerClickPlaceOrder={handlerClickPlaceOrder}
-          placing={placing}
-
-          errorCash={errorCash}
-          isDisabled={cart?.status === 2}
-          businessId={businessDetails?.business?.id}
-          isLoading={businessDetails.loading}
-          paymethods={businessDetails?.business?.paymethods}
-          setErrorCash={setErrorCash}
-        />
-      )}
+      <PaymentOptions
+        navigation={navigation}
+        cart={cart}
+        errors={errors}
+        customerName={customerName}
+        onPaymentChange={handlePaymethodChange}
+        onNavigationRedirect={onNavigationRedirect}
+        paySelected={paymethodSelected}
+        handlerClickPlaceOrder={handlerClickPlaceOrder}
+        placing={placing}
+        errorCash={errorCash}
+        isDisabled={cart?.status === 2}
+        businessId={businessDetails?.business?.id}
+        isLoading={cartState.loading || businessDetails.loading}
+        paymethods={businessDetails?.business?.paymethods}
+        setErrorCash={setErrorCash}
+      />
     </>
   )
 }
@@ -107,7 +119,7 @@ export const Checkout = (props: any) => {
             loading: false,
             cart: result
           })
-        } catch (error) {
+        } catch (error: any) {
           showToast(ToastType.Error, error?.toString() || error.message)
         }
       } else {
@@ -119,7 +131,7 @@ export const Checkout = (props: any) => {
           error: cart ? null : result
         })
       }
-    } catch (e) {
+    } catch (e: any) {
       setCartState({
         ...cartState,
         loading: false,
