@@ -20,7 +20,9 @@ export const SearchBar = (props: any) => {
 		inputStyle,
 		onPress,
 		isDisabled,
-		iconCustomRight
+		iconCustomRight,
+		onSubmitEditing,
+		blurOnSubmit
 	} = props
 
 	const theme = useTheme();
@@ -88,6 +90,7 @@ export const SearchBar = (props: any) => {
 				inputStyle={{padding: 0, paddingTop: Platform.OS == 'android' ? 2 : 0, ...inputStyle}}
 				onPress={() => onPress && onPress()}
 				iconCustomRight={iconCustomRight}
+				onSubmitEditing={() => onSubmitEditing && onSubmitEditing()}
 			/>
 			{isCancelButtonShow && (
 				<OButton
