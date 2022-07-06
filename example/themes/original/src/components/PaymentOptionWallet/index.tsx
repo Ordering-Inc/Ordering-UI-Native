@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Platform, StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { useTheme } from 'styled-components/native'
-import CheckBox from '@react-native-community/checkbox';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   PaymentOptionWallet as PaymentOptionWalletController,
   useLanguage,
@@ -40,13 +40,6 @@ const PaymentOptionWalletUI = (props: any) => {
 
   const isBusinessWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
   const isBusinessWalletPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
-
-  const styles = StyleSheet.create({
-    checkBoxStyle: {
-      width: 25,
-      height: 25,
-    }
-  });
 
   const [checkedState, setCheckedState] = useState(
     new Array(walletsState.result?.length).fill(false)
@@ -104,20 +97,19 @@ const PaymentOptionWalletUI = (props: any) => {
               disabled={(cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0}
             >
               <SectionLeft>
-                <CheckBox
-                  value={checkedState[idx]}
-                  disabled={(cart?.balance === 0 && !checkedState[idx]) || wallet.balance === 0}
-                  boxType={'square'}
-                  tintColors={{
-                    true: theme.colors.primary,
-                    false: theme.colors.disabled
-                  }}
-                  onChange={() => handleOnChange(idx, wallet)}
-                  tintColor={theme.colors.disabled}
-                  onCheckColor={theme.colors.primary}
-                  onTintColor={theme.colors.primary}
-                  style={Platform.OS === 'ios' && styles.checkBoxStyle}
-                />
+                {checkedState[idx] ? (
+                  <MaterialCommunityIcons
+                    name="checkbox-marked"
+                    size={25}
+                    color={theme.colors.primary}
+                  />
+                ) : (
+                  <MaterialCommunityIcons
+                    name="checkbox-blank-outline"
+                    size={25}
+                    color={theme.colors.disabled}
+                  />
+                )}
                 <View style={{ alignItems: 'baseline', marginLeft: 5 }}>
                   <View>
                     <OText
