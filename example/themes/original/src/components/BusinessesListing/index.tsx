@@ -305,9 +305,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 								onCancel={() => handleChangeSearch('')}
 								placeholder={t('SEARCH', 'Search')}
 								height={26}
-								isDisabled={configs?.advanced_business_search_enabled?.value === '1' || !businessTypes}
+								isDisabled={!businessTypes}
 								inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
-								onPress={() => { configs?.advanced_business_search_enabled?.value === '1' && navigation.navigate('BusinessSearch', { businessTypes }) }}
+								onSubmitEditing={() => { configs?.advanced_business_search_enabled?.value === '1' && navigation.navigate('BusinessSearch', { businessTypes, defaultTerm: searchValue }) }}
 							/>
 						)}
 
