@@ -48,16 +48,19 @@ const DriverTipsUI = (props: any) => {
 		}
 	})
 
-	const [value, setvalue] = useState(0);
+	const [value, setvalue] = useState('');
 
 	const placeholderCurrency = (configs?.currency_position?.value || 'left') === 'left'
 		? `${configs?.format_number_currency?.value}0`
 		: `0${configs?.format_number_currency?.value}`
 
 	const handleChangeDriverTip = (val: any) => {
-		let tip = parseFloat(val)
-		tip = isNaN(tip) ? 0 : tip
-		setvalue(tip)
+		const tip = Number(val)
+		if ((isNaN(tip) || tip < 0)) {
+		  setvalue(value)
+		  return
+		}
+		setvalue(val)
 	}
 	
 	return (
@@ -97,6 +100,8 @@ const DriverTipsUI = (props: any) => {
 						<OInput
 							placeholder={placeholderCurrency}
 							style={style.inputStyle}
+							value={value}
+							type={'numeric'}
 							onChange={handleChangeDriverTip}
 							autoCapitalize='none'
 							autoCorrect={false}
@@ -108,10 +113,10 @@ const DriverTipsUI = (props: any) => {
 							textStyle={{ color: 'white', fontSize: 14 }}
 							imgRightSrc={null}
 							style={{ borderRadius: 5, height: 44 }}
-							isDisabled={!(value > 0 && value !== driverTip) || !value}
+							isDisabled={parseFloat(value || '0') < 0 || parseFloat(value || '0') === driverTip || value === ''}
 							onClick={() => {
 								handlerChangeOption(value)
-								setvalue(0)
+								setvalue('')
 							}}
 						/>
 					</DTWrapperInput>
