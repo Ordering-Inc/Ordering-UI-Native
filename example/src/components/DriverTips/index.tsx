@@ -49,7 +49,7 @@ const DriverTipsUI = (props: any) => {
   const [{ configs }] = useConfig();
   const [{loading}] = useOrder()
 
-  const [value, setvalue] = useState(0);
+  const [value, setvalue] = useState('');
   const [valueOption,setValueOption] = useState(0)
 
   const placeholderCurrency = (configs?.currency_position?.value || 'left') === 'left'
@@ -57,9 +57,12 @@ const DriverTipsUI = (props: any) => {
     : `0${configs?.format_number_currency?.value}`
 
   const handleChangeDriverTip = (val: any) => {
-    let tip = parseFloat(val)
-    tip = isNaN(tip) ? 0 : tip
-    setvalue(tip)
+    const tip = Number(val)
+    if ((isNaN(tip) || tip < 0)) {
+      setvalue(value)
+      return
+    }
+    setvalue(val)
   }
 
   const handleChangeOptionCustom = (val : any) => {
@@ -110,6 +113,8 @@ const DriverTipsUI = (props: any) => {
             <OInput
               placeholder={placeholderCurrency}
               style={style.inputStyle}
+              value={value}
+              type={'numeric'}
               onChange={handleChangeDriverTip}
               autoCapitalize='none'
               autoCorrect={false}
@@ -121,10 +126,10 @@ const DriverTipsUI = (props: any) => {
               textStyle={{ color: 'white', fontSize: 18, maxWidth: 110, minWidth: 60 }}
               imgRightSrc={null}
               textProps={{numberOfLines: 1}}
-              isDisabled={!(value > 0 && value !== driverTip) || !value}
+              isDisabled={parseFloat(value || '0') < 0 || parseFloat(value || '0') === driverTip || value === ''}
               onClick={() => {
                 handlerChangeOption(value)
-                setvalue(0)
+                setvalue('')
               }}
             />
           </DTWrapperInput>
