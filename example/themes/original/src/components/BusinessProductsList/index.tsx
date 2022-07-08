@@ -327,7 +327,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               style={{ borderRadius: 7.6 }}
             />
           )}
-          <OText mBottom={40}>{openDescription?.description}</OText>
+          <OText mBottom={60}>{openDescription?.description}</OText>
         </ScrollView>
       </OModal>
     </ProductsContainer>
