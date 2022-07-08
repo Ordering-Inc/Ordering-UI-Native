@@ -136,6 +136,8 @@ const SignupFormUI = (props: SignupParams) => {
 
 	const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
 	const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
+	const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1' || !configs?.facebook_login_enabled?.enabled
+  	const appleLoginEnabled = configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
 
 	const handleRefs = (ref: any, code: string) => {
 		switch (code) {
@@ -780,7 +782,9 @@ const SignupFormUI = (props: SignupParams) => {
 						<ButtonsWrapper>
 							<SocialButtons>
 								{(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
-									configs?.facebook_id?.value && (
+									configs?.facebook_id?.value && 
+									facebookLoginEnabled &&
+									(
 										<FacebookLogin
 											notificationState={notificationState}
 											handleErrors={(err: any) => showToast(ToastType.Error, err)}
@@ -797,7 +801,7 @@ const SignupFormUI = (props: SignupParams) => {
 										handleSuccessGoogleLogin={handleSuccessFacebook}
 									/>
 								)}
-								{(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && (
+								{(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && appleLoginEnabled && (
 									<AppleLogin
 										notificationState={notificationState}
 										handleErrors={(err: any) => showToast(ToastType.Error, err)}
