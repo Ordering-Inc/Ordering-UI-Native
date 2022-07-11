@@ -102,7 +102,7 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
       shippingMethods: [
         {
           amount: cart?.balance?.toString() ?? cart?.total?.toString?.(),
-          identifier: 'DPS',
+          identifier: 'standard',
           label: 'Courier',
           detail: 'Delivery',
           type: 'final',
@@ -125,7 +125,6 @@ export const StripeMethodForm = (props: StripeMethodFormParams) => {
           last4: paymentMethod.Card.last4
         }
       })
-      onCancel()
     }
   }
 
