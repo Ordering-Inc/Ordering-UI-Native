@@ -154,13 +154,17 @@ export interface BusinessesListingParams {
 	franchiseId?: any;
 	businessId?: any;
 	isGuestUser?: any;
+	handleUpdateBusinessList?: any;
 }
 export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
 	onBusinessClick?: void;
 	navigation?: any;
 	isLoading?: boolean;
-	getBusinesses: (newFetch: boolean) => void
+	getBusinesses: (newFetch: boolean) => void,
+	favoriteIds?: any,
+	setFavoriteIds?: any,
+	handleUpdateBusinessList?: any
 }
 export interface BusinessTypeFilterParams {
 	businessTypes?: Array<any>;
@@ -189,7 +193,11 @@ export interface BusinessControllerParams {
 	businessDeliveryPrice?: number,
 	businessDeliveryTime?: string,
 	businessPickupTime?: string,
-	businessDistance?: number
+	businessDistance?: number,
+	favoriteIds?: number[],
+	handleFavoriteBusiness?: any,
+	setFavoriteIds?: any;
+	handleUpdateBusinessList?: any;
 }
 export interface BusinessProductsListingParams {
 	navigation?: any;
@@ -212,6 +220,7 @@ export interface BusinessProductsListingParams {
 	handleChangeCategory: (value: any) => {};
 	setProductLogin?: () => {};
 	updateProductModal?: (value: any) => {};
+	handleUpdateProducts?: any;
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -259,7 +268,8 @@ export interface BusinessProductsListParams {
     subcategoriesSelected?: any,
     onClickCategory?: any,
     lazyLoadProductsRecommended?: boolean,
-	isFiltMode?: boolean
+	isFiltMode?: boolean,
+	handleUpdateProducts?: any
 }
 export interface SingleProductCardParams {
 	businessId: any,
@@ -267,7 +277,9 @@ export interface SingleProductCardParams {
 	isSoldOut: boolean;
 	onProductClick: any;
 	productAddedToCartLength: number;
-	style?: ViewStyle
+	style?: ViewStyle,
+	handleFavoriteProduct?: any,
+	handleUpdateProducts?: any
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -319,7 +331,8 @@ export interface OrdersOptionParams {
 	setOpenMessges?: any,
 	loadMoreStatus?: boolean,
 	refreshOrders?: boolean,
-	setRefreshOrders?: (value : boolean) => void
+	setRefreshOrders?: (value : boolean) => void,
+	handleUpdateOrderList?: (orderId: number, changes: any) => {}
 }
 export interface ActiveOrdersParams {
 	orders?: any,
@@ -332,7 +345,8 @@ export interface ActiveOrdersParams {
 	loadMoreOrders?: () => {},
 	onNavigationRedirect?: (route: string, params?: any) => {},
 	isMessageView?: boolean,
-	handleClickOrder?: any
+	handleClickOrder?: any,
+	handleUpdateOrderList?: (orderId: number, changes: any) => {}
 }
 export interface PreviousOrdersParams {
 	orders?: any,
@@ -343,6 +357,7 @@ export interface PreviousOrdersParams {
 	loadMoreOrders?: () => {},
 	handleReorder?: (orderId: number) => {},
 	onNavigationRedirect?: (route: string, params?: any) => {}
+	handleUpdateOrderList?: (orderId: number, changes: any) => {}
 }
 export interface OrderDetailsParams {
 	navigation?: any,
@@ -619,4 +634,30 @@ export interface otpParams {
 	onSubmit: () => void,
 	handleLoginOtp: (code : string) => void,
 	setAlertState: any
+}
+
+export interface FavoriteParams {
+	favoriteList: any,
+	handleUpdateFavoriteList: (id: number, changes: any) => {},
+	pagination: any,
+	getFavoriteList: (value: number) => {},
+	navigation?: any,
+	onNavigationRedirect?: (route: string, params?: any) => {},
+	reorderState?: any,
+	handleReorder?: (orderId: number) => {},
+	isOrder?: boolean,
+	isProduct?: boolean,
+	isBusiness?: boolean
+}
+
+export interface SingleOrderCardParams {
+	order: any,
+	reorderLoading: any,
+	handleReorder?: (value: any) => {},
+	getOrderStatus: any,
+	handleFavoriteOrder?: (value: boolean) => {},
+	onNavigationRedirect?: (route: string, params?: any) => {},
+	pastOrders: any,
+	isMessageView?: any,
+	handleClickOrder: (value: any) => {}
 }

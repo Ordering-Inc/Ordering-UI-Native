@@ -4,13 +4,15 @@ import {
 	useConfig,
 	useOrder,
 	useUtils,
+	SingleProductCard as SingleProductCardController
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
 import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { OText, OIcon } from '../shared';
 import FastImage from 'react-native-fast-image'
+import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { shape } from '../../utils';
 
 function SingleProductCardPropsAreEqual(prevProps : any, nextProps : any) {
@@ -19,13 +21,14 @@ function SingleProductCardPropsAreEqual(prevProps : any, nextProps : any) {
 	prevProps.productAddedToCartLength === nextProps.productAddedToCartLength
 }
 
-export const SingleProductCard = React.memo((props: SingleProductCardParams) => {
+const SinguleProductCardUI = (props: SingleProductCardParams) => {
 	const {
 		product,
 		isSoldOut,
 		onProductClick,
 		productAddedToCartLength,
-		style
+		style,
+		handleFavoriteProduct
 	} = props;
 
 	const theme = useTheme();
@@ -36,6 +39,11 @@ export const SingleProductCard = React.memo((props: SingleProductCardParams) => 
 			borderRadius: 7.6,
 			borderColor: theme.colors.border,
 			marginBottom: 28,
+		},
+		titleWrapper: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'space-between'
 		},
 		line18: {
 			lineHeight: 18,
@@ -102,6 +110,11 @@ export const SingleProductCard = React.memo((props: SingleProductCardParams) => 
 		maxCartProductConfig,
 		maxCartProductInventory,
 	);
+
+	const handleChangeFavorite = () => {
+		handleFavoriteProduct && handleFavoriteProduct(!product?.favorite)
+	}
+
 	return (
 		<CardContainer
 			style={[
@@ -118,14 +131,25 @@ export const SingleProductCard = React.memo((props: SingleProductCardParams) => 
 				</QuantityContainer>
 			)}
 			<CardInfo>
-				<OText
-					size={12}
-					weight={'500'}
-					numberOfLines={1}
-					ellipsizeMode="tail"
-					style={styles.line18}>
-					{product?.name}
-				</OText>
+				<View style={styles.titleWrapper}>
+					<OText
+						size={12}
+						weight={'500'}
+						numberOfLines={1}
+						ellipsizeMode="tail"
+						style={styles.line18}>
+						{product?.name}
+					</OText>
+					<TouchableOpacity
+						onPress={handleChangeFavorite}
+					>
+						<IconAntDesign
+							name={product?.favorite ? 'heart' : 'hearto'}
+							color={theme.colors.danger5}
+							size={18}
+						/>
+					</TouchableOpacity>
+				</View>
 				<PricesContainer>
 					<OText color={theme.colors.primary}>{product?.price ? parsePrice(product?.price) : ''}</OText>
 					{product?.offer_price !== null && product?.in_offer && (
@@ -186,4 +210,12 @@ export const SingleProductCard = React.memo((props: SingleProductCardParams) => 
 			)}
 		</CardContainer>
 	);
+}
+
+export const SingleProductCard = React.memo((props: SingleProductCardParams) => {
+	const singleProductCardProps = {
+		...props,
+		UIComponent: SinguleProductCardUI
+	}
+	return <SingleProductCardController {...singleProductCardProps} />
 }, SingleProductCardPropsAreEqual);
