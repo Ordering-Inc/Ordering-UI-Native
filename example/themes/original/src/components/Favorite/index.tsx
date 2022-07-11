@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import { useLanguage } from 'ordering-components/native'
+import { useLanguage, useOrder } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native'
+import { FavoriteList } from '../FavoriteList'
 import NavBar from '../NavBar'
 import { OText } from '../shared'
-import { FavoriteBusinesses } from '../FavoriteBusinesses'
-import { FavoriteProducts } from '../FavoriteProducts'
-import { FavoriteOrders } from '../FavoriteOrders'
 
 import {
   TabContainer,
@@ -19,7 +17,7 @@ export const Favorite = (props: any) => {
   } = props
   const [, t] = useLanguage()
   const theme = useTheme()
-  const [refreshing] = useState(false);
+  const [orderState] = useOrder()
   const [tabSelected, setTabSelected] = useState('businesses')
 
   const tabList = [
@@ -63,13 +61,31 @@ export const Favorite = (props: any) => {
         ))}
       </TabContainer>
       {tabSelected === 'businesses' && (
-        <FavoriteBusinesses
+        <FavoriteList
           navigation={navigation}
           onNavigationRedirect={onRedirect}
+          isBusiness
+          favoriteURL='favorite_businesses'
+          originalURL='business'
+          location={`${orderState.options?.address?.location?.lat},${orderState.options?.address?.location?.lng}`}
+          propsToFetch={['id', 'name', 'header', 'logo', 'location', 'address', 'ribbon', 'timezone', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']}
         />
       )}
-      {tabSelected === 'products' && <FavoriteProducts />}
-      {tabSelected === 'orders' && <FavoriteOrders onNavigationRedirect={onRedirect} />}
+      {tabSelected === 'products' && (
+        <FavoriteList
+          favoriteURL='favorite_products'
+          originalURL='products'
+          isProduct
+        />
+      )}
+      {tabSelected === 'orders' && (
+        <FavoriteList
+          onNavigationRedirect={onRedirect}
+          favoriteURL='favorite_orders'
+          originalURL='orders'
+          isOrder
+        />
+      )}
     </Container>
   )
 }

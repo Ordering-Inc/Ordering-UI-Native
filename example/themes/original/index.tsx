@@ -16,9 +16,7 @@ import { CartContent } from './src/components/CartContent';
 import { BusinessCart } from './src/components/BusinessCart';
 import { Checkout } from './src/components/Checkout';
 import { Favorite } from './src/components/Favorite';
-import { FavoriteBusinesses } from './src/components/FavoriteBusinesses';
-import { FavoriteProducts } from './src/components/FavoriteProducts';
-import { FavoriteOrders } from './src/components/FavoriteOrders';
+import { FavoriteList } from './src/components/FavoriteList';
 import { FloatingButton } from './src/components/FloatingButton';
 import { ForgotPasswordForm } from './src/components/ForgotPasswordForm';
 import { MomentOption } from './src/components/MomentOption';
@@ -170,9 +168,7 @@ export {
 	BusinessCart,
 	Checkout,
 	Favorite,
-	FavoriteBusinesses,
-	FavoriteProducts,
-	FavoriteOrders,
+	FavoriteList,
 	ForgotPasswordForm,
 	MomentOption,
 	OrdersOption,

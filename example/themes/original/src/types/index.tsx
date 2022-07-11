@@ -644,7 +644,10 @@ export interface FavoriteParams {
 	navigation?: any,
 	onNavigationRedirect?: (route: string, params?: any) => {},
 	reorderState?: any,
-	handleReorder?: (orderId: number) => {}
+	handleReorder?: (orderId: number) => {},
+	isOrder?: boolean,
+	isProduct?: boolean,
+	isBusiness?: boolean
 }
 
 export interface SingleOrderCardParams {
