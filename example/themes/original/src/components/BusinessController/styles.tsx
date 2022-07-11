@@ -49,6 +49,11 @@ export const BusinessLogo = styled.View`
    
 `
 
+export const ReviewAndFavorite = styled.View`
+  flex-direction: row;
+  align-items: center;
+`
+
 export const Reviews = styled.View`
   flex-direction: row;
   align-items: center;

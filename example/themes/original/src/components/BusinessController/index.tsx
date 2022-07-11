@@ -7,7 +7,7 @@ import {
 	useConfig
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { BusinessControllerParams } from '../../types';
 import { convertHoursToMinutes, shape } from '../../utils';
 import {
@@ -20,10 +20,12 @@ import {
 	BusinessState,
 	BusinessLogo,
 	Reviews,
-	RibbonBox
+	RibbonBox,
+	ReviewAndFavorite
 } from './styles';
 import { useTheme } from 'styled-components/native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
+import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import FastImage from 'react-native-fast-image'
 
 export const BusinessControllerUI = (props: BusinessControllerParams) => {
@@ -40,7 +42,8 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		businessDeliveryPrice,
 		businessDeliveryTime,
 		businessPickupTime,
-		businessDistance
+		businessDistance,
+		handleFavoriteBusiness
 	} = props;
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
 	const [orderState] = useOrder();
@@ -120,6 +123,10 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		}
 	}
 
+  const handleChangeFavorite = () => {
+    handleFavoriteBusiness && handleFavoriteBusiness(!business?.favorite)
+  }
+
 	return (
 		<Card activeOpacity={1} onPress={() => handleBusinessClick(business)} style={style}>
 			{business?.ribbon?.enabled && (
@@ -179,14 +186,25 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 							resizeMode={FastImage.resizeMode.cover}
 						/>
 					</BusinessLogo>
-					{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && (
-						<Reviews>
-							<OIcon src={theme.images.general.star} width={12} style={styles.starIcon} />
-							<OText size={10} style={{ lineHeight: 15 }}>
-								{parseNumber(businessReviews?.reviews?.total ?? business?.reviews?.total, { separator: '.' })}
-							</OText>
-						</Reviews>
-					)}
+					<ReviewAndFavorite>
+						{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && (
+							<Reviews>
+								<OIcon src={theme.images.general.star} width={12} style={styles.starIcon} />
+								<OText size={10} style={{ lineHeight: 15 }}>
+									{parseNumber(businessReviews?.reviews?.total ?? business?.reviews?.total, { separator: '.' })}
+								</OText>
+							</Reviews>
+						)}
+						<TouchableOpacity
+							onPress={handleChangeFavorite}
+						>
+							<IconAntDesign
+								name={business?.favorite ? 'heart' : 'hearto'}
+								color={theme.colors.danger5}
+								size={18}
+							/>
+						</TouchableOpacity>
+					</ReviewAndFavorite>
 				</BusinessInfo>
 				<OText
 					size={12}
