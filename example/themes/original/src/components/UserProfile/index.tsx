@@ -219,6 +219,10 @@ const ProfileListUI = (props: ProfileParams) => {
 						<Ionicons name='md-list-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
 						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('SESSIONS', 'Sessions')}</OText>
 					</ListItem>
+					<ListItem onPress={() => navigation.navigate('Favorite')} activeOpacity={0.7}>
+						<Ionicons name='heart-outline' style={styles.messageIconStyle} color={theme.colors.textNormal} />
+						<OText size={14} lineHeight={24} weight={'400'} color={theme.colors.textNormal}>{t('FAVORITES', 'Favorites')}</OText>
+					</ListItem>
 				</Actions>
 
 				<Actions>

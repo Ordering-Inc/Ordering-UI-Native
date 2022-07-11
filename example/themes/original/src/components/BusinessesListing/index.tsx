@@ -60,7 +60,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		paginationProps,
 		handleChangeSearch,
 		businessId,
-		isGuestUser
+		isGuestUser,
+		handleUpdateBusinessList
 	} = props;
 	const theme = useTheme();
 	const isFocused = useIsFocused();
@@ -122,6 +123,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		Number(configs?.max_days_preorder?.value) > 0
 	const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
 	const timerId = useRef<any>(false)
+  const [favoriteIds, setFavoriteIds] = useState<any>([])
+
 	// const panResponder = useRef(
 	// 	PanResponder.create({
 	// 		onMoveShouldSetPanResponder: (e, gestureState) => {
@@ -217,6 +220,17 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		}, [navigation])
 	)
 
+	useEffect(() => {
+    if (!businessesList?.businesses?.length) return
+    const ids = [...favoriteIds]
+    businessesList.businesses.forEach((business: any) => {
+      if (business?.favorite) {
+        ids.push(business?.id)
+      }
+    })
+    setFavoriteIds([...new Set(ids)])
+  }, [businessesList?.businesses?.length])
+
 	return (
 		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}
 			refreshControl={
@@ -227,7 +241,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			}
 		>
 			<HeaderWrapper
-				source={theme.images.backgrounds.business_list_header}
+				source={theme.images.general.homeHero}
 				style={{ paddingTop: top + 20 }}>
 				{!auth && (
 					<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
@@ -355,7 +369,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
 			{
 				!businessId && !props.franchiseId && (
-					<HighestRatedBusinesses onBusinessClick={handleBusinessClick} navigation={navigation} />
+					<HighestRatedBusinesses
+						onBusinessClick={handleBusinessClick}
+						navigation={navigation}
+						favoriteIds={favoriteIds}
+						setFavoriteIds={setFavoriteIds}
+					/>
 				)
 			}
 			<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
@@ -394,6 +413,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							businessDeliveryTime={business?.delivery_time}
 							businessPickupTime={business?.pickup_time}
 							businessDistance={business?.distance}
+							handleUpdateBusinessList={handleUpdateBusinessList}
+							favoriteIds={favoriteIds}
+							setFavoriteIds={setFavoriteIds}
 						/>
 					)
 				)}

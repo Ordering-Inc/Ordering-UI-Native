@@ -20,7 +20,10 @@ const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
     onBusinessClick,
     navigation,
     isLoading,
-    getBusinesses
+    getBusinesses,
+    favoriteIds,
+    setFavoriteIds,
+    handleUpdateBusinessList
   } = props;
 
   const [, t] = useLanguage()
@@ -32,6 +35,17 @@ const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
     if (businessesList?.loading || !isLoading) return
     getBusinesses(true)
   }, [isLoading])
+
+  useEffect(() => {
+    if (!businessesList?.businesses?.length) return
+    const ids = [...favoriteIds]
+    businessesList.businesses.forEach(business => {
+      if (business?.favorite) {
+        ids.push(business.id)
+      }
+    })
+    setFavoriteIds([...new Set(ids)])
+  }, [businessesList?.businesses?.length])
 
   return (
     <>
@@ -123,6 +137,9 @@ const HighestRatedBusinessesUI = (props: HighestRatedBusinessesParams) => {
                           handleCustomClick={onBusinessClick}
                           orderType={orderState?.options?.type}
                           navigation={navigation}
+                          favoriteIds={favoriteIds}
+                          setFavoriteIds={setFavoriteIds}
+                          handleUpdateBusinessList={handleUpdateBusinessList}
                         />
                       </View>
                     )

@@ -53,6 +53,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		setAlertState,
 		multiRemoveProducts,
 		getNextProducts,
+		handleUpdateProducts
 	} = props
 
 	const theme = useTheme();
@@ -353,6 +354,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								currentCart={currentCart}
 								setSubcategoriesSelected={setSubcategoriesSelected}
 								onClickCategory={handleChangeCategory}
+								handleUpdateProducts={handleUpdateProducts}
 							/>
 						</WrapContent>
 					</>
@@ -374,6 +376,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								categoryState={categoryState}
 								isBusinessLoading={loading}
 								errorQuantityProducts={errorQuantityProducts}
+								handleUpdateProducts={handleUpdateProducts}
 							/>
 						</WrapContent>
 					</>

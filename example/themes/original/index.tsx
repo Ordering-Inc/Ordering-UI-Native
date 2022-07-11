@@ -15,6 +15,10 @@ import { BusinessProductsListing } from './src/components/BusinessProductsListin
 import { CartContent } from './src/components/CartContent';
 import { BusinessCart } from './src/components/BusinessCart';
 import { Checkout } from './src/components/Checkout';
+import { Favorite } from './src/components/Favorite';
+import { FavoriteBusinesses } from './src/components/FavoriteBusinesses';
+import { FavoriteProducts } from './src/components/FavoriteProducts';
+import { FavoriteOrders } from './src/components/FavoriteOrders';
 import { FloatingButton } from './src/components/FloatingButton';
 import { ForgotPasswordForm } from './src/components/ForgotPasswordForm';
 import { MomentOption } from './src/components/MomentOption';
@@ -58,6 +62,7 @@ import { CartStoresListing } from './src/components/CartStoresListing';
 import { PaymentOptionsWebView } from '../../src/components/PaymentOptionsWebView';
 import { GoogleMap } from './src/components/GoogleMap';
 import { SingleProductCard } from './src/components/SingleProductCard';
+import { SingleOrderCard } from './src/components/SingleOrderCard';
 import { UpsellingRedirect } from './src/components/BusinessProductsListing/UpsellingRedirect';
 import { ProductItemAccordion } from './src/components/ProductItemAccordion';
 import { BusinessItemAccordion } from './src/components/BusinessItemAccordion';
@@ -164,6 +169,10 @@ export {
 	CartContent,
 	BusinessCart,
 	Checkout,
+	Favorite,
+	FavoriteBusinesses,
+	FavoriteProducts,
+	FavoriteOrders,
 	ForgotPasswordForm,
 	MomentOption,
 	OrdersOption,
@@ -209,6 +218,7 @@ export {
 	PaymentOptionsWebView,
 	GoogleMap,
 	SingleProductCard,
+	SingleOrderCard,
 	UpsellingRedirect,
 	ProductItemAccordion,
 	BusinessItemAccordion,

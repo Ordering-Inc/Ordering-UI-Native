@@ -37,7 +37,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		refreshOrders,
 		setRefreshOrders,
 		reorderState,
-		handleReorder
+		handleReorder,
+		handleUpdateOrderList
 	} = props
 
 	const theme = useTheme();
@@ -222,6 +223,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 						customArray={customArray}
 						getOrderStatus={getOrderStatus}
 						onNavigationRedirect={onNavigationRedirect}
+						handleUpdateOrderList={handleUpdateOrderList}
 					/>
 				) : activeOrders ? (
 					<ActiveOrders
@@ -231,6 +233,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 						customArray={customArray}
 						getOrderStatus={getOrderStatus}
 						onNavigationRedirect={onNavigationRedirect}
+						handleUpdateOrderList={handleUpdateOrderList}
 					/>
 				) : (
 					<PreviousOrders
@@ -241,6 +244,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 						getOrderStatus={getOrderStatus}
 						onNavigationRedirect={onNavigationRedirect}
 						handleReorder={handleReorder}
+						handleUpdateOrderList={handleUpdateOrderList}
 					/>
 				)
 			)}
