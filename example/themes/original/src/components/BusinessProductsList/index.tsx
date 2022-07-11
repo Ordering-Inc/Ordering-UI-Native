@@ -213,7 +213,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       {category?.description?.length > 80 && (
                         <OButton
                           style={{ height: 15, paddingRight: 0, paddingLeft: 0, borderWidth: 0 }}
-                          text={t('SEE_MORE', 'See more')}
+                          text={t('VIEW_MORE', 'View more')}
                           parentStyle={{ padding: 0 }}
                           onClick={() => setOpenDescription(category)}
                           bgColor='transparent'
