@@ -99,7 +99,10 @@ const LoginFormUI = (props: LoginParams) => {
 	const theme = useTheme();
 	const isOtpEmail = loginTab === 'otp' && otpType === 'email'
 	const isOtpCellphone = loginTab === 'otp' && otpType === 'cellphone'
+
 	const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
+	const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1' || !configs?.facebook_login_enabled?.enabled
+  	const appleLoginEnabled = configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
 
 	const loginStyle = StyleSheet.create({
 		btnOutline: {
@@ -704,7 +707,8 @@ const LoginFormUI = (props: LoginParams) => {
 							<ButtonsWrapper>
 								<SocialButtons>
 									{(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
-										configs?.facebook_id?.value && (
+										configs?.facebook_id?.value && 
+										facebookLoginEnabled && (
 											<FacebookLogin
 												notificationState={notificationState}
 												handleErrors={(err: any) => showToast(ToastType.Error, err)}
@@ -721,7 +725,7 @@ const LoginFormUI = (props: LoginParams) => {
 											handleSuccessGoogleLogin={handleSuccessFacebook}
 										/>
 									)}
-									{(configs?.apple_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && (
+									{(configs?.apple_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && appleLoginEnabled && (
 										<AppleLogin
 											notificationState={notificationState}
 											handleErrors={(err: any) => showToast(ToastType.Error, err)}
