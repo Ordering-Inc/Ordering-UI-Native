@@ -118,7 +118,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             !subcategoriesSelected.find((subcategory: any) => subcategory?.parent_category_id === category?.id) ||
             subcategoriesSelected?.some((subcategory: any) => subcategory.id === product?.category_id))
           ?.sort((a: any, b: any) => a.rank - b.rank)
-          ?.map((product: any, i : number) => (
+          ?.map((product: any, i: number) => (
             <SingleProductCard
               key={'prod_' + product.id + `_${i}`}
               isSoldOut={product.inventoried && !product.quantity}
@@ -320,8 +320,14 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
       <OModal
         open={!!openDescription}
         onClose={() => setOpenDescription(null)}
+        styleContainerCloseButton={{
+          marginLeft: -30,
+          width: 55,
+          height: 55,
+          marginTop: 2
+        }}
       >
-        <OText size={20} style={{paddingLeft: 70, paddingRight: 20, bottom: 25}}>{openDescription?.name}</OText>
+        <OText size={20} style={{ paddingLeft: 70, paddingRight: 20, bottom: 25 }}>{openDescription?.name}</OText>
         <ScrollView style={{ padding: 20 }}>
           {!!openDescription?.image && (
             <OIcon

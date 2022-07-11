@@ -21,6 +21,7 @@ interface Props {
 	isNotDecoration?: boolean;
 	styleCloseButton?: any,
 	isAvoidKeyBoardView?: boolean;
+	styleContainerCloseButton?: any;
 }
 const KeyboardView = styled.KeyboardAvoidingView`
   flex-grow: 1;
@@ -45,6 +46,7 @@ const OModal = (props: Props): React.ReactElement => {
 		isNotDecoration,
 		style,
 		styleCloseButton,
+		styleContainerCloseButton,
 		isAvoidKeyBoardView
 	} = props
 
@@ -55,7 +57,7 @@ const OModal = (props: Props): React.ReactElement => {
 			{!entireModal ? (
 				<View style={styles.centeredView}>
 					<View style={titleSectionStyle ? titleSectionStyle : styles.titleSection}>
-						<TouchableOpacity style={styles.wrapperIcon} onPress={onClose}>
+						<TouchableOpacity style={{...styles.wrapperIcon, ...styleContainerCloseButton}} onPress={onClose}>
 							<OIcon
 								src={theme.images.general.close}
 								width={16}
