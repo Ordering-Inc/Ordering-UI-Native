@@ -1027,7 +1027,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           )}
                         </View>
                         <OText>
-                          -{parsePrice(event.amount)}
+                          -{parsePrice(event.amount, {isTruncable: true})}
                         </OText>
                       </View>
                     ))}
