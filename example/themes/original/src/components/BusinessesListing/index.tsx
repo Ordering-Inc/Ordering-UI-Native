@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import Geolocation from '@react-native-community/geolocation'
+import { getTrackingStatus } from 'react-native-tracking-transparency'
 import {
 	View,
 	StyleSheet,
@@ -194,17 +195,24 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		}
 	}
 
+	const checkUserLocation = async () => {
+		const trackingStatus = await getTrackingStatus()
+		if (trackingStatus === 'authorized' || trackingStatus === 'unavailable') {
+			Geolocation.getCurrentPosition((pos) => {
+				const crd = pos.coords
+				const distance = getDistance(crd.latitude, crd.longitude, orderState?.options?.address?.location?.lat, orderState?.options?.address?.location?.lng)
+				if (distance > 20) setIsFarAway(true)
+				else setIsFarAway(false)
+			}, (err) => {
+				console.log(`ERROR(${err.code}): ${err.message}`)
+			}, {
+				enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
+			})
+		}
+	}
+
 	useEffect(() => {
-		Geolocation.getCurrentPosition((pos) => {
-			const crd = pos.coords
-			const distance = getDistance(crd.latitude, crd.longitude, orderState?.options?.address?.location?.lat, orderState?.options?.address?.location?.lng)
-			if (distance > 20) setIsFarAway(true)
-			else setIsFarAway(false)
-		}, (err) => {
-			console.log(`ERROR(${err.code}): ${err.message}`)
-		}, {
-			enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
-		})
+		checkUserLocation()
 	}, [orderState?.options?.address?.location])
 
 	useEffect(() => {
