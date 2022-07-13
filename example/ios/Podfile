@@ -5,7 +5,7 @@ platform :ios, '11.0'
 
 target 'delivery' do
   # Pods for google signin
-    pod 'GoogleSignIn', '~> 6.0.2'
+    pod 'GoogleSignIn', '~> 6.1.0'
 
   # React Native Maps dependencies
     permissions_path = '../node_modules/react-native-permissions/ios'

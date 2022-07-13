@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getTrackingStatus } from 'react-native-tracking-transparency'
+import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency'
 import Geolocation from '@react-native-community/geolocation'
 import Geocoder from 'react-native-geocoding'
 import { GpsButtonStyle } from './styles'
@@ -57,7 +57,10 @@ export const GPSButton = (props: any) => {
   }
 
 	const getCurrentPosition = async () => {
-		const trackingStatus = await getTrackingStatus()
+    let trackingStatus = await getTrackingStatus()
+		if (trackingStatus === 'not-determined') {
+			trackingStatus = await requestTrackingPermission()
+		}
 		if (trackingStatus === 'authorized' || trackingStatus === 'unavailable') {
       setLoading(true);
       Geolocation.getCurrentPosition((pos) => {

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import Geolocation from '@react-native-community/geolocation'
-import { getTrackingStatus } from 'react-native-tracking-transparency'
+import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency'
 import {
 	View,
 	StyleSheet,
@@ -196,7 +196,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}
 
 	const checkUserLocation = async () => {
-		const trackingStatus = await getTrackingStatus()
+		let trackingStatus = await getTrackingStatus()
+		if (trackingStatus === 'not-determined') {
+			trackingStatus = await requestTrackingPermission()
+		}
 		if (trackingStatus === 'authorized' || trackingStatus === 'unavailable') {
 			Geolocation.getCurrentPosition((pos) => {
 				const crd = pos.coords
