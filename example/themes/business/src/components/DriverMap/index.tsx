@@ -327,6 +327,7 @@ export const DriverMap = (props: GoogleMapsParams) => {
       justifyContent: 'center',
       paddingVertical: 10,
       paddingHorizontal: 80,
+      position: 'absolute'
     },
     showButton: {
       alignSelf: 'center',
@@ -490,14 +491,14 @@ export const DriverMap = (props: GoogleMapsParams) => {
             </View>
           </View>
         </View>
-        <View style={styles.buttonContainer}>
+        <View style={{
+          ...styles.buttonContainer,
+          bottom: showAcceptOrReject ? 80 : 0
+        }}>
           <OButton
             imgRightSrc=''
             textStyle={{ color: theme.colors.white }}
-            style={{
-              ...styles.showButton,
-              bottom: showAcceptOrReject ? 80 : 0
-            }}
+            style={styles.showButton}
             onClick={() => showLocation({
               latitude: destination.latitude,
               longitude: destination.longitude,
