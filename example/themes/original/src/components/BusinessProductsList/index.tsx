@@ -10,6 +10,7 @@ import { View, ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { shape } from '../../utils'
+import { CategoryDescriptionMemoized } from './CategoryDescription';
 
 const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   const {
@@ -33,6 +34,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     subcategoriesSelected,
     onClickCategory,
     lazyLoadProductsRecommended,
+    handleUpdateProducts,
     isFiltMode
   } = props;
 
@@ -102,7 +104,6 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
       </SubCategoriesContainer>
     )
   }
-
 
   return (
     <ProductsContainer renderToHardwareTextureAndroid={categoryState.loading || isBusinessLoading}>
@@ -313,23 +314,12 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             <OText>{e}</OText>
           </ErrorMessage>
         ))}
-      <OModal
-        open={!!openDescription}
-        onClose={() => setOpenDescription(null)}
-      >
-        <OText size={20} style={{paddingLeft: 70, paddingRight: 20, bottom: 25}}>{openDescription?.name}</OText>
-        <ScrollView style={{ padding: 20 }}>
-          {!!openDescription?.image && (
-            <OIcon
-              url={optimizeImage(openDescription?.image, 'h_100,c_limit')}
-              width={240}
-              height={240}
-              style={{ borderRadius: 7.6 }}
-            />
-          )}
-          <OText mBottom={60}>{openDescription?.description}</OText>
-        </ScrollView>
-      </OModal>
+      {!!openDescription && (
+        <CategoryDescriptionMemoized
+          openDescription={openDescription}
+          setOpenDescription={setOpenDescription}
+        />
+      )}
     </ProductsContainer>
   );
 };
