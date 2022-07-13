@@ -139,5 +139,7 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>App requires your permission to get customer&apos;s location</string>
 </dict>
 </plist>
