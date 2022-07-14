@@ -6,6 +6,7 @@ import AddressForm from '../pages/AddressForm'
 import CartList from '../pages/CartList'
 import CheckoutPage from '../pages/Checkout';
 import BusinessProductsList from '../pages/BusinessProductsList';
+import MultiCheckout from '../pages/MultiCheckout';
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,11 @@ const CheckoutNavigator = (props: any) => {
       <Stack.Screen
         name="AddressForm"
         component={AddressForm}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MultiCheckout"
+        children={() => <MultiCheckout {...checkoutProps} />}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
