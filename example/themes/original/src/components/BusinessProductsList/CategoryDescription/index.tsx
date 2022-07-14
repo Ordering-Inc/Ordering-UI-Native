@@ -19,7 +19,7 @@ const CategoryDescription = (props : CategoryDescriptionParams) => {
             open={!!props.openDescription}
             onClose={() => props.setOpenDescription(null)}
             styleContainerCloseButton={{
-                marginLeft: -30,
+                marginLeft: -37,
                 width: 55,
                 height: 55,
                 marginTop: 2
