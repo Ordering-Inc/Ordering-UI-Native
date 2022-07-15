@@ -6,7 +6,7 @@ const MultiCheckout = (props: any) => {
   const multiCheckoutProps = {
     ...props,
     onPlaceOrderClick: (orderUuids: any) => {
-      props.navigation.navigate('MultiOrders', { orderUuids: orderUuids })
+      props.navigation.navigate('MultiOrdersDetails', { orderUuids: orderUuids, isFromMultiCheckout: true })
     }
   }
 

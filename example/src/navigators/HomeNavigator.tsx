@@ -23,6 +23,7 @@ import HelpAccountAndPayment from '../pages/HelpAccountAndPayment'
 import Sessions from '../pages/Sessions';
 import Splash from '../pages/Splash';
 import ProductDetails from '../pages/ProductDetails';
+import MultiOrdersDetails from '../pages/MultiOrdersDetails';
 const Stack = createStackNavigator();
 
 const HomeNavigator = (e : any) => {
@@ -168,6 +169,11 @@ const HomeNavigator = (e : any) => {
                   <Stack.Screen
                     name="Sessions"
                     component={Sessions}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="MultiOrdersDetails"
+                    component={MultiOrdersDetails}
                     options={{ headerShown: false }}
                   />
                 </>
