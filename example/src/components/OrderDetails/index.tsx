@@ -302,7 +302,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <OText size={20} color={theme.colors.white} space>
                   {t('TOTAL', 'Total')}
                 </OText>
-                <OText size={20} color={theme.colors.white}>{parsePrice(order?.summary?.total ?? order?.total)}</OText>               
+                <OText size={20} color={theme.colors.white}>{parsePrice(order?.summary?.total ?? order?.total)}</OText>
               </View>
             </HeaderInfo>
           </Header>
