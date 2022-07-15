@@ -931,9 +931,9 @@
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
 "@invertase/react-native-apple-authentication@^2.1.5":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@invertase/react-native-apple-authentication/-/react-native-apple-authentication-2.2.1.tgz#0e0618f644c9a9af59860f335545bf037b3f8e8a"
-  integrity sha512-sadjKQa9W2i422i7kcZquZ0ZNSBSCljfu7eN0oGqhrzV+RIlWnnU1HiKf/1hOibPQ2ceRvTatjYlHKxrDMirPQ==
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@invertase/react-native-apple-authentication/-/react-native-apple-authentication-2.2.2.tgz#1d3b6d22ba1fab8ef8a285396acdbf0778ab071b"
+  integrity sha512-uNZcUn9WbAQP5zSOFXI1+kEUokLwZG9imUulFdt5t22CU2ozGq6zyPm+BAVVg8D5eUUXduX/dJFhbuOpJxiEhQ==
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
@@ -3027,9 +3027,9 @@
   integrity sha512-OCutwjDZ4aFS6PB1UZ988C4YgwlBHJd6wCeQqaLdmadZ/7e+w79+hbMUFC1QXDNCmdyoRfAFdm0RypzwR+Qpag==
 
 "@types/geojson@^7946.0.7":
-  version "7946.0.9"
-  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.9.tgz#dd5d4c39c989c01f49c1b05df5826ffd4ddae1e9"
-  integrity sha512-snVY+R7d0VfUEHdfEe/NTFnz0+Qei0kEGIV8ErryWQwDXNS7uzhVEMcUtZ+uBHXSBcJa0zBcevBE0u41acbodQ==
+  version "7946.0.10"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.10.tgz#6dfbf5ea17142f7f9a043809f1cd4c448cb68249"
+  integrity sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
@@ -3076,9 +3076,9 @@
   integrity sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==
 
 "@types/node@*":
-  version "18.0.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.3.tgz#463fc47f13ec0688a33aec75d078a0541a447199"
-  integrity sha512-HzNRZtp4eepNitP+BD6k2L6DROIDG4Q0fm4x+dwfsr6LGmROENnok75VGw40628xf+iR24WeMFcHuuBDUAzzsQ==
+  version "18.0.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.4.tgz#48aedbf35efb3af1248e4cd4d792c730290cd5d6"
+  integrity sha512-M0+G6V0Y4YV8cqzHssZpaNCqvYwlCiulmm0PwpNLF55r/+cT8Ol42CHRU1SEaYFH2rTwiiE1aYg/2g2rrtGdPA==
 
 "@types/node@16.9.1":
   version "16.9.1"
@@ -4625,9 +4625,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.188:
-  version "1.4.188"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.188.tgz#1954bc444e6f6662cb39f24810f9e5022fcd5bb3"
-  integrity sha512-Zpa1+E+BVmD/orkyz1Z2dAT1XNUuVAHB3GrogfyY66dXN0ZWSsygI8+u6QTDai1ZayLcATDJpcv2Z2AZjEcr1A==
+  version "1.4.191"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.191.tgz#01dd4bf32502a48ce24bf3890b5553a1c5f93539"
+  integrity sha512-MeEaiuoSFh4G+rrN+Ilm1KJr8pTTZloeLurcZ+PRcthvdK1gWThje+E6baL7/7LoNctrzCncavAG/j/vpES9jg==
 
 emittery@^0.7.1:
   version "0.7.2"
@@ -6240,9 +6240,9 @@ istanbul-lib-source-maps@^4.0.0:
     source-map "^0.6.1"
 
 istanbul-reports@^3.0.2:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-3.1.4.tgz#1b6f068ecbc6c331040aab5741991273e609e40c"
-  integrity sha512-r1/DshN4KSE7xWEknZLLLLDn5CJybV3nw01VTkp6D5jzLuELlcbudfj/eSQFvrKsJuTVCGnePO7ho82Nw9zzfw==
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-3.1.5.tgz#cc9a6ab25cb25659810e4785ed9d9fb742578bae"
+  integrity sha512-nUsEMa9pBt/NOHqbcbeJEgqIlY/K7rVWUX6Lql2orY5e9roQOthbR3vtY4zzf2orPELg80fnxxk9zUyPlgwD1w==
   dependencies:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
@@ -7966,7 +7966,7 @@ ora@^3.4.0:
 
 "ordering-components@github:Ordering-Inc/ordering-components#development":
   version "0.0.1"
-  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/334211f66a1ac8a32dea723257896a09e418df0a"
+  resolved "https://codeload.github.com/Ordering-Inc/ordering-components/tar.gz/09f6541ec8407275500df65b1e01626e8d5f3892"
   dependencies:
     "@babel/runtime" "^7.10.4"
     "@react-native-async-storage/async-storage" "^1.13.1"
@@ -8406,9 +8406,9 @@ react-async-script@^1.1.1:
     prop-types "^15.5.0"
 
 react-devtools-core@^4.6.0:
-  version "4.24.7"
-  resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-4.24.7.tgz#43df22e6d244ed8286fd3ff16a80813998fe82a0"
-  integrity sha512-OFB1cp8bsh5Kc6oOJ3ZzH++zMBtydwD53yBYa50FKEGyOOdgdbJ4VsCsZhN/6F5T4gJfrZraU6EKda8P+tMLtg==
+  version "4.25.0"
+  resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-4.25.0.tgz#78b11a2c9f81dd9ebff3745ab4ee2147cc96c12a"
+  integrity sha512-iewRrnu0ZnmfL+jJayKphXj04CFh6i3ezVnpCtcnZbTPSQgN09XqHAzXbKbqNDl7aTg9QLNkQRP6M3DvdrinWA==
   dependencies:
     shell-quote "^1.6.1"
     ws "^7"
@@ -8725,9 +8725,9 @@ react-native-parsed-text@0.0.22:
     prop-types "^15.7.x"
 
 react-native-permissions@^3.0.5:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.4.0.tgz#7989bb079ec44a5c6308e5fe3dec6884dd851782"
-  integrity sha512-qNMFVPBhffuC7APZ7/etzlnrDGh7Givfq3pOI37GDjcenOFEOMFU8qyU+vRrrOwbUMuwtDAjWxe6ZBX1ZM+aAw==
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.5.0.tgz#ebd81a2928f1fb215cef01c8e39c21c96de330ef"
+  integrity sha512-9HrmW1BDVsWAFhaGMfQErxoUBDdsrUY19LAtnExYMaNTd3LsT7R+yXX0oN/XLtF7wok68izN8iCLmieX4/MElA==
 
 react-native-phone-number-input@^2.0.0:
   version "2.1.0"
@@ -10641,9 +10641,9 @@ xmlchars@^2.2.0:
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
 
 xmldoc@^1.1.2:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/xmldoc/-/xmldoc-1.1.4.tgz#ea4e26dca76b1d218a2f777018bce404ba374a86"
-  integrity sha512-rQshsBGR5s7pUNENTEncpI2LTCuzicri0DyE4SCV5XmS0q81JS8j1iPijP0Q5c4WLGbKh3W92hlOwY6N9ssW1w==
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/xmldoc/-/xmldoc-1.2.0.tgz#7554371bfd8c138287cff01841ae4566d26e5541"
+  integrity sha512-2eN8QhjBsMW2uVj7JHLHkMytpvGHLHxKXBy4J3fAT/HujsEtM6yU84iGjpESYGHg6XwK0Vu4l+KgqQ2dv2cCqg==
   dependencies:
     sax "^1.2.4"
 
