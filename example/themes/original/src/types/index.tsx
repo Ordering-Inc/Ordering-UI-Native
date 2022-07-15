@@ -18,10 +18,10 @@ export interface LoginParams {
 	handleCheckPhoneCode?: any;
 	notificationState?: any;
 	handleReCaptcha?: any;
-    enableReCaptcha?: any;
+	enableReCaptcha?: any;
 	otpType?: string,
-	setOtpType: (type : string) => void,
-	generateOtpCode: (values ?: any) => void,
+	setOtpType: (type: string) => void,
+	generateOtpCode: (values?: any) => void,
 	useLoginOtpEmail?: boolean,
 	useLoginOtpCellphone?: boolean,
 	useLoginOtp?: boolean
@@ -265,9 +265,9 @@ export interface BusinessProductsListParams {
 	setCategoriesLayout?: any,
 	currentCart?: any,
 	setSubcategoriesSelected?: any,
-    subcategoriesSelected?: any,
-    onClickCategory?: any,
-    lazyLoadProductsRecommended?: boolean,
+	subcategoriesSelected?: any,
+	onClickCategory?: any,
+	lazyLoadProductsRecommended?: boolean,
 	isFiltMode?: boolean,
 	handleUpdateProducts?: any
 }
@@ -313,6 +313,7 @@ export interface OrdersOptionParams {
 	orderList?: any,
 	franchiseId?: any,
 	activeOrders?: boolean,
+	pastOrders?: boolean,
 	pagination?: any,
 	titleContent?: string,
 	customArray?: Array<any>,
@@ -331,8 +332,15 @@ export interface OrdersOptionParams {
 	setOpenMessges?: any,
 	loadMoreStatus?: boolean,
 	refreshOrders?: boolean,
-	setRefreshOrders?: (value : boolean) => void,
-	handleUpdateOrderList?: (orderId: number, changes: any) => {}
+	setRefreshOrders?: (value: boolean) => void,
+	handleUpdateOrderList?: (orderId: number, changes: any) => {},
+	isBusiness?: boolean,
+	isProducts?: boolean,
+	businessOrderIds?: any,
+	products?: any,
+	businessesSearchList?: any,
+	hideOrders?: boolean,
+	BusinessControllerSkeletons?: any,
 }
 export interface ActiveOrdersParams {
 	orders?: any,
@@ -520,7 +528,7 @@ export interface OrderTypeSelectParams {
 	defaultValue?: number;
 	configTypes?: Array<any>;
 	orderTypes: Array<any>;
-	setOrderTypeValue?: (value : number) => any
+	setOrderTypeValue?: (value: number) => any
 }
 export interface UpsellingProductsParams {
 	isCustomMode?: boolean;
@@ -613,26 +621,26 @@ export interface PlaceSpotParams {
 
 export interface PromotionParams {
 	navigation: any,
-    offersState: any,
-    handleSearchValue: any,
-    searchValue: string,
-    offerSelected: any,
-    setOfferSelected: any,
+	offersState: any,
+	handleSearchValue: any,
+	searchValue: string,
+	offerSelected: any,
+	setOfferSelected: any,
 	loadOffers: any
 }
 export interface SessionsParams {
 	navigation: any,
 	sessionsList: any,
-    actionState: any,
-    handleDeleteSession: any,
-    handleDeleteAllSessions: any
+	actionState: any,
+	handleDeleteSession: any,
+	handleDeleteAllSessions: any
 }
 
 export interface otpParams {
 	willVerifyOtpState: boolean,
-	setWillVerifyOtpState: (val : boolean) => void,
+	setWillVerifyOtpState: (val: boolean) => void,
 	onSubmit: () => void,
-	handleLoginOtp: (code : string) => void,
+	handleLoginOtp: (code: string) => void,
 	setAlertState: any
 }
 
@@ -660,4 +668,20 @@ export interface SingleOrderCardParams {
 	pastOrders: any,
 	isMessageView?: any,
 	handleClickOrder: (value: any) => {}
+}
+
+export interface PreviousBusinessOrderedParams {
+	navigation?: any,
+	businessesList?: any,
+	setBusinessLoading?: any,
+	businessId?: number,
+	onNavigationRedirect?: any,
+	isBusinessesSearchList?: any,
+	businessLoading?: boolean
+}
+
+export interface PreviousProductsOrderedParams {
+	products?: any,
+	onProductClick?: any,
+	isBusinessesSearchList?: boolean
 }
