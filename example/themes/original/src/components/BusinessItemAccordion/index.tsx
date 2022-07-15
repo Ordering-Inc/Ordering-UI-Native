@@ -21,7 +21,8 @@ export const BusinessItemAccordion = (props: any) => {
 		singleBusiness,
 		handleClearProducts,
 		handleClickCheckout,
-		checkoutButtonDisabled
+		checkoutButtonDisabled,
+		isMultiCheckout
 	} = props
 
 	const [orderState] = useOrder();
@@ -139,7 +140,7 @@ export const BusinessItemAccordion = (props: any) => {
 					)}
 				</BIActions>
 			</BIHeader>
-			{!isActive && !isClosed && !!isProducts && (
+			{!isActive && !isClosed && !!isProducts && !isMultiCheckout && (
 				<PriceContainer>
 					<OText>{parsePrice(cart?.total)}</OText>
 					{cart?.valid_products && (

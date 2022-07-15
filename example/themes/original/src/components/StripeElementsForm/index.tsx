@@ -27,7 +27,8 @@ const StripeElementsFormUI = (props: any) => {
 		paymethod,
 		onCancel,
 		cart,
-		merchantId
+		merchantId,
+		businessIds
 	} = props;
 
 	const theme = useTheme();
@@ -108,7 +109,14 @@ const StripeElementsFormUI = (props: any) => {
 			const { setupIntent, error } = await confirmSetupIntent(requirements, params);
 
 			if (setupIntent?.status === 'Succeeded') {
-				stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId);
+				if (businessIds) {
+					businessIds.forEach((_businessId: any, index: any) => {
+					  const _isNewCard = index === 0
+					  stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId, _isNewCard);
+					})
+				} else {
+					stripeTokenHandler(setupIntent?.paymentMethodId, user, businessId);
+				}
 			}
 
 			if (error) {

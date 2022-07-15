@@ -39,7 +39,8 @@ const CartUI = (props: any) => {
     handleChangeComment,
     commentState,
     onNavigationRedirect,
-    handleRemoveOfferClick
+    handleRemoveOfferClick,
+    isMultiCheckout
   } = props
 
   const theme = useTheme();
@@ -59,6 +60,7 @@ const CartUI = (props: any) => {
 
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
+	const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
 
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
   const businessId = business?.business_id ?? null
@@ -96,13 +98,19 @@ const CartUI = (props: any) => {
   const handleUpsellingPage = () => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
-    props.onNavigationRedirect('CheckoutNavigator', {
-      screen: 'CheckoutPage',
-      cartUuid: cart?.uuid,
-      businessLogo: cart?.business?.logo,
-      businessName: cart?.business?.name,
-      cartTotal: cart?.total
-    })
+    if (isCheckoutMultiBusinessEnabled) {
+			props.onNavigationRedirect('CheckoutNavigator', {
+				screen: 'MultiCheckout'
+			})
+		} else {
+      props.onNavigationRedirect('CheckoutNavigator', {
+        screen: 'CheckoutPage',
+        cartUuid: cart?.uuid,
+        businessLogo: cart?.business?.logo,
+        businessName: cart?.business?.name,
+        cartTotal: cart?.total
+      })
+    }
   }
 
   const getIncludedTaxes = () => {
@@ -165,6 +173,7 @@ const CartUI = (props: any) => {
         handleChangeStore={() => setOpenChangeStore(true)}
         handleClickCheckout={() => setOpenUpselling(true)}
         checkoutButtonDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
+        isMultiCheckout={isMultiCheckout}
       >
         {cart?.products?.length > 0 && cart?.products.map((product: any, i: number) => (
           <ProductItemAccordion
