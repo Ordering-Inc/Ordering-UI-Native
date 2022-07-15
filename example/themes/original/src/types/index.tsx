@@ -278,6 +278,7 @@ export interface SingleProductCardParams {
 	onProductClick: any;
 	productAddedToCartLength: number;
 	style?: ViewStyle,
+	categoryState?: any,
 	handleFavoriteProduct?: any,
 	handleUpdateProducts?: any
 }

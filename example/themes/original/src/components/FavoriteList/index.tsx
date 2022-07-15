@@ -194,9 +194,9 @@ const FavoriteListUI = (props: FavoriteParams) => {
             ))
           )}
           {!favoriteList?.loading && favoriteList?.favorites?.length > 0 && (
-            favoriteList.favorites.map((order: any) => (
+            favoriteList.favorites.map((order: any, i: number) => (
               <SingleOrderCard
-                key={order?.id}
+                key={`${order?.id}_${i}`}
                 order={order}
                 getOrderStatus={getOrderStatus}
                 onNavigationRedirect={onNavigationRedirect}
@@ -231,9 +231,9 @@ const FavoriteListUI = (props: FavoriteParams) => {
             ))
           )}
           {!favoriteList?.loading && favoriteList?.favorites?.length > 0 && (
-            favoriteList.favorites.map((product: any) => (
+            favoriteList.favorites.map((product: any, i: number) => (
               <SingleProductCard
-                key={product?.id}
+                key={`${product?.id}_${i}`}
                 isSoldOut={product.inventoried && !product.quantity}
                 product={product}
                 onProductClick={() => {}}

@@ -156,9 +156,11 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
         )}
         <CardInfoWrapper>
           <ContentHeader>
-            <OText size={12} lineHeight={18} weight={'600'} numberOfLines={1} ellipsizeMode={'tail'}>
-              {order.business?.name}
-            </OText>
+            <View style={{ flex: 1 }}>
+              <OText size={12} lineHeight={18} weight={'600'} numberOfLines={1} ellipsizeMode={'tail'}>
+                {order.business?.name}
+              </OText>
+            </View>
             {!!!pastOrders && (
               <>
                 {isMessageView ? (

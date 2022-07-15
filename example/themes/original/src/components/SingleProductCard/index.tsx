@@ -18,17 +18,19 @@ import { shape } from '../../utils';
 function SingleProductCardPropsAreEqual(prevProps : any, nextProps : any) {
 	return JSON.stringify(prevProps.product) === JSON.stringify(nextProps.product) && 
 	prevProps.isSoldOut === nextProps.isSoldOut && 
-	prevProps.productAddedToCartLength === nextProps.productAddedToCartLength
+	prevProps.productAddedToCartLength === nextProps.productAddedToCartLength &&
+	prevProps.categoryState === nextProps.categoryState
 }
 
-const SinguleProductCardUI = (props: SingleProductCardParams) => {
+const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const {
 		product,
 		isSoldOut,
 		onProductClick,
 		productAddedToCartLength,
 		style,
-		handleFavoriteProduct
+		handleFavoriteProduct,
+		handleUpdateProducts
 	} = props;
 
 	const theme = useTheme();
@@ -210,12 +212,12 @@ const SinguleProductCardUI = (props: SingleProductCardParams) => {
 			)}
 		</CardContainer>
 	);
-}
+}, SingleProductCardPropsAreEqual);
 
-export const SingleProductCard = React.memo((props: SingleProductCardParams) => {
+export const SingleProductCard = (props: SingleProductCardParams) => {
 	const singleProductCardProps = {
 		...props,
 		UIComponent: SinguleProductCardUI
 	}
 	return <SingleProductCardController {...singleProductCardProps} />
-}, SingleProductCardPropsAreEqual);
+}
