@@ -25,7 +25,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
     customer,
     paymentEvents,
     ordersSummary,
-    isFromCheckout
+    isFromMultiCheckout
   } = props
 
   const theme = useTheme()
@@ -54,7 +54,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
   }
 
   const handleBackNavigation = () => {
-    if (!isFromCheckout) {
+    if (!isFromMultiCheckout) {
       navigation?.canGoBack() && navigation.goBack();
       return;
     }
