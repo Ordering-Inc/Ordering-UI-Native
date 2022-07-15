@@ -40,7 +40,7 @@ export const StripeElementsForm = (props: any) => {
     }
   }
 
-  const stripeTokenHandler = async (tokenId: string, user: any, businessId: string) => {
+  const stripeTokenHandler = async (tokenId: string, user: any, businessId: string, isNewCard: any = true) => {
     try {
       setState({
         ...state,
@@ -60,7 +60,7 @@ export const StripeElementsForm = (props: any) => {
         })
       })
       const response = await result.json();
-      props.onSelectCard && props.onSelectCard(response.result);
+      isNewCard && props.onSelectCard && props.onSelectCard(response.result);
       setState({
         ...state,
         loadingAdd: false
