@@ -102,6 +102,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [isCategoryClicked, setCategoryClicked] = useState(false)
 	const [subcategoriesSelected, setSubcategoriesSelected] = useState([])
 
+	const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 	const isOpenFiltProducts = isOpenSearchBar && !!searchValue
 	const filtProductsHeight = Platform.OS === 'ios' ? 0 : 35
@@ -123,13 +124,19 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const handleUpsellingPage = () => {
-		onRedirect('CheckoutNavigator', {
-			screen: 'CheckoutPage',
-			cartUuid: currentCart?.uuid,
-			businessLogo: logo,
-			businessName: business?.name,
-			cartTotal: currentCart?.total
-		})
+		if (isCheckoutMultiBusinessEnabled) {
+			onRedirect('CheckoutNavigator', {
+				screen: 'MultiCheckout'
+			})
+		} else {
+			onRedirect('CheckoutNavigator', {
+				screen: 'CheckoutPage',
+				cartUuid: currentCart?.uuid,
+				businessLogo: logo,
+				businessName: business?.name,
+				cartTotal: currentCart?.total
+			})
+		}
 		setOpenUpselling(false)
 	}
 
