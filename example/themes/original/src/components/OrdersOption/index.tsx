@@ -6,8 +6,9 @@ import { OText } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
-
-import { OptionTitle } from './styles'
+import { PreviousBusinessOrdered } from './PreviousBusinessOrdered'
+import { PreviousProductsOrdered } from './PreviousProductsOrdered'
+import { OptionTitle, NoOrdersWrapper } from './styles'
 import { OrdersOptionParams } from '../../types'
 import { _setStoreData } from '../../providers/StoreUtil';
 import {
@@ -38,15 +39,23 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		setRefreshOrders,
 		reorderState,
 		handleReorder,
-		handleUpdateOrderList
+		handleUpdateOrderList,
+		isBusiness,
+		isProducts,
+		businessOrderIds,
+		products,
+		businessesSearchList,
+		hideOrders,
+		BusinessControllerSkeletons,
 	} = props
 
 	const theme = useTheme();
 
 	const [, t] = useLanguage()
 	const [{ carts }] = useOrder()
-	const { showToast } = useToast()
+	const [, { showToast }] = useToast()
 	const { loading, error, orders: values } = orderList
+	const [businessLoading, setBusinessLoading] = useState(true)
 
 	const imageFails = activeOrders
 		? theme.images.general.emptyActiveOrders
@@ -88,28 +97,40 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		return objectStatus && objectStatus
 	}
 
+	const onProductClick = (product: any) => {
+		if (product?.product_id && product?.category_id && product?.businessId) {
+			onNavigationRedirect('ProductDetails', {
+				productId: product?.product_id,
+				categoryId: product?.category_id,
+				businessId: product?.businessId,
+			})
+		} else {
+			showToast(ToastType.Error, t('ERROR_FAILED_REDIRECT_IDS', 'Failed to redirect product for ids'))
+		}
+	}
+
 	useEffect(() => {
 		const _businessId = 'businessId:' + reorderState?.result?.business_id
 		if (reorderState?.error) {
-		  if (reorderState?.result?.business_id) {
-			_setStoreData('adjust-cart-products', JSON.stringify(_businessId))
-			navigation.navigate('Business', { store: reorderState?.result?.business?.slug })
-		  }
+			if (reorderState?.result?.business_id) {
+				_setStoreData('adjust-cart-products', JSON.stringify(_businessId))
+				navigation.navigate('Business', { store: reorderState?.result?.business?.slug })
+			}
 		}
 		if (!reorderState?.error && reorderState.loading === false && reorderState?.result?.business_id) {
-		  const cartProducts = carts?.[_businessId]?.products
-		  const available = cartProducts.every((product: any) => product.valid === true)
-		  const orderProducts = orders.find((order: any) => order?.id === reorderState?.result?.orderId)?.products
+			const cartProducts = carts?.[_businessId]?.products
+			const available = cartProducts.every((product: any) => product.valid === true)
+			const orderProducts = orders.find((order: any) => order?.id === reorderState?.result?.orderId)?.products
 
-		  if (available && reorderState?.result?.uuid && (cartProducts?.length === orderProducts?.length)) {
-			onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
-		  } else {
-			_setStoreData('adjust-cart-products', JSON.stringify(_businessId))
-			cartProducts?.length !== orderProducts?.length && _setStoreData('already-removed', JSON.stringify('removed'))
-			navigation.navigate('Business', { store: reorderState?.result?.business?.slug })
-		  }
+			if (available && reorderState?.result?.uuid && (cartProducts?.length === orderProducts?.length)) {
+				onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
+			} else {
+				_setStoreData('adjust-cart-products', JSON.stringify(_businessId))
+				cartProducts?.length !== orderProducts?.length && _setStoreData('already-removed', JSON.stringify('removed'))
+				navigation.navigate('Business', { store: reorderState?.result?.business?.slug })
+			}
 		}
-	  }, [reorderState])
+	}, [reorderState])
 
 	useFocusEffect(
 		React.useCallback(() => {
@@ -134,10 +155,10 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		} else if (!preOrders) {
 			setOrdersLength && setOrdersLength({ ...ordersLength, previousOrdersLength: updateOrders?.length })
 		}
-	}, [orders, activeOrders])
+	}, [orders, activeOrders, preOrders])
 
 	useEffect(() => {
-		if(refreshOrders){
+		if (refreshOrders) {
 			loadOrders(false, false, false, true)
 			setRefreshOrders && setRefreshOrders(false)
 		}
@@ -145,9 +166,23 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	return (
 		<>
-			{(orders.length > 0) && (
+			{!loading && ordersLength.activeOrdersLength === 0 && ordersLength.previousOrdersLength === 0 && !activeOrders && (
+				<NoOrdersWrapper>
+					<OText size={14} numberOfLines={1}>
+						{t('YOU_DONT_HAVE_ORDERS', 'You don\'t have any orders')}
+					</OText>
+					<OButton
+						text={t('ORDER_NOW', 'Order now')}
+						onClick={() => onNavigationRedirect && onNavigationRedirect('BusinessList')}
+						textStyle={{ color: 'white', fontSize: 14 }}
+						style={{ borderRadius: 7.6, marginBottom: 10, marginTop: 10, height: 44, paddingLeft: 10, paddingRight: 10 }}
+					/>
+
+				</NoOrdersWrapper>
+			)}
+			{(ordersLength?.activeOrdersLength > 0 || ordersLength?.previousOrdersLength > 0) && (
 				<>
-					<OptionTitle>
+					<OptionTitle titleContent={!!titleContent} isBusinessesSearchList={!!businessesSearchList}>
 						<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10} >
 							{titleContent || (activeOrders
 								? t('ACTIVE', 'Active')
@@ -156,16 +191,63 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 									: t('PAST', 'Past'))}
 						</OText>
 					</OptionTitle>
+					{!(ordersLength?.activeOrdersLength === 0 && ordersLength?.previousOrdersLength === 0) &&
+						!loading &&
+						orders.filter((order: any) => orderStatus.includes(order.status)).length === 0 &&
+						(
+							<NotFoundSource
+								content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
+								image={imageFails}
+								conditioned
+							/>
+						)}
 				</>
 			)}
-			{!loading && orders.length === 0 && (
-				<NotFoundSource
-					content={t('NO_RESULTS_FOUND', 'Sorry, no results found')}
-					image={imageFails}
-					conditioned
+			{isBusiness && !!businessesSearchList && businessLoading && (
+				<ScrollView horizontal>
+					<BusinessControllerSkeletons />
+				</ScrollView>
+			)}
+			{isBusiness && businessOrderIds?.length > 0 && (
+				<PreviousBusinessOrdered
+					businessId={businessOrderIds}
+					businessLoading={businessLoading}
+					setBusinessLoading={setBusinessLoading}
+					onNavigationRedirect={onNavigationRedirect}
+					isLoadingOrders={loading}
+					isBusinessesSearchList={!!businessesSearchList}
 				/>
 			)}
-			{loading && (
+
+			{isProducts && (
+				<PreviousProductsOrdered
+					products={products}
+					onProductClick={onProductClick}
+					isBusinessesSearchList={!!businessesSearchList}
+				/>
+			)}
+			{(loading && isProducts) && (
+				<>
+					{[...Array(4).keys()].map(
+						(item, i) => (
+							<Placeholder key={i} style={{ padding: 5, paddingLeft: 40 }} Animation={Fade}>
+								<View style={{ flexDirection: 'row' }}>
+									<PlaceholderLine
+										width={24}
+										height={70}
+										style={{ marginRight: 10, marginBottom: 10 }}
+									/>
+									<Placeholder style={{ paddingVertical: 10 }}>
+										<PlaceholderLine width={60} style={{ marginBottom: 25 }} />
+										<PlaceholderLine width={20} />
+									</Placeholder>
+								</View>
+							</Placeholder>
+						),
+					)}
+				</>
+			)}
+			{loading && !hideOrders && (
 				<>
 					{!activeOrders ? (
 						<Placeholder style={{ marginTop: 30 }} Animation={Fade}>
@@ -196,7 +278,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 					)}
 				</>
 			)}
-			{!loading && !error && orders.length > 0 && (
+			{!loading && !error && orders.length > 0 && !hideOrders && (
 				preOrders ? (
 					<ActiveOrders
 						orders={orders.filter((order: any) => orderStatus.includes(order.status))}
@@ -236,13 +318,22 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 }
 
 export const OrdersOption = (props: OrdersOptionParams) => {
+	const getAllOrders = props.activeOrders && props.pastOrders && props.preOrders
+
 	const MyOrdersProps = {
 		...props,
 		UIComponent: OrdersOptionUI,
-		orderStatus: props.preOrders ? [13] : props.activeOrders
-			? [0, 3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23]
-			: [1, 2, 5, 6, 10, 11, 12, 15, 16, 17],
+		orderStatus: getAllOrders
+			? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+			: props.preOrders ? [13] : props.activeOrders
+				? [0, 3, 4, 7, 8, 9, 14, 18, 19, 20, 21, 22, 23]
+				: [1, 2, 5, 6, 10, 11, 12, 15, 16, 17],
 		useDefualtSessionManager: true,
+		paginationSettings: {
+			initialPage: 1,
+			pageSize: getAllOrders ? 30 : 10,
+			controlType: 'infinity'
+		}
 	}
 
 	return <OrderList {...MyOrdersProps} />

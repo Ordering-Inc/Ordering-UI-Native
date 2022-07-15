@@ -32,6 +32,7 @@ import { ReviewDriver } from './src/components/ReviewDriver';
 import { UserProfile } from './src/components/UserProfile';
 import { MessageListing } from './src/components/MessageListing';
 import { Messages } from './src/components/Messages';
+import { MyOrders } from './src/components/MyOrders';
 import { Help } from './src/components/Help';
 import { HelpAccountAndPayment } from './src/components/HelpAccountAndPayment';
 import { HelpGuide } from './src/components/HelpGuide';
@@ -244,6 +245,7 @@ export {
 	UserFormDetailsUI,
 	WalletTransactionItem,
 	Promotions,
+	MyOrders,
 	ORDER_TYPES,
 	USER_TYPE,
 
