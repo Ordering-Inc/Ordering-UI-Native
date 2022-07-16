@@ -274,8 +274,8 @@ export const OrderContentComponent = (props: OrderContent) => {
           <View style={styles.linkWithIcons}>
             <OLink
               PressStyle={styles.linkWithIcons}
-              url={`tel:${order?.customer?.cellphone}`}
-              shorcut={order?.customer?.cellphone}
+              url={`tel:${!!order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''} ${order?.customer?.cellphone}`}
+              shorcut={`${!!order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''} ${order?.customer?.cellphone}`}
               TextStyle={styles.textLink}
             />
           </View>

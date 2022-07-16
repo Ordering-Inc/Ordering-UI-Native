@@ -276,7 +276,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     };
   }, [])
 
-
   return (
     <OrderDetailsContainer keyboardShouldPersistTaps='handled'>
       {order && order?.id && !error && !loading && (
@@ -400,6 +399,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 <InfoBlock>
                   <OText size={18} style={{ textAlign: 'left' }} >{order?.customer?.name} {order?.customer?.lastname}</OText>
                   <OText style={{ textAlign: 'left' }}>{order?.customer?.address}</OText>
+                  {(!!order?.customer?.cellphone) && (
+                    <OText size={18} style={{ textAlign: 'left' }}>
+                      {(order?.customer?.country_phone_code) && `+${(order?.customer?.country_phone_code)} `}{(order?.customer?.cellphone)}
+                    </OText>
+                  )}
                 </InfoBlock>
               </Customer>
               {order?.delivery_option !== undefined && order?.delivery_type === 1 && (
