@@ -285,6 +285,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								currentCart={currentCart}
 								setSubcategoriesSelected={setSubcategoriesSelected}
 								onClickCategory={handleChangeCategory}
+								handleUpdateProducts={handleUpdateProducts}
 								isFiltMode
 							/>
 						</View>
