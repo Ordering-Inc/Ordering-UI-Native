@@ -258,13 +258,13 @@ const SingleOrderCardUI = (props: any) => {
   return (
     <SingleOrderContainer>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 35 }}>
-        <View>
+        <View style={{ flex: 1, marginRight: 10 }}>
           <OText size={16} lineHeight={24} mBottom={5} weight={'500'} color={theme.colors.textNormal}>
             {t('ORDER', 'Order')} #{order.id}
           </OText>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row' }}>
             <OText size={12} lineHeight={18} color={theme.colors.textNormal}>{orderTypes?.find((type: any) => order?.delivery_type === type?.value)?.text}:</OText>
-            <OText mLeft={10} size={12} lineHeight={18} color={theme.colors.textNormal}>
+            <OText mLeft={5} size={12} lineHeight={18} color={theme.colors.textNormal}>
               {
                 order?.delivery_datetime_utc
                   ? parseDate(order?.delivery_datetime_utc)
@@ -275,8 +275,8 @@ const SingleOrderCardUI = (props: any) => {
         </View>
         <OButton
           onClick={() => handleGoToOrderDetails(order?.uuid)}
-          textStyle={{ color: theme.colors.primary, textAlign: 'center' }}
-          style={{ flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
+          textStyle={{ color: theme.colors.primary, textAlign: 'center', fontSize: 14 }}
+          style={{ flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0, paddingLeft: 5, paddingRight: 5, height: 44 }}
           text={t('ORDER_DETAILS', 'Order Details')}
           bgColor={theme.colors.white}
           borderColor={theme.colors.primary}
