@@ -663,13 +663,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     mBottom={2}>
                     {order?.customer?.address}
                   </OText>
-                  <OText
-                    size={12}
-                    lineHeight={18}
-                    color={theme.colors.textNormal}
-                    mBottom={2}>
-                    {order?.customer?.cellphone}
-                  </OText>
+                  {(!!order?.customer?.cellphone) && (
+                    <OText
+                      size={12}
+                      lineHeight={18}
+                      color={theme.colors.textNormal}
+                      mBottom={2}>
+                      {`${!!order?.customer?.country_phone_code ? '+' + order?.customer?.country_phone_code : ''} ${order?.customer?.cellphone}`}
+                    </OText>
+                  )}
                 </InfoBlock>
               </Customer>
               {order?.delivery_option !== undefined && order?.delivery_type === 1 && (

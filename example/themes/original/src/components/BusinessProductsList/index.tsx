@@ -124,6 +124,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               isSoldOut={product.inventoried && !product.quantity}
               product={product}
               businessId={businessId}
+              categoryState={categoryState}
               onProductClick={() => onProductClick(product)}
               productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
               handleUpdateProducts={handleUpdateProducts}
@@ -148,6 +149,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       isSoldOut={product.inventoried && !product.quantity}
                       product={product}
                       businessId={businessId}
+                      categoryState={categoryState}
                       onProductClick={onProductClick}
                       handleUpdateProducts={handleUpdateProducts}
                       productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
@@ -236,10 +238,11 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                 <>
                   {products.sort((a: any, b: any) => a.rank - b.rank).map((product: any, i: any) => (
                     <SingleProductCard
-                      key={i}
+                      key={`${product?.id}_${i}`}
                       isSoldOut={product.inventoried && !product.quantity}
                       businessId={businessId}
                       product={product}
+                      categoryState={categoryState}
                       onProductClick={onProductClick}
                       handleUpdateProducts={handleUpdateProducts}
                       productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}

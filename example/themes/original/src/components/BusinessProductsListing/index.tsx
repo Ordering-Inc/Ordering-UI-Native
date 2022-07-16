@@ -256,6 +256,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 			{business?.categories?.length > 0 && isOpenFiltProducts && (
 					<FiltProductsContainer
+						isIos={Platform.OS === 'ios'}
 						style={{
 							height: Dimensions.get('window').height - filtProductsHeight
 						}}
@@ -285,6 +286,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								currentCart={currentCart}
 								setSubcategoriesSelected={setSubcategoriesSelected}
 								onClickCategory={handleChangeCategory}
+								handleUpdateProducts={handleUpdateProducts}
 								isFiltMode
 							/>
 						</View>
