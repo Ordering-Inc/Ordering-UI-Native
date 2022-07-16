@@ -240,6 +240,7 @@ const MultiCheckoutUI = (props: any) => {
                     cart={cart}
                     cartuuid={cart.uuid}
                     isMultiCheckout
+                    onNavigationRedirect={(route: string, params: any) => props.navigation.navigate(route, params)}
                   />
                   <View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 13, marginHorizontal: -40 }} />
                 </React.Fragment>
