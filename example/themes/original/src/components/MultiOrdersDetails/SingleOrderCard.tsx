@@ -264,13 +264,15 @@ const SingleOrderCardUI = (props: any) => {
           </OText>
           <View style={{ flexDirection: 'row' }}>
             <OText size={12} lineHeight={18} color={theme.colors.textNormal}>{orderTypes?.find((type: any) => order?.delivery_type === type?.value)?.text}:</OText>
-            <OText mLeft={5} size={12} lineHeight={18} color={theme.colors.textNormal}>
-              {
-                order?.delivery_datetime_utc
-                  ? parseDate(order?.delivery_datetime_utc)
-                  : parseDate(order?.delivery_datetime, { utc: false })
-              }
-            </OText>
+            <View style={{ flex: 1 }}>
+              <OText mLeft={5} size={12} lineHeight={18} color={theme.colors.textNormal}>
+                {
+                  order?.delivery_datetime_utc
+                    ? parseDate(order?.delivery_datetime_utc)
+                    : parseDate(order?.delivery_datetime, { utc: false })
+                }
+              </OText>
+            </View>
           </View>
         </View>
         <OButton
