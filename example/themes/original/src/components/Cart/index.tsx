@@ -418,31 +418,35 @@ const CartUI = (props: any) => {
             )}
           </OSBill>
         )}
-        {cart?.valid_products ? (
-          <CheckoutAction>
-            <OButton
-              text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
-                !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
-              ) : !cart?.valid_address ? (
-                `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
-              ) : (
-                `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
-              )}
-              bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
-              isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
-              borderColor={theme.colors.primary}
-              imgRightSrc={null}
-              textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
-              onClick={() => setOpenUpselling(true)}
-              style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
-            />
-          </CheckoutAction>
-        ) : (
-          <View style={{ alignItems: 'center', width: '100%' }}>
-            <OText size={12} color={theme.colors.red} style={{ textAlign: 'center', marginTop: 5 }}>
-              {t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
-            </OText>
-          </View>
+        {!isMultiCheckout && (
+          <>
+            {cart?.valid_products ? (
+              <CheckoutAction>
+                <OButton
+                  text={(cart?.subtotal >= cart?.minimum || !cart?.minimum) && cart?.valid_address ? (
+                    !openUpselling !== canOpenUpselling ? t('CHECKOUT', 'Checkout') : t('LOADING', 'Loading')
+                  ) : !cart?.valid_address ? (
+                    `${t('OUT_OF_COVERAGE', 'Out of Coverage')}`
+                  ) : (
+                    `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`
+                  )}
+                  bgColor={(cart?.subtotal < cart?.minimum || !cart?.valid_address) ? theme.colors.secundary : theme.colors.primary}
+                  isDisabled={(openUpselling && !canOpenUpselling) || cart?.subtotal < cart?.minimum || !cart?.valid_address}
+                  borderColor={theme.colors.primary}
+                  imgRightSrc={null}
+                  textStyle={{ color: 'white', textAlign: 'center', flex: 1 }}
+                  onClick={() => setOpenUpselling(true)}
+                  style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', borderRadius: 7.6, shadowOpacity: 0 }}
+                />
+              </CheckoutAction>
+            ) : (
+              <View style={{ alignItems: 'center', width: '100%' }}>
+                <OText size={12} color={theme.colors.red} style={{ textAlign: 'center', marginTop: 5 }}>
+                  {t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
+                </OText>
+              </View>
+            )}
+          </>          
         )}
       </BusinessItemAccordion>
 
