@@ -107,7 +107,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
         {t('PAYMENT_METHODS', 'Payment Methods')}
       </OText>
       {paymethodsAndWallets.loading ? (
-        <Placeholder style={{ marginTop: 10 }} Animation={Fade}>
+        <Placeholder style={{ marginTop: 10, marginBottom: 10 }} Animation={Fade}>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
             {[...Array(3)].map((_, i) => (
               <PlaceholderLine
@@ -115,7 +115,7 @@ const MultiCartsPaymethodsAndWalletsUI = (props: any) => {
                 width={37}
                 height={80}
                 noMargin
-                style={{ borderRadius: 10, marginRight: 10 }}
+                style={{ borderRadius: 10, marginRight: 10, }}
               />
             ))}
           </View>
