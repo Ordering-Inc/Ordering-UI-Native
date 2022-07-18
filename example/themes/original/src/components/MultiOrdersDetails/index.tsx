@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useLanguage, useUtils, useToast,	ToastType, MultiOrdersDetails as MultiOrdersDetailsController } from 'ordering-components/native'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, BackHandler } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import { OText, OButton } from '../shared'
 import { Container } from '../../layouts/Container'
@@ -53,12 +53,13 @@ export const MultiOrdersDetailsUI = (props: any) => {
     }
   }
 
-  const handleBackNavigation = () => {
+  const handleArrowBack: any = () => {
     if (!isFromMultiCheckout) {
       navigation?.canGoBack() && navigation.goBack();
       return;
     }
     navigation.navigate('BottomTab');
+    return true
 	}
 
   const handleGoToOrderDetails = (uuid: any) => {
@@ -71,6 +72,13 @@ export const MultiOrdersDetailsUI = (props: any) => {
     }
   }, [error])
 
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleArrowBack)
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleArrowBack)
+    }
+  }, [])
+
   return (
     <OrdersDetailsContainer keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 40 }}>
       <View style={{ flexDirection: 'row' }}>
@@ -78,7 +86,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
           imgLeftSrc={theme.images.general.arrow_left}
           imgRightSrc={null}
           style={styles.btnBackArrow}
-          onClick={() => handleBackNavigation()}
+          onClick={() => handleArrowBack()}
           imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
         />
       </View>
