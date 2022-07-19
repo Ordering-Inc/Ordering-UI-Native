@@ -45,7 +45,7 @@ export const BusinessItemAccordion = (props: any) => {
 	}, [orderState?.carts])
 
 	return (
-		<BIContainer isClosed={isClosed} checkoutVisible={!isActive && !isClosed && !!isProducts && !checkoutButtonDisabled}>
+		<BIContainer isClosed={isClosed} isMultiCheckout={isMultiCheckout} checkoutVisible={!isActive && !isClosed && !!isProducts && !checkoutButtonDisabled}>
 			<BIHeader
 				isClosed={isClosed}
 				onPress={() => !isClosed ? setActiveState(!isActive) : isClosed}
