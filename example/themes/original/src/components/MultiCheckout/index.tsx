@@ -77,7 +77,8 @@ const MultiCheckoutUI = (props: any) => {
 
 	const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
-  const isDisablePlaceOrderButton = !(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) || placing
+  const maximumCarts = 5
+  const isDisablePlaceOrderButton = !(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) || openCarts.length > maximumCarts
 
 	const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
 	const [phoneUpdate, setPhoneUpdate] = useState(false);
@@ -264,6 +265,11 @@ const MultiCheckoutUI = (props: any) => {
                     {t('MULTI_CHECKOUT_DESCRIPTION', 'You will receive a receipt for each business. The payment is not combined between multiple stores. Each payment is processed by the store')}
                   </OText>
                 </ChCartsTotal>
+              )}
+              {openCarts.length > maximumCarts && (
+                <OText size={14} color={theme.colors.danger5} style={{ marginVertical: 20 }}>
+                  {t('WARNING_MAXIMUM_CARTS', 'You can only pay for a maximum of 5 carts, please discard one or more to continue.')}
+                </OText>
               )}
             </ChCarts>
           </ChSection>
