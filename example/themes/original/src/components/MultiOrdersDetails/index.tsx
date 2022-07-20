@@ -58,7 +58,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
       navigation?.canGoBack() && navigation.goBack();
       return;
     }
-    navigation.navigate('BottomTab');
+    navigation.navigate('BusinessList');
     return true
 	}
 
