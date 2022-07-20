@@ -31,7 +31,8 @@ import {
 	ListWrapper,
 	FeaturedWrapper,
 	OrderProgressWrapper,
-	FarAwayMessage
+	FarAwayMessage,
+	AddressInputContainer
 } from './styles';
 
 import { SearchBar } from '../SearchBar';
@@ -84,7 +85,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		wrapperOrderOptions: {
 			width: '100%',
 			flexDirection: 'row',
-			justifyContent: 'space-between',
+			justifyContent: 'center',
 			marginBottom: 10,
 			zIndex: 100,
 		},
@@ -94,7 +95,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			borderRadius: 10,
 		},
 		searchInput: {
-			fontSize: 12,
+			fontSize: 16,
+			backgroundColor: theme.colors.white,
+			paddingLeft: 10,
+			paddingTop: 7
 		},
 		iconStyle: {
 			fontSize: 18,
@@ -104,6 +108,11 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		farAwayMsg: {
 			paddingVertical: 6,
 			paddingHorizontal: 20
+		},
+		inputContainerStyles: {
+			backgroundColor: theme.colors.white,
+			borderColor: theme.colors.backgroundGray,
+			borderWidth: 1,
 		}
 	});
 
@@ -124,7 +133,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		Number(configs?.max_days_preorder?.value) > 0
 	const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
 	const timerId = useRef<any>(false)
-  const [favoriteIds, setFavoriteIds] = useState<any>([])
+	const [favoriteIds, setFavoriteIds] = useState<any>([])
 
 	// const panResponder = useRef(
 	// 	PanResponder.create({
@@ -219,7 +228,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}, [orderState?.options?.address?.location])
 
 	useEffect(() => {
-		if(!orderState?.loading){
+		if (!orderState?.loading) {
 			setOrderTypeValue(orderState?.options?.type)
 		}
 	}, [orderState?.options?.type])
@@ -232,15 +241,15 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	)
 
 	useEffect(() => {
-    if (!businessesList?.businesses?.length) return
-    const ids = [...favoriteIds]
-    businessesList.businesses.forEach((business: any) => {
-      if (business?.favorite) {
-        ids.push(business?.id)
-      }
-    })
-    setFavoriteIds([...new Set(ids)])
-  }, [businessesList?.businesses?.length])
+		if (!businessesList?.businesses?.length) return
+		const ids = [...favoriteIds]
+		businessesList.businesses.forEach((business: any) => {
+			if (business?.favorite) {
+				ids.push(business?.id)
+			}
+		})
+		setFavoriteIds([...new Set(ids)])
+	}, [businessesList?.businesses?.length])
 
 	return (
 		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}
@@ -251,15 +260,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				/>
 			}
 		>
-			<HeaderWrapper
-				source={theme.images.general.homeHero}
-				style={{ paddingTop: top + 20 }}>
-				{!auth && (
-					<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
-						<OIcon src={theme.images.general.arrow_left} width={20} style={{ tintColor: theme.colors.white }} />
-					</TouchableOpacity>
-				)}
-
+			<View style={{ height: isFarAway ? 150 : 100, marginTop: Platform.OS == 'ios' ? 0 : 50 }}>
 				<Search>
 					<AddressInput
 						onPress={() =>
@@ -271,15 +272,22 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 									isGuestUser: isGuestUser
 								})
 						}>
-						<OIcon
-							src={theme.images.general.pin}
-							color={theme.colors.disabled}
-							width={16}
-							style={{ marginRight: 10 }}
-						/>
-						<OText size={12} numberOfLines={1} style={{ width: '90%' }}>
-							{orderState?.options?.address?.address}
-						</OText>
+						<AddressInputContainer>
+							<OIcon
+								src={theme.images.general.pin}
+								color={theme.colors.disabled}
+								width={16}
+								style={{ marginRight: 10 }}
+							/>
+							<OText size={12} numberOfLines={1}>
+								{orderState?.options?.address?.address}
+							</OText>
+							<OIcon
+								src={theme.images.general.arrow_down}
+								width={10}
+								style={{ marginStart: 8 }}
+							/>
+						</AddressInputContainer>
 					</AddressInput>
 				</Search>
 				{isFarAway && (
@@ -288,16 +296,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textNormal}>{t('YOU_ARE_FAR_FROM_ADDRESS', 'You are far from this address')}</OText>
 					</FarAwayMessage>
 				)}
+
 				<OrderControlContainer>
 					<View style={styles.wrapperOrderOptions}>
-						<WrapMomentOption onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes, setOrderTypeValue })}>
-							<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(orderTypeValue || orderState?.options?.type || 1), 'Delivery')}</OText>
-							<OIcon
-								src={theme.images.general.arrow_down}
-								width={10}
-								style={{ marginStart: 8 }}
-							/>
-						</WrapMomentOption>
 						{isPreOrderSetting && (
 							<WrapMomentOption
 								onPress={() => handleMomentClick()}>
@@ -319,27 +320,48 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 								)}
 							</WrapMomentOption>
 						)}
-
-						{!businessId && (
-							<SearchBar
-								onSearch={handleChangeSearch}
-								searchValue={searchValue}
-								lazyLoad
-								isCancelXButtonShow={!!searchValue}
-								borderStyle={styles.borderStyle}
-								onCancel={() => handleChangeSearch('')}
-								placeholder={t('SEARCH', 'Search')}
-								height={26}
-								isDisabled={!businessTypes}
-								inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
-								onSubmitEditing={() => { configs?.advanced_business_search_enabled?.value === '1' && navigation.navigate('BusinessSearch', { businessTypes, defaultTerm: searchValue }) }}
+						<WrapMomentOption onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes, setOrderTypeValue })}>
+							<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(orderTypeValue || orderState?.options?.type || 1), 'Delivery')}</OText>
+							<OIcon
+								src={theme.images.general.arrow_down}
+								width={10}
+								style={{ marginStart: 8 }}
 							/>
-						)}
-
+						</WrapMomentOption>
 					</View>
 				</OrderControlContainer>
+			</View>
+			<HeaderWrapper
+				source={theme.images.backgrounds.business_list_header}
+				style={{ paddingTop: top + 20 }}
+				resizeMode='stretch'
+			>
+				{!auth && (
+					<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
+						<OIcon src={theme.images.general.arrow_left} width={20} style={{ tintColor: theme.colors.white }} />
+					</TouchableOpacity>
+				)}
 			</HeaderWrapper>
-
+			{!businessId && (
+				<SearchBar
+					onSearch={handleChangeSearch}
+					searchValue={searchValue}
+					lazyLoad
+					hideIcon
+					isCancelXButtonShow={!!searchValue}
+					onCancel={() => handleChangeSearch('')}
+					placeholder={t('SEARCH', 'Search')}
+					height={50}
+					isDisabled={!businessTypes}
+					inputContainerStyles={styles.inputContainerStyles}
+					containerStyles={{
+						marginHorizontal: 40,
+						marginTop: 20
+					}}
+					inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? { paddingBottom: 6 } : { paddingBottom: 4 } }}
+					onSubmitEditing={() => { configs?.advanced_business_search_enabled?.value === '1' && navigation.navigate('BusinessSearch', { businessTypes, defaultTerm: searchValue }) }}
+				/>
+			)}
 			<OrderProgressWrapper>
 				<OrderProgress
 					{...props}
@@ -408,7 +430,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					/>
 				)}
 				{businessesList.businesses?.map(
-					(business: any, i : number) => (
+					(business: any, i: number) => (
 						<BusinessController
 							key={`${business.id}_` + i}
 							business={business}

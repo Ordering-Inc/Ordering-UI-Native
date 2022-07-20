@@ -22,7 +22,10 @@ export const SearchBar = (props: any) => {
 		isDisabled,
 		iconCustomRight,
 		onSubmitEditing,
-		blurOnSubmit
+		blurOnSubmit,
+		inputContainerStyles,
+		containerStyles,
+		hideIcon
 	} = props
 
 	const theme = useTheme();
@@ -77,13 +80,13 @@ export const SearchBar = (props: any) => {
 	}
 
 	return (
-		<Pressable style={[styles.container, { height: height }]}>
+		<Pressable style={[styles.container, containerStyles, { height: height }]}>
 			<OInput
 				value={searchValue}
 				onChange={onChangeSearch}
-				style={styles.inputStyle}
+				style={{...styles.inputStyle, ...inputContainerStyles}}
 				placeholder={placeholder}
-				icon={theme.images.general.search}
+				icon={!hideIcon && theme.images.general.search}
 				isDisabled={isDisabled}
 				iconStyle={{ width: 12 }}
 				returnKeyType='done'

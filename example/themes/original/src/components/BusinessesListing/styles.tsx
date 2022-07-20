@@ -15,6 +15,7 @@ export const Search = styled.View`
   justify-content: flex-end;
   align-items: center;
   margin-vertical: 10px;
+  margin-horizontal: 20px;
 `
 
 export const AddressInput = styled.TouchableOpacity`
@@ -39,7 +40,7 @@ export const OrderControlContainer = styled.View`
 `
 
 export const WrapMomentOption = styled.TouchableOpacity`
-  background-color: ${(props: any) => props.theme.colors.backgroundGray100};
+  background-color: ${(props: any) => props.theme.colors.white};
   border-radius: 7.6px;
   font-size: 12px;
   max-width: 240px;
@@ -53,7 +54,7 @@ export const WrapMomentOption = styled.TouchableOpacity`
 
 export const HeaderWrapper = styled.ImageBackground`
 	width: 100%;
-	height: 370px;
+	height: 270px;
 	padding: 20px 40px;
 	background-color: transparent;
 `;
@@ -79,7 +80,14 @@ export const FarAwayMessage = styled.View`
   flex-direction: row;
   align-items: center;
 	background-color: ${(props: any) => props.theme.colors.warning1};
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   border-radius: 7.6px;
   border: 1px solid ${(props: any) => props.theme.colors.warning5};
+`
+
+export const AddressInputContainer = styled.View`
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: center
 `
