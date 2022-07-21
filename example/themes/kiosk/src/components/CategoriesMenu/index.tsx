@@ -141,6 +141,7 @@ const CategoriesMenu = (props: any): React.ReactElement => {
           }}
         >
           <Container nopadding nestedScrollEnabled>
+            {Platform.OS === 'android' && (<View style={{ paddingTop: 20 }} />)}
             <NavBar
               title={categories[curIndexCateg].name}
               onActionLeft={goToBack}

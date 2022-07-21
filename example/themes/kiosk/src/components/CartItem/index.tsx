@@ -56,9 +56,10 @@ const CartItem = (props: CartItemProps) => {
     return product
   }
   const isProductIngredients = productInfo()?.ingredients.length > 0 || productInfo()?.options.length > 0 || product?.comment
-  const getFormattedSubOptionName = ({ quantity, name, position, price }: { quantity: number, name: string, position: string, price: number }) => {
+  const getFormattedSubOptionName = ({ quantity, name, position, price }: { quantity: number, name: string, position: string, price: any }) => {
     const pos = position ? `(${position})` : ''
-    return `${quantity} x ${name} ${pos} +${price}`
+    const str = `${quantity} x ${name} ${pos}`
+    return price ? `${str} ${price}` : str
   }
 
   return (
@@ -184,7 +185,7 @@ const CartItem = (props: CartItemProps) => {
                             quantity: suboption.quantity,
                             name: suboption.name,
                             position: (suboption.position !== 'whole') ? t(suboption.position.toUpperCase(), suboption.position) : '',
-                            price: parsePrice(suboption.price)
+                            price: suboption.price > 0 && `+${parsePrice(suboption.price)}`
                           })}
                         </OText>
                       </ProductSubOption>
