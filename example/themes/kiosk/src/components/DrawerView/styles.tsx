@@ -19,12 +19,12 @@ export const WrapperFloatBtn = styled.View`
   top: 10%;
   right: ${(props: any) => props.outside ? 11 : 58}%;
   z-index: 20002;
-  elevation: 11;
+  elevation: 17;
 `;
 
 export const IconControl = styled.TouchableOpacity`
   background-color: ${(props: any) => props.theme.colors.white};
   padding: 10px;
   border-radius: 8px;
-  elevation: 11;
+  elevation: 17;
 `;

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { PanResponder, TouchableOpacity, View } from 'react-native';
+import { PanResponder, Platform, TouchableOpacity, View } from 'react-native';
 import {
   useLanguage,
   useOrder,
@@ -120,6 +120,7 @@ const BusinessMenu = (props:any): React.ReactElement => {
         }}
       >
         <Container nopadding nestedScrollEnabled>
+          {Platform.OS === 'android' && (<View style={{ paddingTop: 20 }} />)}
           <NavBar
             title={t('MENU_V21', 'Menu')}
             onActionLeft={goToBack}
