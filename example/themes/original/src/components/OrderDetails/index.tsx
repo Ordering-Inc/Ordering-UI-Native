@@ -417,14 +417,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   ];
   const driverLocationString = typeof order?.driver?.location?.location === 'string' && order?.driver?.location?.location?.split(',').map((l: string) => l.replace(/[^-.0-9]/g, ''))
   const parsedLocations = locations.map(location => typeof location?.location === 'string' ? {
-      ...location,
-      lat: parseFloat(location?.location?.split(',')[0].replace(/[^-.0-9]/g, '')),
-      lng: parseFloat(location?.location?.split(',')[1].replace(/[^-.0-9]/g, ''))
-    } : location)
+    ...location,
+    lat: parseFloat(location?.location?.split(',')[0].replace(/[^-.0-9]/g, '')),
+    lng: parseFloat(location?.location?.split(',')[1].replace(/[^-.0-9]/g, ''))
+  } : location)
 
   useEffect(() => {
     if (driverLocation) {
-      locations[0] = driverLocation;
+      parsedLocations[0] = {
+        ...locations[0],
+        ...driverLocation
+      }
     }
   }, [driverLocation]);
 
@@ -696,7 +699,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                     <Map>
                      <GoogleMap
                         location={typeof order?.driver?.location?.location === 'string'
-                        ? {
+                          ? {
                             lat: parseFloat(driverLocationString[0]),
                             lng: parseFloat(driverLocationString[1]),
                           } : driverLocation ?? order?.driver?.location
@@ -1027,7 +1030,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                           )}
                         </View>
                         <OText>
-                          -{parsePrice(event.amount)}
+                          -{parsePrice(event.amount, { isTruncable: true })}
                         </OText>
                       </View>
                     ))}
