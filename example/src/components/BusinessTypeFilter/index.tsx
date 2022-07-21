@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, ScrollView, Dimensions, Platform, PlatformIOSStatic, Pressable } from 'react-native'
+import { StyleSheet, View, ScrollView, Dimensions, Platform, PlatformIOSStatic, TouchableOpacity } from 'react-native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { BusinessTypeFilter as BusinessTypeFilterController, useLanguage } from 'ordering-components/native'
 
@@ -9,7 +9,6 @@ import { BusinessTypeFilterParams } from '../../types'
 import { useTheme } from 'styled-components/native'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DeviceInfo from 'react-native-device-info';
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const windowWidth = Dimensions.get('window').width;
 
