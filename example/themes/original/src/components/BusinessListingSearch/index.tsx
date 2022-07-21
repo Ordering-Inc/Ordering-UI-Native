@@ -46,7 +46,9 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
     filters,
     businessTypes,
     setFilters,
-    brandList
+    brandList,
+    handleUpdateBusinessList,
+    handleUpdateProducts
   } = props
   
   const screenHeight = Dimensions.get('window').height;
@@ -264,6 +266,7 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
             business={business}
             isBusinessOpen={business.open}
             handleCustomClick={() => onBusinessClick(business)}
+            handleUpdateBusinessList={handleUpdateBusinessList}
             orderType={orderState?.options?.type}
             style={{ width: 320, marginRight: (businessesSearchList.loading || i !== businessesSearchList.businesses?.length - 1) ? 20 : 0 }}
           />
@@ -384,6 +387,7 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
                   businessId={business?.id}
                   onProductClick={() => { }}
                   productAddedToCartLength={0}
+                  handleUpdateProducts={(productId: number, changes: any) => handleUpdateProducts(productId, category?.id, business?.id, changes)}
                   style={{ width: 320, marginRight: i === category?.products?.length - 1 ? 0 : 20 }}
                 />
               )))}
