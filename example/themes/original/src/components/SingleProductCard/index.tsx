@@ -15,22 +15,14 @@ import FastImage from 'react-native-fast-image'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { shape } from '../../utils';
 
-function SingleProductCardPropsAreEqual(prevProps : any, nextProps : any) {
-	return JSON.stringify(prevProps.product) === JSON.stringify(nextProps.product) && 
-	prevProps.isSoldOut === nextProps.isSoldOut && 
-	prevProps.productAddedToCartLength === nextProps.productAddedToCartLength &&
-	prevProps.categoryState === nextProps.categoryState
-}
-
-const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
+const SinguleProductCardUI = (props: SingleProductCardParams) => {
 	const {
 		product,
 		isSoldOut,
 		onProductClick,
 		productAddedToCartLength,
 		style,
-		handleFavoriteProduct,
-		handleUpdateProducts
+		handleFavoriteProduct
 	} = props;
 
 	const theme = useTheme();
@@ -212,7 +204,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 			)}
 		</CardContainer>
 	);
-}, SingleProductCardPropsAreEqual);
+};
 
 export const SingleProductCard = (props: SingleProductCardParams) => {
 	const singleProductCardProps = {
