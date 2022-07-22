@@ -410,29 +410,29 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               {`${order?.products?.length} ${t('ITEMS', 'items')}`}
             </OText>
 
-            <GridContainer style={{ maxWidth: orientationState?.dimensions?.width * 0.6 }}>
-              {order?.products.map((product: Product, i: number) => (
-                <OImage
-                  key={product?.id || i}
-                  source={{ uri: product?.images || '' }}
-                  resizeMode="cover"
-                  height={80}
-                  width={80}
-                  borderRadius={8}
-                  style={{ marginEnd: 10, marginBottom: 10 }}
-                />
-              ))}
-            </GridContainer>
+            <OText
+              color={theme.colors.primary}
+              weight="bold"
+            >
+              {parsePrice((order?.summary?.total || order?.total) - (order?.summary?.discount || order?.discount))}
+            </OText>
           </View>
-
-          <OText
-            color={theme.colors.primary}
-            weight="bold"
-            mRight={30}
-          >
-            {parsePrice((order?.summary?.total || order?.total) - (order?.summary?.discount || order?.discount))}
-          </OText>
-        </OSTable>
+          <OSTable>
+          <GridContainer style={{ maxWidth: orientationState?.dimensions?.width * 0.6 }}>
+            {order?.products.map((product: Product, i: number) => (
+              <OImage
+                key={product?.id || i}
+                source={{ uri: product?.images || '' }}
+                resizeMode="cover"
+                height={80}
+                width={80}
+                borderRadius={8}
+                style={{ marginEnd: 10, marginBottom: 10 }}
+              />
+            ))}
+          </GridContainer>
+          </OSTable>
+        </>
       )}
 
       <OrderBill>
