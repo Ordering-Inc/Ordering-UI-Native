@@ -171,9 +171,9 @@ const CheckoutUI = (props: any) => {
 		}
 	}
 
-	const handlePlaceOrder = () => {
+	const handlePlaceOrder = (confirmPayment) => {
 		if (!userErrors.length) {
-			handlerClickPlaceOrder && handlerClickPlaceOrder()
+			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
 		}
 		let stringError = ''
