@@ -137,10 +137,11 @@ const CheckoutUI = (props: any) => {
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
 
 	const placeSpotTypes = [3, 4]
-  const businessConfigs = businessDetails?.business?.configs ?? []
-  const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
-  const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
-  const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletCreditPointsEnabled)
+	const businessConfigs = businessDetails?.business?.configs ?? []
+	const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
+	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
+	const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletCreditPointsEnabled)
+	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash ||
@@ -611,19 +612,21 @@ const CheckoutUI = (props: any) => {
 												</OText>
 											</TouchableOpacity>
 										</CartHeader>
-										<TouchableOpacity
-											onPress={() => setOpenChangeStore(true)}
-											style={{ alignSelf: 'flex-start' }}
-										>
-											<OText
-												size={12}
-												lineHeight={18}
-												color={theme.colors.textSecondary}
-												style={{ textDecorationLine: 'underline' }}
+										{isBusinessChangeEnabled && (
+											<TouchableOpacity
+												onPress={() => setOpenChangeStore(true)}
+												style={{ alignSelf: 'flex-start' }}
 											>
-												{t('CHANGE_STORE', 'Change store')}
-											</OText>
-										</TouchableOpacity>
+												<OText
+													size={12}
+													lineHeight={18}
+													color={theme.colors.textSecondary}
+													style={{ textDecorationLine: 'underline' }}
+												>
+													{t('CHANGE_STORE', 'Change store')}
+												</OText>
+											</TouchableOpacity>
+										)}
 										<OrderSummary
 											cart={cart}
 											isCartPending={cart?.status === 2}
