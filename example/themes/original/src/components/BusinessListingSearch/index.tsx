@@ -25,15 +25,17 @@ import {
   SortContainer,
   BrandContainer,
   BrandItem,
-  PriceFilterWrapper
+  PriceFilterWrapper,
+  OptionTitle
 } from './styles'
 import FastImage from 'react-native-fast-image'
 import { convertHoursToMinutes } from '../../utils'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { BusinessSearchParams } from '../../types'
+import { MyOrders } from '../MyOrders'
 
 
-export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
+export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   const {
     navigation,
     businessesSearchList,
@@ -46,9 +48,10 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
     filters,
     businessTypes,
     setFilters,
-    brandList
+    brandList,
+    onNavigationRedirect
   } = props
-  
+
   const screenHeight = Dimensions.get('window').height;
   const theme = useTheme()
   const [orderState] = useOrder()
@@ -222,6 +225,60 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
     )
   }
 
+  const BusinessControllerSkeletons = () => {
+    return (
+      <>
+        {[
+          ...Array(
+            paginationProps.nextPageItems
+              ? paginationProps.nextPageItems
+              : 3,
+          ).keys(),
+        ].map((item, i) => (
+          <Placeholder
+            Animation={Fade}
+            key={i}
+            style={{ width: 320, marginRight: 20, marginTop: 20 }}>
+            <View style={{ width: 320 }}>
+              <PlaceholderLine
+                height={155}
+                style={{ marginBottom: 20, borderRadius: 25 }}
+              />
+              <View style={{ paddingHorizontal: 10 }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <PlaceholderLine
+                    height={25}
+                    width={40}
+                    style={{ marginBottom: 10 }}
+                  />
+                  <PlaceholderLine
+                    height={25}
+                    width={20}
+                    style={{ marginBottom: 10 }}
+                  />
+                </View>
+                <PlaceholderLine
+                  height={20}
+                  width={30}
+                  style={{ marginBottom: 10 }}
+                />
+                <PlaceholderLine
+                  height={20}
+                  width={80}
+                  style={{ marginBottom: 0 }}
+                />
+              </View>
+            </View>
+          </Placeholder>
+        ))}
+      </>
+    )
+  }
+
   return (
     <ScrollView style={styles.container}>
       <WrapHeader style={{ paddingTop: top + 20, marginVertical: 2 }}>
@@ -257,6 +314,20 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
           </View>
         )
       }
+      {businessesSearchList.businesses?.length > 0 && (
+        <MyOrders
+          hideOrders
+          businessesSearchList={businessesSearchList}
+          onNavigationRedirect={onNavigationRedirect}
+          BusinessControllerSkeletons={BusinessControllerSkeletons}
+        />
+      )}
+
+      <OptionTitle isBusinessesSearchList={!!businessesSearchList}>
+        <OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10}>
+          {t('BUSINESSES', 'Businesses')}
+        </OText>
+      </OptionTitle>
       <ScrollView horizontal>
         {businessesSearchList.businesses?.length > 0 && businessesSearchList.businesses.map((business: any, i: number) => (
           <BusinessController
@@ -280,55 +351,7 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
           </LoadMoreBusinessContainer>
         )}
         {businessesSearchList.loading && (
-          <>
-            {[
-              ...Array(
-                paginationProps.nextPageItems
-                  ? paginationProps.nextPageItems
-                  : 3,
-              ).keys(),
-            ].map((item, i) => (
-              <Placeholder
-                Animation={Fade}
-                key={i}
-                style={{ width: 320, marginRight: 20, marginTop: 20 }}>
-                <View style={{ width: 320 }}>
-                  <PlaceholderLine
-                    height={155}
-                    style={{ marginBottom: 20, borderRadius: 25 }}
-                  />
-                  <View style={{ paddingHorizontal: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <PlaceholderLine
-                        height={25}
-                        width={40}
-                        style={{ marginBottom: 10 }}
-                      />
-                      <PlaceholderLine
-                        height={25}
-                        width={20}
-                        style={{ marginBottom: 10 }}
-                      />
-                    </View>
-                    <PlaceholderLine
-                      height={20}
-                      width={30}
-                      style={{ marginBottom: 10 }}
-                    />
-                    <PlaceholderLine
-                      height={20}
-                      width={80}
-                      style={{ marginBottom: 0 }}
-                    />
-                  </View>
-                </View>
-              </Placeholder>
-            ))}
-          </>
+          <BusinessControllerSkeletons />
         )}
       </ScrollView>
       <ProductsList>
@@ -452,7 +475,7 @@ export const BusinessListingSearchUI = (props : BusinessSearchParams) => {
                 onPress={() => handleChangeFilters('orderBy', item?.value)}
                 style={{ marginBottom: 7 }}
               >
-                <OText 
+                <OText
                   weight={filters?.orderBy?.includes(item?.value) ? 'bold' : '500'}
                   mBottom={filters?.orderBy?.includes(item?.value) ? 5 : 0}
                 >
