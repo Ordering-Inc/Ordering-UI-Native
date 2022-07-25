@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Pressable, StyleSheet, View, Keyboard } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Recaptcha from 'react-native-recaptcha-that-works'
 
 import {
   LoginForm as LoginFormController,
@@ -28,7 +30,8 @@ import {
   OTab,
   SocialButtons,
   OrSeparator,
-  LineSeparator
+  LineSeparator,
+  RecaptchaButton
 } from './styles';
 
 import { _removeStoreData } from '../../providers/StoreUtil';
@@ -56,7 +59,9 @@ const LoginFormUI = (props: LoginParams) => {
     handleSendVerifyCode,
     handleCheckPhoneCode,
     onNavigationRedirect,
-    notificationState
+    notificationState,
+    handleReCaptcha,
+    enableReCaptcha
   } = props
 
   const theme = useTheme()
@@ -70,6 +75,10 @@ const LoginFormUI = (props: LoginParams) => {
       marginBottom: 25,
       borderWidth: 1,
       borderColor: theme.colors.disabled
+    },
+    recaptchaIcon: {
+      width: 100,
+      height: 100,
     }
   });
 
@@ -89,7 +98,9 @@ const LoginFormUI = (props: LoginParams) => {
       cellphone: null
     }
   });
-
+  const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
+  const [recaptchaVerified, setRecaptchaVerified] = useState(false)
+  const recaptchaRef = useRef<any>({});
   const inputRef = useRef<any>({})
 
   const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
@@ -151,6 +162,34 @@ const LoginFormUI = (props: LoginParams) => {
   const handleChangeInputEmail = (value: string, onChange: any) => {
     onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''))
   }
+
+  const handleOpenRecaptcha = () => {
+    setRecaptchaVerified(false)
+    if (!recaptchaConfig?.siteKey) {
+      showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
+      return
+    }
+    if (!recaptchaConfig?.baseUrl) {
+      showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
+      return
+    }
+
+    recaptchaRef.current.open()
+  }
+
+  const onRecaptchaVerify = (token: any) => {
+    setRecaptchaVerified(true)
+    handleReCaptcha && handleReCaptcha(token)
+  }
+
+  useEffect(() => {
+    if (configs && Object.keys(configs).length > 0 && enableReCaptcha) {
+      setRecaptchaConfig({
+        siteKey: configs?.security_recaptcha_site_key?.value || null,
+        baseUrl: configs?.security_recaptcha_base_url?.value || null
+      })
+    }
+  }, [configs, enableReCaptcha])
 
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
@@ -317,6 +356,39 @@ const LoginFormUI = (props: LoginParams) => {
               rules={{ required: t('VALIDATION_ERROR_PASSWORD_REQUIRED', 'The field Password is required').replace('_attribute_', t('PASSWORD', 'Password')) }}
               defaultValue=""
             />
+
+            {enableReCaptcha && (
+              <>
+                <TouchableOpacity
+                  onPress={handleOpenRecaptcha}
+                >
+                  <RecaptchaButton>
+                    {recaptchaVerified ? (
+                      <MaterialCommunityIcons
+                        name="checkbox-marked"
+                        size={26}
+                        color={theme.colors.primary}
+                      />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="checkbox-blank-outline"
+                        size={26}
+                        color={theme.colors.mediumGray}
+                      />
+                    )}
+                    <OText size={14} mLeft={8}>{t('VERIFY_ReCAPTCHA', 'Verify reCAPTCHA')}</OText>
+                  </RecaptchaButton>
+                </TouchableOpacity>
+                <Recaptcha
+                  ref={recaptchaRef}
+                  siteKey={recaptchaConfig?.siteKey}
+                  baseUrl={recaptchaConfig?.baseUrl}
+                  onVerify={onRecaptchaVerify}
+                  onExpire={() => setRecaptchaVerified(false)}
+                />
+              </>
+            )}
+
             <OButton
               onClick={handleSubmit(onSubmit)}
               text={loginButtonText}
@@ -369,13 +441,13 @@ const LoginFormUI = (props: LoginParams) => {
         }
 
         {configs && Object.keys(configs).length > 0 && anySocialButtonActivated && (
-            <ButtonsWrapper>
-              <OText size={18} mBottom={10} color={theme.colors.disabled}>
-                {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
-              </OText>
-              <SocialButtons>
-                {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
-                  configs?.facebook_id?.value && (
+          <ButtonsWrapper>
+            <OText size={18} mBottom={10} color={theme.colors.disabled}>
+              {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
+            </OText>
+            <SocialButtons>
+              {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
+                configs?.facebook_id?.value && (
                   <FacebookLogin
                     notificationState={notificationState}
                     handleErrors={(err: any) => showToast(ToastType.Error, err)}
@@ -383,26 +455,26 @@ const LoginFormUI = (props: LoginParams) => {
                     handleSuccessFacebookLogin={handleSuccessFacebook}
                   />
                 )}
-                {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled && (
-                  <GoogleLogin
-                    notificationState={notificationState}
-                    webClientId={configs?.google_login_client_id?.value}
-                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
-                    handleSuccessGoogleLogin={handleSuccessFacebook}
-                  />
-                )}
-                {(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && (
-                  <AppleLogin
-                    notificationState={notificationState}
-                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
-                    handleSuccessApple={handleSuccessApple}
-                  />
-                )}
-              </SocialButtons>
-            </ButtonsWrapper>
-          )}
+              {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled && (
+                <GoogleLogin
+                  notificationState={notificationState}
+                  webClientId={configs?.google_login_client_id?.value}
+                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                  handleSuccessGoogleLogin={handleSuccessFacebook}
+                />
+              )}
+              {(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && (
+                <AppleLogin
+                  notificationState={notificationState}
+                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                  handleSuccessApple={handleSuccessApple}
+                />
+              )}
+            </SocialButtons>
+          </ButtonsWrapper>
+        )}
 
         {onNavigationRedirect && registerButtonText && (
           <ButtonsWrapper>
@@ -440,6 +512,7 @@ const LoginFormUI = (props: LoginParams) => {
 export const LoginForm = (props: any) => {
   const loginProps = {
     ...props,
+    isRecaptchaEnable: true,
     UIComponent: LoginFormUI,
     handleSuccessLogin: () => _removeStoreData('isGuestUser')
   };
