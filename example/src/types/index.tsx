@@ -17,7 +17,7 @@ export interface LoginParams {
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
   notificationState?: any;
-  handleReCaptcha?: any;
+  handleReCaptcha?: (token: string) => void;
   enableReCaptcha?: any;
 }
 export interface ProfileParams {
@@ -101,6 +101,8 @@ export interface SignupParams {
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
   notificationState?: any;
+  enableReCaptcha?: boolean;
+  handleReCaptcha?: (token: string) => void;
 }
 
 export interface PhoneInputParams {

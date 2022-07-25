@@ -179,7 +179,7 @@ const LoginFormUI = (props: LoginParams) => {
 
   const onRecaptchaVerify = (token: any) => {
     setRecaptchaVerified(true)
-    handleReCaptcha(token)
+    handleReCaptcha && handleReCaptcha(token)
   }
 
   useEffect(() => {
