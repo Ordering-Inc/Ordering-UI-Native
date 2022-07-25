@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { useOrder, useLanguage, useUtils } from 'ordering-components/native';
+import { useOrder, useLanguage, useUtils, useConfig } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import {
 	BIContainer,
@@ -28,11 +28,13 @@ export const BusinessItemAccordion = (props: any) => {
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
 	const [{ parsePrice }] = useUtils();
+	const [{ configs }] = useConfig()
 	const theme = useTheme();
 
 	const isCartPending = cart?.status === 2
 	const isClosed = !cart?.valid_schedule
 	const isProducts = cart?.products?.length
+	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
 
 	const [isActive, setActiveState] = useState(!!singleBusiness)
 
@@ -91,7 +93,7 @@ export const BusinessItemAccordion = (props: any) => {
 									</OAlert>
 								</>
 							)}
-							{props.handleChangeStore && (
+							{isBusinessChangeEnabled && props.handleChangeStore && (
 								<>
 									<OText color={theme.colors.textSecondary}>{' \u2022 '}</OText>
 									<TouchableOpacity
