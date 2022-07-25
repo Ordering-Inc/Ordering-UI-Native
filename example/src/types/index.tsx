@@ -17,6 +17,8 @@ export interface LoginParams {
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
   notificationState?: any;
+  handleReCaptcha?: any;
+  enableReCaptcha?: any;
 }
 export interface ProfileParams {
   navigation?: any;
@@ -248,8 +250,8 @@ export interface OrdersOptionParams {
   navigation?: any,
   loadOrders?: any,
   setOrderList?: any,
-  setOrdersLength?: ({activeOrdersLength, previousOrdersLength} : {activeOrdersLength: number, previousOrdersLength: number}) => void,
-  ordersLength: {activeOrdersLength: number, previousOrdersLength: number}
+  setOrdersLength?: ({ activeOrdersLength, previousOrdersLength }: { activeOrdersLength: number, previousOrdersLength: number }) => void,
+  ordersLength: { activeOrdersLength: number, previousOrdersLength: number }
 }
 export interface ActiveOrdersParams {
   orders?: any,
@@ -347,7 +349,7 @@ export interface MessagesParams {
   messages?: any,
   message?: string,
   image?: string,
-  messagesToShow?: any ,
+  messagesToShow?: any,
   sendMessage?: any,
   handleSend?: () => {},
   setImage?: (image: string | null) => {},
@@ -416,7 +418,7 @@ export interface UpsellingProductsParams {
   setOpenUpselling?: any;
   onRedirect?: any;
   businessId?: number;
-  cartProducts?: Array<any>; 
+  cartProducts?: Array<any>;
   handleUpsellingPage: () => void;
   openUpselling: boolean;
   canOpenUpselling?: boolean;
@@ -424,16 +426,16 @@ export interface UpsellingProductsParams {
 }
 
 export interface GoogleMapsParams {
-  location: {lat: number, lng: number}
-  handleChangeAddressMap?: (address : any, details : any) => void
-  setErrors?: (error : string) => void
+  location: { lat: number, lng: number }
+  handleChangeAddressMap?: (address: any, details: any) => void
+  setErrors?: (error: string) => void
   maxLimitLocation?: number
   readOnly?: boolean
   markerTitle?: string,
   saveLocation?: boolean,
   isSetInputs?: boolean,
   locations?: Array<any>,
-  setSaveLocation?: (val : boolean) => void,
+  setSaveLocation?: (val: boolean) => void,
   handleToggleMap?: () => void
 }
 
@@ -481,7 +483,7 @@ export interface HelpAccountAndPaymentParams {
 
 export interface StripeMethodFormParams {
   cart: any;
-  handleSource: ({id, card} : {id : string, card : any}) => void;
+  handleSource: ({ id, card }: { id: string, card: any }) => void;
   onCancel: () => void;
   setErrors: (error: string) => void;
   paymethod: string;
