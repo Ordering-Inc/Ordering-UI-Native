@@ -9,13 +9,20 @@ import {
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
 import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { OText, OIcon } from '../shared';
+import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { OText } from '../shared';
 import FastImage from 'react-native-fast-image'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { shape } from '../../utils';
 
-const SinguleProductCardUI = (props: SingleProductCardParams) => {
+function SingleProductCardPropsAreEqual(prevProps: any, nextProps: any) {
+	return JSON.stringify(prevProps.product) === JSON.stringify(nextProps.product) &&
+		prevProps.isSoldOut === nextProps.isSoldOut &&
+		prevProps.productAddedToCartLength === nextProps.productAddedToCartLength &&
+		prevProps.categoryState === nextProps.categoryState
+}
+
+const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const {
 		product,
 		isSoldOut,
@@ -188,9 +195,13 @@ const SinguleProductCardUI = (props: SingleProductCardParams) => {
 						resizeMode={FastImage.resizeMode.cover}
 					/>
 				) : (
-					<OIcon
-						src={theme?.images?.dummies?.product}
+					<FastImage
 						style={styles.productStyle}
+						source={{
+							uri: Image.resolveAssetSource(theme.images.dummies.product).uri,
+							priority: FastImage.priority.normal,
+						}}
+						resizeMode={FastImage.resizeMode.cover}
 					/>
 				)}
 			</LogoWrapper>
@@ -204,7 +215,7 @@ const SinguleProductCardUI = (props: SingleProductCardParams) => {
 			)}
 		</CardContainer>
 	);
-};
+}, SingleProductCardPropsAreEqual);
 
 export const SingleProductCard = (props: SingleProductCardParams) => {
 	const singleProductCardProps = {
