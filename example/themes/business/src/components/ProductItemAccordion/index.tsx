@@ -153,7 +153,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                 {(
                   productInfo?.()?.ingredients?.length > 0 ||
                   productInfo?.()?.options?.length > 0 ||
-                  product.comment
+                  !!product.comment
                 ) && !isClickableEvent && (
                     <MaterialCommunityIcon name="chevron-down" size={12} />
                   )}
@@ -278,7 +278,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
               </ProductOptionsList>
             )}
 
-            {product.comment && (
+            {!!product.comment && (
               <ProductComment>
                 <OText
                   size={12}
