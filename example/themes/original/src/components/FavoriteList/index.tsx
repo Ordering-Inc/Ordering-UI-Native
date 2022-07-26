@@ -14,6 +14,7 @@ import { Container, WrappButton } from './styles'
 import { OButton } from '../shared';
 import { BusinessController } from '../BusinessController';
 import { SingleProductCard } from '../SingleProductCard';
+import moment from 'moment';
 
 
 const FavoriteListUI = (props: FavoriteParams) => {
@@ -103,55 +104,91 @@ const FavoriteListUI = (props: FavoriteParams) => {
     });
   }
 
+  const BusinessSkeleton = () => {
+    return (
+      <Placeholder
+        Animation={Fade}
+        style={{ marginBottom: 20 }}>
+        <View style={{ width: '100%' }}>
+          <PlaceholderLine
+            height={200}
+            style={{ marginBottom: 20, borderRadius: 25 }}
+          />
+          <View style={{ paddingHorizontal: 10 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <PlaceholderLine
+                height={25}
+                width={40}
+                style={{ marginBottom: 10 }}
+              />
+              <PlaceholderLine
+                height={25}
+                width={20}
+                style={{ marginBottom: 10 }}
+              />
+            </View>
+            <PlaceholderLine
+              height={20}
+              width={30}
+              style={{ marginBottom: 10 }}
+            />
+            <PlaceholderLine
+              height={20}
+              width={80}
+              style={{ marginBottom: 10 }}
+            />
+          </View>
+        </View>
+      </Placeholder>
+    )
+  }
+
+  const ProductSkeleton = () => {
+    return (
+      <Placeholder style={{ padding: 5 }} Animation={Fade}>
+        <View style={{ flexDirection: 'row' }}>
+          <PlaceholderLine
+            width={24}
+            height={70}
+            style={{ marginRight: 10, marginBottom: 10 }}
+          />
+          <Placeholder style={{ paddingVertical: 10 }}>
+            <PlaceholderLine width={60} style={{ marginBottom: 25 }} />
+            <PlaceholderLine width={20} />
+          </Placeholder>
+        </View>
+      </Placeholder>
+    )
+  }
+
+  const OrderSkeleton = () => {
+    return (
+      <Placeholder style={{ padding: 5 }} Animation={Fade}>
+        <View style={{ flexDirection: 'row' }}>
+          <PlaceholderLine
+            width={24}
+            height={70}
+            style={{ marginRight: 10, marginBottom: 10 }}
+          />
+          <Placeholder style={{ paddingVertical: 10 }}>
+            <PlaceholderLine width={60} style={{ marginBottom: 25 }} />
+            <PlaceholderLine width={20} />
+          </Placeholder>
+        </View>
+      </Placeholder>
+    )
+  }
+
 	return (
 		<Container>
       {isBusiness && (
         <>
-          {favoriteList?.loading && (
-            [...Array(5).keys()].map(i => (
-              <Placeholder
-                Animation={Fade}
-                key={i}
-                style={{ marginBottom: 20 }}>
-                <View style={{ width: '100%' }}>
-                  <PlaceholderLine
-                    height={200}
-                    style={{ marginBottom: 20, borderRadius: 25 }}
-                  />
-                  <View style={{ paddingHorizontal: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <PlaceholderLine
-                        height={25}
-                        width={40}
-                        style={{ marginBottom: 10 }}
-                      />
-                      <PlaceholderLine
-                        height={25}
-                        width={20}
-                        style={{ marginBottom: 10 }}
-                      />
-                    </View>
-                    <PlaceholderLine
-                      height={20}
-                      width={30}
-                      style={{ marginBottom: 10 }}
-                    />
-                    <PlaceholderLine
-                      height={20}
-                      width={80}
-                      style={{ marginBottom: 10 }}
-                    />
-                  </View>
-                </View>
-              </Placeholder>
-            ))
-          )}
-          {!favoriteList?.loading && favoriteList?.favorites?.length > 0 && (
-            favoriteList.favorites.map((business: any, i:number) => (
+          {favoriteList?.favorites?.length > 0 && (
+            favoriteList.favorites?.sort((a: any, b: any) => a?.name?.toLowerCase() > b?.name?.toLowerCase()).map((business: any, i:number) => (
               <BusinessController
                 key={`${business.id}_` + i}
                 business={business}
@@ -171,41 +208,35 @@ const FavoriteListUI = (props: FavoriteParams) => {
               />
             ))
           )}
+          {favoriteList?.loading && (
+            [...Array(5).keys()].map(i => (
+              <BusinessSkeleton key={i} />
+            ))
+          )}
         </>
       )}
 
       {isOrder && (
         <>
-          {favoriteList?.loading && (
-            [...Array(5).keys()].map(i => (
-              <Placeholder key={i} style={{ padding: 5 }} Animation={Fade}>
-                <View style={{ flexDirection: 'row' }}>
-                  <PlaceholderLine
-                    width={24}
-                    height={70}
-                    style={{ marginRight: 10, marginBottom: 10 }}
-                  />
-                  <Placeholder style={{ paddingVertical: 10 }}>
-                    <PlaceholderLine width={60} style={{ marginBottom: 25 }} />
-                    <PlaceholderLine width={20} />
-                  </Placeholder>
-                </View>
-              </Placeholder>
+          {favoriteList?.favorites?.length > 0 && (
+            favoriteList.favorites?.sort((a: any, b:any) => moment(a?.delivery_datetime_utc).valueOf() - moment(b?.delivery_datetime_utc).valueOf())
+              .map((order: any, i: number) => (
+                <SingleOrderCard
+                  key={`${order?.id}_${i}`}
+                  order={order}
+                  getOrderStatus={getOrderStatus}
+                  onNavigationRedirect={onNavigationRedirect}
+                  pastOrders={pastOrders.includes(order?.status)}
+                  handleUpdateOrderList={handleUpdateFavoriteList}
+                  handleUpdateFavoriteList={handleUpdateFavoriteList}
+                  handleReorder={handleReorder}
+                  reorderLoading={reorderState?.loading}
+                />
             ))
           )}
-          {!favoriteList?.loading && favoriteList?.favorites?.length > 0 && (
-            favoriteList.favorites.map((order: any, i: number) => (
-              <SingleOrderCard
-                key={`${order?.id}_${i}`}
-                order={order}
-                getOrderStatus={getOrderStatus}
-                onNavigationRedirect={onNavigationRedirect}
-                pastOrders={pastOrders.includes(order?.status)}
-                handleUpdateOrderList={handleUpdateFavoriteList}
-                handleUpdateFavoriteList={handleUpdateFavoriteList}
-                handleReorder={handleReorder}
-                reorderLoading={reorderState?.loading}
-              />
+          {favoriteList?.loading && (
+            [...Array(5).keys()].map(i => (
+              <OrderSkeleton key={i} />
             ))
           )}
         </>
@@ -213,25 +244,8 @@ const FavoriteListUI = (props: FavoriteParams) => {
 
       {isProduct && (
         <>
-          {favoriteList?.loading && (
-            [...Array(5).keys()].map(i => (
-              <Placeholder key={i} style={{ padding: 5 }} Animation={Fade}>
-                <View style={{ flexDirection: 'row' }}>
-                  <PlaceholderLine
-                    width={24}
-                    height={70}
-                    style={{ marginRight: 10, marginBottom: 10 }}
-                  />
-                  <Placeholder style={{ paddingVertical: 10 }}>
-                    <PlaceholderLine width={60} style={{ marginBottom: 25 }} />
-                    <PlaceholderLine width={20} />
-                  </Placeholder>
-                </View>
-              </Placeholder>
-            ))
-          )}
-          {!favoriteList?.loading && favoriteList?.favorites?.length > 0 && (
-            favoriteList.favorites.map((product: any, i: number) => (
+          {favoriteList?.favorites?.length > 0 && (
+            favoriteList.favorites?.sort((a: any, b: any) => a?.name?.toLowerCase() > b?.name?.toLowerCase()).map((product: any, i: number) => (
               <SingleProductCard
                 key={`${product?.id}_${i}`}
                 isSoldOut={product.inventoried && !product.quantity}
@@ -239,6 +253,11 @@ const FavoriteListUI = (props: FavoriteParams) => {
                 onProductClick={() => {}}
                 handleUpdateProducts={handleUpdateFavoriteList}
               />
+            ))
+          )}
+          {favoriteList?.loading && (
+            [...Array(5).keys()].map(i => (
+              <ProductSkeleton key={i} />
             ))
           )}
         </>

@@ -247,17 +247,17 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   let isToFollow = false;
   let isBusinessMarker = false;
 
-  if (order?.status === 7 || order?.status === 8) {
+  if (order?.status === 7 || order?.status === 8 || order?.status === 18) {
     const markerBusiness = 'Business';
     isBusinessMarker = true;
     locationMarker = locations.find(
       (location: any) => location.type === markerBusiness,
     );
 
-    if (order?.status === 8) {
+    if (order?.status === 8 || order?.status === 18) {
       isToFollow = true;
     }
-  } else if (order?.status === 3 || order?.status === 9) {
+  } else if (order?.status === 3 || order?.status === 9 || order?.status === 19 || order?.status === 23) {
     const markerCustomer = 'Customer';
     isToFollow = true;
     isBusinessMarker = false;

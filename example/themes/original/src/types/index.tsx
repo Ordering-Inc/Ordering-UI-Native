@@ -605,6 +605,9 @@ export interface BusinessSearchParams {
 	setFilters: (filters: any) => void,
 	lazySearch?: boolean,
 	brandList?: any;
+	onNavigationRedirect?: any,
+	handleUpdateProducts: any,
+	handleUpdateBusinessList?: any;
 }
 
 export interface NoNetworkParams {

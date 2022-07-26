@@ -29,8 +29,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		onProductClick,
 		productAddedToCartLength,
 		style,
-		handleFavoriteProduct,
-		handleUpdateProducts
+		handleFavoriteProduct
 	} = props;
 
 	const theme = useTheme();
