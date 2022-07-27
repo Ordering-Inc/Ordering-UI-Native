@@ -7,11 +7,12 @@ import { ListWrapper } from './styles'
 import {
   View,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from 'react-native';
 import { PreviousBusinessOrderedParams } from '../../../types';
 
-export const PreviousBusinessOrderedUI = (props : PreviousBusinessOrderedParams) => {
+export const PreviousBusinessOrderedUI = (props: PreviousBusinessOrderedParams) => {
   const {
     navigation,
     businessesList,
@@ -23,6 +24,8 @@ export const PreviousBusinessOrderedUI = (props : PreviousBusinessOrderedParams)
   } = props
 
   const [orderState] = useOrder()
+  const windowWidth = Dimensions.get('window').width;
+
   const onBusinessClick = (business: any) => {
     onNavigationRedirect('Business', { store: business.slug })
   }
@@ -120,7 +123,7 @@ export const PreviousBusinessOrderedUI = (props : PreviousBusinessOrderedParams)
         <>
           {!businessLoading && (
             <BusinessControllerList
-              style={{ width: 320, marginRight: 20 }}
+              style={{ width: windowWidth - 80, marginRight: 20 }}
             />
           )}
         </>
@@ -137,7 +140,7 @@ export const PreviousBusinessOrderedUI = (props : PreviousBusinessOrderedParams)
   )
 }
 
-export const PreviousBusinessOrdered = (props) => {
+export const PreviousBusinessOrdered = (props: PreviousBusinessOrderedParams) => {
   const previousBusinessOrderedController = {
     ...props,
     UIComponent: PreviousBusinessOrderedUI,

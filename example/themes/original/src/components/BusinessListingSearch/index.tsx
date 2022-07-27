@@ -55,6 +55,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   } = props
 
   const screenHeight = Dimensions.get('window').height;
+  const screenWidth = Dimensions.get('window').width;
   const theme = useTheme()
   const [orderState] = useOrder()
   const { top } = useSafeAreaInsets();
@@ -339,7 +340,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
             handleCustomClick={() => onBusinessClick(business)}
             handleUpdateBusinessList={handleUpdateBusinessList}
             orderType={orderState?.options?.type}
-            style={{ width: 320, marginRight: (businessesSearchList.loading || i !== businessesSearchList.businesses?.length - 1) ? 20 : 0 }}
+            style={{ width: screenWidth - 80, marginRight: (businessesSearchList.loading || i !== businessesSearchList.businesses?.length - 1) ? 20 : 0 }}
           />
         ))}
         {!businessesSearchList.loading && paginationProps?.totalPages && paginationProps?.currentPage < paginationProps?.totalPages && (
@@ -411,7 +412,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                   onProductClick={() => { }}
                   productAddedToCartLength={0}
                   handleUpdateProducts={(productId: number, changes: any) => handleUpdateProducts(productId, category?.id, business?.id, changes)}
-                  style={{ width: 320, marginRight: i === category?.products?.length - 1 ? 0 : 20 }}
+                  style={{ width: screenWidth - 80, marginRight: i === category?.products?.length - 1 ? 0 : 20 }}
                 />
               )))}
 

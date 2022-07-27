@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet, Dimensions } from 'react-native'
 import {
   ListWrapper
 } from './styles'
@@ -7,12 +7,14 @@ import {
 import { SingleProductCard } from '../../SingleProductCard'
 import { PreviousProductsOrderedParams } from '../../../types'
 
-export const PreviousProductsOrdered = (props : PreviousProductsOrderedParams) => {
+export const PreviousProductsOrdered = (props: PreviousProductsOrderedParams) => {
   const {
     products,
     onProductClick,
     isBusinessesSearchList
   } = props
+
+  const windowWidth = Dimensions.get('window').width;
 
   const styles = StyleSheet.create({
     container: {
@@ -24,15 +26,15 @@ export const PreviousProductsOrdered = (props : PreviousProductsOrderedParams) =
     return (
       <>
         {products?.map((product: any) => (
-          <SingleProductCard
-            key={product?.id}
-            isSoldOut={(product.inventoried && !product.quantity)}
-            product={product}
-            businessId={product?.business?.id}
-            onProductClick={onProductClick}
-            style={style}
-            productAddedToCartLength={0}
-          />
+            <SingleProductCard
+              key={product?.id}
+              isSoldOut={(product.inventoried && !product.quantity)}
+              product={product}
+              businessId={product?.business?.id}
+              onProductClick={onProductClick}
+              style={style}
+              productAddedToCartLength={0}
+            />
         ))}
       </>
     )
@@ -40,7 +42,7 @@ export const PreviousProductsOrdered = (props : PreviousProductsOrderedParams) =
   return (
     <ScrollView horizontal={isBusinessesSearchList} style={styles.container} showsVerticalScrollIndicator={false}>
       {isBusinessesSearchList ? (
-        <ProductList style={{ width: 320, marginRight: 20 }} />
+        <ProductList style={{ width: windowWidth - 80, marginRight: 20 }} />
       ) : (
         <ListWrapper isBusinessesSearchList={isBusinessesSearchList}>
           <ProductList />
