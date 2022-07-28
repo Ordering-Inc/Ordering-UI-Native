@@ -8,6 +8,7 @@ import {
 	Dimensions
 } from 'react-native';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
+import { OButton } from '../shared'
 import {
 	BusinessTypeFilter as BusinessTypeFilterController,
 	useLanguage,
@@ -17,6 +18,7 @@ import {
 	BusinessCategories,
 	Category,
 	BCContainer,
+	ServiceWrapper
 } from './styles';
 import { OIcon, OText, OModal } from '../shared';
 import { BusinessTypeFilterParams } from '../../types';
@@ -28,7 +30,8 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 		typesState, 
 		currentTypeSelected, 
 		handleChangeBusinessType,
-		setBusinessTypes
+		setBusinessTypes,
+		isAppoint
 	} = props;
 
 	const [, t] = useLanguage();
@@ -41,6 +44,15 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 		  setBusinessTypes && setBusinessTypes(typesState?.types)
 		}
 	  }, [typesState])
+
+	const handleChangeServiceType = (serviceId: any) => {
+		if (serviceId === currentTypeSelected) {
+			handleChangeBusinessType(null)
+			return
+		}
+		handleChangeBusinessType(serviceId)
+		isOpenAllCategories && setIsOpenAllCategories(false)
+	}
 
 	const renderTypes = ({ item }: any) => {
 		return (
@@ -72,48 +84,95 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 
 	return (
 		<>
-			<BCContainer>
-				{typesState?.loading && (
-					<View>
-						<Placeholder style={{ marginVertical: 10 }} Animation={Fade}>
-							<ScrollView
-								horizontal
-								showsVerticalScrollIndicator={false}
-								showsHorizontalScrollIndicator={false}>
-								{[...Array(4)].map((_, i) => (
-									<View
-										key={i}
-										style={{ width: 80, borderRadius: 10, marginRight: 15 }}>
-										<PlaceholderLine height={80} noMargin />
-									</View>
-								))}
-							</ScrollView>
-						</Placeholder>
-					</View>
-				)}
-				{!typesState?.loading &&
-					!typesState?.error &&
-					typesState?.types &&
-					typesState?.types.length > 0 && (
-						<>
-							<BusinessCategories>
-								<FlatList
+			{isAppoint ? (
+				<>
+					{typesState?.loading && (
+						<View>
+							<Placeholder Animation={Fade}>
+								<ScrollView
 									horizontal
-									showsHorizontalScrollIndicator={false}
-									data={typesState?.types}
-									renderItem={renderTypes}
-									keyExtractor={(type, index) => `${type.name}_${index}`}
-								/>
-								<TouchableOpacity
-									style={{ marginLeft: 15 }}
-									onPress={() => setIsOpenAllCategories(true)}
-								>
-									<OText size={12} color={theme.colors.primary}>{t('SEE_ALL', 'See All')}</OText>
-								</TouchableOpacity>
-							</BusinessCategories>
-						</>
+									showsVerticalScrollIndicator={false}
+									showsHorizontalScrollIndicator={false}>
+									{[...Array(4)].map((_, i) => (
+										<View
+											key={i}
+											style={{ width: 80, borderRadius: 50, marginRight: 10 }}>
+											<PlaceholderLine height={25} noMargin />
+										</View>
+									))}
+								</ScrollView>
+							</Placeholder>
+						</View>
 					)}
-			</BCContainer>
+					{
+						!typesState?.loading &&
+						!typesState?.error &&
+						typesState?.types &&
+						typesState?.types.length > 0 && (
+							<ServiceWrapper
+								showsVerticalScrollIndicator={false}
+								showsHorizontalScrollIndicator={false}
+								horizontal
+							>
+								{typesState?.types.length > 0 && typesState?.types.map((businessType: any, i: number) => (
+									<OButton
+										key={i}
+										bgColor={(currentTypeSelected === businessType?.id) ? theme.colors.primary : theme.colors.backgroundGray200}
+										onClick={() => handleChangeServiceType(businessType?.id)}
+										text={`${businessType?.name} ${(currentTypeSelected === businessType?.id) ? ' X' : ''}`}
+										style={styles.businessType}
+										textStyle={{ fontSize: 10, color: (currentTypeSelected === businessType?.id) ? theme.colors.backgroundLight : theme.colors.textNormal }}
+									/>
+								))}
+							</ServiceWrapper>
+						)
+					}
+				</>
+			) : (
+				<BCContainer>
+					{typesState?.loading && (
+						<View>
+							<Placeholder style={{ marginVertical: 10 }} Animation={Fade}>
+								<ScrollView
+									horizontal
+									showsVerticalScrollIndicator={false}
+									showsHorizontalScrollIndicator={false}>
+									{[...Array(4)].map((_, i) => (
+										<View
+											key={i}
+											style={{ width: 80, borderRadius: 10, marginRight: 15 }}>
+											<PlaceholderLine height={80} noMargin />
+										</View>
+									))}
+								</ScrollView>
+							</Placeholder>
+						</View>
+					)}
+					{!typesState?.loading &&
+						!typesState?.error &&
+						typesState?.types &&
+						typesState?.types.length > 0 && (
+							<>
+								<BusinessCategories>
+									<FlatList
+										horizontal
+										showsHorizontalScrollIndicator={false}
+										data={typesState?.types}
+										renderItem={renderTypes}
+										keyExtractor={(type, index) => `${type.name}_${index}`}
+									/>
+									<TouchableOpacity
+										style={{ marginLeft: 15 }}
+										onPress={() => setIsOpenAllCategories(true)}
+									>
+										<OText size={12} color={theme.colors.primary}>{t('SEE_ALL', 'See All')}</OText>
+									</TouchableOpacity>
+								</BusinessCategories>
+							</>
+						)}
+				</BCContainer>
+			)}
+
 			<OModal
 				open={isOpenAllCategories}
 				onClose={() => setIsOpenAllCategories(false)}
@@ -195,6 +254,15 @@ const styles = StyleSheet.create({
 	allCategoriesWrapper: {
 		flexDirection: 'row',
 		flexWrap: 'wrap',
+	},
+	businessType: {
+		marginRight: 10,
+		borderRadius: 50,
+		paddingVertical: 4,
+		paddingLeft: 5,
+		paddingRight: 5,
+		height: 27,
+		borderWidth: 0
 	}
 });
 
