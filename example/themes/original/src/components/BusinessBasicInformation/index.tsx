@@ -223,7 +223,7 @@ export const BusinessBasicInformation = (
 				<WrapReviews>
 					{!isBusinessInfoShow && (
 						<>
-							{isPreOrder && (
+							{isPreOrder && (!business?.professionals || business?.professionals?.length === 0) && (
 								<>
 									<TouchableOpacity onPress={() => navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })}>
 										<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>

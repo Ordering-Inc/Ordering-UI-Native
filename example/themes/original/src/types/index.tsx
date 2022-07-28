@@ -155,6 +155,9 @@ export interface BusinessesListingParams {
 	businessId?: any;
 	isGuestUser?: any;
 	handleUpdateBusinessList?: any;
+	priceLevelSelected?: any;
+	handleChangePriceLevel?: any;
+	businessTypeSelected?: any;
 }
 export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
@@ -173,7 +176,8 @@ export interface BusinessTypeFilterParams {
 	defaultBusinessType?: string | null;
 	images?: any
 	typesState?: any
-	setBusinessTypes?: any
+	setBusinessTypes?: any,
+	isAppoint?: boolean | undefined
 }
 export interface BusinessControllerParams {
 	key?: string | number;
@@ -221,6 +225,8 @@ export interface BusinessProductsListingParams {
 	setProductLogin?: () => {};
 	updateProductModal?: (value: any) => {};
 	handleUpdateProducts?: any;
+	professionalSelected?: any;
+	handleChangeProfessionalSelected?: any;
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -681,6 +687,30 @@ export interface PreviousBusinessOrderedParams {
 	onNavigationRedirect?: any,
 	isBusinessesSearchList?: any,
 	businessLoading?: boolean
+}
+
+export interface ServiceFormParams {
+	navigation?: any,
+	professionalSelected: any,
+	product: any,
+	handleSave: (value?: any) => {}
+	productCart?: any
+	isSoldOut: boolean,
+	maxProductQuantity: any,
+	businessSlug?: string,
+	onClose: any
+}
+
+export interface ProfessionalFilterParams {
+	professionals?: any,
+	professionalSelected?: any,
+	handleChangeProfessionalSelected: any
+}
+
+export interface ProfessionalProfileParams {
+	professional: any,
+	handleChangeProfessionalSelected: any,
+	onClose: any
 }
 
 export interface PreviousProductsOrderedParams {

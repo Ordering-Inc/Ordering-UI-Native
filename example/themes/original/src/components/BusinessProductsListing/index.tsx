@@ -26,11 +26,14 @@ import {
 	BusinessProductsListingContainer,
 	FiltProductsContainer,
 	ContainerSafeAreaView,
-	BackgroundGray
+	BackgroundGray,
+	ProfessionalFilterWrapper
 } from './styles'
 import { FloatingButton } from '../FloatingButton'
 import { UpsellingRedirect } from './UpsellingRedirect'
 import Animated from 'react-native-reanimated'
+import { ProfessionalFilter } from '../ProfessionalFilter';
+import { ServiceForm } from '../ServiceForm';
 
 const PIXELS_TO_SCROLL = 2000
 
@@ -53,7 +56,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		setAlertState,
 		multiRemoveProducts,
 		getNextProducts,
-		handleUpdateProducts
+		handleUpdateProducts,
+		professionalSelected,
+		handleChangeProfessionalSelected
 	} = props
 
 	const theme = useTheme();
@@ -101,6 +106,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [productListLayout, setProductListLayout] = useState<any>(null)
 	const [isCategoryClicked, setCategoryClicked] = useState(false)
 	const [subcategoriesSelected, setSubcategoriesSelected] = useState([])
+	const [openService, setOpenService] = useState(false)
+	const [currentProduct, setCurrentProduct] = useState(null)
 
 	const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
@@ -111,6 +118,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const onProductClick = (product: any) => {
+		if (product?.type === 'service' && professionalSelected) {
+			setCurrentProduct(product)
+			setOpenService(true)
+			return
+		}
 		onRedirect('ProductDetails', {
 			product: product,
 			businessSlug: business.slug,
@@ -210,228 +222,263 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}, [currentCart])
 
 	return (
-		<ContainerSafeAreaView
-			style={{ flex: 1 }}
-			isOpenFiltProducts={isOpenFiltProducts}
-		>
-			<Animated.View style={{ position: 'relative' }}>
-				<TopHeader isIos={Platform.OS === 'ios'}>
-					{!isOpenSearchBar && (
-						<>
-							<View style={{ ...styles.headerItem, flex: 1 }}>
-								<OButton
-									imgLeftSrc={theme.images.general.arrow_left}
-									imgRightSrc={null}
-									style={styles.btnBackArrow}
-									onClick={() => handleBackNavigation()}
-									imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
+		<>
+					<ContainerSafeAreaView
+				style={{ flex: 1 }}
+				isOpenFiltProducts={isOpenFiltProducts}
+			>
+				<Animated.View style={{ position: 'relative' }}>
+					<TopHeader isIos={Platform.OS === 'ios'}>
+						{!isOpenSearchBar && (
+							<>
+								<View style={{ ...styles.headerItem, flex: 1 }}>
+									<OButton
+										imgLeftSrc={theme.images.general.arrow_left}
+										imgRightSrc={null}
+										style={styles.btnBackArrow}
+										onClick={() => handleBackNavigation()}
+										imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
+									/>
+								</View>
+								{!errorQuantityProducts && (
+									<View style={{ ...styles.headerItem }}>
+										<TouchableOpacity
+											onPress={() => setIsOpenSearchBar(true)}
+											style={styles.searchIcon}
+										>
+											<OIcon src={theme.images.general.search} color={theme.colors.textNormal} width={16} />
+										</TouchableOpacity>
+									</View>
+								)}
+							</>
+						)}
+						{isOpenSearchBar && (
+							<WrapSearchBar>
+								<SearchBar
+									onSearch={handleChangeSearch}
+									onCancel={() => handleCancel()}
+									isCancelXButtonShow
+									noBorderShow
+									placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
+									lazyLoad={businessState?.business?.lazy_load_products_recommended}
+								/>
+							</WrapSearchBar>
+						)}
+					</TopHeader>
+				</Animated.View>
+
+				{business?.categories?.length > 0 && isOpenFiltProducts && (
+						<FiltProductsContainer
+							isIos={Platform.OS === 'ios'}
+							style={{
+								height: Dimensions.get('window').height - filtProductsHeight
+							}}
+						>
+							<View style={{ padding: 20, backgroundColor: theme.colors.white }}>
+								<BusinessProductsList
+									categories={[
+										{ id: null, name: t('ALL', 'All') },
+										{ id: 'featured', name: t('FEATURED', 'Featured') },
+										...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
+									]}
+									category={categorySelected}
+									categoryState={categoryState}
+									businessId={business.id}
+									errors={errors}
+									onProductClick={onProductClick}
+									handleSearchRedirect={handleSearchRedirect}
+									featured={featuredProducts}
+									searchValue={searchValue}
+									handleClearSearch={handleChangeSearch}
+									errorQuantityProducts={errorQuantityProducts}
+									handleCancelSearch={handleCancel}
+									categoriesLayout={categoriesLayout}
+									subcategoriesSelected={subcategoriesSelected}
+									lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
+									setCategoriesLayout={setCategoriesLayout}
+									currentCart={currentCart}
+									setSubcategoriesSelected={setSubcategoriesSelected}
+									onClickCategory={handleChangeCategory}
+									handleUpdateProducts={handleUpdateProducts}
+									isFiltMode
 								/>
 							</View>
-							{!errorQuantityProducts && (
-								<View style={{ ...styles.headerItem }}>
-									<TouchableOpacity
-										onPress={() => setIsOpenSearchBar(true)}
-										style={styles.searchIcon}
-									>
-										<OIcon src={theme.images.general.search} color={theme.colors.textNormal} width={16} />
-									</TouchableOpacity>
-								</View>
+						</FiltProductsContainer>
+				)}
+				{isOpenFiltProducts && (
+					<BackgroundGray />
+				)}
+				<BusinessProductsListingContainer
+					stickyHeaderIndices={[2]}
+					style={styles.mainContainer}
+					ref={scrollViewRef}
+					isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
+					onScroll={handlePageScroll}
+					onScrollBeginDrag={handleTouchDrag}
+					scrollEventThrottle={16}
+				>
+					<BusinessBasicInformation
+						navigation={navigation}
+						businessState={businessState}
+						openBusinessInformation={openBusinessInformation}
+						header={header}
+						logo={logo}
+						isPreOrder={isPreOrder}
+					/>
+					{business?.professionals?.length > 0 && (
+						<ProfessionalFilterWrapper>
+							<OText
+								size={16}
+								style={{ marginBottom: 16 }}
+								weight={Platform.OS === 'ios' ? '600' : 'bold'}
+							>
+								{t('PROFESSIONALS', 'Professionals')}
+							</OText>
+							<ProfessionalFilter
+								professionals={business?.professionals}
+								professionalSelected={professionalSelected}
+								handleChangeProfessionalSelected={handleChangeProfessionalSelected}
+							/>
+						</ProfessionalFilterWrapper>
+					)}
+					<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
+					{!loading && business?.id && (
+						<>
+							{!(business?.categories?.length === 0) && (
+								<BusinessProductsCategories
+									categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
+									categorySelected={categorySelected}
+									onClickCategory={handleChangeCategory}
+									featured={featuredProducts}
+									openBusinessInformation={openBusinessInformation}
+									scrollViewRef={scrollViewRef}
+									productListLayout={productListLayout}
+									categoriesLayout={categoriesLayout}
+									selectedCategoryId={selectedCategoryId}
+									lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
+									setSelectedCategoryId={setSelectedCategoryId}
+									setCategoryClicked={setCategoryClicked}
+
+								/>
 							)}
 						</>
 					)}
-					{isOpenSearchBar && (
-						<WrapSearchBar>
-							<SearchBar
-								onSearch={handleChangeSearch}
-								onCancel={() => handleCancel()}
-								isCancelXButtonShow
-								noBorderShow
-								placeholder={t('SEARCH_PRODUCTS', 'Search Products')}
-								lazyLoad={businessState?.business?.lazy_load_products_recommended}
-							/>
-						</WrapSearchBar>
+					{!loading && business?.id && (
+						<>
+							<WrapContent
+								onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}
+							>
+								<BusinessProductsList
+									categories={[
+										{ id: null, name: t('ALL', 'All') },
+										{ id: 'featured', name: t('FEATURED', 'Featured') },
+										...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
+									]}
+									category={categorySelected}
+									categoryState={categoryState}
+									businessId={business.id}
+									errors={errors}
+									onProductClick={onProductClick}
+									handleSearchRedirect={handleSearchRedirect}
+									featured={featuredProducts}
+									searchValue={searchValue}
+									handleClearSearch={handleChangeSearch}
+									errorQuantityProducts={errorQuantityProducts}
+									handleCancelSearch={handleCancel}
+									categoriesLayout={categoriesLayout}
+									subcategoriesSelected={subcategoriesSelected}
+									lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
+									setCategoriesLayout={setCategoriesLayout}
+									currentCart={currentCart}
+									setSubcategoriesSelected={setSubcategoriesSelected}
+									onClickCategory={handleChangeCategory}
+									handleUpdateProducts={handleUpdateProducts}
+								/>
+							</WrapContent>
+						</>
 					)}
-				</TopHeader>
-			</Animated.View>
-
-			{business?.categories?.length > 0 && isOpenFiltProducts && (
-					<FiltProductsContainer
-						isIos={Platform.OS === 'ios'}
-						style={{
-							height: Dimensions.get('window').height - filtProductsHeight
-						}}
-					>
-						<View style={{ padding: 20, backgroundColor: theme.colors.white }}>
-							<BusinessProductsList
-								categories={[
-									{ id: null, name: t('ALL', 'All') },
-									{ id: 'featured', name: t('FEATURED', 'Featured') },
-									...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
-								]}
-								category={categorySelected}
-								categoryState={categoryState}
-								businessId={business.id}
-								errors={errors}
-								onProductClick={onProductClick}
-								handleSearchRedirect={handleSearchRedirect}
-								featured={featuredProducts}
-								searchValue={searchValue}
-								handleClearSearch={handleChangeSearch}
-								errorQuantityProducts={errorQuantityProducts}
-								handleCancelSearch={handleCancel}
-								categoriesLayout={categoriesLayout}
-								subcategoriesSelected={subcategoriesSelected}
-								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
-								setCategoriesLayout={setCategoriesLayout}
-								currentCart={currentCart}
-								setSubcategoriesSelected={setSubcategoriesSelected}
-								onClickCategory={handleChangeCategory}
-								handleUpdateProducts={handleUpdateProducts}
-								isFiltMode
-							/>
-						</View>
-					</FiltProductsContainer>
-			)}
-			{isOpenFiltProducts && (
-				<BackgroundGray />
-			)}
-			<BusinessProductsListingContainer
-				stickyHeaderIndices={[2]}
-				style={styles.mainContainer}
-				ref={scrollViewRef}
-				isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
-				onScroll={handlePageScroll}
-				onScrollBeginDrag={handleTouchDrag}
-				scrollEventThrottle={16}
-			>
-				<BusinessBasicInformation
-					navigation={navigation}
-					businessState={businessState}
-					openBusinessInformation={openBusinessInformation}
-					header={header}
-					logo={logo}
-					isPreOrder={isPreOrder}
-				/>
-				<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
-				{!loading && business?.id && (
-					<>
-						{!(business?.categories?.length === 0) && (
+					{loading && !error && (
+						<>
 							<BusinessProductsCategories
-								categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
+								categories={[]}
 								categorySelected={categorySelected}
 								onClickCategory={handleChangeCategory}
 								featured={featuredProducts}
 								openBusinessInformation={openBusinessInformation}
-								scrollViewRef={scrollViewRef}
-								productListLayout={productListLayout}
-								categoriesLayout={categoriesLayout}
-								selectedCategoryId={selectedCategoryId}
-								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
-								setSelectedCategoryId={setSelectedCategoryId}
-								setCategoryClicked={setCategoryClicked}
-
+								loading={loading}
 							/>
-						)}
-					</>
+							<WrapContent>
+								<BusinessProductsList
+									categories={[]}
+									category={categorySelected}
+									categoryState={categoryState}
+									isBusinessLoading={loading}
+									errorQuantityProducts={errorQuantityProducts}
+									handleUpdateProducts={handleUpdateProducts}
+								/>
+							</WrapContent>
+						</>
+					)}
+				</BusinessProductsListingContainer>
+				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
+					<FloatingButton
+						btnText={
+							openUpselling
+								? t('LOADING', 'Loading')
+								: currentCart?.subtotal >= currentCart?.minimum
+									? t('VIEW_ORDER', 'View Order')
+									: `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
+						}
+						isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum || openUpselling}
+						btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
+						btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
+						btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
+						btnRightValue={parsePrice(currentCart?.total)}
+						disabled={currentCart?.subtotal < currentCart?.minimum || openUpselling}
+						handleClick={() => setOpenUpselling(true)}
+					/>
 				)}
-				{!loading && business?.id && (
-					<>
-						<WrapContent
-							onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}
-						>
-							<BusinessProductsList
-								categories={[
-									{ id: null, name: t('ALL', 'All') },
-									{ id: 'featured', name: t('FEATURED', 'Featured') },
-									...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
-								]}
-								category={categorySelected}
-								categoryState={categoryState}
-								businessId={business.id}
-								errors={errors}
-								onProductClick={onProductClick}
-								handleSearchRedirect={handleSearchRedirect}
-								featured={featuredProducts}
-								searchValue={searchValue}
-								handleClearSearch={handleChangeSearch}
-								errorQuantityProducts={errorQuantityProducts}
-								handleCancelSearch={handleCancel}
-								categoriesLayout={categoriesLayout}
-								subcategoriesSelected={subcategoriesSelected}
-								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
-								setCategoriesLayout={setCategoriesLayout}
-								currentCart={currentCart}
-								setSubcategoriesSelected={setSubcategoriesSelected}
-								onClickCategory={handleChangeCategory}
-								handleUpdateProducts={handleUpdateProducts}
-							/>
-						</WrapContent>
-					</>
+				{openUpselling && (
+					<UpsellingRedirect
+						businessId={currentCart?.business_id}
+						business={currentCart?.business}
+						cartProducts={currentCart?.products}
+						cart={currentCart}
+						setOpenUpselling={setOpenUpselling}
+						handleUpsellingPage={handleUpsellingPage}
+						handleCloseUpsellingPage={handleCloseUpsellingPage}
+						openUpselling={openUpselling}
+						canOpenUpselling={canOpenUpselling}
+						setCanOpenUpselling={setCanOpenUpselling}
+						onRedirect={onRedirect}
+					/>
 				)}
-				{loading && !error && (
-					<>
-						<BusinessProductsCategories
-							categories={[]}
-							categorySelected={categorySelected}
-							onClickCategory={handleChangeCategory}
-							featured={featuredProducts}
-							openBusinessInformation={openBusinessInformation}
-							loading={loading}
-						/>
-						<WrapContent>
-							<BusinessProductsList
-								categories={[]}
-								category={categorySelected}
-								categoryState={categoryState}
-								isBusinessLoading={loading}
-								errorQuantityProducts={errorQuantityProducts}
-								handleUpdateProducts={handleUpdateProducts}
-							/>
-						</WrapContent>
-					</>
-				)}
-			</BusinessProductsListingContainer>
-			{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
-				<FloatingButton
-					btnText={
-						openUpselling
-							? t('LOADING', 'Loading')
-							: currentCart?.subtotal >= currentCart?.minimum
-								? t('VIEW_ORDER', 'View Order')
-								: `${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(currentCart?.minimum)}`
-					}
-					isSecondaryBtn={currentCart?.subtotal < currentCart?.minimum || openUpselling}
-					btnLeftValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
-					btnRightValueShow={currentCart?.subtotal >= currentCart?.minimum && currentCart?.products?.length > 0}
-					btnLeftValue={currentCart?.products.reduce((prev: number, product: any) => prev + product.quantity, 0)}
-					btnRightValue={parsePrice(currentCart?.total)}
-					disabled={currentCart?.subtotal < currentCart?.minimum || openUpselling}
-					handleClick={() => setOpenUpselling(true)}
+				<Alert
+					open={alertState?.open || false}
+					title=''
+					content={[t('NOT_AVAILABLE_PRODUCTS', 'These products are not available.')]}
+					onAccept={() => setAlertState({ open: false, content: [] })}
+					onClose={() => setAlertState({ open: false, content: [] })}
 				/>
-			)}
-			{openUpselling && (
-				<UpsellingRedirect
-					businessId={currentCart?.business_id}
-					business={currentCart?.business}
-					cartProducts={currentCart?.products}
-					cart={currentCart}
-					setOpenUpselling={setOpenUpselling}
-					handleUpsellingPage={handleUpsellingPage}
-					handleCloseUpsellingPage={handleCloseUpsellingPage}
-					openUpselling={openUpselling}
-					canOpenUpselling={canOpenUpselling}
-					setCanOpenUpselling={setCanOpenUpselling}
-					onRedirect={onRedirect}
+			</ContainerSafeAreaView>
+			<OModal
+				open={openService}
+				onClose={() => setOpenService(false)}
+				entireModal
+			>
+				<ServiceForm
+					navigation={navigation}
+					product={currentProduct}
+					businessSlug={business.slug}
+					businessId={business.id}
+					professionalList={business?.professionals}
+					professionalSelected={professionalSelected}
+					handleChangeProfessional={handleChangeProfessionalSelected}
+					onSave={() => setOpenService(false)}
+					onClose={() => setOpenService(false)}
 				/>
-			)}
-			<Alert
-				open={alertState?.open || false}
-				title=''
-				content={[t('NOT_AVAILABLE_PRODUCTS', 'These products are not available.')]}
-				onAccept={() => setAlertState({ open: false, content: [] })}
-				onClose={() => setAlertState({ open: false, content: [] })}
-			/>
-		</ContainerSafeAreaView>
+			</OModal>
+		</>
 	)
 }
 

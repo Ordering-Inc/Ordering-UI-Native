@@ -229,3 +229,14 @@ export const formatSeconds = (seconds : number) => {
   ret += '' + secs
   return ret
 }
+
+/**
+ * List of price to filter businesses
+ */
+ export const priceList = [
+  { level: '1', content: '$' },
+  { level: '2', content: '$$' },
+  { level: '3', content: '$$$' },
+  { level: '4', content: '$$$$' },
+  { level: '5', content: '$$$$$' }
+]
