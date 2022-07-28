@@ -39,3 +39,5 @@ export const IconContainer = styled.View`
   border-radius: 10px;
   height: 60px;
 `
+
+export const ServiceWrapper = styled.ScrollView``
