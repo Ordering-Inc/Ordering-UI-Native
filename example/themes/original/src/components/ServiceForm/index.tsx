@@ -125,7 +125,8 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   };
 
   const handleSaveService = () => {
-    handleSave && handleSave(dateSelected)
+    const updated = { serviceTime: dateSelected }
+    handleSave && handleSave(updated)
   }
 
   const validateSelectedDate = (curdate: any, menu: any) => {
