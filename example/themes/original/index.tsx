@@ -70,6 +70,10 @@ import { BusinessItemAccordion } from './src/components/BusinessItemAccordion';
 import { CouponControl } from './src/components/CouponControl';
 import { TaxInformation } from './src/components/TaxInformation';
 import { PlaceSpot } from './src/components/PlaceSpot';
+import { ProfessionalFilter } from './src/components/ProfessionalFilter';
+import { ProfessionalProfile } from './src/components/ProfessionalProfile';
+import { ServiceForm } from './src/components/ServiceForm';
+import { MomentSelector } from './src/components/MomentSelector';
 import { Cart } from './src/components/Cart';
 import { LanguageSelector } from './src/components/LanguageSelector';
 import { PhoneInputNumber } from './src/components/PhoneInputNumber'
@@ -226,6 +230,10 @@ export {
 	CouponControl,
 	TaxInformation,
 	PlaceSpot,
+	ProfessionalFilter,
+	ServiceForm,
+	ProfessionalProfile,
+	MomentSelector,
 	Cart,
 	LanguageSelector,
 	PhoneInputNumber,

@@ -127,6 +127,7 @@
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
     "@types/react-native": "^0.63.25",
+    "@types/react-native-calendar-picker": "^7.0.2",
     "babel-jest": "^26.3.0",
     "eslint": "^7.10.0",
     "jest": "^26.4.2",
