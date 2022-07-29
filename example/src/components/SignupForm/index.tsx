@@ -3,6 +3,7 @@ import { View, Pressable, StyleSheet, Keyboard, Linking, Platform, TouchableOpac
 import { useForm, Controller } from 'react-hook-form';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Recaptcha from 'react-native-recaptcha-that-works'
 
 import { PhoneInputNumber } from '../PhoneInputNumber'
 import { FacebookLogin } from '../FacebookLogin'
@@ -23,7 +24,7 @@ import {
   SocialButtons
 } from './styles'
 
-import { LoginWith as SignupWith, OTab, OTabs } from '../LoginForm/styles'
+import { LoginWith as SignupWith, OTab, OTabs, RecaptchaButton } from '../LoginForm/styles'
 
 import { _removeStoreData } from '../../providers/StoreUtil';
 import NavBar from '../NavBar'
@@ -58,7 +59,9 @@ const SignupFormUI = (props: SignupParams) => {
     setCheckPhoneCodeState,
     handleSendVerifyCode,
     handleCheckPhoneCode,
-    notificationState
+    notificationState,
+    enableReCaptcha,
+    handleReCaptcha
   } = props
 
   const theme = useTheme()
@@ -107,6 +110,9 @@ const SignupFormUI = (props: SignupParams) => {
     }
   });
 
+  const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
+  const [recaptchaVerified, setRecaptchaVerified] = useState(false)
+
   const nameRef = useRef<any>(null)
   const lastnameRef = useRef<any>(null)
   const middleNameRef = useRef<any>(null)
@@ -114,6 +120,7 @@ const SignupFormUI = (props: SignupParams) => {
   const emailRef = useRef<any>(null)
   const phoneRef = useRef<any>(null)
   const passwordRef = useRef<any>(null)
+  const recaptchaRef = useRef<any>({});
 
   const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
 
@@ -196,35 +203,6 @@ const SignupFormUI = (props: SignupParams) => {
     setPasswordSee(false);
   }
 
-  const onSubmit = (values: any) => {
-    Keyboard.dismiss()
-    if (phoneInputData.error) {
-      showToast(ToastType.Error, phoneInputData.error);
-      return
-    }
-    if (
-      !phoneInputData.phone.country_phone_code &&
-      !phoneInputData.phone.cellphone &&
-      validationFields?.fields?.checkout?.cellphone?.enabled &&
-      validationFields?.fields?.checkout?.cellphone?.required
-    ) {
-      showToast(ToastType.Error, t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.'))
-      return
-    }
-    if (signupTab === 'email' || !useSignupByCellphone) {
-      handleButtonSignupClick && handleButtonSignupClick({
-        ...values,
-        ...phoneInputData.phone
-      })
-      if (!formState.loading && formState.result.result && !formState.result.error) {
-        handleSuccessSignup && handleSuccessSignup(formState.result.result)
-      }
-      return
-    }
-    setFormValues(values)
-    handleVerifyCodeClick(values)
-  }
-
   const handleVerifyCodeClick = (values: any) => {
     const formData = values || formValues
     handleSendVerifyCode && handleSendVerifyCode({
@@ -264,6 +242,62 @@ const SignupFormUI = (props: SignupParams) => {
       showToast(ToastType.Error, t('VALIDATION_ERROR_ACTIVE_URL', 'The _attribute_ is not a valid URL.').replace('_attribute_', t('URL', 'URL')))
     }
   }
+
+  const handleOpenRecaptcha = () => {
+    setRecaptchaVerified(false)
+    if (!recaptchaConfig?.siteKey) {
+      showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
+      return
+    }
+    if (!recaptchaConfig?.baseUrl) {
+      showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
+      return
+    }
+    recaptchaRef.current.open()
+  }
+
+  const onRecaptchaVerify = (token: any) => {
+    setRecaptchaVerified(true)
+    handleReCaptcha && handleReCaptcha(token)
+  }
+
+  const onSubmit = (values: any) => {
+    Keyboard.dismiss()
+    if (phoneInputData.error) {
+      showToast(ToastType.Error, phoneInputData.error);
+      return
+    }
+    if (
+      !phoneInputData.phone.country_phone_code &&
+      !phoneInputData.phone.cellphone &&
+      validationFields?.fields?.checkout?.cellphone?.enabled &&
+      validationFields?.fields?.checkout?.cellphone?.required
+    ) {
+      showToast(ToastType.Error, t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required.'))
+      return
+    }
+    if (signupTab === 'email' || !useSignupByCellphone) {
+      handleButtonSignupClick && handleButtonSignupClick({
+        ...values,
+        ...phoneInputData.phone
+      })
+      if (!formState.loading && formState.result.result && !formState.result.error) {
+        handleSuccessSignup && handleSuccessSignup(formState.result.result)
+      }
+      return
+    }
+    setFormValues(values)
+    handleVerifyCodeClick(values)
+  }
+
+  useEffect(() => {
+    if (configs && Object.keys(configs).length > 0 && enableReCaptcha) {
+      setRecaptchaConfig({
+        siteKey: configs?.security_recaptcha_site_key?.value || null,
+        baseUrl: configs?.security_recaptcha_base_url?.value || null
+      })
+    }
+  }, [configs, enableReCaptcha])
 
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
@@ -492,6 +526,38 @@ const SignupFormUI = (props: SignupParams) => {
             </View>
           )}
 
+          {enableReCaptcha && (
+            <>
+              <TouchableOpacity
+                onPress={handleOpenRecaptcha}
+                style={{ marginHorizontal: 4, marginBottom: 10 }}
+              >
+                <RecaptchaButton>
+                  {recaptchaVerified ? (
+                    <MaterialCommunityIcons
+                      name="checkbox-marked"
+                      size={23}
+                      color={theme.colors.primary}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="checkbox-blank-outline"
+                      size={23}
+                      color={theme.colors.disabled}
+                    />
+                  )}
+                  <OText size={14} mLeft={8}>{t('VERIFY_ReCAPTCHA', 'Verify reCAPTCHA')}</OText>
+                </RecaptchaButton>
+              </TouchableOpacity>
+              <Recaptcha
+                ref={recaptchaRef}
+                siteKey={recaptchaConfig?.siteKey}
+                baseUrl={recaptchaConfig?.baseUrl}
+                onVerify={onRecaptchaVerify}
+                onExpire={() => setRecaptchaVerified(false)}
+              />
+            </>
+          )}
           {signupTab === 'cellphone' && useSignupByEmail && useSignupByCellphone ? (
             <OButton
               onClick={handleSubmit(onSubmit)}
@@ -531,40 +597,40 @@ const SignupFormUI = (props: SignupParams) => {
         }
 
         {configs && Object.keys(configs).length > 0 && anySocialButtonActivated && (
-            <ButtonsSection>
-              <OText size={18} mBottom={10} color={theme.colors.disabled}>
-                {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
-              </OText>
-              <SocialButtons>
-                {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
-                  configs?.facebook_id?.value && (
-                    <FacebookLogin
-                      notificationState={notificationState}
-                      handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                      handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
-                      handleSuccessFacebookLogin={handleSuccessFacebook}
-                    />
-                  )}
-                {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled && (
-                  <GoogleLogin
-                    notificationState={notificationState}
-                    webClientId={configs?.google_login_client_id?.value}
-                    handleErrors={(err: any) => showToast(ToastType.Error, err)}
-                    handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
-                    handleSuccessGoogleLogin={handleSuccessFacebook}
-                  />
-                )}
-                {(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && (
-                  <AppleLogin
+          <ButtonsSection>
+            <OText size={18} mBottom={10} color={theme.colors.disabled}>
+              {t('SELECT_AN_OPTION_TO_LOGIN', 'Select an option to login')}
+            </OText>
+            <SocialButtons>
+              {(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
+                configs?.facebook_id?.value && (
+                  <FacebookLogin
                     notificationState={notificationState}
                     handleErrors={(err: any) => showToast(ToastType.Error, err)}
                     handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
-                    handleSuccessApple={handleSuccessApple}
+                    handleSuccessFacebookLogin={handleSuccessFacebook}
                   />
                 )}
-              </SocialButtons>
-            </ButtonsSection>
-          )}
+              {(configs?.google_login_client_id?.value !== '' && configs?.google_login_client_id?.value !== null) && googleLoginEnabled && (
+                <GoogleLogin
+                  notificationState={notificationState}
+                  webClientId={configs?.google_login_client_id?.value}
+                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                  handleSuccessGoogleLogin={handleSuccessFacebook}
+                />
+              )}
+              {(configs?.apple_login_client_id?.value !== '' && configs?.apple_login_client_id?.value !== null) && (
+                <AppleLogin
+                  notificationState={notificationState}
+                  handleErrors={(err: any) => showToast(ToastType.Error, err)}
+                  handleLoading={(val: boolean) => setIsLoadingSocialButton(val)}
+                  handleSuccessApple={handleSuccessApple}
+                />
+              )}
+            </SocialButtons>
+          </ButtonsSection>
+        )}
       </FormSide>
       <OModal
         open={isModalVisible}
@@ -581,13 +647,14 @@ const SignupFormUI = (props: SignupParams) => {
         />
       </OModal>
       <Spinner visible={formState.loading || isLoadingSocialButton} />
-    </View >
+    </View>
   );
 };
 
 export const SignupForm = (props: any) => {
   const signupProps = {
     ...props,
+    isRecaptchaEnable: true,
     UIComponent: SignupFormUI,
   };
   return <SignUpController {...signupProps} />;

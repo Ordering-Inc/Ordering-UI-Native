@@ -9,7 +9,7 @@ import {
 import {
 	PaymentOptions as PaymentOptionsController,
 	useLanguage,
-  ToastType,
+	ToastType,
 	useToast,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -30,6 +30,7 @@ import {
 	PMCardItemContent
 } from './styles'
 import { getIconCard, flatArray } from '../../utils';
+import { useApplePay } from '@stripe/stripe-react-native';
 
 const stripeOptions: any = ['stripe_direct', 'stripe', 'stripe_connect']
 const methodsPay = ['google_pay', 'apple_pay']
@@ -62,7 +63,8 @@ const PaymentOptionsUI = (props: any) => {
 	} = props
 
 	const theme = useTheme();
-  const [, { showToast }] = useToast();
+	const [, { showToast }] = useToast();
+	const { confirmApplePayPayment } = useApplePay()
 
 	const getPayIcon = (method: string) => {
 		switch (method) {
@@ -98,18 +100,18 @@ const PaymentOptionsUI = (props: any) => {
 	// ]
 
 	const handlePaymentMethodClick = (paymethod: any) => {
-    if (cart?.balance > 0) {
-      const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
-      if (webViewPaymentGateway.includes(paymethod?.gateway)) {
-        handlePaymentMethodClickCustom(paymethod)
-      }
-      handlePaymethodClick(paymethod, isPopupMethod)
-      return
-    }
-    showToast(
+		if (cart?.balance > 0) {
+			const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
+			if (webViewPaymentGateway.includes(paymethod?.gateway)) {
+				handlePaymentMethodClickCustom(paymethod)
+			}
+			handlePaymethodClick(paymethod, isPopupMethod)
+			return
+		}
+		showToast(
 			ToastType.Error,
 			t('CART_BALANCE_ZERO', 'Sorry, the amount to pay is equal to zero and it is not necessary to select a payment method'))
-		;
+			;
 	}
 
 	useEffect(() => {
@@ -134,7 +136,7 @@ const PaymentOptionsUI = (props: any) => {
 
 	useEffect(() => {
 		if (methodsPay.includes(paymethodSelected?.gateway) && paymethodData?.id && paymethodSelected?.data?.card) {
-		  handlePlaceOrder()
+			handlePlaceOrder(confirmApplePayPayment)
 		}
 	}, [paymethodData, paymethodSelected])
 
@@ -214,7 +216,7 @@ const PaymentOptionsUI = (props: any) => {
 
 			{paymethodSelected?.gateway === 'cash' && (
 				<PaymentOptionCash
-					orderTotal={cart.total}
+					orderTotal={cart.balance ?? cart.total}
 					defaultValue={paymethodSelected?.data?.cash}
 					onChangeData={handlePaymethodDataChange}
 					setErrorCash={props.setErrorCash}

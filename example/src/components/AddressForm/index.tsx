@@ -210,9 +210,25 @@ const AddressFormUI = (props: AddressFormParams) => {
             }
             if ( addressType === 'postal_code') {
               postalCode = component.short_name
+              if (isObjet) {
+                setValue('zipcode', postalCode)
+                handleChangeInput({ target: { name: 'zipcode', value: postalCode } })
+              }
             }
           }
           isObjet ? address = addressValue.join(', ') : address
+    
+          if (isObjet) {
+            setValue('address', address)
+            googleInput?.current?.setAddressText(address)
+            setLoadingLocation(false)
+            updateChanges({
+              address: address,
+              location: json.results[0].geometry.location
+            })
+            return
+          }
+        
           data.address = {
             address,
             location: json.results[0].geometry.location,
@@ -597,7 +613,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                 name='zipcode'
                 rules={{ required: isRequiredField && isRequiredField('zipcode') ? t(`VALIDATION_ERROR_ZIP_CODE_REQUIRED`, `The field Zip Code is required`) : null }}
                 defaultValue={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
-                render={() => (
+                render={({ value }) => (
                   <OInput
                     name='zipcode'
                     placeholder={t('ZIP_CODE', 'Zip code')}
@@ -605,7 +621,7 @@ const AddressFormUI = (props: AddressFormParams) => {
                       handleChangeInput(text)
                       setValue('zipcode', text)
                     }}
-                    value={address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
+                    value={value || address?.zipcode || formState.changes?.zipcode || addressState.address.zipcode || ''}
                     style={styles.inputsStyle}
                     forwardRef={zipCodeRef}
                     returnKeyType='next'

@@ -55,3 +55,8 @@ export const BackgroundGray = styled.View`
   z-index: 100;
   width: 100%;
 `
+
+export const ProfessionalFilterWrapper = styled.View`
+  padding-left: 40px;
+  margin-bottom: 35px;
+`

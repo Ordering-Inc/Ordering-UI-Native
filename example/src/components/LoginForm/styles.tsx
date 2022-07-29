@@ -67,3 +67,9 @@ export const LineSeparator = styled.View`
 export const SkeletonWrapper = styled.View`
   width: 90%;
 `
+export const RecaptchaButton = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: center;
+`

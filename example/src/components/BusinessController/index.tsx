@@ -146,16 +146,18 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
           />
         </BusinessLogo>
         <BusinessState>
-          {(isBusinessOpen || !!getBusinessOffer(business?.offers)) && (
+          {(!isBusinessOpen || !!getBusinessOffer(business?.offers)) && (
             <View style={styles.businessStateView}>
               {getBusinessOffer(business?.offers) && (
                 <OText color={theme.colors.white} size={18} style={styles.businessStateText}>
                   {getBusinessOffer(business?.offers) || parsePrice(0)}
                 </OText>
               )}
-              <OText color={theme.colors.white} size={18} style={styles.businessStateText}>
-                {t('PREORDER', 'PREORDER')}
-              </OText>
+              {!isBusinessOpen && (
+                <OText color={theme.colors.white} size={18} style={styles.businessStateText}>
+                  {t('PREORDER', 'PREORDER')}
+                </OText>
+              )}
             </View>
           )}
         </BusinessState>
@@ -164,10 +166,10 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
         <BusinessInfo>
           <View style={{ width: '70%', alignItems: 'flex-start' }}>
             <OText
-                size={20}
-                numberOfLines={1}
-                ellipsizeMode='tail'
-              >
+              size={20}
+              numberOfLines={1}
+              ellipsizeMode='tail'
+            >
               {business?.name}
             </OText>
           </View>
