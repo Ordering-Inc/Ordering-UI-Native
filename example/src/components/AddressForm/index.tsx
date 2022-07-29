@@ -220,9 +220,12 @@ const AddressFormUI = (props: AddressFormParams) => {
     
           if (isObjet) {
             setValue('address', address)
-            handleChangeInput({ target: { name: 'address', value: address } })
             googleInput?.current?.setAddressText(address)
             setLoadingLocation(false)
+            updateChanges({
+              address: address,
+              location: json.results[0].geometry.location
+            })
             return
           }
         
