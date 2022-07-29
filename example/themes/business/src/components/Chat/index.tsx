@@ -484,12 +484,12 @@ const ChatUI = (props: MessagesParams) => {
           image: message.source,
           system: message.type === 1,
           user: {
-            _id: message.author.id,
-            name: message.author.name,
+            _id: message.author?.id,
+            name: message.author?.name,
             can_see: message?.can_see,
-            level: message.author.level,
+            level: message.author?.level,
             avatar:
-              message.author.id !== user?.id && type === USER_TYPE.DRIVER
+              message.author?.id !== user?.id && type === USER_TYPE.DRIVER
                 ? order?.driver?.photo
                 : order?.business?.logo,
           },
