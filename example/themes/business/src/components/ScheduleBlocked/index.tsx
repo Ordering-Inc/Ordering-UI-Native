@@ -7,10 +7,9 @@ import { useTheme } from 'styled-components/native'
 export const ScheduleBlocked = (props : any) => {
     const { nextSchedule } = props
     const [, t] = useLanguage()
-    const [{ user }, {logout}] = useSession()
+    const [, {logout}] = useSession()
     const theme = useTheme()
     const deviceWidth = Dimensions.get('screen').width
-    console.log(nextSchedule)
 
     const daysOfWeek = [
         t('MONDAY', 'Monday'),
