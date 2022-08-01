@@ -18,10 +18,12 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { FormSide, FormInput, SocialButtons } from './styles';
+import { Otp } from '../LoginForm/Otp'
 
 import {
 	ButtonsWrapper,
 	LoginWith as SignupWith,
+	TabBtn,
 	OTab,
 	OTabs,
 	RecaptchaButton
@@ -30,7 +32,9 @@ import {
 import NavBar from '../NavBar';
 import { VerifyPhone } from '../VerifyPhone';
 
-import { OText, OButton, OInput, OModal } from '../shared';
+import Alert from '../../../../../src/providers/AlertProvider'
+import { OText, OButton, OInput } from '../shared';
+import { OModal } from '../../../../../src/components/shared';
 import { SignupParams } from '../../types';
 import { sortInputFields } from '../../utils';
 import { GoogleLogin } from '../GoogleLogin';
@@ -67,7 +71,18 @@ const SignupFormUI = (props: SignupParams) => {
 		notificationState,
 		handleChangePromotions,
 		enableReCaptcha,
-		handleReCaptcha
+		handleReCaptcha,
+		generateOtpCode,
+		numOtpInputs,
+		setWillVerifyOtpState,
+		handleChangeInput,
+		willVerifyOtpState,
+		setOtpState,
+		setSignUpTab,
+		signUpTab,
+		useSignUpFullDetails,
+		useSignUpOtpEmail,
+		useSignUpOtpCellphone
 	} = props;
 
 	const theme = useTheme();
@@ -104,26 +119,27 @@ const SignupFormUI = (props: SignupParams) => {
 	const [, t] = useLanguage();
 	const [, { login }] = useSession();
 	const [{ configs }] = useConfig();
-	const { control, handleSubmit, errors, register, setValue } = useForm();
+	const { control, handleSubmit, clearErrors, errors, register, unregister, setValue } = useForm();
 
 	const [passwordSee, setPasswordSee] = useState(false);
 	const [formValues, setFormValues] = useState(null);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
-	const [signupTab, setSignupTab] = useState(
-		useSignupByCellphone && !useSignupByEmail ? 'cellphone' : 'email',
-	);
 	const [isFBLoading, setIsFBLoading] = useState(false);
 	const [phoneInputData, setPhoneInputData] = useState({
 		error: '',
 		phone: {
 			country_phone_code: null,
 			cellphone: null,
+			country_code: null
 		},
 	});
+	const [alertState, setAlertState] = useState({ open: false, title: '', content: [] })
 	const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
 	const [recaptchaVerified, setRecaptchaVerified] = useState(false)
+	const [tabLayouts, setTabLayouts] = useState<any>({})
 
+	const tabsRef = useRef<any>(null)
 	const nameRef = useRef<any>(null);
 	const lastnameRef = useRef<any>(null);
 	const middleNameRef = useRef<any>(null);
@@ -136,7 +152,15 @@ const SignupFormUI = (props: SignupParams) => {
 	const showInputPhoneNumber = (validationFields?.fields?.checkout?.cellphone?.enabled ?? false) || configs?.verification_phone_required?.value === '1'
 	const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
 	const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1' || !configs?.facebook_login_enabled?.enabled
-  	const appleLoginEnabled = configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
+	const appleLoginEnabled = configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
+
+	const closeAlert = () => {
+		setAlertState({
+			open: false,
+			title: '',
+			content: []
+		})
+	}
 
 	const handleRefs = (ref: any, code: string) => {
 		switch (code) {
@@ -161,6 +185,13 @@ const SignupFormUI = (props: SignupParams) => {
 			}
 		}
 	};
+
+	const handleOnLayout = (event: any, opc: string) => {
+		const _tabLayouts = { ...tabLayouts }
+		const categoryKey = opc
+		_tabLayouts[categoryKey] = event.nativeEvent.layout
+		setTabLayouts(_tabLayouts)
+	}
 
 	const handleFocusRef = (code: string) => {
 		switch (code) {
@@ -205,13 +236,13 @@ const SignupFormUI = (props: SignupParams) => {
 		navigation.navigate('Home');
 	};
 
-	const handleChangeTab = (val: string) => {
-		setSignupTab(val);
-		setPasswordSee(false);
-	};
+	const handleSignUpTab = (tab: string) => {
+		setSignUpTab && setSignUpTab(tab)
+		clearErrors()
+	}
 
-	const onSubmit = (values: any) => {
-		if (phoneInputData.error) {
+	const onSubmit = (values?: any) => {
+		if (phoneInputData.error && signUpTab !== 'otpEmail') {
 			showToast(ToastType.Error, phoneInputData.error);
 			return;
 		}
@@ -219,8 +250,9 @@ const SignupFormUI = (props: SignupParams) => {
 			!phoneInputData.phone.country_phone_code &&
 			!phoneInputData.phone.cellphone &&
 			((validationFields?.fields?.checkout?.cellphone?.enabled &&
-        validationFields?.fields?.checkout?.cellphone?.required) ||
-        configs?.verification_phone_required?.value === '1')
+				validationFields?.fields?.checkout?.cellphone?.required) ||
+				configs?.verification_phone_required?.value === '1') &&
+			signUpTab !== 'otpEmail'
 		) {
 			showToast(
 				ToastType.Error,
@@ -231,24 +263,28 @@ const SignupFormUI = (props: SignupParams) => {
 			);
 			return;
 		}
-		if (signupTab === 'email' || !useSignupByCellphone) {
-			handleButtonSignupClick &&
-				handleButtonSignupClick({
-					...values,
-					...((phoneInputData.phone.cellphone !== null && phoneInputData.phone.country_phone_code !== null) && {...phoneInputData.phone}),
-				});
-			if (
-				!formState.loading &&
-				formState.result.result &&
-				!formState.result.error
-			) {
-				handleSuccessSignup && handleSuccessSignup(formState.result.result);
-			}
-			return;
+		if (signUpTab === 'otpEmail' || signUpTab === 'otpCellphone') {
+			generateOtpCode && generateOtpCode({
+				...values,
+				...((phoneInputData.phone.cellphone !== null && phoneInputData.phone.country_phone_code !== null) && { ...phoneInputData.phone }),
+				country_code: phoneInputData.phone.country_code
+			})
+			return
 		}
-		setFormValues(values);
-		handleVerifyCodeClick(values);
+		handleButtonSignupClick &&
+			handleButtonSignupClick({
+				...values,
+				...((phoneInputData.phone.cellphone !== null && phoneInputData.phone.country_phone_code !== null) && { ...phoneInputData.phone }),
+				country_code: phoneInputData.phone.country_code
+			});
+		if (!formState.loading && formState.result.result && !formState.result.error) {
+			handleSuccessSignup && handleSuccessSignup(formState.result.result);
+		}
 	};
+
+	const handleSingUpOtp = (value: string) => {
+		setOtpState && setOtpState(value)
+	}
 
 	const handleVerifyCodeClick = (values: any) => {
 		const formData = values || formValues;
@@ -298,7 +334,7 @@ const SignupFormUI = (props: SignupParams) => {
 
 	const handleOpenRecaptcha = () => {
 		setRecaptchaVerified(false)
-	  	if (!recaptchaConfig?.siteKey) {
+		if (!recaptchaConfig?.siteKey) {
 			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
 			return
 		}
@@ -307,11 +343,11 @@ const SignupFormUI = (props: SignupParams) => {
 			return
 		}
 		recaptchaRef.current.open()
-  	}
+	}
 
 	const onRecaptchaVerify = (token: any) => {
 		setRecaptchaVerified(true)
-		handleReCaptcha(token)
+		handleReCaptcha && handleReCaptcha(token)
 	}
 
 	useEffect(() => {
@@ -335,15 +371,19 @@ const SignupFormUI = (props: SignupParams) => {
 		if (Object.keys(errors).length > 0) {
 			setIsLoadingVerifyModal(false);
 		}
-	}, [errors]);
+	}, [errors])
 
 	useEffect(() => {
-    register('cellphone', {
-      required: isRequiredField('cellphone')
-        ? t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone'))
-        : null
-    })
-  }, [register])
+		if (signUpTab === 'default' || signUpTab === 'otpCellphone') {
+			register('cellphone', {
+				required: isRequiredField('cellphone')
+					? t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone'))
+					: null
+			})
+		} else {
+			unregister('cellphone')
+		}
+	}, [signUpTab])
 
 	useEffect(() => {
 		if (phoneInputData?.phone?.cellphone) setValue('cellphone', phoneInputData?.phone?.cellphone, '')
@@ -370,6 +410,26 @@ const SignupFormUI = (props: SignupParams) => {
 		}
 	}, [verifyPhoneState]);
 
+	useEffect(() => {
+		setPhoneInputData({
+			...phoneInputData,
+			phone: {
+				...phoneInputData.phone,
+				country_code: configs?.default_country_code?.value
+			}
+		})
+	}, [configs])
+
+	useEffect(() => {
+		if (checkPhoneCodeState?.result?.error) {
+			setAlertState({
+				open: true,
+				title: (typeof checkPhoneCodeState?.result?.result === 'string' ? checkPhoneCodeState?.result?.result : checkPhoneCodeState?.result?.result[0].toString()) || t('ERROR', 'Error'),
+				content: []
+			})
+		}
+	}, [checkPhoneCodeState])
+
 	return (
 		<View>
 			<NavBar
@@ -383,47 +443,90 @@ const SignupFormUI = (props: SignupParams) => {
 				titleStyle={{ marginLeft: 0, marginRight: 0 }}
 			/>
 			<FormSide>
-				{useSignupByEmail &&
-					useSignupByCellphone &&
-					configs &&
-					Object.keys(configs).length > 0 &&
-					(configs?.twilio_service_enabled?.value === 'true' ||
-						configs?.twilio_service_enabled?.value === '1') && (
-						<SignupWith style={{ paddingBottom: 25 }}>
-							<OTabs>
-								{useSignupByEmail && (
-									<Pressable onPress={() => handleChangeTab('email')}>
-										<OTab>
-											<OText
-												size={18}
-												color={
-													signupTab === 'email'
-														? theme.colors.primary
-														: theme.colors.disabled
-												}>
-												{t('SIGNUP_BY_EMAIL', 'Signup by Email')}
-											</OText>
-										</OTab>
-									</Pressable>
-								)}
-								{useSignupByCellphone && (
-									<Pressable onPress={() => handleChangeTab('cellphone')}>
-										<OTab>
-											<OText
-												size={18}
-												color={
-													signupTab === 'cellphone'
-														? theme.colors.primary
-														: theme.colors.disabled
-												}>
-												{t('SIGNUP_BY_PHONE', 'Signup by Phone')}
-											</OText>
-										</OTab>
-									</Pressable>
-								)}
-							</OTabs>
-						</SignupWith>
-					)}
+				{(useSignUpFullDetails) && (
+					<SignupWith>
+						<OTabs
+							horizontal
+							showsHorizontalScrollIndicator={false}
+							ref={tabsRef}
+						>
+							<TabBtn
+								onPress={() => handleSignUpTab('default')}
+								onLayout={(event: any) => handleOnLayout(event, 'default')}
+							>
+								<OTab
+									style={{
+										borderBottomColor:
+											signUpTab === 'default'
+												? theme.colors.textNormal
+												: theme.colors.border,
+									}}>
+									<OText
+										size={14}
+										color={
+											signUpTab === 'default'
+												? theme.colors.textNormal
+												: theme.colors.disabled
+										}
+										weight={signUpTab === 'default' ? 'bold' : 'normal'}>
+										{t('DEFAULT', 'Default')}
+									</OText>
+								</OTab>
+							</TabBtn>
+							{useSignUpOtpEmail && (
+								<TabBtn
+									onPress={() => handleSignUpTab('otpEmail')}
+									onLayout={(event: any) => handleOnLayout(event, 'otpEmail')}
+								>
+									<OTab
+										style={{
+											borderBottomColor:
+												signUpTab === 'otpEmail'
+													? theme.colors.textNormal
+													: theme.colors.border,
+										}}>
+										<OText
+											size={14}
+											color={
+												signUpTab === 'otpEmail'
+													? theme.colors.textNormal
+													: theme.colors.disabled
+											}
+											weight={signUpTab === 'otpEmail' ? 'bold' : 'normal'}>
+											{t('BY_OTP_EMAIL', 'by Otp Email')}
+										</OText>
+									</OTab>
+								</TabBtn>
+
+							)}
+							{useSignUpOtpCellphone && (
+								<TabBtn
+									onPress={() => handleSignUpTab('otpCellphone')}
+									onLayout={(event: any) => handleOnLayout(event, 'otpCellphone')}
+								>
+									<OTab
+										style={{
+											borderBottomColor:
+												signUpTab === 'otpCellphone'
+													? theme.colors.textNormal
+													: theme.colors.border,
+										}}>
+										<OText
+											size={14}
+											color={
+												signUpTab === 'otpCellphone'
+													? theme.colors.textNormal
+													: theme.colors.disabled
+											}
+											weight={signUpTab === 'otpCellphone' ? 'bold' : 'normal'}>
+											{t('BY_OTP_CELLPHONE', 'by Otp Cellphone')}
+										</OText>
+									</OTab>
+								</TabBtn>
+							)}
+						</OTabs>
+					</SignupWith>
+				)}
 				<FormInput>
 					{!(useChekoutFileds && validationFields?.loading) ? (
 						<>
@@ -433,7 +536,9 @@ const SignupFormUI = (props: SignupParams) => {
 								(field: any, i: number) =>
 									!notValidationFields.includes(field.code) &&
 									showField &&
-									showField(field.code) && (
+									showField(field.code) &&
+									(signUpTab === 'default' ||
+										(signUpTab === 'otpEmail' && field.code === 'email')) && (
 										<React.Fragment key={field.id}>
 											{errors?.[`${field.code}`] && (
 												<OText
@@ -457,7 +562,7 @@ const SignupFormUI = (props: SignupParams) => {
 														value={value}
 														onChange={(val: any) =>
 															field.code !== 'email'
-																? onChange(val)
+																? (onChange(val))
 																: handleChangeInputEmail(val, onChange)
 														}
 														autoCapitalize={
@@ -489,12 +594,28 @@ const SignupFormUI = (props: SignupParams) => {
 									),
 							)}
 
-							{!!showInputPhoneNumber && (
+							{(!!showInputPhoneNumber && (signUpTab === 'default' || signUpTab === 'otpCellphone')) && (
 								<View style={{ marginBottom: 25 }}>
 									<PhoneInputNumber
 										data={phoneInputData}
-										handleData={(val: any) => setPhoneInputData(val)}
+										handleData={(val: any) => setPhoneInputData({
+											...phoneInputData,
+											...val,
+											phone: {
+												...phoneInputData.phone,
+												...val.phone,
+												country_code: phoneInputData.phone.country_code
+											}
+										})}
 										forwardRef={phoneRef}
+										defaultCode={formState?.country_code ?? formState?.country_phone_code ?? null}
+										changeCountry={(val: any) => setPhoneInputData({
+											...phoneInputData,
+											phone: {
+												...phoneInputData.phone,
+												country_code: val.cca2
+											}
+										})}
 										textInputProps={{
 											returnKeyType: 'next',
 											onSubmitEditing: () => passwordRef?.current?.focus?.(),
@@ -536,34 +657,34 @@ const SignupFormUI = (props: SignupParams) => {
 									/>
 								</>
 							)}
-
-							<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-								<Controller
-									control={control}
-									render={({ onChange, value }: any) => (
-										<CheckBox
-											value={value}
-											onValueChange={newValue => {
-												onChange(newValue)
-												handleChangePromotions()
-											}}
-											boxType={'square'}
-											tintColors={{
-												true: theme.colors.primary,
-												false: theme.colors.disabled
-											}}
-											tintColor={theme.colors.disabled}
-											onCheckColor={theme.colors.primary}
-											onTintColor={theme.colors.primary}
-											style={Platform.OS === 'ios' && style.checkBoxStyle}
-										/>
-									)}
-									name='promotions'
-									defaultValue={false}
-								/>
-								<OText style={{ fontSize: 14, paddingHorizontal: 5 }}>{t('RECEIVE_NEWS_EXCLUSIVE_PROMOTIONS', 'Receive newsletters and exclusive promotions')}</OText>
-							</View>
-
+							{(signUpTab === 'default') && (
+								<View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+									<Controller
+										control={control}
+										render={({ onChange, value }: any) => (
+											<CheckBox
+												value={value}
+												onValueChange={newValue => {
+													onChange(newValue)
+													handleChangePromotions()
+												}}
+												boxType={'square'}
+												tintColors={{
+													true: theme.colors.primary,
+													false: theme.colors.disabled
+												}}
+												tintColor={theme.colors.disabled}
+												onCheckColor={theme.colors.primary}
+												onTintColor={theme.colors.primary}
+												style={Platform.OS === 'ios' && style.checkBoxStyle}
+											/>
+										)}
+										name='promotions'
+										defaultValue={false}
+									/>
+									<OText style={{ fontSize: 14, paddingHorizontal: 5 }}>{t('RECEIVE_NEWS_EXCLUSIVE_PROMOTIONS', 'Receive newsletters and exclusive promotions')}</OText>
+								</View>
+							)}
 							{configs?.terms_and_conditions?.value === 'true' && (
 								<>
 									{errors?.termsAccept && (
@@ -615,7 +736,7 @@ const SignupFormUI = (props: SignupParams) => {
 
 							)}
 
-							{signupTab !== 'cellphone' && (
+							{signUpTab === 'default' && (
 								<>
 									{errors?.password && (
 										<OText
@@ -687,9 +808,7 @@ const SignupFormUI = (props: SignupParams) => {
 						<Spinner visible />
 					)}
 
-					{signupTab === 'cellphone' &&
-						useSignupByEmail &&
-						useSignupByCellphone ? (
+					{(signUpTab === 'otpEmail' || signUpTab === 'otpCellphone') ? (
 						<OButton
 							onClick={handleSubmit(onSubmit)}
 							text={t('GET_VERIFY_CODE', 'Get Verify Code')}
@@ -754,7 +873,7 @@ const SignupFormUI = (props: SignupParams) => {
 						<ButtonsWrapper>
 							<SocialButtons>
 								{(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
-									configs?.facebook_id?.value && 
+									configs?.facebook_id?.value &&
 									facebookLoginEnabled &&
 									(
 										<FacebookLogin
@@ -787,27 +906,40 @@ const SignupFormUI = (props: SignupParams) => {
 				)}
 
 			</FormSide>
-			<OModal open={isModalVisible} onClose={() => setIsModalVisible(false)}>
-				<VerifyPhone
-					phone={phoneInputData.phone}
-					formValues={formValues}
-					verifyPhoneState={verifyPhoneState}
-					checkPhoneCodeState={checkPhoneCodeState}
-					handleCheckPhoneCode={handleCheckPhoneCode}
-					setCheckPhoneCodeState={setCheckPhoneCodeState}
-					handleVerifyCodeClick={onSubmit}
+			<OModal
+				open={willVerifyOtpState}
+				onClose={() => setWillVerifyOtpState && setWillVerifyOtpState(false)}
+				entireModal
+				title={t('ENTER_VERIFICATION_CODE', 'Enter verification code')}
+			>
+				<Otp
+					pinCount={numOtpInputs || 6}
+					willVerifyOtpState={willVerifyOtpState || false}
+					setWillVerifyOtpState={() => setWillVerifyOtpState && setWillVerifyOtpState(false)}
+					handleLoginOtp={handleSingUpOtp}
+					onSubmit={onSubmit}
+					setAlertState={setAlertState}
 				/>
 			</OModal>
 			<Spinner
 				visible={formState.loading || validationFields.loading || isFBLoading}
+			/>
+			<Alert
+				open={alertState.open}
+				content={alertState.content}
+				title={alertState.title || ''}
+				onAccept={closeAlert}
+				onClose={closeAlert}
 			/>
 		</View>
 	);
 };
 
 export const SignupForm = (props: any) => {
+	const _numOtpInputs = 6
 	const signupProps = {
 		...props,
+		numOtpInputs: _numOtpInputs,
 		isRecaptchaEnable: true,
 		UIComponent: SignupFormUI,
 	};

@@ -15,7 +15,8 @@ export const Otp = (props: otpParams) => {
         setWillVerifyOtpState,
         onSubmit,
         handleLoginOtp,
-        setAlertState
+        setAlertState,
+        pinCount
     } = props
 
     const theme = useTheme();
@@ -65,7 +66,7 @@ export const Otp = (props: otpParams) => {
                 </OText>
                 <OTPInputView
                     style={{ width: '100%', height: 150 }}
-                    pinCount={6}
+                    pinCount={pinCount || 6}
                     codeInputFieldStyle={loginStyle.underlineStyleBase}
                     codeInputHighlightStyle={loginStyle.underlineStyleHighLighted}
                     onCodeFilled={(code: string) => handleLoginOtp(code)}

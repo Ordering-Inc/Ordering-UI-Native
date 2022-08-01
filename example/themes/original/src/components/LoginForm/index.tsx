@@ -102,7 +102,7 @@ const LoginFormUI = (props: LoginParams) => {
 
 	const googleLoginEnabled = configs?.google_login_enabled?.value === '1' || !configs?.google_login_enabled?.enabled
 	const facebookLoginEnabled = configs?.facebook_login_enabled?.value === '1' || !configs?.facebook_login_enabled?.enabled
-  	const appleLoginEnabled = configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
+	const appleLoginEnabled = configs?.apple_login_enabled?.value === '1' || !configs?.apple_login_enabled?.enabled
 
 	const loginStyle = StyleSheet.create({
 		btnOutline: {
@@ -256,7 +256,7 @@ const LoginFormUI = (props: LoginParams) => {
 		})
 	}
 
-	const handleCategoryScroll = (opc : string) => {
+	const handleCategoryScroll = (opc: string) => {
 		tabsRef.current.scrollTo({
 			x: tabLayouts?.[opc]?.x - 40,
 			animated: true
@@ -351,15 +351,15 @@ const LoginFormUI = (props: LoginParams) => {
 				titleStyle={{ marginRight: 0, marginLeft: 0 }}
 			/>
 			<FormSide>
-				{((useLoginByEmail && useLoginByCellphone) || useLoginOtp) && (
+				{(Number(useLoginByEmail) + Number(useLoginByCellphone) + Number(useLoginOtpEmail) + Number(useLoginOtpCellphone) > 1) && (
 					<LoginWith>
 						<OTabs
-							horizontal 
+							horizontal
 							showsHorizontalScrollIndicator={false}
 							ref={tabsRef}
 						>
 							{useLoginByEmail && (
-								<TabBtn 
+								<TabBtn
 									onPress={() => handleChangeTab('email')}
 									onLayout={(event: any) => handleOnLayout(event, 'email')}
 								>
@@ -384,7 +384,7 @@ const LoginFormUI = (props: LoginParams) => {
 								</TabBtn>
 							)}
 							{useLoginByCellphone && (
-								<TabBtn 
+								<TabBtn
 									onPress={() => handleChangeTab('cellphone')}
 									onLayout={(event: any) => handleOnLayout(event, 'cellphone')}
 								>
@@ -409,7 +409,7 @@ const LoginFormUI = (props: LoginParams) => {
 								</TabBtn>
 							)}
 							{useLoginOtpEmail && (
-								<TabBtn 
+								<TabBtn
 									onPress={() => handleChangeOtpType('email')}
 									onLayout={(event: any) => handleOnLayout(event, 'otp_email')}
 								>
@@ -434,7 +434,7 @@ const LoginFormUI = (props: LoginParams) => {
 								</TabBtn>
 							)}
 							{useLoginOtpCellphone && (
-								<TabBtn 
+								<TabBtn
 									onPress={() => handleChangeOtpType('cellphone')}
 									onLayout={(event: any) => handleOnLayout(event, 'otp_cellphone')}
 								>
@@ -707,7 +707,7 @@ const LoginFormUI = (props: LoginParams) => {
 							<ButtonsWrapper>
 								<SocialButtons>
 									{(configs?.facebook_login?.value === 'true' || configs?.facebook_login?.value === '1') &&
-										configs?.facebook_id?.value && 
+										configs?.facebook_id?.value &&
 										facebookLoginEnabled && (
 											<FacebookLogin
 												notificationState={notificationState}
