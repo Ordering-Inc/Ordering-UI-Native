@@ -17,6 +17,9 @@ export const UserFormDetailsUI = (props: any) => {
 		isEdit,
 		formState,
 		showField,
+		requiredFields,
+		onClose,
+		setIsSubmit,
 		cleanFormState,
 		onCloseProfile,
 		isRequiredField,
@@ -75,6 +78,7 @@ export const UserFormDetailsUI = (props: any) => {
 
 	const [{ user }] = useSession();
 	const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null);
+	const [isValid, setIsValid] = useState(false)
   const [isChanged, setIsChanged] = useState(false)
 	const [phoneInputData, setPhoneInputData] = useState({
 		error: '',
@@ -160,6 +164,7 @@ export const UserFormDetailsUI = (props: any) => {
 					cellphone: '',
 				};
 			}
+			setIsSubmit && setIsSubmit(true)
 			handleButtonUpdateClick(changes);
 		}
 	};
@@ -235,6 +240,12 @@ export const UserFormDetailsUI = (props: any) => {
 			setWillVerifyOtpState?.(true)
 		}
 	}, [phoneInputData, configs?.verification_phone_required?.value, isChanged])
+
+	useEffect(() => {
+		if (!requiredFields || formState?.changes?.length === 0) return
+			const _isValid = requiredFields.every((key: any) => formState?.changes[key])
+			setIsValid(_isValid)
+		}, [formState?.changes, requiredFields])
 	
 	return (
 		<>
@@ -248,7 +259,7 @@ export const UserFormDetailsUI = (props: any) => {
 							}).map(
 								(field: any) =>
 									showField &&
-									showField(field.code) && (
+									showField(field.code) && ((requiredFields && requiredFields.includes(field.code)) || !requiredFields) && (
 										<React.Fragment key={field.id}>
 											<Controller
 												key={field.id}
@@ -322,7 +333,7 @@ export const UserFormDetailsUI = (props: any) => {
 									),
 							)}
 
-							{!!showInputPhoneNumber && (
+							{!!showInputPhoneNumber &&((requiredFields && requiredFields.includes('cellphone')) || !requiredFields) && (
 								<WrapperPhone>
 									<OText size={14} lineHeight={21} weight={'500'} color={theme.colors.textNormal}>{t('PHONE', 'Phone')}</OText>
 									<PhoneInputNumber
@@ -347,71 +358,76 @@ export const UserFormDetailsUI = (props: any) => {
 									)}
 								</WrapperPhone>
 							)}
-							<Controller
-								control={control}
-								render={() => (
-									<>
-										<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
-											{t('PASSWORD', 'Password')}
-										</OText>
-										<OInput
-											name='password'
-											placeholder={t('FRONT_VISUALS_PASSWORD', 'Password')}
-											inputStyle={styles.inputStyle}
-											style={{ paddingLeft: 0, paddingRight: 0, marginTop: 6, height: 44, minHeight: 44 }}
-											autoCapitalize='none'
-											isDisabled={false}
-											value={
-												formState?.changes['password'] ??
-												(user && user['password']) ??
-												''
-											}
-											onChange={(val: any) => {
-												setValue('password', val.target.value)
-												handleChangeInput(val)
+							{!requiredFields && (
+								<Controller
+									control={control}
+									render={() => (
+										<>
+											<OText size={14} lineHeight={21} color={theme.colors.textNormal} weight={'500'} style={{ textTransform: 'capitalize', alignSelf: 'flex-start' }}>
+												{t('PASSWORD', 'Password')}
+											</OText>
+											<OInput
+												name='password'
+												placeholder={t('FRONT_VISUALS_PASSWORD', 'Password')}
+												inputStyle={styles.inputStyle}
+												style={{ paddingLeft: 0, paddingRight: 0, marginTop: 6, height: 44, minHeight: 44 }}
+												autoCapitalize='none'
+												isDisabled={false}
+												value={
+													formState?.changes['password'] ??
+													(user && user['password']) ??
+													''
+												}
+												onChange={(val: any) => {
+													setValue('password', val.target.value)
+													handleChangeInput(val)
+												}}
+												autoCorrect
+												type='default'
+												returnKeyType="done"
+												autoCompleteType='off'
+												isSecured
+											/>
+										</>
+									)}
+									name='password'
+									rules={getInputRules({ name: 'password', code: 'password' })}
+									defaultValue=''
+								/>
+							)}
+							{!requiredFields && (
+								<Controller
+									control={control}
+									render={({ onChange, value }: any) => (
+										<TouchableOpacity
+											style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, width: '100%' }}
+											onPress={() => {
+												onChange(!value)
+												handleChangePromotions(!value)
 											}}
-											autoCorrect
-											type='default'
-											returnKeyType="done"
-											autoCompleteType='off'
-											isSecured
-										/>
-									</>
-								)}
-								name='password'
-								rules={getInputRules({ name: 'password', code: 'password' })}
-								defaultValue=''
-							/>
-							<Controller
-								control={control}
-								render={({ onChange, value }: any) => (
-									<TouchableOpacity
-										style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20, width: '100%' }}
-										onPress={() => {
-											onChange(!value)
-											handleChangePromotions(!value)
-										}}
-									>
-										<CheckBox
-											value={value}
-											boxType={'square'}
-											tintColors={{
-												true: theme.colors.primary,
-												false: theme.colors.disabled
-											}}
-											tintColor={theme.colors.disabled}
-											onCheckColor={theme.colors.primary}
-											onTintColor={theme.colors.primary}
-											style={Platform.OS === 'ios' && styles.checkBoxStyle}
-										/>
-										<OText style={{ fontSize: 14, paddingHorizontal: 5, paddingLeft: 10 }}>{t('RECEIVE_NEWS_EXCLUSIVE_PROMOTIONS', 'Receive newsletters and exclusive promotions')}</OText>
-									</TouchableOpacity>
-								)}
-								name='promotions'
-								defaultValue={formState?.result?.result
-									? !!formState?.result?.result?.settings?.notification?.newsletter
-									: !!(formState?.changes?.settings?.notification?.newsletter ?? (user && user?.settings?.notification?.newsletter))}
-							/>
+										>
+											<CheckBox
+												value={value}
+												boxType={'square'}
+												tintColors={{
+													true: theme.colors.primary,
+													false: theme.colors.disabled
+												}}
+												tintColor={theme.colors.disabled}
+												onCheckColor={theme.colors.primary}
+												onTintColor={theme.colors.primary}
+												style={Platform.OS === 'ios' && styles.checkBoxStyle}
+											/>
+											<OText style={{ fontSize: 14, paddingHorizontal: 5, paddingLeft: 10 }}>{t('RECEIVE_NEWS_EXCLUSIVE_PROMOTIONS', 'Receive newsletters and exclusive promotions')}</OText>
+										</TouchableOpacity>
+									)}
+									name='promotions'
+									defaultValue={formState?.result?.result
+										? !!formState?.result?.result?.settings?.notification?.newsletter
+										: !!(formState?.changes?.settings?.notification?.newsletter ?? (user && user?.settings?.notification?.newsletter))}
+								/>
+							)}
+
 						</UDWrapper>
 					)}
 				{validationFields?.loading && (
@@ -442,6 +458,22 @@ export const UserFormDetailsUI = (props: any) => {
 							/>
 						)}
 				</>
+			)}
+			{requiredFields && (
+				<OButton
+					text={
+						formState.loading
+							? t('UPDATING', 'Updating...')
+							: t('CONTINUE', 'Continue')
+					}
+					bgColor={theme.colors.white}
+					textStyle={{ color: theme.colors.primary, fontSize: 14 }}
+					borderColor={theme.colors.primary}
+					isDisabled={formState.loading || !isValid}
+					imgRightSrc={null}
+					style={{ borderRadius: 7.6, shadowOpacity: 0, width: '100%', borderWidth: 1, marginTop: 20, marginBottom: 20 }}
+					onClick={handleSubmit(onSubmit)}
+				/>
 			)}
 		</>
 	);
