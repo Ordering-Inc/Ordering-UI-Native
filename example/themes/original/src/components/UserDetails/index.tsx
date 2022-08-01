@@ -20,6 +20,8 @@ const UserDetailsUI = (props: any) => {
 		isEdit,
 		formState,
 		cleanFormState,
+		requiredFields,
+		onClose,
 		cartStatus,
 		toggleIsEdit,
 		validationFields,
@@ -35,6 +37,17 @@ const UserDetailsUI = (props: any) => {
 	const [{ user }] = useSession()
 	const userData = props.userData || (!formState.result.error && formState.result?.result) || user
 
+	const [isModalVisible, setIsModalVisible] = useState(false);
+	const [isSubmit, setIsSubmit] = useState(false)
+	const [willVerifyOtpState, setWillVerifyOtpState] = useState(false);
+	const [checkPhoneCodeState, setCheckPhoneCodeState] = useState({ loading: false, result: { error: false } })
+	const [phoneInputData, setPhoneInputData] = useState({
+		error: '',
+		phone: {
+			country_phone_code: null,
+			cellphone: null,
+		},
+	});
 
 	useEffect(() => {
 		if (isUserDetailsEdit) {
@@ -46,6 +59,12 @@ const UserDetailsUI = (props: any) => {
 		toggleIsEdit()
 		cleanFormState({ changes: {} })
 	}
+
+	useEffect(() => {
+		if (isSubmit && !isEdit && requiredFields) {
+			onClose && onClose()
+		}
+	}, [isSubmit, requiredFields, isEdit])
 
 	useEffect(() => {
 		if (user?.cellphone && !user?.country_phone_code) {
@@ -72,7 +91,7 @@ const UserDetailsUI = (props: any) => {
 						<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal}>
 							{t('CUSTOMER_DETAILS', 'Customer Details')}
 						</OText>
-						{cartStatus !== 2 && (
+						{cartStatus !== 2 && !requiredFields && (
 							!isEdit ? (
 								<EditBtn onPress={() => toggleIsEdit()} activeOpacity={0.7}>
 									<OIcon
@@ -117,7 +136,13 @@ const UserDetailsUI = (props: any) => {
 							)}
 						</UDInfo>
 					) : (
-						<UserFormDetailsUI {...props} phoneUpdate={phoneUpdate} togglePhoneUpdate={togglePhoneUpdate} isCheckout={isCheckout} />
+						<UserFormDetailsUI
+							{...props}
+							phoneUpdate={phoneUpdate}
+							togglePhoneUpdate={togglePhoneUpdate}
+							isCheckout={isCheckout}
+							setWillVerifyOtpState={setWillVerifyOtpState}
+						/>
 					)}
 				</UDContainer>
 			)}

@@ -114,6 +114,10 @@ const CheckoutUI = (props: any) => {
 			position: 'absolute',
 			fontSize: 20
 		},
+		detailWrapper: {
+			paddingHorizontal: 40,
+			width: '100%'
+		},
 		wrapperNavbar: Platform.OS === 'ios'
 			? { paddingVertical: 0, paddingHorizontal: 40 }
 			: { paddingVertical: 20, paddingHorizontal: 40 }
@@ -136,6 +140,8 @@ const CheckoutUI = (props: any) => {
 	const [isDeliveryOptionModalVisible, setIsDeliveryOptionModalVisible] = useState(false)
 	const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
+	const [isOpen, setIsOpen] = useState(false)
+  const [requiredFields, setRequiredFields] = useState<any>([])
 
 	const placeSpotTypes = [3, 4]
 	const businessConfigs = businessDetails?.business?.configs ?? []
@@ -173,10 +179,14 @@ const CheckoutUI = (props: any) => {
 	}
 
 	const handlePlaceOrder = (confirmPayment) => {
-		if (!userErrors.length) {
+		if (!userErrors.length && !requiredFields?.length) {
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
 		}
+		if (requiredFields?.length) {
+      setIsOpen(true)
+      return
+    }
 		let stringError = ''
 		Object.values(userErrors).map((item: any, i: number) => {
 			stringError += (i + 1) === userErrors.length ? `- ${item?.message || item}` : `- ${item?.message || item}\n`
@@ -204,11 +214,12 @@ const CheckoutUI = (props: any) => {
 		setUserErrors([])
 		const errors = []
 		const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes']
+		const _requiredFields: any = []
 
 		Object.values(validationFields?.fields?.checkout).map((field: any) => {
 			if (field?.required && !notFields.includes(field.code)) {
 				if (!user[field?.code]) {
-					errors.push(t(`VALIDATION_ERROR_${field.code.toUpperCase()}_REQUIRED`, `The field ${field?.name} is required`))
+					_requiredFields.push(field?.code)
 				}
 			}
 		})
@@ -219,8 +230,9 @@ const CheckoutUI = (props: any) => {
 				validationFields?.fields?.checkout?.cellphone?.required) ||
 				configs?.verification_phone_required?.value === '1')
 		) {
-			errors.push(t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Phone number is required'))
+			_requiredFields.push('cellphone')
 		}
+		setRequiredFields(_requiredFields)
 
 		if (phoneUpdate) {
 			errors.push(t('NECESSARY_UPDATE_COUNTRY_PHONE_CODE', 'It is necessary to update your phone number'))
@@ -702,6 +714,28 @@ const CheckoutUI = (props: any) => {
 							cartuuid={cart?.uuid}
 							onClose={() => setOpenChangeStore(false)}
 						/>
+					</OModal>
+					<OModal
+						open={isOpen}
+						onClose={() => setIsOpen(false)}
+					>
+						<View style={styles.detailWrapper}>
+							<UserDetails
+								isUserDetailsEdit
+								cartStatus={cart?.status}
+								businessId={cart?.business_id}
+								useValidationFields
+								useDefualtSessionManager
+								useSessionUser
+								isCheckout
+								isEdit
+								phoneUpdate={phoneUpdate}
+								togglePhoneUpdate={togglePhoneUpdate}
+								requiredFields={requiredFields}
+								hideUpdateButton
+								onClose={() => setIsOpen(false)}
+							/>
+						</View>
 					</OModal>
 				</ChContainer>
 			</Container>
