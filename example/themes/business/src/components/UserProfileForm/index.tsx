@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, ActivityIndicator, Pressable } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
@@ -22,6 +22,7 @@ import {
 import { LogoutButton } from '../LogoutButton';
 import { LanguageSelector } from '../LanguageSelector';
 import { UserFormDetailsUI } from '../UserFormDetails';
+import { DriverSchedule } from '../DriverSchedule'
 import ToggleSwitch from 'toggle-switch-react-native';
 import { UDWrapper } from '../UserFormDetails/styles';
 import {
@@ -30,11 +31,12 @@ import {
   OText,
   OButton,
   OInput,
+  OModal,
 } from '../../components/shared';
 import { sortInputFields, getTraduction } from '../../utils';
 import { ProfileParams } from '../../types';
 import { NotFoundSource } from '../NotFoundSource';
-
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 const ProfileUI = (props: ProfileParams) => {
   const {
     navigation,
@@ -67,6 +69,7 @@ const ProfileUI = (props: ProfileParams) => {
   const [phoneUpdate, setPhoneUpdate] = useState(false);
   const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null);
   const [phoneToShow, setPhoneToShow] = useState('');
+  const [openModal, setOpenModal] = useState(false)
 
   useEffect(() => {
     if (phoneInputData.phone.cellphone) {
@@ -461,7 +464,6 @@ const ProfileUI = (props: ProfileParams) => {
               />
             </View>
           )}
-
           {!validationFields.loading && !isEdit && (
             <EditButton>
               <OButton
@@ -476,12 +478,32 @@ const ProfileUI = (props: ProfileParams) => {
               />
             </EditButton>
           )}
-
+          {!!user?.schedule && (
+            <Pressable style={{ marginBottom: 10 }} onPress={() => setOpenModal(true)}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <OText size={16}>{t('SCHEDULE', 'Schedule')}</OText>
+                <AntDesignIcon size={18} name='right' />
+              </View>
+              <View style={{
+                borderBottomColor: theme.colors.tabBar,
+                borderBottomWidth: 1,
+                marginTop: 10
+              }} />
+            </Pressable>
+          )}
           <Actions>
             <LanguageSelector />
 
             <LogoutButton />
           </Actions>
+          <OModal
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            entireModal
+            hideIcons
+          >
+            <DriverSchedule schedule={user?.schedule} />
+          </OModal>
         </ScrollView>
       )}
     </>

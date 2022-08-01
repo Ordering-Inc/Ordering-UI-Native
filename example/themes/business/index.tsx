@@ -39,6 +39,8 @@ import { VerifyPhone } from './src/components/VerifyPhone';
 import { DriverMap } from './src/components/DriverMap';
 import { MapViewUI as MapView } from './src/components/MapView'
 import { NewOrderNotification } from './src/components/NewOrderNotification';
+import { DriverSchedule } from './src/components/DriverSchedule';
+import { ScheduleBlocked } from './src/components/ScheduleBlocked';
 //OComponents
 import {
   OText,
@@ -106,6 +108,8 @@ export {
   UserFormDetailsUI,
   UserProfileForm,
   VerifyPhone,
+  DriverSchedule,
+  ScheduleBlocked,
   //OComponents
   OAlert,
   OButton,

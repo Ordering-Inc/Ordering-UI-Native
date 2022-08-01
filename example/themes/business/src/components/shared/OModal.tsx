@@ -26,6 +26,7 @@ interface Props {
   isNotDecoration?: boolean;
   styleCloseButton?: any;
   order?: any;
+  hideIcons?: boolean
 }
 
 const OModal = (props: Props): React.ReactElement => {
@@ -47,6 +48,7 @@ const OModal = (props: Props): React.ReactElement => {
     style,
     styleCloseButton,
     order,
+    hideIcons
   } = props;
 
   const theme = useTheme();
@@ -70,8 +72,8 @@ const OModal = (props: Props): React.ReactElement => {
       alignItems: 'center',
       paddingHorizontal: 30,
       paddingTop: 30,
-      paddingBottom: 25,
-      borderBottomWidth: 2,
+      paddingBottom: !hideIcons ? 25 : 15,
+      borderBottomWidth: !hideIcons ? 2 : 0,
       borderBottomColor: '#e6e6e6',
     },
     titleGroups: {
@@ -218,50 +220,51 @@ const OModal = (props: Props): React.ReactElement => {
                     {title}
                   </OText>
                 </View>
+                {!hideIcons && (
+                  <View style={styles.titleGroups}>
+                    <View style={styles.shadow}>
+                      {order?.business?.logo ? (
+                        <OIcon
+                          url={optimizeImage(
+                            order?.business?.logo,
+                            'h_300,c_limit',
+                          )}
+                          style={styles.titleIcons}
+                        />
+                      ) : (
+                        <OIcon
+                          src={theme.images.dummies.businessLogo}
+                          style={styles.titleIcons}
+                        />
+                      )}
+                    </View>
 
-                <View style={styles.titleGroups}>
-                  <View style={styles.shadow}>
-                    {order?.business?.logo ? (
+                    <View style={styles.shadow}>
                       <OIcon
                         url={optimizeImage(
-                          order?.business?.logo,
+                          order?.customer?.photo ||
+                          theme?.images?.dummies?.customerPhoto,
                           'h_300,c_limit',
                         )}
                         style={styles.titleIcons}
                       />
-                    ) : (
-                      <OIcon
-                        src={theme.images.dummies.businessLogo}
-                        style={styles.titleIcons}
-                      />
+                    </View>
+
+                    {order?.driver && (
+                      <View style={styles.shadow}>
+                        <OIcon
+                          url={
+                            optimizeImage(
+                              order?.driver?.photo,
+                              'h_300,c_limit',
+                            ) || theme?.images?.dummies?.driverPhoto
+                          }
+                          style={styles.titleIcons}
+                        />
+                      </View>
                     )}
                   </View>
-
-                  <View style={styles.shadow}>
-                    <OIcon
-                      url={optimizeImage(
-                        order?.customer?.photo ||
-                          theme?.images?.dummies?.customerPhoto,
-                        'h_300,c_limit',
-                      )}
-                      style={styles.titleIcons}
-                    />
-                  </View>
-
-                  {order?.driver && (
-                    <View style={styles.shadow}>
-                      <OIcon
-                        url={
-                          optimizeImage(
-                            order?.driver?.photo,
-                            'h_300,c_limit',
-                          ) || theme?.images?.dummies?.driverPhoto
-                        }
-                        style={styles.titleIcons}
-                      />
-                    </View>
-                  )}
-                </View>
+                )}
               </View>
             )}
             {children}
