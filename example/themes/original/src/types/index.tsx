@@ -166,6 +166,9 @@ export interface BusinessesListingParams {
 	businessId?: any;
 	isGuestUser?: any;
 	handleUpdateBusinessList?: any;
+	priceLevelSelected?: any;
+	handleChangePriceLevel?: any;
+	businessTypeSelected?: any;
 }
 export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
@@ -184,7 +187,8 @@ export interface BusinessTypeFilterParams {
 	defaultBusinessType?: string | null;
 	images?: any
 	typesState?: any
-	setBusinessTypes?: any
+	setBusinessTypes?: any,
+	isAppoint?: boolean | undefined
 }
 export interface BusinessControllerParams {
 	key?: string | number;
@@ -209,6 +213,7 @@ export interface BusinessControllerParams {
 	handleFavoriteBusiness?: any,
 	setFavoriteIds?: any;
 	handleUpdateBusinessList?: any;
+	enableIntersection?: boolean;
 }
 export interface BusinessProductsListingParams {
 	navigation?: any;
@@ -232,6 +237,8 @@ export interface BusinessProductsListingParams {
 	setProductLogin?: () => {};
 	updateProductModal?: (value: any) => {};
 	handleUpdateProducts?: any;
+	professionalSelected?: any;
+	handleChangeProfessionalSelected?: any;
 }
 export interface BusinessBasicInformationParams {
 	navigation?: any;
@@ -283,15 +290,16 @@ export interface BusinessProductsListParams {
 	handleUpdateProducts?: any
 }
 export interface SingleProductCardParams {
-	businessId: any,
+	businessId: any;
 	product: any;
 	isSoldOut: boolean;
 	onProductClick: any;
 	productAddedToCartLength: number;
-	style?: ViewStyle,
-	categoryState?: any,
-	handleFavoriteProduct?: any,
-	handleUpdateProducts?: any
+	style?: ViewStyle;
+	categoryState?: any;
+	handleFavoriteProduct?: any;
+	handleUpdateProducts?: any;
+	enableIntersection?: boolean;
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -409,25 +417,28 @@ export interface ProductItemAccordionParams {
 	isFromCheckout?: any
 }
 export interface ReviewOrderParams {
-	order?: { id: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
-	stars?: any,
-	handleChangeInput?: any,
-	handleChangeRating?: any,
-	handleSendReview?: any,
-	formState?: any,
-	navigation?: any,
-	setIsReviewed?: (isReviewed: boolean) => {},
-	handleReviewState?: any,
-	setStars?: any,
-	onNavigationRedirect?: any
+	order?: { id: number, business_id: number, business_name?: string, delivery_datetime?: string, logo: string, driver: any, products: Array<any>, review: any, user_review: any };
+	stars?: any;
+	handleChangeInput?: any;
+	handleChangeRating?: any;
+	handleSendReview?: any;
+	formState?: any;
+	navigation?: any;
+	setIsReviewed?: (isReviewed: boolean) => void;
+	handleReviewState?: any;
+	setStars?: any;
+	onNavigationRedirect?: any;
+	closeReviewOrder?: () => void;
+	skipReview?: () => void;
 }
 export interface ReviewProductParams {
 	navigation?: any,
 	onNavigationRedirect?: any,
-	order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
+	order?: { orderId: number, business_id: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
 	formState?: any,
 	handleChangeFormState?: any,
-	handleSendProductReview?: any
+	handleSendProductReview?: any;
+	closeReviewProduct?: () => void;
 }
 export interface SingleProductReviewParams {
 	product: any,
@@ -437,12 +448,13 @@ export interface SingleProductReviewParams {
 export interface ReviewDriverParams {
 	navigation?: any,
 	onNavigationRedirect?: any,
-	order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
+	order?: { orderId: number, business_id: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
 	formState?: any,
 	setIsDriverReviewed?: (isReviewed: boolean) => {},
 	dirverReviews?: any,
 	setDriverReviews?: any,
-	handleSendDriverReview?: any
+	handleSendDriverReview?: any;
+	closeReviewDriver?: () => void;
 }
 export interface MessagesParams {
 	type?: string,
@@ -694,6 +706,31 @@ export interface PreviousBusinessOrderedParams {
 	onNavigationRedirect?: any,
 	isBusinessesSearchList?: any,
 	businessLoading?: boolean
+}
+
+export interface ServiceFormParams {
+	navigation?: any,
+	professionalSelected: any,
+	product: any,
+	handleSave: (value?: any) => {}
+	productCart?: any
+	isSoldOut: boolean,
+	maxProductQuantity: any,
+	businessSlug?: string,
+	onClose: any,
+	professionalList: any
+}
+
+export interface ProfessionalFilterParams {
+	professionals?: any,
+	professionalSelected?: any,
+	handleChangeProfessionalSelected: any
+}
+
+export interface ProfessionalProfileParams {
+	professional: any,
+	handleChangeProfessionalSelected: any,
+	onClose: any
 }
 
 export interface PreviousProductsOrderedParams {
