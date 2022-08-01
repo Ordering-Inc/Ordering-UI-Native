@@ -476,7 +476,7 @@ const ProfileUI = (props: ProfileParams) => {
               />
             </EditButton>
           )}
-          {user?.schedule && (
+          {!!user?.schedule && (
             <Pressable style={{ marginBottom: 10 }} onPress={() => setOpenModal(true)}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <OText size={16}>{t('SCHEDULE', 'Schedule')}</OText>
