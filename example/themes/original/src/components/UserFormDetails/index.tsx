@@ -29,7 +29,6 @@ export const UserFormDetailsUI = (props: any) => {
 		phoneUpdate,
 		hideUpdateButton,
 		setWillVerifyOtpState,
-		isVerifiedPhone,
 		handleChangePromotions,
 	} = props;
 
@@ -80,6 +79,7 @@ export const UserFormDetailsUI = (props: any) => {
 	const [{ user }] = useSession();
 	const [userPhoneNumber, setUserPhoneNumber] = useState<any>(null);
 	const [isValid, setIsValid] = useState(false)
+  const [isChanged, setIsChanged] = useState(false)
 	const [phoneInputData, setPhoneInputData] = useState({
 		error: '',
 		phone: {
@@ -157,9 +157,6 @@ export const UserFormDetailsUI = (props: any) => {
 				);
 				return;
 			}
-			if (formState?.changes?.cellphone && !isVerifiedPhone) {
-				showToast(ToastType.Error, t('VERIFY_ERROR_PHONE_NUMBER', 'The Phone Number field is not verified'))
-			}
 			let changes = null;
 			if (user?.cellphone && !userPhoneNumber) {
 				changes = {
@@ -174,6 +171,7 @@ export const UserFormDetailsUI = (props: any) => {
 
 	const handleChangePhoneNumber = (number: any) => {
 		setPhoneInputData(number);
+		setIsChanged(true)
 		let phoneNumber = {
 			country_phone_code: {
 				name: 'country_phone_code',
@@ -233,17 +231,22 @@ export const UserFormDetailsUI = (props: any) => {
 	}, [user, isEdit]);
 
 	useEffect(() => {
-		if (!phoneInputData.error && phoneInputData?.phone?.country_phone_code && phoneInputData?.phone?.cellphone) {
+		if (!phoneInputData.error &&
+			phoneInputData?.phone?.country_phone_code &&
+			phoneInputData?.phone?.cellphone &&
+			configs?.verification_phone_required?.value === '1' &&
+			formState?.changes?.cellphone &&
+			isChanged) {
 			setWillVerifyOtpState?.(true)
 		}
-	}, [phoneInputData])
+	}, [phoneInputData, configs?.verification_phone_required?.value, isChanged])
 
 	useEffect(() => {
-	if (!requiredFields || formState?.changes?.length === 0) return
-		const _isValid = requiredFields.every((key: any) => formState?.changes[key])
-		setIsValid(_isValid)
-	}, [formState?.changes, requiredFields])
-
+		if (!requiredFields || formState?.changes?.length === 0) return
+			const _isValid = requiredFields.every((key: any) => formState?.changes[key])
+			setIsValid(_isValid)
+		}, [formState?.changes, requiredFields])
+	
 	return (
 		<>
 			<UDForm>
