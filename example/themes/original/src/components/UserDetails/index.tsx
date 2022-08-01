@@ -30,12 +30,9 @@ const UserDetailsUI = (props: any) => {
 		phoneUpdate,
 		togglePhoneUpdate,
 		isCheckout,
-		checkPhoneCodeState,
 		handleSendVerifyCode,
-		handleCheckPhoneCode,
 		verifyPhoneState,
-		isVerifiedPhone,
-		setCheckPhoneCodeState
+		setFormState
 	} = props
 
 	const theme = useTheme();
@@ -48,6 +45,7 @@ const UserDetailsUI = (props: any) => {
 
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [willVerifyOtpState, setWillVerifyOtpState] = useState(false);
+	const [checkPhoneCodeState, setCheckPhoneCodeState] = useState({ loading: false, result: { error: false } })
 	const [phoneInputData, setPhoneInputData] = useState({
 		error: '',
 		phone: {
@@ -94,6 +92,18 @@ const UserDetailsUI = (props: any) => {
 		}
 	}
 
+	const handleSendPhoneCode = (values: any) => {
+    setWillVerifyOtpState(false)
+		setIsModalVisible(false)
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState?.changes,
+        verification_code: values?.code
+      }
+    })
+  }
+
 	useEffect(() => {
 		if (willVerifyOtpState) handleVerifyCodeClick()
 	}, [willVerifyOtpState])
@@ -119,10 +129,6 @@ const UserDetailsUI = (props: any) => {
 			}
 		}
 	}, [verifyPhoneState])
-
-	useEffect(() => {
-		if (isVerifiedPhone) setIsModalVisible(false)
-	}, [isVerifiedPhone])
 
 	return (
 		<>
@@ -202,13 +208,12 @@ const UserDetailsUI = (props: any) => {
 				entireModal
 			>
 				<VerifyPhone
-				phone={phoneInputData.phone}
-				verifyPhoneState={verifyPhoneState}
-				checkPhoneCodeState={checkPhoneCodeState}
-				handleCheckPhoneCode={handleCheckPhoneCode}
-				setCheckPhoneCodeState={setCheckPhoneCodeState}
-				handleVerifyCodeClick={handleVerifyCodeClick}
-				onClose={() => setIsModalVisible(false)}
+					phone={phoneInputData.phone}
+					verifyPhoneState={verifyPhoneState}
+					checkPhoneCodeState={checkPhoneCodeState}
+					handleCheckPhoneCode={handleSendPhoneCode}
+					handleVerifyCodeClick={handleVerifyCodeClick}
+					onClose={() => setIsModalVisible(false)}
 				/>
 			</OModal>
 			<Spinner visible={verifyPhoneState?.loading} />

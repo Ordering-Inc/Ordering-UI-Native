@@ -35,12 +35,9 @@ const ProfileUI = (props: ProfileParams) => {
 		cleanFormState,
 		handleChangeInput,
 		handleButtonUpdateClick,
-		checkPhoneCodeState,
 		handleSendVerifyCode,
-		handleCheckPhoneCode,
 		verifyPhoneState,
-		isVerifiedPhone,
-		setCheckPhoneCodeState
+		setFormState
 	} = props;
 
 	const theme = useTheme();
@@ -73,6 +70,7 @@ const ProfileUI = (props: ProfileParams) => {
 	const { handleSubmit, errors, setValue, control } = useForm();
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [willVerifyOtpState, setWillVerifyOtpState] = useState(false);
+	const [checkPhoneCodeState, setCheckPhoneCodeState] = useState({ loading: false, result: { error: false } })
 
 	const [phoneInputData, setPhoneInputData] = useState({
 		error: '',
@@ -272,9 +270,17 @@ const ProfileUI = (props: ProfileParams) => {
 		}
 	}, [verifyPhoneState])
 
-	useEffect(() => {
-		if (isVerifiedPhone) setIsModalVisible(false)
-	}, [isVerifiedPhone])
+	const handleSendPhoneCode = (values: any) => {
+    setWillVerifyOtpState(false)
+		setIsModalVisible(false)
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState?.changes,
+        verification_code: values?.code
+      }
+    })
+  }
 
 	return (
 		<>
@@ -331,8 +337,7 @@ const ProfileUI = (props: ProfileParams) => {
 					phone={phoneInputData.phone}
 					verifyPhoneState={verifyPhoneState}
 					checkPhoneCodeState={checkPhoneCodeState}
-					handleCheckPhoneCode={handleCheckPhoneCode}
-					setCheckPhoneCodeState={setCheckPhoneCodeState}
+					handleCheckPhoneCode={handleSendPhoneCode}
 					handleVerifyCodeClick={handleVerifyCodeClick}
 					onClose={() => setIsModalVisible(false)}
 				/>
