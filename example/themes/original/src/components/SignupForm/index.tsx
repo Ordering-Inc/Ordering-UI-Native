@@ -123,6 +123,7 @@ const SignupFormUI = (props: SignupParams) => {
 	const { control, handleSubmit, errors, register, setValue } = useForm();
 
 	const [passwordSee, setPasswordSee] = useState(false);
+	const [otpErrMsg, setOtpErrMsg] = useState('')
 	const [formValues, setFormValues] = useState(null);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
@@ -414,11 +415,9 @@ const SignupFormUI = (props: SignupParams) => {
 
 	useEffect(() => {
 		if (checkPhoneCodeState?.result?.error) {
-			showToast(ToastType.Error,
-				(typeof checkPhoneCodeState?.result?.result === 'string' ? checkPhoneCodeState?.result?.result : checkPhoneCodeState?.result?.result[0]) || t('ERROR', 'Error'));
+			setOtpErrMsg((typeof checkPhoneCodeState?.result?.result === 'string' ? checkPhoneCodeState?.result?.result : checkPhoneCodeState?.result?.result[0]) || t('ERROR', 'Error'))
 		} else if (checkPhoneCodeState?.result?.result && checkPhoneCodeState?.result?.result?.[0] === 'VERIFICATION_CODE_WAS_SENT_TO') {
-			showToast(ToastType.Succesed, t('CODE_SENT', 'The code has been sent'));
-			//   resetOtpLeftTime()
+			setOtpErrMsg(t('CODE_SENT', 'The code has been sent'))
 		}
 	}, [checkPhoneCodeState])
 
