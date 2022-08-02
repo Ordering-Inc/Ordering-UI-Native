@@ -73,6 +73,17 @@ const FavoriteListUI = (props: FavoriteParams) => {
     return objectStatus && objectStatus
   }
 
+  const onProductClick = (product: any) => {
+    const categoryId = product?.category?.id
+    const businessId = product?.category?.business?.id
+    if (!categoryId || !businessId) return
+    onNavigationRedirect && onNavigationRedirect('ProductDetails', {
+			productId: product?.id,
+			categoryId: categoryId,
+			businessId: businessId
+		})
+  }
+
   useEffect(() => {
 		const _businessId = 'businessId:' + reorderState?.result?.business_id
 		if (reorderState?.error) {
@@ -248,9 +259,9 @@ const FavoriteListUI = (props: FavoriteParams) => {
             favoriteList.favorites?.sort((a: any, b: any) => a?.name?.toLowerCase() > b?.name?.toLowerCase()).map((product: any, i: number) => (
               <SingleProductCard
                 key={`${product?.id}_${i}`}
-                isSoldOut={product.inventoried && !product.quantity}
+                isSoldOut={product?.inventoried && !product?.quantity}
                 product={product}
-                onProductClick={() => {}}
+                onProductClick={onProductClick}
                 handleUpdateProducts={handleUpdateFavoriteList}
               />
             ))

@@ -75,6 +75,7 @@ export const Favorite = (props: any) => {
         <FavoriteList
           favoriteURL='favorite_products'
           originalURL='products'
+          onNavigationRedirect={onRedirect}
           isProduct
         />
       )}
