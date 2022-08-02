@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager, AppState } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, StyleSheet, BackHandler, TouchableOpacity, I18nManager } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -109,7 +109,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [isReviewed, setIsReviewed] = useState(false)
   const [openOrderCreating, setOpenOrderCreating] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
-  const appState = useRef(AppState.currentState)
 
   const { order, loading, businessData, error } = props.order
 
@@ -257,23 +256,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     AsyncStorage.getItem('business-address', (err, result) => {
       if (result !== null) setOpenOrderCreating(true)
     })
-  }, [])
-
-  useEffect(() => {
-    const onFocusApp = (nextAppState: any) => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === "active"
-      ) {
-        getOrder && getOrder()
-      }
-      appState.current = nextAppState;
-    }
-
-    AppState.addEventListener("change", onFocusApp);
-    return () => {
-      AppState.removeEventListener('change', onFocusApp);
-    };
   }, [])
 
   return (
