@@ -68,3 +68,7 @@ export const RibbonBox = styled.View`
     border-radius: 50px;
   `}
 `
+
+export const SocialListWrapper = styled.ScrollView`
+  flex-direction: row;
+`
