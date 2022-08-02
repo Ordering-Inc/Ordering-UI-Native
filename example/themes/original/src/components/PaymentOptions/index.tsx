@@ -82,6 +82,8 @@ const PaymentOptionsUI = (props: any) => {
 				return theme.images.general.stripes
 			case 'stripe_redirect':
 				return theme.images.general.stripesb
+			case 'apple_pay':
+				return theme.images.general.applePayMark
 			default:
 				return theme.images.general.creditCard
 		}
@@ -142,29 +144,46 @@ const PaymentOptionsUI = (props: any) => {
 
 	const renderPaymethods = ({ item }: any) => {
 		return (
-			<TouchableOpacity
-				onPress={() => handlePaymentMethodClick(item)}
-			>
-				<PMItem
-					key={item.id}
-					isDisabled={isDisabled}
-					isActive={paymethodSelected?.id === item.id}
-				>
-					<OIcon
-						src={getPayIcon(item.gateway)}
-						width={20}
-						height={20}
-						color={paymethodSelected?.id === item.id ? theme.colors.white : theme.colors.backgroundDark}
-					/>
-					<OText
-						size={10}
-						style={{ margin: 0, marginTop: 4 }}
-						color={paymethodSelected?.id === item.id ? theme.colors.white : '#000'}
+			<>
+				{item?.gateway === 'apple_pay' ? (
+					<TouchableOpacity
+						onPress={() => handlePaymentMethodClick(item)}
 					>
-						{t(item.gateway.toUpperCase(), item.name)}
-					</OText>
-				</PMItem>
-			</TouchableOpacity>
+						<OIcon
+							src={getPayIcon(item.gateway)}
+							width={70}
+							height={70}
+							style={{ marginRight: 10 }}
+						/>
+					</TouchableOpacity>
+				) : (
+					<TouchableOpacity
+						onPress={() => handlePaymentMethodClick(item)}
+					>
+						{console.log(item?.gateway)}
+						<PMItem
+							key={item.id}
+							isDisabled={isDisabled}
+							isActive={paymethodSelected?.id === item.id}
+						>
+							<OIcon
+								src={getPayIcon(item.gateway)}
+								width={20}
+								height={20}
+								color={item?.gateway === 'apple_pay' ? '' : paymethodSelected?.id === item.id ? theme.colors.white : theme.colors.backgroundDark}
+							/>
+							<OText
+								size={10}
+								style={{ margin: 0, marginTop: 4 }}
+								color={paymethodSelected?.id === item.id ? theme.colors.white : '#000'}
+							>
+								{t(item.gateway.toUpperCase(), item.name)}
+							</OText>
+						</PMItem>
+					</TouchableOpacity>
+				)}
+			</>
+
 		)
 	}
 
