@@ -332,6 +332,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
 export const ReviewOrder = (props: ReviewOrderParams) => {
   const reviewOrderProps = {
     ...props,
+    defaultStar: 0,
     UIComponent: ReviewOrderUI
   }
   return <ReviewOrderController {...reviewOrderProps} />
