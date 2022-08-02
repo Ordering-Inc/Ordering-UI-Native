@@ -299,7 +299,7 @@ const OrderSummaryUI = (props: any) => {
                       {t('TOTAL', 'Total')}
                     </OText>
                     <OText size={14} style={{ fontWeight: 'bold' }} >
-                      {parsePrice(cart?.total >= 0 ? cart?.total : 0)}
+                      {parsePrice(cart?.balance >= 0 ? cart?.balance : 0)}
                     </OText>
                   </OSTable>
                 </View>
