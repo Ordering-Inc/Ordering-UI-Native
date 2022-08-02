@@ -89,6 +89,8 @@ const PaymentOptionsUI = (props: any) => {
         return theme.images.general.stripes
       case 'stripe_redirect':
         return theme.images.general.stripesb
+      case 'apple_pay':
+        return theme.images.general.applePayMark
       default:
         return theme.images.general.creditCard
     }
@@ -97,7 +99,7 @@ const PaymentOptionsUI = (props: any) => {
   const handlePaymentMethodClick = (paymethod: any) => {
     const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal', 'square'].includes(paymethod?.gateway)
     handlePaymethodClick(paymethod, isPopupMethod)
-		if (webViewPaymentGateway.includes(paymethod?.gateway)) {
+    if (webViewPaymentGateway.includes(paymethod?.gateway)) {
       handlePaymentMethodClickCustom(paymethod)
     }
     setCardData(paymethodData)
@@ -130,29 +132,44 @@ const PaymentOptionsUI = (props: any) => {
 
   const renderPaymethods = ({ item }: any) => {
     return (
-      <TouchableOpacity
-        onPress={() => handlePaymentMethodClick(item)}
-      >
-        <PMItem
-          key={item.id}
-          isDisabled={isDisabled}
-          isActive={paymethodSelected?.id === item.id}
-        >
-          <OIcon
-            src={getPayIcon(item.gateway)}
-            width={40}
-            height={40}
-            color={paymethodSelected?.id === item.id ? theme.colors.white : theme.colors.backgroundDark}
-          />
-          <OText
-            size={12}
-            style={{ margin: 0 }}
-            color={paymethodSelected?.id === item.id ? theme.colors.white : '#000'}
+      <>
+        {item?.gateway === 'apple_pay' ? (
+          <TouchableOpacity
+            onPress={() => handlePaymentMethodClick(item)}
           >
-            {t(item.gateway.toUpperCase(), item.name)}
-          </OText>
-        </PMItem>
-      </TouchableOpacity>
+            <OIcon
+              src={getPayIcon(item.gateway)}
+              width={120}
+              height={100}
+              style={{ marginRight: 10 }}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => handlePaymentMethodClick(item)}
+          >
+            <PMItem
+              key={item.id}
+              isDisabled={isDisabled}
+              isActive={paymethodSelected?.id === item.id}
+            >
+              <OIcon
+                src={getPayIcon(item.gateway)}
+                width={40}
+                height={40}
+                color={paymethodSelected?.id === item.id ? theme.colors.white : theme.colors.backgroundDark}
+              />
+              <OText
+                size={12}
+                style={{ margin: 0 }}
+                color={paymethodSelected?.id === item.id ? theme.colors.white : '#000'}
+              >
+                {t(item.gateway.toUpperCase(), item.name)}
+              </OText>
+            </PMItem>
+          </TouchableOpacity>
+        )}
+      </>
     )
   }
 
@@ -213,31 +230,31 @@ const PaymentOptionsUI = (props: any) => {
       {stripeOptions.includes(paymethodSelected?.gateway) &&
         (paymethodData?.brand || paymethodData?.card?.brand) &&
         (paymethodData?.last4 || paymethodData?.card?.last4) &&
-      (
-        <PMCardSelected>
-          <PMCardItemContent>
-            <View style={styles.viewStyle}>
-              <MaterialCommunityIcons
-                name='radiobox-marked'
-                size={24}
-                color={theme.colors.primary}
-              />
-            </View>
-            <View style={styles.viewStyle}>
-              <OText>
-                {getIconCard((paymethodData?.brand || paymethodData?.card?.brand), 26)}
-              </OText>
-            </View>
-            <View style={styles.viewStyle}>
-              <OText
-                size={20}
-              >
-                XXXX-XXXX-XXXX-{(paymethodData?.last4 || paymethodData?.card?.last4)}
-              </OText>
-            </View>
-          </PMCardItemContent>
-        </PMCardSelected>
-      )}
+        (
+          <PMCardSelected>
+            <PMCardItemContent>
+              <View style={styles.viewStyle}>
+                <MaterialCommunityIcons
+                  name='radiobox-marked'
+                  size={24}
+                  color={theme.colors.primary}
+                />
+              </View>
+              <View style={styles.viewStyle}>
+                <OText>
+                  {getIconCard((paymethodData?.brand || paymethodData?.card?.brand), 26)}
+                </OText>
+              </View>
+              <View style={styles.viewStyle}>
+                <OText
+                  size={20}
+                >
+                  XXXX-XXXX-XXXX-{(paymethodData?.last4 || paymethodData?.card?.last4)}
+                </OText>
+              </View>
+            </PMCardItemContent>
+          </PMCardSelected>
+        )}
 
       {/* Stripe */}
       {isOpenMethod?.paymethod?.gateway === 'stripe' && !paymethodData?.id && (
@@ -317,7 +334,7 @@ const PaymentOptionsUI = (props: any) => {
             bgColor={theme.colors.primary}
             borderColor={theme.colors.primary}
             style={styles.btnAddStyle}
-            textStyle={{color: 'white'}}
+            textStyle={{ color: 'white' }}
             imgRightSrc={null}
             onClick={() => setAddCardOpen({ ...addCardOpen, stripeConnect: true })}
           />
