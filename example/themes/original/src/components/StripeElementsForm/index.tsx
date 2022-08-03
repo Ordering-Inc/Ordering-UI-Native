@@ -67,7 +67,7 @@ const StripeElementsFormUI = (props: any) => {
 	const createPayMethod = async () => {
 		const params: any = { paymentMethodType: 'Card', paymentMethodData: {} }
 		if (Object.keys(billingDetails).length > 0) {
-			params.paymentMethodData.billingDetails = billingDetails
+			params.paymentMethodData.billingDetails = {...billingDetails, token: card?.last4}
 		}
 		try {
 			setCreatePmLoading(true)
