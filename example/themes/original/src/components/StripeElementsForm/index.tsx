@@ -61,13 +61,13 @@ const StripeElementsFormUI = (props: any) => {
 	}
 
 	if (user?.address) {
-		billingDetails.addressLine1 = user?.address
+		billingDetails.address.line1 = user?.address
 	}
 
 	const createPayMethod = async () => {
-		const params: any = { type: 'Card' }
+		const params: any = { paymentMethodType: 'Card', paymentMethodData: {} }
 		if (Object.keys(billingDetails).length > 0) {
-			params.billingDetails = billingDetails
+			params.paymentMethodData.billingDetails = billingDetails
 		}
 		try {
 			setCreatePmLoading(true)
@@ -94,16 +94,16 @@ const StripeElementsFormUI = (props: any) => {
 			setErrors(error?.message || error?.toString());
 		}
 	}
-
+	
 	const handleSaveCard = async () => {
 		setErrors('');
 		if (!requirements) {
 			createPayMethod();
 			return
 		}
-		const params: any = { type: 'Card' }
+		const params: any = { paymentMethodType: 'Card', paymentMethodData: {} }
 		if (Object.keys(billingDetails).length > 0) {
-			params.billingDetails = billingDetails
+			params.paymentMethodData.billingDetails = {...billingDetails, token: card?.last4}
 		}
 		try {
 			const { setupIntent, error } = await confirmSetupIntent(requirements, params);
