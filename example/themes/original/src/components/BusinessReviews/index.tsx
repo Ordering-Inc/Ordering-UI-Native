@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	BusinessReviews as BusinessReviewController,
 	useLanguage,
@@ -22,6 +22,7 @@ import {
 import { BusinessReviewsParams } from '../../types';
 import { ProgressBar, TouchableRipple } from 'react-native-paper';
 import moment from 'moment';
+import { setLocalMoment } from '../../utils';
 
 const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 	const { businessState, reviewsList } = props;
@@ -98,6 +99,10 @@ const BusinessReviewsUI = (props: BusinessReviewsParams) => {
 			<OText size={12} color={theme.colors.textNormal}>{comment}</OText>
 		</View>
 	);
+
+	useEffect(() => {
+		setLocalMoment(moment, t)
+	}, [])
 
 	return (
 		<BusinessReviewsContainer>
