@@ -25,7 +25,8 @@ export const SearchBar = (props: any) => {
 		blurOnSubmit,
 		inputContainerStyles,
 		containerStyles,
-		hideIcon
+		hideIcon,
+		autoFocus
 	} = props
 
 	const theme = useTheme();
@@ -82,15 +83,16 @@ export const SearchBar = (props: any) => {
 	return (
 		<Pressable style={[styles.container, containerStyles, { height: height }]}>
 			<OInput
+				autoFocus={autoFocus}
 				value={searchValue}
 				onChange={onChangeSearch}
-				style={{...styles.inputStyle, ...inputContainerStyles}}
+				style={{ ...styles.inputStyle, ...inputContainerStyles }}
 				placeholder={placeholder}
 				icon={!hideIcon && theme.images.general.search}
 				isDisabled={isDisabled}
 				iconStyle={{ width: 12 }}
 				returnKeyType='done'
-				inputStyle={{padding: 0, paddingTop: Platform.OS == 'android' ? 2 : 0, ...inputStyle}}
+				inputStyle={{ padding: 0, paddingTop: Platform.OS == 'android' ? 2 : 0, ...inputStyle }}
 				onPress={() => onPress && onPress()}
 				iconCustomRight={iconCustomRight}
 				onSubmitEditing={() => onSubmitEditing && onSubmitEditing()}
