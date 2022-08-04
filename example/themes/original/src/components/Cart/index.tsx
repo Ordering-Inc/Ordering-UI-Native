@@ -361,7 +361,7 @@ const CartUI = (props: any) => {
                   {t('TOTAL', 'Total')}
                 </OText>
                 <OText size={14} lineHeight={21} weight={'600'}>
-                  {parsePrice(cart?.total >= 0 ? cart?.total : 0)}
+                  {parsePrice(cart?.balance >= 0 ? cart?.balance : 0)}
                 </OText>
               </OSTable>
             </OSTotal>
