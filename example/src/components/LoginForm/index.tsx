@@ -165,6 +165,12 @@ const LoginFormUI = (props: LoginParams) => {
 
   const handleOpenRecaptcha = () => {
     setRecaptchaVerified(false)
+
+    if (recaptchaVerified) {
+      handleReCaptcha && handleReCaptcha('')
+      return
+    }
+
     if (!recaptchaConfig?.siteKey) {
       showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
       return
@@ -385,6 +391,15 @@ const LoginFormUI = (props: LoginParams) => {
                   baseUrl={recaptchaConfig?.baseUrl}
                   onVerify={onRecaptchaVerify}
                   onExpire={() => setRecaptchaVerified(false)}
+                  footerComponent={<OButton
+                    onClick={() => recaptchaRef.current.close()}
+                    style={{ borderRadius: 0 }}
+                    text={t('CLOSE', 'Close')}
+                    bgColor={theme.colors.primary}
+                    borderColor={theme.colors.primary}
+                    textStyle={{ color: 'white' }}
+                    imgRightSrc={null}
+                  />}
                 />
               </>
             )}

@@ -78,7 +78,6 @@ const SignupFormUI = (props: SignupParams) => {
 		handleChangeInput,
 		willVerifyOtpState,
 		setOtpState,
-		otpState,
 		setSignUpTab,
 		signUpTab,
 		useSignUpFullDetails,
@@ -120,10 +119,9 @@ const SignupFormUI = (props: SignupParams) => {
 	const [, t] = useLanguage();
 	const [, { login }] = useSession();
 	const [{ configs }] = useConfig();
-	const { control, handleSubmit, errors, register, setValue } = useForm();
+	const { control, handleSubmit, clearErrors, errors, register, unregister, setValue } = useForm();
 
 	const [passwordSee, setPasswordSee] = useState(false);
-	const [otpErrMsg, setOtpErrMsg] = useState('')
 	const [formValues, setFormValues] = useState(null);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
@@ -238,6 +236,11 @@ const SignupFormUI = (props: SignupParams) => {
 		navigation.navigate('Home');
 	};
 
+	const handleSignUpTab = (tab: string) => {
+		setSignUpTab && setSignUpTab(tab)
+		clearErrors()
+	}
+
 	const onSubmit = (values?: any) => {
 		if (phoneInputData.error && signUpTab !== 'otpEmail') {
 			showToast(ToastType.Error, phoneInputData.error);
@@ -344,7 +347,7 @@ const SignupFormUI = (props: SignupParams) => {
 
 	const onRecaptchaVerify = (token: any) => {
 		setRecaptchaVerified(true)
-		handleReCaptcha(token)
+		handleReCaptcha && handleReCaptcha(token)
 	}
 
 	useEffect(() => {
@@ -368,15 +371,19 @@ const SignupFormUI = (props: SignupParams) => {
 		if (Object.keys(errors).length > 0) {
 			setIsLoadingVerifyModal(false);
 		}
-	}, [errors]);
+	}, [errors])
 
 	useEffect(() => {
-		register('cellphone', {
-			required: isRequiredField('cellphone')
-				? t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone'))
-				: null
-		})
-	}, [register])
+		if (signUpTab === 'default' || signUpTab === 'otpCellphone') {
+			register('cellphone', {
+				required: isRequiredField('cellphone')
+					? t('VALIDATION_ERROR_MOBILE_PHONE_REQUIRED', 'The field Mobile phone is required').replace('_attribute_', t('CELLPHONE', 'Cellphone'))
+					: null
+			})
+		} else {
+			unregister('cellphone')
+		}
+	}, [signUpTab])
 
 	useEffect(() => {
 		if (phoneInputData?.phone?.cellphone) setValue('cellphone', phoneInputData?.phone?.cellphone, '')
@@ -415,9 +422,11 @@ const SignupFormUI = (props: SignupParams) => {
 
 	useEffect(() => {
 		if (checkPhoneCodeState?.result?.error) {
-			setOtpErrMsg((typeof checkPhoneCodeState?.result?.result === 'string' ? checkPhoneCodeState?.result?.result : checkPhoneCodeState?.result?.result[0]) || t('ERROR', 'Error'))
-		} else if (checkPhoneCodeState?.result?.result && checkPhoneCodeState?.result?.result?.[0] === 'VERIFICATION_CODE_WAS_SENT_TO') {
-			setOtpErrMsg(t('CODE_SENT', 'The code has been sent'))
+			setAlertState({
+				open: true,
+				title: (typeof checkPhoneCodeState?.result?.result === 'string' ? checkPhoneCodeState?.result?.result : checkPhoneCodeState?.result?.result[0].toString()) || t('ERROR', 'Error'),
+				content: []
+			})
 		}
 	}, [checkPhoneCodeState])
 
@@ -442,7 +451,7 @@ const SignupFormUI = (props: SignupParams) => {
 							ref={tabsRef}
 						>
 							<TabBtn
-								onPress={() => setSignUpTab && setSignUpTab('default')}
+								onPress={() => handleSignUpTab('default')}
 								onLayout={(event: any) => handleOnLayout(event, 'default')}
 							>
 								<OTab
@@ -466,7 +475,7 @@ const SignupFormUI = (props: SignupParams) => {
 							</TabBtn>
 							{useSignUpOtpEmail && (
 								<TabBtn
-									onPress={() => setSignUpTab && setSignUpTab('otpEmail')}
+									onPress={() => handleSignUpTab('otpEmail')}
 									onLayout={(event: any) => handleOnLayout(event, 'otpEmail')}
 								>
 									<OTab
@@ -492,7 +501,7 @@ const SignupFormUI = (props: SignupParams) => {
 							)}
 							{useSignUpOtpCellphone && (
 								<TabBtn
-									onPress={() => setSignUpTab && setSignUpTab('otpCellphone')}
+									onPress={() => handleSignUpTab('otpCellphone')}
 									onLayout={(event: any) => handleOnLayout(event, 'otpCellphone')}
 								>
 									<OTab
