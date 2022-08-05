@@ -120,7 +120,7 @@ export interface SignupParams {
 	handleChangeInput?: (in1: any, in2: any) => void;
 	enableReCaptcha?: boolean;
 	generateOtpCode?: (in1?: any) => void;
-	handleReCaptcha?: () => void;
+	handleReCaptcha?: (token?: any) => void;
 	setSignUpTab?: (in1: string) => void;
 	setWillVerifyOtpState?: (in1: boolean) => void;
 	setOtpState?: (in1: string) => void;
