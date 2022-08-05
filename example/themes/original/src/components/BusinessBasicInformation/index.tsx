@@ -94,7 +94,8 @@ export const BusinessBasicInformation = (
 			height: 20,
 			justifyContent: 'center',
 			alignItems: 'center',
-			marginLeft: 5
+			marginRight: 5,
+			marginBottom: 7
 		},
 		tiktokIcon: {
 			height: 12,
@@ -238,53 +239,6 @@ export const BusinessBasicInformation = (
 									</OText>
 								</RibbonBox>
 							)}
-							<SocialListWrapper
-								showsVerticalScrollIndicator={false}
-								showsHorizontalScrollIndicator={false}
-								horizontal
-								contentContainerStyle={{ flex: 1, justifyContent: 'flex-end'}}
-							>
-								{!!business?.facebook_profile && (
-									<SocialNetWork
-										socialLink={business?.facebook_profile}
-										iconTitle='facebook'
-									/>
-								)}
-								{!!business?.instagram_profile && (
-									<SocialNetWork
-										socialLink={business?.instagram_profile}
-										iconTitle='instagram'
-									/>
-								)}
-								{!!business?.tiktok_profile && (
-									<TouchableOpacity style={styles.socialIcon} onPress={() => Linking.openURL(business?.tiktok_profile)}>
-										<View style={styles.tiktokIcon}>
-											<OIcon
-												src={theme.images.general.tiktok}
-												style={{ width: '100%', height: '100%'}}
-											/>
-										</View>
-									</TouchableOpacity>
-								)}
-								{!!business?.pinterest_profile && (
-									<SocialNetWork
-										socialLink={business?.pinterest_profile}
-										iconTitle='pinterest'
-									/>
-								)}
-								{!!business?.whatsapp_number && (
-									<SocialNetWork
-										socialLink={business?.whatsapp_number}
-										iconTitle='whatsapp'
-									/>
-								)}
-								{!!business?.snapchat_profile && (
-									<SocialNetWork
-										socialLink={business?.snapchat_profile}
-										iconTitle='snapchat'
-									/>
-								)}
-							</SocialListWrapper>
 						</TitleWrapper>
 					)}
 				</BusinessInfoItem>
@@ -296,6 +250,65 @@ export const BusinessBasicInformation = (
 					<View style={{ width: '75%' }}>
 						<OText color={theme.colors.textNormal}>{getBusinessType()}</OText>
 					</View>
+				)}
+				{loading ? (
+					<Placeholder Animation={Fade}>
+						<View style={{ flexDirection: 'row' }}>
+							{[...Array(5).keys()].map(i => (
+								<View style={styles.socialIcon} key={i}>
+									<PlaceholderLine width={100} height={20} style={{ marginBottom: 0 }} />
+								</View>
+							))}
+						</View>
+					</Placeholder>
+				) : (
+					<SocialListWrapper
+						showsVerticalScrollIndicator={false}
+						showsHorizontalScrollIndicator={false}
+						horizontal
+						contentContainerStyle={{ flex: 1}}
+					>
+						{!!business?.facebook_profile && (
+							<SocialNetWork
+								socialLink={business?.facebook_profile}
+								iconTitle='facebook'
+							/>
+						)}
+						{!!business?.instagram_profile && (
+							<SocialNetWork
+								socialLink={business?.instagram_profile}
+								iconTitle='instagram'
+							/>
+						)}
+						{!!business?.tiktok_profile && (
+							<TouchableOpacity style={styles.socialIcon} onPress={() => Linking.openURL(business?.tiktok_profile)}>
+								<View style={styles.tiktokIcon}>
+									<OIcon
+										src={theme.images.general.tiktok}
+										style={{ width: '100%', height: '100%'}}
+									/>
+								</View>
+							</TouchableOpacity>
+						)}
+						{!!business?.pinterest_profile && (
+							<SocialNetWork
+								socialLink={business?.pinterest_profile}
+								iconTitle='pinterest'
+							/>
+						)}
+						{!!business?.whatsapp_number && (
+							<SocialNetWork
+								socialLink={business?.whatsapp_number}
+								iconTitle='whatsapp'
+							/>
+						)}
+						{!!business?.snapchat_profile && (
+							<SocialNetWork
+								socialLink={business?.snapchat_profile}
+								iconTitle='snapchat'
+							/>
+						)}
+					</SocialListWrapper>
 				)}
 				<View>
 					<BusinessInfoItem>
