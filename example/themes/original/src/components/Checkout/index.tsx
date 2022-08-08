@@ -178,7 +178,7 @@ const CheckoutUI = (props: any) => {
 		}
 	}
 
-	const handlePlaceOrder = (confirmPayment) => {
+	const handlePlaceOrder = (confirmPayment : any) => {
 		if (!userErrors.length && !requiredFields?.length) {
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
@@ -741,7 +741,7 @@ const CheckoutUI = (props: any) => {
 			</Container>
 			{!cartState.loading && cart && cart?.status !== 2 && (
 				<FloatingButton
-					handleClick={() => handlePlaceOrder()}
+					handleClick={() => handlePlaceOrder(null)}
 					isSecondaryBtn={isDisabledButtonPlace}
 					disabled={isDisabledButtonPlace}
 					btnText={cart?.subtotal >= cart?.minimum
@@ -755,7 +755,7 @@ const CheckoutUI = (props: any) => {
 						: (`${t('MINIMUN_SUBTOTAL_ORDER', 'Minimum subtotal order:')} ${parsePrice(cart?.minimum)}`)
 					}
 					btnRightValueShow
-					btnRightValue={parsePrice(cart?.total)}
+					btnRightValue={parsePrice(cart?.balance)}
 					iosBottom={30}
 				/>
 			)}
