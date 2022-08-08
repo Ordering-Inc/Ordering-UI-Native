@@ -62,7 +62,7 @@ const NavBar = (props: Props) => {
 		<Wrapper style={{ paddingTop: props.paddingTop, ...{ flexDirection: props.isVertical ? 'column' : 'row', alignItems: props.isVertical ? 'flex-start' : 'center' }, ...props.style }}>
 			<OButton
 				imgLeftSrc={props.leftImg || theme.images.general.arrow_left}
-				imgLeftStyle={{width: 18}}
+				imgLeftStyle={{ width: 18 }}
 				imgRightSrc={null}
 				style={{ ...btnBackArrow, ...props.btnStyle, ...props.isVertical ? (I18nManager.isRTL ? { paddingRight: 0 } : { paddingLeft: 0 }) : {} }}
 				onClick={props?.onActionLeft}
@@ -126,9 +126,9 @@ NavBar.defaultProps = {
 	textAlign: 'center'
 };
 
-const areEqual=(prevProps: { route?: any; }, nextProps: { route?: any; })=>{
-  return prevProps.route === nextProps.route
-  return true
+const areEqual = (prevProps: { route?: any; }, nextProps: { route?: any; }) => {
+	return prevProps.route === nextProps.route
+	return true
 }
 
 export default React.memo(NavBar, areEqual);
