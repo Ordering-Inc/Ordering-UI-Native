@@ -370,7 +370,7 @@ export const ProductOptionsUI = (props: any) => {
 		<SafeAreaView style={{ flex: 1 }}>
 			<TopHeader>
 				<TopActions onPress={() => handleGoBack()}>
-					<OIcon src={theme.images.general.arrow_left} width={15} />
+					<OIcon src={theme.images.general.arrow_left} width={30} />
 				</TopActions>
 			</TopHeader>
 			<ScrollView ref={scrollViewRef}>

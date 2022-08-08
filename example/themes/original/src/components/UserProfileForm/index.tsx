@@ -271,16 +271,16 @@ const ProfileUI = (props: ProfileParams) => {
 	}, [verifyPhoneState])
 
 	const handleSendPhoneCode = (values: any) => {
-    setWillVerifyOtpState(false)
+		setWillVerifyOtpState(false)
 		setIsModalVisible(false)
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState?.changes,
-        verification_code: values?.code
-      }
-    })
-  }
+		setFormState({
+			...formState,
+			changes: {
+				...formState?.changes,
+				verification_code: values?.code
+			}
+		})
+	}
 
 	return (
 		<>
@@ -289,7 +289,7 @@ const ProfileUI = (props: ProfileParams) => {
 				titleAlign={'center'}
 				onActionLeft={() => navigation.goBack()}
 				showCall={false}
-				style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 30 , marginTop: Platform.OS === 'ios' ? 50 : 40 }}
+				style={{ paddingHorizontal: 40, paddingVertical: Platform.OS === 'ios' ? 0 : 30 }}
 			/>
 			<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} enabled style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
 				<Container noPadding>
