@@ -42,3 +42,12 @@ export const RatingTextContainer = styled.View`
   justify-content: space-between;
   margin-top: 10px;
 `
+export const RatingStarContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+`
+export const PlacedDate = styled.View`
+  margin-top: 30px;
+`

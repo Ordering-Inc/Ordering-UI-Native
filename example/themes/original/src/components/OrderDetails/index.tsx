@@ -363,6 +363,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           id: order?.id,
           business_id: order?.business_id,
           logo: order.business?.logo,
+          business_name: order?.business?.name,
+          delivery_datetime: order?.delivery_datetime,
           driver: order?.driver,
           products: order?.products,
           review: order?.review,

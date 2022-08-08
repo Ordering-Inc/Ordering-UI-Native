@@ -44,7 +44,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
     photoWrapper: {
       shadowColor: theme.colors.black,
       shadowRadius: 3,
-      shadowOffset: {width: 1, height: 4},
+      shadowOffset: { width: 1, height: 4 },
       elevation: 3,
       borderRadius: 8,
       shadowOpacity: 0.1,
@@ -86,11 +86,11 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<any>, success?: boolean }>({ open: false, content: [], success: false })
 
   const qualificationList = [
-    { key: 1, text: t('TERRIBLE', 'Terrible'), percent: 0,  parentStyle: { left: '0%' }, isInnerStyle: false, pointerColor: false },
+    { key: 1, text: t('TERRIBLE', 'Terrible'), percent: 0, parentStyle: { left: '0%' }, isInnerStyle: false, pointerColor: false },
     { key: 2, text: t('BAD', 'Bad'), percent: 0.25, parentStyle: { left: '25%' }, isInnerStyle: true, pointerColor: true },
     { key: 3, text: t('OKAY', 'Okay'), percent: 0.5, parentStyle: { left: '50%' }, isInnerStyle: true, pointerColor: true },
     { key: 4, text: t('GOOD', 'Good'), percent: 0.75, parentStyle: { left: '75%' }, isInnerStyle: true, pointerColor: true },
-    { key: 5, text: t('GREAT', 'Great'), percent: 1, parentStyle: { right: '0%' }, isInnerStyle: false,  pointerColor: false }
+    { key: 5, text: t('GREAT', 'Great'), percent: 1, parentStyle: { right: '0%' }, isInnerStyle: false, pointerColor: false }
   ]
 
   const commentsList = reviewCommentList('driver')
@@ -204,7 +204,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
             <OIcon
               url={order?.driver?.photo}
               src={!order?.driver?.photo && theme.images.general.user}
-              cover={order?.driver?.photo ? true: false}
+              cover={order?.driver?.photo ? true : false}
               width={80}
               height={80}
             />
@@ -212,7 +212,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
           <OText weight={500} style={{ marginVertical: 10 }} color={theme.colors.textNormal}>{order?.driver?.name} {order?.driver?.lastname}</OText>
         </DriverPhotoContainer>
 
-        <View style={{flex: 1, justifyContent: 'flex-end'}}>
+        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
           <FormReviews>
             <OText mBottom={13} color={theme.colors.textNormal}>{t('HOW_WAS_YOUR_DRIVER', 'How was your driver?')}</OText>
             <RatingBarContainer>
@@ -264,7 +264,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
                   style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
                   imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
                   imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-                  onClick={() => handleChangeComment(commentItem) }
+                  onClick={() => handleChangeComment(commentItem)}
                 />
               ))}
             </CommentsButtonGroup>
