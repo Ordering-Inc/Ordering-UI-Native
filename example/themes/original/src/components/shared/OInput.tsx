@@ -56,7 +56,7 @@ const Wrapper = styled.Pressable`
 const OInput = (props: Props): React.ReactElement => {
 	return (
 		<Wrapper
-			onPress={() => {props.forwardRef?.current?.focus?.(); props.onPress && props.onPress()}}
+			onPress={() => { props.forwardRef?.current?.focus?.(); props.onPress && props.onPress() }}
 			style={{
 				backgroundColor: props.bgColor,
 				borderColor: props.borderColor,
@@ -75,6 +75,7 @@ const OInput = (props: Props): React.ReactElement => {
 				<MaterialIcon name={props?.vertorIcon} size={20} color={props?.vectorIconColor} style={{ marginHorizontal: 10 }} />
 			)}
 			<Input
+				autoFocus={props?.autoFocus}
 				name={props.name}
 				secureTextEntry={props.isSecured}
 				onChangeText={(txt: any) => props.name ? props.onChange({ target: { name: props.name, value: txt } }) : props.onChange(txt)}
@@ -90,7 +91,7 @@ const OInput = (props: Props): React.ReactElement => {
 				returnKeyType={props.returnKeyType}
 				onSubmitEditing={props.onSubmitEditing}
 				blurOnSubmit={props.blurOnSubmit}
-				ref={(e : any) => {
+				ref={(e: any) => {
 					props.forwardRef && (props.forwardRef.current = e)
 				}}
 				style={props?.inputStyle}
