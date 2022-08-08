@@ -203,7 +203,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 			multiRemoveProducts && await multiRemoveProducts(unavailableProducts, _carts)
 			return
 		}
-	
+
 		if (alreadyRemoved === 'removed') {
 			setAlertState({ open: true, content: [t('NOT_AVAILABLE_PRODUCT', 'This product is not available.')] })
 		}
@@ -223,7 +223,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	return (
 		<>
-					<ContainerSafeAreaView
+			<ContainerSafeAreaView
 				style={{ flex: 1 }}
 				isOpenFiltProducts={isOpenFiltProducts}
 			>
@@ -237,7 +237,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 										imgRightSrc={null}
 										style={styles.btnBackArrow}
 										onClick={() => handleBackNavigation()}
-										imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
+										imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 30 }}
 									/>
 								</View>
 								{!errorQuantityProducts && (
@@ -255,6 +255,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						{isOpenSearchBar && (
 							<WrapSearchBar>
 								<SearchBar
+									autoFocus
 									onSearch={handleChangeSearch}
 									onCancel={() => handleCancel()}
 									isCancelXButtonShow
@@ -268,42 +269,42 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				</Animated.View>
 
 				{business?.categories?.length > 0 && isOpenFiltProducts && (
-						<FiltProductsContainer
-							isIos={Platform.OS === 'ios'}
-							style={{
-								height: Dimensions.get('window').height - filtProductsHeight
-							}}
-						>
-							<View style={{ padding: 20, backgroundColor: theme.colors.white }}>
-								<BusinessProductsList
-									categories={[
-										{ id: null, name: t('ALL', 'All') },
-										{ id: 'featured', name: t('FEATURED', 'Featured') },
-										...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
-									]}
-									category={categorySelected}
-									categoryState={categoryState}
-									businessId={business.id}
-									errors={errors}
-									onProductClick={onProductClick}
-									handleSearchRedirect={handleSearchRedirect}
-									featured={featuredProducts}
-									searchValue={searchValue}
-									handleClearSearch={handleChangeSearch}
-									errorQuantityProducts={errorQuantityProducts}
-									handleCancelSearch={handleCancel}
-									categoriesLayout={categoriesLayout}
-									subcategoriesSelected={subcategoriesSelected}
-									lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
-									setCategoriesLayout={setCategoriesLayout}
-									currentCart={currentCart}
-									setSubcategoriesSelected={setSubcategoriesSelected}
-									onClickCategory={handleChangeCategory}
-									handleUpdateProducts={handleUpdateProducts}
-									isFiltMode
-								/>
-							</View>
-						</FiltProductsContainer>
+					<FiltProductsContainer
+						isIos={Platform.OS === 'ios'}
+						style={{
+							height: Dimensions.get('window').height - filtProductsHeight
+						}}
+					>
+						<View style={{ padding: 20, backgroundColor: theme.colors.white }}>
+							<BusinessProductsList
+								categories={[
+									{ id: null, name: t('ALL', 'All') },
+									{ id: 'featured', name: t('FEATURED', 'Featured') },
+									...business?.categories.sort((a: any, b: any) => a.rank - b.rank)
+								]}
+								category={categorySelected}
+								categoryState={categoryState}
+								businessId={business.id}
+								errors={errors}
+								onProductClick={onProductClick}
+								handleSearchRedirect={handleSearchRedirect}
+								featured={featuredProducts}
+								searchValue={searchValue}
+								handleClearSearch={handleChangeSearch}
+								errorQuantityProducts={errorQuantityProducts}
+								handleCancelSearch={handleCancel}
+								categoriesLayout={categoriesLayout}
+								subcategoriesSelected={subcategoriesSelected}
+								lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
+								setCategoriesLayout={setCategoriesLayout}
+								currentCart={currentCart}
+								setSubcategoriesSelected={setSubcategoriesSelected}
+								onClickCategory={handleChangeCategory}
+								handleUpdateProducts={handleUpdateProducts}
+								isFiltMode
+							/>
+						</View>
+					</FiltProductsContainer>
 				)}
 				{isOpenFiltProducts && (
 					<BackgroundGray />
