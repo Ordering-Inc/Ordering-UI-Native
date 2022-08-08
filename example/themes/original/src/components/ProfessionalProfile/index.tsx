@@ -62,7 +62,7 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
 
   const onDateChange = (date: any) => {
     setSelectedDate(date)
-    dropdownRef.current.reset()
+    dropdownRef?.current && dropdownRef.current.reset()
   }
 
   const dropDownIcon = () => {
@@ -191,9 +191,9 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
             {t('REQUIRED', 'Required')}
           </OText>
         </View>
-        {(!!professional?.schedule && isEnabled) ? (
+        {!!professional?.schedule ? (
           <CalendarWrapper>
-            {timeList?.length > 0 ? (
+            {(timeList?.length > 0 && isEnabled) ? (
               <SelectDropdown
                 ref={dropdownRef} 
                 data={timeList}
@@ -237,11 +237,12 @@ export const ProfessionalProfile = (props: ProfessionalProfileParams) => {
               />
             ) : (
               <OText
-                size={20}
+                size={12}
                 style={{ marginBottom: 30 }}
-                weight={Platform.OS === 'ios' ? '600' : 'bold'}
+                weight={'400'}
+                color={theme.colors?.danger5}
               >
-                {t('NOT_AVAILABLE', 'Not available')}
+                {t('PROFESSIONAL_NOT_AVAILABLE', 'Professional is not available at the moment')}
               </OText>
             )}
 
