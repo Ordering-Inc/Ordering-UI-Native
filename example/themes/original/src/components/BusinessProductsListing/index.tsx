@@ -237,7 +237,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 										imgRightSrc={null}
 										style={styles.btnBackArrow}
 										onClick={() => handleBackNavigation()}
-										imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
+										imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 30 }}
 									/>
 								</View>
 								{!errorQuantityProducts && (
