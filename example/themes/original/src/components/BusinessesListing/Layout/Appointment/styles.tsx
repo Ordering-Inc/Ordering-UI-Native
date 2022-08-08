@@ -97,10 +97,10 @@ export const FilterWrapper = styled.View`
 `
 
 export const ServiceWrapper = styled.View`
-  padding-left: 40px;
+  padding-horizontal: 40px;
 `
 
 export const PriceWrapper = styled.View`
-  padding-left: 40px;
+  padding-horizontal: 40px;
   margin-top: 30px;
 `

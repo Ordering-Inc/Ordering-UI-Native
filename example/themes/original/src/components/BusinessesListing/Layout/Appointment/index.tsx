@@ -104,8 +104,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		},
 		searchInput: {
 			fontSize: 12,
-			// backgroundColor: theme.colors.white,
-			paddingLeft: 10,
+			paddingLeft: 0,
+			paddingRight: 17,
 			paddingTop: 7
 		},
 		iconStyle: {

@@ -711,7 +711,8 @@ export interface ServiceFormParams {
 	isSoldOut: boolean,
 	maxProductQuantity: any,
 	businessSlug?: string,
-	onClose: any
+	onClose: any,
+	professionalList: any
 }
 
 export interface ProfessionalFilterParams {
