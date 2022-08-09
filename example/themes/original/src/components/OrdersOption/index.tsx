@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { OrderList, useLanguage, useOrder, ToastType, useToast } from 'ordering-components/native'
 import { useTheme } from 'styled-components/native';
 import { useFocusEffect } from '@react-navigation/native'
-import { OText } from '../shared'
+import { OText, OButton } from '../shared'
 import { NotFoundSource } from '../NotFoundSource'
 import { ActiveOrders } from '../ActiveOrders'
 import { PreviousOrders } from '../PreviousOrders'
@@ -89,7 +89,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			{ key: 20, value: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Customer almost arrived to business') },
 			{ key: 21, value: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business') },
 			{ key: 22, value: t('ORDER_LOOKING_FOR_DRIVER', 'Looking for driver') },
-      		{ key: 23, value: t('ORDER_DRIVER_ON_WAY', 'Driver on way') }
+			{ key: 23, value: t('ORDER_DRIVER_ON_WAY', 'Driver on way') }
 		]
 
 		const objectStatus = orderStatus.find((o) => o.key === status)
@@ -136,7 +136,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		React.useCallback(() => {
 			loadOrders(false, false, false, true)
 		}, [navigation])
-	  )
+	)
 
 	useEffect(() => {
 		const hasMore = pagination?.totalPages && pagination?.currentPage !== pagination?.totalPages

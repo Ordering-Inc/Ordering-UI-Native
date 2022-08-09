@@ -6,3 +6,9 @@ export const OptionTitle = styled.View`
 		margin-left: ${() => props.isBusinessesSearchList ? '0' : '40px'};
 	`}
 `
+
+export const NoOrdersWrapper = styled.View`
+	flex-direction: column;
+	align-items: center;
+	margin-top: 50px;
+`
