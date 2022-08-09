@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useTheme } from 'styled-components/native'
-import { Platform, View, StyleSheet, Dimensions } from 'react-native'
-import { OText, OButton } from '../shared'
+import { Platform, View, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
+import { OText, OButton, OModal } from '../shared'
 import FastImage from 'react-native-fast-image'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import SelectDropdown from 'react-native-select-dropdown'
@@ -41,7 +41,8 @@ const ServiceFormUI = (props: ServiceFormParams) => {
     navigation,
     isSoldOut,
     maxProductQuantity,
-    onClose
+    onClose,
+    professionalList
   } = props
 
   const theme = useTheme()
@@ -57,6 +58,8 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   const [isEnabled, setIsEnabled] = useState(false)
   const [timeSelected, setTimeSelected] = useState(null)
   const [dateSelected, setDateSelected] = useState<any>(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const [currentProfessional, setCurrentProfessional] = useState<any>(null)
 
   const dropdownRef = useRef<any>(null)
 
@@ -75,7 +78,15 @@ const ServiceFormUI = (props: ServiceFormParams) => {
       borderRadius: 7.6,
       padding: 11,
       borderWidth: 1,
-      borderColor: theme.colors.backgroundGray200
+      borderColor: theme.colors.backgroundGray200,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+    professionalItem: {
+      padding: 11,
+      borderColor: theme.colors.backgroundGray200,
+      borderTopWidth: 1
     },
     selectOption: {
       width: '100%',
@@ -87,12 +98,16 @@ const ServiceFormUI = (props: ServiceFormParams) => {
       justifyContent: 'space-between',
       height: 40,
       marginBottom: 30
+    },
+    professionalList: {
+      paddingHorizontal: 40,
+      paddingVertical: 30
     }
   })
 
-  const isBusyTime = () => {
-    if (professionalSelected?.busy_times?.length === 0 || !dateSelected) return false
-    const valid = professionalSelected?.busy_times.some((item: any) => {
+  const isBusyTime = (professional: any) => {
+    if (professional?.busy_times?.length === 0 || !dateSelected) return false
+    const valid = professional?.busy_times.some((item: any) => {
       return moment(item?.start).valueOf() <= moment(dateSelected).valueOf() &&
         moment(dateSelected).valueOf() <= moment(item?.end).valueOf()
     })
@@ -102,7 +117,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   const onDateChange = (date: any) => {
     setSelectedDate(date)
     setTimeSelected(null)
-    dropdownRef.current.reset()
+    dropdownRef?.current && dropdownRef.current.reset()
   }
 
   const dropDownIcon = () => {
@@ -125,7 +140,10 @@ const ServiceFormUI = (props: ServiceFormParams) => {
   };
 
   const handleSaveService = () => {
-    const updated = { serviceTime: dateSelected }
+    const updated = {
+      serviceTime: dateSelected,
+      professional: currentProfessional
+    }
     handleSave && handleSave(updated)
   }
 
@@ -195,11 +213,16 @@ const ServiceFormUI = (props: ServiceFormParams) => {
     onClose && onClose()
   }
 
+  const handleChangeProfessional = (professional: any) => {
+    setCurrentProfessional(professional)
+    setIsOpen(false)
+  }
+
   useEffect(() => {
-    if (selectDate === null) return
-    const _times = getTimes(selectDate, professionalSelected)
+    if (selectDate === null || currentProfessional === null) return
+    const _times = getTimes(selectDate, currentProfessional)
     setTimeList(_times)
-  }, [selectDate, professionalSelected])
+  }, [selectDate, currentProfessional])
 
   useEffect(() => {
     if (!selectDate || !timeSelected) {
@@ -209,269 +232,330 @@ const ServiceFormUI = (props: ServiceFormParams) => {
     const date = `${moment(selectDate).format('YYYY-MM-DD')} ${timeSelected}:00`
     setDateSelected(date)
   }, [selectDate, timeSelected])
+
+  useEffect(() => {
+    if (!professionalSelected) return
+    setCurrentProfessional(professionalSelected)
+  }, [professionalSelected])
   
   return (
-    <Container>
-      <ProfessionalPhoto
-				source={{
-					uri:
-          product?.images ||
-						optimizeImage(theme?.images?.dummies?.product, 'h_250,c_limit'),
-				}}
-      />
-      <InfoWrapper>
-        <OText
-          size={20}
-          style={{ marginBottom: 4 }}
-          weight={Platform.OS === 'ios' ? '600' : 'bold'}
-        >
-          {product?.name}
-        </OText>
-        <OText
-          size={16}
-          style={{ marginBottom: 10 }}
-          weight={'400'}
-        >
-          {parsePrice(product?.price)} • {product?.duration}min
-        </OText>
-        <OText
-          size={14}
-          weight={'400'}
-          color={theme?.colors?.disabled}
-        >
-          {product?.description}
-        </OText>
-      </InfoWrapper>
-      <Divider />
-      <ProfessionalWrapper>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 23
+    <>
+      <Container>
+        <ProfessionalPhoto
+          source={{
+            uri:
+            product?.images ||
+              optimizeImage(theme?.images?.dummies?.product, 'h_250,c_limit'),
           }}
-        >
-          <OText
-            size={16}
-            weight={Platform.OS === 'ios' ? '600' : 'bold'}
-          >
-            {t('PROFESSIONAL', 'Proffesional')}
-          </OText>
-          <OText
-            size={10}
-            weight={'400'}
-            color={theme.colors?.danger5}
-          >
-            {t('REQUIRED', 'Required')}
-          </OText>
-        </View>
-        <View
-          style={styles.professionalSelect}
-        >
-          <View style={{ flexDirection: 'row' }}>
-            <FastImage
-              style={styles.photoStyle}
-              source={{
-                uri: optimizeImage(professionalSelected?.photo, 'h_250,c_limit'),
-                priority: FastImage.priority.normal,
-              }}
-              resizeMode={FastImage.resizeMode.cover}
-            />
-            <View style={{ marginLeft: 14 }}>
-              <OText
-                size={14}
-                weight={'400'}
-              >
-                {professionalSelected?.name} {professionalSelected?.lastname}
-              </OText>
-              <OText
-                size={12}
-                weight={'400'}
-                color={isBusyTime() ? theme.colors.danger5 : theme.colors.success500}
-              >
-                {isBusyTime()
-                  ? t('BUSY_ON_SELECTED_TIME', 'Busy on selected time')
-                  : t('AVAILABLE', 'Available')
-                }
-              </OText>
-            </View>
-          </View>
-        </View>
-      </ProfessionalWrapper>
-      <ScheduleWrapper>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 23
-          }}
-        >
-          <OText
-            size={16}
-            weight={Platform.OS === 'ios' ? '600' : 'bold'}
-          >
-            {t('SCHEDULE', 'Schedule')}
-          </OText>
-          <OText
-            size={10}
-            weight={'400'}
-            color={theme.colors?.danger5}
-          >
-            {t('REQUIRED', 'Required')}
-          </OText>
-        </View>
-        {(!!professionalSelected?.schedule && isEnabled) ? (
-          <CalendarWrapper>
-            {timeList?.length > 0 ? (
-              <SelectDropdown
-                ref={dropdownRef} 
-                defaultValue={timeSelected}
-                data={timeList}
-                onSelect={(selectedItem, index) => {
-                  setTimeSelected(selectedItem.value)
-                }}
-                buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem.text
-                }}
-                rowTextForSelection={(item, index) => {
-                  return item.text
-                }}
-                buttonStyle={{borderRadius: 7.6, ...styles.selectOption}}
-                buttonTextStyle={{
-                  color: theme.colors.disabled,
-                  fontSize: 14,
-                  textAlign: 'left',
-                  marginHorizontal: 0
-                }}
-                dropdownStyle={{
-                  borderRadius: 8,
-                  borderColor: theme.colors.lightGray,
-                  marginTop: Platform.OS === 'ios' ? 12 : -top
-                }}
-                rowStyle={{
-                  borderBottomColor: theme.colors.backgroundGray100,
-                  backgroundColor: theme.colors.backgroundGray100,
-                  height: 30,
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  paddingTop: 8,
-                  paddingHorizontal: 12
-                }}
-                rowTextStyle={{
-                  color: theme.colors.disabled,
-                  fontSize: 14,
-                  marginHorizontal: 0
-                }}
-                renderDropdownIcon={() => dropDownIcon()}
-                dropdownOverlayColor='transparent'
-              />
-            ) : (
-              <OText
-                size={20}
-                style={{ marginBottom: 30 }}
-                weight={Platform.OS === 'ios' ? '600' : 'bold'}
-              >
-                {t('NOT_AVAILABLE', 'Not available')}
-              </OText>
-            )}
-
-            <CalendarPicker
-              previousComponent={
-                <FeatherIcon
-                  name='chevron-left'
-                  color={theme.colors.disabled}
-                  size={24}
-                  style={{ marginHorizontal: 4 }}
-                />
-              }
-              nextComponent={
-                <FeatherIcon
-                  name='chevron-right'
-                  color={theme.colors.disabled}
-                  size={24}
-                  style={{ marginHorizontal: 4 }}
-                />
-              }
-              width={screenWidth - 110}
-              selectedDayTextColor={theme.colors.white}
-              selectedDayColor={theme.colors.primary}
-              todayBackgroundColor={theme.colors.border}
-              dayLabelsWrapper={{ borderColor: theme.colors.clear }}
-              onDateChange={onDateChange}
-              minDate={new Date()}
-              customDayHeaderStyles={customDayHeaderStylesCallback}
-              selectedStartDate={selectDate}
-            />
-          </CalendarWrapper>
-        ) : (
+        />
+        <InfoWrapper>
           <OText
             size={20}
-            style={{ marginBottom: 30 }}
+            style={{ marginBottom: 4 }}
             weight={Platform.OS === 'ios' ? '600' : 'bold'}
           >
-            {t('NO_SCHEDULE', 'No schedule')}
+            {product?.name}
           </OText>
-        )}
-      </ScheduleWrapper>
-      <ButtonWrapper>
-        <OText
-          size={14}
-          weight={Platform.OS === 'ios' ? '600' : 'bold'}
-        >
-          {dateSelected
-            ? moment(dateSelected).format('hh:mm A')
-            : t('ASAP_ABBREVIATION', 'ASAP')}
-        </OText>
-        {((productCart &&
-          auth &&
-          orderState.options?.address_id)) && (
-            <OButton
-              bgColor={theme.colors.primary}
-              onClick={() => handleSaveService()}
-              text={orderState.loading
-                ? t('LOADING', 'Loading')
-                : ((isSoldOut || maxProductQuantity <= 0)
-                  ? t('SOLD_OUT', 'Sold out')
-                  : t('BOOK', 'Book'))}
-              style={styles.buttonStyle}
-              isDisabled={isSoldOut || maxProductQuantity <= 0 || !professionalSelected?.id || !dateSelected}
-              textStyle={{ fontSize: 14, color: theme.colors.white }}
-            />
+          <OText
+            size={16}
+            style={{ marginBottom: 10 }}
+            weight={'400'}
+          >
+            {parsePrice(product?.price)} • {product?.duration}min
+          </OText>
+          <OText
+            size={14}
+            weight={'400'}
+            color={theme?.colors?.disabled}
+          >
+            {product?.description}
+          </OText>
+        </InfoWrapper>
+        <Divider />
+        <ProfessionalWrapper>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 23
+            }}
+          >
+            <OText
+              size={16}
+              weight={Platform.OS === 'ios' ? '600' : 'bold'}
+            >
+              {t('PROFESSIONAL', 'Professional')}
+            </OText>
+            <OText
+              size={10}
+              weight={'400'}
+              color={theme.colors?.danger5}
+            >
+              {t('REQUIRED', 'Required')}
+            </OText>
+          </View>
+          {currentProfessional && (
+            <TouchableOpacity
+              style={styles.professionalSelect}
+              onPress={() => setIsOpen(true)}
+            >
+              <View style={{ flexDirection: 'row' }}>
+                <FastImage
+                  style={styles.photoStyle}
+                  source={{
+                    uri: optimizeImage(currentProfessional?.photo, 'h_250,c_limit'),
+                    priority: FastImage.priority.normal,
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}
+                />
+                <View style={{ marginLeft: 14 }}>
+                  <OText
+                    size={14}
+                    weight={'400'}
+                  >
+                    {currentProfessional?.name} {currentProfessional?.lastname}
+                  </OText>
+                  <OText
+                    size={12}
+                    weight={'400'}
+                    color={isBusyTime(currentProfessional) ? theme.colors.danger5 : theme.colors.success500}
+                  >
+                    {isBusyTime(currentProfessional)
+                      ? t('BUSY_ON_SELECTED_TIME', 'Busy on selected time')
+                      : t('AVAILABLE', 'Available')
+                    }
+                  </OText>
+                </View>
+              </View>
+              <View style={{ marginLeft: 5 }}>
+                <IconAntDesign
+                  name='down'
+                  color={theme.colors.textThird}
+                  size={12}
+                />
+              </View>
+            </TouchableOpacity>
           )}
-        {auth &&
-          !orderState.options?.address_id &&
-          (orderState.loading ? (
-            <OButton
-              isDisabled
-              text={t('LOADING', 'Loading')}
-              imgRightSrc=""
-              textStyle={{ fontSize: 10 }}
-            />
+        </ProfessionalWrapper>
+        <ScheduleWrapper>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 23
+            }}
+          >
+            <OText
+              size={16}
+              weight={Platform.OS === 'ios' ? '600' : 'bold'}
+            >
+              {t('SCHEDULE', 'Schedule')}
+            </OText>
+            <OText
+              size={10}
+              weight={'400'}
+              color={theme.colors?.danger5}
+            >
+              {t('REQUIRED', 'Required')}
+            </OText>
+          </View>
+          {!!currentProfessional?.schedule ? (
+            <CalendarWrapper>
+              {(timeList?.length > 0 && isEnabled) ? (
+                <SelectDropdown
+                  ref={dropdownRef} 
+                  defaultValue={timeSelected}
+                  data={timeList}
+                  onSelect={(selectedItem, index) => {
+                    setTimeSelected(selectedItem?.value)
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    return selectedItem?.text
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    return item.text
+                  }}
+                  buttonStyle={{borderRadius: 7.6, ...styles.selectOption}}
+                  buttonTextStyle={{
+                    color: theme.colors.disabled,
+                    fontSize: 14,
+                    textAlign: 'left',
+                    marginHorizontal: 0
+                  }}
+                  dropdownStyle={{
+                    borderRadius: 8,
+                    borderColor: theme.colors.lightGray,
+                    marginTop: Platform.OS === 'ios' ? 12 : -top
+                  }}
+                  rowStyle={{
+                    borderBottomColor: theme.colors.backgroundGray100,
+                    backgroundColor: theme.colors.backgroundGray100,
+                    height: 30,
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                    paddingTop: 8,
+                    paddingHorizontal: 12
+                  }}
+                  rowTextStyle={{
+                    color: theme.colors.disabled,
+                    fontSize: 14,
+                    marginHorizontal: 0
+                  }}
+                  renderDropdownIcon={() => dropDownIcon()}
+                  dropdownOverlayColor='transparent'
+                />
+              ) : (
+                <OText
+                  size={12}
+                  style={{ marginBottom: 30 }}
+                  weight={'400'}
+                  color={theme.colors?.danger5}
+                >
+                  {t('PROFESSIONAL_NOT_AVAILABLE', 'Professional is not available at the moment')}
+                </OText>
+              )}
+              <CalendarPicker
+                previousComponent={
+                  <FeatherIcon
+                    name='chevron-left'
+                    color={theme.colors.disabled}
+                    size={24}
+                    style={{ marginHorizontal: 4 }}
+                  />
+                }
+                nextComponent={
+                  <FeatherIcon
+                    name='chevron-right'
+                    color={theme.colors.disabled}
+                    size={24}
+                    style={{ marginHorizontal: 4 }}
+                  />
+                }
+                width={screenWidth - 110}
+                selectedDayTextColor={theme.colors.white}
+                selectedDayColor={theme.colors.primary}
+                todayBackgroundColor={theme.colors.border}
+                dayLabelsWrapper={{ borderColor: theme.colors.clear }}
+                onDateChange={onDateChange}
+                minDate={new Date()}
+                customDayHeaderStyles={customDayHeaderStylesCallback}
+                selectedStartDate={selectDate}
+              />
+            </CalendarWrapper>
           ) : (
-            <OButton onClick={() => addressRedirect()} />
-          ))}
-          {!auth && (
-            <OButton
-              isDisabled={isSoldOut || maxProductQuantity <= 0}
-              onClick={() => handleRedirectLogin()}
-              text={
-                isSoldOut || maxProductQuantity <= 0
-                  ? t('SOLD_OUT', 'Sold out')
-                  : t('LOGIN_SIGNUP', 'Login / Sign Up')
-              }
-              imgRightSrc=""
-              textStyle={{ color: theme.colors.primary, fontSize: 14 }}
-              style={{
-                height: 44,
-                borderColor: theme.colors.primary,
-                backgroundColor: theme.colors.white,
-              }}
-            />
+            <OText
+              size={20}
+              style={{ marginBottom: 30 }}
+              weight={Platform.OS === 'ios' ? '600' : 'bold'}
+            >
+              {t('NO_SCHEDULE', 'No schedule')}
+            </OText>
           )}
-      </ButtonWrapper>
-    </Container>
+        </ScheduleWrapper>
+        <ButtonWrapper>
+          <OText
+            size={14}
+            weight={Platform.OS === 'ios' ? '600' : 'bold'}
+          >
+            {dateSelected
+              ? moment(dateSelected).format('hh:mm A')
+              : t('ASAP_ABBREVIATION', 'ASAP')}
+          </OText>
+          {((productCart &&
+            auth &&
+            orderState.options?.address_id)) && (
+              <OButton
+                bgColor={theme.colors.primary}
+                onClick={() => handleSaveService()}
+                text={orderState.loading
+                  ? t('LOADING', 'Loading')
+                  : ((isSoldOut || maxProductQuantity <= 0)
+                    ? t('SOLD_OUT', 'Sold out')
+                    : t('BOOK', 'Book'))}
+                style={styles.buttonStyle}
+                isDisabled={isSoldOut || maxProductQuantity <= 0 || !currentProfessional?.id || !dateSelected}
+                textStyle={{ fontSize: 14, color: theme.colors.white }}
+              />
+            )}
+          {auth &&
+            !orderState.options?.address_id &&
+            (orderState.loading ? (
+              <OButton
+                isDisabled
+                text={t('LOADING', 'Loading')}
+                imgRightSrc=""
+                textStyle={{ fontSize: 10 }}
+              />
+            ) : (
+              <OButton onClick={() => addressRedirect()} />
+            ))}
+            {!auth && (
+              <OButton
+                isDisabled={isSoldOut || maxProductQuantity <= 0}
+                onClick={() => handleRedirectLogin()}
+                text={
+                  isSoldOut || maxProductQuantity <= 0
+                    ? t('SOLD_OUT', 'Sold out')
+                    : t('LOGIN_SIGNUP', 'Login / Sign Up')
+                }
+                imgRightSrc=""
+                textStyle={{ color: theme.colors.primary, fontSize: 14 }}
+                style={{
+                  height: 44,
+                  borderColor: theme.colors.primary,
+                  backgroundColor: theme.colors.white,
+                }}
+              />
+            )}
+        </ButtonWrapper>
+      </Container>
+      <OModal
+				open={isOpen}
+				onClose={() => setIsOpen(false)}
+				entireModal
+			>
+				<ScrollView contentContainerStyle={styles.professionalList}>
+          {professionalList?.map((professional: any) => professional?.products?.includes(product?.id) && (
+            <TouchableOpacity
+              key={professional?.id}
+              style={styles.professionalItem}
+              onPress={() => handleChangeProfessional(professional)}
+            >
+              <View style={{ flexDirection: 'row' }}>
+                <FastImage
+                  style={styles.photoStyle}
+                  source={{
+                    uri: optimizeImage(professional?.photo, 'h_250,c_limit'),
+                    priority: FastImage.priority.normal,
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}
+                />
+                <View style={{ marginLeft: 14 }}>
+                  <OText
+                    size={14}
+                    weight={'400'}
+                  >
+                    {professional?.name} {professional?.lastname}
+                  </OText>
+                  <OText
+                    size={12}
+                    weight={'400'}
+                    color={isBusyTime(professional) ? theme.colors.danger5 : theme.colors.success500}
+                  >
+                    {isBusyTime(professional)
+                      ? t('BUSY_ON_SELECTED_TIME', 'Busy on selected time')
+                      : t('AVAILABLE', 'Available')
+                    }
+                  </OText>
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+			</OModal>
+    </>
   )
 }
 
