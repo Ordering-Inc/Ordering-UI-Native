@@ -104,8 +104,8 @@ export const PreviousOrders = (props: any) => {
     const offset = 300
     const cdtToutc = moment(order?.delivery_datetime).add(offset, 'minutes').format('YYYY-MM-DD HH:mm:ss')
     const _delivery = order?.delivery_datetime_utc
-      ? parseDate(order?.delivery_datetime_utc)
-      : parseDate(cdtToutc)
+      ? parseDate(order?.delivery_datetime_utc, { outputFormat: 'YYYY-MM-DD hh:mm A' })
+      : parseDate(cdtToutc, { outputFormat: 'YYYY-MM-DD hh:mm A' })
     const _eta = order?.eta_time
     const diffTimeAsSeconds = moment(_delivery, 'YYYY-MM-DD hh:mm A').add(_eta, 'minutes').diff(moment().utc(), 'seconds')
     return Math.ceil(diffTimeAsSeconds / 60)
@@ -178,9 +178,9 @@ export const PreviousOrders = (props: any) => {
                   activeOpacity={1}
                 >
                   <Card key={order.id}>
-                  {allowColumns?.slaBar && (
-                    <Timestatus style={{ backgroundColor: getStatusClassName(getDelayMinutes(order)) === 'in_time' ? '#00D27A' : getStatusClassName(getDelayMinutes(order)) === 'at_risk' ? '#FFC700' : getStatusClassName(getDelayMinutes(order)) === 'delayed' ? '#E63757' : '' }} />
-                  )}
+                    {allowColumns?.slaBar && (
+                      <Timestatus style={{ backgroundColor: getStatusClassName(getDelayMinutes(order)) === 'in_time' ? '#00D27A' : getStatusClassName(getDelayMinutes(order)) === 'at_risk' ? '#FFC700' : getStatusClassName(getDelayMinutes(order)) === 'delayed' ? '#E63757' : '' }} />
+                    )}
                     {
                       !!order.business?.logo && (
                         <Logo style={styles.logo}>
