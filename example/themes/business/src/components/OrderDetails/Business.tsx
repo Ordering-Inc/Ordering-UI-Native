@@ -439,7 +439,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             <>
               <OrderContentComponent order={order} />
               {(order?.status === 7 || order?.status === 4) &&
-                order?.delivery_type === 1 && (
+                order?.delivery_type === 1 && configs?.assign_driver_enabled?.value === '1' && (
                   <AssignDriver>
                     <OText style={{ marginBottom: 5 }} size={16} weight="600">
                       {t('ASSIGN_DRIVER', 'Assign driver')}
