@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react'
 import { useOrder, useSession } from 'ordering-components/native';
 
 import { useTheme } from 'styled-components/native'
-import { IOScrollView } from 'react-native-intersection-observer'
 import { BusinessesListing as OriginalBusinessListing } from './Layout/Original'
 import { BusinessesListing as AppointmentBusinessListing } from './Layout/Appointment'
 
@@ -43,9 +42,9 @@ export const BusinessesListing = (props: any) => {
   }, [auth])
 
   return (
-    <IOScrollView rootMargin={{ top: 0, bottom: 0 }}>
+    <>
       {(layout === 'original') && <OriginalBusinessListing {...props} />}
       {(layout === 'appointment') && <AppointmentBusinessListing {...props} />}
-    </IOScrollView>
+    </>
   )
 }

@@ -4,7 +4,9 @@ import {
 	useUtils,
 	useOrder,
 	useLanguage,
-	useConfig
+	useConfig,
+	useToast,
+	ToastType
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -48,6 +50,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		enableIntersection
 	} = props;
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
+	const [, { showToast }] = useToast()
 	const [orderState] = useOrder();
 	const [configState] = useConfig();
 	const [, t] = useLanguage();
@@ -122,7 +125,11 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const handleBusinessClick = (selectedBusiness: any) => {
 		if (business?.open) handleClick && handleClick(selectedBusiness)
 		else {
-			navigation.navigate('BusinessPreorder', { business: selectedBusiness, handleBusinessClick: handleClick })
+			if (configState?.configs?.preorder_status_enabled?.value === '1') {
+				navigation.navigate('BusinessPreorder', { business: selectedBusiness, handleBusinessClick: handleClick })
+				return
+			}
+			showToast(ToastType.Info, t('ERROR_ADD_PRODUCT_BUSINESS_CLOSED', 'The business is closed at the moment'));
 		}
 	}
 
