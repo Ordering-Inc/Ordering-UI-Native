@@ -106,7 +106,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   }
 
   const qualificationList = [
-    { key: 1, text: t('TERRIBLE', 'Terrible'), percent: 0.0001,  parentStyle: { left: '0%' }, isInnerStyle: false, pointerColor: false },
+    { key: 1, text: t('TERRIBLE', 'Terrible'), percent: 0,  parentStyle: { left: '0%' }, isInnerStyle: false, pointerColor: false },
     { key: 2, text: t('BAD', 'Bad'), percent: 0.25, parentStyle: { left: '25%' }, isInnerStyle: true, pointerColor: true },
     { key: 3, text: t('OKAY', 'Okay'), percent: 0.5, parentStyle: { left: '50%' }, isInnerStyle: true, pointerColor: true },
     { key: 4, text: t('GOOD', 'Good'), percent: 0.75, parentStyle: { left: '75%' }, isInnerStyle: true, pointerColor: true },
@@ -238,7 +238,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
               <RatingBarContainer>
                 <LinearGradient
                   start={{ x: 0.0, y: 0.0 }}
-                  end={{ x: qualificationList[stars.quality - 1]?.percent || 0.0, y: 0.0 }}
+                  end={{ x: qualificationList[stars.quality - 1]?.percent || 0.0001, y: 0.0 }}
                   locations={[.9999, .9999]}
                   colors={[theme.colors.primary, theme.colors.lightGray]}
                   style={styles.statusBar}
