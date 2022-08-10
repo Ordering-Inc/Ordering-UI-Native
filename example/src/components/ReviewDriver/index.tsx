@@ -218,7 +218,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
             <RatingBarContainer>
               <LinearGradient
                 start={{ x: 0.0, y: 0.0 }}
-                end={{ x: qualificationList[dirverReviews?.qualification - 1]?.percent || 0, y: 0 }}
+                end={{ x: qualificationList[dirverReviews?.qualification - 1]?.percent || 0.0001, y: 0 }}
                 locations={[.9999, .9999]}
                 colors={[theme.colors.primary, theme.colors.lightGray]}
                 style={styles.statusBar}
