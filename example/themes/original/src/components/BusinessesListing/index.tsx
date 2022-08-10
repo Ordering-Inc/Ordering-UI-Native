@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react'
-import { useOrder, useSession, useLanguage } from 'ordering-components/native';
+import { useOrder, useSession, useLanguage, useOrderingTheme } from 'ordering-components/native';
 
 import { useTheme } from 'styled-components/native'
 import { BusinessesListing as OriginalBusinessListing } from './Layout/Original'
@@ -9,8 +8,10 @@ import { OBottomPopup } from '../shared';
 import { ReviewTrigger } from '../ReviewTrigger';
 
 export const BusinessesListing = (props: any) => {
+  const { logosLayout } = props
   const theme = useTheme()
-  const layout = theme?.layouts?.business_listing_view?.components?.layout?.type || 'original'
+  const [orderingTheme] = useOrderingTheme()
+  const layout = orderingTheme?.theme?.business_listing_view?.components?.layout?.type || 'original'
   const [, t] = useLanguage();
   const [{ auth }] = useSession()
   const [, { getLastOrderHasNoReview }] = useOrder();
@@ -76,8 +77,8 @@ export const BusinessesListing = (props: any) => {
 
   return (
     <>
-      {(layout === 'original') && <OriginalBusinessListing {...props} />}
-      {(layout === 'appointment') && <AppointmentBusinessListing {...props} />}
+      {((layout === 'original') || logosLayout) && <OriginalBusinessListing {...props} />}
+      {(layout === 'appointment') && !logosLayout && <AppointmentBusinessListing {...props} />}
 
       {lastOrderReview?.isReviewOpen && (
         <OBottomPopup

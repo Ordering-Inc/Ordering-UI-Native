@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLanguage, BusinessSearchList, useOrder, useUtils } from 'ordering-components/native'
+import { useLanguage, BusinessSearchList, useOrder, useUtils, showToast, ToastType } from 'ordering-components/native'
 import { ScrollView, StyleSheet, TouchableOpacity, Platform, View, Dimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native'
@@ -184,6 +184,30 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   const handleApplyFilters = () => {
     handleSearchbusinessAndProducts(true)
     setOpenFilters(false)
+  }
+
+  const isInteger = (val: any) => Number.isInteger(Number(val)) && !!val
+
+  const onProductClick = (business: any, categoryId: any, productId: any) => {
+    if (!isInteger(business?.id) ||
+      !isInteger(categoryId) ||
+      !isInteger(productId) ||
+      !business.slug || !business.header || !business.logo) {
+      showToast(ToastType.error, t('NOT_AVAILABLE', 'Not Available'))
+      return
+    }
+
+    navigation.navigate('ProductDetails', {
+      isRedirect: 'business',
+      businessId: business?.id,
+      categoryId: categoryId,
+      productId: productId,
+      business: {
+        store: business.slug,
+        header: business.header,
+        logo: business.logo,
+      }
+    })
   }
 
   useEffect(() => {
@@ -415,7 +439,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                   isSoldOut={(product.inventoried && !product.quantity)}
                   product={product}
                   businessId={business?.id}
-                  onProductClick={() => { }}
+                  onProductClick={(product: any) => onProductClick(business, category?.id, product?.id)}
                   productAddedToCartLength={0}
                   handleUpdateProducts={(productId: number, changes: any) => handleUpdateProducts(productId, category?.id, business?.id, changes)}
                   style={{ width: screenWidth - 80, marginRight: i === category?.products?.length - 1 ? 0 : 20 }}
