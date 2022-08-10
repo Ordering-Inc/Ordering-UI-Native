@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView } from 'react-native'
+import { IOScrollView } from 'react-native-intersection-observer'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -222,7 +223,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}, [currentCart])
 
 	return (
-		<>
+		<IOScrollView rootMargin={{ top: 0, bottom: 0 }}>
 			<ContainerSafeAreaView
 				style={{ flex: 1 }}
 				isOpenFiltProducts={isOpenFiltProducts}
@@ -421,6 +422,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						</>
 					)}
 				</BusinessProductsListingContainer>
+
 				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
 					<FloatingButton
 						btnText={
@@ -479,7 +481,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					onClose={() => setOpenService(false)}
 				/>
 			</OModal>
-		</>
+		</IOScrollView>
 	)
 }
 
