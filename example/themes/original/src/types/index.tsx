@@ -213,6 +213,7 @@ export interface BusinessControllerParams {
 	handleFavoriteBusiness?: any,
 	setFavoriteIds?: any;
 	handleUpdateBusinessList?: any;
+	enableIntersection?: boolean;
 }
 export interface BusinessProductsListingParams {
 	navigation?: any;
@@ -289,15 +290,16 @@ export interface BusinessProductsListParams {
 	handleUpdateProducts?: any
 }
 export interface SingleProductCardParams {
-	businessId: any,
+	businessId: any;
 	product: any;
 	isSoldOut: boolean;
 	onProductClick: any;
 	productAddedToCartLength: number;
-	style?: ViewStyle,
-	categoryState?: any,
-	handleFavoriteProduct?: any,
-	handleUpdateProducts?: any
+	style?: ViewStyle;
+	categoryState?: any;
+	handleFavoriteProduct?: any;
+	handleUpdateProducts?: any;
+	enableIntersection?: boolean;
 }
 export interface BusinessInformationParams {
 	navigation?: any,

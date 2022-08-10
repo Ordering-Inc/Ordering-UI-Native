@@ -44,14 +44,15 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		businessDeliveryTime,
 		businessPickupTime,
 		businessDistance,
-		handleFavoriteBusiness
+		handleFavoriteBusiness,
+		enableIntersection
 	} = props;
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
 	const [orderState] = useOrder();
 	const [configState] = useConfig();
 	const [, t] = useLanguage();
 	const theme = useTheme()
-	const [isIntersectionObserver, setIsIntersectionObserver] = useState(false)
+	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
 	const styles = StyleSheet.create({
 		headerStyle: {
 			borderTopLeftRadius: 7.6,

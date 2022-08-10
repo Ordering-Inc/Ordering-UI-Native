@@ -434,6 +434,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					(business: any, i: number) => (
 						<BusinessController
 							key={`${business.id}_` + i}
+							enableIntersection
 							business={business}
 							isBusinessOpen={business.open}
 							handleCustomClick={handleBusinessClick}
