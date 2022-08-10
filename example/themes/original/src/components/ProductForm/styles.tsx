@@ -49,7 +49,7 @@ export const ProductDescription = styled.View`
 `
 
 export const ProductEditions = styled.View`
-
+  padding: 0 40px;
 `
 
 export const SectionTitle = styled.View`
@@ -99,4 +99,8 @@ export const WeightUnitItem = styled.View`
   `}
 `
 export const ProductSummary = styled.View`
+  padding: 26px 40px;
+  position: relative;
+  background-color: white;
+  z-index: 100;
 `
