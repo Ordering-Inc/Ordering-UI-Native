@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	useLanguage,
 	useConfig,
@@ -10,6 +10,8 @@ import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
 import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { InView } from 'react-native-intersection-observer'
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OText } from '../shared';
 import FastImage from 'react-native-fast-image'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
@@ -87,7 +89,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const [stateConfig] = useConfig();
 	const [{ parsePrice, optimizeImage }] = useUtils();
 	const [orderState] = useOrder();
-
+	const [isIntersectionObserver, setIsIntersectionObserver] = useState(false)
 	const editMode = typeof product?.code !== 'undefined';
 
 	const removeToBalance = editMode ? product?.quantity : 0;
@@ -117,103 +119,110 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	}
 
 	return (
-		<CardContainer
-			style={[
-				styles.container,
-				(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
-				(style && { ...style }),
-			]}
-			onPress={() => onProductClick?.(product)}>
-			{productAddedToCartLength > 0 && (
-				<QuantityContainer style={[styles.quantityContainer, {
-					transform: [{ translateX: 10 }, { translateY: -10 }],
-				}]}>
-					<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>
-				</QuantityContainer>
-			)}
-			<CardInfo>
-				<View style={styles.titleWrapper}>
-					<OText
-						size={12}
-						weight={'500'}
-						numberOfLines={1}
-						ellipsizeMode="tail"
-						style={styles.line18}>
-						{product?.name}
-					</OText>
-					<TouchableOpacity
-						onPress={handleChangeFavorite}
-					>
-						<IconAntDesign
-							name={product?.favorite ? 'heart' : 'hearto'}
-							color={theme.colors.danger5}
-							size={18}
-						/>
-					</TouchableOpacity>
-				</View>
-				<PricesContainer>
-					<OText color={theme.colors.primary}>{product?.price ? parsePrice(product?.price) : ''}</OText>
-					{product?.offer_price !== null && product?.in_offer && (
-						<OText style={styles.regularPriceStyle}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
+		<InView style={{ minHeight: 140 }} triggerOnce={true} onChange={(inView: boolean) => setIsIntersectionObserver(true)}>
+			{isIntersectionObserver && (
+				<CardContainer
+					style={[
+						styles.container,
+						(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
+						(style && { ...style }),
+					]}
+					onPress={() => onProductClick?.(product)}>
+					{productAddedToCartLength > 0 && (
+						<QuantityContainer style={[styles.quantityContainer, {
+							transform: [{ translateX: 10 }, { translateY: -10 }],
+						}]}>
+							<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>
+						</QuantityContainer>
 					)}
-				</PricesContainer>
-				<OText
-					size={10}
-					numberOfLines={2}
-					ellipsizeMode="tail"
-					color={theme.colors.textSecondary}
-					style={styles.line15}>
-					{product?.description}
-				</OText>
-			</CardInfo>
-			<LogoWrapper>
-				{product?.ribbon?.enabled && (
-					<RibbonBox
-						bgColor={product?.ribbon?.color}
-						isRoundRect={product?.ribbon?.shape === shape?.rectangleRound}
-						isCapsule={product?.ribbon?.shape === shape?.capsuleShape}
-					>
+					<CardInfo>
+						<View style={styles.titleWrapper}>
+							<OText
+								size={12}
+								weight={'500'}
+								numberOfLines={1}
+								ellipsizeMode="tail"
+								style={styles.line18}>
+								{product?.name}
+							</OText>
+							<TouchableOpacity
+								onPress={handleChangeFavorite}
+							>
+								<IconAntDesign
+									name={product?.favorite ? 'heart' : 'hearto'}
+									color={theme.colors.danger5}
+									size={18}
+								/>
+							</TouchableOpacity>
+						</View>
+						<PricesContainer>
+							<OText color={theme.colors.primary}>{product?.price ? parsePrice(product?.price) : ''}</OText>
+							{product?.offer_price !== null && product?.in_offer && (
+								<OText style={styles.regularPriceStyle}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
+							)}
+						</PricesContainer>
 						<OText
 							size={10}
-							weight={'400'}
-							color={theme.colors.white}
 							numberOfLines={2}
-							ellipsizeMode='tail'
-							lineHeight={13}
-						>
-							{product?.ribbon?.text}
+							ellipsizeMode="tail"
+							color={theme.colors.textSecondary}
+							style={styles.line15}>
+							{product?.description}
 						</OText>
-					</RibbonBox>
-				)}
-				{product?.images ? (
-					<FastImage
-						style={styles.productStyle}
-						source={{
-							uri: optimizeImage(product?.images, 'h_250,c_limit'),
-							priority: FastImage.priority.normal,
-						}}
-						resizeMode={FastImage.resizeMode.cover}
-					/>
-				) : (
-					<FastImage
-						style={styles.productStyle}
-						source={{
-							uri: Image.resolveAssetSource(theme.images.dummies.product).uri,
-							priority: FastImage.priority.normal,
-						}}
-						resizeMode={FastImage.resizeMode.cover}
-					/>
-				)}
-			</LogoWrapper>
-
-			{(isSoldOut || maxProductQuantity <= 0) && (
-				<SoldOut>
-					<OText size={12} weight="bold" color={theme.colors.textSecondary} style={styles.soldOutTextStyle}>
-						{t('SOLD_OUT', 'SOLD OUT')}
-					</OText>
-				</SoldOut>
+					</CardInfo>
+					<LogoWrapper>
+						{product?.ribbon?.enabled && (
+							<RibbonBox
+								bgColor={product?.ribbon?.color}
+								isRoundRect={product?.ribbon?.shape === shape?.rectangleRound}
+								isCapsule={product?.ribbon?.shape === shape?.capsuleShape}
+							>
+								<OText
+									size={10}
+									weight={'400'}
+									color={theme.colors.white}
+									numberOfLines={2}
+									ellipsizeMode='tail'
+									lineHeight={13}
+								>
+									{product?.ribbon?.text}
+								</OText>
+							</RibbonBox>
+						)}
+						{product?.images ? (
+							<>
+								{isIntersectionObserver && (
+									<FastImage
+										style={styles.productStyle}
+										source={{
+											uri: optimizeImage(product?.images, 'h_250,c_limit'),
+											priority: FastImage.priority.normal,
+										}}
+										resizeMode={FastImage.resizeMode.cover}
+									/>
+								)}
+							</>
+						) : (
+							<FastImage
+								style={styles.productStyle}
+								source={{
+									uri: Image.resolveAssetSource(theme.images.dummies.product).uri,
+									priority: FastImage.priority.normal,
+								}}
+								resizeMode={FastImage.resizeMode.cover}
+							/>
+						)}
+					</LogoWrapper>
+					{(isSoldOut || maxProductQuantity <= 0) && (
+						<SoldOut>
+							<OText size={12} weight="bold" color={theme.colors.textSecondary} style={styles.soldOutTextStyle}>
+								{t('SOLD_OUT', 'SOLD OUT')}
+							</OText>
+						</SoldOut>
+					)}
+				</CardContainer>
 			)}
-		</CardContainer>
+		</InView >
 	);
 }, SingleProductCardPropsAreEqual);
 
