@@ -57,19 +57,11 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         source={{ uri: header || optimizeImage(businessState?.business?.header, 'h_400,c_limit') }}
       >
         <BusinessLogo>
-          {loading ? (
-            <View style={{ marginLeft: 20 }}>
-              <Placeholder Animation={Fade}>
-                <PlaceholderLine height={50} width={20} />
-              </Placeholder>
-            </View>
-          ) : (
-            !isBusinessInfoShow && (
-              <OIcon
-                url={logo || optimizeImage(businessState?.business?.logo, 'h_300,c_limit')}
-                style={styles.businessLogo}
-              />
-            )
+          {!isBusinessInfoShow && (
+            <OIcon
+              url={logo || optimizeImage(businessState?.business?.logo, 'h_300,c_limit')}
+              style={styles.businessLogo}
+            />
           )}
         </BusinessLogo>
       </BusinessHeader>
@@ -117,7 +109,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
               <PlaceholderLine width={10} />
             </Placeholder>
           ) : (
-            <View style={{width: '75%'}}>
+            <View style={{ width: '75%' }}>
               <OText color={theme.colors.textSecondary}>{getBusinessType()}</OText>
             </View>
           )}
@@ -187,7 +179,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         titleSectionStyle={styles.modalTitleSectionStyle}
         open={openBusinessInformation}
         onClose={() => setOpenBusinessInformation(false)}
-        styleCloseButton={{color: theme.colors.white, backgroundColor: 'rgba(0,0,0,0.3)'}}
+        styleCloseButton={{ color: theme.colors.white, backgroundColor: 'rgba(0,0,0,0.3)' }}
         isNotDecoration
       >
         <BusinessInformation
@@ -199,7 +191,7 @@ export const BusinessBasicInformation = (props: BusinessBasicInformationParams) 
         titleSectionStyle={styles.modalTitleSectionStyle}
         open={openBusinessReviews}
         onClose={() => setOpenBusinessReviews(false)}
-        styleCloseButton={{color: theme.colors.white, backgroundColor: 'rgba(0,0,0,0.3)'}}
+        styleCloseButton={{ color: theme.colors.white, backgroundColor: 'rgba(0,0,0,0.3)' }}
         isNotDecoration
       >
         <BusinessReviews
