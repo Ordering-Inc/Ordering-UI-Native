@@ -32,7 +32,7 @@ import {
 	FeaturedWrapper,
 	OrderProgressWrapper,
 	FarAwayMessage,
-  SearchBarWrapper,
+	SearchBarWrapper,
 	MomentWrapper,
 	FilterWrapper,
 	ServiceWrapper,
@@ -70,8 +70,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		isGuestUser,
 		handleUpdateBusinessList,
 		priceLevelSelected,
-    handleChangePriceLevel,
-    businessTypeSelected
+		handleChangePriceLevel,
+		businessTypeSelected
 	} = props;
 	const theme = useTheme();
 	const isFocused = useIsFocused();
@@ -327,22 +327,23 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 							/>
 						</WrapMomentOption>
 						{!businessId && (
-              <SearchBarWrapper>
-                <SearchBar
-                  onSearch={handleChangeSearch}
-                  searchValue={searchValue}
-                  lazyLoad
-                  isCancelXButtonShow={!!searchValue}
-                  borderStyle={styles.borderStyle}
-                  onCancel={() => handleChangeSearch('')}
-                  placeholder={t('SEARCH', 'Search')}
-                  height={80}
-                  isAppointment
-                  isDisabled={!businessTypes}
-                  inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
-                  onSubmitEditing={() => { configs?.advanced_business_search_enabled?.value === '1' && navigation.navigate('BusinessSearch', { businessTypes, defaultTerm: searchValue }) }}
-                />
-              </SearchBarWrapper>
+							<SearchBarWrapper>
+								<SearchBar
+									onSearch={handleChangeSearch}
+									searchValue={searchValue}
+									lazyLoad
+									isCancelXButtonShow={!!searchValue}
+									borderStyle={styles.borderStyle}
+									onCancel={() => handleChangeSearch('')}
+									placeholder={t('SEARCH', 'Search')}
+									height={80}
+									isAppointment
+									isDisabled={!businessTypes || configs?.advanced_business_search_enabled?.value === '1'}
+									inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
+									onPress={() => { configs?.advanced_business_search_enabled?.value === '1' && navigation.navigate('BusinessSearch', { businessTypes }) }}
+									onSubmitEditing={() => { configs?.advanced_business_search_enabled?.value === '1' && navigation.navigate('BusinessSearch', { businessTypes, defaultTerm: searchValue }) }}
+								/>
+							</SearchBarWrapper>
 						)}
 					</View>
 				</OrderControlContainer>

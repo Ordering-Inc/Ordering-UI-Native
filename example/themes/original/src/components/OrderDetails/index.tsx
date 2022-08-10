@@ -43,6 +43,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign'
 import { TaxInformation } from '../TaxInformation';
 import { Placeholder, PlaceholderLine } from 'rn-placeholder';
 import NavBar from '../NavBar'
+import { OrderHistory } from './OrderHistory';
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
     navigation,
@@ -85,6 +86,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
       width: 30,
       marginTop: Platform.OS === 'ios' ? 0 : 30
     },
+    linkWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      flexDirection: 'row'
+    }
   });
 
   const [, t] = useLanguage();
@@ -93,6 +99,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [{ carts }] = useOrder()
 
   const [isReviewed, setIsReviewed] = useState(false)
+  const [isOrderHistory, setIsOrderHistory] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
   const { order, businessData } = props.order;
   const mapValidStatuses = [9, 19, 23]
@@ -366,6 +373,14 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     )
   }
 
+  const handleTriggerReview = () => {
+    setIsOrderHistory(false);
+    (
+      parseInt(order?.status) === 1 ||
+      parseInt(order?.status) === 11 ||
+      parseInt(order?.status) === 15
+    ) && !order.review && !isReviewed && handleClickOrderReview(order)
+  }
 
   useEffect(() => {
     const _businessId = 'businessId:' + businessData?.id
@@ -377,7 +392,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     }
     if (!reorderState?.error && reorderState.loading === false && businessData?.id) {
       const products = carts?.[_businessId]?.products
-      const available = products.every((product: any) => product.valid === true)
+      const available = products?.every((product: any) => product.valid === true)
 
       if (available && reorderState?.result?.uuid && (products?.length === order?.products.length)) {
         onNavigationRedirect && onNavigationRedirect('CheckoutNavigator', { cartUuid: reorderState?.result.uuid })
@@ -507,7 +522,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             />
             <OrderInfo>
               <OrderData>
-                {
+                <View style={styles.linkWrapper}>
+                  {
                   (
                     parseInt(order?.status) === 1 ||
                     parseInt(order?.status) === 11 ||
@@ -515,20 +531,36 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                   ) && !order.review && !isReviewed && (
                     <TouchableOpacity
                       activeOpacity={0.7}
-                      style={{ marginTop: 6 }}
+                      style={{ marginTop: 6, marginRight: 10 }}
                       onPress={() => handleClickOrderReview(order)}
-
                     >
                       <OText
                         size={10}
                         lineHeight={15}
-                        color={theme.colors.textSecondary}
+                        color={theme.colors.primary}
                         style={{ textDecorationLine: 'underline' }}
                       >
                         {t('REVIEW_YOUR_ORDER', 'Review your order')}
                       </OText>
                     </TouchableOpacity>
                   )}
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={{ marginTop: 6 }}
+                      onPress={() => setIsOrderHistory(true)}
+
+                    >
+                      <OText
+                        size={10}
+                        lineHeight={15}
+                        color={theme.colors.primary}
+                        style={{ textDecorationLine: 'underline', textTransform: 'capitalize' }}
+                      >
+                        {t('VIEW_DETAILS', 'View Details')}
+                      </OText>
+                    </TouchableOpacity>
+                </View>
+
                 <StaturBar>
                   <LinearGradient
                     start={{ x: 0.0, y: 0.0 }}
@@ -1054,6 +1086,23 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           type={openTaxModal.type}
           data={openTaxModal.data}
           products={order?.products}
+        />
+      </OModal>
+      <OModal
+        open={isOrderHistory}
+        onClose={() => setIsOrderHistory(false)}
+        entireModal
+      >
+        <OrderHistory
+          order={order}
+          messages={messages}
+          enableReview={(
+            parseInt(order?.status) === 1 ||
+            parseInt(order?.status) === 11 ||
+            parseInt(order?.status) === 15
+          ) && !order.review && !isReviewed}
+          onClose={() => setIsOrderHistory(false)}
+          handleTriggerReview={handleTriggerReview}
         />
       </OModal>
     </OrderDetailsContainer>

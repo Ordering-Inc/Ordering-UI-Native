@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	BusinessController as BusinessSingleCard,
 	useUtils,
@@ -8,6 +8,7 @@ import {
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { InView } from 'react-native-intersection-observer'
 import { BusinessControllerParams } from '../../types';
 import { convertHoursToMinutes, shape } from '../../utils';
 import {
@@ -50,6 +51,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const [configState] = useConfig();
 	const [, t] = useLanguage();
 	const theme = useTheme()
+	const [isIntersectionObserver, setIsIntersectionObserver] = useState(false)
 	const styles = StyleSheet.create({
 		headerStyle: {
 			borderTopLeftRadius: 7.6,
@@ -123,126 +125,132 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		}
 	}
 
-  const handleChangeFavorite = () => {
-    handleFavoriteBusiness && handleFavoriteBusiness(!business?.favorite)
-  }
+	const handleChangeFavorite = () => {
+		handleFavoriteBusiness && handleFavoriteBusiness(!business?.favorite)
+	}
 
 	return (
-		<Card activeOpacity={1} onPress={() => handleBusinessClick(business)} style={style}>
-			{business?.ribbon?.enabled && (
-				<RibbonBox
-					bgColor={business?.ribbon?.color}
-					isRoundRect={business?.ribbon?.shape === shape?.rectangleRound}
-					isCapsule={business?.ribbon?.shape === shape?.capsuleShape}
-				>
-					<OText
-						size={10}
-						weight={'400'}
-						color={theme.colors.white}
-						numberOfLines={2}
-						ellipsizeMode='tail'
-						lineHeight={13}
+		<InView triggerOnce={true} onChange={(inView: boolean) => setIsIntersectionObserver(inView)}>
+			<Card activeOpacity={1} onPress={() => handleBusinessClick(business)} style={style}>
+				{business?.ribbon?.enabled && (
+					<RibbonBox
+						bgColor={business?.ribbon?.color}
+						isRoundRect={business?.ribbon?.shape === shape?.rectangleRound}
+						isCapsule={business?.ribbon?.shape === shape?.capsuleShape}
 					>
-						{business?.ribbon?.text}
-					</OText>
-				</RibbonBox>
-			)}
-			<BusinessHero>
-				<FastImage
-					style={{ height: 120 }}
-					source={{
-						uri: optimizeImage(businessHeader || business?.header, 'h_500,c_limit'),
-						priority: FastImage.priority.normal,
-					}}
-					resizeMode={FastImage.resizeMode.cover}
-				/>
-				{(businessFeatured ?? business?.featured) && (
-					<View style={styles.featured}>
-						<FontAwesomeIcon name="crown" size={26} color="gold" />
-					</View>
+						<OText
+							size={10}
+							weight={'400'}
+							color={theme.colors.white}
+							numberOfLines={2}
+							ellipsizeMode='tail'
+							lineHeight={13}
+						>
+							{business?.ribbon?.text}
+						</OText>
+					</RibbonBox>
 				)}
-				<BusinessState>
-					{!isBusinessOpen && (configState?.configs?.preorder_status_enabled?.value === '1') && (
-						<View style={styles.businessStateView}>
-							<OText
-								color={theme.colors.textThird}
-								size={10}
-								style={styles.businessStateText}>
-								{t('PREORDER', 'PREORDER')}
-							</OText>
-						</View>
-					)}
-				</BusinessState>
-			</BusinessHero>
-			<BusinessContent>
-				<BusinessInfo>
-					<BusinessLogo style={styles.businessLogo}>
+				{isIntersectionObserver && (
+					<BusinessHero>
 						<FastImage
-							style={{ width: 56, height: 56 }}
+							style={{ height: 120 }}
 							source={{
-								uri: optimizeImage(businessLogo || business?.logo, 'h_150,c_limit'),
+								uri: optimizeImage(businessHeader || business?.header, 'h_500,c_limit'),
 								priority: FastImage.priority.normal,
 							}}
 							resizeMode={FastImage.resizeMode.cover}
 						/>
-					</BusinessLogo>
-					<ReviewAndFavorite>
-						{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && (
-							<Reviews>
-								<OIcon src={theme.images.general.star} width={12} style={styles.starIcon} />
-								<OText size={10} style={{ lineHeight: 15 }}>
-									{parseNumber(businessReviews?.reviews?.total ?? business?.reviews?.total, { separator: '.' })}
-								</OText>
-							</Reviews>
+						{(businessFeatured ?? business?.featured) && (
+							<View style={styles.featured}>
+								<FontAwesomeIcon name="crown" size={26} color="gold" />
+							</View>
 						)}
-						<TouchableOpacity
-							onPress={handleChangeFavorite}
-						>
-							<IconAntDesign
-								name={business?.favorite ? 'heart' : 'hearto'}
-								color={theme.colors.danger5}
-								size={18}
-							/>
-						</TouchableOpacity>
-					</ReviewAndFavorite>
-				</BusinessInfo>
-				<OText
-					size={12}
-					style={{ lineHeight: 18, marginBottom: 6 }}
-					weight={'500'}>
-					{business?.name}
-				</OText>
-				<OText size={10} style={{ lineHeight: 15, marginBottom: 3 }}>
-					{business?.address}
-				</OText>
-				{/* <BusinessCategory>
+						<BusinessState>
+							{!isBusinessOpen && (configState?.configs?.preorder_status_enabled?.value === '1') && (
+								<View style={styles.businessStateView}>
+									<OText
+										color={theme.colors.textThird}
+										size={10}
+										style={styles.businessStateText}>
+										{t('PREORDER', 'PREORDER')}
+									</OText>
+								</View>
+							)}
+						</BusinessState>
+					</BusinessHero>
+				)}
+				<BusinessContent>
+					<BusinessInfo>
+						{isIntersectionObserver && (
+							<BusinessLogo style={styles.businessLogo}>
+								<FastImage
+									style={{ width: 56, height: 56 }}
+									source={{
+										uri: optimizeImage(businessLogo || business?.logo, 'h_150,c_limit'),
+										priority: FastImage.priority.normal,
+									}}
+									resizeMode={FastImage.resizeMode.cover}
+								/>
+							</BusinessLogo>
+						)}
+						<ReviewAndFavorite>
+							{(businessReviews?.reviews?.total > 0 ?? business?.reviews?.total > 0) && (
+								<Reviews>
+									<OIcon src={theme.images.general.star} width={12} style={styles.starIcon} />
+									<OText size={10} style={{ lineHeight: 15 }}>
+										{parseNumber(businessReviews?.reviews?.total ?? business?.reviews?.total, { separator: '.' })}
+									</OText>
+								</Reviews>
+							)}
+							<TouchableOpacity
+								onPress={handleChangeFavorite}
+							>
+								<IconAntDesign
+									name={business?.favorite ? 'heart' : 'hearto'}
+									color={theme.colors.danger5}
+									size={18}
+								/>
+							</TouchableOpacity>
+						</ReviewAndFavorite>
+					</BusinessInfo>
+					<OText
+						size={12}
+						style={{ lineHeight: 18, marginBottom: 6 }}
+						weight={'500'}>
+						{business?.name}
+					</OText>
+					<OText size={10} style={{ lineHeight: 15, marginBottom: 3 }}>
+						{business?.address}
+					</OText>
+					{/* <BusinessCategory>
           <OText>{getBusinessType()}</OText>
         </BusinessCategory> */}
-				<Metadata>
-					{!isBusinessOpen ? (
-						<View style={styles.closed}>
-							<OText size={10} color={theme.colors.red}>
-								{t('CLOSED', 'Closed')}
-							</OText>
-						</View>
-					) : (
-						<View style={styles.bullet}>
-							{orderState?.options?.type === 1 && (
-								<OText size={10} color={theme.colors.textSecondary}>
-									{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(businessDeliveryPrice ?? business?.delivery_price) + ' \u2022 '}`}
+					<Metadata>
+						{!isBusinessOpen ? (
+							<View style={styles.closed}>
+								<OText size={10} color={theme.colors.red}>
+									{t('CLOSED', 'Closed')}
 								</OText>
-							)}
-							<OText size={10} color={theme.colors.textSecondary}>{`${convertHoursToMinutes(
-								orderState?.options?.type === 1
-									? (businessDeliveryTime ?? business?.delivery_time)
-									: (businessPickupTime ?? business?.pickup_time),
-							)} \u2022 `}</OText>
-							<OText size={10} color={theme.colors.textSecondary}>{parseDistance(businessDistance ?? business?.distance)}</OText>
-						</View>
-					)}
-				</Metadata>
-			</BusinessContent>
-		</Card>
+							</View>
+						) : (
+							<View style={styles.bullet}>
+								{orderState?.options?.type === 1 && (
+									<OText size={10} color={theme.colors.textSecondary}>
+										{`${t('DELIVERY_FEE', 'Delivery fee')} ${parsePrice(businessDeliveryPrice ?? business?.delivery_price) + ' \u2022 '}`}
+									</OText>
+								)}
+								<OText size={10} color={theme.colors.textSecondary}>{`${convertHoursToMinutes(
+									orderState?.options?.type === 1
+										? (businessDeliveryTime ?? business?.delivery_time)
+										: (businessPickupTime ?? business?.pickup_time),
+								)} \u2022 `}</OText>
+								<OText size={10} color={theme.colors.textSecondary}>{parseDistance(businessDistance ?? business?.distance)}</OText>
+							</View>
+						)}
+					</Metadata>
+				</BusinessContent>
+			</Card>
+		</InView>
 	);
 };
 

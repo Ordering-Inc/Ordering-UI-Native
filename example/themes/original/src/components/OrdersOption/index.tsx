@@ -98,11 +98,18 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 	}
 
 	const onProductClick = (product: any) => {
-		if (product?.product_id && product?.category_id && product?.businessId) {
+		if (product?.product_id && product?.category_id && product?.businessId &&
+			product?.business.slug && product?.business.header && product?.business.logo) {
 			onNavigationRedirect('ProductDetails', {
-				productId: product?.product_id,
-				categoryId: product?.category_id,
+				isRedirect: 'business',
 				businessId: product?.businessId,
+				categoryId: product?.category_id,
+				productId: product?.product_id,
+				business: {
+					store: product?.business.slug,
+					header: product?.business.header,
+					logo: product?.business.logo,
+				}
 			})
 		} else {
 			showToast(ToastType.Error, t('ERROR_FAILED_REDIRECT_IDS', 'Failed to redirect product for ids'))

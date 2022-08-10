@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import moment from 'moment';
 import {
   SingleOrderCard as SingleOrderCardController,
   useUtils,
@@ -36,20 +35,20 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
     handleClickOrder
   } = props;
 
-  const [{ parsePrice, optimizeImage }] = useUtils();
+  const [{ parsePrice, optimizeImage, parseDate }] = useUtils();
   const [, t] = useLanguage();
-	const theme = useTheme();
+  const theme = useTheme();
 
-	const [reorderSelected, setReorderSelected] = useState<number | null>(null);
+  const [reorderSelected, setReorderSelected] = useState<number | null>(null);
 
-	const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12];
+  const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12];
 
   const styles = StyleSheet.create({
-		logo: {
-			borderRadius: 8,
-			width: 64,
-			height: 64
-		},
+    logo: {
+      borderRadius: 8,
+      width: 64,
+      height: 64
+    },
     logoWrapper: {
       overflow: 'hidden',
       backgroundColor: 'white',
@@ -62,79 +61,75 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
     },
     buttonText: {
       color: theme.colors.primary,
-			fontSize: 10,
-			marginLeft: 2,
-			marginRight: 2,
+      fontSize: 10,
+      marginLeft: 2,
+      marginRight: 2,
     },
     reorderLoading: {
       width: 80,
-			height: 40,
-			borderRadius: 10,
+      height: 40,
+      borderRadius: 10,
     },
     reorderbutton: {
-			height: 23,
-			paddingLeft: 10,
-			paddingRight: 10,
-			borderRadius: 23,
-			shadowOpacity: 0,
-			backgroundColor: theme.colors.primaryContrast,
-			borderWidth: 0,
-		},
+      height: 23,
+      paddingLeft: 10,
+      paddingRight: 10,
+      borderRadius: 23,
+      shadowOpacity: 0,
+      backgroundColor: theme.colors.primaryContrast,
+      borderWidth: 0,
+    },
     reviewButton: {
-			height: 23,
-			maxHeight: 23,
-			backgroundColor: theme.colors.white,
-			alignItems: 'center',
-			justifyContent: 'center',
-			paddingHorizontal: 10,
-			borderRadius: 23,
-			borderWidth: 1,
-			borderColor: theme.colors.primaryContrast,
+      height: 23,
+      maxHeight: 23,
+      backgroundColor: theme.colors.white,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 10,
+      borderRadius: 23,
+      borderWidth: 1,
+      borderColor: theme.colors.primaryContrast,
       marginRight: 2
-		},
+    },
     infoText: {
       flexDirection: 'row',
       alignItems: 'center'
     }
-	});
+  });
 
   const handleReorderClick = (id: number) => {
-		setReorderSelected(id);
-		handleReorder && handleReorder(id);
-	};
+    setReorderSelected(id);
+    handleReorder && handleReorder(id);
+  };
 
   const handleClickOrderReview = (order: any) => {
     if (pastOrders) {
       onNavigationRedirect &&
-      onNavigationRedirect('ReviewOrder', {
-        order: {
-          id: order?.id,
-          business_id: order?.business_id,
-          logo: order?.business?.logo,
-          driver: order?.driver,
-          products: order?.products,
-          review: order?.review,
-          user_review: order?.user_review
-        },
-      });
+        onNavigationRedirect('ReviewOrder', {
+          order: {
+            id: order?.id,
+            business_id: order?.business_id,
+            logo: order?.business?.logo,
+            driver: order?.driver,
+            products: order?.products,
+            review: order?.review,
+            user_review: order?.user_review
+          },
+        });
       return
     }
     if (isMessageView) {
-			handleClickOrder(order?.uuid)
-			return
-		}
-		onNavigationRedirect &&
-			onNavigationRedirect('OrderDetails', { orderId: order?.uuid });
-	};
+      handleClickOrder(order?.uuid)
+      return
+    }
+    onNavigationRedirect &&
+      onNavigationRedirect('OrderDetails', { orderId: order?.uuid });
+  };
 
   const handleClickViewOrder = (uuid: string) => {
-		onNavigationRedirect &&
-			onNavigationRedirect('OrderDetails', { orderId: uuid });
-	};
-
-  const formatDate = (date: string, option?: any) => {
-		return option?.utc ? moment.utc(date).format('DD/MM/YY \u2022 h:m a') : moment(date).format('DD/MM/YY \u2022 h:m a');
-	};
+    onNavigationRedirect &&
+      onNavigationRedirect('OrderDetails', { orderId: uuid });
+  };
 
   const handleChangeFavorite = () => {
     handleFavoriteOrder && handleFavoriteOrder(!order?.favorite)
@@ -143,7 +138,7 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   return (
     <Container
       onPress={() => handleClickViewOrder(order?.uuid)}
-			activeOpacity={0.7}
+      activeOpacity={0.7}
     >
       <InnerContainer>
         {!!order.business?.logo && (
@@ -164,22 +159,22 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
             {!!!pastOrders && (
               <>
                 {isMessageView ? (
-                <>
-                  {order?.unread_count > 0 && (
-                    <UnreadMessageCounter>
-                      <OText size={12} color={theme.colors.primary} lineHeight={18} >
-                        {order?.unread_count}
-                      </OText>
-                    </UnreadMessageCounter>
-                  )}
-                </>
-              ) : (
-                <Price>
-                  <OText size={12} lineHeight={18}>
-                    {parsePrice(order?.summary?.total || order?.total)}
-                  </OText>
-                </Price>
-              )}
+                  <>
+                    {order?.unread_count > 0 && (
+                      <UnreadMessageCounter>
+                        <OText size={12} color={theme.colors.primary} lineHeight={18} >
+                          {order?.unread_count}
+                        </OText>
+                      </UnreadMessageCounter>
+                    )}
+                  </>
+                ) : (
+                  <Price>
+                    <OText size={12} lineHeight={18}>
+                      {parsePrice(order?.summary?.total || order?.total)}
+                    </OText>
+                  </Price>
+                )}
               </>
             )}
             {!!pastOrders && (
@@ -243,29 +238,27 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                   color={theme.colors.textSecondary}
                   style={{ marginVertical: 3 }}
                   numberOfLines={1}>
-                  {order?.delivery_datetime_utc
-                    ? formatDate(order?.delivery_datetime_utc)
-                    : formatDate(order?.delivery_datetime, { utc: false })}
+                  {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
                 </OText>
               </View>
-							<OText
-								color={theme.colors.primary}
-								size={10}
-								lineHeight={15}
-								numberOfLines={1}>
-								{getOrderStatus(order.status)?.value}
-							</OText>
+              <OText
+                color={theme.colors.primary}
+                size={10}
+                lineHeight={15}
+                numberOfLines={1}>
+                {getOrderStatus(order.status)?.value}
+              </OText>
             </View>
             <TouchableOpacity
-							onPress={handleChangeFavorite}
+              onPress={handleChangeFavorite}
               style={{ marginTop: 5 }}
-						>
-							<IconAntDesign
-								name={order?.favorite ? 'heart' : 'hearto'}
-								color={theme.colors.danger5}
-								size={16}
-							/>
-						</TouchableOpacity>
+            >
+              <IconAntDesign
+                name={order?.favorite ? 'heart' : 'hearto'}
+                color={theme.colors.danger5}
+                size={16}
+              />
+            </TouchableOpacity>
           </ContentFooter>
         </CardInfoWrapper>
       </InnerContainer>
