@@ -443,36 +443,38 @@ const SignupFormUI = (props: SignupParams) => {
 				titleStyle={{ marginLeft: 0, marginRight: 0 }}
 			/>
 			<FormSide>
-				{(useSignUpFullDetails) && (
+				{((Number(useSignUpFullDetails) + Number(useSignUpOtpEmail) + Number(useSignUpOtpCellphone)) > 1) && (
 					<SignupWith>
 						<OTabs
 							horizontal
 							showsHorizontalScrollIndicator={false}
 							ref={tabsRef}
 						>
-							<TabBtn
-								onPress={() => handleSignUpTab('default')}
-								onLayout={(event: any) => handleOnLayout(event, 'default')}
-							>
-								<OTab
-									style={{
-										borderBottomColor:
-											signUpTab === 'default'
-												? theme.colors.textNormal
-												: theme.colors.border,
-									}}>
-									<OText
-										size={14}
-										color={
-											signUpTab === 'default'
-												? theme.colors.textNormal
-												: theme.colors.disabled
-										}
-										weight={signUpTab === 'default' ? 'bold' : 'normal'}>
-										{t('DEFAULT', 'Default')}
-									</OText>
-								</OTab>
-							</TabBtn>
+							{useSignUpFullDetails && (
+								<TabBtn
+									onPress={() => handleSignUpTab('default')}
+									onLayout={(event: any) => handleOnLayout(event, 'default')}
+								>
+									<OTab
+										style={{
+											borderBottomColor:
+												signUpTab === 'default'
+													? theme.colors.textNormal
+													: theme.colors.border,
+										}}>
+										<OText
+											size={14}
+											color={
+												signUpTab === 'default'
+													? theme.colors.textNormal
+													: theme.colors.disabled
+											}
+											weight={signUpTab === 'default' ? 'bold' : 'normal'}>
+											{t('BY_FULL_DETAILS', 'by Full Details')}
+										</OText>
+									</OTab>
+								</TabBtn>
+							)}
 							{useSignUpOtpEmail && (
 								<TabBtn
 									onPress={() => handleSignUpTab('otpEmail')}
