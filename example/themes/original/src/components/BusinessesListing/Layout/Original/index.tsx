@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import Geolocation from '@react-native-community/geolocation'
+import { IOScrollView } from 'react-native-intersection-observer'
 import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency'
 import {
 	View,
@@ -162,7 +163,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		const hasMore = !(
 			paginationProps.totalPages === paginationProps.currentPage
 		);
-
 		if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
 			getBusinesses();
 		}
@@ -430,29 +430,32 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						)}
 					/>
 				)}
-				{businessesList.businesses?.map(
-					(business: any, i: number) => (
-						<BusinessController
-							key={`${business.id}_` + i}
-							business={business}
-							isBusinessOpen={business.open}
-							handleCustomClick={handleBusinessClick}
-							orderType={orderState?.options?.type}
-							navigation={navigation}
-							businessHeader={business?.header}
-							businessFeatured={business?.featured}
-							businessLogo={business?.logo}
-							businessReviews={business?.reviews}
-							businessDeliveryPrice={business?.delivery_price}
-							businessDeliveryTime={business?.delivery_time}
-							businessPickupTime={business?.pickup_time}
-							businessDistance={business?.distance}
-							handleUpdateBusinessList={handleUpdateBusinessList}
-							favoriteIds={favoriteIds}
-							setFavoriteIds={setFavoriteIds}
-						/>
-					)
-				)}
+				<IOScrollView>
+					{businessesList.businesses?.map(
+						(business: any, i: number) => (
+							<BusinessController
+								key={`${business.id}_` + i}
+								enableIntersection
+								business={business}
+								isBusinessOpen={business.open}
+								handleCustomClick={handleBusinessClick}
+								orderType={orderState?.options?.type}
+								navigation={navigation}
+								businessHeader={business?.header}
+								businessFeatured={business?.featured}
+								businessLogo={business?.logo}
+								businessReviews={business?.reviews}
+								businessDeliveryPrice={business?.delivery_price}
+								businessDeliveryTime={business?.delivery_time}
+								businessPickupTime={business?.pickup_time}
+								businessDistance={business?.distance}
+								handleUpdateBusinessList={handleUpdateBusinessList}
+								favoriteIds={favoriteIds}
+								setFavoriteIds={setFavoriteIds}
+							/>
+						)
+					)}
+				</IOScrollView>
 				{businessesList.loading && (
 					<>
 						{[

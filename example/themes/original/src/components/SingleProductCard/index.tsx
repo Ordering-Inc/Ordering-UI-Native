@@ -31,7 +31,8 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		onProductClick,
 		productAddedToCartLength,
 		style,
-		handleFavoriteProduct
+		handleFavoriteProduct,
+		enableIntersection
 	} = props;
 
 	const theme = useTheme();
@@ -89,7 +90,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const [stateConfig] = useConfig();
 	const [{ parsePrice, optimizeImage }] = useUtils();
 	const [orderState] = useOrder();
-	const [isIntersectionObserver, setIsIntersectionObserver] = useState(false)
+	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
 	const editMode = typeof product?.code !== 'undefined';
 
 	const removeToBalance = editMode ? product?.quantity : 0;
