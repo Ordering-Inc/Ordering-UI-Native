@@ -61,6 +61,17 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
     }
   }, [formState])
 
+  useEffect(() => {
+    const _changes = order?.products.map(product => {
+      return {
+        product_id: product?.product_id,
+        comment: '',
+        qualification: 5
+      }
+    })
+    handleChangeFormState(_changes)
+  }, [])
+
   return (
     <>
       <ReviewProductsContainer>

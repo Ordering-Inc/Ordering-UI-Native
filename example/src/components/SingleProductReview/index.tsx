@@ -69,7 +69,7 @@ export const SingleProductReview = (props: SingleProductReviewParams) => {
   }
 
   useEffect(() => {
-    if (comments?.length === 0 && !extraComment && formState.changes?.length === 0 && qualification === 5) return
+    if (comments?.length === 0 && !extraComment) return
     let _comments = ''
     if (comments.length > 0) {
       comments.map(comment => (_comments += comment.content + '. '))
