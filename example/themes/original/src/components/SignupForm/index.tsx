@@ -470,7 +470,7 @@ const SignupFormUI = (props: SignupParams) => {
 													: theme.colors.disabled
 											}
 											weight={signUpTab === 'default' ? 'bold' : 'normal'}>
-											{t('BY_FULL_DETAILS', 'by Full Details')}
+											{t('DEFAULT', 'Default')}
 										</OText>
 									</OTab>
 								</TabBtn>
