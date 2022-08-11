@@ -223,7 +223,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}, [currentCart])
 
 	return (
-		<IOScrollView rootMargin={{ top: 0, bottom: 0 }}>
+		<>
 			<ContainerSafeAreaView
 				style={{ flex: 1 }}
 				isOpenFiltProducts={isOpenFiltProducts}
@@ -366,7 +366,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						</>
 					)}
 					{!loading && business?.id && (
-						<>
+						<IOScrollView rootMargin={{ top: 0, bottom: 0 }}>
 							<WrapContent
 								onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}
 							>
@@ -397,7 +397,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 									handleUpdateProducts={handleUpdateProducts}
 								/>
 							</WrapContent>
-						</>
+						</IOScrollView>
 					)}
 					{loading && !error && (
 						<>
@@ -481,7 +481,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					onClose={() => setOpenService(false)}
 				/>
 			</OModal>
-		</IOScrollView>
+		</>
 	)
 }
 
