@@ -282,6 +282,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
             text={t('SEND_REVIEW', 'Send Review')}
             style={{ borderRadius: 8 }}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
+            isDisabled={dirverReviews?.qualification < 1 || dirverReviews?.comment.length < 1}
             onClick={handleSubmit(handleSendReviewClick)}
           />
         </ActionContainer>

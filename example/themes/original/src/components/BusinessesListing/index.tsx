@@ -19,7 +19,7 @@ export const BusinessesListing = (props: any) => {
     isReviewOpen: false,
     order: {
       id: 0,
-      businessId: 0,
+      business_id: 0,
       business_name: '',
       delivery_datetime: '',
       logo: '',
@@ -42,7 +42,7 @@ export const BusinessesListing = (props: any) => {
       isReviewOpen: true,
       order: {
         id: order?.id,
-        businessId: order?.business_id,
+        business_id: order?.business_id,
         business_name: order?.business?.name,
         delivery_datetime: order?.delivery_datetime,
         logo: order.business?.logo,

@@ -103,6 +103,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       })
       return
     }
+    setAlertState({ ...alertState, success: true })
     handleSendReview()
   }
 
