@@ -35,7 +35,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     setStars,
     onNavigationRedirect,
     handleReviewState,
-    setIsReviewed
+    setIsReviewed,
+    closeReviewOrder
   } = props
 
   const theme = useTheme()
@@ -192,17 +193,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   return (
     <>
       <ReviewOrderContainer>
-        {/* <NavBar
-          title={t('HEY', 'Hey! ') + t('HOW_WAS_YOUR_ORDER', 'How was your order?')}
-          titleAlign={'center'}
-          leftImg={theme.images.general.close}
-          onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-          showCall={false}
-          btnStyle={{ paddingLeft: 0 }}
-          style={{ flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' }}
-          titleWrapStyle={{ paddingHorizontal: 0, width: '100%', justifyContent: 'center' }}
-          titleStyle={{ textAlign: 'center', marginRight: 0, marginLeft: 0 }}
-        /> */}
         <BusinessLogo>
           <View style={styles.logoWrapper}>
             <OIcon
@@ -314,7 +304,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       <FloatingBottomContainer>
         <ActionContainer>
           <SkipButton
-            onPress={() => onNavigationRedirect('ReviewProducts', { order: order })}
+            onPress={closeReviewOrder}
           >
             <OText weight={700} size={18} color={theme.colors.textNormal}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
           </SkipButton>

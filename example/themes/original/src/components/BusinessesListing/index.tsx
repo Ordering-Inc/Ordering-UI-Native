@@ -64,27 +64,27 @@ export const BusinessesListing = (props: any) => {
     })
   }
 
-  // const setIsReviewed = (reviewType) => {
-  //   const _reviewStatus = { ...lastOrderReview?.reviewed }
-  //   setLastOrderReview({
-  //     ...lastOrderReview,
-  //     reviewed: { ..._reviewStatus, [reviewType]: true }
-  //   })
-  // }
+  const setIsReviewed = (reviewType: string) => {
+    const _reviewStatus = { ...lastOrderReview?.reviewed }
+    setLastOrderReview({
+      ...lastOrderReview,
+      reviewed: { ..._reviewStatus, [reviewType]: true }
+    })
+  }
 
-  // const closeReviewOrder = () => {
-  //   if (!lastOrderReview?.reviewed?.isProductReviewed) setLastOrderReview({ ...lastOrderReview, reviewStatus: { order: false, product: true, driver: false } })
-  //   else if (lastOrderReview?.order?.driver && !lastOrderReview?.order?.user_review && !lastOrderReview?.reviewed?.isDriverReviewed) setLastOrderReview({ ...lastOrderReview, reviewStatus: { order: false, product: false, driver: true } })
-  //   else handleCloseReivew()
-  // }
+  const closeReviewOrder = () => {
+    if (!lastOrderReview?.reviewed?.isProductReviewed) setLastOrderReview({ ...lastOrderReview, reviewStatus: { order: false, product: true, driver: false } })
+    else if (lastOrderReview?.order?.driver && !lastOrderReview?.order?.user_review && !lastOrderReview?.reviewed?.isDriverReviewed) setLastOrderReview({ ...lastOrderReview, reviewStatus: { order: false, product: false, driver: true } })
+    else handleCloseReivew()
+  }
 
-  // const closeReviewProduct = () => {
-  //   if (lastOrderReview?.order?.driver && !lastOrderReview?.order?.user_review && !lastOrderReview?.reviewed?.isDriverReviewed) setLastOrderReview({ ...lastOrderReview, reviewStatus: { order: false, product: false, driver: true } })
-  //   else {
-  //     setIsReviewed('isDriverReviewed')
-  //     handleCloseReivew()
-  //   }
-  // }
+  const closeReviewProduct = () => {
+    if (lastOrderReview?.order?.driver && !lastOrderReview?.order?.user_review && !lastOrderReview?.reviewed?.isDriverReviewed) setLastOrderReview({ ...lastOrderReview, reviewStatus: { order: false, product: false, driver: true } })
+    else {
+      setIsReviewed('isDriverReviewed')
+      handleCloseReivew()
+    }
+  }
 
   useEffect(() => {
     auth && _getLastOrderHasNoReview()
@@ -94,6 +94,7 @@ export const BusinessesListing = (props: any) => {
     <>
       {(layout === 'original') && <OriginalBusinessListing {...props} />}
       {(layout === 'appointment') && <AppointmentBusinessListing {...props} />}
+
       {lastOrderReview?.isReviewOpen && (
         <OBottomPopup
           open={lastOrderReview?.isReviewOpen}
@@ -105,20 +106,20 @@ export const BusinessesListing = (props: any) => {
                 ? t('REVIEW_PRODUCT', 'Review Product')
                 : t('REVIEW_DRIVER', 'Review Driver')))
             : t('LOADING', 'Loading...')}
+          bottomContainerStyle={{ height: 'auto' }}
+          titleStyle={{ textAlign: 'center' }}
+          closeIcon={theme.images.general.close}
         >
-          <ReviewOrderModal order={lastOrderReview?.order} onNavigationRedirect={() => console.log('onNavigationRedirect')} />
+          {
+            lastOrderReview?.reviewStatus?.order
+              ? <ReviewOrderModal order={lastOrderReview?.order} closeReviewOrder={closeReviewOrder} skipReview={handleCloseReivew} setIsReviewed={() => setIsReviewed('isOrderReviewed')} />
+              : (lastOrderReview?.reviewStatus?.product
+                ? <ReviewProductsModal order={lastOrderReview?.order} closeReviewProduct={closeReviewProduct} setIsProductReviewed={() => setIsReviewed('isProductReviewed')} />
+                : <ReviewDriverModal order={lastOrderReview?.order} closeReviewDriver={handleCloseReivew} setIsDriverReviewed={() => setIsReviewed('isDriverReviewed')} />)
+          }
+
         </OBottomPopup>
       )}
     </>
   )
 }
-
-//     <div>
-//       {
-//         lastOrderReview?.reviewStatus?.order
-//           ? <ReviewOrder order={lastOrderReview?.order} closeReviewOrder={closeReviewOrder} skipReview={handleCloseReivew} setIsReviewed={() => setIsReviewed('isOrderReviewed')} />
-//           : (lastOrderReview?.reviewStatus?.product
-//             ? <ReviewProduct order={lastOrderReview?.order} closeReviewProduct={closeReviewProduct} setIsProductReviewed={() => setIsReviewed('isProductReviewed')} />
-//             : <ReviewDriver order={lastOrderReview?.order} closeReviewDriver={handleCloseReivew} setIsDriverReviewed={() => setIsReviewed('isDriverReviewed')} />)
-//       }
-//     </div>

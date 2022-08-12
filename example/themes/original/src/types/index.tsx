@@ -417,17 +417,19 @@ export interface ProductItemAccordionParams {
 	isFromCheckout?: any
 }
 export interface ReviewOrderParams {
-	order?: { id: number, businessId: number, business_name?: string, delivery_datetime?: string, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
-	stars?: any,
-	handleChangeInput?: any,
-	handleChangeRating?: any,
-	handleSendReview?: any,
-	formState?: any,
-	navigation?: any,
-	setIsReviewed?: (isReviewed: boolean) => {},
-	handleReviewState?: any,
-	setStars?: any,
-	onNavigationRedirect?: any
+	order?: { id: number, businessId: number, business_name?: string, delivery_datetime?: string, logo: string, driver: any, products: Array<any>, review: any, user_review: any };
+	stars?: any;
+	handleChangeInput?: any;
+	handleChangeRating?: any;
+	handleSendReview?: any;
+	formState?: any;
+	navigation?: any;
+	setIsReviewed?: (isReviewed: boolean) => void;
+	handleReviewState?: any;
+	setStars?: any;
+	onNavigationRedirect?: any;
+	closeReviewOrder?: () => void;
+	skipReview?: () => void;
 }
 export interface ReviewProductParams {
 	navigation?: any,
