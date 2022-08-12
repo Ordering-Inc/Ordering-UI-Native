@@ -437,7 +437,8 @@ export interface ReviewProductParams {
 	order?: { orderId: number, businessId: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any },
 	formState?: any,
 	handleChangeFormState?: any,
-	handleSendProductReview?: any
+	handleSendProductReview?: any;
+	closeReviewProduct?: () => void;
 }
 export interface SingleProductReviewParams {
 	product: any,
@@ -452,7 +453,8 @@ export interface ReviewDriverParams {
 	setIsDriverReviewed?: (isReviewed: boolean) => {},
 	dirverReviews?: any,
 	setDriverReviews?: any,
-	handleSendDriverReview?: any
+	handleSendDriverReview?: any;
+	closeReviewDriver?: () => void;
 }
 export interface MessagesParams {
 	type?: string,

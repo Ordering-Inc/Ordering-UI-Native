@@ -29,7 +29,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
     dirverReviews,
     setDriverReviews,
     handleSendDriverReview,
-    onNavigationRedirect
+    closeReviewDriver
   } = props
 
   const [, t] = useLanguage()
@@ -127,11 +127,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
   }
 
   const handleSendReviewClick = () => {
-    if (!order?.user_review && !isDriverReviewed) {
-      onSubmit()
-    } else {
-      onNavigationRedirect && onNavigationRedirect('MyOrders')
-    }
+    (!order?.user_review && !isDriverReviewed) && onSubmit()
   }
 
   useEffect(() => {
@@ -144,7 +140,7 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
     }
     if (!formState.loading && !formState.result?.error && alertState.success) {
       setIsDriverReviewed && setIsDriverReviewed(true)
-      onNavigationRedirect('MyOrders')
+      closeReviewDriver && closeReviewDriver()
     }
   }, [formState])
 
@@ -182,16 +178,6 @@ const ReviewDriverUI = (props: ReviewDriverParams) => {
   return (
     <>
       <ReviewDriverContainer>
-        {/* <NavBar
-          title={t('REVIEW_DRIVER', 'Review driver')}
-          titleAlign={'center'}
-          onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
-          showCall={false}
-          btnStyle={{ paddingLeft: 0 }}
-          style={{ flexDirection: 'column', alignItems: 'flex-start' }}
-          titleWrapStyle={{ paddingHorizontal: 0 }}
-          titleStyle={{ marginRight: 0, marginLeft: 0 }}
-        /> */}
         <DriverPhotoContainer>
           <View
             style={{

@@ -33,10 +33,9 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     handleSendReview,
     formState,
     setStars,
-    onNavigationRedirect,
-    handleReviewState,
     setIsReviewed,
-    closeReviewOrder
+    closeReviewOrder,
+    skipReview
   } = props
 
   const theme = useTheme()
@@ -105,9 +104,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       return
     }
     handleSendReview()
-    handleReviewState && handleReviewState(order?.id)
-    setIsReviewed && setIsReviewed(true)
-    setAlertState({ ...alertState, success: true })
   }
 
   const qualificationList = [
@@ -141,11 +137,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   }
 
   const handleContinueClick = () => {
-    if (!order?.review) {
-      onSubmit()
-    } else {
-      onNavigationRedirect('ReviewProducts', { order: order })
-    }
+    !order?.review && onSubmit()
   }
 
   useEffect(() => {
@@ -154,7 +146,8 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     }
     if (!formState.loading && !formState.error && alertState.success) {
       showToast(ToastType.Success, t('ORDER_REVIEW_SUCCESS_CONTENT', 'Thank you, Order review successfully submitted!'))
-      onNavigationRedirect && onNavigationRedirect('ReviewProducts', { order: order })
+      setIsReviewed && setIsReviewed(true)
+      closeReviewOrder && closeReviewOrder()
     }
   }, [formState.result])
 
@@ -304,13 +297,13 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
       <FloatingBottomContainer>
         <ActionContainer>
           <SkipButton
-            onPress={closeReviewOrder}
+            onPress={skipReview}
           >
             <OText weight={700} size={18} color={theme.colors.textNormal}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
           </SkipButton>
           <OButton
             textStyle={{ color: theme.colors.white, paddingRight: 10 }}
-            text={t('GOTO_REVIEW', 'Go to review')}
+            text={t('CONTINUE_REVIEW', 'Continue Review')}
             style={{ borderRadius: 8 }}
             imgRightSrc={theme.images.general.arrow_right}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}

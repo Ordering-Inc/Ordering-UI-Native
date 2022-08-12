@@ -16,10 +16,10 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
   const {
     navigation,
     order,
-    onNavigationRedirect,
     formState,
     handleChangeFormState,
-    handleSendProductReview
+    handleSendProductReview,
+    closeReviewProduct
   } = props
 
   const [, t] = useLanguage()
@@ -52,27 +52,13 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
     }
     if (!formState.loading && !formState.result?.error && alertState.success) {
       setIsProductReviewed && setIsProductReviewed(true)
-      if (order?.driver && !order?.user_review) {
-        onNavigationRedirect('ReviewDriver', { order: order })
-      } else {
-        onNavigationRedirect('MyOrders')
-      }
+      closeReviewProduct && closeReviewProduct()
     }
   }, [formState])
 
   return (
     <>
       <ReviewProductsContainer>
-        {/* <NavBar
-          title={t('REVIEW_PRODUCT', 'Review product')}
-          titleAlign={'center'}
-          onActionLeft={() => onNavigationRedirect('MyOrders')}
-          showCall={false}
-          btnStyle={{ paddingLeft: 0 }}
-          style={{ flexDirection: 'column', alignItems: 'flex-start' }}
-          titleWrapStyle={{ paddingHorizontal: 0 }}
-          titleStyle={{ marginRight: 0, marginLeft: 0 }}
-        /> */}
         {order?.products?.map((product: any) => (
           <SingleProductReview
             key={product.id}
@@ -86,7 +72,7 @@ const ReviewProductsUI = (props: ReviewProductParams) => {
       <FloatingBottomContainer>
         <ActionContainer>
           <SkipButton
-            onPress={() => (order?.driver && !order?.user_review) ? onNavigationRedirect('ReviewDriver', { order: order }) : onNavigationRedirect('MyOrders')}
+            onPress={() => closeReviewProduct && closeReviewProduct()}
           >
             <OText weight={700} size={18} color={theme.colors.textNormal}>{t('FRONT_VISUALS_SKIP', 'Skip')}</OText>
           </SkipButton>

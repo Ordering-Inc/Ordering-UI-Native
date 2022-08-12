@@ -3,6 +3,7 @@ import styled from 'styled-components/native'
 export const ReviewProductsContainer = styled.ScrollView`
   padding: 20px 40px;
   margin-bottom: 100px;
+  max-height: 400px;
 `
 
 export const ActionContainer = styled.View`
