@@ -65,8 +65,8 @@ const ServiceFormUI = (props: ServiceFormParams) => {
 
   const styles = StyleSheet.create({
     photoStyle: {
-      width: 42,
-			height: 42,
+      width: 45,
+			height: 45,
 			borderRadius: 7.6
     },
     buttonStyle: {
@@ -313,12 +313,14 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                   <OText
                     size={14}
                     weight={'400'}
+                    lineHeight={22}
                   >
                     {currentProfessional?.name} {currentProfessional?.lastname}
                   </OText>
                   <OText
                     size={12}
                     weight={'400'}
+                    lineHeight={17}
                     color={isBusyTime(currentProfessional) ? theme.colors.danger5 : theme.colors.success500}
                   >
                     {isBusyTime(currentProfessional)
@@ -459,9 +461,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
             size={14}
             weight={Platform.OS === 'ios' ? '600' : 'bold'}
           >
-            {dateSelected
-              ? moment(dateSelected).format('hh:mm A')
-              : t('ASAP_ABBREVIATION', 'ASAP')}
+            {dateSelected && moment(dateSelected).format('hh:mm A')}
           </OText>
           {((productCart &&
             auth &&
@@ -517,6 +517,14 @@ const ServiceFormUI = (props: ServiceFormParams) => {
 				entireModal
 			>
 				<ScrollView contentContainerStyle={styles.professionalList}>
+          <View style={{ padding: 11 }}>
+            <OText
+              size={14}
+              weight={'400'}
+            >
+              {t('ANY_OROFESSIONAL_MEMBER', 'Any professional member')}
+            </OText>
+          </View>
           {professionalList?.map((professional: any) => professional?.products?.includes(product?.id) && (
             <TouchableOpacity
               key={professional?.id}
@@ -536,12 +544,14 @@ const ServiceFormUI = (props: ServiceFormParams) => {
                   <OText
                     size={14}
                     weight={'400'}
+                    lineHeight={22}
                   >
                     {professional?.name} {professional?.lastname}
                   </OText>
                   <OText
                     size={12}
                     weight={'400'}
+                    lineHeight={17}
                     color={isBusyTime(professional) ? theme.colors.danger5 : theme.colors.success500}
                   >
                     {isBusyTime(professional)

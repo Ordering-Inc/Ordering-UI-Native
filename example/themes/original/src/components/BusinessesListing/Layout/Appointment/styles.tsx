@@ -43,8 +43,9 @@ export const WrapMomentOption = styled.TouchableOpacity`
   font-size: 12px;
   max-width: 240px;
   height: 26px;
+  width: 130px;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   padding-horizontal: 8px;
   flex-direction: row;
   margin-end: 12px;
@@ -84,7 +85,7 @@ export const FarAwayMessage = styled.View`
 `
 
 export const SearchBarWrapper = styled.View`
-  width: 100px;
+  width: 130px;
 `
 
 export const MomentWrapper = styled.View`
