@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import Geolocation from '@react-native-community/geolocation'
+import { IOScrollView } from 'react-native-intersection-observer'
 import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency'
 import {
 	View,
@@ -79,8 +80,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const appState = useRef(AppState.currentState)
 	const searchBarRef = useRef<any>()
 	const [appStateVisible, setAppStateVisible] = useState(appState.current);
-	const isChewLayout = theme?.layouts?.header?.components?.layout?.type === 'chew'
-	const showCities = !orderingTheme?.theme?.business_listing_view?.components?.cities?.hidden
+	const isChewLayout = orderingTheme?.theme?.header?.components?.layout?.type === 'chew'
+	const hideCities = orderingTheme?.theme?.business_listing_view?.components?.cities?.hidden
 	const [refreshing] = useState(false);
 	const styles = StyleSheet.create({
 		container: {
@@ -132,7 +133,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			borderRadius: 8,
 			marginHorizontal: 40,
 			height: 45
-		}
+		},
+		businessSkeleton: {
+			borderRadius: 8,
+			marginRight: 20,
+			width: 56,
+			height: 56
+		},
 	});
 
 
@@ -201,12 +208,17 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}
 
 	const resetInactivityTimeout = () => {
-		if(!logosLayout){
+		if (!logosLayout) {
 			clearTimeout(timerId.current)
 			timerId.current = setInterval(() => {
 				getBusinesses(true)
 			}, 120000)
 		}
+	}
+
+	const handleChangeCity = (cityId: number | null) => {
+		changeCityFilter(orderState?.options?.city_id === cityId ? null : cityId)
+		setIsOpenCities(false)
 	}
 
 	useEffect(() => {
@@ -247,7 +259,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}
 
 	useEffect(() => {
-		if(!logosLayout){
+		if (!logosLayout) {
 			checkUserLocation()
 		}
 	}, [orderState?.options?.address?.location])
@@ -319,7 +331,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}
 
 	return (
-		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}
+		<IOScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}
 			refreshControl={
 				<RefreshControl
 					refreshing={refreshing}
@@ -338,11 +350,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						<OText size={18} weight={700} color={theme.colors?.white}>
 							{t('WELCOME', 'Welcome')} {user?.name}!
 						</OText>
-						<TouchableOpacity
-							onPress={() => searchBarRef?.current?.focus?.()}
-						>
-							<Ionicons name='search' style={{ ...styles.iconStyle, color: theme.colors?.white }} />
-						</TouchableOpacity>
 					</View>
 				)}
 				<Search isChewLayout={isChewLayout}>
@@ -478,11 +485,11 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				/>
 			)}
 
-			{showCities && (
+			{!hideCities && (
 				<View style={{ marginTop: 10 }}>
 					<OButton
 						onClick={() => setIsOpenCities(true)}
-						text={citiesState?.cities?.find((city : any) => city?.id === orderState?.options?.city_id)?.name || t('FILTER_BY_CITY', 'Filter by city')}
+						text={citiesState?.cities?.find((city: any) => city?.id === orderState?.options?.city_id)?.name || t('FILTER_BY_CITY', 'Filter by city')}
 						style={styles?.buttonCityStyle}
 						textStyle={{ color: theme.colors.backgroundGray, fontWeight: 'bold', fontSize: 18 }}
 					/>
@@ -638,7 +645,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				title={t('SELECT_A_CITY', 'Select a city')}
 			>
 				<View style={{ padding: 40, width: '100%' }}>
-					{citiesState?.cities?.map((city : any) => (
+					{citiesState?.cities?.map((city: any) => (
 						<TouchableOpacity
 							key={city?.id}
 							style={{
@@ -647,7 +654,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 								borderBottomColor: orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.backgroundGray,
 								marginBottom: 10,
 							}}
-							onPress={() => changeCityFilter(city?.id)}
+							onPress={() => handleChangeCity(city?.id)}
 							disabled={orderState?.loading}
 						>
 							<OText color={orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.black}>
@@ -657,7 +664,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					))}
 				</View>
 			</OModal>
-		</ScrollView>
+		</IOScrollView>
 	);
 };
 
