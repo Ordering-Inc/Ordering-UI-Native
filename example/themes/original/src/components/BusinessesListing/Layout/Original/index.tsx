@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import Geolocation from '@react-native-community/geolocation'
+import { IOScrollView } from 'react-native-intersection-observer'
 import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency'
 import {
 	View,
@@ -201,7 +202,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}
 
 	const resetInactivityTimeout = () => {
-		if(!logosLayout){
+		if (!logosLayout) {
 			clearTimeout(timerId.current)
 			timerId.current = setInterval(() => {
 				getBusinesses(true)
@@ -247,7 +248,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}
 
 	useEffect(() => {
-		if(!logosLayout){
+		if (!logosLayout) {
 			checkUserLocation()
 		}
 	}, [orderState?.options?.address?.location])
@@ -284,11 +285,11 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		return (
 			<BusinessLogosContainer horizontal>
 				{businessesList?.loading ? (
-						<Placeholder Animation={Fade}>
-							{[...Array(10).keys()].map(item => (
-								<PlaceholderLine key={item} width={56} height={56} />
-							))}
-						</Placeholder>
+					<Placeholder Animation={Fade}>
+						{[...Array(10).keys()].map(item => (
+							<PlaceholderLine key={item} width={56} height={56} />
+						))}
+					</Placeholder>
 				) : (
 					<>
 						{businessesList.businesses
@@ -478,7 +479,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				<View style={{ marginTop: 10 }}>
 					<OButton
 						onClick={() => setIsOpenCities(true)}
-						text={citiesState?.cities?.find((city : any) => city?.id === orderState?.options?.city_id)?.name || t('FILTER_BY_CITY', 'Filter by city')}
+						text={citiesState?.cities?.find((city: any) => city?.id === orderState?.options?.city_id)?.name || t('FILTER_BY_CITY', 'Filter by city')}
 						style={styles?.buttonCityStyle}
 						textStyle={{ color: theme.colors.backgroundGray, fontWeight: 'bold', fontSize: 18 }}
 					/>
@@ -552,29 +553,33 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						)}
 					/>
 				)}
-				{businessesList.businesses?.map(
-					(business: any, i: number) => (
-						<BusinessController
-							key={`${business.id}_` + i}
-							business={business}
-							isBusinessOpen={business.open}
-							handleCustomClick={handleBusinessClick}
-							orderType={orderState?.options?.type}
-							navigation={navigation}
-							businessHeader={business?.header}
-							businessFeatured={business?.featured}
-							businessLogo={business?.logo}
-							businessReviews={business?.reviews}
-							businessDeliveryPrice={business?.delivery_price}
-							businessDeliveryTime={business?.delivery_time}
-							businessPickupTime={business?.pickup_time}
-							businessDistance={business?.distance}
-							handleUpdateBusinessList={handleUpdateBusinessList}
-							favoriteIds={favoriteIds}
-							setFavoriteIds={setFavoriteIds}
-						/>
-					)
-				)}
+				<IOScrollView>
+
+					{businessesList.businesses?.map(
+						(business: any, i: number) => (
+							<BusinessController
+								key={`${business.id}_` + i}
+								enableIntersection
+								business={business}
+								isBusinessOpen={business.open}
+								handleCustomClick={handleBusinessClick}
+								orderType={orderState?.options?.type}
+								navigation={navigation}
+								businessHeader={business?.header}
+								businessFeatured={business?.featured}
+								businessLogo={business?.logo}
+								businessReviews={business?.reviews}
+								businessDeliveryPrice={business?.delivery_price}
+								businessDeliveryTime={business?.delivery_time}
+								businessPickupTime={business?.pickup_time}
+								businessDistance={business?.distance}
+								handleUpdateBusinessList={handleUpdateBusinessList}
+								favoriteIds={favoriteIds}
+								setFavoriteIds={setFavoriteIds}
+							/>
+						)
+					)}
+				</IOScrollView>
 				{businessesList.loading && (
 					<>
 						{[
@@ -633,7 +638,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				title={t('SELECT_A_CITY', 'Select a city')}
 			>
 				<View style={{ padding: 40, width: '100%' }}>
-					{citiesState?.cities?.map((city : any) => (
+					{citiesState?.cities?.map((city: any) => (
 						<TouchableOpacity
 							key={city?.id}
 							style={{
