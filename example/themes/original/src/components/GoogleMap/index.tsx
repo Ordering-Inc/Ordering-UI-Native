@@ -32,6 +32,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     latitudeDelta: 0.0010,
     longitudeDelta: 0.0010 * ASPECT_RATIO
   })
+  const [MARKERS, SETMARKERS] = useState(locations)
   let mapRef = useRef<any>(null)
   const googleMapsApiKey = configState?.configs?.google_maps_api_key?.value
 
@@ -41,12 +42,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
     ERROR_NOT_FOUND_ADDRESS: 'Sorry, we couldn\'t find an address',
     ERROR_MAX_LIMIT_LOCATION: `Sorry, You can only set the position to ${maxLimitLocation}m`
   }
-  const MARKERS = locations && locations.map((location: { lat: number, lng: number }) => {
-    return {
-      latitude: location.lat,
-      longitude: location.lng
-    }
-  })
+
   const geocodePosition = (pos: { latitude: number, longitude: number }) => {
     Geocoder.from({
       latitude: pos.latitude,
@@ -147,7 +143,7 @@ export const GoogleMap = (props: GoogleMapsParams) => {
   }
 
   const fitAllMarkers = () => {
-    mapRef.current.fitToCoordinates(MARKERS, {
+    mapRef.current.fitToCoordinates(MARKERS?.map(location => ({ latitude: location.lat, longitude: location.lng })), {
       edgePadding: { top: 80, right: 80, bottom: 80, left: 80 },
       animated: true,
     });
@@ -170,6 +166,9 @@ export const GoogleMap = (props: GoogleMapsParams) => {
         fitAllMarkers()
       }
     }, 1000)
+    if (locations) {
+      SETMARKERS(locations)
+    }
     return () => clearInterval(interval)
   }, [locations])
 
@@ -189,16 +188,16 @@ export const GoogleMap = (props: GoogleMapsParams) => {
       >
         {locations ? (
           <>
-            {MARKERS && MARKERS.map((location: { latitude: number, longitude: number }, i: number) => (
+            {MARKERS && MARKERS.map((location: { lat: number, lng: number }, i: number) => (
               <React.Fragment key={i}>
                 {
                   <Marker
                     zIndex={i}
-                    coordinate={location}
-                    title={locations[i]?.title}
+                    coordinate={{ latitude: location.lat ?? 0, longitude: location.lng ?? 0 }}
+                    title={MARKERS[i]?.title}
                   >
                     <View>
-                      <OIcon url={locations[i].icon} width={50} height={50} />
+                      <OIcon url={MARKERS[i].icon} width={50} height={50} />
                     </View>
                   </Marker>
                 }
