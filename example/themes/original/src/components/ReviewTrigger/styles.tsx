@@ -16,32 +16,13 @@ export const FormReviews = styled.View`
   margin-top: 30px;
 `
 
-export const CommentsButtonGroup = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
-`
-
 export const ActionContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 3px 30px;
 `
 
-export const SkipButton = styled.TouchableOpacity`
-`
-
-export const RatingBarContainer = styled.View`
-  margin-top: 10px;
-  margin-bottom: 25px;
-`
-
-export const RatingTextContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 10px;
-`
 export const RatingStarContainer = styled.View`
   flex-direction: row;
   align-items: center;
