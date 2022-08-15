@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
 	useLanguage,
 	useConfig,
@@ -10,9 +10,7 @@ import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
 import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
 import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
-import { InView } from 'react-native-intersection-observer'
-import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
-import { OText } from '../shared';
+import { OButton, OText } from '../shared';
 import FastImage from 'react-native-fast-image'
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { shape } from '../../utils';
@@ -31,11 +29,11 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		onProductClick,
 		productAddedToCartLength,
 		style,
-		handleFavoriteProduct,
-		enableIntersection
+		handleFavoriteProduct
 	} = props;
 
 	const theme = useTheme();
+	const showAddButton = !theme?.layouts?.business_view?.components?.products?.components?.add_to_cart_button?.hidden
 
 	const styles = StyleSheet.create({
 		container: {
@@ -90,7 +88,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const [stateConfig] = useConfig();
 	const [{ parsePrice, optimizeImage }] = useUtils();
 	const [orderState] = useOrder();
-	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
+
 	const editMode = typeof product?.code !== 'undefined';
 
 	const removeToBalance = editMode ? product?.quantity : 0;
@@ -120,110 +118,122 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	}
 
 	return (
-		<InView style={{ minHeight: 140 }} triggerOnce={true} onChange={(inView: boolean) => setIsIntersectionObserver(true)}>
-			{isIntersectionObserver && (
-				<CardContainer
-					style={[
-						styles.container,
-						(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
-						(style && { ...style }),
-					]}
-					onPress={() => onProductClick?.(product)}>
-					{productAddedToCartLength > 0 && (
-						<QuantityContainer style={[styles.quantityContainer, {
-							transform: [{ translateX: 10 }, { translateY: -10 }],
-						}]}>
-							<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>
-						</QuantityContainer>
-					)}
-					<CardInfo>
-						<View style={styles.titleWrapper}>
-							<OText
-								size={12}
-								weight={'500'}
-								numberOfLines={1}
-								ellipsizeMode="tail"
-								style={styles.line18}>
-								{product?.name}
-							</OText>
-							<TouchableOpacity
-								onPress={handleChangeFavorite}
-							>
-								<IconAntDesign
-									name={product?.favorite ? 'heart' : 'hearto'}
-									color={theme.colors.danger5}
-									size={18}
-								/>
-							</TouchableOpacity>
-						</View>
-						<PricesContainer>
-							<OText color={theme.colors.primary}>{product?.price ? parsePrice(product?.price) : ''}</OText>
-							{product?.offer_price !== null && product?.in_offer && (
-								<OText style={styles.regularPriceStyle}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
-							)}
-						</PricesContainer>
+		<CardContainer
+			showAddButton={showAddButton}
+			style={[
+				styles.container,
+				(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
+				(style && { ...style }),
+			]}
+			onPress={() => onProductClick?.(product)}
+		>
+			<View style={{ flexDirection: 'row' }}>
+				{productAddedToCartLength > 0 && (
+					<QuantityContainer style={[styles.quantityContainer, {
+						transform: [{ translateX: 10 }, { translateY: -10 }],
+					}]}>
+						<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>
+					</QuantityContainer>
+				)}
+				<CardInfo>
+					<View style={styles.titleWrapper}>
 						<OText
-							size={10}
-							numberOfLines={2}
+							size={12}
+							weight={'500'}
+							numberOfLines={1}
 							ellipsizeMode="tail"
-							color={theme.colors.textSecondary}
-							style={styles.line15}>
-							{product?.description}
+							style={styles.line18}>
+							{product?.name}
 						</OText>
-					</CardInfo>
-					<LogoWrapper>
-						{product?.ribbon?.enabled && (
-							<RibbonBox
-								bgColor={product?.ribbon?.color}
-								isRoundRect={product?.ribbon?.shape === shape?.rectangleRound}
-								isCapsule={product?.ribbon?.shape === shape?.capsuleShape}
-							>
-								<OText
-									size={10}
-									weight={'400'}
-									color={theme.colors.white}
-									numberOfLines={2}
-									ellipsizeMode='tail'
-									lineHeight={13}
-								>
-									{product?.ribbon?.text}
-								</OText>
-							</RibbonBox>
-						)}
-						{product?.images ? (
-							<>
-								{isIntersectionObserver && (
-									<FastImage
-										style={styles.productStyle}
-										source={{
-											uri: optimizeImage(product?.images, 'h_250,c_limit'),
-											priority: FastImage.priority.normal,
-										}}
-										resizeMode={FastImage.resizeMode.cover}
-									/>
-								)}
-							</>
-						) : (
-							<FastImage
-								style={styles.productStyle}
-								source={{
-									uri: Image.resolveAssetSource(theme.images.dummies.product).uri,
-									priority: FastImage.priority.normal,
-								}}
-								resizeMode={FastImage.resizeMode.cover}
+						<TouchableOpacity
+							onPress={handleChangeFavorite}
+						>
+							<IconAntDesign
+								name={product?.favorite ? 'heart' : 'hearto'}
+								color={theme.colors.danger5}
+								size={18}
 							/>
+						</TouchableOpacity>
+					</View>
+					<PricesContainer>
+						<OText color={theme.colors.primary}>{product?.price ? parsePrice(product?.price) : ''}</OText>
+						{product?.offer_price !== null && product?.in_offer && (
+							<OText style={styles.regularPriceStyle}>{product?.offer_price ? parsePrice(product?.offer_price) : ''}</OText>
 						)}
-					</LogoWrapper>
-					{(isSoldOut || maxProductQuantity <= 0) && (
-						<SoldOut>
-							<OText size={12} weight="bold" color={theme.colors.textSecondary} style={styles.soldOutTextStyle}>
-								{t('SOLD_OUT', 'SOLD OUT')}
+					</PricesContainer>
+					<OText
+						size={10}
+						numberOfLines={2}
+						ellipsizeMode="tail"
+						color={theme.colors.textSecondary}
+						style={styles.line15}>
+						{product?.description}
+					</OText>
+				</CardInfo>
+				<LogoWrapper>
+					{product?.ribbon?.enabled && (
+						<RibbonBox
+							bgColor={product?.ribbon?.color}
+							isRoundRect={product?.ribbon?.shape === shape?.rectangleRound}
+							isCapsule={product?.ribbon?.shape === shape?.capsuleShape}
+						>
+							<OText
+								size={10}
+								weight={'400'}
+								color={theme.colors.white}
+								numberOfLines={2}
+								ellipsizeMode='tail'
+								lineHeight={13}
+							>
+								{product?.ribbon?.text}
 							</OText>
-						</SoldOut>
+						</RibbonBox>
 					)}
-				</CardContainer>
+					{product?.images ? (
+						<FastImage
+							style={styles.productStyle}
+							source={{
+								uri: optimizeImage(product?.images, 'h_250,c_limit'),
+								priority: FastImage.priority.normal,
+							}}
+							resizeMode={FastImage.resizeMode.cover}
+						/>
+					) : (
+						<FastImage
+							style={styles.productStyle}
+							source={{
+								uri: Image.resolveAssetSource(theme.images.dummies.product).uri,
+								priority: FastImage.priority.normal,
+							}}
+							resizeMode={FastImage.resizeMode.cover}
+						/>
+					)}
+				</LogoWrapper>
+
+				{(isSoldOut || maxProductQuantity <= 0) && (
+					<SoldOut>
+						<OText size={12} weight="bold" color={theme.colors.textSecondary} style={styles.soldOutTextStyle}>
+							{t('SOLD_OUT', 'SOLD OUT')}
+						</OText>
+					</SoldOut>
+				)}
+			</View>
+			{showAddButton && (
+				<OButton
+					onClick={() => onProductClick?.(product)}
+					style={{ 
+						width: '100%', 
+						borderRadius: 7.6, 
+						marginTop: 10,
+
+					}}
+					bgColor={isSoldOut ? '#B8B8B8' : theme?.colors?.white}
+					borderColor={theme?.colors.primary}
+					textStyle={{color: theme.colors.primary}}
+					text={t('ADD', 'Add')}
+				/>
 			)}
-		</InView >
+		</CardContainer>
 	);
 }, SingleProductCardPropsAreEqual);
 

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import Geolocation from '@react-native-community/geolocation'
-import { IOScrollView } from 'react-native-intersection-observer'
 import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency'
 import {
 	View,
@@ -19,6 +18,7 @@ import {
 	useOrder,
 	useConfig,
 	useUtils,
+	useOrderingTheme
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -33,11 +33,14 @@ import {
 	FeaturedWrapper,
 	OrderProgressWrapper,
 	FarAwayMessage,
-	AddressInputContainer
+	AddressInputContainer,
+	PreorderInput,
+	OrderTypesContainer,
+	BusinessLogosContainer
 } from './styles';
 
 import { SearchBar } from '../../../SearchBar';
-import { OIcon, OText } from '../../../shared';
+import { OButton, OIcon, OText, OBottomPopup, OModal } from '../../../shared';
 import { BusinessesListingParams } from '../../../../types';
 import { NotFoundSource } from '../../../NotFoundSource';
 import { BusinessTypeFilter } from '../../../BusinessTypeFilter';
@@ -49,6 +52,7 @@ import { HighestRatedBusinesses } from '../../../HighestRatedBusinesses';
 import { getTypesText, convertToRadian } from '../../../../utils';
 import { OrderProgress } from '../../../OrderProgress';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
 const PIXELS_TO_SCROLL = 2000;
 
@@ -64,12 +68,19 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		handleChangeSearch,
 		businessId,
 		isGuestUser,
-		handleUpdateBusinessList
+		handleUpdateBusinessList,
+		citiesState,
+		actualSlug,
+		logosLayout
 	} = props;
 	const theme = useTheme();
+	const [orderingTheme] = useOrderingTheme()
 	const isFocused = useIsFocused();
 	const appState = useRef(AppState.currentState)
+	const searchBarRef = useRef<any>()
 	const [appStateVisible, setAppStateVisible] = useState(appState.current);
+	const isChewLayout = theme?.layouts?.header?.components?.layout?.type === 'chew'
+	const showCities = !orderingTheme?.theme?.business_listing_view?.components?.cities?.hidden
 	const [refreshing] = useState(false);
 	const styles = StyleSheet.create({
 		container: {
@@ -114,13 +125,20 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			backgroundColor: theme.colors.white,
 			borderColor: theme.colors.backgroundGray,
 			borderWidth: 1,
+		},
+		buttonCityStyle: {
+			backgroundColor: theme.colors.white,
+			borderColor: theme.colors.backgroundGray,
+			borderRadius: 8,
+			marginHorizontal: 40,
+			height: 45
 		}
 	});
 
 
 	const [, t] = useLanguage();
 	const [{ user, auth }] = useSession();
-	const [orderState] = useOrder();
+	const [orderState, { changeCityFilter }] = useOrder();
 	const [{ configs }] = useConfig();
 	const [{ parseDate }] = useUtils();
 
@@ -130,11 +148,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [isFarAway, setIsFarAway] = useState(false)
 	const [businessTypes, setBusinessTypes] = useState(null)
 	const [orderTypeValue, setOrderTypeValue] = useState(orderState?.options.value)
+	const [isOpenCities, setIsOpenCities] = useState(false)
 	const isPreorderEnabled = (configs?.preorder_status_enabled?.value === '1' || configs?.preorder_status_enabled?.value === 'true') &&
 		Number(configs?.max_days_preorder?.value) > 0
 	const isPreOrderSetting = configs?.preorder_status_enabled?.value === '1'
 	const timerId = useRef<any>(false)
 	const [favoriteIds, setFavoriteIds] = useState<any>([])
+	const chewOrderTypes = [{ name: t('DELIVERY', 'Delivery').toUpperCase(), value: 1 }, { name: t('PICKUP', 'Pickup').toUpperCase(), value: 2 }]
 
 	// const panResponder = useRef(
 	// 	PanResponder.create({
@@ -163,6 +183,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		const hasMore = !(
 			paginationProps.totalPages === paginationProps.currentPage
 		);
+
 		if (y + PIXELS_TO_SCROLL > height && !businessesList.loading && hasMore) {
 			getBusinesses();
 		}
@@ -180,10 +201,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}
 
 	const resetInactivityTimeout = () => {
-		clearTimeout(timerId.current)
-		timerId.current = setInterval(() => {
-			getBusinesses(true)
-		}, 120000)
+		if(!logosLayout){
+			clearTimeout(timerId.current)
+			timerId.current = setInterval(() => {
+				getBusinesses(true)
+			}, 120000)
+		}
 	}
 
 	useEffect(() => {
@@ -224,7 +247,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}
 
 	useEffect(() => {
-		checkUserLocation()
+		if(!logosLayout){
+			checkUserLocation()
+		}
 	}, [orderState?.options?.address?.location])
 
 	useEffect(() => {
@@ -251,6 +276,44 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		setFavoriteIds([...new Set(ids)])
 	}, [businessesList?.businesses?.length])
 
+	useEffect(() => {
+		setIsOpenCities(false)
+	}, [orderState?.options?.city_id])
+
+	if (logosLayout) {
+		return (
+			<BusinessLogosContainer horizontal>
+				{businessesList?.loading ? (
+						<Placeholder Animation={Fade}>
+							{[...Array(10).keys()].map(item => (
+								<PlaceholderLine key={item} width={56} height={56} />
+							))}
+						</Placeholder>
+				) : (
+					<>
+						{businessesList.businesses
+							?.filter(business => business?.slug !== actualSlug && business?.open)
+							?.map(business => (
+								<TouchableOpacity
+									key={business?.id}
+									onPress={() => handleBusinessClick && handleBusinessClick(business)}
+								>
+									<FastImage
+										style={{ width: 56, height: 56, marginRight: 20, borderRadius: 7.6 }}
+										source={{
+											uri: business?.logo,
+											priority: FastImage.priority.normal,
+										}}
+										resizeMode={FastImage.resizeMode.cover}
+									/>
+								</TouchableOpacity>
+							))}
+					</>
+				)}
+			</BusinessLogosContainer>
+		)
+	}
+
 	return (
 		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}
 			refreshControl={
@@ -260,9 +323,27 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				/>
 			}
 		>
-			<View style={{ height: isFarAway ? 150 : 100, marginTop: Platform.OS == 'ios' ? 0 : 50 }}>
-				<Search>
+			<View style={{
+				height: !isPreOrderSetting && isChewLayout ? 150 : isChewLayout ? 200 : isFarAway ? 150 : 100,
+				marginTop: Platform.OS == 'ios' ? 0 : 50,
+				backgroundColor: isChewLayout ? theme?.colors?.chew : theme.colors?.white
+			}}
+			>
+				{isChewLayout && (
+					<View style={{ marginTop: 30, paddingHorizontal: 30, flexDirection: 'row', justifyContent: 'space-between' }}>
+						<OText size={18} weight={700} color={theme.colors?.white}>
+							{t('WELCOME', 'Welcome')} {user?.name}!
+						</OText>
+						<TouchableOpacity
+							onPress={() => searchBarRef?.current?.focus?.()}
+						>
+							<Ionicons name='search' style={{ ...styles.iconStyle, color: theme.colors?.white }} />
+						</TouchableOpacity>
+					</View>
+				)}
+				<Search isChewLayout={isChewLayout}>
 					<AddressInput
+						isChewLayout={isChewLayout}
 						onPress={() =>
 							auth
 								? navigation.navigate('AddressList', { isFromBusinesses: true })
@@ -272,78 +353,108 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 									isGuestUser: isGuestUser
 								})
 						}>
-						<AddressInputContainer>
+						<AddressInputContainer isChewLayout={isChewLayout}>
 							<OIcon
 								src={theme.images.general.pin}
 								color={theme.colors.disabled}
 								width={16}
-								style={{ marginRight: 10 }}
+								style={{ marginRight: isChewLayout ? 0 : 10 }}
 							/>
-							<OText size={12} numberOfLines={1}>
+							<OText size={12} numberOfLines={1} style={{ flex: 1 }}>
 								{orderState?.options?.address?.address}
 							</OText>
-							<OIcon
-								src={theme.images.general.arrow_down}
-								width={10}
-								style={{ marginStart: 8 }}
-							/>
+							{!isChewLayout && (
+								<OIcon
+									src={theme.images.general.arrow_down}
+									width={10}
+									style={{ marginStart: 8 }}
+								/>
+							)}
 						</AddressInputContainer>
 					</AddressInput>
 				</Search>
-				{isFarAway && (
+				{isFarAway && !isChewLayout && (
 					<FarAwayMessage style={styles.farAwayMsg}>
 						<Ionicons name='md-warning-outline' style={styles.iconStyle} />
 						<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textNormal}>{t('YOU_ARE_FAR_FROM_ADDRESS', 'You are far from this address')}</OText>
 					</FarAwayMessage>
 				)}
-
-				<OrderControlContainer>
-					<View style={styles.wrapperOrderOptions}>
-						{isPreOrderSetting && (
-							<WrapMomentOption
-								onPress={() => handleMomentClick()}>
-								<OText
-									size={12}
-									numberOfLines={1}
-									ellipsizeMode="tail"
-									color={theme.colors.textSecondary}>
-									{orderState.options?.moment
-										? parseDate(orderState.options?.moment, { outputFormat: configs?.dates_moment_format?.value })
-										: t('ASAP_ABBREVIATION', 'ASAP')}
-								</OText>
-								{isPreorderEnabled && (
-									<OIcon
-										src={theme.images.general.arrow_down}
-										width={10}
-										style={{ marginStart: 8 }}
-									/>
-								)}
+				{!isChewLayout ? (
+					<OrderControlContainer>
+						<View style={styles.wrapperOrderOptions}>
+							{isPreOrderSetting && (
+								<WrapMomentOption
+									onPress={() => handleMomentClick()}>
+									<OText
+										size={12}
+										numberOfLines={1}
+										ellipsizeMode="tail"
+										color={theme.colors.textSecondary}>
+										{orderState.options?.moment
+											? parseDate(orderState.options?.moment, { outputFormat: configs?.dates_moment_format?.value })
+											: t('ASAP_ABBREVIATION', 'ASAP')}
+									</OText>
+									{isPreorderEnabled && (
+										<OIcon
+											src={theme.images.general.arrow_down}
+											width={10}
+											style={{ marginStart: 8 }}
+										/>
+									)}
+								</WrapMomentOption>
+							)}
+							<WrapMomentOption onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes, setOrderTypeValue })}>
+								<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(orderTypeValue || orderState?.options?.type || 1), 'Delivery')}</OText>
+								<OIcon
+									src={theme.images.general.arrow_down}
+									width={10}
+									style={{ marginStart: 8 }}
+								/>
 							</WrapMomentOption>
+						</View>
+					</OrderControlContainer>
+				) : (
+					<>
+						{!isPreOrderSetting && (// cambiar
+							<View style={{ paddingHorizontal: 30 }}>
+								<PreorderInput
+									isChewLayout={isChewLayout}
+									onPress={() => handleMomentClick()}
+								>
+									<OText color={theme.colors.textSecondary}>
+										{orderState.options?.moment
+											? parseDate(orderState.options?.moment, { outputFormat: configs?.dates_moment_format?.value })
+											: t('ASAP_ABBREVIATION', 'ASAP')}</OText>
+								</PreorderInput>
+							</View>
 						)}
-						<WrapMomentOption onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes, setOrderTypeValue })}>
-							<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(orderTypeValue || orderState?.options?.type || 1), 'Delivery')}</OText>
-							<OIcon
-								src={theme.images.general.arrow_down}
-								width={10}
-								style={{ marginStart: 8 }}
-							/>
-						</WrapMomentOption>
-					</View>
-				</OrderControlContainer>
-			</View>
-			<HeaderWrapper
-				source={theme.images.backgrounds.business_list_header}
-				style={{ paddingTop: top + 20 }}
-				resizeMode='stretch'
-			>
-				{!auth && (
-					<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
-						<OIcon src={theme.images.general.arrow_left} width={20} style={{ tintColor: theme.colors.white }} />
-					</TouchableOpacity>
+					</>
 				)}
-			</HeaderWrapper>
+			</View>
+			{!isChewLayout ? (
+				<HeaderWrapper
+					source={theme.images.general.homeHero}
+					style={{ paddingTop: top + 20 }}
+					resizeMode='stretch'
+				>
+					{!auth && (
+						<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
+							<OIcon src={theme.images.general.arrow_left} width={20} style={{ tintColor: theme.colors.white }} />
+						</TouchableOpacity>
+					)}
+				</HeaderWrapper>
+			) : (
+				<OrderTypesContainer>
+					<OrderTypeSelector
+						handleChangeBusinessType={handleChangeBusinessType}
+						isChewLayout
+						chewOrderTypes={chewOrderTypes}
+					/>
+				</OrderTypesContainer>
+			)}
 			{!businessId && (
 				<SearchBar
+					forwardRef={searchBarRef}
 					onSearch={handleChangeSearch}
 					searchValue={searchValue}
 					lazyLoad
@@ -352,16 +463,26 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					onCancel={() => handleChangeSearch('')}
 					placeholder={t('SEARCH', 'Search')}
 					height={50}
-					isDisabled={!businessTypes || configs?.advanced_business_search_enabled?.value === '1'}
+					isDisabled={!businessTypes}
 					inputContainerStyles={styles.inputContainerStyles}
 					containerStyles={{
 						marginHorizontal: 40,
 						marginTop: 20
 					}}
 					inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? { paddingBottom: 6 } : { paddingBottom: 4 } }}
-					onPress={() => { configs?.advanced_business_search_enabled?.value === '1' && navigation.navigate('BusinessSearch', { businessTypes }) }}
 					onSubmitEditing={() => { configs?.advanced_business_search_enabled?.value === '1' && navigation.navigate('BusinessSearch', { businessTypes, defaultTerm: searchValue }) }}
 				/>
+			)}
+
+			{showCities && (
+				<View style={{ marginTop: 10 }}>
+					<OButton
+						onClick={() => setIsOpenCities(true)}
+						text={citiesState?.cities?.find((city : any) => city?.id === orderState?.options?.city_id)?.name || t('FILTER_BY_CITY', 'Filter by city')}
+						style={styles?.buttonCityStyle}
+						textStyle={{ color: theme.colors.backgroundGray, fontWeight: 'bold', fontSize: 18 }}
+					/>
+				</View>
 			)}
 			<OrderProgressWrapper>
 				<OrderProgress
@@ -369,7 +490,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					isFocused={isFocused}
 				/>
 			</OrderProgressWrapper>
-
 			{
 				!businessId && !props.franchiseId && featuredBusiness && featuredBusiness.length > 0 && (
 					<FeaturedWrapper>
@@ -377,7 +497,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						<ScrollView
 							showsHorizontalScrollIndicator={false}
 							nestedScrollEnabled
-							horizontal contentContainerStyle={{ paddingHorizontal: 40 }}>
+							horizontal
+							contentContainerStyle={{ paddingHorizontal: 40 }}
+						>
 							{featuredBusiness.map((bAry: any, idx) => (
 								<View key={'f-listing_' + idx}>
 									<BusinessFeaturedController
@@ -430,32 +552,29 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						)}
 					/>
 				)}
-				<IOScrollView>
-					{businessesList.businesses?.map(
-						(business: any, i: number) => (
-							<BusinessController
-								key={`${business.id}_` + i}
-								enableIntersection
-								business={business}
-								isBusinessOpen={business.open}
-								handleCustomClick={handleBusinessClick}
-								orderType={orderState?.options?.type}
-								navigation={navigation}
-								businessHeader={business?.header}
-								businessFeatured={business?.featured}
-								businessLogo={business?.logo}
-								businessReviews={business?.reviews}
-								businessDeliveryPrice={business?.delivery_price}
-								businessDeliveryTime={business?.delivery_time}
-								businessPickupTime={business?.pickup_time}
-								businessDistance={business?.distance}
-								handleUpdateBusinessList={handleUpdateBusinessList}
-								favoriteIds={favoriteIds}
-								setFavoriteIds={setFavoriteIds}
-							/>
-						)
-					)}
-				</IOScrollView>
+				{businessesList.businesses?.map(
+					(business: any, i: number) => (
+						<BusinessController
+							key={`${business.id}_` + i}
+							business={business}
+							isBusinessOpen={business.open}
+							handleCustomClick={handleBusinessClick}
+							orderType={orderState?.options?.type}
+							navigation={navigation}
+							businessHeader={business?.header}
+							businessFeatured={business?.featured}
+							businessLogo={business?.logo}
+							businessReviews={business?.reviews}
+							businessDeliveryPrice={business?.delivery_price}
+							businessDeliveryTime={business?.delivery_time}
+							businessPickupTime={business?.pickup_time}
+							businessDistance={business?.distance}
+							handleUpdateBusinessList={handleUpdateBusinessList}
+							favoriteIds={favoriteIds}
+							setFavoriteIds={setFavoriteIds}
+						/>
+					)
+				)}
 				{businessesList.loading && (
 					<>
 						{[
@@ -508,6 +627,31 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</>
 				)}
 			</ListWrapper>
+			<OModal
+				open={isOpenCities}
+				onClose={() => setIsOpenCities(false)}
+				title={t('SELECT_A_CITY', 'Select a city')}
+			>
+				<View style={{ padding: 40, width: '100%' }}>
+					{citiesState?.cities?.map((city : any) => (
+						<TouchableOpacity
+							key={city?.id}
+							style={{
+								padding: 10,
+								borderBottomWidth: 1,
+								borderBottomColor: orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.backgroundGray,
+								marginBottom: 10,
+							}}
+							onPress={() => changeCityFilter(city?.id)}
+							disabled={orderState?.loading}
+						>
+							<OText color={orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.black}>
+								{city?.name}
+							</OText>
+						</TouchableOpacity>
+					))}
+				</View>
+			</OModal>
 		</ScrollView>
 	);
 };

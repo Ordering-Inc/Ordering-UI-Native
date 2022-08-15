@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, Linking } from 'react-native';
-import { useUtils, useOrder, useLanguage } from 'ordering-components/native';
+import { useUtils, useOrder, useLanguage, useOrderingTheme } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OModal } from '../shared';
 import { BusinessBasicInformationParams } from '../../types';
@@ -38,6 +38,7 @@ export const BusinessBasicInformation = (
 	const { business, loading } = businessState;
 
 	const theme = useTheme();
+	const [orderingTheme] = useOrderingTheme()
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
 	const [{ parsePrice, parseDistance, optimizeImage }] = useUtils();
@@ -45,13 +46,15 @@ export const BusinessBasicInformation = (
 	const [openBusinessReviews, setOpenBusinessReviews] = useState(false);
 	const [businessInformationObtained, setBusinessInformationObtained] = useState(false)
 	const [businessReviewsObtained, setBusinessReviewsObtainedbtained] = useState(false)
-
+	const isChewLayout = theme?.layouts?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const showLogo = !orderingTheme?.theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
+	
 	const styles = StyleSheet.create({
 		businesInfoheaderStyle: {
 			height: 150,
 		},
 		headerStyle: {
-			height: 260,
+			height: isChewLayout ? 170 : 260,
 		},
 		businessLogo: {
 			width: 72,
@@ -62,7 +65,7 @@ export const BusinessBasicInformation = (
 		},
 		businessInfo: {
 			paddingHorizontal: 40,
-			paddingTop: 56,
+			paddingTop: isChewLayout ? 0 : 56,
 		},
 		bullet: {
 			flexDirection: 'row',
@@ -89,7 +92,7 @@ export const BusinessBasicInformation = (
 		socialIcon: {
 			borderRadius: 3,
 			borderColor: theme.colors.border,
-			borderWidth: 1,
+			borderWidth: isChewLayout ? 0 : 1,
 			width: 20,
 			height: 20,
 			justifyContent: 'center',
@@ -102,6 +105,16 @@ export const BusinessBasicInformation = (
 			width: 12,
 			margin: 0,
 			padding: 0
+		},
+		headerChewStyle: {
+			paddingHorizontal: 30,
+			justifyContent: 'center',
+			height: '100%'
+		},
+		socialIconsChewContainer: {
+			flexDirection: 'row',
+			justifyContent: 'flex-start',
+			marginTop: 5
 		}
 	});
 
@@ -135,14 +148,14 @@ export const BusinessBasicInformation = (
 	};
 
 	const SocialNetWork = (props: any) => {
-		const { socialLink, iconTitle} = props
+		const { socialLink, iconTitle } = props
 
 		return (
 			<TouchableOpacity style={styles.socialIcon} onPress={() => Linking.openURL(socialLink)}>
 				<MaterialComIcon
 					name={iconTitle}
-					color={theme.colors.textNormal}
-					size={14}
+					color={isChewLayout ? theme.colors.black : theme.colors.textNormal}
+					size={isChewLayout ? 18 : 14}
 				/>
 			</TouchableOpacity>
 		)
@@ -172,85 +185,9 @@ export const BusinessBasicInformation = (
 		}
 	}, [businessState?.business])
 
-	return (
-		<BusinessContainer>
-			<BusinessHeader
-				style={
-					isBusinessInfoShow
-						? styles.businesInfoheaderStyle
-						: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
-				}
-				source={{
-					uri:
-						header ||
-						optimizeImage(businessState?.business?.header, 'h_250,c_limit'),
-				}}>
-				{!isBusinessInfoShow && (
-					<WrapBusinessInfo onPress={() => handleClickBusinessInformation()}>
-						<OIcon src={theme.images.general.info} width={24} />
-					</WrapBusinessInfo>
-				)}
-			</BusinessHeader>
-			<BusinessInfo style={styles.businessInfo}>
-				<BusinessLogo>
-					{loading ? (
-						<View>
-							<Placeholder Animation={Fade}>
-								<PlaceholderLine height={50} width={20} />
-							</Placeholder>
-						</View>
-					) : (
-						!isBusinessInfoShow && (
-							<OIcon
-								url={
-									logo ||
-									optimizeImage(businessState?.business?.logo, 'h_70,c_limit')
-								}
-								style={styles.businessLogo}
-							/>
-						)
-					)}
-				</BusinessLogo>
-				<BusinessInfoItem>
-					{loading ? (
-						<Placeholder Animation={Fade}>
-							<PlaceholderLine height={30} width={20} />
-						</Placeholder>
-					) : (
-						<TitleWrapper>
-							<OText size={24} weight={'600'}>
-								{business?.name}
-							</OText>
-							{business?.ribbon?.enabled && (
-								<RibbonBox
-									bgColor={business?.ribbon?.color}
-									isRoundRect={business?.ribbon?.shape === shape?.rectangleRound}
-									isCapsule={business?.ribbon?.shape === shape?.capsuleShape}
-								>
-									<OText
-										size={10}
-										weight={'400'}
-										color={theme.colors.white}
-										numberOfLines={2}
-										ellipsizeMode='tail'
-										lineHeight={13}
-									>
-										{business?.ribbon?.text}
-									</OText>
-								</RibbonBox>
-							)}
-						</TitleWrapper>
-					)}
-				</BusinessInfoItem>
-				{loading ? (
-					<Placeholder Animation={Fade}>
-						<PlaceholderLine width={10} />
-					</Placeholder>
-				) : (
-					<View style={{ width: '75%' }}>
-						<OText color={theme.colors.textNormal}>{getBusinessType()}</OText>
-					</View>
-				)}
+	const SocialIcons = () => {
+		return (
+			<>
 				{loading ? (
 					<Placeholder Animation={Fade}>
 						<View style={{ flexDirection: 'row' }}>
@@ -266,7 +203,7 @@ export const BusinessBasicInformation = (
 						showsVerticalScrollIndicator={false}
 						showsHorizontalScrollIndicator={false}
 						horizontal
-						contentContainerStyle={{ flex: 1}}
+						contentContainerStyle={{ flex: 1 }}
 					>
 						{!!business?.facebook_profile && (
 							<SocialNetWork
@@ -285,7 +222,7 @@ export const BusinessBasicInformation = (
 								<View style={styles.tiktokIcon}>
 									<OIcon
 										src={theme.images.general.tiktok}
-										style={{ width: '100%', height: '100%'}}
+										style={{ width: '100%', height: '100%' }}
 									/>
 								</View>
 							</TouchableOpacity>
@@ -308,72 +245,190 @@ export const BusinessBasicInformation = (
 								iconTitle='snapchat'
 							/>
 						)}
-					</SocialListWrapper>
-				)}
-				<View>
-					<BusinessInfoItem>
-						{loading && (
-							<Placeholder Animation={Fade}>
-								<View style={{ flexDirection: 'row' }}>
-									<PlaceholderLine width={13} style={{ marginRight: 10 }} />
-									<PlaceholderLine width={13} style={{ marginRight: 10 }} />
-									<PlaceholderLine width={13} style={{ marginRight: 10 }} />
-									<PlaceholderLine width={13} />
-								</View>
-							</Placeholder>
-						)}
-						<View style={styles.bullet}>
-							<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
-								{`${t('DELIVERY_FEE', 'Delivery fee')} ${business && parsePrice(business?.delivery_price || 0)} \u2022 `}
-							</OText>
-							{orderState?.options?.type === 1 ? (
-								<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
-									{convertHoursToMinutes(business?.delivery_time) + `  \u2022 `}
-								</OText>
-							) : (
-								<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
-									{convertHoursToMinutes(business?.pickup_time) + `  \u2022 `}
-								</OText>
-							)}
-							<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
-								{parseDistance(business?.distance || 0) + `  \u2022 `}
-							</OText>
-						</View>
-
-						<View style={styles.reviewStyle}>
-							<OIcon
-								src={theme.images.general.star}
-								width={14}
-								color={theme.colors.textSecondary}
-								style={{ marginTop: -2, marginEnd: 2 }}
-							/>
-							<OText size={12} color={theme.colors.textSecondary}>
-								{business?.reviews?.total}
-							</OText>
-						</View>
-					</BusinessInfoItem>
-				</View>
-				<WrapReviews>
-					{!isBusinessInfoShow && (
-						<>
-							{isPreOrder && (!business?.professionals || business?.professionals?.length === 0) && (
-								<>
-									<TouchableOpacity onPress={() => navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })}>
-										<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
-											{t('PRE_ORDER', 'Preorder')}
-										</OText>
-									</TouchableOpacity>
-									<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
-								</>
-							)}
-							<TouchableOpacity onPress={() => handleClickBusinessReviews()}>
-								<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
-									{t('REVIEWS', 'Reviews')}
+						{isChewLayout && (
+							<TouchableOpacity onPress={() => handleClickBusinessInformation()}>
+								<OText style={{textDecorationColor: theme.colors.black, textDecorationLine: 'underline'}}>
+									{t('SEE_MORE_DESCRIPTION', 'See more')}
 								</OText>
 							</TouchableOpacity>
-						</>
-					)}
-				</WrapReviews>
+						)}
+					</SocialListWrapper>
+				)}
+			</>
+		)
+	}
+
+	return (
+		<BusinessContainer isChewLayout={isChewLayout && !showLogo}>
+			<BusinessHeader
+				isChewLayout={isChewLayout}
+				style={
+					isBusinessInfoShow
+						? styles.businesInfoheaderStyle
+						: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
+				}
+				source={{
+					uri:
+						header ||
+						optimizeImage(businessState?.business?.header, 'h_250,c_limit'),
+				}}
+				imageStyle={{ opacity: isChewLayout ? 0.5 : 1 }}
+			>
+				{!isBusinessInfoShow && !isChewLayout && (
+					<WrapBusinessInfo onPress={() => handleClickBusinessInformation()}>
+						<OIcon src={theme.images.general.info} width={24} />
+					</WrapBusinessInfo>
+				)}
+				{isChewLayout && (
+					<View style={styles.headerChewStyle}>
+						<OText size={24} weight={'600'} mBottom={-5}>
+							{business?.name}
+						</OText>
+						{business?.city?.name && (
+							<OText>
+								{business?.city?.name}
+							</OText>
+						)}
+						<View style={styles.socialIconsChewContainer}>
+							<SocialIcons />
+						</View>
+					</View>
+				)}
+			</BusinessHeader>
+			<BusinessInfo style={styles.businessInfo}>
+				{showLogo && (
+					<BusinessLogo isChewLayout={isChewLayout}>
+						{loading ? (
+							<View>
+								<Placeholder Animation={Fade}>
+									<PlaceholderLine height={50} width={20} />
+								</Placeholder>
+							</View>
+						) : (
+							!isBusinessInfoShow && (
+								<OIcon
+									url={
+										logo ||
+										optimizeImage(businessState?.business?.logo, 'h_70,c_limit')
+									}
+									style={styles.businessLogo}
+								/>
+							)
+						)}
+					</BusinessLogo>
+				)}
+				{!isChewLayout && (
+
+					<>
+						<BusinessInfoItem>
+							{loading ? (
+								<Placeholder Animation={Fade}>
+									<PlaceholderLine height={30} width={20} />
+								</Placeholder>
+							) : (
+								<TitleWrapper>
+									<OText size={24} weight={'600'}>
+										{business?.name}
+									</OText>
+									{business?.ribbon?.enabled && (
+										<RibbonBox
+											bgColor={business?.ribbon?.color}
+											isRoundRect={business?.ribbon?.shape === shape?.rectangleRound}
+											isCapsule={business?.ribbon?.shape === shape?.capsuleShape}
+										>
+											<OText
+												size={10}
+												weight={'400'}
+												color={theme.colors.white}
+												numberOfLines={2}
+												ellipsizeMode='tail'
+												lineHeight={13}
+											>
+												{business?.ribbon?.text}
+											</OText>
+										</RibbonBox>
+									)}
+								</TitleWrapper>
+							)}
+						</BusinessInfoItem>
+						{loading ? (
+							<Placeholder Animation={Fade}>
+								<PlaceholderLine width={10} />
+							</Placeholder>
+						) : (
+							<View style={{ width: '75%' }}>
+								<OText color={theme.colors.textNormal}>{getBusinessType()}</OText>
+							</View>
+						)}
+						{!isChewLayout && (
+							<SocialIcons />
+						)}
+						<View>
+							<BusinessInfoItem>
+								{loading && (
+									<Placeholder Animation={Fade}>
+										<View style={{ flexDirection: 'row' }}>
+											<PlaceholderLine width={13} style={{ marginRight: 10 }} />
+											<PlaceholderLine width={13} style={{ marginRight: 10 }} />
+											<PlaceholderLine width={13} style={{ marginRight: 10 }} />
+											<PlaceholderLine width={13} />
+										</View>
+									</Placeholder>
+								)}
+								<View style={styles.bullet}>
+									<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
+										{`${t('DELIVERY_FEE', 'Delivery fee')} ${business && parsePrice(business?.delivery_price || 0)} \u2022 `}
+									</OText>
+									{orderState?.options?.type === 1 ? (
+										<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
+											{convertHoursToMinutes(business?.delivery_time) + `  \u2022 `}
+										</OText>
+									) : (
+										<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
+											{convertHoursToMinutes(business?.pickup_time) + `  \u2022 `}
+										</OText>
+									)}
+									<OText color={theme.colors.textSecondary} size={12} style={styles.metadata}>
+										{parseDistance(business?.distance || 0) + `  \u2022 `}
+									</OText>
+								</View>
+
+								<View style={styles.reviewStyle}>
+									<OIcon
+										src={theme.images.general.star}
+										width={14}
+										color={theme.colors.textSecondary}
+										style={{ marginTop: -2, marginEnd: 2 }}
+									/>
+									<OText size={12} color={theme.colors.textSecondary}>
+										{business?.reviews?.total}
+									</OText>
+								</View>
+							</BusinessInfoItem>
+						</View>
+						<WrapReviews>
+							{!isBusinessInfoShow && (
+								<>
+									{isPreOrder && (!business?.professionals || business?.professionals?.length === 0) && (
+										<>
+											<TouchableOpacity onPress={() => navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })}>
+												<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
+													{t('PRE_ORDER', 'Preorder')}
+												</OText>
+											</TouchableOpacity>
+											<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
+										</>
+									)}
+									<TouchableOpacity onPress={() => handleClickBusinessReviews()}>
+										<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
+											{t('REVIEWS', 'Reviews')}
+										</OText>
+									</TouchableOpacity>
+								</>
+							)}
+						</WrapReviews>
+					</>
+				)}
 			</BusinessInfo>
 			{businessInformationObtained ? (
 				<OModal
