@@ -1,6 +1,7 @@
 import React from 'react'
-import { Modal, TouchableWithoutFeedback, Dimensions, StyleSheet, View, Text, Platform, StatusBar } from 'react-native'
+import { Modal, TouchableWithoutFeedback, TouchableOpacity, Dimensions, StyleSheet, View, Text, Platform, StatusBar } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { OIcon } from '.';
 const deviceHeight = Dimensions.get('window').height
 
 interface Props {
@@ -9,6 +10,9 @@ interface Props {
 	children?: any;
 	onClose?: any;
 	isStatusBar?: boolean;
+	bottomContainerStyle?: any;
+	titleStyle?: any;
+	closeIcon?: any;
 }
 const OBottomPopup = (props: Props) => {
 	const {
@@ -16,7 +20,10 @@ const OBottomPopup = (props: Props) => {
 		title,
 		onClose,
 		children,
-		isStatusBar
+		isStatusBar,
+		titleStyle,
+		bottomContainerStyle,
+		closeIcon
 	} = props
 	const { top, bottom } = useSafeAreaInsets();
 	return (
@@ -27,7 +34,7 @@ const OBottomPopup = (props: Props) => {
 			onRequestClose={() => onClose()}
 			presentationStyle={'fullScreen'}
 		>
-		  {isStatusBar && <StatusBar translucent={false} />}
+			{isStatusBar && <StatusBar translucent={false} />}
 			<View style={styles.container}>
 				<TouchableWithoutFeedback
 					style={styles.touchableOutsideStyle}
@@ -35,10 +42,18 @@ const OBottomPopup = (props: Props) => {
 				>
 					<View style={styles.touchableOutsideStyle} />
 				</TouchableWithoutFeedback>
-				<View style={styles.bottomContainer}>
+				<View style={{ ...styles.bottomContainer, ...bottomContainerStyle }}>
 					<View style={{ paddingTop: top, paddingBottom: bottom }}>
-						{title != '' && (
-							<Text style={styles.titleStyle}>
+						{closeIcon && (
+							<TouchableOpacity onPress={onClose} style={styles.closeIconStyle}>
+								<OIcon
+									src={closeIcon}
+									width={30}
+								/>
+							</TouchableOpacity>
+						)}
+						{!!title && (
+							<Text style={{ ...styles.titleStyle, ...titleStyle }}>
 								{title}
 							</Text>
 						)}
@@ -69,7 +84,11 @@ const styles = StyleSheet.create({
 	titleStyle: {
 		fontSize: 20,
 		fontWeight: 'bold',
-		marginVertical: 15
+		marginVertical: 10
+	},
+	closeIconStyle: {
+		paddingTop: 20,
+		paddingLeft: 20
 	}
 })
 

@@ -29,6 +29,9 @@ import { UserProfileForm } from './src/components/UserProfileForm';
 import { ReviewOrder } from './src/components/ReviewOrder';
 import { ReviewProducts } from './src/components/ReviewProducts';
 import { ReviewDriver } from './src/components/ReviewDriver';
+import { ReviewOrder as ReviewOrderModal } from './src/components/Reviews/ReviewOrder';
+import { ReviewProducts as ReviewProductsModal } from './src/components/Reviews/ReviewProducts';
+import { ReviewDriver as ReviewDriverModal } from './src/components/Reviews/ReviewDriver';
 import { UserProfile } from './src/components/UserProfile';
 import { MessageListing } from './src/components/MessageListing';
 import { Messages } from './src/components/Messages';
@@ -186,6 +189,9 @@ export {
 	ReviewOrder,
 	ReviewProducts,
 	ReviewDriver,
+	ReviewOrderModal,
+	ReviewProductsModal,
+	ReviewDriverModal,
 	BusinessMenuList,
 	UserProfile,
 	MessageListing,

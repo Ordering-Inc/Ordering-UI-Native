@@ -320,7 +320,15 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</MomentWrapper>
 					<View style={styles.wrapperOrderOptions}>
 						<WrapMomentOption onPress={() => navigation.navigate('OrderTypes', { configTypes: configTypes, setOrderTypeValue })}>
-							<OText size={12} numberOfLines={1} ellipsizeMode={'tail'} color={theme.colors.textSecondary}>{t(getTypesText(orderTypeValue || orderState?.options?.type || 1), 'Delivery')}</OText>
+							<OText
+								size={12}
+								numberOfLines={1}
+								ellipsizeMode={'tail'}
+								color={theme.colors.textSecondary}
+								style={{ textAlign: 'left' }}
+							>
+								{t(getTypesText(orderTypeValue || orderState?.options?.type || 1), 'Delivery')}
+							</OText>
 							<OIcon
 								src={theme.images.general.arrow_down}
 								width={10}
