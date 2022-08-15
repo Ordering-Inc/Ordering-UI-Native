@@ -419,6 +419,7 @@ export interface ProductItemAccordionParams {
 export interface ReviewOrderParams {
 	order?: { id: number, business_id: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any };
 	stars?: any;
+	defaultStar?: number;
 	handleChangeInput?: any;
 	handleChangeRating?: any;
 	handleSendReview?: any;
