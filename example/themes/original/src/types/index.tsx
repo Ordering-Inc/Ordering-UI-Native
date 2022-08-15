@@ -417,7 +417,7 @@ export interface ProductItemAccordionParams {
 	isFromCheckout?: any
 }
 export interface ReviewOrderParams {
-	order?: { id: number, business_id: number, business_name?: string, delivery_datetime?: string, logo: string, driver: any, products: Array<any>, review: any, user_review: any };
+	order?: { id: number, business_id: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any };
 	stars?: any;
 	handleChangeInput?: any;
 	handleChangeRating?: any;
