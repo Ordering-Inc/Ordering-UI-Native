@@ -361,8 +361,6 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
           id: order?.id,
           business_id: order?.business_id,
           logo: order.business?.logo,
-          business_name: order?.business?.name,
-          delivery_datetime: order?.delivery_datetime,
           driver: order?.driver,
           products: order?.products,
           review: order?.review,
@@ -524,41 +522,41 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
               <OrderData>
                 <View style={styles.linkWrapper}>
                   {
-                  (
-                    parseInt(order?.status) === 1 ||
-                    parseInt(order?.status) === 11 ||
-                    parseInt(order?.status) === 15
-                  ) && !order.review && !isReviewed && (
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      style={{ marginTop: 6, marginRight: 10 }}
-                      onPress={() => handleClickOrderReview(order)}
-                    >
-                      <OText
-                        size={10}
-                        lineHeight={15}
-                        color={theme.colors.primary}
-                        style={{ textDecorationLine: 'underline' }}
+                    (
+                      parseInt(order?.status) === 1 ||
+                      parseInt(order?.status) === 11 ||
+                      parseInt(order?.status) === 15
+                    ) && !order.review && !isReviewed && (
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        style={{ marginTop: 6, marginRight: 10 }}
+                        onPress={() => handleClickOrderReview(order)}
                       >
-                        {t('REVIEW_YOUR_ORDER', 'Review your order')}
-                      </OText>
-                    </TouchableOpacity>
-                  )}
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      style={{ marginTop: 6 }}
-                      onPress={() => setIsOrderHistory(true)}
+                        <OText
+                          size={10}
+                          lineHeight={15}
+                          color={theme.colors.primary}
+                          style={{ textDecorationLine: 'underline' }}
+                        >
+                          {t('REVIEW_YOUR_ORDER', 'Review your order')}
+                        </OText>
+                      </TouchableOpacity>
+                    )}
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={{ marginTop: 6 }}
+                    onPress={() => setIsOrderHistory(true)}
 
+                  >
+                    <OText
+                      size={10}
+                      lineHeight={15}
+                      color={theme.colors.primary}
+                      style={{ textDecorationLine: 'underline', textTransform: 'capitalize' }}
                     >
-                      <OText
-                        size={10}
-                        lineHeight={15}
-                        color={theme.colors.primary}
-                        style={{ textDecorationLine: 'underline', textTransform: 'capitalize' }}
-                      >
-                        {t('VIEW_DETAILS', 'View Details')}
-                      </OText>
-                    </TouchableOpacity>
+                      {t('VIEW_DETAILS', 'View Details')}
+                    </OText>
+                  </TouchableOpacity>
                 </View>
 
                 <StaturBar>

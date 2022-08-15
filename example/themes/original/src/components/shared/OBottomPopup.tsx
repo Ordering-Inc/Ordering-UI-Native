@@ -6,6 +6,7 @@ const deviceHeight = Dimensions.get('window').height
 
 interface Props {
 	open: boolean;
+	transparent?: boolean;
 	title?: string;
 	children?: any;
 	onClose?: any;
@@ -17,6 +18,7 @@ interface Props {
 const OBottomPopup = (props: Props) => {
 	const {
 		open,
+		transparent,
 		title,
 		onClose,
 		children,
@@ -26,10 +28,11 @@ const OBottomPopup = (props: Props) => {
 		closeIcon
 	} = props
 	const { top, bottom } = useSafeAreaInsets();
+
 	return (
 		<Modal
 			animationType='slide'
-			transparent={false}
+			transparent={transparent}
 			visible={open}
 			onRequestClose={() => onClose()}
 			presentationStyle={'fullScreen'}
@@ -69,7 +72,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#000000AA',
-		justifyContent: 'flex-end',
+		justifyContent: 'flex-end'
 	},
 	touchableOutsideStyle: {
 		flex: 1,

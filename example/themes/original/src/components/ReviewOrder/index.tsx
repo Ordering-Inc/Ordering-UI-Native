@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { OrderReview as ReviewOrderController, useLanguage, useToast, ToastType, useUtils } from 'ordering-components/native'
+import { OrderReview as ReviewOrderController, useLanguage, useToast, ToastType } from 'ordering-components/native'
 import { useForm, Controller } from 'react-hook-form'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -12,9 +11,7 @@ import {
   ActionContainer,
   SkipButton,
   RatingBarContainer,
-  RatingTextContainer,
-  RatingStarContainer,
-  PlacedDate
+  RatingTextContainer
 } from './styles'
 import { OButton, OIcon, OInput, OText } from '../shared'
 import { TouchableOpacity, StyleSheet, View, I18nManager } from 'react-native';
@@ -91,11 +88,10 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
   const [, t] = useLanguage()
   const [, { showToast }] = useToast()
   const { handleSubmit, control, errors } = useForm()
-  const [{ parseDate }] = useUtils()
+
   const [alertState, setAlertState] = useState<{ open: boolean, content: Array<any>, success?: boolean }>({ open: false, content: [], success: false })
   const [comments, setComments] = useState<Array<any>>([])
   const [extraComment, setExtraComment] = useState('')
-  const placedOnDate = parseDate(order?.delivery_datetime, { outputFormat: 'dddd MMMM DD, YYYY' })
 
   const onSubmit = () => {
     if (Object.values(stars).some((value: any) => value === 0)) {
@@ -195,15 +191,14 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
     <>
       <ReviewOrderContainer>
         <NavBar
-          title={t('HEY', 'Hey! ') + t('HOW_WAS_YOUR_ORDER', 'How was your order?')}
+          title={t('REVIEW_ORDER', 'Review your Order')}
           titleAlign={'center'}
-          leftImg={theme.images.general.close}
           onActionLeft={() => navigation?.canGoBack() && navigation.goBack()}
           showCall={false}
           btnStyle={{ paddingLeft: 0 }}
-          style={{ flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center' }}
-          titleWrapStyle={{ paddingHorizontal: 0, width: '100%', justifyContent: 'center' }}
-          titleStyle={{ textAlign: 'center', marginRight: 0, marginLeft: 0 }}
+          style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+          titleWrapStyle={{ paddingHorizontal: 0 }}
+          titleStyle={{ marginRight: 0, marginLeft: 0 }}
         />
         <BusinessLogo>
           <View style={styles.logoWrapper}>
@@ -214,7 +209,6 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
             />
           </View>
         </BusinessLogo>
-        {!!order?.business_name && <OText style={{ textAlign: 'center', marginTop: 15 }} color={theme.colors.textNormal}>{order?.business_name}</OText>}
         {order?.review ? (
           <View style={styles.reviewedStyle}>
             <OText color={theme.colors.primary}>{t('ORDER_REVIEWED', 'This order has been already reviewed')}</OText>
@@ -222,92 +216,78 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
         ) : (
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <FormReviews>
-              {/* <OText mBottom={13} color={theme.colors.textNormal}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText> */}
-              {false && (
-                <RatingBarContainer>
-                  <LinearGradient
-                    start={{ x: 0.0, y: 0.0 }}
-                    end={{ x: qualificationList[stars.quality - 1]?.percent || 0, y: 0 }}
-                    locations={[.9999, .9999]}
-                    colors={[theme.colors.primary, theme.colors.backgroundGray200]}
-                    style={styles.statusBar}
-                  />
-                  <RatingTextContainer>
-                    {qualificationList.map((qualification: any) => (
-                      <View
-                        key={qualification.key}
-                        style={{ ...qualification.parentStyle, ...styles.ratingItemContainer }}
-                      >
-                        <TouchableOpacity
-                          style={qualification.isInnerStyle && styles.ratingItem}
-                          onPress={() => handleChangeStars(qualification.key)}
-                        >
-                          <View
-                            style={{
-                              ...styles.ratingLineStyle,
-                              backgroundColor: (qualification.pointerColor && !(stars.quality >= qualification.key)) ? theme.colors.dusk : 'transparent'
-                            }}
-                          />
-                          <OText size={12} color={stars.quality === qualification.key ? theme.colors.black : theme.colors.backgroundGray200}>{qualification.text}</OText>
-                        </TouchableOpacity>
-                      </View>
-                    ))}
-                  </RatingTextContainer>
-                </RatingBarContainer>
-              )}
-              <RatingStarContainer>
-                {[...Array(5).keys()].map((index) => (<FontAwesome name={(index <= (stars?.quality - 1)) ? 'star' : 'star-o'} size={28} key={`star-symbol-${index}`} onPress={() => handleChangeStars(index + 1)} color={theme?.colors?.primary} />)
-                )}
-              </RatingStarContainer>
-              <PlacedDate>
-                <OText color={theme.colors.textNormal}>{t('DONOT_FORGET_RATE_YOUR_ORDER', 'Do not forget to rate your order placed on ')}</OText>
-                <OText color={theme.colors.textNormal} style={{ fontWeight: "bold" }}>{placedOnDate}</OText>
-              </PlacedDate>
-              {false && (
-                <>
-                  <OText style={{ marginTop: 30 }} color={theme.colors.textNormal}>
-                    {commentsList[stars?.quality || 1]?.title}
-                  </OText>
-                  <CommentsButtonGroup>
-                    {commentsList[stars?.quality || 1]?.list?.map((commentItem: any) => (
-                      <OButton
-                        key={commentItem.key}
-                        text={commentItem.content}
-                        bgColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.backgroundGray200}
-                        borderColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.backgroundGray200}
-                        textStyle={{
-                          color: isSelectedComment(commentItem.key) ? theme.colors.white : theme.colors.black,
-                          fontSize: 13,
-                          paddingRight: isSelectedComment(commentItem.key) ? 15 : 0
-                        }}
-                        style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
-                        imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
-                        imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
-                        onClick={() => handleChangeComment(commentItem)}
-                      />
-                    ))}
-                  </CommentsButtonGroup>
-                </>
-              )}
-              {/* <OText style={{ marginTop: 30 }} color={theme.colors.textNormal}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText> */}
-              {false && (
-                <Controller
-                  control={control}
-                  defaultValue=''
-                  name='comments'
-                  render={({ onChange }: any) => (
-                    <OInput
-                      name='comments'
-                      onChange={(val: any) => {
-                        onChange(val)
-                        setExtraComment(val.target.value)
-                      }}
-                      style={styles.inputTextArea}
-                      multiline
-                    />
-                  )}
+              <OText mBottom={13} color={theme.colors.textNormal}>{t('HOW_WAS_YOUR_ORDER', 'How was your order?')}</OText>
+              <RatingBarContainer>
+                <LinearGradient
+                  start={{ x: 0.0, y: 0.0 }}
+                  end={{ x: qualificationList[stars.quality - 1]?.percent || 0, y: 0 }}
+                  locations={[.9999, .9999]}
+                  colors={[theme.colors.primary, theme.colors.backgroundGray200]}
+                  style={styles.statusBar}
                 />
-              )}
+                <RatingTextContainer>
+                  {qualificationList.map((qualification: any) => (
+                    <View
+                      key={qualification.key}
+                      style={{ ...qualification.parentStyle, ...styles.ratingItemContainer }}
+                    >
+                      <TouchableOpacity
+                        style={qualification.isInnerStyle && styles.ratingItem}
+                        onPress={() => handleChangeStars(qualification.key)}
+                      >
+                        <View
+                          style={{
+                            ...styles.ratingLineStyle,
+                            backgroundColor: (qualification.pointerColor && !(stars.quality >= qualification.key)) ? theme.colors.dusk : 'transparent'
+                          }}
+                        />
+                        <OText size={12} color={stars.quality === qualification.key ? theme.colors.black : theme.colors.backgroundGray200}>{qualification.text}</OText>
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </RatingTextContainer>
+              </RatingBarContainer>
+
+              <OText style={{ marginTop: 30 }} color={theme.colors.textNormal}>
+                {commentsList[stars?.quality || 1]?.title}
+              </OText>
+              <CommentsButtonGroup>
+                {commentsList[stars?.quality || 1]?.list?.map(commentItem => (
+                  <OButton
+                    key={commentItem.key}
+                    text={commentItem.content}
+                    bgColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.backgroundGray200}
+                    borderColor={isSelectedComment(commentItem.key) ? theme.colors.primary : theme.colors.backgroundGray200}
+                    textStyle={{
+                      color: isSelectedComment(commentItem.key) ? theme.colors.white : theme.colors.black,
+                      fontSize: 13,
+                      paddingRight: isSelectedComment(commentItem.key) ? 15 : 0
+                    }}
+                    style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
+                    imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
+                    imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
+                    onClick={() => handleChangeComment(commentItem)}
+                  />
+                ))}
+              </CommentsButtonGroup>
+
+              <OText style={{ marginTop: 30 }} color={theme.colors.textNormal}>{t('REVIEW_COMMENT_QUESTION', 'Do you want to add something?')}</OText>
+              <Controller
+                control={control}
+                defaultValue=''
+                name='comments'
+                render={({ onChange }: any) => (
+                  <OInput
+                    name='comments'
+                    onChange={(val: any) => {
+                      onChange(val)
+                      setExtraComment(val.target.value)
+                    }}
+                    style={styles.inputTextArea}
+                    multiline
+                  />
+                )}
+              />
             </FormReviews>
           </View>
         )}
@@ -322,7 +302,7 @@ export const ReviewOrderUI = (props: ReviewOrderParams) => {
           </SkipButton>
           <OButton
             textStyle={{ color: theme.colors.white, paddingRight: 10 }}
-            text={t('GOTO_REVIEW', 'Go to review')}
+            text={t('CONTINUE', 'Continue')}
             style={{ borderRadius: 8 }}
             imgRightSrc={theme.images.general.arrow_right}
             imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
@@ -338,7 +318,7 @@ export const ReviewOrder = (props: ReviewOrderParams) => {
   const reviewOrderProps = {
     ...props,
     UIComponent: ReviewOrderUI,
-    defaultStar: 5
+    defaultStar: props?.defaultStar || 5
   }
   return <ReviewOrderController {...reviewOrderProps} />
 }

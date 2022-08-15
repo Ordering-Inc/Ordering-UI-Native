@@ -417,8 +417,9 @@ export interface ProductItemAccordionParams {
 	isFromCheckout?: any
 }
 export interface ReviewOrderParams {
-	order?: { id: number, business_id: number, business_name?: string, delivery_datetime?: string, logo: string, driver: any, products: Array<any>, review: any, user_review: any };
+	order?: { id: number, business_id: number, logo: string, driver: any, products: Array<any>, review: any, user_review: any };
 	stars?: any;
+	defaultStar?: number;
 	handleChangeInput?: any;
 	handleChangeRating?: any;
 	handleSendReview?: any;
@@ -428,8 +429,6 @@ export interface ReviewOrderParams {
 	handleReviewState?: any;
 	setStars?: any;
 	onNavigationRedirect?: any;
-	closeReviewOrder?: () => void;
-	skipReview?: () => void;
 }
 export interface ReviewProductParams {
 	navigation?: any,
@@ -438,7 +437,6 @@ export interface ReviewProductParams {
 	formState?: any,
 	handleChangeFormState?: any,
 	handleSendProductReview?: any;
-	closeReviewProduct?: () => void;
 }
 export interface SingleProductReviewParams {
 	product: any,
@@ -454,7 +452,6 @@ export interface ReviewDriverParams {
 	dirverReviews?: any,
 	setDriverReviews?: any,
 	handleSendDriverReview?: any;
-	closeReviewDriver?: () => void;
 }
 export interface MessagesParams {
 	type?: string,
