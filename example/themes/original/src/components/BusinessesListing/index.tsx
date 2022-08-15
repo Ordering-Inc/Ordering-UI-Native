@@ -10,8 +10,8 @@ import { ReviewOrderModal, ReviewProductsModal, ReviewDriverModal } from '../Rev
 
 export const BusinessesListing = (props: any) => {
   const theme = useTheme()
+	const layout = theme?.layouts?.business_listing_view?.components?.layout?.type || 'original'
   const [, t] = useLanguage();
-  const layout = theme?.layout?.businessListing?.layout?.type || 'original'
   const [{ auth }] = useSession()
   const [, { getLastOrderHasNoReview }] = useOrder();
 

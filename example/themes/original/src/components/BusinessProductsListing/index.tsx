@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView } from 'react-native'
-import { IOScrollView } from 'react-native-intersection-observer'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -10,7 +9,8 @@ import {
 	useUtils,
 	ToastType,
 	useToast,
-	useConfig
+	useConfig,
+	useOrderingTheme
 } from 'ordering-components/native'
 import { OButton, OIcon, OModal, OText } from '../shared'
 import Alert from '../../providers/AlertProvider'
@@ -28,13 +28,15 @@ import {
 	FiltProductsContainer,
 	ContainerSafeAreaView,
 	BackgroundGray,
-	ProfessionalFilterWrapper
+	ProfessionalFilterWrapper,
+	NearBusiness
 } from './styles'
 import { FloatingButton } from '../FloatingButton'
 import { UpsellingRedirect } from './UpsellingRedirect'
 import Animated from 'react-native-reanimated'
 import { ProfessionalFilter } from '../ProfessionalFilter';
 import { ServiceForm } from '../ServiceForm';
+import { BusinessesListing } from '../BusinessesListing/Layout/Original'
 
 const PIXELS_TO_SCROLL = 2000
 
@@ -59,10 +61,12 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 		getNextProducts,
 		handleUpdateProducts,
 		professionalSelected,
-		handleChangeProfessionalSelected
+		handleChangeProfessionalSelected,
+		onBusinessClick
 	} = props
 
 	const theme = useTheme();
+	const [orderingTheme] = useOrderingTheme()
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
 	const [orderState, { clearCart }] = useOrder()
@@ -70,6 +74,11 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [, { showToast }] = useToast()
 	const [{ configs }] = useConfig()
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
+
+	const isChewLayout = theme?.layouts?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const showLogo = !orderingTheme?.theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
+	const showBusinessNearCity = !theme?.layouts?.business_view?.components?.near_business?.hidden
+
 	const styles = StyleSheet.create({
 		mainContainer: {
 			flex: 1,
@@ -240,6 +249,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 										onClick={() => handleBackNavigation()}
 										imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 30 }}
 									/>
+
 								</View>
 								{!errorQuantityProducts && (
 									<View style={{ ...styles.headerItem }}>
@@ -267,6 +277,17 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							</WrapSearchBar>
 						)}
 					</TopHeader>
+					{showBusinessNearCity && (
+						<NearBusiness>
+							<BusinessesListing
+								logosLayout
+								propsToFetch={['id', 'logo', 'location', 'timezone', 'schedule', 'open', 'slug']}
+								cityId={businessState?.business?.city_id}
+								onBusinessClick={onBusinessClick}
+								actualSlug={businessState?.business?.slug}
+							/>
+						</NearBusiness>
+					)}
 				</Animated.View>
 
 				{business?.categories?.length > 0 && isOpenFiltProducts && (
@@ -343,7 +364,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							/>
 						</ProfessionalFilterWrapper>
 					)}
-					<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100 }} />
+					<View
+						style={{
+							height: 8,
+							backgroundColor: theme.colors.backgroundGray100,
+							marginTop: isChewLayout && showLogo ? 10 : 0
+						}}
+					/>
 					{!loading && business?.id && (
 						<>
 							{!(business?.categories?.length === 0) && (
@@ -366,7 +393,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						</>
 					)}
 					{!loading && business?.id && (
-						<IOScrollView rootMargin={{ top: 0, bottom: 0 }}>
+						<>
 							<WrapContent
 								onLayout={(event: any) => setProductListLayout(event.nativeEvent.layout)}
 							>
@@ -397,7 +424,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 									handleUpdateProducts={handleUpdateProducts}
 								/>
 							</WrapContent>
-						</IOScrollView>
+						</>
 					)}
 					{loading && !error && (
 						<>
@@ -422,7 +449,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						</>
 					)}
 				</BusinessProductsListingContainer>
-
 				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
 					<FloatingButton
 						btnText={

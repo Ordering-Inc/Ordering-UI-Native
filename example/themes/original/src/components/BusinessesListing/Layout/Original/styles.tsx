@@ -1,4 +1,4 @@
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 
 export const WelcomeTitle = styled.View`
   flex: 1;
@@ -16,6 +16,9 @@ export const Search = styled.View`
   align-items: center;
   margin-vertical: 10px;
   margin-horizontal: 20px;
+  ${(props: any) => props.isChewLayout && css`
+    margin-horizontal: 30px;
+  `}
 `
 
 export const AddressInput = styled.TouchableOpacity`
@@ -27,6 +30,9 @@ export const AddressInput = styled.TouchableOpacity`
   width: 100%;
   height: 44px;
   max-height: 44px;
+  ${(props: any) => props.isChewLayout && css`
+    border-radius: 8px;
+  `}
 `
 
 export const OrderControlContainer = styled.View`
@@ -89,5 +95,43 @@ export const AddressInputContainer = styled.View`
   flex-direction: row;
   width: 100%;
   align-items: center;
-  justify-content: center
+  justify-content: center;
+  ${(props: any) => props.isChewLayout && css`
+    flex-direction: row-reverse;
+  `}
+`
+
+export const PreorderInput = styled(AddressInput)`
+  justify-content: center;
+`
+
+export const OTabs = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: -1px;
+  width: 100%;
+`;
+
+export const OTab = styled.TouchableOpacity`
+  padding-bottom: 10px;
+  border-bottom-width: 1px;
+  margin-end: 14px;
+  padding-horizontal: 5px;
+`;
+
+export const OrderTypesContainer = styled.View`
+  flex-direction: row;
+  font-size: 14px;
+  width: 180px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-width: 1px;
+  border-bottom-color: ${(props: any) => props.theme.colors.border};
+  margin-top: 10px;
+  align-self: center;
+`
+
+export const BusinessLogosContainer = styled.ScrollView`
+  padding-bottom: 10px;
 `

@@ -60,3 +60,8 @@ export const ProfessionalFilterWrapper = styled.View`
   padding-left: 40px;
   margin-bottom: 35px;
 `
+
+export const NearBusiness = styled.View`
+  width: 100%;
+  padding-left: 20px;
+`

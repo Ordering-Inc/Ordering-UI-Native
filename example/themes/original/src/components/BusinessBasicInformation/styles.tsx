@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 
 export const BusinessContainer = styled.View`
   flex-direction: column;
-  padding-bottom: 35px;
+  padding-bottom: ${(props: any) => props.isChewLayout ? '0' : '35px'};
 `;
 export const BusinessHeader = styled.ImageBackground`
   width: 100%;
@@ -20,7 +20,7 @@ export const BusinessLogo = styled.View`
   box-shadow: 0 0 2px ${Platform.OS == 'android' ? '#000000DD' : '#0000001A'};
   elevation: 2;
   background-color: white;
-  border-radius: 7.6px;
+  border-radius: 7.6px;  
 `;
 export const BusinessInfo = styled.View`
   justify-content: flex-start;
