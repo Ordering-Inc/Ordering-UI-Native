@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components/native'
 
 export const CardContainer = styled.TouchableOpacity`
   flex: 1;
-  flex-direction: row;
+  flex-direction: ${(props : any) => props.showAddButton ? 'column' : 'row'};
   justify-content: space-between;
   align-items: center;
   padding: 12px;
@@ -23,7 +23,7 @@ export const SoldOut = styled.View`
 `
 
 export const QuantityContainer = styled.View`
-  background: ${({ theme } : any) => theme.colors.primary};
+  background: ${({ theme }: any) => theme.colors.primary};
   align-items: center;
   justify-content: center;
 `

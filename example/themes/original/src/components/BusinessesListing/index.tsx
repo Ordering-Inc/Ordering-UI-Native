@@ -8,7 +8,7 @@ import { BusinessesListing as AppointmentBusinessListing } from './Layout/Appoin
 
 export const BusinessesListing = (props: any) => {
   const theme = useTheme()
-  const layout = theme?.layout?.businessListing?.layout?.type || 'original'
+	const layout = theme?.layouts?.business_listing_view?.components?.layout?.type || 'original'
   const [{ auth }] = useSession()
   const [, { getLastOrderHasNoReview }] = useOrder();
   const [, setIsReviewed] = useState(false)

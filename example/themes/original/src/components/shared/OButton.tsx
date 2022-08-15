@@ -78,6 +78,7 @@ interface Props {
 	borderColor?: string;
 	loadingStyle?: ViewStyle;
 	showNextIcon?: boolean;
+	isDisabledWithSameStyles?: boolean;
 }
 
 const OButton = (props: Props): React.ReactElement => {
@@ -110,6 +111,7 @@ const OButton = (props: Props): React.ReactElement => {
 			activeOpacity={props.activeOpacity}
 			onPress={props.onClick}
 			style={{ width: props.isCircle ? 52 : props.style?.width, ...props.parentStyle }}
+			disabled={props.isDisabledWithSameStyles}
 		>
 			<StyledButton style={props.bgColor ? { ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor } : props.style}>
 				{props.imgLeftSrc ? (
