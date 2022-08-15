@@ -428,8 +428,6 @@ export interface ReviewOrderParams {
 	handleReviewState?: any;
 	setStars?: any;
 	onNavigationRedirect?: any;
-	closeReviewOrder?: () => void;
-	skipReview?: () => void;
 }
 export interface ReviewProductParams {
 	navigation?: any,
@@ -438,7 +436,6 @@ export interface ReviewProductParams {
 	formState?: any,
 	handleChangeFormState?: any,
 	handleSendProductReview?: any;
-	closeReviewProduct?: () => void;
 }
 export interface SingleProductReviewParams {
 	product: any,
@@ -454,7 +451,6 @@ export interface ReviewDriverParams {
 	dirverReviews?: any,
 	setDriverReviews?: any,
 	handleSendDriverReview?: any;
-	closeReviewDriver?: () => void;
 }
 export interface MessagesParams {
 	type?: string,
