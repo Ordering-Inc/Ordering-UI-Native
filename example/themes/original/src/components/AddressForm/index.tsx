@@ -109,8 +109,8 @@ const AddressFormUI = (props: AddressFormParams) => {
 			zIndex: 1002,
 		},
 		wrapperNavbar: Platform.OS === 'ios'
-			? {  paddingVertical: 0, paddingHorizontal: 40 }
-			: {  paddingVertical: 20, paddingHorizontal: 40 }
+			? { paddingVertical: 0, paddingHorizontal: 40 }
+			: { paddingVertical: 20, paddingHorizontal: 40 }
 	});
 
 	const [, t] = useLanguage();
@@ -156,7 +156,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 	const maxLimitLocation =
 		configState?.configs?.meters_to_change_address?.value;
 
-	const continueAsGuest = () => navigation.navigate('BusinessList');
+	const continueAsGuest = () => navigation.navigate('BusinessList', { isGuestUser: true });
 	const goToBack = () => navigation?.canGoBack() && navigation.goBack();
 
 	const getAddressFormatted = (address: any) => {
@@ -203,6 +203,7 @@ const AddressFormUI = (props: AddressFormParams) => {
 						saveAddress(data.address);
 						if (isGuestUser) {
 							continueAsGuest();
+							return;
 						}
 						if (!isGuestUser && !auth) {
 							!isFromProductsList
@@ -600,13 +601,13 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 								{hasEditing ? (
 									<View style={styles.pinIcon}>
-										<GPSButton 
+										<GPSButton
 											apiKey={googleMapsApiKey}
 											handleGPS={(data: any, detail: any) => {
 												handleChangeAddress(data, detail);
 												setValue(data.address);
 												if (googleInput?.current) {
-													googleInput?.current?.setAddressText( data.address );
+													googleInput?.current?.setAddressText(data.address);
 												}
 											}}
 											IconButton={<OIcon src={theme.images.general.pin} width={16} />}
