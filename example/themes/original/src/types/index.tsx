@@ -403,6 +403,7 @@ export interface OrderDetailsParams {
 	onNavigationRedirect?: any,
 	reorderState?: any,
 	handleReorder?: any,
+	getOrder: any
 }
 export interface ProductItemAccordionParams {
 	key?: any;
