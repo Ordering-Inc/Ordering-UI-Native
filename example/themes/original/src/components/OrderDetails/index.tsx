@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, BackHandler, Platform, Linking } from 'react-native';
+import { View, StyleSheet, BackHandler, Platform, Linking, RefreshControl } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { _setStoreData } from '../../providers/StoreUtil';
 import {
@@ -54,7 +54,8 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     driverLocation,
     onNavigationRedirect,
     reorderState,
-    handleReorder
+    handleReorder,
+    getOrder
   } = props;
 
   const theme = useTheme();
@@ -101,6 +102,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [isReviewed, setIsReviewed] = useState(false)
   const [isOrderHistory, setIsOrderHistory] = useState(false)
   const [openTaxModal, setOpenTaxModal] = useState<any>({ open: false, tax: null, type: '' })
+  const [refreshing] = useState(false);
   const { order, businessData } = props.order;
   const mapValidStatuses = [9, 19, 23]
 
@@ -380,6 +382,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
     ) && !order.review && !isReviewed && handleClickOrderReview(order)
   }
 
+  
+  const resfreshOrder = () => {
+    getOrder()
+  }
+
   useEffect(() => {
     const _businessId = 'businessId:' + businessData?.id
     if (reorderState?.error) {
@@ -447,7 +454,15 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   }, [driverLocation]);
 
   return (
-    <OrderDetailsContainer keyboardShouldPersistTaps="handled">
+    <OrderDetailsContainer 
+      keyboardShouldPersistTaps="handled"
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => resfreshOrder()}
+        />
+      }
+    >
       {(!order || Object.keys(order).length === 0) && (
         <Placeholder style={{ marginTop: 30 }}>
           <Header>
