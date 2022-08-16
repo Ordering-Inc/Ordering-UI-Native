@@ -217,7 +217,7 @@ const CheckoutUI = (props: any) => {
 		const _requiredFields: any = []
 
 		Object.values(validationFields?.fields?.checkout).map((field: any) => {
-			if (field?.required && !notFields.includes(field.code) && field.enabled) {
+			if (field?.required && !notFields.includes(field.code) && field?.enabled) {
 				if (!user[field?.code]) {
 					_requiredFields.push(field?.code)
 				}
