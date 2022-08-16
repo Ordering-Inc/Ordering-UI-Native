@@ -31,8 +31,8 @@ export const PreviousOrders = (props: any) => {
   const theme = useTheme();
   const [, setCurrentTime] = useState()
   const [allowColumns, setAllowColumns] = useState({
-    timer: true,
-    slaBar: true,
+    timer: configState?.configs?.order_deadlines_enabled?.value === '1',
+    slaBar: configState?.configs?.order_deadlines_enabled?.value === '1',
   })
 
   const [orientationState] = useDeviceOrientation();
