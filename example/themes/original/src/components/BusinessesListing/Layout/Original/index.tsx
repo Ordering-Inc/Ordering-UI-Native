@@ -316,7 +316,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}
 
 	return (
-		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}
+		<IOScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}
 			refreshControl={
 				<RefreshControl
 					refreshing={refreshing}
@@ -553,33 +553,30 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						)}
 					/>
 				)}
-				<IOScrollView>
-
-					{businessesList.businesses?.map(
-						(business: any, i: number) => (
-							<BusinessController
-								key={`${business.id}_` + i}
-								enableIntersection
-								business={business}
-								isBusinessOpen={business.open}
-								handleCustomClick={handleBusinessClick}
-								orderType={orderState?.options?.type}
-								navigation={navigation}
-								businessHeader={business?.header}
-								businessFeatured={business?.featured}
-								businessLogo={business?.logo}
-								businessReviews={business?.reviews}
-								businessDeliveryPrice={business?.delivery_price}
-								businessDeliveryTime={business?.delivery_time}
-								businessPickupTime={business?.pickup_time}
-								businessDistance={business?.distance}
-								handleUpdateBusinessList={handleUpdateBusinessList}
-								favoriteIds={favoriteIds}
-								setFavoriteIds={setFavoriteIds}
-							/>
-						)
-					)}
-				</IOScrollView>
+				{businessesList.businesses?.map(
+					(business: any, i: number) => (
+						<BusinessController
+							key={`${business.id}_` + i}
+							enableIntersection
+							business={business}
+							isBusinessOpen={business.open}
+							handleCustomClick={handleBusinessClick}
+							orderType={orderState?.options?.type}
+							navigation={navigation}
+							businessHeader={business?.header}
+							businessFeatured={business?.featured}
+							businessLogo={business?.logo}
+							businessReviews={business?.reviews}
+							businessDeliveryPrice={business?.delivery_price}
+							businessDeliveryTime={business?.delivery_time}
+							businessPickupTime={business?.pickup_time}
+							businessDistance={business?.distance}
+							handleUpdateBusinessList={handleUpdateBusinessList}
+							favoriteIds={favoriteIds}
+							setFavoriteIds={setFavoriteIds}
+						/>
+					)
+				)}
 				{businessesList.loading && (
 					<>
 						{[
@@ -657,7 +654,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					))}
 				</View>
 			</OModal>
-		</ScrollView>
+		</IOScrollView>
 	);
 };
 

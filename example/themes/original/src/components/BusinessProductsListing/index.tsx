@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView } from 'react-native'
+import { IOScrollView } from 'react-native-intersection-observer'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -24,7 +25,6 @@ import {
 	TopHeader,
 	WrapSearchBar,
 	WrapContent,
-	BusinessProductsListingContainer,
 	FiltProductsContainer,
 	ContainerSafeAreaView,
 	BackgroundGray,
@@ -81,7 +81,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 
 	const styles = StyleSheet.create({
 		mainContainer: {
-			flex: 1,
+			flex: 1
 		},
 		BackIcon: {
 			paddingRight: 20,
@@ -331,11 +331,14 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				{isOpenFiltProducts && (
 					<BackgroundGray />
 				)}
-				<BusinessProductsListingContainer
+				<IOScrollView
 					stickyHeaderIndices={[2]}
-					style={styles.mainContainer}
+					style={{
+						...styles.mainContainer,
+						marginBottom: currentCart?.products?.length > 0 && categoryState.products.length !== 0 ?
+							50 : 0
+					}}
 					ref={scrollViewRef}
-					isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
 					onScroll={handlePageScroll}
 					onScrollBeginDrag={handleTouchDrag}
 					scrollEventThrottle={16}
@@ -448,7 +451,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							</WrapContent>
 						</>
 					)}
-				</BusinessProductsListingContainer>
+				</IOScrollView>
 				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
 					<FloatingButton
 						btnText={

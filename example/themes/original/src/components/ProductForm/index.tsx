@@ -598,7 +598,7 @@ export const ProductOptionsUI = (props: any) => {
 							horizontal
 							showsHorizontalScrollIndicator={false}
 							style={{ marginBottom: 20 }}
-							contentContainerStyle={{ marginHorizontal: 40, paddingHorizontal: 33, backgroundColor: theme.colors.white }}
+							contentContainerStyle={{ paddingHorizontal: 33, backgroundColor: theme.colors.white }}
 						>
 							<TouchableOpacity
 								key={`eopt_all_0`}
