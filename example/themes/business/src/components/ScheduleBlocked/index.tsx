@@ -12,13 +12,13 @@ export const ScheduleBlocked = (props : any) => {
     const deviceWidth = Dimensions.get('screen').width
 
     const daysOfWeek = [
+        t('SUNDAY', 'Sunday'),
         t('MONDAY', 'Monday'),
         t('TUESDAY', 'Tuesday'),
         t('WEDNESDAY', 'Wednesday'),
         t('THURSDAY', 'Thurday'),
         t('FRIDAY', 'Friday'),
         t('SATURDAY', 'Saturday'),
-        t('SUNDAY', 'Sunday')
     ]
 
     const scheduleFormatted = ({ hour, minute }: any) => {
@@ -41,7 +41,7 @@ export const ScheduleBlocked = (props : any) => {
             <OText>{t('OUTSIDE_ESTABLISHED_SCHEDULE', 'You are outside the established schedule')}</OText>
             <View style={{ flexDirection: 'row', marginBottom: 20 }}>
                 <OText color={theme.colors.primary}>{t('NEXT_TIME', 'Next time')}: </OText>
-                <OText>{daysOfWeek[nextSchedule?.day - 1]} {scheduleFormatted(nextSchedule?.schedule?.open)}</OText>
+                <OText>{daysOfWeek[nextSchedule?.day]} {scheduleFormatted(nextSchedule?.schedule?.open)}</OText>
             </View>
             <OButton
                 text={t('GO_BACK', 'Go back')}
