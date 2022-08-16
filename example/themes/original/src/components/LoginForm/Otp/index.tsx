@@ -5,7 +5,7 @@ import { useCountdownTimer } from '../../../../../../src/hooks/useCountdownTimer
 import { useLanguage } from 'ordering-components/native';
 import { OTPContainer } from './styles';
 import { OText, OButton } from '../../shared';
-import OTPInputView from '@twotalltotems/react-native-otp-input'
+// import OTPInputView from '@twotalltotems/react-native-otp-input'
 import { useTheme } from 'styled-components/native';
 import { otpParams } from '../../../types'
 
@@ -64,14 +64,14 @@ export const Otp = (props: otpParams) => {
                 <OText size={24}>
                     {formatSeconds(otpLeftTime)}
                 </OText>
-                <OTPInputView
+                {/* <OTPInputView
                     style={{ width: '100%', height: 150 }}
                     pinCount={pinCount || 6}
                     codeInputFieldStyle={loginStyle.underlineStyleBase}
                     codeInputHighlightStyle={loginStyle.underlineStyleHighLighted}
                     onCodeFilled={(code: string) => handleLoginOtp(code)}
                     selectionColor={theme.colors.primary}
-                />
+                /> */}
                 <TouchableOpacity onPress={() => handleOnSubmit()} disabled={otpLeftTime > 520}>
                     <OText size={16} mBottom={30} color={otpLeftTime > 520 ? theme.colors.disabled : theme.colors.primary}>
                         {t('RESEND_CODE', 'Resend code')}
