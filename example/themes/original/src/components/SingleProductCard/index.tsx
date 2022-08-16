@@ -120,8 +120,8 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	}
 
 	return (
-		<InView style={{ minHeight: 140 }} triggerOnce={true} onChange={(inView: boolean) => setIsIntersectionObserver(true)}>
-			{isIntersectionObserver && (
+		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => setIsIntersectionObserver(true)}>
+			{isIntersectionObserver ? (
 				<CardContainer
 					style={[
 						styles.container,
@@ -222,6 +222,20 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 						</SoldOut>
 					)}
 				</CardContainer>
+			) : (
+				<Placeholder style={{ padding: 5 }} Animation={Fade}>
+					<View style={{ flexDirection: 'row' }}>
+						<PlaceholderLine
+							width={24}
+							height={70}
+							style={{ marginRight: 10, marginBottom: 10 }}
+						/>
+						<Placeholder style={{ paddingVertical: 10 }}>
+							<PlaceholderLine width={60} style={{ marginBottom: 25 }} />
+							<PlaceholderLine width={20} />
+						</Placeholder>
+					</View>
+				</Placeholder>
 			)}
 		</InView >
 	);

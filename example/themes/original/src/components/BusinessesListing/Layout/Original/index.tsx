@@ -251,6 +251,44 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		setFavoriteIds([...new Set(ids)])
 	}, [businessesList?.businesses?.length])
 
+	useEffect(() => {
+		setIsOpenCities(false)
+	}, [orderState?.options?.city_id])
+
+	if (logosLayout) {
+		return (
+			<BusinessLogosContainer horizontal>
+				{businessesList?.loading ? (
+					<Placeholder Animation={Fade}>
+						{[...Array(10).keys()].map(item => (
+							<PlaceholderLine key={item} width={56} height={56} />
+						))}
+					</Placeholder>
+				) : (
+					<>
+						{businessesList.businesses
+							?.filter(business => business?.slug !== actualSlug && business?.open)
+							?.map(business => (
+								<TouchableOpacity
+									key={business?.id}
+									onPress={() => handleBusinessClick && handleBusinessClick(business)}
+								>
+									<FastImage
+										style={{ width: 56, height: 56, marginRight: 20, borderRadius: 7.6 }}
+										source={{
+											uri: business?.logo,
+											priority: FastImage.priority.normal,
+										}}
+										resizeMode={FastImage.resizeMode.cover}
+									/>
+								</TouchableOpacity>
+							))}
+					</>
+				)}
+			</BusinessLogosContainer>
+		)
+	}
+
 	return (
 		<ScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}
 			refreshControl={
@@ -430,32 +468,30 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						)}
 					/>
 				)}
-				<IOScrollView>
-					{businessesList.businesses?.map(
-						(business: any, i: number) => (
-							<BusinessController
-								key={`${business.id}_` + i}
-								enableIntersection
-								business={business}
-								isBusinessOpen={business.open}
-								handleCustomClick={handleBusinessClick}
-								orderType={orderState?.options?.type}
-								navigation={navigation}
-								businessHeader={business?.header}
-								businessFeatured={business?.featured}
-								businessLogo={business?.logo}
-								businessReviews={business?.reviews}
-								businessDeliveryPrice={business?.delivery_price}
-								businessDeliveryTime={business?.delivery_time}
-								businessPickupTime={business?.pickup_time}
-								businessDistance={business?.distance}
-								handleUpdateBusinessList={handleUpdateBusinessList}
-								favoriteIds={favoriteIds}
-								setFavoriteIds={setFavoriteIds}
-							/>
-						)
-					)}
-				</IOScrollView>
+				{businessesList.businesses?.map(
+					(business: any, i: number) => (
+						<BusinessController
+							key={`${business.id}_` + i}
+							enableIntersection
+							business={business}
+							isBusinessOpen={business.open}
+							handleCustomClick={handleBusinessClick}
+							orderType={orderState?.options?.type}
+							navigation={navigation}
+							businessHeader={business?.header}
+							businessFeatured={business?.featured}
+							businessLogo={business?.logo}
+							businessReviews={business?.reviews}
+							businessDeliveryPrice={business?.delivery_price}
+							businessDeliveryTime={business?.delivery_time}
+							businessPickupTime={business?.pickup_time}
+							businessDistance={business?.distance}
+							handleUpdateBusinessList={handleUpdateBusinessList}
+							favoriteIds={favoriteIds}
+							setFavoriteIds={setFavoriteIds}
+						/>
+					)
+				)}
 				{businessesList.loading && (
 					<>
 						{[

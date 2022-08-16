@@ -24,7 +24,6 @@ import {
 	TopHeader,
 	WrapSearchBar,
 	WrapContent,
-	BusinessProductsListingContainer,
 	FiltProductsContainer,
 	ContainerSafeAreaView,
 	BackgroundGray,
@@ -72,7 +71,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 	const styles = StyleSheet.create({
 		mainContainer: {
-			flex: 1,
+			flex: 1
 		},
 		BackIcon: {
 			paddingRight: 20,
@@ -310,11 +309,14 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 				{isOpenFiltProducts && (
 					<BackgroundGray />
 				)}
-				<BusinessProductsListingContainer
+				<IOScrollView
 					stickyHeaderIndices={[2]}
-					style={styles.mainContainer}
+					style={{
+						...styles.mainContainer,
+						marginBottom: currentCart?.products?.length > 0 && categoryState.products.length !== 0 ?
+							50 : 0
+					}}
 					ref={scrollViewRef}
-					isActiveFloatingButtom={currentCart?.products?.length > 0 && categoryState.products.length !== 0}
 					onScroll={handlePageScroll}
 					onScrollBeginDrag={handleTouchDrag}
 					scrollEventThrottle={16}
