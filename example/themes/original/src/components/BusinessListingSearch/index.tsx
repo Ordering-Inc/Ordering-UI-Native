@@ -33,6 +33,7 @@ import { convertHoursToMinutes } from '../../utils'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { BusinessSearchParams } from '../../types'
 import { MyOrders } from '../MyOrders'
+import { useIsFocused } from '@react-navigation/native';
 
 
 export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
@@ -81,6 +82,8 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     { level: '4', content: '$$$$' },
     { level: '5', content: '$$$$$' }
   ]
+
+  const isFocused = useIsFocused();
 
   const styles = StyleSheet.create({
     container: {
@@ -217,6 +220,11 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     handleSearchbusinessAndProducts(true)
   }, [])
 
+  
+  useEffect(() => {
+    handleChangeTermValue('')
+  }, [isFocused])
+
   const MaxSectionItem = ({ title, options, filter }: any) => {
     const parseValue = (option: number) => {
       return filter === 'max_distance'
@@ -309,9 +317,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   return (
     <ScrollView style={styles.container}>
       <WrapHeader style={{ paddingTop: top + 20, marginVertical: 2 }}>
-        <TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', paddingVertical: 20 }}>
-          <OIcon src={theme.images.general.arrow_left} width={20} />
-        </TouchableOpacity>
         <OText
           size={20}
           mBottom={15}
@@ -323,6 +328,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
       </WrapHeader>
       <SearchWrapper>
         <SearchBar
+          autoFocus
           lazyLoad
           inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
           placeholder={`${t('SEARCH_BUSINESSES', 'Search Businesses')} / ${t('TYPE_AT_LEAST_3_CHARACTERS', 'type at least 3 characters')}`}
