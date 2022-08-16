@@ -122,7 +122,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	}
 
 	return (
-		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => { console.log(product?.id, inView, 'proid'); setIsIntersectionObserver(true) }}>
+		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => setIsIntersectionObserver(true)}>
 			{isIntersectionObserver ? (
 				<CardContainer
 					showAddButton={showAddButton}
