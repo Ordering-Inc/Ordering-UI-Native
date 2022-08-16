@@ -84,7 +84,7 @@ export const ProductActions = styled.View`
   border-top-color: ${(props: any) => props.theme.colors.border};
 `
 export const ExtraOptionWrap = styled.ScrollView`
-	margin-horizontal: -40px;
+	margin-horizontal: 30px;
 `;
 
 export const WeightUnitSwitch = styled.View`
