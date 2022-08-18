@@ -59,7 +59,7 @@ export const PaymentOptionsWebView = (props: PaymentOptionsWebViewParams) => {
     if (e?.nativeEvent?.data && e?.nativeEvent?.data !== 'undefined') {
       let payment = JSON.parse(e.nativeEvent.data);
 
-      if (payment === 'api error') {
+      if (payment === 'api error' || payment === 'Cancelled by user') {
         setShowGateway({ closedByUser: true, open: false })
         setProg(true);
       }
