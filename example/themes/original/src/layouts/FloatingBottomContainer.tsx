@@ -19,7 +19,11 @@ export const Container = styled.View`
 
 export const FloatingBottomContainer = (props: any) => {
   return (
-    <Container style={{ width: windowWidth }}>
+    <Container style={{
+      width: windowWidth,
+      borderTopWidth: props?.borderTopWidth ?? 1,
+      borderRadius: props?.borderRadius ?? 0
+    }}>
       {props.children}
     </Container>
   )
