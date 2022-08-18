@@ -84,7 +84,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
       justifyContent: 'space-between'
     },
     professionalItem: {
-      padding: 11,
+      paddingVertical: 11,
       borderColor: theme.colors.backgroundGray200,
       borderTopWidth: 1
     },
@@ -517,7 +517,7 @@ const ServiceFormUI = (props: ServiceFormParams) => {
 				entireModal
 			>
 				<ScrollView contentContainerStyle={styles.professionalList}>
-          <View style={{ padding: 11 }}>
+          <View style={{ paddingVertical: 11 }}>
             <OText
               size={14}
               weight={'400'}
