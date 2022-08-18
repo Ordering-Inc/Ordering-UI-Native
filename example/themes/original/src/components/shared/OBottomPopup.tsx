@@ -47,19 +47,21 @@ const OBottomPopup = (props: Props) => {
 				</TouchableWithoutFeedback>
 				<View style={{ ...styles.bottomContainer, ...bottomContainerStyle }}>
 					<View style={{ paddingTop: top, paddingBottom: bottom }}>
-						{closeIcon && (
-							<TouchableOpacity onPress={onClose} style={styles.closeIconStyle}>
-								<OIcon
-									src={closeIcon}
-									width={30}
-								/>
-							</TouchableOpacity>
-						)}
-						{!!title && (
-							<Text style={{ ...styles.titleStyle, ...titleStyle }}>
-								{title}
-							</Text>
-						)}
+						<View style={styles.modalTitleStyle}>
+							{closeIcon && (
+								<TouchableOpacity onPress={onClose} style={styles.closeIconStyle}>
+									<OIcon
+										src={closeIcon}
+										width={30}
+									/>
+								</TouchableOpacity>
+							)}
+							{!!title && (
+								<Text style={{ ...styles.titleStyle, ...titleStyle }}>
+									{title}
+								</Text>
+							)}
+						</View>
 						{children}
 					</View>
 				</View>
@@ -86,12 +88,17 @@ const styles = StyleSheet.create({
 	},
 	titleStyle: {
 		fontSize: 20,
-		fontWeight: 'bold',
-		marginVertical: 10
+		fontWeight: 'bold'
 	},
 	closeIconStyle: {
-		paddingTop: 20,
-		paddingLeft: 20
+		position: 'absolute',
+		left: 25,
+		top: 22.5
+	},
+	modalTitleStyle: {
+		position: 'relative',
+		paddingHorizontal: 10,
+		paddingVertical: 20
 	}
 })
 

@@ -101,7 +101,7 @@ export const ReviewTrigger = (props: any) => {
           </FormReviews>
         </View>
       </ReviewOrderContainer>
-      <FloatingBottomContainer>
+      <FloatingBottomContainer borderTopWidth={0} borderRadius={10}>
         <ActionContainer>
           <OButton
             textStyle={{ color: theme.colors.white, paddingRight: 10 }}
