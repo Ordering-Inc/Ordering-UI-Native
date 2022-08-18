@@ -51,10 +51,10 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
           <GrayBackground>
             <OText size={16} weight='bold'>{t('BUSINESS_DETAILS', 'Business Details')}</OText>
           </GrayBackground>
-          {businessState?.business?.email && (
+          {!!businessState?.business?.email && (
             <OText size={14} mBottom={5} mLeft={15} style={{ marginTop: 10 }}>{t('EMAIL', 'Email')}: <OText color={theme.colors.textSecondary}>{businessState?.business?.email}</OText></OText>
           )}
-          {businessState?.business?.cellphone && (
+          {!!businessState?.business?.cellphone && (
             <OText size={14} mBottom={20} mLeft={15}>{t('CELLPHONE', 'Cellphone')}: <OText color={theme.colors.textSecondary}>{businessState?.business?.cellphone}</OText></OText>
           )}
 
