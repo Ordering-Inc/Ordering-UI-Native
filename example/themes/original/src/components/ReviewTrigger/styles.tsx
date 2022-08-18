@@ -1,7 +1,7 @@
 import styled from 'styled-components/native'
 
 export const ReviewOrderContainer = styled.ScrollView`
-  padding: 20px 40px;
+  padding: 0 25px;
   margin-bottom: 100px;
 `
 
@@ -13,7 +13,7 @@ export const BusinessLogo = styled.View`
 export const FormReviews = styled.View`
   flex: 1;
   height: 100%;
-  margin-top: 30px;
+  margin-top: 10px;
 `
 
 export const ActionContainer = styled.View`

@@ -85,7 +85,7 @@ export const BusinessesListing = (props: any) => {
           transparent={true}
           onClose={() => setLastOrderReview({ ...lastOrderReview, isReviewOpen: false, order: defaultOrder })}
           title={t('HEY', 'Hey! ') + t('HOW_WAS_YOUR_ORDER', 'How was your order?')}
-          bottomContainerStyle={{ height: 'auto' }}
+          bottomContainerStyle={{ height: 'auto', borderRadius: 10 }}
           titleStyle={{ textAlign: 'center' }}
           closeIcon={theme.images.general.close}
         >
