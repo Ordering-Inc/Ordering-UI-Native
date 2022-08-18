@@ -49,6 +49,12 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
       <WrapMainContent>
         <InnerContent>
           <GrayBackground>
+            <OText size={16} weight='bold'>{t('BUSINESS_DETAILS', 'Business Details')}</OText>
+          </GrayBackground>
+          <OText size={14} mBottom={5} mLeft={15} style={{ marginTop: 10 }}>{t('EMAIL', 'Email')}: <OText color={theme.colors.textSecondary}>{businessState?.business?.email}</OText></OText>
+          <OText size={14} mBottom={20} mLeft={15}>{t('CELLPHONE', 'Cellphone')}: <OText color={theme.colors.textSecondary}>{businessState?.business?.cellphone}</OText></OText>
+
+          <GrayBackground>
             <OText size={16} weight='bold'>{t('BUSINESS_LOCATION', 'Business Location')}</OText>
           </GrayBackground>
           {businessLocation.location && (
