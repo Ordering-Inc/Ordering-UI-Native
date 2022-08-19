@@ -25,3 +25,21 @@ export const MaskCont = styled.View`
   background-color: #0000004D;
   height: 100%;
 `;
+
+export const OTabs = styled.View`
+  flex-direction: row;
+  width: 100%;
+  margin-bottom: -1px;
+  justify-content: space-between;
+`;
+
+export const OTab = styled.View`
+  padding-bottom: 10px;
+  border-bottom-width: 1px;
+  padding-horizontal: 10px;
+`;
+
+export const TabBtn = styled.TouchableOpacity`
+  min-height: 30px;
+  height: 30px;
+`;
