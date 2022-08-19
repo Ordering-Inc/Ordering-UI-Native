@@ -49,10 +49,11 @@ const OBottomPopup = (props: Props) => {
 					<View style={{ paddingTop: top, paddingBottom: bottom }}>
 						<View style={styles.modalTitleStyle}>
 							{closeIcon && (
-								<TouchableOpacity onPress={onClose} style={styles.closeIconStyle}>
+								<TouchableOpacity onPress={() => onClose()} style={styles.closeIconStyle}>
 									<OIcon
 										src={closeIcon}
-										width={30}
+										width={20}
+										height={20}
 									/>
 								</TouchableOpacity>
 							)}
@@ -93,7 +94,8 @@ const styles = StyleSheet.create({
 	closeIconStyle: {
 		position: 'absolute',
 		left: 25,
-		top: 22.5
+		top: 25,
+		zIndex: 100
 	},
 	modalTitleStyle: {
 		position: 'relative',
