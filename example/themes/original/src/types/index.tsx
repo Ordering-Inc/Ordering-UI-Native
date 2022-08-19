@@ -169,6 +169,7 @@ export interface BusinessesListingParams {
 	priceLevelSelected?: any;
 	handleChangePriceLevel?: any;
 	businessTypeSelected?: any;
+	logosLayout?: boolean;
 }
 export interface HighestRatedBusinessesParams {
 	businessesList: { businesses: Array<any>, loading: boolean, error: null | string };
@@ -549,7 +550,9 @@ export interface OrderTypeSelectParams {
 	defaultValue?: number;
 	configTypes?: Array<any>;
 	orderTypes: Array<any>;
-	setOrderTypeValue?: (value: number) => any
+	setOrderTypeValue?: (value: number) => any,
+	isChewLayout?: boolean;
+	chewOrderTypes?: any;
 }
 export interface UpsellingProductsParams {
 	isCustomMode?: boolean;
