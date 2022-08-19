@@ -49,6 +49,7 @@ const ProfileUI = (props: ProfileParams) => {
     handleToggleAvalaibleStatusDriver,
     userState,
     isAvailableLoading,
+    isAlsea
   } = props;
 
   const [{ user }] = useSession();
@@ -459,6 +460,7 @@ const ProfileUI = (props: ProfileParams) => {
                 hideUpdateButton
                 handleCancelEdit={handleCancelEdit}
                 toggleIsEdit={toggleIsEdit}
+                isAlsea={isAlsea}
               />
             </View>
           )}

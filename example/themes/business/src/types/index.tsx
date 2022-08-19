@@ -41,6 +41,7 @@ export interface ProfileParams {
   validationFields?: any;
   showField?: any;
   isRequiredField?: any;
+  isAlsea?: boolean;
 }
 
 export interface AddressListParams {
