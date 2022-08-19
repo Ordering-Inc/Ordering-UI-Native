@@ -36,6 +36,7 @@ export const UserFormDetailsUI = (props: any) => {
     handleCancelEdit,
     toggleIsEdit,
     isCheckout,
+    isAlsea
   } = props;
 
   const theme = useTheme();
@@ -265,7 +266,9 @@ export const UserFormDetailsUI = (props: any) => {
               }).map(
                 (field: any) =>
                   showField &&
-                  showField(field.code) && (
+                  showField(field.code) &&
+                  !isAlsea
+                  && (
                     <React.Fragment key={field.id}>
                       <OText style={styles.label}>
                         {t(field?.code.toUpperCase(), field?.name)}
@@ -442,7 +445,7 @@ export const UserFormDetailsUI = (props: any) => {
                 </OText>
               )}
 
-              {!!showInputPhoneNumber && (
+              {!!showInputPhoneNumber && !isAlsea && (
                 <WrapperPhone>
                   <PhoneInputNumber
                     data={phoneInputData}
