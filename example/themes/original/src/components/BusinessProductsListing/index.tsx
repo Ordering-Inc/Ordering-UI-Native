@@ -276,7 +276,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							</WrapSearchBar>
 						)}
 					</TopHeader>
-					{showBusinessNearCity && (
+					{showBusinessNearCity && businessState?.business?.city_id && (
 						<NearBusiness>
 							<BusinessesListing
 								logosLayout
