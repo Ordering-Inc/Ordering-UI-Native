@@ -4,6 +4,7 @@ import {
 	useConfig,
 	useOrder,
 	useUtils,
+	useSession,
 	SingleProductCard as SingleProductCardController
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -32,7 +33,9 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		productAddedToCartLength,
 		style,
 		handleFavoriteProduct,
-		enableIntersection
+		enableIntersection,
+		navigation,
+		businessId
 	} = props;
 
 	const theme = useTheme();
@@ -86,9 +89,9 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		}
 	});
 
-
 	const [, t] = useLanguage();
 	const [stateConfig] = useConfig();
+	const [{ auth }] = useSession()
 	const [{ parsePrice, optimizeImage }] = useUtils();
 	const [orderState] = useOrder()
 	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
@@ -118,7 +121,11 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	);
 
 	const handleChangeFavorite = () => {
-		handleFavoriteProduct && handleFavoriteProduct(!product?.favorite)
+		if (auth) {
+			handleFavoriteProduct && handleFavoriteProduct(!product?.favorite)
+		} else {
+			navigation && navigation.navigate('Login');
+		}
 	}
 
 	return (
@@ -148,7 +155,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									weight={'500'}
 									numberOfLines={1}
 									ellipsizeMode="tail"
-									style={styles.line18}>
+									style={{ ...styles.line18, flex: 1 }}>
 									{product?.name}
 								</OText>
 								<TouchableOpacity

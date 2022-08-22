@@ -133,7 +133,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			borderRadius: 8,
 			marginHorizontal: 40,
 			height: 45
-		}
+		},
+		businessSkeleton: {
+			borderRadius: 8,
+			marginRight: 20,
+			width: 56,
+			height: 56
+		},
 	});
 
 
@@ -286,9 +292,13 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			<BusinessLogosContainer horizontal>
 				{businessesList?.loading ? (
 					<Placeholder Animation={Fade}>
-						{[...Array(10).keys()].map(item => (
-							<PlaceholderLine key={item} width={56} height={56} />
-						))}
+						<View style={{ flexDirection: 'row' }}>
+							{[...Array(10).keys()].map(i => (
+								<View style={styles.businessSkeleton} key={i}>
+									<PlaceholderLine style={{ width: '100%', height: '100%' }} />
+								</View>
+							))}
+						</View>
 					</Placeholder>
 				) : (
 					<>

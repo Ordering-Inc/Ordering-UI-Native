@@ -287,7 +287,8 @@ export interface BusinessProductsListParams {
 	onClickCategory?: any,
 	lazyLoadProductsRecommended?: boolean,
 	isFiltMode?: boolean,
-	handleUpdateProducts?: any
+	handleUpdateProducts?: any,
+	navigation?: any;
 }
 export interface SingleProductCardParams {
 	businessId: any;
@@ -300,6 +301,7 @@ export interface SingleProductCardParams {
 	handleFavoriteProduct?: any;
 	handleUpdateProducts?: any;
 	enableIntersection?: boolean;
+	navigation?: any;
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -692,7 +694,9 @@ export interface SingleOrderCardParams {
 	onNavigationRedirect?: (route: string, params?: any) => {},
 	pastOrders: any,
 	isMessageView?: any,
-	handleClickOrder: (value: any) => {}
+	handleClickOrder: (value: any) => {},
+	handleRemoveCart: () => {},
+	cartState: any
 }
 
 export interface PreviousBusinessOrderedParams {
