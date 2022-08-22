@@ -7,6 +7,7 @@ import {
 	useLanguage,
 	useConfig,
 	useToast,
+	useSession,
 	ToastType
 } from 'ordering-components/native';
 import { OIcon, OText } from '../shared';
@@ -53,6 +54,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const [{ parsePrice, parseDistance, parseNumber, optimizeImage }] = useUtils();
 	const [, { showToast }] = useToast()
 	const [orderState] = useOrder();
+	const [ { auth }] = useSession()
 	const [configState] = useConfig();
 	const [, t] = useLanguage();
 	const theme = useTheme()
@@ -135,7 +137,11 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	}
 
 	const handleChangeFavorite = () => {
-		handleFavoriteBusiness && handleFavoriteBusiness(!business?.favorite)
+		if (auth) {
+			handleFavoriteBusiness && handleFavoriteBusiness(!business?.favorite)
+		} else {
+			navigation && navigation.navigate('Login');
+		}
 	}
 
 	return (
