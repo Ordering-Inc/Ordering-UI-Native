@@ -141,9 +141,9 @@ const CheckoutUI = (props: any) => {
 	const [showGateway, setShowGateway] = useState<any>({ closedByUsed: false, open: false });
 	const [webviewPaymethod, setWebviewPaymethod] = useState<any>(null)
 	const [isOpen, setIsOpen] = useState(false)
-  const [requiredFields, setRequiredFields] = useState<any>([])
+	const [requiredFields, setRequiredFields] = useState<any>([])
 
-	const placeSpotTypes = [3, 4]
+	const placeSpotTypes = [4]
 	const businessConfigs = businessDetails?.business?.configs ?? []
 	const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
 	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
@@ -178,15 +178,15 @@ const CheckoutUI = (props: any) => {
 		}
 	}
 
-	const handlePlaceOrder = (confirmPayment : any) => {
+	const handlePlaceOrder = (confirmPayment: any) => {
 		if (!userErrors.length && !requiredFields?.length) {
 			handlerClickPlaceOrder && handlerClickPlaceOrder(null, null, confirmPayment)
 			return
 		}
 		if (requiredFields?.length) {
-      setIsOpen(true)
-      return
-    }
+			setIsOpen(true)
+			return
+		}
 		let stringError = ''
 		Object.values(userErrors).map((item: any, i: number) => {
 			stringError += (i + 1) === userErrors.length ? `- ${item?.message || item}` : `- ${item?.message || item}\n`
@@ -646,6 +646,7 @@ const CheckoutUI = (props: any) => {
 											cart={cart}
 											isCartPending={cart?.status === 2}
 											onNavigationRedirect={onNavigationRedirect}
+											placeSpotTypes={placeSpotTypes}
 										/>
 									</>
 								)}
