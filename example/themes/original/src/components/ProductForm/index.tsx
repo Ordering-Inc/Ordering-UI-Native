@@ -304,7 +304,9 @@ export const ProductOptionsUI = (props: any) => {
 									selOpt == id ? theme.colors.textNormal : theme.colors.textSecondary
 								}
 								size={selOpt == id ? 14 : 12}
-								weight={selOpt == id ? '600' : 'normal'}>
+								weight={selOpt == id ? '600' : 'normal'}
+								style={{ maxWidth: 150 }}
+								numberOfLines={1}>
 								{name}
 							</OText>
 						</TouchableOpacity>
