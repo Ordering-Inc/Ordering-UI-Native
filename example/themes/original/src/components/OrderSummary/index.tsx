@@ -39,7 +39,8 @@ const OrderSummaryUI = (props: any) => {
     commentState,
     handleChangeComment,
     onNavigationRedirect,
-    handleRemoveOfferClick
+    handleRemoveOfferClick,
+    placeSpotTypes
   } = props;
 
   const theme = useTheme()
@@ -52,7 +53,6 @@ const OrderSummaryUI = (props: any) => {
   const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
   const [openPlaceModal, setOpenPlaceModal] = useState(false)
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled;
-  const placeSpotTypes = [3, 4]
 
   const handleDeleteClick = (product: any) => {
     removeProduct(product, cart)
@@ -304,7 +304,7 @@ const OrderSummaryUI = (props: any) => {
                   </OSTable>
                 </View>
               )}
-              {placeSpotTypes.includes(orderState?.options?.type) && (
+              {placeSpotTypes && placeSpotTypes.includes(orderState?.options?.type) && (
                 <OSTable style={{ marginTop: 15 }}>
                   <OText size={14} lineHeight={21} weight={'600'}>
                     {t('SPOT', 'Spot')}: {cart?.place?.name || t('NO_SELECTED', 'No selected')}
