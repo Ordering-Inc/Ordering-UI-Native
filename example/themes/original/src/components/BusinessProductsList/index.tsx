@@ -35,7 +35,8 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     onClickCategory,
     lazyLoadProductsRecommended,
     handleUpdateProducts,
-    isFiltMode
+    isFiltMode,
+    navigation
   } = props;
 
   const [, t] = useLanguage();
@@ -129,6 +130,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               onProductClick={() => onProductClick(product)}
               productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
               handleUpdateProducts={handleUpdateProducts}
+							navigation={navigation}
             />
           ))
       }
@@ -155,6 +157,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       onProductClick={onProductClick}
                       handleUpdateProducts={handleUpdateProducts}
                       productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
+                      navigation={navigation}
                     />
                   ),
               )}
@@ -248,6 +251,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       categoryState={categoryState}
                       onProductClick={onProductClick}
                       handleUpdateProducts={handleUpdateProducts}
+                      navigation={navigation}
                       productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
                     />
                   ))}

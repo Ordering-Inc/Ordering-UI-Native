@@ -323,6 +323,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 								setSubcategoriesSelected={setSubcategoriesSelected}
 								onClickCategory={handleChangeCategory}
 								handleUpdateProducts={handleUpdateProducts}
+								navigation={navigation}
 								isFiltMode
 							/>
 						</View>
@@ -425,6 +426,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 									setSubcategoriesSelected={setSubcategoriesSelected}
 									onClickCategory={handleChangeCategory}
 									handleUpdateProducts={handleUpdateProducts}
+									navigation={navigation}
 								/>
 							</WrapContent>
 						</>
@@ -447,6 +449,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 									isBusinessLoading={loading}
 									errorQuantityProducts={errorQuantityProducts}
 									handleUpdateProducts={handleUpdateProducts}
+									navigation={navigation}
 								/>
 							</WrapContent>
 						</>

@@ -65,21 +65,19 @@ export const WrapperSubOption = styled.View`
 `
 
 export const ProductComment = styled.View`
-  padding-bottom: 50px;
+  padding-bottom: 60px;
 `
 
 export const ProductActions = styled.View`
   position: absolute;
   bottom: 0px;
-	min-height: 70px;
   padding-top: ${(props: any) => props.ios ? '20px' : '0'};
   padding-horizontal: 40px;
+  padding-vertical: 20px;
   width: 100%;
-  flex-direction: row;
+  flex-direction: ${(props: any) => props.isColumn ? 'column' : 'row'};
   background-color: #FFF;
   z-index: 1000;
-  align-items: center;
-  justify-content: space-between;
   border-top-width: 1px;
   border-top-color: ${(props: any) => props.theme.colors.border};
 `
