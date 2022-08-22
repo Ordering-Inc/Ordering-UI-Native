@@ -151,6 +151,13 @@ export const ProductOptionsUI = (props: any) => {
 		productTagNameStyle: {
 			paddingHorizontal: 6,
 			marginRight: 5
+		},
+		actionContainer: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'space-between',
+			width: '100%',
+			marginTop: 10
 		}
 	});
 
@@ -367,6 +374,77 @@ export const ProductOptionsUI = (props: any) => {
 			setPricePerWeightUnit(product?.price / product?.weight)
 		}
 	}, [product])
+
+	const ActionButton = () => {
+		return (
+			<View
+				style={{
+					width: isHaveWeight ? '100%' : ((isSoldOut || maxProductQuantity <= 0) ? '60%' : '40%'),
+				}}>
+				{((productCart &&
+					auth &&
+					orderState.options?.address_id) || (isSoldOut || maxProductQuantity <= 0)) && (
+						<OButton
+							onClick={() => handleSaveProduct()}
+							imgRightSrc=""
+							text={`${orderState.loading
+								? t('LOADING', 'Loading')
+								: (isSoldOut || maxProductQuantity <= 0)
+									? t('SOLD_OUT', 'Sold out')
+									: editMode
+										? t('UPDATE', 'Update')
+										: t('ADD', 'Add')
+								}`}
+							isDisabled={isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order))}
+							textStyle={{
+								color: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.primary : theme.colors.white,
+								fontSize: orderState.loading || editMode ? 10 : 14
+							}}
+							style={{
+								backgroundColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order)) ? theme.colors.lightGray : theme.colors.primary,
+								borderColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order)) ? theme.colors.white : theme.colors.primary,
+								opacity: saveErrors || isSoldOut || maxProductQuantity <= 0 ? 0.3 : 1,
+								borderRadius: 7.6,
+								height: 44,
+								shadowOpacity: 0,
+								borderWidth: 1,
+								marginTop: isHaveWeight ? 10: 0
+							}}
+						/>
+					)}
+				{auth &&
+					!orderState.options?.address_id &&
+					(orderState.loading ? (
+						<OButton
+							isDisabled
+							text={t('LOADING', 'Loading')}
+							imgRightSrc=""
+							textStyle={{ fontSize: 10 }}
+						/>
+					) : (
+						<OButton onClick={navigation.navigate('AddressList')} />
+					))}
+				{!auth && (
+					<OButton
+						isDisabled={isSoldOut || maxProductQuantity <= 0}
+						onClick={() => handleRedirectLogin()}
+						text={
+							isSoldOut || maxProductQuantity <= 0
+								? t('SOLD_OUT', 'Sold out')
+								: t('LOGIN_SIGNUP', 'Login / Sign Up')
+						}
+						imgRightSrc=""
+						textStyle={{ color: theme.colors.primary, fontSize: 14 }}
+						style={{
+							height: 44,
+							borderColor: theme.colors.primary,
+							backgroundColor: theme.colors.white,
+						}}
+					/>
+				)}
+			</View>
+		)
+	}
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
@@ -888,173 +966,114 @@ export const ProductOptionsUI = (props: any) => {
 				</ScrollView>
 			)}
 			{!loading && !error && product && (
-				<ProductActions ios={Platform?.OS === 'ios'}>
-					<View>
-						<OText size={16} lineHeight={24} weight={'600'}>
-							{productCart.total ? parsePrice(productCart?.total) : ''}
-						</OText>
-						{product?.minimum_per_order && productCart?.quantity < product?.minimum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MINIMUM_TO_ORDER', 'Min. _number_ ').replace('_number_', product?.minimum_per_order)}</OText>}
-						{product?.maximum_per_order && productCart?.quantity > product?.maximum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MAXIMUM_TO_ORDER', 'Max. _number_'.replace('_number_', product?.maximum_per_order))}</OText>}
-					</View>
-					{productCart && !isSoldOut && maxProductQuantity > 0 && (
-						<View style={styles.quantityControl}>
-							<TouchableOpacity
-								onPress={decrement}
-								disabled={productCart.quantity === 1 || isSoldOut}>
-								<OIcon
-									src={theme.images.general.minus}
-									width={16}
-									color={
-										productCart.quantity === 1 || isSoldOut
-											? theme.colors.backgroundGray
-											: theme.colors.backgroundDark
-									}
-								/>
-							</TouchableOpacity>
-							{qtyBy?.pieces && (
-								<TextInput
-									keyboardType='numeric'
-									value={`${productCart?.quantity > 0 ? productCart?.quantity : ''}`}
-									onChangeText={(val: any) => onChangeProductCartQuantity(parseInt(val))}
-									editable={!orderState.loading}
-									style={{
-										borderWidth: 1,
-										textAlign: 'center',
-										minWidth: 60,
-										borderRadius: 8,
-										borderColor: theme.colors.inputBorderColor,
-										height: 44,
-										marginHorizontal: 10
-									}}
-								/>
-							)}
-							{qtyBy?.weight_unit && (
-								<OText
-									size={12}
-									lineHeight={18}
-									style={{ minWidth: 40, textAlign: 'center' }}
-								>
-									{productCart.quantity * product?.weight}
-								</OText>
-							)}
-							<TouchableOpacity
-								onPress={increment}
-								disabled={
-									maxProductQuantity <= 0 ||
-									productCart.quantity >= maxProductQuantity ||
-									isSoldOut
-								}>
-								<OIcon
-									src={theme.images.general.plus}
-									width={16}
-									color={
-										maxProductQuantity <= 0 ||
+				<ProductActions ios={Platform?.OS === 'ios'} isColumn={isHaveWeight}>
+					<View style={styles.actionContainer}>
+						<View>
+							<OText size={16} lineHeight={24} weight={'600'}>
+								{productCart.total ? parsePrice(productCart?.total) : ''}
+							</OText>
+							{product?.minimum_per_order && productCart?.quantity < product?.minimum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MINIMUM_TO_ORDER', 'Min. _number_ ').replace('_number_', product?.minimum_per_order)}</OText>}
+							{product?.maximum_per_order && productCart?.quantity > product?.maximum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MAXIMUM_TO_ORDER', 'Max. _number_'.replace('_number_', product?.maximum_per_order))}</OText>}
+						</View>
+						{productCart && !isSoldOut && maxProductQuantity > 0 && (
+							<>
+								<View style={styles.quantityControl}>
+									<TouchableOpacity
+										onPress={decrement}
+										disabled={productCart.quantity === 1 || isSoldOut}>
+										<OIcon
+											src={theme.images.general.minus}
+											width={16}
+											color={
+												productCart.quantity === 1 || isSoldOut
+													? theme.colors.backgroundGray
+													: theme.colors.backgroundDark
+											}
+										/>
+									</TouchableOpacity>
+									{qtyBy?.pieces && (
+										<TextInput
+											keyboardType='numeric'
+											value={`${productCart?.quantity > 0 ? productCart?.quantity : ''}`}
+											onChangeText={(val: any) => onChangeProductCartQuantity(parseInt(val))}
+											editable={!orderState.loading}
+											style={{
+												borderWidth: 1,
+												textAlign: 'center',
+												minWidth: 60,
+												borderRadius: 8,
+												borderColor: theme.colors.inputBorderColor,
+												height: 44,
+												marginHorizontal: 10
+											}}
+										/>
+									)}
+									{qtyBy?.weight_unit && (
+										<OText
+											size={12}
+											lineHeight={18}
+											style={{ minWidth: 40, textAlign: 'center' }}
+										>
+											{productCart.quantity * product?.weight}
+										</OText>
+									)}
+									<TouchableOpacity
+										onPress={increment}
+										disabled={
+											maxProductQuantity <= 0 ||
 											productCart.quantity >= maxProductQuantity ||
 											isSoldOut
-											? theme.colors.backgroundGray
-											: theme.colors.backgroundDark
-									}
-								/>
-							</TouchableOpacity>
-							{isHaveWeight && (
-								<WeightUnitSwitch>
-									<TouchableOpacity
-										onPress={() => handleSwitchQtyUnit('pieces')}
-									>
-										<WeightUnitItem active={qtyBy?.pieces}>
-											<OText
-												size={12}
-												lineHeight={18}
-												color={qtyBy?.pieces ? theme.colors.primary : theme.colors.textNormal}
-											>
-												{t('PIECES', 'pcs')}
-											</OText>
-										</WeightUnitItem>
+										}>
+										<OIcon
+											src={theme.images.general.plus}
+											width={16}
+											color={
+												maxProductQuantity <= 0 ||
+													productCart.quantity >= maxProductQuantity ||
+													isSoldOut
+													? theme.colors.backgroundGray
+													: theme.colors.backgroundDark
+											}
+										/>
 									</TouchableOpacity>
-									<View style={{ alignItems: 'flex-start' }}>
+								</View>
+								{isHaveWeight && (
+									<WeightUnitSwitch>
 										<TouchableOpacity
-											onPress={() => handleSwitchQtyUnit('weight_unit')}
+											onPress={() => handleSwitchQtyUnit('pieces')}
 										>
-											<WeightUnitItem active={qtyBy?.weight_unit}>
+											<WeightUnitItem active={qtyBy?.pieces}>
 												<OText
 													size={12}
 													lineHeight={18}
-													color={qtyBy?.weight_unit ? theme.colors.primary : theme.colors.textNormal}
+													color={qtyBy?.pieces ? theme.colors.primary : theme.colors.textNormal}
 												>
-													{product?.weight_unit}
+													{t('PIECES', 'pcs')}
 												</OText>
 											</WeightUnitItem>
 										</TouchableOpacity>
-									</View>
-								</WeightUnitSwitch>
-							)}
-						</View>
-					)}
-					<View
-						style={{
-							width: isSoldOut || maxProductQuantity <= 0 ? '60%' : '40%',
-						}}>
-						{((productCart &&
-							auth &&
-							orderState.options?.address_id) || (isSoldOut || maxProductQuantity <= 0)) && (
-								<OButton
-									onClick={() => handleSaveProduct()}
-									imgRightSrc=""
-									text={`${orderState.loading
-										? t('LOADING', 'Loading')
-										: (isSoldOut || maxProductQuantity <= 0)
-											? t('SOLD_OUT', 'Sold out')
-											: editMode
-												? t('UPDATE', 'Update')
-												: t('ADD', 'Add')
-										}`}
-									isDisabled={isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order))}
-									textStyle={{
-										color: saveErrors || isSoldOut || maxProductQuantity <= 0 ? theme.colors.primary : theme.colors.white,
-										fontSize: orderState.loading || editMode ? 10 : 14
-									}}
-									style={{
-										backgroundColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order)) ? theme.colors.lightGray : theme.colors.primary,
-										borderColor: saveErrors || isSoldOut || maxProductQuantity <= 0 || (product?.minimum_per_order && (productCart?.quantity < product?.minimum_per_order)) || (product?.maximum_per_order && (productCart?.quantity > product?.maximum_per_order)) ? theme.colors.white : theme.colors.primary,
-										opacity: saveErrors || isSoldOut || maxProductQuantity <= 0 ? 0.3 : 1,
-										borderRadius: 7.6,
-										height: 44,
-										shadowOpacity: 0,
-										borderWidth: 1,
-									}}
-								/>
-							)}
-						{auth &&
-							!orderState.options?.address_id &&
-							(orderState.loading ? (
-								<OButton
-									isDisabled
-									text={t('LOADING', 'Loading')}
-									imgRightSrc=""
-									textStyle={{ fontSize: 10 }}
-								/>
-							) : (
-								<OButton onClick={navigation.navigate('AddressList')} />
-							))}
-						{!auth && (
-							<OButton
-								isDisabled={isSoldOut || maxProductQuantity <= 0}
-								onClick={() => handleRedirectLogin()}
-								text={
-									isSoldOut || maxProductQuantity <= 0
-										? t('SOLD_OUT', 'Sold out')
-										: t('LOGIN_SIGNUP', 'Login / Sign Up')
-								}
-								imgRightSrc=""
-								textStyle={{ color: theme.colors.primary, fontSize: 14 }}
-								style={{
-									height: 44,
-									borderColor: theme.colors.primary,
-									backgroundColor: theme.colors.white,
-								}}
-							/>
+										<View style={{ alignItems: 'flex-start' }}>
+											<TouchableOpacity
+												onPress={() => handleSwitchQtyUnit('weight_unit')}
+											>
+												<WeightUnitItem active={qtyBy?.weight_unit}>
+													<OText
+														size={12}
+														lineHeight={18}
+														color={qtyBy?.weight_unit ? theme.colors.primary : theme.colors.textNormal}
+													>
+														{product?.weight_unit}
+													</OText>
+												</WeightUnitItem>
+											</TouchableOpacity>
+										</View>
+									</WeightUnitSwitch>
+								)}
+							</>
 						)}
+						{!isHaveWeight && <ActionButton />}
 					</View>
+					{isHaveWeight && <ActionButton />}
 				</ProductActions>
 			)}
 		</SafeAreaView>

@@ -9,6 +9,7 @@ import { OBottomPopup } from '../shared';
 import { ReviewTrigger } from '../ReviewTrigger';
 
 export const BusinessesListing = (props: any) => {
+  const { logosLayout } = props
   const theme = useTheme()
   const layout = theme?.layouts?.business_listing_view?.components?.layout?.type || 'original'
   const [, t] = useLanguage();
@@ -76,8 +77,8 @@ export const BusinessesListing = (props: any) => {
 
   return (
     <>
-      {(layout === 'original') && <OriginalBusinessListing {...props} />}
-      {(layout === 'appointment') && <AppointmentBusinessListing {...props} />}
+      {((layout === 'original') || logosLayout) && <OriginalBusinessListing {...props} />}
+      {(layout === 'appointment') && !logosLayout && <AppointmentBusinessListing {...props} />}
 
       {lastOrderReview?.isReviewOpen && (
         <OBottomPopup

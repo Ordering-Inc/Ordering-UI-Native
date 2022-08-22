@@ -64,4 +64,5 @@ export const ProfessionalFilterWrapper = styled.View`
 export const NearBusiness = styled.View`
   width: 100%;
   padding-left: 20px;
+  max-height: 80px;
 `

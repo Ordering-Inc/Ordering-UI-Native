@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   SingleOrderCard as SingleOrderCardController,
   useUtils,
+  useOrder,
   useLanguage
 } from 'ordering-components/native';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -9,6 +10,7 @@ import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OButton } from '../shared';
 import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import { SingleOrderCardParams } from '../../types';
+import { OAlert } from '../../../../../src/components/shared'
 
 import {
   Container,
@@ -32,14 +34,18 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
     onNavigationRedirect,
     pastOrders,
     isMessageView,
-    handleClickOrder
+    handleClickOrder,
+    handleRemoveCart,
+    cartState
   } = props;
 
   const [{ parsePrice, optimizeImage, parseDate }] = useUtils();
   const [, t] = useLanguage();
+  const [{ carts }] = useOrder()
   const theme = useTheme();
 
   const [reorderSelected, setReorderSelected] = useState<number | null>(null);
+  const [confirm, setConfirm] = useState<any>({ open: false, content: null, handleOnAccept: null, id: null, title: null })
 
   const allowedOrderStatus = [1, 2, 5, 6, 10, 11, 12];
 
@@ -97,9 +103,21 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
     }
   });
 
-  const handleReorderClick = (id: number) => {
-    setReorderSelected(id);
-    handleReorder && handleReorder(id);
+  const handleReorderClick = (order: any) => {
+    if (carts[`businessId:${order?.business_id}`] && carts[`businessId:${order?.business_id}`]?.products?.length > 0) {
+      setConfirm({
+        open: true,
+        content: [t('QUESTION_DELETE_PRODUCTS_FROM_CART', 'Are you sure that you want to delete all products from cart?')],
+        title: t('ORDER', 'Order'),
+        handleOnAccept: async () => {
+          handleRemoveCart()
+          setConfirm({ ...confirm, open: false })
+        }
+      })
+    } else {
+      setReorderSelected(order?.id);
+      handleReorder && handleReorder(order?.id);
+    }
   };
 
   const handleClickOrderReview = (order: any) => {
@@ -135,134 +153,151 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
     handleFavoriteOrder && handleFavoriteOrder(!order?.favorite)
   };
 
+  const handleOriginalReorder = () => {
+    setConfirm({ ...confirm, open: false, title: null })
+    setReorderSelected(order?.id);
+    handleReorder && handleReorder(order?.id);
+  }
+
   return (
-    <Container
-      onPress={() => handleClickViewOrder(order?.uuid)}
-      activeOpacity={0.7}
-    >
-      <InnerContainer>
-        {!!order.business?.logo && (
-          <Logo style={styles.logoWrapper}>
-            <OIcon
-              url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
-              style={styles.logo}
-            />
-          </Logo>
-        )}
-        <CardInfoWrapper>
-          <ContentHeader>
-            <View style={{ flex: 1 }}>
-              <OText size={12} lineHeight={18} weight={'600'} numberOfLines={1} ellipsizeMode={'tail'}>
-                {order.business?.name}
-              </OText>
-            </View>
-            {!!!pastOrders && (
-              <>
-                {isMessageView ? (
-                  <>
-                    {order?.unread_count > 0 && (
-                      <UnreadMessageCounter>
-                        <OText size={12} color={theme.colors.primary} lineHeight={18} >
-                          {order?.unread_count}
-                        </OText>
-                      </UnreadMessageCounter>
-                    )}
-                  </>
-                ) : (
-                  <Price>
-                    <OText size={12} lineHeight={18}>
-                      {parsePrice(order?.summary?.total || order?.total)}
-                    </OText>
-                  </Price>
-                )}
-              </>
-            )}
-            {!!pastOrders && (
-              <ButtonWrapper>
-                {allowedOrderStatus.includes(parseInt(order?.status)) &&
-                  !order.review && (
-                    <TouchableOpacity
-                      onPress={() => handleClickOrderReview(order)}
-                      style={styles.reviewButton}>
-                      <OText size={10} color={theme.colors.primary} numberOfLines={1}>
-                        {t('REVIEW', 'Review')}
-                      </OText>
-                    </TouchableOpacity>
-                  )}
-                {order.cart && (
-                  <OButton
-                    text={t('REORDER', 'Reorder')}
-                    imgRightSrc={''}
-                    textStyle={styles.buttonText}
-                    style={
-                      reorderLoading && order.id === reorderSelected
-                        ? styles.reorderLoading
-                        : styles.reorderbutton
-                    }
-                    onClick={() => handleReorderClick(order.id)}
-                    isLoading={reorderLoading && order.id === reorderSelected}
-                  />
-                )}
-              </ButtonWrapper>
-            )}
-          </ContentHeader>
-          <ContentFooter>
-            <View style={{ flex: 1 }}>
-              <View style={styles.infoText}>
-                {!!!pastOrders && (
-                  <>
-                    <OText
-                      size={10}
-                      space
-                      color={theme.colors.textSecondary}
-                      style={{ marginVertical: 3 }}
-                      lineHeight={15}
-                      numberOfLines={1}
-                    >
-                      {t('ORDER_NO', 'Order No') + '.'}
-                    </OText>
-                    <OText
-                      size={10}
-                      color={theme.colors.textSecondary}
-                      style={{ marginVertical: 3 }}
-                      lineHeight={15}
-                      numberOfLines={1}
-                    >
-                      {order.id + ` \u2022 `}
-                    </OText>
-                  </>
-                )}
-                <OText
-                  size={10}
-                  lineHeight={15}
-                  color={theme.colors.textSecondary}
-                  style={{ marginVertical: 3 }}
-                  numberOfLines={1}>
-                  {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
+    <>
+      <Container
+        onPress={() => handleClickViewOrder(order?.uuid)}
+        activeOpacity={0.7}
+      >
+        <InnerContainer>
+          {!!order.business?.logo && (
+            <Logo style={styles.logoWrapper}>
+              <OIcon
+                url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
+                style={styles.logo}
+              />
+            </Logo>
+          )}
+          <CardInfoWrapper>
+            <ContentHeader>
+              <View style={{ flex: 1 }}>
+                <OText size={12} lineHeight={18} weight={'600'} numberOfLines={1} ellipsizeMode={'tail'}>
+                  {order.business?.name}
                 </OText>
               </View>
-              <OText
-                color={theme.colors.primary}
-                size={10}
-                lineHeight={15}
-                numberOfLines={1}>
-                {getOrderStatus(order.status)?.value}
-              </OText>
-            </View>
-            <TouchableOpacity
-              onPress={handleChangeFavorite}
-              style={{ marginTop: 5 }}
-            >
-              <IconAntDesign
-                name={order?.favorite ? 'heart' : 'hearto'}
-                color={theme.colors.danger5}
-                size={16}
-              />
-            </TouchableOpacity>
-          </ContentFooter>
-        </CardInfoWrapper>
-      </InnerContainer>
-    </Container>
+              {!!!pastOrders && (
+                <>
+                  {isMessageView ? (
+                    <>
+                      {order?.unread_count > 0 && (
+                        <UnreadMessageCounter>
+                          <OText size={12} color={theme.colors.primary} lineHeight={18} >
+                            {order?.unread_count}
+                          </OText>
+                        </UnreadMessageCounter>
+                      )}
+                    </>
+                  ) : (
+                    <Price>
+                      <OText size={12} lineHeight={18}>
+                        {parsePrice(order?.summary?.total || order?.total)}
+                      </OText>
+                    </Price>
+                  )}
+                </>
+              )}
+              {!!pastOrders && (
+                <ButtonWrapper>
+                  {allowedOrderStatus.includes(parseInt(order?.status)) &&
+                    !order.review && (
+                      <TouchableOpacity
+                        onPress={() => handleClickOrderReview(order)}
+                        style={styles.reviewButton}>
+                        <OText size={10} color={theme.colors.primary} numberOfLines={1}>
+                          {t('REVIEW', 'Review')}
+                        </OText>
+                      </TouchableOpacity>
+                    )}
+                  {order.cart && (
+                    <OButton
+                      text={t('REORDER', 'Reorder')}
+                      imgRightSrc={''}
+                      textStyle={styles.buttonText}
+                      style={
+                        ((reorderLoading && order.id === reorderSelected) || cartState?.loading)
+                          ? styles.reorderLoading
+                          : styles.reorderbutton
+                      }
+                      onClick={() => handleReorderClick(order)}
+                      isLoading={(reorderLoading && order.id === reorderSelected) || cartState?.loading}
+                    />
+                  )}
+                </ButtonWrapper>
+              )}
+            </ContentHeader>
+            <ContentFooter>
+              <View style={{ flex: 1 }}>
+                <View style={styles.infoText}>
+                  {!!!pastOrders && (
+                    <>
+                      <OText
+                        size={10}
+                        space
+                        color={theme.colors.textSecondary}
+                        style={{ marginVertical: 3 }}
+                        lineHeight={15}
+                        numberOfLines={1}
+                      >
+                        {t('ORDER_NO', 'Order No') + '.'}
+                      </OText>
+                      <OText
+                        size={10}
+                        color={theme.colors.textSecondary}
+                        style={{ marginVertical: 3 }}
+                        lineHeight={15}
+                        numberOfLines={1}
+                      >
+                        {order.id + ` \u2022 `}
+                      </OText>
+                    </>
+                  )}
+                  <OText
+                    size={10}
+                    lineHeight={15}
+                    color={theme.colors.textSecondary}
+                    style={{ marginVertical: 3 }}
+                    numberOfLines={1}>
+                    {order?.delivery_datetime_utc ? parseDate(order?.delivery_datetime_utc) : parseDate(order?.delivery_datetime, { utc: false })}
+                  </OText>
+                </View>
+                <OText
+                  color={theme.colors.primary}
+                  size={10}
+                  lineHeight={15}
+                  numberOfLines={1}>
+                  {getOrderStatus(order.status)?.value}
+                </OText>
+              </View>
+              <TouchableOpacity
+                onPress={handleChangeFavorite}
+                style={{ marginTop: 5 }}
+              >
+                <IconAntDesign
+                  name={order?.favorite ? 'heart' : 'hearto'}
+                  color={theme.colors.danger5}
+                  size={16}
+                />
+              </TouchableOpacity>
+            </ContentFooter>
+          </CardInfoWrapper>
+        </InnerContainer>
+      </Container>
+      <OAlert
+        open={confirm.open}
+        title={confirm.title}
+        content={confirm.content}
+        onAccept={confirm.handleOnAccept}
+        onCancel={() => handleOriginalReorder()}
+        onClose={() => handleOriginalReorder()}
+      />
+    </>
+
   )
 }
 
