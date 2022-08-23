@@ -293,7 +293,8 @@ export interface OrdersOptionParams {
   handleClickLogisticOrder: (status: number, orderId: number) => void,
   logisticOrders: {orders: Array<any>, loading: boolean, error: Array<string> | string},
   loadLogisticOrders: () => void;
-  isLogisticActivated?: boolean
+  isLogisticActivated?: boolean;
+  isAlsea?: boolean;
 }
 export interface ActiveOrdersParams {
   orders?: any;

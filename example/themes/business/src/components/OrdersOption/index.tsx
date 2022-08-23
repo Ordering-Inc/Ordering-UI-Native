@@ -88,7 +88,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     handleClickLogisticOrder,
     logisticOrders,
     loadLogisticOrders,
-    isLogisticActivated
+    isLogisticActivated,
+    isAlsea
   } = props;
 
   const defaultSearchList = {
@@ -545,7 +546,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </ScrollView>
       </FiltersTab>
       <View style={{ flex: 1, minHeight: HEIGHT_SCREEN - 450 }}>
-        {currentTabSelected !== 'logisticOrders' && (
+        {currentTabSelected !== 'logisticOrders' && !isAlsea && (
           <View
             style={{
               display: 'flex',
