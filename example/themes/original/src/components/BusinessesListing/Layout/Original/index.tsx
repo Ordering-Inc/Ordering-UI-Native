@@ -216,6 +216,11 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		}
 	}
 
+	const handleChangeCity = (cityId : number | null) => {
+		changeCityFilter(orderState?.options?.city_id === cityId ? null : cityId)
+		setIsOpenCities(false)
+	}
+
 	useEffect(() => {
 		if (!businessesList?.loading) {
 			const fb = businessesList.businesses.filter((b) => b.featured === true && b?.open);
@@ -345,11 +350,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						<OText size={18} weight={700} color={theme.colors?.white}>
 							{t('WELCOME', 'Welcome')} {user?.name}!
 						</OText>
-						<TouchableOpacity
-							onPress={() => searchBarRef?.current?.focus?.()}
-						>
-							<Ionicons name='search' style={{ ...styles.iconStyle, color: theme.colors?.white }} />
-						</TouchableOpacity>
 					</View>
 				)}
 				<Search isChewLayout={isChewLayout}>
@@ -654,7 +654,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 								borderBottomColor: orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.backgroundGray,
 								marginBottom: 10,
 							}}
-							onPress={() => changeCityFilter(city?.id)}
+							onPress={() => handleChangeCity(city?.id)}
 							disabled={orderState?.loading}
 						>
 							<OText color={orderState?.options?.city_id === city?.id ? theme.colors.primary : theme.colors.black}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Linking } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Linking, Pressable } from 'react-native';
 import { useUtils, useOrder, useLanguage, useOrderingTheme } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OModal } from '../shared';
@@ -218,14 +218,14 @@ export const BusinessBasicInformation = (
 							/>
 						)}
 						{!!business?.tiktok_profile && (
-							<TouchableOpacity style={styles.socialIcon} onPress={() => Linking.openURL(business?.tiktok_profile)}>
+							<Pressable style={styles.socialIcon} onPress={() => Linking.openURL(business?.tiktok_profile)}>
 								<View style={styles.tiktokIcon}>
 									<OIcon
 										src={theme.images.general.tiktok}
 										style={{ width: '100%', height: '100%' }}
 									/>
 								</View>
-							</TouchableOpacity>
+							</Pressable>
 						)}
 						{!!business?.pinterest_profile && (
 							<SocialNetWork
@@ -327,7 +327,7 @@ export const BusinessBasicInformation = (
 								</Placeholder>
 							) : (
 								<TitleWrapper>
-									<OText size={24} weight={'600'}>
+									<OText size={24} weight={'600'} numberOfLines={2}>
 										{business?.name}
 									</OText>
 									{business?.ribbon?.enabled && (
