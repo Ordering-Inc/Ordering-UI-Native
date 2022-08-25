@@ -169,7 +169,7 @@ export const ProductOptionsUI = (props: any) => {
 	const [gallery, setGallery] = useState([])
 	const [thumbsSwiper, setThumbsSwiper] = useState(0)
 	const [indexGallery, setIndexGallery] = useState(0)
-	const [selOpt, setSelectedOpt] = useState(0);
+	const [selOpt, setSelectedOpt] = useState(-1);
 	const [isHaveWeight, setIsHaveWeight] = useState(false)
 	const [playing, setPlaying] = useState(false);
 	const [qtyBy, setQtyBy] = useState({
@@ -323,6 +323,14 @@ export const ProductOptionsUI = (props: any) => {
 		</>
 	);
 
+	const handleScroll = ({ nativeEvent: { contentOffset, layoutMeasurement } }: any) => {
+
+		const _topOption = Object.keys(optionLayout).find(((option: any) => Math.abs(contentOffset?.y - layoutMeasurement?.height - optionLayout[option]?.y) < 20))
+		if (_topOption) {
+			const _topOptionId = Number(_topOption.replace('id:', ''))
+		}
+	}
+
 	const handleGoBack = navigation?.canGoBack()
 		? () => navigation.goBack()
 		: () => navigation.navigate('Business', { store: props.businessSlug })
@@ -408,7 +416,7 @@ export const ProductOptionsUI = (props: any) => {
 								height: 44,
 								shadowOpacity: 0,
 								borderWidth: 1,
-								marginTop: isHaveWeight ? 10: 0
+								marginTop: isHaveWeight ? 10 : 0
 							}}
 						/>
 					)}
@@ -457,7 +465,8 @@ export const ProductOptionsUI = (props: any) => {
 				<ScrollView
 					ref={scrollViewRef}
 					contentContainerStyle={{ paddingBottom: 80 }}
-					stickyHeaderIndices={[2]}>
+					stickyHeaderIndices={[2]}
+					onScroll={handleScroll}>
 					<WrapHeader onLayout={(event: any) => setHeaderRefHeight(event.nativeEvent.layout?.height)}>
 						{loading && !product ? (
 							<View style={styles.productHeaderSkeleton}>
@@ -681,36 +690,36 @@ export const ProductOptionsUI = (props: any) => {
 							contentContainerStyle={{ paddingHorizontal: 33, backgroundColor: theme.colors.white }}
 						>
 							<TouchableOpacity
-								key={`eopt_all_0`}
-								onPress={() => setSelectedOpt(0)}
+								key={`eopt_key_00`}
+								onPress={() => setSelectedOpt(-1)}
 								style={[
 									styles.extraItem,
 									{
-										borderBottomColor: selOpt == 0 ? theme.colors.textNormal : theme.colors.border,
+										borderBottomColor: selOpt == -1 ? theme.colors.textNormal : theme.colors.border,
 									},
 								]}>
 								<OText
-									color={selOpt == 0 ? theme.colors.textNormal : theme.colors.textSecondary}
-									size={selOpt == 0 ? 14 : 12}
-									weight={selOpt == 0 ? '600' : 'normal'}>
+									color={selOpt == -1 ? theme.colors.textNormal : theme.colors.textSecondary}
+									size={selOpt == -1 ? 14 : 12}
+									weight={selOpt == -1 ? '600' : 'normal'}>
 									{t('ALL', 'All')}
 								</OText>
 							</TouchableOpacity>
 							{product?.ingredients.length > 0 && (
 								<TouchableOpacity
-									key={`eopt_all_00`}
-									onPress={() => setSelectedOpt(-1)}
+									key={`eopt_key_01`}
+									onPress={() => setSelectedOpt(0)}
 									style={[
 										styles.extraItem,
 										{
 											borderBottomColor:
-												selOpt == -1 ? theme.colors.textNormal : theme.colors.border,
+												selOpt == 0 ? theme.colors.textNormal : theme.colors.border,
 										},
 									]}>
 									<OText
-										color={selOpt == -1 ? theme.colors.textNormal : theme.colors.textSecondary}
-										size={selOpt == -1 ? 14 : 12}
-										weight={selOpt == -1 ? '600' : 'normal'}>
+										color={selOpt == 0 ? theme.colors.textNormal : theme.colors.textSecondary}
+										size={selOpt == 0 ? 14 : 12}
+										weight={selOpt == 0 ? '600' : 'normal'}>
 										{t('INGREDIENTS', 'Ingredients')}
 									</OText>
 								</TouchableOpacity>
@@ -760,10 +769,10 @@ export const ProductOptionsUI = (props: any) => {
 						</>
 					) : (
 						<ProductEditions>
-							{selOpt == 0 ? (
+							{selOpt === -1 ? (
 								<>
 									{product?.ingredients.length > 0 && (
-										<View style={styles.optionContainer}>
+										<View style={styles.optionContainer} onLayout={(event: any) => handleOnLayout(event, 0)}>
 											<SectionTitle>
 												<OText size={16}>
 													{t('INGREDIENTS', 'Ingredients')}
@@ -845,7 +854,7 @@ export const ProductOptionsUI = (props: any) => {
 								</>
 							) : (
 								<>
-									{selOpt == -1 ? (
+									{selOpt === 0 ? (
 										<View style={styles.optionContainer}>
 											<SectionTitle>
 												<OText size={16}>
