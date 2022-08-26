@@ -80,8 +80,8 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const appState = useRef(AppState.currentState)
 	const searchBarRef = useRef<any>()
 	const [appStateVisible, setAppStateVisible] = useState(appState.current);
-	const isChewLayout = theme?.layouts?.header?.components?.layout?.type === 'chew'
-	const showCities = !orderingTheme?.theme?.business_listing_view?.components?.cities?.hidden
+	const isChewLayout = orderingTheme?.theme?.header?.components?.layout?.type === 'chew'
+	const hideCities = orderingTheme?.theme?.business_listing_view?.components?.cities?.hidden
 	const [refreshing] = useState(false);
 	const styles = StyleSheet.create({
 		container: {
@@ -216,7 +216,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		}
 	}
 
-	const handleChangeCity = (cityId : number | null) => {
+	const handleChangeCity = (cityId: number | null) => {
 		changeCityFilter(orderState?.options?.city_id === cityId ? null : cityId)
 		setIsOpenCities(false)
 	}
@@ -485,7 +485,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				/>
 			)}
 
-			{showCities && (
+			{!hideCities && (
 				<View style={{ marginTop: 10 }}>
 					<OButton
 						onClick={() => setIsOpenCities(true)}
