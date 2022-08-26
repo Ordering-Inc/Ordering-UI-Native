@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react'
-import { useOrder, useSession, useLanguage } from 'ordering-components/native';
+import { useOrder, useSession, useLanguage, useOrderingTheme } from 'ordering-components/native';
 
 import { useTheme } from 'styled-components/native'
 import { BusinessesListing as OriginalBusinessListing } from './Layout/Original'
@@ -11,7 +11,8 @@ import { ReviewTrigger } from '../ReviewTrigger';
 export const BusinessesListing = (props: any) => {
   const { logosLayout } = props
   const theme = useTheme()
-  const layout = theme?.layouts?.business_listing_view?.components?.layout?.type || 'original'
+  const [orderingTheme] = useOrderingTheme()
+  const layout = orderingTheme?.theme?.business_listing_view?.components?.layout?.type || 'original'
   const [, t] = useLanguage();
   const [{ auth }] = useSession()
   const [, { getLastOrderHasNoReview }] = useOrder();
