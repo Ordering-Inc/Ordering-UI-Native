@@ -75,9 +75,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [{ configs }] = useConfig()
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 
-	const isChewLayout = orderingTheme?.theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const isChewLayout = theme?.layouts?.business_view?.components?.header?.components?.layout?.type === 'chew'
 	const showLogo = !orderingTheme?.theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
-	const hideBusinessNearCity = orderingTheme?.theme?.business_view?.components?.near_business?.hidden
+	const showBusinessNearCity = !theme?.layouts?.business_view?.components?.near_business?.hidden
 
 	const styles = StyleSheet.create({
 		mainContainer: {
@@ -277,7 +277,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							</WrapSearchBar>
 						)}
 					</TopHeader>
-					{!hideBusinessNearCity && businessState?.business?.city_id && (
+					{showBusinessNearCity && businessState?.business?.city_id && (
 						<NearBusiness>
 							<BusinessesListing
 								logosLayout

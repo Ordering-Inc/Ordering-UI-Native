@@ -5,7 +5,6 @@ import {
 	useOrder,
 	useUtils,
 	useSession,
-	useOrderingTheme,
 	SingleProductCard as SingleProductCardController
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -40,8 +39,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	} = props;
 
 	const theme = useTheme();
-	const [orderingTheme] = useOrderingTheme()
-	const hideAddButton = orderingTheme?.theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden
+	const showAddButton = !theme?.layouts?.business_view?.components?.products?.components?.add_to_cart_button?.hidden
 
 	const styles = StyleSheet.create({
 		container: {
@@ -134,7 +132,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => setIsIntersectionObserver(true)}>
 			{isIntersectionObserver ? (
 				<CardContainer
-					showAddButton={!hideAddButton}
+					showAddButton={showAddButton}
 					style={[
 						styles.container,
 						(isSoldOut || maxProductQuantity <= 0) && styles.soldOutBackgroundStyle,
@@ -233,7 +231,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 							</SoldOut>
 						)}
 					</View>
-					{!hideAddButton && (
+					{showAddButton && (
 						<OButton
 							onClick={() => onProductClick?.(product)}
 							style={{
