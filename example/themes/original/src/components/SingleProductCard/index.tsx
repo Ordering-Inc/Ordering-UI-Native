@@ -204,20 +204,11 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									</OText>
 								</RibbonBox>
 							)}
-							{product?.images ? (
+							{product?.images && (
 								<FastImage
 									style={styles.productStyle}
 									source={{
 										uri: optimizeImage(product?.images, 'h_250,c_limit'),
-										priority: FastImage.priority.normal,
-									}}
-									resizeMode={FastImage.resizeMode.cover}
-								/>
-							) : (
-								<FastImage
-									style={styles.productStyle}
-									source={{
-										uri: Image.resolveAssetSource(theme.images.dummies.product).uri,
 										priority: FastImage.priority.normal,
 									}}
 									resizeMode={FastImage.resizeMode.cover}
