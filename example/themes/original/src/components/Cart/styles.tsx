@@ -33,3 +33,7 @@ export const Divider = styled.View`
   margin-top: 5px;
   margin-bottom: 10px;
 `
+
+export const DriverTipsContainer = styled.View`
+  padding: 5px 0;
+`
