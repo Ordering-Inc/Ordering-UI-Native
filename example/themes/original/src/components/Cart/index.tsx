@@ -8,7 +8,7 @@ import {
   useValidationFields,
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
-import { CContainer, CheckoutAction, Divider } from './styles';
+import { CContainer, CheckoutAction, Divider, DriverTipsContainer } from './styles';
 
 import { OSBill, OSTable, OSCoupon, OSTotal, OSRow } from '../OrderSummary/styles';
 
@@ -25,6 +25,7 @@ import { TaxInformation } from '../TaxInformation';
 import { CartStoresListing } from '../CartStoresListing';
 import { OAlert } from '../../../../../src/components/shared'
 import { PlaceSpot } from '../PlaceSpot'
+import { DriverTips } from '../DriverTips'
 
 const CartUI = (props: any) => {
   const {
@@ -65,6 +66,10 @@ const CartUI = (props: any) => {
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
   const businessId = business?.business_id ?? null
   const placeSpotTypes = [4]
+
+  const driverTipsOptions = typeof configs?.driver_tip_options?.value === 'string'
+    ? JSON.parse(configs?.driver_tip_options?.value) || []
+    : configs?.driver_tip_options?.value || []
 
   const momentFormatted = !orderState?.option?.moment
     ? t('RIGHT_NOW', 'Right Now')
@@ -354,6 +359,32 @@ const CartUI = (props: any) => {
                 </OSCoupon>
               </OSTable>
             )}
+
+            {isMultiCheckout &&
+              cart &&
+              cart?.valid &&
+              orderState?.options?.type === 1 &&
+              cart?.status !== 2 &&
+              validationFields?.fields?.checkout?.driver_tip?.enabled &&
+              driverTipsOptions && driverTipsOptions?.length > 0 &&
+              (
+								<DriverTipsContainer>
+									<OText size={14} lineHeight={20} color={theme.colors.textNormal}>
+										{t('DRIVER_TIPS', 'Driver Tips')}
+									</OText>
+									<DriverTips
+										uuid={cart?.uuid}
+										businessId={cart?.business_id}
+										driverTipsOptions={driverTipsOptions}
+										isFixedPrice={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)}
+										isDriverTipUseCustom={!!parseInt(configs?.driver_tip_use_custom?.value, 10)}
+										driverTip={parseInt(configs?.driver_tip_type?.value, 10) === 1 || !!parseInt(configs?.driver_tip_use_custom?.value, 10)
+											? cart?.driver_tip
+											: cart?.driver_tip_rate}
+										useOrderContext
+									/>
+								</DriverTipsContainer>
+              )}
 
             <OSTotal>
               <OSTable style={{ marginTop: 15 }}>
