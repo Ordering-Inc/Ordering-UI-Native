@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
 	useLanguage,
 	useConfig,
@@ -11,7 +11,7 @@ import {
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
 import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image, Animated } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OButton, OText } from '../shared';
@@ -42,6 +42,8 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const theme = useTheme();
 	const [orderingTheme] = useOrderingTheme()
 	const hideAddButton = orderingTheme?.theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden
+
+	const fadeAnim = useRef(new Animated.Value(0)).current;
 
 	const styles = StyleSheet.create({
 		container: {
@@ -122,6 +124,14 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		maxCartProductInventory,
 	);
 
+	const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+			useNativeDriver: true
+    }).start();
+  };
+
 	const handleChangeFavorite = () => {
 		if (auth) {
 			handleFavoriteProduct && handleFavoriteProduct(!product?.favorite)
@@ -130,8 +140,17 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		}
 	}
 
+	const handleChangeIntersection = () => {
+		setIsIntersectionObserver(true);
+		fadeIn();
+	}
+
+	useEffect(() => {
+		if (!enableIntersection) fadeIn()
+	}, [enableIntersection])
+
 	return (
-		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => setIsIntersectionObserver(true)}>
+		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
 			{isIntersectionObserver ? (
 				<CardContainer
 					showAddButton={!hideAddButton}
@@ -205,14 +224,23 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								</RibbonBox>
 							)}
 							{product?.images && (
-								<FastImage
-									style={styles.productStyle}
-									source={{
-										uri: optimizeImage(product?.images, 'h_250,c_limit'),
-										priority: FastImage.priority.normal,
-									}}
-									resizeMode={FastImage.resizeMode.cover}
-								/>
+								<Animated.View
+									style={[
+										{
+											// Bind opacity to animated value
+											opacity: fadeAnim
+										}
+									]}
+								>
+									<FastImage
+										style={styles.productStyle}
+										source={{
+											uri: optimizeImage(product?.images, 'h_250,c_limit'),
+											priority: FastImage.priority.normal,
+										}}
+										resizeMode={FastImage.resizeMode.cover}
+									/>
+								</Animated.View>
 							)}
 						</LogoWrapper>
 
