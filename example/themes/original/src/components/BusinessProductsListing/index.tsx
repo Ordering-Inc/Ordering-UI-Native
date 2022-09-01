@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { View, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions, Platform, KeyboardAvoidingViewBase, KeyboardAvoidingView } from 'react-native'
+import { IOScrollView } from 'react-native-intersection-observer'
 import { useTheme } from 'styled-components/native';
 import {
 	BusinessAndProductList,
@@ -450,7 +451,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							</WrapContent>
 						</>
 					)}
-				</BusinessProductsListingContainer>
+				</IOScrollView>
 				{!loading && auth && currentCart?.products?.length > 0 && categoryState.products.length !== 0 && (
 					<FloatingButton
 						btnText={
