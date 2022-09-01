@@ -1,5 +1,10 @@
 
 import React, { useState, useEffect } from 'react'
+import {
+  openSettings,
+  checkNotifications
+} from 'react-native-permissions';
+
 import { useOrder, useSession, useLanguage, useOrderingTheme } from 'ordering-components/native';
 
 import { useTheme } from 'styled-components/native'
@@ -7,6 +12,7 @@ import { BusinessesListing as OriginalBusinessListing } from './Layout/Original'
 import { BusinessesListing as AppointmentBusinessListing } from './Layout/Appointment'
 import { OBottomPopup } from '../shared';
 import { ReviewTrigger } from '../ReviewTrigger';
+import { NotificationSetting } from '../../../../../src/components/NotificationSetting';
 
 export const BusinessesListing = (props: any) => {
   const { logosLayout } = props
@@ -18,6 +24,7 @@ export const BusinessesListing = (props: any) => {
   const [, { getLastOrderHasNoReview }] = useOrder();
 
   const [, setIsReviewed] = useState()
+  const [checkNotificationStatus, setCheckNotificationStatus] = useState({ open: false, checked: false })
   const defaultOrder = {
     id: 0,
     business_id: 0,
@@ -34,6 +41,20 @@ export const BusinessesListing = (props: any) => {
     order: defaultOrder,
     defaultStar: 5,
   })
+
+  const requestLocationPermission = async () => {
+    const notificationStatus = await checkNotifications()
+    if (notificationStatus?.status === 'blocked') {
+      setCheckNotificationStatus({ open: true, checked: false })
+      return
+    }
+    setCheckNotificationStatus({ open: false, checked: true })
+  };
+
+  const callOpenSettings = () => {
+    openSettings().catch(() => console.warn('cannot open settings'));
+    setCheckNotificationStatus({ open: false, checked: true })
+  }
 
   const _getLastOrderHasNoReview = async () => {
     const lastOrderHasNoReview = await getLastOrderHasNoReview()
@@ -73,8 +94,12 @@ export const BusinessesListing = (props: any) => {
   }
 
   useEffect(() => {
-    auth && _getLastOrderHasNoReview()
+    auth && requestLocationPermission()
   }, [auth])
+
+  useEffect(() => {
+    checkNotificationStatus?.checked && _getLastOrderHasNoReview()
+  }, [checkNotificationStatus])
 
   return (
     <>
@@ -93,6 +118,18 @@ export const BusinessesListing = (props: any) => {
         >
           {lastOrderReview?.order && <ReviewTrigger order={lastOrderReview?.order} handleOpenOrderReview={handleOpenOrderReview} />}
 
+        </OBottomPopup>
+      )}
+      {checkNotificationStatus && (
+        <OBottomPopup
+          open={checkNotificationStatus?.open}
+          transparent={true}
+          onClose={() => setCheckNotificationStatus({ open: false, checked: true })}
+          title={t('ENABLE_NOTIFICATIONS', 'Enable notifications')}
+          bottomContainerStyle={{ height: 'auto', borderRadius: 10 }}
+          titleStyle={{ textAlign: 'center' }}
+        >
+          <NotificationSetting actFunction={() => callOpenSettings()} />
         </OBottomPopup>
       )}
     </>
