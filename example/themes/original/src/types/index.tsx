@@ -290,6 +290,7 @@ export interface BusinessProductsListParams {
 	isFiltMode?: boolean,
 	handleUpdateProducts?: any,
 	navigation?: any;
+	previouslyProducts?: any;
 }
 export interface SingleProductCardParams {
 	businessId: any;
@@ -303,6 +304,7 @@ export interface SingleProductCardParams {
 	handleUpdateProducts?: any;
 	enableIntersection?: boolean;
 	navigation?: any;
+	isPreviously?: any;
 }
 export interface BusinessInformationParams {
 	navigation?: any,
@@ -735,6 +737,16 @@ export interface ProfessionalProfileParams {
 	professional: any,
 	handleChangeProfessionalSelected: any,
 	onClose: any
+}
+
+export interface OrderItAgainParams {
+	onProductClick: any,
+	productList: any,
+	businessId: any,
+	categoryState: any,
+	currentCart: any,
+	handleUpdateProducts: any,
+	navigation: any
 }
 
 export interface PreviousProductsOrderedParams {
