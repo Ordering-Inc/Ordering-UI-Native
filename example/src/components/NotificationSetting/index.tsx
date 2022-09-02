@@ -39,7 +39,7 @@ export const NotificationSetting = (props: NotificationSettingPropsParams) => {
       onClose={() => setCheckNotificationStatus({ open: false, checked: true })}
       title={t('ENABLE_NOTIFICATIONS', 'Enable notifications')}
       titleStyle={{ textAlign: 'center' }}
-      containerStyle={{ borderRadius: 10 }}
+      containerStyle={{ borderRadius: 10, borderTopRightRadius: 10, borderTopLeftRadius: 10 }}
     >
       <View style={styles.container}>
         <View style={styles.textContainer}>

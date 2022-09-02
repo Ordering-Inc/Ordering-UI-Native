@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
   bottomContainer: {
     backgroundColor: '#FFFFFF',
     width: '100%',
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
     paddingHorizontal: 20,
     maxHeight: deviceHeight,
   },
