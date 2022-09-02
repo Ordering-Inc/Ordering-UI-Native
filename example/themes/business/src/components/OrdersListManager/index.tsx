@@ -6,7 +6,7 @@ import FontistoIcon from 'react-native-vector-icons/Fontisto'
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import SelectDropdown from 'react-native-select-dropdown'
 import { useTheme } from 'styled-components/native';
-
+import { NotificationSetting } from '../../../../../src/components/NotificationSetting'
 import {
   FiltersTab,
   TabsContainer,
@@ -611,7 +611,7 @@ const OrdersListManagerUI = (props: OrdersOptionParams) => {
         </LeftSide>
 
         <RightSide style={{ paddingBottom: 110, paddingHorizontal: 20 }}>
-          {currentOrderSelected &&  (
+          {currentOrderSelected && (
             <OrderDetailsBusiness {...props.orderDetailsProps} order={currentOrderSelected} isCustomView />
           )}
         </RightSide>
@@ -756,6 +756,7 @@ const OrdersListManagerUI = (props: OrdersOptionParams) => {
 
 export const OrdersListManager = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
+  const [checkNotificationStatus, setCheckNotificationStatus] = useState({ open: false, checked: false })
   const ordersProps = {
     ...props,
     UIComponent: OrdersListManagerUI,
@@ -870,5 +871,11 @@ export const OrdersListManager = (props: OrdersOptionParams) => {
     ]
   };
 
-  return <OrderListGroups {...ordersProps} />;
+  return (<>
+    <OrderListGroups {...ordersProps} />
+    {props?.checkNotification && (
+      <NotificationSetting checkNotificationStatus={checkNotificationStatus}
+        setCheckNotificationStatus={setCheckNotificationStatus} />
+    )}
+  </>);
 };

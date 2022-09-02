@@ -11,6 +11,7 @@ import { StyleSheet } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { shape } from '../../utils'
 import { CategoryDescriptionMemoized } from './CategoryDescription';
+import { OrderItAgain } from '../OrderItAgain'
 
 const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   const {
@@ -35,6 +36,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     onClickCategory,
     lazyLoadProductsRecommended,
     handleUpdateProducts,
+    previouslyProducts,
     isFiltMode,
     navigation
   } = props;
@@ -113,6 +115,17 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
           <SubcategoriesComponent category={category} />
         )}
       </HeaderWrapper>
+      {previouslyProducts?.length > 0 && (
+        <OrderItAgain
+          onProductClick={onProductClick}
+          productList={previouslyProducts}
+          businessId={businessId}
+          categoryState={categoryState}
+          navigation={navigation}
+          handleUpdateProducts={handleUpdateProducts}
+          currentCart={currentCart}
+        />
+      )}
       {category.id &&
         categoryState.products
           ?.filter((product: any) =>
@@ -123,6 +136,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             <SingleProductCard
               key={'prod_' + product.id + `_${i}`}
               isSoldOut={product.inventoried && !product.quantity}
+              enableIntersection
               product={product}
               businessId={businessId}
               categoryState={categoryState}
@@ -150,6 +164,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       key={'feat_' + product.id + `_${i}`}
                       isSoldOut={product.inventoried && !product.quantity}
                       product={product}
+                      enableIntersection
                       businessId={businessId}
                       categoryState={categoryState}
                       onProductClick={onProductClick}

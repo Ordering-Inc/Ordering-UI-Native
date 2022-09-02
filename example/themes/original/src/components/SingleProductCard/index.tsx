@@ -26,7 +26,7 @@ function SingleProductCardPropsAreEqual(prevProps: any, nextProps: any) {
 		prevProps.categoryState === nextProps.categoryState
 }
 
-const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
+const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const {
 		product,
 		isSoldOut,
@@ -36,7 +36,8 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		handleFavoriteProduct,
 		enableIntersection,
 		navigation,
-		businessId
+		businessId,
+		isPreviously
 	} = props;
 
 	const theme = useTheme();
@@ -96,7 +97,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const [, t] = useLanguage();
 	const [stateConfig] = useConfig();
 	const [{ auth }] = useSession()
-	const [{ parsePrice, optimizeImage }] = useUtils();
+	const [{ parsePrice, optimizeImage, parseDate }] = useUtils();
 	const [orderState] = useOrder()
 	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
 
@@ -179,15 +180,17 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									style={{ ...styles.line18, flex: 1 }}>
 									{product?.name}
 								</OText>
-								<TouchableOpacity
-									onPress={handleChangeFavorite}
-								>
-									<IconAntDesign
-										name={product?.favorite ? 'heart' : 'hearto'}
-										color={theme.colors.danger5}
-										size={18}
-									/>
-								</TouchableOpacity>
+								{!isPreviously && (
+									<TouchableOpacity
+										onPress={handleChangeFavorite}
+									>
+										<IconAntDesign
+											name={product?.favorite ? 'heart' : 'hearto'}
+											color={theme.colors.danger5}
+											size={18}
+										/>
+									</TouchableOpacity>
+								)}
 							</View>
 							<PricesContainer>
 								<OText color={theme.colors.primary}>{product?.price ? parsePrice(product?.price) : ''}</OText>
@@ -197,12 +200,22 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 							</PricesContainer>
 							<OText
 								size={10}
-								numberOfLines={2}
+								numberOfLines={!isPreviously ? 2 : 1}
 								ellipsizeMode="tail"
 								color={theme.colors.textSecondary}
 								style={styles.line15}>
 								{product?.description}
 							</OText>
+							{isPreviously && (
+								<OText
+									size={10}
+									numberOfLines={1}
+									ellipsizeMode="tail"
+									color={theme.colors.primary}
+									style={styles.line15}>
+									{t('LAST_ORDERED_ON', 'Last ordered on')} {parseDate(product?.last_ordered_date, { outputFormat: 'MMM DD, YYYY' })}
+								</OText>
+							)}
 						</CardInfo>
 						<LogoWrapper>
 							{product?.ribbon?.enabled && (
@@ -290,7 +303,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 export const SingleProductCard = (props: SingleProductCardParams) => {
 	const singleProductCardProps = {
 		...props,
-		UIComponent: SinguleProductCardUI
+		UIComponent: SingleProductCardUI
 	}
 	return <SingleProductCardController {...singleProductCardProps} />
 }
