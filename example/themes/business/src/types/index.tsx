@@ -21,8 +21,8 @@ export interface LoginParams {
   allowedLevels?: any;
   useRootPoint?: any;
   notificationState?: any;
-	handleReCaptcha?: any;
-	enableReCaptcha?: any;
+  handleReCaptcha?: any;
+  enableReCaptcha?: any;
 }
 export interface ProfileParams {
   navigation?: any;
@@ -266,7 +266,7 @@ export interface OrdersOptionParams {
   titleContent?: string;
   customArray?: Array<any>;
   loadMoreOrders?: () => {};
-  loadOrders?: ({}: any) => {};
+  loadOrders?: ({ }: any) => {};
   messages?: any;
   setMessages?: () => {};
   loadMessages?: () => {};
@@ -280,7 +280,7 @@ export interface OrdersOptionParams {
   ordersGroup?: any;
   setOrdersGroup?: any;
   setCurrentFilters?: any;
-  onFiltered?: ({}: any) => {};
+  onFiltered?: ({ }: any) => {};
   filtered?: any;
   handleClickOrder?: any;
   orderGroupStatusCustom?: {
@@ -291,10 +291,11 @@ export interface OrdersOptionParams {
   };
   isBusinessApp?: boolean;
   handleClickLogisticOrder: (status: number, orderId: number) => void,
-  logisticOrders: {orders: Array<any>, loading: boolean, error: Array<string> | string},
+  logisticOrders: { orders: Array<any>, loading: boolean, error: Array<string> | string },
   loadLogisticOrders: () => void;
   isLogisticActivated?: boolean;
   isAlsea?: boolean;
+  checkNotification?: boolean;
 }
 export interface ActiveOrdersParams {
   orders?: any;
@@ -563,13 +564,13 @@ export interface AcceptOrRejectOrderParams {
 }
 
 export interface MapViewParams {
-  onNavigationRedirect: (page : string, params ?: any) => void,
+  onNavigationRedirect: (page: string, params?: any) => void,
   getBusinessLocations: () => void,
   isLoadingBusinessMarkers?: boolean,
   markerGroups: Array<any>,
   customerMarkerGroups: Array<any>,
   alertState: { open: boolean, content: Array<string>, key?: string | null },
-  setAlertState: ({open, content, key} : { open: boolean, content: Array<string>, key?: string | null }) => void
+  setAlertState: ({ open, content, key }: { open: boolean, content: Array<string>, key?: string | null }) => void
 }
 
 export interface ReviewCustomerParams {
