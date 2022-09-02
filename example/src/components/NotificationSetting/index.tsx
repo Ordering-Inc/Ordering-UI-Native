@@ -1,31 +1,63 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTheme } from 'styled-components/native';
 import { StyleSheet, View } from 'react-native';
+import {
+  openSettings,
+  checkNotifications
+} from 'react-native-permissions';
 import { useLanguage } from 'ordering-components/native'
-import { OButton, OText } from '../shared';
-
-export const NotificationSetting = (props: any) => {
-  const { actFunction } = props
+import { OBottomPopup, OButton, OText } from '../shared';
+interface NotificationSettingPropsParams {
+  checkNotificationStatus: { open: boolean, checked: boolean };
+  setCheckNotificationStatus: (notificationStatus: any) => void;
+}
+export const NotificationSetting = (props: NotificationSettingPropsParams) => {
+  const { checkNotificationStatus, setCheckNotificationStatus } = props
   const theme = useTheme();
   const [, t] = useLanguage();
 
+  const requestLocationPermission = async () => {
+    const notificationStatus = await checkNotifications()
+    if (notificationStatus?.status === 'blocked') {
+      setCheckNotificationStatus({ open: true, checked: false })
+      return
+    }
+    setCheckNotificationStatus({ open: false, checked: true })
+  };
+
+  const callOpenSettings = () => {
+    openSettings().catch(() => console.warn('cannot open settings'));
+    setCheckNotificationStatus({ open: false, checked: true })
+  }
+
+  useEffect(() => {
+    requestLocationPermission()
+  }, [])
   return (
-    <View style={styles.container}>
-      <View style={styles.textContainer}>
-        <OText style={{ textAlign: 'center' }}>
-          {t('ACTIVE_NOTIFICATION_TO_RECEIVE_INFORMATION', 'Activate notifications to receive information about your orders')}
-        </OText>
+    <OBottomPopup
+      open={checkNotificationStatus?.open}
+      onClose={() => setCheckNotificationStatus({ open: false, checked: true })}
+      title={t('ENABLE_NOTIFICATIONS', 'Enable notifications')}
+      titleStyle={{ textAlign: 'center' }}
+      containerStyle={{ borderRadius: 10 }}
+    >
+      <View style={styles.container}>
+        <View style={styles.textContainer}>
+          <OText style={{ textAlign: 'center' }}>
+            {t('ACTIVE_NOTIFICATION_TO_RECEIVE_INFORMATION', 'Activate notifications to receive information about your orders')}
+          </OText>
+        </View>
+        <OButton
+          text={t('ENABLE_NOTIFICATIONS', 'Enable notifications')}
+          bgColor={theme.colors.primary}
+          borderColor={theme.colors.primary}
+          parentStyle={styles.parentStyle}
+          style={styles.button}
+          textStyle={{ color: 'white' }}
+          onClick={() => callOpenSettings()}
+        />
       </View>
-      <OButton
-        text={t('ENABLE_NOTIFICATIONS', 'Enable notifications')}
-        bgColor={theme.colors.primary}
-        borderColor={theme.colors.primary}
-        parentStyle={styles.parentStyle}
-        style={styles.button}
-        textStyle={{ color: 'white' }}
-        onClick={() => actFunction()}
-      />
-    </View>
+    </OBottomPopup>
   );
 };
 

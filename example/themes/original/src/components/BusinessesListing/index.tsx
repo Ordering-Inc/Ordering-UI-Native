@@ -1,10 +1,5 @@
 
 import React, { useState, useEffect } from 'react'
-import {
-  openSettings,
-  checkNotifications
-} from 'react-native-permissions';
-
 import { useOrder, useSession, useLanguage, useOrderingTheme } from 'ordering-components/native';
 
 import { useTheme } from 'styled-components/native'
@@ -41,20 +36,6 @@ export const BusinessesListing = (props: any) => {
     order: defaultOrder,
     defaultStar: 5,
   })
-
-  const requestLocationPermission = async () => {
-    const notificationStatus = await checkNotifications()
-    if (notificationStatus?.status === 'blocked') {
-      setCheckNotificationStatus({ open: true, checked: false })
-      return
-    }
-    setCheckNotificationStatus({ open: false, checked: true })
-  };
-
-  const callOpenSettings = () => {
-    openSettings().catch(() => console.warn('cannot open settings'));
-    setCheckNotificationStatus({ open: false, checked: true })
-  }
 
   const _getLastOrderHasNoReview = async () => {
     const lastOrderHasNoReview = await getLastOrderHasNoReview()
@@ -93,13 +74,11 @@ export const BusinessesListing = (props: any) => {
     )
   }
 
-  useEffect(() => {
-    auth && requestLocationPermission()
-  }, [auth])
+
 
   useEffect(() => {
-    checkNotificationStatus?.checked && _getLastOrderHasNoReview()
-  }, [checkNotificationStatus])
+    (checkNotificationStatus?.checked && auth) && _getLastOrderHasNoReview()
+  }, [checkNotificationStatus, auth])
 
   return (
     <>
@@ -117,21 +96,10 @@ export const BusinessesListing = (props: any) => {
           closeIcon={theme.images.general.close}
         >
           {lastOrderReview?.order && <ReviewTrigger order={lastOrderReview?.order} handleOpenOrderReview={handleOpenOrderReview} />}
-
         </OBottomPopup>
       )}
-      {checkNotificationStatus && (
-        <OBottomPopup
-          open={checkNotificationStatus?.open}
-          transparent={true}
-          onClose={() => setCheckNotificationStatus({ open: false, checked: true })}
-          title={t('ENABLE_NOTIFICATIONS', 'Enable notifications')}
-          bottomContainerStyle={{ height: 'auto', borderRadius: 10 }}
-          titleStyle={{ textAlign: 'center' }}
-        >
-          <NotificationSetting actFunction={() => callOpenSettings()} />
-        </OBottomPopup>
-      )}
+      <NotificationSetting checkNotificationStatus={checkNotificationStatus}
+        setCheckNotificationStatus={setCheckNotificationStatus} />
     </>
   )
 }
