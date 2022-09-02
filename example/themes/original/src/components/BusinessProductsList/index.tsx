@@ -11,6 +11,7 @@ import { StyleSheet } from 'react-native';
 import { useTheme } from 'styled-components/native';
 import { shape } from '../../utils'
 import { CategoryDescriptionMemoized } from './CategoryDescription';
+import { OrderItAgain } from '../OrderItAgain'
 
 const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   const {
@@ -35,6 +36,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     onClickCategory,
     lazyLoadProductsRecommended,
     handleUpdateProducts,
+    previously_products,
     isFiltMode,
     navigation
   } = props;
@@ -113,6 +115,17 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
           <SubcategoriesComponent category={category} />
         )}
       </HeaderWrapper>
+      {previously_products?.length > 0 && (
+        <OrderItAgain
+          onProductClick={onProductClick}
+          productList={previously_products}
+          businessId={businessId}
+          categoryState={categoryState}
+          navigation={navigation}
+          handleUpdateProducts={handleUpdateProducts}
+          currentCart={currentCart}
+        />
+      )}
       {category.id &&
         categoryState.products
           ?.filter((product: any) =>
