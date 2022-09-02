@@ -36,6 +36,7 @@ import { LogoutButton } from './components/LogoutButton';
 import { Messages } from './components/Messages';
 import { MomentOption } from './components/MomentOption';
 import NavBar from './components/NavBar';
+import { NotificationSetting } from './components/NotificationSetting'
 import { NotFoundSource } from './components/NotFoundSource';
 import { OrderCreating } from './components/OrderCreating';
 import { OrderDetails } from './components/OrderDetails';
@@ -136,6 +137,7 @@ export {
   Messages,
   MomentOption,
   NavBar,
+  NotificationSetting,
   NotFoundSource,
   OrderCreating,
   OrderDetails,
