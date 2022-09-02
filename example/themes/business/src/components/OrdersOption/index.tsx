@@ -7,6 +7,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontistoIcon from 'react-native-vector-icons/Fontisto'
 import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
+import { NotificationSetting } from '../../../../../src/components/NotificationSetting'
 import { NewOrderNotification } from '../NewOrderNotification';
 
 import { OText, OButton, OModal, OIconButton, OInput, OIcon } from '../shared';
@@ -726,11 +727,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
         </ScrollView>
       </View>
       {/* </GestureRecognizer> */}
-                
+
       {isBusinessApp && (
         <NewOrderNotification isBusinessApp={isBusinessApp} />
       )}
-      
+
       {(openSearchModal || openSLASettingModal) && (
         <OModal open={openSearchModal || openSLASettingModal} entireModal customClose>
           <ModalContainer
@@ -935,6 +936,7 @@ export const OrdersOption = (props: OrdersOptionParams) => {
   const [, t] = useLanguage();
   const [configState] = useConfig()
   const theme = useTheme()
+  const [checkNotificationStatus, setCheckNotificationStatus] = useState({ open: false, checked: false })
   const ordersProps = {
     ...props,
     UIComponent: OrdersOptionUI,
@@ -1049,5 +1051,11 @@ export const OrdersOption = (props: OrdersOptionParams) => {
     ]
   };
 
-  return <OrderListGroups {...ordersProps} />;
+  return (<>
+    <OrderListGroups {...ordersProps} />
+    {props?.checkNotification && (
+      <NotificationSetting checkNotificationStatus={checkNotificationStatus}
+        setCheckNotificationStatus={setCheckNotificationStatus} />
+    )}
+  </>);
 };
