@@ -290,7 +290,7 @@ export interface BusinessProductsListParams {
 	isFiltMode?: boolean,
 	handleUpdateProducts?: any,
 	navigation?: any;
-	previously_products?: any;
+	previouslyProducts?: any;
 }
 export interface SingleProductCardParams {
 	businessId: any;

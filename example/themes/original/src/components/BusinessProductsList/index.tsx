@@ -36,7 +36,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
     onClickCategory,
     lazyLoadProductsRecommended,
     handleUpdateProducts,
-    previously_products,
+    previouslyProducts,
     isFiltMode,
     navigation
   } = props;
@@ -115,10 +115,10 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
           <SubcategoriesComponent category={category} />
         )}
       </HeaderWrapper>
-      {previously_products?.length > 0 && (
+      {previouslyProducts?.length > 0 && (
         <OrderItAgain
           onProductClick={onProductClick}
-          productList={previously_products}
+          productList={previouslyProducts}
           businessId={businessId}
           categoryState={categoryState}
           navigation={navigation}
