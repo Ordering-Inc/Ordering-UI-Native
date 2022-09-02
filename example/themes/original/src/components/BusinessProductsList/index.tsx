@@ -142,7 +142,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
               onProductClick={() => onProductClick(product)}
               productAddedToCartLength={currentCart?.products?.reduce((productsLength: number, Cproduct: any) => { return productsLength + (Cproduct?.id === product?.id ? Cproduct?.quantity : 0) }, 0)}
               handleUpdateProducts={handleUpdateProducts}
-							navigation={navigation}
+              navigation={navigation}
             />
           ))
       }
