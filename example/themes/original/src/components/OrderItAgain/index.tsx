@@ -5,6 +5,7 @@ import { useTheme } from 'styled-components/native'
 import { SingleProductCard } from '../SingleProductCard'
 import { OrderItAgainParams } from '../../types'
 import { ScrollView, Dimensions } from 'react-native'
+import moment from 'moment';
 import {
   Container,
   ProductWrapper
@@ -50,7 +51,7 @@ export const OrderItAgain = (props: OrderItAgainParams) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        {productList?.length > 0 && productList?.map((product: any, i: number) => (
+        {productList?.length > 0 && productList?.sort((a: any, b:any) => moment(b?.last_ordered_date).valueOf() - moment(a?.last_ordered_date).valueOf()).map((product: any, i: number) => (
           <ProductWrapper key={'prod_' + product.id + `_${i}`} style={{ width: width - 120, }}>
             <SingleProductCard
               isSoldOut={product.inventoried && !product.quantity}
