@@ -48,75 +48,73 @@ export const ActiveOrders = (props: ActiveOrdersParams) => {
   }, [orders.length])
 
   const Order = ({ order }: { order: any }) => (
-    <React.Fragment>
-      <Card
-        isMiniCard={configs?.google_maps_api_key?.value}
-        onPress={() => handleClickCard(order?.uuid)}
-      >
-        {!!(configs?.google_maps_api_key?.value) && (
-          <Map>
+    <Card
+      isMiniCard={configs?.google_maps_api_key?.value}
+      onPress={() => handleClickCard(order?.uuid)}
+    >
+      {!!(configs?.google_maps_api_key?.value) && (
+        <Map>
+          <OIcon
+            url={getGoogleMapImage(order?.business?.location, configs?.google_maps_api_key?.value)}
+            height={100}
+            width={320}
+            style={{resizeMode: 'cover', borderTopRightRadius: 24, borderTopLeftRadius: 24}}
+          />
+        </Map>
+      )}
+      <Information>
+        {!!order.business?.logo && (
+          <Logo>
             <OIcon
-              url={getGoogleMapImage(order?.business?.location, configs?.google_maps_api_key?.value)}
-              height={100}
-              width={320}
-              style={{resizeMode: 'cover', borderTopRightRadius: 24, borderTopLeftRadius: 24}}
+              url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
+              style={styles.logo}
             />
-          </Map>
+          </Logo>
         )}
-        <Information>
-          {!!order.business?.logo && (
-            <Logo>
-              <OIcon
-                url={optimizeImage(order.business?.logo, 'h_300,c_limit')}
-                style={styles.logo}
-              />
-            </Logo>
-          )}
-          <OrderInformation>
-            <BusinessInformation style={{ width: '60%' }}>
-              <GestureHandlerScrollView
-                  showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={false}
-                  horizontal
-              >
-                <TouchableWithoutFeedback>
-                  <View>
-                    <OText
-                      size={16}
-                      numberOfLines={1}
-                      ellipsizeMode='tail'
-                    >
-                      {order.business?.name}
-                    </OText>
-                  </View>
-                </TouchableWithoutFeedback>
-              </GestureHandlerScrollView>
-              <GestureHandlerScrollView
+        <OrderInformation>
+          <BusinessInformation style={{ width: '60%' }}>
+            <GestureHandlerScrollView
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
                 horizontal
-              >
-                <TouchableWithoutFeedback>
-                  <View style={styles.orderNumber}>
-                    <OText size={12} space color={theme.colors.textSecondary}>{t('ORDER_NUMBER', 'Order No.')}</OText>
-                    <OText size={12} color={theme.colors.textSecondary}>{order.id}</OText>
-                  </View>
-                </TouchableWithoutFeedback>
-              </GestureHandlerScrollView>
-              <OText size={12} color={theme.colors.textSecondary}>{order?.delivery_datetime_utc
-                ? parseDate(order?.delivery_datetime_utc)
-                : parseDate(order?.delivery_datetime, { utc: false })}</OText>
-            </BusinessInformation>
-            <Price>
-              <OText size={16}>{parsePrice(order?.summary?.total || order?.total)}</OText>
-              {order?.status !== 0 && (
-                <OText color={theme.colors.primary} size={12} numberOfLines={2}>{getOrderStatus(order.status)?.value}</OText>
-              )}
-            </Price>
-          </OrderInformation>
-        </Information>
-      </Card>
-    </React.Fragment>
+            >
+              <TouchableWithoutFeedback>
+                <View>
+                  <OText
+                    size={16}
+                    numberOfLines={1}
+                    ellipsizeMode='tail'
+                  >
+                    {order.business?.name}
+                  </OText>
+                </View>
+              </TouchableWithoutFeedback>
+            </GestureHandlerScrollView>
+            <GestureHandlerScrollView
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              horizontal
+            >
+              <TouchableWithoutFeedback>
+                <View style={styles.orderNumber}>
+                  <OText size={12} space color={theme.colors.textSecondary}>{t('ORDER_NUMBER', 'Order No.')}</OText>
+                  <OText size={12} color={theme.colors.textSecondary}>{order.id}</OText>
+                </View>
+              </TouchableWithoutFeedback>
+            </GestureHandlerScrollView>
+            <OText size={12} color={theme.colors.textSecondary}>{order?.delivery_datetime_utc
+              ? parseDate(order?.delivery_datetime_utc)
+              : parseDate(order?.delivery_datetime, { utc: false })}</OText>
+          </BusinessInformation>
+          <Price>
+            <OText size={16}>{parsePrice(order?.summary?.total || order?.total)}</OText>
+            {order?.status !== 0 && (
+              <OText color={theme.colors.primary} size={12} numberOfLines={2}>{getOrderStatus(order.status)?.value}</OText>
+            )}
+          </Price>
+        </OrderInformation>
+      </Information>
+    </Card>
   )
 
   return (
