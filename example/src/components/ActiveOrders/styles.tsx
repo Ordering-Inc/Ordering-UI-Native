@@ -2,7 +2,7 @@ import styled from 'styled-components/native'
 
 export const ActiveOrdersContainer = styled.ScrollView`
   margin-bottom: 20px;
-  height: ${({ isMiniCards }: { isMiniCards: boolean }) => !isMiniCards ? '150px' : '220px'};
+  height: ${({ isMiniCards }: { isMiniCards: boolean }) => !isMiniCards ? '150px' : '450px'};
   max-height: ${({ isMiniCards }: { isMiniCards: boolean }) => !isMiniCards ? '150px' : '220px'};
 `
 
