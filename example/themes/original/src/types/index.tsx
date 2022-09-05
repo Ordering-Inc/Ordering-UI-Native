@@ -640,12 +640,20 @@ export interface NoNetworkParams {
 }
 
 export interface PlaceSpotParams {
-	isOpenPlaceSpot?: boolean,
+	isCheckout?: any,
+	isInputMode?: any,
 	cart?: any,
+	spotNumberDefault?: any,
+	vehicleDefault?: any,
+	spotNumber?: any,
+    setSpotNumber?: any,
+	orderTypes?: any,
 	placesState?: any,
-	handleChangePlace?: any,
-	getPlacesList?: any,
-	setOpenPlaceModal?: any
+	handleChangePlace? : any,
+	spotState?: any,
+	vehicle?: any,
+	setVehicle?: any,
+	handleChangeSpot?: any
 }
 
 export interface PromotionParams {

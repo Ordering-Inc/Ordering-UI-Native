@@ -24,6 +24,7 @@ import { DriverTips } from '../DriverTips';
 import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
 import { PaymentOptionWallet } from '../PaymentOptionWallet';
+import { PlaceSpot } from '../PlaceSpot'
 
 import {
 	ChContainer,
@@ -143,7 +144,8 @@ const CheckoutUI = (props: any) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const [requiredFields, setRequiredFields] = useState<any>([])
 
-	const placeSpotTypes = [4]
+	const placeSpotTypes = [3, 4, 5]
+	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
 	const businessConfigs = businessDetails?.business?.configs ?? []
 	const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
 	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
@@ -594,6 +596,20 @@ const CheckoutUI = (props: any) => {
 						</WalletPaymentOptionContainer>
 					)}
 
+
+					{!cartState.loading && placeSpotsEnabled && (
+						<>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 30, marginHorizontal: -40 }} />
+							<PlaceSpot
+								isCheckout
+								isInputMode
+								cart={cart}
+								spotNumberDefault={cartState?.cart?.spot_number ?? cart?.spot_number}
+								vehicleDefault={cart?.vehicle}
+							/>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
+						</>
+					)}
 
 					{!cartState.loading && cart && (
 						<ChSection>
