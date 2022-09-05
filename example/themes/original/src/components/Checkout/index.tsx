@@ -699,14 +699,6 @@ const CheckoutUI = (props: any) => {
 										{t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
 									</OText>
 								)}
-								{placeSpotTypes.includes(options?.type) && !cart?.place && (
-									<OText
-										color={theme.colors.error}
-										size={12}
-									>
-										{t('WARNING_PLACE_SPOT', 'Please, select your spot to place order.')}
-									</OText>
-								)}
 								{options.type === 1 &&
 									validationFields?.fields?.checkout?.driver_tip?.enabled &&
 									validationFields?.fields?.checkout?.driver_tip?.required &&
