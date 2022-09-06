@@ -127,3 +127,7 @@ export const Divider = styled.View`
 export const OrderAction = styled.View`
   flex-direction: row;
 `
+
+export const PlaceSpotWrapper = styled.View`
+  padding-horizontal: 40px;
+`

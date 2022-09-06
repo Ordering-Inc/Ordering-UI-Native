@@ -30,7 +30,8 @@ import {
   OrderDriver,
   Map,
   Divider,
-  OrderAction
+  OrderAction,
+  PlaceSpotWrapper
 } from './styles';
 import { OButton, OIcon, OModal, OText } from '../shared';
 import { ProductItemAccordion } from '../ProductItemAccordion';
@@ -44,6 +45,7 @@ import { TaxInformation } from '../TaxInformation';
 import { Placeholder, PlaceholderLine } from 'rn-placeholder';
 import NavBar from '../NavBar'
 import { OrderHistory } from './OrderHistory';
+import { PlaceSpot } from '../PlaceSpot'
 export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const {
     navigation,
@@ -105,6 +107,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const [refreshing] = useState(false);
   const { order, businessData } = props.order;
   const mapValidStatuses = [9, 19, 23]
+  const placeSpotTypes = [3, 4, 5]
 
   const walletName: any = {
     cash: {
@@ -680,6 +683,18 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                 </OText>
               </View>
             </OrderBusiness>
+            
+            {placeSpotTypes.includes(order?.delivery_type) && (
+              <PlaceSpotWrapper>
+                <PlaceSpot
+                  isInputMode
+                  cart={order}
+                  spotNumberDefault={order?.spot_number}
+                  vehicleDefault={order?.vehicle}
+                />
+              </PlaceSpotWrapper>
+            )}
+
             <View
               style={{
                 height: 8,
