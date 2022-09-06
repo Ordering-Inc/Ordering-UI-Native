@@ -153,8 +153,9 @@ const CheckoutUI = (props: any) => {
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
-	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash ||
-		cart?.subtotal < cart?.minimum || (placeSpotTypes.includes(options?.type) && !cart?.place) ||
+	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
+		placing || errorCash || cart?.subtotal < cart?.minimum ||
+		// (placeSpotTypes.includes(options?.type) && !cart?.place) ||
 		(options.type === 1 &&
 			validationFields?.fields?.checkout?.driver_tip?.enabled &&
 			validationFields?.fields?.checkout?.driver_tip?.required &&
