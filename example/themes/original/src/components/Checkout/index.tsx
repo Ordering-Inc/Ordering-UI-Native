@@ -24,6 +24,7 @@ import { DriverTips } from '../DriverTips';
 import { NotFoundSource } from '../NotFoundSource';
 import { UserDetails } from '../UserDetails';
 import { PaymentOptionWallet } from '../PaymentOptionWallet';
+import { PlaceSpot } from '../PlaceSpot'
 
 import {
 	ChContainer,
@@ -143,7 +144,8 @@ const CheckoutUI = (props: any) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const [requiredFields, setRequiredFields] = useState<any>([])
 
-	const placeSpotTypes = [4]
+	const placeSpotTypes = [3, 4, 5]
+	const placeSpotsEnabled = placeSpotTypes.includes(options?.type)
 	const businessConfigs = businessDetails?.business?.configs ?? []
 	const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
 	const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
@@ -151,8 +153,9 @@ const CheckoutUI = (props: any) => {
 	const isBusinessChangeEnabled = configs?.cart_change_business_validation?.value === '1'
 
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
-	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) || placing || errorCash ||
-		cart?.subtotal < cart?.minimum || (placeSpotTypes.includes(options?.type) && !cart?.place) ||
+	const isDisabledButtonPlace = loading || !cart?.valid || (!paymethodSelected && cart?.balance > 0) ||
+		placing || errorCash || cart?.subtotal < cart?.minimum ||
+		// (placeSpotTypes.includes(options?.type) && !cart?.place) ||
 		(options.type === 1 &&
 			validationFields?.fields?.checkout?.driver_tip?.enabled &&
 			validationFields?.fields?.checkout?.driver_tip?.required &&
@@ -595,6 +598,20 @@ const CheckoutUI = (props: any) => {
 					)}
 
 
+					{!cartState.loading && placeSpotsEnabled && (
+						<>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginTop: 30, marginHorizontal: -40 }} />
+							<PlaceSpot
+								isCheckout
+								isInputMode
+								cart={cart}
+								spotNumberDefault={cartState?.cart?.spot_number ?? cart?.spot_number}
+								vehicleDefault={cart?.vehicle}
+							/>
+							<View style={{ height: 8, backgroundColor: theme.colors.backgroundGray100, marginHorizontal: -40 }} />
+						</>
+					)}
+
 					{!cartState.loading && cart && (
 						<ChSection>
 							<ChCart>
@@ -681,14 +698,6 @@ const CheckoutUI = (props: any) => {
 										size={12}
 									>
 										{t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
-									</OText>
-								)}
-								{placeSpotTypes.includes(options?.type) && !cart?.place && (
-									<OText
-										color={theme.colors.error}
-										size={12}
-									>
-										{t('WARNING_PLACE_SPOT', 'Please, select your spot to place order.')}
 									</OText>
 								)}
 								{options.type === 1 &&
