@@ -59,6 +59,7 @@ import { PaymentOptions } from './src/components/PaymentOptions';
 import { DriverTips } from './src/components/DriverTips';
 import { UserDetails } from './src/components/UserDetails';
 import { OrderSummary } from './src/components/OrderSummary';
+import { OrderItAgain } from './src/components/OrderItAgain';
 import { CartStoresListing } from './src/components/CartStoresListing';
 import { PaymentOptionsWebView } from '../../src/components/PaymentOptionsWebView';
 import { GoogleMap } from './src/components/GoogleMap';
@@ -219,6 +220,7 @@ export {
 	DriverTips,
 	UserDetails,
 	OrderSummary,
+	OrderItAgain,
 	CartStoresListing,
 	PaymentOptionsWebView,
 	GoogleMap,

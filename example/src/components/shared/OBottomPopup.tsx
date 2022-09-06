@@ -4,14 +4,18 @@ const deviceHeight = Dimensions.get('window').height
 
 interface Props {
   open: boolean;
+  containerStyle: any;
   title?: string;
+  titleStyle?: any;
   children?: any;
   onClose?: any;
 }
 const OBottomPopup = (props: Props) => {
   const {
     open,
+    containerStyle,
     title,
+    titleStyle,
     onClose,
     children
   } = props
@@ -29,9 +33,9 @@ const OBottomPopup = (props: Props) => {
         >
           <View style={styles.touchableOutsideStyle} />
         </TouchableWithoutFeedback>
-        <View style={styles.bottomContainer}>
+        <View style={{ ...styles.bottomContainer, ...containerStyle }}>
           <View>
-            <Text style={styles.titleStyle}>
+            <Text style={{ ...styles.titleStyle, ...titleStyle }}>
               {title}
             </Text>
             {children}

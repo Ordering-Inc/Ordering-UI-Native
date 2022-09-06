@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
 	useLanguage,
 	useConfig,
@@ -11,7 +11,7 @@ import {
 import { useTheme } from 'styled-components/native';
 import { SingleProductCardParams } from '../../types';
 import { CardContainer, CardInfo, SoldOut, QuantityContainer, PricesContainer, RibbonBox, LogoWrapper } from './styles';
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image, Animated } from 'react-native';
 import { InView } from 'react-native-intersection-observer'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OButton, OText } from '../shared';
@@ -26,7 +26,7 @@ function SingleProductCardPropsAreEqual(prevProps: any, nextProps: any) {
 		prevProps.categoryState === nextProps.categoryState
 }
 
-const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
+const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const {
 		product,
 		isSoldOut,
@@ -36,12 +36,15 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		handleFavoriteProduct,
 		enableIntersection,
 		navigation,
-		businessId
+		businessId,
+		isPreviously
 	} = props;
 
 	const theme = useTheme();
 	const [orderingTheme] = useOrderingTheme()
 	const hideAddButton = orderingTheme?.theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden
+
+	const fadeAnim = useRef(new Animated.Value(0)).current;
 
 	const styles = StyleSheet.create({
 		container: {
@@ -94,7 +97,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const [, t] = useLanguage();
 	const [stateConfig] = useConfig();
 	const [{ auth }] = useSession()
-	const [{ parsePrice, optimizeImage }] = useUtils();
+	const [{ parsePrice, optimizeImage, parseDate }] = useUtils();
 	const [orderState] = useOrder()
 	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
 
@@ -122,6 +125,14 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		maxCartProductInventory,
 	);
 
+	const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+			useNativeDriver: true
+    }).start();
+  };
+
 	const handleChangeFavorite = () => {
 		if (auth) {
 			handleFavoriteProduct && handleFavoriteProduct(!product?.favorite)
@@ -130,8 +141,17 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		}
 	}
 
+	const handleChangeIntersection = () => {
+		setIsIntersectionObserver(true);
+		fadeIn();
+	}
+
+	useEffect(() => {
+		if (!enableIntersection) fadeIn()
+	}, [enableIntersection])
+
 	return (
-		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => setIsIntersectionObserver(true)}>
+		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
 			{isIntersectionObserver ? (
 				<CardContainer
 					showAddButton={!hideAddButton}
@@ -160,15 +180,17 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 									style={{ ...styles.line18, flex: 1 }}>
 									{product?.name}
 								</OText>
-								<TouchableOpacity
-									onPress={handleChangeFavorite}
-								>
-									<IconAntDesign
-										name={product?.favorite ? 'heart' : 'hearto'}
-										color={theme.colors.danger5}
-										size={18}
-									/>
-								</TouchableOpacity>
+								{!isPreviously && (
+									<TouchableOpacity
+										onPress={handleChangeFavorite}
+									>
+										<IconAntDesign
+											name={product?.favorite ? 'heart' : 'hearto'}
+											color={theme.colors.danger5}
+											size={18}
+										/>
+									</TouchableOpacity>
+								)}
 							</View>
 							<PricesContainer>
 								<OText color={theme.colors.primary}>{product?.price ? parsePrice(product?.price) : ''}</OText>
@@ -178,12 +200,22 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 							</PricesContainer>
 							<OText
 								size={10}
-								numberOfLines={2}
+								numberOfLines={!isPreviously ? 2 : 1}
 								ellipsizeMode="tail"
 								color={theme.colors.textSecondary}
 								style={styles.line15}>
 								{product?.description}
 							</OText>
+							{isPreviously && (
+								<OText
+									size={10}
+									numberOfLines={1}
+									ellipsizeMode="tail"
+									color={theme.colors.primary}
+									style={styles.line15}>
+									{t('LAST_ORDERED_ON', 'Last ordered on')} {parseDate(product?.last_ordered_date, { outputFormat: 'MMM DD, YYYY' })}
+								</OText>
+							)}
 						</CardInfo>
 						<LogoWrapper>
 							{product?.ribbon?.enabled && (
@@ -205,14 +237,23 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								</RibbonBox>
 							)}
 							{product?.images && (
-								<FastImage
-									style={styles.productStyle}
-									source={{
-										uri: optimizeImage(product?.images, 'h_250,c_limit'),
-										priority: FastImage.priority.normal,
-									}}
-									resizeMode={FastImage.resizeMode.cover}
-								/>
+								<Animated.View
+									style={[
+										{
+											// Bind opacity to animated value
+											opacity: fadeAnim
+										}
+									]}
+								>
+									<FastImage
+										style={styles.productStyle}
+										source={{
+											uri: optimizeImage(product?.images, 'h_250,c_limit'),
+											priority: FastImage.priority.normal,
+										}}
+										resizeMode={FastImage.resizeMode.cover}
+									/>
+								</Animated.View>
 							)}
 						</LogoWrapper>
 
@@ -262,7 +303,7 @@ const SinguleProductCardUI = React.memo((props: SingleProductCardParams) => {
 export const SingleProductCard = (props: SingleProductCardParams) => {
 	const singleProductCardProps = {
 		...props,
-		UIComponent: SinguleProductCardUI
+		UIComponent: SingleProductCardUI
 	}
 	return <SingleProductCardController {...singleProductCardProps} />
 }

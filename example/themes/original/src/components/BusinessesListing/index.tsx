@@ -7,6 +7,7 @@ import { BusinessesListing as OriginalBusinessListing } from './Layout/Original'
 import { BusinessesListing as AppointmentBusinessListing } from './Layout/Appointment'
 import { OBottomPopup } from '../shared';
 import { ReviewTrigger } from '../ReviewTrigger';
+import { NotificationSetting } from '../../../../../src/components/NotificationSetting';
 
 export const BusinessesListing = (props: any) => {
   const { logosLayout } = props
@@ -18,6 +19,7 @@ export const BusinessesListing = (props: any) => {
   const [, { getLastOrderHasNoReview }] = useOrder();
 
   const [, setIsReviewed] = useState()
+  const [checkNotificationStatus, setCheckNotificationStatus] = useState({ open: false, checked: false })
   const defaultOrder = {
     id: 0,
     business_id: 0,
@@ -72,9 +74,11 @@ export const BusinessesListing = (props: any) => {
     )
   }
 
+
+
   useEffect(() => {
-    auth && _getLastOrderHasNoReview()
-  }, [auth])
+    (checkNotificationStatus?.checked && auth) && _getLastOrderHasNoReview()
+  }, [checkNotificationStatus, auth])
 
   return (
     <>
@@ -92,9 +96,10 @@ export const BusinessesListing = (props: any) => {
           closeIcon={theme.images.general.close}
         >
           {lastOrderReview?.order && <ReviewTrigger order={lastOrderReview?.order} handleOpenOrderReview={handleOpenOrderReview} />}
-
         </OBottomPopup>
       )}
+      <NotificationSetting checkNotificationStatus={checkNotificationStatus}
+        setCheckNotificationStatus={setCheckNotificationStatus} />
     </>
   )
 }
