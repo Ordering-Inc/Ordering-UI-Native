@@ -48,7 +48,7 @@ export const BusinessBasicInformation = (
 	const [businessReviewsObtained, setBusinessReviewsObtainedbtained] = useState(false)
 	const isChewLayout = orderingTheme?.theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
 	const showLogo = !orderingTheme?.theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
-	
+
 	const styles = StyleSheet.create({
 		businesInfoheaderStyle: {
 			height: 150,
@@ -247,7 +247,7 @@ export const BusinessBasicInformation = (
 						)}
 						{isChewLayout && (
 							<TouchableOpacity onPress={() => handleClickBusinessInformation()}>
-								<OText style={{textDecorationColor: theme.colors.black, textDecorationLine: 'underline'}}>
+								<OText style={{ textDecorationColor: theme.colors.black, textDecorationLine: 'underline' }}>
 									{t('SEE_MORE_DESCRIPTION', 'See more')}
 								</OText>
 							</TouchableOpacity>
@@ -298,22 +298,14 @@ export const BusinessBasicInformation = (
 			<BusinessInfo style={styles.businessInfo}>
 				{showLogo && (
 					<BusinessLogo isChewLayout={isChewLayout}>
-						{loading ? (
-							<View>
-								<Placeholder Animation={Fade}>
-									<PlaceholderLine height={50} width={20} />
-								</Placeholder>
-							</View>
-						) : (
-							!isBusinessInfoShow && (
-								<OIcon
-									url={
-										logo ||
-										optimizeImage(businessState?.business?.logo, 'h_70,c_limit')
-									}
-									style={styles.businessLogo}
-								/>
-							)
+						{!isBusinessInfoShow && (
+							<OIcon
+								url={
+									logo ||
+									optimizeImage(businessState?.business?.logo, 'h_70,c_limit')
+								}
+								style={styles.businessLogo}
+							/>
 						)}
 					</BusinessLogo>
 				)}
