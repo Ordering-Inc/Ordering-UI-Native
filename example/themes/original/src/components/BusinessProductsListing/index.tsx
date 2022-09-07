@@ -10,8 +10,7 @@ import {
 	useUtils,
 	ToastType,
 	useToast,
-	useConfig,
-	useOrderingTheme
+	useConfig
 } from 'ordering-components/native'
 import { OButton, OIcon, OModal, OText } from '../shared'
 import Alert from '../../providers/AlertProvider'
@@ -66,7 +65,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	} = props
 
 	const theme = useTheme();
-	const [orderingTheme] = useOrderingTheme()
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
 	const [orderState, { clearCart }] = useOrder()
@@ -75,9 +73,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [{ configs }] = useConfig()
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 
-	const isChewLayout = orderingTheme?.theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
-	const showLogo = !orderingTheme?.theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
-	const hideBusinessNearCity = orderingTheme?.theme?.business_view?.components?.near_business?.hidden
+	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const showLogo = !theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
+	const hideBusinessNearCity = theme?.business_view?.components?.near_business?.hidden ?? true
 
 	const styles = StyleSheet.create({
 		mainContainer: {

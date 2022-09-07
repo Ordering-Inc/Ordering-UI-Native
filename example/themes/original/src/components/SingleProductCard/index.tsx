@@ -5,7 +5,6 @@ import {
 	useOrder,
 	useUtils,
 	useSession,
-	useOrderingTheme,
 	SingleProductCard as SingleProductCardController
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -41,8 +40,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	} = props;
 
 	const theme = useTheme();
-	const [orderingTheme] = useOrderingTheme()
-	const hideAddButton = orderingTheme?.theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden
+	const hideAddButton = theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden ?? true
 
 	const fadeAnim = useRef(new Animated.Value(0)).current;
 
