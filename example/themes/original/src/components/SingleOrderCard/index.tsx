@@ -145,6 +145,10 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
   };
 
   const handleClickViewOrder = (uuid: string) => {
+    if (isMessageView) {
+      handleClickOrder(order?.uuid)
+      return
+    }
     onNavigationRedirect &&
       onNavigationRedirect('OrderDetails', { orderId: uuid });
   };
