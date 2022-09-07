@@ -278,16 +278,18 @@ const SingleOrderCardUI = (props: SingleOrderCardParams) => {
                   {getOrderStatus(order.status)?.value}
                 </OText>
               </View>
-              <TouchableOpacity
-                onPress={handleChangeFavorite}
-                style={{ marginTop: 5 }}
-              >
-                <IconAntDesign
-                  name={order?.favorite ? 'heart' : 'hearto'}
-                  color={theme.colors.danger5}
-                  size={16}
-                />
-              </TouchableOpacity>
+              {!isMessageView && (
+                <TouchableOpacity
+                  onPress={handleChangeFavorite}
+                  style={{ marginTop: 5 }}
+                >
+                  <IconAntDesign
+                    name={order?.favorite ? 'heart' : 'hearto'}
+                    color={theme.colors.danger5}
+                    size={16}
+                  />
+                </TouchableOpacity>
+              )}
             </ContentFooter>
           </CardInfoWrapper>
         </InnerContainer>
