@@ -13,6 +13,7 @@ import {
 	useConfig,
 	useOrderingTheme
 } from 'ordering-components/native'
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OButton, OIcon, OModal, OText } from '../shared'
 import Alert from '../../providers/AlertProvider'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -103,7 +104,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 			padding: 15,
 			justifyContent: 'center',
 			shadowColor: theme.colors.clear,
-		}
+		},
+		businessSkeleton: {
+			borderRadius: 8,
+			marginRight: 20,
+			width: 56,
+			height: 56
+		},
 	})
 
 	const { business, loading, error } = businessState
@@ -277,6 +284,19 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							</WrapSearchBar>
 						)}
 					</TopHeader>
+					{!hideBusinessNearCity && loading && (
+						<NearBusiness style={{ paddingBottom: 10 }}>
+							<Placeholder Animation={Fade}>
+								<View style={{ flexDirection: 'row' }}>
+									{[...Array(10).keys()].map(i => (
+										<View style={styles.businessSkeleton} key={i}>
+											<PlaceholderLine style={{ width: '100%', height: '100%' }} />
+										</View>
+									))}
+								</View>
+							</Placeholder>
+						</NearBusiness>
+					)}
 					{!hideBusinessNearCity && businessState?.business?.city_id && (
 						<NearBusiness>
 							<BusinessesListing
