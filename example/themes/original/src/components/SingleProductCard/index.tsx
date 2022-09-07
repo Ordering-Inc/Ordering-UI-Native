@@ -52,6 +52,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 			borderRadius: 7.6,
 			borderColor: theme.colors.border,
 			marginBottom: 28,
+			minHeight: 165
 		},
 		titleWrapper: {
 			flexDirection: 'row',
