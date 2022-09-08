@@ -18,8 +18,7 @@ import {
 	useSession,
 	useOrder,
 	useConfig,
-	useUtils,
-	useOrderingTheme
+	useUtils
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -75,13 +74,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		logosLayout
 	} = props;
 	const theme = useTheme();
-	const [orderingTheme] = useOrderingTheme()
 	const isFocused = useIsFocused();
 	const appState = useRef(AppState.currentState)
 	const searchBarRef = useRef<any>()
 	const [appStateVisible, setAppStateVisible] = useState(appState.current);
-	const isChewLayout = orderingTheme?.theme?.header?.components?.layout?.type === 'chew'
-	const hideCities = orderingTheme?.theme?.business_listing_view?.components?.cities?.hidden
+	const isChewLayout = theme?.header?.components?.layout?.type === 'original'
+	const hideCities = theme?.business_listing_view?.components?.cities?.hidden ?? true
 	const [refreshing] = useState(false);
 	const styles = StyleSheet.create({
 		container: {
@@ -429,7 +427,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</OrderControlContainer>
 				) : (
 					<>
-						{!isPreOrderSetting && (// cambiar
+						{isPreOrderSetting && (
 							<View style={{ paddingHorizontal: 30 }}>
 								<PreorderInput
 									isChewLayout={isChewLayout}
