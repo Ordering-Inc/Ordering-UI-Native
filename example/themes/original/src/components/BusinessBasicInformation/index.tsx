@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, Linking, Pressable } from 'react-native';
-import { useUtils, useOrder, useLanguage, useOrderingTheme } from 'ordering-components/native';
+import { useUtils, useOrder, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OModal } from '../shared';
 import { BusinessBasicInformationParams } from '../../types';
@@ -38,7 +38,6 @@ export const BusinessBasicInformation = (
 	const { business, loading } = businessState;
 
 	const theme = useTheme();
-	const [orderingTheme] = useOrderingTheme()
 	const [orderState] = useOrder();
 	const [, t] = useLanguage();
 	const [{ parsePrice, parseDistance, optimizeImage }] = useUtils();
@@ -46,9 +45,9 @@ export const BusinessBasicInformation = (
 	const [openBusinessReviews, setOpenBusinessReviews] = useState(false);
 	const [businessInformationObtained, setBusinessInformationObtained] = useState(false)
 	const [businessReviewsObtained, setBusinessReviewsObtainedbtained] = useState(false)
-	const isChewLayout = orderingTheme?.theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
-	const showLogo = !orderingTheme?.theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
-	
+	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'original'
+	const showLogo = !theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
+
 	const styles = StyleSheet.create({
 		businesInfoheaderStyle: {
 			height: 150,
@@ -247,7 +246,7 @@ export const BusinessBasicInformation = (
 						)}
 						{isChewLayout && (
 							<TouchableOpacity onPress={() => handleClickBusinessInformation()}>
-								<OText style={{textDecorationColor: theme.colors.black, textDecorationLine: 'underline'}}>
+								<OText style={{ textDecorationColor: theme.colors.black, textDecorationLine: 'underline' }}>
 									{t('SEE_MORE_DESCRIPTION', 'See more')}
 								</OText>
 							</TouchableOpacity>
@@ -298,22 +297,14 @@ export const BusinessBasicInformation = (
 			<BusinessInfo style={styles.businessInfo}>
 				{showLogo && (
 					<BusinessLogo isChewLayout={isChewLayout}>
-						{loading ? (
-							<View>
-								<Placeholder Animation={Fade}>
-									<PlaceholderLine height={50} width={20} />
-								</Placeholder>
-							</View>
-						) : (
-							!isBusinessInfoShow && (
-								<OIcon
-									url={
-										logo ||
-										optimizeImage(businessState?.business?.logo, 'h_70,c_limit')
-									}
-									style={styles.businessLogo}
-								/>
-							)
+						{!isBusinessInfoShow && (
+							<OIcon
+								url={
+									logo ||
+									optimizeImage(businessState?.business?.logo, 'h_70,c_limit')
+								}
+								style={styles.businessLogo}
+							/>
 						)}
 					</BusinessLogo>
 				)}
