@@ -18,8 +18,7 @@ import {
 	useSession,
 	useOrder,
 	useConfig,
-	useUtils,
-	useOrderingTheme
+	useUtils
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -75,13 +74,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		logosLayout
 	} = props;
 	const theme = useTheme();
-	const [orderingTheme] = useOrderingTheme()
 	const isFocused = useIsFocused();
 	const appState = useRef(AppState.currentState)
 	const searchBarRef = useRef<any>()
 	const [appStateVisible, setAppStateVisible] = useState(appState.current);
-	const isChewLayout = orderingTheme?.theme?.header?.components?.layout?.type === 'chew'
-	const hideCities = orderingTheme?.theme?.business_listing_view?.components?.cities?.hidden
+	const isChewLayout = theme?.header?.components?.layout?.type === 'original'
+	const hideCities = theme?.business_listing_view?.components?.cities?.hidden ?? true
 	const [refreshing] = useState(false);
 	const styles = StyleSheet.create({
 		container: {
@@ -132,7 +130,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			borderColor: theme.colors.backgroundGray,
 			borderRadius: 8,
 			marginHorizontal: 40,
-			height: 45
+			minHeight: 45,
+			paddingVertical: 5,
+			paddingHorizontal: 20,
+			borderWidth: 1
 		},
 		businessSkeleton: {
 			borderRadius: 8,
@@ -426,7 +427,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</OrderControlContainer>
 				) : (
 					<>
-						{!isPreOrderSetting && (// cambiar
+						{isPreOrderSetting && (
 							<View style={{ paddingHorizontal: 30 }}>
 								<PreorderInput
 									isChewLayout={isChewLayout}
@@ -488,12 +489,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
 			{!hideCities && (
 				<View style={{ marginTop: 10 }}>
-					<OButton
-						onClick={() => setIsOpenCities(true)}
-						text={citiesState?.cities?.find((city: any) => city?.id === orderState?.options?.city_id)?.name || t('FILTER_BY_CITY', 'Filter by city')}
-						style={styles?.buttonCityStyle}
-						textStyle={{ color: theme.colors.backgroundGray, fontWeight: 'bold', fontSize: 18 }}
-					/>
+					<TouchableOpacity
+						style={styles.buttonCityStyle}
+						onPress={() => setIsOpenCities(true)}
+					>
+						<OText size={18} color={theme.colors.backgroundGray} weight='bold' style={{ textAlign: 'center' }}>
+							{citiesState?.cities?.find((city: any) => city?.id === orderState?.options?.city_id)?.name || t('FILTER_BY_CITY', 'Filter by city')}
+						</OText>
+					</TouchableOpacity>
 				</View>
 			)}
 			<OrderProgressWrapper>

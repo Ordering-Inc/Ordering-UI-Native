@@ -10,9 +10,9 @@ import {
 	useUtils,
 	ToastType,
 	useToast,
-	useConfig,
-	useOrderingTheme
+	useConfig
 } from 'ordering-components/native'
+import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import { OButton, OIcon, OModal, OText } from '../shared'
 import Alert from '../../providers/AlertProvider'
 import { BusinessBasicInformation } from '../BusinessBasicInformation'
@@ -66,7 +66,6 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	} = props
 
 	const theme = useTheme();
-	const [orderingTheme] = useOrderingTheme()
 	const [, t] = useLanguage()
 	const [{ auth }] = useSession()
 	const [orderState, { clearCart }] = useOrder()
@@ -75,9 +74,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [{ configs }] = useConfig()
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
 
-	const isChewLayout = orderingTheme?.theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
-	const showLogo = !orderingTheme?.theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
-	const hideBusinessNearCity = orderingTheme?.theme?.business_view?.components?.near_business?.hidden
+	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
+	const showLogo = !theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
+	const hideBusinessNearCity = theme?.business_view?.components?.near_business?.hidden ?? true
 
 	const styles = StyleSheet.create({
 		mainContainer: {
@@ -103,7 +102,13 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 			padding: 15,
 			justifyContent: 'center',
 			shadowColor: theme.colors.clear,
-		}
+		},
+		businessSkeleton: {
+			borderRadius: 8,
+			marginRight: 20,
+			width: 56,
+			height: 56
+		},
 	})
 
 	const { business, loading, error } = businessState
@@ -277,6 +282,19 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							</WrapSearchBar>
 						)}
 					</TopHeader>
+					{!hideBusinessNearCity && loading && (
+						<NearBusiness style={{ paddingBottom: 10 }}>
+							<Placeholder Animation={Fade}>
+								<View style={{ flexDirection: 'row' }}>
+									{[...Array(10).keys()].map(i => (
+										<View style={styles.businessSkeleton} key={i}>
+											<PlaceholderLine style={{ width: '100%', height: '100%' }} />
+										</View>
+									))}
+								</View>
+							</Placeholder>
+						</NearBusiness>
+					)}
 					{!hideBusinessNearCity && businessState?.business?.city_id && (
 						<NearBusiness>
 							<BusinessesListing
