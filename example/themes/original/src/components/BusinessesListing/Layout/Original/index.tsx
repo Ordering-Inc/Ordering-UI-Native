@@ -132,7 +132,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			borderColor: theme.colors.backgroundGray,
 			borderRadius: 8,
 			marginHorizontal: 40,
-			height: 45
+			minHeight: 45,
+			paddingVertical: 5,
+			paddingHorizontal: 20,
+			borderWidth: 1
 		},
 		businessSkeleton: {
 			borderRadius: 8,
@@ -488,12 +491,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
 			{!hideCities && (
 				<View style={{ marginTop: 10 }}>
-					<OButton
-						onClick={() => setIsOpenCities(true)}
-						text={citiesState?.cities?.find((city: any) => city?.id === orderState?.options?.city_id)?.name || t('FILTER_BY_CITY', 'Filter by city')}
-						style={styles?.buttonCityStyle}
-						textStyle={{ color: theme.colors.backgroundGray, fontWeight: 'bold', fontSize: 18 }}
-					/>
+					<TouchableOpacity
+						style={styles.buttonCityStyle}
+						onPress={() => setIsOpenCities(true)}
+					>
+						<OText size={18} color={theme.colors.backgroundGray} weight='bold' style={{ textAlign: 'center' }}>
+							{citiesState?.cities?.find((city: any) => city?.id === orderState?.options?.city_id)?.name || t('FILTER_BY_CITY', 'Filter by city')}
+						</OText>
+					</TouchableOpacity>
 				</View>
 			)}
 			<OrderProgressWrapper>
