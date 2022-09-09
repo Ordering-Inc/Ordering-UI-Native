@@ -327,16 +327,17 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
         </OText>
       </WrapHeader>
       <SearchWrapper>
-        <SearchBar
-          autoFocus
-          lazyLoad
-          inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
-          placeholder={`${t('SEARCH_BUSINESSES', 'Search Businesses')} / ${t('TYPE_AT_LEAST_3_CHARACTERS', 'type at least 3 characters')}`}
-          onSearch={(val: string) => handleChangeTermValue(val)}
-          value={termValue}
-          iconCustomRight={<AntDesignIcon name='filter' size={16} style={{ bottom: 2 }} onPress={() => handleOpenfilters()} />}
-        />
-
+        {isFocused && (
+          <SearchBar
+            autoFocus
+            lazyLoad
+            inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
+            placeholder={`${t('SEARCH_BUSINESSES', 'Search Businesses')} / ${t('TYPE_AT_LEAST_3_CHARACTERS', 'type at least 3 characters')}`}
+            onSearch={(val: string) => handleChangeTermValue(val)}
+            value={termValue}
+            iconCustomRight={<AntDesignIcon name='filter' size={16} style={{ bottom: 2 }} onPress={() => handleOpenfilters()} />}
+          />
+        )}
       </SearchWrapper>
       {
         noResults && (
