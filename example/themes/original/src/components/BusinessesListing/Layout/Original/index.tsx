@@ -18,8 +18,7 @@ import {
 	useSession,
 	useOrder,
 	useConfig,
-	useUtils,
-	useOrderingTheme
+	useUtils
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -75,13 +74,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		logosLayout
 	} = props;
 	const theme = useTheme();
-	const [orderingTheme] = useOrderingTheme()
 	const isFocused = useIsFocused();
 	const appState = useRef(AppState.currentState)
 	const searchBarRef = useRef<any>()
 	const [appStateVisible, setAppStateVisible] = useState(appState.current);
-	const isChewLayout = orderingTheme?.theme?.header?.components?.layout?.type === 'chew'
-	const hideCities = orderingTheme?.theme?.business_listing_view?.components?.cities?.hidden
+	const isChewLayout = theme?.header?.components?.layout?.type === 'original'
+	const hideCities = theme?.business_listing_view?.components?.cities?.hidden ?? true
 	const [refreshing] = useState(false);
 	const styles = StyleSheet.create({
 		container: {
@@ -429,7 +427,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					</OrderControlContainer>
 				) : (
 					<>
-						{!isPreOrderSetting && (// cambiar
+						{isPreOrderSetting && (
 							<View style={{ paddingHorizontal: 30 }}>
 								<PreorderInput
 									isChewLayout={isChewLayout}
@@ -467,25 +465,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				</OrderTypesContainer>
 			)}
 			{!businessId && (
-				<SearchBar
-					forwardRef={searchBarRef}
-					onSearch={handleChangeSearch}
-					searchValue={searchValue}
-					lazyLoad
-					hideIcon
-					isCancelXButtonShow={!!searchValue}
-					onCancel={() => handleChangeSearch('')}
-					placeholder={t('SEARCH', 'Search')}
-					height={50}
-					isDisabled={!businessTypes}
-					inputContainerStyles={styles.inputContainerStyles}
-					containerStyles={{
-						marginHorizontal: 40,
-						marginTop: 20
-					}}
-					inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? { paddingBottom: 6 } : { paddingBottom: 4 } }}
-					onSubmitEditing={() => { configs?.advanced_business_search_enabled?.value === '1' && navigation.navigate('BusinessSearch', { businessTypes, defaultTerm: searchValue }) }}
-				/>
+				<View style={{ marginTop: 20 }}>
+					<OButton
+						onClick={() => navigation.navigate('BusinessSearch', { businessTypes })}
+						text={t('SEARCH', 'Search')}
+						style={styles?.buttonCityStyle}
+						textStyle={{ color: theme.colors.textSecondary, fontSize: 16 }}
+					/>
+				</View>
 			)}
 
 			{!hideCities && (
