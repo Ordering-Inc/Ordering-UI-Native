@@ -465,26 +465,14 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				</OrderTypesContainer>
 			)}
 			{!businessId && (
-				<SearchBar
-					forwardRef={searchBarRef}
-					onSearch={handleChangeSearch}
-					searchValue={searchValue}
-					lazyLoad
-					hideIcon
-					isCancelXButtonShow={!!searchValue}
-					onCancel={() => handleChangeSearch('')}
-					placeholder={t('SEARCH', 'Search')}
-					height={50}
-					isDisabled={true}
-					inputContainerStyles={styles.inputContainerStyles}
-					containerStyles={{
-						marginHorizontal: 40,
-						marginTop: 20
-					}}
-					inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? { paddingBottom: 6 } : { paddingBottom: 4 } }}
-					onPress={() => { navigation.navigate('BusinessSearch', { businessTypes }) }}
-					onSubmitEditing={() => { navigation.navigate('BusinessSearch', { businessTypes, defaultTerm: searchValue }) }}
-				/>
+				<View style={{ marginTop: 20 }}>
+					<OButton
+						onClick={() => navigation.navigate('BusinessSearch', { businessTypes })}
+						text={t('SEARCH', 'Search')}
+						style={styles?.buttonCityStyle}
+						textStyle={{ color: theme.colors.textSecondary, fontSize: 16 }}
+					/>
+				</View>
 			)}
 
 			{!hideCities && (
