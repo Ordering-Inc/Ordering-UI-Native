@@ -76,8 +76,8 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		},
 		quantityContainer: {
 			position: 'absolute',
-			left: '100%',
-			bottom: '100%',
+			right: 0,
+			top: 0,
 			width: 25,
 			height: 25,
 			textAlign: 'center',
@@ -125,12 +125,12 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	);
 
 	const fadeIn = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 500,
+		Animated.timing(fadeAnim, {
+			toValue: 1,
+			duration: 500,
 			useNativeDriver: true
-    }).start();
-  };
+		}).start();
+	};
 
 	const handleChangeFavorite = () => {
 		if (auth) {
@@ -164,7 +164,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 					<View style={{ flexDirection: 'row' }}>
 						{productAddedToCartLength > 0 && (
 							<QuantityContainer style={[styles.quantityContainer, {
-								transform: [{ translateX: 10 }, { translateY: -10 }],
+								transform: [{ translateX: 25 }, { translateY: -55 }],
 							}]}>
 								<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>
 							</QuantityContainer>
