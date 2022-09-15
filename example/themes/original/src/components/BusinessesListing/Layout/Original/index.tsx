@@ -464,19 +464,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					/>
 				</OrderTypesContainer>
 			)}
-			{!businessId && (
-				<View style={{ marginTop: 20 }}>
-					<OButton
-						onClick={() => navigation.navigate('BusinessSearch', { businessTypes })}
-						text={t('SEARCH', 'Search')}
-						style={styles?.buttonCityStyle}
-						textStyle={{ color: theme.colors.textSecondary, fontSize: 16 }}
-					/>
-				</View>
-			)}
 
 			{!hideCities && (
-				<View style={{ marginTop: 10 }}>
+				<View style={{ marginTop: 20 }}>
 					<TouchableOpacity
 						style={styles.buttonCityStyle}
 						onPress={() => setIsOpenCities(true)}
