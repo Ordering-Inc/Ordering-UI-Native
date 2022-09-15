@@ -433,7 +433,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                 style={{ borderRadius: 50, paddingLeft: 5, paddingRight: 5, height: 20 }}
               />
             </SingleBusinessContainer>
-            <ScrollView horizontal style={styles.productsContainer}>
+            <ScrollView horizontal style={styles.productsContainer} contentContainerStyle={{ flexGrow: 1 }}>
               {business?.categories?.map((category: any) => category?.products?.map((product: any, i: number) => (
                 <SingleProductCard
                   key={product?.id}
