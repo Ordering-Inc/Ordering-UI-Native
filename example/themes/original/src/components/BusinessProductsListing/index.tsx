@@ -314,6 +314,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 						style={{
 							height: Dimensions.get('window').height - filtProductsHeight
 						}}
+						contentContainerStyle={{ flexGrow: 1 }}
 					>
 						<View style={{ padding: 20, backgroundColor: theme.colors.white }}>
 							<BusinessProductsList

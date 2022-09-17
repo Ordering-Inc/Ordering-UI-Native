@@ -119,14 +119,31 @@ export const MyOrders = (props: any) => {
           </View>
         </>
       )}
-      {notOrderOptions.includes(selectedOption) && (
+      {selectedOption === 'business' && (
         <OrdersOption
           {...props}
+          isBusiness
           titleContent={t('PREVIOUSLY_ORDERED', 'Previously ordered')}
           hideOrders
           horizontal
-          isBusiness={selectedOption === 'business'}
-          isProducts={selectedOption === 'products'}
+          activeOrders
+          pastOrders
+          preOrders
+          businessesSearchList={businessesSearchList}
+          setIsEmptyBusinesses={setIsEmptyBusinesses}
+          businessOrderIds={businessOrderIds}
+          setBusinessOrderIds={setBusinessOrderIds}
+          ordersLength={ordersLength}
+          setOrdersLength={setOrdersLength}
+        />
+      )}
+      {selectedOption === 'products' && (
+        <OrdersOption
+          {...props}
+          isProducts
+          titleContent={t('PREVIOUSLY_ORDERED', 'Previously ordered')}
+          hideOrders
+          horizontal
           activeOrders
           pastOrders
           preOrders
