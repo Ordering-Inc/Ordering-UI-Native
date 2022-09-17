@@ -127,7 +127,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 	const isOpenFiltProducts = isOpenSearchBar && !!searchValue
-	const filtProductsHeight = Platform.OS === 'ios' ? 0 : 35
+	const filtProductsHeight = Platform.OS === 'ios' ? 0 : 100
 	const onRedirect = (route: string, params?: any) => {
 		navigation.navigate(route, params)
 	}
@@ -246,7 +246,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					<TopHeader isIos={Platform.OS === 'ios'}>
 						{!isOpenSearchBar && (
 							<>
-								<View style={{ ...styles.headerItem, flex: 1 }}>
+								<View style={{ ...styles.headerItem, width: 175 }}>
 									<OButton
 										imgLeftSrc={theme.images.general.arrow_left}
 										imgRightSrc={null}
@@ -352,7 +352,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					<BackgroundGray />
 				)}
 				<IOScrollView
-					stickyHeaderIndices={[2]}
+					stickyHeaderIndices={[business?.professionals?.length > 0 ? 3 : 2]}
 					style={{
 						...styles.mainContainer,
 						marginBottom: currentCart?.products?.length > 0 && categoryState.products.length !== 0 ?
@@ -394,26 +394,21 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							marginTop: isChewLayout && showLogo ? 10 : 0
 						}}
 					/>
-					{!loading && business?.id && (
-						<>
-							{!(business?.categories?.length === 0) && (
-								<BusinessProductsCategories
-									categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
-									categorySelected={categorySelected}
-									onClickCategory={handleChangeCategory}
-									featured={featuredProducts}
-									openBusinessInformation={openBusinessInformation}
-									scrollViewRef={scrollViewRef}
-									productListLayout={productListLayout}
-									categoriesLayout={categoriesLayout}
-									selectedCategoryId={selectedCategoryId}
-									lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
-									setSelectedCategoryId={setSelectedCategoryId}
-									setCategoryClicked={setCategoryClicked}
-
-								/>
-							)}
-						</>
+					{!loading && business?.id && !(business?.categories?.length === 0) && (
+						<BusinessProductsCategories
+							categories={[{ id: null, name: t('ALL', 'All') }, { id: 'featured', name: t('FEATURED', 'Featured') }, ...business?.categories.sort((a: any, b: any) => a.rank - b.rank)]}
+							categorySelected={categorySelected}
+							onClickCategory={handleChangeCategory}
+							featured={featuredProducts}
+							openBusinessInformation={openBusinessInformation}
+							scrollViewRef={scrollViewRef}
+							productListLayout={productListLayout}
+							categoriesLayout={categoriesLayout}
+							selectedCategoryId={selectedCategoryId}
+							lazyLoadProductsRecommended={business?.lazy_load_products_recommended}
+							setSelectedCategoryId={setSelectedCategoryId}
+							setCategoryClicked={setCategoryClicked}
+						/>
 					)}
 					{!loading && business?.id && (
 						<>
