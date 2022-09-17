@@ -371,7 +371,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
             handleCustomClick={() => onBusinessClick(business)}
             handleUpdateBusinessList={handleUpdateBusinessList}
             orderType={orderState?.options?.type}
-            style={{ width: screenWidth - 80, marginRight: (businessesSearchList.loading || i !== businessesSearchList.businesses?.length - 1) ? 20 : 0 }}
+            style={{ width: screenWidth - 120, marginRight: (businessesSearchList.loading || i !== businessesSearchList.businesses?.length - 1) ? 20 : 0 }}
           />
         ))}
         {!businessesSearchList.loading && paginationProps?.totalPages && paginationProps?.currentPage < paginationProps?.totalPages && (
@@ -433,7 +433,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                 style={{ borderRadius: 50, paddingLeft: 5, paddingRight: 5, height: 20 }}
               />
             </SingleBusinessContainer>
-            <ScrollView horizontal style={styles.productsContainer}>
+            <ScrollView horizontal style={styles.productsContainer} contentContainerStyle={{ flexGrow: 1 }}>
               {business?.categories?.map((category: any) => category?.products?.map((product: any, i: number) => (
                 <SingleProductCard
                   key={product?.id}
@@ -443,7 +443,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                   onProductClick={(product: any) => onProductClick(business, category?.id, product?.id)}
                   productAddedToCartLength={0}
                   handleUpdateProducts={(productId: number, changes: any) => handleUpdateProducts(productId, category?.id, business?.id, changes)}
-                  style={{ width: screenWidth - 80, marginRight: i === category?.products?.length - 1 ? 0 : 20 }}
+                  style={{ width: screenWidth - 120, marginRight: i === category?.products?.length - 1 ? 0 : 20 }}
                 />
               )))}
 

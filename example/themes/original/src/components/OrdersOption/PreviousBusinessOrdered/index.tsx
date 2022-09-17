@@ -123,7 +123,7 @@ export const PreviousBusinessOrderedUI = (props: PreviousBusinessOrderedParams) 
         <>
           {!businessLoading && (
             <BusinessControllerList
-              style={{ width: windowWidth - 80, marginRight: 20 }}
+              style={{ width: windowWidth - 120, marginRight: 20 }}
             />
           )}
         </>
