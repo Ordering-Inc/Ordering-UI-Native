@@ -136,7 +136,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             <SingleProductCard
               key={'prod_' + product.id + `_${i}`}
               isSoldOut={product.inventoried && !product.quantity}
-              enableIntersection
+              enableIntersection={!isFiltMode}
               product={product}
               businessId={businessId}
               categoryState={categoryState}
@@ -164,7 +164,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                       key={'feat_' + product.id + `_${i}`}
                       isSoldOut={product.inventoried && !product.quantity}
                       product={product}
-                      enableIntersection
+                      enableIntersection={!isFiltMode}
                       businessId={businessId}
                       categoryState={categoryState}
                       onProductClick={onProductClick}
@@ -257,7 +257,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                   {products.sort((a: any, b: any) => a.rank - b.rank).map((product: any, i: any) => (
                     <SingleProductCard
                       key={`${product?.id}_${i}`}
-                      enableIntersection
+                      enableIntersection={!isFiltMode}
                       isSoldOut={product.inventoried && !product.quantity}
                       businessId={businessId}
                       product={product}
