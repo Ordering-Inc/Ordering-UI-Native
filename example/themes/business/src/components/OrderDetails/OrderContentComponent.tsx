@@ -372,7 +372,7 @@ export const OrderContentComponent = (props: OrderContent) => {
         <Table>
           <OText mBottom={4}>{t('SUBTOTAL', 'Subtotal')}</OText>
           <OText mBottom={4}>
-            {parsePrice(((order?.summary?.subtotal ?? order?.subtotal) + getIncludedTaxes()))}
+            {parsePrice(((order?.summary?.subtotal ?? order?.subtotal) + getIncludedTaxes()), { currency: order?.currency})}
           </OText>
         </Table>
         {(order?.summary?.discount > 0 ?? order?.discount > 0) && order?.offers?.length === 0 && (
@@ -385,7 +385,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             ) : (
               <OText mBottom={4}>{t('DISCOUNT', theme?.defaultLanguages?.DISCOUNT || 'Discount')}</OText>
             )}
-            <OText>- {parsePrice(order?.summary?.discount ?? order?.discount)}</OText>
+            <OText>- {parsePrice(order?.summary?.discount ?? order?.discount, { currency: order?.currency})}</OText>
           </Table>
         )}
         {
@@ -399,7 +399,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                   )}
                 </OText>
               </OSRow>
-              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount)}</OText>
+              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: order?.currency})}</OText>
             </Table>
           ))
         }
@@ -407,9 +407,9 @@ export const OrderContentComponent = (props: OrderContent) => {
           <Table>
             <OText mBottom={4}>{t('SUBTOTAL_WITH_DISCOUNT', 'Subtotal with discount')}</OText>
             {order?.tax_type === 1 ? (
-              <OText mBottom={4}>{parsePrice((order?.summary?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0))}</OText>
+              <OText mBottom={4}>{parsePrice((order?.summary?.subtotal_with_discount + getIncludedTaxesDiscounts() ?? 0), { currency: order?.currency})}</OText>
             ) : (
-              <OText mBottom={4}>{parsePrice(order?.summary?.subtotal_with_discount ?? 0)}</OText>
+              <OText mBottom={4}>{parsePrice(order?.summary?.subtotal_with_discount ?? 0, { currency: order?.currency})}</OText>
             )}
           </Table>
         )}
@@ -419,7 +419,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               {t('TAX', 'Tax')} {`(${verifyDecimals(order?.tax, parseNumber)}%)`}
             </OText>
             <OText mBottom={4}>
-              {parsePrice(order?.summary?.tax ?? 0)}
+              {parsePrice(order?.summary?.tax ?? 0, { currency: order?.currency})}
             </OText>
           </Table>
         )}
@@ -430,7 +430,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                 {t('SERVICE_FEE', 'Service fee')}
                 {`(${verifyDecimals(order?.service_fee, parseNumber)}%)`}
               </OText>
-              <OText mBottom={4}>{parsePrice(order?.summary?.service_fee ?? 0)}</OText>
+              <OText mBottom={4}>{parsePrice(order?.summary?.service_fee ?? 0, { currency: order?.currency})}</OText>
             </Table>
           )
         }
@@ -443,7 +443,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                   {`(${verifyDecimals(tax?.rate, parseNumber)}%)`}{' '}
                 </OText>
               </OSRow>
-              <OText mBottom={4}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0)}</OText>
+              <OText mBottom={4}>{parsePrice(tax?.summary?.tax_after_discount ?? tax?.summary?.tax ?? 0, { currency: order?.currency})}</OText>
             </Table>
           ))
         }
@@ -453,10 +453,10 @@ export const OrderContentComponent = (props: OrderContent) => {
               <OSRow>
                 <OText mBottom={4}>
                   {fee.name || t('INHERIT_FROM_BUSINESS', 'Inherit from business')}
-                  ({fee?.fixed > 0 && `${parsePrice(fee?.fixed)} + `}{fee.percentage}%){' '}
+                  ({fee?.fixed > 0 && `${parsePrice(fee?.fixed, { currency: order?.currency})} + `}{fee.percentage}%){' '}
                 </OText>
               </OSRow>
-              <OText mBottom={4}>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0)}</OText>
+              <OText mBottom={4}>{parsePrice(fee?.summary?.fixed + (fee?.summary?.percentage_after_discount ?? fee?.summary?.percentage) ?? 0, { currency: order?.currency})}</OText>
             </Table>
           ))
         }
@@ -471,7 +471,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                   )}
                 </OText>
               </OSRow>
-              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount)}</OText>
+              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: order?.currency})}</OText>
             </Table>
           ))
         }
@@ -483,7 +483,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               </OText>
 
               <OText mBottom={4}>
-                {parsePrice(order?.summary?.delivery_price)}
+                {parsePrice(order?.summary?.delivery_price, { currency: order?.currency})}
               </OText>
             </Table>
           )
@@ -499,7 +499,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                   )}
                 </OText>
               </OSRow>
-              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount)}</OText>
+              <OText mBottom={4}>- {parsePrice(offer?.summary?.discount, { currency: order?.currency})}</OText>
             </Table>
           ))
         }
@@ -514,7 +514,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                   `(${verifyDecimals(order?.summary?.driver_tip, parseNumber)}%)`
                 )}
             </OText>
-            <OText mBottom={4}>{parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip)}</OText>
+            <OText mBottom={4}>{parsePrice(order?.summary?.driver_tip ?? order?.totalDriverTip, { currency: order?.currency})}</OText>
           </Table>
         )}
 
@@ -528,7 +528,7 @@ export const OrderContentComponent = (props: OrderContent) => {
               mBottom={4}
               style={styles.textBold}
               color={theme.colors.primary}>
-              {parsePrice(order?.summary?.total ?? order?.total)}
+              {parsePrice(order?.summary?.total ?? order?.total, { currency: order?.currency})}
             </OText>
           </Table>
         </Total>
@@ -571,7 +571,7 @@ export const OrderContentComponent = (props: OrderContent) => {
                     )}
                   </View>
                   <OText>
-                    -{parsePrice(event.amount)}
+                    -{parsePrice(event.amount, { currency: order?.currency})}
                   </OText>
                 </View>
               ))}
