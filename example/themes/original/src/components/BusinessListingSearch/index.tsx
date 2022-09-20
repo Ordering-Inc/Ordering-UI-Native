@@ -367,6 +367,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
             key={business.id}
             business={business}
             isBusinessOpen={business.open}
+            enableIntersection={false}
             handleCustomClick={() => onBusinessClick(business)}
             handleUpdateBusinessList={handleUpdateBusinessList}
             orderType={orderState?.options?.type}
@@ -438,11 +439,12 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                   key={product?.id}
                   isSoldOut={(product.inventoried && !product.quantity)}
                   product={product}
+                  enableIntersection={false}
                   businessId={business?.id}
                   onProductClick={(product: any) => onProductClick(business, category?.id, product?.id)}
                   productAddedToCartLength={0}
                   handleUpdateProducts={(productId: number, changes: any) => handleUpdateProducts(productId, category?.id, business?.id, changes)}
-                  style={{ width: screenWidth - 120, marginRight: i === category?.products?.length - 1 ? 0 : 20 }}
+                  style={{ width: screenWidth - 80, maxWidth: screenWidth - 80, marginRight: 20 }}
                 />
               )))}
 
