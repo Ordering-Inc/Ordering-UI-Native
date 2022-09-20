@@ -445,9 +445,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			</View>
 			{!isChewLayout ? (
 				<HeaderWrapper
-					source={theme.images.general.homeHero}
+					source={theme.images.general.homeHero300}
 					style={{ paddingTop: top + 20 }}
-					resizeMode='stretch'
+					resizeMode='cover'
 				>
 					{!auth && (
 						<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
