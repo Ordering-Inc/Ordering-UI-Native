@@ -61,7 +61,9 @@ const StripeElementsFormUI = (props: any) => {
 	}
 
 	if (user?.address) {
-		billingDetails.address.line1 = user?.address
+		billingDetails.address = {
+      line1: user?.address
+    }
 	}
 
 	const createPayMethod = async () => {
@@ -71,7 +73,13 @@ const StripeElementsFormUI = (props: any) => {
 		}
 		try {
 			setCreatePmLoading(true)
-			const { paymentMethod } = await createPaymentMethod(params);
+			const { paymentMethod, error } = await createPaymentMethod(params);
+
+      if (error) {
+        setErrors(error?.message);
+        setCreatePmLoading(false)
+        return
+      }
 
 			setCreatePmLoading(false)
 			handleSource && handleSource({

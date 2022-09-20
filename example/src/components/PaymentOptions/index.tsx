@@ -62,7 +62,8 @@ const PaymentOptionsUI = (props: any) => {
     handlePaymentMethodClickCustom,
     isOpenMethod,
     setCardData,
-    handlePlaceOrder
+    handlePlaceOrder,
+    merchantId
   } = props
 
   const theme = useTheme();
@@ -220,7 +221,7 @@ const PaymentOptionsUI = (props: any) => {
 
       {paymethodSelected?.gateway === 'cash' && (
         <PaymentOptionCash
-          orderTotal={cart.total}
+          orderTotal={cart.balance ?? cart.total}
           defaultValue={paymethodSelected?.data?.cash}
           onChangeData={handlePaymethodDataChange}
           setErrorCash={props.setErrorCash}
@@ -322,6 +323,7 @@ const PaymentOptionsUI = (props: any) => {
             publicKey={isOpenMethod?.paymethod?.credentials?.publishable || isOpenMethod?.paymethod?.credentials?.publishable_key}
             handleSource={handlePaymethodDataChange}
             onCancel={() => handlePaymethodClick(null)}
+            merchantId={merchantId}
           />
         </KeyboardAvoidingView>
       </OModal>
