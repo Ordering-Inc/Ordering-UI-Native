@@ -445,7 +445,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			</View>
 			{!isChewLayout ? (
 				<HeaderWrapper
-					source={theme.images.general.homeHero300}
+					source={theme.images.backgrounds.business_list_header}
 					style={{ paddingTop: top + 20 }}
 					resizeMode='cover'
 				>
