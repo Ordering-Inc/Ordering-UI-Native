@@ -363,6 +363,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					onScroll={handlePageScroll}
 					onScrollBeginDrag={handleTouchDrag}
 					scrollEventThrottle={16}
+					bounces={false}
 				>
 					<BusinessBasicInformation
 						navigation={navigation}

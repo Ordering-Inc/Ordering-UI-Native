@@ -93,6 +93,7 @@ export const BusinessesListing = (props: any) => {
           bottomContainerStyle={{ height: 'auto', borderRadius: 10 }}
           titleStyle={{ textAlign: 'center' }}
           closeIcon={theme.images.general.close}
+          presentationStyle='overFullScreen'
         >
           {lastOrderReview?.order && <ReviewTrigger order={lastOrderReview?.order} handleOpenOrderReview={handleOpenOrderReview} />}
         </OBottomPopup>
