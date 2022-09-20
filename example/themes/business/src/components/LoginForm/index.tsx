@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Recaptcha from 'react-native-recaptcha-that-works'
+import ReCaptcha from '@fatnlazycat/react-native-recaptcha-v3'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -52,8 +53,8 @@ const LoginFormUI = (props: LoginParams) => {
     allowedLevels,
     useRootPoint,
     notificationState,
-		handleReCaptcha,
-		enableReCaptcha
+    handleReCaptcha,
+    enableReCaptcha
   } = props;
 
   const [ordering, { setOrdering }] = useApi();
@@ -67,7 +68,7 @@ const LoginFormUI = (props: LoginParams) => {
   const inputRef = useRef<any>(null);
   const inputMailRef = useRef<any>(null);
 
-  const [projectName, setProjectName] = useState({name: '', isFocued: false});
+  const [projectName, setProjectName] = useState({ name: '', isFocued: false });
   const [passwordSee, setPasswordSee] = useState(false);
   const [isLoadingVerifyModal, setIsLoadingVerifyModal] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -92,36 +93,50 @@ const LoginFormUI = (props: LoginParams) => {
   const [formValues, setFormValues] = useState(null);
 
   const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
-	const [recaptchaVerified, setRecaptchaVerified] = useState(false)
+  const [recaptchaVerified, setRecaptchaVerified] = useState(false)
 
   const recaptchaRef = useRef<any>({});
 
   const handleOpenRecaptcha = () => {
-		setRecaptchaVerified(false)
-	  	if (!recaptchaConfig?.siteKey) {
-			showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
-			return
-		}
-		if (!recaptchaConfig?.baseUrl) {
-			showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
-			return
-		}
-		recaptchaRef.current.open()
-  	}
+    setRecaptchaVerified(false)
+    if (!recaptchaConfig?.siteKey) {
+      showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
+      return
+    }
+    if (!recaptchaConfig?.baseUrl) {
+      showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
+      return
+    }
+    recaptchaRef.current.open()
+  }
 
-	const onRecaptchaVerify = (token: any) => {
-		setRecaptchaVerified(true)
-		handleReCaptcha(token)
-	}
+  const onRecaptchaVerify = (token: any) => {
+    setRecaptchaVerified(true)
+    handleReCaptcha({ code: token, version: recaptchaConfig?.version })
+  }
 
-	useEffect(() => {
-		if (configs && Object.keys(configs).length > 0 && enableReCaptcha) {
-			setRecaptchaConfig({
-				siteKey: configs?.security_recaptcha_site_key?.value || null,
-				baseUrl: configs?.security_recaptcha_base_url?.value || null
-			})
-		}
-	}, [configs, enableReCaptcha])
+  useEffect(() => {
+    if (configs && Object.keys(configs).length > 0 && enableReCaptcha) {
+      if (configs?.security_recaptcha_type?.value === 'v3' &&
+        configs?.security_recaptcha_score_v3?.value > 0 &&
+        configs?.security_recaptcha_site_key_v3?.value
+      ) {
+        setRecaptchaConfig({
+          version: 'v3',
+          siteKey: configs?.security_recaptcha_site_key_v3?.value || null,
+          baseUrl: configs?.security_recaptcha_base_url?.value || null
+        })
+        return
+      }
+      if (configs?.security_recaptcha_site_key?.value) {
+        setRecaptchaConfig({
+          version: 'v2',
+          siteKey: configs?.security_recaptcha_site_key?.value || null,
+          baseUrl: configs?.security_recaptcha_base_url?.value || null
+        })
+      }
+    }
+  }, [configs, enableReCaptcha])
 
   useEffect(() => {
     const projectInputInterval = setInterval(() => {
@@ -245,6 +260,17 @@ const LoginFormUI = (props: LoginParams) => {
 
   useEffect(() => {
     if (!formState?.loading && formState?.result?.error) {
+      if (formState.result?.result?.[0] === 'ERROR_AUTH_VERIFICATION_CODE') {
+        setRecaptchaVerified(false)
+        setSubmitted(false)
+        setRecaptchaConfig({
+          version: 'v2',
+          siteKey: configs?.security_recaptcha_site_key?.value || null,
+          baseUrl: configs?.security_recaptcha_base_url?.value || null
+        })
+        showToast(ToastType.Info, t('TRY_AGAIN', 'Please try again'))
+        return
+      }
       formState?.result?.result &&
         showToast(
           ToastType.Error,
@@ -252,17 +278,17 @@ const LoginFormUI = (props: LoginParams) => {
             ? getTraduction(formState.result?.result)
             : loginTab === 'email' &&
               typeof formState.result?.result !== 'string'
-            ? getTraduction(formState.result?.result[0])
-            : loginTab === 'cellphone' &&
-              typeof formState.result?.result === 'string'
-            ? getTraduction(formState.result?.result).replace(
-                t('USER', 'user').toLowerCase(),
-                t('PHONE_NUMER', 'Phone number'),
-              )
-            : getTraduction(formState.result?.result[0]).replace(
-                t('USER', 'user').toLowerCase(),
-                t('PHONE_NUMER', 'Phone number'),
-              ),
+              ? getTraduction(formState.result?.result[0])
+              : loginTab === 'cellphone' &&
+                typeof formState.result?.result === 'string'
+                ? getTraduction(formState.result?.result).replace(
+                  t('USER', 'user').toLowerCase(),
+                  t('PHONE_NUMER', 'Phone number'),
+                )
+                : getTraduction(formState.result?.result[0]).replace(
+                  t('USER', 'user').toLowerCase(),
+                  t('PHONE_NUMER', 'Phone number'),
+                ),
         );
       setSubmitted(false)
     }
@@ -516,7 +542,7 @@ const LoginFormUI = (props: LoginParams) => {
                   icon={theme.images.general.project}
                   iconColor={theme.colors.arrowColor}
                   onChange={(e: any) => {
-                    setProjectName({name: e?.target?.value, isFocued: true})
+                    setProjectName({ name: e?.target?.value, isFocued: true })
                     onChange(e?.target?.value);
                     setSubmitted(false);
                   }}
@@ -545,7 +571,7 @@ const LoginFormUI = (props: LoginParams) => {
                   icon={theme.images.logos.emailInputIcon}
                   iconColor={theme.colors.arrowColor}
                   onChange={(e: any) => {
-                    setProjectName({...projectName, isFocued: false})
+                    setProjectName({ ...projectName, isFocued: false })
                     handleChangeInputEmail(e, onChange);
                   }}
                   selectionColor={theme.colors.primary}
@@ -650,40 +676,50 @@ const LoginFormUI = (props: LoginParams) => {
               </OText>
             </Pressable>
           )}
-
-          {enableReCaptcha && (
+          {(enableReCaptcha && recaptchaConfig?.version) && (
             <>
-              <TouchableOpacity
-                style={{ marginBottom: 15 }}
-                onPress={handleOpenRecaptcha}
-              >
-                <RecaptchaButton>
-                  {recaptchaVerified ? (
-                    <MaterialCommunityIcons
-                      name="checkbox-marked"
-                      size={26}
-                      color={theme.colors.primary}
-                    />
-                  ) : (
-                    <MaterialCommunityIcons
-                      name="checkbox-blank-outline"
-                      size={26}
-                      color={theme.colors.mediumGray}
-                    />
-                  )}
-                  <OText size={14} mLeft={8}>{t('VERIFY_ReCAPTCHA', 'Verify reCAPTCHA')}</OText>
-                </RecaptchaButton>
-              </TouchableOpacity>
-              <Recaptcha
-                ref={recaptchaRef}
-                siteKey={recaptchaConfig?.siteKey}
-                baseUrl={recaptchaConfig?.baseUrl}
-                onVerify={onRecaptchaVerify}
-                onExpire={() => setRecaptchaVerified(false)}
-              />
+              {recaptchaConfig?.version === 'v3' ? (
+                <ReCaptcha
+                  url={recaptchaConfig?.baseUrl}
+                  siteKey={recaptchaConfig?.siteKey}
+                  containerStyle={{ height: 40 }}
+                  onExecute={onRecaptchaVerify}
+                  reCaptchaType={1}
+                />
+              ) : (
+                <>
+                  <TouchableOpacity
+                    style={{ marginBottom: 15 }}
+                    onPress={handleOpenRecaptcha}
+                  >
+                    <RecaptchaButton>
+                      {recaptchaVerified ? (
+                        <MaterialCommunityIcons
+                          name="checkbox-marked"
+                          size={26}
+                          color={theme.colors.primary}
+                        />
+                      ) : (
+                        <MaterialCommunityIcons
+                          name="checkbox-blank-outline"
+                          size={26}
+                          color={theme.colors.mediumGray}
+                        />
+                      )}
+                      <OText size={14} mLeft={8}>{t('VERIFY_ReCAPTCHA', 'Verify reCAPTCHA')}</OText>
+                    </RecaptchaButton>
+                  </TouchableOpacity>
+                  <Recaptcha
+                    ref={recaptchaRef}
+                    siteKey={recaptchaConfig?.siteKey}
+                    baseUrl={recaptchaConfig?.baseUrl}
+                    onVerify={onRecaptchaVerify}
+                    onExpire={() => setRecaptchaVerified(false)}
+                  />
+                </>)
+              }
             </>
-					)}
-
+          )}
           <OButton
             onClick={handleLogin}
             text={t('LOGIN', 'Login')}
