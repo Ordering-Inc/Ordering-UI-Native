@@ -7,7 +7,6 @@ import {
   useConfirmSetupIntent,
   createPaymentMethod
 } from '@stripe/stripe-react-native';
-import configs from '../../config.json'
 import { ErrorMessage } from './styles';
 
 import { StripeElementsForm as StripeFormController } from './naked';
@@ -26,7 +25,8 @@ const StripeElementsFormUI = (props: any) => {
     methodsPay,
     paymethod,
     onCancel,
-    cart
+    cart,
+    merchantId
   } = props;
 
   const theme = useTheme();
@@ -54,17 +54,25 @@ const StripeElementsFormUI = (props: any) => {
   }
 
   if (user?.address) {
-    billingDetails.addressLine1 = user?.address
-  }
+		billingDetails.address = {
+      line1: user?.address
+    }
+	}
 
   const createPayMethod = async () => {
-    const params: any = { type: 'Card' }
-    if (Object.keys(billingDetails).length > 0) {
-      params.billingDetails = billingDetails
-    }
+    const params: any = { paymentMethodType: 'Card', paymentMethodData: {} }
+		if (Object.keys(billingDetails).length > 0) {
+			params.paymentMethodData.billingDetails = {...billingDetails, token: card?.last4}
+		}
     try {
       setCreatePmLoading(true)
-      const { paymentMethod } = await createPaymentMethod(params);
+      const { paymentMethod, error } = await createPaymentMethod(params);
+
+      if (error) {
+        setErrors(error?.message);
+        setCreatePmLoading(false)
+        return
+      }
 
       setCreatePmLoading(false)
       handleSource && handleSource({
@@ -87,10 +95,10 @@ const StripeElementsFormUI = (props: any) => {
       createPayMethod();
       return
     }
-    const params: any = { type: 'Card' }
-    if (Object.keys(billingDetails).length > 0) {
-      params.billingDetails = billingDetails
-    }
+    const params: any = { paymentMethodType: 'Card', paymentMethodData: {} }
+		if (Object.keys(billingDetails).length > 0) {
+			params.paymentMethodData.billingDetails = {...billingDetails, token: card?.last4}
+		}
     try {
       const { setupIntent, error } = await confirmSetupIntent(requirements, params);
 
@@ -126,12 +134,13 @@ const StripeElementsFormUI = (props: any) => {
     <View style={styles.container}>
       {publicKey ? (
         <View style={{ flex: 1 }}>
-          <StripeProvider 
+          <StripeProvider
             publishableKey={publicKey}
-            merchantIdentifier={`merchant.${configs.apple_app_id}`}
+            merchantIdentifier={`merchant.${merchantId}`}
+            urlScheme={merchantId}
           >
             {methodsPay?.includes(paymethod) ? (
-              <StripeMethodForm 
+              <StripeMethodForm
                 handleSource={handleSource}
                 onCancel={onCancel}
                 cart={cart}
