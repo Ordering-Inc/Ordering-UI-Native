@@ -404,7 +404,7 @@ export const BusinessBasicInformation = (
 										<>
 											<TouchableOpacity onPress={() => navigation.navigate('BusinessPreorder', { business: businessState?.business, handleBusinessClick: () => navigation?.goBack() })}>
 												<OText color={theme.colors.textSecondary} style={{ textDecorationLine: 'underline' }}>
-													{t('PRE_ORDER', 'Preorder')}
+													{t('PREORDER', 'Preorder')}
 												</OText>
 											</TouchableOpacity>
 											<OText size={12} color={theme.colors.textSecondary}>{' \u2022 '}</OText>
