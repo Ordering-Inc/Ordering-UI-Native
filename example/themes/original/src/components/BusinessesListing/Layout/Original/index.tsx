@@ -447,7 +447,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				<HeaderWrapper
 					source={theme.images.backgrounds.business_list_header}
 					style={{ paddingTop: top + 20 }}
-					resizeMode='stretch'
+					resizeMode='cover'
 				>
 					{!auth && (
 						<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>

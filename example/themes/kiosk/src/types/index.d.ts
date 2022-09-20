@@ -82,6 +82,7 @@ export interface LoginParams {
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
   useRootPoint?: any;
+  handleReCaptcha?: (vlaue: any) => void;
 }
 
 export interface ProductItemAccordionParams {
