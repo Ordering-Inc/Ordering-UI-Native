@@ -106,8 +106,7 @@ const CheckoutUI = (props: any) => {
 			padding: 20
 		},
 		pagePadding: {
-			paddingLeft: 40,
-			paddingRight: 40
+			paddingHorizontal: 40
 		},
 		icon: {
 			top: 15,
