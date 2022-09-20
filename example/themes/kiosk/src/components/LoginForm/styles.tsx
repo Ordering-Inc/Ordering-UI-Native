@@ -7,3 +7,8 @@ export const LogoWrapper = styled.View`
 export const WelcomeTextContainer = styled.View`
   margin-bottom: 30px;
 `;
+export const RecaptchaButton = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+`

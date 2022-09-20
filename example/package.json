@@ -33,6 +33,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@fatnlazycat/react-native-recaptcha-v3": "^1.0.3",
     "@invertase/react-native-apple-authentication": "^2.1.5",
     "@react-native-async-storage/async-storage": "^1.15.5",
     "@react-native-clipboard/clipboard": "^1.8.4",
