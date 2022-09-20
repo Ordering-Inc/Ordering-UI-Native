@@ -160,7 +160,6 @@ const PaymentOptionsUI = (props: any) => {
 					<TouchableOpacity
 						onPress={() => handlePaymentMethodClick(item)}
 					>
-						{console.log(item?.gateway)}
 						<PMItem
 							key={item.id}
 							isDisabled={isDisabled}
