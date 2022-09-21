@@ -62,6 +62,7 @@ const CartUI = (props: any) => {
   const isCartPending = cart?.status === 2
   const isCouponEnabled = validationFields?.fields?.checkout?.coupon?.enabled
   const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
+  const openCarts = (Object.values(orderState?.carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && !cart?.wallets) || null) || []
 
   const business: any = (orderState?.carts && Object.values(orderState.carts).find((_cart: any) => _cart?.uuid === props.cartuuid)) ?? {}
   const businessId = business?.business_id ?? null
@@ -103,7 +104,7 @@ const CartUI = (props: any) => {
   const handleUpsellingPage = () => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
-    if (isCheckoutMultiBusinessEnabled) {
+    if (isCheckoutMultiBusinessEnabled && openCarts.length > 1) {
       props.onNavigationRedirect('CheckoutNavigator', {
         screen: 'MultiCheckout'
       })

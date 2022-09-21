@@ -125,6 +125,8 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	const [currentProduct, setCurrentProduct] = useState(null)
 
 	const isCheckoutMultiBusinessEnabled: Boolean = configs?.checkout_multi_business_enabled?.value === '1'
+	const openCarts = (Object.values(orderState?.carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && !cart?.wallets) || null) || []
+
 	const currentCart: any = Object.values(orderState.carts).find((cart: any) => cart?.business?.slug === business?.slug) ?? {}
 	const isOpenFiltProducts = isOpenSearchBar && !!searchValue
 	const filtProductsHeight = Platform.OS === 'ios' ? 0 : 100
@@ -151,7 +153,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 	}
 
 	const handleUpsellingPage = () => {
-		if (isCheckoutMultiBusinessEnabled) {
+		if (isCheckoutMultiBusinessEnabled && openCarts.length > 1) {
 			onRedirect('CheckoutNavigator', {
 				screen: 'MultiCheckout'
 			})
