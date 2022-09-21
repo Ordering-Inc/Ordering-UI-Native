@@ -79,6 +79,7 @@ const MultiCheckoutUI = (props: any) => {
 	const isPreOrder = configs?.preorder_status_enabled?.value === '1'
   const maximumCarts = 5
   const isDisablePlaceOrderButton = !(paymethodSelected?.paymethod_id || paymethodSelected?.wallet_id) || openCarts.length > maximumCarts
+  const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets) || null) || []
 
 	const [isUserDetailsEdit, setIsUserDetailsEdit] = useState(false);
 	const [phoneUpdate, setPhoneUpdate] = useState(false);
@@ -252,6 +253,11 @@ const MultiCheckoutUI = (props: any) => {
                     {t('CARTS_NOT_FOUND', 'You don\'t have carts available')}
                   </OText>
                 </CCNotCarts>
+              )}
+              {walletCarts.length > 0 && (
+                <OText size={14} color={theme.colors.danger5} style={{ marginVertical: 20 }}>
+                  {t('WARNING_PARTIAL_WALLET_CARTS', 'Important: One or more carts can`t be completed due a partial payment with cash/points wallet and requires to be paid individually')}
+                </OText>
               )}
               {openCarts.length > 0 && (
                 <ChCartsTotal>
