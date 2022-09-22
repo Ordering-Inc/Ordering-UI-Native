@@ -1031,6 +1031,7 @@ export const ProductOptionsUI = (props: any) => {
 										disabled={
 											maxProductQuantity <= 0 ||
 											productCart.quantity >= maxProductQuantity ||
+											productCart.quantity >= product?.maximum_per_order ||
 											isSoldOut
 										}>
 										<OIcon
@@ -1039,6 +1040,7 @@ export const ProductOptionsUI = (props: any) => {
 											color={
 												maxProductQuantity <= 0 ||
 													productCart.quantity >= maxProductQuantity ||
+													productCart.quantity >= product?.maximum_per_order ||
 													isSoldOut
 													? theme.colors.backgroundGray
 													: theme.colors.backgroundDark
@@ -1093,7 +1095,7 @@ export const ProductOptionsUI = (props: any) => {
 export const ProductForm = (props: any) => {
 	const productOptionsProps = {
 		...props,
-		productCart: { quantity: props?.product?.minimum_per_order || 1 },
+		productCart: { quantity: props?.product?.maximum_per_order || 1 },
 		UIComponent: ProductOptionsUI,
 	};
 
