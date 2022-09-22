@@ -33,7 +33,8 @@ const LoginFormUI = (props: LoginParams) => {
     formState,
     handleButtonLoginClick,
     useRootPoint,
-    handleReCaptcha
+    handleReCaptcha,
+    enableReCaptcha
   } = props;
 
   const theme = useTheme()
@@ -167,7 +168,7 @@ const LoginFormUI = (props: LoginParams) => {
   }, [errors]);
 
   useEffect(() => {
-    if (configs && Object.keys(configs).length > 0) {
+    if (configs && Object.keys(configs).length > 0 && enableReCaptcha) {
       if (configs?.security_recaptcha_type?.value === 'v3' &&
         configs?.security_recaptcha_score_v3?.value > 0 &&
         configs?.security_recaptcha_site_key_v3?.value
@@ -187,7 +188,7 @@ const LoginFormUI = (props: LoginParams) => {
         })
       }
     }
-  }, [configs])
+  }, [configs, enableReCaptcha])
 
   const logo = (
     <LogoWrapper>
