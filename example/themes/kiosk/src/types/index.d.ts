@@ -82,6 +82,7 @@ export interface LoginParams {
   handleSendVerifyCode?: any;
   handleCheckPhoneCode?: any;
   useRootPoint?: any;
+  enableReCaptcha?: boolean;
   handleReCaptcha?: (vlaue: any) => void;
 }
 
