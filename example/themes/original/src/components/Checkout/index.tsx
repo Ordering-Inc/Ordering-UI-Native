@@ -329,10 +329,10 @@ const CheckoutUI = (props: any) => {
 								!businessDetails?.error &&
 								(
 									<Placeholder Animation={Fade}>
-										<PlaceholderLine height={20} width={70} />
-										<PlaceholderLine height={10} width={60} />
-										<PlaceholderLine height={10} width={60} />
-										<PlaceholderLine height={10} width={80} style={{ marginBottom: 20 }} />
+										<PlaceholderLine height={20} />
+										<PlaceholderLine height={12} />
+										<PlaceholderLine height={12} />
+										<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
 									</Placeholder>
 								)}
 							{
@@ -378,10 +378,10 @@ const CheckoutUI = (props: any) => {
 						<ChUserDetails>
 							{cartState.loading ? (
 								<Placeholder Animation={Fade}>
-									<PlaceholderLine height={20} width={70} />
-									<PlaceholderLine height={10} width={60} />
-									<PlaceholderLine height={10} width={60} />
-									<PlaceholderLine height={10} width={80} style={{ marginBottom: 20 }} />
+									<PlaceholderLine height={20} />
+									<PlaceholderLine height={12} />
+									<PlaceholderLine height={12} />
+									<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
 								</Placeholder>
 							) : (
 								<UserDetails
@@ -405,8 +405,8 @@ const CheckoutUI = (props: any) => {
 							{cartState.loading || deliveryOptionSelected === undefined ? (
 								<View style={{ height: 110 }}>
 									<Placeholder Animation={Fade}>
-										<PlaceholderLine height={20} width={70} />
-										<PlaceholderLine height={40} width={100} />
+										<PlaceholderLine height={20} />
+										<PlaceholderLine height={40} />
 									</Placeholder>
 								</View>
 							) : (

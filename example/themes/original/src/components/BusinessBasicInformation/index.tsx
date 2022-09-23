@@ -103,7 +103,10 @@ export const BusinessBasicInformation = (
 			height: 12,
 			width: 12,
 			margin: 0,
-			padding: 0
+			padding: 0,
+			display: 'flex',
+			justifyContent: 'center',
+			alignItems: 'center'
 		},
 		headerChewStyle: {
 			paddingHorizontal: 30,
@@ -221,7 +224,8 @@ export const BusinessBasicInformation = (
 								<View style={styles.tiktokIcon}>
 									<OIcon
 										src={theme.images.general.tiktok}
-										style={{ width: '100%', height: '100%' }}
+										style={{ width: 10, height: 12 }}
+										cover
 									/>
 								</View>
 							</Pressable>
