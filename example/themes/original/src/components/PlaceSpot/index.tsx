@@ -103,7 +103,7 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
       return
     }
     if (Number(spotNumber) < 0) {
-      showToast(ToastType.Error, t('VALIDATION_ERROR_MAX_NUMERIC', 'The _attribute_ may not be greater than _max_.').replace('_attribute_', placeholderText).replace('_max_', 0))
+      showToast(ToastType.Error, t('VALIDATION_MUST_BIGGER_ZERO', '_attribute_ must be bigger than zero').replace('_attribute_', placeholderText))
       return
     }
     const isVehicle = Object.values(vehicle).every(e => e)
