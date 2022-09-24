@@ -235,7 +235,7 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
               textStyle={{ color: 'white', fontSize: 12 }}
               imgRightSrc={null}
               text={t('UPDATE_SPOT_NUMBER', 'Update')}
-              isDisabled={(!spotNumber && vehicle && !Object.values(vehicle).every(e => e))}
+              isDisabled={(!spotNumber && !Object.values(vehicle).every(e => e))}
               style={{ borderRadius: 7.6, height: 44, shadowOpacity: 0, marginTop: 20 }}
             />
           </View>
