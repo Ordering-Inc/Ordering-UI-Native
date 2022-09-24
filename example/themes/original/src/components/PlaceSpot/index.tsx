@@ -102,6 +102,10 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
       showToast(ToastType.Error, t('VALIDATION_ERROR_INTEGER', 'The _attribute_ must be an integer.').replace('_attribute_', placeholderText))
       return
     }
+    if (Number(spotNumber) < 0) {
+      showToast(ToastType.Error, t('VALIDATION_ERROR_MAX_NUMERIC', 'The _attribute_ may not be greater than _max_.').replace('_attribute_', placeholderText).replace('_max_', 0))
+      return
+    }
     const isVehicle = Object.values(vehicle).every(e => e)
     const bodyToSend: any = {}
     spotNumber && (bodyToSend.spot_number = spotNumber)
@@ -231,7 +235,7 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
               textStyle={{ color: 'white', fontSize: 12 }}
               imgRightSrc={null}
               text={t('UPDATE_SPOT_NUMBER', 'Update')}
-              isDisabled={(!spotNumber && !Object.values(vehicle).every(e => e))}
+              isDisabled={(!spotNumber && vehicle && !Object.values(vehicle).every(e => e))}
               style={{ borderRadius: 7.6, height: 44, shadowOpacity: 0, marginTop: 20 }}
             />
           </View>
