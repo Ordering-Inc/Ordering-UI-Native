@@ -364,6 +364,7 @@ export const OrderContentComponent = (props: OrderContent) => {
             <ProductItemAccordion
               key={product?.id || i}
               product={product}
+              currency={order?.currency}
             />
           ))}
       </OrderProducts>
