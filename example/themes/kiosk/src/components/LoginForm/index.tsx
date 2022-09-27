@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { useTheme } from 'styled-components/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Recaptcha from 'react-native-recaptcha-that-works'
+import ReCaptcha from '@fatnlazycat/react-native-recaptcha-v3'
 
 import {
   LoginForm as LoginFormController,
+  useConfig,
   useLanguage,
   ToastType,
   useToast,
@@ -13,7 +18,8 @@ import {
 
 import {
   WelcomeTextContainer,
-  LogoWrapper
+  LogoWrapper,
+  RecaptchaButton
 } from './styles';
 
 import { OText, OButton, OInput, OIcon } from '../shared';
@@ -26,14 +32,20 @@ const LoginFormUI = (props: LoginParams) => {
     loginButtonText,
     formState,
     handleButtonLoginClick,
-    useRootPoint
+    useRootPoint,
+    handleReCaptcha,
+    enableReCaptcha
   } = props;
 
   const theme = useTheme()
+  const [{ configs }] = useConfig()
   const [ordering, { setOrdering }] = useApi();
   const [, { showToast }] = useToast();
   const [, t] = useLanguage();
-  const {control, handleSubmit, formState: {errors}} = useForm();
+  const [recaptchaConfig, setRecaptchaConfig] = useState<any>({})
+  const [recaptchaVerified, setRecaptchaVerified] = useState(false)
+  const recaptchaRef = useRef<any>({});
+  const { control, handleSubmit, formState: { errors } } = useForm();
   const [orientationState] = useDeviceOrientation();
 
   const [formsStateValues, setFormsStateValues] = useState<any>({ isSubmitted: false })
@@ -59,6 +71,25 @@ const LoginFormUI = (props: LoginParams) => {
   const handleChangeInputEmail = (value: string, onChange: any) => {
     onChange(value.toLowerCase().replace(/[&,()%";:ç?<>{}\\[\]\s]/g, ''));
   };
+
+  const handleOpenRecaptcha = () => {
+    setRecaptchaVerified(false)
+    if (!recaptchaConfig?.siteKey) {
+      showToast(ToastType.Error, t('NO_RECAPTCHA_SITE_KEY', 'The config doesn\'t have recaptcha site key'));
+      return
+    }
+    if (!recaptchaConfig?.baseUrl) {
+      showToast(ToastType.Error, t('NO_RECAPTCHA_BASE_URL', 'The config doesn\'t have recaptcha base url'));
+      return
+    }
+
+    recaptchaRef.current.open()
+  }
+
+  const onRecaptchaVerify = (token: any) => {
+    setRecaptchaVerified(true)
+    handleReCaptcha && handleReCaptcha({ code: token, version: recaptchaConfig?.version })
+  }
 
   const styles = StyleSheet.create({
     logo: {
@@ -87,6 +118,20 @@ const LoginFormUI = (props: LoginParams) => {
 
   useEffect(() => {
     if (!formState.loading && formState.result?.error) {
+      if (formState.result?.result?.[0] === 'ERROR_AUTH_VERIFICATION_CODE') {
+        setRecaptchaVerified(false)
+        setRecaptchaConfig({
+          version: 'v2',
+          siteKey: configs?.security_recaptcha_site_key?.value || null,
+          baseUrl: configs?.security_recaptcha_base_url?.value || null
+        })
+        showToast(ToastType.Info, t('TRY_AGAIN', 'Please try again'))
+        setFormsStateValues({
+          ...formsStateValues,
+          isSubmitted: false,
+        })
+        return
+      }
       formState.result?.result && showToast(
         ToastType.Error,
         typeof formState.result?.result === 'string'
@@ -122,9 +167,32 @@ const LoginFormUI = (props: LoginParams) => {
     }
   }, [errors]);
 
+  useEffect(() => {
+    if (configs && Object.keys(configs).length > 0 && enableReCaptcha) {
+      if (configs?.security_recaptcha_type?.value === 'v3' &&
+        configs?.security_recaptcha_score_v3?.value > 0 &&
+        configs?.security_recaptcha_site_key_v3?.value
+      ) {
+        setRecaptchaConfig({
+          version: 'v3',
+          siteKey: configs?.security_recaptcha_site_key_v3?.value || null,
+          baseUrl: configs?.security_recaptcha_base_url?.value || null
+        })
+        return
+      }
+      if (configs?.security_recaptcha_site_key?.value) {
+        setRecaptchaConfig({
+          version: 'v2',
+          siteKey: configs?.security_recaptcha_site_key?.value || null,
+          baseUrl: configs?.security_recaptcha_base_url?.value || null
+        })
+      }
+    }
+  }, [configs, enableReCaptcha])
+
   const logo = (
     <LogoWrapper>
-      <OIcon src={theme.images.logos.logotype} style={styles.logo}/>
+      <OIcon src={theme.images.logos.logotype} style={styles.logo} />
     </LogoWrapper>
   );
 
@@ -144,7 +212,7 @@ const LoginFormUI = (props: LoginParams) => {
               value={value}
               autoCapitalize='none'
               autoCorrect={false}
-              inputStyle={{textAlign: 'center'}}
+              inputStyle={{ textAlign: 'center' }}
               onChange={(e: any) => {
                 onChange(e?.target?.value);
                 setFormsStateValues({
@@ -167,7 +235,7 @@ const LoginFormUI = (props: LoginParams) => {
             autoCapitalize="none"
             autoCorrect={false}
             type="email-address"
-            inputStyle={{textAlign: 'center'}}
+            inputStyle={{ textAlign: 'center' }}
             onChange={(e: any) => {
               handleChangeInputEmail(e, onChange);
             }}
@@ -199,7 +267,7 @@ const LoginFormUI = (props: LoginParams) => {
             style={styles.inputStyle}
             value={value}
             onChange={(val: any) => onChange(val)}
-            inputStyle={{textAlign: 'center'}}
+            inputStyle={{ textAlign: 'center' }}
           />
         )}
         name="password"
@@ -211,7 +279,49 @@ const LoginFormUI = (props: LoginParams) => {
         }}
         defaultValue=""
       />
-
+      {(recaptchaConfig?.version) && (
+        <>
+          {recaptchaConfig?.version === 'v3' ? (
+            <ReCaptcha
+              url={recaptchaConfig?.baseUrl}
+              siteKey={recaptchaConfig?.siteKey}
+              containerStyle={{ height: 40 }}
+              onExecute={onRecaptchaVerify}
+              reCaptchaType={1}
+            />
+          ) : (
+            <>
+              <TouchableOpacity
+                onPress={handleOpenRecaptcha}
+              >
+                <RecaptchaButton>
+                  {recaptchaVerified ? (
+                    <MaterialCommunityIcons
+                      name="checkbox-marked"
+                      size={26}
+                      color={theme.colors.primary}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="checkbox-blank-outline"
+                      size={26}
+                      color={theme.colors.mediumGray}
+                    />
+                  )}
+                  <OText size={14} mLeft={8}>{t('VERIFY_ReCAPTCHA', 'Verify reCAPTCHA')}</OText>
+                </RecaptchaButton>
+              </TouchableOpacity>
+              <Recaptcha
+                ref={recaptchaRef}
+                siteKey={recaptchaConfig?.siteKey}
+                baseUrl={recaptchaConfig?.baseUrl}
+                onVerify={onRecaptchaVerify}
+                onExpire={() => setRecaptchaVerified(false)}
+              />
+            </>)
+          }
+        </>
+      )}
       <OButton
         onClick={handleSubmit(onSubmit)}
         text={loginButtonText}
@@ -280,7 +390,7 @@ const LoginFormUI = (props: LoginParams) => {
               ? 0 : 0,
           }}
         >
-          { welcome }
+          {welcome}
           {orientationState?.orientation === LANDSCAPE && (
             <View style={{
               justifyContent: 'flex-end',
@@ -327,6 +437,7 @@ export const LoginForm = (props: any) => {
   const loginProps = {
     ...props,
     UIComponent: LoginFormUI,
+    isRecaptchaEnable: true
   };
   return <LoginFormController {...loginProps} />;
 };

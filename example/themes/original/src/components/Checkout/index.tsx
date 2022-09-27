@@ -106,8 +106,7 @@ const CheckoutUI = (props: any) => {
 			padding: 20
 		},
 		pagePadding: {
-			paddingLeft: 40,
-			paddingRight: 40
+			paddingHorizontal: 40
 		},
 		icon: {
 			top: 15,
@@ -330,10 +329,10 @@ const CheckoutUI = (props: any) => {
 								!businessDetails?.error &&
 								(
 									<Placeholder Animation={Fade}>
-										<PlaceholderLine height={20} width={70} />
-										<PlaceholderLine height={10} width={60} />
-										<PlaceholderLine height={10} width={60} />
-										<PlaceholderLine height={10} width={80} style={{ marginBottom: 20 }} />
+										<PlaceholderLine height={20} />
+										<PlaceholderLine height={12} />
+										<PlaceholderLine height={12} />
+										<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
 									</Placeholder>
 								)}
 							{
@@ -379,10 +378,10 @@ const CheckoutUI = (props: any) => {
 						<ChUserDetails>
 							{cartState.loading ? (
 								<Placeholder Animation={Fade}>
-									<PlaceholderLine height={20} width={70} />
-									<PlaceholderLine height={10} width={60} />
-									<PlaceholderLine height={10} width={60} />
-									<PlaceholderLine height={10} width={80} style={{ marginBottom: 20 }} />
+									<PlaceholderLine height={20} />
+									<PlaceholderLine height={12} />
+									<PlaceholderLine height={12} />
+									<PlaceholderLine height={12} style={{ marginBottom: 20 }} />
 								</Placeholder>
 							) : (
 								<UserDetails
@@ -406,8 +405,8 @@ const CheckoutUI = (props: any) => {
 							{cartState.loading || deliveryOptionSelected === undefined ? (
 								<View style={{ height: 110 }}>
 									<Placeholder Animation={Fade}>
-										<PlaceholderLine height={20} width={70} />
-										<PlaceholderLine height={40} width={100} />
+										<PlaceholderLine height={20} />
+										<PlaceholderLine height={40} />
 									</Placeholder>
 								</View>
 							) : (
@@ -819,16 +818,23 @@ export const Checkout = (props: any) => {
 
 	const getOrder = async (cartId: any) => {
 		try {
-			setCartState({ ...cartState, loading: true })
-			const url = `${ordering.root}/carts/${cartId}`
-			const response = await fetch(url, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`
-				}
-			})
-			const { result } = await response.json();
+			let result: any = {}
+			const cart = orderState?.carts.find((cart: any) => cart.uuid === cartId)
+			if (cart) {
+				result = { ...cart }
+			} else {
+				setCartState({ ...cartState, loading: true })
+				const url = `${ordering.root}/carts/${cartId}`
+				const response = await fetch(url, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`
+					}
+				})
+				const content = await response.json();
+				result = content.result
+			}
 
 			let publicKey = null
 			try {

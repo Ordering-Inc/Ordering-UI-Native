@@ -93,7 +93,7 @@ const CheckoutUI = (props: any) => {
     deliveryOptionSelected,
     instructionsOptions,
     handleChangeDeliveryOption,
-
+    merchantId
   } = props
 
   const theme = useTheme();
@@ -530,6 +530,7 @@ const CheckoutUI = (props: any) => {
                   handlePaymentMethodClickCustom={handlePaymentMethodClick}
                   setCardData={setCardData}
                   handlePlaceOrder={handlePlaceOrder}
+                  merchantId={merchantId}
                 />
               </ChPaymethods>
             </ChSection>

@@ -14,6 +14,7 @@ interface Props {
 	bottomContainerStyle?: any;
 	titleStyle?: any;
 	closeIcon?: any;
+	presentationStyle?: "fullScreen" | "pageSheet" | "formSheet" | "overFullScreen" | undefined
 }
 const OBottomPopup = (props: Props) => {
 	const {
@@ -25,17 +26,18 @@ const OBottomPopup = (props: Props) => {
 		isStatusBar,
 		titleStyle,
 		bottomContainerStyle,
-		closeIcon
+		closeIcon,
+		presentationStyle
 	} = props
 	const { top, bottom } = useSafeAreaInsets();
-
+	
 	return (
 		<Modal
 			animationType='slide'
 			transparent={transparent}
 			visible={open}
 			onRequestClose={() => onClose()}
-			presentationStyle={'fullScreen'}
+			presentationStyle={presentationStyle || 'fullScreen'}
 		>
 			{isStatusBar && <StatusBar translucent={false} />}
 			<View style={styles.container}>

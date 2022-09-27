@@ -28,6 +28,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
     getProductMax,
     onDeleteProduct,
     onEditProduct,
+    currency
   } = props;
 
   const [, t] = useLanguage();
@@ -147,7 +148,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
               }}>
               <View style={{ flexDirection: 'row' }}>
                 <OText size={12} color={theme.colors.textGray}>
-                  {parsePrice(getProductPrice(product))}
+                  {parsePrice(getProductPrice(product), { currency })}
                 </OText>
 
                 {(
@@ -268,7 +269,7 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
                                   suboption.position,
                                 )
                                 : '',
-                            price: parsePrice(suboption.price),
+                            price: parsePrice(suboption.price, { currency }),
                           })}
                         </OText>
                       </ProductSubOption>

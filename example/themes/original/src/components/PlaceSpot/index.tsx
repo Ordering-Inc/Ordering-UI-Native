@@ -98,6 +98,14 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
 
   const onChangeSpot = () => {
     if (orderState.loading) return
+    if (!Number.isInteger(Number(spotNumber))) {
+      showToast(ToastType.Error, t('VALIDATION_ERROR_INTEGER', 'The _attribute_ must be an integer.').replace('_attribute_', placeholderText))
+      return
+    }
+    if (Number(spotNumber) < 0) {
+      showToast(ToastType.Error, t('VALIDATION_MUST_BIGGER_ZERO', '_attribute_ must be bigger than zero').replace('_attribute_', placeholderText))
+      return
+    }
     const isVehicle = Object.values(vehicle).every(e => e)
     const bodyToSend: any = {}
     spotNumber && (bodyToSend.spot_number = spotNumber)
@@ -126,7 +134,7 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
 
   useEffect(() => {
     if (spotState?.error?.length > 0) {
-      const errorText = manageErrorsToShow(spotState?.errors)
+      const errorText = manageErrorsToShow(spotState?.error)
 			showToast(ToastType.Error, errorText)
     }
   }, [spotState?.error])
@@ -211,7 +219,7 @@ const PlaceSpotUI = (props: PlaceSpotParams) => {
           <OInput
             value={spotNumber?.toString() ?? ''}
             placeholder={placeholderText}
-            keyboardType='number-pad'
+            type='number-pad'
             onChange={(value: string) => setSpotNumber(value)}
             style={{
               borderColor: theme.colors.border,

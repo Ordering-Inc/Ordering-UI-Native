@@ -141,7 +141,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	useFocusEffect(
 		React.useCallback(() => {
-			loadOrders(false, false, false, true)
+			if (!businessesSearchList) {
+				loadOrders(false, false, false, true)
+			}
 		}, [navigation])
 	)
 
@@ -189,15 +191,18 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			)}
 			{(ordersLength?.activeOrdersLength > 0 || ordersLength?.previousOrdersLength > 0) && (
 				<>
-					<OptionTitle titleContent={!!titleContent} isBusinessesSearchList={!!businessesSearchList}>
-						<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10} >
-							{titleContent || (activeOrders
-								? t('ACTIVE', 'Active')
-								: preOrders
-									? t('PREORDERS', 'Preorders')
-									: t('PAST', 'Past'))}
-						</OText>
-					</OptionTitle>
+					{((titleContent && ((isBusiness && businessOrderIds?.length > 0) || isProducts)) || !titleContent) && (
+						<OptionTitle titleContent={!!titleContent} isBusinessesSearchList={!!businessesSearchList}>
+							<OText size={16} lineHeight={24} weight={'500'} color={theme.colors.textNormal} mBottom={10} >
+								{titleContent || (activeOrders
+									? t('ACTIVE', 'Active')
+									: preOrders
+										? t('PREORDERS', 'Preorders')
+										: t('PAST', 'Past'))}
+							</OText>
+						</OptionTitle>
+					)}
+
 					{!(ordersLength?.activeOrdersLength === 0 && ordersLength?.previousOrdersLength === 0) &&
 						!loading &&
 						orders.filter((order: any) => orderStatus.includes(order.status)).length === 0 &&
@@ -210,7 +215,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 						)}
 				</>
 			)}
-			{isBusiness && !!businessesSearchList && businessLoading && (
+			{isBusiness && !!businessesSearchList && businessLoading && businessOrderIds?.length > 0 && (
 				<ScrollView horizontal>
 					<BusinessControllerSkeletons />
 				</ScrollView>

@@ -445,9 +445,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			</View>
 			{!isChewLayout ? (
 				<HeaderWrapper
-					source={theme.images.general.homeHero}
+					source={theme.images.backgrounds.business_list_header}
 					style={{ paddingTop: top + 20 }}
-					resizeMode='stretch'
+					resizeMode='cover'
 				>
 					{!auth && (
 						<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
@@ -464,19 +464,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					/>
 				</OrderTypesContainer>
 			)}
-			{!businessId && (
-				<View style={{ marginTop: 20 }}>
-					<OButton
-						onClick={() => navigation.navigate('BusinessSearch', { businessTypes })}
-						text={t('SEARCH', 'Search')}
-						style={styles?.buttonCityStyle}
-						textStyle={{ color: theme.colors.textSecondary, fontSize: 16 }}
-					/>
-				</View>
-			)}
 
 			{!hideCities && (
-				<View style={{ marginTop: 10 }}>
+				<View style={{ marginTop: 20 }}>
 					<TouchableOpacity
 						style={styles.buttonCityStyle}
 						onPress={() => setIsOpenCities(true)}

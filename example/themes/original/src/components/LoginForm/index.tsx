@@ -5,6 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { PhoneInputNumber } from '../PhoneInputNumber';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Recaptcha from 'react-native-recaptcha-that-works'
+import ReCaptcha from '@fatnlazycat/react-native-recaptcha-v3'
 
 import {
 	LoginForm as LoginFormController,
@@ -235,7 +236,7 @@ const LoginFormUI = (props: LoginParams) => {
 
 	const onRecaptchaVerify = (token: any) => {
 		setRecaptchaVerified(true)
-		handleReCaptcha(token)
+		handleReCaptcha({ code: token, version: recaptchaConfig?.version })
 	}
 
 	const handleChangeOtpType = (type: string) => {
@@ -272,15 +273,39 @@ const LoginFormUI = (props: LoginParams) => {
 
 	useEffect(() => {
 		if (configs && Object.keys(configs).length > 0 && enableReCaptcha) {
-			setRecaptchaConfig({
-				siteKey: configs?.security_recaptcha_site_key?.value || null,
-				baseUrl: configs?.security_recaptcha_base_url?.value || null
-			})
+			if (configs?.security_recaptcha_type?.value === 'v3' &&
+				configs?.security_recaptcha_score_v3?.value > 0 &&
+				configs?.security_recaptcha_site_key_v3?.value
+			) {
+				setRecaptchaConfig({
+					version: 'v3',
+					siteKey: configs?.security_recaptcha_site_key_v3?.value || null,
+					baseUrl: configs?.security_recaptcha_base_url?.value || null
+				})
+				return
+			}
+			if (configs?.security_recaptcha_site_key?.value) {
+				setRecaptchaConfig({
+					version: 'v2',
+					siteKey: configs?.security_recaptcha_site_key?.value || null,
+					baseUrl: configs?.security_recaptcha_base_url?.value || null
+				})
+			}
 		}
 	}, [configs, enableReCaptcha])
 
 	useEffect(() => {
 		if (!formState.loading && formState.result?.error) {
+			if (formState.result?.result?.[0] === 'ERROR_AUTH_VERIFICATION_CODE') {
+				setRecaptchaVerified(false)
+				setRecaptchaConfig({
+					version: 'v2',
+					siteKey: configs?.security_recaptcha_site_key?.value || null,
+					baseUrl: configs?.security_recaptcha_base_url?.value || null
+				})
+				showToast(ToastType.Info, t('TRY_AGAIN', 'Please try again'))
+				return
+			}
 			formState.result?.result &&
 				showToast(
 					ToastType.Error,
@@ -596,35 +621,47 @@ const LoginFormUI = (props: LoginParams) => {
 							</TouchableOpacity>
 						)}
 
-						{enableReCaptcha && (
+						{(enableReCaptcha && recaptchaConfig?.version) && (
 							<>
-								<TouchableOpacity
-									onPress={handleOpenRecaptcha}
-								>
-									<RecaptchaButton>
-										{recaptchaVerified ? (
-											<MaterialCommunityIcons
-												name="checkbox-marked"
-												size={26}
-												color={theme.colors.primary}
-											/>
-										) : (
-											<MaterialCommunityIcons
-												name="checkbox-blank-outline"
-												size={26}
-												color={theme.colors.mediumGray}
-											/>
-										)}
-										<OText size={14} mLeft={8}>{t('VERIFY_ReCAPTCHA', 'Verify reCAPTCHA')}</OText>
-									</RecaptchaButton>
-								</TouchableOpacity>
-								<Recaptcha
-									ref={recaptchaRef}
-									siteKey={recaptchaConfig?.siteKey}
-									baseUrl={recaptchaConfig?.baseUrl}
-									onVerify={onRecaptchaVerify}
-									onExpire={() => setRecaptchaVerified(false)}
-								/>
+								{recaptchaConfig?.version === 'v3' ? (
+									<ReCaptcha
+										url={recaptchaConfig?.baseUrl}
+										siteKey={recaptchaConfig?.siteKey}
+										containerStyle={{ height: 40 }}
+										onExecute={onRecaptchaVerify}
+										reCaptchaType={1}
+									/>
+								) : (
+									<>
+										<TouchableOpacity
+											onPress={handleOpenRecaptcha}
+										>
+											<RecaptchaButton>
+												{recaptchaVerified ? (
+													<MaterialCommunityIcons
+														name="checkbox-marked"
+														size={26}
+														color={theme.colors.primary}
+													/>
+												) : (
+													<MaterialCommunityIcons
+														name="checkbox-blank-outline"
+														size={26}
+														color={theme.colors.mediumGray}
+													/>
+												)}
+												<OText size={14} mLeft={8}>{t('VERIFY_ReCAPTCHA', 'Verify reCAPTCHA')}</OText>
+											</RecaptchaButton>
+										</TouchableOpacity>
+										<Recaptcha
+											ref={recaptchaRef}
+											siteKey={recaptchaConfig?.siteKey}
+											baseUrl={recaptchaConfig?.baseUrl}
+											onVerify={onRecaptchaVerify}
+											onExpire={() => setRecaptchaVerified(false)}
+										/>
+									</>)
+								}
 							</>
 						)}
 						<OButton

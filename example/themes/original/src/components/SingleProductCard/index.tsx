@@ -42,7 +42,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const theme = useTheme();
 	const hideAddButton = theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden ?? true
 
-	const fadeAnim = useRef(new Animated.Value(0)).current;
+	const fadeAnim = useRef(new Animated.Value(enableIntersection ? 0 : 1)).current;
 
 	const styles = StyleSheet.create({
 		container: {
@@ -50,7 +50,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 			borderRadius: 7.6,
 			borderColor: theme.colors.border,
 			marginBottom: 28,
-			minHeight: 165
+			minHeight: hideAddButton ? 100 : 165
 		},
 		titleWrapper: {
 			flexDirection: 'row',
@@ -76,8 +76,8 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		},
 		quantityContainer: {
 			position: 'absolute',
-			left: '100%',
-			bottom: '100%',
+			right: 0,
+			top: 0,
 			width: 25,
 			height: 25,
 			textAlign: 'center',
@@ -123,14 +123,14 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		maxCartProductConfig,
 		maxCartProductInventory,
 	);
-
+	
 	const fadeIn = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 500,
+		Animated.timing(fadeAnim, {
+			toValue: 1,
+			duration: 500,
 			useNativeDriver: true
-    }).start();
-  };
+		}).start();
+	};
 
 	const handleChangeFavorite = () => {
 		if (auth) {
@@ -141,16 +141,18 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	}
 
 	const handleChangeIntersection = () => {
-		setIsIntersectionObserver(true);
-		fadeIn();
+		if (enableIntersection) {
+			setIsIntersectionObserver(true);
+			fadeIn();
+		}
 	}
 
 	useEffect(() => {
-		if (!enableIntersection) fadeIn()
+		if (enableIntersection) fadeIn()
 	}, [enableIntersection])
 
 	return (
-		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
+		<InView style={{ minHeight: hideAddButton ? 125 : 165 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
 			{isIntersectionObserver ? (
 				<CardContainer
 					showAddButton={!hideAddButton}
@@ -164,7 +166,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 					<View style={{ flexDirection: 'row' }}>
 						{productAddedToCartLength > 0 && (
 							<QuantityContainer style={[styles.quantityContainer, {
-								transform: [{ translateX: 10 }, { translateY: -10 }],
+								transform: [{ translateX: 25 }, { translateY: hideAddButton ? -25 : -55 }],
 							}]}>
 								<OText size={12} color={theme.colors.white}>{productAddedToCartLength.toString()}</OText>
 							</QuantityContainer>
@@ -281,19 +283,24 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 					)}
 				</CardContainer>
 			) : (
-				<Placeholder style={{ padding: 5 }} Animation={Fade}>
-					<View style={{ flexDirection: 'row' }}>
+				<View style={{ marginBottom: 28, padding: 12, height: hideAddButton ? 125 : 165 }}>
+					<Placeholder style={{ padding: 5 }} Animation={Fade}>
+						<View style={{ flexDirection: 'row' }}>
+							<Placeholder style={{ paddingVertical: 10, flex: 1 }}>
+								<PlaceholderLine width={60} style={{ marginBottom: 15 }} />
+								<PlaceholderLine width={20} />
+							</Placeholder>
+							<PlaceholderLine
+								width={24}
+								height={70}
+								style={{ marginLeft: 10, marginBottom: 10 }}
+							/>
+						</View>
 						<PlaceholderLine
-							width={24}
-							height={70}
-							style={{ marginRight: 10, marginBottom: 10 }}
+							height={52}
 						/>
-						<Placeholder style={{ paddingVertical: 10 }}>
-							<PlaceholderLine width={60} style={{ marginBottom: 25 }} />
-							<PlaceholderLine width={20} />
-						</Placeholder>
-					</View>
-				</Placeholder>
+					</Placeholder>
+				</View>
 			)}
 		</InView>
 	);
