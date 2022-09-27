@@ -981,15 +981,15 @@ export const ProductOptionsUI = (props: any) => {
 							<OText size={16} lineHeight={24} weight={'600'}>
 								{productCart.total ? parsePrice(productCart?.total) : ''}
 							</OText>
-							{product?.minimum_per_order && productCart?.quantity < product?.minimum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MINIMUM_TO_ORDER', 'Min. _number_ ').replace('_number_', product?.minimum_per_order)}</OText>}
-							{product?.maximum_per_order && productCart?.quantity > product?.maximum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MAXIMUM_TO_ORDER', 'Max. _number_'.replace('_number_', product?.maximum_per_order))}</OText>}
+							{product?.minimum_per_order && productCart?.quantity <= product?.minimum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MINIMUM_TO_ORDER', 'Min. _number_ ').replace('_number_', product?.minimum_per_order)}</OText>}
+							{product?.maximum_per_order && productCart?.quantity >= product?.maximum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MAXIMUM_TO_ORDER', 'Max. _number_'.replace('_number_', product?.maximum_per_order))}</OText>}
 						</View>
 						{productCart && !isSoldOut && maxProductQuantity > 0 && (
 							<>
 								<View style={styles.quantityControl}>
 									<TouchableOpacity
 										onPress={decrement}
-										disabled={productCart.quantity === 1 || isSoldOut}>
+										disabled={productCart.quantity === 1 || !productCart.quantity || isSoldOut || (productCart?.quantity <= product?.minimum_per_order)}>
 										<OIcon
 											src={theme.images.general.minus}
 											width={16}
@@ -1095,7 +1095,7 @@ export const ProductOptionsUI = (props: any) => {
 export const ProductForm = (props: any) => {
 	const productOptionsProps = {
 		...props,
-		productCart: { quantity: props?.product?.maximum_per_order || 1 },
+		productCart: { quantity: props?.product?.maximum_per_order || props?.product?.minimum_per_order || 1 },
 		UIComponent: ProductOptionsUI,
 	};
 
