@@ -393,6 +393,7 @@ export interface ProductItemAccordionParams {
   offsetDisabled?: any;
   isFromCheckout?: any;
   isClickableEvent?: any;
+  currency?: any;
 }
 export interface ReviewOrderParams {
   order?: { orderId: number; businessId: number; logo: string };
