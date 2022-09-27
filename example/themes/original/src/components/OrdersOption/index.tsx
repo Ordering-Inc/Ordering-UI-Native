@@ -144,7 +144,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	useFocusEffect(
 		React.useCallback(() => {
-			loadOrders(false, false, false, true)
+			if (!businessesSearchList) {
+				loadOrders(false, false, false, true)
+			}
 		}, [navigation])
 	)
 
