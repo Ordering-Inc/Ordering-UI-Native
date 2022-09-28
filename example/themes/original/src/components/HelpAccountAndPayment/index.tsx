@@ -3,7 +3,8 @@ import { useLanguage } from 'ordering-components/native'
 import { HelpAccountAndPaymentParams } from '../../types'
 import { OText, OButton, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
   Content
@@ -38,10 +39,14 @@ export const HelpAccountAndPayment = (props: HelpAccountAndPaymentParams) => {
   return (
     <>
       <OButton
-        imgLeftSrc={theme.images.general.arrow_left}
         imgRightSrc={null}
         style={styles.btnBackArrow}
         onClick={() => goToBack()}
+        icon={AntDesignIcon}
+        iconProps={{
+          name: 'arrowleft',
+          size: 26
+        }}
       />
       <OText size={22} weight={600}>{t('ACCOUNT_PAYMENT_OPTIONS', 'Account and Payment Options')}</OText>
       <Content>

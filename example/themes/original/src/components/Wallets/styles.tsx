@@ -4,7 +4,11 @@ export const Container = styled.View`
   display: flex;
   flex-direction: column;
 `
-
+export const Header = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`
 export const SectionContent = styled.View`
   width: 100%;
   display: flex;
@@ -12,13 +16,6 @@ export const SectionContent = styled.View`
   align-items: center;
   justify-content: center;
   margin-top: 20px;
-`
-
-export const TransactionsWrapper = styled.View`
-  display: flex;
-  flex-direction: column;
-  border-left-width: 2px;
-  border-left-color: ${(props: any) => props.theme.colors.disabled};
 `
 
 export const BalanceElement = styled.View`
@@ -30,6 +27,7 @@ export const BalanceElement = styled.View`
   align-items: center;
   background-color: ${(props: any) => props.theme.colors.backgroundGray100};
   border-radius: 8px;
+  margin-bottom: 20px;
 `
 
 export const OTabs = styled.View`
@@ -61,4 +59,8 @@ export const LoyaltyImg = styled.ImageBackground`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`
+export const WalletTransactionsWrapper = styled.View`
+  padding-horizontal: 40px;
+  padding-top: 20px;
 `

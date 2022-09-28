@@ -458,7 +458,7 @@ export const ProductOptionsUI = (props: any) => {
 		<SafeAreaView style={{ flex: 1 }}>
 			<TopHeader>
 				<TopActions onPress={() => handleGoBack()}>
-					<OIcon src={theme.images.general.arrow_left} width={30} />
+					<IconAntDesign name='arrowleft' size={26} />
 				</TopActions>
 			</TopHeader>
 			{!error && (
@@ -981,7 +981,7 @@ export const ProductOptionsUI = (props: any) => {
 							<OText size={16} lineHeight={24} weight={'600'}>
 								{productCart.total ? parsePrice(productCart?.total) : ''}
 							</OText>
-							{product?.minimum_per_order && productCart?.quantity <= product?.minimum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MINIMUM_TO_ORDER', 'Min. _number_ ').replace('_number_', product?.minimum_per_order)}</OText>}
+							{product?.minimum_per_order && productCart?.quantity <= product?.minimum_per_order && productCart?.quantity !== 1 && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MINIMUM_TO_ORDER', 'Min. _number_ ').replace('_number_', product?.minimum_per_order)}</OText>}
 							{product?.maximum_per_order && productCart?.quantity >= product?.maximum_per_order && <OText size={12} color={theme.colors?.red}>{t('MOBILE_MAXIMUM_TO_ORDER', 'Max. _number_'.replace('_number_', product?.maximum_per_order))}</OText>}
 						</View>
 						{productCart && !isSoldOut && maxProductQuantity > 0 && (
@@ -1031,7 +1031,7 @@ export const ProductOptionsUI = (props: any) => {
 										disabled={
 											maxProductQuantity <= 0 ||
 											productCart.quantity >= maxProductQuantity ||
-											productCart.quantity >= product?.maximum_per_order ||
+											(productCart.quantity >= product?.maximum_per_order && product?.maximum_per_order) ||
 											isSoldOut
 										}>
 										<OIcon
@@ -1040,7 +1040,7 @@ export const ProductOptionsUI = (props: any) => {
 											color={
 												maxProductQuantity <= 0 ||
 													productCart.quantity >= maxProductQuantity ||
-													productCart.quantity >= product?.maximum_per_order ||
+													(productCart.quantity >= product?.maximum_per_order && product?.maximum_per_order) ||
 													isSoldOut
 													? theme.colors.backgroundGray
 													: theme.colors.backgroundDark
