@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import {
 	BusinessController as BusinessSingleCard,
@@ -59,7 +59,6 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 	const [, t] = useLanguage();
 	const theme = useTheme()
 	const [isIntersectionObserver, setIsIntersectionObserver] = useState(!enableIntersection)
-	const fadeAnim = useRef(new Animated.Value(0)).current;
 
 	const styles = StyleSheet.create({
 		headerStyle: {
@@ -146,22 +145,9 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 		}
 	}
 
-	const fadeIn = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 500,
-			useNativeDriver: true
-    }).start();
-  };
-
 	const handleChangeInterSection = (inView: boolean) => {
 		setIsIntersectionObserver(inView)
-		fadeIn()
 	}
-
-	useEffect(() => {
-		if (!enableIntersection) fadeIn()
-	}, [enableIntersection])
 
 	return (
 		<InView style={{ minHeight: 200 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeInterSection(inView)}>
@@ -186,13 +172,6 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 						</RibbonBox>
 					)}
 					<BusinessHero>
-					<Animated.View
-						style={[
-							{
-								opacity: fadeAnim
-							}
-						]}
-					>
 						<FastImage
 							style={{ height: 120 }}
 							source={{
@@ -201,7 +180,6 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
 							}}
 							resizeMode={FastImage.resizeMode.cover}
 						/>
-					</Animated.View>
 						{(businessFeatured ?? business?.featured) && (
 							<View style={styles.featured}>
 								<FontAwesomeIcon name="crown" size={26} color="gold" />

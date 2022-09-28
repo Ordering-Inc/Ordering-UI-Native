@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
 	useLanguage,
 	useConfig,
@@ -41,8 +41,6 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 
 	const theme = useTheme();
 	const hideAddButton = theme?.business_view?.components?.products?.components?.add_to_cart_button?.hidden ?? true
-
-	const fadeAnim = useRef(new Animated.Value(enableIntersection ? 0 : 1)).current;
 
 	const styles = StyleSheet.create({
 		container: {
@@ -123,14 +121,6 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 		maxCartProductConfig,
 		maxCartProductInventory,
 	);
-	
-	const fadeIn = () => {
-		Animated.timing(fadeAnim, {
-			toValue: 1,
-			duration: 500,
-			useNativeDriver: true
-		}).start();
-	};
 
 	const handleChangeFavorite = () => {
 		if (auth) {
@@ -143,13 +133,8 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	const handleChangeIntersection = () => {
 		if (enableIntersection) {
 			setIsIntersectionObserver(true);
-			fadeIn();
 		}
 	}
-
-	useEffect(() => {
-		if (enableIntersection) fadeIn()
-	}, [enableIntersection])
 
 	return (
 		<InView style={{ minHeight: hideAddButton ? 125 : 165 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
@@ -238,23 +223,14 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 								</RibbonBox>
 							)}
 							{product?.images && (
-								<Animated.View
-									style={[
-										{
-											// Bind opacity to animated value
-											opacity: fadeAnim
-										}
-									]}
-								>
-									<FastImage
-										style={styles.productStyle}
-										source={{
-											uri: optimizeImage(product?.images, 'h_250,c_limit'),
-											priority: FastImage.priority.normal,
-										}}
-										resizeMode={FastImage.resizeMode.cover}
-									/>
-								</Animated.View>
+								<FastImage
+									style={styles.productStyle}
+									source={{
+										uri: optimizeImage(product?.images, 'h_250,c_limit'),
+										priority: FastImage.priority.normal,
+									}}
+									resizeMode={FastImage.resizeMode.cover}
+								/>
 							)}
 						</LogoWrapper>
 
