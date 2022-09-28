@@ -458,7 +458,7 @@ export const ProductOptionsUI = (props: any) => {
 		<SafeAreaView style={{ flex: 1 }}>
 			<TopHeader>
 				<TopActions onPress={() => handleGoBack()}>
-					<OIcon src={theme.images.general.arrow_left} width={30} />
+					<IconAntDesign name='arrowleft' size={26} />
 				</TopActions>
 			</TopHeader>
 			{!error && (

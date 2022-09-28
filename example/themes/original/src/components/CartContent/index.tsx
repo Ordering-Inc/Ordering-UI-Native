@@ -30,10 +30,10 @@ export const CartContent = (props: any) => {
 							{cart.products.length > 0 && (
 								<>
 									<Cart
-                    singleBusiness={props.singleBusiness}
-                    isFranchiseApp={props.isFranchiseApp}
+										singleBusiness={props.singleBusiness}
+										isFranchiseApp={props.isFranchiseApp}
 										cart={cart}
-                    cartuuid={cart.uuid}
+										cartuuid={cart.uuid}
 										onNavigationRedirect={props.onNavigationRedirect}
 										isCartsLoading={isCartsLoading}
 										setIsCartsLoading={setIsCartsLoading}

@@ -3,10 +3,11 @@ import { useLanguage } from 'ordering-components/native'
 import { HelpGuideParams } from '../../types'
 import { OText, OButton, OIcon } from '../shared'
 import { useTheme } from 'styled-components/native'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import {
   Content
 } from './styles'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 export const HelpGuide = (props: HelpGuideParams) => {
   const {
@@ -37,10 +38,14 @@ export const HelpGuide = (props: HelpGuideParams) => {
   return (
     <>
       <OButton
-        imgLeftSrc={theme.images.general.arrow_left}
         imgRightSrc={null}
         style={styles.btnBackArrow}
         onClick={() => goToBack()}
+        icon={AntDesignIcon}
+        iconProps={{
+          name: 'arrowleft',
+          size: 26
+        }}
       />
       <OText size={22} weight={600}>{t('GUIDE_TO_ORDERING', 'Guide to Ordering')}</OText>
       <Content>

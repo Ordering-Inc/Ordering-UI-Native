@@ -19,15 +19,16 @@ export const OrderItAgain = (props: OrderItAgainParams) => {
     categoryState,
     currentCart,
     handleUpdateProducts,
-    navigation
+    navigation,
+    searchValue
   } = props
 
   const [, t] = useLanguage()
   const theme = useTheme()
   const { width } = Dimensions.get('window');
-
+  const productsFilterd = productList?.length > 0 && productList?.sort((a: any, b:any) => moment(b?.last_ordered_date).valueOf() - moment(a?.last_ordered_date).valueOf()).filter((product : any) => product?.name?.toLowerCase()?.includes(searchValue?.toLowerCase()))
   return (
-    <Container>
+    <Container hide={productsFilterd?.length === 0}>
       <OText
         size={16}
         lineHeight={24}
@@ -51,7 +52,7 @@ export const OrderItAgain = (props: OrderItAgainParams) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        {productList?.length > 0 && productList?.sort((a: any, b:any) => moment(b?.last_ordered_date).valueOf() - moment(a?.last_ordered_date).valueOf()).map((product: any, i: number) => (
+        {productsFilterd.map((product: any, i: number) => (
           <ProductWrapper key={'prod_' + product.id + `_${i}`} style={{ width: width - 120, }}>
             <SingleProductCard
               isSoldOut={product.inventoried && !product.quantity}
