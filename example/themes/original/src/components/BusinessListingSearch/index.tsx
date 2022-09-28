@@ -3,7 +3,7 @@ import { useLanguage, BusinessSearchList, useOrder, useUtils, showToast, ToastTy
 import { ScrollView, StyleSheet, TouchableOpacity, Platform, View, Dimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from 'styled-components/native'
-import { OButton, OIcon, OModal, OText } from '../shared'
+import { OButton, OModal, OText } from '../shared'
 import { SearchBar } from '../SearchBar';
 import { BusinessController } from '../BusinessController'
 import { NotFoundSource } from '../NotFoundSource'
@@ -19,14 +19,13 @@ import {
   Metadata,
   SingleBusinessContainer,
   LoadMoreBusinessContainer,
-  ProgressContentWrapper,
-  ProgressBar,
   TagsContainer,
   SortContainer,
   BrandContainer,
   BrandItem,
   PriceFilterWrapper,
-  OptionTitle
+  OptionTitle,
+  BContainer
 } from './styles'
 import FastImage from 'react-native-fast-image'
 import { convertHoursToMinutes } from '../../utils'
@@ -34,8 +33,8 @@ import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder'
 import { BusinessSearchParams } from '../../types'
 import { MyOrders } from '../MyOrders'
 import { useIsFocused } from '@react-navigation/native';
-
-
+import { MaxSectionItem } from './MaxSectionItem'
+import { BusinessControllerSkeletons } from './BusinessControllerSkeletons'
 export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   const {
     navigation,
@@ -100,10 +99,6 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     },
     productsContainer: {
       marginTop: 20
-    },
-    maxContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between'
     },
     businessTypesContainer: {
       width: '100%',
@@ -220,116 +215,16 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
     handleSearchbusinessAndProducts(true)
   }, [])
 
-  
+
   useEffect(() => {
     handleChangeTermValue('')
   }, [isFocused])
 
-  const MaxSectionItem = ({ title, options, filter }: any) => {
-    const parseValue = (option: number) => {
-      return filter === 'max_distance'
-        ? `${option / 1000} ${t('KM', 'Km')}`
-        : filter === 'max_eta'
-          ? `${option} ${t('MIN', 'min')}`
-          : parsePrice(option)
-    }
-    return (
-      <View style={{ marginBottom: 20 }}>
-        <OText weight='bold' mBottom={10} size={16}>
-          {title}
-        </OText>
-        <ProgressContentWrapper>
-          <ProgressBar style={{ width: `${((options.indexOf(filters?.[filter]) / 3) * 100) ?? 100}%` }} />
-        </ProgressContentWrapper>
-        <View style={styles.maxContainer}>
-          {options.map((option: any, i: number) => (
-            <TouchableOpacity
-              onPress={() => handleChangeFilters(filter, option)}
-              key={option}
-            >
-              <OText
-                size={12}
-                weight={filters?.[filter] === option || (option === 'default' && (filters?.[filter] === 'default' || !filters?.[filter])) ? 'bold' : '500'}
-              >
-                {option === 'default' ? `${parseValue(options[i - 1])}+` : parseValue(option)}
-              </OText>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-    )
-  }
-
-  const BusinessControllerSkeletons = () => {
-    return (
-      <>
-        {[
-          ...Array(
-            paginationProps.nextPageItems
-              ? paginationProps.nextPageItems
-              : 3,
-          ).keys(),
-        ].map((item, i) => (
-          <Placeholder
-            Animation={Fade}
-            key={i}
-            style={{ width: 320, marginRight: 20, marginTop: 20 }}>
-            <View style={{ width: 320 }}>
-              <PlaceholderLine
-                height={155}
-                style={{ marginBottom: 20, borderRadius: 25 }}
-              />
-              <View style={{ paddingHorizontal: 10 }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <PlaceholderLine
-                    height={25}
-                    width={40}
-                    style={{ marginBottom: 10 }}
-                  />
-                  <PlaceholderLine
-                    height={25}
-                    width={20}
-                    style={{ marginBottom: 10 }}
-                  />
-                </View>
-                <PlaceholderLine
-                  height={20}
-                  width={30}
-                  style={{ marginBottom: 10 }}
-                />
-                <PlaceholderLine
-                  height={20}
-                  width={80}
-                  style={{ marginBottom: 0 }}
-                />
-              </View>
-            </View>
-          </Placeholder>
-        ))}
-      </>
-    )
-  }
-
   return (
-    <ScrollView style={styles.container}>
-      <WrapHeader style={{ paddingTop: top + 20, marginVertical: 2 }}>
-        <OText
-          size={20}
-          mBottom={15}
-          weight='bold'
-          style={{ marginTop: 10 }}
-        >
-          {t('SEARCH', 'Search')}
-        </OText>
-      </WrapHeader>
+    <BContainer>
       <SearchWrapper>
         {isFocused && (
           <SearchBar
-            autoFocus
             lazyLoad
             inputStyle={{ ...styles.searchInput, ...Platform.OS === 'ios' ? {} : { paddingBottom: 4 } }}
             placeholder={`${t('SEARCH_BUSINESSES', 'Search Businesses')} / ${t('TYPE_AT_LEAST_3_CHARACTERS', 'type at least 3 characters')}`}
@@ -348,12 +243,13 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           </View>
         )
       }
-      {businessesSearchList.businesses?.length > 0 && (
+      {businessesSearchList.businesses?.length > 0 && termValue?.length === 0 && (
         <MyOrders
           hideOrders
           businessesSearchList={businessesSearchList}
           onNavigationRedirect={onNavigationRedirect}
           BusinessControllerSkeletons={BusinessControllerSkeletons}
+          businessPaginationProps={paginationProps}
         />
       )}
 
@@ -387,7 +283,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           </LoadMoreBusinessContainer>
         )}
         {businessesSearchList.loading && (
-          <BusinessControllerSkeletons />
+          <BusinessControllerSkeletons paginationProps={paginationProps} />
         )}
       </ScrollView>
       <ProductsList>
@@ -630,7 +526,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           onClick={() => handleApplyFilters()}
         />
       </OModal>
-    </ScrollView>
+    </BContainer>
   )
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Platform, StyleSheet, View } from 'react-native'
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
 import {
 	UpsellingPage as UpsellingPageController,
 	useUtils,
@@ -21,6 +21,7 @@ import {
 import { OrderSummary } from '../OrderSummary';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 	const {
@@ -161,11 +162,14 @@ const UpsellingProductsUI = (props: UpsellingProductsParams) => {
 			<>
 				<View style={{ ...styles.headerItem, flex: 1, marginTop: Platform.OS == 'ios' ? 35 : 70 }}>
 					<OButton
-						imgLeftSrc={theme.images.general.arrow_left}
 						imgRightSrc={null}
 						style={styles.btnBackArrow}
 						onClick={() => onGoBack()}
-						imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
+						icon={AntDesignIcon}
+						iconProps={{
+							name: 'arrowleft',
+							size: 26
+						}}
 					/>
 				</View>
 				<ScrollView style={{ marginTop: 10, marginBottom: props.isPage ? 40 : bottom + (Platform.OS == 'ios' ? 96 : 130) }} showsVerticalScrollIndicator={false}>

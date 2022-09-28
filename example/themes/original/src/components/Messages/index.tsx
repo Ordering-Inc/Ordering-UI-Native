@@ -5,6 +5,7 @@ import { launchImageLibrary } from 'react-native-image-picker'
 import { GiftedChat, Actions, ActionsProps, InputToolbar, Composer, Send, Bubble, MessageImage, InputToolbarProps, ComposerProps } from 'react-native-gifted-chat'
 import { USER_TYPE } from '../../config/constants'
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { OIcon, OIconButton, OText, OButton } from '../shared'
 import { TouchableOpacity, ActivityIndicator, StyleSheet, View, Platform, Keyboard } from 'react-native'
 import { Header, TitleHeader, Wrapper, QuickMessageContainer, ProfileMessageHeader, MessageTypeItem } from './styles'
@@ -36,7 +37,7 @@ const ORDER_STATUS: any = {
 	20: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
 	21: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
 	22: 'ORDER_LOOKING_FOR_DRIVER',
-  	23: 'ORDER_DRIVER_ON_WAY'
+	23: 'ORDER_DRIVER_ON_WAY'
 }
 
 const filterSpecialStatus = ['prepared_in', 'delivered_in', 'delivery_datetime']
@@ -122,18 +123,17 @@ const MessagesUI = (props: MessagesParams) => {
 
 	const messageConsole = (message: any) => {
 		return message.change?.attribute !== 'driver_id'
-		  ?
-		  `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${
-			filterSpecialStatus.includes(message.change.attribute) ? 
-			`${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}` : 
-			`${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
-		  }`
-		  : message.change.new
 			?
-			`${message.driver?.name} ${message.driver?.lastname !== null ? message.driver.lastname : ''} ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${message.comment ? message.comment.length : ''}`
-			:
-			`${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`
-	  }
+			`${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute) ?
+				`${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}` :
+				`${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
+			}`
+			: message.change.new
+				?
+				`${message.driver?.name} ${message.driver?.lastname !== null ? message.driver.lastname : ''} ${t('WAS_ASSIGNED_AS_DRIVER', 'Was assigned as driver')} ${message.comment ? message.comment.length : ''}`
+				:
+				`${t('DRIVER_UNASSIGNED', 'Driver unassigned')}`
+	}
 
 	useEffect(() => {
 		let newMessages: Array<any> = []
@@ -402,7 +402,9 @@ const MessagesUI = (props: MessagesParams) => {
 			<Wrapper>
 				{!isMeesageListing ? (
 					<Header>
-						<OIconButton icon={theme.images.general.arrow_left} style={{ paddingStart: 10, borderColor: theme.colors.clear }} onClick={onClose} />
+						<TouchableOpacity onPress={onClose} style={{ paddingStart: 10, borderColor: theme.colors.clear }}>
+							<AntDesignIcon name='arrowleft' size={26} />
+						</TouchableOpacity>
 						<View style={{ marginRight: 10, shadowColor: theme.colors.black, shadowOpacity: 0.1, shadowOffset: { width: 0, height: 1 }, shadowRadius: 2 }}>
 							<OIcon
 								url={type === USER_TYPE.DRIVER ? order?.driver?.photo : order?.business?.logo}
@@ -419,10 +421,8 @@ const MessagesUI = (props: MessagesParams) => {
 				) : (
 					<ProfileMessageHeader>
 						<View style={{ ...styles.headerTitle }}>
-							<TouchableOpacity
-								style={styles.headerItem}
-								onPress={onClose}>
-								<OIcon src={theme.images.general.arrow_left} width={16} />
+							<TouchableOpacity onPress={onClose} style={styles.headerItem}>
+								<AntDesignIcon name='arrowleft' size={26} />
 							</TouchableOpacity>
 							<OText size={18}>{t('ORDER', theme?.defaultLanguages?.ORDER || 'Order')} #{order?.id}</OText>
 						</View>

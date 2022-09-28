@@ -11,6 +11,7 @@ import { OrderTypeSelectParams } from '../../types'
 import { OIcon, OText } from '../shared'
 import NavBar from '../NavBar';
 import { ORDER_TYPES } from '../../config/constants';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	const {
@@ -44,7 +45,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 		if (!orderState.loading) {
 			setOrderTypeValue && setOrderTypeValue(orderType)
 			handleChangeOrderType(orderType)
-			if(!isChewLayout){
+			if (!isChewLayout) {
 				goToBack();
 			}
 		}
@@ -58,7 +59,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 						horizontal
 						showsHorizontalScrollIndicator={false}
 					>
-						{chewOrderTypes?.map((type : any) => (
+						{chewOrderTypes?.map((type: any) => (
 							<TabBtn
 								key={type.value}
 								onPress={() => handleChangeOrderTypeCallback(type.value)}
@@ -108,7 +109,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 													<OText size={10} lineHeight={15} color={theme.colors.white}>{item?.description}</OText>
 													<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 														<OText size={10} lineHeight={15} color={theme.colors.white}>{t('START_MY_ORDER', 'Start my order')}</OText>
-														<OIcon src={theme.images.general.arrow_left} width={16} color={theme.colors.white} style={{ transform: [{ rotate: '180deg' }], marginStart: 4 }} />
+														<AntDesignIcon name='arrowleft' size={26} color={theme.colors.white} style={{ transform: [{ rotate: '180deg' }], marginStart: 4 }} />
 													</View>
 												</MaskCont>
 											</BgImage>

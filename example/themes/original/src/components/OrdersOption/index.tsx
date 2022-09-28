@@ -47,6 +47,8 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 		businessesSearchList,
 		hideOrders,
 		BusinessControllerSkeletons,
+		businesses,
+		businessPaginationProps
 	} = props
 
 	const theme = useTheme();
@@ -141,9 +143,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 
 	useFocusEffect(
 		React.useCallback(() => {
-			if (!businessesSearchList) {
-				loadOrders(false, false, false, true)
-			}
+			loadOrders(false, false, false, true)
 		}, [navigation])
 	)
 
@@ -215,23 +215,20 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 						)}
 				</>
 			)}
-			{isBusiness && !!businessesSearchList && businessLoading && businessOrderIds?.length > 0 && (
+			{isBusiness && !!businessesSearchList && businesses?.loading &&  (
 				<ScrollView horizontal>
-					<BusinessControllerSkeletons />
+					<BusinessControllerSkeletons paginationProps={businessPaginationProps} />
 				</ScrollView>
 			)}
-			{isBusiness && businessOrderIds?.length > 0 && (
+			{isBusiness && (
 				<PreviousBusinessOrdered
-					businessId={businessOrderIds}
-					businessLoading={businessLoading}
-					setBusinessLoading={setBusinessLoading}
 					onNavigationRedirect={onNavigationRedirect}
-					isLoadingOrders={loading}
 					isBusinessesSearchList={!!businessesSearchList}
+					businesses={businesses}
 				/>
 			)}
 
-			{isProducts && (
+			{isProducts && !loading && (
 				<PreviousProductsOrdered
 					products={products}
 					onProductClick={onProductClick}
@@ -240,9 +237,9 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
 			)}
 			{(loading && isProducts) && (
 				<>
-					{[...Array(4).keys()].map(
+					{[...Array(!!businessesSearchList ? 1 : 4).keys()].map(
 						(item, i) => (
-							<Placeholder key={i} style={{ padding: 5, paddingLeft: 40 }} Animation={Fade}>
+							<Placeholder key={i} style={{ padding: 5, paddingLeft: !!businessesSearchList ? 0 : 40, marginBottom: !!businessesSearchList ? 38 : 0 }} Animation={Fade}>
 								<View style={{ flexDirection: 'row' }}>
 									<PlaceholderLine
 										width={24}

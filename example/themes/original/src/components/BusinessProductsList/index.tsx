@@ -91,6 +91,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
           navigation={navigation}
           handleUpdateProducts={handleUpdateProducts}
           currentCart={currentCart}
+          searchValue={searchValue}
         />
       )}
       {category.id &&
