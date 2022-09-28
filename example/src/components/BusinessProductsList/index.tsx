@@ -68,7 +68,7 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
 
       {
         !category.id && categories && categories.filter(category => category.id !== null).map((category, i, _categories) => {
-          const products = categoryState.products?.filter((product: any) => product.category_id === category.id) || []
+          const products = categoryState.products?.filter((product: any) => category?.children?.some((cat: any) => cat?.category_id === product?.category_id)) || []
           return (
             <View key={`category${category.id}`} style={{ alignItems: 'flex-start', flex: 1 }}>
               {
@@ -104,8 +104,8 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
                 <View style={{ flexDirection: 'row' }}>
                   <PlaceholderLine width={24} height={70} style={{ marginRight: 10, marginBottom: 10 }} />
                   <Placeholder style={{ paddingVertical: 10 }}>
-                      <PlaceholderLine width={60} style={{marginBottom: 25}}/>
-                      <PlaceholderLine width={20} />
+                    <PlaceholderLine width={60} style={{ marginBottom: 25 }} />
+                    <PlaceholderLine width={20} />
                   </Placeholder>
                 </View>
               </Placeholder>
