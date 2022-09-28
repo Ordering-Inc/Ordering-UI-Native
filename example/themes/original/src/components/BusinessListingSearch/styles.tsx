@@ -1,5 +1,9 @@
 import styled, { css } from 'styled-components/native'
 
+export const BContainer = styled.View`
+  padding: 20px 40px;
+`
+
 export const WrapHeader = styled.View`
   width: 100%;
 	padding-vertical: 20px;
@@ -53,18 +57,6 @@ export const LoadMoreBusinessContainer = styled.View`
   align-items: center;
   justify-content: center;
   margin-left: 20px;
-`
-
-export const ProgressBar = styled.View`
-  height: 4px;
-  background: ${(props: any) => props.theme.colors.textNormal};
-`
-
-export const ProgressContentWrapper = styled.View`
-  height: 4px;
-  background: #F8F9FA;
-  margin-bottom: 10px;
-  flex: 1;
 `
 
 export const TagsContainer = styled.View`

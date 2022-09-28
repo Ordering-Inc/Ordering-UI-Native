@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import { useLanguage, useUtils, useToast,	ToastType, MultiOrdersDetails as MultiOrdersDetailsController } from 'ordering-components/native'
-import { View, StyleSheet, BackHandler } from 'react-native'
+import { useLanguage, useUtils, useToast, ToastType, MultiOrdersDetails as MultiOrdersDetailsController } from 'ordering-components/native'
+import { View, StyleSheet, BackHandler, TouchableOpacity } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import { OText, OButton } from '../shared'
 import { Container } from '../../layouts/Container'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder'
 import { SingleOrderCard } from './SingleOrderCard'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
   OrdersDetailsContainer,
@@ -29,20 +30,20 @@ export const MultiOrdersDetailsUI = (props: any) => {
   } = props
 
   const theme = useTheme()
-	const styles = StyleSheet.create({
+  const styles = StyleSheet.create({
     btnBackArrow: {
-			borderWidth: 0,
-			backgroundColor: theme.colors.clear,
-			shadowColor: theme.colors.clear,
-			padding: 0,
+      borderWidth: 0,
+      backgroundColor: theme.colors.clear,
+      shadowColor: theme.colors.clear,
+      padding: 0,
       marginLeft: -20
-		},
-	})
-  
+    },
+  })
+
   const { loading, orders, error } = props.ordersList
   const [, t] = useLanguage()
   const [{ parsePrice, parseNumber, parseDate }] = useUtils();
-	const [, { showToast }] = useToast();
+  const [, { showToast }] = useToast();
 
   const walletName: any = {
     cash: {
@@ -60,7 +61,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
     }
     navigation.navigate('BusinessList');
     return true
-	}
+  }
 
   const handleGoToOrderDetails = (uuid: any) => {
     navigation.navigate('OrderDetails', { orderId: uuid })
@@ -68,7 +69,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
 
   useEffect(() => {
     if (error) {
-	  	showToast(ToastType.Error, error)
+      showToast(ToastType.Error, error)
     }
   }, [error])
 
@@ -83,11 +84,14 @@ export const MultiOrdersDetailsUI = (props: any) => {
     <OrdersDetailsContainer keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 40 }}>
       <View style={{ flexDirection: 'row' }}>
         <OButton
-          imgLeftSrc={theme.images.general.arrow_left}
           imgRightSrc={null}
           style={styles.btnBackArrow}
           onClick={() => handleArrowBack()}
-          imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 16 }}
+          icon={AntDesignIcon}
+          iconProps={{
+            name: 'arrowleft',
+            size: 26
+          }}
         />
       </View>
       <Header>
@@ -202,7 +206,7 @@ export const MultiOrdersDetailsUI = (props: any) => {
           </Row>
           <Row>
             <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
-            {t('ESTIMATED_TAX_TO_BE_COLLECTED', 'Estimated tax to be collected')}:
+              {t('ESTIMATED_TAX_TO_BE_COLLECTED', 'Estimated tax to be collected')}:
             </OText>
             <OText size={12} lineHeight={18} weight={'400'} color={theme.colors.textNormal}>
               {parsePrice(ordersSummary?.tax)}

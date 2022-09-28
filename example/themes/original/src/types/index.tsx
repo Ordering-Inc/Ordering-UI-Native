@@ -366,6 +366,8 @@ export interface OrdersOptionParams {
 	businessesSearchList?: any,
 	hideOrders?: boolean,
 	BusinessControllerSkeletons?: any,
+	businessPaginationProps?: any,
+	businesses?: any
 }
 export interface ActiveOrdersParams {
 	orders?: any,
@@ -719,7 +721,8 @@ export interface PreviousBusinessOrderedParams {
 	businessId?: number,
 	onNavigationRedirect?: any,
 	isBusinessesSearchList?: any,
-	businessLoading?: boolean
+	businessLoading?: boolean,
+	businesses?: any
 }
 
 export interface ServiceFormParams {
@@ -754,7 +757,8 @@ export interface OrderItAgainParams {
 	categoryState: any,
 	currentCart: any,
 	handleUpdateProducts: any,
-	navigation: any
+	navigation: any,
+	searchValue?: string
 }
 
 export interface PreviousProductsOrderedParams {

@@ -41,10 +41,10 @@ export const BusinessItemAccordion = (props: any) => {
 	useEffect(() => {
 		const cartsArray = Object.values(orderState?.carts)
 		const cartsLength = cartsArray.filter((cart: any) => cart.products.length > 0).length ?? 0
-		if ((cartsLength === 1) && !isClosed) {
-			setActiveState(true)
+		if (cartsLength === 1) {
+			setActiveState(!isClosed)
 		}
-	}, [orderState?.carts])
+	}, [orderState?.carts, isClosed])
 
 	return (
 		<BIContainer isClosed={isClosed} isMultiCheckout={isMultiCheckout} checkoutVisible={!isActive && !isClosed && !!isProducts && !checkoutButtonDisabled}>

@@ -79,6 +79,8 @@ interface Props {
 	loadingStyle?: ViewStyle;
 	showNextIcon?: boolean;
 	isDisabledWithSameStyles?: boolean;
+	icon?: any;
+	iconProps?: any
 }
 
 const OButton = (props: Props): React.ReactElement => {
@@ -114,6 +116,9 @@ const OButton = (props: Props): React.ReactElement => {
 			disabled={props.isDisabledWithSameStyles}
 		>
 			<StyledButton style={props.bgColor ? { ...props.style, backgroundColor: props.bgColor, borderColor: props.borderColor } : props.style}>
+				{props.icon ? (
+					<props.icon {...props.iconProps} />
+				) : null}
 				{props.imgLeftSrc ? (
 					<OIcon style={props.imgLeftStyle} src={props.imgLeftSrc} />
 				) : null}
@@ -122,9 +127,9 @@ const OButton = (props: Props): React.ReactElement => {
 				) : null}
 				{props.imgRightSrc ? (
 					<EndImage style={props.imgRightStyle} source={props.imgRightSrc} />
-				) : props.showNextIcon ? 
-					<EndImage source={theme.images.general.arrow_left} 
-					style={{width: 16, tintColor: 'white', transform: [{rotate: I18nManager.isRTL ? '0deg' : '180deg'}]}} /> : null }
+				) : props.showNextIcon ?
+					<EndImage source={theme.images.general.arrow_left}
+						style={{ width: 16, tintColor: 'white', transform: [{ rotate: I18nManager.isRTL ? '0deg' : '180deg' }] }} /> : null}
 			</StyledButton>
 		</TouchableOpacity>
 	);

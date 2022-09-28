@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled, { useTheme } from 'styled-components/native'
 import { OButton, OIcon, OText } from '../shared'
 import { Platform, TextStyle, ViewStyle, I18nManager, TouchableOpacity } from 'react-native'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 const TitleWrapper = styled.View`
   flex-direction: column;
@@ -61,11 +62,16 @@ const NavBar = (props: Props) => {
 	return (
 		<Wrapper style={{ paddingTop: props.paddingTop, ...{ flexDirection: props.isVertical ? 'column' : 'row', alignItems: props.isVertical ? 'flex-start' : 'center' }, ...props.style }}>
 			<OButton
-				imgLeftSrc={props.leftImg || theme.images.general.arrow_left}
+				imgLeftSrc={props.leftImg}
 				imgLeftStyle={{ width: 18 }}
 				imgRightSrc={null}
 				style={{ ...btnBackArrow, ...props.btnStyle, ...props.isVertical ? (I18nManager.isRTL ? { paddingRight: 0 } : { paddingLeft: 0 }) : {} }}
 				onClick={props?.onActionLeft}
+				icon={AntDesignIcon}
+				iconProps={{
+					name: 'arrowleft',
+					size: 26
+				}}
 			/>
 			<TitleTopWrapper>
 				{props.withIcon
