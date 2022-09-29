@@ -47,7 +47,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 			borderWidth: 1,
 			borderRadius: 7.6,
 			borderColor: theme.colors.border,
-			marginBottom: 28,
+			marginBottom: 25,
 			minHeight: hideAddButton ? 100 : 165
 		},
 		titleWrapper: {
@@ -137,7 +137,7 @@ const SingleProductCardUI = React.memo((props: SingleProductCardParams) => {
 	}
 
 	return (
-		<InView style={{ minHeight: hideAddButton ? 125 : 165 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
+		<InView style={{ minHeight: hideAddButton ? 125 : 190 }} triggerOnce={true} onChange={(inView: boolean) => handleChangeIntersection()}>
 			{isIntersectionObserver ? (
 				<CardContainer
 					showAddButton={!hideAddButton}
