@@ -33,6 +33,7 @@ const OrderProgressUI = (props: any) => {
   const [{ optimizeImage, parseDate, parseTime }] = useUtils()
   const [lastOrder, setLastOrder] = useState<any>(null)
   const imageFails = theme.images.general.emptyActiveOrders
+  const [initialLoaded, setInitialLoaded] = useState(false)
 
   const styles = StyleSheet.create({
     main: {
@@ -135,16 +136,21 @@ const OrderProgressUI = (props: any) => {
     }
   }, [isFocused])
 
+  useEffect(() => {
+    if (orderList.loading || initialLoaded) return
+    setInitialLoaded(true)
+  }, [orderList.loading, initialLoaded])
+
   return (
     <>
-      {orderList?.loading && (
+      {(orderList?.loading && !initialLoaded) && (
         <Placeholder Animation={Fade} height={Platform.OS === 'ios' ? 147.5 : 158}>
           <PlaceholderLine height={60} style={{ borderRadius: 8, marginBottom: 10 }} />
           <PlaceholderLine height={20} style={{ marginBottom: 10 }} />
           <PlaceholderLine height={40} style={{ borderRadius: 8, marginBottom: 10 }} />
         </Placeholder>
       )}
-      {!orderList?.loading && orderList?.orders?.length > 0 && lastOrder && (
+      {(!orderList?.loading || initialLoaded) && orderList?.orders?.length > 0 && lastOrder && (
         <View style={styles.main}>
           <OrderInfoWrapper style={{ flex: 1 }}>
             <View style={styles.logoWrapper}>
