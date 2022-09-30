@@ -34,9 +34,9 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
   return (
     <ProductsContainer>
       {category.id && (
-        categoryState.products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any) => (
+        categoryState.products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any, index: number) => (
           <SingleProductCard
-            key={product.id}
+            key={`category${category.id}-${product.id}-${index}`}
             isSoldOut={(product.inventoried && !product.quantity)}
             product={product}
             businessId={businessId}
@@ -51,9 +51,9 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
             <>
               <OText size={18} weight='bold' mBottom={10}>{t('FEATURED', 'Featured')}</OText>
               <>
-                {categoryState.products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any) => product.featured && (
+                {categoryState.products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any, index: number) => product.featured && (
                   <SingleProductCard
-                    key={product.id}
+                    key={`featured${product.id}-${index}`}
                     isSoldOut={(product.inventoried && !product.quantity)}
                     product={product}
                     businessId={businessId}
@@ -70,16 +70,16 @@ const BusinessProductsListUI = (props: BusinessProductsListParams) => {
         !category.id && categories && categories.filter(category => category.id !== null).map((category, i, _categories) => {
           const products = categoryState.products?.filter((product: any) => product.category_id === category.id) || []
           return (
-            <View key={category.id} style={{alignItems: 'flex-start', flex:1}}>
+            <View key={`category${category.id}`} style={{ alignItems: 'flex-start', flex: 1 }}>
               {
                 products.length > 0 && (
                   <>
                     <OText size={18} weight='bold' mBottom={10}>{category.name}</OText>
                     <>
                       {
-                        products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any) => (
+                        products?.sort((a: any, b: any) => a.rank - b.rank).map((product: any, index: number) => (
                           <SingleProductCard
-                            key={product.id}
+                            key={`all${product.id}-${index}`}
                             isSoldOut={product.inventoried && !product.quantity}
                             businessId={businessId}
                             product={product}
