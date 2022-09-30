@@ -42,8 +42,8 @@ const ORDER_STATUS: any = {
 
 const imgOptions = {
   mediaType: 'photo',
-  maxHeight: 300,
-  maxWidth: 300,
+  maxHeight: 2048,
+  maxWidth: 2048,
   includeBase64: true,
   selectionLimit: 0
 }
