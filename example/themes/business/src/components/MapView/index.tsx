@@ -191,7 +191,7 @@ const MapViewComponent = (props: MapViewParams) => {
             {((customer && marker?.business?.zipcode) || (!customer && marker?.business?.zipcode)) && (
               <OText>{customer ? marker?.customer?.zipcode : marker?.business?.zipcode}</OText>
             )}
-            {customer && marker?.customer?.internal_number && (
+            {customer && !!marker?.customer?.internal_number && (
               <OText>{marker?.customer?.internal_number}</OText>
             )}
             <OText textDecorationLine='underline' color={theme.colors.primary}>
