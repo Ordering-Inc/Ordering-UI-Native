@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { LanguageSelector as LanguageSelectorController, useOrder } from 'ordering-components/native'
+import { Platform, StyleSheet, NativeModules } from 'react-native'
 import { useTheme } from 'styled-components/native';
-import { I18nManager, Platform, StyleSheet, View } from 'react-native'
+import RNRestart from 'react-native-restart'
+import { LanguageSelector as LanguageSelectorController, useOrder, useLanguage } from 'ordering-components/native'
 
 import RNPickerSelect from 'react-native-picker-select'
 import { Container, DummyContainer } from './styles'
 import { LanguageSelectorParams } from '../../types'
-import { OIcon } from '../shared'
-import RNRestart from 'react-native-restart'
 
 const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 
@@ -19,6 +18,7 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   } = props
 
   const [orderState] = useOrder()
+  const [langugageState] = useLanguage()
   const theme = useTheme();
 
   const [language, setLanguage] = useState(currentLanguage)
@@ -70,16 +70,18 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
   )
 
   const changeDirection = async (language: any) => {
-    if (language !== 'ar') {
-      if (I18nManager.isRTL) {
-        await I18nManager.forceRTL(false)
-        RNRestart.Restart();
-      }
-    } else {
-      if (!I18nManager.isRTL) {
-        await I18nManager.forceRTL(true)
-        RNRestart.Restart();
-      }
+    if (language === langugageState?.language?.code) return
+    const isArabicLang = language === 'ar'
+    const isRTLOn = NativeModules.I18nManager.isRTL
+
+    if (isArabicLang && !isRTLOn) {
+      NativeModules.I18nManager.forceRTL(!isRTLOn)
+      RNRestart.Restart();
+    }
+
+    if (!isArabicLang && isRTLOn) {
+      NativeModules.I18nManager.forceRTL(!isRTLOn)
+      RNRestart.Restart();
     }
   }
 
@@ -87,11 +89,11 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
     changeDirection(Platform.OS === 'ios' ? language : langCode)
     handleChangeLanguage(Platform.OS === 'ios' ? language : langCode)
   }
-  
+
   useEffect(() => {
     changeDirection(currentLanguage)
   }, [])
-  
+
   return (
     <Container>
       {languagesState?.languages ? (
@@ -113,8 +115,11 @@ const LanguageSelectorUI = (props: LanguageSelectorParams) => {
 }
 
 export const LanguageSelector = (props: LanguageSelectorParams) => {
+  const [langugageState] = useLanguage()
+
   const LanguageProps = {
     ...props,
+    currentLanguage: langugageState?.language?.code ?? NativeModules.I18nManager.localeIdentifier?.split('_')?.[0] ?? 'en',
     UIComponent: LanguageSelectorUI
   }
 
