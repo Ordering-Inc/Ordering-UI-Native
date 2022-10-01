@@ -365,7 +365,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
                     </View>
                   </Placeholder>
                   <Placeholder style={{ paddingHorizontal: 5, bottom: 10 }} Animation={Fade}>
-                    <View style={{ flexDirection: 'row-reverse' }}>
+                    <View style={{ flexDirection: 'row-reverse', overflow: 'hidden' }}>
                       <PlaceholderLine
                         width={24}
                         height={70}
