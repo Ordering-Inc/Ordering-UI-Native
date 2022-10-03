@@ -635,7 +635,6 @@ const SignupFormUI = (props: SignupParams) => {
 											}
 										})}
 										forwardRef={phoneRef}
-										defaultCode={formState?.country_code ?? formState?.country_phone_code ?? null}
 										changeCountry={(val: any) => setPhoneInputData({
 											...phoneInputData,
 											phone: {
