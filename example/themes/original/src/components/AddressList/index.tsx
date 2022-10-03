@@ -36,6 +36,9 @@ const AddressListUI = (props: AddressListParams) => {
 
 	const [isProfile, setIsProfile] = useState(isFromProfile || route?.params?.isFromProfile);
 
+	const goToBack = () => navigation?.canGoBack() && navigation.goBack()
+	const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
+
 	const onNavigatorRedirect = () => {
 		if (route && (isFromBusinesses || isGoBack)) {
 			isGoBack ? goToBack() : onNavigationRedirect('BottomTab')
@@ -97,6 +100,7 @@ const AddressListUI = (props: AddressListParams) => {
 	const handleSetAddress = (address: any) => {
 		if (address.id === orderState?.options?.address_id) return
 		handleSetDefault(address)
+		onNavigatorRedirect()
 	}
 
 	const handleSaveAddress = (address: any) => {
@@ -124,15 +128,6 @@ const AddressListUI = (props: AddressListParams) => {
 			loadAddresses();
 		}
 	}
-
-	const goToBack = () => navigation?.canGoBack() && navigation.goBack()
-	const onNavigationRedirect = (route: string, params?: any) => navigation.navigate(route, params)
-
-	useEffect(() => {
-		if (orderState.loading && auth && orderState.options.address?.location) {
-			onNavigatorRedirect()
-		}
-	}, [orderState.options.address])
 
 	useEffect(() => {
 		console.log('From profile : ' + isProfile)
