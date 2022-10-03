@@ -9,6 +9,7 @@ import {
   useUtils,
   useConfig
 } from 'ordering-components/native'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
   Container,
@@ -64,7 +65,7 @@ const WalletsUI = (props: any) => {
 
   const [tabSelected, setTabSelected] = useState(isWalletCashEnabled ? 'cash' : 'credit_point')
   const [openHistory, setOpenHistory] = useState(false)
-	const isChewLayout = theme?.wallets_view?.components?.layout?.type === 'original'
+  const isChewLayout = theme?.wallets_view?.components?.layout?.type === 'original'
 
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletPointsEnabled)
 
@@ -103,7 +104,7 @@ const WalletsUI = (props: any) => {
   }, [configs])
 
   useEffect(() => {
-    if(refreshWallets){
+    if (refreshWallets) {
       getWallets()
       setRefreshWallets && setRefreshWallets(false)
     }
@@ -139,83 +140,83 @@ const WalletsUI = (props: any) => {
           !userLoyaltyLevel.loading &&
           !walletList.error &&
           walletList.wallets?.length > 0 &&
-        (
-          <>
-            <OTabs
-              horizontal
-              showsHorizontalScrollIndicator={false}
-            >
-              {walletList.wallets?.map((wallet: any) => walletName[wallet.type]?.isActive && (
-                <Pressable
-                  key={wallet.id}
-                  onPress={() => handleChangeTab(wallet)}
-                >
-                  <OTab isSelected={tabSelected === wallet.type}>
-                    <OText size={18}>
-                      {walletName[wallet.type]?.name}
-                    </OText>
-                  </OTab>
-                </Pressable>
-              ))}
-            </OTabs>
+          (
+            <>
+              <OTabs
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              >
+                {walletList.wallets?.map((wallet: any) => walletName[wallet.type]?.isActive && (
+                  <Pressable
+                    key={wallet.id}
+                    onPress={() => handleChangeTab(wallet)}
+                  >
+                    <OTab isSelected={tabSelected === wallet.type}>
+                      <OText size={18}>
+                        {walletName[wallet.type]?.name}
+                      </OText>
+                    </OTab>
+                  </Pressable>
+                ))}
+              </OTabs>
 
-            <SectionContent>
-              {!!loyaltyLevel && tabSelected === 'credit_point' && (
-                <LoyaltyContent>
-                  <LoyaltyWrapp>
-                    <OText size={20}>
-                      {`${t('LOYALTY_LEVEL_TITLE', 'Your level is')}:`}
-                    </OText>
-                    {loyaltyLevel.image ? (
-                      <FastImage
-                        style={styles.logoStyle}
-                        source={{
-                          uri: loyaltyLevel.image,
-                          priority: FastImage.priority.high,
-                          cache:FastImage.cacheControl.web
-                        }}
-                        resizeMode={FastImage.resizeMode.contain}
-                      />
-                    ) : (
-                      <LoyaltyImg
-                        source={theme.images.dummies.loyaltyLevel}
-                        resizeMode='contain'
-                      />
-                    )}
-                    <OText
-                      size={22}
-                      weight='bold'
-                      style={{ textTransform: 'uppercase' }}
-                      color={theme.colors.primary}
-                    >
-                      {loyaltyLevel.name}
-                    </OText>
-                  </LoyaltyWrapp>
-                </LoyaltyContent>
-              )}
-              <BalanceElement>
-                <OText size={20} style={{fontWeight: '600'}}>
-                  {currentWalletSelected?.type === 'cash'
-                    ? parsePrice(currentWalletSelected?.balance)
-                    : currentWalletSelected?.balance
-                  }
-                </OText>
-                <OText style={{ paddingLeft: 5 }}>
-                  {currentWalletSelected?.type === 'cash'
-                    ? configs?.stripe_currency?.value
-                    : t('POINTS', 'Points')}
-                </OText>
-              </BalanceElement>
+              <SectionContent>
+                {!!loyaltyLevel && tabSelected === 'credit_point' && (
+                  <LoyaltyContent>
+                    <LoyaltyWrapp>
+                      <OText size={20}>
+                        {`${t('LOYALTY_LEVEL_TITLE', 'Your level is')}:`}
+                      </OText>
+                      {loyaltyLevel.image ? (
+                        <FastImage
+                          style={styles.logoStyle}
+                          source={{
+                            uri: loyaltyLevel.image,
+                            priority: FastImage.priority.high,
+                            cache: FastImage.cacheControl.web
+                          }}
+                          resizeMode={FastImage.resizeMode.contain}
+                        />
+                      ) : (
+                        <LoyaltyImg
+                          source={theme.images.dummies.loyaltyLevel}
+                          resizeMode='contain'
+                        />
+                      )}
+                      <OText
+                        size={22}
+                        weight='bold'
+                        style={{ textTransform: 'uppercase' }}
+                        color={theme.colors.primary}
+                      >
+                        {loyaltyLevel.name}
+                      </OText>
+                    </LoyaltyWrapp>
+                  </LoyaltyContent>
+                )}
+                <BalanceElement>
+                  <OText size={20} style={{ fontWeight: '600' }}>
+                    {currentWalletSelected?.type === 'cash'
+                      ? parsePrice(currentWalletSelected?.balance)
+                      : currentWalletSelected?.balance
+                    }
+                  </OText>
+                  <OText style={{ paddingLeft: 5 }}>
+                    {currentWalletSelected?.type === 'cash'
+                      ? configs?.stripe_currency?.value
+                      : t('POINTS', 'Points')}
+                  </OText>
+                </BalanceElement>
 
-              {!isChewLayout && (
-                <WalletTransactions
-                  transactionsList={transactionsList}
-                  currentWalletSelected={currentWalletSelected}
-                />
-              )}
-            </SectionContent>
-          </>
-        )}
+                {!isChewLayout && (
+                  <WalletTransactions
+                    transactionsList={transactionsList}
+                    currentWalletSelected={currentWalletSelected}
+                  />
+                )}
+              </SectionContent>
+            </>
+          )}
 
         {(walletList?.loading || userLoyaltyLevel.loading) && (
           <>
@@ -260,8 +261,6 @@ const WalletsUI = (props: any) => {
         <ScrollView>
           <WalletTransactionsWrapper>
             <OButton
-              imgLeftSrc={theme.images.general.arrow_left}
-              imgLeftStyle={{ width: 18 }}
               imgRightSrc={null}
               style={{
                 borderWidth: 0,
@@ -273,6 +272,11 @@ const WalletsUI = (props: any) => {
                 paddingRight: 0
               }}
               onClick={() => setOpenHistory(false)}
+              icon={AntDesignIcon}
+              iconProps={{
+                name: 'arrowleft',
+                size: 26
+              }}
             />
             <WalletTransactions
               transactionsList={transactionsList}
