@@ -21,6 +21,8 @@ import { BusinessProductsCategories } from '../BusinessProductsCategories'
 import { BusinessProductsList } from '../BusinessProductsList'
 import { BusinessProductsListingParams } from '../../types'
 import { _retrieveStoreData, _removeStoreData } from '../../providers/StoreUtil';
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
+
 import {
 	TopHeader,
 	WrapSearchBar,
@@ -29,7 +31,8 @@ import {
 	ContainerSafeAreaView,
 	BackgroundGray,
 	ProfessionalFilterWrapper,
-	NearBusiness
+	NearBusiness,
+	TopActions
 } from './styles'
 import { FloatingButton } from '../FloatingButton'
 import { UpsellingRedirect } from './UpsellingRedirect'
@@ -248,16 +251,9 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 					<TopHeader isIos={Platform.OS === 'ios'}>
 						{!isOpenSearchBar && (
 							<>
-								<View style={{ ...styles.headerItem, width: 175 }}>
-									<OButton
-										imgLeftSrc={theme.images.general.arrow_left}
-										imgRightSrc={null}
-										style={styles.btnBackArrow}
-										onClick={() => handleBackNavigation()}
-										imgLeftStyle={{ tintColor: theme.colors.textNormal, width: 30 }}
-									/>
-
-								</View>
+								<TopActions onPress={() => handleBackNavigation()}>
+									<IconAntDesign name='arrowleft' size={26} />
+								</TopActions>
 								{!errorQuantityProducts && (
 									<View style={{ ...styles.headerItem }}>
 										<TouchableOpacity
