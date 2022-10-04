@@ -53,6 +53,7 @@ import { getTypesText, convertToRadian } from '../../../../utils';
 import { OrderProgress } from '../../../OrderProgress';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
 
 const PIXELS_TO_SCROLL = 2000;
 
@@ -450,8 +451,9 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 					resizeMode='cover'
 				>
 					{!auth && (
+
 						<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
-							<OIcon src={theme.images.general.arrow_left} width={20} style={{ tintColor: theme.colors.white }} />
+							<IconAntDesign name='arrowleft' size={26} />
 						</TouchableOpacity>
 					)}
 				</HeaderWrapper>

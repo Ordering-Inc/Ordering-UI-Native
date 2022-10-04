@@ -66,3 +66,10 @@ export const NearBusiness = styled.View`
   padding-left: 20px;
   max-height: 80px;
 `
+
+export const TopActions = styled.TouchableOpacity`
+	height: 60px;
+	justify-content: center;
+  padding-horizontal: 30px;
+  width: 100px;
+`;

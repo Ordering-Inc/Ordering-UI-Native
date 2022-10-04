@@ -22,6 +22,7 @@ import {
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
 
 import {
 	Search,
@@ -283,7 +284,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				style={{ paddingTop: top + 20 }}>
 				{!auth && (
 					<TouchableOpacity onPress={() => navigation?.canGoBack() && navigation.goBack()} style={{ position: 'absolute', marginStart: 40, paddingVertical: 20 }}>
-						<OIcon src={theme.images.general.arrow_left} width={20} style={{ tintColor: theme.colors.white }} />
+						<IconAntDesign name='arrowleft' size={26} />
 					</TouchableOpacity>
 				)}
 				<Search>

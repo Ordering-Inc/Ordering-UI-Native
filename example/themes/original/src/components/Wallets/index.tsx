@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
 import { useTheme } from 'styled-components/native'
 import { Fade, Placeholder, PlaceholderLine } from 'rn-placeholder';
 import FastImage from 'react-native-fast-image'
@@ -9,23 +9,25 @@ import {
   useUtils,
   useConfig
 } from 'ordering-components/native'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
   Container,
+  Header,
   BalanceElement,
-  TransactionsWrapper,
   OTabs,
   OTab,
   SectionContent,
   LoyaltyContent,
   LoyaltyWrapp,
-  LoyaltyImg
+  LoyaltyImg,
+  WalletTransactionsWrapper
 } from './styles'
 
 import NavBar from '../NavBar'
-import { OText } from '../shared';
+import { OButton, OIcon, OText, OModal } from '../shared';
 import { NotFoundSource } from '../NotFoundSource';
-import { WalletTransactionItem } from '../WalletTransactionItem'
+import { WalletTransactions } from '../WalletTransactions'
 
 const WalletsUI = (props: any) => {
   const {
@@ -46,6 +48,8 @@ const WalletsUI = (props: any) => {
   const [{ parsePrice }] = useUtils()
   const [{ configs }] = useConfig()
 
+  console.log(theme)
+
   const styles = StyleSheet.create({
     logoStyle: {
       width: 120,
@@ -60,6 +64,8 @@ const WalletsUI = (props: any) => {
   });
 
   const [tabSelected, setTabSelected] = useState(isWalletCashEnabled ? 'cash' : 'credit_point')
+  const [openHistory, setOpenHistory] = useState(false)
+  const isChewLayout = theme?.wallets_view?.components?.layout?.type === 'original'
 
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletPointsEnabled)
 
@@ -98,180 +104,188 @@ const WalletsUI = (props: any) => {
   }, [configs])
 
   useEffect(() => {
-    if(refreshWallets){
+    if (refreshWallets) {
       getWallets()
       setRefreshWallets && setRefreshWallets(false)
     }
   }, [refreshWallets])
 
   return (
-    <Container>
-      <NavBar
-        title={t('WALLETS', 'Wallets')}
-        titleAlign={'center'}
-        onActionLeft={goToBack}
-        showCall={false}
-        paddingTop={10}
-        btnStyle={{ paddingLeft: 0 }}
-      />
+    <>
+      <Container>
+        <Header>
+          <NavBar
+            title={isChewLayout ? '' : t('WALLETS', 'Wallets')}
+            titleAlign={'center'}
+            onActionLeft={goToBack}
+            showCall={false}
+            paddingTop={10}
+            btnStyle={{ paddingLeft: 0 }}
+            style={{ flex: 1 }}
+          />
+          {isChewLayout && (
+            <OButton
+              text={t('WALLET_HISTORY', 'Wallet history')}
+              bgColor={theme.colors.white}
+              borderColor={theme.colors.lightGray}
+              imgRightSrc={null}
+              textStyle={{ fontSize: 12, color: theme.colors.disabled }}
+              onClick={() => setOpenHistory(true)}
+              style={{ borderRadius: 8, height: 40 }}
+            />
+          )}
+        </Header>
 
-      {!walletList.loading &&
-        !userLoyaltyLevel.loading &&
-        !walletList.error &&
-        walletList.wallets?.length > 0 &&
-      (
-        <>
-          <OTabs
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          >
-            {walletList.wallets?.map((wallet: any) => walletName[wallet.type]?.isActive && (
-              <Pressable
-                key={wallet.id}
-                onPress={() => handleChangeTab(wallet)}
+        {!walletList.loading &&
+          !userLoyaltyLevel.loading &&
+          !walletList.error &&
+          walletList.wallets?.length > 0 &&
+          (
+            <>
+              <OTabs
+                horizontal
+                showsHorizontalScrollIndicator={false}
               >
-                <OTab isSelected={tabSelected === wallet.type}>
-                  <OText size={18}>
-                    {walletName[wallet.type]?.name}
-                  </OText>
-                </OTab>
-              </Pressable>
-            ))}
-          </OTabs>
-
-          <SectionContent>
-            {!!loyaltyLevel && tabSelected === 'credit_point' && (
-              <LoyaltyContent>
-                <LoyaltyWrapp>
-                  <OText size={20}>
-                    {`${t('LOYALTY_LEVEL_TITLE', 'Your level is')}:`}
-                  </OText>
-                  {loyaltyLevel.image ? (
-                    <FastImage
-                      style={styles.logoStyle}
-                      source={{
-                        uri: loyaltyLevel.image,
-                        priority: FastImage.priority.high,
-                        cache:FastImage.cacheControl.web
-                      }}
-                      resizeMode={FastImage.resizeMode.contain}
-                    />
-                  ) : (
-                    <LoyaltyImg
-                      source={theme.images.dummies.loyaltyLevel}
-                      resizeMode='contain'
-                    />
-                  )}
-                  <OText
-                    size={22}
-                    weight='bold'
-                    style={{ textTransform: 'uppercase' }}
-                    color={theme.colors.primary}
+                {walletList.wallets?.map((wallet: any) => walletName[wallet.type]?.isActive && (
+                  <Pressable
+                    key={wallet.id}
+                    onPress={() => handleChangeTab(wallet)}
                   >
-                    {loyaltyLevel.name}
+                    <OTab isSelected={tabSelected === wallet.type}>
+                      <OText size={18}>
+                        {walletName[wallet.type]?.name}
+                      </OText>
+                    </OTab>
+                  </Pressable>
+                ))}
+              </OTabs>
+
+              <SectionContent>
+                {!!loyaltyLevel && tabSelected === 'credit_point' && (
+                  <LoyaltyContent>
+                    <LoyaltyWrapp>
+                      <OText size={20}>
+                        {`${t('LOYALTY_LEVEL_TITLE', 'Your level is')}:`}
+                      </OText>
+                      {loyaltyLevel.image ? (
+                        <FastImage
+                          style={styles.logoStyle}
+                          source={{
+                            uri: loyaltyLevel.image,
+                            priority: FastImage.priority.high,
+                            cache: FastImage.cacheControl.web
+                          }}
+                          resizeMode={FastImage.resizeMode.contain}
+                        />
+                      ) : (
+                        <LoyaltyImg
+                          source={theme.images.dummies.loyaltyLevel}
+                          resizeMode='contain'
+                        />
+                      )}
+                      <OText
+                        size={22}
+                        weight='bold'
+                        style={{ textTransform: 'uppercase' }}
+                        color={theme.colors.primary}
+                      >
+                        {loyaltyLevel.name}
+                      </OText>
+                    </LoyaltyWrapp>
+                  </LoyaltyContent>
+                )}
+                <BalanceElement>
+                  <OText size={20} style={{ fontWeight: '600' }}>
+                    {currentWalletSelected?.type === 'cash'
+                      ? parsePrice(currentWalletSelected?.balance)
+                      : currentWalletSelected?.balance
+                    }
                   </OText>
-                </LoyaltyWrapp>
-              </LoyaltyContent>
-            )}
-            <BalanceElement>
-              <OText size={20} style={{fontWeight: '600'}}>
-                {currentWalletSelected?.type === 'cash'
-                  ? parsePrice(currentWalletSelected?.balance)
-                  : currentWalletSelected?.balance
-                }
-              </OText>
-              <OText style={{ paddingLeft: 5 }}>
-                {currentWalletSelected?.type === 'cash'
-                  ? configs?.stripe_currency?.value
-                  : t('POINTS', 'Points')}
-              </OText>
-            </BalanceElement>
-
-            <View style={{ marginTop: 20, width: '100%', paddingHorizontal: 1, paddingBottom: 40 }}>
-              {!transactionsList?.loading &&
-                !transactionsList?.error &&
-                transactionsList.list?.[`wallet:${currentWalletSelected?.id}`]?.length > 0 &&
-              (
-                <>
-                  <OText style={{fontSize: 20}}>
-                    {t('TRANSACTIONS_HISTORY', 'Transactions history')}
+                  <OText style={{ paddingLeft: 5 }}>
+                    {currentWalletSelected?.type === 'cash'
+                      ? configs?.stripe_currency?.value
+                      : t('POINTS', 'Points')}
                   </OText>
-                  <TransactionsWrapper>
-                    {transactionsList.list?.[`wallet:${currentWalletSelected?.id}`]?.map((transaction: any, i: number) =>(
-                      <WalletTransactionItem
-                        idx={i}
-                        type={currentWalletSelected?.type}
-                        key={transaction.id}
-                        item={transaction}
-                        withFormatPrice={currentWalletSelected?.type === 'cash'}
-                      />
-                    ))}
-                  </TransactionsWrapper>
-                </>
-              )}
+                </BalanceElement>
 
-              {(transactionsList?.loading || !transactionsList.list?.[`wallet:${currentWalletSelected?.id}`]) && (
-                <View>
-                  {[...Array(4).keys()].map(i => (
-                    <View style={{ marginBottom: 10 }} key={i}>
-                      <Placeholder Animation={Fade}>
-                        <PlaceholderLine width={100} height={100} style={{ marginBottom: 0, borderRadius: 8 }} />
-                      </Placeholder>
-                    </View>
-                  ))}
-                </View>
-              )}
+                {!isChewLayout && (
+                  <WalletTransactions
+                    transactionsList={transactionsList}
+                    currentWalletSelected={currentWalletSelected}
+                  />
+                )}
+              </SectionContent>
+            </>
+          )}
 
-              {!transactionsList?.loading &&
-                !(transactionsList?.loading && transactionsList.list?.[`wallet:${currentWalletSelected?.id}`]) &&
-                (transactionsList?.error ||
-                  !transactionsList.list?.[`wallet:${currentWalletSelected?.id}`]?.length) &&
-              (
-                <NotFoundSource
-                  content={transactionsList?.error
-                    ? t('ERROR_NOT_FOUND_TRANSACTIONS', 'Sorry, an error has occurred')
-                    : t('NOT_FOUND_TRANSACTIONS', 'No transactions to show at this time.')
-                  }
-                />
-              )}
+        {(walletList?.loading || userLoyaltyLevel.loading) && (
+          <>
+            <View>
+              <Placeholder Animation={Fade}>
+                <PlaceholderLine width={100} height={40} style={{ marginBottom: 0 }} />
+              </Placeholder>
             </View>
-          </SectionContent>
-        </>
-      )}
+            <View style={{ marginTop: 10, marginBottom: 20 }}>
+              <Placeholder Animation={Fade}>
+                <PlaceholderLine width={100} height={40} style={{ marginBottom: 0 }} />
+              </Placeholder>
+            </View>
+            <View>
+              {[...Array(4).keys()].map(i => (
+                <View style={{ marginBottom: 10 }} key={i}>
+                  <Placeholder Animation={Fade}>
+                    <PlaceholderLine width={100} height={60} style={{ marginBottom: 0 }} />
+                  </Placeholder>
+                </View>
+              ))}
+            </View>
+          </>
+        )}
 
-      {(walletList?.loading || userLoyaltyLevel.loading) && (
-        <>
-          <View>
-            <Placeholder Animation={Fade}>
-              <PlaceholderLine width={100} height={40} style={{ marginBottom: 0 }} />
-            </Placeholder>
-          </View>
-          <View style={{ marginTop: 10, marginBottom: 20 }}>
-            <Placeholder Animation={Fade}>
-              <PlaceholderLine width={100} height={40} style={{ marginBottom: 0 }} />
-            </Placeholder>
-          </View>
-          <View>
-            {[...Array(4).keys()].map(i => (
-              <View style={{ marginBottom: 10 }} key={i}>
-                <Placeholder Animation={Fade}>
-                  <PlaceholderLine width={100} height={60} style={{ marginBottom: 0 }} />
-                </Placeholder>
-              </View>
-            ))}
-          </View>
-        </>
-      )}
+        {!walletList?.loading && !userLoyaltyLevel.loading && (walletList?.error || !walletList?.wallets?.length) && (
+          <NotFoundSource
+            content={walletList?.error
+              ? t('ERROR_NOT_FOUND_WALLETS', 'Sorry, an error has occurred')
+              : t('NOT_FOUND_WALLETS', 'No wallets to show at this time.')
+            }
+          />
+        )}
+      </Container>
 
-      {!walletList?.loading && !userLoyaltyLevel.loading && (walletList?.error || !walletList?.wallets?.length) && (
-        <NotFoundSource
-          content={walletList?.error
-            ? t('ERROR_NOT_FOUND_WALLETS', 'Sorry, an error has occurred')
-            : t('NOT_FOUND_WALLETS', 'No wallets to show at this time.')
-          }
-        />
-      )}
-    </Container>
+      <OModal
+        open={openHistory}
+        onClose={() => setOpenHistory(false)}
+        entireModal
+        customClose
+      >
+        <ScrollView>
+          <WalletTransactionsWrapper>
+            <OButton
+              imgRightSrc={null}
+              style={{
+                borderWidth: 0,
+                backgroundColor: theme.colors.white,
+                padding: 0,
+                paddingHorizontal: 0,
+                width: 30,
+                paddingLeft: 0,
+                paddingRight: 0
+              }}
+              onClick={() => setOpenHistory(false)}
+              icon={AntDesignIcon}
+              iconProps={{
+                name: 'arrowleft',
+                size: 26
+              }}
+            />
+            <WalletTransactions
+              transactionsList={transactionsList}
+              currentWalletSelected={currentWalletSelected}
+            />
+          </WalletTransactionsWrapper>
+        </ScrollView>
+      </OModal>
+    </>
   )
 }
 
