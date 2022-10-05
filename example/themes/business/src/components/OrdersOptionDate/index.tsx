@@ -3,12 +3,16 @@ import { useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { Container } from './styles';
 import ODropDownCalendar from '../shared/ODropDownCalendar';
-import { Platform } from 'react-native'
-
+import { Button, Platform, Touchable, TouchableOpacity, View } from 'react-native'
+import DoubleClick from 'react-native-double-tap'
+import { OText } from '../shared';
+import DoubleTap from 'react-native-double-tap';
 export const OrdersOptionDate = (props: any) => {
   const {
     search,
-    onSearch
+    onSearch,
+    setOpenedSelect,
+    openedSelect
   } = props
 
   const theme = useTheme();
@@ -22,18 +26,23 @@ export const OrdersOptionDate = (props: any) => {
 
   const handleChangeOption = (option: any) => {
     if (option === 'calendar') {
-      onSearch({...search, date: {...search.date, type: option}})
+      onSearch({ ...search, date: { ...search.date, type: option } })
     } else {
-      onSearch({...search, date: {from: '', to: '', type: option}})
+      onSearch({ ...search, date: { from: '', to: '', type: option } })
     }
   }
 
   const handleChangeDate = (from: any, to: any) => {
-    onSearch({...search, date: {...search.date, from: from, to: to}})
+    onSearch({ ...search, date: { ...search.date, from: from, to: to } })
+  }
+
+  const handleOpenSelect = () => {
+    setOpenedSelect('calendar')
   }
 
   return (
     <Container isIos={Platform.OS === 'ios'}>
+
       <ODropDownCalendar
         options={optionsList}
         defaultValue={search.date.type}
@@ -47,6 +56,10 @@ export const OrdersOptionDate = (props: any) => {
         rangeDate={search.date}
         handleChangeDate={handleChangeDate}
         isCalendarAlwaysVisible
+        handleClear={() => onSearch({ ...search, date: { from: '', to: '', type: '' } })}
+        handleOpenSelect={handleOpenSelect}
+        openedSelect={openedSelect}
+        selectType='calendar'
       />
     </Container>
   );

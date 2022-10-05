@@ -8,7 +8,9 @@ import { Platform } from 'react-native'
 export const OrdersOptionDelivery = (props: any) => {
   const {
     search,
-    onSearch
+    onSearch,
+    setOpenedSelect,
+    openedSelect
   } = props
 
   const theme = useTheme();
@@ -17,6 +19,14 @@ export const OrdersOptionDelivery = (props: any) => {
     { value: '1', content: t('DELIVERY', 'Delivery') },
     { value: '2', content: t('PICKUP', 'Pickup') }
   ]
+
+  const handleClear = () => {
+    onSearch({ ...search, delivery_type: '' })
+  }
+
+  const handleOpenSelect = () => {
+    setOpenedSelect('delivery_type')
+  }
 
   return (
     <Container isIos={Platform.OS === 'ios'}>
@@ -29,6 +39,10 @@ export const OrdersOptionDelivery = (props: any) => {
         textcolor={theme.colors.unselectText}
         placeholder={t('SELECT_DELIVERY_TYPE', 'Select Delivery type')}
         dropViewMaxHeight={200}
+        handleClear={handleClear}
+        handleOpenSelect={handleOpenSelect}
+        openedSelect={openedSelect}
+        selectType='delivery_type'
       />
     </Container>
   );

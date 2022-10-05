@@ -11,7 +11,9 @@ export const OrdersOptionStatus = (props: any) => {
     tabs,
     orderStatus,
     search,
-    onSearch
+    onSearch,
+    setOpenedSelect,
+    openedSelect
   } = props
 
   const theme = useTheme();
@@ -29,6 +31,10 @@ export const OrdersOptionStatus = (props: any) => {
     setOptionsList(_optionList)
   }, [currentTabSelected, tabs, orderStatus])
 
+  const handleOpenSelect = () => {
+    setOpenedSelect('state')
+  }
+
   return (
     <Container isIos={Platform.OS === 'ios'}>
       <ODropDown
@@ -40,6 +46,9 @@ export const OrdersOptionStatus = (props: any) => {
         textcolor={theme.colors.unselectText}
         placeholder={t('SELECT_STATUS', 'Select Status')}
         dropViewMaxHeight={200}
+        handleOpenSelect={handleOpenSelect}
+        openedSelect={openedSelect}
+        selectType='state'
       />
     </Container>
   );

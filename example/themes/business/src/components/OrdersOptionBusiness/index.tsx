@@ -10,7 +10,9 @@ export const OrdersOptionBusinessUI = (props: any) => {
   const {
     search,
     onSearch,
-    businessesList
+    businessesList,
+    setOpenedSelect,
+    openedSelect
   } = props
 
   const theme = useTheme();
@@ -25,6 +27,14 @@ export const OrdersOptionBusinessUI = (props: any) => {
     setOptionsList(businesses)
   }, [businessesList?.businesses])
 
+  const handleClear = () => {
+    onSearch({ ...search, option: '' })
+  }
+
+  const handleOpenSelect = () => {
+    setOpenedSelect('business')
+  }
+
   return (
     <Container isIos={Platform.OS === 'ios'}>
       <ODropDown
@@ -36,6 +46,10 @@ export const OrdersOptionBusinessUI = (props: any) => {
         textcolor={theme.colors.unselectText}
         placeholder={t('SELECT_BUSINESS', 'Select Business')}
         dropViewMaxHeight={200}
+        handleClear={handleClear}
+        handleOpenSelect={handleOpenSelect}
+        openedSelect={openedSelect}
+        selectType='business'
       />
     </Container>
   );
