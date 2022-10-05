@@ -150,3 +150,7 @@ export const OverLine = styled.View`
 export const Actions = styled.View`
 
 `
+
+export const InputContainer = styled.View`
+  position: relative;
+`

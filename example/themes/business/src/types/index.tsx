@@ -256,6 +256,7 @@ export interface MessagesOptionParams {
   messagesReadList?: any;
   onNavigationRedirect?: any;
   setSortBy?: any;
+  getOrders: any
 }
 export interface OrdersOptionParams {
   orderList?: any;
@@ -409,7 +410,7 @@ export interface MessagesParams {
   order?: any;
   orderId?: number;
   messages?: any;
-  message?: string;
+  message: string;
   image?: string;
   messagesToShow?: any;
   sendMessage?: any;

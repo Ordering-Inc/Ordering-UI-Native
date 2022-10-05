@@ -9,7 +9,9 @@ export const OrdersOptionPaymethodUI = (props: any) => {
   const {
     search,
     onSearch,
-    paymethodList
+    paymethodList,
+    setOpenedSelect,
+    openedSelect
   } = props
 
   const theme = useTheme();
@@ -24,6 +26,14 @@ export const OrdersOptionPaymethodUI = (props: any) => {
     setOptionsList(paymethods)
   }, [paymethodList?.paymethods])
 
+  const handleClear = () => {
+    onSearch({ ...search, paymethod: '' })
+  }
+
+  const handleOpenSelect = () => {
+    setOpenedSelect('paymethod')
+  }
+
   return (
     <Container isIos={Platform.OS === 'ios'}>
       <ODropDown
@@ -35,6 +45,10 @@ export const OrdersOptionPaymethodUI = (props: any) => {
         textcolor={theme.colors.unselectText}
         placeholder={t('SELECT_PAYMETHOD', 'Select Paymethod')}
         dropViewMaxHeight={200}
+        handleClear={handleClear}
+        handleOpenSelect={handleOpenSelect}
+        openedSelect={openedSelect}
+        selectType='paymethod'
       />
     </Container>
   );
