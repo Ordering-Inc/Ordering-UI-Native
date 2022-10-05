@@ -9,7 +9,9 @@ export const OrdersOptionDriverUI = (props: any) => {
   const {
     search,
     onSearch,
-    driverList
+    driverList,
+    setOpenedSelect,
+    openedSelect
   } = props
 
   const theme = useTheme();
@@ -24,6 +26,14 @@ export const OrdersOptionDriverUI = (props: any) => {
     setOptionsList(drivers)
   }, [driverList?.drivers])
 
+  const handleClear = () => {
+    onSearch({ ...search, driver: '' })
+  }
+
+  const handleOpenSelect = () => {
+    setOpenedSelect('driver')
+  }
+
   return (
     <Container isIos={Platform.OS === 'ios'}>
       <ODropDown
@@ -35,6 +45,10 @@ export const OrdersOptionDriverUI = (props: any) => {
         textcolor={theme.colors.unselectText}
         placeholder={t('SELECT_DRIVER', 'Select Driver')}
         dropViewMaxHeight={165}
+        handleClear={handleClear}
+        handleOpenSelect={handleOpenSelect}
+        openedSelect={openedSelect}
+        selectType='driver'
       />
     </Container>
   );

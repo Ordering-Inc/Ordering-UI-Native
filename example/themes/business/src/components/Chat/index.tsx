@@ -742,7 +742,7 @@ const ChatUI = (props: MessagesParams) => {
                 color: '#414954'
               }}
               style={{ ...styles.editButton }}
-              onClick={() => handleClickQuickMessage(quickMessage.text)}
+              onClick={() => handleClickQuickMessage(message?.length > 0 ? ' ' + quickMessage.text : quickMessage.text)}
             />
           </React.Fragment>
         ))}

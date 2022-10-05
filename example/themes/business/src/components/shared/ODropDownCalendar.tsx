@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled, { css, useTheme } from 'styled-components/native'
 import { useLanguage } from 'ordering-components/native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
@@ -24,6 +24,10 @@ interface Props {
   handleChangeDate?: any,
   rangeDate?: any,
   isCalendarAlwaysVisible?: boolean
+  handleClear?: any;
+  handleOpenSelect?: any,
+  openedSelect?: string,
+  selectType?: string
 }
 
 const Wrapper = styled.View`
@@ -96,7 +100,11 @@ const ODropDownCalendar = (props: Props) => {
     isCalendar,
     handleChangeDate,
     rangeDate,
-    isCalendarAlwaysVisible
+    isCalendarAlwaysVisible,
+    handleClear,
+    handleOpenSelect,
+    openedSelect,
+    selectType
   } = props
 
   const theme = useTheme();
@@ -110,6 +118,7 @@ const ODropDownCalendar = (props: Props) => {
 
   const onToggle = () => {
     setIsOpen(!isOpen)
+    if (!isOpen) handleOpenSelect?.()
   }
 
   const onSelectOption = (option: any) => {
@@ -122,7 +131,7 @@ const ODropDownCalendar = (props: Props) => {
   const onDateChange = (date: any, type: any) => {
     if (!date) return
     if (type === 'END_DATE') {
-      handleChangeDate(rangeDate.from, date.format('MM/DD/YY'))
+      handleChangeDate(rangeDate.from, new Date(date.format('MM/DD/YY')) === rangeDate.from ? '' : date.format('MM/DD/YY'))
     } else {
       handleChangeDate(date.format('MM/DD/YY'), '')
     }
@@ -142,11 +151,30 @@ const ODropDownCalendar = (props: Props) => {
     return (from || to) ? (from + (to ? end : '')) : placeholder
   }
 
+  const handleClearCalendar = () => {
+    handleClear && handleClear()
+    if (isOpen) {
+      onToggle()
+    }
+  }
+
   useEffect(() => {
     const _defaultOption = options?.find((option: any) => option.value === defaultValue)
     setSelectedOption(_defaultOption)
     setValue(defaultValue)
   }, [defaultValue, options])
+
+  useEffect(() => {
+    if (openedSelect !== selectType && typeof openedSelect === 'string') {
+      setIsOpen(false)
+    }
+  }, [openedSelect])
+
+  useEffect(() => {
+    if (rangeDate.to && rangeDate.from) {
+      onSelect('calendar')
+    }
+  }, [rangeDate.to, rangeDate.from])
 
   return (
     <Wrapper style={props.style}>
@@ -165,10 +193,11 @@ const ODropDownCalendar = (props: Props) => {
               : `${selectedOption?.content || selectedOption?.name || placeholder}`
           }
         </SelectedLabel>
-        <FeatherIcon
-          name='calendar'
-          color={theme.colors.backArrow}
-          size={24}
+        <AntDesign
+          name={selectedOption && handleClear ? 'close' : 'calendar'}
+          size={20}
+          onPress={() => handleClearCalendar()}
+          style={{ position: 'absolute', right: 12, top: 13 }}
         />
       </Selected>
       {isOpen && options && (

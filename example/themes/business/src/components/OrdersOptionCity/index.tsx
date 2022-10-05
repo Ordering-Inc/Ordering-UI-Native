@@ -10,7 +10,9 @@ export const OrdersOptionCityUI = (props: any) => {
   const {
     search,
     onSearch,
-    allListValues
+    allListValues,
+    setOpenedSelect,
+    openedSelect
   } = props
 
   const theme = useTheme();
@@ -27,6 +29,14 @@ export const OrdersOptionCityUI = (props: any) => {
     setOptionsList(cities)
   }, [allListValues?.countries])
 
+  const handleClear = () => {
+    onSearch({ ...search, city: '' })
+  }
+
+  const handleOpenSelect = () => {
+    setOpenedSelect('city')
+  }
+
   return (
     <Container isIos={Platform.OS === 'ios'}>
       <ODropDown
@@ -38,6 +48,10 @@ export const OrdersOptionCityUI = (props: any) => {
         textcolor={theme.colors.unselectText}
         placeholder={t('SELECT_CITY', 'Select City')}
         dropViewMaxHeight={200}
+        handleClear={handleClear}
+        handleOpenSelect={handleOpenSelect}
+        openedSelect={openedSelect}
+        selectType='city'
       />
     </Container>
   );

@@ -230,6 +230,7 @@ export const PreviousMessages = (props: PreviousMessagesParams) => {
       fontWeight: '600',
       fontSize: 16,
       color: theme.colors.textGray,
+      width: '85%'
     },
     badge: {
       marginBottom: 6,
