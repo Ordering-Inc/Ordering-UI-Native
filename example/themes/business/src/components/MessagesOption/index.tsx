@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import { Contacts, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
@@ -24,6 +25,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
     messages,
     onNavigationRedirect,
     setSortBy,
+    getOrders
   } = props;
 
   const theme = useTheme();
@@ -55,6 +57,7 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
   const [tabsFilter, setTabsFilter] = useState(tabs[0].tags);
   const [activeTag, setActiveTag] = useState(tags[0].key);
   const [reload, setReload] = useState(false);
+  const [refreshing] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState(
     values?.reduce(
       (total: number, order: any) => total + order.unread_count,
@@ -247,7 +250,14 @@ const MessagesOptionUI = (props: MessagesOptionParams) => {
         />
       )}
 
-      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
+        refreshControl={<RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => getOrders?.()}
+      />}
+      >
         {!reload &&
           !error &&
           values.length > 0 &&

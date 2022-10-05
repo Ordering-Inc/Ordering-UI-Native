@@ -5,6 +5,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { Placeholder, PlaceholderLine, Fade } from 'rn-placeholder';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontistoIcon from 'react-native-vector-icons/Fontisto'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { useTheme } from 'styled-components/native';
 import { DeviceOrientationMethods } from '../../../../../src/hooks/DeviceOrientation'
 import { NotificationSetting } from '../../../../../src/components/NotificationSetting'
@@ -33,7 +34,8 @@ import {
   ItemContent,
   TimerInputWrapper,
   OverLine,
-  Actions
+  Actions,
+  InputContainer
 } from './styles';
 import { PreviousOrders } from '../PreviousOrders';
 import { OrdersOptionParams } from '../../types';
@@ -48,7 +50,7 @@ import { OrdersOptionDelivery } from '../OrdersOptionDelivery';
 import { OrdersOptionPaymethod } from '../OrdersOptionPaymethod';
 import { OrdersOptionDriver } from '../OrdersOptionDriver';
 import { OrdersOptionDate } from '../OrdersOptionDate';
-
+import { GestureEvent, GestureDetector } from 'react-native-gesture-handler'
 const tabsList: any = {
   pending: 1,
   inProgress: 2,
@@ -123,7 +125,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   const [selectedTabStatus, setSelectedTabStatus] = useState([])
   const [hour, setHour] = useState(0)
   const [minute, setMinute] = useState(0)
-
+  const [openedSelect, setOpenedSelect] = useState('')
   const WIDTH_SCREEN = orientationState?.dimensions?.width
   const HEIGHT_SCREEN = orientationState?.dimensions?.height
   const IS_PORTRAIT = orientationState.orientation === PORTRAIT
@@ -403,10 +405,11 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
     setOpenSLASettingModal(false)
   }
 
-  useEffect(() => {
-    setCurrentFilters(null)
-    onFiltered && onFiltered(null)
+  const handleClearFilters = () => {
     setSearch(defaultSearchList)
+  }
+
+  useEffect(() => {
     scrollRefTab.current?.scrollTo({ animated: true });
     scrollListRef.current?.scrollTo({ animated: true });
     scrollRef.current?.scrollTo({ y: 0, animated: true });
@@ -415,7 +418,7 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
   useEffect(() => {
     setSelectedTabStatus(deliveryStatus)
   }, [])
-
+  
   return (
     // <GestureRecognizer
     //   onSwipeLeft={onSwipeLeft}
@@ -754,22 +757,34 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
             {openSearchModal && (
               <SearchModalContent>
                 <ModalTitle>{t('SEARCH_ORDERS', 'Search orders')}</ModalTitle>
-                <OInput
-                  value={search.id}
-                  onChange={(value: any) => setSearch({ ...search, id: value })}
-                  style={styles.inputStyle}
-                  placeholder={t('ORDER_NUMBER', 'Order number')}
-                  autoCorrect={false}
-                />
+                <InputContainer>
+                  <OInput
+                    value={search.id}
+                    onChange={(value: any) => setSearch({ ...search, id: value })}
+                    style={styles.inputStyle}
+                    placeholder={t('ORDER_NUMBER', 'Order number')}
+                    autoCorrect={false}
+                  />
+                  <AntDesignIcon
+                    name='close'
+                    size={20}
+                    style={{ position: 'absolute', right: 12, top: 13 }}
+                    onPress={() => setSearch({ ...search, id: '' })}
+                  />
+                </InputContainer>
                 <OrdersOptionDate
                   {...props}
                   search={search}
                   onSearch={setSearch}
+                  setOpenedSelect={setOpenedSelect}
+                  openedSelect={openedSelect}
                 />
                 <OrdersOptionCity
                   {...props}
                   search={search}
                   onSearch={setSearch}
+                  setOpenedSelect={setOpenedSelect}
+                  openedSelect={openedSelect}
                 />
                 {isBusinessApp && (
                   <>
@@ -777,21 +792,29 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                       {...props}
                       search={search}
                       onSearch={setSearch}
+                      setOpenedSelect={setOpenedSelect}
+                      openedSelect={openedSelect}
                     />
                     <OrdersOptionDelivery
                       {...props}
                       search={search}
                       onSearch={setSearch}
+                      setOpenedSelect={setOpenedSelect}
+                      openedSelect={openedSelect}
                     />
                     <OrdersOptionDriver
                       {...props}
                       search={search}
                       onSearch={setSearch}
+                      setOpenedSelect={setOpenedSelect}
+                      openedSelect={openedSelect}
                     />
                     <OrdersOptionPaymethod
                       {...props}
                       search={search}
                       onSearch={setSearch}
+                      setOpenedSelect={setOpenedSelect}
+                      openedSelect={openedSelect}
                     />
                   </>
                 )}
@@ -801,13 +824,24 @@ const OrdersOptionUI = (props: OrdersOptionParams) => {
                   imgRightSrc={null}
                   style={{
                     borderRadius: 7.6,
-                    marginBottom: 70,
+                    marginBottom: 10,
                     marginTop: 60,
                     zIndex: 12
                   }}
                   onClick={applyFilters}
                 />
-
+                <OButton
+                  text={t('CLEAR_SEARCh', 'Clear search')}
+                  imgRightSrc={null}
+                  bgColor='#fff'
+                  style={{
+                    borderRadius: 7.6,
+                    marginBottom: 0,
+                    marginTop: 0,
+                    zIndex: 12
+                  }}
+                  onClick={handleClearFilters}
+                />
               </SearchModalContent>
             )}
             {openSLASettingModal && (
