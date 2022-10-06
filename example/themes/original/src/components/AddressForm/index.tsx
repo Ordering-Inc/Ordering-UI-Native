@@ -5,7 +5,6 @@ import {
 	TouchableOpacity,
 	Keyboard,
 	TouchableWithoutFeedback,
-	KeyboardAvoidingView,
 	Platform,
 } from 'react-native';
 import {
@@ -22,7 +21,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { useForm, Controller } from 'react-hook-form';
 import Geocoder from 'react-native-geocoding';
 
-import { OInput, OButton, OText, OModal, OIcon } from '../shared';
+import { OInput, OButton, OModal, OIcon } from '../shared';
 import { AddressFormParams } from '../../types';
 import { getTraduction } from '../../utils';
 import { useTheme } from 'styled-components/native';
@@ -57,7 +56,6 @@ const AddressFormUI = (props: AddressFormParams) => {
 		addressState,
 		addressesList,
 		saveAddress,
-		userCustomerSetup,
 		isGuestUser,
 		isRequiredField,
 		isFromProductsList,
@@ -599,33 +597,26 @@ const AddressFormUI = (props: AddressFormParams) => {
 										/>
 									)}
 								/>
-								{hasEditing ? (
-									<View style={styles.pinIcon}>
-										<GPSButton
-											apiKey={googleMapsApiKey}
-											handleGPS={(data: any, detail: any) => {
-												handleChangeAddress(data, detail);
-												setValue(data.address);
-												if (googleInput?.current) {
-													googleInput?.current?.setAddressText(data.address);
-												}
-											}}
-											IconButton={<OIcon src={theme.images.general.pin} width={16} />}
-										/>
-									</View>
-								) : null}
-							</AutocompleteInput>
 
-							{/* {!isKeyboardShow && (addressState?.address?.location || formState?.changes?.location) && (
-                <TouchableOpacity onPress={handleToggleMap} style={{ marginBottom: 10 }}>
-                  <OText
-                    color={theme.colors.primary}
-                    style={{ textAlign: 'center' }}
-                  >
-                    {t('VIEW_MAP', 'View map to modify the exact location')}
-                  </OText>
-                </TouchableOpacity>
-              )} */}
+								{(
+									(!isEditing && !formState.changes?.address) ||
+									(isEditing && !formState.changes?.address && formState.changes?.address !== undefined)) &&
+								(
+										<View style={styles.pinIcon}>
+											<GPSButton
+												apiKey={googleMapsApiKey}
+												handleGPS={(data: any, detail: any) => {
+													handleChangeAddress(data, detail);
+													setValue('address', data.address);
+													if (googleInput?.current) {
+														googleInput?.current?.setAddressText(data.address);
+													}
+												}}
+												IconButton={<OIcon src={theme.images.general.pin} width={16} />}
+											/>
+										</View>
+								)}
+							</AutocompleteInput>
 
 							{(locationChange || formState.changes?.location) && (
 								<View
