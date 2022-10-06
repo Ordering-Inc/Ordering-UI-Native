@@ -97,7 +97,7 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
             <Logo style={styles.logo}>
               <OIcon
                 url={optimizeImage(business?.logo, 'h_300,c_limit')}
-                src={business?.logo ? '' : theme?.images?.dummies?.businessLogo}
+                src={!business?.logo && theme?.images?.dummies?.businessLogo}
                 style={styles.icon}
               />
             </Logo>
