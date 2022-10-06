@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, Linking, Pressable } from 'react-native';
+import FastImage from 'react-native-fast-image'
 import { useUtils, useOrder, useLanguage } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import { OIcon, OText, OModal } from '../shared';
@@ -55,13 +56,13 @@ export const BusinessBasicInformation = (
 		headerStyle: {
 			height: isChewLayout ? 170 : 260,
 		},
-		businessLogo: {
-			width: 72,
-			height: 72,
-			borderRadius: 7.6,
-			justifyContent: 'flex-start',
-			alignItems: 'flex-start',
-		},
+		logoStyle: {
+      width: 72,
+      height: 72,
+      borderRadius: 7.6,
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start'
+    },
 		businessInfo: {
 			paddingHorizontal: 40,
 			paddingTop: isChewLayout ? 0 : 56,
@@ -270,11 +271,9 @@ export const BusinessBasicInformation = (
 						? styles.businesInfoheaderStyle
 						: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
 				}
-				source={{
-					uri:
-						header ||
-						optimizeImage(businessState?.business?.header, 'h_250,c_limit'),
-				}}
+				{...(!loading && { source: {
+					uri: header || optimizeImage(businessState?.business?.header, 'h_250,c_limit')
+				}})}
 				imageStyle={{ opacity: isChewLayout ? 0.5 : 1 }}
 			>
 				{!isBusinessInfoShow && !isChewLayout && (
@@ -282,7 +281,7 @@ export const BusinessBasicInformation = (
 						<OIcon src={theme.images.general.info} width={24} />
 					</WrapBusinessInfo>
 				)}
-				{isChewLayout && (
+				{isChewLayout && !loading && (
 					<View style={styles.headerChewStyle}>
 						<OText size={24} weight={'600'} mBottom={-5}>
 							{business?.name}
@@ -302,12 +301,14 @@ export const BusinessBasicInformation = (
 				{showLogo && (
 					<BusinessLogo isChewLayout={isChewLayout}>
 						{!isBusinessInfoShow && (
-							<OIcon
-								url={
-									logo ||
-									optimizeImage(businessState?.business?.logo, 'h_70,c_limit')
-								}
-								style={styles.businessLogo}
+							<FastImage
+								style={styles.logoStyle}
+								source={{
+									uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit'),
+									priority: FastImage.priority.high,
+									cache:FastImage.cacheControl.web
+								}}
+								resizeMode={FastImage.resizeMode.contain}
 							/>
 						)}
 					</BusinessLogo>

@@ -293,7 +293,7 @@ const BusinessProductsListingUI = (props: BusinessProductsListingParams) => {
 							</Placeholder>
 						</NearBusiness>
 					)}
-					{!hideBusinessNearCity && businessState?.business?.city_id && (
+					{!loading && !hideBusinessNearCity && businessState?.business?.city_id && (
 						<NearBusiness>
 							<BusinessesListing
 								logosLayout
