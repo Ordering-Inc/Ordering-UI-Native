@@ -165,16 +165,6 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	const [favoriteIds, setFavoriteIds] = useState<any>([])
 	const chewOrderTypes = [{ name: t('DELIVERY', 'Delivery').toUpperCase(), value: 1 }, { name: t('PICKUP', 'Pickup').toUpperCase(), value: 2 }]
 
-	// const panResponder = useRef(
-	// 	PanResponder.create({
-	// 		onMoveShouldSetPanResponder: (e, gestureState) => {
-	// 			const { dx, dy } = gestureState;
-	// 			resetInactivityTimeout()
-	// 			return (Math.abs(dx) > 20) || (Math.abs(dy) > 20);
-	// 		},
-	// 	})
-	// ).current
-
 	const handleMomentClick = () => {
 		if (isPreorderEnabled) {
 			navigation.navigate('MomentOption')
@@ -296,7 +286,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 
 	if (logosLayout) {
 		return (
-			<BusinessLogosContainer horizontal>
+			<BusinessLogosContainer
+				horizontal
+				showsHorizontalScrollIndicator={false}
+			>
 				{businessesList?.loading ? (
 					<Placeholder Animation={Fade}>
 						<View style={{ flexDirection: 'row' }}>
@@ -310,14 +303,27 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 				) : (
 					<>
 						{businessesList.businesses
-							?.filter(business => business?.slug !== actualSlug && business?.open)
+							?.filter(business => business?.open)
 							?.map(business => (
 								<TouchableOpacity
 									key={business?.id}
 									onPress={() => handleBusinessClick && handleBusinessClick(business)}
+									style={{
+										width: 57,
+										height: 58,
+										borderBottomColor: theme.colors.primary,
+										borderBottomWidth: business?.slug === actualSlug ? 2 : 0,
+										marginRight: 5
+									}}
 								>
 									<FastImage
-										style={{ width: 56, height: 56, marginRight: 20, borderRadius: 7.6 }}
+										style={{
+											width: 56,
+											height: 56,
+											marginRight: 20,
+											borderTopLeftRadius: 7.6,
+											borderTopRightRadius: 7.6
+										}}
 										source={{
 											uri: business?.logo,
 											priority: FastImage.priority.normal,
@@ -333,7 +339,10 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 	}
 
 	return (
-		<IOScrollView style={styles.container} onScroll={(e) => handleScroll(e)} showsVerticalScrollIndicator={false}
+		<IOScrollView
+			style={styles.container}
+			onScroll={(e) => handleScroll(e)}
+			showsVerticalScrollIndicator={false}
 			refreshControl={
 				<RefreshControl
 					refreshing={refreshing}
@@ -463,11 +472,12 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 						handleChangeBusinessType={handleChangeBusinessType}
 						isChewLayout
 						chewOrderTypes={chewOrderTypes}
+						handleChangeType={setOrderTypeValue}
 					/>
 				</OrderTypesContainer>
 			)}
 
-			{!hideCities && (
+			{!hideCities && orderTypeValue === 2 && (
 				<View style={{ marginTop: 20 }}>
 					<TouchableOpacity
 						style={styles.buttonCityStyle}

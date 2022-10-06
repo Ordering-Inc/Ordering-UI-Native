@@ -56,7 +56,7 @@ const AddressListUI = (props: AddressListParams) => {
 	}
 
 	const uniqueAddressesList = (addressList.addresses && addressList.addresses.filter(
-		(address: any, i: number, self: any) =>
+		(address: any, i: number, self: any) => address.address &&
 			i === self.findIndex((obj: any) => (
 				address.address === obj.address &&
 				address.address_notes === obj.address_notes &&

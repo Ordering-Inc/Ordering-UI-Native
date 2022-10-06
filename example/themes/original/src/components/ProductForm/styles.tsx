@@ -65,7 +65,7 @@ export const WrapperSubOption = styled.View`
 `
 
 export const ProductComment = styled.View`
-  padding-bottom: 60px;
+  padding-bottom: ${(props: any) => props.pb || 60}px;
 `
 
 export const ProductActions = styled.View`

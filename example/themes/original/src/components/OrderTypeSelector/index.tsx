@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
 	OrderTypeControl,
 	useLanguage,
@@ -17,6 +17,7 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 	const {
 		navigation,
 		handleChangeOrderType,
+		handleChangeType,
 		typeSelected,
 		defaultValue,
 		configTypes,
@@ -50,6 +51,10 @@ const OrderTypeSelectorUI = (props: OrderTypeSelectParams) => {
 			}
 		}
 	}
+
+	useEffect(() => {
+		handleChangeType(typeSelected)
+	}, [typeSelected])
 
 	return (
 		<Wrapper>

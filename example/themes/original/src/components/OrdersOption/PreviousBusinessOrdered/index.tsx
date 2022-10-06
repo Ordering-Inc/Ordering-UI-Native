@@ -97,7 +97,7 @@ export const PreviousBusinessOrdered = (props: PreviousBusinessOrderedParams) =>
   const [orderState] = useOrder()
   const windowWidth = Dimensions.get('window').width;
   const onBusinessClick = (business: any) => {
-    onNavigationRedirect('Business', { store: business.slug })
+    onNavigationRedirect('Business', { store: business.slug, logo: business.logo, header: business.header })
   }
 
   const styles = StyleSheet.create({
