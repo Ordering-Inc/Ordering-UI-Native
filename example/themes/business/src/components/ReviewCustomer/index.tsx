@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   useLanguage,
   useUtils,
@@ -10,7 +10,8 @@ import {
   View,
   StyleSheet,
   I18nManager,
-  TouchableOpacity
+  TouchableOpacity,
+  Keyboard
 } from 'react-native'
 import { useTheme } from 'styled-components/native'
 import { ReviewCustomerParams } from '../../types'
@@ -52,7 +53,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
   const { top, bottom } = useSafeAreaInsets()
   const [comments, setComments] = useState<Array<any>>([])
   const [extraComment, setExtraComment] = useState('')
-
+  const scrollref = useRef<any>()
   const styles = StyleSheet.create({
     photoWrapper: {
       shadowColor: theme.colors.black,
@@ -142,6 +143,14 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
 
   }, [actionState.error])
 
+  useEffect(() => {
+    if(scrollref?.current){
+      Keyboard.addListener('keyboardDidShow', () => {
+        scrollref.current.scrollToEnd()
+      })
+    }
+  }, [scrollref?.current])
+
   return (
     <KeyboardAvoidingView
       enabled
@@ -179,6 +188,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
       <Content
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 30 }}
+        ref={scrollref}
       >
         <CustomerInfoContainer>
           <View
