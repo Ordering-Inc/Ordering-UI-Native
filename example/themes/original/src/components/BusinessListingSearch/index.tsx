@@ -482,22 +482,29 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           </PriceFilterWrapper>
           {orderState?.options?.type === 1 && (
             <MaxSectionItem
+              filters={filters}
               title={t('MAX_DELIVERY_FEE', 'Max delivery fee')}
               options={maxDeliveryFeeOptions}
               filter='max_delivery_price'
+              handleChangeFilters={handleChangeFilters}
             />
           )}
           {[1, 2].includes(orderState?.options?.type) && (
             <MaxSectionItem
+              filters={filters}
               title={orderState?.options?.type === 1 ? t('MAX_DELIVERY_TIME', 'Max delivery time') : t('MAX_PICKUP_TIME', 'Max pickup time')}
               options={maxTimeOptions}
               filter='max_eta'
+              handleChangeFilters={handleChangeFilters}
+
             />
           )}
           <MaxSectionItem
+            filters={filters}
             title={t('MAX_DISTANCE', 'Max distance')}
             options={maxDistanceOptions}
             filter='max_distance'
+            handleChangeFilters={handleChangeFilters}
           />
           {businessTypes?.length > 0 && (
             <TagsContainer>
