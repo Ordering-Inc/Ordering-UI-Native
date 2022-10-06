@@ -15,7 +15,7 @@ import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import YoutubePlayer from "react-native-youtube-iframe"
-import { TextInput } from 'react-native'
+import { Keyboard, TextInput } from 'react-native'
 import {
 	Grayscale
 } from 'react-native-color-matrix-image-filters'
@@ -183,6 +183,7 @@ export const ProductOptionsUI = (props: any) => {
 	const [headerRefHeight, setHeaderRefHeight] = useState(0)
 	const [summaryRefHeight, setSummaryRefHeight] = useState(0)
 	const [isScrollAvailable, setIsScrollAvailable] = useState(null)
+	const [isKeyboardShow, setIsKeyboardShow] = useState(false)
 
 	const isError = (id: number) => {
 		let bgColor = theme.colors.white;
@@ -453,6 +454,20 @@ export const ProductOptionsUI = (props: any) => {
 			</View>
 		)
 	}
+
+	useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardShow(true)
+    })
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardShow(false)
+    })
+    return () => {
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [])
+
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
@@ -947,7 +962,7 @@ export const ProductOptionsUI = (props: any) => {
 								</>
 							)}
 							{!product?.hide_special_instructions && (
-								<ProductComment>
+								<ProductComment pb={isKeyboardShow && Platform.OS === 'ios' && 320}>
 									<SectionTitle>
 										<OText size={16} weight={'600'} lineHeight={24}>
 											{t('SPECIAL_COMMENT', 'Special comment')}

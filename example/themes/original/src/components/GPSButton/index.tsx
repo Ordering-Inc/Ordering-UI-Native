@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency'
-import Geolocation from '@react-native-community/geolocation'
 import Geocoder from 'react-native-geocoding'
-import { GpsButtonStyle } from './styles'
-import { View } from 'react-native'
-import { OText } from '../shared'
 import { ActivityIndicator } from 'react-native-paper'
+import Geolocation from '@react-native-community/geolocation'
+import { getTrackingStatus, requestTrackingPermission } from 'react-native-tracking-transparency'
+
+import { OText } from '../shared'
+import { GpsButtonStyle } from './styles'
 
 export const GPSButton = (props: any) => {
   const {
     handleGPS,
 		apiKey,
-    googleReady,
     IconButton,
     IconLoadingButton
   } = props
@@ -56,25 +55,27 @@ export const GPSButton = (props: any) => {
     })
   }
 
-	const getCurrentPosition = async () => {
+  const getCurrentPosition = async () => {
     let trackingStatus = await getTrackingStatus()
-		if (trackingStatus === 'not-determined') {
-			trackingStatus = await requestTrackingPermission()
-		}
-		if (trackingStatus === 'authorized' || trackingStatus === 'unavailable') {
-      setLoading(true);
+    if (trackingStatus === 'not-determined') {
+      trackingStatus = await requestTrackingPermission()
+    }
+    if (trackingStatus === 'authorized' || trackingStatus === 'unavailable') {
+      setLoading(true)
       Geolocation.getCurrentPosition((pos) => {
-        geoCodePosition(pos.coords);
+        geoCodePosition(pos.coords)
       }, (err) => {
         setLoading(false);
-        console.log(err);
-      });
+        console.log(`ERROR(${err.code}): ${err.message}`)
+      }, {
+        enableHighAccuracy: true, timeout: 15000, maximumAge: 10000
+      })
     }
-	}
+  }
 
-	useEffect(() => {
-		Geocoder.init(apiKey);
-	}, [])
+  useEffect(() => {
+    Geocoder.init(apiKey);
+  }, [])
 
   return (
     <GpsButtonStyle

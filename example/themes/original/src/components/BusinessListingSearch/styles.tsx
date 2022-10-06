@@ -86,3 +86,9 @@ export const OptionTitle = styled.View`
 		margin-left: ${() => props.isBusinessesSearchList ? '0' : '40px'};
 	`}
 `
+
+export const WrapperButtons = styled.View`
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+`

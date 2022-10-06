@@ -149,10 +149,10 @@ const StoresListUI = (props: BusinessesListingParams) => {
             width={12}
             height={12}
             color={theme.colors.skyBlue}
-            style={{ marginRight: 5 }}
+            style={{ marginRight: 5, marginTop: 3 }}
           />
           <OText size={12}>
-            {t('MORE_SETTINGS_GO_TO', 'For more settings go to ')}
+            {t('MORE_SETTINGS_GO_TO', 'For more settings go to')}{' '}
           </OText>
           <TouchableOpacity onPress={() => { Linking.openURL(t('LINK_MORE_SETTINGS_GO_TO', 'https://app.ordering.co')) }}>
             <OText size={12} color={theme.colors.skyBlue}>

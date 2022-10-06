@@ -25,7 +25,8 @@ import {
   BrandItem,
   PriceFilterWrapper,
   OptionTitle,
-  BContainer
+  BContainer,
+  WrapperButtons
 } from './styles'
 import FastImage from 'react-native-fast-image'
 import { convertHoursToMinutes } from '../../utils'
@@ -134,7 +135,7 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
       borderWidth: 0
     },
     applyButton: {
-      paddingHorizontal: 40,
+      paddingHorizontal: 10,
       width: '100%',
       marginTop: 20
     }
@@ -145,8 +146,12 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
   }
 
   const handleCloseFilters = () => {
-    setFilters({ business_types: [], orderBy: 'default', franchise_ids: [], price_level: null })
+    clearFilters()
     setOpenFilters(false)
+  }
+
+  const clearFilters = () => {
+    setFilters({ business_types: [], orderBy: 'default', franchise_ids: [], price_level: null })
   }
 
   const handleChangeActiveBusinessType = (type: any) => {
@@ -482,22 +487,28 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
           </PriceFilterWrapper>
           {orderState?.options?.type === 1 && (
             <MaxSectionItem
+              filters={filters}
               title={t('MAX_DELIVERY_FEE', 'Max delivery fee')}
               options={maxDeliveryFeeOptions}
               filter='max_delivery_price'
+              handleChangeFilters={handleChangeFilters}
             />
           )}
           {[1, 2].includes(orderState?.options?.type) && (
             <MaxSectionItem
+              filters={filters}
               title={orderState?.options?.type === 1 ? t('MAX_DELIVERY_TIME', 'Max delivery time') : t('MAX_PICKUP_TIME', 'Max pickup time')}
               options={maxTimeOptions}
               filter='max_eta'
+              handleChangeFilters={handleChangeFilters}
             />
           )}
           <MaxSectionItem
+            filters={filters}
             title={t('MAX_DISTANCE', 'Max distance')}
             options={maxDistanceOptions}
             filter='max_distance'
+            handleChangeFilters={handleChangeFilters}
           />
           {businessTypes?.length > 0 && (
             <TagsContainer>
@@ -517,12 +528,26 @@ export const BusinessListingSearchUI = (props: BusinessSearchParams) => {
             </TagsContainer>
           )}
         </ScrollView>
-        <OButton
-          text={t('APPLY', 'Apply')}
-          parentStyle={styles.applyButton}
-          textStyle={{ color: '#fff' }}
-          onClick={() => handleApplyFilters()}
-        />
+        <WrapperButtons>
+          <View style={{ width: '50%' }}>
+            <OButton
+              text={t('APPLY', 'Apply')}
+              parentStyle={styles.applyButton}
+              textStyle={{ color: '#fff' }}
+              onClick={() => handleApplyFilters()}
+            />
+          </View>
+          <View style={{ width: '50%' }}>
+            <OButton
+              text={t('CLEAR_FILTERS', 'Clear')}
+              bgColor={theme.colors.white}
+              borderColor={theme.colors.primary}
+              parentStyle={styles.applyButton}
+              textStyle={{ color: theme.colors.primary }}
+              onClick={() => clearFilters()}
+            />
+          </View>
+        </WrapperButtons>
       </OModal>
     </BContainer>
   )
