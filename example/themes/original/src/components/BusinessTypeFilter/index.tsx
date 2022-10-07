@@ -38,6 +38,7 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 
 	const theme = useTheme();
 	const [isOpenAllCategories, setIsOpenAllCategories] = useState(false)
+	const defaultImage = (name : string) => theme.images?.categories?.[name.toLowerCase()]
 
 	useEffect(() => {
 		if(typesState?.types?.length > 0){
@@ -197,9 +198,9 @@ export const BusinessTypeFilterUI = (props: BusinessTypeFilterParams) => {
 									isOpenAllCategories && setIsOpenAllCategories(false)
 								}}
 							>
-								{item.image ? (
+								{(item.image || defaultImage(item.name)) ? (
 									<OIcon
-										url={item.image}
+										url={item.image || defaultImage(item.name)}
 										style={styles.logo}
 									/>
 								) : (

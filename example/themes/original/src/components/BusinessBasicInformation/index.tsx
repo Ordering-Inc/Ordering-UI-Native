@@ -46,7 +46,7 @@ export const BusinessBasicInformation = (
 	const [openBusinessReviews, setOpenBusinessReviews] = useState(false);
 	const [businessInformationObtained, setBusinessInformationObtained] = useState(false)
 	const [businessReviewsObtained, setBusinessReviewsObtainedbtained] = useState(false)
-	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'original'
+	const isChewLayout = theme?.business_view?.components?.header?.components?.layout?.type === 'chew'
 	const showLogo = !theme?.business_view?.components?.header?.components?.business?.components?.logo?.hidden
 
 	const styles = StyleSheet.create({
@@ -272,7 +272,7 @@ export const BusinessBasicInformation = (
 						: { ...styles.headerStyle, backgroundColor: theme.colors.backgroundGray }
 				}
 				{...(!loading && { source: {
-					uri: header || optimizeImage(businessState?.business?.header, 'h_250,c_limit')
+					uri: header || optimizeImage(businessState?.business?.header || theme?.images?.dummies?.businessHeader, 'h_250,c_limit')
 				}})}
 				imageStyle={{ opacity: isChewLayout ? 0.5 : 1 }}
 			>
@@ -304,7 +304,7 @@ export const BusinessBasicInformation = (
 							<FastImage
 								style={styles.logoStyle}
 								source={{
-									uri: logo || optimizeImage(businessState?.business?.logo, 'h_70,c_limit'),
+									uri: logo || optimizeImage(businessState?.business?.logo || theme?.images?.dummies?.businessLogo, 'h_70,c_limit'),
 									priority: FastImage.priority.high,
 									cache:FastImage.cacheControl.web
 								}}
