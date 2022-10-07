@@ -54,7 +54,6 @@ const BusinessInformationUI = (props: BusinessInformationParams) => {
                 <OText size={16} weight='bold'>{t('BUSINESS_DESCRIPTION', 'Business description')}</OText>
               </GrayBackground>
               <OText size={14} mBottom={20} mLeft={15} mRight={15} style={{ marginTop: 10 }}>{businessState?.business?.description}</OText>
-
             </>
           )}
           {(!!businessState?.business?.email || !!businessState?.business?.cellphone) && (
