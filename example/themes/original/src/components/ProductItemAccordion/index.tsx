@@ -143,12 +143,12 @@ export const ProductItemAccordion = (props: ProductItemAccordionParams) => {
 			>
 				<View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
 					<ContentInfo>
-						{product?.images && (
+						{(product?.images || theme?.images?.dummies?.product) && (
 							<ProductImage>
 								{isFromCheckout ? (
-									<OIcon url={optimizeImage(product?.images, 'h_100,c_limit')} style={{ ...styles.productImage, ...{ width: 82, height: 82 } }} />
+									<OIcon url={optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_100,c_limit')} style={{ ...styles.productImage, ...{ width: 82, height: 82 } }} />
 								) : (
-									<OIcon url={optimizeImage(product?.images, 'h_100,c_limit')} style={styles.productImage} />
+									<OIcon url={optimizeImage(product?.images || theme?.images?.dummies?.product, 'h_100,c_limit')} style={styles.productImage} />
 								)}
 							</ProductImage>
 						)}
