@@ -18,7 +18,8 @@ import {
 	useSession,
 	useOrder,
 	useConfig,
-	useUtils
+	useUtils,
+	useOrderingTheme
 } from 'ordering-components/native';
 import { useTheme } from 'styled-components/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -75,13 +76,15 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 		logosLayout
 	} = props;
 	const theme = useTheme();
+	const [orderingTheme] = useOrderingTheme()
 	const isFocused = useIsFocused();
 	const appState = useRef(AppState.currentState)
 	const searchBarRef = useRef<any>()
 	const [appStateVisible, setAppStateVisible] = useState(appState.current);
-	const isChewLayout = theme?.header?.components?.layout?.type === 'original'
+	const isChewLayout = theme?.header?.components?.layout?.type === 'chew'
 	const hideCities = theme?.business_listing_view?.components?.cities?.hidden ?? true
 	const [refreshing] = useState(false);
+	const bgHeader =  orderingTheme?.theme?.business_listing_view?.components?.business_hero?.components?.image 
 	const styles = StyleSheet.create({
 		container: {
 			marginBottom: 0,
@@ -455,7 +458,7 @@ const BusinessesListingUI = (props: BusinessesListingParams) => {
 			</View>
 			{!isChewLayout ? (
 				<HeaderWrapper
-					source={theme.images.backgrounds.business_list_header}
+					source={bgHeader ? {uri: bgHeader} : theme.images.backgrounds.business_list_header}
 					style={{ paddingTop: top + 20 }}
 					resizeMode='cover'
 				>

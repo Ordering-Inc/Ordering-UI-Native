@@ -346,7 +346,7 @@ export const ProductOptionsUI = (props: any) => {
 	useEffect(() => {
 		const imageList: any = []
 		const videoList: any = []
-		product?.images && imageList.push(product.images)
+		product?.images?.length > 0 ? imageList.push(product.images) : imageList.push(theme?.images?.dummies?.product)
 		if (product?.gallery && product?.gallery.length > 0) {
 			for (const img of product?.gallery) {
 				if (img?.file) {
