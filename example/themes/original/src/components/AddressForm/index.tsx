@@ -599,8 +599,9 @@ const AddressFormUI = (props: AddressFormParams) => {
 								/>
 
 								{(
-									(!isEditing && !formState.changes?.address) ||
-									(isEditing && !formState.changes?.address && formState.changes?.address !== undefined)) &&
+									(!isEditing && !isGuestUser && !formState.changes?.address) ||
+									(isEditing && !isGuestUser && !formState.changes?.address && formState.changes?.address !== undefined)) ||
+									(isGuestUser && !formState.changes?.address && formState.changes?.address !== undefined) &&
 								(
 										<View style={styles.pinIcon}>
 											<GPSButton
