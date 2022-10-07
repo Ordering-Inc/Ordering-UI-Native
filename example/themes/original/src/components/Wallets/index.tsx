@@ -48,8 +48,6 @@ const WalletsUI = (props: any) => {
   const [{ parsePrice }] = useUtils()
   const [{ configs }] = useConfig()
 
-  console.log(theme)
-
   const styles = StyleSheet.create({
     logoStyle: {
       width: 120,
@@ -65,7 +63,7 @@ const WalletsUI = (props: any) => {
 
   const [tabSelected, setTabSelected] = useState(isWalletCashEnabled ? 'cash' : 'credit_point')
   const [openHistory, setOpenHistory] = useState(false)
-  const isChewLayout = theme?.wallets_view?.components?.layout?.type === 'original'
+  const isChewLayout = theme?.wallets_view?.components?.layout?.type === 'chew'
 
   const isWalletEnabled = configs?.cash_wallet?.value && configs?.wallet_enabled?.value === '1' && (isWalletCashEnabled || isWalletPointsEnabled)
 

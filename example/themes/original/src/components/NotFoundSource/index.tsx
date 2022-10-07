@@ -20,12 +20,13 @@ export const NotFoundSource = (props: NotFoundSourceParams) => {
 	const theme = useTheme();
 
 	const errorImage = image || theme.images.general.notFound
+	const isUrl = errorImage.includes('http')
 
 	return (
 		<NotFound>
 			{errorImage && (
 				<NotFoundImage>
-					<OIcon src={errorImage} width={260} height={220} />
+					<OIcon url={isUrl && errorImage} src={!isUrl && errorImage} width={260} height={220} />
 				</NotFoundImage>
 			)}
 			{content && conditioned && !errorImage && <OText color={theme.colors.disabled} size={18} style={{ textAlign: 'center' }}>{content}</OText>}
