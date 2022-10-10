@@ -72,8 +72,6 @@ export const BusinessesListing = (props: any) => {
     )
   }
 
-
-
   useEffect(() => {
     (checkNotificationStatus?.checked && auth) && _getLastOrderHasNoReview()
   }, [checkNotificationStatus, auth])
@@ -81,7 +79,7 @@ export const BusinessesListing = (props: any) => {
   return (
     <>
       {((layout === 'original') || logosLayout) && <OriginalBusinessListing {...props} />}
-      {(layout === 'appointment') && !logosLayout && <AppointmentBusinessListing {...props} />}
+      {(layout === 'appointments') && !logosLayout && <AppointmentBusinessListing {...props} />}
 
       {lastOrderReview?.isReviewOpen && (
         <OBottomPopup
