@@ -28,7 +28,7 @@ export const OrdersOptionBusinessUI = (props: any) => {
   }, [businessesList?.businesses])
 
   const handleClear = () => {
-    onSearch({ ...search, option: '' })
+    onSearch({ ...search, business: '' })
   }
 
   const handleOpenSelect = () => {
