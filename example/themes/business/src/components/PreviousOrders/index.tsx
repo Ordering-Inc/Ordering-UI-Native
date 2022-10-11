@@ -181,18 +181,16 @@ export const PreviousOrders = (props: any) => {
                     {allowColumns?.slaBar && (
                       <Timestatus style={{ backgroundColor: getStatusClassName(getDelayMinutes(order)) === 'in_time' ? '#00D27A' : getStatusClassName(getDelayMinutes(order)) === 'at_risk' ? '#FFC700' : getStatusClassName(getDelayMinutes(order)) === 'delayed' ? '#E63757' : '' }} />
                     )}
-                    {
-                      !!order.business?.logo && (
-                        <Logo style={styles.logo}>
-                          <OIcon
-                            url={optimizeImage(
-                              order.business?.logo,
-                              'h_300,c_limit',
-                            )}
-                            style={styles.icon}
-                          />
-                        </Logo>
-                      )}
+                    <Logo style={styles.logo}>
+                      <OIcon
+                        url={optimizeImage(
+                          order.business?.logo,
+                          'h_300,c_limit',
+                        )}
+                        src={!order?.business?.logo && theme?.images?.dummies?.businessLogo}
+                        style={styles.icon}
+                      />
+                    </Logo>
                     <Information>
                       {!!order?.order_group_id && (
                         <OText>
