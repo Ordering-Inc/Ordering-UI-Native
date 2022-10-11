@@ -476,8 +476,8 @@ export const DriverMap = (props: GoogleMapsParams) => {
                 style={styles.arrowDistance}
               />
               <OText size={12} numberOfLines={3}>{`${(
-                distancesFromTwoPlacesKm * 3280.84
-              ).toFixed(0)} ${t('FT', 'Ft')}`}</OText>
+                distancesFromTwoPlacesKm
+              ).toFixed(2)} ${t('KM', 'KM')}`}</OText>
             </View>
             <View style={{ width: '75%', paddingRight: 20 }}>
               <OText
