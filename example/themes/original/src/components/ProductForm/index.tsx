@@ -527,7 +527,7 @@ export const ProductOptionsUI = (props: any) => {
 											style={styles.slide1}
 											key={i}
 										>
-											{img.includes('image') ? (
+											{String(img).includes('image') ? (
 												<FastImage
 													style={{ height: '100%', opacity: isSoldOut ? 0.5 : 1 }}
 													source={{
@@ -569,7 +569,7 @@ export const ProductOptionsUI = (props: any) => {
 													opacity: index === thumbsSwiper ? 1 : 0.8
 												}}
 											>
-												{img.includes('image') ? (
+												{String(img).includes('image') ? (
 													<OIcon
 														url={img}
 														style={{
