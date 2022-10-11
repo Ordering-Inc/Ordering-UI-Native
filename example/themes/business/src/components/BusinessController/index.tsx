@@ -67,11 +67,11 @@ export const BusinessControllerUI = (props: BusinessControllerParams) => {
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
-        height: 1.5,
+        height: business?.logo ? 1.5 : 0,
       },
       shadowOpacity: 0.21,
       shadowRadius: 3,
-      elevation: 7,
+      elevation: business?.logo ? 7 : 0,
     },
     header: {
       flexDirection: 'row',
