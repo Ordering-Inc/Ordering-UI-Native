@@ -270,7 +270,7 @@ const ReviewCustomerUI = (props: ReviewCustomerParams) => {
               }}
               style={{ height: 35, paddingLeft: 5, paddingRight: 5, marginHorizontal: 3, marginVertical: 10 }}
               imgRightSrc={isSelectedComment(commentItem.key) ? theme.images.general.close : null}
-              imgRightStyle={{ tintColor: theme.colors.white, right: 5, margin: 5 }}
+              imgRightStyle={{ right: 5, margin: 5 }}
               onClick={() => handleChangeComment(commentItem) }
             />
           ))}
