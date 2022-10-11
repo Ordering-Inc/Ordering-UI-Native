@@ -44,33 +44,6 @@ import { USER_TYPE } from '../../config/constants';
 
 import SignatureScreen from 'react-native-signature-canvas';
 
-const ORDER_STATUS: any = {
-  0: 'ORDER_STATUS_PENDING',
-  1: 'ORDERS_COMPLETED',
-  2: 'ORDER_REJECTED',
-  3: 'ORDER_STATUS_IN_BUSINESS',
-  4: 'ORDER_READY',
-  5: 'ORDER_REJECTED_RESTAURANT',
-  6: 'ORDER_STATUS_CANCELLEDBYDRIVER',
-  7: 'ORDER_STATUS_ACCEPTEDBYRESTAURANT',
-  8: 'ORDER_CONFIRMED_ACCEPTED_BY_DRIVER',
-  9: 'ORDER_PICKUP_COMPLETED_BY_DRIVER',
-  10: 'ORDER_PICKUP_FAILED_BY_DRIVER',
-  11: 'ORDER_DELIVERY_COMPLETED_BY_DRIVER',
-  12: 'ORDER_DELIVERY_FAILED_BY_DRIVER',
-  13: 'PREORDER',
-  14: 'ORDER_NOT_READY',
-  15: 'ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER',
-  16: 'ORDER_STATUS_CANCELLED_BY_CUSTOMER',
-  17: 'ORDER_NOT_PICKEDUP_BY_CUSTOMER',
-  18: 'ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS',
-  19: 'ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER',
-  20: 'ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS',
-  21: 'ORDER_CUSTOMER_ARRIVED_BUSINESS',
-  22: 'ORDER_LOOKING_FOR_DRIVER',
-  23: 'ORDER_DRIVER_ON_WAY'
-}
-
 const filterSpecialStatus = ['prepared_in', 'delivered_in', 'delivery_datetime']
 
 const ChatUI = (props: MessagesParams) => {
@@ -96,6 +69,33 @@ const ChatUI = (props: MessagesParams) => {
   const [, { showToast }] = useToast();
   const theme = useTheme();
   const [messageList, setMessageList] = useState<any>([])
+
+  const ORDER_STATUS: any = {
+    0: t('ORDER_STATUS_PENDING', 'Order status pending'),
+    1: t('ORDERS_COMPLETED', 'Order completed'),
+    2: t('ORDER_REJECTED', 'Order rejected'),
+    3: t('ORDER_STATUS_IN_BUSINESS', 'Order status in business'),
+    4: t('ORDER_READY', 'Order ready'),
+    5: t('ORDER_REJECTED_RESTAURANT', 'Order rejected by restaurant'),
+    6: t('ORDER_STATUS_CANCELLEDBYDRIVER', 'Order status cancelled by driver'),
+    7: t('ORDER_STATUS_ACCEPTEDBYRESTAURANT', 'Order status accepted by restaurant'),
+    8: t('ORDER_CONFIRMED_ACCEPTED_BY_DRIVER', 'Order confirmed accepted by driver'),
+    9: t('ORDER_PICKUP_COMPLETED_BY_DRIVER', 'Order pickup completed by driver'),
+    10: t('ORDER_PICKUP_FAILED_BY_DRIVER', 'Order pickup failed by driver'),
+    11: t('ORDER_DELIVERY_COMPLETED_BY_DRIVER', 'Order delivery completed by driver'),
+    12: t('ORDER_DELIVERY_FAILED_BY_DRIVER', 'Order delivery failed by driver'),
+    13: t('PREORDER', 'Preorder'),
+    14: t('ORDER_NOT_READY', 'Order not ready'),
+    15: t('ORDER_PICKEDUP_COMPLETED_BY_CUSTOMER', 'Order picked up completed by customer'),
+    16: t('ORDER_STATUS_CANCELLED_BY_CUSTOMER', 'Order status cancelled by customer'),
+    17: t('ORDER_NOT_PICKEDUP_BY_CUSTOMER', 'Order not picked up by customer'),
+    18: t('ORDER_DRIVER_ALMOST_ARRIVED_BUSINESS', 'Order driver almost arrived to business'),
+    19: t('ORDER_DRIVER_ALMOST_ARRIVED_CUSTOMER', 'Order driver almost arrived to customer'),
+    20: t('ORDER_CUSTOMER_ALMOST_ARRIVED_BUSINESS', 'Order customer almost arrived to business'),
+    21: t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Order customer arrived to business'),
+    22: t('ORDER_LOOKING_FOR_DRIVER', 'Order looking for driver'),
+    23: t('ORDER_DRIVER_ON_WAY', 'Driver on way')
+  }
 
   const storeMessageList: any = [
     { key: 'store_message_1', text: t('STORE_MESSAGE_1', 'store_message_1') },
@@ -377,7 +377,7 @@ const ChatUI = (props: MessagesParams) => {
             ?
             `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute) ?
               `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}` :
-              `${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
+              `${message.change.old !== null && ORDER_STATUS[parseInt(message.change.old, 10)]} ${t('TO', 'to')} ${ORDER_STATUS[parseInt(message.change.new, 10)]}`
             }`
             : message.change.new
               ?

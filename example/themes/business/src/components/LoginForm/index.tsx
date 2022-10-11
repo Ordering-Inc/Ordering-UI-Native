@@ -179,6 +179,7 @@ const LoginFormUI = (props: LoginParams) => {
         'An error occurred while trying to pay by PayPal',
       ERROR_ADD_PRODUCT_VERY_FAR_FOR_DELIVERY:
         'Error adding product, very far for delivery',
+      ERROR_AUTH_DRIVER_LOGIN_VALIDATION: 'Error auth driver login validation'
     };
 
     return keyList[key] ? t(key, keyList[key]) : t(key);
