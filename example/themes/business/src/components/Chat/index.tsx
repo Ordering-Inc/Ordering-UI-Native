@@ -361,6 +361,11 @@ const ChatUI = (props: MessagesParams) => {
     setIsShowSignaturePad(false)
   };
 
+  const msgText: any = {
+    22: 'Order looking for driver',
+    23: 'Driver on way',
+  }
+
   const messageConsole = (message: any) => {
     return (
       <View
@@ -377,7 +382,7 @@ const ChatUI = (props: MessagesParams) => {
             ?
             `${t('ORDER', 'Order')} ${t(message.change.attribute.toUpperCase(), message.change.attribute.replace('_', ' '))} ${t('CHANGED_FROM', 'Changed from')} ${filterSpecialStatus.includes(message.change.attribute) ?
               `${message.change.old === null ? '0' : message.change.old} ${t('TO', 'to')} ${message.change.new} ${t('MINUTES', 'Minutes')}` :
-              `${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)])}`
+              `${message.change.old !== null && t(ORDER_STATUS[parseInt(message.change.old, 10)], msgText[message.change.old])} ${t('TO', 'to')} ${t(ORDER_STATUS[parseInt(message.change.new, 10)], msgText[message.change.new])}`
             }`
             : message.change.new
               ?
